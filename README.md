@@ -7,7 +7,7 @@
 Using Catalyst, the open-source package manager for GameMaker Studio 2:
 
 ```cmd
-catalyst require blueburn/bbmod
+catalyst require blueburn-cz/bbmod
 ```
 
 # Links
