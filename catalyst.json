@@ -3,5 +3,8 @@
     "description": "Resources for loading and rendering BBMOD files created with BlueBurn AssetCreator",
     "license": "MIT",
     "homepage": "https://github.com/blueburn-cz/BBMOD",
-    "yyp": "BBMOD.yyp"
+    "yyp": "BBMOD.yyp",
+    "ignore": {
+        "Demo": "group"
+    }
 }
