@@ -4,6 +4,11 @@
     "license": "MIT",
     "homepage": "https://github.com/blueburn-cz/BBMOD",
     "yyp": "BBMOD.yyp",
+    "require": {
+        "slagtand-org/ce-vector": "*",
+        "slagtand-org/ce-matrix": "*",
+        "slagtand-org/ce-quaternion": "*"
+    },
     "ignore": {
         "Demo": "group"
     }

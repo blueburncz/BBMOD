@@ -8,7 +8,7 @@
 /// does not match with this, then the model will not be loaded.
 /// @return {real} The id of the created vertex buffer or -1 on fail.
 var _file = argument[0];
-var _vFormat = (argument_count > 1) ? argument[1] : undefined;
+var _vformat = (argument_count > 1) ? argument[1] : undefined;
 var _sha1 = (argument_count > 2) ? argument[2] : undefined;
 
 if (!is_undefined(_sha1))
@@ -22,73 +22,73 @@ if (!is_undefined(_sha1))
 var _buffer = buffer_load(_file);
 buffer_seek(_buffer, buffer_seek_start, 0);
 
-var _vBuffer = -1;
+var _vbuffer = -1;
 var _version = buffer_read(_buffer, buffer_u8);
 
 if (_version == 0)
 {
-	var _hasVertices = buffer_read(_buffer, buffer_bool);
-	var _hasNormals = buffer_read(_buffer, buffer_bool);
-	var _hasUVs = buffer_read(_buffer, buffer_bool);
-	var _hasColours = buffer_read(_buffer, buffer_bool);
-	var _hasTangentW = buffer_read(_buffer, buffer_bool);
-	var _vertexCount = buffer_read(_buffer, buffer_u32);
+	var _has_vertices = buffer_read(_buffer, buffer_bool);
+	var _has_normals = buffer_read(_buffer, buffer_bool);
+	var _has_uvs = buffer_read(_buffer, buffer_bool);
+	var _has_colors = buffer_read(_buffer, buffer_bool);
+	var _has_tangentw = buffer_read(_buffer, buffer_bool);
+	var _vertex_count = buffer_read(_buffer, buffer_u32);
 
-	if (is_undefined(_vFormat))
+	if (is_undefined(_vformat))
 	{
-		if (!variable_global_exists("__bVertexFormats"))
+		if (!variable_global_exists("__b_vertex_formats"))
 		{
-			global.__bVertexFormats = ds_map_create();
+			global.__b_vertex_formats = ds_map_create();
 		}
 
-		var _mask = (_hasVertices
-			| _hasNormals << 1
-			| _hasUVs << 2
-			| _hasColours << 3
-			| _hasTangentW << 4);
+		var _mask = (_has_vertices
+			| _has_normals << 1
+			| _has_uvs << 2
+			| _has_colors << 3
+			| _has_tangentw << 4);
  
-		if (ds_map_exists(global.__bVertexFormats, _mask))
+		if (ds_map_exists(global.__b_vertex_formats, _mask))
 		{
-			_vFormat = global.__bVertexFormats[? _mask];
+			_vformat = global.__b_vertex_formats[? _mask];
 		}
 		else
 		{
 			vertex_format_begin();
 	 
-			if (_hasVertices)
+			if (_has_vertices)
 			{
 				vertex_format_add_position_3d();
 			}
 
-			if (_hasNormals)
+			if (_has_normals)
 			{
 				vertex_format_add_normal();
 			}
 
-			if (_hasUVs)
+			if (_has_uvs)
 			{
 				vertex_format_add_texcoord();
 			}
 
-			if (_hasColours)
+			if (_has_colors)
 			{
 				vertex_format_add_colour();
 			}
 
-			if (_hasTangentW)
+			if (_has_tangentw)
 			{
 				vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
 			}
 
-			_vFormat = vertex_format_end();
-			global.__bVertexFormats[? _mask] = _vFormat;
+			_vformat = vertex_format_end();
+			global.__b_vertex_formats[? _mask] = _vformat;
 		}
 	}
 
-	_vBuffer = vertex_create_buffer_from_buffer_ext(
-		_buffer, _vFormat, buffer_tell(_buffer), _vertexCount);
-	vertex_freeze(_vBuffer);
+	_vbuffer = vertex_create_buffer_from_buffer_ext(
+		_buffer, _vformat, buffer_tell(_buffer), _vertex_count);
+	vertex_freeze(_vbuffer);
 }
 
 buffer_delete(_buffer);
-return _vBuffer;
+return _vbuffer;
