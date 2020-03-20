@@ -1,7 +1,11 @@
 # BBMOD
-> Resources for loading and rendering BBMOD files created with BlueBurn AssetCreator
+> Simple 3D model format for GameMaker Studio 2 + conversion tool
 
 [![License](https://img.shields.io/github/license/blueburn-cz/BBMOD)](LICENSE)
+
+# Table of Contents
+* [Installation](#installation)
+* [Links](#links)
 
 # Installation
 Using Catalyst, the open-source package manager for GameMaker Studio 2:
@@ -11,4 +15,5 @@ catalyst require blueburn-cz/bbmod
 ```
 
 # Links
-* [BlueBurn AssetCreator](https://forum.yoyogames.com/index.php?threads/60628)
+* [GameMaker Community forums thread](https://forum.yoyogames.com/index.php?threads/60628)
+* [Assimp](https://github.com/assimp/assimp)
