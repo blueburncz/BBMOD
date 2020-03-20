@@ -37,13 +37,32 @@ int main(int argc, const char* argv[])
 	std::string foutPath = std::filesystem::path(foutArg).replace_extension(".bbmod").string();
 	const char* fout = foutPath.c_str();
 
-	if (!ConvertToBBMOD(fin, fout))
+	int retval = ConvertToBBMOD(fin, fout);
+
+	if (retval != BBMOD_SUCCESS)
 	{
-		std::cout << "Could not convert model!\n" << std::endl;
+		switch (retval)
+		{
+		case BBMOD_ERR_LOAD_FAILED:
+			std::cout << "ERROR: Could not load the model!" << std::endl;
+			break;
+
+		case BBMOD_ERR_CONVERSION_FAILED:
+			std::cout << "ERROR: Model conversion failed!" << std::endl;
+			break;
+
+		case BBMOD_ERR_SAVE_FAILED:
+			std::cout << "ERROR: Could not save the model to \"" << fout << "\"!" << std::endl;
+			break;
+
+		default:
+			break;
+		}
+
 		return EXIT_FAILURE;
 	}
 
-	std::cout << "Saved to \"" << fout << "\"" << std::endl;
+	std::cout << "SUCCESS: Model saved to \"" << fout << "\"!" << std::endl;
 
 	return EXIT_SUCCESS;
 }

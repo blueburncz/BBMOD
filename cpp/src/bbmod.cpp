@@ -4,6 +4,7 @@
 #include <assimp/postprocess.h>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 
 #define FILE_WRITE_DATA(f, d) \
 	(f).write(reinterpret_cast<const char*>(&(d)), sizeof(d))
@@ -35,20 +36,32 @@ uint32_t EncodeColor(const aiColor4D& color)
 		((uint32_t)(color.b * 255.0)));
 }
 
+/** Returns cross product of vectors v1 and v2. */
+aiVector3D Vec3Cross(const aiVector3D& v1, const aiVector3D& v2)
+{
+	aiVector3D res;
+	res.x = v1.y * v2.z - v1.z * v2.y;
+	res.y = v1.z * v2.x - v1.x * v2.z;
+	res.z = v1.x * v2.y - v1.y * v2.x;
+	return res;
+}
+
+/** Returns dot product of vectors v1 and v2. */
+float Vec3Dot(const aiVector3D& v1, const aiVector3D& v2)
+{
+	return (v1.x * v2.x
+		+ v1.y * v2.y
+		+ v1.z * v2.z);
+}
+
 /** Returns bitangent sign. */
 float GetBitangentSign(
 	const aiVector3D& normal,
 	const aiVector3D& tangent,
 	const aiVector3D& bitangent)
 {
-	float cX = normal.y * tangent.z - normal.z * tangent.y;
-	float cY = normal.z * tangent.x - normal.x * tangent.z;
-	float cZ = normal.x * tangent.y - normal.y * tangent.x;
-
-	float dot = cX * bitangent.x
-		+ cY * bitangent.y
-		+ cZ * bitangent.z;
-
+	aiVector3D cross = Vec3Cross(normal, tangent);
+	float dot = Vec3Dot(cross, bitangent);
 	return (dot < 0.0f) ? -1.0f : 1.0f;
 }
 
@@ -113,7 +126,7 @@ void MeshToBBMOD(aiMesh* mesh, std::ofstream& fout)
  * In this version, all meshes are pretransformed and merged into one.
  * Animations are not supported.
  */
-bool SceneToBBMOD_0(const char* fin, std::ofstream& fout)
+int SceneToBBMOD_0(const char* fin, std::ofstream& fout)
 {
 	Assimp::Importer* importer = new Assimp::Importer();
 
@@ -127,7 +140,7 @@ bool SceneToBBMOD_0(const char* fin, std::ofstream& fout)
 
 	if (!scene)
 	{
-		return false;
+		return BBMOD_ERR_LOAD_FAILED;
 	}
 
 	bool first = true;
@@ -173,22 +186,27 @@ bool SceneToBBMOD_0(const char* fin, std::ofstream& fout)
 
 	delete importer;
 
-	return true;
+	return BBMOD_SUCCESS;
 }
 
-bool ConvertToBBMOD(const char* fin, const char* fout)
+int ConvertToBBMOD(const char* fin, const char* fout)
 {
 	std::ofstream file(fout, std::ios::out | std::ios::binary);
 
 	if (!file.is_open())
 	{
-		return false;
+		return BBMOD_ERR_SAVE_FAILED;
 	}
 
-	bool success = SceneToBBMOD_0(fin, file);
+	int retval = SceneToBBMOD_0(fin, file);
 
 	file.flush();
 	file.close();
 
-	return success;
+	if (retval != BBMOD_SUCCESS)
+	{
+		std::filesystem::remove(fout);
+	}
+
+	return retval;
 }
