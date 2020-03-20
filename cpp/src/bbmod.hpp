@@ -2,5 +2,5 @@
 
 #include <assimp/scene.h>
 
-/** Writes scene into a latest-version BBMOD file. */
+/** Converts a model from file fin to BBMOD and saves it to fout. */
 bool ConvertToBBMOD(const char* fin, const char* fout);
