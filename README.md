@@ -8,7 +8,7 @@
 * [Links](#links)
 
 # Installation
-Using Catalyst, the open-source package manager for GameMaker Studio 2:
+Using [Catalyst](https://github.com/GameMakerHub/Catalyst), the open-source package manager for GameMaker Studio 2:
 
 ```cmd
 catalyst require blueburn-cz/bbmod
