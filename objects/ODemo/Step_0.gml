@@ -28,9 +28,12 @@ mouse_last_y = _mouse_y;
 if (model != B_BBMOD_NONE)
 {
 	var _anim_name = ds_map_find_first(model[@ B_EBBMOD.Animations]);
-	if (is_undefined(transform))
+	if (!is_undefined(_anim_name))
 	{
-		transform = b_bbmod_create_transform_array(model);
+		if (is_undefined(transform))
+		{
+			transform = b_bbmod_create_transform_array(model);
+		}
+		b_bbmod_animate(model, _anim_name, transform);
 	}
-	b_bbmod_animate(model, _anim_name, transform);
 }

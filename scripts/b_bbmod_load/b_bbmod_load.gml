@@ -98,6 +98,10 @@ if (_version == 1)
 		var _anim_name = _anim_data[B_EBBMODAnimation.Name];
 		_animations[? _anim_name] = _anim_data;
 	}
+
+	// Materials
+	var _material_count = buffer_read(_buffer, buffer_u32);
+	_bbmod[@ B_EBBMOD.Materials] = array_create(_material_count, global.__b_material_default);
 }
 
 buffer_delete(_buffer);

@@ -398,14 +398,17 @@ void WriteHeader_1(
  * Writes a mesh into a BBMOD version 1 file.
  *
  * Format:
- *  * Vertex (3x f32)
- *  * [Normal (3x f32)]
- *  * [UV (2x f32)]
- *  * Color (uint32)
- *  * [Tangent (3x f32)]
- *  * [Bitangent sign (f32)]
- *  * [Bone indices (4x f32)]
- *  * [Bone weights (4x f32)]
+ *  * Material index (uint32)
+ *  * Vertex count (uint32)
+ *  * For each vertex:
+ *     * Position (3x f32)
+ *     * [Normal (3x f32)]
+ *     * [UV (2x f32)]
+ *     * Color (uint32)
+ *     * [Tangent (3x f32)]
+ *     * [Bitangent sign (f32)]
+ *     * [Bone indices (4x f32)]
+ *     * [Bone weights (4x f32)]
  */
 void MeshToBBMOD_1(
 	aiMesh* mesh,
@@ -415,6 +418,9 @@ void MeshToBBMOD_1(
 {
 	uint32_t faceCount = mesh->mNumFaces;
 	aiColor4D cWhite(1.0f, 1.0f, 1.0f, 1.0f);
+
+	uint32_t material = mesh->mMaterialIndex;
+	FILE_WRITE_DATA(fout, material);
 
 	uint32_t vertexCount = (uint32_t)mesh->mNumFaces * 3;
 	FILE_WRITE_DATA(fout, vertexCount);
@@ -476,7 +482,8 @@ void MeshToBBMOD_1(
 			// Texture
 			if (mesh->HasTextureCoords(0))
 			{
-				aiVector3D& texture = mesh->mTextureCoords[0][idx];
+				aiVector3D texture = mesh->mTextureCoords[0][idx];
+				texture.y = 1.0f - texture.y;
 				FILE_WRITE_VEC2(fout, texture);
 			}
 
@@ -772,6 +779,17 @@ void AnimationToBBMOD(aiAnimation* animation, std::ofstream& fout)
  * Writes the scene into a version 1 BBMOD file.
  *
  * Scene-graph and animations are supported.
+ *
+ * Format:
+ *  * Header
+ *  * Global inverse transform matrix (16x f32, row major)
+ *  * Root node follows...
+ *  * Number of bones (uint32)
+ *  * Bones follow...
+ *  * Number of animations (uint32)
+ *  * Animations follow...
+ *  * Number of materials (uint32)
+ *  * Material names follow... (null terminated strings)
  */
 int SceneToBBMOD_1(const char* fin, std::ofstream& fout)
 {
@@ -829,6 +847,21 @@ int SceneToBBMOD_1(const char* fin, std::ofstream& fout)
 	for (uint32_t i = 0; i < numOfAnimations; ++i)
 	{
 		AnimationToBBMOD(scene->mAnimations[i], fout);
+	}
+
+	// Write materials
+	uint32_t numOfMaterials = scene->mNumMaterials;
+	FILE_WRITE_DATA(fout, numOfMaterials);
+
+	if (numOfMaterials > 0)
+	{
+		std::cout << "Materials:" << std::endl;
+
+		for (uint32_t i = 0; i < numOfMaterials; ++i)
+		{
+			aiMaterial* material = scene->mMaterials[i];
+			std::cout << i << ": " << material->GetName().C_Str() << std::endl;
+		}
 	}
 
 	delete importer;

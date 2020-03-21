@@ -14,7 +14,7 @@ matrix_set(matrix_projection, matrix_build_projection_perspective_fov(60, 16 / 9
 var _shader = ShDemo;
 shader_set(_shader);
 texture_set_stage(shader_get_sampler_index(_shader, "u_texNormal"),
-	sprite_get_texture(SprMaterial, 1));
+	sprite_get_texture(B_SprBBMODDefaultMaterial, 1));
 if (!is_undefined(transform))
 {
 	shader_set_uniform_f_array(shader_get_uniform(_shader, "u_mBones"), transform);

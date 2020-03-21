@@ -2,7 +2,7 @@
     "id": "bfbd7aa2-8111-4dd1-b274-d09def9a07e8",
     "modelName": "GMSprite",
     "mvc": "1.12",
-    "name": "SprMaterial",
+    "name": "B_SprBBMODDefaultMaterial",
     "For3D": true,
     "HTile": false,
     "VTile": false,

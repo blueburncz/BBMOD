@@ -14,5 +14,6 @@ enum B_EBBMOD
 	BoneCount,
 	Skeleton,
 	Animations,
+	Materials,
 	SIZE
 };

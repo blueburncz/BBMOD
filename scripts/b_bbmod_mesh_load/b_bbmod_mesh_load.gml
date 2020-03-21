@@ -1,0 +1,41 @@
+/// @func b_bbmod_mesh_load(buffer, format, format_mask)
+/// @param {real} buffer
+/// @param {real} format
+/// @param {real} format_mask
+/// @return {array}
+var _buffer = argument0;
+var _format = argument1;
+var _mask = argument2;
+
+var _has_vertices = (_mask >> B_BBMOD_VFORMAT_VERTEX) & 1;
+var _has_normals = (_mask >> B_BBMOD_VFORMAT_NORMAL) & 1;
+var _has_uvs = (_mask >> B_BBMOD_VFORMAT_TEXCOORD) & 1;
+var _has_colors = (_mask >> B_BBMOD_VFORMAT_COLOR) & 1;
+var _has_tangentw = (_mask >> B_BBMOD_VFORMAT_TANGENTW) & 1;
+var _has_bones = (_mask >> B_BBMOD_VFORMAT_BONES) & 1;
+
+var _mesh = array_create(B_EBBMODMesh.SIZE, 0);
+_mesh[@ B_EBBMODMesh.MaterialIndex] = buffer_read(_buffer, buffer_u32);
+
+var _vertex_count = buffer_read(_buffer, buffer_u32);
+if (_vertex_count > 0)
+{
+	var _size = _vertex_count * (0
+		+ _has_vertices * 3 * buffer_sizeof(buffer_f32)
+		+ _has_normals * 3 * buffer_sizeof(buffer_f32)
+		+ _has_uvs * 2 * buffer_sizeof(buffer_f32)
+		+ _has_colors * buffer_sizeof(buffer_u32)
+		+ _has_tangentw * 4 * buffer_sizeof(buffer_f32)
+		+ _has_bones * 8 * buffer_sizeof(buffer_f32));
+
+	if (_size > 0)
+	{
+		var _vbuffer = vertex_create_buffer_from_buffer_ext(
+			_buffer, _format, buffer_tell(_buffer), _vertex_count);
+		vertex_freeze(_vbuffer);
+		_mesh[@ B_EBBMODMesh.VertexBuffer] = _vbuffer;
+		buffer_seek(_buffer, buffer_seek_relative, _size);
+	}
+}
+
+return _mesh;
