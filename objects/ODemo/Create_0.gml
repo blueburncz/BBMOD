@@ -9,11 +9,10 @@ cam_zoom = 10;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
-//model = b_bbmod_load("Demo/box.bbmod");
-model = b_bbmod_load_1("Demo/bob_lamp_update.bbmod");
+model = b_bbmod_load("Demo/bob_lamp_update.bbmod");
 transform = undefined;
 
-if (model == -1)
+if (model == B_BBMOD_NONE)
 {
 	show_error("Model loading failed!", true);
 }

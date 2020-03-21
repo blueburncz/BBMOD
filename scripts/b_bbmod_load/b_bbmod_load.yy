@@ -1,5 +1,5 @@
 {
-    "id": "56b23224-4c84-49f6-93c4-cdab4e9351da",
+    "id": "8271765a-d9ae-4f09-9bd7-77f48a48f8ba",
     "modelName": "GMScript",
     "mvc": "1.0",
     "name": "b_bbmod_load",

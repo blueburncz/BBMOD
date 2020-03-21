@@ -1,3 +1,8 @@
+if (model == B_BBMOD_NONE)
+{
+	exit;
+}
+
 var _mat_world = matrix_get(matrix_world);
 var _mat_view = matrix_get(matrix_view);
 var _mat_proj = matrix_get(matrix_projection);

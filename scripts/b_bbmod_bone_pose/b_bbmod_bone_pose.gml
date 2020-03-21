@@ -60,7 +60,7 @@ if (_bone_index >= 0)
 		var _rotations_count = array_length_1d(_rotations);
 		var _rotation_key_next = _rotations[0];
 
-		var k = 0;
+		k = 0;
 		for (/**/; k < _rotations_count - 1; ++k)
 		{
 			_rotation_key_next = _rotations[k + 1];

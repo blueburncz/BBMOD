@@ -1,8 +1,8 @@
 {
-    "id": "8271765a-d9ae-4f09-9bd7-77f48a48f8ba",
+    "id": "6ecc0963-f21f-4426-8fdf-3ad41b8b2cce",
     "modelName": "GMScript",
     "mvc": "1.0",
-    "name": "b_bbmod_load_1",
+    "name": "b_bbmod",
     "IsCompatibility": false,
     "IsDnD": false
 }
