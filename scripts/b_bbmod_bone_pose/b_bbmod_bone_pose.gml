@@ -99,7 +99,7 @@ _matrix = matrix_multiply(_transform, _matrix);
 var _children = _bone[@ B_EBBMODBone.Children];
 var _child_count = array_length_1d(_children);
 
-for (var i = 0; i < _child_count; ++i)
+for (var i/*:int*/= 0; i < _child_count; ++i)
 {
 	b_bbmod_bone_pose(_children[i], _array, _inverse_transform, _matrix, _animation);
 }

@@ -15,7 +15,7 @@ var _children = array_create(_child_count, 0);
 
 _bone[@ B_EBBMODBone.Children] = _children;
 
-for (var i = 0; i < _child_count; ++i)
+for (var i/*:int*/= 0; i < _child_count; ++i)
 {
 	_children[@ i] = b_bbmod_bone_load(_buffer);
 }

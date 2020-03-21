@@ -3,7 +3,7 @@
 /// @return {array}
 var _buffer = argument0;
 var _matrix = array_create(16, 0);
-for (var i = 0; i < 16; ++i)
+for (var i/*:int*/= 0; i < 16; ++i)
 {
 	_matrix[@ i] = buffer_read(_buffer, buffer_f32);
 }

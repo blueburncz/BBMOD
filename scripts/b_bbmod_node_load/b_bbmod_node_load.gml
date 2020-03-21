@@ -23,7 +23,7 @@ var _models = array_create(_model_count, 0);
 
 _node[@ B_EBBMODNode.Models] = _models;
 
-for (var i = 0; i < _model_count; ++i)
+for (var i/*:int*/= 0; i < _model_count; ++i)
 {
 	var _vertex_count = buffer_read(_buffer, buffer_u32);
 	if (_vertex_count > 0)
@@ -52,7 +52,7 @@ var _child_count = buffer_read(_buffer, buffer_u32);
 var _children = array_create(_child_count, 0);
 _node[@ B_EBBMODNode.Children] = _children;
 
-for (var i = 0; i < _child_count; ++i)
+for (var i/*:int*/= 0; i < _child_count; ++i)
 {
 	_children[@ i] = b_bbmod_node_load(_buffer, _format, _mask);
 }
