@@ -2,7 +2,7 @@
 /// @param {real} buffer
 /// @param {real} format
 /// @param {real} formatMask
-/// @return {real}
+/// @return {array}
 var _buffer = argument0;
 var _format = argument1;
 var _mask = argument2;
@@ -14,18 +14,16 @@ var _has_colors = (_mask > 3) & 1;
 var _has_tangentw = (_mask > 4) & 1;
 var _has_bones = (_mask > 5) & 1;
 
-var _node = ds_map_create();
-var _name = buffer_read(_buffer, buffer_string);
-_node[? "name"] = _name;
-show_debug_message(_name);
+var _node = array_create(B_EBBMODNode.SIZE, 0);
+_node[@ B_EBBMODNode.Name] = buffer_read(_buffer, buffer_string);
 
 // Models
 var _model_count = buffer_read(_buffer, buffer_u32);
-show_debug_message(_model_count);
-var _models = ds_list_create();
-ds_map_add_list(_node, "models", _models);
+var _models = array_create(_model_count, 0);
 
-repeat (_model_count)
+_node[@ B_EBBMODNode.Models] = _models;
+
+for (var i = 0; i < _model_count; ++i)
 {
 	var _vertex_count = buffer_read(_buffer, buffer_u32);
 	if (_vertex_count > 0)
@@ -42,24 +40,21 @@ repeat (_model_count)
 		{
 			var _vbuffer = vertex_create_buffer_from_buffer_ext(
 				_buffer, _format, buffer_tell(_buffer), _vertex_count);
-
 			vertex_freeze(_vbuffer);
-			ds_list_add(_models, _vbuffer);
+			_models[@ i] = _vbuffer;
 			buffer_seek(_buffer, buffer_seek_relative, _size);
 		}
 	}
 }
 
 // Child nodes
-var _children = ds_list_create();
-ds_map_add_list(_node, "children", _children);
-
 var _child_count = buffer_read(_buffer, buffer_u32);
-show_debug_message(_child_count);
+var _children = array_create(_child_count, 0);
+_node[@ B_EBBMODNode.Children] = _children;
 
-repeat (_child_count)
+for (var i = 0; i < _child_count; ++i)
 {
-	ds_list_add(_children, b_bbmod_node_load(_buffer, _format, _mask));
+	_children[@ i] = b_bbmod_node_load(_buffer, _format, _mask);
 }
 
 return _node;

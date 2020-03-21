@@ -2,4 +2,4 @@
 /// @param {real} node
 /// @return {array}
 gml_pragma("forceinline");
-return array_create(argument0[? "bone_count"] * 16, 0);
+return array_create(argument0[B_EBBMOD1.BoneCount] * 16, 0);

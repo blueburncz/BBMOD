@@ -14,7 +14,7 @@ if (!is_undefined(transform))
 {
 	shader_set_uniform_f_array(shader_get_uniform(_shader, "u_mBones"), transform);
 }
-b_bbmod_node_render(model);
+b_bbmod_render(model);
 shader_reset();
 
 matrix_set(matrix_world, _mat_world);

@@ -1,18 +1,16 @@
 /// @func b_bbmod_node_destroy(node)
-/// @param {real} node The id of the node.
+/// @desc Frees resources used by the node from memory.
+/// @param {array} node The node to destroy.
 var _node = argument0;
-var _models = _node[? "models"];
+var _models = _node[B_EBBMODNode.Models];
+var _children = _models[B_EBBMODNode.Children];
 
-for (var i = ds_list_size(_models) - 1; i >= 0; --i)
+for (var i = array_length_1d(_models) - 1; i >= 0; --i)
 {
-	vertex_delete_buffer(_models[| i]);
+	vertex_delete_buffer(_models[i]);
 }
 
-var _children = _models[? "children"];
-
-for (var i = ds_list_size(_children) - 1; i >= 0; --i)
+for (var i = array_length_1d(_children) - 1; i >= 0; --i)
 {
-	b_bbmod_node_destroy(_children[| i]);
+	b_bbmod_node_destroy(_children[i]);
 }
-
-ds_map_destroy(_node);
