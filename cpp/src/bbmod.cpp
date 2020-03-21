@@ -56,7 +56,8 @@
 	} \
 	while (false)
 
-struct cmp_str
+/** String comparator. */
+struct StringCompare
 {
 	bool operator()(char const* a, char const* b) const
 	{
@@ -64,43 +65,49 @@ struct cmp_str
 	}
 };
 
-double m_nextNodeId = 0.0;
-std::map<double, aiNode*> m_indexDoubleToNode;
-std::map<aiNode*, double> m_indexNodeToDouble;
+////////////////////////////////////////////////////////////////////////////////
+// FIXME: These were originally members and methods of a custom scene class.
+// Making globals was just a quick temporary solution.
+
+float gNextNodeId = 0.0f;
+std::map<double, aiNode*> gIndexDoubleToNode;
+std::map<aiNode*, double> gIndexNodeToDouble;
 
 /** Node has a mesh or has a child node with a mesh. */
-std::map<aiNode*, bool> m_indexNodeHasMesh;
+std::map<aiNode*, bool> gIndexNodeHasMesh;
 
 /** Node is a bone or has a bone child node. */
-std::map<aiNode*, bool> m_indexNodeHasBone;
+std::map<aiNode*, bool> gIndexNodeHasBone;
 
-float m_nextBoneId = 0.0f;
-std::map<const char*, float, cmp_str> m_indexBoneNameToIndex;
-std::map<const char*, aiBone*, cmp_str> m_indexBoneNameToBone;
+float gNextBoneId = 0.0f;
+std::map<const char*, float, StringCompare> gIndexBoneNameToIndex;
+std::map<const char*, aiBone*, StringCompare> gIndexBoneNameToBone;
 
 size_t GetNodeMesh(double id, size_t index)
 {
-	return m_indexDoubleToNode.at(id)->mMeshes[index];
+	return gIndexDoubleToNode.at(id)->mMeshes[index];
 }
 
 size_t GetNodeChildCount(double id)
 {
-	return m_indexDoubleToNode.at(id)->mNumChildren;
+	return gIndexDoubleToNode.at(id)->mNumChildren;
 }
 
 double GetNodeChild(double id, size_t index)
 {
-	return m_indexNodeToDouble.at(m_indexDoubleToNode.at(id)->mChildren[index]);
+	return gIndexNodeToDouble.at(gIndexDoubleToNode.at(id)->mChildren[index]);
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /** Encodes color into a single integer as ARGB. */
 uint32_t EncodeColor(const aiColor4D& color)
 {
 	return (uint32_t)(
-		((uint32_t)(color.a * 255.0) << 24) |
-		((uint32_t)(color.r * 255.0) << 16) |
-		((uint32_t)(color.g * 255.0) << 8) |
-		((uint32_t)(color.b * 255.0)));
+		((uint32_t)(color.a * 255.0f) << 24) |
+		((uint32_t)(color.r * 255.0f) << 16) |
+		((uint32_t)(color.g * 255.0f) << 8) |
+		((uint32_t)(color.b * 255.0f)));
 }
 
 /** Returns cross product of vectors v1 and v2. */
@@ -132,11 +139,27 @@ float GetBitangentSign(
 	return (dot < 0.0f) ? -1.0f : 1.0f;
 }
 
-/** Writes a single mesh into a BBMOD file. */
+/** Returns number of vertices of a mesh. */
+inline uint32_t GetMeshVertexCount(const aiMesh* mesh)
+{
+	return (mesh->mNumFaces * 3);
+}
+
+/**
+ * Writes a mesh into a BBMOD version 0 file.
+ *
+ * Format:
+ *  * Vertex (3x f32)
+ *  * [Normal (3x f32)]
+ *  * [UV (2x f32)]
+ *  * Color (uint32)
+ *  * [Tangent (3x f32)]
+ *  * [Bitangent sign (f32)]
+ */
 void MeshToBBMOD_0(aiMesh* mesh, std::ofstream& fout)
 {
 	uint32_t faceCount = mesh->mNumFaces;
-	aiColor4D cWhite(1.0, 1.0, 1.0, 1.0);
+	aiColor4D cWhite(1.0f, 1.0f, 1.0f, 1.0f);
 
 	for (unsigned int i = 0; i < faceCount; ++i)
 	{
@@ -187,6 +210,43 @@ void MeshToBBMOD_0(aiMesh* mesh, std::ofstream& fout)
 }
 
 /**
+ * Writes a BBMOD version 0 header into a file.
+ *
+ * Format:
+ *  * Version (uint8, always 0)
+ *  * HasVertices (bool, always true)
+ *  * HasNormals (bool)
+ *  * HasTextureCoords (bool)
+ *  * HasVertexColors (bool, always true)
+ *  * HasTangentW (bool)
+ *  * VertexCount (uint32)
+ */
+void WriteHeader_0(
+	bool hasNormals,
+	bool hasTextureCoords,
+	bool hasTangentW,
+	uint32_t vertexCount,
+	std::ofstream& fout)
+{
+	uint8_t version = 0;
+	FILE_WRITE_DATA(fout, version);
+
+	bool hasVertices = true;
+	FILE_WRITE_DATA(fout, hasVertices);
+
+	FILE_WRITE_DATA(fout, hasNormals);
+
+	FILE_WRITE_DATA(fout, hasTextureCoords);
+
+	bool hasVertexColors = true;
+	FILE_WRITE_DATA(fout, hasVertexColors);
+
+	FILE_WRITE_DATA(fout, hasTangentW);
+
+	FILE_WRITE_DATA(fout, vertexCount);
+}
+
+/**
  * Writes the scene into a version 0 BBMOD file.
  *
  * In this version, all meshes are pretransformed and merged into one.
@@ -215,39 +275,18 @@ int SceneToBBMOD_0(const char* fin, std::ofstream& fout)
 
 	for (size_t i = 0; i < scene->mNumMeshes; ++i)
 	{
-		vertexCount += scene->mMeshes[i]->mNumFaces * 3;
+		vertexCount += GetMeshVertexCount(scene->mMeshes[i]);
 	}
 
 	for (size_t i = 0; i < scene->mNumMeshes; ++i)
 	{
 		aiMesh* mesh = scene->mMeshes[i];
-
 		if (first)
 		{
-			// Write header
-			uint8_t version = 0;
-			FILE_WRITE_DATA(fout, version);
-
-			bool hasVertices = true;
-			FILE_WRITE_DATA(fout, hasVertices);
-
-			bool hasNormals = mesh->HasNormals();
-			FILE_WRITE_DATA(fout, hasNormals);
-
-			bool hasTextureCoords = mesh->HasTextureCoords(0);
-			FILE_WRITE_DATA(fout, hasTextureCoords);
-
-			bool hasVertexColors = true; //mesh->HasVertexColors(0);
-			FILE_WRITE_DATA(fout, hasVertexColors);
-
-			bool hasTangentsAndBitangents = mesh->HasTangentsAndBitangents();
-			FILE_WRITE_DATA(fout, hasTangentsAndBitangents);
-
-			FILE_WRITE_DATA(fout, vertexCount);
-
+			WriteHeader_0(mesh->HasNormals(), mesh->HasTextureCoords(0),
+				mesh->HasTangentsAndBitangents(), vertexCount, fout);
 			first = false;
 		}
-
 		MeshToBBMOD_0(mesh, fout);
 	}
 
@@ -259,14 +298,14 @@ bool BuildIndices(const aiScene* scene, aiNode* node)
 {
 	// Has mesh index
 	bool hasMesh = (node->mNumMeshes > 0);
-	m_indexNodeHasMesh[node] = hasMesh;
+	gIndexNodeHasMesh[node] = hasMesh;
 
 	if (hasMesh)
 	{
 		aiNode* current = node->mParent;
 		while (current)
 		{
-			m_indexNodeHasMesh[current] = true;
+			gIndexNodeHasMesh[current] = true;
 			current = current->mParent;
 		}
 	}
@@ -285,31 +324,31 @@ bool BuildIndices(const aiScene* scene, aiNode* node)
 			aiBone* bone = mesh->mBones[j];
 			const char* name = bone->mName.C_Str();
 
-			auto it = m_indexBoneNameToIndex.find(name);
-			if (it == m_indexBoneNameToIndex.end())
+			auto it = gIndexBoneNameToIndex.find(name);
+			if (it == gIndexBoneNameToIndex.end())
 			{
-				m_indexBoneNameToIndex[name] = m_nextBoneId++;
-				m_indexBoneNameToBone[name] = bone;
+				gIndexBoneNameToIndex[name] = gNextBoneId++;
+				gIndexBoneNameToBone[name] = bone;
 			}
 		}
 	}
 
-	m_indexNodeHasBone[node] = hasBone;
+	gIndexNodeHasBone[node] = hasBone;
 
 	if (hasBone)
 	{
 		aiNode* current = node->mParent;
 		while (current)
 		{
-			m_indexNodeHasBone[current] = true;
+			gIndexNodeHasBone[current] = true;
 			current = current->mParent;
 		}
 	}
 
 	// Node index
-	double id = m_nextNodeId++;
-	m_indexDoubleToNode[id] = node;
-	m_indexNodeToDouble[node] = id;
+	double id = gNextNodeId++;
+	gIndexDoubleToNode[id] = node;
+	gIndexNodeToDouble[node] = id;
 	for (size_t i = 0; i < node->mNumChildren; ++i)
 	{
 		BuildIndices(scene, node->mChildren[i]);
@@ -318,7 +357,24 @@ bool BuildIndices(const aiScene* scene, aiNode* node)
 }
 
 
-void WriteHeader(aiMesh* mesh, std::ofstream& fout)
+/**
+ * Writes a BBMOD version 1 header into a file.
+ *
+ * Format:
+ *  * Version (uint8, always 1)
+ *  * HasVertices (bool, always true)
+ *  * HasNormals (bool)
+ *  * HasTextureCoords (bool)
+ *  * HasVertexColors (bool, always true)
+ *  * HasTangentW (bool)
+ *  * HasBones (bool)
+ */
+void WriteHeader_1(
+	bool hasNormals,
+	bool hasTextureCoords,
+	bool hasTangentW,
+	bool hasBones,
+	std::ofstream& fout)
 {
 	uint8_t version = 1;
 	FILE_WRITE_DATA(fout, version);
@@ -326,26 +382,39 @@ void WriteHeader(aiMesh* mesh, std::ofstream& fout)
 	bool hasVertices = true;
 	FILE_WRITE_DATA(fout, hasVertices);
 
-	bool hasNormals = mesh->HasNormals();
 	FILE_WRITE_DATA(fout, hasNormals);
 
-	bool hasTextureCoords = mesh->HasTextureCoords(0);
 	FILE_WRITE_DATA(fout, hasTextureCoords);
 
-	bool hasVertexColors = true; //mesh->HasVertexColors(0);
+	bool hasVertexColors = true;
 	FILE_WRITE_DATA(fout, hasVertexColors);
 
-	bool hasTangentsAndBitangents = mesh->HasTangentsAndBitangents();
-	FILE_WRITE_DATA(fout, hasTangentsAndBitangents);
+	FILE_WRITE_DATA(fout, hasTangentW);
 
-	bool hasBones = true; //*m_indexBoneNameToFloat.size() > 0;
 	FILE_WRITE_DATA(fout, hasBones);
 }
 
-void MeshToBBMOD_1(aiMesh* mesh, std::ofstream& fout, aiMatrix4x4& matrix)
+/**
+ * Writes a mesh into a BBMOD version 1 file.
+ *
+ * Format:
+ *  * Vertex (3x f32)
+ *  * [Normal (3x f32)]
+ *  * [UV (2x f32)]
+ *  * Color (uint32)
+ *  * [Tangent (3x f32)]
+ *  * [Bitangent sign (f32)]
+ *  * [Bone indices (4x f32)]
+ *  * [Bone weights (4x f32)]
+ */
+void MeshToBBMOD_1(
+	aiMesh* mesh,
+	aiMatrix4x4& matrix,
+	bool forceBonesAndWeights,
+	std::ofstream& fout)
 {
 	uint32_t faceCount = mesh->mNumFaces;
-	aiColor4D cWhite(1.0, 1.0, 1.0, 1.0);
+	aiColor4D cWhite(1.0f, 1.0f, 1.0f, 1.0f);
 
 	uint32_t vertexCount = (uint32_t)mesh->mNumFaces * 3;
 	FILE_WRITE_DATA(fout, vertexCount);
@@ -361,7 +430,7 @@ void MeshToBBMOD_1(aiMesh* mesh, std::ofstream& fout, aiMatrix4x4& matrix)
 	{
 		aiBone* bone = mesh->mBones[i];
 		const char* name = bone->mName.C_Str();
-		float boneId = m_indexBoneNameToIndex.at(name);
+		float boneId = gIndexBoneNameToIndex.at(name);
 		for (uint32_t j = 0; j < bone->mNumWeights; ++j)
 		{
 			auto weight = bone->mWeights[j];
@@ -440,7 +509,7 @@ void MeshToBBMOD_1(aiMesh* mesh, std::ofstream& fout, aiMatrix4x4& matrix)
 					FILE_WRITE_DATA(fout, b);
 				}
 			}
-			else
+			else if (forceBonesAndWeights)
 			{
 				float b = 0.0f;
 				for (uint32_t j = 0; j < 4; ++j)
@@ -459,7 +528,7 @@ void MeshToBBMOD_1(aiMesh* mesh, std::ofstream& fout, aiMatrix4x4& matrix)
 					FILE_WRITE_DATA(fout, w);
 				}
 			}
-			else
+			else if (forceBonesAndWeights)
 			{
 				float w = 0.0f;
 				for (uint32_t j = 0; j < 4; ++j)
@@ -471,11 +540,26 @@ void MeshToBBMOD_1(aiMesh* mesh, std::ofstream& fout, aiMatrix4x4& matrix)
 	}
 }
 
-void NodeToBBMOD(const aiScene* scene, double id, std::ofstream& fout, aiMatrix4x4& matrix)
+/**
+ * Writes a node into a BBMOD version 1 file.
+ *
+ * Format:
+ *  * Name (null terminated string)
+ *  * Mesh count (uint32)
+ *  * Meshes follow...
+ *  * Number of child nodes (uint32)
+ *  * Child nodes follow...
+ */
+void NodeToBBMOD(
+	const aiScene* scene,
+	double id,
+	aiMatrix4x4& matrix,
+	bool forceBonesAndWeights,
+	std::ofstream& fout)
 {
-	aiNode* node = m_indexDoubleToNode.at(id);
+	aiNode* node = gIndexDoubleToNode.at(id);
 
-	if (!m_indexNodeHasMesh.at(node))
+	if (!gIndexNodeHasMesh.at(node))
 	{
 		return;
 	}
@@ -497,7 +581,7 @@ void NodeToBBMOD(const aiScene* scene, double id, std::ofstream& fout, aiMatrix4
 	{
 		size_t idx = GetNodeMesh(id, (size_t)i);
 		aiMesh* mesh = scene->mMeshes[idx];
-		MeshToBBMOD_1(mesh, fout, matrix);
+		MeshToBBMOD_1(mesh, matrix, forceBonesAndWeights, fout);
 	}
 
 	// Write child nodes
@@ -505,8 +589,8 @@ void NodeToBBMOD(const aiScene* scene, double id, std::ofstream& fout, aiMatrix4
 	for (uint32_t i = 0; i < childCount; ++i)
 	{
 		double childDouble = GetNodeChild(id, (size_t)i);
-		aiNode* child = m_indexDoubleToNode.at(childDouble);
-		if (m_indexNodeHasMesh.at(child))
+		aiNode* child = gIndexDoubleToNode.at(childDouble);
+		if (gIndexNodeHasMesh.at(child))
 		{
 			++childNumWithMesh;
 		}
@@ -517,26 +601,37 @@ void NodeToBBMOD(const aiScene* scene, double id, std::ofstream& fout, aiMatrix4
 	for (uint32_t i = 0; i < childCount; ++i)
 	{
 		double child = GetNodeChild(id, (size_t)i);
-		NodeToBBMOD(scene, child, fout, matrix);
+		NodeToBBMOD(scene, child, matrix, forceBonesAndWeights, fout);
 	}
 
 	matrix = matrixBackup;
 }
 
-void BoneToBBMOD(double id, std::ofstream& fout, aiMatrix4x4& matrix)
+/**
+ * Writes a bone into a BBMOD file.
+ *
+ * Format:
+ *  * Name (null terminated string)
+ *  * Index (f32)
+ *  * Transform matrix (16x f32, row major)
+ *  * Offset matrix (16x f32, row major)
+ *  * Number of child bones (uint32)
+ *  * Child bones follow...
+ */
+void BoneToBBMOD(double id, aiMatrix4x4& matrix, std::ofstream& fout)
 {
-	aiNode* node = m_indexDoubleToNode.at(id);
-	uint32_t size = GetNodeChildCount(id);
+	aiNode* node = gIndexDoubleToNode.at(id);
+	uint32_t childCount = GetNodeChildCount(id);
 
 	const char* name = node->mName.C_Str();
 
-	bool isBone = m_indexBoneNameToIndex.find(name) != m_indexBoneNameToIndex.end();
+	bool isBone = gIndexBoneNameToIndex.find(name) != gIndexBoneNameToIndex.end();
 
 	// Bone name
 	fout.write(name, sizeof(char) * (node->mName.length + 1));
 
 	// Bone index
-	float boneIndex = isBone ? m_indexBoneNameToIndex.at(name) : -1.0f;
+	float boneIndex = isBone ? gIndexBoneNameToIndex.at(name) : -1.0f;
 	FILE_WRITE_DATA(fout, boneIndex);
 
 	// Node transform matrix
@@ -545,7 +640,7 @@ void BoneToBBMOD(double id, std::ofstream& fout, aiMatrix4x4& matrix)
 	// Bone offset matrix
 	if (isBone)
 	{
-		aiBone* bone = m_indexBoneNameToBone.at(name);
+		aiBone* bone = gIndexBoneNameToBone.at(name);
 		aiMatrix4x4& offsetMatrix = bone->mOffsetMatrix;
 		FILE_WRITE_MATRIX(fout, offsetMatrix);
 	}
@@ -557,7 +652,7 @@ void BoneToBBMOD(double id, std::ofstream& fout, aiMatrix4x4& matrix)
 
 	// Number of child nodes with bones
 	//uint32_t childBones = 0;
-	//for (uint32_t i = 0; i < size; ++i)
+	//for (uint32_t i = 0; i < childCount; ++i)
 	//{
 	//	aiNode* child = m_indexDoubleToNode.at(GetNodeChild(id, i));
 	//	if (m_indexNodeHasBone.at(child))
@@ -566,16 +661,110 @@ void BoneToBBMOD(double id, std::ofstream& fout, aiMatrix4x4& matrix)
 	//	}
 	//}
 	//FILE_WRITE_DATA(fout, childBones);
-	FILE_WRITE_DATA(fout, size);
+	FILE_WRITE_DATA(fout, childCount);
 
 	// Write child nodes
-	for (uint32_t i = 0; i < size; ++i)
+	for (uint32_t i = 0; i < childCount; ++i)
 	{
-		aiNode* child = m_indexDoubleToNode.at(GetNodeChild(id, i));
+		aiNode* child = gIndexDoubleToNode.at(GetNodeChild(id, i));
 		//if (m_indexNodeHasBone.at(child))
 		//{
-			BoneToBBMOD(GetNodeChild(id, i), fout, matrix);
+			BoneToBBMOD(GetNodeChild(id, i), matrix, fout);
 		//}
+	}
+}
+
+/**
+ * Writes an animation int o a BBMOD file.
+ *
+ * Format:
+ *  * Name (null terminated string)
+ *  * Duration in tics (f64)
+ *  * Tics per second (f64)
+ *  * Number of affected bones (uint32)
+ *  * For each affected bone:
+ *     * Bone ID (f32)
+ *     * Number of position keys (uint32)
+ *     * For each position key:
+ *        * Time (double)
+ *        * Position (3x f32)
+ *     * Number of rotation keys (uint32)
+ *     * For each rotation key:
+ *        * Time (double)
+ *        * Rotation quaternion (4x f32)
+ */
+void AnimationToBBMOD(aiAnimation* animation, std::ofstream& fout)
+{
+	// Name
+	const char* animationName = animation->mName.C_Str();
+	fout.write(animationName, sizeof(char) * (animation->mName.length + 1));
+
+	// Duration in ticks
+	FILE_WRITE_DATA(fout, animation->mDuration);
+
+	// Ticks per second
+	FILE_WRITE_DATA(fout, animation->mTicksPerSecond);
+
+	// Number of affected bones
+	uint32_t affectedBones = 0;
+
+	for (uint32_t j = 0; j < animation->mNumChannels; ++j)
+	{
+		aiNodeAnim* nodeAnim = animation->mChannels[j];
+		const char* nodeAnimName = nodeAnim->mNodeName.C_Str();
+
+		if (gIndexBoneNameToIndex.find(nodeAnimName) != gIndexBoneNameToIndex.end())
+		{
+			++affectedBones;
+		}
+	}
+
+	FILE_WRITE_DATA(fout, affectedBones);
+
+	// Write bones
+	for (uint32_t j = 0; j < animation->mNumChannels; ++j)
+	{
+		aiNodeAnim* nodeAnim = animation->mChannels[j];
+		const char* nodeAnimName = nodeAnim->mNodeName.C_Str();
+
+		if (gIndexBoneNameToIndex.find(nodeAnimName) != gIndexBoneNameToIndex.end())
+		{
+			// Bone id
+			float boneId = gIndexBoneNameToIndex.at(nodeAnimName);
+			FILE_WRITE_DATA(fout, boneId);
+
+			// Position keys
+			uint32_t positionKeyCount = nodeAnim->mNumPositionKeys;
+			FILE_WRITE_DATA(fout, positionKeyCount);
+
+			for (uint32_t k = 0; k < positionKeyCount; ++k)
+			{
+				aiVectorKey& key = nodeAnim->mPositionKeys[k];
+
+				// Time
+				FILE_WRITE_DATA(fout, key.mTime);
+
+				// Position
+				aiVector3D& position = key.mValue;
+				FILE_WRITE_VEC3(fout, position);
+			}
+
+			// Rotation keys
+			uint32_t rotationKeyCount = nodeAnim->mNumRotationKeys;
+			FILE_WRITE_DATA(fout, rotationKeyCount);
+
+			for (uint32_t k = 0; k < rotationKeyCount; ++k)
+			{
+				aiQuatKey& key = nodeAnim->mRotationKeys[k];
+
+				// Time
+				FILE_WRITE_DATA(fout, key.mTime);
+
+				// Position
+				aiQuaternion& rotation = key.mValue;
+				FILE_WRITE_VEC4(fout, rotation);
+			}
+		}
 	}
 }
 
@@ -610,7 +799,11 @@ int SceneToBBMOD_1(const char* fin, std::ofstream& fout)
 	}
 
 	// Write header
-	WriteHeader(scene->mMeshes[0], fout);
+	aiMesh* mesh = scene->mMeshes[0];
+	bool hasBones = (gIndexBoneNameToBone.size() > 0);
+
+	WriteHeader_1(mesh->HasNormals(), mesh->HasTextureCoords(0),
+		mesh->HasTangentsAndBitangents(), hasBones, fout);
 
 	// Write global inverse transform
 	aiMatrix4x4 inverse = scene->mRootNode->mTransformation.Inverse();
@@ -618,96 +811,24 @@ int SceneToBBMOD_1(const char* fin, std::ofstream& fout)
 
 	// Write nodes
 	aiMatrix4x4 matrix;
-	NodeToBBMOD(scene, 0.0, fout, matrix);
+	NodeToBBMOD(scene, 0.0f, matrix, hasBones, fout);
 
 	// Write bones
-	uint32_t numOfBones = (uint32_t)m_nextBoneId;
-	fout.write(reinterpret_cast<const char*>(&numOfBones), sizeof(numOfBones));
+	uint32_t numOfBones = (uint32_t)gNextBoneId;
+	FILE_WRITE_DATA(fout, numOfBones);
 
 	if (numOfBones > 0)
 	{
-		BoneToBBMOD(0.0, fout, matrix);
+		BoneToBBMOD(0.0f, matrix, fout);
 	}
 
 	// Write animations
 	uint32_t numOfAnimations = scene->mNumAnimations;
-	fout.write(reinterpret_cast<const char*>(&numOfAnimations), sizeof(numOfAnimations));
+	FILE_WRITE_DATA(fout, numOfAnimations);
 
 	for (uint32_t i = 0; i < numOfAnimations; ++i)
 	{
-		aiAnimation* animation = scene->mAnimations[i];
-
-		// Name
-		const char* animationName = animation->mName.C_Str();
-		fout.write(animationName, sizeof(char) * (animation->mName.length + 1));
-
-		// Duration in ticks
-		fout.write(reinterpret_cast<const char*>(&animation->mDuration), sizeof(animation->mDuration));
-
-		// Ticks per second
-		fout.write(reinterpret_cast<const char*>(&animation->mTicksPerSecond), sizeof(animation->mTicksPerSecond));
-
-		// Number of affected bones
-		uint32_t affectedBones = 0;
-
-		for (uint32_t j = 0; j < animation->mNumChannels; ++j)
-		{
-			aiNodeAnim* nodeAnim = animation->mChannels[j];
-			const char* nodeAnimName = nodeAnim->mNodeName.C_Str();
-
-			if (m_indexBoneNameToIndex.find(nodeAnimName) != m_indexBoneNameToIndex.end())
-			{
-				++affectedBones;
-			}
-		}
-
-		fout.write(reinterpret_cast<const char*>(&affectedBones), sizeof(affectedBones));
-
-		// Write bones
-		for (uint32_t j = 0; j < animation->mNumChannels; ++j)
-		{
-			aiNodeAnim* nodeAnim = animation->mChannels[j];
-			const char* nodeAnimName = nodeAnim->mNodeName.C_Str();
-
-			if (m_indexBoneNameToIndex.find(nodeAnimName) != m_indexBoneNameToIndex.end())
-			{
-				// Bone id
-				float boneId = m_indexBoneNameToIndex.at(nodeAnimName);
-				FILE_WRITE_DATA(fout, boneId);
-
-				// Position keys
-				uint32_t positionKeyCount = nodeAnim->mNumPositionKeys;
-				FILE_WRITE_DATA(fout, positionKeyCount);
-
-				for (uint32_t k = 0; k < positionKeyCount; ++k)
-				{
-					aiVectorKey& key = nodeAnim->mPositionKeys[k];
-
-					// Time
-					FILE_WRITE_DATA(fout, key.mTime);
-
-					// Position
-					aiVector3D& position = key.mValue;
-					FILE_WRITE_VEC3(fout, position);
-				}
-
-				// Rotation keys
-				uint32_t rotationKeyCount = nodeAnim->mNumRotationKeys;
-				FILE_WRITE_DATA(fout, rotationKeyCount);
-
-				for (uint32_t k = 0; k < rotationKeyCount; ++k)
-				{
-					aiQuatKey& key = nodeAnim->mRotationKeys[k];
-
-					// Time
-					FILE_WRITE_DATA(fout, key.mTime);
-
-					// Position
-					aiQuaternion& rotation = key.mValue;
-					FILE_WRITE_VEC4(fout, rotation);
-				}
-			}
-		}
+		AnimationToBBMOD(scene->mAnimations[i], fout);
 	}
 
 	delete importer;
