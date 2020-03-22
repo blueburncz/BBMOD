@@ -7,7 +7,7 @@
     "require": {
         "slagtand-org/ce-vector": "*",
         "slagtand-org/ce-matrix": "*",
-        "slagtand-org/ce-quaternion": "*"
+        "slagtand-org/ce-quaternion": "^1.0.1"
     },
     "ignore": {
         "Demo": "group"
