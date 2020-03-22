@@ -7,7 +7,7 @@ gml_pragma("forceinline");
 
 var _keys = argument[0];
 var _animation_time = argument[1];
-var _index = (argument_count > 2) ? argument[2] : 0;
+var _index/*:int*/= (argument_count > 2) ? argument[2] : 0;
 var _key_count = array_length_1d(_keys);
 
 repeat (2)

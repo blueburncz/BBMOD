@@ -37,10 +37,12 @@ if (_bone_index >= 0)
 		// Interpolate between the keys
 		_factor = b_bbmod_get_animation_key_interpolation_factor(
 			_position_key, _position_key_next, _animation_time);
-		var _position = ce_vec3_clone(_position_key[B_EBBMODPositionKey.Position]);
-		ce_vec3_lerp(_position, _position_key_next[B_EBBMODPositionKey.Position], _factor);
+		var _position = _position_key[B_EBBMODPositionKey.Position];
+		var _position_next = _position_key_next[B_EBBMODPositionKey.Position];
 		var _mat_position = matrix_build(
-			_position[0], _position[1], _position[2],
+			lerp(_position[0], _position_next[0], _factor),
+			lerp(_position[1], _position_next[1], _factor),
+			lerp(_position[2], _position_next[2], _factor),
 			0, 0, 0,
 			1, 1, 1);
 
