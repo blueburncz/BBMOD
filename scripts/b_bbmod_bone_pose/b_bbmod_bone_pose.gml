@@ -32,15 +32,22 @@ if (_bone_index >= 0)
 		var _positions_count = array_length_1d(_positions);
 		var _position_key_next = _positions[0];
 
-		var k = 0;
+		var _found = false;
+		var k = position_key_last;
 		for (/**/; k < _positions_count - 1; ++k)
 		{
 			_position_key_next = _positions[k + 1];
 			if (_animation_time < _position_key_next[B_EBBMODPositionKey.Time])
 			{
+				_found = true;
 				break;
 			}
 		}
+		if (!_found)
+		{
+			k = 0;
+		}
+		position_key_last = k;
 
 		// Interpolate position keys
 		var _position_key = _positions[k];
@@ -60,15 +67,22 @@ if (_bone_index >= 0)
 		var _rotations_count = array_length_1d(_rotations);
 		var _rotation_key_next = _rotations[0];
 
-		k = 0;
+		_found = false;
+		k = rotation_key_last;
 		for (/**/; k < _rotations_count - 1; ++k)
 		{
 			_rotation_key_next = _rotations[k + 1];
 			if (_animation_time < _rotation_key_next[B_EBBMODRotationKey.Time])
 			{
+				_found = true;
 				break;
 			}
 		}
+		if (!_found)
+		{
+			k = 0;
+		}
+		rotation_key_last = k;
 
 		// Interpolate rotation frames
 		var _rotation_key = _rotations[k];
@@ -82,15 +96,11 @@ if (_bone_index >= 0)
 		// Multiply transformation matrices
 		_transform = matrix_multiply(_mat_rotation, _mat_position);
 	}
-}
 
-// Apply offset
-if (_bone_index >= 0)
-{
+	// Apply offset
 	var _final_transform = _bone[@ B_EBBMODBone.OffsetMatrix];
 	_final_transform = matrix_multiply(_final_transform, matrix_multiply(_transform, _matrix));
 	_final_transform = matrix_multiply(_final_transform, _inverse_transform);
-
 	array_copy(_array, _bone_index * 16, _final_transform, 0, 16);
 }
 

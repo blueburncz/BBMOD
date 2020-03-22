@@ -9,7 +9,6 @@ _animation[@ B_EBBMODAnimation.Duration] =  buffer_read(_buffer, buffer_f64);
 _animation[@ B_EBBMODAnimation.TicsPerSecond] =  buffer_read(_buffer, buffer_f64);
 
 var _mesh_bone_count = buffer_read(_buffer, buffer_u32);
-show_message(_mesh_bone_count);
 
 var _bones = array_create(_mesh_bone_count, undefined);
 _animation[@ B_EBBMODAnimation.Bones] = _bones;
