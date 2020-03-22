@@ -1175,14 +1175,6 @@
             }
         },
         {
-            "Key": "a75d0bb8-ce8d-43db-be4a-2ab831a1662f",
-            "Value": {
-                "id": "4d857f72-af0b-4931-bce5-1a430cd1122d",
-                "resourcePath": "scripts\\b_bbmod_animation_destroy\\b_bbmod_animation_destroy.yy",
-                "resourceType": "GMScript"
-            }
-        },
-        {
             "Key": "a7c643fc-26b5-483d-a4cb-23da672f6ad6",
             "Value": {
                 "id": "a7c643fc-26b5-483d-a4cb-23da672f6ad6",
@@ -1719,7 +1711,6 @@
         "6fae5a90-ac87-4d8b-8e67-5621938fb337",
         "45c1cb3d-228e-40f8-827c-3e97b8fb6f2e",
         "b8650315-ac4f-41a7-b350-7fed17448f32",
-        "a75d0bb8-ce8d-43db-be4a-2ab831a1662f",
         "3a73460e-340f-4b49-86b2-38922e5f87d7",
         "95361add-fd80-40c7-8c3d-25fa2de78848",
         "576b2405-e9f5-4dfc-9f64-22e8cf12aaee",

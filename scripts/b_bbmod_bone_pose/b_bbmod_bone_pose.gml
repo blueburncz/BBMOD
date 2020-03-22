@@ -23,7 +23,7 @@ var _bone_index = _bone[@ B_EBBMODBone.Index];
 
 if (_bone_index >= 0)
 {
-	var _bone_data = ds_map_find_value(_animation[@ B_EBBMODAnimation.Bones], _bone_index);
+	var _bone_data = array_get(_animation[@ B_EBBMODAnimation.Bones], _bone_index);
 
 	if (!is_undefined(_bone_data))
 	{

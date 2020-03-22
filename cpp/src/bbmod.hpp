@@ -1,5 +1,8 @@
 #pragma once
 
+/** The version of created BBMOD files. */
+#define BBMOD_VERSION 1
+
 /** A code returned when a model is successfully converted.  */
 #define BBMOD_SUCCESS 0
 

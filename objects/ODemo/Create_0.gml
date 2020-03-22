@@ -10,8 +10,9 @@ cam_zoom = 10;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
-model = b_bbmod_load("Demo/bob_lamp_update.bbmod");
 transform = undefined;
+
+model = b_bbmod_load("Demo/bob_lamp_update.bbmod");
 
 if (model == B_BBMOD_NONE)
 {

@@ -70,8 +70,8 @@ struct StringCompare
 // Making globals was just a quick temporary solution.
 
 float gNextNodeId = 0.0f;
-std::map<double, aiNode*> gIndexDoubleToNode;
-std::map<aiNode*, double> gIndexNodeToDouble;
+std::map<float, aiNode*> gIndexFloatToNode;
+std::map<aiNode*, float> gIndexNodeToFloat;
 
 /** Node has a mesh or has a child node with a mesh. */
 std::map<aiNode*, bool> gIndexNodeHasMesh;
@@ -83,19 +83,19 @@ float gNextBoneId = 0.0f;
 std::map<const char*, float, StringCompare> gIndexBoneNameToIndex;
 std::map<const char*, aiBone*, StringCompare> gIndexBoneNameToBone;
 
-size_t GetNodeMesh(double id, size_t index)
+size_t GetNodeMesh(float id, size_t index)
 {
-	return gIndexDoubleToNode.at(id)->mMeshes[index];
+	return gIndexFloatToNode.at(id)->mMeshes[index];
 }
 
-size_t GetNodeChildCount(double id)
+size_t GetNodeChildCount(float id)
 {
-	return gIndexDoubleToNode.at(id)->mNumChildren;
+	return gIndexFloatToNode.at(id)->mNumChildren;
 }
 
-double GetNodeChild(double id, size_t index)
+float GetNodeChild(float id, size_t index)
 {
-	return gIndexNodeToDouble.at(gIndexDoubleToNode.at(id)->mChildren[index]);
+	return gIndexNodeToFloat.at(gIndexFloatToNode.at(id)->mChildren[index]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,155 +143,6 @@ float GetBitangentSign(
 inline uint32_t GetMeshVertexCount(const aiMesh* mesh)
 {
 	return (mesh->mNumFaces * 3);
-}
-
-/**
- * Writes a mesh into a BBMOD version 0 file.
- *
- * Format:
- *  * Vertex (3x f32)
- *  * [Normal (3x f32)]
- *  * [UV (2x f32)]
- *  * Color (uint32)
- *  * [Tangent (3x f32)]
- *  * [Bitangent sign (f32)]
- */
-void MeshToBBMOD_0(aiMesh* mesh, std::ofstream& fout)
-{
-	uint32_t faceCount = mesh->mNumFaces;
-	aiColor4D cWhite(1.0f, 1.0f, 1.0f, 1.0f);
-
-	for (unsigned int i = 0; i < faceCount; ++i)
-	{
-		aiFace& face = mesh->mFaces[i];
-		for (unsigned int f = 0; f < face.mNumIndices; ++f)
-		{
-			unsigned int idx = face.mIndices[f];
-
-			// Vertex position
-			aiVector3D& vertex = mesh->mVertices[idx];
-			FILE_WRITE_VEC3(fout, vertex);
-
-			// Normals
-			aiVector3D* normal = nullptr;
-			if (mesh->HasNormals())
-			{
-				normal = &(mesh->mNormals[idx]);
-				FILE_WRITE_VEC3(fout, *normal);
-			}
-
-			// Texture coords
-			if (mesh->HasTextureCoords(0))
-			{
-				aiVector3D& texture = mesh->mTextureCoords[0][idx];
-				FILE_WRITE_VEC2(fout, texture);
-			}
-
-			// Color
-			aiColor4D& color = (mesh->HasVertexColors(0))
-				? mesh->mColors[0][idx]
-				: cWhite;
-			uint32_t vertexColor = EncodeColor(color);
-			FILE_WRITE_DATA(fout, vertexColor);
-
-			if (normal && mesh->HasTangentsAndBitangents())
-			{
-				// Tangent
-				aiVector3D& tangent = mesh->mTangents[idx];
-				FILE_WRITE_VEC3(fout, tangent);
-
-				// Bitangent sign
-				aiVector3D& bitangent = mesh->mBitangents[idx];
-				float sign = GetBitangentSign(*normal, tangent, bitangent);
-				FILE_WRITE_DATA(fout, sign);
-			}
-		}
-	}
-}
-
-/**
- * Writes a BBMOD version 0 header into a file.
- *
- * Format:
- *  * Version (uint8, always 0)
- *  * HasVertices (bool, always true)
- *  * HasNormals (bool)
- *  * HasTextureCoords (bool)
- *  * HasVertexColors (bool, always true)
- *  * HasTangentW (bool)
- *  * VertexCount (uint32)
- */
-void WriteHeader_0(
-	bool hasNormals,
-	bool hasTextureCoords,
-	bool hasTangentW,
-	uint32_t vertexCount,
-	std::ofstream& fout)
-{
-	uint8_t version = 0;
-	FILE_WRITE_DATA(fout, version);
-
-	bool hasVertices = true;
-	FILE_WRITE_DATA(fout, hasVertices);
-
-	FILE_WRITE_DATA(fout, hasNormals);
-
-	FILE_WRITE_DATA(fout, hasTextureCoords);
-
-	bool hasVertexColors = true;
-	FILE_WRITE_DATA(fout, hasVertexColors);
-
-	FILE_WRITE_DATA(fout, hasTangentW);
-
-	FILE_WRITE_DATA(fout, vertexCount);
-}
-
-/**
- * Writes the scene into a version 0 BBMOD file.
- *
- * In this version, all meshes are pretransformed and merged into one.
- * Animations are not supported.
- */
-int SceneToBBMOD_0(const char* fin, std::ofstream& fout)
-{
-	Assimp::Importer* importer = new Assimp::Importer();
-
-	const aiScene* scene = importer->ReadFile(fin, 0
-		| aiProcessPreset_TargetRealtime_Quality
-		| aiProcess_PreTransformVertices
-		//| aiProcess_TransformUVCoords
-		//| aiProcess_OptimizeGraph
-		//| aiProcess_OptimizeMeshes
-	);
-
-	if (!scene)
-	{
-		delete importer;
-		return BBMOD_ERR_LOAD_FAILED;
-	}
-
-	bool first = true;
-	uint32_t vertexCount = 0;
-
-	for (size_t i = 0; i < scene->mNumMeshes; ++i)
-	{
-		vertexCount += GetMeshVertexCount(scene->mMeshes[i]);
-	}
-
-	for (size_t i = 0; i < scene->mNumMeshes; ++i)
-	{
-		aiMesh* mesh = scene->mMeshes[i];
-		if (first)
-		{
-			WriteHeader_0(mesh->HasNormals(), mesh->HasTextureCoords(0),
-				mesh->HasTangentsAndBitangents(), vertexCount, fout);
-			first = false;
-		}
-		MeshToBBMOD_0(mesh, fout);
-	}
-
-	delete importer;
-	return BBMOD_SUCCESS;
 }
 
 bool BuildIndices(const aiScene* scene, aiNode* node)
@@ -346,9 +197,9 @@ bool BuildIndices(const aiScene* scene, aiNode* node)
 	}
 
 	// Node index
-	double id = gNextNodeId++;
-	gIndexDoubleToNode[id] = node;
-	gIndexNodeToDouble[node] = id;
+	float id = gNextNodeId++;
+	gIndexFloatToNode[id] = node;
+	gIndexNodeToFloat[node] = id;
 	for (size_t i = 0; i < node->mNumChildren; ++i)
 	{
 		BuildIndices(scene, node->mChildren[i]);
@@ -356,12 +207,11 @@ bool BuildIndices(const aiScene* scene, aiNode* node)
 	return true;
 }
 
-
 /**
- * Writes a BBMOD version 1 header into a file.
+ * Writes a BBMOD header into a file.
  *
  * Format:
- *  * Version (uint8, always 1)
+ *  * Version (uint8)
  *  * HasVertices (bool, always true)
  *  * HasNormals (bool)
  *  * HasTextureCoords (bool)
@@ -369,14 +219,14 @@ bool BuildIndices(const aiScene* scene, aiNode* node)
  *  * HasTangentW (bool)
  *  * HasBones (bool)
  */
-void WriteHeader_1(
+void WriteHeader(
 	bool hasNormals,
 	bool hasTextureCoords,
 	bool hasTangentW,
 	bool hasBones,
 	std::ofstream& fout)
 {
-	uint8_t version = 1;
+	uint8_t version = BBMOD_VERSION;
 	FILE_WRITE_DATA(fout, version);
 
 	bool hasVertices = true;
@@ -395,7 +245,7 @@ void WriteHeader_1(
 }
 
 /**
- * Writes a mesh into a BBMOD version 1 file.
+ * Writes a mesh into a BBMOD file.
  *
  * Format:
  *  * Material index (uint32)
@@ -410,7 +260,7 @@ void WriteHeader_1(
  *     * [Bone indices (4x f32)]
  *     * [Bone weights (4x f32)]
  */
-void MeshToBBMOD_1(
+void MeshToBBMOD(
 	aiMesh* mesh,
 	aiMatrix4x4& matrix,
 	bool forceBonesAndWeights,
@@ -548,7 +398,7 @@ void MeshToBBMOD_1(
 }
 
 /**
- * Writes a node into a BBMOD version 1 file.
+ * Writes a node into a BBMOD file.
  *
  * Format:
  *  * Name (null terminated string)
@@ -559,12 +409,12 @@ void MeshToBBMOD_1(
  */
 void NodeToBBMOD(
 	const aiScene* scene,
-	double id,
+	float id,
 	aiMatrix4x4& matrix,
 	bool forceBonesAndWeights,
 	std::ofstream& fout)
 {
-	aiNode* node = gIndexDoubleToNode.at(id);
+	aiNode* node = gIndexFloatToNode.at(id);
 
 	if (!gIndexNodeHasMesh.at(node))
 	{
@@ -588,15 +438,15 @@ void NodeToBBMOD(
 	{
 		size_t idx = GetNodeMesh(id, (size_t)i);
 		aiMesh* mesh = scene->mMeshes[idx];
-		MeshToBBMOD_1(mesh, matrix, forceBonesAndWeights, fout);
+		MeshToBBMOD(mesh, matrix, forceBonesAndWeights, fout);
 	}
 
 	// Write child nodes
 	uint32_t childNumWithMesh = 0;
 	for (uint32_t i = 0; i < childCount; ++i)
 	{
-		double childDouble = GetNodeChild(id, (size_t)i);
-		aiNode* child = gIndexDoubleToNode.at(childDouble);
+		float childDouble = GetNodeChild(id, (size_t)i);
+		aiNode* child = gIndexFloatToNode.at(childDouble);
 		if (gIndexNodeHasMesh.at(child))
 		{
 			++childNumWithMesh;
@@ -607,7 +457,7 @@ void NodeToBBMOD(
 
 	for (uint32_t i = 0; i < childCount; ++i)
 	{
-		double child = GetNodeChild(id, (size_t)i);
+		float child = GetNodeChild(id, (size_t)i);
 		NodeToBBMOD(scene, child, matrix, forceBonesAndWeights, fout);
 	}
 
@@ -625,12 +475,14 @@ void NodeToBBMOD(
  *  * Number of child bones (uint32)
  *  * Child bones follow...
  */
-void BoneToBBMOD(double id, aiMatrix4x4& matrix, std::ofstream& fout)
+void BoneToBBMOD(float id, aiMatrix4x4& matrix, std::ofstream& fout)
 {
-	aiNode* node = gIndexDoubleToNode.at(id);
+	aiNode* node = gIndexFloatToNode.at(id);
 	uint32_t childCount = GetNodeChildCount(id);
 
 	const char* name = node->mName.C_Str();
+
+	std::cout << (uint32_t)id << ": " << name << std::endl;
 
 	bool isBone = gIndexBoneNameToIndex.find(name) != gIndexBoneNameToIndex.end();
 
@@ -673,7 +525,7 @@ void BoneToBBMOD(double id, aiMatrix4x4& matrix, std::ofstream& fout)
 	// Write child nodes
 	for (uint32_t i = 0; i < childCount; ++i)
 	{
-		aiNode* child = gIndexDoubleToNode.at(GetNodeChild(id, i));
+		aiNode* child = gIndexFloatToNode.at(GetNodeChild(id, i));
 		//if (m_indexNodeHasBone.at(child))
 		//{
 			BoneToBBMOD(GetNodeChild(id, i), matrix, fout);
@@ -688,6 +540,7 @@ void BoneToBBMOD(double id, aiMatrix4x4& matrix, std::ofstream& fout)
  *  * Name (null terminated string)
  *  * Duration in tics (f64)
  *  * Tics per second (f64)
+ *  * Number of bones of target mesh (uint32)
  *  * Number of affected bones (uint32)
  *  * For each affected bone:
  *     * Bone ID (f32)
@@ -700,7 +553,7 @@ void BoneToBBMOD(double id, aiMatrix4x4& matrix, std::ofstream& fout)
  *        * Time (double)
  *        * Rotation quaternion (4x f32)
  */
-void AnimationToBBMOD(aiAnimation* animation, std::ofstream& fout)
+void AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream& fout)
 {
 	// Name
 	const char* animationName = animation->mName.C_Str();
@@ -711,6 +564,9 @@ void AnimationToBBMOD(aiAnimation* animation, std::ofstream& fout)
 
 	// Ticks per second
 	FILE_WRITE_DATA(fout, animation->mTicksPerSecond);
+
+	// Number of bones of target mesh
+	FILE_WRITE_DATA(fout, numOfBones);
 
 	// Number of affected bones
 	uint32_t affectedBones = 0;
@@ -776,7 +632,7 @@ void AnimationToBBMOD(aiAnimation* animation, std::ofstream& fout)
 }
 
 /**
- * Writes the scene into a version 1 BBMOD file.
+ * Writes the scene into a BBMOD file.
  *
  * Scene-graph and animations are supported.
  *
@@ -791,7 +647,7 @@ void AnimationToBBMOD(aiAnimation* animation, std::ofstream& fout)
  *  * Number of materials (uint32)
  *  * Material names follow... (null terminated strings)
  */
-int SceneToBBMOD_1(const char* fin, std::ofstream& fout)
+int SceneToBBMOD(const char* fin, std::ofstream& fout)
 {
 	Assimp::Importer* importer = new Assimp::Importer();
 
@@ -820,7 +676,7 @@ int SceneToBBMOD_1(const char* fin, std::ofstream& fout)
 	aiMesh* mesh = scene->mMeshes[0];
 	bool hasBones = (gIndexBoneNameToBone.size() > 0);
 
-	WriteHeader_1(mesh->HasNormals(), mesh->HasTextureCoords(0),
+	WriteHeader(mesh->HasNormals(), mesh->HasTextureCoords(0),
 		mesh->HasTangentsAndBitangents(), hasBones, fout);
 
 	// Write global inverse transform
@@ -837,6 +693,7 @@ int SceneToBBMOD_1(const char* fin, std::ofstream& fout)
 
 	if (numOfBones > 0)
 	{
+		std::cout << "Bones:" << std::endl;
 		BoneToBBMOD(0.0f, matrix, fout);
 	}
 
@@ -844,9 +701,16 @@ int SceneToBBMOD_1(const char* fin, std::ofstream& fout)
 	uint32_t numOfAnimations = scene->mNumAnimations;
 	FILE_WRITE_DATA(fout, numOfAnimations);
 
-	for (uint32_t i = 0; i < numOfAnimations; ++i)
+	if (numOfAnimations > 0)
 	{
-		AnimationToBBMOD(scene->mAnimations[i], fout);
+		std::cout << "Animations:" << std::endl;
+
+		for (uint32_t i = 0; i < numOfAnimations; ++i)
+		{
+			aiAnimation* animation = scene->mAnimations[i];
+			std::cout << i << ": " << animation->mName.C_Str() << std::endl;
+			AnimationToBBMOD(animation, numOfBones, fout);
+		}
 	}
 
 	// Write materials
@@ -877,7 +741,7 @@ int ConvertToBBMOD(const char* fin, const char* fout)
 		return BBMOD_ERR_SAVE_FAILED;
 	}
 
-	int retval = SceneToBBMOD_1(fin, file);
+	int retval = SceneToBBMOD(fin, file);
 
 	file.flush();
 	file.close();
