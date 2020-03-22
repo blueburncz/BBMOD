@@ -27,16 +27,29 @@ if (_bone_index >= 0)
 
 	if (!is_undefined(_bone_data))
 	{
-		var k;
-
-		// Find position keys
+		// Find position
 		var _positions = _bone_data[@ B_EBBMODAnimationBone.PositionKeys];
-		k = b_bbmod_find_animation_key(_positions, _animation_time, position_key_last[_bone_index]);
-		var _position_key = b_bbmod_get_animation_key(_positions, k);
-		var _position_key_next = b_bbmod_get_animation_key(_positions, k + 1);
-		position_key_last[@ _bone_index] = k;
+		var _positions_count = array_length_1d(_positions);
+		var _position_key_next = _positions[0];
 
-		// Interpolate between the keys
+		var _found = false;
+		var k = position_key_last;
+		for (/**/; k < _positions_count - 1; ++k)
+		{
+			_position_key_next = _positions[k + 1];
+			if (_animation_time < _position_key_next[B_EBBMODPositionKey.Time])
+			{
+				_found = true;
+				break;
+			}
+		}
+		if (!_found)
+		{
+			k = 0;
+		}
+		position_key_last = k;
+
+		// Interpolate position keys
 		var _position_key = _positions[k];
 		var _delta_time = _position_key_next[B_EBBMODPositionKey.Time] - _position_key[B_EBBMODPositionKey.Time];
 		var _factor = (_animation_time - _position_key[B_EBBMODPositionKey.Time]) / _delta_time;
@@ -49,14 +62,29 @@ if (_bone_index >= 0)
 			1, 1, 1
 		);
 
-		// Find rotation keys
+		// Find rotation
 		var _rotations = _bone_data[@ B_EBBMODAnimationBone.RotationKeys];
-		k = b_bbmod_find_animation_key(_rotations, _animation_time, rotation_key_last[_bone_index]);
-		var _rotation_key = b_bbmod_get_animation_key(_rotations, k);
-		var _rotation_key_next = b_bbmod_get_animation_key(_rotations, k + 1);
-		rotation_key_last[@ _bone_index] = k;
+		var _rotations_count = array_length_1d(_rotations);
+		var _rotation_key_next = _rotations[0];
 
-		// Interpolate between the keys
+		_found = false;
+		k = rotation_key_last;
+		for (/**/; k < _rotations_count - 1; ++k)
+		{
+			_rotation_key_next = _rotations[k + 1];
+			if (_animation_time < _rotation_key_next[B_EBBMODRotationKey.Time])
+			{
+				_found = true;
+				break;
+			}
+		}
+		if (!_found)
+		{
+			k = 0;
+		}
+		rotation_key_last = k;
+
+		// Interpolate rotation frames
 		var _rotation_key = _rotations[k];
 		var _delta_time = _rotation_key_next[B_EBBMODRotationKey.Time] - _rotation_key[B_EBBMODRotationKey.Time];
 		var _factor = (_animation_time - _rotation_key[B_EBBMODRotationKey.Time]) / _delta_time;
@@ -76,4 +104,12 @@ if (_bone_index >= 0)
 	array_copy(_array, _bone_index * 16, _final_transform, 0, 16);
 }
 
-return matrix_multiply(_transform, _matrix);
+_matrix = matrix_multiply(_transform, _matrix);
+
+var _children = _bone[@ B_EBBMODBone.Children];
+var _child_count = array_length_1d(_children);
+
+for (var i/*:int*/= 0; i < _child_count; ++i)
+{
+	b_bbmod_bone_pose(_children[i], _array, _inverse_transform, _matrix, _animation);
+}

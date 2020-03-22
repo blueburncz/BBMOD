@@ -1,8 +1,8 @@
 {
-    "id": "f294f26f-6428-493d-948d-0249715a74fb",
+    "id": "e031a0e2-d8ec-4d87-8e0f-4d94b0e3d00b",
     "modelName": "GMScript",
     "mvc": "1.0",
-    "name": "b_bbmod_animate",
+    "name": "b_bbmod_find_animation_key",
     "IsCompatibility": false,
     "IsDnD": false
 }

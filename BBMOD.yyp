@@ -639,6 +639,14 @@
             }
         },
         {
+            "Key": "56cf211f-8942-4c2f-9cee-1089200ca957",
+            "Value": {
+                "id": "24322db5-7731-43e6-b299-5a9084a34fce",
+                "resourcePath": "views\\56cf211f-8942-4c2f-9cee-1089200ca957.yy",
+                "resourceType": "GMFolder"
+            }
+        },
+        {
             "Key": "576b2405-e9f5-4dfc-9f64-22e8cf12aaee",
             "Value": {
                 "id": "a858cc49-7972-41e7-8ef1-8dbb856380b1",
@@ -794,7 +802,7 @@
             "Key": "6f71eee3-7435-48d3-aa2c-edd97d552ff4",
             "Value": {
                 "id": "914a7afc-2d54-4e37-b6ea-ad2aec3450d7",
-                "resourcePath": "scripts\\b_bbmod_animate\\b_bbmod_animate.yy",
+                "resourcePath": "scripts\\b_bbmod_animate_\\b_bbmod_animate_.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -975,6 +983,14 @@
             }
         },
         {
+            "Key": "89a0aa17-c5de-4c06-bb1c-b24b264c83ea",
+            "Value": {
+                "id": "692a7fce-307d-4874-8970-c91691a49368",
+                "resourcePath": "scripts\\b_bbmod_get_animation_key\\b_bbmod_get_animation_key.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "8bdc065c-197d-4b3f-9712-e6cac0a2dd0d",
             "Value": {
                 "id": "8bdc065c-197d-4b3f-9712-e6cac0a2dd0d",
@@ -1036,6 +1052,14 @@
                 "id": "bb210789-f7ca-4c96-a13f-b31aa118f105",
                 "resourcePath": "options\\tvos\\options_tvos.yy",
                 "resourceType": "GMtvOSOptions"
+            }
+        },
+        {
+            "Key": "94c1141d-e642-4674-bfb6-3c1f620b47d9",
+            "Value": {
+                "id": "8824f169-411d-44ee-b38d-e7b1dad15985",
+                "resourcePath": "scripts\\b_bbmod_bone_pose\\b_bbmod_bone_pose.yy",
+                "resourceType": "GMScript"
             }
         },
         {
@@ -1258,7 +1282,7 @@
             "Key": "b223c89b-3fba-4b24-9331-7df74c086ef7",
             "Value": {
                 "id": "cfcf9adc-daba-4647-bb20-fa271a4c3e98",
-                "resourcePath": "scripts\\b_bbmod_bone_pose\\b_bbmod_bone_pose.yy",
+                "resourcePath": "scripts\\b_bbmod_bone_pose_\\b_bbmod_bone_pose_.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -1391,6 +1415,14 @@
             }
         },
         {
+            "Key": "c98aec7b-0b52-4a4e-9572-00bfb427ea7f",
+            "Value": {
+                "id": "f6432316-cf93-4317-a817-34345649b9a4",
+                "resourcePath": "scripts\\b_bbmod_animation_key\\b_bbmod_animation_key.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "caa1b0bc-37e8-4c03-9694-a3496a6c9d59",
             "Value": {
                 "id": "caa1b0bc-37e8-4c03-9694-a3496a6c9d59",
@@ -1495,6 +1527,14 @@
             }
         },
         {
+            "Key": "e031a0e2-d8ec-4d87-8e0f-4d94b0e3d00b",
+            "Value": {
+                "id": "808a5f5a-3aad-471f-87db-3d6361165c90",
+                "resourcePath": "scripts\\b_bbmod_find_animation_key\\b_bbmod_find_animation_key.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "e070d21c-60cb-4a8d-82fd-28d5696ffbbb",
             "Value": {
                 "id": "e070d21c-60cb-4a8d-82fd-28d5696ffbbb",
@@ -1595,6 +1635,14 @@
             "Value": {
                 "id": "ef71419e-6779-4c9a-8a89-52db01f2fdbe",
                 "resourcePath": "scripts\\ce_vec2_lerp\\ce_vec2_lerp.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "f294f26f-6428-493d-948d-0249715a74fb",
+            "Value": {
+                "id": "d965738d-7ab5-4e33-9905-fb716b39424c",
+                "resourcePath": "scripts\\b_bbmod_animate\\b_bbmod_animate.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -1706,6 +1754,9 @@
     "script_order": [
         "ff4065be-136a-4a27-be85-5ec76e7ccdef",
         "8755244c-1fe0-4666-b6af-67f3810f01ce",
+        "c98aec7b-0b52-4a4e-9572-00bfb427ea7f",
+        "e031a0e2-d8ec-4d87-8e0f-4d94b0e3d00b",
+        "89a0aa17-c5de-4c06-bb1c-b24b264c83ea",
         "5c3d84a7-3648-4502-8be1-ebde368edb47",
         "c69c5571-050f-4b92-b1d6-501caa2f3bf5",
         "6fae5a90-ac87-4d8b-8e67-5621938fb337",
@@ -1714,6 +1765,7 @@
         "3a73460e-340f-4b49-86b2-38922e5f87d7",
         "95361add-fd80-40c7-8c3d-25fa2de78848",
         "576b2405-e9f5-4dfc-9f64-22e8cf12aaee",
+        "94c1141d-e642-4674-bfb6-3c1f620b47d9",
         "b223c89b-3fba-4b24-9331-7df74c086ef7",
         "108216c1-fedb-446d-aad4-da5fae564306",
         "9726cbf0-4085-4890-a8a9-3766a639e045",
@@ -1724,6 +1776,7 @@
         "a0aa5fc0-42b5-41b5-a9ca-c44d9ddf27e5",
         "223e3996-c1a3-489c-975c-31f4ce483bd4",
         "6ecc0963-f21f-4426-8fdf-3ad41b8b2cce",
+        "f294f26f-6428-493d-948d-0249715a74fb",
         "6f71eee3-7435-48d3-aa2c-edd97d552ff4",
         "1fe06e10-cd14-47b5-b9bd-909a1918592c",
         "f53435a7-5e9c-40fc-a01f-35161de2215f",

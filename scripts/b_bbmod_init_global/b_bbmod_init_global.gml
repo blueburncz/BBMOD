@@ -6,3 +6,5 @@ global.__b_vertex_formats = ds_map_create();
 
 /// @var {real} The default material.
 global.__b_material_default = b_bbmod_material_create();
+
+global.__b_anim_stack = ds_stack_create();

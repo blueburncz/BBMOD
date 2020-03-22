@@ -12,8 +12,8 @@ cam_zoom = 10;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
-position_key_last = 0;
-rotation_key_last = 0;
+position_key_last = array_create(32, 0);
+rotation_key_last = array_create(32, 0);
 transform = undefined;
 
 model = b_bbmod_load("Demo/bob_lamp_update.bbmod");
