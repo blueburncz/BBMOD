@@ -1,22 +1,19 @@
-/// @func b_bbmod_bone_pose(bone, array, inverse_transform, matrix, animation)
+/// @func b_bbmod_bone_pose(bone, array, inverse_transform, matrix, animation, animation_time)
 /// @param {array} bone
 /// @param {array} array
 /// @param {array} inverse_transform
 /// @param {array} matrix
 /// @param {array} animation
+/// @param {real} animation_time
 // Thanks to http://ogldev.atspace.co.uk/www/tutorial38/tutorial38.html
+gml_pragma("forceinline");
+
 var _bone = argument0;
 var _array = argument1;
 var _inverse_transform = argument2;
-var _matrix = ce_matrix_clone(argument3);
+var _matrix = argument3;
 var _animation = argument4;
-
-var _animation_duration = _animation[@ B_EBBMODAnimation.Duration];
-var _animation_tics_per_sec = _animation[@ B_EBBMODAnimation.TicsPerSecond];
-
-var _time_in_seconds = current_time * 0.001;
-var _time_in_tics = _time_in_seconds * _animation_tics_per_sec;
-var _animation_time = _time_in_tics mod _animation_duration;
+var _animation_time = argument5;
 
 var _transform = _bone[@ B_EBBMODBone.TransformMatrix];
 var _bone_index = _bone[@ B_EBBMODBone.Index];
@@ -27,6 +24,7 @@ if (_bone_index >= 0)
 
 	if (!is_undefined(_bone_data))
 	{
+		var _factor;
 		var k;
 
 		// Find position keys
@@ -37,17 +35,14 @@ if (_bone_index >= 0)
 		position_key_last[@ _bone_index] = k;
 
 		// Interpolate between the keys
-		var _position_key = _positions[k];
-		var _delta_time = _position_key_next[B_EBBMODPositionKey.Time] - _position_key[B_EBBMODPositionKey.Time];
-		var _factor = (_animation_time - _position_key[B_EBBMODPositionKey.Time]) / _delta_time;
-		_factor = clamp(_factor, 0, 1);
+		_factor = b_bbmod_get_animation_key_interpolation_factor(
+			_position_key, _position_key_next, _animation_time);
 		var _position = ce_vec3_clone(_position_key[B_EBBMODPositionKey.Position]);
 		ce_vec3_lerp(_position, _position_key_next[B_EBBMODPositionKey.Position], _factor);
 		var _mat_position = matrix_build(
 			_position[0], _position[1], _position[2],
 			0, 0, 0,
-			1, 1, 1
-		);
+			1, 1, 1);
 
 		// Find rotation keys
 		var _rotations = _bone_data[@ B_EBBMODAnimationBone.RotationKeys];
@@ -57,10 +52,8 @@ if (_bone_index >= 0)
 		rotation_key_last[@ _bone_index] = k;
 
 		// Interpolate between the keys
-		var _rotation_key = _rotations[k];
-		var _delta_time = _rotation_key_next[B_EBBMODRotationKey.Time] - _rotation_key[B_EBBMODRotationKey.Time];
-		var _factor = (_animation_time - _rotation_key[B_EBBMODRotationKey.Time]) / _delta_time;
-		_factor = clamp(_factor, 0, 1);
+		_factor = b_bbmod_get_animation_key_interpolation_factor(
+			_rotation_key, _rotation_key_next, _animation_time);
 		var _rotation = ce_quaternion_clone(_rotation_key[B_EBBMODRotationKey.Rotation]);
 		ce_quaternion_slerp(_rotation, _rotation_key_next[B_EBBMODRotationKey.Rotation], _factor);
 		var _mat_rotation = ce_quaternion_to_matrix(_rotation);

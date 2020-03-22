@@ -10,28 +10,17 @@ var _animation_time = argument[1];
 var _index = (argument_count > 2) ? argument[2] : 0;
 var _key_count = array_length_1d(_keys);
 
-repeat (_key_count)
+repeat (2)
 {
-	if (_index >= _key_count - 2)
+	for (/**/; _index < _key_count - 1; ++_index)
 	{
-		// Start searching from the start of the array
-		_index = 0;
+		var _key_next = _keys[_index + 1];
+		if (_animation_time < _key_next[B_EBBMODAnimationKey.Time])
+		{
+			return _index;
+		}
 	}
-
-	if (_index >= _key_count - 1)
-	{
-		// Stop if there is no next key
-		break;
-	}
-
-	var _key_next = _keys[_index + 1];
-	if (_animation_time < _key_next[B_EBBMODAnimationKey.Time])
-	{
-		// Key found
-		break;
-	}
-
-	++_index;
+	_index = 0;
 }
 
 return _index;
