@@ -12,8 +12,10 @@ if (mouse_check_button(mb_right))
 	cam_pitch = clamp(cam_pitch, -89.99, 89.99);
 }
 
-cam_z += (keyboard_check(ord("E")) - keyboard_check(ord("Q"))) * 0.1;
-cam_zoom = max(cam_zoom + (mouse_wheel_down() - mouse_wheel_up()), 0);
+var _speed = keyboard_check(vk_shift) ? 5 : 0.1;
+
+cam_z += (keyboard_check(ord("E")) - keyboard_check(ord("Q"))) * _speed;
+cam_zoom = max(cam_zoom + (mouse_wheel_down() - mouse_wheel_up()) * _speed, 0);
 
 x = dcos(direction) * dcos(cam_pitch) * cam_zoom;
 y = -dsin(direction) * dcos(cam_pitch) * cam_zoom;
