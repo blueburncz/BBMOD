@@ -2,7 +2,6 @@
 
 enum B_EBBMODAnimation
 {
-	Name,
 	Duration,
 	TicsPerSecond,
 	Bones,

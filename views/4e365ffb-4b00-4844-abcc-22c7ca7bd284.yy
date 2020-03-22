@@ -9,7 +9,10 @@
         "e6a72393-7167-411f-9ecd-f53184c1f8a3",
         "1705165a-641a-4f5d-bb1c-6743571d5bec",
         "959d706a-2708-40a0-9c5d-879921535e09",
-        "e25b5a81-ff8c-4298-9010-8fb0f85ecd9c"
+        "e25b5a81-ff8c-4298-9010-8fb0f85ecd9c",
+        "6e7a56a1-204d-4331-bc6d-47b5f7b2b6bf",
+        "47b9e973-3340-4022-9155-4c9c13e0a1db",
+        "6905bf9e-03f1-4104-9711-8c611d197fa5"
     ],
     "filterType": "GMIncludedFile",
     "folderName": "Demo",

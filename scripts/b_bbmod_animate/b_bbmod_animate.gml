@@ -1,12 +1,12 @@
 /// @func b_bbmod_animate(bbmod, animation, out)
 /// @param {array} node
-/// @param {string} animation
+/// @param {array} animation
 /// @param {array} out
 /// @return {array}
-var _t = get_timer();
+//var _t = get_timer();
 
 var _bbmod = argument0;
-var _animation = ds_map_find_value(_bbmod[@ B_EBBMOD.Animations], argument1);
+var _animation = argument1;
 var _array = argument2;
 
 var _anim_stack = global.__b_anim_stack;
@@ -22,8 +22,8 @@ var _animation_time = _time_in_tics mod _animation_duration;
 // TODO: Use animation_cache struct!
 if (_animation_time < animation_time_last)
 {
-	position_key_last = array_create(32, 0);
-	rotation_key_last = array_create(32, 0);
+	position_key_last = array_create(64, 0);
+	rotation_key_last = array_create(64, 0);
 }
 animation_time_last = _animation_time;
 
@@ -51,4 +51,4 @@ while (!ds_stack_empty(_anim_stack))
 	}
 }
 
-show_debug_message("Animate: " + string(get_timer() - _t) + "us");
+//show_debug_message("Animate: " + string(get_timer() - _t) + "us");

@@ -1,4 +1,5 @@
-bob_lamp_update*.bbmod*
+*.bbmod*
+*.bbanim*
 bob_*.png*
 lantern*.png*
 

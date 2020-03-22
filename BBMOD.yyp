@@ -503,6 +503,14 @@
             }
         },
         {
+            "Key": "47b9e973-3340-4022-9155-4c9c13e0a1db",
+            "Value": {
+                "id": "d0545d3b-4072-4957-9cf3-18424833a3bc",
+                "resourcePath": "datafiles_yy\\Demo\\SneakingForward.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "4879fef4-d6a5-d809-7c4e-2f1060b31782",
             "Value": {
                 "id": "4879fef4-d6a5-d809-7c4e-2f1060b31782",
@@ -743,6 +751,14 @@
             }
         },
         {
+            "Key": "6905bf9e-03f1-4104-9711-8c611d197fa5",
+            "Value": {
+                "id": "9490fdf7-6716-4993-b840-964db49e8337",
+                "resourcePath": "datafiles_yy\\Demo\\Walking.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "6a8cf79a-3f1e-4671-af77-3da6bc73f189",
             "Value": {
                 "id": "b45db983-7250-43ce-ab3b-fa8fccc6d5b7",
@@ -772,6 +788,14 @@
                 "id": "6e0d060f-4b9b-4313-8c4f-0ec6da450688",
                 "resourcePath": "scripts\\ce_quaternion_rotate\\ce_quaternion_rotate.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "6e7a56a1-204d-4331-bc6d-47b5f7b2b6bf",
+            "Value": {
+                "id": "628c503b-f856-4007-bb0c-0e95e6e1f8d9",
+                "resourcePath": "datafiles_yy\\Demo\\Character.bbmod.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1039,6 +1063,14 @@
             }
         },
         {
+            "Key": "91a1d9b1-5f8b-432e-90af-a8de2cce4d6c",
+            "Value": {
+                "id": "fff41c34-85c5-47e9-96df-ef53661c6205",
+                "resourcePath": "scripts\\b_bbmod_load_\\b_bbmod_load_.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "93566aad-c3b3-48a9-8fa7-9c5ee19f74ac",
             "Value": {
                 "id": "bb210789-f7ca-4c96-a13f-b31aa118f105",
@@ -1204,14 +1236,6 @@
                 "id": "4076199a-dfbe-46e6-8d0b-81937c8824d7",
                 "resourcePath": "options\\linux\\options_linux.yy",
                 "resourceType": "GMLinuxOptions"
-            }
-        },
-        {
-            "Key": "a959fbdf-2720-4b16-964a-21dadfd71bc0",
-            "Value": {
-                "id": "64264518-6402-4ae2-b848-7b6caa1c74e2",
-                "resourcePath": "scripts\\b_bbmod_destroy\\b_bbmod_destroy.yy",
-                "resourceType": "GMScript"
             }
         },
         {
@@ -1771,10 +1795,10 @@
         "f294f26f-6428-493d-948d-0249715a74fb",
         "1fe06e10-cd14-47b5-b9bd-909a1918592c",
         "f53435a7-5e9c-40fc-a01f-35161de2215f",
-        "a959fbdf-2720-4b16-964a-21dadfd71bc0",
         "b992c2b4-52ad-4038-94cd-90c9db6daa04",
         "895f366b-7bff-46c7-8758-0bd8cdf16920",
         "8271765a-d9ae-4f09-9bd7-77f48a48f8ba",
+        "91a1d9b1-5f8b-432e-90af-a8de2cce4d6c",
         "64290248-48ff-466d-abc8-1832b338965e",
         "9eb2f664-26d5-4ced-b3bf-e833b5ea18be",
         "550eba04-9fd7-4133-af2c-ffaafda84080",

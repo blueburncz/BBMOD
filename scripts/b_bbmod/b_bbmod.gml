@@ -13,7 +13,6 @@ enum B_EBBMOD
 	RootNode,
 	BoneCount,
 	Skeleton,
-	Animations,
 	Materials,
 	SIZE
 };

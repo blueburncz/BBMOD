@@ -10,7 +10,7 @@ attribute vec4 in_TangentW;
 attribute vec4 in_BoneIndex;
 attribute vec4 in_BoneWeight;
 
-uniform mat4 u_mBones[32];
+uniform mat4 u_mBones[64];
 
 varying vec3 vVertex;
 varying vec4 vColour;

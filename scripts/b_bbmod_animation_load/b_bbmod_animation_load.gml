@@ -4,9 +4,8 @@
 var _buffer = argument0;
 
 var _animation = array_create(B_EBBMODAnimation.SIZE, 0);
-_animation[@ B_EBBMODAnimation.Name] = buffer_read(_buffer, buffer_string);
-_animation[@ B_EBBMODAnimation.Duration] =  buffer_read(_buffer, buffer_f64);
-_animation[@ B_EBBMODAnimation.TicsPerSecond] =  buffer_read(_buffer, buffer_f64);
+_animation[@ B_EBBMODAnimation.Duration] = buffer_read(_buffer, buffer_f64);
+_animation[@ B_EBBMODAnimation.TicsPerSecond] = buffer_read(_buffer, buffer_f64);
 
 var _mesh_bone_count = buffer_read(_buffer, buffer_u32);
 

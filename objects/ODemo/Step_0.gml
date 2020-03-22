@@ -26,16 +26,35 @@ mouse_last_y = _mouse_y;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Play animations
+var _anim_changed = false;
+var _anim_count = array_length_1d(animations);
 
-if (model != B_BBMOD_NONE)
+if (keyboard_check_pressed(vk_left))
 {
-	var _anim_name = ds_map_find_first(model[@ B_EBBMOD.Animations]);
-	if (!is_undefined(_anim_name))
+	if (--anim_current < 0)
 	{
-		if (is_undefined(transform))
-		{
-			transform = b_bbmod_create_transform_array(model);
-		}
-		b_bbmod_animate(model, _anim_name, transform);
+		anim_current = _anim_count - 1;
 	}
+	_anim_changed = true;
 }
+else if (keyboard_check_pressed(vk_right))
+{
+	if (++anim_current >= _anim_count)
+	{
+		anim_current = 0;
+	}
+	_anim_changed = true;
+}
+
+if (_anim_changed)
+{
+	animation_time_last = 0;
+	position_key_last = array_create(64, 0);
+	rotation_key_last = array_create(64, 0);
+}
+
+if (is_undefined(transform))
+{
+	transform = b_bbmod_create_transform_array(model);
+}
+b_bbmod_animate(model, animations[anim_current], transform);

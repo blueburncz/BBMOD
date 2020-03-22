@@ -6,6 +6,7 @@
 #include <iostream>
 #include <filesystem>
 #include <map>
+#include <string>
 
 #define FILE_WRITE_DATA(f, d) \
 	(f).write(reinterpret_cast<const char*>(&(d)), sizeof(d))
@@ -211,6 +212,7 @@ bool BuildIndices(const aiScene* scene, aiNode* node)
  * Writes a BBMOD header into a file.
  *
  * Format:
+ *  * String "bbmod" (null terminated)
  *  * Version (uint8)
  *  * HasVertices (bool, always true)
  *  * HasNormals (bool)
@@ -219,13 +221,15 @@ bool BuildIndices(const aiScene* scene, aiNode* node)
  *  * HasTangentW (bool)
  *  * HasBones (bool)
  */
-void WriteHeader(
+void WriteHeader_BBMOD(
 	bool hasNormals,
 	bool hasTextureCoords,
 	bool hasTangentW,
 	bool hasBones,
 	std::ofstream& fout)
 {
+	fout.write("bbmod", sizeof(char) * 6);
+
 	uint8_t version = BBMOD_VERSION;
 	FILE_WRITE_DATA(fout, version);
 
@@ -242,6 +246,21 @@ void WriteHeader(
 	FILE_WRITE_DATA(fout, hasTangentW);
 
 	FILE_WRITE_DATA(fout, hasBones);
+}
+
+/**
+ * Writes a BBANIM header into a file.
+ *
+ * Format:
+ *  * String "bbanim" (null terminated)
+ *  * Version (uint8)
+ */
+void WriteHeader_BBANIM(std::ofstream& fout)
+{
+	fout.write("bbanim", sizeof(char) * 7);
+
+	uint8_t version = BBMOD_VERSION;
+	FILE_WRITE_DATA(fout, version);
 }
 
 /**
@@ -479,11 +498,7 @@ void BoneToBBMOD(float id, aiMatrix4x4& matrix, std::ofstream& fout)
 {
 	aiNode* node = gIndexFloatToNode.at(id);
 	uint32_t childCount = GetNodeChildCount(id);
-
 	const char* name = node->mName.C_Str();
-
-	std::cout << (uint32_t)id << ": " << name << std::endl;
-
 	bool isBone = gIndexBoneNameToIndex.find(name) != gIndexBoneNameToIndex.end();
 
 	// Bone name
@@ -534,10 +549,9 @@ void BoneToBBMOD(float id, aiMatrix4x4& matrix, std::ofstream& fout)
 }
 
 /**
- * Writes an animation int o a BBMOD file.
+ * Writes an animation into a BBMOD file.
  *
  * Format:
- *  * Name (null terminated string)
  *  * Duration in tics (f64)
  *  * Tics per second (f64)
  *  * Number of bones of target mesh (uint32)
@@ -555,10 +569,6 @@ void BoneToBBMOD(float id, aiMatrix4x4& matrix, std::ofstream& fout)
  */
 void AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream& fout)
 {
-	// Name
-	const char* animationName = animation->mName.C_Str();
-	fout.write(animationName, sizeof(char) * (animation->mName.length + 1));
-
 	// Duration in ticks
 	FILE_WRITE_DATA(fout, animation->mDuration);
 
@@ -642,41 +652,16 @@ void AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream
  *  * Root node follows...
  *  * Number of bones (uint32)
  *  * Bones follow...
- *  * Number of animations (uint32)
- *  * Animations follow...
  *  * Number of materials (uint32)
  *  * Material names follow... (null terminated strings)
  */
-int SceneToBBMOD(const char* fin, std::ofstream& fout)
+int SceneToBBMOD(const aiScene* scene, std::ofstream& fout)
 {
-	Assimp::Importer* importer = new Assimp::Importer();
-
-	const aiScene* scene = importer->ReadFile(fin, 0
-		| aiProcessPreset_TargetRealtime_Quality
-		//| aiProcess_MakeLeftHanded
-		//| aiProcess_PreTransformVertices
-		| aiProcess_TransformUVCoords
-		| aiProcess_OptimizeGraph
-		| aiProcess_OptimizeMeshes
-	);
-
-	if (!scene)
-	{
-		delete importer;
-		return BBMOD_ERR_LOAD_FAILED;
-	}
-
-	if (!BuildIndices(scene, scene->mRootNode))
-	{
-		delete importer;
-		return BBMOD_ERR_CONVERSION_FAILED;
-	}
-
 	// Write header
 	aiMesh* mesh = scene->mMeshes[0];
 	bool hasBones = (gIndexBoneNameToBone.size() > 0);
 
-	WriteHeader(mesh->HasNormals(), mesh->HasTextureCoords(0),
+	WriteHeader_BBMOD(mesh->HasNormals(), mesh->HasTextureCoords(0),
 		mesh->HasTangentsAndBitangents(), hasBones, fout);
 
 	// Write global inverse transform
@@ -693,24 +678,7 @@ int SceneToBBMOD(const char* fin, std::ofstream& fout)
 
 	if (numOfBones > 0)
 	{
-		std::cout << "Bones:" << std::endl;
 		BoneToBBMOD(0.0f, matrix, fout);
-	}
-
-	// Write animations
-	uint32_t numOfAnimations = scene->mNumAnimations;
-	FILE_WRITE_DATA(fout, numOfAnimations);
-
-	if (numOfAnimations > 0)
-	{
-		std::cout << "Animations:" << std::endl;
-
-		for (uint32_t i = 0; i < numOfAnimations; ++i)
-		{
-			aiAnimation* animation = scene->mAnimations[i];
-			std::cout << i << ": " << animation->mName.C_Str() << std::endl;
-			AnimationToBBMOD(animation, numOfBones, fout);
-		}
 	}
 
 	// Write materials
@@ -728,12 +696,34 @@ int SceneToBBMOD(const char* fin, std::ofstream& fout)
 		}
 	}
 
-	delete importer;
 	return BBMOD_SUCCESS;
 }
 
 int ConvertToBBMOD(const char* fin, const char* fout)
 {
+	Assimp::Importer* importer = new Assimp::Importer();
+
+	const aiScene* scene = importer->ReadFile(fin, 0
+		| aiProcessPreset_TargetRealtime_Quality
+		//| aiProcess_MakeLeftHanded
+		//| aiProcess_PreTransformVertices
+		| aiProcess_TransformUVCoords
+		| aiProcess_OptimizeGraph
+		| aiProcess_OptimizeMeshes);
+
+	if (!scene)
+	{
+		delete importer;
+		return BBMOD_ERR_LOAD_FAILED;
+	}
+
+	if (!BuildIndices(scene, scene->mRootNode))
+	{
+		delete importer;
+		return BBMOD_ERR_CONVERSION_FAILED;
+	}
+
+	// Write BBMOD
 	std::ofstream file(fout, std::ios::out | std::ios::binary);
 
 	if (!file.is_open())
@@ -741,7 +731,7 @@ int ConvertToBBMOD(const char* fin, const char* fout)
 		return BBMOD_ERR_SAVE_FAILED;
 	}
 
-	int retval = SceneToBBMOD(fin, file);
+	int retval = SceneToBBMOD(scene, file);
 
 	file.flush();
 	file.close();
@@ -749,7 +739,46 @@ int ConvertToBBMOD(const char* fin, const char* fout)
 	if (retval != BBMOD_SUCCESS)
 	{
 		std::filesystem::remove(fout);
+		return retval;
 	}
 
-	return retval;
+	// Write animations
+	uint32_t numOfAnimations = scene->mNumAnimations;
+
+	if (numOfAnimations > 0)
+	{
+		for (uint32_t i = 0; i < numOfAnimations; ++i)
+		{
+			aiAnimation* animation = scene->mAnimations[i];
+			std::string animationName = std::filesystem::path(fout).stem().string() + "_";
+
+			if (std::strlen(animation->mName.C_Str()) == 0)
+			{
+				animationName.append("anim");
+				animationName.append(std::to_string(i));
+			}
+			else
+			{
+				animationName.append(animation->mName.C_Str());
+			}
+
+			const char* fanimArg = fout;
+			std::string fanimPath = std::filesystem::path(fanimArg)
+				.replace_filename(animationName.c_str()).replace_extension(".bbanim").string();
+
+			std::cout << "Writing \"" << fanimPath.c_str() << "\"... ";
+
+			std::ofstream fanim(fanimPath.c_str(), std::ios::out | std::ios::binary);
+
+			WriteHeader_BBANIM(fanim);
+			AnimationToBBMOD(animation, (uint32_t)gNextBoneId, fanim);
+
+			file.flush();
+			file.close();
+
+			std::cout << "DONE!" << std::endl;
+		}
+	}
+
+	return BBMOD_SUCCESS;
 }
