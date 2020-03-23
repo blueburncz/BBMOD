@@ -64,6 +64,6 @@ if (_bone_count > 0)
 
 // Materials
 var _material_count = buffer_read(_buffer, buffer_u32);
-_bbmod[@ B_EBBMOD.Materials] = array_create(_material_count, global.__b_material_default);
+_bbmod[@ B_EBBMOD.Materials] = array_create(_material_count, global.__b_bbmod_material_default);
 
 return _bbmod;

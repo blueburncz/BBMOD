@@ -15,6 +15,13 @@ for (var i/*:int*/= 0; i < _model_count; ++i)
 	var _model = _models[i];
 	var _material_index = _model[B_EBBMODMesh.MaterialIndex];
 	var _material = _materials[_material_index];
+
+	if (b_bbmod_material_apply(_material))
+	{
+		// FIXME: transform should be passed as an argument?
+		shader_set_uniform_f_array(shader_get_uniform(shader_current(), "u_mBones"), transform);
+	}
+
 	var _tex_diffuse = _material[B_EBBMODMaterial.Diffuse];
 	vertex_submit(_model[B_EBBMODMesh.VertexBuffer], pr_trianglelist, _tex_diffuse);
 }

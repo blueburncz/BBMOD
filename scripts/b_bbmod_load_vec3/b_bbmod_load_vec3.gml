@@ -1,6 +1,7 @@
 /// @func b_bbmod_load_vec3(buffer)
-/// @param {real} buffer
-/// @return {array}
+/// @desc Loads a 3D vector from a buffer.
+/// @param {real} buffer The buffer to load the vector from.
+/// @return {array} The loaded vector.
 var _buffer = argument0;
 var _vec3 = array_create(3, 0);
 _vec3[@ 0] = buffer_read(_buffer, buffer_f32);

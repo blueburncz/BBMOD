@@ -9,7 +9,7 @@ var _bbmod = argument0;
 var _animation = argument1;
 var _array = argument2;
 
-var _anim_stack = global.__b_anim_stack;
+var _anim_stack = global.__b_bbmod_anim_stack;
 var _inverse_transform = _bbmod[B_EBBMOD.InverseTransformMatrix];
 
 var _animation_duration = _animation[@ B_EBBMODAnimation.Duration];

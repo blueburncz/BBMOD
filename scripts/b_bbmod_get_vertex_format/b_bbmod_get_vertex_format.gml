@@ -23,9 +23,9 @@ var _mask = (0
 
 var _vformat;
 
-if (ds_map_exists(global.__b_vertex_formats, _mask))
+if (ds_map_exists(global.__b_bbmod_vertex_formats, _mask))
 {
-	_vformat = global.__b_vertex_formats[? _mask];
+	_vformat = global.__b_bbmod_vertex_formats[? _mask];
 }
 else
 {
@@ -63,7 +63,7 @@ else
 	}
 
 	_vformat = vertex_format_end();
-	global.__b_vertex_formats[? _mask] = _vformat;
+	global.__b_bbmod_vertex_formats[? _mask] = _vformat;
 }
 
 return _vformat;
