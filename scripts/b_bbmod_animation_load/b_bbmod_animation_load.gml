@@ -1,9 +1,12 @@
-/// @func b_bbmod_animation(buffer)
+/// @func b_bbmod_animation(buffer, version)
 /// @param {real} buffer
+/// @param {real} version
 /// @return {array}
 var _buffer = argument0;
+var _version = argument1;
 
 var _animation = array_create(B_EBBMODAnimation.SIZE, 0);
+_animation[@ B_EBBMODAnimation.Version] = _version;
 _animation[@ B_EBBMODAnimation.Duration] = buffer_read(_buffer, buffer_f64);
 _animation[@ B_EBBMODAnimation.TicsPerSecond] = buffer_read(_buffer, buffer_f64);
 

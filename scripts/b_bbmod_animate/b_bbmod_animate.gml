@@ -10,7 +10,7 @@ var _animation = argument1;
 var _array = argument2;
 
 var _anim_stack = global.__b_bbmod_anim_stack;
-var _inverse_transform = _bbmod[B_EBBMOD.InverseTransformMatrix];
+var _inverse_transform = _bbmod[B_EBBMODModel.InverseTransformMatrix];
 
 var _animation_duration = _animation[@ B_EBBMODAnimation.Duration];
 var _animation_tics_per_sec = _animation[@ B_EBBMODAnimation.TicsPerSecond];
@@ -27,7 +27,7 @@ if (_animation_time < animation_time_last)
 }
 animation_time_last = _animation_time;
 
-ds_stack_push(_anim_stack, _bbmod[B_EBBMOD.Skeleton], matrix_build_identity());
+ds_stack_push(_anim_stack, _bbmod[B_EBBMODModel.Skeleton], matrix_build_identity());
 
 while (!ds_stack_empty(_anim_stack))
 {

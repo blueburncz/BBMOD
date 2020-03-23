@@ -8,7 +8,7 @@ var _models = _node[B_EBBMODNode.Models];
 var _children = _node[B_EBBMODNode.Children];
 var _model_count = array_length_1d(_models);
 var _child_count = array_length_1d(_children);
-var _materials = _bbmod[B_EBBMOD.Materials];
+var _materials = _bbmod[B_EBBMODModel.Materials];
 
 for (var i/*:int*/= 0; i < _model_count; ++i)
 {

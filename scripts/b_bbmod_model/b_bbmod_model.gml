@@ -1,6 +1,6 @@
 /// @func b_bbmod()
 
-enum B_EBBMOD
+enum B_EBBMODModel
 {
 	Version,
 	HasVertices,
