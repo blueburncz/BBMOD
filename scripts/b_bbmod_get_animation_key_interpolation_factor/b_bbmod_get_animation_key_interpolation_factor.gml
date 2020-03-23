@@ -8,5 +8,9 @@ var _key = argument0;
 var _key_next = argument1;
 var _animation_time = argument2;
 var _delta_time = _key_next[B_EBBMODAnimationKey.Time] - _key[B_EBBMODAnimationKey.Time];
+if (_delta_time == 0)
+{
+	return 0;
+}
 var _factor = (_animation_time - _key[B_EBBMODAnimationKey.Time]) / _delta_time;
 return clamp(_factor, 0, 1);
