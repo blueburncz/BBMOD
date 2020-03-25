@@ -1,4 +1,4 @@
-//show_debug_overlay(true);
+show_debug_overlay(true);
 
 gpu_set_zwriteenable(true);
 gpu_set_ztestenable(true);

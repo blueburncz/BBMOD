@@ -143,6 +143,14 @@
             }
         },
         {
+            "Key": "093c5da6-14ca-464b-8b86-4958de2121d3",
+            "Value": {
+                "id": "00f90280-dff0-4c0f-ba92-c1ad19b8468e",
+                "resourcePath": "scripts\\b_bbmod_position_key_interpolate\\b_bbmod_position_key_interpolate.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "0b7f25d6-76fc-4665-9de6-30e136c2e935",
             "Value": {
                 "id": "0b7f25d6-76fc-4665-9de6-30e136c2e935",
@@ -743,10 +751,26 @@
             }
         },
         {
+            "Key": "65abafbb-5949-45aa-bcef-e00421e7f2e9",
+            "Value": {
+                "id": "6fbffdef-8c6b-49d0-b7ee-0ea74ad05a7a",
+                "resourcePath": "scripts\\b_bbmod_rotation_key_to_matrix\\b_bbmod_rotation_key_to_matrix.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "67687946-0d7b-4ee5-85dc-48a28e7c29c4",
             "Value": {
                 "id": "67687946-0d7b-4ee5-85dc-48a28e7c29c4",
                 "resourcePath": "scripts\\ce_vec2_dot\\ce_vec2_dot.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "67a7ef89-5651-41fc-add4-c86f7b701240",
+            "Value": {
+                "id": "6ef55d44-c2c1-4e12-8831-a9a81038ecf2",
+                "resourcePath": "scripts\\b_bbmod_rotation_key_interpolate\\b_bbmod_rotation_key_interpolate.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -1359,6 +1383,14 @@
             }
         },
         {
+            "Key": "b67cf344-1cc1-48e4-aaa9-27f00204e34a",
+            "Value": {
+                "id": "06f91c96-df8f-43f7-a8fc-1708defae9a8",
+                "resourcePath": "scripts\\b_bbmod_position_key_to_matrix\\b_bbmod_position_key_to_matrix.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "b73250d9-7d49-4e33-bd17-2d3e7c235444",
             "Value": {
                 "id": "b73250d9-7d49-4e33-bd17-2d3e7c235444",
@@ -1807,9 +1839,13 @@
         "89a0aa17-c5de-4c06-bb1c-b24b264c83ea",
         "d12569d8-b374-42fb-91b2-99ef8abf8798",
         "5c3d84a7-3648-4502-8be1-ebde368edb47",
+        "093c5da6-14ca-464b-8b86-4958de2121d3",
         "c69c5571-050f-4b92-b1d6-501caa2f3bf5",
+        "b67cf344-1cc1-48e4-aaa9-27f00204e34a",
         "6fae5a90-ac87-4d8b-8e67-5621938fb337",
+        "67a7ef89-5651-41fc-add4-c86f7b701240",
         "45c1cb3d-228e-40f8-827c-3e97b8fb6f2e",
+        "65abafbb-5949-45aa-bcef-e00421e7f2e9",
         "b8650315-ac4f-41a7-b350-7fed17448f32",
         "3a73460e-340f-4b49-86b2-38922e5f87d7",
         "95361add-fd80-40c7-8c3d-25fa2de78848",
