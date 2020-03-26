@@ -487,14 +487,6 @@
             }
         },
         {
-            "Key": "433a8f98-5132-4088-b2ae-c00dcac5df17",
-            "Value": {
-                "id": "66b5127c-1fa2-44a9-bfe1-d1161de9bcd7",
-                "resourcePath": "scripts\\bbmod_set_material\\bbmod_set_material.yy",
-                "resourceType": "GMScript"
-            }
-        },
-        {
             "Key": "45c1cb3d-228e-40f8-827c-3e97b8fb6f2e",
             "Value": {
                 "id": "8a287d2e-a69f-4f0d-9a32-84ba567b0117",
@@ -1874,7 +1866,6 @@
         "9eb2f664-26d5-4ced-b3bf-e833b5ea18be",
         "550eba04-9fd7-4133-af2c-ffaafda84080",
         "d58f9993-fd4a-4c0c-a17d-8c169de75f60",
-        "433a8f98-5132-4088-b2ae-c00dcac5df17",
         "90e23c5f-86a5-44c8-8178-8c1b3b9d10b5",
         "763e8b9a-8362-4066-85ab-1b662b691b22",
         "37c5cb65-7ae0-4532-b19c-0924ced3170d",

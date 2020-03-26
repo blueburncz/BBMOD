@@ -13,6 +13,6 @@ enum BBMOD_EModel
 	RootNode,
 	BoneCount,
 	Skeleton,
-	Materials,
+	MaterialCount,
 	SIZE
 };

@@ -21,37 +21,33 @@ transform = undefined;
 
 //model = bbmod_load("Demo/bob_lamp_update.bbmod");
 
-//if (model == B_BBMOD_NONE)
+//if (model == BBMOD_NONE)
 //{
 //	show_error("Model loading failed!", true);
 //}
 
 //var _spr_body_diffuse = sprite_add("Demo/bob_body.png", 0, 0, 0, 0, 0);
-//var _mat_body = bbmod_material_create(sprite_get_texture(_spr_body_diffuse, 0));
-//bbmod_set_material(model, 0, _mat_body);
-
 //var _spr_head_diffuse = sprite_add("Demo/bob_head.png", 0, 0, 0, 0, 0);
-//var _mat_head = bbmod_material_create(sprite_get_texture(_spr_head_diffuse, 0));
-//bbmod_set_material(model, 1, _mat_head);
-
 //var _spr_helmet_diffuse = sprite_add("Demo/bob_helmet.png", 0, 0, 0, 0, 0);
-//var _mat_helmet = bbmod_material_create(sprite_get_texture(_spr_helmet_diffuse, 0));
-//bbmod_set_material(model, 2, _mat_helmet);
-
 //var _spr_lantern_diffuse = sprite_add("Demo/lantern.png", 0, 0, 0, 0, 0);
-//var _mat_lantern = bbmod_material_create(sprite_get_texture(_spr_lantern_diffuse, 0));
-//bbmod_set_material(model, 3, _mat_lantern);
-
 //var _spr_lantern_top_diffuse = sprite_add("Demo/lantern_top.png", 0, 0, 0, 0, 0);
-//var _mat_lantern_top = bbmod_material_create(sprite_get_texture(_spr_lantern_top_diffuse, 0));
-//bbmod_set_material(model, 4, _mat_lantern_top);
+
+//materials = [
+//	bbmod_material_create(sprite_get_texture(_spr_body_diffuse, 0)),
+//	bbmod_material_create(sprite_get_texture(_spr_head_diffuse, 0)),
+//	bbmod_material_create(sprite_get_texture(_spr_helmet_diffuse, 0)),
+//	bbmod_material_create(sprite_get_texture(_spr_lantern_diffuse, 0)),
+//	bbmod_material_create(sprite_get_texture(_spr_lantern_top_diffuse, 0)),
+//];
 
 model = bbmod_load("Demo/Character.bbmod");
 
-if (model == B_BBMOD_NONE)
+if (model == BBMOD_NONE)
 {
 	show_error("Model loading failed!", true);
 }
+
+materials = array_create(model[BBMOD_EModel.MaterialCount], BBMOD_MATERIAL_DEFAULT);
 
 animations = [
 	bbmod_load("Demo/Walking.bbanim"),

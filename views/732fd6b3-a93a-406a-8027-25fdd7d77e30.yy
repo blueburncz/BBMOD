@@ -19,8 +19,7 @@
         "64290248-48ff-466d-abc8-1832b338965e",
         "9eb2f664-26d5-4ced-b3bf-e833b5ea18be",
         "550eba04-9fd7-4133-af2c-ffaafda84080",
-        "d58f9993-fd4a-4c0c-a17d-8c169de75f60",
-        "433a8f98-5132-4088-b2ae-c00dcac5df17"
+        "d58f9993-fd4a-4c0c-a17d-8c169de75f60"
     ],
     "filterType": "GMScript",
     "folderName": "BBMOD",

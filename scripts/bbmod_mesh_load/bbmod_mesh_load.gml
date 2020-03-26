@@ -7,12 +7,12 @@ var _buffer = argument0;
 var _format = argument1;
 var _mask = argument2;
 
-var _has_vertices = (_mask >> B_BBMOD_VFORMAT_VERTEX) & 1;
-var _has_normals = (_mask >> B_BBMOD_VFORMAT_NORMAL) & 1;
-var _has_uvs = (_mask >> B_BBMOD_VFORMAT_TEXCOORD) & 1;
-var _has_colors = (_mask >> B_BBMOD_VFORMAT_COLOR) & 1;
-var _has_tangentw = (_mask >> B_BBMOD_VFORMAT_TANGENTW) & 1;
-var _has_bones = (_mask >> B_BBMOD_VFORMAT_BONES) & 1;
+var _has_vertices = (_mask >> BBMOD_VFORMAT_VERTEX) & 1;
+var _has_normals = (_mask >> BBMOD_VFORMAT_NORMAL) & 1;
+var _has_uvs = (_mask >> BBMOD_VFORMAT_TEXCOORD) & 1;
+var _has_colors = (_mask >> BBMOD_VFORMAT_COLOR) & 1;
+var _has_tangentw = (_mask >> BBMOD_VFORMAT_TANGENTW) & 1;
+var _has_bones = (_mask >> BBMOD_VFORMAT_BONES) & 1;
 
 var _mesh = array_create(BBMOD_EMesh.SIZE, 0);
 _mesh[@ BBMOD_EMesh.MaterialIndex] = buffer_read(_buffer, buffer_u32);

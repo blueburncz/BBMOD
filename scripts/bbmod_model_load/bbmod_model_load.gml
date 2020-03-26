@@ -34,12 +34,12 @@ _bbmod[@ BBMOD_EModel.InverseTransformMatrix] = bbmod_load_matrix(_buffer);
 
 // Vertex format
 var _mask = (0
-	| (_has_vertices << B_BBMOD_VFORMAT_VERTEX)
-	| (_has_normals << B_BBMOD_VFORMAT_NORMAL)
-	| (_has_uvs << B_BBMOD_VFORMAT_TEXCOORD)
-	| (_has_colors << B_BBMOD_VFORMAT_COLOR)
-	| (_has_tangentw << B_BBMOD_VFORMAT_TANGENTW)
-	| (_has_bones << B_BBMOD_VFORMAT_BONES));
+	| (_has_vertices << BBMOD_VFORMAT_VERTEX)
+	| (_has_normals << BBMOD_VFORMAT_NORMAL)
+	| (_has_uvs << BBMOD_VFORMAT_TEXCOORD)
+	| (_has_colors << BBMOD_VFORMAT_COLOR)
+	| (_has_tangentw << BBMOD_VFORMAT_TANGENTW)
+	| (_has_bones << BBMOD_VFORMAT_BONES));
 
 if (is_undefined(_vformat))
 {
@@ -65,7 +65,6 @@ if (_bone_count > 0)
 }
 
 // Materials
-var _material_count = buffer_read(_buffer, buffer_u32);
-_bbmod[@ BBMOD_EModel.Materials] = array_create(_material_count, global.__bbmod_material_default);
+_bbmod[@ BBMOD_EModel.MaterialCount] = buffer_read(_buffer, buffer_u32);
 
 return _bbmod;

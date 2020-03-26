@@ -8,7 +8,7 @@ matrix_set(matrix_projection, matrix_build_projection_perspective_fov(60, 16 / 9
 
 gpu_push_state();
 bbmod_material_reset();
-bbmod_render(model);
+bbmod_render(model, materials);
 bbmod_material_reset();
 gpu_pop_state();
 

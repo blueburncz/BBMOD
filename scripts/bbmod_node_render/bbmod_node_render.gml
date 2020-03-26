@@ -1,14 +1,15 @@
-/// @func bbmod_node_render(bbmod, node)
+/// @func bbmod_node_render(bbmod, node, materials)
 /// @desc Submits a node into a shader for rendering.
 /// @param {array} bbmod
 /// @param {array} node
+/// @param {array} materials
 var _bbmod = argument0;
 var _node = argument1;
+var _materials = argument2;
 var _models = _node[BBMOD_ENode.Models];
 var _children = _node[BBMOD_ENode.Children];
 var _model_count = array_length_1d(_models);
 var _child_count = array_length_1d(_children);
-var _materials = _bbmod[BBMOD_EModel.Materials];
 
 for (var i/*:int*/= 0; i < _model_count; ++i)
 {
@@ -28,5 +29,5 @@ for (var i/*:int*/= 0; i < _model_count; ++i)
 
 for (var i/*:int*/= 0; i < _child_count; ++i)
 {
-	bbmod_node_render(_bbmod, _children[i]);
+	bbmod_node_render(_bbmod, _children[i], _materials);
 }

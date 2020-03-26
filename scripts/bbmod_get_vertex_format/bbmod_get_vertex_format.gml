@@ -14,12 +14,12 @@ var _has_tangentw = argument4;
 var _has_bones = argument5;
 
 var _mask = (0
-	| (_has_vertices << B_BBMOD_VFORMAT_VERTEX)
-	| (_has_normals << B_BBMOD_VFORMAT_NORMAL)
-	| (_has_uvs << B_BBMOD_VFORMAT_TEXCOORD)
-	| (_has_colors << B_BBMOD_VFORMAT_COLOR)
-	| (_has_tangentw << B_BBMOD_VFORMAT_TANGENTW)
-	| (_has_bones << B_BBMOD_VFORMAT_BONES));
+	| (_has_vertices << BBMOD_VFORMAT_VERTEX)
+	| (_has_normals << BBMOD_VFORMAT_NORMAL)
+	| (_has_uvs << BBMOD_VFORMAT_TEXCOORD)
+	| (_has_colors << BBMOD_VFORMAT_COLOR)
+	| (_has_tangentw << BBMOD_VFORMAT_TANGENTW)
+	| (_has_bones << BBMOD_VFORMAT_BONES));
 
 var _vformat;
 

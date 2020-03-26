@@ -3,7 +3,7 @@
 /// @param {ptr} [normal] The normal texture.
 var _mat = array_create(BBMOD_EMaterial.SIZE, -1);
 
-_mat[@ BBMOD_EMaterial.RenderPath] = B_BBMOD_RENDER_FORWARD;
+_mat[@ BBMOD_EMaterial.RenderPath] = BBMOD_RENDER_FORWARD;
 // FIXME: Use default BBMOD shader here.
 _mat[@ BBMOD_EMaterial.Shader] = ShDemo;
 _mat[@ BBMOD_EMaterial.BlendMode] = bm_normal;

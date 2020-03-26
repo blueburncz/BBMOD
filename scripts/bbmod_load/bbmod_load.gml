@@ -4,11 +4,11 @@
 /// @param {string} [sha1] Expected SHA1 of the file. If the actual one
 /// does not match with this, then the model will not be loaded. Default is
 /// `undefined`.
-/// @return {array/B_BBMOD_NONE} The loaded model/animation on success or
-/// `B_BBMOD_NONE` on fail.
+/// @return {array/BBMOD_NONE} The loaded model/animation on success or
+/// `BBMOD_NONE` on fail.
 var _file = argument[0];
 var _sha1 = (argument_count > 2) ? argument[2] : undefined;
-var _bbmod = B_BBMOD_NONE;
+var _bbmod = BBMOD_NONE;
 
 if (!is_undefined(_sha1))
 {
