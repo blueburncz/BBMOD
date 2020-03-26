@@ -7,9 +7,9 @@ matrix_set(matrix_view, matrix_build_lookat(x, y, z, 0, 0, cam_z, 0, 0, 1));
 matrix_set(matrix_projection, matrix_build_projection_perspective_fov(60, 16 / 9, 0.1, 8192));
 
 gpu_push_state();
-b_bbmod_material_reset();
-b_bbmod_render(model);
-b_bbmod_material_reset();
+bbmod_material_reset();
+bbmod_render(model);
+bbmod_material_reset();
 gpu_pop_state();
 
 matrix_set(matrix_world, _mat_world);

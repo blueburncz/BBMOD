@@ -55,6 +55,6 @@ if (_anim_changed)
 
 if (is_undefined(transform))
 {
-	transform = b_bbmod_create_transform_array(model);
+	transform = bbmod_create_transform_array(model);
 }
-b_bbmod_animate(model, animations[anim_current], transform);
+bbmod_animate(model, animations[anim_current], transform);
