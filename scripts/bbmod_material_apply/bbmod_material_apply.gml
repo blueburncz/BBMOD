@@ -1,6 +1,6 @@
 /// @func bbmod_material_apply(material)
-/// @desc Applies given material.
-/// @param {array} material The material to apply.
+/// @desc Applies a material.
+/// @param {array} material A Material structure.
 /// @return {bool} True if the material was applied or false if it was already
 /// the current one.
 var _material = argument0;
@@ -15,8 +15,12 @@ var _shader = _material[BBMOD_EMaterial.Shader];
 if (shader_current() != _shader)
 {
 	shader_set(_shader);
-	texture_set_stage(shader_get_sampler_index(_shader, "u_texNormal"),
-		_material[BBMOD_EMaterial.Normal]);
+
+	var _on_apply = _material[BBMOD_EMaterial.OnApply];
+	if (!is_undefined(_on_apply))
+	{
+		script_execute(_on_apply, _material);
+	}
 }
 
 var _blend_mode = _material[BBMOD_EMaterial.BlendMode];

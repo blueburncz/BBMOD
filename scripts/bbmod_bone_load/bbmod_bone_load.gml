@@ -1,6 +1,7 @@
 /// @func bbmod_bone_load(buffer)
-/// @param {real} buffer
-/// @return {array}
+/// @desc Loads a Bone structure from a buffer.
+/// @param {real} buffer The buffer to load the structure from.
+/// @return {array} The loaded Bone structure.
 var _buffer = argument0;
 
 var _bone = array_create(BBMOD_EBone.SIZE, 0);

@@ -1063,6 +1063,14 @@
             }
         },
         {
+            "Key": "8cec01f0-c11c-4c53-8d0e-2583aa6e287d",
+            "Value": {
+                "id": "43eeedb6-49aa-4374-ab40-66bf87b18442",
+                "resourcePath": "scripts\\bbmod_material_on_apply_default\\bbmod_material_on_apply_default.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "8d2bbc95-656e-43e1-a435-03d44e6547d5",
             "Value": {
                 "id": "f631b87e-0974-4512-8d20-9017903eb30a",
@@ -1847,6 +1855,7 @@
         "60e02e6d-dc3c-4a8b-9f41-8f3ccb7bc218",
         "77d36980-15d8-476d-936f-2506c2be95e7",
         "9726cbf0-4085-4890-a8a9-3766a639e045",
+        "8cec01f0-c11c-4c53-8d0e-2583aa6e287d",
         "74eb72bb-ec00-46fc-ad96-7a39f4fe5c96",
         "6f8de25e-542f-450d-be16-9e36033413f3",
         "f5e8fe28-d488-49c1-9a91-19fc3eaca6f5",
