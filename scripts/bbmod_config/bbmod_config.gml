@@ -1,4 +1,5 @@
 /// @func bbmod_config()
+/// @desc A configuration script of the BBMOD library.
 
 /// @macro The default BBMOD material.
 #macro BBMOD_MATERIAL_DEFAULT global.__bbmod_material_default

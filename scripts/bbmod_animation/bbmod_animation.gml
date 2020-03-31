@@ -11,6 +11,6 @@ enum BBMOD_EAnimation
 	TicsPerSecond,
 	/// @enum An array of AnimationBone structures.
 	Bones,
-	/// @enum Total number of members of this enum.
+	/// @enum The size of the Animation structure.
 	SIZE
 };

@@ -9,6 +9,6 @@ enum BBMOD_EAnimationBone
 	PositionKeys,
 	/// @member An array of RotationKey structures.
 	RotationKeys,
-	/// @member Total number of members of this enum.
+	/// @member The size of the AnimationBone structure.
 	SIZE
 };

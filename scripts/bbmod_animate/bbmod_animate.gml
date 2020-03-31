@@ -1,8 +1,10 @@
 /// @func bbmod_animate(bbmod, animation, out)
-/// @param {array} node
-/// @param {array} animation
-/// @param {array} out
-/// @return {array}
+/// @desc Animates a BBMOD.
+/// @param {array} bbmod The BBMOD structure.
+/// @param {array} animation The Animation structure.
+/// @param {array} out An array created using
+/// [bbmod_create_transform_array](./bbmod_create_transform_array.html).
+
 //var _t = get_timer();
 
 var _bbmod = argument0;
@@ -15,7 +17,7 @@ var _inverse_transform = _bbmod[BBMOD_EModel.InverseTransformMatrix];
 var _time_in_seconds = current_time * 0.001;
 var _animation_time = bbmod_get_animation_time(_animation, _time_in_seconds);
 
-// TODO: Use animation_cache struct!
+// TODO: Use AnimationCache struct!
 if (_animation_time < animation_time_last)
 {
 	position_key_last = array_create(64, 0);

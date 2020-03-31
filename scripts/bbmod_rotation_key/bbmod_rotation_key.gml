@@ -7,6 +7,6 @@ enum BBMOD_ERotationKey
 	Time,
 	/// @member A quaternion.
 	Rotation,
-	/// @member Total number of members of this enum.
+	/// @member The size of the RotationKey structure.
 	SIZE
 };

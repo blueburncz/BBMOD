@@ -1,8 +1,9 @@
 /// @func bbmod_node_load(buffer, format, format_mask)
-/// @param {real} buffer
-/// @param {real} format
-/// @param {real} format_mask
-/// @return {array}
+/// @desc Loads a Node structure from a buffer.
+/// @param {real} buffer The buffer to load the structure from.
+/// @param {real} format A vertex format for node's meshes.
+/// @param {real} format_mask A vertex format mask.
+/// @return {array} The loaded Node structure.
 var _buffer = argument0;
 var _format = argument1;
 var _mask = argument2;
@@ -14,7 +15,7 @@ _node[@ BBMOD_ENode.Name] = buffer_read(_buffer, buffer_string);
 var _model_count = buffer_read(_buffer, buffer_u32);
 var _models = array_create(_model_count, 0);
 
-_node[@ BBMOD_ENode.Models] = _models;
+_node[@ BBMOD_ENode.Meshes] = _models;
 
 for (var i/*:int*/= 0; i < _model_count; ++i)
 {

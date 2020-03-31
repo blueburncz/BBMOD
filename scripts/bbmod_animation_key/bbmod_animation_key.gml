@@ -9,6 +9,6 @@ enum BBMOD_EAnimationKey
 	Time,
 	/// @member Additional key data.
 	Data,
-	/// @member Total number of members of this enum.
+	/// @member The size of the AnimationKey structure.
 	SIZE
 };

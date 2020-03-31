@@ -1,11 +1,15 @@
 /// @func bbmod_get_vertex_format(vertices, normals, uvs, colors, tangetW, bones)
-/// @param {bool} vertices
-/// @param {bool} normals
-/// @param {bool} uvs
-/// @param {bool} colors
-/// @param {bool} tangentW
-/// @param {bool} bones
-/// @return {real}
+/// @desc Creates a new vertex format or retrieves an existing one with specified
+/// properties.
+/// @param {bool} vertices True if the vertex format must have vertices.
+/// @param {bool} normals True if the vertex format must have normal vectors.
+/// @param {bool} uvs True if the vertex format must have texture coordinates.
+/// @param {bool} colors True if the vertex format must have vertex colors.
+/// @param {bool} tangentW True if the vertex format must have tangent vectors and
+/// bitangent signs.
+/// @param {bool} bones True if the vertex format must have vertex weights and bone
+/// indices.
+/// @return {real} The vertex format.
 var _has_vertices = argument0;
 var _has_normals = argument1;
 var _has_uvs = argument2;

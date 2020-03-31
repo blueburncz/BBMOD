@@ -19,6 +19,6 @@ enum BBMOD_EMaterial
 	Diffuse,
 	/// @member A normal texture.
 	Normal,
-	/// @member Total number of members in this enum.
+	/// @member The size of the Material structure.
 	SIZE
 };

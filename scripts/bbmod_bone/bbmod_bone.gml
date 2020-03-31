@@ -13,6 +13,6 @@ enum BBMOD_EBone
 	OffsetMatrix,
 	/// @member An array of child Bone structures.
 	Children,
-	/// @member Total number of members of this enum.
+	/// @member The size of the Bone structure.
 	SIZE
 };

@@ -1,8 +1,9 @@
 /// @func bbmod_mesh_load(buffer, format, format_mask)
-/// @param {real} buffer
-/// @param {real} format
-/// @param {real} format_mask
-/// @return {array}
+/// @desc Loads a Mesh structure from a bufffer.
+/// @param {real} buffer The buffer to load the structure from.
+/// @param {real} format A vertex format that the mesh uses.
+/// @param {real} format_mask A vertex format mask.
+/// @return {array} The loaded Mesh structure.
 var _buffer = argument0;
 var _format = argument1;
 var _mask = argument2;

@@ -1,7 +1,8 @@
 /// @func bbmod_model_load(buffer, version)
-/// @param {real} buffer
-/// @param {real} version
-/// @return {array}
+/// @desc Loads a Model structure from a buffer.
+/// @param {real} buffer The buffer to load the structure from.
+/// @param {real} version The version of the model file.
+/// @return {array} The loaded Model structure.
 var _buffer = argument0;
 var _version = argument1;
 var _vformat = undefined;
