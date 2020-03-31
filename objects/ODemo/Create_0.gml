@@ -12,7 +12,7 @@ cam_zoom = 10;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
-// TODO: Creat animatio_cache struct!
+// TODO: Create AnimationCache struct!
 animation_time_last = 0;
 position_key_last = array_create(64, 0);
 rotation_key_last = array_create(64, 0);
