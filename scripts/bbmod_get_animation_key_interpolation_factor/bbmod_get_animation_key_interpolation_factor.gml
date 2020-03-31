@@ -1,8 +1,10 @@
 /// @func bbmod_get_animation_key_interpolation_factor(key, key_next, animation_time)
-/// @param {array} key
-/// @param {array} key_next
-/// @param {real} animation_time
-/// @return {real}
+/// @desc Calculates interpolation factor between two animation keys at specified
+/// animation time.
+/// @param {array} key The first AnimationKey structure.
+/// @param {array} key_next The second AnimationKey structure.
+/// @param {real} animation_time The animation time.
+/// @return {real} The calculated interpolation factor.
 gml_pragma("forceinline");
 var _key = argument0;
 var _key_next = argument1;

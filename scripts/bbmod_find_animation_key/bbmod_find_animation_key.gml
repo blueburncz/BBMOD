@@ -1,4 +1,5 @@
 /// @func bbmod_find_animation_key(keys, animation_time[, index])
+/// @desc Finds an animation key for specified animation time.
 /// @param {array} key An array of animation keys.
 /// @param {real} animation_time The current animation time.
 /// @param {real} [index] An index where to start looking. Defaults to 0.

@@ -1,6 +1,7 @@
 /// @fun bbmod_rotation_key_load(buffer)
-/// @param {real} buffer
-/// @return array
+/// @desc Loads a RotationKey structure from a buffer.
+/// @param {real} buffer The buffer to load the structure from.
+/// @return {array} The loaded RotationKey structure.
 var _buffer = argument0;
 var _key = array_create(BBMOD_ERotationKey.SIZE, 0);
 _key[@ BBMOD_ERotationKey.Time] = buffer_read(_buffer, buffer_f64);

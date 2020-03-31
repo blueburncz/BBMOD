@@ -1,6 +1,7 @@
 /// @func bbmod_position_key_to_matrix(position_key)
-/// @param {array} position_key
-/// @return {array}
+/// @desc Creates a translation matrix from a PositionKey structure.
+/// @param {array} position_key The PositionKey structure.
+/// @return {array} The created matrix.
 gml_pragma("forceinline");
 var _position = argument0[BBMOD_EPositionKey.Position];
 return matrix_build(

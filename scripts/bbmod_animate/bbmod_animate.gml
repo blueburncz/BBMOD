@@ -3,7 +3,7 @@
 /// @param {array} animation
 /// @param {array} out
 /// @return {array}
-var _t = get_timer();
+//var _t = get_timer();
 
 var _bbmod = argument0;
 var _animation = argument1;
@@ -85,4 +85,4 @@ while (!ds_stack_empty(_anim_stack))
 	}
 }
 
-show_debug_message("Animate: " + string(get_timer() - _t) + "us");
+//show_debug_message("Animate: " + string(get_timer() - _t) + "us");
