@@ -12,13 +12,6 @@ cam_zoom = 10;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
-// TODO: Create AnimationCache struct!
-animation_time_last = 0;
-position_key_last = array_create(64, 0);
-rotation_key_last = array_create(64, 0);
-
-transform = undefined;
-
 //model = bbmod_load("Demo/bob_lamp_update.bbmod");
 
 //if (model == BBMOD_NONE)
@@ -48,6 +41,8 @@ if (model == BBMOD_NONE)
 }
 
 materials = array_create(model[BBMOD_EModel.MaterialCount], BBMOD_MATERIAL_DEFAULT);
+
+animation_instance = bbmod_animation_instance_create();
 
 animations = [
 	bbmod_load("Demo/Walking.bbanim"),

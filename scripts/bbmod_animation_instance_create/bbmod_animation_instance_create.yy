@@ -1,8 +1,8 @@
 {
-    "id": "f53435a7-5e9c-40fc-a01f-35161de2215f",
+    "id": "4487311d-5726-4c98-850f-b15d4db98d8b",
     "modelName": "GMScript",
     "mvc": "1.0",
-    "name": "bbmod_create_transform_array",
+    "name": "bbmod_animation_instance_create",
     "IsCompatibility": false,
     "IsDnD": false
 }

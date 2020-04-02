@@ -26,7 +26,6 @@ mouse_last_y = _mouse_y;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Play animations
-var _anim_changed = false;
 var _anim_count = array_length_1d(animations);
 
 if (keyboard_check_pressed(vk_left))
@@ -35,7 +34,6 @@ if (keyboard_check_pressed(vk_left))
 	{
 		anim_current = _anim_count - 1;
 	}
-	_anim_changed = true;
 }
 else if (keyboard_check_pressed(vk_right))
 {
@@ -43,18 +41,6 @@ else if (keyboard_check_pressed(vk_right))
 	{
 		anim_current = 0;
 	}
-	_anim_changed = true;
 }
 
-if (_anim_changed)
-{
-	animation_time_last = 0;
-	position_key_last = array_create(64, 0);
-	rotation_key_last = array_create(64, 0);
-}
-
-if (is_undefined(transform))
-{
-	transform = bbmod_create_transform_array(model);
-}
-bbmod_animate(model, animations[anim_current], transform);
+bbmod_animate(model, animations[anim_current], animation_instance);
