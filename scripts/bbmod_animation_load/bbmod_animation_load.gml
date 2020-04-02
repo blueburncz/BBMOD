@@ -1,7 +1,8 @@
 /// @func bbmod_animation(buffer, version)
-/// @param {real} buffer
-/// @param {real} version
-/// @return {array}
+/// @desc Loads an Animation structure from a buffer.
+/// @param {real} buffer The buffer to load the structure from.
+/// @param {real} version The version of the animation file.
+/// @return {array} The loaded Animation structure.
 var _buffer = argument0;
 var _version = argument1;
 
