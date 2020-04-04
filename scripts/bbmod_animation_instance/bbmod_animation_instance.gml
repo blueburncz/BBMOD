@@ -5,6 +5,8 @@ enum BBMOD_EAnimationInstance
 {
 	/// @member The currently played animation.
 	Animation,
+	/// @member The current animation time.
+	AnimationTime,
 	/// @member Animation time in last frame. Used to reset members in
 	/// looping animations or when switching between animations.
 	AnimationTimeLast,

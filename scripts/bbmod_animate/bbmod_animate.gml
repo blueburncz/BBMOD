@@ -4,9 +4,6 @@
 /// @param {array} animation The Animation structure.
 /// @param {array} animation_instance An AnimationInstance structure.
 /// [bbmod_create_transform_array](./bbmod_create_transform_array.html).
-
-//var _t = get_timer();
-
 var _bbmod = argument0;
 var _animation = argument1;
 var _anim_inst = argument2;
@@ -19,6 +16,7 @@ var _inverse_transform = _bbmod[BBMOD_EModel.InverseTransformMatrix];
 
 var _time_in_seconds = current_time * 0.001;
 var _animation_time = bbmod_get_animation_time(_animation, _time_in_seconds);
+_anim_inst[@ BBMOD_EAnimationInstance.AnimationTime] = _animation_time;
 
 if (_anim_changed
 	|| _animation_time < _anim_inst[BBMOD_EAnimationInstance.AnimationTimeLast])
@@ -98,5 +96,3 @@ while (!ds_stack_empty(_anim_stack))
 		ds_stack_push(_anim_stack, _children[i], _matrix_new);
 	}
 }
-
-//show_debug_message("Animate: " + string(get_timer() - _t) + "us");

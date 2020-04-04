@@ -44,9 +44,15 @@ materials = array_create(model[BBMOD_EModel.MaterialCount], BBMOD_MATERIAL_DEFAU
 
 animation_instance = bbmod_animation_instance_create();
 
+var _anim_walking = bbmod_load("Demo/Walking.bbanim");
+var _anim_sneaking_forward = bbmod_load("Demo/SneakingForward.bbanim");
+var _anim_transition = bbmod_animation_create_transition(
+	model, _anim_walking, 0, _anim_sneaking_forward, 0, 1);
+
 animations = [
-	bbmod_load("Demo/Walking.bbanim"),
-	bbmod_load("Demo/SneakingForward.bbanim")
+	_anim_walking,
+	_anim_sneaking_forward,
+	_anim_transition
 ];
 
 anim_current = 0;
