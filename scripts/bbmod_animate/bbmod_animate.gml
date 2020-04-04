@@ -1,41 +1,22 @@
-/// @func bbmod_animate(bbmod, animation, animation_instance)
-/// @desc Animates a BBMOD.
-/// @param {array} bbmod The BBMOD structure.
-/// @param {array} animation The Animation structure.
+/// @func bbmod_animate(animation_player, animation_instance, anim_time)
+/// @desc Animates a Model.
+/// @param {array} animation_player An AnimationPlayer structure.
 /// @param {array} animation_instance An AnimationInstance structure.
+/// @param {real} anim_time The current animation time.
 /// [bbmod_create_transform_array](./bbmod_create_transform_array.html).
-var _bbmod = argument0;
-var _animation = argument1;
-var _anim_inst = argument2;
-
-var _anim_changed = (_anim_inst[BBMOD_EAnimationInstance.Animation] != _animation);
-_anim_inst[@ BBMOD_EAnimationInstance.Animation] = _animation;
-
+var _anim_player = argument0;
+var _model = _anim_player[BBMOD_EAnimationPlayer.Model];
+var _anim_inst = argument1
+var _animation = _anim_inst[BBMOD_EAnimationInstance.Animation];
+var _animation_time = argument2;
 var _anim_stack = global.__bbmod_anim_stack;
-var _inverse_transform = _bbmod[BBMOD_EModel.InverseTransformMatrix];
-
-var _time_in_seconds = current_time * 0.001;
-var _animation_time = bbmod_get_animation_time(_animation, _time_in_seconds);
-_anim_inst[@ BBMOD_EAnimationInstance.AnimationTime] = _animation_time;
-
-if (_anim_changed
-	|| _animation_time < _anim_inst[BBMOD_EAnimationInstance.AnimationTimeLast])
-{
-	var _bone_count = array_length_1d(_animation[BBMOD_EAnimation.Bones]);
-	_anim_inst[@ BBMOD_EAnimationInstance.PositionKeyLast] =
-		array_create(_bone_count, 0);
-	_anim_inst[@ BBMOD_EAnimationInstance.RotationKeyLast] =
-		array_create(_bone_count, 0);
-	_anim_inst[@ BBMOD_EAnimationInstance.TransformArray] =
-		array_create(_bone_count * 16, 0);
-}
-_anim_inst[@ BBMOD_EAnimationInstance.AnimationTimeLast] = _animation_time;
-
+var _inverse_transform = _model[BBMOD_EModel.InverseTransformMatrix];
 var _position_key_last = _anim_inst[BBMOD_EAnimationInstance.PositionKeyLast];
 var _rotation_key_last = _anim_inst[BBMOD_EAnimationInstance.RotationKeyLast];
 var _transform_array = _anim_inst[BBMOD_EAnimationInstance.TransformArray];
+var _anim_bones = _animation[BBMOD_EAnimation.Bones];
 
-ds_stack_push(_anim_stack, _bbmod[BBMOD_EModel.Skeleton], matrix_build_identity());
+ds_stack_push(_anim_stack, _model[BBMOD_EModel.Skeleton], matrix_build_identity());
 
 while (!ds_stack_empty(_anim_stack))
 {
@@ -47,7 +28,7 @@ while (!ds_stack_empty(_anim_stack))
 
 	if (_bone_index >= 0)
 	{
-		var _bone_data = array_get(_animation[BBMOD_EAnimation.Bones], _bone_index);
+		var _bone_data = array_get(_anim_bones, _bone_index);
 
 		if (!is_undefined(_bone_data))
 		{

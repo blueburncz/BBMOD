@@ -3,8 +3,12 @@
 /// @enum An enumeration of members of an AnimationInstance structure.
 enum BBMOD_EAnimationInstance
 {
-	/// @member The currently played animation.
+	/// @member The animation to be played.
 	Animation,
+	/// @member True if the animation should be looped.
+	Loop,
+	/// @member Time when the animation started playing (in seconds).
+	AnimationStart,
 	/// @member The current animation time.
 	AnimationTime,
 	/// @member Animation time in last frame. Used to reset members in

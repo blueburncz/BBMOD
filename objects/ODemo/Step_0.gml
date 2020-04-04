@@ -1,6 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Camera control
-
 var _mouse_x = window_mouse_get_x();
 var _mouse_y = window_mouse_get_y();
 var _mouse_sens = 1;
@@ -34,6 +33,7 @@ if (keyboard_check_pressed(vk_left))
 	{
 		anim_current = _anim_count - 1;
 	}
+	bbmod_play(animation_player, animations[anim_current], true);
 }
 else if (keyboard_check_pressed(vk_right))
 {
@@ -41,6 +41,7 @@ else if (keyboard_check_pressed(vk_right))
 	{
 		anim_current = 0;
 	}
+	bbmod_play(animation_player, animations[anim_current], true);
 }
 
-bbmod_animate(model, animations[anim_current], animation_instance);
+bbmod_animation_player_update(animation_player, current_time * 0.001);
