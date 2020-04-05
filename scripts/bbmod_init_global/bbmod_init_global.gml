@@ -14,5 +14,8 @@ global.__bbmod_material_current = undefined;
 /// @var {real} A stack used when posing skeletons to avoid recursion.
 global.__bbmod_anim_stack = ds_stack_create();
 
-/// @var {real} An index of last found AnimationKey.
+/// @var {real} An index of the last found AnimationKey.
 global.__bbmod_key_index_last = 0;
+
+/// @var {real} The current render pass.
+global.bbmod_render_pass = BBMOD_RENDER_FORWARD;

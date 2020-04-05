@@ -3,7 +3,7 @@
 /// for specified animation time.
 /// @param {array} rotations An array of RotationKey structs.
 /// @param {real} time The current animation time.
-/// @param {real} index An index where to start searching for two closest
+/// @param {real} [index] An index where to start searching for two closest
 /// rotation keys for specified time. Defaults to 0.
 /// @return {array} The interpolated RotationKey.
 var _rotations = argument[0];

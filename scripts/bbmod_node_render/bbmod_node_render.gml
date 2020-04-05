@@ -14,12 +14,20 @@ var _meshes = _node[BBMOD_ENode.Meshes];
 var _children = _node[BBMOD_ENode.Children];
 var _model_count = array_length_1d(_meshes);
 var _child_count = array_length_1d(_children);
+var _render_pass = global.bbmod_render_pass;
 
 for (var i/*:int*/= 0; i < _model_count; ++i)
 {
 	var _model = _meshes[i];
 	var _material_index = _model[BBMOD_EMesh.MaterialIndex];
 	var _material = _materials[_material_index];
+
+	if ((_material[BBMOD_EMaterial.RenderPath] & _render_pass) == 0)
+	{
+		// Do not render the mesh if it doesn't use a material that can be used
+		// in the current render path.
+		continue;
+	}
 
 	if (bbmod_material_apply(_material) && !is_undefined(_transform))
 	{

@@ -2,7 +2,7 @@
 /// @desc Starts playing an animation.
 /// @param {struct} animation_player An AnimationPlayer structure.
 /// @param {struct} animation An Animation to play.
-/// @param {bool} loop True to loop the animation. Defaults to false.
+/// @param {bool} [loop] True to loop the animation. Defaults to false.
 var _animation_player = argument[0];
 var _animation = argument[1];
 var _loop = (argument_count > 2) ? argument[2] : false;

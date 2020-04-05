@@ -3,7 +3,7 @@
 /// for specified animation time.
 /// @param {array} positions An array of PositionKey structs.
 /// @param {real} time The current animation time.
-/// @param {real} index An index where to start searching for two closest
+/// @param {real} [index] An index where to start searching for two closest
 /// position keys for specified time. Defaults to 0.
 /// @return {array} The interpolated PositionKey.
 var _positions = argument[0];

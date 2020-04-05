@@ -40,4 +40,5 @@
 /// weights" predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_BONES 5
 
+/// @macro An index of the last found AnimationKey.
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
