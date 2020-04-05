@@ -10,6 +10,11 @@ var _file = argument[0];
 var _sha1 = (argument_count > 2) ? argument[2] : undefined;
 var _bbmod = BBMOD_NONE;
 
+if (!file_exists(_file))
+{
+	return _bbmod;
+}
+
 if (!is_undefined(_sha1))
 {
 	if (sha1_file(_file) != _sha1)

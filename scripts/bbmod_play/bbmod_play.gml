@@ -8,7 +8,8 @@ var _animation = argument[1];
 var _loop = (argument_count > 2) ? argument[2] : false;
 
 var _animation_list = _animation_player[BBMOD_EAnimationPlayer.Animations]; 
-var _animation_last = _animation_list[| 0];
+var _animation_last = _animation_player[@ BBMOD_EAnimationPlayer.AnimationInstanceLast];
+
 ds_list_clear(_animation_list);
 
 if (!is_undefined(_animation_last))

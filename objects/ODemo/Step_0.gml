@@ -1,5 +1,58 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Camera control
+// Control character
+var _anim_prev = anim_current;
+var _anim_loop = false;
+
+if (anim_current != anim_reload)
+{
+	if (keyboard_check(ord("A")))
+	{
+		anim_current = anim_strafe_left;
+		_anim_loop = true;
+	}
+	else if (keyboard_check(ord("D")))
+	{
+		anim_current = anim_strafe_right;
+		_anim_loop = true;
+	}
+
+	if (keyboard_check(ord("W")))
+	{
+		anim_current = anim_walk_forward;
+		_anim_loop = true;
+	}
+	else if (keyboard_check(ord("S")))
+	{
+		anim_current = anim_walk_backward;
+		_anim_loop = true;
+	}
+
+	if (keyboard_check_pressed(ord("R")))
+	{
+		anim_current = anim_reload;
+	}
+
+	if (mouse_check_button(mb_left))
+	{
+		anim_current = anim_firing;
+	}
+}
+
+if (_anim_prev != anim_current)
+{
+	bbmod_play(animation_player, anim_current, _anim_loop);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Play animations
+if (!bbmod_animation_player_update(animation_player, current_time * 0.001))
+{
+	anim_current = anim_idle;
+	bbmod_play(animation_player, anim_current, true);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Control camera
 var _mouse_x = window_mouse_get_x();
 var _mouse_y = window_mouse_get_y();
 var _mouse_sens = 1;
@@ -22,26 +75,3 @@ z = cam_z + dsin(cam_pitch) * cam_zoom;
 
 mouse_last_x = _mouse_x;
 mouse_last_y = _mouse_y;
-
-////////////////////////////////////////////////////////////////////////////////
-// Play animations
-var _anim_count = array_length_1d(animations);
-
-if (keyboard_check_pressed(vk_left))
-{
-	if (--anim_current < 0)
-	{
-		anim_current = _anim_count - 1;
-	}
-	bbmod_play(animation_player, animations[anim_current], true);
-}
-else if (keyboard_check_pressed(vk_right))
-{
-	if (++anim_current >= _anim_count)
-	{
-		anim_current = 0;
-	}
-	bbmod_play(animation_player, animations[anim_current], true);
-}
-
-bbmod_animation_player_update(animation_player, current_time * 0.001);

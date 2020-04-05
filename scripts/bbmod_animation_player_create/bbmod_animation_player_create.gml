@@ -5,4 +5,5 @@
 var _anim_player = array_create(BBMOD_EAnimationPlayer.SIZE, 0);
 _anim_player[@ BBMOD_EAnimationPlayer.Model] = argument0;
 _anim_player[@ BBMOD_EAnimationPlayer.Animations] = ds_list_create();
+_anim_player[@ BBMOD_EAnimationPlayer.AnimationInstanceLast] = undefined;
 return _anim_player;

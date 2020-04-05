@@ -7,6 +7,8 @@ enum BBMOD_EAnimationPlayer
 	Model,
 	/// @member List of animations to play.
 	Animations,
+	/// @member The last played AnimationInstance.
+	AnimationInstanceLast,
 	/// @member The size of the AnimationPlayer structure.
 	SIZE
 };

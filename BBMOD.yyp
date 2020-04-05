@@ -119,6 +119,14 @@
             }
         },
         {
+            "Key": "081d30b8-b9cd-4e9f-82d8-e891978ab593",
+            "Value": {
+                "id": "9525ecfe-8715-4c18-a017-4c7cd1261548",
+                "resourcePath": "datafiles_yy\\Demo\\JumpUp.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "083f09c9-58a0-4986-abfc-4ba14fa826de",
             "Value": {
                 "id": "083f09c9-58a0-4986-abfc-4ba14fa826de",
@@ -215,6 +223,14 @@
             }
         },
         {
+            "Key": "16385223-bcf3-465d-8508-d0bd0c88e2a9",
+            "Value": {
+                "id": "28711650-88d4-4766-b814-b0e52112b087",
+                "resourcePath": "datafiles_yy\\Demo\\JumpLoop.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "1a280402-fc8c-4ed7-86aa-fb113d5ab2e1",
             "Value": {
                 "id": "871e2a20-872d-4bc1-bddc-15d5e65ce50e",
@@ -260,6 +276,14 @@
                 "id": "79cacd7c-1868-470e-972c-ca7227b166f7",
                 "resourcePath": "scripts\\bbmod_config\\bbmod_config.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "206c7189-81d3-4e4c-84e3-bd5cb0757208",
+            "Value": {
+                "id": "9ffbbdf5-9df6-4bf0-92de-dcd051d5a150",
+                "resourcePath": "datafiles_yy\\Demo\\Character.bbmod.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -559,14 +583,6 @@
             }
         },
         {
-            "Key": "47b9e973-3340-4022-9155-4c9c13e0a1db",
-            "Value": {
-                "id": "d0545d3b-4072-4957-9cf3-18424833a3bc",
-                "resourcePath": "datafiles_yy\\Demo\\SneakingForward.bbanim.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "47e7da7d-8875-49e9-a86b-f94e0be3c61d",
             "Value": {
                 "id": "f08e3a12-b2c8-4604-a46c-8faf9d8321bd",
@@ -639,6 +655,14 @@
             }
         },
         {
+            "Key": "4da87a17-a033-4e1f-8a87-7787ee38ce50",
+            "Value": {
+                "id": "eb782c3b-b460-444c-b681-0f8231a944d5",
+                "resourcePath": "views\\4da87a17-a033-4e1f-8a87-7787ee38ce50.yy",
+                "resourceType": "GMFolder"
+            }
+        },
+        {
             "Key": "4e358721-698e-4799-865a-b16e983dfe7e",
             "Value": {
                 "id": "4e358721-698e-4799-865a-b16e983dfe7e",
@@ -687,11 +711,27 @@
             }
         },
         {
+            "Key": "513a9d67-22c3-482d-bda9-475a06e5fdb9",
+            "Value": {
+                "id": "0925f867-146a-49ce-a0aa-28c6c03577b6",
+                "resourcePath": "datafiles_yy\\Demo\\IdleAiming.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "523710bd-348a-fb49-a4ca-1f2eb860cf70",
             "Value": {
                 "id": "523710bd-348a-fb49-a4ca-1f2eb860cf70",
                 "resourcePath": "views\\523710bd-348a-fb49-a4ca-1f2eb860cf70.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "527897bd-9825-4cf3-8964-ef39282856c5",
+            "Value": {
+                "id": "8c4730fa-9b7b-4746-947f-9dc61b0d6746",
+                "resourcePath": "datafiles_yy\\Demo\\Reloading.bbanim.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -903,14 +943,6 @@
             }
         },
         {
-            "Key": "6905bf9e-03f1-4104-9711-8c611d197fa5",
-            "Value": {
-                "id": "9490fdf7-6716-4993-b840-964db49e8337",
-                "resourcePath": "datafiles_yy\\Demo\\Walking.bbanim.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "6a8cf79a-3f1e-4671-af77-3da6bc73f189",
             "Value": {
                 "id": "b45db983-7250-43ce-ab3b-fa8fccc6d5b7",
@@ -948,14 +980,6 @@
                 "id": "6e0d060f-4b9b-4313-8c4f-0ec6da450688",
                 "resourcePath": "scripts\\ce_quaternion_rotate\\ce_quaternion_rotate.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "6e7a56a1-204d-4331-bc6d-47b5f7b2b6bf",
-            "Value": {
-                "id": "628c503b-f856-4007-bb0c-0e95e6e1f8d9",
-                "resourcePath": "datafiles_yy\\Demo\\Character.bbmod.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1047,6 +1071,14 @@
             }
         },
         {
+            "Key": "7513894b-24bd-45a1-bb46-14e03e9266ed",
+            "Value": {
+                "id": "ea877447-7adc-4cce-b21d-086e93c00237",
+                "resourcePath": "datafiles_yy\\Demo\\StrafeLeft.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "763e8b9a-8362-4066-85ab-1b662b691b22",
             "Value": {
                 "id": "763e8b9a-8362-4066-85ab-1b662b691b22",
@@ -1124,6 +1156,14 @@
                 "id": "7db744f7-c059-4fb1-be2f-6b33f6ebfe86",
                 "resourcePath": "scripts\\ce_vec3_normalize\\ce_vec3_normalize.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "7e9c7253-c8a2-4ab0-b007-b553adc2d7bf",
+            "Value": {
+                "id": "3c88b397-45be-4ac2-9d86-8c8f8b362d51",
+                "resourcePath": "datafiles_yy\\Demo\\WalkForward.bbanim.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1463,6 +1503,14 @@
             }
         },
         {
+            "Key": "a9a1f2b9-9d38-4c1a-9548-0c01a95bcd2e",
+            "Value": {
+                "id": "b54052c0-f3f9-4fef-904d-b0381c3f9021",
+                "resourcePath": "datafiles_yy\\Demo\\M4A1.bbmod.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "ab55c9ef-21fc-4373-8580-4d920ab879ea",
             "Value": {
                 "id": "ab55c9ef-21fc-4373-8580-4d920ab879ea",
@@ -1607,6 +1655,14 @@
             }
         },
         {
+            "Key": "be2b221a-26d2-4c41-b8f9-561c4d630dd7",
+            "Value": {
+                "id": "114da143-638a-491b-9efc-c82571a67b6a",
+                "resourcePath": "datafiles_yy\\Demo\\FiringRifle.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "bfbd7aa2-8111-4dd1-b274-d09def9a07e8",
             "Value": {
                 "id": "0a170400-b886-4b0f-9f08-cc822837f1b2",
@@ -1695,11 +1751,27 @@
             }
         },
         {
+            "Key": "cc20521b-69dd-4205-8da9-176b57d57ffe",
+            "Value": {
+                "id": "bdc07eb7-47e1-46b5-b8b6-155ca06e41ec",
+                "resourcePath": "datafiles_yy\\Demo\\StrafeRight.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "cc98d028-7bdd-4680-85f3-c87a7baa481e",
             "Value": {
                 "id": "5a142ef9-8934-4ce5-a573-e0e446f5d504",
                 "resourcePath": "options\\windows\\options_windows.yy",
                 "resourceType": "GMWindowsOptions"
+            }
+        },
+        {
+            "Key": "cf1e2a63-f595-4421-812b-e593db147ae5",
+            "Value": {
+                "id": "174ae515-0c9d-40a5-9827-c7f2646f6e69",
+                "resourcePath": "shaders\\ShDemo\\ShDemo.yy",
+                "resourceType": "GMShader"
             }
         },
         {
@@ -1732,6 +1804,14 @@
                 "id": "ceddef91-3d32-49bb-9fde-5f9b8f458ba6",
                 "resourcePath": "scripts\\bbmod_get_animation_key_interpolation_factor\\bbmod_get_animation_key_interpolation_factor.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "d168e3df-c1aa-4cf2-876c-129eeaac7a2d",
+            "Value": {
+                "id": "f6295caa-db5f-4f0d-b939-3cfb7e16d796",
+                "resourcePath": "datafiles_yy\\Demo\\WalkBackward.bbanim.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {

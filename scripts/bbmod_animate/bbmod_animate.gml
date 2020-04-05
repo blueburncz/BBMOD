@@ -49,9 +49,13 @@ while (!ds_stack_empty(_anim_stack))
 		}
 
 		// Apply offset
-		var _final_transform = _bone[BBMOD_EBone.OffsetMatrix];
-		_final_transform = matrix_multiply(_final_transform, matrix_multiply(_transform, _matrix));
-		_final_transform = matrix_multiply(_final_transform, _inverse_transform);
+		var _final_transform = matrix_multiply(matrix_multiply(_transform, _matrix), _inverse_transform);
+		if (_bone_index == 28)
+		{
+			global.socket = ce_array_clone(_final_transform);
+		}
+		_final_transform = matrix_multiply(_bone[BBMOD_EBone.OffsetMatrix], _final_transform);
+
 		array_copy(_transform_array, _bone_index * 16, _final_transform, 0, 16);
 	}
 

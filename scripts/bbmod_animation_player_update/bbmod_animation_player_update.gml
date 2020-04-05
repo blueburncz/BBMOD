@@ -46,5 +46,9 @@ repeat (ds_list_size(_animations))
 
 	bbmod_animate(_model, _anim_inst, _animation_time);
 
-	break;
+	_anim_player[@ BBMOD_EAnimationPlayer.AnimationInstanceLast] = _anim_inst;
+
+	return true;
 }
+
+return false;
