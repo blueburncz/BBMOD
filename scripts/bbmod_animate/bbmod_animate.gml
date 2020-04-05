@@ -1,11 +1,10 @@
-/// @func bbmod_animate(animation_player, animation_instance, anim_time)
+/// @func bbmod_animate(model, animation_instance, anim_time)
 /// @desc Animates a Model.
-/// @param {array} animation_player An AnimationPlayer structure.
+/// @param {array} model A Model structure.
 /// @param {array} animation_instance An AnimationInstance structure.
 /// @param {real} anim_time The current animation time.
 /// [bbmod_create_transform_array](./bbmod_create_transform_array.html).
-var _anim_player = argument0;
-var _model = _anim_player[BBMOD_EAnimationPlayer.Model];
+var _model = argument0;
 var _anim_inst = argument1
 var _animation = _anim_inst[BBMOD_EAnimationInstance.Animation];
 var _animation_time = argument2;
@@ -22,7 +21,6 @@ while (!ds_stack_empty(_anim_stack))
 {
 	var _matrix = ds_stack_pop(_anim_stack);
 	var _bone = ds_stack_pop(_anim_stack);
-
 	var _transform = _bone[BBMOD_EBone.TransformMatrix];
 	var _bone_index = _bone[BBMOD_EBone.Index];
 
@@ -34,27 +32,17 @@ while (!ds_stack_empty(_anim_stack))
 		{
 			// Position
 			var _positions = _bone_data[BBMOD_EAnimationBone.PositionKeys];
-			var k = bbmod_find_animation_key(_positions, _animation_time, _position_key_last[_bone_index]);
-			var _position_key = bbmod_get_animation_key(_positions, k);
-			var _position_key_next = bbmod_get_animation_key(_positions, k + 1);
-			var _factor = bbmod_get_animation_key_interpolation_factor(
-				_position_key, _position_key_next, _animation_time);
-			var _position_interpolated = bbmod_position_key_interpolate(
-				_position_key, _position_key_next, _factor);
-			var _mat_position = bbmod_position_key_to_matrix(_position_interpolated);
-			_position_key_last[@ _bone_index] = k;
+			var _position = bbmod_get_interpolated_position_key(
+				_positions, _animation_time, _position_key_last[_bone_index]);
+			var _mat_position = bbmod_position_key_to_matrix(_position);
+			_position_key_last[@ _bone_index] = BBMOD_KEY_INDEX_LAST;
 
 			// Rotation
 			var _rotations = _bone_data[BBMOD_EAnimationBone.RotationKeys];
-			var k = bbmod_find_animation_key(_rotations, _animation_time, _rotation_key_last[_bone_index]);
-			var _rotation_key = bbmod_get_animation_key(_rotations, k);
-			var _rotation_key_next = bbmod_get_animation_key(_rotations, k + 1);
-			var _factor = bbmod_get_animation_key_interpolation_factor(
-				_rotation_key, _rotation_key_next, _animation_time);
-			var _rotation_interpolated = bbmod_rotation_key_interpolate(
-				_rotation_key, _rotation_key_next, _factor);
-			var _mat_rotation = bbmod_rotation_key_to_matrix(_rotation_interpolated);
-			_rotation_key_last[@ _bone_index] = k;
+			var _rotation = bbmod_get_interpolated_rotation_key(
+				_rotations, _animation_time, _rotation_key_last[_bone_index]);
+			var _mat_rotation = bbmod_rotation_key_to_matrix(_rotation);
+			_rotation_key_last[@ _bone_index] = BBMOD_KEY_INDEX_LAST;
 
 			// Multiply transformation matrices
 			_transform = matrix_multiply(_mat_rotation, _mat_position);

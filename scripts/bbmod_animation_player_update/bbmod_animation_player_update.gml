@@ -4,6 +4,7 @@
 /// @param {real} current_time The current time in seconds.
 var _anim_player = argument0;
 var _current_time = argument1;
+var _model = _anim_player[BBMOD_EAnimationPlayer.Model];
 var _animations = _anim_player[BBMOD_EAnimationPlayer.Animations];
 
 repeat (ds_list_size(_animations))
@@ -43,7 +44,7 @@ repeat (ds_list_size(_animations))
 	}
 	_anim_inst[@ BBMOD_EAnimationInstance.AnimationTimeLast] = _animation_time;
 
-	bbmod_animate(_anim_player, _anim_inst, _animation_time);
+	bbmod_animate(_model, _anim_inst, _animation_time);
 
 	break;
 }

@@ -6,8 +6,7 @@
 var _mat = array_create(BBMOD_EMaterial.SIZE, -1);
 
 _mat[@ BBMOD_EMaterial.RenderPath] = BBMOD_RENDER_FORWARD;
-// FIXME: Use default BBMOD shader here.
-_mat[@ BBMOD_EMaterial.Shader] = ShDemo;
+_mat[@ BBMOD_EMaterial.Shader] = BBMOD_ShDefault;
 _mat[@ BBMOD_EMaterial.OnApply] = bbmod_material_on_apply_default;
 _mat[@ BBMOD_EMaterial.BlendMode] = bm_normal;
 _mat[@ BBMOD_EMaterial.Culling] = cull_counterclockwise;

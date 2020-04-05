@@ -18,6 +18,7 @@ repeat (2)
 		var _key_next = _keys[_index + 1];
 		if (_animation_time < _key_next[BBMOD_EAnimationKey.Time])
 		{
+			BBMOD_KEY_INDEX_LAST = _index;
 			return _index;
 		}
 		++_index;
@@ -25,4 +26,5 @@ repeat (2)
 	_index = 0;
 }
 
+BBMOD_KEY_INDEX_LAST = _index;
 return _index;

@@ -11,7 +11,9 @@
         "b8650315-ac4f-41a7-b350-7fed17448f32",
         "47e7da7d-8875-49e9-a86b-f94e0be3c61d",
         "3a73460e-340f-4b49-86b2-38922e5f87d7",
-        "8a0f84cb-765e-46f6-b13e-b500c0f2d523"
+        "8a0f84cb-765e-46f6-b13e-b500c0f2d523",
+        "598231de-9864-4a3d-85e1-0cbd471c595d",
+        "238a3a72-6410-4858-8295-75bada52a9f8"
     ],
     "filterType": "GMScript",
     "folderName": "Animation",

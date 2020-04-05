@@ -39,3 +39,5 @@
 /// @macro How many bites to shift to read/write a "has bone indices and vertex
 /// weights" predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_BONES 5
+
+#macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
