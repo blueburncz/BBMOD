@@ -55,6 +55,14 @@
             }
         },
         {
+            "Key": "024e517a-82c9-4d25-ad31-24d338dfa68a",
+            "Value": {
+                "id": "72b5564d-5b21-4253-8fab-2493e8683a1f",
+                "resourcePath": "datafiles_yy\\Demo\\WalkForwardRight.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "02952ae2-020d-45e0-a4cd-fedbee6f5d68",
             "Value": {
                 "id": "920bb5b1-cbfb-43d5-b1fa-1fe2ac6e245f",
@@ -239,6 +247,14 @@
             }
         },
         {
+            "Key": "1b8eb87d-0160-4334-98a7-f3518f42fa84",
+            "Value": {
+                "id": "2ee2d977-5643-4005-8cc5-ac5226f62a4b",
+                "resourcePath": "datafiles_yy\\Demo\\WalkLeft.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "1d39e99a-b6eb-76ce-a8d2-6e6a4c433a18",
             "Value": {
                 "id": "1d39e99a-b6eb-76ce-a8d2-6e6a4c433a18",
@@ -260,6 +276,14 @@
                 "id": "1e20707d-f1e4-455e-ae5e-cc5983c2093f",
                 "resourcePath": "scripts\\ce_vec4_lerp\\ce_vec4_lerp.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "1e2d0888-6551-4844-b9b1-aa86d9f6ff0d",
+            "Value": {
+                "id": "219fd8a5-30bd-48b5-b1ef-d3e84b029cff",
+                "resourcePath": "datafiles_yy\\Demo\\WalkBackwardLeft.bbanim.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -348,6 +372,14 @@
                 "id": "20c14d2a-2737-4a08-9752-05ae512fb6d9",
                 "resourcePath": "scripts\\bbmod_get_bone_transform\\bbmod_get_bone_transform.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "2a3936a4-b4ea-4e01-870b-a3cdcde8d7c4",
+            "Value": {
+                "id": "256c3a99-76db-4240-a682-d84e24a06e87",
+                "resourcePath": "datafiles_yy\\Demo\\WalkForwardLeft.bbanim.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -468,6 +500,14 @@
                 "id": "37c5cb65-7ae0-4532-b19c-0924ced3170d",
                 "resourcePath": "scripts\\ce_vec2_ceil\\ce_vec2_ceil.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "393046d8-2a8d-4570-9429-b59ac5559d0c",
+            "Value": {
+                "id": "554ed524-05f0-428d-a41a-29a73c8693b1",
+                "resourcePath": "datafiles_yy\\Demo\\WalkBackwardRight.bbanim.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1079,14 +1119,6 @@
             }
         },
         {
-            "Key": "7513894b-24bd-45a1-bb46-14e03e9266ed",
-            "Value": {
-                "id": "ea877447-7adc-4cce-b21d-086e93c00237",
-                "resourcePath": "datafiles_yy\\Demo\\StrafeLeft.bbanim.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "763e8b9a-8362-4066-85ab-1b662b691b22",
             "Value": {
                 "id": "763e8b9a-8362-4066-85ab-1b662b691b22",
@@ -1164,14 +1196,6 @@
                 "id": "7db744f7-c059-4fb1-be2f-6b33f6ebfe86",
                 "resourcePath": "scripts\\ce_vec3_normalize\\ce_vec3_normalize.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "7e9c7253-c8a2-4ab0-b007-b553adc2d7bf",
-            "Value": {
-                "id": "3c88b397-45be-4ac2-9d86-8c8f8b362d51",
-                "resourcePath": "datafiles_yy\\Demo\\WalkForward.bbanim.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1511,6 +1535,14 @@
             }
         },
         {
+            "Key": "a989cc88-0163-467e-8bc4-5ebc44bece94",
+            "Value": {
+                "id": "6dcaa6aa-ffc4-48d4-bab9-6c376c376362",
+                "resourcePath": "datafiles_yy\\Demo\\WalkForward.bbanim.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "a9a1f2b9-9d38-4c1a-9548-0c01a95bcd2e",
             "Value": {
                 "id": "b54052c0-f3f9-4fef-904d-b0381c3f9021",
@@ -1532,6 +1564,14 @@
                 "id": "fea7e230-3f2c-4e8f-a3df-cf4ee4716f30",
                 "resourcePath": "views\\ab8e1d7c-612f-4ea0-accd-b67c3f1b28cd.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "abf51c63-0dd3-4e54-841c-b06e5b57c8c4",
+            "Value": {
+                "id": "1785ebb2-a6bb-49df-83ee-6b3ba36788e3",
+                "resourcePath": "datafiles_yy\\Demo\\WalkBackward.bbanim.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1759,14 +1799,6 @@
             }
         },
         {
-            "Key": "cc20521b-69dd-4205-8da9-176b57d57ffe",
-            "Value": {
-                "id": "bdc07eb7-47e1-46b5-b8b6-155ca06e41ec",
-                "resourcePath": "datafiles_yy\\Demo\\StrafeRight.bbanim.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "cc98d028-7bdd-4680-85f3-c87a7baa481e",
             "Value": {
                 "id": "5a142ef9-8934-4ce5-a573-e0e446f5d504",
@@ -1812,14 +1844,6 @@
                 "id": "ceddef91-3d32-49bb-9fde-5f9b8f458ba6",
                 "resourcePath": "scripts\\bbmod_get_animation_key_interpolation_factor\\bbmod_get_animation_key_interpolation_factor.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "d168e3df-c1aa-4cf2-876c-129eeaac7a2d",
-            "Value": {
-                "id": "f6295caa-db5f-4f0d-b939-3cfb7e16d796",
-                "resourcePath": "datafiles_yy\\Demo\\WalkBackward.bbanim.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -2092,6 +2116,14 @@
                 "id": "fc3cd849-93a3-47d2-ac0e-970fc12199e0",
                 "resourcePath": "scripts\\ce_vec2_create\\ce_vec2_create.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "fc65ebd8-15c3-4695-a74d-cadf2941f1e5",
+            "Value": {
+                "id": "8adb753b-a21c-49ea-9595-f16b6b9ad4ad",
+                "resourcePath": "datafiles_yy\\Demo\\WalkRight.bbanim.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {

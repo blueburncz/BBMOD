@@ -8,26 +8,28 @@ if (anim_current != anim_reload)
 	anim_current = anim_idle;
 	_anim_loop = true;
 
-	if (keyboard_check(ord("A")))
-	{
-		anim_current = anim_strafe_left;
-		_anim_loop = true;
-	}
-	else if (keyboard_check(ord("D")))
-	{
-		anim_current = anim_strafe_right;
-		_anim_loop = true;
-	}
+	var _x = 0;
+	var _y = 0;
 
-	if (keyboard_check(ord("W")))
+	_x += keyboard_check(ord("W")) - keyboard_check(ord("S"));
+	_y += keyboard_check(ord("D")) - keyboard_check(ord("A"));
+
+	if (_x != 0 || _y != 0)
 	{
-		anim_current = anim_walk_forward;
-		_anim_loop = true;
-	}
-	else if (keyboard_check(ord("S")))
-	{
-		anim_current = anim_walk_backward;
-		_anim_loop = true;
+		var _dir = point_direction(0, 0, _x, _y);
+
+		switch (_dir)
+		{
+		case 0: anim_current = anim_walk_forward; break;
+		case 45: anim_current = anim_walk_forward_left; break;
+		case 90: anim_current = anim_walk_left; break;
+		case 135: anim_current = anim_walk_backward_left; break;
+		case 180: anim_current = anim_walk_backward; break;
+		case 225: anim_current = anim_walk_backward_right; break;
+		case 270: anim_current = anim_walk_right; break;
+		case 315: anim_current = anim_walk_forward_right; break;
+		default: show_debug_message(_dir); break;
+		}
 	}
 
 	if (keyboard_check_pressed(ord("R")))

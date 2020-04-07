@@ -31,10 +31,14 @@ anim_idle = bbmod_load("Demo/IdleAiming.bbanim");
 anim_jump = bbmod_load("Demo/JumpUp.bbanim");
 anim_jump_loop = bbmod_load("Demo/JumpLoop.bbanim");
 anim_reload = bbmod_load("Demo/Reloading.bbanim");
-anim_strafe_left = bbmod_load("Demo/StrafeLeft.bbanim");
-anim_strafe_right = bbmod_load("Demo/StrafeRight.bbanim");
+anim_walk_left = bbmod_load("Demo/WalkLeft.bbanim");
+anim_walk_right = bbmod_load("Demo/WalkRight.bbanim");
 anim_walk_backward = bbmod_load("Demo/WalkBackward.bbanim");
+anim_walk_backward_left = bbmod_load("Demo/WalkBackwardLeft.bbanim");
+anim_walk_backward_right = bbmod_load("Demo/WalkBackwardRight.bbanim");
 anim_walk_forward = bbmod_load("Demo/WalkForward.bbanim");
+anim_walk_forward_left = bbmod_load("Demo/WalkForwardLeft.bbanim");
+anim_walk_forward_right = bbmod_load("Demo/WalkForwardRight.bbanim");
 
 anim_current = anim_idle;
 
