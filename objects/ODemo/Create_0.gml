@@ -38,4 +38,9 @@ anim_walk_forward = bbmod_load("Demo/WalkForward.bbanim");
 
 anim_current = anim_idle;
 
+weapon_pos = ce_vec3_create(-9, -2, -0.5);
+weapon_rot = ce_vec3_create(292.95, 302.54, 236.83);
+weapon_modify_type = weapon_pos;
+weapon_modify_sub = 0;
+
 bbmod_play(animation_player, anim_current, true);

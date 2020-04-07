@@ -20,6 +20,9 @@ enum BBMOD_EAnimationInstance
 	/// @member An index of a rotation key which was used last frame.
 	/// Used to optimize search of rotation keys in following frames.
 	RotationKeyLast,
+	/// @member An array of individual bone transformation matrices,
+	/// without offsets. Useful for attachments.
+	BoneTransform,
 	/// @member An array containing transformation matrices of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	TransformArray,

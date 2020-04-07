@@ -39,6 +39,8 @@ repeat (ds_list_size(_animations))
 			array_create(_bone_count, 0);
 		_anim_inst[@ BBMOD_EAnimationInstance.RotationKeyLast] =
 			array_create(_bone_count, 0);
+		_anim_inst[@ BBMOD_EAnimationInstance.BoneTransform] =
+			array_create(_bone_count * 16, 0);
 		_anim_inst[@ BBMOD_EAnimationInstance.TransformArray] =
 			array_create(_bone_count * 16, 0);
 	}

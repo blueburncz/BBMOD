@@ -343,6 +343,14 @@
             }
         },
         {
+            "Key": "2792c207-56e5-48c1-a62e-afb79fdd7b7d",
+            "Value": {
+                "id": "20c14d2a-2737-4a08-9752-05ae512fb6d9",
+                "resourcePath": "scripts\\bbmod_get_bone_transform\\bbmod_get_bone_transform.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "2ad9d2a8-6c8c-40fd-902b-7b024d3dc9d8",
             "Value": {
                 "id": "cd414981-c4f6-43df-89fe-5cf817dcffe6",
@@ -2139,6 +2147,7 @@
         "b509bc9f-ea11-45a0-ac87-39de3e06b341",
         "4bf6115a-f830-479c-97c0-8eb501053421",
         "551bea06-a9df-4090-b6a6-08a60d83ca4f",
+        "2792c207-56e5-48c1-a62e-afb79fdd7b7d",
         "dc48fe91-72fc-4a75-ae20-8d2bd316e27b",
         "95361add-fd80-40c7-8c3d-25fa2de78848",
         "576b2405-e9f5-4dfc-9f64-22e8cf12aaee",

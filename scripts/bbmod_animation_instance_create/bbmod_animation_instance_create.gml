@@ -10,5 +10,6 @@ _anim_inst[@ BBMOD_EAnimationInstance.AnimationTime] = 0;
 _anim_inst[@ BBMOD_EAnimationInstance.AnimationTimeLast] = 0;
 _anim_inst[@ BBMOD_EAnimationInstance.PositionKeyLast] = 0;
 _anim_inst[@ BBMOD_EAnimationInstance.RotationKeyLast] = 0;
+_anim_inst[@ BBMOD_EAnimationInstance.BoneTransform] = undefined;
 _anim_inst[@ BBMOD_EAnimationInstance.TransformArray] = undefined;
 return _anim_inst;

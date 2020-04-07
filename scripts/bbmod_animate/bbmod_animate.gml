@@ -12,6 +12,7 @@ var _anim_stack = global.__bbmod_anim_stack;
 var _inverse_transform = _model[BBMOD_EModel.InverseTransformMatrix];
 var _position_key_last = _anim_inst[BBMOD_EAnimationInstance.PositionKeyLast];
 var _rotation_key_last = _anim_inst[BBMOD_EAnimationInstance.RotationKeyLast];
+var _bone_transform = _anim_inst[BBMOD_EAnimationInstance.BoneTransform];
 var _transform_array = _anim_inst[BBMOD_EAnimationInstance.TransformArray];
 var _anim_bones = _animation[BBMOD_EAnimation.Bones];
 
@@ -48,14 +49,10 @@ while (!ds_stack_empty(_anim_stack))
 			_transform = matrix_multiply(_mat_rotation, _mat_position);
 		}
 
-		// Apply offset
+		// Final transform
 		var _final_transform = matrix_multiply(matrix_multiply(_transform, _matrix), _inverse_transform);
-		if (_bone_index == 28)
-		{
-			global.socket = ce_array_clone(_final_transform);
-		}
+		_bone_transform[@ _bone_index] = ce_array_clone(_final_transform);
 		_final_transform = matrix_multiply(_bone[BBMOD_EBone.OffsetMatrix], _final_transform);
-
 		array_copy(_transform_array, _bone_index * 16, _final_transform, 0, 16);
 	}
 

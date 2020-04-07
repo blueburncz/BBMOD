@@ -5,6 +5,9 @@ var _anim_loop = false;
 
 if (anim_current != anim_reload)
 {
+	anim_current = anim_idle;
+	_anim_loop = true;
+
 	if (keyboard_check(ord("A")))
 	{
 		anim_current = anim_strafe_left;
@@ -30,11 +33,13 @@ if (anim_current != anim_reload)
 	if (keyboard_check_pressed(ord("R")))
 	{
 		anim_current = anim_reload;
+		_anim_loop = false;
 	}
 
 	if (mouse_check_button(mb_left))
 	{
 		anim_current = anim_firing;
+		_anim_loop = false;
 	}
 }
 
