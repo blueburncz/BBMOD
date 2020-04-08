@@ -15,7 +15,7 @@ mod_m4a1 = bbmod_load("Demo/M4A1.bbmod");
 ce_assert(mod_m4a1 != BBMOD_NONE, "Weapon model loading failed!");
 
 var _mat = bbmod_material_create();
-_mat[@ BBMOD_EMaterial.Shader] = ShDemo;
+_mat[@ BBMOD_EMaterial.Shader] = ShNoSkeleton;
 
 mat_m4a1 = array_create(mod_m4a1[BBMOD_EModel.MaterialCount], _mat);
 

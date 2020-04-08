@@ -1794,7 +1794,7 @@
             "Key": "cf1e2a63-f595-4421-812b-e593db147ae5",
             "Value": {
                 "id": "174ae515-0c9d-40a5-9827-c7f2646f6e69",
-                "resourcePath": "shaders\\ShDemo\\ShDemo.yy",
+                "resourcePath": "shaders\\ShNoSkeleton\\ShNoSkeleton.yy",
                 "resourceType": "GMShader"
             }
         },
