@@ -20,15 +20,33 @@ if (anim_current != anim_reload)
 
 		switch (_dir)
 		{
-		case 0: anim_current = anim_walk_forward; break;
-		case 45: anim_current = anim_walk_forward_left; break;
-		case 90: anim_current = anim_walk_left; break;
-		case 135: anim_current = anim_walk_backward_left; break;
-		case 180: anim_current = anim_walk_backward; break;
-		case 225: anim_current = anim_walk_backward_right; break;
-		case 270: anim_current = anim_walk_right; break;
-		case 315: anim_current = anim_walk_forward_right; break;
-		default: show_debug_message(_dir); break;
+		case 0:
+			anim_current = anim_walk_forward;
+			break;
+		case 45:
+			anim_current = anim_walk_forward_left;
+			break;
+		case 90:
+			anim_current = anim_walk_left;
+			break;
+		case 135:
+			anim_current = anim_walk_backward_left;
+			break;
+		case 180:
+			anim_current = anim_walk_backward;
+			break;
+		case 225:
+			anim_current = anim_walk_backward_right;
+			break;
+		case 270:
+			anim_current = anim_walk_right;
+			break;
+		case 315:
+			anim_current = anim_walk_forward_right;
+			break;
+		default:
+			show_debug_message(_dir);
+			break;
 		}
 	}
 

@@ -1,5 +1,3 @@
-show_debug_overlay(true);
-
 gpu_set_zwriteenable(true);
 gpu_set_ztestenable(true);
 gpu_set_tex_filter(true);
@@ -28,8 +26,6 @@ animation_player = bbmod_animation_player_create(mod_character);
 
 anim_firing = bbmod_load("Demo/FiringRifle.bbanim");
 anim_idle = bbmod_load("Demo/IdleAiming.bbanim");
-anim_jump = bbmod_load("Demo/JumpUp.bbanim");
-anim_jump_loop = bbmod_load("Demo/JumpLoop.bbanim");
 anim_reload = bbmod_load("Demo/Reloading.bbanim");
 anim_walk_left = bbmod_load("Demo/WalkLeft.bbanim");
 anim_walk_right = bbmod_load("Demo/WalkRight.bbanim");
@@ -41,10 +37,5 @@ anim_walk_forward_left = bbmod_load("Demo/WalkForwardLeft.bbanim");
 anim_walk_forward_right = bbmod_load("Demo/WalkForwardRight.bbanim");
 
 anim_current = anim_idle;
-
-weapon_pos = ce_vec3_create(-9, -2, -0.5);
-weapon_rot = ce_vec3_create(292.95, 302.54, 236.83);
-weapon_modify_type = weapon_pos;
-weapon_modify_sub = 0;
 
 bbmod_play(animation_player, anim_current, true);

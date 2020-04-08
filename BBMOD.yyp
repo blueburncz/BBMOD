@@ -127,14 +127,6 @@
             }
         },
         {
-            "Key": "081d30b8-b9cd-4e9f-82d8-e891978ab593",
-            "Value": {
-                "id": "9525ecfe-8715-4c18-a017-4c7cd1261548",
-                "resourcePath": "datafiles_yy\\Demo\\JumpUp.bbanim.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "083f09c9-58a0-4986-abfc-4ba14fa826de",
             "Value": {
                 "id": "083f09c9-58a0-4986-abfc-4ba14fa826de",
@@ -228,14 +220,6 @@
                 "id": "1620bd31-e9d9-4594-a39c-bd4dbf99a510",
                 "resourcePath": "scripts\\ce_array_reverse\\ce_array_reverse.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "16385223-bcf3-465d-8508-d0bd0c88e2a9",
-            "Value": {
-                "id": "28711650-88d4-4766-b814-b0e52112b087",
-                "resourcePath": "datafiles_yy\\Demo\\JumpLoop.bbanim.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
