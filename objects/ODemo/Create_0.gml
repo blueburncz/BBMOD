@@ -4,9 +4,10 @@ gpu_set_tex_filter(true);
 gpu_set_cullmode(cull_counterclockwise);
 
 z = 0;
-cam_z = 0;
-cam_pitch = 0;
-cam_zoom = 10;
+cam_z = 80;
+cam_pitch = 25;
+direction = 135;
+cam_zoom = 200;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
