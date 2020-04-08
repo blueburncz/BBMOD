@@ -11,8 +11,6 @@ _bone[@ BBMOD_EBone.Index] = buffer_read(_buffer, buffer_f32);
 _bone[@ BBMOD_EBone.TransformMatrix] = bbmod_load_matrix(_buffer);
 _bone[@ BBMOD_EBone.OffsetMatrix] = bbmod_load_matrix(_buffer);
 
-show_debug_message(_bone[@ BBMOD_EBone.Name] + " " + string(_bone[@ BBMOD_EBone.Index]));
-
 var _child_count = buffer_read(_buffer, buffer_u32);
 var _children = array_create(_child_count, 0);
 
