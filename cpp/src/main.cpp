@@ -1,4 +1,5 @@
 #include "bbmod.hpp"
+#include "terminal.h"
 #include <iostream>
 #include <filesystem>
 #include <string>
@@ -9,10 +10,8 @@ int main(int argc, const char* argv[])
 
 	if (argc < 2)
 	{
-		std::cout
-			<< "Input file not specified!" << std::endl
-			<< std::endl
-			<< usage << std::endl;
+		PRINT_ERROR("Input file not specified!");
+		std::cout << std::endl << usage << std::endl;
 		return EXIT_FAILURE;
 	}
 
@@ -28,7 +27,8 @@ int main(int argc, const char* argv[])
 			<< "  -h           Shows this help message." << std::endl
 			<< "  input_file   Path to the model to convert." << std::endl
 			<< "  output_file  Where to save the converted model. If not specified, " << std::endl
-			<< "               then the input file with .bbmod extension is used." << std::endl
+			<< "               then the input file path is used. Extensions .bbmod" << std::endl
+			<< "               and .bbanim are added automatically." << std::endl
 			<< std::endl;
 		return EXIT_SUCCESS;
 	}
@@ -44,15 +44,15 @@ int main(int argc, const char* argv[])
 		switch (retval)
 		{
 		case BBMOD_ERR_LOAD_FAILED:
-			std::cout << "ERROR: Could not load the model!" << std::endl;
+			PRINT_ERROR("Could not load the model!");
 			break;
 
 		case BBMOD_ERR_CONVERSION_FAILED:
-			std::cout << "ERROR: Model conversion failed!" << std::endl;
+			PRINT_ERROR("Model conversion failed!");
 			break;
 
 		case BBMOD_ERR_SAVE_FAILED:
-			std::cout << "ERROR: Could not save the model to \"" << fout << "\"!" << std::endl;
+			PRINT_ERROR("Could not save the model to \"%s\"!", fout);
 			break;
 
 		default:
@@ -62,7 +62,7 @@ int main(int argc, const char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	std::cout << "SUCCESS: Model saved to \"" << fout << "\"!" << std::endl;
+	PRINT_SUCCESS("Model saved to \"%s\"!", fout);
 
 	return EXIT_SUCCESS;
 }

@@ -32,5 +32,8 @@
     <ClInclude Include="src\bbmod.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\terminal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
