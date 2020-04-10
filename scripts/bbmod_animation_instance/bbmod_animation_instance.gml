@@ -1,4 +1,6 @@
 /// @func bbmod_animation_instance()
+/// @desc Contains definition of the AnimationInstance structure.
+/// @see BBMOD_EAnimationInstance
 
 /// @enum An enumeration of members of an AnimationInstance structure.
 enum BBMOD_EAnimationInstance

@@ -1,0 +1,27 @@
+{
+  "_version": 2,
+  "project": "BBMOD.yyp",
+  "project_name": "BBMOD",
+  "title": "BBMOD Docs",
+  "author": "BlueBurn",
+  "prefix": "bbmod_",
+  "analytics": "",
+  "api": {
+    "rating": ""
+  },
+  "toc": {
+    "BBMOD Docs": "index.md",
+    "Quickstart guide": {
+      "file": "QuickstartGuide/QuickstartGuide.md",
+      "pages": {
+        "Installation": "QuickstartGuide/QuickstartInstallation.md",
+        "Converting models": "QuickstartGuide/QuickstartConvertingModels.md",
+        "Loading files": "QuickstartGuide/QuickstartLoadingFiles.md",
+        "Setting up materials": "QuickstartGuide/QuickstartSettingUpMaterials.md",
+        "Playing animations": "QuickstartGuide/QuickstartPlayingAnimations.md",
+        "Animation events": "QuickstartGuide/QuickstartAnimationEvents.md",
+        "Rendering models": "QuickstartGuide/QuickstartRenderingModels.md"
+      }
+    }
+  }
+}

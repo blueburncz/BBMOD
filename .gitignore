@@ -1,7 +1,6 @@
+/docs_build/
 *.bbmod*
 *.bbanim*
-bob_*.png*
-lantern*.png*
 
 ### CATALYST ###
 
@@ -145,6 +144,16 @@ scripts/ce_array_reverse
 scripts/ce_array_shuffle
 scripts/ce_array_sort
 scripts/ce_array_swap
+views/21caa71b-c3b0-7cfc-835e-b813d1b718a3.yy
+views/59dab150-ca12-a6ed-fd8d-ffad131c75a3.yy
+scripts/ce_event_config
+scripts/ce_event_init_global
+scripts/ce_event_return
+scripts/ce_get_event
+scripts/ce_get_event_data
+scripts/ce_get_event_retval
+scripts/ce_trigger_event
+scripts/ce_trigger_event_global
 views/8e6a1a78-8765-3a82-5fee-51e026b5c9d3.yy
 views/88619fa4-21ed-c641-2530-52b79a56702c.yy
 scripts/ce_assert

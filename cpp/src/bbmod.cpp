@@ -266,9 +266,15 @@ void WriteHeader_BBMOD(
 	bool hasTextureCoords,
 	bool hasTangentW,
 	bool hasBones,
-	std::ofstream& fout)
+	std::ofstream& fout,
+	std::ofstream& log)
 {
 	fout.write("bbmod", sizeof(char) * 6);
+
+	log << "BBMOD v" << BBMOD_VERSION << std::endl
+		<< std::endl
+		<< "Vertex format:" << std::endl
+		<< "==============" << std::endl;
 
 	uint8_t version = BBMOD_VERSION;
 	FILE_WRITE_DATA(fout, version);
@@ -276,16 +282,43 @@ void WriteHeader_BBMOD(
 	bool hasVertices = true;
 	FILE_WRITE_DATA(fout, hasVertices);
 
+	log << "Vertex position 3D (3x float)" << std::endl;
+
 	FILE_WRITE_DATA(fout, hasNormals);
 
+	if (hasNormals)
+	{
+		log << "Vertex normal (3x float)" << std::endl;
+	}
+
 	FILE_WRITE_DATA(fout, hasTextureCoords);
+
+	if (hasTextureCoords)
+	{
+		log << "Texture coords (2x float)" << std::endl;
+	}
 
 	bool hasVertexColors = true;
 	FILE_WRITE_DATA(fout, hasVertexColors);
 
+	log << "Vertex color (4x uint8)" << std::endl;
+
 	FILE_WRITE_DATA(fout, hasTangentW);
 
+	if (hasTangentW)
+	{
+		log << "Tangent vector, bitangent sign (4x float)" << std::endl;
+	}
+
 	FILE_WRITE_DATA(fout, hasBones);
+
+	if (hasBones)
+	{
+		log << "Bone indices (4x float)" << std::endl
+			<< "Vertex weights (4x float)" << std::endl;
+	}
+
+	log << std::endl;
 }
 
 /**
@@ -694,7 +727,7 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log)
 	bool hasBones = (gIndexBoneNameToBone.size() > 0);
 
 	WriteHeader_BBMOD(mesh->HasNormals(), mesh->HasTextureCoords(0),
-		mesh->HasTangentsAndBitangents(), hasBones, fout);
+		mesh->HasTangentsAndBitangents(), hasBones, fout, log);
 
 	// Write global inverse transform
 	aiMatrix4x4 inverse = scene->mRootNode->mTransformation.Inverse();
@@ -710,7 +743,8 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log)
 
 	if (numOfBones > 0)
 	{
-		log << "Bones:" << std::endl;
+		log << "Bones:" << std::endl
+			<< "======" << std::endl;
 		BoneToBBMOD(0, matrix, fout, log);
 		log << std::endl;
 	}
@@ -721,7 +755,8 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log)
 
 	if (numOfMaterials > 0)
 	{
-		log << "Materials:" << std::endl;
+		log << "Materials:" << std::endl
+			<< "==========" << std::endl;
 		for (uint32_t i = 0; i < numOfMaterials; ++i)
 		{
 			aiMaterial* material = scene->mMaterials[i];

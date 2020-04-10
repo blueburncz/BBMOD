@@ -1,4 +1,6 @@
-/// @func b_bbmod()
+/// @func bbmod_model()
+/// @desc Contains definition of the Model structure.
+/// @see BBMOD_EModel
 
 /// @enum An enumeration of members of a Model structure.
 enum BBMOD_EModel

@@ -6,10 +6,10 @@
 #define HAS_TBN
 
 // Comment out if the model doesn't have bone indices and vertex weights.
-#define HAS_BONES
+//#define HAS_BONES
 
 // Define maximum number of bones per model here
-#define MAX_BONES 64
+//#define MAX_BONES 64
 
 attribute vec4 in_Position;
 attribute vec3 in_Normal;

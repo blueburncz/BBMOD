@@ -1,4 +1,6 @@
 /// @func bbmod_position_key()
+/// @desc Contains definition of the PositionKey structure.
+/// @see BBMOD_EPositionKey
 
 /// @enum An enumeration of members of a PositionKey structure.
 enum BBMOD_EPositionKey

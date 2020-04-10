@@ -1,5 +1,6 @@
 /// @func bbmod_config()
-/// @desc A configuration script of the BBMOD library.
+/// @desc A configuration script of the BBMOD library. Contains macro
+/// definitions etc. See its content for more info.
 
 /// @macro The default BBMOD material.
 #macro BBMOD_MATERIAL_DEFAULT global.__bbmod_material_default
@@ -8,11 +9,15 @@
 /// model/animation.
 #macro BBMOD_NONE undefined
 
-/// @macro A mask used to tell that a model is rendered in a forward render
+/// @macro {string} An event triggered on animation end. The event data
+/// will containg the animation that was finished playing.
+#macro BBMOD_EV_ANIMATION_END "bbmod_ev_animation_end"
+
+/// @macro A flag used to tell that a model is rendered in a forward render
 /// path.
 #macro BBMOD_RENDER_FORWARD (1)
 
-/// @macro A mask used to tell that a model is rendered in a deferred render
+/// @macro A flag used to tell that a model is rendered in a deferred render
 /// path.
 #macro BBMOD_RENDER_DEFERRED (1 << 1)
 
@@ -40,5 +45,6 @@
 /// weights" predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_BONES 5
 
-/// @macro An index of the last found AnimationKey.
+/// @macro An index of the last found AnimationKey, updated by
+/// [bbmod_find_animation_key](./bbmod_find_animation_key.html).
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last

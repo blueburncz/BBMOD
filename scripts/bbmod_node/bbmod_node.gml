@@ -1,6 +1,8 @@
 /// @func bbmod_node()
+/// @desc Contains definition of the Node structure.
+/// @see BBMOD_ENode
 
-/// @member An enumeration of members of a Node structure.
+/// @enum An enumeration of members of a Node structure.
 enum BBMOD_ENode
 {
 	/// @member The name of the node.

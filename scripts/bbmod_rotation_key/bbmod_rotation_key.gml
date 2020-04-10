@@ -1,4 +1,6 @@
 /// @func bbmod_rotation_key()
+/// @desc Contains definition of the RotationKey structure.
+/// @see BBMOD_ERotationKey
 
 /// @enum An enumeration of member of a RotationKey structure.
 enum BBMOD_ERotationKey

@@ -24,6 +24,7 @@ repeat (ds_list_size(_animations))
 
 	if (_looped && !_anim_inst[BBMOD_EAnimationInstance.Loop])
 	{
+		ce_trigger_event(BBMOD_EV_ANIMATION_END, _animation);
 		ds_list_delete(_animations, 0);
 		continue;
 	}
@@ -49,8 +50,4 @@ repeat (ds_list_size(_animations))
 	bbmod_animate(_model, _anim_inst, _animation_time);
 
 	_anim_player[@ BBMOD_EAnimationPlayer.AnimationInstanceLast] = _anim_inst;
-
-	return true;
 }
-
-return false;

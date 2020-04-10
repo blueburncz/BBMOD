@@ -1,16 +1,18 @@
 /// @func bbmod_animation()
+/// @desc Contains definition of the Animation structure.
+/// @see BBMOD_EAnimation
 
 /// @enum An enumeration of members of an Animation structure.
 enum BBMOD_EAnimation
 {
-	/// @enum The version of the animation file.
+	/// @member The version of the animation file.
 	Version,
-	/// @enum The duration of the animation (in tics).
+	/// @member The duration of the animation (in tics).
 	Duration,
-	/// @enum Number of animation tics per second.
+	/// @member Number of animation tics per second.
 	TicsPerSecond,
-	/// @enum An array of AnimationBone structures.
+	/// @member An array of AnimationBone structures.
 	Bones,
-	/// @enum The size of the Animation structure.
+	/// @member The size of the Animation structure.
 	SIZE
 };

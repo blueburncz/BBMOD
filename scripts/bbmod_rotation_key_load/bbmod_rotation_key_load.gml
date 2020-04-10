@@ -1,4 +1,4 @@
-/// @fun bbmod_rotation_key_load(buffer)
+/// @func bbmod_rotation_key_load(buffer)
 /// @desc Loads a RotationKey structure from a buffer.
 /// @param {real} buffer The buffer to load the structure from.
 /// @return {array} The loaded RotationKey structure.

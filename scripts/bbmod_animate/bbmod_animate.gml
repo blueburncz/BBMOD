@@ -3,7 +3,6 @@
 /// @param {array} model A Model structure.
 /// @param {array} animation_instance An AnimationInstance structure.
 /// @param {real} anim_time The current animation time.
-/// [bbmod_create_transform_array](./bbmod_create_transform_array.html).
 var _model = argument0;
 var _anim_inst = argument1
 var _animation = _anim_inst[BBMOD_EAnimationInstance.Animation];

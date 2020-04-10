@@ -1,12 +1,12 @@
-/// @func bbmod_node_render(bbmod, node, materials, transform)
+/// @func bbmod_node_render(model, node, materials, transform)
 /// @desc Submits a Node structure for rendering.
-/// @param {array} bbmod The BBMOD structure to which the Node belongs.
+/// @param {array} model The Model structure to which the Node belongs.
 /// @param {array} node The Node structure.
 /// @param {array} materials An array of Material structures, one for each
-/// material slot of the BBMOD.
+/// material slot of the Model.
 /// @param {array/undefined} transform An array of transformation matrices
 /// (for animated models) or `undefined`.
-var _bbmod = argument0;
+var _model = argument0;
 var _node = argument1;
 var _materials = argument2;
 var _transform = argument3;
@@ -40,5 +40,5 @@ for (var i/*:int*/= 0; i < _model_count; ++i)
 
 for (var i/*:int*/= 0; i < _child_count; ++i)
 {
-	bbmod_node_render(_bbmod, _children[i], _materials, _transform);
+	bbmod_node_render(_model, _children[i], _materials, _transform);
 }

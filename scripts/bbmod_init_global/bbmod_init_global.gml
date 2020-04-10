@@ -1,5 +1,7 @@
 /// @func bbmod_init_global()
 /// @desc Global initialization script for the BBMOD library.
+/// @note This script is executed automatically upon game start. Do not call it
+/// manually!
 gml_pragma("global", "bbmod_init_global()");
 
 /// @var {real} Mapping of vertex format masks to existing vertex formats.

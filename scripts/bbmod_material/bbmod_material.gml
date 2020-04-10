@@ -1,9 +1,13 @@
 /// @func bbmod_material()
+/// @desc Contains definition of the Material structure.
+/// @see BBMOD_EMaterial
 
 /// @enum An enumeration of members of a Material structure.
 enum BBMOD_EMaterial
 {
-	/// @enum A render path. See `BBMOD_RENDER_*` macros.
+	/// @member A render path. See macros
+	/// [BBMOD_RENDER_FORWARD](./BBMOD_RENDER_FORWARD.html) and
+	/// [BBMOD_RENDER_DEFERRED](./BBMOD_RENDER_DEFFERED.html).
 	RenderPath,
 	/// @member A shader that the material uses.
 	Shader,

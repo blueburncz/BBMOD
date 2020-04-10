@@ -1,4 +1,6 @@
 /// @func bbmod_bone()
+/// @desc Contains definition of the Bone structure.
+/// @see BBMOD_EBone
 
 /// @enum An enumeration of members of a Bone structure.
 enum BBMOD_EBone

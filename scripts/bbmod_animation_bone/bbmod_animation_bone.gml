@@ -1,4 +1,6 @@
 /// @func bbmod_animation_bone()
+/// @desc Contains definition of the AnimationBone structure.
+/// @see BBMOD_EAnimationBone
 
 /// @enum An enumeration of members of an AnimationBone structure.
 enum BBMOD_EAnimationBone

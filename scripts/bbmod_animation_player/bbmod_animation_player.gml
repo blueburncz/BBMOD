@@ -1,4 +1,6 @@
 /// @func bbmod_animation_player()
+/// @desc Contains definition of the AnimationPlayer structure.
+/// @see BBMOD_EAnimationPlayer
 
 /// @enum An enumeration of member of an AnimationPlayer structure.
 enum BBMOD_EAnimationPlayer
