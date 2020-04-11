@@ -768,19 +768,24 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log)
 	return BBMOD_SUCCESS;
 }
 
-int ConvertToBBMOD(const char* fin, const char* fout)
+int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded)
 {
 	std::ofstream log(GetFilename(fout, "log", ".txt"), std::ios::out);
 
 	Assimp::Importer* importer = new Assimp::Importer();
 
-	const aiScene* scene = importer->ReadFile(fin, 0
+	int flags = (0
 		| aiProcessPreset_TargetRealtime_Quality
-		//| aiProcess_MakeLeftHanded
-		//| aiProcess_PreTransformVertices
 		| aiProcess_TransformUVCoords
 		| aiProcess_OptimizeGraph
 		| aiProcess_OptimizeMeshes);
+
+	if (leftHanded)
+	{
+		flags |= aiProcess_ConvertToLeftHanded;
+	}
+
+	const aiScene* scene = importer->ReadFile(fin, flags);
 
 	if (!scene)
 	{

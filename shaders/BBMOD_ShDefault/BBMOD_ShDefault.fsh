@@ -27,7 +27,7 @@ void main()
 	vec3 N = normalize(v_vNormal);
 #endif
 
-	vec3 L = normalize(vec3(1.0, -1.0, 1.0));
+	vec3 L = normalize(-vec3(-1.0, -1.0, -1.0));
 	float NoL = max(dot(N, L), 0.0);
 	diffuse.rgb *= max(NoL, 0.25);
 	gl_FragColor = diffuse;

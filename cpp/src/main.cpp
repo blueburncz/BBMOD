@@ -4,6 +4,24 @@
 #include <filesystem>
 #include <string>
 
+const char* gUsage = "Usage: BBMOD.exe [-h] input_file [output_file] [-lh]";
+
+void PrintHelp()
+{
+	std::cout
+		<< gUsage << std::endl
+		<< std::endl
+		<< "Arguments:" << std::endl
+		<< std::endl
+		<< "  -h           Shows this help message." << std::endl
+		<< "  input_file   Path to the model to convert." << std::endl
+		<< "  output_file  Where to save the converted model. If not specified, " << std::endl
+		<< "               then the input file path is used. Extensions .bbmod" << std::endl
+		<< "               and .bbanim are added automatically." << std::endl
+		<< "  -lh          Convert to left-handed coordinate system." << std::endl
+		<< std::endl;
+}
+
 int main(int argc, const char* argv[])
 {
 	if (!InitTerminal())
@@ -11,38 +29,61 @@ int main(int argc, const char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	const char* usage = "Usage: BBMOD.exe [-h] input_file [output_file]";
+	const char* fin = NULL;
+	const char* fout = NULL;
+	bool showHelp = false;
+	bool leftHanded = false;
 
-	if (argc < 2)
+	for (int i = 1; i < argc; ++i)
+	{
+		if (*argv[i] == '-')
+		{
+			if (strcmp(argv[i], "-h") == 0)
+			{
+				PrintHelp();
+				return EXIT_SUCCESS;
+			}
+			else if (strcmp(argv[i], "-lh") == 0)
+			{
+				leftHanded = true;
+			}
+			else
+			{
+				PRINT_ERROR("Unrecognized option %s!", argv[i]);
+				return EXIT_FAILURE;
+			}
+		}
+		else
+		{
+			if (!fin)
+			{
+				fin = argv[i];
+			}
+			else if (!fout)
+			{
+				fout = argv[i];
+			}
+			else
+			{
+				PRINT_ERROR("Too many arguments!");
+				std::cout << std::endl << gUsage << std::endl;
+				return EXIT_FAILURE;
+			}
+		}
+	}
+
+	if (!fin)
 	{
 		PRINT_ERROR("Input file not specified!");
-		std::cout << std::endl << usage << std::endl;
+		std::cout << std::endl << gUsage << std::endl;
 		return EXIT_FAILURE;
 	}
 
-	const char* fin = argv[1];
-
-	if (strcmp(fin, "-h") == 0)
-	{
-		std::cout
-			<< usage << std::endl
-			<< std::endl
-			<< "Arguments:" << std::endl
-			<< std::endl
-			<< "  -h           Shows this help message." << std::endl
-			<< "  input_file   Path to the model to convert." << std::endl
-			<< "  output_file  Where to save the converted model. If not specified, " << std::endl
-			<< "               then the input file path is used. Extensions .bbmod" << std::endl
-			<< "               and .bbanim are added automatically." << std::endl
-			<< std::endl;
-		return EXIT_SUCCESS;
-	}
-
-	const char* foutArg = (argc > 2) ? argv[2] : fin;
+	const char* foutArg = (fout) ? fout : fin;
 	std::string foutPath = std::filesystem::path(foutArg).replace_extension(".bbmod").string();
-	const char* fout = foutPath.c_str();
+	fout = foutPath.c_str();
 
-	int retval = ConvertToBBMOD(fin, fout);
+	int retval = ConvertToBBMOD(fin, fout, leftHanded);
 
 	if (retval != BBMOD_SUCCESS)
 	{
