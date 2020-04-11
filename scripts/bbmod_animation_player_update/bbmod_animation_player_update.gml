@@ -32,7 +32,16 @@ repeat (ds_list_size(_animations))
 	_anim_inst[@ BBMOD_EAnimationInstance.AnimationTime] = _animation_time;
 
 	var _bone_count = array_length_1d(_animation[BBMOD_EAnimation.Bones]);
-	var _initialized = !is_undefined(_anim_inst[BBMOD_EAnimationInstance.TransformArray]);
+	var _initialized = (!is_undefined(_anim_inst[BBMOD_EAnimationInstance.BoneTransform])
+		&& !is_undefined(_anim_inst[BBMOD_EAnimationInstance.TransformArray]));
+
+	if (!_initialized)
+	{
+		_anim_inst[@ BBMOD_EAnimationInstance.BoneTransform] =
+			array_create(_bone_count * 16, 0);
+		_anim_inst[@ BBMOD_EAnimationInstance.TransformArray] =
+			array_create(_bone_count * 16, 0);
+	}
 
 	if (!_initialized || _looped)
 	{
@@ -40,11 +49,8 @@ repeat (ds_list_size(_animations))
 			array_create(_bone_count, 0);
 		_anim_inst[@ BBMOD_EAnimationInstance.RotationKeyLast] =
 			array_create(_bone_count, 0);
-		_anim_inst[@ BBMOD_EAnimationInstance.BoneTransform] =
-			array_create(_bone_count * 16, 0);
-		_anim_inst[@ BBMOD_EAnimationInstance.TransformArray] =
-			array_create(_bone_count * 16, 0);
 	}
+
 	_anim_inst[@ BBMOD_EAnimationInstance.AnimationTimeLast] = _animation_time;
 
 	bbmod_animate(_model, _anim_inst, _animation_time);

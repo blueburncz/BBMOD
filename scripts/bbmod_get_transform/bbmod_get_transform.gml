@@ -3,12 +3,11 @@
 /// @param {array} animation_player An AnimationPlayer structure.
 /// @return {array} The array of transformation matrices.
 var _anim_player = argument0;
-var _animations = _anim_player[BBMOD_EAnimationPlayer.Animations];
+var _animation = _anim_player[BBMOD_EAnimationPlayer.AnimationInstanceLast];
 
-if (!ds_list_empty(_animations))
+if (!is_undefined(_animation))
 {
-	var _anim_inst = _animations[| 0];
-	return _anim_inst[BBMOD_EAnimationInstance.TransformArray];
+	return _animation[BBMOD_EAnimationInstance.TransformArray];
 }
 
 var _model = _anim_player[BBMOD_EAnimationPlayer.Model];

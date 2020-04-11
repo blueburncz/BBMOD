@@ -2,8 +2,11 @@
 /// @desc A configuration script of the BBMOD library. Contains macro
 /// definitions etc. See its content for more info.
 
-/// @macro The default BBMOD material.
+/// @macro The default material.
 #macro BBMOD_MATERIAL_DEFAULT global.__bbmod_material_default
+
+/// @macro The default material for animated models.
+#macro BBMOD_MATERIAL_DEFAULT_ANIMATED global.__bbmod_material_default_animated
 
 /// @macro A value returned when loading fails or to destroy an existing
 /// model/animation.

@@ -27,7 +27,7 @@ anim_current = (speed > 0) ? anim_walk : anim_idle;
 
 if (anim_current != _anim_last)
 {
-    bbmod_play(anim_current, true);
+    bbmod_play(animation_player, anim_current, true);
 }
 
 bbmod_animation_player_update(animation_player, current_time * 0.001);

@@ -15,6 +15,7 @@ _anim_empty[@ BBMOD_EAnimation.TicsPerSecond] = 0;
 _anim_empty[@ BBMOD_EAnimation.Bones] = array_create(_bone_count, undefined);
 
 var _anim_inst = bbmod_animation_instance_create(_anim_empty);
-_anim_inst[BBMOD_EAnimationInstance.TransformArray] = array_create(_bone_count * 16, 0);
+_anim_inst[@ BBMOD_EAnimationInstance.BoneTransform] = array_create(_bone_count * 16, 0);
+_anim_inst[@ BBMOD_EAnimationInstance.TransformArray] = array_create(_bone_count * 16, 0);
 bbmod_animate(_model, _anim_inst, 0);
 return _anim_inst[BBMOD_EAnimationInstance.TransformArray];

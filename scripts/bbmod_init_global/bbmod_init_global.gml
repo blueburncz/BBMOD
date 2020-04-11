@@ -8,7 +8,10 @@ gml_pragma("global", "bbmod_init_global()");
 global.__bbmod_vertex_formats = ds_map_create();
 
 /// @var {real} The default material.
-global.__bbmod_material_default = bbmod_material_create();
+global.__bbmod_material_default = bbmod_material_create(BBMOD_ShDefault);
+
+/// @var {real} The default material for animated models.
+global.__bbmod_material_default_animated = bbmod_material_create(BBMOD_ShDefaultAnimated);
 
 /// @var {array/undefined} The currently applied material.
 global.__bbmod_material_current = undefined;
