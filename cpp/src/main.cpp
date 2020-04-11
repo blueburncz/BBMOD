@@ -1,11 +1,16 @@
 #include "bbmod.hpp"
-#include "terminal.h"
+#include "terminal.hpp"
 #include <iostream>
 #include <filesystem>
 #include <string>
 
 int main(int argc, const char* argv[])
 {
+	if (!InitTerminal())
+	{
+		return EXIT_FAILURE;
+	}
+
 	const char* usage = "Usage: BBMOD.exe [-h] input_file [output_file]";
 
 	if (argc < 2)

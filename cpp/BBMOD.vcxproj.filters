@@ -27,12 +27,15 @@
     <ClCompile Include="src\bbmod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\terminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bbmod.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\terminal.h">
+    <ClInclude Include="src\terminal.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

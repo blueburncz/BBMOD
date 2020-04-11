@@ -156,10 +156,11 @@
   <ItemGroup>
     <ClCompile Include="src\bbmod.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\terminal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bbmod.hpp" />
-    <ClInclude Include="src\terminal.h" />
+    <ClInclude Include="src\terminal.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,10 +25,10 @@
 #define TC_STRINGIFY(v) #v
 
 #define TC1(v) \
-	"\033[" TC_STRINGIFY(v) "m"
+	"\x1B[" TC_STRINGIFY(v) "m"
 
 #define TC2(v1, v2) \
-	"\033[" TC_STRINGIFY(v1) ";" TC_STRINGIFY(v2) "m"
+	"\x1B[" TC_STRINGIFY(v1) ";" TC_STRINGIFY(v2) "m"
 
 #define PRINT_SUCCESS(fmt, ...) \
 	printf(TC2(TC_B_GREEN, TC_F_BLACK) "Success: " fmt TC1(TC_RESET) "\n", ##__VA_ARGS__)
@@ -41,3 +41,5 @@
 
 #define PRINT_ERROR(fmt, ...) \
 	printf(TC2(TC_B_RED, TC_F_BLACK) "Error: " fmt TC1(TC_RESET) "\n", ##__VA_ARGS__)
+
+bool InitTerminal();
