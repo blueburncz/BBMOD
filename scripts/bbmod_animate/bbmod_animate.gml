@@ -46,10 +46,10 @@ while (!ds_stack_empty(_anim_stack))
 
 			#region Find position keys
 			var _found = false;
-			repeat (_positions_size - 1 - _index)
+			while (_index < _positions_size)
 			{
 				_position_key = _positions[_index];
-				_position_key_next = _positions[_index + 1];
+				_position_key_next = _positions[clamp(_index + 1,0,_positions_size-1)];
 				if (_animation_time < _position_key_next[BBMOD_EAnimationKey.Time])
 				{
 					_found = true;
@@ -60,10 +60,10 @@ while (!ds_stack_empty(_anim_stack))
 			if (!_found)
 			{
 				_index = 0;
-				repeat (_positions_size - 1 - _index)
+				while (_index < _positions_size)
 				{
 					_position_key = _positions[_index];
-					_position_key_next = _positions[_index + 1];
+					_position_key_next = _positions[clamp(_index + 1,0,_positions_size-1)];
 					if (_animation_time < _position_key_next[BBMOD_EAnimationKey.Time])
 					{
 						_found = true;
@@ -75,7 +75,7 @@ while (!ds_stack_empty(_anim_stack))
 			#endregion Find position keys
 
 			_position_key_last[@ _bone_index] = _index;
-
+	
 			var _position_key_time = _position_key[BBMOD_EAnimationKey.Time];
 			var _delta_time = _position_key_next[BBMOD_EAnimationKey.Time] - _position_key_time;
 			var _factor = (_delta_time == 0) ? 0 : (_animation_time - _position_key_time) / _delta_time;
@@ -98,10 +98,10 @@ while (!ds_stack_empty(_anim_stack))
 
 			#region Find rotation keys
 			var _found = false;
-			repeat (_rotations_size - 1 - _index)
+			while (_index < _rotations_size)
 			{
 				_rotation_key = _rotations[_index];
-				_rotation_key_next = _rotations[_index + 1];
+				_rotation_key_next = _rotations[clamp(_index + 1,0,_rotations_size-1)];
 				if (_animation_time < _rotation_key_next[BBMOD_EAnimationKey.Time])
 				{
 					_found = true;
@@ -112,10 +112,10 @@ while (!ds_stack_empty(_anim_stack))
 			if (!_found)
 			{
 				_index = 0;
-				repeat (_rotations_size - 1 - _index)
+				while (_index < _rotations_size)
 				{
 					_rotation_key = _rotations[_index];
-					_rotation_key_next = _rotations[_index + 1];
+					_rotation_key_next = _rotations[clamp(_index + 1,0,_rotations_size-1)];
 					if (_animation_time < _rotation_key_next[BBMOD_EAnimationKey.Time])
 					{
 						_found = true;
