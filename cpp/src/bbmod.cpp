@@ -146,9 +146,9 @@ uint32_t EncodeColor(const aiColor4D& color)
 {
 	return (uint32_t)(
 		((uint32_t)(color.a * 255.0f) << 24) |
-		((uint32_t)(color.r * 255.0f) << 16) |
+		((uint32_t)(color.b * 255.0f) << 16) |
 		((uint32_t)(color.g * 255.0f) << 8) |
-		((uint32_t)(color.b * 255.0f)));
+		((uint32_t)(color.r * 255.0f)));
 }
 
 /** Returns cross product of vectors v1 and v2. */
@@ -356,6 +356,7 @@ void MeshToBBMOD(
 	aiMesh* mesh,
 	aiMatrix4x4& matrix,
 	bool forceBonesAndWeights,
+	bool invertWinding,
 	std::ofstream& fout)
 {
 	uint32_t faceCount = mesh->mNumFaces;
@@ -403,7 +404,7 @@ void MeshToBBMOD(
 	for (unsigned int i = 0; i < faceCount; ++i)
 	{
 		aiFace& face = mesh->mFaces[i];
-		for (unsigned int f = 0; f < face.mNumIndices; ++f)
+		for (unsigned int f = invertWinding ? face.mNumIndices - 1 : 0; f >= 0 && f < face.mNumIndices; f += invertWinding ? -1 : +1)
 		{
 			uint32_t idx = face.mIndices[f];
 
@@ -504,6 +505,7 @@ void NodeToBBMOD(
 	id_t id,
 	aiMatrix4x4& matrix,
 	bool forceBonesAndWeights,
+	bool invertWinding,
 	std::ofstream& fout)
 {
 	aiNode* node = gIndexIdToNode.at(id);
@@ -530,7 +532,7 @@ void NodeToBBMOD(
 	{
 		size_t idx = GetNodeMesh(id, (size_t)i);
 		aiMesh* mesh = scene->mMeshes[idx];
-		MeshToBBMOD(mesh, matrix, forceBonesAndWeights, fout);
+		MeshToBBMOD(mesh, matrix, forceBonesAndWeights, invertWinding, fout);
 	}
 
 	// Write child nodes
@@ -550,7 +552,7 @@ void NodeToBBMOD(
 	for (uint32_t i = 0; i < childCount; ++i)
 	{
 		id_t child = GetNodeChild(id, (size_t)i);
-		NodeToBBMOD(scene, child, matrix, forceBonesAndWeights, fout);
+		NodeToBBMOD(scene, child, matrix, forceBonesAndWeights, invertWinding, fout);
 	}
 
 	matrix = matrixBackup;
@@ -720,7 +722,7 @@ void AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream
  *  * Number of materials (uint32)
  *  * Material names follow... (null terminated strings)
  */
-int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log)
+int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log, bool invertWinding)
 {
 	// Write header
 	aiMesh* mesh = scene->mMeshes[0];
@@ -735,7 +737,7 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log)
 
 	// Write nodes
 	aiMatrix4x4 matrix;
-	NodeToBBMOD(scene, 0, matrix, hasBones, fout);
+	NodeToBBMOD(scene, 0, matrix, hasBones, invertWinding, fout);
 
 	// Write bones
 	uint32_t numOfBones = (uint32_t)gNextBoneId;
@@ -768,7 +770,7 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log)
 	return BBMOD_SUCCESS;
 }
 
-int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded)
+int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded, bool invertWinding)
 {
 	std::ofstream log(GetFilename(fout, "log", ".txt"), std::ios::out);
 
@@ -807,7 +809,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded)
 		return BBMOD_ERR_SAVE_FAILED;
 	}
 
-	int retval = SceneToBBMOD(scene, file, log);
+	int retval = SceneToBBMOD(scene, file, log, invertWinding);
 
 	file.flush();
 	file.close();

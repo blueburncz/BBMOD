@@ -19,6 +19,7 @@ void PrintHelp()
 		<< "               then the input file path is used. Extensions .bbmod" << std::endl
 		<< "               and .bbanim are added automatically." << std::endl
 		<< "  -lh          Convert to left-handed coordinate system." << std::endl
+		<< "  -iw          Invert winding order of vertices." << std::endl
 		<< std::endl;
 }
 
@@ -33,6 +34,7 @@ int main(int argc, const char* argv[])
 	const char* fout = NULL;
 	bool showHelp = false;
 	bool leftHanded = false;
+	bool invertWinding = false;
 
 	for (int i = 1; i < argc; ++i)
 	{
@@ -46,6 +48,10 @@ int main(int argc, const char* argv[])
 			else if (strcmp(argv[i], "-lh") == 0)
 			{
 				leftHanded = true;
+			}
+			else if (strcmp(argv[i], "-iw") == 0)
+			{
+				invertWinding = true;
 			}
 			else
 			{
@@ -83,7 +89,7 @@ int main(int argc, const char* argv[])
 	std::string foutPath = std::filesystem::path(foutArg).replace_extension(".bbmod").string();
 	fout = foutPath.c_str();
 
-	int retval = ConvertToBBMOD(fin, fout, leftHanded);
+	int retval = ConvertToBBMOD(fin, fout, leftHanded, invertWinding);
 
 	if (retval != BBMOD_SUCCESS)
 	{

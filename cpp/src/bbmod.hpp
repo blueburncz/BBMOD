@@ -16,4 +16,4 @@
 #define BBMOD_ERR_SAVE_FAILED 3
 
 /** Converts a model from file fin to BBMOD and saves it to fout. */
-int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded);
+int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded, bool invertWinding);
