@@ -1,15 +1,15 @@
 # bbmod_animate
 `script`
 ```gml
-bbmod_animate(model, animation_instance, anim_time)
+bbmod_animate(animation_player, animation_instance, anim_time)
 ```
 
 ## Description
-Animates a Model.
+Calculates skeleton's current transformation matrices.
 
 ### Arguments
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| model | `array` | A Model structure. |
+| animation_player | `array` | An AnimationPlayer structure. |
 | animation_instance | `array` | An AnimationInstance structure. |
 | anim_time | `real` | The current animation time. |

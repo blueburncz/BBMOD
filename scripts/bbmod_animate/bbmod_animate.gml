@@ -1,11 +1,12 @@
-/// @func bbmod_animate(model, animation_instance, anim_time)
-/// @desc Animates a Model.
-/// @param {array} model A Model structure.
+/// @func bbmod_animate(animation_player, animation_instance, anim_time)
+/// @desc Calculates skeleton's current transformation matrices.
+/// @param {array} animation_player An AnimationPlayer structure.
 /// @param {array} animation_instance An AnimationInstance structure.
 /// @param {real} anim_time The current animation time.
 //var _t = get_timer();
 
-var _model = argument0;
+var _animation_player = argument0;
+var _model = _animation_player[BBMOD_EAnimationPlayer.Model];
 var _anim_inst = argument1
 var _animation = _anim_inst[BBMOD_EAnimationInstance.Animation];
 var _animation_time = argument2;
@@ -16,6 +17,8 @@ var _rotation_key_last = _anim_inst[BBMOD_EAnimationInstance.RotationKeyLast];
 var _bone_transform = _anim_inst[BBMOD_EAnimationInstance.BoneTransform];
 var _transform_array = _anim_inst[BBMOD_EAnimationInstance.TransformArray];
 var _anim_bones = _animation[BBMOD_EAnimation.Bones];
+var _position_overrides = _animation_player[BBMOD_EAnimationPlayer.BonePositionOverride];
+var _rotation_overrides = _animation_player[BBMOD_EAnimationPlayer.BoneRotationOverride];
 
 ds_stack_push(_anim_stack, _model[BBMOD_EModel.Skeleton], matrix_build_identity());
 
@@ -37,29 +40,19 @@ while (!ds_stack_empty(_anim_stack))
 		if (!is_undefined(_bone_data))
 		{
 			#region Position
-			var _positions = _bone_data[BBMOD_EAnimationBone.PositionKeys];
-			var _positions_size = array_length_1d(_positions);
-			var _index = _position_key_last[_bone_index];
+			var _override = _position_overrides[_bone_index];
 
-			var _position_key;
-			var _position_key_next;
+			if (_override == undefined)
+			{
+				var _positions = _bone_data[BBMOD_EAnimationBone.PositionKeys];
+				var _positions_size = array_length_1d(_positions);
+				var _index = _position_key_last[_bone_index];
 
-			#region Find position keys
-			var _found = false;
-			while (_index < _positions_size)
-			{
-				_position_key = _positions[_index];
-				_position_key_next = _positions[clamp(_index + 1,0,_positions_size-1)];
-				if (_animation_time < _position_key_next[BBMOD_EAnimationKey.Time])
-				{
-					_found = true;
-					break;
-				}
-				++_index;
-			}
-			if (!_found)
-			{
-				_index = 0;
+				var _position_key;
+				var _position_key_next;
+
+				#region Find position keys
+				var _found = false;
 				while (_index < _positions_size)
 				{
 					_position_key = _positions[_index];
@@ -71,47 +64,59 @@ while (!ds_stack_empty(_anim_stack))
 					}
 					++_index;
 				}
-			}
-			#endregion Find position keys
+				if (!_found)
+				{
+					_index = 0;
+					while (_index < _positions_size)
+					{
+						_position_key = _positions[_index];
+						_position_key_next = _positions[clamp(_index + 1,0,_positions_size-1)];
+						if (_animation_time < _position_key_next[BBMOD_EAnimationKey.Time])
+						{
+							_found = true;
+							break;
+						}
+						++_index;
+					}
+				}
+				#endregion Find position keys
 
-			_position_key_last[@ _bone_index] = _index;
+				_position_key_last[@ _bone_index] = _index;
 	
-			var _position_key_time = _position_key[BBMOD_EAnimationKey.Time];
-			var _delta_time = _position_key_next[BBMOD_EAnimationKey.Time] - _position_key_time;
-			var _factor = (_delta_time == 0) ? 0 : (_animation_time - _position_key_time) / _delta_time;
+				var _position_key_time = _position_key[BBMOD_EAnimationKey.Time];
+				var _delta_time = _position_key_next[BBMOD_EAnimationKey.Time] - _position_key_time;
+				var _factor = (_delta_time == 0) ? 0 : (_animation_time - _position_key_time) / _delta_time;
 
-			var _pos_from = _position_key[BBMOD_EPositionKey.Position];
-			var _pos_to = _position_key_next[BBMOD_EPositionKey.Position];
+				var _pos_from = _position_key[BBMOD_EPositionKey.Position];
+				var _pos_to = _position_key_next[BBMOD_EPositionKey.Position];
 
-			_mat_position[@ 12] = lerp(_pos_from[0], _pos_to[0], _factor);
-			_mat_position[@ 13] = lerp(_pos_from[1], _pos_to[1], _factor);
-			_mat_position[@ 14] = lerp(_pos_from[2], _pos_to[2], _factor);
+				_mat_position[@ 12] = lerp(_pos_from[0], _pos_to[0], _factor);
+				_mat_position[@ 13] = lerp(_pos_from[1], _pos_to[1], _factor);
+				_mat_position[@ 14] = lerp(_pos_from[2], _pos_to[2], _factor);
+			}
+			else // Animation
+			{
+				_mat_position[@ 12] = _override[0];
+				_mat_position[@ 13] = _override[1];
+				_mat_position[@ 14] = _override[2];
+			} // Override
 			#endregion
 
 			#region Rotation
-			var _rotations = _bone_data[BBMOD_EAnimationBone.RotationKeys];
-			var _rotations_size = array_length_1d(_rotations);
-			var _index = _rotation_key_last[_bone_index];
+			var _override = _rotation_overrides[_bone_index];
+			var _q10, _q11, _q12, _q13;
 
-			var _rotation_key;
-			var _rotation_key_next;
+			if (_override == undefined)
+			{
+				var _rotations = _bone_data[BBMOD_EAnimationBone.RotationKeys];
+				var _rotations_size = array_length_1d(_rotations);
+				var _index = _rotation_key_last[_bone_index];
 
-			#region Find rotation keys
-			var _found = false;
-			while (_index < _rotations_size)
-			{
-				_rotation_key = _rotations[_index];
-				_rotation_key_next = _rotations[clamp(_index + 1,0,_rotations_size-1)];
-				if (_animation_time < _rotation_key_next[BBMOD_EAnimationKey.Time])
-				{
-					_found = true;
-					break;
-				}
-				++_index;
-			}
-			if (!_found)
-			{
-				_index = 0;
+				var _rotation_key;
+				var _rotation_key_next;
+
+				#region Find rotation keys
+				var _found = false;
 				while (_index < _rotations_size)
 				{
 					_rotation_key = _rotations[_index];
@@ -123,89 +128,111 @@ while (!ds_stack_empty(_anim_stack))
 					}
 					++_index;
 				}
-			}
-			#endregion Find rotation keys
+				if (!_found)
+				{
+					_index = 0;
+					while (_index < _rotations_size)
+					{
+						_rotation_key = _rotations[_index];
+						_rotation_key_next = _rotations[clamp(_index + 1,0,_rotations_size-1)];
+						if (_animation_time < _rotation_key_next[BBMOD_EAnimationKey.Time])
+						{
+							_found = true;
+							break;
+						}
+						++_index;
+					}
+				}
+				#endregion Find rotation keys
 
-			_rotation_key_last[@ _bone_index] = _index;
+				_rotation_key_last[@ _bone_index] = _index;
 
-			var _rotation_key_time = _rotation_key[BBMOD_EAnimationKey.Time];
-			var _delta_time = _rotation_key_next[BBMOD_EAnimationKey.Time] - _rotation_key_time;
-			var _factor = (_delta_time == 0) ? 0 : (_animation_time - _rotation_key_time) / _delta_time;
+				var _rotation_key_time = _rotation_key[BBMOD_EAnimationKey.Time];
+				var _delta_time = _rotation_key_next[BBMOD_EAnimationKey.Time] - _rotation_key_time;
+				var _factor = (_delta_time == 0) ? 0 : (_animation_time - _rotation_key_time) / _delta_time;
 	
-			var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
-			var _rot_to = _rotation_key_next[BBMOD_ERotationKey.Rotation];
+				var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
+				var _rot_to = _rotation_key_next[BBMOD_ERotationKey.Rotation];
 
-			#region Quaternion slerp
-			var _q10 = _rot_from[0];
-			var _q11 = _rot_from[1];
-			var _q12 = _rot_from[2];
-			var _q13 = _rot_from[3];
+				#region Quaternion slerp
+				_q10 = _rot_from[0];
+				_q11 = _rot_from[1];
+				_q12 = _rot_from[2];
+				_q13 = _rot_from[3];
 
-			var _q20 = _rot_to[0];
-			var _q21 = _rot_to[1];
-			var _q22 = _rot_to[2];
-			var _q23 = _rot_to[3];
+				var _q20 = _rot_to[0];
+				var _q21 = _rot_to[1];
+				var _q22 = _rot_to[2];
+				var _q23 = _rot_to[3];
 
-			#region Normalize q1
-			var _q1norm = 1 / sqrt(_q10 * _q10
-				+ _q11 * _q11
-				+ _q12 * _q12
-				+ _q13 * _q13);
+				#region Normalize q1
+				var _q1norm = 1 / sqrt(_q10 * _q10
+					+ _q11 * _q11
+					+ _q12 * _q12
+					+ _q13 * _q13);
 
-			_q10 *= _q1norm;
-			_q11 *= _q1norm;
-			_q12 *= _q1norm;
-			_q13 *= _q1norm;
-			#endregion Normalize q1
+				_q10 *= _q1norm;
+				_q11 *= _q1norm;
+				_q12 *= _q1norm;
+				_q13 *= _q1norm;
+				#endregion Normalize q1
 
-			#region Normalize q2
-			var _q2norm = sqrt(_q20 * _q20
-				+ _q21 * _q21
-				+ _q22 * _q22
-				+ _q23 * _q23);
+				#region Normalize q2
+				var _q2norm = sqrt(_q20 * _q20
+					+ _q21 * _q21
+					+ _q22 * _q22
+					+ _q23 * _q23);
 
-			_q20 *= _q2norm;
-			_q21 *= _q2norm;
-			_q22 *= _q2norm;
-			_q23 *= _q2norm;
+				_q20 *= _q2norm;
+				_q21 *= _q2norm;
+				_q22 *= _q2norm;
+				_q23 *= _q2norm;
 
-			var _dot = _q10 * _q20
-				+ _q11 * _q21
-				+ _q12 * _q22
-				+ _q13 * _q23;
-			#endregion Normalize q2
+				var _dot = _q10 * _q20
+					+ _q11 * _q21
+					+ _q12 * _q22
+					+ _q13 * _q23;
+				#endregion Normalize q2
 
-			if (_dot < 0)
-			{
-				_dot = -_dot;
-				_q20 *= -1;
-				_q21 *= -1;
-				_q22 *= -1;
-				_q23 *= -1;
+				if (_dot < 0)
+				{
+					_dot = -_dot;
+					_q20 *= -1;
+					_q21 *= -1;
+					_q22 *= -1;
+					_q23 *= -1;
+				}
+
+				if (_dot > 0.9995)
+				{
+					_q10 = lerp(_q10, _q20, _factor);
+					_q11 = lerp(_q11, _q21, _factor);
+					_q12 = lerp(_q12, _q22, _factor);
+					_q13 = lerp(_q13, _q23, _factor);
+				}
+				else
+				{
+					var _theta_0 = arccos(_dot);
+					var _theta = _theta_0 * _factor;
+					var _sin_theta = sin(_theta);
+					var _sin_theta_0 = sin(_theta_0);
+					var _s2 = _sin_theta / _sin_theta_0;
+					var _s1 = cos(_theta) - (_dot * _s2);
+
+					_q10 = (_q10 * _s1) + (_q20 * _s2);
+					_q11 = (_q11 * _s1) + (_q21 * _s2);
+					_q12 = (_q12 * _s1) + (_q22 * _s2);
+					_q13 = (_q13 * _s1) + (_q23 * _s2);
+				}
+				#endregion Quaternion slerp
 			}
-
-			if (_dot > 0.9995)
+			else // Animation
 			{
-				_q10 = lerp(_q10, _q20, _factor);
-				_q11 = lerp(_q11, _q21, _factor);
-				_q12 = lerp(_q12, _q22, _factor);
-				_q13 = lerp(_q13, _q23, _factor);
-			}
-			else
-			{
-				var _theta_0 = arccos(_dot);
-				var _theta = _theta_0 * _factor;
-				var _sin_theta = sin(_theta);
-				var _sin_theta_0 = sin(_theta_0);
-				var _s2 = _sin_theta / _sin_theta_0;
-				var _s1 = cos(_theta) - (_dot * _s2);
-
-				_q10 = (_q10 * _s1) + (_q20 * _s2);
-				_q11 = (_q11 * _s1) + (_q21 * _s2);
-				_q12 = (_q12 * _s1) + (_q22 * _s2);
-				_q13 = (_q13 * _s1) + (_q23 * _s2);
-			}
-			#endregion Quaternion slerp
+				_q10 = _override[0];
+				_q11 = _override[1];
+				_q12 = _override[2];
+				_q13 = _override[3];
+			} // Override
 
 			#region Quaternion to matrix
 			var _q0sqr = _q10 * _q10;

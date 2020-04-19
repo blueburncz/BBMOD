@@ -20,7 +20,8 @@
         "Setting up materials": "QuickstartGuide/QuickstartSettingUpMaterials.md",
         "Playing animations": "QuickstartGuide/QuickstartPlayingAnimations.md",
         "Animation events": "QuickstartGuide/QuickstartAnimationEvents.md",
-        "Rendering models": "QuickstartGuide/QuickstartRenderingModels.md"
+        "Rendering models": "QuickstartGuide/QuickstartRenderingModels.md",
+        "Transforming bones": "QuickstartGuide/QuickstartTransformingBones.md"
       }
     }
   }

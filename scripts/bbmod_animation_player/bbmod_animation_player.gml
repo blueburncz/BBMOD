@@ -11,6 +11,10 @@ enum BBMOD_EAnimationPlayer
 	Animations,
 	/// @member The last played AnimationInstance.
 	AnimationInstanceLast,
+	/// @member Array of 3D vectors for bone position overriding.
+	BonePositionOverride,
+	/// @member Array of quaternions for bone position overriding.
+	BoneRotationOverride,
 	/// @member The size of the AnimationPlayer structure.
 	SIZE
 };

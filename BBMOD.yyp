@@ -559,6 +559,14 @@
             }
         },
         {
+            "Key": "42533c7e-bf35-434d-b4e7-bb89dca8cb60",
+            "Value": {
+                "id": "75288653-5c8b-4824-aae0-9084ba5a76f9",
+                "resourcePath": "scripts\\bbmod_model_find_bone_id\\bbmod_model_find_bone_id.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "42968b2c-a7bb-4752-9e40-257893814cf8",
             "Value": {
                 "id": "42968b2c-a7bb-4752-9e40-257893814cf8",
@@ -1511,6 +1519,14 @@
             }
         },
         {
+            "Key": "acdaecfa-995f-4619-89d2-042c59edb874",
+            "Value": {
+                "id": "df8b25d6-39a1-46f8-80c9-224116f29880",
+                "resourcePath": "scripts\\bbmod_set_bone_rotation\\bbmod_set_bone_rotation.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "add064e9-9b04-4f49-1093-d71379adf35a",
             "Value": {
                 "id": "add064e9-9b04-4f49-1093-d71379adf35a",
@@ -1636,6 +1652,14 @@
                 "id": "8fedc39d-bbee-4b24-a993-f528682ed11f",
                 "resourcePath": "shaders\\BBMOD_ShDefaultAnimated\\BBMOD_ShDefaultAnimated.yy",
                 "resourceType": "GMShader"
+            }
+        },
+        {
+            "Key": "bf64b911-8867-4fb4-9f26-57f2143db95e",
+            "Value": {
+                "id": "56d9467f-4318-4407-ab2f-1ef0955679f1",
+                "resourcePath": "scripts\\bbmod_set_bone_position\\bbmod_set_bone_position.yy",
+                "resourceType": "GMScript"
             }
         },
         {
@@ -2093,6 +2117,8 @@
         "551bea06-a9df-4090-b6a6-08a60d83ca4f",
         "2792c207-56e5-48c1-a62e-afb79fdd7b7d",
         "dc48fe91-72fc-4a75-ae20-8d2bd316e27b",
+        "bf64b911-8867-4fb4-9f26-57f2143db95e",
+        "acdaecfa-995f-4619-89d2-042c59edb874",
         "95361add-fd80-40c7-8c3d-25fa2de78848",
         "576b2405-e9f5-4dfc-9f64-22e8cf12aaee",
         "108216c1-fedb-446d-aad4-da5fae564306",
@@ -2104,6 +2130,7 @@
         "6f8de25e-542f-450d-be16-9e36033413f3",
         "f5e8fe28-d488-49c1-9a91-19fc3eaca6f5",
         "6ecc0963-f21f-4426-8fdf-3ad41b8b2cce",
+        "42533c7e-bf35-434d-b4e7-bb89dca8cb60",
         "3523b226-ceec-4ff8-a19c-21d48a9c1b5c",
         "91a1d9b1-5f8b-432e-90af-a8de2cce4d6c",
         "2ad9d2a8-6c8c-40fd-902b-7b024d3dc9d8",
