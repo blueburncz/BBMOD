@@ -12,7 +12,8 @@
         "2792c207-56e5-48c1-a62e-afb79fdd7b7d",
         "dc48fe91-72fc-4a75-ae20-8d2bd316e27b",
         "bf64b911-8867-4fb4-9f26-57f2143db95e",
-        "acdaecfa-995f-4619-89d2-042c59edb874"
+        "acdaecfa-995f-4619-89d2-042c59edb874",
+        "aa934ddd-6ace-473d-ac98-7c28088c72c1"
     ],
     "filterType": "GMScript",
     "folderName": "AnimationPlayer",
