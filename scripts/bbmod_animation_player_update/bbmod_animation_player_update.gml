@@ -53,7 +53,7 @@ repeat (ds_list_size(_animations))
 
 	_anim_inst[@ BBMOD_EAnimationInstance.AnimationTimeLast] = _animation_time;
 
-	bbmod_animate(_model, _anim_inst, _animation_time);
+	bbmod_animate(_anim_player, _anim_inst, _animation_time);
 
 	_anim_player[@ BBMOD_EAnimationPlayer.AnimationInstanceLast] = _anim_inst;
 }
