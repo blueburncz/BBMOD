@@ -1,8 +1,9 @@
-/// @func bbmod_animate(animation_player, animation_instance, anim_time)
+/// @func bbmod_animate(animation_player, animation_instance, anim_time, interpolate_frames)
 /// @desc Calculates skeleton's current transformation matrices.
 /// @param {array} animation_player An AnimationPlayer structure.
 /// @param {array} animation_instance An AnimationInstance structure.
 /// @param {real} anim_time The current animation time.
+/// @param {bool} interpolate_frames True to interpolate between animation frames.
 //var _t = get_timer();
 
 var _animation_player = argument0;
@@ -10,6 +11,7 @@ var _model = _animation_player[BBMOD_EAnimationPlayer.Model];
 var _anim_inst = argument1
 var _animation = _anim_inst[BBMOD_EAnimationInstance.Animation];
 var _animation_time = argument2;
+var _interpolate_frames = argument3;
 var _anim_stack = global.__bbmod_anim_stack;
 var _inverse_transform = _model[BBMOD_EModel.InverseTransformMatrix];
 var _position_key_last = _anim_inst[BBMOD_EAnimationInstance.PositionKeyLast];
@@ -22,8 +24,7 @@ var _rotation_overrides = _animation_player[BBMOD_EAnimationPlayer.BoneRotationO
 
 ds_stack_push(_anim_stack, _model[BBMOD_EModel.Skeleton], matrix_build_identity());
 
-var _mat_position = matrix_build_identity();
-var _mat_rotation = matrix_build_identity();
+var _mat_transform = matrix_build_identity();
 
 while (!ds_stack_empty(_anim_stack))
 {
@@ -52,53 +53,51 @@ while (!ds_stack_empty(_anim_stack))
 				var _position_key_next;
 
 				#region Find position keys
-				var _found = false;
-				while (_index < _positions_size)
+				repeat (_positions_size)
 				{
+					if (_index + 1 >= _positions_size)
+					{
+						_index = 0;
+					}
 					_position_key = _positions[_index];
-					_position_key_next = _positions[clamp(_index + 1,0,_positions_size-1)];
+					_position_key_next = _positions[clamp(_index + 1, 0, _positions_size - 1)];
 					if (_animation_time < _position_key_next[BBMOD_EAnimationKey.Time])
 					{
-						_found = true;
 						break;
 					}
 					++_index;
 				}
-				if (!_found)
-				{
-					_index = 0;
-					while (_index < _positions_size)
-					{
-						_position_key = _positions[_index];
-						_position_key_next = _positions[clamp(_index + 1,0,_positions_size-1)];
-						if (_animation_time < _position_key_next[BBMOD_EAnimationKey.Time])
-						{
-							_found = true;
-							break;
-						}
-						++_index;
-					}
-				}
 				#endregion Find position keys
 
 				_position_key_last[@ _bone_index] = _index;
-	
-				var _position_key_time = _position_key[BBMOD_EAnimationKey.Time];
-				var _delta_time = _position_key_next[BBMOD_EAnimationKey.Time] - _position_key_time;
-				var _factor = (_delta_time == 0) ? 0 : (_animation_time - _position_key_time) / _delta_time;
 
-				var _pos_from = _position_key[BBMOD_EPositionKey.Position];
-				var _pos_to = _position_key_next[BBMOD_EPositionKey.Position];
+				if (_interpolate_frames)
+				{
+					var _position_key_time = _position_key[BBMOD_EAnimationKey.Time];
+					var _delta_time = _position_key_next[BBMOD_EAnimationKey.Time] - _position_key_time;
+					var _factor = (_delta_time == 0) ? 0 : (_animation_time - _position_key_time) / _delta_time;
 
-				_mat_position[@ 12] = lerp(_pos_from[0], _pos_to[0], _factor);
-				_mat_position[@ 13] = lerp(_pos_from[1], _pos_to[1], _factor);
-				_mat_position[@ 14] = lerp(_pos_from[2], _pos_to[2], _factor);
+					var _pos_from = _position_key[BBMOD_EPositionKey.Position];
+					var _pos_to = _position_key_next[BBMOD_EPositionKey.Position];
+
+					_mat_transform[12] = lerp(_pos_from[0], _pos_to[0], _factor);
+					_mat_transform[13] = lerp(_pos_from[1], _pos_to[1], _factor);
+					_mat_transform[14] = lerp(_pos_from[2], _pos_to[2], _factor);
+				}
+				else // Interpolated
+				{
+					var _pos_from = _position_key[BBMOD_EPositionKey.Position];
+
+					_mat_transform[12] = _pos_from[0];
+					_mat_transform[13] = _pos_from[1];
+					_mat_transform[14] = _pos_from[2];
+				} // No interpolation
 			}
 			else // Animation
 			{
-				_mat_position[@ 12] = _override[0];
-				_mat_position[@ 13] = _override[1];
-				_mat_position[@ 14] = _override[2];
+				_mat_transform[12] = _override[0];
+				_mat_transform[13] = _override[1];
+				_mat_transform[14] = _override[2];
 			} // Override
 			#endregion
 
@@ -116,115 +115,114 @@ while (!ds_stack_empty(_anim_stack))
 				var _rotation_key_next;
 
 				#region Find rotation keys
-				var _found = false;
-				while (_index < _rotations_size)
+				repeat (_rotations_size)
 				{
+					if (_index + 1 >= _rotations_size)
+					{
+						_index = 0;
+					}
 					_rotation_key = _rotations[_index];
-					_rotation_key_next = _rotations[clamp(_index + 1,0,_rotations_size-1)];
+					_rotation_key_next = _rotations[clamp(_index + 1, 0, _rotations_size - 1)];
 					if (_animation_time < _rotation_key_next[BBMOD_EAnimationKey.Time])
 					{
-						_found = true;
 						break;
 					}
 					++_index;
-				}
-				if (!_found)
-				{
-					_index = 0;
-					while (_index < _rotations_size)
-					{
-						_rotation_key = _rotations[_index];
-						_rotation_key_next = _rotations[clamp(_index + 1,0,_rotations_size-1)];
-						if (_animation_time < _rotation_key_next[BBMOD_EAnimationKey.Time])
-						{
-							_found = true;
-							break;
-						}
-						++_index;
-					}
 				}
 				#endregion Find rotation keys
 
 				_rotation_key_last[@ _bone_index] = _index;
 
-				var _rotation_key_time = _rotation_key[BBMOD_EAnimationKey.Time];
-				var _delta_time = _rotation_key_next[BBMOD_EAnimationKey.Time] - _rotation_key_time;
-				var _factor = (_delta_time == 0) ? 0 : (_animation_time - _rotation_key_time) / _delta_time;
+				if (_interpolate_frames)
+				{
+					var _rotation_key_time = _rotation_key[BBMOD_EAnimationKey.Time];
+					var _delta_time = _rotation_key_next[BBMOD_EAnimationKey.Time] - _rotation_key_time;
+					var _factor = (_delta_time == 0) ? 0 : (_animation_time - _rotation_key_time) / _delta_time;
 	
-				var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
-				var _rot_to = _rotation_key_next[BBMOD_ERotationKey.Rotation];
+					var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
+					var _rot_to = _rotation_key_next[BBMOD_ERotationKey.Rotation];
 
-				#region Quaternion slerp
-				_q10 = _rot_from[0];
-				_q11 = _rot_from[1];
-				_q12 = _rot_from[2];
-				_q13 = _rot_from[3];
+					#region Quaternion slerp
+					_q10 = _rot_from[0];
+					_q11 = _rot_from[1];
+					_q12 = _rot_from[2];
+					_q13 = _rot_from[3];
 
-				var _q20 = _rot_to[0];
-				var _q21 = _rot_to[1];
-				var _q22 = _rot_to[2];
-				var _q23 = _rot_to[3];
+					var _q20 = _rot_to[0];
+					var _q21 = _rot_to[1];
+					var _q22 = _rot_to[2];
+					var _q23 = _rot_to[3];
 
-				#region Normalize q1
-				var _q1norm = 1 / sqrt(_q10 * _q10
-					+ _q11 * _q11
-					+ _q12 * _q12
-					+ _q13 * _q13);
+					#region Normalize q1
+					var _q1norm = 1 / sqrt(_q10 * _q10
+						+ _q11 * _q11
+						+ _q12 * _q12
+						+ _q13 * _q13);
 
-				_q10 *= _q1norm;
-				_q11 *= _q1norm;
-				_q12 *= _q1norm;
-				_q13 *= _q1norm;
-				#endregion Normalize q1
+					_q10 *= _q1norm;
+					_q11 *= _q1norm;
+					_q12 *= _q1norm;
+					_q13 *= _q1norm;
+					#endregion Normalize q1
 
-				#region Normalize q2
-				var _q2norm = sqrt(_q20 * _q20
-					+ _q21 * _q21
-					+ _q22 * _q22
-					+ _q23 * _q23);
+					#region Normalize q2
+					var _q2norm = 1 / sqrt(_q20 * _q20
+						+ _q21 * _q21
+						+ _q22 * _q22
+						+ _q23 * _q23);
 
-				_q20 *= _q2norm;
-				_q21 *= _q2norm;
-				_q22 *= _q2norm;
-				_q23 *= _q2norm;
+					_q20 *= _q2norm;
+					_q21 *= _q2norm;
+					_q22 *= _q2norm;
+					_q23 *= _q2norm;
+					#endregion Normalize q2
 
-				var _dot = _q10 * _q20
-					+ _q11 * _q21
-					+ _q12 * _q22
-					+ _q13 * _q23;
-				#endregion Normalize q2
+					var _dot = _q10 * _q20
+						+ _q11 * _q21
+						+ _q12 * _q22
+						+ _q13 * _q23;
 
-				if (_dot < 0)
-				{
-					_dot = -_dot;
-					_q20 *= -1;
-					_q21 *= -1;
-					_q22 *= -1;
-					_q23 *= -1;
+					if (_dot < 0)
+					{
+						_dot = -_dot;
+						_q20 *= -1;
+						_q21 *= -1;
+						_q22 *= -1;
+						_q23 *= -1;
+					}
+
+					if (_dot > 0.9995)
+					{
+						_q10 = lerp(_q10, _q20, _factor);
+						_q11 = lerp(_q11, _q21, _factor);
+						_q12 = lerp(_q12, _q22, _factor);
+						_q13 = lerp(_q13, _q23, _factor);
+					}
+					else
+					{
+						var _theta_0 = arccos(_dot);
+						var _theta = _theta_0 * _factor;
+						var _sin_theta = sin(_theta);
+						var _sin_theta_0 = sin(_theta_0);
+						var _s2 = _sin_theta / _sin_theta_0;
+						var _s1 = cos(_theta) - (_dot * _s2);
+
+						_q10 = (_q10 * _s1) + (_q20 * _s2);
+						_q11 = (_q11 * _s1) + (_q21 * _s2);
+						_q12 = (_q12 * _s1) + (_q22 * _s2);
+						_q13 = (_q13 * _s1) + (_q23 * _s2);
+					}
+					#endregion Quaternion slerp
 				}
-
-				if (_dot > 0.9995)
+				else // Interpolated
 				{
-					_q10 = lerp(_q10, _q20, _factor);
-					_q11 = lerp(_q11, _q21, _factor);
-					_q12 = lerp(_q12, _q22, _factor);
-					_q13 = lerp(_q13, _q23, _factor);
-				}
-				else
-				{
-					var _theta_0 = arccos(_dot);
-					var _theta = _theta_0 * _factor;
-					var _sin_theta = sin(_theta);
-					var _sin_theta_0 = sin(_theta_0);
-					var _s2 = _sin_theta / _sin_theta_0;
-					var _s1 = cos(_theta) - (_dot * _s2);
+					var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
 
-					_q10 = (_q10 * _s1) + (_q20 * _s2);
-					_q11 = (_q11 * _s1) + (_q21 * _s2);
-					_q12 = (_q12 * _s1) + (_q22 * _s2);
-					_q13 = (_q13 * _s1) + (_q23 * _s2);
-				}
-				#endregion Quaternion slerp
+					_q10 = _rot_from[0];
+					_q11 = _rot_from[1];
+					_q12 = _rot_from[2];
+					_q13 = _rot_from[3];
+				} // No interpolation
 			}
 			else // Animation
 			{
@@ -244,20 +242,20 @@ while (!ds_stack_empty(_anim_stack))
 			var _q1q2 = _q11 * _q12;
 			var _q3q0 = _q13 * _q10;
 			var _q3q1 = _q13 * _q11;
-			_mat_rotation[@ 0] = 1 - 2 * (_q1sqr + _q2sqr);
-			_mat_rotation[@ 1] = 2 * (_q0q1 + _q3q2);
-			_mat_rotation[@ 2] = 2 * (_q0q2 - _q3q1);
-			_mat_rotation[@ 4] = 2 * (_q0q1 - _q3q2);
-			_mat_rotation[@ 5] = 1 - 2 * (_q0sqr + _q2sqr);
-			_mat_rotation[@ 6] = 2 * (_q1q2 + _q3q0);
-			_mat_rotation[@ 8] = 2 * (_q0q2 + _q3q1);
-			_mat_rotation[@ 9] = 2 * (_q1q2 - _q3q0);
-			_mat_rotation[@ 10] = 1 - 2 * (_q0sqr + _q1sqr);
+
+			_mat_transform[0] = 1 - 2 * (_q1sqr + _q2sqr);
+			_mat_transform[1] = 2 * (_q0q1 + _q3q2);
+			_mat_transform[2] = 2 * (_q0q2 - _q3q1);
+			_mat_transform[4] = 2 * (_q0q1 - _q3q2);
+			_mat_transform[5] = 1 - 2 * (_q0sqr + _q2sqr);
+			_mat_transform[6] = 2 * (_q1q2 + _q3q0);
+			_mat_transform[8] = 2 * (_q0q2 + _q3q1);
+			_mat_transform[9] = 2 * (_q1q2 - _q3q0);
+			_mat_transform[10] = 1 - 2 * (_q0sqr + _q1sqr);
 			#endregion Quaternion to matrix
 			#endregion Rotation
 
-			// Multiply transformation matrices
-			_transform = matrix_multiply(_mat_rotation, _mat_position);
+			_transform = _mat_transform;
 		}
 
 		// Final transform
