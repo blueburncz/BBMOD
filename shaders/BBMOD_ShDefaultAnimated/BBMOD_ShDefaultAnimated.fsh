@@ -14,7 +14,7 @@ varying vec2 v_vTexCoord;
 	// Tangent-space normal map
 	uniform sampler2D u_texNormal;
 #else
-	varying vec3 v_vNormal
+	varying vec3 v_vNormal;
 #endif
 
 void main()
