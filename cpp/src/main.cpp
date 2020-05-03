@@ -1,3 +1,5 @@
+#ifndef _WINDLL
+
 #include "bbmod.hpp"
 #include "terminal.hpp"
 #include <iostream>
@@ -33,8 +35,7 @@ int main(int argc, const char* argv[])
 	const char* fin = NULL;
 	const char* fout = NULL;
 	bool showHelp = false;
-	bool leftHanded = false;
-	bool invertWinding = false;
+	BBMODConfig config;
 
 	for (int i = 1; i < argc; ++i)
 	{
@@ -47,11 +48,11 @@ int main(int argc, const char* argv[])
 			}
 			else if (strcmp(argv[i], "-lh") == 0)
 			{
-				leftHanded = true;
+				config.leftHanded = true;
 			}
 			else if (strcmp(argv[i], "-iw") == 0)
 			{
-				invertWinding = true;
+				config.invertWinding = true;
 			}
 			else
 			{
@@ -89,7 +90,7 @@ int main(int argc, const char* argv[])
 	std::string foutPath = std::filesystem::path(foutArg).replace_extension(".bbmod").string();
 	fout = foutPath.c_str();
 
-	int retval = ConvertToBBMOD(fin, fout, leftHanded, invertWinding);
+	int retval = ConvertToBBMOD(fin, fout, config);
 
 	if (retval != BBMOD_SUCCESS)
 	{
@@ -118,3 +119,5 @@ int main(int argc, const char* argv[])
 
 	return EXIT_SUCCESS;
 }
+
+#endif // _WINDLL

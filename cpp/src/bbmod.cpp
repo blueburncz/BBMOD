@@ -722,7 +722,7 @@ void AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream
  *  * Number of materials (uint32)
  *  * Material names follow... (null terminated strings)
  */
-int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log, bool invertWinding)
+int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log, const BBMODConfig& config)
 {
 	// Write header
 	aiMesh* mesh = scene->mMeshes[0];
@@ -737,7 +737,7 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log, 
 
 	// Write nodes
 	aiMatrix4x4 matrix;
-	NodeToBBMOD(scene, 0, matrix, hasBones, invertWinding, fout);
+	NodeToBBMOD(scene, 0, matrix, hasBones, config.invertWinding, fout);
 
 	// Write bones
 	uint32_t numOfBones = (uint32_t)gNextBoneId;
@@ -770,7 +770,7 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log, 
 	return BBMOD_SUCCESS;
 }
 
-int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded, bool invertWinding)
+int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 {
 	std::ofstream log(GetFilename(fout, "log", ".txt"), std::ios::out);
 
@@ -782,7 +782,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded, bool inve
 		| aiProcess_OptimizeGraph
 		| aiProcess_OptimizeMeshes);
 
-	if (leftHanded)
+	if (config.leftHanded)
 	{
 		flags |= aiProcess_ConvertToLeftHanded;
 	}
@@ -809,7 +809,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, bool leftHanded, bool inve
 		return BBMOD_ERR_SAVE_FAILED;
 	}
 
-	int retval = SceneToBBMOD(scene, file, log, invertWinding);
+	int retval = SceneToBBMOD(scene, file, log, config);
 
 	file.flush();
 	file.close();
