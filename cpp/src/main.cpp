@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <string>
 
-const char* gUsage = "Usage: BBMOD.exe [-h] input_file [output_file] [-lh]";
+const char* gUsage = "Usage: BBMOD.exe [-h] input_file [output_file] [args...]";
 
 void PrintHelp()
 {
@@ -15,13 +15,19 @@ void PrintHelp()
 		<< std::endl
 		<< "Arguments:" << std::endl
 		<< std::endl
-		<< "  -h           Shows this help message." << std::endl
-		<< "  input_file   Path to the model to convert." << std::endl
-		<< "  output_file  Where to save the converted model. If not specified, " << std::endl
-		<< "               then the input file path is used. Extensions .bbmod" << std::endl
-		<< "               and .bbanim are added automatically." << std::endl
-		<< "  -lh          Convert to left-handed coordinate system." << std::endl
-		<< "  -iw          Invert winding order of vertices." << std::endl
+		<< "  -h                     Show this help message and exit." << std::endl
+		<< "  input_file             Path to the model to convert." << std::endl
+		<< "  output_file            Where to save the converted model. If not specified, " << std::endl
+		<< "                         then the input file path is used. Extensions .bbmod" << std::endl
+		<< "                         and .bbanim are added automatically." << std::endl
+		<< "  -db, --disable-bone    Disable saving bones and animations." << std::endl
+		<< "  -dc, --disable-color   Disable saving vertex colors." << std::endl
+		<< "  -dn, --disable-normal  Disable saving normal vectors. This also automatically" << std::endl
+		<< "                         applies --disable-tangent." << std::endl
+		<< "  -dt, --disable-tangent Disable saving tangent vectors and bitangent signs." << std::endl
+		<< "  -duv, --disable-uv     Disable saving texture coordinates." << std::endl
+		<< "  -iw, --invert-winding  Invert winding order of vertices." << std::endl
+		<< "  -lh, --left-handed     Convert to left-handed coordinate system." << std::endl
 		<< std::endl;
 }
 
@@ -46,13 +52,34 @@ int main(int argc, const char* argv[])
 				PrintHelp();
 				return EXIT_SUCCESS;
 			}
-			else if (strcmp(argv[i], "-lh") == 0)
+			else if (strcmp(argv[i], "-lh") == 0 || strcmp(argv[i], "--left-handed") == 0)
 			{
 				config.leftHanded = true;
 			}
-			else if (strcmp(argv[i], "-iw") == 0)
+			else if (strcmp(argv[i], "-iw") == 0 || strcmp(argv[i], "--invert-winding") == 0)
 			{
 				config.invertWinding = true;
+			}
+			else if (strcmp(argv[i], "-dn") == 0 || strcmp(argv[i], "--disable-normal") == 0)
+			{
+				config.disableNormals = true;
+				config.disableTangentW = true;
+			}
+			else if (strcmp(argv[i], "-duv") == 0 || strcmp(argv[i], "--disable-uv") == 0)
+			{
+				config.disableTextureCoords = true;
+			}
+			else if (strcmp(argv[i], "-dc") == 0 || strcmp(argv[i], "--disable-color") == 0)
+			{
+				config.disableVertexColors = true;
+			}
+			else if (strcmp(argv[i], "-dt") == 0 || strcmp(argv[i], "--disable-tangent") == 0)
+			{
+				config.disableTangentW = true;
+			}
+			else if (strcmp(argv[i], "-db") == 0 || strcmp(argv[i], "--disable-bone") == 0)
+			{
+				config.disableBones = true;
 			}
 			else
 			{

@@ -18,11 +18,27 @@
 /** Configuration structure. */
 struct BBMODConfig
 {
-	/** Convert model's data to left-handed. */
+	/** Convert data to left-handed. */
 	bool leftHanded = false;
 
-	/** Invert model's vertex winding order. */
+	/** Invert vertex winding order. */
 	bool invertWinding = false;
+
+	/** Disable saving vertex normals. This also automatically disable
+	 * tangent vector and bitangent sign. */
+	bool disableNormals = false;
+
+	/** Disable saving texture coordinates. */
+	bool disableTextureCoords = false;
+
+	/** Disable saving vertex colors. */
+	bool disableVertexColors = false;
+
+	/** Disable saving tangent vector and bitangent sign. */
+	bool disableTangentW = false;
+
+	/** Disable saving bones and animations. */
+	bool disableBones = false;
 };
 
 /** Converts a model from file fin to BBMOD and saves it to fout. */

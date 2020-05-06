@@ -38,6 +38,61 @@ GM_EXPORT gmreal_t bbmod_dll_set_invert_winding(gmreal_t invertWinding)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_disable_normal()
+{
+	 return (bool)gConfig.disableNormals;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_disable_normal(gmreal_t disable)
+{
+	gConfig.disableNormals = (bool)disable;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_disable_uv()
+{
+	return (bool)gConfig.disableTextureCoords;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_disable_uv(gmreal_t disable)
+{
+	gConfig.disableTextureCoords = (bool)disable;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_disable_color()
+{
+	return (bool)gConfig.disableVertexColors;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_disable_color(gmreal_t disable)
+{
+	gConfig.disableVertexColors = (bool)disable;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_disable_tangent()
+{
+	return (bool)gConfig.disableTangentW;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_disable_tangent(gmreal_t disable)
+{
+	gConfig.disableTangentW = (bool)disable;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_disable_bone()
+{
+	return (bool)gConfig.disableBones;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_disable_bone(gmreal_t disable)
+{
+	gConfig.disableBones = (bool)disable;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_convert(gmstring_t fin, gmstring_t fout)
 {
 	return ConvertToBBMOD(fin, fout, gConfig);
