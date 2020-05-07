@@ -3,6 +3,9 @@
 /** The version of created BBMOD files. */
 #define BBMOD_VERSION 1
 
+/** A code returned on fail, when none of BBMOD_ERR_ is applicable. */
+#define BBMOD_FAILURE -1
+
 /** A code returned when a model is successfully converted. */
 #define BBMOD_SUCCESS 0
 
