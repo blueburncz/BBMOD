@@ -768,18 +768,15 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log, 
 	NodeToBBMOD(scene, 0, matrix, hasBones, config, fout);
 
 	// Write bones
-	if (!config.disableBones)
-	{
-		uint32_t numOfBones = (uint32_t)gNextBoneId;
-		FILE_WRITE_DATA(fout, numOfBones);
+	uint32_t numOfBones = (uint32_t)gNextBoneId;
+	FILE_WRITE_DATA(fout, numOfBones);
 
-		if (numOfBones > 0)
-		{
-			log << "Bones:" << std::endl
-				<< "======" << std::endl;
-			BoneToBBMOD(0, matrix, fout, log);
-			log << std::endl;
-		}
+	if (numOfBones > 0)
+	{
+		log << "Bones:" << std::endl
+			<< "======" << std::endl;
+		BoneToBBMOD(0, matrix, fout, log);
+		log << std::endl;
 	}
 
 	// Write materials
