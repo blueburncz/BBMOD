@@ -1,3 +1,5 @@
+/datafiles/Test
+/datafiles_yyc/Test
 /docs_build/
 /docs_src/ScriptingAPI/
 Documentation.zip
@@ -163,4 +165,7 @@ scripts/ce_assert_ds_exists
 scripts/ce_assert_equal
 scripts/ce_assert_is_int
 scripts/ce_assert_not_equal
+views/5aed2702-24f9-3ef0-1bb5-f639dc1ef307.yy
+views/9fa97cf2-9d0f-4c79-eba3-725317c1ef9f.yy
+scripts/ce_macro_config
 ### CATALYST ###

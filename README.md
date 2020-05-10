@@ -38,3 +38,4 @@ join our [Discord server](https://discord.gg/ep2BGPm).
 * [Discord](https://discord.gg/ep2BGPm)
 * [Assimp](https://github.com/assimp/assimp)
 * [CE](https://github.com/slagtand-org/ce)
+* [Xpanda](https://github.com/GameMakerDiscord/Xpanda)

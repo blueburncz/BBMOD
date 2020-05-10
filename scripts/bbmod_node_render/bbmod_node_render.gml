@@ -34,8 +34,8 @@ for (var i/*:int*/= 0; i < _model_count; ++i)
 		shader_set_uniform_f_array(shader_get_uniform(shader_current(), "u_mBones"), _transform);
 	}
 
-	var _tex_diffuse = _material[BBMOD_EMaterial.Diffuse];
-	vertex_submit(_model[BBMOD_EMesh.VertexBuffer], pr_trianglelist, _tex_diffuse);
+	var _tex_base = _material[BBMOD_EMaterial.BaseOpacity];
+	vertex_submit(_model[BBMOD_EMesh.VertexBuffer], pr_trianglelist, _tex_base);
 }
 
 for (var i/*:int*/= 0; i < _child_count; ++i)
