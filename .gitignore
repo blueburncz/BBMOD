@@ -3,6 +3,7 @@
 /docs_build/
 /docs_src/ScriptingAPI/
 Documentation.zip
+Changelog.md
 *.bbmod*
 *.bbanim*
 

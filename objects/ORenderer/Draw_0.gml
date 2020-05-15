@@ -31,12 +31,13 @@ matrix_set(matrix_projection, matrix_build_projection_perspective_fov(
 
 // Render scene
 bbmod_material_reset();
-bbmod_render(model, [material]);
 
 matrix_stack_push(matrix_get(matrix_world));
 matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, 0, 1000, 1000, 1000));
 bbmod_render(mod_sphere, [mat_sky]);
 matrix_set(matrix_world, matrix_stack_top());
 matrix_stack_pop();
+
+bbmod_render(model, [material]);
 
 bbmod_material_reset();

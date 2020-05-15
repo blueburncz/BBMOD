@@ -35,6 +35,27 @@ if (gpu_get_cullmode() != _culling)
 	gpu_set_cullmode(_culling);
 }
 
+var _zwrite = _material[BBMOD_EMaterial.ZWrite];
+if (gpu_get_zwriteenable() != _zwrite)
+{
+	gpu_set_zwriteenable(_zwrite);
+}
+
+var _ztest = _material[BBMOD_EMaterial.ZTest];
+if (gpu_get_ztestenable() != _ztest)
+{
+	gpu_set_ztestenable(_ztest);
+}
+
+if (_ztest)
+{
+	var _zfunc = _material[BBMOD_EMaterial.ZFunc];
+	if (gpu_get_zfunc() != _zfunc)
+	{
+		gpu_set_zfunc(_zfunc);
+	}
+}
+
 global.__bbmod_material_current = _material;
 
 return true;

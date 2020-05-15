@@ -247,6 +247,14 @@
             }
         },
         {
+            "Key": "188f7598-67f3-4bc0-8cf5-00e9c8960895",
+            "Value": {
+                "id": "82393c04-7d6a-42cc-aea9-e9631746e9e9",
+                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\BaseOpacity.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "1a280402-fc8c-4ed7-86aa-fb113d5ab2e1",
             "Value": {
                 "id": "871e2a20-872d-4bc1-bddc-15d5e65ce50e",
@@ -476,6 +484,14 @@
                 "id": "365a7bc9-c39d-41d7-9cc4-8cefabe3d8fe",
                 "resourcePath": "scripts\\ce_vec4_frac\\ce_vec4_frac.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "366fb0dd-d80c-4ffb-a88d-f78c94f75afc",
+            "Value": {
+                "id": "773aeda2-ee1d-4f9f-a371-ff71fbe49a31",
+                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\NormalRoughness.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1131,6 +1147,14 @@
             "Value": {
                 "id": "b301e1b7-2c98-42f7-b86a-5674028df525",
                 "resourcePath": "views\\70f6e49c-f3d0-487f-9a5e-d9488bbed61e.yy",
+                "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "71ff5b6a-82df-45d4-a322-f005043c7b2b",
+            "Value": {
+                "id": "f08402db-3564-4ca6-a7a1-d92e2dd54971",
+                "resourcePath": "views\\71ff5b6a-82df-45d4-a322-f005043c7b2b.yy",
                 "resourceType": "GMFolder"
             }
         },
@@ -1791,6 +1815,14 @@
             }
         },
         {
+            "Key": "c2d15b10-4a9e-4f2a-98fa-ef54fe091222",
+            "Value": {
+                "id": "b8a162bc-b235-4f18-8d25-01715aa39e9e",
+                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\Monkey.bbmod.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "c2f10cab-c2d2-4e59-9afd-3a2791bd16ee",
             "Value": {
                 "id": "c2f10cab-c2d2-4e59-9afd-3a2791bd16ee",
@@ -1807,14 +1839,6 @@
             }
         },
         {
-            "Key": "c4b69276-d1a7-48d1-a9bc-4ff3ebd4c000",
-            "Value": {
-                "id": "3bf88279-80dc-468d-b4b8-de85a03ddb8b",
-                "resourcePath": "datafiles_yy\\Test\\Models\\NormalRoughness.png.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "c5f76fd8-c5ea-4bc8-b5d0-c0dd01950499",
             "Value": {
                 "id": "c5f76fd8-c5ea-4bc8-b5d0-c0dd01950499",
@@ -1823,19 +1847,19 @@
             }
         },
         {
-            "Key": "c68228a3-8c5b-4f0b-a108-4a0bdcbe12bd",
-            "Value": {
-                "id": "1c6fe1bb-d4b8-48e3-be8d-b11de8a5fb76",
-                "resourcePath": "datafiles_yy\\Test\\Models\\BaseOpacity.png.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "c69c5571-050f-4b92-b1d6-501caa2f3bf5",
             "Value": {
                 "id": "167cf483-cba1-4dcb-9ff0-caa43efc823a",
                 "resourcePath": "scripts\\bbmod_position_key_load\\bbmod_position_key_load.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "c9767626-6306-498a-b4cc-795fb2187fe2",
+            "Value": {
+                "id": "202bbec2-b170-4622-952d-8370474d97d1",
+                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\Subsurface.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1967,14 +1991,6 @@
             }
         },
         {
-            "Key": "d6f51cb3-bf3a-4341-a25a-c0d47b82b5f2",
-            "Value": {
-                "id": "1835c2fb-820b-430d-b025-a772f4a562c0",
-                "resourcePath": "datafiles_yy\\Test\\Models\\MetallicAO.png.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "d7173a01-084a-41a0-87d0-8560d30638bd",
             "Value": {
                 "id": "d7173a01-084a-41a0-87d0-8560d30638bd",
@@ -1996,14 +2012,6 @@
                 "id": "8c0ee79f-a050-4eac-bb31-d193d7935c7d",
                 "resourcePath": "scripts\\bbmod_get_transform\\bbmod_get_transform.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "dcb3e651-196c-4c6f-8c72-07a9152cbf5d",
-            "Value": {
-                "id": "a042e495-1463-478d-b02c-e82b79b8086e",
-                "resourcePath": "datafiles_yy\\Test\\Models\\Cerberus_LP.bbmod.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -2100,6 +2108,14 @@
                 "id": "e7ece69f-acb3-b312-71b7-9b4199b8cbbe",
                 "resourcePath": "views\\e7ece69f-acb3-b312-71b7-9b4199b8cbbe.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "e84e65f9-ec56-4ab7-89b5-33f2c6005973",
+            "Value": {
+                "id": "d15d4009-f41f-4381-b40d-76b9bd2f04ec",
+                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\MetallicAO.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
