@@ -244,7 +244,7 @@ void main()
 	float opacity = baseOpacity.a;
 
 	vec4 normalRoughness = texture2D(u_texNormalRoughness, v_vTexCoord);
-	normalRoughness.g = 1.0 - normalRoughness.g;
+	normalRoughness.g = 1.0 - normalRoughness.g; // TODO: Comment out!
 	vec3 N = normalize(v_mTBN * (normalRoughness.rgb * 2.0 - 1.0));
 	float roughness = normalRoughness.a;
 
