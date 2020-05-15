@@ -222,40 +222,55 @@ vec3 xSpecularIBL(sampler2D octahedron, vec2 texel, sampler2D brdf, vec3 f0, flo
 
 #pragma include("Math.xsh", "glsl")
 
+#pragma include("CheapSubsurface.xsh", "glsl")
+/// @source https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
+vec3 xCheapSubsurface(vec3 subsurfaceColor, float subsurfaceIntensity, vec3 eye, vec3 normal, vec3 light, vec3 lightColor)
+{
+	const float fLTPower = 1.0;
+	const float fLTScale = 1.0;
+	vec3 vLTLight = light + normal;
+	float fLTDot = pow(clamp(dot(eye, -vLTLight), 0.0, 1.0), fLTPower) * fLTScale;
+	float fLT = fLTDot * subsurfaceIntensity;
+	return subsurfaceColor * lightColor * fLT;
+}
+// include("CheapSubsurface.xsh")
+
 void main()
 {
-	vec2 texCoord = vec2(v_vTexCoord.x, v_vTexCoord.y);
-
-	vec4 baseOpacity = texture2D(u_texBaseOpacity, texCoord);
+	////////////////////////////////////////////////////////////////////////////
+	// Unpack material properties
+	vec4 baseOpacity = texture2D(u_texBaseOpacity, v_vTexCoord);
 	vec3 baseColor = xGammaToLinear(baseOpacity.rgb);
 	float opacity = baseOpacity.a;
 
-	vec4 normalRoughness = texture2D(u_texNormalRoughness, texCoord);
+	vec4 normalRoughness = texture2D(u_texNormalRoughness, v_vTexCoord);
+	normalRoughness.g = 1.0 - normalRoughness.g;
 	vec3 N = normalize(v_mTBN * (normalRoughness.rgb * 2.0 - 1.0));
 	float roughness = normalRoughness.a;
 
-	vec4 metallicAO = texture2D(u_texMetallicAO, texCoord);
+	vec4 metallicAO = texture2D(u_texMetallicAO, v_vTexCoord);
 	float metallic = metallicAO.r;
 	float AO = metallicAO.g;
 
-	vec4 subsurface = texture2D(u_texSubsurface, texCoord);
+	vec4 subsurface = texture2D(u_texSubsurface, v_vTexCoord);
 	vec3 subsurfaceColor = xGammaToLinear(subsurface.rgb);
 	float subsurfaceIntensity = subsurface.a;
 
-	vec3 emissive = xGammaToLinear(xDecodeRGBM(texture2D(u_texEmissive, texCoord)));
+	vec3 emissive = xGammaToLinear(xDecodeRGBM(texture2D(u_texEmissive, v_vTexCoord)));
 
 	vec3 specularColor = mix(X_F0_DEFAULT, baseColor, metallic);
 	baseColor *= (1.0 - metallic);
+	////////////////////////////////////////////////////////////////////////////
 
 	vec3 V = normalize(u_vCamPos - v_vVertex);
-
-	// TODO: Subsurface
+	vec3 lightColor = xDiffuseIBL(u_texDiffuseIBL, N) / X_PI;
 
 	gl_FragColor.rgb = (
-		baseColor * xDiffuseIBL(u_texDiffuseIBL, N)
+		baseColor * lightColor
 		+ xSpecularIBL(u_texSpecularIBL, u_vSpecularIBLTexel, u_texBRDF, specularColor, roughness, N, V)
 		) * AO
 		+ emissive
+		+ xCheapSubsurface(subsurfaceColor, subsurfaceIntensity, -V, N, N, lightColor)
 		;
 
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * u_fExposure);

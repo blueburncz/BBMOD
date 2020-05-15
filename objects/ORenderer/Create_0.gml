@@ -19,7 +19,7 @@ spr_sky = sprite_add("Test/Skies/sky.png", 0, false, true, 0, 0);
 spr_sky_diffuse = sprite_add("Test/Skies/diffuse.png", 0, false, true, 0, 0);
 spr_sky_specular = sprite_add("Test/Skies/specular.png", 0, false, true, 0, 0);
 
-mod_sky = bbmod_load("Test/Models/Sphere.bbmod");
+mod_sphere = bbmod_load("Test/Models/Sphere.bbmod");
 
 mat_sky = bbmod_material_create(BBMOD_ShSky,
 	sprite_get_texture(spr_sky, 0));
