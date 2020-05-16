@@ -33,8 +33,10 @@ shader_set_uniform_f(shader_get_uniform(_shader, "u_vSpecularIBLTexel"),
 texture_set_stage(shader_get_sampler_index(_shader, "u_texBRDF"),
 	sprite_get_texture(BBMOD_SprEnvBRDF, 0));
 
+// TODO: Add API for setting camera's world-space position.
 shader_set_uniform_f(shader_get_uniform(_shader, "u_vCamPos"),
 	x, y, z);
 
+// TODO: Add API for setting camera's exposure.
 shader_set_uniform_f(shader_get_uniform(_shader, "u_fExposure"),
 	exposure);

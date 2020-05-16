@@ -19,9 +19,11 @@ if (_bone[BBMOD_EBone.Name] == _bone_name)
 }
 
 var _children = _bone[BBMOD_EBone.Children];
-for (var i = array_length_1d(_children) - 1; i >= 0; --i)
+var i/*:int*/= 0;
+
+repeat (array_length_1d(_children))
 {
-	var _found = bbmod_model_find_bone_id(_model, _bone_name, _children[i]);
+	var _found = bbmod_model_find_bone_id(_model, _bone_name, _children[i++]);
 	if (_found != BBMOD_NONE)
 	{
 		return _found;

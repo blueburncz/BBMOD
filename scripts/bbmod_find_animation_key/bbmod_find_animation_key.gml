@@ -11,19 +11,19 @@ var _animation_time = argument[1];
 var _index/*:int*/= (argument_count > 2) ? argument[2] : 0;
 var _key_count = array_length_1d(_keys);
 
-repeat (2)
+repeat (_key_count)
 {
-	repeat (_key_count - 1 - _index)
+	if (_index + 1 >= _key_count)
 	{
-		var _key_next = _keys[_index + 1];
-		if (_animation_time < _key_next[BBMOD_EAnimationKey.Time])
-		{
-			BBMOD_KEY_INDEX_LAST = _index;
-			return _index;
-		}
-		++_index;
+		_index = 0;
 	}
-	_index = 0;
+	var _key_next = _keys[clamp(_index + 1, 0, _key_count - 1)];
+	if (_animation_time < _key_next[BBMOD_EAnimationKey.Time])
+	{
+		BBMOD_KEY_INDEX_LAST = _index;
+		return _index;
+	}
+	++_index;
 }
 
 BBMOD_KEY_INDEX_LAST = _index;

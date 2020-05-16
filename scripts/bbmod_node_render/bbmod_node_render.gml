@@ -12,13 +12,12 @@ var _materials = argument2;
 var _transform = argument3;
 var _meshes = _node[BBMOD_ENode.Meshes];
 var _children = _node[BBMOD_ENode.Children];
-var _model_count = array_length_1d(_meshes);
-var _child_count = array_length_1d(_children);
 var _render_pass = global.bbmod_render_pass;
+var i/*:int*/= 0;
 
-for (var i/*:int*/= 0; i < _model_count; ++i)
+repeat (array_length_1d(_meshes))
 {
-	var _model = _meshes[i];
+	var _model = _meshes[i++];
 	var _material_index = _model[BBMOD_EMesh.MaterialIndex];
 	var _material = _materials[_material_index];
 
@@ -38,7 +37,8 @@ for (var i/*:int*/= 0; i < _model_count; ++i)
 	vertex_submit(_model[BBMOD_EMesh.VertexBuffer], pr_trianglelist, _tex_base);
 }
 
-for (var i/*:int*/= 0; i < _child_count; ++i)
+i = 0;
+repeat (array_length_1d(_children))
 {
-	bbmod_node_render(_model, _children[i], _materials, _transform);
+	bbmod_node_render(_model, _children[i++], _materials, _transform);
 }

@@ -4,13 +4,16 @@
 var _node = argument0;
 var _meshes = _node[BBMOD_ENode.Meshes];
 var _children = _meshes[BBMOD_ENode.Children];
+var i/*:int*/= 0;
 
-for (var i/*:int*/= array_length_1d(_meshes) - 1; i >= 0; --i)
+//i = 0;
+repeat (array_length_1d(_meshes))
 {
-	vertex_delete_buffer(_meshes[i]);
+	vertex_delete_buffer(_meshes[i++]);
 }
 
-for (var i/*:int*/= array_length_1d(_children) - 1; i >= 0; --i)
+i = 0;
+repeat (array_length_1d(_children))
 {
-	bbmod_node_destroy(_children[i]);
+	bbmod_node_destroy(_children[i++]);
 }
