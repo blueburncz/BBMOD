@@ -46,8 +46,6 @@ uniform float u_fExposure;
 
 #pragma include("Color.xsh", "glsl")
 
-#pragma include("Math.xsh", "glsl")
-
 #pragma include("CheapSubsurface.xsh", "glsl")
 
 void main()
@@ -78,7 +76,7 @@ void main()
 	////////////////////////////////////////////////////////////////////////////
 
 	vec3 V = normalize(u_vCamPos - v_vVertex);
-	vec3 lightColor = xDiffuseIBL(u_texDiffuseIBL, N) / X_PI;
+	vec3 lightColor = xDiffuseIBL(u_texDiffuseIBL, N);
 
 	gl_FragColor.rgb = (
 		baseColor * lightColor

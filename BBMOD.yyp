@@ -175,14 +175,6 @@
             }
         },
         {
-            "Key": "0f7bd9cc-2502-47a5-b397-f33f4b4e4570",
-            "Value": {
-                "id": "9c20ac67-16e6-444d-b2b2-04f5457590b1",
-                "resourcePath": "datafiles_yy\\Test\\Skies\\diffuse.png.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "0f86e78b-f661-60e6-c3f8-b3c85cd639a4",
             "Value": {
                 "id": "0f86e78b-f661-60e6-c3f8-b3c85cd639a4",
@@ -508,6 +500,14 @@
                 "id": "37c5cb65-7ae0-4532-b19c-0924ced3170d",
                 "resourcePath": "scripts\\ce_vec2_ceil\\ce_vec2_ceil.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "3992e3e3-19ab-4241-944a-1254d4b9a779",
+            "Value": {
+                "id": "1a7d94e6-f3ae-4ba9-b6b4-16a93b3bfc4f",
+                "resourcePath": "datafiles_yy\\Test\\Skies\\diffuse.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1015,6 +1015,14 @@
             }
         },
         {
+            "Key": "677f344a-26e5-45af-a65c-8d3cf57afd98",
+            "Value": {
+                "id": "e427d500-3f5c-4cb7-a078-2637ea04baaf",
+                "resourcePath": "datafiles_yy\\Test\\Skies\\specular.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "6785677c-39f9-4838-814c-d428687376b6",
             "Value": {
                 "id": "d0de716b-de09-4b72-8e61-a9e7a2fc0fbe",
@@ -1428,14 +1436,6 @@
                 "id": "bb210789-f7ca-4c96-a13f-b31aa118f105",
                 "resourcePath": "options\\tvos\\options_tvos.yy",
                 "resourceType": "GMtvOSOptions"
-            }
-        },
-        {
-            "Key": "94e15a97-330a-460c-9748-a75c9eb38b15",
-            "Value": {
-                "id": "099e152c-5083-4acd-9d20-4c46e1652ada",
-                "resourcePath": "datafiles_yy\\Test\\Skies\\specular.png.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {

@@ -212,7 +212,6 @@ vec3 xSpecularIBL(sampler2D octahedron, vec2 texel, sampler2D brdf, vec3 f0, flo
 }
 
 
-
 /// @source https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
 vec3 xCheapSubsurface(vec3 subsurfaceColor, float subsurfaceIntensity, vec3 eye, vec3 normal, vec3 light, vec3 lightColor)
 {
@@ -252,7 +251,7 @@ void main()
 	////////////////////////////////////////////////////////////////////////////
 
 	vec3 V = normalize(u_vCamPos - v_vVertex);
-	vec3 lightColor = xDiffuseIBL(u_texDiffuseIBL, N) / X_PI;
+	vec3 lightColor = xDiffuseIBL(u_texDiffuseIBL, N);
 
 	gl_FragColor.rgb = (
 		baseColor * lightColor

@@ -1,5 +1,5 @@
 {
-    "id": "94e15a97-330a-460c-9748-a75c9eb38b15",
+    "id": "677f344a-26e5-45af-a65c-8d3cf57afd98",
     "modelName": "GMIncludedFile",
     "mvc": "1.0",
     "name": "specular.png",

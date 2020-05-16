@@ -1,8 +1,8 @@
-var _window_width = window_get_width();
-var _window_height = window_get_height();
+var _window_width = max(window_get_width(), 1);
+var _window_height = max(window_get_height(), 1);
 
-var _surface_width = _window_width * application_surface_scale;
-var _surface_height = _window_height * application_surface_scale;
+var _surface_width = max(_window_width * application_surface_scale, 1);
+var _surface_height = max(_window_height * application_surface_scale, 1);
 
 if (surface_get_width(application_surface) != _surface_width
 	|| surface_get_height(application_surface) != _surface_height)

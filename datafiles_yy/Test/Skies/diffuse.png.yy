@@ -1,5 +1,5 @@
 {
-    "id": "0f7bd9cc-2502-47a5-b397-f33f4b4e4570",
+    "id": "3992e3e3-19ab-4241-944a-1254d4b9a779",
     "modelName": "GMIncludedFile",
     "mvc": "1.0",
     "name": "diffuse.png",
