@@ -29,6 +29,8 @@ enum BBMOD_EModel
 	Skeleton,
 	/// @member Number of materials that the model uses.
 	MaterialCount,
+	/// @member Array of material names.
+	MaterialNames,
 	/// @member The size of the Model structure.
 	SIZE
 };

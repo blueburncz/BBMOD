@@ -239,14 +239,6 @@
             }
         },
         {
-            "Key": "188f7598-67f3-4bc0-8cf5-00e9c8960895",
-            "Value": {
-                "id": "82393c04-7d6a-42cc-aea9-e9631746e9e9",
-                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\BaseOpacity.png.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "1a280402-fc8c-4ed7-86aa-fb113d5ab2e1",
             "Value": {
                 "id": "871e2a20-872d-4bc1-bddc-15d5e65ce50e",
@@ -476,14 +468,6 @@
                 "id": "365a7bc9-c39d-41d7-9cc4-8cefabe3d8fe",
                 "resourcePath": "scripts\\ce_vec4_frac\\ce_vec4_frac.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "366fb0dd-d80c-4ffb-a88d-f78c94f75afc",
-            "Value": {
-                "id": "773aeda2-ee1d-4f9f-a371-ff71fbe49a31",
-                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\NormalRoughness.png.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1159,14 +1143,6 @@
             }
         },
         {
-            "Key": "71ff5b6a-82df-45d4-a322-f005043c7b2b",
-            "Value": {
-                "id": "f08402db-3564-4ca6-a7a1-d92e2dd54971",
-                "resourcePath": "views\\71ff5b6a-82df-45d4-a322-f005043c7b2b.yy",
-                "resourceType": "GMFolder"
-            }
-        },
-        {
             "Key": "732fd6b3-a93a-406a-8027-25fdd7d77e30",
             "Value": {
                 "id": "f96e1dce-c1e6-40d7-8881-0fe2007d0ac4",
@@ -1815,14 +1791,6 @@
             }
         },
         {
-            "Key": "c2d15b10-4a9e-4f2a-98fa-ef54fe091222",
-            "Value": {
-                "id": "b8a162bc-b235-4f18-8d25-01715aa39e9e",
-                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\Monkey.bbmod.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "c2f10cab-c2d2-4e59-9afd-3a2791bd16ee",
             "Value": {
                 "id": "c2f10cab-c2d2-4e59-9afd-3a2791bd16ee",
@@ -1852,14 +1820,6 @@
                 "id": "167cf483-cba1-4dcb-9ff0-caa43efc823a",
                 "resourcePath": "scripts\\bbmod_position_key_load\\bbmod_position_key_load.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "c9767626-6306-498a-b4cc-795fb2187fe2",
-            "Value": {
-                "id": "202bbec2-b170-4622-952d-8370474d97d1",
-                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\Subsurface.png.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1924,6 +1884,14 @@
                 "id": "d9748414-bc70-4132-8c64-3a37c377373e",
                 "resourcePath": "objects\\ORenderer\\ORenderer.yy",
                 "resourceType": "GMObject"
+            }
+        },
+        {
+            "Key": "ce84cb42-d171-4826-a609-c4b0f6f6eb04",
+            "Value": {
+                "id": "db6e69db-9983-4ad9-aea2-8830aee3578a",
+                "resourcePath": "views\\ce84cb42-d171-4826-a609-c4b0f6f6eb04.yy",
+                "resourceType": "GMFolder"
             }
         },
         {
@@ -2111,14 +2079,6 @@
             }
         },
         {
-            "Key": "e84e65f9-ec56-4ab7-89b5-33f2c6005973",
-            "Value": {
-                "id": "d15d4009-f41f-4381-b40d-76b9bd2f04ec",
-                "resourcePath": "datafiles_yy\\Test\\Models\\Monkey\\MetallicAO.png.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "e9382d97-81bf-406c-a502-9d21192fc640",
             "Value": {
                 "id": "7d219abc-a0b4-477e-b3d9-a4b25670eb6c",
@@ -2156,6 +2116,14 @@
                 "id": "f0f0cf05-5501-450c-b955-e285d5544709",
                 "resourcePath": "scripts\\ce_array_reduce\\ce_array_reduce.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "f1616bd9-96b8-4e95-b8af-732b79bb370d",
+            "Value": {
+                "id": "5d8af7d4-aaee-4662-9da9-edd95b89de05",
+                "resourcePath": "datafiles_yy\\Test\\Models\\SportsCar\\SportCar.bbmod.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {

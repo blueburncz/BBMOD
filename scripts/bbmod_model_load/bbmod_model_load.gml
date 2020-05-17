@@ -66,6 +66,24 @@ if (_bone_count > 0)
 }
 
 // Materials
-_bbmod[@ BBMOD_EModel.MaterialCount] = buffer_read(_buffer, buffer_u32);
+var _material_count = buffer_read(_buffer, buffer_u32);
+_bbmod[@ BBMOD_EModel.MaterialCount] = _material_count;
+
+if (_material_count > 0)
+{
+	var _material_names = array_create(_material_count, 0);
+
+	var i/*:int*/ = 0;
+	repeat (_material_count)
+	{
+		_material_names[@ i++] = buffer_read(_buffer, buffer_string);
+	}
+
+	_bbmod[@ BBMOD_EModel.MaterialNames] = _material_names;
+}
+else
+{
+	_bbmod[@ BBMOD_EModel.MaterialNames] = undefined;
+}
 
 return _bbmod;

@@ -26,15 +26,15 @@ mat_sky = bbmod_material_create(BBMOD_ShSky,
 mat_sky[@ BBMOD_EMaterial.OnApply] = shader_sky_on_apply;
 mat_sky[@ BBMOD_EMaterial.Culling] = cull_noculling;
 
-model = bbmod_load("Test/Models/Monkey/Monkey.bbmod");
+model = bbmod_load("Test/Models/SportsCar/SportCar.bbmod");
 
-spr_base_opacity = sprite_add("Test/Models/Monkey/BaseOpacity.png", 0, false, true, 0, 0);
-spr_normal_roughness = sprite_add("Test/Models/Monkey/NormalRoughness.png", 0, false, true, 0, 0);
-spr_metallic_ao = sprite_add("Test/Models/Monkey/MetallicAO.png", 0, false, true, 0, 0);
-spr_subsurface = sprite_add("Test/Models/Monkey/Subsurface.png", 0, false, true, 0, 0);
+//spr_base_opacity = sprite_add("Test/Models/Monkey/BaseOpacity.png", 0, false, true, 0, 0);
+//spr_normal_roughness = sprite_add("Test/Models/Monkey/NormalRoughness.png", 0, false, true, 0, 0);
+//spr_metallic_ao = sprite_add("Test/Models/Monkey/MetallicAO.png", 0, false, true, 0, 0);
+//spr_subsurface = sprite_add("Test/Models/Monkey/Subsurface.png", 0, false, true, 0, 0);
 
 material = bbmod_material_create(BBMOD_ShDefault);
-material[@ BBMOD_EMaterial.BaseOpacity] = sprite_get_texture(spr_base_opacity, 0);
-material[@ BBMOD_EMaterial.NormalRoughness] = sprite_get_texture(spr_normal_roughness, 0);
-material[@ BBMOD_EMaterial.MetallicAO] = sprite_get_texture(spr_metallic_ao, 0);
-material[@ BBMOD_EMaterial.Subsurface] = sprite_get_texture(spr_subsurface, 0);
+//material[@ BBMOD_EMaterial.BaseOpacity] = sprite_get_texture(spr_base_opacity, 0);
+//material[@ BBMOD_EMaterial.NormalRoughness] = sprite_get_texture(spr_normal_roughness, 0);
+//material[@ BBMOD_EMaterial.MetallicAO] = sprite_get_texture(spr_metallic_ao, 0);
+//material[@ BBMOD_EMaterial.Subsurface] = sprite_get_texture(spr_subsurface, 0);

@@ -38,6 +38,6 @@ bbmod_render(mod_sphere, [mat_sky]);
 matrix_set(matrix_world, matrix_stack_top());
 matrix_stack_pop();
 
-bbmod_render(model, [material]);
+bbmod_render(model);
 
 bbmod_material_reset();

@@ -790,7 +790,9 @@ int SceneToBBMOD(const aiScene* scene, std::ofstream& fout, std::ofstream& log, 
 		for (uint32_t i = 0; i < numOfMaterials; ++i)
 		{
 			aiMaterial* material = scene->mMaterials[i];
-			log << i << ": " << material->GetName().C_Str() << std::endl;
+			const char* materialName = material->GetName().C_Str();
+			fout.write(materialName, strlen(materialName) + 1);
+			log << i << ": " << materialName << std::endl;
 		}
 		log << std::endl;
 	}
