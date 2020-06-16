@@ -1,4 +1,4 @@
-/// @func bbmod_get_vertex_format(vertices, normals, uvs, colors, tangetw, bones)
+/// @func bbmod_get_vertex_format(vertices, normals, uvs, colors, tangetw, bones[, ids])
 /// @desc Creates a new vertex format or retrieves an existing one with specified
 /// properties.
 /// @param {bool} vertices True if the vertex format must have vertices.
@@ -9,13 +9,15 @@
 /// bitangent signs.
 /// @param {bool} bones True if the vertex format must have vertex weights and bone
 /// indices.
+/// @param {bool} [ids] TODO
 /// @return {real} The vertex format.
-var _has_vertices = argument0;
-var _has_normals = argument1;
-var _has_uvs = argument2;
-var _has_colors = argument3;
-var _has_tangentw = argument4;
-var _has_bones = argument5;
+var _has_vertices = argument[0];
+var _has_normals = argument[1];
+var _has_uvs = argument[2];
+var _has_colors = argument[3];
+var _has_tangentw = argument[4];
+var _has_bones = argument[5];
+var _has_ids = (argument_count > 6) ? argument[6] : false;
 
 var _mask = (0
 	| (_has_vertices << BBMOD_VFORMAT_VERTEX)
@@ -23,7 +25,8 @@ var _mask = (0
 	| (_has_uvs << BBMOD_VFORMAT_TEXCOORD)
 	| (_has_colors << BBMOD_VFORMAT_COLOR)
 	| (_has_tangentw << BBMOD_VFORMAT_TANGENTW)
-	| (_has_bones << BBMOD_VFORMAT_BONES));
+	| (_has_bones << BBMOD_VFORMAT_BONES)
+	| (_has_ids << BBMOD_VFORMAT_IDS));
 
 var _vformat;
 
@@ -64,6 +67,11 @@ else
 	{
 		vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
 		vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
+	}
+
+	if (_has_ids)
+	{
+		vertex_format_add_custom(vertex_type_float1, vertex_usage_texcoord);
 	}
 
 	_vformat = vertex_format_end();

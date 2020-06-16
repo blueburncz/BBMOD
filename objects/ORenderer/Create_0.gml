@@ -28,7 +28,7 @@ mat_sky = bbmod_material_create(BBMOD_ShSky,
 mat_sky[@ BBMOD_EMaterial.OnApply] = shader_sky_on_apply;
 mat_sky[@ BBMOD_EMaterial.Culling] = cull_noculling;
 
-model = mod_sphere; //bbmod_load("Test/Models/SportsCar/SportCar.bbmod");
+model = /*mod_sphere; */bbmod_load("Test/Models/SportsCar/SportCar.bbmod");
 
 //spr_base_opacity = sprite_add("Test/Models/Monkey/BaseOpacity.png", 0, false, true, 0, 0);
 //spr_normal_roughness = sprite_add("Test/Models/Monkey/NormalRoughness.png", 0, false, true, 0, 0);
@@ -56,3 +56,33 @@ material = bbmod_material_create(BBMOD_ShDefault);
 //}
 //bbmod_static_batch_end(static_batch);
 //bbmod_static_batch_freeze(static_batch);
+
+#macro BATCH_SIZE 64
+
+dynamic_batch = bbmod_dynamic_batch_create(model, BATCH_SIZE);
+bbmod_dynamic_batch_freeze(dynamic_batch);
+
+scales = array_create(BATCH_SIZE, 0);
+rotations = array_create(BATCH_SIZE, 0);
+
+data = array_create(BATCH_SIZE * 8, 0);
+
+for (var i = 0; i < BATCH_SIZE; ++i)
+{
+	var _idx = i * 8;
+
+	var _scale = random_range(0.1, 1);
+	scales[i] = _scale;
+
+	data[_idx + 0] = (i mod 8) * 5;
+	data[_idx + 1] = (i div 8) * 5;
+	data[_idx + 2] = 0;
+	data[_idx + 3] = _scale;
+
+	var _rot = random(360);
+	rotations[i] = _rot;
+	var _quat = ce_quaternion_create_from_axisangle([1, 0, 0], _rot);
+	array_copy(data, _idx + 4, _quat, 0, 4);
+}
+
+material = bbmod_material_create(BBMOD_ShDefaultBatched);

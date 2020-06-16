@@ -42,6 +42,6 @@ matrix_stack_pop();
 
 //bbmod_static_batch_render(static_batch, material);
 
-//bbmod_dynamic_batch_render(dynamic_batch, material, transform);
+bbmod_dynamic_batch_render(dynamic_batch, material, data);
 
 bbmod_material_reset();

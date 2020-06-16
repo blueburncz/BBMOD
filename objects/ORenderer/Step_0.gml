@@ -65,3 +65,19 @@ else
 	exposure += _diff;
 	exposure = max(exposure, 0.1);
 }
+
+// Dynamic batching test
+var i/*:int*/= 0;
+var _time = current_time * 0.01;
+
+repeat (BATCH_SIZE)
+{
+	var _idx = i * 8;
+
+	var _rot = rotations[i];
+	_rot += _time * 10;
+	var _quat = ce_quaternion_create_from_axisangle([1, 0, 0], _rot);
+	array_copy(data, _idx + 4, _quat, 0, 4);
+
+	++i;
+}
