@@ -1,3 +1,5 @@
+show_debug_overlay(true);
+
 application_surface_enable(true);
 application_surface_draw_enable(false);
 application_surface_scale = 2;
@@ -26,7 +28,7 @@ mat_sky = bbmod_material_create(BBMOD_ShSky,
 mat_sky[@ BBMOD_EMaterial.OnApply] = shader_sky_on_apply;
 mat_sky[@ BBMOD_EMaterial.Culling] = cull_noculling;
 
-model = bbmod_load("Test/Models/SportsCar/SportCar.bbmod");
+model = mod_sphere; //bbmod_load("Test/Models/SportsCar/SportCar.bbmod");
 
 //spr_base_opacity = sprite_add("Test/Models/Monkey/BaseOpacity.png", 0, false, true, 0, 0);
 //spr_normal_roughness = sprite_add("Test/Models/Monkey/NormalRoughness.png", 0, false, true, 0, 0);
@@ -38,3 +40,19 @@ material = bbmod_material_create(BBMOD_ShDefault);
 //material[@ BBMOD_EMaterial.NormalRoughness] = sprite_get_texture(spr_normal_roughness, 0);
 //material[@ BBMOD_EMaterial.MetallicAO] = sprite_get_texture(spr_metallic_ao, 0);
 //material[@ BBMOD_EMaterial.Subsurface] = sprite_get_texture(spr_subsurface, 0);
+
+//static_batch = bbmod_static_batch_create(bbmod_model_get_vertex_format(model));
+//bbmod_static_batch_begin(static_batch);
+//for (var i = 0; i < 3; ++i)
+//{
+//	for (var j = 0; j < 3; ++j)
+//	{
+//		bbmod_static_batch_add(static_batch, model,
+//			matrix_build(
+//				i * 5, j * 5, 0,
+//				random(360), random(360), random(360),
+//				1, 1, 1));
+//	}
+//}
+//bbmod_static_batch_end(static_batch);
+//bbmod_static_batch_freeze(static_batch);
