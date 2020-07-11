@@ -62,8 +62,8 @@ if (keyboard_check(ord("R")))
 }
 else
 {
-	exposure += _diff;
-	exposure = max(exposure, 0.1);
+	global.bbmod_camera_exposure += _diff;
+	global.bbmod_camera_exposure = max(global.bbmod_camera_exposure, 0.1);
 }
 
 // Batching test

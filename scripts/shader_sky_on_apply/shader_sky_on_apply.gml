@@ -5,4 +5,4 @@ var _material = argument0;
 var _shader = _material[BBMOD_EMaterial.Shader];
 
 shader_set_uniform_f(shader_get_uniform(_shader, "u_fExposure"),
-	exposure);
+	global.bbmod_camera_exposure);
