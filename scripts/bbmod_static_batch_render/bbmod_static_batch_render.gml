@@ -1,6 +1,7 @@
 /// @func bbmod_static_batch_render(static_batch, material)
-/// @param {array} static_batch
-/// @param {array} material
+/// @desc Submits a StaticBatch for rendering.
+/// @param {array} static_batch A StaticBatch structure.
+/// @param {array} material A Material structure.
 var _static_batch = argument0;
 var _material = argument1;
 var _render_pass = global.bbmod_render_pass;
