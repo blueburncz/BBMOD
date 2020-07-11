@@ -1,4 +1,5 @@
 #include "bbmod.hpp"
+#include "terminal.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -381,9 +382,11 @@ void MeshToBBMOD(
 	aiColor4D cWhite(1.0f, 1.0f, 1.0f, 1.0f);
 
 	uint32_t material = mesh->mMaterialIndex;
+
 	FILE_WRITE_DATA(fout, material);
 
-	uint32_t vertexCount = (uint32_t)mesh->mNumFaces * 3;
+	uint32_t vertexCount = faceCount * 3;
+
 	FILE_WRITE_DATA(fout, vertexCount);
 
 
@@ -426,6 +429,13 @@ void MeshToBBMOD(
 	for (unsigned int i = 0; i < faceCount; ++i)
 	{
 		aiFace& face = mesh->mFaces[i];
+
+		if (face.mNumIndices != 3)
+		{
+			PRINT_ERROR("Mesh \"%s\" has a polygon with %d vertices, but only triangles are supported!", mesh->mName.C_Str(), face.mNumIndices);
+			exit(EXIT_FAILURE);
+		}
+
 		for (unsigned int f = config.invertWinding ? face.mNumIndices - 1 : 0; f >= 0 && f < face.mNumIndices; f += config.invertWinding ? -1 : +1)
 		{
 			uint32_t idx = face.mIndices[f];
@@ -437,19 +447,25 @@ void MeshToBBMOD(
 
 			// Normal
 			aiVector3D normal;
-			if (!config.disableNormals && mesh->HasNormals())
+			if (!config.disableNormals)
 			{
-				normal = aiVector3D(mesh->mNormals[idx]);
-				//normal *= matrix;
-				FILE_WRITE_VEC3(fout, normal);
+				if (mesh->HasNormals())
+				{
+					normal = aiVector3D(mesh->mNormals[idx]);
+					//normal *= matrix;
+					FILE_WRITE_VEC3(fout, normal);
+				}
 			}
 
 			// Texture
-			if (!config.disableTextureCoords && mesh->HasTextureCoords(0))
+			if (!config.disableTextureCoords)
 			{
-				aiVector3D texture = mesh->mTextureCoords[0][idx];
-				texture.y = 1.0f - texture.y;
-				FILE_WRITE_VEC2(fout, texture);
+				if (mesh->HasTextureCoords(0))
+				{
+					aiVector3D texture = mesh->mTextureCoords[0][idx];
+					texture.y = 1.0f - texture.y;
+					FILE_WRITE_VEC2(fout, texture);
+				}
 			}
 
 			// Color
@@ -462,16 +478,27 @@ void MeshToBBMOD(
 				FILE_WRITE_DATA(fout, vertexColor);
 			}
 			
-			if (!config.disableTangentW && mesh->HasTangentsAndBitangents())
+			if (!config.disableTangentW)
 			{
-				// Tangent
-				aiVector3D& tangent = mesh->mTangents[idx];
-				FILE_WRITE_VEC3(fout, tangent);
+				if (mesh->HasTangentsAndBitangents())
+				{
+					// Tangent
+					aiVector3D& tangent = mesh->mTangents[idx];
+					FILE_WRITE_VEC3(fout, tangent);
 
-				// Bitangent sign
-				aiVector3D& bitangent = mesh->mBitangents[idx];
-				float sign = GetBitangentSign(normal, tangent, bitangent);
-				FILE_WRITE_DATA(fout, sign);
+					// Bitangent sign
+					aiVector3D& bitangent = mesh->mBitangents[idx];
+					float sign = GetBitangentSign(normal, tangent, bitangent);
+					FILE_WRITE_DATA(fout, sign);
+				}
+				else
+				{
+					aiVector3D tangent(0.0f, 0.0f, 0.0f);
+					FILE_WRITE_VEC3(fout, tangent);
+
+					float sign = 1.0f;
+					FILE_WRITE_DATA(fout, sign);
+				}
 			}
 
 			if (!config.disableBones)
