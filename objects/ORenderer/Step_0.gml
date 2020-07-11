@@ -89,7 +89,7 @@ case EMode.Static:
 	var _model = model[mode_current];
 	if (_model == BBMOD_NONE)
 	{
-		_model = bbmod_static_batch_create(bbmod_model_get_vertex_format(model[EMode.Normal]));
+		_model = bbmod_static_batch_create(bbmod_model_get_vertex_format(model[EMode.Normal], false));
 		bbmod_static_batch_begin(_model);
 		for (var i = 0; i < 8; ++i)
 		{

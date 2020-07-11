@@ -6,7 +6,7 @@
 var _model = argument0;
 var _size = argument1;
 var _buffer = vertex_create_buffer();
-var _format = bbmod_model_get_vertex_format(_model, true);
+var _format = bbmod_model_get_vertex_format(_model, false, true);
 
 var _dynamic_batch = array_create(BBMOD_EDynamicBatch.SIZE, 0);
 _dynamic_batch[@ BBMOD_EDynamicBatch.VertexBuffer] = _buffer;
