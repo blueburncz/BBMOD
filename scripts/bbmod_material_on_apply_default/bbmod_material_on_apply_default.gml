@@ -16,24 +16,18 @@ texture_set_stage(shader_get_sampler_index(_shader, "u_texSubsurface"),
 texture_set_stage(shader_get_sampler_index(_shader, "u_texEmissive"),
 	_material[BBMOD_EMaterial.Emissive]);
 
-// TODO: Add API for setting the sky texture
-var _ibl = ORenderer.spr_ibl;
+var _ibl = global.__bbmod_ibl_sprite;
 
-texture_set_stage(shader_get_sampler_index(_shader, "u_texIBL"),
-	sprite_get_texture(_ibl, 0));
-
-var _texel = 1 / sprite_get_height(_ibl);
-
-shader_set_uniform_f(shader_get_uniform(_shader, "u_vIBLTexel"),
-	_texel, _texel);
+if (_ibl != noone)
+{
+	_bbmod_shader_set_ibl(_shader, _ibl, global.__bbmod_ibl_subimage);
+}
 
 texture_set_stage(shader_get_sampler_index(_shader, "u_texBRDF"),
 	sprite_get_texture(BBMOD_SprEnvBRDF, 0));
 
-// TODO: Add API for setting camera's world-space position.
-shader_set_uniform_f(shader_get_uniform(_shader, "u_vCamPos"),
-	ORenderer.x, ORenderer.y, ORenderer.z);
+shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vCamPos"),
+	global.bbmod_camera_position);
 
-// TODO: Add API for setting camera's exposure.
 shader_set_uniform_f(shader_get_uniform(_shader, "u_fExposure"),
-	ORenderer.exposure);
+	global.bbmod_camera_exposure);

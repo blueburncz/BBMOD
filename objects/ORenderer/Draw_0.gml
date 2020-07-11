@@ -20,6 +20,8 @@ matrix_set(matrix_view, matrix_build_lookat(
 	_to[0], _to[1], _to[2],
 	_up[0], _up[1], _up[2]));
 
+bbmod_set_camera_position(_from[0], _from[1], _from[2]);
+
 // Set projection matrix
 var _fov = 60;
 var _aspect = window_get_width() / window_get_height();

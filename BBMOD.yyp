@@ -719,6 +719,14 @@
             }
         },
         {
+            "Key": "49f80112-c478-49bc-8a52-5a1709a16b54",
+            "Value": {
+                "id": "36d78a91-4483-44b4-9463-457f890212be",
+                "resourcePath": "views\\49f80112-c478-49bc-8a52-5a1709a16b54.yy",
+                "resourceType": "GMFolder"
+            }
+        },
+        {
             "Key": "4a051053-8c62-4589-8c7d-430cedb677da",
             "Value": {
                 "id": "1d1ec88b-5874-4f29-bb88-a5470b2c0e4e",
@@ -1047,6 +1055,14 @@
             }
         },
         {
+            "Key": "6484ab02-9535-4da4-8c06-60e6fabc6f24",
+            "Value": {
+                "id": "5183b43c-5b86-4c82-ba62-889926a6bedd",
+                "resourcePath": "scripts\\_bbmod_shader_set_ibl\\_bbmod_shader_set_ibl.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "658ffa44-2c98-4624-adcf-196442e4cee8",
             "Value": {
                 "id": "69e9c7ce-0964-4768-92b2-6be972f90016",
@@ -1139,6 +1155,14 @@
             "Value": {
                 "id": "6cefbafe-3621-4c16-bf0c-0cf968f96982",
                 "resourcePath": "scripts\\ce_quaternion_create\\ce_quaternion_create.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "6d9b0398-2895-4203-bbd9-0a8c754432b3",
+            "Value": {
+                "id": "0d767262-7a13-4cf8-919b-3aeba15f26a1",
+                "resourcePath": "scripts\\bbmod_set_camera_position\\bbmod_set_camera_position.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -2439,6 +2463,14 @@
             }
         },
         {
+            "Key": "f9c0c352-6069-41fd-8f93-c66c531d4240",
+            "Value": {
+                "id": "50df4234-ba4a-46db-b85c-156248bae1e8",
+                "resourcePath": "scripts\\bbmod_set_ibl\\bbmod_set_ibl.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "fa8ea243-694a-483a-a61c-ce4f4182ab72",
             "Value": {
                 "id": "fa8ea243-694a-483a-a61c-ce4f4182ab72",
@@ -2560,6 +2592,7 @@
         "11ce2f7a-24b0-4003-884f-6076a7926702",
         "a0aa5fc0-42b5-41b5-a9ca-c44d9ddf27e5",
         "223e3996-c1a3-489c-975c-31f4ce483bd4",
+        "6484ab02-9535-4da4-8c06-60e6fabc6f24",
         "bae87300-324a-4c22-8779-b6801fe48aac",
         "85c52c0b-91b8-4f07-99a5-f77c3d2b2be1",
         "9f99d0ea-65be-4f0d-95e3-5ee1be4b7209",
@@ -2577,6 +2610,8 @@
         "8271765a-d9ae-4f09-9bd7-77f48a48f8ba",
         "6785677c-39f9-4838-814c-d428687376b6",
         "d58f9993-fd4a-4c0c-a17d-8c169de75f60",
+        "6d9b0398-2895-4203-bbd9-0a8c754432b3",
+        "f9c0c352-6069-41fd-8f93-c66c531d4240",
         "5775c4f2-5144-47e2-9de4-265cde00acd6",
         "90e23c5f-86a5-44c8-8178-8c1b3b9d10b5",
         "763e8b9a-8362-4066-85ab-1b662b691b22",

@@ -27,3 +27,15 @@ global.__bbmod_key_index_last = 0;
 
 /// @var {real} The current render pass.
 global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
+
+/// @var {array} The current position of the camera.
+global.bbmod_camera_position = [0, 0, 0];
+
+/// @var {real} The current camera exposure.
+global.bbmod_camera_exposure = 1.0;
+
+/// @var {ptr} The sprite that is currently used for IBL.
+global.__bbmod_ibl_sprite = noone;
+
+/// @var {ptr} The subimage of the sprite that is currently used for IBL.
+global.__bbmod_ibl_subimage = noone;
