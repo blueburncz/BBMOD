@@ -1,7 +1,8 @@
 /// @func bbmod_dynamic_batch_create(model, size)
-/// @param {array} model
-/// @param {real} size
-/// @return {array}
+/// @desc Creates a dynamic batch of a model.
+/// @param {array} model The model to create a dynamic batch of.
+/// @param {real} size Number of model instances in the batch.
+/// @return {array} The created dynamic batch.
 var _model = argument0;
 var _size = argument1;
 var _buffer = vertex_create_buffer();

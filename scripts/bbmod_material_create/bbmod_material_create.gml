@@ -1,11 +1,11 @@
 /// @func bbmod_material_create(shader, [base_opacity[, normal_roughness[, metallic_ao[, subsurface[, emissive]]]]])
 /// @desc Creates a new Material structure.
 /// @param {ptr} shader A shader that the material uses.
-/// @param {ptr} [base_opacity] TODO
-/// @param {ptr} [normal_roughness] TODO
-/// @param {ptr} [metallic_ao] TODO
-/// @param {ptr} [subsurface] TODO
-/// @param {ptr} [emissive] TODO
+/// @param {ptr} [base_opacity] A texture with base color in RGB and opacity in alpha.
+/// @param {ptr} [normal_roughness] A texture with normals in RGB and roughness in alpha.
+/// @param {ptr} [metallic_ao] A texture with metallic in R and ambient occlusion in G.
+/// @param {ptr} [subsurface] A texture with subsurface color in RGB and intensity in alpha.
+/// @param {ptr} [emissive] A texture with RGBM encoded emissive color.
 /// @return {array} The created Material structure.
 var _mat = array_create(BBMOD_EMaterial.SIZE, -1);
 

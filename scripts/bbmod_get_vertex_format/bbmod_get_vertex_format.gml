@@ -9,7 +9,7 @@
 /// bitangent signs.
 /// @param {bool} bones True if the vertex format must have vertex weights and bone
 /// indices.
-/// @param {bool} [ids] TODO
+/// @param {bool} [ids] True if the vertex format must have ids for dynamic batching.
 /// @return {real} The vertex format.
 var _has_vertices = argument[0];
 var _has_normals = argument[1];

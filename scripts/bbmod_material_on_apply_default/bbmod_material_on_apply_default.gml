@@ -18,9 +18,9 @@ texture_set_stage(shader_get_sampler_index(_shader, "u_texEmissive"),
 
 // TODO: Add API for setting the sky texture
 texture_set_stage(shader_get_sampler_index(_shader, "u_texDiffuseIBL"),
-	sprite_get_texture(spr_sky_diffuse, 0));
+	sprite_get_texture(ORenderer.spr_sky_diffuse, 0));
 
-var _specularEnv = spr_sky_specular;
+var _specularEnv = ORenderer.spr_sky_specular;
 
 texture_set_stage(shader_get_sampler_index(_shader, "u_texSpecularIBL"),
 	sprite_get_texture(_specularEnv, 0));
@@ -35,8 +35,8 @@ texture_set_stage(shader_get_sampler_index(_shader, "u_texBRDF"),
 
 // TODO: Add API for setting camera's world-space position.
 shader_set_uniform_f(shader_get_uniform(_shader, "u_vCamPos"),
-	x, y, z);
+	ORenderer.x, ORenderer.y, ORenderer.z);
 
 // TODO: Add API for setting camera's exposure.
 shader_set_uniform_f(shader_get_uniform(_shader, "u_fExposure"),
-	exposure);
+	ORenderer.exposure);

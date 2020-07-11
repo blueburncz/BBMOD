@@ -33,7 +33,6 @@ if (_vertex_count > 0)
 	{
 		var _vbuffer = vertex_create_buffer_from_buffer_ext(
 			_buffer, _format, buffer_tell(_buffer), _vertex_count);
-		//vertex_freeze(_vbuffer); // TODO: Add bbmod_model_freeze
 		_mesh[@ BBMOD_EMesh.VertexBuffer] = _vbuffer;
 		buffer_seek(_buffer, buffer_seek_relative, _size);
 	}

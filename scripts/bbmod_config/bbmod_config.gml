@@ -48,7 +48,8 @@
 /// weights" predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_BONES 5
 
-/// @macro TODO
+/// @macro How many bites to shift to read/write a "has ids for dynamic batching"
+/// predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_IDS 6
 
 /// @macro An index of the last found AnimationKey, updated by

@@ -38,10 +38,29 @@ bbmod_render(mod_sphere, [mat_sky]);
 matrix_set(matrix_world, matrix_stack_top());
 matrix_stack_pop();
 
-//bbmod_render(model);
+var _model = model[mode_current];
+var _material = material[mode_current];
 
-//bbmod_static_batch_render(static_batch, material);
+switch (mode_current)
+{
+case EMode.Normal:
+	matrix_stack_push(matrix_get(matrix_world));
+	with (OModel)
+	{
+		matrix_set(matrix_world, matrix_build(x, y, 0, 0, 0, 0, 1, 1, 1));
+		bbmod_render(_model);
+	}
+	matrix_set(matrix_world, matrix_stack_top());
+	matrix_stack_pop();
+	break;
 
-bbmod_dynamic_batch_render(dynamic_batch, material, data);
+case EMode.Static:
+	bbmod_static_batch_render(_model, _material)
+	break;
+
+case EMode.Dynamic:
+	bbmod_dynamic_batch_render(_model, _material, data)
+	break;
+}
 
 bbmod_material_reset();

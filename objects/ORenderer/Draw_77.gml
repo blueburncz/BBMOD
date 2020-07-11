@@ -13,3 +13,18 @@ draw_surface_ext(application_surface, 0, 0, _scale, _scale, 0, c_white, 1);
 shader_reset();
 
 //draw_sprite_part(SprColorGrading, 0, 0, 0, 256, 16, 0, 0);
+
+switch (mode_current)
+{
+case EMode.Normal:
+	draw_text(0, 32, "with (instances) {}");
+	break;
+
+case EMode.Static:
+	draw_text(0, 32, "Static batch");
+	break;
+
+case EMode.Dynamic:
+	draw_text(0, 32, "Dynamic batch");
+	break;
+}
