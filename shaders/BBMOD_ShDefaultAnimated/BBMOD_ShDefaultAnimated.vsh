@@ -2,6 +2,7 @@
 #define MAX_BONES 64
 
 #define in_TangentW in_TextureCoord1
+
 #define in_BoneIndex in_TextureCoord2
 #define in_BoneWeight in_TextureCoord3
 

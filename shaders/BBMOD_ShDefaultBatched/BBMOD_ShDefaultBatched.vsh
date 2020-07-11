@@ -1,8 +1,8 @@
 #pragma include("Default_VS.xsh", "glsl")
-
 #define MAX_BATCH_DATA_SIZE 128
 
 #define in_TangentW in_TextureCoord1
+
 #define in_Id in_TextureCoord2
 
 attribute vec4 in_Position;
@@ -10,8 +10,8 @@ attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord0;
 //attribute vec4 in_Colour;
 attribute vec4 in_TangentW;
-attribute float in_Id;
 
+attribute float in_Id;
 
 varying vec3 v_vVertex;
 //varying vec4 v_vColour;
@@ -20,7 +20,8 @@ varying mat3 v_mTBN;
 
 uniform vec4 u_vData[MAX_BATCH_DATA_SIZE];
 
-vec4 ce_quaternion_multiply(vec4 _q1, vec4 _q2)
+/// @desc Multiplies quaternions q1 and q2.
+vec4 xQuaternionMultiply(vec4 _q1, vec4 _q2)
 {
 	float _q10 = _q1.x;
 	float _q11 = _q1.y;
@@ -31,7 +32,7 @@ vec4 ce_quaternion_multiply(vec4 _q1, vec4 _q2)
 	float _q22 = _q2.z;
 	float _q23 = _q2.w;
 
-	vec4 q = vec4(0.0);
+	vec4 q = vec4(0.0, 0.0, 0.0, 0.0);
 
 	q.x = _q11 * _q22 - _q12 * _q21
 		+ _q13 * _q20 + _q10 * _q23;
@@ -45,13 +46,14 @@ vec4 ce_quaternion_multiply(vec4 _q1, vec4 _q2)
 	return q;
 }
 
-vec4 ce_quaternion_rotate(vec4 q, vec4 v)
+/// @desc Rotates vector v by quaternion q.
+vec4 xQuaternionRotate(vec4 q, vec4 v)
 {
 	q = normalize(q);
-	vec4 V = vec4(v.xyz, 0.0);
-	vec4 conjugate = vec4(-q.xyz, q.w);
-	vec4 rot = ce_quaternion_multiply(q, V);
-	rot = ce_quaternion_multiply(rot, conjugate);
+	vec4 V = vec4(v.x, v.y, v.z, 0.0);
+	vec4 conjugate = vec4(-q.x, -q.y, -q.z, q.w);
+	vec4 rot = xQuaternionMultiply(q, V);
+	rot = xQuaternionMultiply(rot, conjugate);
 	return rot;
 }
 
@@ -60,10 +62,9 @@ void main()
 	int idx = int(in_Id) * 2;
 	vec4 posScale = u_vData[idx];
 	vec4 rot = u_vData[idx + 1];
-
-	vec4 vertexPos = vec4(posScale.xyz + (ce_quaternion_rotate(rot, in_Position).xyz * posScale.w), in_Position.w);
+	vec4 vertexPos = vec4(posScale.xyz + (xQuaternionRotate(rot, in_Position).xyz * posScale.w), in_Position.w);
 	vec4 normal = vec4(in_Normal, 0.0);
-	normal = ce_quaternion_rotate(rot, normal);
+	normal = xQuaternionRotate(rot, normal);
 
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * vertexPos;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * vertexPos).xyz;

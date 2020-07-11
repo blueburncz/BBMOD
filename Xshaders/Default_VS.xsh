@@ -1,11 +1,16 @@
 #if ANIMATED
 #define MAX_BONES 64
+#elif BATCHED
+#define MAX_BATCH_DATA_SIZE 128
 #endif
 
 #define in_TangentW in_TextureCoord1
+
 #if ANIMATED
 #define in_BoneIndex in_TextureCoord2
 #define in_BoneWeight in_TextureCoord3
+#elif BATCHED
+#define in_Id in_TextureCoord2
 #endif
 
 attribute vec4 in_Position;
@@ -17,6 +22,8 @@ attribute vec4 in_TangentW;
 #if ANIMATED
 attribute vec4 in_BoneIndex;
 attribute vec4 in_BoneWeight;
+#elif BATCHED
+attribute float in_Id;
 #endif
 
 varying vec3 v_vVertex;
@@ -26,6 +33,10 @@ varying mat3 v_mTBN;
 
 #if ANIMATED
 uniform mat4 u_mBones[MAX_BONES];
+#elif BATCHED
+uniform vec4 u_vData[MAX_BATCH_DATA_SIZE];
+
+#pragma include("Quaternion.xsh", "glsl")
 #endif
 
 void main()
@@ -37,6 +48,13 @@ void main()
 	boneTransform += u_mBones[int(in_BoneIndex.w)] * in_BoneWeight.w;
 	vec4 vertexPos = boneTransform * in_Position;
 	vec4 normal = boneTransform * vec4(in_Normal, 0.0);
+#elif BATCHED
+	int idx = int(in_Id) * 2;
+	vec4 posScale = u_vData[idx];
+	vec4 rot = u_vData[idx + 1];
+	vec4 vertexPos = vec4(posScale.xyz + (xQuaternionRotate(rot, in_Position).xyz * posScale.w), in_Position.w);
+	vec4 normal = vec4(in_Normal, 0.0);
+	normal = xQuaternionRotate(rot, normal);
 #else
 	vec4 vertexPos = in_Position;
 	vec4 normal = vec4(in_Normal, 0.0);
