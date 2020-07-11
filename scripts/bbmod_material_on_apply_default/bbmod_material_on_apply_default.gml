@@ -17,17 +17,14 @@ texture_set_stage(shader_get_sampler_index(_shader, "u_texEmissive"),
 	_material[BBMOD_EMaterial.Emissive]);
 
 // TODO: Add API for setting the sky texture
-texture_set_stage(shader_get_sampler_index(_shader, "u_texDiffuseIBL"),
-	sprite_get_texture(ORenderer.spr_sky_diffuse, 0));
+var _ibl = ORenderer.spr_ibl;
 
-var _specularEnv = ORenderer.spr_sky_specular;
+texture_set_stage(shader_get_sampler_index(_shader, "u_texIBL"),
+	sprite_get_texture(_ibl, 0));
 
-texture_set_stage(shader_get_sampler_index(_shader, "u_texSpecularIBL"),
-	sprite_get_texture(_specularEnv, 0));
+var _texel = 1 / sprite_get_height(_ibl);
 
-var _texel = 1 / sprite_get_height(_specularEnv);
-
-shader_set_uniform_f(shader_get_uniform(_shader, "u_vSpecularIBLTexel"),
+shader_set_uniform_f(shader_get_uniform(_shader, "u_vIBLTexel"),
 	_texel, _texel);
 
 texture_set_stage(shader_get_sampler_index(_shader, "u_texBRDF"),

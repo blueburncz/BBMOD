@@ -13,6 +13,9 @@ global.__bbmod_material_default = bbmod_material_create(BBMOD_ShDefault);
 /// @var {real} The default material for animated models.
 global.__bbmod_material_default_animated = bbmod_material_create(BBMOD_ShDefaultAnimated);
 
+/// @var {real} The default material for dynamically batched models.
+global.__bbmod_material_default_batched = bbmod_material_create(BBMOD_ShDefaultBatched);
+
 /// @var {array/undefined} The currently applied material.
 global.__bbmod_material_current = undefined;
 

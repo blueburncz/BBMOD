@@ -18,14 +18,11 @@ uniform sampler2D u_texSubsurface;
 // RGBM encoded emissive color
 uniform sampler2D u_texEmissive;
 
-// Prefiltered diffuse octahedron env. map
-uniform sampler2D u_texDiffuseIBL;
-
-// Prefiltered specular octahedron env. map
-uniform sampler2D u_texSpecularIBL;
+// Prefiltered octahedron env. map
+uniform sampler2D u_texIBL;
 
 // Texel size of one octahedron.
-uniform vec2 u_vSpecularIBLTexel;
+uniform vec2 u_vIBLTexel;
 
 // Preintegrated env. BRDF
 uniform sampler2D u_texBRDF;
@@ -76,11 +73,11 @@ void main()
 	////////////////////////////////////////////////////////////////////////////
 
 	vec3 V = normalize(u_vCamPos - v_vVertex);
-	vec3 lightColor = xDiffuseIBL(u_texDiffuseIBL, N);
+	vec3 lightColor = xDiffuseIBL(u_texIBL, u_vIBLTexel, N);
 
 	gl_FragColor.rgb = (
 		baseColor * lightColor
-		+ xSpecularIBL(u_texSpecularIBL, u_vSpecularIBLTexel, u_texBRDF, specularColor, roughness, N, V)
+		+ xSpecularIBL(u_texIBL, u_vIBLTexel, u_texBRDF, specularColor, roughness, N, V)
 		) * AO
 		+ emissive
 		+ xCheapSubsurface(subsurfaceColor, subsurfaceIntensity, -V, N, N, lightColor)

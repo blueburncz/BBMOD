@@ -535,14 +535,6 @@
             }
         },
         {
-            "Key": "3992e3e3-19ab-4241-944a-1254d4b9a779",
-            "Value": {
-                "id": "1a7d94e6-f3ae-4ba9-b6b4-16a93b3bfc4f",
-                "resourcePath": "datafiles_yy\\Test\\Skies\\diffuse.png.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "39985561-af6d-403a-af1d-9cf87d1643cf",
             "Value": {
                 "id": "39985561-af6d-403a-af1d-9cf87d1643cf",
@@ -1084,14 +1076,6 @@
                 "id": "67687946-0d7b-4ee5-85dc-48a28e7c29c4",
                 "resourcePath": "scripts\\ce_vec2_dot\\ce_vec2_dot.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "677f344a-26e5-45af-a65c-8d3cf57afd98",
-            "Value": {
-                "id": "e427d500-3f5c-4cb7-a078-2637ea04baaf",
-                "resourcePath": "datafiles_yy\\Test\\Skies\\specular.png.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -1772,6 +1756,14 @@
                 "id": "ab55c9ef-21fc-4373-8580-4d920ab879ea",
                 "resourcePath": "scripts\\ce_vec4_normalize\\ce_vec4_normalize.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "ab7c455b-197e-4600-853f-9d83f1b427dd",
+            "Value": {
+                "id": "a404ee11-3596-45e5-af8e-5c59b8701fda",
+                "resourcePath": "datafiles_yy\\Test\\Skies\\ibl.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {

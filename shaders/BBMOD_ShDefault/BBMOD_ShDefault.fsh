@@ -19,14 +19,11 @@ uniform sampler2D u_texSubsurface;
 // RGBM encoded emissive color
 uniform sampler2D u_texEmissive;
 
-// Prefiltered diffuse octahedron env. map
-uniform sampler2D u_texDiffuseIBL;
-
-// Prefiltered specular octahedron env. map
-uniform sampler2D u_texSpecularIBL;
+// Prefiltered octahedron env. map
+uniform sampler2D u_texIBL;
 
 // Texel size of one octahedron.
-uniform vec2 u_vSpecularIBLTexel;
+uniform vec2 u_vIBLTexel;
 
 // Preintegrated env. BRDF
 uniform sampler2D u_texBRDF;
@@ -177,22 +174,27 @@ float xLuminance(vec3 rgb)
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
 
-#define X_ROUGHNESS_MIP_COUNT 8
-
-vec3 xDiffuseIBL(sampler2D octahedron, vec3 N)
+vec3 xDiffuseIBL(sampler2D ibl, vec2 texel, vec3 N)
 {
-	return xGammaToLinear(xDecodeRGBM(texture2D(octahedron, xVec3ToOctahedronUv(N))));
+	const float s = 1.0 / 8.0;
+	const float r2 = 7.0;
+
+	vec2 uv0 = xVec3ToOctahedronUv(N);
+	uv0.x = (r2 + mix(texel.x, 1.0 - texel.x, uv0.x)) * s;
+	uv0.y = mix(texel.y, 1.0 - texel.y, uv0.y);
+
+	return xGammaToLinear(xDecodeRGBM(texture2D(ibl, uv0)));
 }
 
 /// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-vec3 xSpecularIBL(sampler2D octahedron, vec2 texel, sampler2D brdf, vec3 f0, float roughness, vec3 N, vec3 V)
+vec3 xSpecularIBL(sampler2D ibl, vec2 texel, sampler2D brdf, vec3 f0, float roughness, vec3 N, vec3 V)
 {
 	float NdotV = clamp(dot(N, V), 0.0, 1.0);
 	vec3 R = 2.0 * dot(V, N) * N - V;
 	vec2 envBRDF = texture2D(brdf, vec2(roughness, NdotV)).xy;
 
-	float s = 1.0 / float(X_ROUGHNESS_MIP_COUNT);
-	float r = roughness * float(X_ROUGHNESS_MIP_COUNT);
+	const float s = 1.0 / 8.0;
+	float r = roughness * 7.0;
 	float r2 = floor(r);
 	float rDiff = r - r2;
 
@@ -205,8 +207,8 @@ vec3 xSpecularIBL(sampler2D octahedron, vec2 texel, sampler2D brdf, vec3 f0, flo
 
 	vec3 specular = f0 * envBRDF.x + envBRDF.y;
 
-	vec3 col0 = xGammaToLinear(xDecodeRGBM(texture2D(octahedron, uv0))) * specular;
-	vec3 col1 = xGammaToLinear(xDecodeRGBM(texture2D(octahedron, uv1))) * specular;
+	vec3 col0 = xGammaToLinear(xDecodeRGBM(texture2D(ibl, uv0))) * specular;
+	vec3 col1 = xGammaToLinear(xDecodeRGBM(texture2D(ibl, uv1))) * specular;
 
 	return mix(col0, col1, rDiff);
 }
@@ -251,11 +253,11 @@ void main()
 	////////////////////////////////////////////////////////////////////////////
 
 	vec3 V = normalize(u_vCamPos - v_vVertex);
-	vec3 lightColor = xDiffuseIBL(u_texDiffuseIBL, N);
+	vec3 lightColor = xDiffuseIBL(u_texIBL, u_vIBLTexel, N);
 
 	gl_FragColor.rgb = (
 		baseColor * lightColor
-		+ xSpecularIBL(u_texSpecularIBL, u_vSpecularIBLTexel, u_texBRDF, specularColor, roughness, N, V)
+		+ xSpecularIBL(u_texIBL, u_vIBLTexel, u_texBRDF, specularColor, roughness, N, V)
 		) * AO
 		+ emissive
 		+ xCheapSubsurface(subsurfaceColor, subsurfaceIntensity, -V, N, N, lightColor)

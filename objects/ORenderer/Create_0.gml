@@ -18,8 +18,7 @@ mouse_last_y = 0;
 exposure = 1.0;
 
 spr_sky = sprite_add("Test/Skies/sky.png", 0, false, true, 0, 0);
-spr_sky_diffuse = sprite_add("Test/Skies/diffuse.png", 0, false, true, 0, 0);
-spr_sky_specular = sprite_add("Test/Skies/specular.png", 0, false, true, 0, 0);
+spr_ibl = sprite_add("Test/Skies/ibl.png", 0, false, true, 0, 0);
 
 mod_sphere = bbmod_load("Test/Models/Sphere.bbmod");
 
@@ -41,9 +40,9 @@ enum EMode
 mode_current = EMode.Normal;
 
 material = [
-	bbmod_material_create(BBMOD_ShDefault),
-	bbmod_material_create(BBMOD_ShDefault),
-	bbmod_material_create(BBMOD_ShDefaultBatched)
+	BBMOD_MATERIAL_DEFAULT,
+	BBMOD_MATERIAL_DEFAULT,
+	BBMOD_MATERIAL_DEFAULT_BACTHED
 ];
 
 model = [
