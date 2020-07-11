@@ -34,8 +34,8 @@ global.bbmod_camera_position = [0, 0, 0];
 /// @var {real} The current camera exposure.
 global.bbmod_camera_exposure = 1.0;
 
-/// @var {ptr} The sprite that is currently used for IBL.
-global.__bbmod_ibl_sprite = noone;
+/// @var {ptr} The texture that is currently used for IBL.
+global.__bbmod_ibl_texture = pointer_null;
 
-/// @var {ptr} The subimage of the sprite that is currently used for IBL.
-global.__bbmod_ibl_subimage = noone;
+/// @var {ptr} A texel size of the IBL texture.
+global.__bbmod_ibl_texel = 0;

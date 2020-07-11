@@ -1767,6 +1767,14 @@
             }
         },
         {
+            "Key": "a7f3102d-2242-4241-ae7d-e003aed21365",
+            "Value": {
+                "id": "2f48c6e4-82a2-473d-8d92-c590df9658be",
+                "resourcePath": "scripts\\bbmod_set_ibl_texture\\bbmod_set_ibl_texture.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "a9188620-a624-4a5a-83ae-a1b53faf038b",
             "Value": {
                 "id": "4076199a-dfbe-46e6-8d0b-81937c8824d7",
@@ -2466,7 +2474,7 @@
             "Key": "f9c0c352-6069-41fd-8f93-c66c531d4240",
             "Value": {
                 "id": "50df4234-ba4a-46db-b85c-156248bae1e8",
-                "resourcePath": "scripts\\bbmod_set_ibl\\bbmod_set_ibl.yy",
+                "resourcePath": "scripts\\bbmod_set_ibl_sprite\\bbmod_set_ibl_sprite.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -2612,6 +2620,7 @@
         "d58f9993-fd4a-4c0c-a17d-8c169de75f60",
         "6d9b0398-2895-4203-bbd9-0a8c754432b3",
         "f9c0c352-6069-41fd-8f93-c66c531d4240",
+        "a7f3102d-2242-4241-ae7d-e003aed21365",
         "5775c4f2-5144-47e2-9de4-265cde00acd6",
         "90e23c5f-86a5-44c8-8178-8c1b3b9d10b5",
         "763e8b9a-8362-4066-85ab-1b662b691b22",

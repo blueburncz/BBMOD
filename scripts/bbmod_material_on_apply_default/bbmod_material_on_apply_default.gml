@@ -16,15 +16,12 @@ texture_set_stage(shader_get_sampler_index(_shader, "u_texSubsurface"),
 texture_set_stage(shader_get_sampler_index(_shader, "u_texEmissive"),
 	_material[BBMOD_EMaterial.Emissive]);
 
-var _ibl = global.__bbmod_ibl_sprite;
+var _ibl = global.__bbmod_ibl_texture;
 
-if (_ibl != noone)
+if (_ibl != pointer_null)
 {
-	_bbmod_shader_set_ibl(_shader, _ibl, global.__bbmod_ibl_subimage);
+	_bbmod_shader_set_ibl(_shader, _ibl, global.__bbmod_ibl_texel);
 }
-
-texture_set_stage(shader_get_sampler_index(_shader, "u_texBRDF"),
-	sprite_get_texture(BBMOD_SprEnvBRDF, 0));
 
 shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vCamPos"),
 	global.bbmod_camera_position);
