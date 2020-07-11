@@ -1,7 +1,9 @@
 /// @func bbmod_dynamic_batch_render(dynamic_batch, material, data)
-/// @param {array} dynamic_batch
-/// @param {array} material
-/// @param {array} data
+/// @desc Submits a DynamitBatch for rendering.
+/// @param {array} dynamic_batch A DynamicBatch structure.
+/// @param {array} material A Material structure. Must use a shader that
+/// expects ids in the vertex format.
+/// @param {array} data An array containing data for each rendered instance.
 var _dynamic_batch = argument0;
 var _material = argument1;
 var _data = argument2;

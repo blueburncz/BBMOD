@@ -2,7 +2,7 @@
 /// @desc Creates a dynamic batch of a model.
 /// @param {array} model The model to create a dynamic batch of.
 /// @param {real} size Number of model instances in the batch.
-/// @return {array} The created dynamic batch.
+/// @return {array} The created DynamicBatch structure.
 var _model = argument0;
 var _size = argument1;
 var _buffer = vertex_create_buffer();
