@@ -18,8 +18,7 @@ if ((_material[BBMOD_EMaterial.RenderPath] & _render_pass) == 0)
 
 bbmod_material_apply(_material);
 
-var _u_data = shader_get_uniform(_material[BBMOD_EMaterial.Shader], "u_vData");
-shader_set_uniform_f_array(_u_data, _data);
+_bbmod_shader_set_dynamic_batch_data(_material[BBMOD_EMaterial.Shader], _data);
 
 var _tex_base = _material[BBMOD_EMaterial.BaseOpacity];
 vertex_submit(_dynamic_batch[BBMOD_EStaticBatch.VertexBuffer], pr_trianglelist, _tex_base);
