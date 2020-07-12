@@ -1,9 +1,10 @@
 /// @func bbmod_position_key_interpolate(pk1, pk2, factor)
-/// @desc Interpolates between two position keys.
-/// @param {array} pk1 The first position key.
-/// @param {array} pk2 The second position key.
+/// @desc Interpolates between two PositionKey structures.
+/// @param {array} pk1 The first PositionKey structure.
+/// @param {array} pk2 The second PositionKey structure.
 /// @param {real} factor The interpolation factor. Should be a value in range 0..1.
-/// @return {array} A new key with the interpolated animation time and position.
+/// @return {array} A new PositionKey with the interpolated animation time and
+/// position.
 var _pk1 = argument0;
 var _pk2 = argument1;
 var _factor = argument2;

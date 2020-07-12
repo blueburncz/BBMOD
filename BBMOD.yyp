@@ -1847,14 +1847,6 @@
             }
         },
         {
-            "Key": "b1beca31-67d1-4eff-b0f4-61816be71843",
-            "Value": {
-                "id": "10e76a1d-bc5d-4054-ad9c-b1723827cbfe",
-                "resourcePath": "datafiles_yy\\Test\\Models\\SportsCar\\SportCar.bbmod.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "b2134b67-0e94-4ece-9e38-31be248aed03",
             "Value": {
                 "id": "b2134b67-0e94-4ece-9e38-31be248aed03",
@@ -2108,14 +2100,6 @@
                 "id": "d9748414-bc70-4132-8c64-3a37c377373e",
                 "resourcePath": "objects\\ORenderer\\ORenderer.yy",
                 "resourceType": "GMObject"
-            }
-        },
-        {
-            "Key": "ce84cb42-d171-4826-a609-c4b0f6f6eb04",
-            "Value": {
-                "id": "db6e69db-9983-4ad9-aea2-8830aee3578a",
-                "resourcePath": "views\\ce84cb42-d171-4826-a609-c4b0f6f6eb04.yy",
-                "resourceType": "GMFolder"
             }
         },
         {

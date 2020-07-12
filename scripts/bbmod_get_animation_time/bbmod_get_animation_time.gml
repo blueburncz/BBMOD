@@ -1,6 +1,6 @@
 /// @func bbmod_get_animation_time(animation, time_in_seconds)
 /// @desc Calculates animation time from current time in seconds.
-/// @param {array} animation The Animation structure.
+/// @param {array} animation An Animation structure.
 /// @param {real} time_in_seconds The current time in seconds.
 /// @return {real} The animation time.
 gml_pragma("forceinline");

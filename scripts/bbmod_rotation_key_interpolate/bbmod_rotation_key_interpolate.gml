@@ -1,9 +1,10 @@
 /// @func bbmod_rotation_key_interpolate(rk1, rk2, factor)
-/// @desc Interpolates between two rotation keys.
-/// @param {array} rk1 The first rotation key.
-/// @param {array} rk2 The second rotation key.
+/// @desc Interpolates between two RotationKey structures.
+/// @param {array} rk1 The first RotationKey.
+/// @param {array} rk2 The second RotationKey.
 /// @param {real} factor The interpolation factor. Should be a value in range 0..1.
-/// @return {array} A new key with the interpolated animation time and position.
+/// @return {array} A new RotationKey sructure with the interpolated animation time
+/// and position.
 var _rk1 = argument0;
 var _rk2 = argument1;
 var _factor = argument2;

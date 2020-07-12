@@ -1,4 +1,6 @@
 /// @func bbmod_dynamic_batch()
+/// @desc Contains definition of the DynamicBatch structure.
+/// @see BBMOD_EDynamicBatch
 
 /// @enum An enumeration of members of a StaticBatch structure.
 enum BBMOD_EDynamicBatch

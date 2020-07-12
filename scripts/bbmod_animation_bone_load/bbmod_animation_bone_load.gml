@@ -1,7 +1,7 @@
 /// @func bbmod_animation_bone_load(buffer)
 /// @desc Loads an AnimationBone structure from a buffer.
 /// @param {real} buffer The buffer to load the structure from.
-/// @return {array} The loaded structure.
+/// @return {array} The loaded AnimationBone.
 var _buffer = argument0;
 var i/*:int*/= 0;
 

@@ -1,12 +1,13 @@
 /// @func bbmod_animation_create_transition(model, anim_from, time_from, anim_to, time_to, duration)
-/// @desc Creates a new animation transition between two specified animations.
+/// @desc Creates a new animation transition between two specified Animation
+/// structures.
 /// @param {array} model A Model structure.
-/// @param {array} anim_from An Animation structure.
+/// @param {array} anim_from The first Animation structure.
 /// @param {real} time_from Animation time of the first animation.
-/// @param {array} anim_to An Animation structure.
+/// @param {array} anim_to The second Animation structure.
 /// @param {real} time_to Animation time of the second animation.
 /// @param {real} duration The duration of the transition in seconds.
-/// @return {array} The created transition Animation struct.
+/// @return {array} The created transition Animation structure.
 var _model = argument0;
 var _anim_from = argument1;
 var _time_from = argument2;
