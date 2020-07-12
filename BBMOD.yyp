@@ -2127,14 +2127,6 @@
             }
         },
         {
-            "Key": "d0a4e919-5e02-4218-89a9-dad9a10d02e3",
-            "Value": {
-                "id": "b6ff5bd1-522e-445d-b88d-0ad48c0b4bd1",
-                "resourcePath": "shaders\\BBMOD_ShPostProcess\\BBMOD_ShPostProcess.yy",
-                "resourceType": "GMShader"
-            }
-        },
-        {
             "Key": "d0e82379-0276-1806-1749-877098acd2cc",
             "Value": {
                 "id": "d0e82379-0276-1806-1749-877098acd2cc",

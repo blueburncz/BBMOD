@@ -78,10 +78,9 @@ void main()
 	gl_FragColor.rgb = (
 		baseColor * lightColor
 		+ xSpecularIBL(u_texIBL, u_vIBLTexel, u_texBRDF, specularColor, roughness, N, V)
-		) * AO
-		+ emissive
-		+ xCheapSubsurface(subsurfaceColor, subsurfaceIntensity, -V, N, N, lightColor)
-		;
+	) * AO
+	+ emissive
+	+ xCheapSubsurface(subsurfaceColor, subsurfaceIntensity, -V, N, N, lightColor);
 
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * u_fExposure);
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
