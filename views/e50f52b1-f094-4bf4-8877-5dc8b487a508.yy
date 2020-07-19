@@ -8,7 +8,7 @@
         "a646dc63-f174-476e-b9a7-17bf39ce2d1d"
     ],
     "filterType": "GMIncludedFile",
-    "folderName": "Test",
+    "folderName": "BBMOD",
     "isDefaultView": false,
     "localisedFolderName": ""
 }

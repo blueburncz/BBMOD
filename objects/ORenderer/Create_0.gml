@@ -15,12 +15,12 @@ direction_up = 0;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
-spr_sky = sprite_add("Test/Skies/Sky.png", 0, false, true, 0, 0);
-spr_ibl = sprite_add("Test/Skies/IBL.png", 0, false, true, 0, 0);
+spr_sky = sprite_add("BBMOD/Skies/NoonSky.png", 0, false, true, 0, 0);
+spr_ibl = sprite_add("BBMOD/Skies/NoonIBL.png", 0, false, true, 0, 0);
 
 bbmod_set_ibl_sprite(spr_ibl, 0);
 
-mod_sphere = bbmod_load("Test/Models/Sphere.bbmod");
+mod_sphere = bbmod_load("BBMOD/Models/Sphere.bbmod");
 
 mat_sky = bbmod_material_create(BBMOD_ShSky,
 	sprite_get_texture(spr_sky, 0));

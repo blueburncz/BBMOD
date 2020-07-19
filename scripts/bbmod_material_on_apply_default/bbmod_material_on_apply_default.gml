@@ -23,8 +23,6 @@ if (_ibl != pointer_null)
 	_bbmod_shader_set_ibl(_shader, _ibl, global.__bbmod_ibl_texel);
 }
 
-shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vCamPos"),
-	global.bbmod_camera_position);
+_bbmod_shader_set_camera_position(_shader);
 
-shader_set_uniform_f(shader_get_uniform(_shader, "u_fExposure"),
-	global.bbmod_camera_exposure);
+_bbmod_shader_set_exposure(_shader);

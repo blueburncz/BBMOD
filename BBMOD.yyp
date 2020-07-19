@@ -66,7 +66,7 @@
             "Key": "03effa3d-fa3f-4e61-a5e0-b7be81383f31",
             "Value": {
                 "id": "d7f8d236-bd50-4df8-a6a6-b5a44d0fa74d",
-                "resourcePath": "datafiles_yy\\Test\\Models\\Sphere.bbmod.yy",
+                "resourcePath": "datafiles_yy\\BBMOD\\Models\\Sphere.bbmod.yy",
                 "resourceType": "GMIncludedFile"
             }
         },
@@ -114,7 +114,7 @@
             "Key": "0609a386-6b23-4544-98b1-599ab54daaf8",
             "Value": {
                 "id": "d73f0220-e118-4ed6-af05-049981637fda",
-                "resourcePath": "datafiles_yy\\Test\\Skies\\Sky.png.yy",
+                "resourcePath": "datafiles_yy\\BBMOD\\Skies\\NoonSky.png.yy",
                 "resourceType": "GMIncludedFile"
             }
         },
@@ -252,14 +252,6 @@
                 "id": "1620bd31-e9d9-4594-a39c-bd4dbf99a510",
                 "resourcePath": "scripts\\ce_array_reverse\\ce_array_reverse.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "17bfbd33-4f74-4a93-a552-a5c5f023c8a6",
-            "Value": {
-                "id": "bb1f9aa2-b249-40c8-8d41-c52c1bac41bd",
-                "resourcePath": "sprites\\BBMOD_SprColorGrading\\BBMOD_SprColorGrading.yy",
-                "resourceType": "GMSprite"
             }
         },
         {
@@ -951,6 +943,14 @@
             }
         },
         {
+            "Key": "5995aa1c-02b4-4a4e-9d09-5a359baea0db",
+            "Value": {
+                "id": "9db5632b-865f-43d6-a090-bfcded7f7a01",
+                "resourcePath": "scripts\\_bbmod_shader_set_camera_position\\_bbmod_shader_set_camera_position.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "59dab150-ca12-a6ed-fd8d-ffad131c75a3",
             "Value": {
                 "id": "59dab150-ca12-a6ed-fd8d-ffad131c75a3",
@@ -1591,6 +1591,14 @@
             }
         },
         {
+            "Key": "97068597-3675-4376-83b8-9b1e270a1b74",
+            "Value": {
+                "id": "4be9b202-378b-4c04-bf62-dca076cc7474",
+                "resourcePath": "scripts\\_bbmod_shader_set_exposure\\_bbmod_shader_set_exposure.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "9726cbf0-4085-4890-a8a9-3766a639e045",
             "Value": {
                 "id": "89d7385d-cb82-432c-83d7-9d449c35965b",
@@ -2002,7 +2010,7 @@
             "Key": "c060d26e-3449-4632-9691-604692300464",
             "Value": {
                 "id": "ba825957-1f95-45de-9f07-7f0623de5180",
-                "resourcePath": "datafiles_yy\\Test\\Skies\\IBL.png.yy",
+                "resourcePath": "datafiles_yy\\BBMOD\\Skies\\NoonIBL.png.yy",
                 "resourceType": "GMIncludedFile"
             }
         },
@@ -2584,7 +2592,9 @@
         "11ce2f7a-24b0-4003-884f-6076a7926702",
         "a0aa5fc0-42b5-41b5-a9ca-c44d9ddf27e5",
         "223e3996-c1a3-489c-975c-31f4ce483bd4",
+        "5995aa1c-02b4-4a4e-9d09-5a359baea0db",
         "acea6e75-ad5c-4089-a6dd-0faa4b191932",
+        "97068597-3675-4376-83b8-9b1e270a1b74",
         "6484ab02-9535-4da4-8c06-60e6fabc6f24",
         "bae87300-324a-4c22-8779-b6801fe48aac",
         "85c52c0b-91b8-4f07-99a5-f77c3d2b2be1",
