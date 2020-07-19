@@ -32,7 +32,7 @@ global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
 global.bbmod_camera_position = [0, 0, 0];
 
 /// @var {real} The current camera exposure.
-global.bbmod_camera_exposure = 1.0;
+global.bbmod_camera_exposure = 0.1;
 
 /// @var {ptr} The texture that is currently used for IBL.
 global.__bbmod_ibl_texture = pointer_null;

@@ -38,16 +38,26 @@ uniform float u_fExposure;
 #define X_2_PI 6.28318530718
 
 /// @return x^2
-float xPow2(float x) { return (x * x); }
+#define xPow2(x) ((x) * (x))
 
 /// @return x^3
-float xPow3(float x) { return (x * x * x); }
+#define xPow3(x) ((x) * (x) * (x))
 
 /// @return x^4
-float xPow4(float x) { return (x * x * x * x); }
+#define xPow4(x) ((x) * (x) * (x) * (x))
 
 /// @return x^5
-float xPow5(float x) { return (x * x * x * x * x); }
+#define xPow5(x) ((x) * (x) * (x) * (x) * (x))
+
+/// @return arctan2(x,y)
+#define xAtan2(x, y) atan(y, x)
+
+/// @return Direction from point `from` to point `to` in degrees (0-360 range).
+float xPointDirection(vec2 from, vec2 to)
+{
+	float x = xAtan2(from.x - to.x, from.y - to.y);
+	return ((x > 0.0) ? x : (2.0 * X_PI + x)) * 180.0 / X_PI;
+}
 
 /// @desc Default specular color for dielectrics
 /// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf

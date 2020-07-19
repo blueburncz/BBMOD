@@ -111,6 +111,14 @@
             }
         },
         {
+            "Key": "0609a386-6b23-4544-98b1-599ab54daaf8",
+            "Value": {
+                "id": "d73f0220-e118-4ed6-af05-049981637fda",
+                "resourcePath": "datafiles_yy\\Test\\Skies\\Sky.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "06dd20c6-7876-4afe-b638-c3b1073621c6",
             "Value": {
                 "id": "5627f89a-f020-4ff1-993d-df2e78fc54ed",
@@ -1583,14 +1591,6 @@
             }
         },
         {
-            "Key": "971385e5-589e-47c0-9c0d-14eaab93d955",
-            "Value": {
-                "id": "801ede3d-52db-4e9d-8e52-82879f2a3079",
-                "resourcePath": "datafiles_yy\\Test\\Skies\\sky.png.yy",
-                "resourceType": "GMIncludedFile"
-            }
-        },
-        {
             "Key": "9726cbf0-4085-4890-a8a9-3766a639e045",
             "Value": {
                 "id": "89d7385d-cb82-432c-83d7-9d449c35965b",
@@ -1788,14 +1788,6 @@
                 "id": "ab55c9ef-21fc-4373-8580-4d920ab879ea",
                 "resourcePath": "scripts\\ce_vec4_normalize\\ce_vec4_normalize.yy",
                 "resourceType": "GMScript"
-            }
-        },
-        {
-            "Key": "ab7c455b-197e-4600-853f-9d83f1b427dd",
-            "Value": {
-                "id": "a404ee11-3596-45e5-af8e-5c59b8701fda",
-                "resourcePath": "datafiles_yy\\Test\\Skies\\ibl.png.yy",
-                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -2004,6 +1996,14 @@
                 "id": "0a170400-b886-4b0f-9f08-cc822837f1b2",
                 "resourcePath": "sprites\\BBMOD_SprDefaultMaterial\\BBMOD_SprDefaultMaterial.yy",
                 "resourceType": "GMSprite"
+            }
+        },
+        {
+            "Key": "c060d26e-3449-4632-9691-604692300464",
+            "Value": {
+                "id": "ba825957-1f95-45de-9f07-7f0623de5180",
+                "resourcePath": "datafiles_yy\\Test\\Skies\\IBL.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {

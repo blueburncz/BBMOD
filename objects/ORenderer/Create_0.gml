@@ -15,8 +15,8 @@ direction_up = 0;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
-spr_sky = sprite_add("Test/Skies/sky.png", 0, false, true, 0, 0);
-spr_ibl = sprite_add("Test/Skies/ibl.png", 0, false, true, 0, 0);
+spr_sky = sprite_add("Test/Skies/Sky.png", 0, false, true, 0, 0);
+spr_ibl = sprite_add("Test/Skies/IBL.png", 0, false, true, 0, 0);
 
 bbmod_set_ibl_sprite(spr_ibl, 0);
 
