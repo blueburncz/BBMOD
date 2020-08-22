@@ -1,8 +1,0 @@
-{
-    "id": "8271765a-d9ae-4f09-9bd7-77f48a48f8ba",
-    "modelName": "GMScript",
-    "mvc": "1.0",
-    "name": "bbmod_load",
-    "IsCompatibility": false,
-    "IsDnD": false
-}

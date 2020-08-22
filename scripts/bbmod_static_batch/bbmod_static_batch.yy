@@ -1,8 +1,12 @@
 {
-    "id": "bae87300-324a-4c22-8779-b6801fe48aac",
-    "modelName": "GMScript",
-    "mvc": "1.0",
-    "name": "bbmod_static_batch",
-    "IsCompatibility": false,
-    "IsDnD": false
+  "isDnD": false,
+  "isCompatibility": false,
+  "parent": {
+    "name": "BBMOD",
+    "path": "folders/Scripts/BBMOD.yy",
+  },
+  "resourceVersion": "1.0",
+  "name": "bbmod_static_batch",
+  "tags": [],
+  "resourceType": "GMScript",
 }
