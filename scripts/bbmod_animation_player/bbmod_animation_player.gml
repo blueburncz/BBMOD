@@ -402,22 +402,6 @@ function bbmod_animate(_animation_player, _animation_instance, _animation_time, 
 	//show_debug_message(get_timer() - _t);
 }
 
-/// @func bbmod_get_bone_transform(_animation_player, _bone_index)
-/// @desc Returns a transformation matrix of a bone, which can be used
-/// for example for attachments.
-/// @param {array} _animation_player An AnimationPlayer structure.
-/// @param {real} _bone_index The index of the bone.
-/// @return {array} The transformation matrix.
-function bbmod_get_bone_transform(_anim_player, _bone_index)
-{
-	var _anim_inst = _anim_player[BBMOD_EAnimationPlayer.AnimationInstanceLast];
-	if (is_undefined(_anim_inst))
-	{
-		return matrix_build_identity();
-	}
-	return array_get(_anim_inst[BBMOD_EAnimationInstance.BoneTransform], _bone_index);
-}
-
 /// @func bbmod_get_transform(_animation_player)
 /// @desc Returns an array of current transformation matrices for animated models.
 /// @param {array} _animation_player An AnimationPlayer structure.
@@ -431,6 +415,22 @@ function bbmod_get_transform(_animation_player)
 	}
 	var _model = _animation_player[BBMOD_EAnimationPlayer.Model];
 	return bbmod_model_get_bindpose_transform(_model);
+}
+
+/// @func bbmod_get_bone_transform(_animation_player, _bone_index)
+/// @desc Returns a transformation matrix of a bone, which can be used
+/// for example for attachments.
+/// @param {array} _animation_player An AnimationPlayer structure.
+/// @param {real} _bone_index The index of the bone.
+/// @return {array} The transformation matrix.
+function bbmod_get_bone_transform(_animation_player, _bone_index)
+{
+	var _anim_inst = _animation_player[BBMOD_EAnimationPlayer.AnimationInstanceLast];
+	if (is_undefined(_anim_inst))
+	{
+		return matrix_build_identity();
+	}
+	return array_get(_anim_inst[BBMOD_EAnimationInstance.BoneTransform], _bone_index);
 }
 
 /// @func bbmod_set_bone_position(_animation_player, _bone_id, _position)
@@ -498,4 +498,60 @@ function bbmod_play()
 	var _animation_instance = bbmod_animation_instance_create(_animation);
 	_animation_instance[@ BBMOD_EAnimationInstance.Loop] = _loop;
 	ds_list_add(_animation_list, _animation_instance);
+}
+
+/// @func BBMOD_AnimationPlayer(_model)
+/// @desc An OOP wrapper around BBMOD_EAnimationPlayer.
+/// @param {array} _model A BBMOD_EModel that the animation player animates.
+function BBMOD_AnimationPlayer(_model) constructor
+{
+	/// @var {array} A BBMOD_EModel that the animation player animates.
+	model = _model;
+
+	/// @var {bool} If true, then the animation player interpolates between
+	/// frames. Setting this to false increases performance, but decreases
+	/// quality of animation playback.
+	interpolate_frames = true;
+
+	/// @var {array} A BBMOD_EAnimationPlayer that this struct wraps.
+	animation_player = bbmod_animation_player_create(model);
+
+	/// @desc Updates the animation player. This should be called every frame
+	/// in the step event.
+	/// @param {real} _current_time The current time in seconds.
+	static update = function (_current_time) {
+		bbmod_animation_player_update(animation_player, _current_time, interpolate_frames);
+	};
+
+	/// @desc Starts playing an animation.
+	/// @param {array} _animation A BBMOD_EAnimation to play.
+	static play = function (_animation) {
+		var _loop = (argument_count > 1) ? argument[1] : false;
+		bbmod_play(animation_player, _animation, _loop);
+	};
+
+	/// @return {array} Returns current transformations of all bones.
+	static get_transform = function () {
+		return bbmod_get_transform(animation_player);
+	};
+
+	/// @param {real} _bone_index An index of a bone.
+	/// @return {array} Returns current transformation of a specific bone.
+	static get_bone_transform = function (_bone_index) {
+		return bbmod_get_bone_transform(animation_player, _bone_index);
+	};
+
+	/// @desc Changes a position of a bone.
+	/// @param {real} _bone_index An index of a bone.
+	/// @param {array} _position An x,y,z position of a bone.
+	static set_bone_position = function (_bone_index, _position) {
+		bbmod_set_bone_position(animation_player, _bone_index, _position);
+	};
+
+	/// @desc Changes a rotation of a bone.
+	/// @param {real} _bone_index An index of a bone.
+	/// @param {array} _rotation A quaternion.
+	static set_bone_rotation = function (_bone_index, _rotation) {
+		bbmod_set_bone_rotation(animation_player, _bone_index, _rotation);
+	};
 }
