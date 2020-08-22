@@ -525,6 +525,8 @@ function BBMOD_AnimationPlayer(_model) constructor
 
 	/// @desc Starts playing an animation.
 	/// @param {array} _animation A BBMOD_EAnimation to play.
+	/// @param {bool} [_loop] If true then the animation will be looped. Defaults
+	/// to false.
 	static play = function (_animation) {
 		var _loop = (argument_count > 1) ? argument[1] : false;
 		bbmod_play(animation_player, _animation, _loop);
