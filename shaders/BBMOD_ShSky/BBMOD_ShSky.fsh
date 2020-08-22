@@ -1,5 +1,6 @@
 varying vec3 v_vNormal;
 
+// Camera's exposure value
 uniform float u_fExposure;
 
 #pragma include("EquirectangularMapping.xsh", "glsl")

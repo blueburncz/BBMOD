@@ -52,19 +52,11 @@ else if (keyboard_check(ord("D")))
 z += (keyboard_check(ord("E")) - keyboard_check(ord("Q"))) * _move_speed;
 
 // Controls
-var _strength = keyboard_check(vk_shift) ? 1 : 0.1;
-var _diff = (mouse_wheel_up() - mouse_wheel_down()) * _strength;
+var _strength = keyboard_check(vk_shift) ? 0.1 : 0.01;
+var _diff = (keyboard_check(vk_add) - keyboard_check(vk_subtract)) * _strength;
 
-if (keyboard_check(ord("R")))
-{
-	roughness += _diff * 0.1;
-	roughness = clamp(roughness, 0, 1);
-}
-else
-{
-	global.bbmod_camera_exposure += _diff;
-	global.bbmod_camera_exposure = max(global.bbmod_camera_exposure, 0.1);
-}
+global.bbmod_camera_exposure += _diff;
+global.bbmod_camera_exposure = max(global.bbmod_camera_exposure, 0.1);
 
 // Batching test
 if (keyboard_check_pressed(vk_space))
