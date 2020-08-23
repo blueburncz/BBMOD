@@ -36,7 +36,7 @@ bbmod_material_reset();
 
 matrix_stack_push(matrix_get(matrix_world));
 matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, 0, 1000, 1000, 1000));
-bbmod_render(mod_sphere, [mat_sky]);
+mod_sphere.render([mat_sky]);
 matrix_set(matrix_world, matrix_stack_top());
 matrix_stack_pop();
 
@@ -50,18 +50,18 @@ case EMode.Normal:
 	with (OModel)
 	{
 		matrix_set(matrix_world, matrix_build(x, y, 0, 0, 0, 0, 1, 1, 1));
-		bbmod_render(_model);
+		_model.render(_material);
 	}
 	matrix_set(matrix_world, matrix_stack_top());
 	matrix_stack_pop();
 	break;
 
 case EMode.Static:
-	bbmod_static_batch_render(_model, _material)
+	_model.render(_material);
 	break;
 
 case EMode.Dynamic:
-	bbmod_dynamic_batch_render(_model, _material, data)
+	_model.render(_material, data)
 	break;
 }
 
