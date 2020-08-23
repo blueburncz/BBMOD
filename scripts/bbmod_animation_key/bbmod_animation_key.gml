@@ -1,21 +1,15 @@
-/// @func bbmod_animation_key()
-/// @desc Contains definition of the AnimationKey structure.
-/// @see BBMOD_EAnimationKey
-function bbmod_animation_key()
+/// @enum An enumeration of members of an AnimationKey structure.
+/// This structure is never instantiated, it only serves as an interface
+/// for specific animation keys.
+enum BBMOD_EAnimationKey
 {
-	/// @enum An enumeration of members of an AnimationKey structure.
-	/// This structure is never instantiated, it only serves as an interface
-	/// for specific animation keys.
-	enum BBMOD_EAnimationKey
-	{
-		/// @member Time when the animation key occurs.
-		Time,
-		/// @member Additional key data.
-		Data,
-		/// @member The size of the AnimationKey structure.
-		SIZE
-	};
-}
+	/// @member Time when the animation key occurs.
+	Time,
+	/// @member Additional key data.
+	Data,
+	/// @member The size of the AnimationKey structure.
+	SIZE
+};
 
 /// @func bbmod_find_animation_key(_keys, _animation_time[, _index])
 /// @desc Finds an animation key for specified animation time.

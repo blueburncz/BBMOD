@@ -1,41 +1,35 @@
-/// @func bbmod_model()
-/// @desc Contains definition of the Model structure.
-/// @see BBMOD_EModel
-function bbmod_model()
+/// @enum An enumeration of members of a Model structure.
+enum BBMOD_EModel
 {
-	/// @enum An enumeration of members of a Model structure.
-	enum BBMOD_EModel
-	{
-		/// @member The version of the model file.
-		Version,
-		/// @member True if the model has vertices (always true).
-		HasVertices,
-		/// @member True if the model has normal vectors.
-		HasNormals,
-		/// @member True if the model has texture coordinates.
-		HasTextureCoords,
-		/// @member True if the model has vertex colors.
-		HasColors,
-		/// @member True if the model has tangent vectors and bitangent sign.
-		HasTangentW,
-		/// @member True if the model has vertex weights and bone indices.
-		HasBones,
-		/// @member The global inverse transform matrix.
-		InverseTransformMatrix,
-		/// @member The root Node structure.
-		RootNode,
-		/// @member Number of bones.
-		BoneCount,
-		/// @member The root Bone structure.
-		Skeleton,
-		/// @member Number of materials that the model uses.
-		MaterialCount,
-		/// @member Array of material names.
-		MaterialNames,
-		/// @member The size of the Model structure.
-		SIZE
-	};
-}
+	/// @member The version of the model file.
+	Version,
+	/// @member True if the model has vertices (always true).
+	HasVertices,
+	/// @member True if the model has normal vectors.
+	HasNormals,
+	/// @member True if the model has texture coordinates.
+	HasTextureCoords,
+	/// @member True if the model has vertex colors.
+	HasColors,
+	/// @member True if the model has tangent vectors and bitangent sign.
+	HasTangentW,
+	/// @member True if the model has vertex weights and bone indices.
+	HasBones,
+	/// @member The global inverse transform matrix.
+	InverseTransformMatrix,
+	/// @member The root Node structure.
+	RootNode,
+	/// @member Number of bones.
+	BoneCount,
+	/// @member The root Bone structure.
+	Skeleton,
+	/// @member Number of materials that the model uses.
+	MaterialCount,
+	/// @member Array of material names.
+	MaterialNames,
+	/// @member The size of the Model structure.
+	SIZE
+};
 
 /// @func bbmod_model_load(_buffer, _version)
 /// @desc Loads a Model structure from a buffer.
@@ -276,4 +270,52 @@ function bbmod_render()
 		array_get(_model, BBMOD_EModel.RootNode),
 		_materials,
 		_transform);
+}
+
+/// @func BBMOD_Model(_file[, _sha1])
+/// @desc An OOP wrapper around BBMOD_EModel.
+/// @param {string} _file
+/// @param {string} [_sha1]
+function BBMOD_Model(_file) constructor
+{
+	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
+
+	/// @var {array} A BBMOD_EModel that this struct wraps.
+	model = bbmod_load(_file, _sha1);
+	if (model == BBMOD_NONE)
+	{
+		throw new BBMOD_Error("Could not load file " + _file);
+	}
+
+	static freeze = function () {
+		bbmod_model_freeze(model);
+	};
+
+	/// @param {string} _bone_name
+	/// @return {real} The id of the bone.
+	static find_bone_id = function (_bone_name) {
+		return bbmod_model_find_bone_id(model, _bone_name);
+	};
+
+	/// @return {array}
+	static get_bindpose_transform = function () {
+		return bbmod_model_get_bindpose_transform(model);
+	};
+
+	/// @param {bool} [_bones]
+	/// @param {bool} [_ids]
+	/// @return {real} The vertex format.
+	static get_vertex_format = function () {
+		var _bones = (argument_count > 0) ? argument[0] : true;
+		var _ids = (argument_count > 1) ? argument[1] : false;
+		return bbmod_model_get_vertex_format(_bones, _ids);
+	};
+
+	/// @param {array} [_materials]
+	/// @param {array} [_transform]
+	static render = function () {
+		var _materials = (argument_count > 0) ? argument[0] : undefined;
+		var _transform = (argument_count > 1) ? argument[1] : undefined;
+		bbmod_render(model, _materials, _transform);
+	};
 }

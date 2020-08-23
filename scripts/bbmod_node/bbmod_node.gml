@@ -1,21 +1,15 @@
-/// @func bbmod_node()
-/// @desc Contains definition of the Node structure.
-/// @see BBMOD_ENode
-function bbmod_node()
+/// @enum An enumeration of members of a Node structure.
+enum BBMOD_ENode
 {
-	/// @enum An enumeration of members of a Node structure.
-	enum BBMOD_ENode
-	{
-		/// @member The name of the node.
-		Name,
-		/// @member An array of Mesh structures.
-		Meshes,
-		/// @member An array of child Node structures.
-		Children,
-		/// @member The size of the Node structure.
-		SIZE
-	};
-}
+	/// @member The name of the node.
+	Name,
+	/// @member An array of Mesh structures.
+	Meshes,
+	/// @member An array of child Node structures.
+	Children,
+	/// @member The size of the Node structure.
+	SIZE
+};
 
 /// @func bbmod_node_load(_buffer, _format, _format_mask)
 /// @desc Loads a Node structure from a buffer.

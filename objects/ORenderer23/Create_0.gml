@@ -20,22 +20,22 @@ spr_ibl = sprite_add("BBMOD/Skies/NoonIBL.png", 0, false, true, 0, 0);
 
 bbmod_set_ibl_sprite(spr_ibl, 0);
 
-mod_sphere = bbmod_load("BBMOD/Models/Sphere.bbmod");
+mod_sphere = new BBMOD_Model("BBMOD/Models/Sphere.bbmod");
 
 mat_sky = bbmod_material_create(BBMOD_ShSky,
 	sprite_get_texture(spr_sky, 0));
 mat_sky[@ BBMOD_EMaterial.OnApply] = shader_sky_on_apply;
 mat_sky[@ BBMOD_EMaterial.Culling] = cull_noculling;
 
-//#macro BATCH_SIZE 64
+#macro BATCH_SIZE 64
 
-//enum EMode
-//{
-//	Normal,
-//	Static,
-//	Dynamic,
-//	SIZE
-//};
+enum EMode
+{
+	Normal,
+	Static,
+	Dynamic,
+	SIZE
+};
 
 mode_current = EMode.Normal;
 

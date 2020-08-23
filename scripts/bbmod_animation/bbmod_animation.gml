@@ -1,23 +1,17 @@
-/// @func bbmod_animation()
-/// @desc Contains definition of the Animation structure.
-/// @see BBMOD_EAnimation
-function bbmod_animation()
+/// @enum An enumeration of members of an Animation structure.
+enum BBMOD_EAnimation
 {
-	/// @enum An enumeration of members of an Animation structure.
-	enum BBMOD_EAnimation
-	{
-		/// @member The version of the animation file.
-		Version,
-		/// @member The duration of the animation (in tics).
-		Duration,
-		/// @member Number of animation tics per second.
-		TicsPerSecond,
-		/// @member An array of AnimationBone structures.
-		Bones,
-		/// @member The size of the Animation structure.
-		SIZE
-	};
-}
+	/// @member The version of the animation file.
+	Version,
+	/// @member The duration of the animation (in tics).
+	Duration,
+	/// @member Number of animation tics per second.
+	TicsPerSecond,
+	/// @member An array of AnimationBone structures.
+	Bones,
+	/// @member The size of the Animation structure.
+	SIZE
+};
 
 /// @func bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
 /// @desc Creates a new animation transition between two specified Animation
@@ -108,7 +102,7 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 	return _transition;
 }
 
-/// @func bbmod_animation(_buffer, _version)
+/// @func bbmod_animation_load(_buffer, _version)
 /// @desc Loads an Animation structure from a buffer.
 /// @param {real} _buffer The buffer to load the structure from.
 /// @param {real} _version The version of the animation file.
@@ -191,4 +185,27 @@ function bbmod_get_interpolated_rotation_key()
 		_rotation_key, _rotation_key_next, _time);
 	return bbmod_rotation_key_interpolate(
 		_rotation_key, _rotation_key_next, _factor);
+}
+
+/// @func BBMOD_Animation(_file[, _sha1])
+/// @desc An OOP wrapper around BBMOD_EAnimation.
+/// @param {string} _file
+/// @param {string} [_sha1]
+function BBMOD_Animation(_file) constructor
+{
+	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
+
+	/// @var {array} A BBMOD_EAnimation that this struct wraps.
+	animation = bbmod_load(_file, _sha1);
+	if (animation == BBMOD_NONE)
+	{
+		throw new BBMOD_Error("Could not load file " + _file);
+	}
+
+	/// @desc Calculates animation time from current time in seconds.
+	/// @param {real} _time_in_seconds The current time in seconds.
+	/// @return {real} The animation time.
+	static get_animation_time = function (_time_in_seconds) {
+		return bbmod_get_animation_time(animation, _time_in_seconds);
+	};
 }

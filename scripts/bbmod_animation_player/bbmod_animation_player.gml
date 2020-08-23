@@ -1,25 +1,19 @@
-/// @func bbmod_animation_player()
-/// @desc Contains definition of the AnimationPlayer structure.
-/// @see BBMOD_EAnimationPlayer
-function bbmod_animation_player()
+/// @enum An enumeration of member of an AnimationPlayer structure.
+enum BBMOD_EAnimationPlayer
 {
-	/// @enum An enumeration of member of an AnimationPlayer structure.
-	enum BBMOD_EAnimationPlayer
-	{
-		/// @member A Model which the AnimationPlayer animates.
-		Model,
-		/// @member List of animations to play.
-		Animations,
-		/// @member The last played AnimationInstance.
-		AnimationInstanceLast,
-		/// @member Array of 3D vectors for bone position overriding.
-		BonePositionOverride,
-		/// @member Array of quaternions for bone position overriding.
-		BoneRotationOverride,
-		/// @member The size of the AnimationPlayer structure.
-		SIZE
-	};
-}
+	/// @member A Model which the AnimationPlayer animates.
+	Model,
+	/// @member List of animations to play.
+	Animations,
+	/// @member The last played AnimationInstance.
+	AnimationInstanceLast,
+	/// @member Array of 3D vectors for bone position overriding.
+	BonePositionOverride,
+	/// @member Array of quaternions for bone position overriding.
+	BoneRotationOverride,
+	/// @member The size of the AnimationPlayer structure.
+	SIZE
+};
 
 /// @func bbmod_animation_player_create(_model)
 /// @desc Creates a new AnimationPlayer for given Model.
@@ -502,10 +496,10 @@ function bbmod_play()
 
 /// @func BBMOD_AnimationPlayer(_model)
 /// @desc An OOP wrapper around BBMOD_EAnimationPlayer.
-/// @param {array} _model A BBMOD_EModel that the animation player animates.
+/// @param {BBMOD_EModel} _model A model that the animation player animates.
 function BBMOD_AnimationPlayer(_model) constructor
 {
-	/// @var {array} A BBMOD_EModel that the animation player animates.
+	/// @var {BBMOD_EModel} A model that the animation player animates.
 	model = _model;
 
 	/// @var {bool} If true, then the animation player interpolates between
@@ -514,7 +508,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	interpolate_frames = true;
 
 	/// @var {array} A BBMOD_EAnimationPlayer that this struct wraps.
-	animation_player = bbmod_animation_player_create(model);
+	animation_player = bbmod_animation_player_create(model.model);
 
 	/// @desc Updates the animation player. This should be called every frame
 	/// in the step event.
@@ -524,12 +518,12 @@ function BBMOD_AnimationPlayer(_model) constructor
 	};
 
 	/// @desc Starts playing an animation.
-	/// @param {array} _animation A BBMOD_EAnimation to play.
+	/// @param {BBMOD_Animation} _animation An animation to play.
 	/// @param {bool} [_loop] If true then the animation will be looped. Defaults
 	/// to false.
 	static play = function (_animation) {
 		var _loop = (argument_count > 1) ? argument[1] : false;
-		bbmod_play(animation_player, _animation, _loop);
+		bbmod_play(animation_player, _animation.animation, _loop);
 	};
 
 	/// @return {array} Returns current transformations of all bones.
