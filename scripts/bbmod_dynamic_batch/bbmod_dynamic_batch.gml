@@ -77,3 +77,24 @@ function bbmod_dynamic_batch_render(_dynamic_batch, _material, _data)
 	var _tex_base = _material[BBMOD_EMaterial.BaseOpacity];
 	vertex_submit(_dynamic_batch[BBMOD_EStaticBatch.VertexBuffer], pr_trianglelist, _tex_base);
 }
+
+/// @func BBMOD_DynamicBatch(_model, _size)
+/// @desc An OOP wrapper around BBMOD_EDynamicBatch.
+/// @param {BBMOD_Model} _model The model to create a dynamic batch of.
+/// @param {real} _size Number of model instances in the batch.
+function BBMOD_DynamicBatch(_model, _size) constructor
+{
+	/// @var {array} A BBMOD_EDynamicBatch that this struct wraps.
+	dynamic_batch = bbmod_dynamic_batch_create(_model.model, _size);
+
+	static freeze = function () {
+		bbmod_dynamic_batch_freeze(dynamic_batch);
+	};
+
+	/// @param {array} _material A Material structure. Must use a shader that
+	/// expects ids in the vertex format.
+	/// @param {array} _data An array containing data for each rendered instance.
+	static render = function (_material, _data) {
+		bbmod_dynamic_batch_render(dynamic_batch, _material, _data);
+	};
+}

@@ -104,8 +104,8 @@ case EMode.Dynamic:
 	var _model = model[mode_current];
 	if (_model == BBMOD_NONE)
 	{
-		_model = bbmod_dynamic_batch_create(model[EMode.Normal].model, BATCH_SIZE);
-		bbmod_dynamic_batch_freeze(_model);
+		_model = new BBMOD_DynamicBatch(model[EMode.Normal], BATCH_SIZE);
+		_model.freeze();
 		model[mode_current] = _model;
 	}
 
