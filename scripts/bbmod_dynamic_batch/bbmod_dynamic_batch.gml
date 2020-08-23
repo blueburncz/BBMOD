@@ -91,10 +91,10 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 		bbmod_dynamic_batch_freeze(dynamic_batch);
 	};
 
-	/// @param {array} _material A Material structure. Must use a shader that
+	/// @param {BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {array} _data An array containing data for each rendered instance.
 	static render = function (_material, _data) {
-		bbmod_dynamic_batch_render(dynamic_batch, _material, _data);
+		bbmod_dynamic_batch_render(dynamic_batch, _material.material, _data);
 	};
 }

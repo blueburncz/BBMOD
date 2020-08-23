@@ -311,11 +311,16 @@ function BBMOD_Model(_file) constructor
 		return bbmod_model_get_vertex_format(model, _bones, _ids);
 	};
 
-	/// @param {array} [_materials]
+	/// @param {BBMOD_Material[]} [_materials]
 	/// @param {array} [_transform]
 	static render = function () {
 		var _materials = (argument_count > 0) ? argument[0] : undefined;
 		var _transform = (argument_count > 1) ? argument[1] : undefined;
+
+		_materials = ce_array_map(_materials, method(undefined, function (_m) {
+			return _m.material;
+		}));
+
 		bbmod_render(model, _materials, _transform);
 	};
 }

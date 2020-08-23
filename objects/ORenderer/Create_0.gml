@@ -22,10 +22,9 @@ bbmod_set_ibl_sprite(spr_ibl, 0);
 
 mod_sphere = new BBMOD_Model("BBMOD/Models/Sphere.bbmod");
 
-mat_sky = bbmod_material_create(BBMOD_ShSky,
-	sprite_get_texture(spr_sky, 0));
-mat_sky[@ BBMOD_EMaterial.OnApply] = shader_sky_on_apply;
-mat_sky[@ BBMOD_EMaterial.Culling] = cull_noculling;
+mat_sky = new BBMOD_Material(BBMOD_ShSky, sprite_get_texture(spr_sky, 0));
+mat_sky.set_on_apply(shader_sky_on_apply);
+mat_sky.set_culling(cull_noculling);
 
 #macro BATCH_SIZE 64
 
@@ -40,9 +39,9 @@ enum EMode
 mode_current = EMode.Normal;
 
 material = [
-	[BBMOD_MATERIAL_DEFAULT],
-	BBMOD_MATERIAL_DEFAULT,
-	BBMOD_MATERIAL_DEFAULT_BACTHED
+	[new BBMOD_Material(BBMOD_ShDefault)],
+	new BBMOD_Material(BBMOD_ShDefault),
+	new BBMOD_Material(BBMOD_ShDefaultBatched)
 ];
 
 model = [

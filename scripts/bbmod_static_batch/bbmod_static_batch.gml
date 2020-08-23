@@ -140,8 +140,8 @@ function BBMOD_StaticBatch(_vformat) constructor
 		bbmod_static_batch_freeze(static_batch);
 	};
 
-	/// @param {array} _material A Material structure.
+	/// @param {BBMOD_Material} _material A material.
 	static render = function (_material) {
-		bbmod_static_batch_render(static_batch, _material);
+		bbmod_static_batch_render(static_batch, _material.material);
 	};
 }
