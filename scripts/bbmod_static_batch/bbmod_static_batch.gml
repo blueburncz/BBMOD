@@ -45,9 +45,9 @@ function bbmod_static_batch_begin(_static_batch)
 
 /// @func bbmod_static_batch_add(_static_batch, _model, _transform)
 /// @desc Adds a model to a static batch.
-/// @param {array} static_batch The static batch.
-/// @param {array} model The model.
-/// @param {array} transform A transformation matrix of the model.
+/// @param {array} _static_batch The static batch.
+/// @param {array} _model The model.
+/// @param {array} _transform A transformation matrix of the model.
 /// @example
 /// ```gml
 /// mod_tree = bbmod_load("Tree.bbmod");
@@ -111,4 +111,37 @@ function bbmod_static_batch_render(_static_batch, _material)
 	bbmod_material_apply(_material);
 	var _tex_base = _material[BBMOD_EMaterial.BaseOpacity];
 	vertex_submit(_static_batch[BBMOD_EStaticBatch.VertexBuffer], pr_trianglelist, _tex_base);
+}
+
+/// @func BBMOD_StaticBatch(_vformat)
+/// @desc An OOP wrapper around BBMOD_EStaticBatch.
+/// @param {real} _vformat The vertex format of the static batch. Must not have
+/// bones!
+function BBMOD_StaticBatch(_vformat) constructor
+{
+	/// @var {array} A BBMOD_EStaticBatch that this struct wraps.
+	static_batch = bbmod_static_batch_create(_vformat);
+
+	static start = function () {
+		bbmod_static_batch_begin(static_batch);
+	};
+
+	/// @param {BBMOD_Model} _model The model.
+	/// @param {array} _transform A transformation matrix of the model.
+	static add = function (_model, _transform) {
+		bbmod_static_batch_add(static_batch, _model.model, _transform);
+	};
+
+	static finish = function () {
+		bbmod_static_batch_end(static_batch);
+	};
+
+	static freeze = function () {
+		bbmod_static_batch_freeze(static_batch);
+	};
+
+	/// @param {array} _material A Material structure.
+	static render = function (_material) {
+		bbmod_static_batch_render(static_batch, _material);
+	};
 }

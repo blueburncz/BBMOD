@@ -57,7 +57,7 @@ case EMode.Normal:
 	break;
 
 case EMode.Static:
-	bbmod_static_batch_render(_model, _material)
+	_model.render(_material);
 	break;
 
 case EMode.Dynamic:

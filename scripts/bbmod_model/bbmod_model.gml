@@ -308,7 +308,7 @@ function BBMOD_Model(_file) constructor
 	static get_vertex_format = function () {
 		var _bones = (argument_count > 0) ? argument[0] : true;
 		var _ids = (argument_count > 1) ? argument[1] : false;
-		return bbmod_model_get_vertex_format(_bones, _ids);
+		return bbmod_model_get_vertex_format(model, _bones, _ids);
 	};
 
 	/// @param {array} [_materials]

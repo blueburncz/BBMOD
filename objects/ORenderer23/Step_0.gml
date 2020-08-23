@@ -81,21 +81,21 @@ case EMode.Static:
 	var _model = model[mode_current];
 	if (_model == BBMOD_NONE)
 	{
-		_model = bbmod_static_batch_create(bbmod_model_get_vertex_format(model[EMode.Normal].model, false));
-		bbmod_static_batch_begin(_model);
+		_model = new BBMOD_StaticBatch(model[EMode.Normal].get_vertex_format(false));
+		_model.start();
 		for (var i = 0; i < 8; ++i)
 		{
 			for (var j = 0; j < 8; ++j)
 			{
-				bbmod_static_batch_add(_model, model[EMode.Normal].model,
+				_model.add(model[EMode.Normal],
 					matrix_build(
 						i * 5, j * 5, 0,
 						0, 0, 0,
 						1, 1, 1));
 			}
 		}
-		bbmod_static_batch_end(_model);
-		bbmod_static_batch_freeze(_model);
+		_model.finish();
+		_model.freeze();
 		model[mode_current] = _model;
 	}
 	break;
