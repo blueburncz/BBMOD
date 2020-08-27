@@ -93,7 +93,7 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 		var _children = _bone[BBMOD_EBone.Children];
 		var _child_count = array_length(_children);
 
-		for (var i/*:int*/= 0; i < _child_count; ++i)
+		for (var i = 0; i < _child_count; ++i)
 		{
 			ds_stack_push(_anim_stack, _children[i]);
 		}

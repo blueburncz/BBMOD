@@ -77,7 +77,7 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 	var _vertex_count = vertex_get_number(_mesh_vertex_buffer);
 	var _buffer = buffer_create_from_vertex_buffer(_mesh_vertex_buffer, buffer_fixed, 1);
 
-	var _id/*:int*/= 0;
+	var _id = 0;
 
 	repeat (_dynamic_batch[BBMOD_EDynamicBatch.Size])
 	{

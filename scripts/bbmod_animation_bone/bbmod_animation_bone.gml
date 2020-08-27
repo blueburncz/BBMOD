@@ -17,7 +17,7 @@ enum BBMOD_EAnimationBone
 /// @return {array} The loaded AnimationBone.
 function bbmod_animation_bone_load(_buffer)
 {
-	var i/*:int*/= 0;
+	var i = 0;
 
 	var _animation_bone = array_create(BBMOD_EAnimationBone.SIZE, 0);
 	_animation_bone[@ BBMOD_EAnimationBone.BoneIndex] = buffer_read(_buffer, buffer_f32);

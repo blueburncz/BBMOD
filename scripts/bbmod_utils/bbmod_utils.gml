@@ -90,7 +90,7 @@ function bbmod_get_vertex_format()
 function bbmod_load_matrix(_buffer)
 {
 	var _matrix = array_create(16, 0);
-	for (var i/*:int*/= 0; i < 16; ++i)
+	for (var i = 0; i < 16; ++i)
 	{
 		_matrix[@ i] = buffer_read(_buffer, buffer_f32);
 	}

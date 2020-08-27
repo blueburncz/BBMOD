@@ -33,7 +33,7 @@ function bbmod_bone_load(_buffer)
 
 	_bone[@ BBMOD_EBone.Children] = _children;
 
-	var i/*:int*/= 0
+	var i = 0
 	repeat (_child_count)
 	{
 		_children[@ i++] = bbmod_bone_load(_buffer);

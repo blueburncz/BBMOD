@@ -105,7 +105,7 @@ function bbmod_model_load(_buffer, _version)
 	{
 		var _material_names = array_create(_material_count, 0);
 
-		var i/*:int*/ = 0;
+		var i  = 0;
 		repeat (_material_count)
 		{
 			_material_names[@ i++] = buffer_read(_buffer, buffer_string);
@@ -154,7 +154,7 @@ function bbmod_model_find_bone_id()
 	}
 
 	var _children = _bone[BBMOD_EBone.Children];
-	var i/*:int*/= 0;
+	var i = 0;
 
 	repeat (array_length(_children))
 	{
@@ -177,7 +177,7 @@ function bbmod_model_get_bindpose_transform(_model)
 	var _bone_count = _model[BBMOD_EModel.BoneCount];
 	var _transform = array_create(_bone_count * 16, 0);
 	var _matrix = matrix_build_identity();
-	var i/*:int*/= 0;
+	var i = 0;
 	repeat (_bone_count)
 	{
 		array_copy(_transform, (i++) * 16, _matrix, 0, 16);

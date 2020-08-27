@@ -109,7 +109,7 @@ case EMode.Dynamic:
 		model[mode_current] = _model;
 	}
 
-	var i/*:int*/= 0;
+	var i = 0;
 	var _time = current_time * 0.01;
 
 	repeat (BATCH_SIZE)

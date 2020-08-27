@@ -19,7 +19,7 @@ enum BBMOD_ENode
 /// @return {array} The loaded Node structure.
 function bbmod_node_load(_buffer, _format, _format_mask)
 {
-	var i/*:int*/= 0;
+	var i = 0;
 
 	var _node = array_create(BBMOD_ENode.SIZE, 0);
 	_node[@ BBMOD_ENode.Name] = buffer_read(_buffer, buffer_string);
@@ -57,7 +57,7 @@ function bbmod_node_destroy(_node)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
 	var _children = _meshes[BBMOD_ENode.Children];
-	var i/*:int*/= 0;
+	var i = 0;
 
 	//i = 0;
 	repeat (array_length(_meshes))
@@ -85,7 +85,7 @@ function bbmod_node_render(_model, _node, _materials, _transform)
 	var _meshes = _node[BBMOD_ENode.Meshes];
 	var _children = _node[BBMOD_ENode.Children];
 	var _render_pass = global.bbmod_render_pass;
-	var i/*:int*/= 0;
+	var i = 0;
 
 	repeat (array_length(_meshes))
 	{
@@ -123,7 +123,7 @@ function _bbmod_node_freeze(_node)
 	var _meshes = _node[BBMOD_ENode.Meshes];
 	var _children = _node[BBMOD_ENode.Children];
 
-	var i/*:int*/= 0;
+	var i = 0;
 	repeat (array_length(_meshes))
 	{
 		_bbmod_mesh_freeze(_meshes[i++]);
@@ -143,7 +143,7 @@ function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
 	var _children = _node[BBMOD_ENode.Children];
-	var i/*:int*/= 0;
+	var i = 0;
 
 	repeat (array_length(_meshes))
 	{
@@ -166,7 +166,7 @@ function _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
 	var _children = _node[BBMOD_ENode.Children];
-	var i/*:int*/= 0;
+	var i = 0;
 
 	repeat (array_length(_meshes))
 	{
