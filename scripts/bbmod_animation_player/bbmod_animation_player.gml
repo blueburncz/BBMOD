@@ -494,13 +494,24 @@ function bbmod_play()
 	ds_list_add(_animation_list, _animation_instance);
 }
 
-/// @func BBMOD_AnimationPlayer(_model)
+/// @func BBMOD_AnimationPlayer(_model[, _paused])
 /// @desc An OOP wrapper around BBMOD_EAnimationPlayer.
 /// @param {BBMOD_EModel} _model A model that the animation player animates.
+/// @param {bool} [_paused] If true then the animation player is created
+/// as paused. Defaults to false.
 function BBMOD_AnimationPlayer(_model) constructor
 {
 	/// @var {BBMOD_EModel} A model that the animation player animates.
 	model = _model;
+
+	/// @var {bool} If true, then the animation playback is paused.
+	paused = (argument_count > 1) ? argument[1] : false;
+
+	/// @var {real} The current animation playback time.
+	time = 0;
+
+	/// @var {real} Controls animation playback speed.
+	playback_speed = 1;
 
 	/// @var {bool} If true, then the animation player interpolates between
 	/// frames. Setting this to false increases performance, but decreases
@@ -513,9 +524,12 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @func update(_current_time)
 	/// @desc Updates the animation player. This should be called every frame
 	/// in the step event.
-	/// @param {real} _current_time The current time in seconds.
-	static update = function (_current_time) {
-		bbmod_animation_player_update(animation_player, _current_time, interpolate_frames);
+	static update = function () {
+		if (!paused)
+		{
+			time += delta_time * 0.001 * playback_speed;
+			bbmod_animation_player_update(animation_player, time, interpolate_frames);
+		}
 	};
 
 	/// @func play(_animation[, _loop])
@@ -525,6 +539,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// to false.
 	static play = function (_animation) {
 		var _loop = (argument_count > 1) ? argument[1] : false;
+		time = 0;
 		bbmod_play(animation_player, _animation.animation, _loop);
 	};
 
