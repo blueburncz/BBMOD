@@ -287,21 +287,25 @@ function BBMOD_Model(_file) constructor
 		throw new BBMOD_Error("Could not load file " + _file);
 	}
 
+	/// @func freeze()
 	static freeze = function () {
 		bbmod_model_freeze(model);
 	};
 
+	/// @func find_bone_id(_bone_name)
 	/// @param {string} _bone_name
 	/// @return {real} The id of the bone.
 	static find_bone_id = function (_bone_name) {
 		return bbmod_model_find_bone_id(model, _bone_name);
 	};
 
+	/// @func get_bindpose_transform()
 	/// @return {array}
 	static get_bindpose_transform = function () {
 		return bbmod_model_get_bindpose_transform(model);
 	};
 
+	/// @func get_vertex_format([_bones[, _ids]])
 	/// @param {bool} [_bones]
 	/// @param {bool} [_ids]
 	/// @return {real} The vertex format.
@@ -311,6 +315,7 @@ function BBMOD_Model(_file) constructor
 		return bbmod_model_get_vertex_format(model, _bones, _ids);
 	};
 
+	/// @func render([_materials[, _transform]])
 	/// @param {BBMOD_Material[]} [_materials]
 	/// @param {array} [_transform]
 	static render = function () {

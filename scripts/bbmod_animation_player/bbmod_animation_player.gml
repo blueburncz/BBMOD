@@ -510,6 +510,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @var {array} A BBMOD_EAnimationPlayer that this struct wraps.
 	animation_player = bbmod_animation_player_create(model.model);
 
+	/// @func update(_current_time)
 	/// @desc Updates the animation player. This should be called every frame
 	/// in the step event.
 	/// @param {real} _current_time The current time in seconds.
@@ -517,6 +518,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 		bbmod_animation_player_update(animation_player, _current_time, interpolate_frames);
 	};
 
+	/// @func play(_animation[, _loop])
 	/// @desc Starts playing an animation.
 	/// @param {BBMOD_Animation} _animation An animation to play.
 	/// @param {bool} [_loop] If true then the animation will be looped. Defaults
@@ -526,17 +528,20 @@ function BBMOD_AnimationPlayer(_model) constructor
 		bbmod_play(animation_player, _animation.animation, _loop);
 	};
 
+	/// @func get_transform()
 	/// @return {array} Returns current transformations of all bones.
 	static get_transform = function () {
 		return bbmod_get_transform(animation_player);
 	};
 
+	/// @func get_bone_transform(_bone_index)
 	/// @param {real} _bone_index An index of a bone.
 	/// @return {array} Returns current transformation of a specific bone.
 	static get_bone_transform = function (_bone_index) {
 		return bbmod_get_bone_transform(animation_player, _bone_index);
 	};
 
+	/// @func set_bone_position(_bone_index, _position)
 	/// @desc Changes a position of a bone.
 	/// @param {real} _bone_index An index of a bone.
 	/// @param {array} _position An x,y,z position of a bone.
@@ -544,6 +549,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 		bbmod_set_bone_position(animation_player, _bone_index, _position);
 	};
 
+	/// @func set_bone_rotation(_bone_index, _rotation)
 	/// @desc Changes a rotation of a bone.
 	/// @param {real} _bone_index An index of a bone.
 	/// @param {array} _rotation A quaternion.

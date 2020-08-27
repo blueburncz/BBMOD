@@ -122,24 +122,29 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// @var {array} A BBMOD_EStaticBatch that this struct wraps.
 	static_batch = bbmod_static_batch_create(_vformat);
 
+	/// @func start()
 	static start = function () {
 		bbmod_static_batch_begin(static_batch);
 	};
 
+	/// @func add(_model, _transform)
 	/// @param {BBMOD_Model} _model The model.
 	/// @param {array} _transform A transformation matrix of the model.
 	static add = function (_model, _transform) {
 		bbmod_static_batch_add(static_batch, _model.model, _transform);
 	};
 
+	/// @func finish()
 	static finish = function () {
 		bbmod_static_batch_end(static_batch);
 	};
 
+	/// @func freeze()
 	static freeze = function () {
 		bbmod_static_batch_freeze(static_batch);
 	};
 
+	/// @func render(_material)
 	/// @param {BBMOD_Material} _material A material.
 	static render = function (_material) {
 		bbmod_static_batch_render(static_batch, _material.material);

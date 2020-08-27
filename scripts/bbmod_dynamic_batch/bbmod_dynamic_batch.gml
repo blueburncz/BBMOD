@@ -87,10 +87,12 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	/// @var {array} A BBMOD_EDynamicBatch that this struct wraps.
 	dynamic_batch = bbmod_dynamic_batch_create(_model.model, _size);
 
+	/// @func freeze()
 	static freeze = function () {
 		bbmod_dynamic_batch_freeze(dynamic_batch);
 	};
 
+	/// @func render(_material, _data)
 	/// @param {BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {array} _data An array containing data for each rendered instance.

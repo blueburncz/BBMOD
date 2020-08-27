@@ -202,6 +202,7 @@ function BBMOD_Animation(_file) constructor
 		throw new BBMOD_Error("Could not load file " + _file);
 	}
 
+	/// @func get_animation_time(_time_in_seconds)
 	/// @desc Calculates animation time from current time in seconds.
 	/// @param {real} _time_in_seconds The current time in seconds.
 	/// @return {real} The animation time.
