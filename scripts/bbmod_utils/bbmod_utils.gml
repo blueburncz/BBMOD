@@ -1,4 +1,4 @@
-/// @func bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangetw, _bones[, _ids])
+/// @func bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones[, _ids])
 /// @desc Creates a new vertex format or retrieves an existing one with specified
 /// properties.
 /// @param {bool} _vertices True if the vertex format must have vertices.
@@ -11,24 +11,18 @@
 /// indices.
 /// @param {bool} [_ids] True if the vertex format must have ids for dynamic batching.
 /// @return {real} The vertex format.
-function bbmod_get_vertex_format()
+function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones)
 {
-	var _has_vertices = argument[0];
-	var _has_normals = argument[1];
-	var _has_uvs = argument[2];
-	var _has_colors = argument[3];
-	var _has_tangentw = argument[4];
-	var _has_bones = argument[5];
-	var _has_ids = (argument_count > 6) ? argument[6] : false;
+	var _ids = (argument_count > 6) ? argument[6] : false;
 
 	var _mask = (0
-		| (_has_vertices << BBMOD_VFORMAT_VERTEX)
-		| (_has_normals << BBMOD_VFORMAT_NORMAL)
-		| (_has_uvs << BBMOD_VFORMAT_TEXCOORD)
-		| (_has_colors << BBMOD_VFORMAT_COLOR)
-		| (_has_tangentw << BBMOD_VFORMAT_TANGENTW)
-		| (_has_bones << BBMOD_VFORMAT_BONES)
-		| (_has_ids << BBMOD_VFORMAT_IDS));
+		| (_vertices << BBMOD_VFORMAT_VERTEX)
+		| (_normals << BBMOD_VFORMAT_NORMAL)
+		| (_uvs << BBMOD_VFORMAT_TEXCOORD)
+		| (_colors << BBMOD_VFORMAT_COLOR)
+		| (_tangentw << BBMOD_VFORMAT_TANGENTW)
+		| (_bones << BBMOD_VFORMAT_BONES)
+		| (_ids << BBMOD_VFORMAT_IDS));
 
 	var _vformat;
 
@@ -40,38 +34,38 @@ function bbmod_get_vertex_format()
 	{
 		vertex_format_begin();
 
-		if (_has_vertices)
+		if (_vertices)
 		{
 			vertex_format_add_position_3d();
 		}
 
-		if (_has_normals)
+		if (_normals)
 		{
 			vertex_format_add_normal();
 		}
 
-		if (_has_uvs)
+		if (_uvs)
 		{
 			vertex_format_add_texcoord();
 		}
 
-		if (_has_colors)
+		if (_colors)
 		{
 			vertex_format_add_colour();
 		}
 
-		if (_has_tangentw)
+		if (_tangentw)
 		{
 			vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
 		}
 
-		if (_has_bones)
+		if (_bones)
 		{
 			vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
 			vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
 		}
 
-		if (_has_ids)
+		if (_ids)
 		{
 			vertex_format_add_custom(vertex_type_float1, vertex_usage_texcoord);
 		}

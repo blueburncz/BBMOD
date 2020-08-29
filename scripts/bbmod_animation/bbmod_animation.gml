@@ -151,10 +151,8 @@ function bbmod_get_animation_time(_animation, _time_in_seconds)
 /// @param {real} [_index] An index where to start searching for two closest
 /// position keys for specified time. Defaults to 0.
 /// @return {array} The interpolated PositionKey.
-function bbmod_get_interpolated_position_key()
+function bbmod_get_interpolated_position_key(_positions, _time)
 {
-	var _positions = argument[0];
-	var _time = argument[1];
 	var _index = (argument_count > 2) ? argument[2] : 0;
 	var k = bbmod_find_animation_key(_positions, _time, _index);
 	var _position_key = bbmod_get_animation_key(_positions, k);
@@ -173,10 +171,8 @@ function bbmod_get_interpolated_position_key()
 /// @param {real} [_index] An index where to start searching for two closest
 /// rotation keys for specified time. Defaults to 0.
 /// @return {array} The interpolated RotationKey.
-function bbmod_get_interpolated_rotation_key()
+function bbmod_get_interpolated_rotation_key(_rotations, _time)
 {
-	var _rotations = argument[0];
-	var _time = argument[1];
 	var _index = (argument_count > 2) ? argument[2] : 0;
 	var k = bbmod_find_animation_key(_rotations, _time, _index);
 	var _rotation_key = bbmod_get_animation_key(_rotations, k);

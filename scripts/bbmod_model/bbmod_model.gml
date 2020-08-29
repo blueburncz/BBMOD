@@ -142,10 +142,8 @@ function bbmod_model_freeze(_model)
 /// many of these lookups can slow down your game! You should instead use the
 /// ids available from the `_log.txt` files, which are created during model
 /// conversion.
-function bbmod_model_find_bone_id()
+function bbmod_model_find_bone_id(_model, _bone_name)
 {
-	var _model = argument[0];
-	var _bone_name = argument[1];
 	var _bone = (argument_count > 2) ? argument[2] : _model[BBMOD_EModel.Skeleton];
 
 	if (_bone[BBMOD_EBone.Name] == _bone_name)
@@ -192,10 +190,9 @@ function bbmod_model_get_bindpose_transform(_model)
 /// @param {bool} [_ids] Use `true` to force ids for dynamic batching. Defaults
 /// to `false`.
 /// @return {real} The vertex format.
-function bbmod_model_get_vertex_format()
+function bbmod_model_get_vertex_format(_model)
 {
 	gml_pragma("forceinline");
-	var _model = argument[0];
 	var _bones = (argument_count > 1) ? argument[1] : true;
 	var _ids = (argument_count > 2) ? argument[2] : false;
 	return bbmod_get_vertex_format(
@@ -235,11 +232,9 @@ function _bbmod_model_to_static_batch(_model, _static_batch, _transform)
 /// material is used for each slot. Default is `undefined`.
 /// @param {array/undefined} [_transform] An array of transformation matrices
 /// (for animated models) or `undefined`.
-function bbmod_render()
+function bbmod_render(_model)
 {
 	gml_pragma("forceinline");
-
-	var _model = argument[0];
 	var _materials = (argument_count > 1) ? argument[1] : undefined;
 	var _transform = (argument_count > 2) ? argument[2] : undefined;
 	var _render_pass = global.bbmod_render_pass;

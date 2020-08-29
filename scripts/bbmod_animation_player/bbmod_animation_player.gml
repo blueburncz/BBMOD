@@ -46,10 +46,8 @@ function bbmod_animation_player_destroy(_animation_player)
 /// @param {bool} [_interpolate_frames] Set to `false` do disable interpolation
 /// between animation frames. This results into worse visual fidelity, but it
 /// improves framerate. Defaults to `true`.
-function bbmod_animation_player_update()
+function bbmod_animation_player_update(_anim_player, _current_time)
 {
-	var _anim_player = argument[0];
-	var _current_time = argument[1];
 	var _interpolate_frames = (argument_count > 2) ? argument[2] : true;
 	var _animations = _anim_player[BBMOD_EAnimationPlayer.Animations];
 
@@ -464,10 +462,8 @@ function bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 /// @param {struct} _animation_player An AnimationPlayer structure.
 /// @param {struct} _animation An Animation to play.
 /// @param {bool} [_loop] True to loop the animation. Defaults to false.
-function bbmod_play()
+function bbmod_play(_animation_player, _animation)
 {
-	var _animation_player = argument[0];
-	var _animation = argument[1];
 	var _loop = (argument_count > 2) ? argument[2] : false;
 
 	var _animation_list = _animation_player[BBMOD_EAnimationPlayer.Animations]; 

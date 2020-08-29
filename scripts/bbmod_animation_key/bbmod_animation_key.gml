@@ -17,12 +17,10 @@ enum BBMOD_EAnimationKey
 /// @param {real} _animation_time The current animation time.
 /// @param {real} [_index] An index where to start looking. Defaults to 0.
 /// @return {real} Index of found animation key.
-function bbmod_find_animation_key()
+function bbmod_find_animation_key(_keys, _animation_time)
 {
 	gml_pragma("forceinline");
 
-	var _keys = argument[0];
-	var _animation_time = argument[1];
 	var _index = (argument_count > 2) ? argument[2] : 0;
 	var _key_count = array_length(_keys);
 
