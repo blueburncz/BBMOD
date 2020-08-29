@@ -492,12 +492,12 @@ function bbmod_play(_animation_player, _animation)
 
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
 /// @desc An OOP wrapper around BBMOD_EAnimationPlayer.
-/// @param {BBMOD_EModel} _model A model that the animation player animates.
+/// @param {BBMOD_Model} _model A model that the animation player animates.
 /// @param {bool} [_paused] If true then the animation player is created
 /// as paused. Defaults to false.
 function BBMOD_AnimationPlayer(_model) constructor
 {
-	/// @var {BBMOD_EModel} A model that the animation player animates.
+	/// @var {BBMOD_Model} A model that the animation player animates.
 	model = _model;
 
 	/// @var {bool} If true, then the animation playback is paused.
@@ -517,7 +517,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @var {array} A BBMOD_EAnimationPlayer that this struct wraps.
 	animation_player = bbmod_animation_player_create(model.model);
 
-	/// @func update(_current_time)
+	/// @func update()
 	/// @desc Updates the animation player. This should be called every frame
 	/// in the step event.
 	static update = function () {
