@@ -149,4 +149,10 @@ function BBMOD_StaticBatch(_vformat) constructor
 	static render = function (_material) {
 		bbmod_static_batch_render(static_batch, _material.material);
 	};
+
+	/// @func destroy()
+	/// @desc Frees memory used by the static batch.
+	static destroy = function () {
+		bbmod_static_batch_destroy(static_batch);
+	};
 }

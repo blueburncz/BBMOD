@@ -50,6 +50,14 @@ function bbmod_mesh_load(_buffer, _format, _format_mask)
 	return _mesh;
 }
 
+/// @func bbmod_mesh_destroy(_mesh)
+/// @desc Destroys a mesh.
+/// @param {array} _mesh The mesh to destroy,
+function bbmod_mesh_destroy(_mesh)
+{
+	vertex_delete_buffer(_mesh[BBMOD_EMesh.VertexBuffer]);
+}
+
 /// @func _bbmod_mesh_freeze(_mesh)
 /// @param {array} _mesh
 function _bbmod_mesh_freeze(_mesh)

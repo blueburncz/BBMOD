@@ -121,6 +121,14 @@ function bbmod_model_load(_buffer, _version)
 	return _bbmod;
 }
 
+/// @func bbmod_model_destroy(_model)
+/// @desc Destroys a model.
+/// @param {array} _model The model to destroy.
+function bbmod_model_destroy(_model)
+{
+	bbmod_node_destroy(_model[BBMOD_EModel.RootNode]);
+}
+
 /// @func bbmod_model_freeze(_model)
 /// @desc Freezes all vertex buffers used by a model. This should make its
 /// rendering faster, but it disables creating new batches of the model.
@@ -322,5 +330,11 @@ function BBMOD_Model(_file) constructor
 		}));
 
 		bbmod_render(model, _materials, _transform);
+	};
+
+	/// @func destroy()
+	/// @desc Frees memory used by the model.
+	static destroy = function () {
+		bbmod_model_destroy(model);
 	};
 }

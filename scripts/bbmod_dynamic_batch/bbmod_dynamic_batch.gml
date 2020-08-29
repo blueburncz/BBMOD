@@ -99,4 +99,10 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	static render = function (_material, _data) {
 		bbmod_dynamic_batch_render(dynamic_batch, _material.material, _data);
 	};
+
+	/// @func destroy()
+	/// @desc Frees memory used by the dynamic batch.
+	static destroy = function () {
+		bbmod_static_batch_destroy(dynamic_batch);
+	};
 }

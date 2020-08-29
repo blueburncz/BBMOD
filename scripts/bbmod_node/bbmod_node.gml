@@ -56,13 +56,13 @@ function bbmod_node_load(_buffer, _format, _format_mask)
 function bbmod_node_destroy(_node)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
-	var _children = _meshes[BBMOD_ENode.Children];
+	var _children = _node[BBMOD_ENode.Children];
 	var i = 0;
 
 	//i = 0;
 	repeat (array_length(_meshes))
 	{
-		vertex_delete_buffer(_meshes[i++]);
+		bbmod_mesh_destroy(_meshes[i++]);
 	}
 
 	i = 0;
