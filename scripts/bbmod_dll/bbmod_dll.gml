@@ -2,27 +2,28 @@
 /// is applicable.
 #macro BBMOD_DLL_FAILURE -1
 
-/// @macro {real} A code returned from the DLL  when a model is successfully
+/// @macro {real} A code returned from the DLL when a model is successfully
 /// converted.
 #macro BBMOD_DLL_SUCCESS 0
 
 /// @macro {real} An error code returned from the DLL when model loading fails.
 #macro BBMOD_DLL_ERR_LOAD_FAILED 1
 
-/// @macro {real} An error code returned from the DLL  when model conversion
+/// @macro {real} An error code returned from the DLL when model conversion
 /// fails.
 #macro BBMOD_DLL_ERR_CONVERSION_FAILED 2
 
-/// @macro {real} An error code returned from the DLL  when converted model
+/// @macro {real} An error code returned from the DLL when converted model
 /// is not saved.
 #macro BBMOD_DLL_ERR_SAVE_FAILED 3
 
 /// @function BBMOD_DLL([_dll])
 /// @desc Loads a DLL which allows you to convert models into BBMOD.
-/// @param {string} [_dll] The path to the DLL file. Defaults to "BBMOD.dll".
+/// @param {string} [_dll] The path to the DLL file. Defaults to "BBMOD/DLL/BBMOD.dll".
 function BBMOD_DLL() constructor
 {
-	dll = (argument_count > 0) ? argument[0] : "BBMOD.dll";
+	/// @desc {string} Path to the DLL file.
+	dll = (argument_count > 0) ? argument[0] : "BBMOD/DLL/BBMOD.dll";
 
 	dll_get_left_handed = external_define(dll, "bbmod_dll_get_left_handed", dll_cdecl, ty_real, 0);
 
