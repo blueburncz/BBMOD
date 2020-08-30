@@ -227,6 +227,8 @@ function BBMOD_Material(_shader) constructor
 	material = bbmod_material_create(_shader, _base_opacity, _normal_roughness,
 		_metallic_ao, _subsurface, _emissive);
 
+	// TODO: Add docs
+
 	static get_render_path = function () {
 		return material[BBMOD_EMaterial.RenderPath];
 	};

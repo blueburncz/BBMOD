@@ -285,6 +285,7 @@ function BBMOD_Model(_file) constructor
 
 	/// @var {array} A BBMOD_EModel that this struct wraps.
 	model = bbmod_load(_file, _sha1);
+
 	if (model == BBMOD_NONE)
 	{
 		throw new BBMOD_Error("Could not load file " + _file);

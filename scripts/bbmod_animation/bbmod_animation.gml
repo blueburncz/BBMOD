@@ -193,6 +193,7 @@ function BBMOD_Animation(_file) constructor
 
 	/// @var {array} A BBMOD_EAnimation that this struct wraps.
 	animation = bbmod_load(_file, _sha1);
+
 	if (animation == BBMOD_NONE)
 	{
 		throw new BBMOD_Error("Could not load file " + _file);

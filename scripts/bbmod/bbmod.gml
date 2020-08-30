@@ -171,6 +171,7 @@ function bbmod_set_camera_position(_x, _y, _z)
 /// lighting.
 function bbmod_set_ibl_sprite(_sprite, _subimage)
 {
+	gml_pragma("forceinline");
 	var _texel = 1 / sprite_get_height(_sprite);
 	bbmod_set_ibl_texture(sprite_get_texture(_sprite, _subimage), _texel);
 }
