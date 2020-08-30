@@ -4,8 +4,6 @@
 /docs_src/ScriptingAPI/
 Documentation.zip
 Changelog.md
-*.bbmod*
-*.bbanim*
 
 */ce_*
 */CE_*
