@@ -1,24 +1,24 @@
-/// @enum An enumeration of member of an AnimationPlayer structure.
+/// @enum An enumeration of member of a BBMOD_EAnimationPlayer legacy struct.
 enum BBMOD_EAnimationPlayer
 {
-	/// @member A Model which the AnimationPlayer animates.
+	/// @member A Model which the BBMOD_EAnimationPlayer animates.
 	Model,
 	/// @member List of animations to play.
 	Animations,
-	/// @member The last played AnimationInstance.
+	/// @member The last played BBMOD_EAnimationInstance.
 	AnimationInstanceLast,
 	/// @member Array of 3D vectors for bone position overriding.
 	BonePositionOverride,
 	/// @member Array of quaternions for bone position overriding.
 	BoneRotationOverride,
-	/// @member The size of the AnimationPlayer structure.
+	/// @member The size of the BBMOD_EAnimationPlayer legacy struct.
 	SIZE
 };
 
 /// @func bbmod_animation_player_create(_model)
-/// @desc Creates a new AnimationPlayer for given Model.
-/// @param {array} _model A Model structure.
-/// @return {array} The created AnimationPlayer structure.
+/// @desc Creates a new animation player for given model.
+/// @param {BBMOD_EModel} _model A model.
+/// @return {BBMOD_EAnimationPlayer} The created animation player.
 function bbmod_animation_player_create(_model)
 {
 	var _bone_count = _model[BBMOD_EModel.BoneCount];
@@ -32,16 +32,16 @@ function bbmod_animation_player_create(_model)
 }
 
 /// @func bbmod_animation_player_destroy(_animation_player)
-/// @desc Frees any memory used by an AnimationPlayer structure.
-/// @param {array} _animation_player The AnimationPlayer structure.
+/// @desc Frees any memory used by an animation player.
+/// @param {BBMOD_EAnimationPlayer} _animation_player The animation player.
 function bbmod_animation_player_destroy(_animation_player)
 {
 	ds_list_destroy(_animation_player[BBMOD_EAnimationPlayer.Animations]);
 }
 
 /// @func bbmod_animation_player_update(_animation_player, _current_time[, _interpolate_frames])
-/// @desc Updates an AnimationPlayer structure. Should be call each frame.
-/// @param {array} _animation_player The AnimationPlayer structure.
+/// @desc Updates an animation player. Should be call each frame.
+/// @param {BBMOD_EAnimationPlayer} _animation_player The animation player.
 /// @param {real} _current_time The current time in seconds.
 /// @param {bool} [_interpolate_frames] Set to `false` do disable interpolation
 /// between animation frames. This results into worse visual fidelity, but it
@@ -105,8 +105,8 @@ function bbmod_animation_player_update(_anim_player, _current_time)
 
 /// @func bbmod_animate(_animation_player, _animation_instance, _animation_time, _interpolate_frames)
 /// @desc Calculates skeleton's current transformation matrices.
-/// @param {array} _animation_player An AnimationPlayer structure.
-/// @param {array} _animation_instance An AnimationInstance structure.
+/// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
+/// @param {BBMOD_EAnimationInstance} _animation_instance An animation instance.
 /// @param {real} _animation_time The current animation time.
 /// @param {bool} _interpolate_frames True to interpolate between animation frames.
 function bbmod_animate(_animation_player, _animation_instance, _animation_time, _interpolate_frames)
@@ -396,7 +396,7 @@ function bbmod_animate(_animation_player, _animation_instance, _animation_time, 
 
 /// @func bbmod_get_transform(_animation_player)
 /// @desc Returns an array of current transformation matrices for animated models.
-/// @param {array} _animation_player An AnimationPlayer structure.
+/// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
 /// @return {array} The array of transformation matrices.
 function bbmod_get_transform(_animation_player)
 {
@@ -412,7 +412,7 @@ function bbmod_get_transform(_animation_player)
 /// @func bbmod_get_bone_transform(_animation_player, _bone_index)
 /// @desc Returns a transformation matrix of a bone, which can be used
 /// for example for attachments.
-/// @param {array} _animation_player An AnimationPlayer structure.
+/// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
 /// @param {real} _bone_index The index of the bone.
 /// @return {array} The transformation matrix.
 function bbmod_get_bone_transform(_animation_player, _bone_index)
@@ -428,7 +428,7 @@ function bbmod_get_bone_transform(_animation_player, _bone_index)
 /// @func bbmod_set_bone_position(_animation_player, _bone_id, _position)
 /// @desc Defines a bone position to be used instead of one from the animation
 /// that's currently playing.
-/// @param {array} _animation_player The animation player structure.
+/// @param {BBMOD_EAnimationPlayer} _animation_player The animation player.
 /// @param {real} _bone_id The id of the bone to transform.
 /// @param {array/undefined} _position An array with the new bone position `[x,y,z]`,
 /// or `undefined` to disable the override.
@@ -444,7 +444,7 @@ function bbmod_set_bone_position(_animation_player, _bone_id, _position)
 /// @func bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 /// @desc Defines a bone rotation to be used instead of one from the animation
 /// that's currently playing.
-/// @param {array} _animation_player The animation player structure.
+/// @param {BBMOD_EAnimationPlayer} _animation_player The animation player.
 /// @param {real} _bone_id The id of the bone to transform.
 /// @param {array/undefined} _quaternion An array with the new bone rotation `[x,y,z,w]`,
 /// or `undefined` to disable the override.
@@ -459,8 +459,8 @@ function bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 
 /// @func bbmod_play(_animation_player, _animation[, _loop])
 /// @desc Starts playing an animation.
-/// @param {struct} _animation_player An AnimationPlayer structure.
-/// @param {struct} _animation An Animation to play.
+/// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
+/// @param {BBMOD_EAnimation} _animation The animation to play.
 /// @param {bool} [_loop] True to loop the animation. Defaults to false.
 function bbmod_play(_animation_player, _animation)
 {
@@ -491,7 +491,7 @@ function bbmod_play(_animation_player, _animation)
 }
 
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
-/// @desc An OOP wrapper around BBMOD_EAnimationPlayer.
+/// @desc An OOP wrapper around a BBMOD_EAnimationPlayer legacy struct.
 /// @param {BBMOD_Model} _model A model that the animation player animates.
 /// @param {bool} [_paused] If true then the animation player is created
 /// as paused. Defaults to false.
@@ -514,7 +514,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// quality of animation playback.
 	interpolate_frames = true;
 
-	/// @var {array} A BBMOD_EAnimationPlayer that this struct wraps.
+	/// @var {BBMOD_EAnimationPlayer} The animation player  that this struct wraps.
 	animation_player = bbmod_animation_player_create(model.model);
 
 	/// @func update()

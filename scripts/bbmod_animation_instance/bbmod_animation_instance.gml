@@ -1,4 +1,4 @@
-/// @enum An enumeration of members of an AnimationInstance structure.
+/// @enum An enumeration of members of a BBMOD_EAnimationInstance legacy struct.
 enum BBMOD_EAnimationInstance
 {
 	/// @member The animation to be played.
@@ -24,14 +24,14 @@ enum BBMOD_EAnimationInstance
 	/// @member An array containing transformation matrices of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	TransformArray,
-	/// @member The size of an AnimationInstance structure.
+	/// @member The size of a BBMOD_EAnimationInstance legacy struct.
 	SIZE
 };
 
 /// @func bbmod_animation_instance_create(_animation)
-/// @desc Creates a new AnimationInstance structure.
-/// @param {array} _animation An Animation structure.
-/// @return {array} The created structure.
+/// @desc Creates a new animation instance.
+/// @param {BBMOD_EAnimation} _animation An animation to create an instance of.
+/// @return {BBMOD_EAnimationInstance} The created animation instance.
 function bbmod_animation_instance_create(_animation)
 {
 	var _anim_inst = array_create(BBMOD_EAnimationInstance.SIZE, 0);

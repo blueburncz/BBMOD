@@ -1,21 +1,21 @@
-/// @enum An enumeration of members of a PositionKey structure.
+/// @enum An enumeration of members of a BBMOD_EPositionKey legacy struct.
 enum BBMOD_EPositionKey
 {
 	/// @member Time when the animation key occurs.
 	Time,
 	/// @member A 3D position vector.
 	Position,
-	/// @member The size of the PositionKey structure.
+	/// @member The size of the BBMOD_EPositionKey legacy struct.
 	SIZE
 };
 
 /// @func bbmod_position_key_interpolate(_pk1, _pk2, _factor)
-/// @desc Interpolates between two PositionKey structures.
-/// @param {array} _pk1 The first PositionKey structure.
-/// @param {array} _pk2 The second PositionKey structure.
+/// @desc Interpolates between two position keys.
+/// @param {BBMOD_EPositionKey} _pk1 The first position key.
+/// @param {BBMOD_EPositionKey} _pk2 The second position key.
 /// @param {real} _factor The interpolation factor. Should be a value in range 0..1.
-/// @return {array} A new PositionKey with the interpolated animation time and
-/// position.
+/// @return {BBMOD_EPositionKey} A new position key with the interpolated
+/// animation time and position.
 function bbmod_position_key_interpolate(_pk1, _pk2, _factor)
 {
 	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
@@ -30,9 +30,9 @@ function bbmod_position_key_interpolate(_pk1, _pk2, _factor)
 }
 
 /// @func bbmod_position_key_load(_buffer)
-/// @desc Loads a PositionKey structure from a buffer.
-/// @param {real} _buffer The buffer to load the structure from.
-/// @return {array} The loaded PositionKey structure.
+/// @desc Loads a position key from a buffer.
+/// @param {real} _buffer The buffer to load the struct from.
+/// @return {BBMOD_EPositionKey} The loaded position key.
 function bbmod_position_key_load(_buffer)
 {
 	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
@@ -42,8 +42,8 @@ function bbmod_position_key_load(_buffer)
 }
 
 /// @func bbmod_position_key_to_matrix(_position_key)
-/// @desc Creates a translation matrix from a PositionKey structure.
-/// @param {array} _position_key The PositionKey structure.
+/// @desc Creates a translation matrix from a position key.
+/// @param {BBMOD_EPositionKey} _position_key The position key.
 /// @return {array} The created matrix.
 function bbmod_position_key_to_matrix(_position_key)
 {

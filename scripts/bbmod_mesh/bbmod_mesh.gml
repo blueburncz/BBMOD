@@ -1,20 +1,20 @@
-/// @enum An enumeration of members of a Mesh structure.
+/// @enum An enumeration of members of a BBMOD_EMesh legacy struct.
 enum BBMOD_EMesh
 {
 	/// @member An index of a material that the mesh uses.
 	MaterialIndex,
 	/// @member A vertex buffer.
 	VertexBuffer,
-	/// @member The size of the Mesh structure.
+	/// @member The size of the BBMOD_EMesh legacy struct.
 	SIZE
 };
 
 /// @func bbmod_mesh_load(_buffer, _format, _format_mask)
-/// @desc Loads a Mesh structure from a bufffer.
-/// @param {real} _buffer The buffer to load the structure from.
+/// @desc Loads a mesh from a bufffer.
+/// @param {real} _buffer The buffer to load the struct from.
 /// @param {real} _format A vertex format that the mesh uses.
 /// @param {real} _format_mask A vertex format mask.
-/// @return {array} The loaded Mesh structure.
+/// @return {BBMOD_EMesh} The loaded mesh.
 function bbmod_mesh_load(_buffer, _format, _format_mask)
 {
 	var _has_vertices = (_format_mask >> BBMOD_VFORMAT_VERTEX) & 1;
@@ -52,14 +52,14 @@ function bbmod_mesh_load(_buffer, _format, _format_mask)
 
 /// @func bbmod_mesh_destroy(_mesh)
 /// @desc Destroys a mesh.
-/// @param {array} _mesh The mesh to destroy,
+/// @param {BBMOD_EMesh} _mesh The mesh to destroy,
 function bbmod_mesh_destroy(_mesh)
 {
 	vertex_delete_buffer(_mesh[BBMOD_EMesh.VertexBuffer]);
 }
 
 /// @func _bbmod_mesh_freeze(_mesh)
-/// @param {array} _mesh
+/// @param {BBMOD_EMesh} _mesh
 function _bbmod_mesh_freeze(_mesh)
 {
 	gml_pragma("forceinline");
@@ -67,8 +67,8 @@ function _bbmod_mesh_freeze(_mesh)
 }
 
 /// @func _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
-/// @param {array} _mesh
-/// @param {array} _dynamic_batch
+/// @param {BBMOD_EMesh} _mesh
+/// @param {BBMOD_EDynamicBatch} _dynamic_batch
 function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 {
 	var _vertex_buffer = _dynamic_batch[BBMOD_EStaticBatch.VertexBuffer];
@@ -157,9 +157,9 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 }
 
 /// @func _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
-/// @param {array} _model
-/// @param {array} _mesh
-/// @param {array} _static_batch
+/// @param {BBMOD_EModel} _model
+/// @param {BBMOD_EMesh} _mesh
+/// @param {BBMOD_EDynamicBatch} _static_batch
 /// @param {array} _transform
 function _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 {

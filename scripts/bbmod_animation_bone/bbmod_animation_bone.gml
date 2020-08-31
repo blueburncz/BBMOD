@@ -1,20 +1,20 @@
-/// @enum An enumeration of members of an AnimationBone structure.
+/// @enum An enumeration of members of an BBMOD_EAnimationBone legacy struct.
 enum BBMOD_EAnimationBone
 {
 	/// @member The bone index.
 	BoneIndex,
-	/// @member An array of PositionKey structures.
+	/// @member An array of BBMOD_EPositionKey legacy structs.
 	PositionKeys,
-	/// @member An array of RotationKey structures.
+	/// @member An array of BBMOD_ERotationKey legacy structs.
 	RotationKeys,
-	/// @member The size of the AnimationBone structure.
+	/// @member The size of the BBMOD_EAnimationBone legacy struct.
 	SIZE
 };
 
 /// @func bbmod_animation_bone_load(_buffer)
-/// @desc Loads an AnimationBone structure from a buffer.
-/// @param {real} _buffer The buffer to load the structure from.
-/// @return {array} The loaded AnimationBone.
+/// @desc Loads a bone from a buffer.
+/// @param {real} _buffer The buffer to load the struct from.
+/// @return {BBMOD_EAnimationBone} The loaded bone.
 function bbmod_animation_bone_load(_buffer)
 {
 	var i = 0;

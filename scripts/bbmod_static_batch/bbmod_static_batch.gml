@@ -1,11 +1,11 @@
-/// @enum An enumeration of members of a StaticBatch structure.
+/// @enum An enumeration of members of a BBMOD_EStaticBatch legacy struct.
 enum BBMOD_EStaticBatch
 {
 	/// @member The vertex buffer.
 	VertexBuffer,
 	/// @member The format of the vertex buffer.
 	VertexFormat,
-	/// @member The size of the StaticBatch structure.
+	/// @member The size of the BBMOD_EStaticBatch legacy struct.
 	SIZE
 };
 
@@ -13,7 +13,7 @@ enum BBMOD_EStaticBatch
 /// @desc Creates a new static batch.
 /// @param {real} _vformat The vertex format of the static batch. Must not have
 /// bones!
-/// @return {array} The created static batch.
+/// @return {BBMOD_EStaticBatch} The created static batch.
 /// @see bbmod_model_get_vertex_format
 function bbmod_static_batch_create(_vformat)
 {
@@ -24,8 +24,8 @@ function bbmod_static_batch_create(_vformat)
 }
 
 /// @func bbmod_static_batch_destroy(_static_batch)
-/// @desc Destroys a StaticBatch structure.
-/// @param {array} _static_batch A StaticBatch structure to destroy.
+/// @desc Destroys a static batch.
+/// @param {BBMOD_EStaticBatch} _static_batch A static batch to destroy.
 function bbmod_static_batch_destroy(_static_batch)
 {
 	vertex_delete_buffer(_static_batch[BBMOD_EStaticBatch.VertexBuffer]);
@@ -33,7 +33,7 @@ function bbmod_static_batch_destroy(_static_batch)
 
 /// @func bbmod_static_batch_begin(_static_batch)
 /// @desc Begins adding models into a static batch.
-/// @param {array} _static_batch The static batch.
+/// @param {BBMOD_EStaticBatch} _static_batch The static batch.
 /// @see bbmod_static_batch_add
 /// @see bbmod_static_batch_end
 function bbmod_static_batch_begin(_static_batch)
@@ -45,8 +45,8 @@ function bbmod_static_batch_begin(_static_batch)
 
 /// @func bbmod_static_batch_add(_static_batch, _model, _transform)
 /// @desc Adds a model to a static batch.
-/// @param {array} _static_batch The static batch.
-/// @param {array} _model The model.
+/// @param {BBMOD_EStaticBatch} _static_batch The static batch.
+/// @param {BBMOD_EModel} _model The model.
 /// @param {array} _transform A transformation matrix of the model.
 /// @example
 /// ```gml
@@ -75,7 +75,7 @@ function bbmod_static_batch_add(_static_batch, _model, _transform)
 
 /// @func bbmod_static_batch_end(_static_batch)
 /// @desc Ends adding models into a static batch.
-/// @param {array} _static_batch The static batch.
+/// @param {BBMOD_EStaticBatch} _static_batch The static batch.
 /// @see bbmod_static_batch_begin
 function bbmod_static_batch_end(_static_batch)
 {
@@ -86,7 +86,7 @@ function bbmod_static_batch_end(_static_batch)
 /// @func bbmod_static_batch_freeze(_static_batch)
 /// @desc Freezes a static batch. This makes it render faster but disables
 /// adding more models to the batch.
-/// @param {array} _static_batch The static batch.
+/// @param {BBMOD_EStaticBatch} _static_batch The static batch.
 function bbmod_static_batch_freeze(_static_batch)
 {
 	gml_pragma("forceinline");
@@ -94,9 +94,9 @@ function bbmod_static_batch_freeze(_static_batch)
 }
 
 /// @func bbmod_static_batch_render(_static_batch, _material)
-/// @desc Submits a StaticBatch for rendering.
-/// @param {array} _static_batch A StaticBatch structure.
-/// @param {array} _material A Material structure.
+/// @desc Submits a static batch for rendering.
+/// @param {BBMOD_EStaticBatch} _static_batch A static batch.
+/// @param {BBMOD_EMaterial} _material A material.
 function bbmod_static_batch_render(_static_batch, _material)
 {
 	var _render_pass = global.bbmod_render_pass;
@@ -114,12 +114,12 @@ function bbmod_static_batch_render(_static_batch, _material)
 }
 
 /// @func BBMOD_StaticBatch(_vformat)
-/// @desc An OOP wrapper around BBMOD_EStaticBatch.
+/// @desc An OOP wrapper around a BBMOD_EStaticBatch legacy struct.
 /// @param {real} _vformat The vertex format of the static batch. Must not have
 /// bones!
 function BBMOD_StaticBatch(_vformat) constructor
 {
-	/// @var {array} A BBMOD_EStaticBatch that this struct wraps.
+	/// @var {BBMOD_EStaticBatch} The static batch that this struct wraps.
 	static_batch = bbmod_static_batch_create(_vformat);
 
 	/// @func start()

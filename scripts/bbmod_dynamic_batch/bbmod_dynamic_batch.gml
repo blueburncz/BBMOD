@@ -1,4 +1,4 @@
-/// @enum An enumeration of members of a StaticBatch structure.
+/// @enum An enumeration of members of a BBMOD_EStaticBatch legacy struct.
 enum BBMOD_EDynamicBatch
 {
 	/// @member The vertex buffer.
@@ -9,7 +9,7 @@ enum BBMOD_EDynamicBatch
 	Model,
 	/// @member Number of model instances within the batch.
 	Size,
-	/// @member The size of the StaticBatch structure.
+	/// @member The size of the BBMOD_EStaticBatch legacy struct.
 	SIZE
 };
 
@@ -17,7 +17,7 @@ enum BBMOD_EDynamicBatch
 /// @desc Creates a dynamic batch of a model.
 /// @param {array} _model The model to create a dynamic batch of.
 /// @param {real} _size Number of model instances in the batch.
-/// @return {array} The created DynamicBatch structure.
+/// @return {BBMOD_EDynamicBatch} The created dynamic batch.
 function bbmod_dynamic_batch_create(_model, _size)
 {
 	var _buffer = vertex_create_buffer();
@@ -37,8 +37,8 @@ function bbmod_dynamic_batch_create(_model, _size)
 }
 
 /// @func bbmod_dynamic_batch_destroy(_dynamic_batch)
-/// @desc Destroys a DynamicBatch structure.
-/// @param {array} _dynamic_batch The DynamicBatch structure to destroy.
+/// @desc Destroys a dynamic batch.
+/// @param {BBMOD_EDynamicBatch} _dynamic_batch The dynamic batch to destroy.
 function bbmod_dynamic_batch_destroy(_dynamic_batch)
 {
 	vertex_delete_buffer(_dynamic_batch[BBMOD_EDynamicBatch.VertexBuffer]);
@@ -46,7 +46,7 @@ function bbmod_dynamic_batch_destroy(_dynamic_batch)
 
 /// @func bbmod_dynamic_batch_freeze(_dynamic_batch)
 /// @desc Freezes a dynamic batch, which makes it render faster.
-/// @param {array} _dynamic_batch A DynamicBatch structure.
+/// @param {BBMOD_EDynamicBatch} _dynamic_batch A dynamic batch.
 function bbmod_dynamic_batch_freeze(_dynamic_batch)
 {
 	gml_pragma("forceinline");
@@ -55,8 +55,8 @@ function bbmod_dynamic_batch_freeze(_dynamic_batch)
 
 /// @func bbmod_dynamic_batch_render(_dynamic_batch, _material, _data)
 /// @desc Submits a DynamitBatch for rendering.
-/// @param {array} _dynamic_batch A DynamicBatch structure.
-/// @param {array} _material A Material structure. Must use a shader that
+/// @param {BBMOD_EDynamicBatch} _dynamic_batch A dynamic batch.
+/// @param {BBMOD_EMaterial} _material A material. Must use a shader that
 /// expects ids in the vertex format.
 /// @param {array} _data An array containing data for each rendered instance.
 function bbmod_dynamic_batch_render(_dynamic_batch, _material, _data)
@@ -79,12 +79,12 @@ function bbmod_dynamic_batch_render(_dynamic_batch, _material, _data)
 }
 
 /// @func BBMOD_DynamicBatch(_model, _size)
-/// @desc An OOP wrapper around BBMOD_EDynamicBatch.
+/// @desc An OOP wrapper around a BBMOD_EDynamicBatch legacy struct.
 /// @param {BBMOD_Model} _model The model to create a dynamic batch of.
 /// @param {real} _size Number of model instances in the batch.
 function BBMOD_DynamicBatch(_model, _size) constructor
 {
-	/// @var {array} A BBMOD_EDynamicBatch that this struct wraps.
+	/// @var {BBMOD_EDynamicBatch} The dynamic batch that this struct wraps.
 	dynamic_batch = bbmod_dynamic_batch_create(_model.model, _size);
 
 	/// @func freeze()

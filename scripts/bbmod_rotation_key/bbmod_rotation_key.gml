@@ -1,21 +1,21 @@
-/// @enum An enumeration of member of a RotationKey structure.
+/// @enum An enumeration of member of a BBMOD_ERotationKey legacy struct.
 enum BBMOD_ERotationKey
 {
 	/// @member Time when the animation key occurs.
 	Time,
 	/// @member A quaternion.
 	Rotation,
-	/// @member The size of the RotationKey structure.
+	/// @member The size of the BBMOD_ERotationKey legacy struct.
 	SIZE
 };
 
 /// @func bbmod_rotation_key_interpolate(_rk1, _rk2, _factor)
-/// @desc Interpolates between two RotationKey structures.
-/// @param {array} _rk1 The first RotationKey.
-/// @param {array} _rk2 The second RotationKey.
+/// @desc Interpolates between two rotation keys.
+/// @param {BBMOD_ERotationKey} _rk1 The first rotation key.
+/// @param {BBMOD_ERotationKey} _rk2 The second rotation key.
 /// @param {real} _factor The interpolation factor. Should be a value in range 0..1.
-/// @return {array} A new RotationKey sructure with the interpolated animation time
-/// and position.
+/// @return {BBMOD_ERotationKey} A new rotation key with the interpolated
+/// animation time and position.
 function bbmod_rotation_key_interpolate(_rk1, _rk2, _factor)
 {
 	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
@@ -30,9 +30,9 @@ function bbmod_rotation_key_interpolate(_rk1, _rk2, _factor)
 }
 
 /// @func bbmod_rotation_key_load(_buffer)
-/// @desc Loads a RotationKey structure from a buffer.
-/// @param {real} _buffer The buffer to load the structure from.
-/// @return {array} The loaded RotationKey structure.
+/// @desc Loads a rotation key from a buffer.
+/// @param {real} _buffer The buffer to load the struct from.
+/// @return {BBMOD_ERotationKey} The loaded rotation key.
 function bbmod_rotation_key_load(_buffer)
 {
 	var _key = array_create(BBMOD_ERotationKey.SIZE, 0);
@@ -42,8 +42,8 @@ function bbmod_rotation_key_load(_buffer)
 }
 
 /// @func bbmod_rotation_key_to_matrix(_rotation_key)
-/// @desc Creates a rotation matrix from a RotationKey structure.
-/// @param {array} _rotation_key The RotationKey structure.
+/// @desc Creates a rotation matrix from a rotation key.
+/// @param {BBMOD_ERotationKey} _rotation_key The rotation key.
 /// @return {array} The created matrix.
 function bbmod_rotation_key_to_matrix(_rotation_key)
 {

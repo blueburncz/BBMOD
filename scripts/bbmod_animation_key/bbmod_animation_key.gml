@@ -1,19 +1,19 @@
-/// @enum An enumeration of members of an AnimationKey structure.
-/// This structure is never instantiated, it only serves as an interface
-/// for specific animation keys.
+/// @enum An enumeration of members of a BBMOD_EAnimationKey legacy struct.
+/// This struct is never instantiated, it only serves as an interface for
+/// specific animation keys.
 enum BBMOD_EAnimationKey
 {
 	/// @member Time when the animation key occurs.
 	Time,
 	/// @member Additional key data.
 	Data,
-	/// @member The size of the AnimationKey structure.
+	/// @member The size of the BBMOD_EAnimationKey legacy struct.
 	SIZE
 };
 
 /// @func bbmod_find_animation_key(_keys, _animation_time[, _index])
 /// @desc Finds an animation key for specified animation time.
-/// @param {array} _key An array of animation keys.
+/// @param {BBMOD_EAnimationKey} _key An array of animation keys.
 /// @param {real} _animation_time The current animation time.
 /// @param {real} [_index] An index where to start looking. Defaults to 0.
 /// @return {real} Index of found animation key.
@@ -44,11 +44,11 @@ function bbmod_find_animation_key(_keys, _animation_time)
 }
 
 /// @func bbmod_get_animation_key(_keys, _index)
-/// @desc Retrieves an AnimationKey at specified index. Checks for boundaries
+/// @desc Retrieves an animation key at specified index. Checks for boundaries
 /// to never read outside of the `keys` array.
-/// @param {array} _keys An array of AnimationKey structures.
+/// @param {BBMOD_EAnimationKey[]} _keys An array of animation keys.
 /// @param {real} _index The index.
-/// @return {array} The AnimationKey.
+/// @return {BBMOD_EAnimationKey} The animation key.
 function bbmod_get_animation_key(_keys, _index)
 {
 	gml_pragma("forceinline");
@@ -56,10 +56,10 @@ function bbmod_get_animation_key(_keys, _index)
 }
 
 /// @func bbmod_get_animation_key_interpolation_factor(_key, _key_next, _animation_time)
-/// @desc Calculates interpolation factor between two AnimationKey structures
+/// @desc Calculates interpolation factor between two animationo keys
 /// at specified animation time.
-/// @param {array} _key The first AnimationKey structure.
-/// @param {array} _key_next The second AnimationKey structure.
+/// @param {BBMOD_EAnimationKey} _key The first animation key.
+/// @param {BBMOD_EAnimationKey} _key_next The second animation key.
 /// @param {real} _animation_time The animation time.
 /// @return {real} The calculated interpolation factor.
 function bbmod_get_animation_key_interpolation_factor(_key, _key_next, _animation_time)

@@ -1,4 +1,4 @@
-/// @enum An enumeration of members of a Model structure.
+/// @enum An enumeration of members of a BBMOD_EModel legacy struct.
 enum BBMOD_EModel
 {
 	/// @member The version of the model file.
@@ -17,25 +17,25 @@ enum BBMOD_EModel
 	HasBones,
 	/// @member The global inverse transform matrix.
 	InverseTransformMatrix,
-	/// @member The root Node structure.
+	/// @member The root BBMOD_ENode legacy struct.
 	RootNode,
 	/// @member Number of bones.
 	BoneCount,
-	/// @member The root Bone structure.
+	/// @member The root BBMOD_EBone legacy struct.
 	Skeleton,
 	/// @member Number of materials that the model uses.
 	MaterialCount,
 	/// @member Array of material names.
 	MaterialNames,
-	/// @member The size of the Model structure.
+	/// @member The size of the BBMOD_EModel legacy struct.
 	SIZE
 };
 
 /// @func bbmod_model_load(_buffer, _version)
-/// @desc Loads a Model structure from a buffer.
-/// @param {real} _buffer The buffer to load the structure from.
+/// @desc Loads a model from a buffer.
+/// @param {real} _buffer The buffer to load the struct from.
 /// @param {real} _version The version of the model file.
-/// @return {array} The loaded Model structure.
+/// @return {BBMOD_EModel} The loaded model.
 function bbmod_model_load(_buffer, _version)
 {
 	var _vformat = undefined;
@@ -123,7 +123,7 @@ function bbmod_model_load(_buffer, _version)
 
 /// @func bbmod_model_destroy(_model)
 /// @desc Destroys a model.
-/// @param {array} _model The model to destroy.
+/// @param {BBMOD_EModel} _model The model to destroy.
 function bbmod_model_destroy(_model)
 {
 	bbmod_node_destroy(_model[BBMOD_EModel.RootNode]);
@@ -132,7 +132,7 @@ function bbmod_model_destroy(_model)
 /// @func bbmod_model_freeze(_model)
 /// @desc Freezes all vertex buffers used by a model. This should make its
 /// rendering faster, but it disables creating new batches of the model.
-/// @param {array} _model The model to freeze.
+/// @param {BBMOD_EModel} _model The model to freeze.
 function bbmod_model_freeze(_model)
 {
 	gml_pragma("forceinline");
@@ -141,10 +141,10 @@ function bbmod_model_freeze(_model)
 
 /// @func bbmod_model_find_bone_id(_model, _bone_name[, _bone])
 /// @desc Seaches for a bone id assigned to given bone name.
-/// @param {array} _model The Model structure.
-/// @param {string} _bone_name The name of the Bone structure.
-/// @param {array/undefined} [_bone] The Bone structure to start searching from.
-/// Use `undefined` to use the model's root bone. Defaults to `undefined`.
+/// @param {BBMOD_EModel} _model The model.
+/// @param {string} _bone_name The name of the bone.
+/// @param {BBMOD_EBone/undefined} [_bone] The bone to start searching
+/// from. Use `undefined` to use the model's root bone. Defaults to `undefined`.
 /// @return {real/BBMOD_NONE} The id of the bone on success or `BBMOD_NONE` on fail.
 /// @note It is not recommened to use this script in release builds, because having
 /// many of these lookups can slow down your game! You should instead use the
@@ -176,7 +176,7 @@ function bbmod_model_find_bone_id(_model, _bone_name)
 
 /// @func bbmod_model_get_bindpose_transform(_model)
 /// @desc Creates a transformation array with model's bindpose.
-/// @param {array} _model A Model structure.
+/// @param {BBMOD_EModel} _model A model.
 /// @return {array} The created array.
 function bbmod_model_get_bindpose_transform(_model)
 {
@@ -193,7 +193,7 @@ function bbmod_model_get_bindpose_transform(_model)
 
 /// @func bbmod_model_get_vertex_format(_model[, _bones[, _ids]])
 /// @desc Retrieves a vertex format of a model.
-/// @param {array} _model The mode.
+/// @param {BBMOD_EModel} _model The model.
 /// @param {bool} [_bones] Use `false` to disable bones. Defaults to `true`.
 /// @param {bool} [_ids] Use `true` to force ids for dynamic batching. Defaults
 /// to `false`.
@@ -214,8 +214,8 @@ function bbmod_model_get_vertex_format(_model)
 }
 
 /// @func _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
-/// @param {array} _model
-/// @param {array} _dynamic_batch
+/// @param {BBMOD_EModel} _model
+/// @param {BBMOD_EDynamicBatch} _dynamic_batch
 function _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
 {
 	gml_pragma("forceinline");
@@ -223,8 +223,8 @@ function _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
 }
 
 /// @func _bbmod_model_to_static_batch(_model, _static_batch, _transform)
-/// @param {array} _model
-/// @param {array} _static_batch
+/// @param {BBMOD_EModel} _model
+/// @param {BBMOD_EStaticBatch} _static_batch
 /// @param {array} _transform
 function _bbmod_model_to_static_batch(_model, _static_batch, _transform)
 {
@@ -233,11 +233,11 @@ function _bbmod_model_to_static_batch(_model, _static_batch, _transform)
 }
 
 /// @func bbmod_render(_model[, _materials[, _transform]])
-/// @desc Submits a Model for rendering.
-/// @param {array} _model A Model structure.
-/// @param {array/undefined} [_materials] An array of Material structures, one
-/// for each material slot of the Model. If not specified, then the default
-/// material is used for each slot. Default is `undefined`.
+/// @desc Submits a model for rendering.
+/// @param {BBMOD_EModel} _model A model.
+/// @param {BBMOD_EMaterial[]/undefined} [_materials] An array of materials,
+/// one for each material slot of the model. If not specified, then
+/// the default material is used for each slot. Default is `undefined`.
 /// @param {array/undefined} [_transform] An array of transformation matrices
 /// (for animated models) or `undefined`.
 function bbmod_render(_model)
@@ -276,14 +276,14 @@ function bbmod_render(_model)
 }
 
 /// @func BBMOD_Model(_file[, _sha1])
-/// @desc An OOP wrapper around BBMOD_EModel.
+/// @desc An OOP wrapper around a BBMOD_EModel legacy struct.
 /// @param {string} _file
 /// @param {string} [_sha1]
 function BBMOD_Model(_file) constructor
 {
 	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
 
-	/// @var {array} A BBMOD_EModel that this struct wraps.
+	/// @var {BBMOD_EModel} The model that this struct wraps.
 	model = bbmod_load(_file, _sha1);
 
 	if (model == BBMOD_NONE)

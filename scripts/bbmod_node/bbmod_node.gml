@@ -1,22 +1,22 @@
-/// @enum An enumeration of members of a Node structure.
+/// @enum An enumeration of members of a BBMOD_ENode legacy struct.
 enum BBMOD_ENode
 {
 	/// @member The name of the node.
 	Name,
-	/// @member An array of Mesh structures.
+	/// @member An array of BBMOD_EMesh legacy structs.
 	Meshes,
-	/// @member An array of child Node structures.
+	/// @member An array of child BBMOD_ENode legacy structs.
 	Children,
-	/// @member The size of the Node structure.
+	/// @member The size of the BBMOD_ENode legacy struct.
 	SIZE
 };
 
 /// @func bbmod_node_load(_buffer, _format, _format_mask)
-/// @desc Loads a Node structure from a buffer.
-/// @param {real} _buffer The buffer to load the structure from.
+/// @desc Loads a node from a buffer.
+/// @param {real} _buffer The buffer to load the struct from.
 /// @param {real} _format A vertex format for node's meshes.
 /// @param {real} _format_mask A vertex format mask.
-/// @return {array} The loaded Node structure.
+/// @return {BBMOD_ENode} The loaded node.
 function bbmod_node_load(_buffer, _format, _format_mask)
 {
 	var i = 0;
@@ -51,8 +51,8 @@ function bbmod_node_load(_buffer, _format, _format_mask)
 }
 
 /// @func bbmod_node_destroy(_node)
-/// @desc Frees resources used by the Node structure from memory.
-/// @param {array} _node The Node structure to destroy.
+/// @desc Frees resources used by a node from memory.
+/// @param {BBMOD_ENode} _node The node to destroy.
 function bbmod_node_destroy(_node)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
@@ -73,11 +73,11 @@ function bbmod_node_destroy(_node)
 }
 
 /// @func bbmod_node_render(_model, _node, _materials, _transform)
-/// @desc Submits a Node structure for rendering.
-/// @param {array} _model The Model structure to which the Node belongs.
-/// @param {array} _node The Node structure.
-/// @param {array} _materials An array of Material structures, one for each
-/// material slot of the Model.
+/// @desc Submits a node for rendering.
+/// @param {BBMOD_EModel} _model The model to which the node belongs.
+/// @param {BBMOD_ENode} _node The node.
+/// @param {BBMOD_EMaterial[]} _materials An array of materials, one for each
+/// material slot of the model.
 /// @param {array/undefined} _transform An array of transformation matrices
 /// (for animated models) or `undefined`.
 function bbmod_node_render(_model, _node, _materials, _transform) 
@@ -117,7 +117,7 @@ function bbmod_node_render(_model, _node, _materials, _transform)
 }
 
 /// @func _bbmod_node_freeze(_node)
-/// @param {array} _node
+/// @param {BBMOD_ENode} _node
 function _bbmod_node_freeze(_node)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
@@ -137,8 +137,8 @@ function _bbmod_node_freeze(_node)
 }
 
 /// @func _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
-/// @param {array} _node
-/// @param {array} _dynamic_batch
+/// @param {BBMOD_ENode} _node
+/// @param {BBMOD_EDynamicBatch} _dynamic_batch
 function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
@@ -158,9 +158,9 @@ function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 }
 
 /// @func _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
-/// @param {array} _model
-/// @param {array} _node
-/// @param {array} _static_batch
+/// @param {BBMOD_EModel} _model
+/// @param {BBMOD_ENode} _node
+/// @param {BBMOD_EStaticBatch} _static_batch
 /// @param {array} _transform
 function _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
 {

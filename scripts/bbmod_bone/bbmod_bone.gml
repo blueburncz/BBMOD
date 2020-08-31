@@ -1,4 +1,4 @@
-/// @enum An enumeration of members of a Bone structure.
+/// @enum An enumeration of members of a BBMOD_EBone legacy struct.
 enum BBMOD_EBone
 {
 	/// @member The name of the bone.
@@ -9,16 +9,16 @@ enum BBMOD_EBone
 	TransformMatrix,
 	/// @member The offset matrix.
 	OffsetMatrix,
-	/// @member An array of child Bone structures.
+	/// @member An array of child BBMOD_EBone legacy structs.
 	Children,
-	/// @member The size of the Bone structure.
+	/// @member The size of the BBMOD_EBone legacy struct.
 	SIZE
 };
 
 /// @func bbmod_bone_load(_buffer)
-/// @desc Loads a Bone structure from a buffer.
-/// @param {real} _buffer The buffer to load the structure from.
-/// @return {array} The loaded Bone structure.
+/// @desc Loads a bone from a buffer.
+/// @param {real} _buffer The buffer to load the struct from.
+/// @return {BBMOD_EBone} The loaded bone.
 function bbmod_bone_load(_buffer)
 {
 	var _bone = array_create(BBMOD_EBone.SIZE, 0);

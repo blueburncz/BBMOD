@@ -1,4 +1,4 @@
-/// @enum An enumeration of members of a Material structure.
+/// @enum An enumeration of members of a BBMOD_EMaterial legacy struct.
 enum BBMOD_EMaterial
 {
 	/// @member A render path. See macros
@@ -8,8 +8,8 @@ enum BBMOD_EMaterial
 	/// @member A shader that the material uses.
 	Shader,
 	/// @member A script that is executed when the shader is applied.
-	/// Must take the material structure as the first argument. Use
-	/// `undefined` if you don't want to execute any script. Defaults
+	/// Must take the material as the first argument. Use `undefined`
+	/// if you don't want to execute any script. Defaults
 	/// to [bbmod_material_on_apply_default](./bbmod_material_on_apply_default.html).
 	OnApply,
 
@@ -52,19 +52,19 @@ enum BBMOD_EMaterial
 
 	////////////////////////////////////////////////////////////////////////////
 
-	/// @member The size of the Material structure.
+	/// @member The size of the BBMOD_EMaterial legacy struct.
 	SIZE
 };
 
 /// @func bbmod_material_create(_shader[, _base_opacity[, _normal_roughness[, _metallic_ao[, _subsurface[, _emissive]]]]])
-/// @desc Creates a new Material structure.
+/// @desc Creates a new material.
 /// @param {ptr} _shader A shader that the material uses.
 /// @param {ptr} [_base_opacity] A texture with base color in RGB and opacity in alpha.
 /// @param {ptr} [_normal_roughness] A texture with normals in RGB and roughness in alpha.
 /// @param {ptr} [_metallic_ao] A texture with metallic in R and ambient occlusion in G.
 /// @param {ptr} [_subsurface] A texture with subsurface color in RGB and intensity in alpha.
 /// @param {ptr} [_emissive] A texture with RGBM encoded emissive color.
-/// @return {array} The created Material structure.
+/// @return {BBMOD_EMaterial} The created material.
 function bbmod_material_create(_shader)
 {
 	var _base_opacity = (argument_count > 1) ? argument[1] : undefined;
@@ -103,9 +103,9 @@ function bbmod_material_create(_shader)
 }
 
 /// @func bbmod_material_clone(_material)
-/// @desc Creates a copy of a Material structure.
-/// @param {array} _material The Material structure to create a copy of.
-/// @return {array} The created Material structure.
+/// @desc Creates a copy of a material.
+/// @param {BBMOD_EMaterial} _material The material to create a copy of.
+/// @return {BBMOD_EMaterial} The created material.
 function bbmod_material_clone(_material)
 {
 	gml_pragma("forceinline");
@@ -116,7 +116,7 @@ function bbmod_material_clone(_material)
 
 /// @func bbmod_material_apply(_material)
 /// @desc Applies a material.
-/// @param {array} _material A Material structure.
+/// @param {BBMOD_EMaterial} _material A material.
 /// @return {bool} True if the material was applied or false if it was already
 /// the current one.
 function bbmod_material_apply(_material)
@@ -178,7 +178,7 @@ function bbmod_material_reset()
 
 /// @func bbmod_material_on_apply_default(_material)
 /// @desc The default material application function.
-/// @param {array} _material The Material struct.
+/// @param {BBMOD_EMaterial} _material The material.
 function bbmod_material_on_apply_default(_material)
 {
 	var _shader = _material[BBMOD_EMaterial.Shader];
@@ -208,7 +208,7 @@ function bbmod_material_on_apply_default(_material)
 }
 
 /// @func BBMOD_Material(_shader[, _base_opacity[, _normal_roughness[, _metallic_ao[, _subsurface[, _emissive]]]]])
-/// @desc An OOP wrapper around BBMOD_EMaterial.
+/// @desc An OOP wrapper around a BBMOD_EMaterial legacy struct.
 /// @param {ptr} _shader A shader that the material uses.
 /// @param {ptr} [_base_opacity] A texture with base color in RGB and opacity in alpha.
 /// @param {ptr} [_normal_roughness] A texture with normals in RGB and roughness in alpha.
@@ -223,7 +223,7 @@ function BBMOD_Material(_shader) constructor
 	var _subsurface = (argument_count > 4) ? argument[4] : undefined;
 	var _emissive = (argument_count > 5) ? argument[5] : undefined;
 
-	/// @var {array} A BBMOD_EMaterial that this struct wraps.
+	/// @var {BBMOD_EMaterial} The material that this struct wraps.
 	material = bbmod_material_create(_shader, _base_opacity, _normal_roughness,
 		_metallic_ao, _subsurface, _emissive);
 

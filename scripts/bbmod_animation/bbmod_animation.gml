@@ -1,4 +1,4 @@
-/// @enum An enumeration of members of an Animation structure.
+/// @enum An enumeration of members of a BBMOD_EAnimation legacy struct.
 enum BBMOD_EAnimation
 {
 	/// @member The version of the animation file.
@@ -7,22 +7,21 @@ enum BBMOD_EAnimation
 	Duration,
 	/// @member Number of animation tics per second.
 	TicsPerSecond,
-	/// @member An array of AnimationBone structures.
+	/// @member An array of BBMOD_EAnimationBone legacy structs.
 	Bones,
-	/// @member The size of the Animation structure.
+	/// @member The size of the BBMOD_EAnimation legacy struct.
 	SIZE
 };
 
 /// @func bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
-/// @desc Creates a new animation transition between two specified Animation
-/// structures.
-/// @param {array} _model A Model structure.
-/// @param {array} _anim_from The first Animation structure.
+/// @desc Creates a new animation transition between two specified animations.
+/// @param {BBMOD_EModel} _model A model.
+/// @param {BBMOD_EAnimation} _anim_from The first animation.
 /// @param {real} _time_from Animation time of the first animation.
-/// @param {array} _anim_to The second Animation structure.
+/// @param {BBMOD_EAnimation} _anim_to The second animation.
 /// @param {real} _time_to Animation time of the second animation.
 /// @param {real} _duration The duration of the transition in seconds.
-/// @return {array} The created transition Animation structure.
+/// @return {BBMOD_EAnimation} The created transition.
 function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
 {
 	var _anim_stack = global.__bbmod_anim_stack;
@@ -103,10 +102,10 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 }
 
 /// @func bbmod_animation_load(_buffer, _version)
-/// @desc Loads an Animation structure from a buffer.
-/// @param {real} _buffer The buffer to load the structure from.
+/// @desc Loads an animation from a buffer.
+/// @param {real} _buffer The buffer to load the struct from.
 /// @param {real} _version The version of the animation file.
-/// @return {array} The loaded Animation structure.
+/// @return {BBMOD_EAnimation} The loaded animation.
 function bbmod_animation_load(_buffer, _version)
 {
 	var _animation = array_create(BBMOD_EAnimation.SIZE, 0);
@@ -133,7 +132,7 @@ function bbmod_animation_load(_buffer, _version)
 
 /// @func bbmod_get_animation_time(_animation, _time_in_seconds)
 /// @desc Calculates animation time from current time in seconds.
-/// @param {array} _animation An Animation structure.
+/// @param {BBMOD_EAnimation} _animation An animation.
 /// @param {real} _time_in_seconds The current time in seconds.
 /// @return {real} The animation time.
 function bbmod_get_animation_time(_animation, _time_in_seconds)
@@ -144,13 +143,13 @@ function bbmod_get_animation_time(_animation, _time_in_seconds)
 }
 
 /// @func bbmod_get_interpolated_position_key(_positions, _time[, _index])
-/// @desc Creates a new PositionKey struct by interpolating two closest ones
-/// for specified animation time.
-/// @param {array} _positions An array of PositionKey structs.
+/// @desc Creates a new position key by interpolating two closest ones for
+/// specified animation time.
+/// @param {BBMOD_EPositionKey[]} _positions An array of position keys.
 /// @param {real} _time The current animation time.
 /// @param {real} [_index] An index where to start searching for two closest
 /// position keys for specified time. Defaults to 0.
-/// @return {array} The interpolated PositionKey.
+/// @return {BBMOD_EPositionKey} The interpolated position key.
 function bbmod_get_interpolated_position_key(_positions, _time)
 {
 	var _index = (argument_count > 2) ? argument[2] : 0;
@@ -164,13 +163,13 @@ function bbmod_get_interpolated_position_key(_positions, _time)
 }
 
 /// @func bbmod_get_interpolated_rotation_key(_rotations, _time[, _index])
-/// @desc Creates a new RotationKey struct by interpolating two closest ones
-/// for specified animation time.
-/// @param {array} _rotations An array of RotationKey structs.
+/// @desc Creates a new rotation key by interpolating two closest ones for
+/// specified animation time.
+/// @param {BBMOD_ERotationKey} _rotations An array of rotation keys.
 /// @param {real} _time The current animation time.
 /// @param {real} [_index] An index where to start searching for two closest
 /// rotation keys for specified time. Defaults to 0.
-/// @return {array} The interpolated RotationKey.
+/// @return {BBMOD_ERotationKey} The interpolated rotation key.
 function bbmod_get_interpolated_rotation_key(_rotations, _time)
 {
 	var _index = (argument_count > 2) ? argument[2] : 0;
@@ -184,14 +183,14 @@ function bbmod_get_interpolated_rotation_key(_rotations, _time)
 }
 
 /// @func BBMOD_Animation(_file[, _sha1])
-/// @desc An OOP wrapper around BBMOD_EAnimation.
+/// @desc An OOP wrapper around the BBMOD_EAnimation legacy struct.
 /// @param {string} _file
 /// @param {string} [_sha1]
 function BBMOD_Animation(_file) constructor
 {
 	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
 
-	/// @var {array} A BBMOD_EAnimation that this struct wraps.
+	/// @var {BBMOD_EAnimation} The animation that this struct wraps.
 	animation = bbmod_load(_file, _sha1);
 
 	if (animation == BBMOD_NONE)
