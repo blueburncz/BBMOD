@@ -33,7 +33,7 @@ function bbmod_static_batch_destroy(_static_batch)
 
 /// @func bbmod_static_batch_begin(_static_batch)
 /// @desc Begins adding models into a static batch.
-/// @param {array} static_batch The static batch.
+/// @param {array} _static_batch The static batch.
 /// @see bbmod_static_batch_add
 /// @see bbmod_static_batch_end
 function bbmod_static_batch_begin(_static_batch)

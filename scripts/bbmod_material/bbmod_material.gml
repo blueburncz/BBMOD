@@ -176,24 +176,24 @@ function bbmod_material_reset()
 	}
 }
 
-/// @func bbmod_material_on_apply_default(material)
+/// @func bbmod_material_on_apply_default(_material)
 /// @desc The default material application function.
-/// @param {array} material The Material struct.
-function bbmod_material_on_apply_default(material)
+/// @param {array} _material The Material struct.
+function bbmod_material_on_apply_default(_material)
 {
-	var _shader = material[BBMOD_EMaterial.Shader];
+	var _shader = _material[BBMOD_EMaterial.Shader];
 
 	texture_set_stage(shader_get_sampler_index(_shader, "u_texNormalRoughness"),
-		material[BBMOD_EMaterial.NormalRoughness]);
+		_material[BBMOD_EMaterial.NormalRoughness]);
 
 	texture_set_stage(shader_get_sampler_index(_shader, "u_texMetallicAO"),
-		material[BBMOD_EMaterial.MetallicAO]);
+		_material[BBMOD_EMaterial.MetallicAO]);
 
 	texture_set_stage(shader_get_sampler_index(_shader, "u_texSubsurface"),
-		material[BBMOD_EMaterial.Subsurface]);
+		_material[BBMOD_EMaterial.Subsurface]);
 
 	texture_set_stage(shader_get_sampler_index(_shader, "u_texEmissive"),
-		material[BBMOD_EMaterial.Emissive]);
+		_material[BBMOD_EMaterial.Emissive]);
 
 	var _ibl = global.__bbmod_ibl_texture;
 

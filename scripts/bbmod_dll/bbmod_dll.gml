@@ -17,12 +17,12 @@
 /// is not saved.
 #macro BBMOD_DLL_ERR_SAVE_FAILED 3
 
-/// @function BBMOD_DLL([_dll])
+/// @func BBMOD_DLL([_dll])
 /// @desc Loads a DLL which allows you to convert models into BBMOD.
 /// @param {string} [_dll] The path to the DLL file. Defaults to "BBMOD/DLL/BBMOD.dll".
 function BBMOD_DLL() constructor
 {
-	/// @desc {string} Path to the DLL file.
+	/// @var {string} Path to the DLL file.
 	dll = (argument_count > 0) ? argument[0] : "BBMOD/DLL/BBMOD.dll";
 
 	dll_get_left_handed = external_define(dll, "bbmod_dll_get_left_handed", dll_cdecl, ty_real, 0);

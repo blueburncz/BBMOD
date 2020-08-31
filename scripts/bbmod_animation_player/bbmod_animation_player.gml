@@ -17,7 +17,7 @@ enum BBMOD_EAnimationPlayer
 
 /// @func bbmod_animation_player_create(_model)
 /// @desc Creates a new AnimationPlayer for given Model.
-/// @param {array} model A Model structure.
+/// @param {array} _model A Model structure.
 /// @return {array} The created AnimationPlayer structure.
 function bbmod_animation_player_create(_model)
 {
