@@ -183,7 +183,7 @@ function bbmod_get_interpolated_rotation_key(_rotations, _time)
 }
 
 /// @func BBMOD_Animation(_file[, _sha1])
-/// @desc An OOP wrapper around the BBMOD_EAnimation legacy struct.
+/// @desc An OOP wrapper around the {@link BBMOD_EAnimation} legacy struct.
 /// @param {string} _file
 /// @param {string} [_sha1]
 function BBMOD_Animation(_file) constructor

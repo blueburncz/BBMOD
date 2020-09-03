@@ -1,16 +1,15 @@
 /// @enum An enumeration of members of a BBMOD_EMaterial legacy struct.
 enum BBMOD_EMaterial
 {
-	/// @member A render path. See macros
-	/// [BBMOD_RENDER_FORWARD](./BBMOD_RENDER_FORWARD.html) and
-	/// [BBMOD_RENDER_DEFERRED](./BBMOD_RENDER_DEFFERED.html).
+	/// @member A render path. See macros {@link BBMOD_RENDER_FORWARD} and
+	/// {@link BBMOD_RENDER_DEFERRED}.
 	RenderPath,
 	/// @member A shader that the material uses.
 	Shader,
 	/// @member A script that is executed when the shader is applied.
 	/// Must take the material as the first argument. Use `undefined`
 	/// if you don't want to execute any script. Defaults
-	/// to [bbmod_material_on_apply_default](./bbmod_material_on_apply_default.html).
+	/// to {@link bbmod_material_on_apply_default}.
 	OnApply,
 
 	////////////////////////////////////////////////////////////////////////////
@@ -208,7 +207,7 @@ function bbmod_material_on_apply_default(_material)
 }
 
 /// @func BBMOD_Material(_shader[, _base_opacity[, _normal_roughness[, _metallic_ao[, _subsurface[, _emissive]]]]])
-/// @desc An OOP wrapper around a BBMOD_EMaterial legacy struct.
+/// @desc An OOP wrapper around a {@link BBMOD_EMaterial} legacy struct.
 /// @param {ptr} _shader A shader that the material uses.
 /// @param {ptr} [_base_opacity] A texture with base color in RGB and opacity in alpha.
 /// @param {ptr} [_normal_roughness] A texture with normals in RGB and roughness in alpha.

@@ -241,7 +241,7 @@ function bbmod_animate(_animation_player, _animation_instance, _animation_time, 
 						var _rotation_key_time = _rotation_key[BBMOD_EAnimationKey.Time];
 						var _delta_time = _rotation_key_next[BBMOD_EAnimationKey.Time] - _rotation_key_time;
 						var _factor = (_delta_time == 0) ? 0 : (_animation_time - _rotation_key_time) / _delta_time;
-	
+
 						var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
 						var _rot_to = _rotation_key_next[BBMOD_ERotationKey.Rotation];
 
@@ -432,7 +432,7 @@ function bbmod_get_bone_transform(_animation_player, _bone_index)
 /// @param {real} _bone_id The id of the bone to transform.
 /// @param {array/undefined} _position An array with the new bone position `[x,y,z]`,
 /// or `undefined` to disable the override.
-/// @note This should be used before [bbmod_animation_player_update](./bbmod_animation_player_update.html)
+/// @note This should be used before {@link bbmod_animation_player_update}
 /// is executed.
 function bbmod_set_bone_position(_animation_player, _bone_id, _position)
 {
@@ -448,7 +448,7 @@ function bbmod_set_bone_position(_animation_player, _bone_id, _position)
 /// @param {real} _bone_id The id of the bone to transform.
 /// @param {array/undefined} _quaternion An array with the new bone rotation `[x,y,z,w]`,
 /// or `undefined` to disable the override.
-/// @note This should be used before [bbmod_animation_player_update](./bbmod_animation_player_update.html)
+/// @note This should be used before {@link bbmod_animation_player_update}
 /// is executed.
 function bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 {
@@ -466,7 +466,7 @@ function bbmod_play(_animation_player, _animation)
 {
 	var _loop = (argument_count > 2) ? argument[2] : false;
 
-	var _animation_list = _animation_player[BBMOD_EAnimationPlayer.Animations]; 
+	var _animation_list = _animation_player[BBMOD_EAnimationPlayer.Animations];
 	var _animation_last = _animation_player[@ BBMOD_EAnimationPlayer.AnimationInstanceLast];
 
 	ds_list_clear(_animation_list);
@@ -491,7 +491,7 @@ function bbmod_play(_animation_player, _animation)
 }
 
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
-/// @desc An OOP wrapper around a BBMOD_EAnimationPlayer legacy struct.
+/// @desc An OOP wrapper around a {@link BBMOD_EAnimationPlayer} legacy struct.
 /// @param {BBMOD_Model} _model A model that the animation player animates.
 /// @param {bool} [_paused] If true then the animation player is created
 /// as paused. Defaults to false.

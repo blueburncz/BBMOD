@@ -52,7 +52,7 @@
 #macro BBMOD_VFORMAT_IDS 6
 
 /// @macro An index of the last found AnimationKey, updated by
-/// [bbmod_find_animation_key](./bbmod_find_animation_key.html).
+/// {@ bbmod_find_animation_key}.
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
 
 /// @var {real} Mapping of vertex format masks to existing vertex formats.

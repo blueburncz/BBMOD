@@ -62,9 +62,8 @@ function bbmod_static_batch_begin(_static_batch)
 /// bbmod_static_batch_end(batch);
 /// bbmod_static_batch_freeze(batch);
 /// ```
-/// @note You must first call
-/// [bbmod_static_batch_begin](./bbmod_static_batch_begin.html)
-/// before using this function!
+/// @note You must first call {@link bbmod_static_batch_begin} before using this
+/// function!
 /// @see bbmod_static_batch_begin
 /// @see bbmod_static_batch_end
 function bbmod_static_batch_add(_static_batch, _model, _transform)
@@ -114,7 +113,7 @@ function bbmod_static_batch_render(_static_batch, _material)
 }
 
 /// @func BBMOD_StaticBatch(_vformat)
-/// @desc An OOP wrapper around a BBMOD_EStaticBatch legacy struct.
+/// @desc An OOP wrapper around a {@link BBMOD_EStaticBatch} legacy struct.
 /// @param {real} _vformat The vertex format of the static batch. Must not have
 /// bones!
 function BBMOD_StaticBatch(_vformat) constructor

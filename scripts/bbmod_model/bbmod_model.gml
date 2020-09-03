@@ -278,7 +278,7 @@ function bbmod_render(_model)
 }
 
 /// @func BBMOD_Model(_file[, _sha1])
-/// @desc An OOP wrapper around a BBMOD_EModel legacy struct.
+/// @desc An OOP wrapper around a {@link BBMOD_EModel} legacy struct.
 /// @param {string} _file
 /// @param {string} [_sha1]
 function BBMOD_Model(_file) constructor

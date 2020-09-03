@@ -1,4 +1,4 @@
-/// @enum An enumeration of members of a BBMOD_EStaticBatch legacy struct.
+/// @enum An enumeration of members of a BBMOD_EDynamicBatch legacy struct.
 enum BBMOD_EDynamicBatch
 {
 	/// @member The vertex buffer.
@@ -9,7 +9,7 @@ enum BBMOD_EDynamicBatch
 	Model,
 	/// @member Number of model instances within the batch.
 	Size,
-	/// @member The size of the BBMOD_EStaticBatch legacy struct.
+	/// @member The size of the BBMOD_EDynamicBatch legacy struct.
 	SIZE
 };
 
@@ -79,7 +79,7 @@ function bbmod_dynamic_batch_render(_dynamic_batch, _material, _data)
 }
 
 /// @func BBMOD_DynamicBatch(_model, _size)
-/// @desc An OOP wrapper around a BBMOD_EDynamicBatch legacy struct.
+/// @desc An OOP wrapper around a {@link BBMOD_EDynamicBatch} legacy struct.
 /// @param {BBMOD_Model} _model The model to create a dynamic batch of.
 /// @param {real} _size Number of model instances in the batch.
 function BBMOD_DynamicBatch(_model, _size) constructor
