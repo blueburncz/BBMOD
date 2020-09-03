@@ -9,7 +9,7 @@ enum BBMOD_EAnimation
 	TicsPerSecond,
 	/// @member An array of BBMOD_EAnimationBone legacy structs.
 	Bones,
-	/// @member The size of the BBMOD_EAnimation legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

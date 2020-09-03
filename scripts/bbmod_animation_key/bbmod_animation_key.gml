@@ -7,7 +7,7 @@ enum BBMOD_EAnimationKey
 	Time,
 	/// @member Additional key data.
 	Data,
-	/// @member The size of the BBMOD_EAnimationKey legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

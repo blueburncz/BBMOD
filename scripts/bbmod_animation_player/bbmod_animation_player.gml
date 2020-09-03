@@ -11,7 +11,7 @@ enum BBMOD_EAnimationPlayer
 	BonePositionOverride,
 	/// @member Array of quaternions for bone position overriding.
 	BoneRotationOverride,
-	/// @member The size of the BBMOD_EAnimationPlayer legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

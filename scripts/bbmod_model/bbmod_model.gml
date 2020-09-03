@@ -27,7 +27,7 @@ enum BBMOD_EModel
 	MaterialCount,
 	/// @member Array of material names.
 	MaterialNames,
-	/// @member The size of the BBMOD_EModel legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

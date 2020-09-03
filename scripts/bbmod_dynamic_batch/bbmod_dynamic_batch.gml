@@ -9,7 +9,7 @@ enum BBMOD_EDynamicBatch
 	Model,
 	/// @member Number of model instances within the batch.
 	Size,
-	/// @member The size of the BBMOD_EDynamicBatch legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

@@ -5,7 +5,7 @@ enum BBMOD_EMesh
 	MaterialIndex,
 	/// @member A vertex buffer.
 	VertexBuffer,
-	/// @member The size of the BBMOD_EMesh legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

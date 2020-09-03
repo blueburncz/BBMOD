@@ -7,7 +7,7 @@ enum BBMOD_ENode
 	Meshes,
 	/// @member An array of child BBMOD_ENode legacy structs.
 	Children,
-	/// @member The size of the BBMOD_ENode legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

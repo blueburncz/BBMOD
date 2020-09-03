@@ -51,7 +51,7 @@ enum BBMOD_EMaterial
 
 	////////////////////////////////////////////////////////////////////////////
 
-	/// @member The size of the BBMOD_EMaterial legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

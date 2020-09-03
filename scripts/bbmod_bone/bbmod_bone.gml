@@ -11,7 +11,7 @@ enum BBMOD_EBone
 	OffsetMatrix,
 	/// @member An array of child BBMOD_EBone legacy structs.
 	Children,
-	/// @member The size of the BBMOD_EBone legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

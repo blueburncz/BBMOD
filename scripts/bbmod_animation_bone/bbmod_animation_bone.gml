@@ -7,7 +7,7 @@ enum BBMOD_EAnimationBone
 	PositionKeys,
 	/// @member An array of BBMOD_ERotationKey legacy structs.
 	RotationKeys,
-	/// @member The size of the BBMOD_EAnimationBone legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

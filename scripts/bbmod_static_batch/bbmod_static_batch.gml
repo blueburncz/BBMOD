@@ -5,7 +5,7 @@ enum BBMOD_EStaticBatch
 	VertexBuffer,
 	/// @member The format of the vertex buffer.
 	VertexFormat,
-	/// @member The size of the BBMOD_EStaticBatch legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

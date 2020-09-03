@@ -5,7 +5,7 @@ enum BBMOD_EPositionKey
 	Time,
 	/// @member A 3D position vector.
 	Position,
-	/// @member The size of the BBMOD_EPositionKey legacy struct.
+	/// @member Total number of members of this enum.
 	SIZE
 };
 

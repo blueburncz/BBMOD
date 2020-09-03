@@ -51,8 +51,8 @@
 /// predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_IDS 6
 
-/// @macro An index of the last found AnimationKey, updated by
-/// {@ bbmod_find_animation_key}.
+/// @macro An index of the last found animation key, updated by
+/// {@link bbmod_find_animation_key}.
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
 
 /// @var {real} Mapping of vertex format masks to existing vertex formats.
@@ -79,7 +79,7 @@ global.__bbmod_material_current = undefined;
 /// @private
 global.__bbmod_anim_stack = ds_stack_create();
 
-/// @var {real} An index of the last found AnimationKey.
+/// @var {real} An index of the last found animation key.
 /// @private
 global.__bbmod_key_index_last = 0;
 
