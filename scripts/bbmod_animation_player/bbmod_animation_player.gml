@@ -1,11 +1,11 @@
-/// @enum An enumeration of member of a BBMOD_EAnimationPlayer legacy struct.
+/// @enum An enumeration of members of a BBMOD_EAnimationPlayer legacy struct.
 enum BBMOD_EAnimationPlayer
 {
 	/// @member A Model which the BBMOD_EAnimationPlayer animates.
 	Model,
 	/// @member List of animations to play.
 	Animations,
-	/// @member The last played BBMOD_EAnimationInstance.
+	/// @member The last played {@link BBMOD_EAnimationInstance}.
 	AnimationInstanceLast,
 	/// @member Array of 3D vectors for bone position overriding.
 	BonePositionOverride,

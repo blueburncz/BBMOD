@@ -7,7 +7,7 @@ enum BBMOD_EAnimation
 	Duration,
 	/// @member Number of animation tics per second.
 	TicsPerSecond,
-	/// @member An array of BBMOD_EAnimationBone legacy structs.
+	/// @member An array of {@link BBMOD_EAnimationBone} legacy structs.
 	Bones,
 	/// @member Total number of members of this enum.
 	SIZE

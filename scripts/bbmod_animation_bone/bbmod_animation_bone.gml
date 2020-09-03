@@ -3,9 +3,9 @@ enum BBMOD_EAnimationBone
 {
 	/// @member The bone index.
 	BoneIndex,
-	/// @member An array of BBMOD_EPositionKey legacy structs.
+	/// @member An array of {@link BBMOD_EPositionKey} legacy structs.
 	PositionKeys,
-	/// @member An array of BBMOD_ERotationKey legacy structs.
+	/// @member An array of {@link BBMOD_ERotationKey} legacy structs.
 	RotationKeys,
 	/// @member Total number of members of this enum.
 	SIZE

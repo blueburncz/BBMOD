@@ -24,7 +24,7 @@ enum BBMOD_EAnimationInstance
 	/// @member An array containing transformation matrices of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	TransformArray,
-	/// @member The size of a BBMOD_EAnimationInstance legacy struct.
+	/// @member The size of a {@link BBMOD_EAnimationInstance} legacy struct.
 	SIZE
 };
 

@@ -1,4 +1,4 @@
-/// @enum An enumeration of member of a BBMOD_ERotationKey legacy struct.
+/// @enum An enumeration of members of a BBMOD_ERotationKey legacy struct.
 enum BBMOD_ERotationKey
 {
 	/// @member Time when the animation key occurs.

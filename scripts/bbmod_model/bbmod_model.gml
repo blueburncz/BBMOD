@@ -17,11 +17,11 @@ enum BBMOD_EModel
 	HasBones,
 	/// @member The global inverse transform matrix.
 	InverseTransformMatrix,
-	/// @member The root BBMOD_ENode legacy struct.
+	/// @member The root {@link BBMOD_ENode} legacy struct.
 	RootNode,
 	/// @member Number of bones.
 	BoneCount,
-	/// @member The root BBMOD_EBone legacy struct.
+	/// @member The root {@link BBMOD_EBone} legacy struct.
 	Skeleton,
 	/// @member Number of materials that the model uses.
 	MaterialCount,

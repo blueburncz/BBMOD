@@ -3,7 +3,7 @@ enum BBMOD_ENode
 {
 	/// @member The name of the node.
 	Name,
-	/// @member An array of BBMOD_EMesh legacy structs.
+	/// @member An array of {@link BBMOD_EMesh} legacy structs.
 	Meshes,
 	/// @member An array of child BBMOD_ENode legacy structs.
 	Children,
