@@ -103,7 +103,7 @@ global.__bbmod_key_index_last = 0;
 /// @see BBMOD_RENDER_DEFERRED
 global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
 
-/// @var {array} The current position of the camera.
+/// @var {array} The current `[x,y,z]` position of the camera.
 /// @see bbmod_set_camera_position
 global.bbmod_camera_position = [0, 0, 0];
 

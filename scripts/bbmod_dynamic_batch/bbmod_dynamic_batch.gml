@@ -5,11 +5,11 @@
 function BBMOD_DynamicBatch(_model, _size) constructor
 {
 	/// @var {BBMOD_Model} A model that is being batched.
-	/// @private
+	/// @readonly
 	model = _model
 
 	/// @var {real} Number of model instances within the batch.
-	/// @private
+	/// @readonly
 	size = _size;
 
 	/// @var {real} A vertex buffer.

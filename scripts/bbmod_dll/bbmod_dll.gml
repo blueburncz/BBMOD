@@ -22,43 +22,44 @@
 /// @private
 #macro BBMOD_DLL_ERR_SAVE_FAILED 3
 
-/// @func BBMOD_DLL([_dll])
+/// @func BBMOD_DLL([_path])
 /// @desc Loads a DLL which allows you to convert models into BBMOD.
-/// @param {string} [_dll] The path to the DLL file. Defaults to "BBMOD/DLL/BBMOD.dll".
+/// @param {string} [_path] The path to the DLL file. Defaults to "BBMOD/DLL/BBMOD.dll".
 function BBMOD_DLL() constructor
 {
 	/// @var {string} Path to the DLL file.
-	dll = (argument_count > 0) ? argument[0] : "BBMOD/DLL/BBMOD.dll";
+	/// @readonly
+	path = (argument_count > 0) ? argument[0] : "BBMOD/DLL/BBMOD.dll";
 
-	dll_get_left_handed = external_define(dll, "bbmod_dll_get_left_handed", dll_cdecl, ty_real, 0);
+	dll_get_left_handed = external_define(path, "bbmod_dll_get_left_handed", dll_cdecl, ty_real, 0);
 
-	dll_set_left_handed = external_define(dll, "bbmod_dll_set_left_handed", dll_cdecl, ty_real, 1, ty_real);
+	dll_set_left_handed = external_define(path, "bbmod_dll_set_left_handed", dll_cdecl, ty_real, 1, ty_real);
 
-	dll_get_invert_winding = external_define(dll, "bbmod_dll_get_invert_winding", dll_cdecl, ty_real, 0);
+	dll_get_invert_winding = external_define(path, "bbmod_dll_get_invert_winding", dll_cdecl, ty_real, 0);
 
-	dll_set_invert_winding = external_define(dll, "bbmod_dll_set_invert_winding", dll_cdecl, ty_real, 1, ty_real);
+	dll_set_invert_winding = external_define(path, "bbmod_dll_set_invert_winding", dll_cdecl, ty_real, 1, ty_real);
 
-	dll_get_disable_normal = external_define(dll, "bbmod_dll_get_disable_normal", dll_cdecl, ty_real, 0);
+	dll_get_disable_normal = external_define(path, "bbmod_dll_get_disable_normal", dll_cdecl, ty_real, 0);
 
-	dll_set_disable_normal = external_define(dll, "bbmod_dll_set_disable_normal", dll_cdecl, ty_real, 1, ty_real);
+	dll_set_disable_normal = external_define(path, "bbmod_dll_set_disable_normal", dll_cdecl, ty_real, 1, ty_real);
 
-	dll_get_disable_uv = external_define(dll, "bbmod_dll_get_disable_uv", dll_cdecl, ty_real, 0);
+	dll_get_disable_uv = external_define(path, "bbmod_dll_get_disable_uv", dll_cdecl, ty_real, 0);
 
-	dll_set_disable_uv = external_define(dll, "bbmod_dll_set_disable_uv", dll_cdecl, ty_real, 1, ty_real);
+	dll_set_disable_uv = external_define(path, "bbmod_dll_set_disable_uv", dll_cdecl, ty_real, 1, ty_real);
 
-	dll_get_disable_color = external_define(dll, "bbmod_dll_get_disable_color", dll_cdecl, ty_real, 0);
+	dll_get_disable_color = external_define(path, "bbmod_dll_get_disable_color", dll_cdecl, ty_real, 0);
 
-	dll_set_disable_color = external_define(dll, "bbmod_dll_set_disable_color", dll_cdecl, ty_real, 1, ty_real);
+	dll_set_disable_color = external_define(path, "bbmod_dll_set_disable_color", dll_cdecl, ty_real, 1, ty_real);
 
-	dll_get_disable_tangent = external_define(dll, "bbmod_dll_get_disable_tangent", dll_cdecl, ty_real, 0);
+	dll_get_disable_tangent = external_define(path, "bbmod_dll_get_disable_tangent", dll_cdecl, ty_real, 0);
 
-	dll_set_disable_tangent = external_define(dll, "bbmod_dll_set_disable_tangent", dll_cdecl, ty_real, 1, ty_real);
+	dll_set_disable_tangent = external_define(path, "bbmod_dll_set_disable_tangent", dll_cdecl, ty_real, 1, ty_real);
 
-	dll_get_disable_bone = external_define(dll, "bbmod_dll_get_disable_bone", dll_cdecl, ty_real, 0);
+	dll_get_disable_bone = external_define(path, "bbmod_dll_get_disable_bone", dll_cdecl, ty_real, 0);
 
-	dll_set_disable_bone = external_define(dll, "bbmod_dll_set_disable_bone", dll_cdecl, ty_real, 1, ty_real);
+	dll_set_disable_bone = external_define(path, "bbmod_dll_set_disable_bone", dll_cdecl, ty_real, 1, ty_real);
 
-	dll_convert = external_define(dll, "bbmod_dll_convert", dll_cdecl, ty_real, 2, ty_string, ty_string);
+	dll_convert = external_define(path, "bbmod_dll_convert", dll_cdecl, ty_real, 2, ty_string, ty_string);
 
 	/// @func convert(_fin, _fout)
 	/// @desc Converts a model into a BBMOD.

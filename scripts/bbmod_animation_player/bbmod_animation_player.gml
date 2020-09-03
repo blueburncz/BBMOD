@@ -518,7 +518,7 @@ function bbmod_play(_animation_player, _animation)
 function BBMOD_AnimationPlayer(_model) constructor
 {
 	/// @var {BBMOD_Model} A model that the animation player animates.
-	/// @private
+	/// @readonly
 	model = _model;
 
 	/// @var {bool} If `true`, then the animation playback is paused.
