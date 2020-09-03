@@ -58,7 +58,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 	}
 
 	/// @func freeze()
-	/// @desc Freezes the static batch. This makes it render faster but disables
+	/// @desc Freezes the static batch. This makes it render faster, but disables
 	/// adding more models.
 	static freeze = function () {
 		gml_pragma("forceinline");

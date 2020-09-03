@@ -513,6 +513,7 @@ function bbmod_play(_animation_player, _animation)
 /// @param {BBMOD_Model} _model A model that the animation player animates.
 /// @param {bool} [_paused] If `true` then the animation player is created
 /// as paused. Defaults to `false`.
+/// @see BBMOD_Model
 /// @see BBMOD_Animation
 function BBMOD_AnimationPlayer(_model) constructor
 {
@@ -530,7 +531,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	playback_speed = 1;
 
 	/// @var {bool} If `true`, then the animation player interpolates between
-	/// frames. Setting this to false increases performance, but decreases
+	/// frames. Setting this to `false` increases performance, but decreases
 	/// quality of animation playback.
 	interpolate_frames = true;
 

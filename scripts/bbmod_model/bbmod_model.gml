@@ -317,6 +317,10 @@ function BBMOD_Model(_file) constructor
 	/// @desc Finds model's bone by its name.
 	/// @param {string} _bone_name The name of the bone.
 	/// @return {real} The id of the bone or `BBMOD_NONE` when it's not found.
+	/// @note It is not recommened to use this script in release builds, because
+	/// having many of these lookups can slow down your game! You should instead
+	/// use the ids available from the `_log.txt` files, which are created during
+	/// model conversion.
 	static find_bone_id = function (_bone_name) {
 		return bbmod_model_find_bone_id(model, _bone_name);
 	};

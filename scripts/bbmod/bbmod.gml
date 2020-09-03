@@ -25,34 +25,42 @@
 
 /// @macro {real} How many bites to shift to read/write a "has vertices" predicate
 /// from/to a vertex format mask.
+/// @private
 #macro BBMOD_VFORMAT_VERTEX 0
 
 /// @macro {real} How many bites to shift to read/write a "has normals" predicate
 /// from/to a vertex format mask.
+/// @private
 #macro BBMOD_VFORMAT_NORMAL 1
 
 /// @macro {real} How many bites to shift to read/write a "has texture coodrinates"
 /// predicate from/to a vertex format mask.
+/// @private
 #macro BBMOD_VFORMAT_TEXCOORD 2
 
 /// @macro {real} How many bites to shift to read/write a "has colors" predicate
 /// from/to a vertex format mask.
+/// @private
 #macro BBMOD_VFORMAT_COLOR 3
 
 /// @macro {real} How many bites to shift to read/write a "has tangent and bitangent
 /// sign" predicate from/to a vertex format mask.
+/// @private
 #macro BBMOD_VFORMAT_TANGENTW 4
 
 /// @macro {real} How many bites to shift to read/write a "has bone indices and vertex
 /// weights" predicate from/to a vertex format mask.
+/// @private
 #macro BBMOD_VFORMAT_BONES 5
 
 /// @macro {real} How many bites to shift to read/write a "has ids for dynamic batching"
 /// predicate from/to a vertex format mask.
+/// @private
 #macro BBMOD_VFORMAT_IDS 6
 
 /// @macro {real} An index of the last found animation key, updated by
 /// {@link bbmod_find_animation_key}.
+/// @private
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
 
 /// @var {real} Mapping of vertex format masks to existing vertex formats.

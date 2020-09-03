@@ -25,12 +25,14 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	vertex_end(vertex_buffer);
 
 	/// @func freeze()
+	/// @desc Freezes the dynamic batch. This makes it render faster.
 	static freeze = function () {
 		gml_pragma("forceinline");
 		vertex_freeze(vertex_buffer);
 	};
 
 	/// @func render(_material, _data)
+	/// @desc Submits the dynamic batch for rendering.
 	/// @param {BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {array} _data An array containing data for each rendered instance.
