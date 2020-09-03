@@ -1,4 +1,5 @@
 /// @enum An enumeration of members of an BBMOD_EAnimationBone legacy struct.
+/// @private
 enum BBMOD_EAnimationBone
 {
 	/// @member The bone index.
@@ -15,6 +16,7 @@ enum BBMOD_EAnimationBone
 /// @desc Loads a bone from a buffer.
 /// @param {real} _buffer The buffer to load the struct from.
 /// @return {BBMOD_EAnimationBone} The loaded bone.
+/// @private
 function bbmod_animation_bone_load(_buffer)
 {
 	var i = 0;

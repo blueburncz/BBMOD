@@ -1,15 +1,15 @@
 /// @func bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones[, _ids])
 /// @desc Creates a new vertex format or retrieves an existing one with specified
 /// properties.
-/// @param {bool} _vertices True if the vertex format must have vertices.
-/// @param {bool} _normals True if the vertex format must have normal vectors.
-/// @param {bool} _uvs True if the vertex format must have texture coordinates.
-/// @param {bool} _colors True if the vertex format must have vertex colors.
-/// @param {bool} _tangentw True if the vertex format must have tangent vectors and
+/// @param {bool} _vertices `true` if the vertex format must have vertices.
+/// @param {bool} _normals `true` if the vertex format must have normal vectors.
+/// @param {bool} _uvs `true` if the vertex format must have texture coordinates.
+/// @param {bool} _colors `true` if the vertex format must have vertex colors.
+/// @param {bool} _tangentw `true` if the vertex format must have tangent vectors and
 /// bitangent signs.
-/// @param {bool} _bones True if the vertex format must have vertex weights and bone
+/// @param {bool} _bones `true` if the vertex format must have vertex weights and bone
 /// indices.
-/// @param {bool} [_ids] True if the vertex format must have ids for dynamic batching.
+/// @param {bool} [_ids] `true` if the vertex format must have ids for dynamic batching.
 /// @return {real} The vertex format.
 function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones)
 {
@@ -81,6 +81,7 @@ function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, 
 /// @desc Loads a 4x4 row-major matrix from a buffer.
 /// @param {real} _buffer The buffer to load the matrix from.
 /// @return {array} The loaded matrix.
+/// @private
 function bbmod_load_matrix(_buffer)
 {
 	var _matrix = array_create(16, 0);
@@ -96,6 +97,7 @@ function bbmod_load_matrix(_buffer)
 /// @desc Loads a quaternion from a buffer.
 /// @param {real} _buffer The buffer to load a quaternion from.
 /// @return {array} The loaded quaternion.
+/// @private
 function bbmod_load_quaternion(_buffer)
 {
 	var _quaternion = array_create(4, 0);
@@ -110,6 +112,7 @@ function bbmod_load_quaternion(_buffer)
 /// @desc Loads a 3D vector from a buffer.
 /// @param {real} _buffer The buffer to load the vector from.
 /// @return {array} The loaded vector.
+/// @private
 function bbmod_load_vec3(_buffer)
 {
 	var _vec3 = array_create(3, 0);

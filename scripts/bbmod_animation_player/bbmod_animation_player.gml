@@ -1,4 +1,6 @@
 /// @enum An enumeration of members of a BBMOD_EAnimationPlayer legacy struct.
+/// @deprecated Legacy structs are deprecated. Please use {@link BBMOD_AnimationPlayer}
+/// instead.
 enum BBMOD_EAnimationPlayer
 {
 	/// @member A Model which the BBMOD_EAnimationPlayer animates.
@@ -19,6 +21,8 @@ enum BBMOD_EAnimationPlayer
 /// @desc Creates a new animation player for given model.
 /// @param {BBMOD_EModel} _model A model.
 /// @return {BBMOD_EAnimationPlayer} The created animation player.
+/// @deprecated This functions is deprecated. Please use {@link BBMOD_AnimationPlayer}
+/// instead.
 function bbmod_animation_player_create(_model)
 {
 	var _bone_count = _model[BBMOD_EModel.BoneCount];
@@ -34,6 +38,8 @@ function bbmod_animation_player_create(_model)
 /// @func bbmod_animation_player_destroy(_animation_player)
 /// @desc Frees any memory used by an animation player.
 /// @param {BBMOD_EAnimationPlayer} _animation_player The animation player.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.destroy}
+/// instead.
 function bbmod_animation_player_destroy(_animation_player)
 {
 	ds_list_destroy(_animation_player[BBMOD_EAnimationPlayer.Animations]);
@@ -46,6 +52,8 @@ function bbmod_animation_player_destroy(_animation_player)
 /// @param {bool} [_interpolate_frames] Set to `false` do disable interpolation
 /// between animation frames. This results into worse visual fidelity, but it
 /// improves framerate. Defaults to `true`.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.update}
+/// instead.
 function bbmod_animation_player_update(_anim_player, _current_time)
 {
 	var _interpolate_frames = (argument_count > 2) ? argument[2] : true;
@@ -108,7 +116,8 @@ function bbmod_animation_player_update(_anim_player, _current_time)
 /// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
 /// @param {BBMOD_EAnimationInstance} _animation_instance An animation instance.
 /// @param {real} _animation_time The current animation time.
-/// @param {bool} _interpolate_frames True to interpolate between animation frames.
+/// @param {bool} _interpolate_frames `true` to interpolate between animation frames.
+/// @private
 function bbmod_animate(_animation_player, _animation_instance, _animation_time, _interpolate_frames)
 {
 	//var _t = get_timer();
@@ -398,6 +407,8 @@ function bbmod_animate(_animation_player, _animation_instance, _animation_time, 
 /// @desc Returns an array of current transformation matrices for animated models.
 /// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
 /// @return {array} The array of transformation matrices.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.get_transform}
+/// instead.
 function bbmod_get_transform(_animation_player)
 {
 	var _animation = _animation_player[BBMOD_EAnimationPlayer.AnimationInstanceLast];
@@ -415,6 +426,8 @@ function bbmod_get_transform(_animation_player)
 /// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
 /// @param {real} _bone_index The index of the bone.
 /// @return {array} The transformation matrix.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.get_bone_transform}
+/// instead.
 function bbmod_get_bone_transform(_animation_player, _bone_index)
 {
 	var _anim_inst = _animation_player[BBMOD_EAnimationPlayer.AnimationInstanceLast];
@@ -434,6 +447,8 @@ function bbmod_get_bone_transform(_animation_player, _bone_index)
 /// or `undefined` to disable the override.
 /// @note This should be used before {@link bbmod_animation_player_update}
 /// is executed.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.set_bone_position}
+/// instead.
 function bbmod_set_bone_position(_animation_player, _bone_id, _position)
 {
 	gml_pragma("forceinline");
@@ -450,6 +465,8 @@ function bbmod_set_bone_position(_animation_player, _bone_id, _position)
 /// or `undefined` to disable the override.
 /// @note This should be used before {@link bbmod_animation_player_update}
 /// is executed.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.set_bone_rotation}
+/// instead.
 function bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 {
 	gml_pragma("forceinline");
@@ -461,7 +478,8 @@ function bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 /// @desc Starts playing an animation.
 /// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
 /// @param {BBMOD_EAnimation} _animation The animation to play.
-/// @param {bool} [_loop] True to loop the animation. Defaults to false.
+/// @param {bool} [_loop] `true` to loop the animation. Defaults to `false`.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.play} instead.
 function bbmod_play(_animation_player, _animation)
 {
 	var _loop = (argument_count > 2) ? argument[2] : false;
@@ -491,16 +509,18 @@ function bbmod_play(_animation_player, _animation)
 }
 
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
-/// @desc An OOP wrapper around a {@link BBMOD_EAnimationPlayer} legacy struct.
+/// @desc An animation player.
 /// @param {BBMOD_Model} _model A model that the animation player animates.
-/// @param {bool} [_paused] If true then the animation player is created
-/// as paused. Defaults to false.
+/// @param {bool} [_paused] If `true` then the animation player is created
+/// as paused. Defaults to `false`.
+/// @see BBMOD_Animation
 function BBMOD_AnimationPlayer(_model) constructor
 {
 	/// @var {BBMOD_Model} A model that the animation player animates.
+	/// @private
 	model = _model;
 
-	/// @var {bool} If true, then the animation playback is paused.
+	/// @var {bool} If `true`, then the animation playback is paused.
 	paused = (argument_count > 1) ? argument[1] : false;
 
 	/// @var {real} The current animation playback time.
@@ -509,12 +529,13 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @var {real} Controls animation playback speed.
 	playback_speed = 1;
 
-	/// @var {bool} If true, then the animation player interpolates between
+	/// @var {bool} If `true`, then the animation player interpolates between
 	/// frames. Setting this to false increases performance, but decreases
 	/// quality of animation playback.
 	interpolate_frames = true;
 
-	/// @var {BBMOD_EAnimationPlayer} The animation player  that this struct wraps.
+	/// @var {BBMOD_EAnimationPlayer} The animation player that this struct wraps.
+	/// @private
 	animation_player = bbmod_animation_player_create(model.model);
 
 	/// @func update()
@@ -531,8 +552,8 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @func play(_animation[, _loop])
 	/// @desc Starts playing an animation.
 	/// @param {BBMOD_Animation} _animation An animation to play.
-	/// @param {bool} [_loop] If true then the animation will be looped. Defaults
-	/// to false.
+	/// @param {bool} [_loop] If `true` then the animation will be looped. Defaults
+	/// to `false`.
 	static play = function (_animation) {
 		var _loop = (argument_count > 1) ? argument[1] : false;
 		time = 0;
@@ -540,14 +561,17 @@ function BBMOD_AnimationPlayer(_model) constructor
 	};
 
 	/// @func get_transform()
-	/// @return {array} Returns current transformations of all bones.
+	/// @desc Returns an array of current transformation matrices of all bones.
+	/// @return {array} The array of transformation matrices.
 	static get_transform = function () {
 		return bbmod_get_transform(animation_player);
 	};
 
 	/// @func get_bone_transform(_bone_index)
+	/// @desc Returns a transformation matrix of a bone, which can be used
+	/// for example for attachments.
 	/// @param {real} _bone_index An index of a bone.
-	/// @return {array} Returns current transformation of a specific bone.
+	/// @return {array} The transformation matrix.
 	static get_bone_transform = function (_bone_index) {
 		return bbmod_get_bone_transform(animation_player, _bone_index);
 	};

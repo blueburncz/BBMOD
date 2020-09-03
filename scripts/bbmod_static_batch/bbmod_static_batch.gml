@@ -1,157 +1,90 @@
-/// @enum An enumeration of members of a BBMOD_EStaticBatch legacy struct.
-enum BBMOD_EStaticBatch
-{
-	/// @member The vertex buffer.
-	VertexBuffer,
-	/// @member The format of the vertex buffer.
-	VertexFormat,
-	/// @member Total number of members of this enum.
-	SIZE
-};
-
-/// @func bbmod_static_batch_create(_vformat)
-/// @desc Creates a new static batch.
-/// @param {real} _vformat The vertex format of the static batch. Must not have
-/// bones!
-/// @return {BBMOD_EStaticBatch} The created static batch.
-/// @see bbmod_model_get_vertex_format
-function bbmod_static_batch_create(_vformat)
-{
-	var _static_batch = array_create(BBMOD_EStaticBatch.SIZE, 0);
-	_static_batch[@ BBMOD_EStaticBatch.VertexBuffer] = vertex_create_buffer();
-	_static_batch[@ BBMOD_EStaticBatch.VertexFormat] = _vformat;
-	return _static_batch;
-}
-
-/// @func bbmod_static_batch_destroy(_static_batch)
-/// @desc Destroys a static batch.
-/// @param {BBMOD_EStaticBatch} _static_batch A static batch to destroy.
-function bbmod_static_batch_destroy(_static_batch)
-{
-	vertex_delete_buffer(_static_batch[BBMOD_EStaticBatch.VertexBuffer]);
-}
-
-/// @func bbmod_static_batch_begin(_static_batch)
-/// @desc Begins adding models into a static batch.
-/// @param {BBMOD_EStaticBatch} _static_batch The static batch.
-/// @see bbmod_static_batch_add
-/// @see bbmod_static_batch_end
-function bbmod_static_batch_begin(_static_batch)
-{
-	gml_pragma("forceinline");
-	vertex_begin(_static_batch[BBMOD_EStaticBatch.VertexBuffer],
-		_static_batch[BBMOD_EStaticBatch.VertexFormat]);
-}
-
-/// @func bbmod_static_batch_add(_static_batch, _model, _transform)
-/// @desc Adds a model to a static batch.
-/// @param {BBMOD_EStaticBatch} _static_batch The static batch.
-/// @param {BBMOD_EModel} _model The model.
-/// @param {array} _transform A transformation matrix of the model.
-/// @example
-/// ```gml
-/// mod_tree = bbmod_load("Tree.bbmod");
-/// var _vformat = bbmod_model_get_vertex_format(mod_tree, false);
-/// batch = bbmod_static_batch_create(_vformat);
-/// bbmod_static_batch_begin(batch);
-/// with (OTree)
-/// {
-///     var _transform = matrix_build(x, y, z, 0, 0, direction, 1, 1, 1);
-///     bbmod_static_batch_add(other.batch, other.mod_tree, _transform);
-/// }
-/// bbmod_static_batch_end(batch);
-/// bbmod_static_batch_freeze(batch);
-/// ```
-/// @note You must first call {@link bbmod_static_batch_begin} before using this
-/// function!
-/// @see bbmod_static_batch_begin
-/// @see bbmod_static_batch_end
-function bbmod_static_batch_add(_static_batch, _model, _transform)
-{
-	gml_pragma("forceinline");
-	_bbmod_model_to_static_batch(_model, _static_batch, _transform);
-}
-
-/// @func bbmod_static_batch_end(_static_batch)
-/// @desc Ends adding models into a static batch.
-/// @param {BBMOD_EStaticBatch} _static_batch The static batch.
-/// @see bbmod_static_batch_begin
-function bbmod_static_batch_end(_static_batch)
-{
-	gml_pragma("forceinline");
-	vertex_end(_static_batch[BBMOD_EStaticBatch.VertexBuffer]);
-}
-
-/// @func bbmod_static_batch_freeze(_static_batch)
-/// @desc Freezes a static batch. This makes it render faster but disables
-/// adding more models to the batch.
-/// @param {BBMOD_EStaticBatch} _static_batch The static batch.
-function bbmod_static_batch_freeze(_static_batch)
-{
-	gml_pragma("forceinline");
-	vertex_freeze(_static_batch[BBMOD_EStaticBatch.VertexBuffer]);
-}
-
-/// @func bbmod_static_batch_render(_static_batch, _material)
-/// @desc Submits a static batch for rendering.
-/// @param {BBMOD_EStaticBatch} _static_batch A static batch.
-/// @param {BBMOD_EMaterial} _material A material.
-function bbmod_static_batch_render(_static_batch, _material)
-{
-	var _render_pass = global.bbmod_render_pass;
-
-	if ((_material[BBMOD_EMaterial.RenderPath] & _render_pass) == 0)
-	{
-		// Do not render the mesh if it doesn't use a material that can be used
-		// in the current render path.
-		return;
-	}
-
-	bbmod_material_apply(_material);
-	var _tex_base = _material[BBMOD_EMaterial.BaseOpacity];
-	vertex_submit(_static_batch[BBMOD_EStaticBatch.VertexBuffer], pr_trianglelist, _tex_base);
-}
-
 /// @func BBMOD_StaticBatch(_vformat)
-/// @desc An OOP wrapper around a {@link BBMOD_EStaticBatch} legacy struct.
-/// @param {real} _vformat The vertex format of the static batch. Must not have
-/// bones!
+/// @desc A static batch.
+/// @param {real} _vformat The vertex format of the static batch. All models
+/// added to the same static batch must have the same vertex format. This
+/// vertex format must not contain bone data!
+/// @see BBMOD_Model.get_vertex_format
 function BBMOD_StaticBatch(_vformat) constructor
 {
-	/// @var {BBMOD_EStaticBatch} The static batch that this struct wraps.
-	static_batch = bbmod_static_batch_create(_vformat);
+	/// @var {real} A vertex buffer.
+	/// @private
+	vertex_buffer = vertex_create_buffer();
+
+	/// @var {real} The format of the vertex buffer.
+	/// @private
+	vertex_format = _vformat;
 
 	/// @func start()
+	/// @desc Begins adding models into the static batch.
+	/// @see BBMOD_StaticBatch.add
+	/// @see BBMOD_StaticBatch.finish
 	static start = function () {
-		bbmod_static_batch_begin(static_batch);
-	};
+		gml_pragma("forceinline");
+		vertex_begin(vertex_buffer, vertex_format);
+	}
 
 	/// @func add(_model, _transform)
+	/// @desc Adds a model to the static batch.
 	/// @param {BBMOD_Model} _model The model.
 	/// @param {array} _transform A transformation matrix of the model.
+	/// @example
+	/// ```gml
+	/// mod_tree = new BBMOD_Model("Tree.bbmod");
+	/// var _vformat = mod_tree.get_vertex_format(false);
+	/// batch = new BBMOD_StaticBatch(_vformat);
+	/// batch.start();
+	/// with (OTree)
+	/// {
+	///     var _transform = matrix_build(x, y, z, 0, 0, direction, 1, 1, 1);
+	///     other.batch.add(other.mod_tree, _transform);
+	/// }
+	/// batch.finish();
+	/// batch.freeze();
+	/// ```
+	/// @note You must first call {@link BBMOD_StaticBatch.begin} before using this
+	/// function!
+	/// @see BBMOD_StaticBatch.finish
 	static add = function (_model, _transform) {
-		bbmod_static_batch_add(static_batch, _model.model, _transform);
-	};
+		gml_pragma("forceinline");
+		_bbmod_model_to_static_batch(_model.model, self, _transform);
+	}
 
 	/// @func finish()
+	/// @desc Ends adding models into the static batch.
+	/// @see BBMOD_StaticBatch.start
 	static finish = function () {
-		bbmod_static_batch_end(static_batch);
-	};
+		gml_pragma("forceinline");
+		vertex_end(vertex_buffer);
+	}
 
 	/// @func freeze()
+	/// @desc Freezes the static batch. This makes it render faster but disables
+	/// adding more models.
 	static freeze = function () {
-		bbmod_static_batch_freeze(static_batch);
-	};
+		gml_pragma("forceinline");
+		vertex_freeze(vertex_buffer);
+	}
 
+	
 	/// @func render(_material)
-	/// @param {BBMOD_Material} _material A material.
+	/// @desc Submits the static batch for rendering.
+	/// @param {BBMOD_EMaterial} _material A material.
 	static render = function (_material) {
-		bbmod_static_batch_render(static_batch, _material.material);
-	};
+		if ((_material.get_render_path() & global.bbmod_render_pass) == 0)
+		{
+			// Do not render the mesh if it doesn't use a material that can be used
+			// in the current render path.
+			return;
+		}
+		_material.apply();
+		var _tex_base = _material.get_base_opacity();
+		vertex_submit(vertex_buffer, pr_trianglelist, _tex_base);
+	}
 
 	/// @func destroy()
 	/// @desc Frees memory used by the static batch.
 	static destroy = function () {
-		bbmod_static_batch_destroy(static_batch);
+		gml_pragma("forceinline");
+		vertex_delete_buffer(vertex_buffer);
 	};
 }

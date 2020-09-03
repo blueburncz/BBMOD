@@ -1,9 +1,10 @@
 /// @enum An enumeration of members of a BBMOD_EAnimationInstance legacy struct.
+/// @private
 enum BBMOD_EAnimationInstance
 {
 	/// @member The animation to be played.
 	Animation,
-	/// @member True if the animation should be looped.
+	/// @member `true` if the animation should be looped.
 	Loop,
 	/// @member Time when the animation started playing (in seconds).
 	AnimationStart,
@@ -32,6 +33,7 @@ enum BBMOD_EAnimationInstance
 /// @desc Creates a new animation instance.
 /// @param {BBMOD_EAnimation} _animation An animation to create an instance of.
 /// @return {BBMOD_EAnimationInstance} The created animation instance.
+/// @private
 function bbmod_animation_instance_create(_animation)
 {
 	var _anim_inst = array_create(BBMOD_EAnimationInstance.SIZE, 0);

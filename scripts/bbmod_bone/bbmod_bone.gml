@@ -1,4 +1,5 @@
 /// @enum An enumeration of members of a BBMOD_EBone legacy struct.
+/// @private
 enum BBMOD_EBone
 {
 	/// @member The name of the bone.
@@ -19,6 +20,7 @@ enum BBMOD_EBone
 /// @desc Loads a bone from a buffer.
 /// @param {real} _buffer The buffer to load the struct from.
 /// @return {BBMOD_EBone} The loaded bone.
+/// @private
 function bbmod_bone_load(_buffer)
 {
 	var _bone = array_create(BBMOD_EBone.SIZE, 0);

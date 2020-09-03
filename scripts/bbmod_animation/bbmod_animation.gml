@@ -1,4 +1,6 @@
 /// @enum An enumeration of members of a BBMOD_EAnimation legacy struct.
+/// @deprecated Legacy structs are deprecated. Please use {@link BBMOD_Animation}
+/// instead.
 enum BBMOD_EAnimation
 {
 	/// @member The version of the animation file.
@@ -22,6 +24,7 @@ enum BBMOD_EAnimation
 /// @param {real} _time_to Animation time of the second animation.
 /// @param {real} _duration The duration of the transition in seconds.
 /// @return {BBMOD_EAnimation} The created transition.
+/// @private
 function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
 {
 	var _anim_stack = global.__bbmod_anim_stack;
@@ -106,6 +109,7 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 /// @param {real} _buffer The buffer to load the struct from.
 /// @param {real} _version The version of the animation file.
 /// @return {BBMOD_EAnimation} The loaded animation.
+/// @private
 function bbmod_animation_load(_buffer, _version)
 {
 	var _animation = array_create(BBMOD_EAnimation.SIZE, 0);
@@ -135,6 +139,8 @@ function bbmod_animation_load(_buffer, _version)
 /// @param {BBMOD_EAnimation} _animation An animation.
 /// @param {real} _time_in_seconds The current time in seconds.
 /// @return {real} The animation time.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Animation.get_animation_time}
+/// instead.
 function bbmod_get_animation_time(_animation, _time_in_seconds)
 {
 	gml_pragma("forceinline");
@@ -150,6 +156,7 @@ function bbmod_get_animation_time(_animation, _time_in_seconds)
 /// @param {real} [_index] An index where to start searching for two closest
 /// position keys for specified time. Defaults to 0.
 /// @return {BBMOD_EPositionKey} The interpolated position key.
+/// @private
 function bbmod_get_interpolated_position_key(_positions, _time)
 {
 	var _index = (argument_count > 2) ? argument[2] : 0;
@@ -170,6 +177,7 @@ function bbmod_get_interpolated_position_key(_positions, _time)
 /// @param {real} [_index] An index where to start searching for two closest
 /// rotation keys for specified time. Defaults to 0.
 /// @return {BBMOD_ERotationKey} The interpolated rotation key.
+/// @private
 function bbmod_get_interpolated_rotation_key(_rotations, _time)
 {
 	var _index = (argument_count > 2) ? argument[2] : 0;
@@ -183,14 +191,16 @@ function bbmod_get_interpolated_rotation_key(_rotations, _time)
 }
 
 /// @func BBMOD_Animation(_file[, _sha1])
-/// @desc An OOP wrapper around the {@link BBMOD_EAnimation} legacy struct.
-/// @param {string} _file
-/// @param {string} [_sha1]
+/// @desc An animation which can be played using {@link BBMOD_AnimationPlayer}.
+/// @param {string} _file The "*.bbanim" animation file to load.
+/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
+/// not match with this, then the model will not be loaded.
 function BBMOD_Animation(_file) constructor
 {
 	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
 
 	/// @var {BBMOD_EAnimation} The animation that this struct wraps.
+	/// @private
 	animation = bbmod_load(_file, _sha1);
 
 	if (animation == BBMOD_NONE)

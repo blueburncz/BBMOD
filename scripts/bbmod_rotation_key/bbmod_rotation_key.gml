@@ -1,4 +1,5 @@
 /// @enum An enumeration of members of a BBMOD_ERotationKey legacy struct.
+/// @private
 enum BBMOD_ERotationKey
 {
 	/// @member Time when the animation key occurs.
@@ -16,6 +17,7 @@ enum BBMOD_ERotationKey
 /// @param {real} _factor The interpolation factor. Should be a value in range 0..1.
 /// @return {BBMOD_ERotationKey} A new rotation key with the interpolated
 /// animation time and position.
+/// @private
 function bbmod_rotation_key_interpolate(_rk1, _rk2, _factor)
 {
 	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
@@ -33,6 +35,7 @@ function bbmod_rotation_key_interpolate(_rk1, _rk2, _factor)
 /// @desc Loads a rotation key from a buffer.
 /// @param {real} _buffer The buffer to load the struct from.
 /// @return {BBMOD_ERotationKey} The loaded rotation key.
+/// @private
 function bbmod_rotation_key_load(_buffer)
 {
 	var _key = array_create(BBMOD_ERotationKey.SIZE, 0);
@@ -45,6 +48,7 @@ function bbmod_rotation_key_load(_buffer)
 /// @desc Creates a rotation matrix from a rotation key.
 /// @param {BBMOD_ERotationKey} _rotation_key The rotation key.
 /// @return {array} The created matrix.
+/// @private
 function bbmod_rotation_key_to_matrix(_rotation_key)
 {
 	gml_pragma("forceinline");

@@ -1,19 +1,21 @@
 /// @enum An enumeration of members of a BBMOD_EModel legacy struct.
+/// @deprecated Legacy structs are deprecated. Please use {@link BBMOD_Model}
+/// instead.
 enum BBMOD_EModel
 {
 	/// @member The version of the model file.
 	Version,
-	/// @member True if the model has vertices (always true).
+	/// @member `true` if the model has vertices (always `true`).
 	HasVertices,
-	/// @member True if the model has normal vectors.
+	/// @member `true` if the model has normal vectors.
 	HasNormals,
-	/// @member True if the model has texture coordinates.
+	/// @member `true` if the model has texture coordinates.
 	HasTextureCoords,
-	/// @member True if the model has vertex colors.
+	/// @member `true` if the model has vertex colors.
 	HasColors,
-	/// @member True if the model has tangent vectors and bitangent sign.
+	/// @member `true` if the model has tangent vectors and bitangent sign.
 	HasTangentW,
-	/// @member True if the model has vertex weights and bone indices.
+	/// @member `true` if the model has vertex weights and bone indices.
 	HasBones,
 	/// @member The global inverse transform matrix.
 	InverseTransformMatrix,
@@ -36,6 +38,7 @@ enum BBMOD_EModel
 /// @param {real} _buffer The buffer to load the struct from.
 /// @param {real} _version The version of the model file.
 /// @return {BBMOD_EModel} The loaded model.
+/// @private
 function bbmod_model_load(_buffer, _version)
 {
 	var _vformat = undefined;
@@ -124,6 +127,8 @@ function bbmod_model_load(_buffer, _version)
 /// @func bbmod_model_destroy(_model)
 /// @desc Destroys a model.
 /// @param {BBMOD_EModel} _model The model to destroy.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.destroy}
+/// instead.
 function bbmod_model_destroy(_model)
 {
 	bbmod_node_destroy(_model[BBMOD_EModel.RootNode]);
@@ -133,6 +138,8 @@ function bbmod_model_destroy(_model)
 /// @desc Freezes all vertex buffers used by a model. This should make its
 /// rendering faster, but it disables creating new batches of the model.
 /// @param {BBMOD_EModel} _model The model to freeze.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.freeze}
+/// instead.
 function bbmod_model_freeze(_model)
 {
 	gml_pragma("forceinline");
@@ -150,6 +157,8 @@ function bbmod_model_freeze(_model)
 /// many of these lookups can slow down your game! You should instead use the
 /// ids available from the `_log.txt` files, which are created during model
 /// conversion.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.find_bone_id}
+/// instead.
 function bbmod_model_find_bone_id(_model, _bone_name)
 {
 	var _bone = (argument_count > 2) ? argument[2] : _model[BBMOD_EModel.Skeleton];
@@ -215,7 +224,7 @@ function bbmod_model_get_vertex_format(_model)
 
 /// @func _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
 /// @param {BBMOD_EModel} _model
-/// @param {BBMOD_EDynamicBatch} _dynamic_batch
+/// @param {BBMOD_DynamicBatch} _dynamic_batch
 /// @private
 function _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
 {
@@ -242,6 +251,8 @@ function _bbmod_model_to_static_batch(_model, _static_batch, _transform)
 /// the default material is used for each slot. Default is `undefined`.
 /// @param {array/undefined} [_transform] An array of transformation matrices
 /// (for animated models) or `undefined`.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.render}
+/// instead.
 function bbmod_render(_model)
 {
 	gml_pragma("forceinline");
@@ -278,14 +289,16 @@ function bbmod_render(_model)
 }
 
 /// @func BBMOD_Model(_file[, _sha1])
-/// @desc An OOP wrapper around a {@link BBMOD_EModel} legacy struct.
-/// @param {string} _file
-/// @param {string} [_sha1]
+/// @desc A model.
+/// @param {string} _file The "*.bbmod" model file to load.
+/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
+/// not match with this, then the model will not be loaded.
 function BBMOD_Model(_file) constructor
 {
 	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
 
 	/// @var {BBMOD_EModel} The model that this struct wraps.
+	/// @private
 	model = bbmod_load(_file, _sha1);
 
 	if (model == BBMOD_NONE)
@@ -294,26 +307,35 @@ function BBMOD_Model(_file) constructor
 	}
 
 	/// @func freeze()
+	/// @desc Freezes all vertex buffers used by the model. This should make its
+	/// rendering faster, but it disables creating new batches of the model.
 	static freeze = function () {
 		bbmod_model_freeze(model);
 	};
 
 	/// @func find_bone_id(_bone_name)
-	/// @param {string} _bone_name
-	/// @return {real} The id of the bone.
+	/// @desc Finds model's bone by its name.
+	/// @param {string} _bone_name The name of the bone.
+	/// @return {real} The id of the bone or `BBMOD_NONE` when it's not found.
 	static find_bone_id = function (_bone_name) {
 		return bbmod_model_find_bone_id(model, _bone_name);
 	};
 
 	/// @func get_bindpose_transform()
-	/// @return {array}
+	/// @desc Retrieves bindpose transform of the model.
+	/// @return {array} The bindpose transform.
 	static get_bindpose_transform = function () {
 		return bbmod_model_get_bindpose_transform(model);
 	};
 
 	/// @func get_vertex_format([_bones[, _ids]])
-	/// @param {bool} [_bones]
-	/// @param {bool} [_ids]
+	/// @desc Retrieves or creates a vertex format compatible with the model.
+	/// This can be used when creating a {@link BBMOD_StaticBatch}.
+	/// @param {bool} [_bones] `true` to include bone data in the vertex format.
+	/// Defaults to `true`.
+	/// @param {bool} [_ids] `true` to include model instance ids in the vertex
+	/// format.
+	/// Defaults to `false`.
 	/// @return {real} The vertex format.
 	static get_vertex_format = function () {
 		var _bones = (argument_count > 0) ? argument[0] : true;
@@ -322,8 +344,14 @@ function BBMOD_Model(_file) constructor
 	};
 
 	/// @func render([_materials[, _transform]])
-	/// @param {BBMOD_Material[]} [_materials]
-	/// @param {array} [_transform]
+	/// @desc Submits the model for rendering.
+	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
+	/// one for each material slot of the model. If not specified, then
+	/// the default material is used for each slot. Defaults to `undefined`.
+	/// @param {array/undefined} [_transform] An array of transformation matrices
+	/// (for animated models) or `undefined`.
+	/// @see BBMOD_Material
+	/// @see BBMOD_AnimationPlayer.get_transform
 	static render = function () {
 		var _materials = (argument_count > 0) ? argument[0] : undefined;
 		var _transform = (argument_count > 1) ? argument[1] : undefined;

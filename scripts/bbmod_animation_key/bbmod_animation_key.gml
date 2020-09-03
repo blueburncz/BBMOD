@@ -1,6 +1,7 @@
 /// @enum An enumeration of members of a BBMOD_EAnimationKey legacy struct.
 /// This struct is never instantiated, it only serves as an interface for
 /// specific animation keys.
+/// @private
 enum BBMOD_EAnimationKey
 {
 	/// @member Time when the animation key occurs.
@@ -17,6 +18,7 @@ enum BBMOD_EAnimationKey
 /// @param {real} _animation_time The current animation time.
 /// @param {real} [_index] An index where to start looking. Defaults to 0.
 /// @return {real} Index of found animation key.
+/// @private
 function bbmod_find_animation_key(_keys, _animation_time)
 {
 	gml_pragma("forceinline");
@@ -49,6 +51,7 @@ function bbmod_find_animation_key(_keys, _animation_time)
 /// @param {BBMOD_EAnimationKey[]} _keys An array of animation keys.
 /// @param {real} _index The index.
 /// @return {BBMOD_EAnimationKey} The animation key.
+/// @private
 function bbmod_get_animation_key(_keys, _index)
 {
 	gml_pragma("forceinline");
@@ -62,6 +65,7 @@ function bbmod_get_animation_key(_keys, _index)
 /// @param {BBMOD_EAnimationKey} _key_next The second animation key.
 /// @param {real} _animation_time The animation time.
 /// @return {real} The calculated interpolation factor.
+/// @private
 function bbmod_get_animation_key_interpolation_factor(_key, _key_next, _animation_time)
 {
 	gml_pragma("forceinline");

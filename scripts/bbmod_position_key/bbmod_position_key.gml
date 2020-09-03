@@ -1,4 +1,5 @@
 /// @enum An enumeration of members of a BBMOD_EPositionKey legacy struct.
+/// @private
 enum BBMOD_EPositionKey
 {
 	/// @member Time when the animation key occurs.
@@ -16,6 +17,7 @@ enum BBMOD_EPositionKey
 /// @param {real} _factor The interpolation factor. Should be a value in range 0..1.
 /// @return {BBMOD_EPositionKey} A new position key with the interpolated
 /// animation time and position.
+/// @private
 function bbmod_position_key_interpolate(_pk1, _pk2, _factor)
 {
 	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
@@ -33,6 +35,7 @@ function bbmod_position_key_interpolate(_pk1, _pk2, _factor)
 /// @desc Loads a position key from a buffer.
 /// @param {real} _buffer The buffer to load the struct from.
 /// @return {BBMOD_EPositionKey} The loaded position key.
+/// @private
 function bbmod_position_key_load(_buffer)
 {
 	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
@@ -45,6 +48,7 @@ function bbmod_position_key_load(_buffer)
 /// @desc Creates a translation matrix from a position key.
 /// @param {BBMOD_EPositionKey} _position_key The position key.
 /// @return {array} The created matrix.
+/// @private
 function bbmod_position_key_to_matrix(_position_key)
 {
 	gml_pragma("forceinline");

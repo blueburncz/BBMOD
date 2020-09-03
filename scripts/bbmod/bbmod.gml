@@ -1,13 +1,13 @@
-/// @macro The default material.
+/// @macro {BBMOD_EMaterial} The default material.
 #macro BBMOD_MATERIAL_DEFAULT global.__bbmod_material_default
 
-/// @macro The default material for animated models.
+/// @macro {BBMOD_EMaterial} The default material for animated models.
 #macro BBMOD_MATERIAL_DEFAULT_ANIMATED global.__bbmod_material_default_animated
 
-/// @macro The default material for dynamically batched models.
+/// @macro {BBMOD_EMaterial} The default material for dynamically batched models.
 #macro BBMOD_MATERIAL_DEFAULT_BACTHED global.__bbmod_material_default_batched
 
-/// @macro A value returned when loading fails or to destroy an existing
+/// @macro {undefined} A value returned when loading fails or to destroy an existing
 /// model/animation.
 #macro BBMOD_NONE undefined
 
@@ -15,43 +15,43 @@
 /// will containg the animation that was finished playing.
 #macro BBMOD_EV_ANIMATION_END "bbmod_ev_animation_end"
 
-/// @macro A flag used to tell that a model is rendered in a forward render
+/// @macro {real} A flag used to tell that a model is rendered in a forward render
 /// path.
 #macro BBMOD_RENDER_FORWARD (1)
 
-/// @macro A flag used to tell that a model is rendered in a deferred render
+/// @macro {real} A flag used to tell that a model is rendered in a deferred render
 /// path.
 #macro BBMOD_RENDER_DEFERRED (1 << 1)
 
-/// @macro How many bites to shift to read/write a "has vertices" predicate
+/// @macro {real} How many bites to shift to read/write a "has vertices" predicate
 /// from/to a vertex format mask.
 #macro BBMOD_VFORMAT_VERTEX 0
 
-/// @macro How many bites to shift to read/write a "has normals" predicate
+/// @macro {real} How many bites to shift to read/write a "has normals" predicate
 /// from/to a vertex format mask.
 #macro BBMOD_VFORMAT_NORMAL 1
 
-/// @macro How many bites to shift to read/write a "has texture coodrinates"
+/// @macro {real} How many bites to shift to read/write a "has texture coodrinates"
 /// predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_TEXCOORD 2
 
-/// @macro How many bites to shift to read/write a "has colors" predicate
+/// @macro {real} How many bites to shift to read/write a "has colors" predicate
 /// from/to a vertex format mask.
 #macro BBMOD_VFORMAT_COLOR 3
 
-/// @macro How many bites to shift to read/write a "has tangent and bitangent
+/// @macro {real} How many bites to shift to read/write a "has tangent and bitangent
 /// sign" predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_TANGENTW 4
 
-/// @macro How many bites to shift to read/write a "has bone indices and vertex
+/// @macro {real} How many bites to shift to read/write a "has bone indices and vertex
 /// weights" predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_BONES 5
 
-/// @macro How many bites to shift to read/write a "has ids for dynamic batching"
+/// @macro {real} How many bites to shift to read/write a "has ids for dynamic batching"
 /// predicate from/to a vertex format mask.
 #macro BBMOD_VFORMAT_IDS 6
 
-/// @macro An index of the last found animation key, updated by
+/// @macro {real} An index of the last found animation key, updated by
 /// {@link bbmod_find_animation_key}.
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
 
@@ -84,12 +84,23 @@ global.__bbmod_anim_stack = ds_stack_create();
 global.__bbmod_key_index_last = 0;
 
 /// @var {real} The current render pass.
+/// @example
+/// ```gml
+/// if (global.bbmod_render_pass & BBMOD_RENDER_DEFERRED)
+/// {
+///     // Draw objects to a G-Buffer...
+/// }
+/// ```
+/// @see BBMOD_RENDER_FORWARD
+/// @see BBMOD_RENDER_DEFERRED
 global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
 
 /// @var {array} The current position of the camera.
+/// @see bbmod_set_camera_position
 global.bbmod_camera_position = [0, 0, 0];
 
 /// @var {real} The current camera exposure.
+/// @see bbmod_set_camera_exposure
 global.bbmod_camera_exposure = 0.1;
 
 /// @var {ptr} The texture that is currently used for IBL.
@@ -103,11 +114,12 @@ global.__bbmod_ibl_texel = 0;
 /// @func bbmod_load(_file[, _sha1])
 /// @desc Loads a model/animation from a BBMOD/BBANIM file.
 /// @param {string} _file The path to the file.
-/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-/// does not match with this, then the model will not be loaded. Default is
-/// `undefined`.
-/// @return {array/BBMOD_NONE} The loaded model/animation on success or
-/// `BBMOD_NONE` on fail.
+/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
+/// not match with this, then the model will not be loaded.
+/// @return {array/BBMOD_NONE} The loaded model/animation on success or `BBMOD_NONE`
+/// on fail.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model}
+/// and {@link BBMOD_Animation} instead to load resources.
 function bbmod_load()
 {
 	var _file = argument[0];

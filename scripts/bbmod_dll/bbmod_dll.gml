@@ -1,20 +1,25 @@
 /// @macro {real} A code returned from the DLL on fail, when none of `BBMOD_ERR_`
 /// is applicable.
+/// @private
 #macro BBMOD_DLL_FAILURE -1
 
 /// @macro {real} A code returned from the DLL when a model is successfully
 /// converted.
+/// @private
 #macro BBMOD_DLL_SUCCESS 0
 
 /// @macro {real} An error code returned from the DLL when model loading fails.
+/// @private
 #macro BBMOD_DLL_ERR_LOAD_FAILED 1
 
 /// @macro {real} An error code returned from the DLL when model conversion
 /// fails.
+/// @private
 #macro BBMOD_DLL_ERR_CONVERSION_FAILED 2
 
 /// @macro {real} An error code returned from the DLL when converted model
 /// is not saved.
+/// @private
 #macro BBMOD_DLL_ERR_SAVE_FAILED 3
 
 /// @func BBMOD_DLL([_dll])

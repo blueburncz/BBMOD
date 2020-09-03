@@ -1,4 +1,5 @@
 /// @enum An enumeration of members of a BBMOD_ENode legacy struct.
+/// @private
 enum BBMOD_ENode
 {
 	/// @member The name of the node.
@@ -17,6 +18,7 @@ enum BBMOD_ENode
 /// @param {real} _format A vertex format for node's meshes.
 /// @param {real} _format_mask A vertex format mask.
 /// @return {BBMOD_ENode} The loaded node.
+/// @private
 function bbmod_node_load(_buffer, _format, _format_mask)
 {
 	var i = 0;
@@ -53,6 +55,7 @@ function bbmod_node_load(_buffer, _format, _format_mask)
 /// @func bbmod_node_destroy(_node)
 /// @desc Frees resources used by a node from memory.
 /// @param {BBMOD_ENode} _node The node to destroy.
+/// @private
 function bbmod_node_destroy(_node)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
@@ -80,6 +83,7 @@ function bbmod_node_destroy(_node)
 /// material slot of the model.
 /// @param {array/undefined} _transform An array of transformation matrices
 /// (for animated models) or `undefined`.
+/// @private
 function bbmod_node_render(_model, _node, _materials, _transform)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
@@ -139,7 +143,7 @@ function _bbmod_node_freeze(_node)
 
 /// @func _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 /// @param {BBMOD_ENode} _node
-/// @param {BBMOD_EDynamicBatch} _dynamic_batch
+/// @param {BBMOD_DynamicBatch} _dynamic_batch
 /// @private
 function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 {
@@ -162,7 +166,7 @@ function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 /// @func _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
 /// @param {BBMOD_EModel} _model
 /// @param {BBMOD_ENode} _node
-/// @param {BBMOD_EStaticBatch} _static_batch
+/// @param {BBMOD_StaticBatch} _static_batch
 /// @param {array} _transform
 /// @private
 function _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)

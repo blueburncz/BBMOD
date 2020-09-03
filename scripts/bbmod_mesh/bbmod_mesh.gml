@@ -1,4 +1,5 @@
 /// @enum An enumeration of members of a BBMOD_EMesh legacy struct.
+/// @private
 enum BBMOD_EMesh
 {
 	/// @member An index of a material that the mesh uses.
@@ -15,6 +16,7 @@ enum BBMOD_EMesh
 /// @param {real} _format A vertex format that the mesh uses.
 /// @param {real} _format_mask A vertex format mask.
 /// @return {BBMOD_EMesh} The loaded mesh.
+/// @private
 function bbmod_mesh_load(_buffer, _format, _format_mask)
 {
 	var _has_vertices = (_format_mask >> BBMOD_VFORMAT_VERTEX) & 1;
@@ -53,6 +55,7 @@ function bbmod_mesh_load(_buffer, _format, _format_mask)
 /// @func bbmod_mesh_destroy(_mesh)
 /// @desc Destroys a mesh.
 /// @param {BBMOD_EMesh} _mesh The mesh to destroy,
+/// @private
 function bbmod_mesh_destroy(_mesh)
 {
 	vertex_delete_buffer(_mesh[BBMOD_EMesh.VertexBuffer]);
@@ -69,12 +72,12 @@ function _bbmod_mesh_freeze(_mesh)
 
 /// @func _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 /// @param {BBMOD_EMesh} _mesh
-/// @param {BBMOD_EDynamicBatch} _dynamic_batch
+/// @param {BBMOD_DynamicBatch} _dynamic_batch
 /// @private
 function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 {
-	var _vertex_buffer = _dynamic_batch[BBMOD_EStaticBatch.VertexBuffer];
-	var _model = _dynamic_batch[BBMOD_EDynamicBatch.Model];
+	var _vertex_buffer = _dynamic_batch.vertex_buffer;
+	var _model = _dynamic_batch.model.model;
 
 	var _has_vertices = _model[BBMOD_EModel.HasVertices];
 	var _has_normals = _model[BBMOD_EModel.HasNormals];
@@ -89,7 +92,7 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 
 	var _id = 0;
 
-	repeat (_dynamic_batch[BBMOD_EDynamicBatch.Size])
+	repeat (_dynamic_batch.size)
 	{
 		buffer_seek(_buffer, buffer_seek_start, 0);
 
@@ -161,12 +164,12 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 /// @func _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 /// @param {BBMOD_EModel} _model
 /// @param {BBMOD_EMesh} _mesh
-/// @param {BBMOD_EDynamicBatch} _static_batch
+/// @param {BBMOD_StaticBatch} _static_batch
 /// @param {array} _transform
 /// @private
 function _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 {
-	var _vertex_buffer = _static_batch[BBMOD_EStaticBatch.VertexBuffer];
+	var _vertex_buffer = _static_batch.vertex_buffer;
 
 	var _has_vertices = _model[BBMOD_EModel.HasVertices];
 	var _has_normals = _model[BBMOD_EModel.HasNormals];

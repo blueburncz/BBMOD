@@ -1,4 +1,6 @@
 /// @enum An enumeration of members of a BBMOD_EMaterial legacy struct.
+/// @deprecated Legacy structs are deprecated. Please use {@link BBMOD_Material}
+/// instead.
 enum BBMOD_EMaterial
 {
 	/// @member A render path. See macros {@link BBMOD_RENDER_FORWARD} and
@@ -21,10 +23,10 @@ enum BBMOD_EMaterial
 	/// @member A culling mode. Use one of the `cull_` constants. Defaults to
 	/// `cull_counterclockwise`.
 	Culling,
-	/// @member True if models using this material should write to the depth
+	/// @member `true` if models using this material should write to the depth
 	/// buffer. Defaults to `true`.
 	ZWrite,
-	/// @member True if models using this material should be tested againsy the
+	/// @member `true` if models using this material should be tested againsy the
 	/// depth buffer. Defaults to `true`.
 	ZTest,
 	/// @member The function used for depth testing when `ZTest` is enabled.
@@ -64,6 +66,7 @@ enum BBMOD_EMaterial
 /// @param {ptr} [_subsurface] A texture with subsurface color in RGB and intensity in alpha.
 /// @param {ptr} [_emissive] A texture with RGBM encoded emissive color.
 /// @return {BBMOD_EMaterial} The created material.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Material} instead.
 function bbmod_material_create(_shader)
 {
 	var _base_opacity = (argument_count > 1) ? argument[1] : undefined;
@@ -105,6 +108,8 @@ function bbmod_material_create(_shader)
 /// @desc Creates a copy of a material.
 /// @param {BBMOD_EMaterial} _material The material to create a copy of.
 /// @return {BBMOD_EMaterial} The created material.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Material.clone}
+/// instead.
 function bbmod_material_clone(_material)
 {
 	gml_pragma("forceinline");
@@ -116,8 +121,10 @@ function bbmod_material_clone(_material)
 /// @func bbmod_material_apply(_material)
 /// @desc Applies a material.
 /// @param {BBMOD_EMaterial} _material A material.
-/// @return {bool} True if the material was applied or false if it was already
+/// @return {bool} `true` if the material was applied or `false` if it was already
 /// the current one.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Material.apply}
+/// instead.
 function bbmod_material_apply(_material)
 {
 	if (_material == global.__bbmod_material_current)
@@ -160,6 +167,8 @@ function bbmod_material_apply(_material)
 
 /// @func bbmod_material_reset()
 /// @desc Resets the current material to `undefined`.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Material.reset}
+/// instead.
 function bbmod_material_reset()
 {
 	gml_pragma("forceinline");
@@ -207,7 +216,7 @@ function bbmod_material_on_apply_default(_material)
 }
 
 /// @func BBMOD_Material(_shader[, _base_opacity[, _normal_roughness[, _metallic_ao[, _subsurface[, _emissive]]]]])
-/// @desc An OOP wrapper around a {@link BBMOD_EMaterial} legacy struct.
+/// @desc A material that can be used when rendering models.
 /// @param {ptr} _shader A shader that the material uses.
 /// @param {ptr} [_base_opacity] A texture with base color in RGB and opacity in alpha.
 /// @param {ptr} [_normal_roughness] A texture with normals in RGB and roughness in alpha.
@@ -223,115 +232,174 @@ function BBMOD_Material(_shader) constructor
 	var _emissive = (argument_count > 5) ? argument[5] : undefined;
 
 	/// @var {BBMOD_EMaterial} The material that this struct wraps.
+	/// @private
 	material = bbmod_material_create(_shader, _base_opacity, _normal_roughness,
 		_metallic_ao, _subsurface, _emissive);
 
-	// TODO: Add docs
-
+	/// @func get_render_path()
+	/// @return {real}
+	/// @see BBMOD_RENDER_FORWARD
+	/// @see BBMOD_RENDER_DEFERRED
 	static get_render_path = function () {
 		return material[BBMOD_EMaterial.RenderPath];
 	};
 
+	/// @func set_render_path(_render_path)
+	/// @param {real} _render_path
+	/// @return {real}
+	/// @see BBMOD_RENDER_FORWARD
+	/// @see BBMOD_RENDER_DEFERRED
 	static set_render_path = function (_render_path) {
 		material[@ BBMOD_EMaterial.RenderPath] = _render_path;
 	};
 
+	/// @func get_shader()
+	/// @return {real}
 	static get_shader = function () {
 		return material[BBMOD_EMaterial.Shader];
 	};
 
+	/// @func set_shader(_shader)
+	/// @param {real} shader
 	static set_shader = function (_shader) {
 		material[@ BBMOD_EMaterial.Shader] = _shader;
 	};
 
+	/// @return get_on_apply()
+	/// @return {function}
 	static get_on_apply = function () {
 		return material[BBMOD_EMaterial.OnApply];
 	};
 
+	/// @func set_on_apply(_on_apply)
+	/// @param {function} _on_apply
 	static set_on_apply = function (_on_apply) {
 		material[@ BBMOD_EMaterial.OnApply] = method(self, _on_apply);
 	};
 
+	/// @func get_blendmode()
+	/// @return {real}
 	static get_blendmode = function () {
 		return material[BBMOD_EMaterial.BlendMode];
 	};
 
+	/// @func set_blendmode(_blendmode)
+	/// @param {real} _blendmode
 	static set_blendmode = function (_blendmode) {
 		material[@ BBMOD_EMaterial.BlendMode] = _blendmode;
 	};
 
+	/// @func get_culling()
+	/// @return {real}
 	static get_culling = function () {
 		return material[BBMOD_EMaterial.Culling];
 	};
 
+	/// @func set_culling(_culling)
+	/// @param {real} _culling
 	static set_culling = function (_culling) {
 		material[@ BBMOD_EMaterial.Culling] = _culling;
 	};
 
+	/// @func get_zwrite()
+	/// @return {bool}
 	static get_zwrite = function () {
 		return material[BBMOD_EMaterial.ZWrite];
 	};
 
+	/// @func set_zwrite(_zwrite)
+	/// @param {bool} _zwrite
 	static set_zwrite = function (_zwrite) {
 		material[@ BBMOD_EMaterial.ZWrite] = _zwrite;
 	};
 
+	/// @func get_ztest()
+	/// @return {bool}
 	static get_ztest = function () {
 		return material[BBMOD_EMaterial.ZTest];
 	};
 
+	/// @func set_ztest(_ztest)
+	/// @param {bool} _ztest
 	static set_ztest = function (_ztest) {
 		material[@ BBMOD_EMaterial.ZTest] = _ztest;
 	};
 
+	/// @func get_zfunc()
+	/// @return {real}
 	static get_zfunc = function () {
 		return material[BBMOD_EMaterial.ZFunc];
 	};
 
+	/// @func set_zfunc(_zfunc)
+	/// @param {real} _zfunc
 	static set_zfunc = function (_zfunc) {
 		material[@ BBMOD_EMaterial.ZFunc] = _zfunc;
 	};
 
+	/// @func get_base_opacity()
+	/// @return {ptr}
 	static get_base_opacity = function () {
 		return material[BBMOD_EMaterial.BaseOpacity];
 	};
 
+	/// @func set_base_opacity(_base_opacity)
+	/// @param {ptr} _base_opacity
 	static set_base_opacity = function (_base_opacity) {
 		material[@ BBMOD_EMaterial.BaseOpacity] = _base_opacity;
 	};
 
+	/// @func get_normal_roughness()
+	/// @return {ptr}
 	static get_normal_roughness = function () {
 		return material[BBMOD_EMaterial.NormalRoughness];
 	};
 
+	/// @func set_normal_roughness(_normal_roughness)
+	/// @param {ptr} _normal_roughness
 	static set_normal_roughness = function (_normal_roughness) {
 		material[@ BBMOD_EMaterial.NormalRoughness] = _normal_roughness;
 	};
 
+	/// @func get_metallic_ao()
+	/// @return {ptr}
 	static get_metallic_ao = function () {
 		return material[BBMOD_EMaterial.MetallicAO];
 	};
 
+	/// @func set_metallic_ao(_metallic_ao)
+	/// @param {ptr} _metallic_ao
 	static set_metallic_ao = function (_metallic_ao) {
 		material[@ BBMOD_EMaterial.MetallicAO] = _metallic_ao;
 	};
 
+	/// @func get_subsurface()
+	/// @return {ptr}
 	static get_subsurface = function () {
 		return material[BBMOD_EMaterial.Subsurface];
 	};
 
+	/// @func set_subsurface(_subsurface)
+	/// @param {ptr} _subsurface
 	static set_subsurface = function (_subsurface) {
 		material[@ BBMOD_EMaterial.Subsurface] = _subsurface;
 	};
 
+	/// @func get_emissive()
+	/// @return {ptr}
 	static get_emissive = function () {
 		return material[BBMOD_EMaterial.Emissive];
 	};
 
+	/// @func set_emissive(_missive)
+	/// @param {ptr} _missive
 	static set_emissive = function (_missive) {
 		material[@ BBMOD_EMaterial.Emissive] = _emissive;
 	};
 
+	/// @func clone()
+	/// @desc Clones the material.
+	/// @return {BBMOD_Material} The created clone.
 	static clone = function () {
 		var _clone = new BBMOD_Material(get_shader());
 		_clone.material = bbmod_material_clone(material);
@@ -339,10 +407,14 @@ function BBMOD_Material(_shader) constructor
 		return _clone;
 	};
 
+	/// @func apply()
+	/// @desc Sets the current material to this one.
 	static apply = function () {
 		bbmod_material_apply(material);
 	};
 
+	/// @func reset()
+	/// @desc Unsets the current material.
 	static reset = function () {
 		bbmod_material_reset();
 	};
