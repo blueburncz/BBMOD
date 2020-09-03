@@ -80,7 +80,7 @@ function bbmod_node_destroy(_node)
 /// material slot of the model.
 /// @param {array/undefined} _transform An array of transformation matrices
 /// (for animated models) or `undefined`.
-function bbmod_node_render(_model, _node, _materials, _transform) 
+function bbmod_node_render(_model, _node, _materials, _transform)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
 	var _children = _node[BBMOD_ENode.Children];
@@ -118,6 +118,7 @@ function bbmod_node_render(_model, _node, _materials, _transform)
 
 /// @func _bbmod_node_freeze(_node)
 /// @param {BBMOD_ENode} _node
+/// @private
 function _bbmod_node_freeze(_node)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
@@ -139,6 +140,7 @@ function _bbmod_node_freeze(_node)
 /// @func _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 /// @param {BBMOD_ENode} _node
 /// @param {BBMOD_EDynamicBatch} _dynamic_batch
+/// @private
 function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];
@@ -162,6 +164,7 @@ function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 /// @param {BBMOD_ENode} _node
 /// @param {BBMOD_EStaticBatch} _static_batch
 /// @param {array} _transform
+/// @private
 function _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
 {
 	var _meshes = _node[BBMOD_ENode.Meshes];

@@ -216,6 +216,7 @@ function bbmod_model_get_vertex_format(_model)
 /// @func _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
 /// @param {BBMOD_EModel} _model
 /// @param {BBMOD_EDynamicBatch} _dynamic_batch
+/// @private
 function _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
 {
 	gml_pragma("forceinline");
@@ -226,6 +227,7 @@ function _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
 /// @param {BBMOD_EModel} _model
 /// @param {BBMOD_EStaticBatch} _static_batch
 /// @param {array} _transform
+/// @private
 function _bbmod_model_to_static_batch(_model, _static_batch, _transform)
 {
 	gml_pragma("forceinline");

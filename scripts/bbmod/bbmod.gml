@@ -56,24 +56,31 @@
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
 
 /// @var {real} Mapping of vertex format masks to existing vertex formats.
+/// @private
 global.__bbmod_vertex_formats = ds_map_create();
 
 /// @var {real} The default material.
+/// @private
 global.__bbmod_material_default = bbmod_material_create(BBMOD_ShDefault);
 
 /// @var {real} The default material for animated models.
+/// @private
 global.__bbmod_material_default_animated = bbmod_material_create(BBMOD_ShDefaultAnimated);
 
 /// @var {real} The default material for dynamically batched models.
+/// @private
 global.__bbmod_material_default_batched = bbmod_material_create(BBMOD_ShDefaultBatched);
 
 /// @var {array/undefined} The currently applied material.
+/// @private
 global.__bbmod_material_current = undefined;
 
 /// @var {real} A stack used when posing skeletons to avoid recursion.
+/// @private
 global.__bbmod_anim_stack = ds_stack_create();
 
 /// @var {real} An index of the last found AnimationKey.
+/// @private
 global.__bbmod_key_index_last = 0;
 
 /// @var {real} The current render pass.
@@ -86,9 +93,11 @@ global.bbmod_camera_position = [0, 0, 0];
 global.bbmod_camera_exposure = 0.1;
 
 /// @var {ptr} The texture that is currently used for IBL.
+/// @private
 global.__bbmod_ibl_texture = pointer_null;
 
 /// @var {ptr} A texel size of the IBL texture.
+/// @private
 global.__bbmod_ibl_texel = 0;
 
 /// @func bbmod_load(_file[, _sha1])
@@ -178,7 +187,7 @@ function bbmod_set_ibl_sprite(_sprite, _subimage)
 
 /// @func bbmod_set_ibl_texture(_texture, _texel)
 /// @desc Changes a texture used for image based lighting.
-/// @param {real} _texture The texture.
+/// @param {ptr} _texture The texture.
 /// @param {real} _texel A size of one texel.
 /// @note This texture must be a stripe of eight prefiltered octahedrons, the
 /// first seven being used for specular lighting and the last one for diffuse

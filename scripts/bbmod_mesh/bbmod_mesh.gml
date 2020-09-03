@@ -60,6 +60,7 @@ function bbmod_mesh_destroy(_mesh)
 
 /// @func _bbmod_mesh_freeze(_mesh)
 /// @param {BBMOD_EMesh} _mesh
+/// @private
 function _bbmod_mesh_freeze(_mesh)
 {
 	gml_pragma("forceinline");
@@ -69,6 +70,7 @@ function _bbmod_mesh_freeze(_mesh)
 /// @func _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 /// @param {BBMOD_EMesh} _mesh
 /// @param {BBMOD_EDynamicBatch} _dynamic_batch
+/// @private
 function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 {
 	var _vertex_buffer = _dynamic_batch[BBMOD_EStaticBatch.VertexBuffer];
@@ -161,6 +163,7 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 /// @param {BBMOD_EMesh} _mesh
 /// @param {BBMOD_EDynamicBatch} _static_batch
 /// @param {array} _transform
+/// @private
 function _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 {
 	var _vertex_buffer = _static_batch[BBMOD_EStaticBatch.VertexBuffer];

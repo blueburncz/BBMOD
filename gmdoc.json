@@ -4,7 +4,7 @@
   "project_name": "BBMOD",
   "title": "BBMOD Docs",
   "author": "BlueBurn",
-  "prefix": "bbmod_",
+  "prefix": "bbmod",
   "analytics": "",
   "api": {
     "rating": ""
