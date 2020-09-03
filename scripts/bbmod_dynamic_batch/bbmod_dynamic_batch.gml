@@ -54,7 +54,7 @@ function bbmod_dynamic_batch_freeze(_dynamic_batch)
 }
 
 /// @func bbmod_dynamic_batch_render(_dynamic_batch, _material, _data)
-/// @desc Submits a DynamitBatch for rendering.
+/// @desc Submits a dynamic batch for rendering.
 /// @param {BBMOD_EDynamicBatch} _dynamic_batch A dynamic batch.
 /// @param {BBMOD_EMaterial} _material A material. Must use a shader that
 /// expects ids in the vertex format.
