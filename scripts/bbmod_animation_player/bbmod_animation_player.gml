@@ -509,10 +509,32 @@ function bbmod_play(_animation_player, _animation)
 }
 
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
-/// @desc An animation player.
+/// @desc An animation player. Each instance of an animated model should have
+/// its own animation player.
 /// @param {BBMOD_Model} _model A model that the animation player animates.
 /// @param {bool} [_paused] If `true` then the animation player is created
 /// as paused. Defaults to `false`.
+/// @example
+/// Following code shows how to load models and animations in a resource manager
+/// object and then play animations in multiple instances of a character object.
+/// ```gml
+/// /// @desc Create event of OResourceManager
+/// mod_character = new BBMOD_Model("character.bbmod");
+/// anim_idle = new BBMOD_Animation("index.bbanim");
+///
+/// /// @desc Create event of OCharacter
+/// model = OResourceManager.mod_character;
+/// animation_player = new BBMOD_AnimationPlayer(model);
+/// animation_player.play(OResourceManager.anim_idle, true);
+///
+/// /// @desc Step event of OCharacter
+/// animation_player.update();
+///
+/// /// @desc Draw event of OCharacter
+/// bbmod_material_reset();
+/// model.render(undefined, animation_player.get_transform());
+/// bbmod_material_reset();
+/// ```
 /// @see BBMOD_Model
 /// @see BBMOD_Animation
 function BBMOD_AnimationPlayer(_model) constructor
@@ -580,7 +602,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @func set_bone_position(_bone_index, _position)
 	/// @desc Changes a position of a bone.
 	/// @param {real} _bone_index An index of a bone.
-	/// @param {array} _position An x,y,z position of a bone.
+	/// @param {array} _position An `[x,y,z]` position of a bone.
 	static set_bone_position = function (_bone_index, _position) {
 		bbmod_set_bone_position(animation_player, _bone_index, _position);
 	};

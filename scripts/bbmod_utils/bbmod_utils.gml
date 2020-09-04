@@ -11,6 +11,7 @@
 /// indices.
 /// @param {bool} [_ids] `true` if the vertex format must have ids for dynamic batching.
 /// @return {real} The vertex format.
+/// @private
 function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones)
 {
 	var _ids = (argument_count > 6) ? argument[6] : false;

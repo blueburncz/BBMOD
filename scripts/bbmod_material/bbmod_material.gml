@@ -166,17 +166,35 @@ function bbmod_material_apply(_material)
 }
 
 /// @func bbmod_material_reset()
-/// @desc Resets the current material to `undefined`.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Material.reset}
-/// instead.
+/// @desc Resets the current material to {@link BBMOD_NONE}. Every block of code
+/// rendering models must start and end with this function!
+/// @example
+/// ```gml
+/// bbmod_material_reset();
+///
+/// // Render static batch of trees
+/// tree_batch.render(mat_tree);
+///
+/// // Render characters
+/// var _world = matrix_get(matrix_world);
+/// with (OCharacter)
+/// {
+///     matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, direction, 1, 1, 1));
+///     model.render(materials, animation_player.get_transform());
+/// }
+/// matrix_set(matrix_world, _world);
+///
+/// bbmod_material_reset();
+/// ```
+/// @see BBMOD_Material.reset
 function bbmod_material_reset()
 {
 	gml_pragma("forceinline");
-	if (global.__bbmod_material_current != undefined)
+	if (global.__bbmod_material_current != BBMOD_NONE)
 	{
 		shader_reset();
 		gpu_pop_state();
-		global.__bbmod_material_current = undefined;
+		global.__bbmod_material_current = BBMOD_NONE;
 	}
 	else
 	{
@@ -414,7 +432,8 @@ function BBMOD_Material(_shader) constructor
 	};
 
 	/// @func reset()
-	/// @desc Unsets the current material.
+	/// @desc Resets the current material to {@link BBMOD_NONE}.
+	/// @see bbmod_material_reset
 	static reset = function () {
 		bbmod_material_reset();
 	};

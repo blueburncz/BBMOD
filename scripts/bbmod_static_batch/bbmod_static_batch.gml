@@ -65,7 +65,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 		vertex_freeze(vertex_buffer);
 	}
 
-	
+
 	/// @func render(_material)
 	/// @desc Submits the static batch for rendering.
 	/// @param {BBMOD_EMaterial} _material A material.
@@ -82,7 +82,13 @@ function BBMOD_StaticBatch(_vformat) constructor
 	}
 
 	/// @func destroy()
-	/// @desc Frees memory used by the static batch.
+	/// @desc Frees memory used by the static batch. Use this in combination with
+	/// `delete` to destroy a static batch struct.
+	/// @example
+	/// ```gml
+	/// static_batch.destroy();
+	/// delete static_batch;
+	/// ```
 	static destroy = function () {
 		gml_pragma("forceinline");
 		vertex_delete_buffer(vertex_buffer);

@@ -4,5 +4,6 @@
 function BBMOD_Error() constructor
 {
 	/// @var {string} The error message.
+	/// @readonly
 	msg = (argument_count > 0) ? argument[0] : "";
 }

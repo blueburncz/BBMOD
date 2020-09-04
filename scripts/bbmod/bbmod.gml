@@ -7,34 +7,67 @@
 /// @macro {BBMOD_EMaterial} The default material for dynamically batched models.
 #macro BBMOD_MATERIAL_DEFAULT_BACTHED global.__bbmod_material_default_batched
 
-/// @macro {undefined} A value returned when loading fails or to destroy an existing
-/// model/animation.
+/// @macro {undefined} An empty value. This is for example used in the legacy
+/// scripts as a return value when animation/model loading fails or to unassign
+/// an existing one.
+/// @example
+/// ```gml
+/// model = bbmod_load("model.bbmod");
+/// if (model == BBMOD_NONE)
+/// {
+///     // Model loading failed!
+///     exit;
+/// }
+///
+/// // Destroy and unassign an existing model
+/// bbmod_model_destroy(model);
+/// model = BBMOD_NONE;
+/// ```
 #macro BBMOD_NONE undefined
 
 /// @macro {string} An event triggered on animation end. The event data
 /// will containg the animation that was finished playing.
+/// @example
+/// ```gml
+/// /// @desc User event
+/// switch (ce_get_event())
+/// {
+/// case BBMOD_EV_ANIMATION_END:
+///     var _animation = ce_get_event_data();
+///     // Do something when _animation ends...
+///     break;
+/// }
+/// ```
 #macro BBMOD_EV_ANIMATION_END "bbmod_ev_animation_end"
 
-/// @macro {real} A flag used to tell that a model is rendered in a forward render
-/// path.
+/// @macro {real} A flag used to tell that a model is rendered in a forward
+/// render path.
+/// @see BBMOD_RENDER_DEFERRED
+/// @see global.bbmod_render_pass
+/// @see BBMOD_Material.get_render_path
+/// @see BBMOD_Material.set_render_path
 #macro BBMOD_RENDER_FORWARD (1)
 
-/// @macro {real} A flag used to tell that a model is rendered in a deferred render
-/// path.
+/// @macro {real} A flag used to tell that a model is rendered in a deferred
+/// render path.
+/// @see BBMOD_RENDER_FORWARD
+/// @see global.bbmod_render_pass
+/// @see BBMOD_Material.get_render_path
+/// @see BBMOD_Material.set_render_path
 #macro BBMOD_RENDER_DEFERRED (1 << 1)
 
-/// @macro {real} How many bites to shift to read/write a "has vertices" predicate
-/// from/to a vertex format mask.
+/// @macro {real} How many bites to shift to read/write a "has vertices"
+/// predicate from/to a vertex format mask.
 /// @private
 #macro BBMOD_VFORMAT_VERTEX 0
 
-/// @macro {real} How many bites to shift to read/write a "has normals" predicate
-/// from/to a vertex format mask.
+/// @macro {real} How many bites to shift to read/write a "has normals"
+/// predicate from/to a vertex format mask.
 /// @private
 #macro BBMOD_VFORMAT_NORMAL 1
 
-/// @macro {real} How many bites to shift to read/write a "has texture coodrinates"
-/// predicate from/to a vertex format mask.
+/// @macro {real} How many bites to shift to read/write a "has texture
+/// coodrinates" predicate from/to a vertex format mask.
 /// @private
 #macro BBMOD_VFORMAT_TEXCOORD 2
 
@@ -43,17 +76,18 @@
 /// @private
 #macro BBMOD_VFORMAT_COLOR 3
 
-/// @macro {real} How many bites to shift to read/write a "has tangent and bitangent
-/// sign" predicate from/to a vertex format mask.
+/// @macro {real} How many bites to shift to read/write a "has tangent and
+/// bitangent sign" predicate from/to a vertex format mask.
 /// @private
 #macro BBMOD_VFORMAT_TANGENTW 4
 
-/// @macro {real} How many bites to shift to read/write a "has bone indices and vertex
-/// weights" predicate from/to a vertex format mask.
+/// @macro {real} How many bites to shift to read/write a "has bone indices and
+/// vertex weights" predicate from/to a vertex format mask.
 /// @private
 #macro BBMOD_VFORMAT_BONES 5
 
-/// @macro {real} How many bites to shift to read/write a "has ids for dynamic batching"
+/// @macro {real} How many bites to shift to read/write a "has ids for dynamic
+/// batching"
 /// predicate from/to a vertex format mask.
 /// @private
 #macro BBMOD_VFORMAT_IDS 6
@@ -79,9 +113,9 @@ global.__bbmod_material_default_animated = bbmod_material_create(BBMOD_ShDefault
 /// @private
 global.__bbmod_material_default_batched = bbmod_material_create(BBMOD_ShDefaultBatched);
 
-/// @var {array/undefined} The currently applied material.
+/// @var {array/BBMOD_NONE} The currently applied material.
 /// @private
-global.__bbmod_material_current = undefined;
+global.__bbmod_material_current = BBMOD_NONE;
 
 /// @var {real} A stack used when posing skeletons to avoid recursion.
 /// @private
@@ -108,7 +142,6 @@ global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
 global.bbmod_camera_position = [0, 0, 0];
 
 /// @var {real} The current camera exposure.
-/// @see bbmod_set_camera_exposure
 global.bbmod_camera_exposure = 0.1;
 
 /// @var {ptr} The texture that is currently used for IBL.
@@ -124,8 +157,8 @@ global.__bbmod_ibl_texel = 0;
 /// @param {string} _file The path to the file.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
-/// @return {array/BBMOD_NONE} The loaded model/animation on success or `BBMOD_NONE`
-/// on fail.
+/// @return {array/BBMOD_NONE} The loaded model/animation on success or
+/// {@link BBMOD_NONE} on fail.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Model}
 /// and {@link BBMOD_Animation} instead to load resources.
 function bbmod_load()
@@ -180,8 +213,8 @@ function bbmod_load()
 /// @param {real} _x The x position of the camera.
 /// @param {real} _y The y position of the camera.
 /// @param {real} _z The z position of the camera.
-/// @note This should be called each frame before rendering, since it is required
-/// for proper functioning of PBR shaders!
+/// @note This should be called each frame before rendering, since it is
+/// required for proper functioning of PBR shaders!
 function bbmod_set_camera_position(_x, _y, _z)
 {
 	gml_pragma("forceinline");
@@ -208,7 +241,7 @@ function bbmod_set_ibl_sprite(_sprite, _subimage)
 /// @func bbmod_set_ibl_texture(_texture, _texel)
 /// @desc Changes a texture used for image based lighting.
 /// @param {ptr} _texture The texture.
-/// @param {real} _texel A size of one texel.
+/// @param {real} _texel The size of a texel.
 /// @note This texture must be a stripe of eight prefiltered octahedrons, the
 /// first seven being used for specular lighting and the last one for diffuse
 /// lighting.
@@ -220,7 +253,7 @@ function bbmod_set_ibl_texture(_texture, _texel)
 	if (_texture != pointer_null)
 	{
 		var _material = global.__bbmod_material_current;
-		if (_material != undefined)
+		if (_material != BBMOD_NONE)
 		{
 			var _shader = _material[BBMOD_EMaterial.Shader];
 			_bbmod_shader_set_ibl(_shader, _texture, _texel);

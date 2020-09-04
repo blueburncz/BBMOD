@@ -152,7 +152,8 @@ function bbmod_model_freeze(_model)
 /// @param {string} _bone_name The name of the bone.
 /// @param {BBMOD_EBone/undefined} [_bone] The bone to start searching
 /// from. Use `undefined` to use the model's root bone. Defaults to `undefined`.
-/// @return {real/BBMOD_NONE} The id of the bone on success or `BBMOD_NONE` on fail.
+/// @return {real/BBMOD_NONE} The id of the bone on success or {@link BBMOD_NONE}
+/// on fail.
 /// @note It is not recommened to use this script in release builds, because having
 /// many of these lookups can slow down your game! You should instead use the
 /// ids available from the `_log.txt` files, which are created during model
@@ -207,6 +208,8 @@ function bbmod_model_get_bindpose_transform(_model)
 /// @param {bool} [_ids] Use `true` to force ids for dynamic batching. Defaults
 /// to `false`.
 /// @return {real} The vertex format.
+/// @deprecated This function is deprecated. Please use
+/// {@link BBMOD_Model.get_vertex_format} instead.
 function bbmod_model_get_vertex_format(_model)
 {
 	gml_pragma("forceinline");
@@ -316,7 +319,7 @@ function BBMOD_Model(_file) constructor
 	/// @func find_bone_id(_bone_name)
 	/// @desc Finds model's bone by its name.
 	/// @param {string} _bone_name The name of the bone.
-	/// @return {real} The id of the bone or `BBMOD_NONE` when it's not found.
+	/// @return {real} The id of the bone or {@link BBMOD_NONE} when it's not found.
 	/// @note It is not recommened to use this script in release builds, because
 	/// having many of these lookups can slow down your game! You should instead
 	/// use the ids available from the `_log.txt` files, which are created during
@@ -341,6 +344,10 @@ function BBMOD_Model(_file) constructor
 	/// format.
 	/// Defaults to `false`.
 	/// @return {real} The vertex format.
+	/// @example
+	/// ```gml
+	/// static_batch = new BBMOD_StaticBatch(mod_tree.get_vertex_format());
+	/// ```
 	static get_vertex_format = function () {
 		var _bones = (argument_count > 0) ? argument[0] : true;
 		var _ids = (argument_count > 1) ? argument[1] : false;
@@ -354,8 +361,18 @@ function BBMOD_Model(_file) constructor
 	/// the default material is used for each slot. Defaults to `undefined`.
 	/// @param {array/undefined} [_transform] An array of transformation matrices
 	/// (for animated models) or `undefined`.
+	/// @example
+	/// ```gml
+	/// bbmod_material_reset();
+	/// // Render a terrain model (doesn't have animation data)
+	/// mod_terrain.render([mat_grass]);
+	/// // Render a character model (animated by animation_player)
+	/// mod_character.render([mat_head, mat_body], animation_player.get_transform());
+	/// bbmod_material_reset();
+	/// ```
 	/// @see BBMOD_Material
 	/// @see BBMOD_AnimationPlayer.get_transform
+	/// @see bbmod_material_reset
 	static render = function () {
 		var _materials = (argument_count > 0) ? argument[0] : undefined;
 		var _transform = (argument_count > 1) ? argument[1] : undefined;
@@ -368,7 +385,13 @@ function BBMOD_Model(_file) constructor
 	};
 
 	/// @func destroy()
-	/// @desc Frees memory used by the model.
+	/// @desc Frees memory used by the model. Use this in combination with
+	/// `delete` to destroy a model struct.
+	/// @example
+	/// ```gml
+	/// model.destroy();
+	/// delete model;
+	/// ```
 	static destroy = function () {
 		bbmod_model_destroy(model);
 	};

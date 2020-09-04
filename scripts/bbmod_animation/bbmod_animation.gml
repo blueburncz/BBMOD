@@ -139,8 +139,9 @@ function bbmod_animation_load(_buffer, _version)
 /// @param {BBMOD_EAnimation} _animation An animation.
 /// @param {real} _time_in_seconds The current time in seconds.
 /// @return {real} The animation time.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Animation.get_animation_time}
-/// instead.
+/// @deprecated This function is deprecated. Please use
+/// {@link BBMOD_Animation.get_animation_time} instead.
+/// @private
 function bbmod_get_animation_time(_animation, _time_in_seconds)
 {
 	gml_pragma("forceinline");
@@ -212,6 +213,7 @@ function BBMOD_Animation(_file) constructor
 	/// @desc Calculates animation time from current time in seconds.
 	/// @param {real} _time_in_seconds The current time in seconds.
 	/// @return {real} The animation time.
+	/// @private
 	static get_animation_time = function (_time_in_seconds) {
 		return bbmod_get_animation_time(animation, _time_in_seconds);
 	};

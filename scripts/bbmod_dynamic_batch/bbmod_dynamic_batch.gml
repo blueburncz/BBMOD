@@ -50,7 +50,13 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	};
 
 	/// @func destroy()
-	/// @desc Frees memory used by the dynamic batch.
+	/// @desc Frees memory used by the dynamic batch. Use this in combination with
+	/// `delete` to destroy a dynamic batch struct.
+	/// @example
+	/// ```gml
+	/// dynamic_batch.destroy();
+	/// delete dynamic_batch;
+	/// ```
 	static destroy = function () {
 		gml_pragma("forceinline");
 		vertex_delete_buffer(vertex_buffer);
