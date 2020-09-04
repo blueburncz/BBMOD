@@ -1,7 +1,18 @@
 /// @func BBMOD_DynamicBatch(_model, _size)
-/// @desc A dynamic batch.
-/// @param {BBMOD_Model} _model The model to create a dynamic batch of.
+///
+/// @desc A dynamic batch is a structure that allows you to render multiple
+/// instances of a single model at once, each with its own position, scale and
+/// rotation. Compared to {@link BBMOD_Model.render}, this drastically reduces
+/// draw calls and increases performance, but requires more memory. Current
+/// limitations are that the model must not have bones (it cannot be animated)
+/// and it can use only a single material. Number of model instances per batch
+/// is also affected by maximum number of uniforms that a vertex shader can
+/// accept.
+///
+/// @param {BBMOD_Model} _model The model to create a dynamic batch of. Must
+/// use a single material and must not have bones.
 /// @param {real} _size Number of model instances in the batch.
+///
 /// @example
 /// Following code renders all instances of a car object in batches of 64.
 /// ```gml

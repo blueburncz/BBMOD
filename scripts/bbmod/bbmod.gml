@@ -138,7 +138,9 @@ global.__bbmod_key_index_last = 0;
 /// @see BBMOD_RENDER_DEFERRED
 global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
 
-/// @var {array} The current `[x,y,z]` position of the camera.
+/// @var {array} The current `[x,y,z]` position of the camera. This should be
+/// updated every frame before rendering models, otherwise the default PBR
+/// shaders won't work properly!
 /// @see bbmod_set_camera_position
 global.bbmod_camera_position = [0, 0, 0];
 
@@ -214,8 +216,7 @@ function bbmod_load()
 /// @param {real} _x The x position of the camera.
 /// @param {real} _y The y position of the camera.
 /// @param {real} _z The z position of the camera.
-/// @note This should be called each frame before rendering, since it is
-/// required for proper functioning of PBR shaders!
+/// @see global.bbmod_camera_position
 function bbmod_set_camera_position(_x, _y, _z)
 {
 	gml_pragma("forceinline");
