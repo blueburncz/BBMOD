@@ -114,7 +114,8 @@ function BBMOD_DynamicBatch(_model) constructor
 	/// variation of it.
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.default_fn
-	static render_object = function (_object, _material, _fn) {
+	static render_object = function (_object, _material) {
+		var _fn = (argument_count > 2) ? argument[2] : default_fn;
 		var _find = 0;
 		repeat (instance_number(_object) mod size)
 		{
