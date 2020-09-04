@@ -296,6 +296,18 @@ function bbmod_render(_model)
 /// @param {string} _file The "*.bbmod" model file to load.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
+/// @example
+/// ```gml
+/// try
+/// {
+///     mod_character = new BBMOD_Model("character.bbmod");
+/// }
+/// catch (e)
+/// {
+///     // The model failed to load!
+/// }
+/// ```
+/// @throws {BBMOD_Error} When the model fails to load.
 function BBMOD_Model(_file) constructor
 {
 	var _sha1 = (argument_count > 1) ? argument[1] : undefined;

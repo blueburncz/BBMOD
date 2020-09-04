@@ -196,6 +196,18 @@ function bbmod_get_interpolated_rotation_key(_rotations, _time)
 /// @param {string} _file The "*.bbanim" animation file to load.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
+/// @example
+/// ```gml
+/// try
+/// {
+///     anim_walk = new BBMOD_Animation("walk.bbanim");
+/// }
+/// catch (e)
+/// {
+///     // The animation failed to load!
+/// }
+/// ```
+/// @throws {BBMOD_Error} When the animation fails to load.
 function BBMOD_Animation(_file) constructor
 {
 	var _sha1 = (argument_count > 1) ? argument[1] : undefined;

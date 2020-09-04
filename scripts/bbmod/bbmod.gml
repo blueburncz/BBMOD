@@ -5,7 +5,8 @@
 #macro BBMOD_MATERIAL_DEFAULT_ANIMATED global.__bbmod_material_default_animated
 
 /// @macro {BBMOD_EMaterial} The default material for dynamically batched models.
-#macro BBMOD_MATERIAL_DEFAULT_BACTHED global.__bbmod_material_default_batched
+/// @see BBMOD_DynamicBatch
+#macro BBMOD_MATERIAL_DEFAULT_BATCHED global.__bbmod_material_default_batched
 
 /// @macro {undefined} An empty value. This is for example used in the legacy
 /// scripts as a return value when animation/model loading fails or to unassign
