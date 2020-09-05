@@ -160,7 +160,7 @@ function bbmod_animate(_animation_player, _animation_instance, _animation_time, 
 		{
 			var _bone_data = _anim_bones[_bone_index];
 
-			if (!is_undefined(_bone_data))
+			if (_bone_data != undefined)
 			{
 			#region Position
 				var _override = _position_overrides[_bone_index];
@@ -577,7 +577,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	static update = function () {
 		if (!paused)
 		{
-			time += delta_time * 0.001 * playback_speed;
+			time += delta_time * 0.000001 * playback_speed;
 			bbmod_animation_player_update(animation_player, time, interpolate_frames);
 		}
 	};

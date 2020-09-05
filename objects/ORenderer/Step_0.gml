@@ -83,16 +83,10 @@ case EMode.Static:
 	{
 		_model = new BBMOD_StaticBatch(model[EMode.Normal].get_vertex_format(false));
 		_model.start();
-		for (var i = 0; i < 8; ++i)
+		with (OModel)
 		{
-			for (var j = 0; j < 8; ++j)
-			{
-				_model.add(model[EMode.Normal],
-					matrix_build(
-						i * 5, j * 5, 0,
-						0, 0, 0,
-						1, 1, 1));
-			}
+			_model.add(other.model[EMode.Normal],
+				matrix_build(x, y, z, 0, 0, image_angle, image_xscale, image_xscale, image_xscale));
 		}
 		_model.finish();
 		_model.freeze();
@@ -108,20 +102,7 @@ case EMode.Dynamic:
 		_model.freeze();
 		model[mode_current] = _model;
 	}
-
-	var i = 0;
-	var _time = current_time * 0.01;
-
-	repeat (BATCH_SIZE)
-	{
-		var _idx = i * 8;
-
-		var _rot = rotations[i];
-		_rot += _time * 10;
-		var _quat = ce_quaternion_create_from_axisangle([1, 0, 0], _rot);
-		array_copy(data, _idx + 4, _quat, 0, 4);
-
-		++i;
-	}
 	break;
 }
+
+animation_player.update();

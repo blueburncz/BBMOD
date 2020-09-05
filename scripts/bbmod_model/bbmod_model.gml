@@ -338,6 +338,24 @@ function BBMOD_Model(_file) constructor
 		throw new BBMOD_Error("Could not load file " + _file);
 	}
 
+	static print_skeleton = function (_bone, _indent) {
+		show_debug_message(string_repeat(" ", _indent * 8) + _bone[BBMOD_EBone.Name] + ": " + string(_bone[BBMOD_EBone.Index]));
+		var _children = _bone[BBMOD_EBone.Children];
+		if (is_array(_children))
+		{
+			for (var i = 0; i < array_length(_children); ++i)
+			{
+				print_skeleton(_children[i], _indent + 1);
+			}
+		}
+	};
+
+	if (model[BBMOD_EModel.BoneCount] > 0)
+	{
+		print_skeleton(model[BBMOD_EModel.Skeleton], 0);
+		//game_end();
+	}
+
 	/// @func freeze()
 	/// @desc Freezes all vertex buffers used by the model. This should make its
 	/// rendering faster, but it disables creating new batches of the model.
@@ -406,9 +424,12 @@ function BBMOD_Model(_file) constructor
 		var _materials = (argument_count > 0) ? argument[0] : undefined;
 		var _transform = (argument_count > 1) ? argument[1] : undefined;
 
-		_materials = ce_array_map(_materials, method(undefined, function (_m) {
-			return _m.material;
-		}));
+		if (_materials != undefined)
+		{
+			_materials = ce_array_map(_materials, method(undefined, function (_m) {
+				return _m.material;
+			}));
+		}
 
 		bbmod_render(model, _materials, _transform);
 	};

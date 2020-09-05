@@ -207,6 +207,9 @@
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Models","resourceVersion":"1.0","name":"Sphere.bbmod","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Skies","resourceVersion":"1.0","name":"NoonIBL.png","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Skies","resourceVersion":"1.0","name":"NoonSky.png","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"Paladin.bbmod","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"Idle.bbanim","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"PaladinBaseOpacity.png","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2.3.0.529",

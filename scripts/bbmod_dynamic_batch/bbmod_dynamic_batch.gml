@@ -24,7 +24,7 @@
 /// /// @desc Draw event
 /// car_batch.render_object(OCar, mat_car);
 /// ```
-function BBMOD_DynamicBatch(_model) constructor
+function BBMOD_DynamicBatch(_model, _size) constructor
 {
 	/// @var {BBMOD_Model} A model that is being batched.
 	/// @readonly
@@ -128,9 +128,12 @@ function BBMOD_DynamicBatch(_model) constructor
 	static render_object = function (_object, _material) {
 		var _fn = (argument_count > 2) ? argument[2] : default_fn;
 		var _find = 0;
-		repeat (instance_number(_object) mod size)
+		var _data_size = size * 8;
+		var _data_empty = array_create(_data_size, 0);
+		var _data = array_create(_data_size, 0)
+		repeat (ceil(instance_number(_object) / size))
 		{
-			var _data = array_create(size * 8, 0);
+			array_copy(_data, 0, _data_empty, 0, _data_size);
 			var _index = 0;
 			repeat (size)
 			{
