@@ -1,19 +1,29 @@
-/// @enum An enumeration of members of a BBMOD_EAnimationPlayer legacy struct.
-/// @deprecated Legacy structs are deprecated. Please use {@link BBMOD_AnimationPlayer}
-/// instead.
+/// @enum An enumeration of members of a legacy animation player struct.
+/// @deprecated This legacy struct is deprecated. Please use
+/// {@link BBMOD_AnimationPlayer} instead.
 enum BBMOD_EAnimationPlayer
 {
-	/// @member A Model which the BBMOD_EAnimationPlayer animates.
+	/// @member {BBMOD_EModel} A model which the animation player animates.
+	/// @see BBMOD_EModel
+	/// @readonly
 	Model,
-	/// @member List of animations to play.
+	/// @member {ds_list<BBMOD_EAnimation>} List of animations to play.
+	/// @see BBMOD_EAnimation
+	/// @readonly
 	Animations,
-	/// @member The last played {@link BBMOD_EAnimationInstance}.
+	/// @member {BBMOD_EAnimationInstance} The last played animation instance.
+	/// @see BBMOD_EAnimationInstance
+	/// @readonly
 	AnimationInstanceLast,
-	/// @member Array of 3D vectors for bone position overriding.
+	/// @member {array<real[]>} Array of 3D vectors for bone position overriding.
+	/// @see bbmod_set_bone_position
+	/// @readonly
 	BonePositionOverride,
-	/// @member Array of quaternions for bone position overriding.
+	/// @member {array<real[]>} Array of quaternions for bone rotation overriding.
+	/// @see bbmod_set_bone_rotation
+	/// @readonly
 	BoneRotationOverride,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
@@ -406,7 +416,7 @@ function bbmod_animate(_animation_player, _animation_instance, _animation_time, 
 /// @func bbmod_get_transform(_animation_player)
 /// @desc Returns an array of current transformation matrices for animated models.
 /// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
-/// @return {array} The array of transformation matrices.
+/// @return {real[]} The array of transformation matrices.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.get_transform}
 /// instead.
 function bbmod_get_transform(_animation_player)
@@ -425,7 +435,7 @@ function bbmod_get_transform(_animation_player)
 /// for example for attachments.
 /// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
 /// @param {real} _bone_index The index of the bone.
-/// @return {array} The transformation matrix.
+/// @return {real[]} The transformation matrix.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.get_bone_transform}
 /// instead.
 function bbmod_get_bone_transform(_animation_player, _bone_index)
@@ -443,7 +453,7 @@ function bbmod_get_bone_transform(_animation_player, _bone_index)
 /// that's currently playing.
 /// @param {BBMOD_EAnimationPlayer} _animation_player The animation player.
 /// @param {real} _bone_id The id of the bone to transform.
-/// @param {array/undefined} _position An array with the new bone position `[x,y,z]`,
+/// @param {real[]/undefined} _position An array with the new bone position `[x,y,z]`,
 /// or `undefined` to disable the override.
 /// @note This should be used before {@link bbmod_animation_player_update}
 /// is executed.
@@ -461,7 +471,7 @@ function bbmod_set_bone_position(_animation_player, _bone_id, _position)
 /// that's currently playing.
 /// @param {BBMOD_EAnimationPlayer} _animation_player The animation player.
 /// @param {real} _bone_id The id of the bone to transform.
-/// @param {array/undefined} _quaternion An array with the new bone rotation `[x,y,z,w]`,
+/// @param {real[]/undefined} _quaternion An array with the new bone rotation `[x,y,z,w]`,
 /// or `undefined` to disable the override.
 /// @note This should be used before {@link bbmod_animation_player_update}
 /// is executed.
@@ -562,8 +572,8 @@ function BBMOD_AnimationPlayer(_model) constructor
 	animation_player = bbmod_animation_player_create(model.model);
 
 	/// @func update()
-	/// @desc Updates the animation player. This should be called every frame
-	/// in the step event.
+	/// @desc Updates the animation player. This should be called every frame in
+	/// the step event.
 	static update = function () {
 		if (!paused)
 		{
@@ -585,7 +595,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 
 	/// @func get_transform()
 	/// @desc Returns an array of current transformation matrices of all bones.
-	/// @return {array} The array of transformation matrices.
+	/// @return {real[]} The array of transformation matrices.
 	static get_transform = function () {
 		return bbmod_get_transform(animation_player);
 	};
@@ -594,7 +604,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @desc Returns a transformation matrix of a bone, which can be used
 	/// for example for attachments.
 	/// @param {real} _bone_index An index of a bone.
-	/// @return {array} The transformation matrix.
+	/// @return {real[]} The transformation matrix.
 	static get_bone_transform = function (_bone_index) {
 		return bbmod_get_bone_transform(animation_player, _bone_index);
 	};
@@ -602,7 +612,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @func set_bone_position(_bone_index, _position)
 	/// @desc Changes a position of a bone.
 	/// @param {real} _bone_index An index of a bone.
-	/// @param {array} _position An `[x,y,z]` position of a bone.
+	/// @param {real[]} _position An `[x,y,z]` position of a bone.
 	static set_bone_position = function (_bone_index, _position) {
 		bbmod_set_bone_position(animation_player, _bone_index, _position);
 	};
@@ -610,7 +620,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @func set_bone_rotation(_bone_index, _rotation)
 	/// @desc Changes a rotation of a bone.
 	/// @param {real} _bone_index An index of a bone.
-	/// @param {array} _rotation A quaternion.
+	/// @param {real[]} _rotation A quaternion.
 	static set_bone_rotation = function (_bone_index, _rotation) {
 		bbmod_set_bone_rotation(animation_player, _bone_index, _rotation);
 	};

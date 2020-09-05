@@ -34,7 +34,7 @@ function BBMOD_DynamicBatch(_model) constructor
 	/// @readonly
 	size = _size;
 
-	/// @var {real} A vertex buffer.
+	/// @var {vertex_buffer} A vertex buffer.
 	/// @private
 	vertex_buffer = vertex_create_buffer();
 
@@ -57,7 +57,7 @@ function BBMOD_DynamicBatch(_model) constructor
 	/// @desc Submits the dynamic batch for rendering.
 	/// @param {BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
-	/// @param {array} _data An array containing data for each rendered instance.
+	/// @param {real[]} _data An array containing data for each rendered instance.
 	/// @see BBMOD_DynamicBatch.render_object
 	static render = function (_material, _data) {
 		if ((_material.get_render_path() & global.bbmod_render_pass) == 0)
@@ -76,7 +76,7 @@ function BBMOD_DynamicBatch(_model) constructor
 	/// @desc The default function used in {@link BBMOD_DynamicBatch.render_object}.
 	/// Uses instance's variables `x`, `y`, `z` for position, `image_xscale` for
 	/// uniform scale and `image_angle` for rotation around the `z` axis.
-	/// @param {array} _data An array to which the function will write instance
+	/// @param {real[]} _data An array to which the function will write instance
 	/// data. The data layout is compatible with shader `BBMOD_ShDefaultBatched`
 	/// and hence with material {@link BBMOD_MATERIAL_DEFAULT_BATCHED}.
 	/// @param {real} _index An index at which the first variable will be written.

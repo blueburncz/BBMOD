@@ -1,16 +1,16 @@
 /// @func BBMOD_StaticBatch(_vformat)
 /// @desc A static batch.
-/// @param {real} _vformat The vertex format of the static batch. All models
+/// @param {vertex_format} _vformat The vertex format of the static batch. All models
 /// added to the same static batch must have the same vertex format. This
 /// vertex format must not contain bone data!
 /// @see BBMOD_Model.get_vertex_format
 function BBMOD_StaticBatch(_vformat) constructor
 {
-	/// @var {real} A vertex buffer.
+	/// @var {vertex_buffer} A vertex buffer.
 	/// @private
 	vertex_buffer = vertex_create_buffer();
 
-	/// @var {real} The format of the vertex buffer.
+	/// @var {vertex_format} The format of the vertex buffer.
 	/// @private
 	vertex_format = _vformat;
 
@@ -26,7 +26,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// @func add(_model, _transform)
 	/// @desc Adds a model to the static batch.
 	/// @param {BBMOD_Model} _model The model.
-	/// @param {array} _transform A transformation matrix of the model.
+	/// @param {real[]} _transform A transformation matrix of the model.
 	/// @example
 	/// ```gml
 	/// mod_tree = new BBMOD_Model("Tree.bbmod");

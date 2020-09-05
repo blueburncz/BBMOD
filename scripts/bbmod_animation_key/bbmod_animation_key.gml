@@ -1,14 +1,17 @@
-/// @enum An enumeration of members of a BBMOD_EAnimationKey legacy struct.
+/// @enum An enumeration of members of a legacy animation key struct.
 /// This struct is never instantiated, it only serves as an interface for
 /// specific animation keys.
-/// @private
+/// @see BBMOD_EPositionKey
+/// @see BBMOD_ERotationKey
 enum BBMOD_EAnimationKey
 {
-	/// @member Time when the animation key occurs.
+	/// @member {real} Time when the animation key occurs.
+	/// @readonly
 	Time,
-	/// @member Additional key data.
+	/// @member Key data. Can differ based on the key type.
+	/// @readonly
 	Data,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 

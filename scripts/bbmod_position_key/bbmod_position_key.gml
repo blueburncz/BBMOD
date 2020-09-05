@@ -1,12 +1,16 @@
-/// @enum An enumeration of members of a BBMOD_EPositionKey legacy struct.
-/// @private
+/// @enum An enumeration of members of a legacy position key struct.
+/// @extends BBMOD_EAnimationKey
+/// @see BBMOD_EAnimationKey
+/// @see BBMOD_ERotationKey
 enum BBMOD_EPositionKey
 {
-	/// @member Time when the animation key occurs.
+	/// @member {real} Time when the animation key occurs.
+	/// @readonly
 	Time,
-	/// @member A 3D position vector.
+	/// @member {real[]} A 3D position vector.
+	/// @readonly
 	Position,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
@@ -33,7 +37,7 @@ function bbmod_position_key_interpolate(_pk1, _pk2, _factor)
 
 /// @func bbmod_position_key_load(_buffer)
 /// @desc Loads a position key from a buffer.
-/// @param {real} _buffer The buffer to load the struct from.
+/// @param {buffer} _buffer The buffer to load the struct from.
 /// @return {BBMOD_EPositionKey} The loaded position key.
 /// @private
 function bbmod_position_key_load(_buffer)
@@ -47,7 +51,7 @@ function bbmod_position_key_load(_buffer)
 /// @func bbmod_position_key_to_matrix(_position_key)
 /// @desc Creates a translation matrix from a position key.
 /// @param {BBMOD_EPositionKey} _position_key The position key.
-/// @return {array} The created matrix.
+/// @return {real[]} The created matrix.
 /// @private
 function bbmod_position_key_to_matrix(_position_key)
 {

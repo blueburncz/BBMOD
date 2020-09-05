@@ -1,12 +1,16 @@
-/// @enum An enumeration of members of a BBMOD_ERotationKey legacy struct.
-/// @private
+/// @enum An enumeration of members of a legacy rotation key struct.
+/// @extends BBMOD_EAnimationKey
+/// @see BBMOD_EAnimationKey
+/// @see BBMOD_EPositionKey
 enum BBMOD_ERotationKey
 {
-	/// @member Time when the animation key occurs.
+	/// @member {real} Time when the animation key occurs.
+	/// @readonly
 	Time,
-	/// @member A quaternion.
+	/// @member {real[]} A quaternion.
+	/// @readonly
 	Rotation,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
@@ -33,7 +37,7 @@ function bbmod_rotation_key_interpolate(_rk1, _rk2, _factor)
 
 /// @func bbmod_rotation_key_load(_buffer)
 /// @desc Loads a rotation key from a buffer.
-/// @param {real} _buffer The buffer to load the struct from.
+/// @param {buffer} _buffer The buffer to load the struct from.
 /// @return {BBMOD_ERotationKey} The loaded rotation key.
 /// @private
 function bbmod_rotation_key_load(_buffer)
@@ -47,7 +51,7 @@ function bbmod_rotation_key_load(_buffer)
 /// @func bbmod_rotation_key_to_matrix(_rotation_key)
 /// @desc Creates a rotation matrix from a rotation key.
 /// @param {BBMOD_ERotationKey} _rotation_key The rotation key.
-/// @return {array} The created matrix.
+/// @return {real[]} The created matrix.
 /// @private
 function bbmod_rotation_key_to_matrix(_rotation_key)
 {

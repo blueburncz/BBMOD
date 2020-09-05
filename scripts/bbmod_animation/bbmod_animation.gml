@@ -1,17 +1,22 @@
-/// @enum An enumeration of members of a BBMOD_EAnimation legacy struct.
-/// @deprecated Legacy structs are deprecated. Please use {@link BBMOD_Animation}
-/// instead.
+/// @enum An enumeration of members of a legacy animation struct.
+/// @deprecated This legacy struct is deprecated. Please use
+/// {@link BBMOD_Animation} instead.
 enum BBMOD_EAnimation
 {
-	/// @member The version of the animation file.
+	/// @member {real} The version of the animation file.
+	/// @readonly
 	Version,
-	/// @member The duration of the animation (in tics).
+	/// @member {real} The duration of the animation (in tics).
+	/// @readonly
 	Duration,
-	/// @member Number of animation tics per second.
+	/// @member {real} Number of animation tics per second.
+	/// @readonly
 	TicsPerSecond,
-	/// @member An array of {@link BBMOD_EAnimationBone} legacy structs.
+	/// @member {BBMOD_EAnimationBone[]} An array of animation bones.
+	/// @see BBMOD_EAnimationBone
+	/// @readonly
 	Bones,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
@@ -106,7 +111,7 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 
 /// @func bbmod_animation_load(_buffer, _version)
 /// @desc Loads an animation from a buffer.
-/// @param {real} _buffer The buffer to load the struct from.
+/// @param {buffer} _buffer The buffer to load the struct from.
 /// @param {real} _version The version of the animation file.
 /// @return {BBMOD_EAnimation} The loaded animation.
 /// @private

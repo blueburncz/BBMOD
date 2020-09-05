@@ -1,31 +1,45 @@
-/// @enum An enumeration of members of a BBMOD_EAnimationInstance legacy struct.
-/// @private
+/// @enum An enumeration of members of a legacy animation instance struct.
+/// @see BBMOD_EAnimation
 enum BBMOD_EAnimationInstance
 {
-	/// @member The animation to be played.
+	/// @member {BBMOD_EAnimation} The animation to be played.
+	/// @see BBMOD_EAnimation
+	/// @readonly
 	Animation,
-	/// @member `true` if the animation should be looped.
+	/// @member {bool} If `true` then the animation should be looped.
+	/// @readonly
 	Loop,
-	/// @member Time when the animation started playing (in seconds).
+	/// @member {real} Time when the animation started playing (in seconds).
+	/// @readonly
 	AnimationStart,
-	/// @member The current animation time.
+	/// @member {real} The current animation time.
+	/// @readonly
 	AnimationTime,
-	/// @member Animation time in last frame. Used to reset members in
+	/// @member {real} Animation time in last frame. Used to reset members in
 	/// looping animations or when switching between animations.
+	/// @readonly
 	AnimationTimeLast,
-	/// @member An index of a position key which was used last frame.
+	/// @member {real} An index of a position key which was used last frame.
 	/// Used to optimize search of position keys in following frames.
+	/// @see BBMOD_EPositionKey
+	/// @readonly
 	PositionKeyLast,
-	/// @member An index of a rotation key which was used last frame.
+	/// @member {real} An index of a rotation key which was used last frame.
 	/// Used to optimize search of rotation keys in following frames.
+	/// @see BBMOD_ERotationKey
+	/// @readonly
 	RotationKeyLast,
-	/// @member An array of individual bone transformation matrices,
+	/// @member {array<real[]>} An array of individual bone transformation matrices,
 	/// without offsets. Useful for attachments.
+	/// @see bbmod_get_bone_transform
+	/// @readonly
 	BoneTransform,
-	/// @member An array containing transformation matrices of all bones.
+	/// @member {real[]} An array containing transformation matrices of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
+	/// @see bbmod_get_transform
+	/// @readonly
 	TransformArray,
-	/// @member The size of a {@link BBMOD_EAnimationInstance} legacy struct.
+	/// @member The size of the struct.
 	SIZE
 };
 

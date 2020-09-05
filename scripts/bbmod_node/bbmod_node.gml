@@ -1,21 +1,26 @@
-/// @enum An enumeration of members of a BBMOD_ENode legacy struct.
-/// @private
+/// @enum An enumeration of members of a legacy node struct.
+/// @see BBMOD_EModel.RootNode
 enum BBMOD_ENode
 {
-	/// @member The name of the node.
+	/// @member {string} The name of the node.
+	/// @readonly
 	Name,
-	/// @member An array of {@link BBMOD_EMesh} legacy structs.
+	/// @member {BBMOD_EMesh} An array of meshes.
+	/// @see BBMOD_EMesh
+	/// @readonly
 	Meshes,
-	/// @member An array of child BBMOD_ENode legacy structs.
+	/// @member An array of child nodes.
+	/// @see BBMOD_ENode
+	/// @readonly
 	Children,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
 /// @func bbmod_node_load(_buffer, _format, _format_mask)
 /// @desc Loads a node from a buffer.
-/// @param {real} _buffer The buffer to load the struct from.
-/// @param {real} _format A vertex format for node's meshes.
+/// @param {buffer} _buffer The buffer to load the struct from.
+/// @param {vertex_format} _format A vertex format for node's meshes.
 /// @param {real} _format_mask A vertex format mask.
 /// @return {BBMOD_ENode} The loaded node.
 /// @private
@@ -81,7 +86,7 @@ function bbmod_node_destroy(_node)
 /// @param {BBMOD_ENode} _node The node.
 /// @param {BBMOD_EMaterial[]} _materials An array of materials, one for each
 /// material slot of the model.
-/// @param {array/undefined} _transform An array of transformation matrices
+/// @param {real[]/undefined} _transform An array of transformation matrices
 /// (for animated models) or `undefined`.
 /// @private
 function bbmod_node_render(_model, _node, _materials, _transform)
@@ -167,7 +172,7 @@ function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 /// @param {BBMOD_EModel} _model
 /// @param {BBMOD_ENode} _node
 /// @param {BBMOD_StaticBatch} _static_batch
-/// @param {array} _transform
+/// @param {real[]} _transform
 /// @private
 function _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
 {

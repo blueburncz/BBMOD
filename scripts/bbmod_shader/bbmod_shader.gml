@@ -1,6 +1,6 @@
 /// @func _bbmod_shader_set_camera_position(_shader[, _camera_position])
-/// @param {real} _shader
-/// @param {array} [_camera_position]
+/// @param {shader} _shader
+/// @param {real[]} [_camera_position]
 /// @private
 function _bbmod_shader_set_camera_position(_shader)
 {
@@ -10,8 +10,8 @@ function _bbmod_shader_set_camera_position(_shader)
 }
 
 /// @func _bbmod_shader_set_dynamic_batch_data(_shader, _data)
-/// @param {real} _shader
-/// @param {array} _data
+/// @param {shader} _shader
+/// @param {real[]} _data
 /// @private
 function _bbmod_shader_set_dynamic_batch_data(_shader, _data)
 {
@@ -20,7 +20,7 @@ function _bbmod_shader_set_dynamic_batch_data(_shader, _data)
 }
 
 /// @func _bbmod_shader_set_exposure(_shader[, _exposure])
-/// @param {real} _shader
+/// @param {shader} _shader
 /// @param {real} [_exposure]
 /// @private
 function _bbmod_shader_set_exposure(_shader)
@@ -31,7 +31,7 @@ function _bbmod_shader_set_exposure(_shader)
 }
 
 /// @func _bbmod_shader_set_ibl(_shader, _texture, _texel)
-/// @param {real} _shader
+/// @param {shader} _shader
 /// @param {ptr} _texture
 /// @param {real} _texel
 /// @private

@@ -95,30 +95,32 @@
 
 /// @macro {real} An index of the last found animation key, updated by
 /// {@link bbmod_find_animation_key}.
-/// @private
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
 
-/// @var {real} Mapping of vertex format masks to existing vertex formats.
+/// @var {ds_map} Mapping of vertex format masks to existing vertex formats.
 /// @private
 global.__bbmod_vertex_formats = ds_map_create();
 
-/// @var {real} The default material.
+/// @var {BBMOD_EMaterial} The default material.
+/// @see BBMOD_EMaterial
 /// @private
 global.__bbmod_material_default = bbmod_material_create(BBMOD_ShDefault);
 
-/// @var {real} The default material for animated models.
+/// @var {BBMOD_EMaterial} The default material for animated models.
+/// @see BBMOD_EMaterial
 /// @private
 global.__bbmod_material_default_animated = bbmod_material_create(BBMOD_ShDefaultAnimated);
 
-/// @var {real} The default material for dynamically batched models.
+/// @var {BBMOD_EMaterial} The default material for dynamically batched models.
+/// @see BBMOD_EMaterial
 /// @private
 global.__bbmod_material_default_batched = bbmod_material_create(BBMOD_ShDefaultBatched);
 
-/// @var {array/BBMOD_NONE} The currently applied material.
+/// @var {BBMOD_EMaterial/BBMOD_NONE} The currently applied material.
 /// @private
 global.__bbmod_material_current = BBMOD_NONE;
 
-/// @var {real} A stack used when posing skeletons to avoid recursion.
+/// @var {ds_stack} A stack used when posing skeletons to avoid recursion.
 /// @private
 global.__bbmod_anim_stack = ds_stack_create();
 
@@ -138,7 +140,7 @@ global.__bbmod_key_index_last = 0;
 /// @see BBMOD_RENDER_DEFERRED
 global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
 
-/// @var {array} The current `[x,y,z]` position of the camera. This should be
+/// @var {real[]} The current `[x,y,z]` position of the camera. This should be
 /// updated every frame before rendering models, otherwise the default PBR
 /// shaders won't work properly!
 /// @see bbmod_set_camera_position
@@ -160,7 +162,7 @@ global.__bbmod_ibl_texel = 0;
 /// @param {string} _file The path to the file.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
-/// @return {array/BBMOD_NONE} The loaded model/animation on success or
+/// @return {BBMOD_EModel/BBMOD_EAnimation/BBMOD_NONE} The loaded model/animation on success or
 /// {@link BBMOD_NONE} on fail.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Model}
 /// and {@link BBMOD_Animation} instead to load resources.

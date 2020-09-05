@@ -1,41 +1,58 @@
-/// @enum An enumeration of members of a BBMOD_EModel legacy struct.
-/// @deprecated Legacy structs are deprecated. Please use {@link BBMOD_Model}
-/// instead.
+/// @enum An enumeration of members of a legacy model struct.
+/// @deprecated This legacy struct is deprecated. Please use
+/// {@link BBMOD_Model} instead.
 enum BBMOD_EModel
 {
-	/// @member The version of the model file.
+	/// @member {real} The version of the model file.
+	/// @readonly
 	Version,
-	/// @member `true` if the model has vertices (always `true`).
+	/// @member {bool} If `true` then the model has vertices (always `true`).
+	/// @readonly
 	HasVertices,
-	/// @member `true` if the model has normal vectors.
+	/// @member {bool} If `true` then the model has normal vectors.
+	/// @readonly
 	HasNormals,
-	/// @member `true` if the model has texture coordinates.
+	/// @member {bool} If `true` then the model has texture coordinates.
+	/// @readonly
 	HasTextureCoords,
-	/// @member `true` if the model has vertex colors.
+	/// @member {bool} If `true` then the model has vertex colors.
+	/// @readonly
 	HasColors,
-	/// @member `true` if the model has tangent vectors and bitangent sign.
+	/// @member {bool} If `true` then the model has tangent vectors and bitangent sign.
+	/// @readonly
 	HasTangentW,
-	/// @member `true` if the model has vertex weights and bone indices.
+	/// @member {bool} If `true` then the model has vertex weights and bone indices.
+	/// @readonly
 	HasBones,
-	/// @member The global inverse transform matrix.
+	/// @member {real[]} The global inverse transform matrix.
+	/// @readonly
 	InverseTransformMatrix,
-	/// @member The root {@link BBMOD_ENode} legacy struct.
+	/// @member {BBMOD_ENode} The root node.
+	/// @see BBMOD_ENode
+	/// @readonly
 	RootNode,
-	/// @member Number of bones.
+	/// @member {real} Number of bones.
+	/// @readonly
 	BoneCount,
-	/// @member The root {@link BBMOD_EBone} legacy struct.
+	/// @member {BBMOD_EBone} The root bone.
+	/// @see BBMOD_EBone
+	/// @readonly
 	Skeleton,
-	/// @member Number of materials that the model uses.
+	/// @member {real} Number of materials that the model uses.
+	/// @see BBMOD_EMaterial
+	/// @readonly
 	MaterialCount,
-	/// @member Array of material names.
+	/// @member {string[]} Array of material names.
+	/// @see BBMOD_EMaterial
+	/// @readonly
 	MaterialNames,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
 /// @func bbmod_model_load(_buffer, _version)
 /// @desc Loads a model from a buffer.
-/// @param {real} _buffer The buffer to load the struct from.
+/// @param {buffer} _buffer The buffer to load the struct from.
 /// @param {real} _version The version of the model file.
 /// @return {BBMOD_EModel} The loaded model.
 /// @private
@@ -187,7 +204,7 @@ function bbmod_model_find_bone_id(_model, _bone_name)
 /// @func bbmod_model_get_bindpose_transform(_model)
 /// @desc Creates a transformation array with model's bindpose.
 /// @param {BBMOD_EModel} _model A model.
-/// @return {array} The created array.
+/// @return {real[]} The created array.
 function bbmod_model_get_bindpose_transform(_model)
 {
 	var _bone_count = _model[BBMOD_EModel.BoneCount];
@@ -238,7 +255,7 @@ function _bbmod_model_to_dynamic_batch(_model, _dynamic_batch)
 /// @func _bbmod_model_to_static_batch(_model, _static_batch, _transform)
 /// @param {BBMOD_EModel} _model
 /// @param {BBMOD_EStaticBatch} _static_batch
-/// @param {array} _transform
+/// @param {real[]} _transform
 /// @private
 function _bbmod_model_to_static_batch(_model, _static_batch, _transform)
 {
@@ -252,7 +269,7 @@ function _bbmod_model_to_static_batch(_model, _static_batch, _transform)
 /// @param {BBMOD_EMaterial[]/undefined} [_materials] An array of materials,
 /// one for each material slot of the model. If not specified, then
 /// the default material is used for each slot. Default is `undefined`.
-/// @param {array/undefined} [_transform] An array of transformation matrices
+/// @param {real[]/undefined} [_transform] An array of transformation matrices
 /// (for animated models) or `undefined`.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Model.render}
 /// instead.
@@ -342,7 +359,7 @@ function BBMOD_Model(_file) constructor
 
 	/// @func get_bindpose_transform()
 	/// @desc Retrieves bindpose transform of the model.
-	/// @return {array} The bindpose transform.
+	/// @return {real[]} The bindpose transform.
 	static get_bindpose_transform = function () {
 		return bbmod_model_get_bindpose_transform(model);
 	};
@@ -371,7 +388,7 @@ function BBMOD_Model(_file) constructor
 	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
 	/// one for each material slot of the model. If not specified, then
 	/// the default material is used for each slot. Defaults to `undefined`.
-	/// @param {array/undefined} [_transform] An array of transformation matrices
+	/// @param {real[]/undefined} [_transform] An array of transformation matrices
 	/// (for animated models) or `undefined`.
 	/// @example
 	/// ```gml

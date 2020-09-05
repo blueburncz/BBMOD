@@ -1,20 +1,26 @@
-/// @enum An enumeration of members of an BBMOD_EAnimationBone legacy struct.
-/// @private
+/// @enum An enumeration of members of a legacy bone struct.
+/// @see BBMOD_EAnimation
 enum BBMOD_EAnimationBone
 {
-	/// @member The bone index.
+	/// @member {real} The index of the bone that this transforms.
+	/// @see BBMOD_EBone.Index
+	/// @readonly
 	BoneIndex,
-	/// @member An array of {@link BBMOD_EPositionKey} legacy structs.
+	/// @member {BBMOD_EPositionKey[]} An array of position keys.
+	/// @see BBMOD_EPositionKey
+	/// @readonly
 	PositionKeys,
-	/// @member An array of {@link BBMOD_ERotationKey} legacy structs.
+	/// @member {BBMOD_ERotationKey[]} An array of rotation keys.
+	/// @see BBMOD_ERotationKey
+	/// @readonly
 	RotationKeys,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
 /// @func bbmod_animation_bone_load(_buffer)
 /// @desc Loads a bone from a buffer.
-/// @param {real} _buffer The buffer to load the struct from.
+/// @param {buffer} _buffer The buffer to load the struct from.
 /// @return {BBMOD_EAnimationBone} The loaded bone.
 /// @private
 function bbmod_animation_bone_load(_buffer)

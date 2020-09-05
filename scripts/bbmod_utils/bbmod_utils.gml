@@ -10,7 +10,7 @@
 /// @param {bool} _bones `true` if the vertex format must have vertex weights and bone
 /// indices.
 /// @param {bool} [_ids] `true` if the vertex format must have ids for dynamic batching.
-/// @return {real} The vertex format.
+/// @return {vertex_format} The vertex format.
 /// @private
 function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones)
 {
@@ -80,8 +80,8 @@ function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, 
 
 /// @func bbmod_load_matrix(_buffer)
 /// @desc Loads a 4x4 row-major matrix from a buffer.
-/// @param {real} _buffer The buffer to load the matrix from.
-/// @return {array} The loaded matrix.
+/// @param {buffer} _buffer The buffer to load the matrix from.
+/// @return {real[]} The loaded matrix.
 /// @private
 function bbmod_load_matrix(_buffer)
 {
@@ -96,8 +96,8 @@ function bbmod_load_matrix(_buffer)
 
 /// @func bbmod_load_quaternion(_buffer)
 /// @desc Loads a quaternion from a buffer.
-/// @param {real} _buffer The buffer to load a quaternion from.
-/// @return {array} The loaded quaternion.
+/// @param {buffer} _buffer The buffer to load a quaternion from.
+/// @return {real[]} The loaded quaternion.
 /// @private
 function bbmod_load_quaternion(_buffer)
 {
@@ -111,8 +111,8 @@ function bbmod_load_quaternion(_buffer)
 
 /// @func bbmod_load_vec3(_buffer)
 /// @desc Loads a 3D vector from a buffer.
-/// @param {real} _buffer The buffer to load the vector from.
-/// @return {array} The loaded vector.
+/// @param {buffer} _buffer The buffer to load the vector from.
+/// @return {real[]} The loaded vector.
 /// @private
 function bbmod_load_vec3(_buffer)
 {

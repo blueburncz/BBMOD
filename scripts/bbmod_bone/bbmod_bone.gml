@@ -1,24 +1,30 @@
-/// @enum An enumeration of members of a BBMOD_EBone legacy struct.
-/// @private
+/// @enum An enumeration of members of a legacy bone struct.
+/// @see BBMOD_EModel.Skeleton
 enum BBMOD_EBone
 {
-	/// @member The name of the bone.
+	/// @member {string} The name of the bone.
+	/// @readonly
 	Name,
-	/// @member The index of the bone.
+	/// @member {real} The index of the bone.
+	/// @readonly
 	Index,
-	/// @member The transformation matrix.
+	/// @member {real[]} The transformation matrix.
+	/// @readonly
 	TransformMatrix,
-	/// @member The offset matrix.
+	/// @member {real[]} The offset matrix.
+	/// @readonly
 	OffsetMatrix,
-	/// @member An array of child BBMOD_EBone legacy structs.
+	/// @member {BBMOD_EBone[]} An array of child bones.
+	/// @see BBMOD_EBone
+	/// @readonly
 	Children,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
 /// @func bbmod_bone_load(_buffer)
 /// @desc Loads a bone from a buffer.
-/// @param {real} _buffer The buffer to load the struct from.
+/// @param {buffer} _buffer The buffer to load the struct from.
 /// @return {BBMOD_EBone} The loaded bone.
 /// @private
 function bbmod_bone_load(_buffer)

@@ -1,19 +1,23 @@
-/// @enum An enumeration of members of a BBMOD_EMesh legacy struct.
-/// @private
+/// @enum An enumeration of members of a legacy mesh struct.
+/// @see BBMOD_ENode
 enum BBMOD_EMesh
 {
-	/// @member An index of a material that the mesh uses.
+	/// @member {real} An index of a material that the mesh uses.
+	/// @see BBMOD_EModel.MaterialCount
+	/// @see BBMOD_EModel.MaterialNames
+	/// @readonly
 	MaterialIndex,
-	/// @member A vertex buffer.
+	/// @member {vertex_buffer} A vertex buffer.
+	/// @readonly
 	VertexBuffer,
-	/// @member Total number of members of this enum.
+	/// @member The size of the struct.
 	SIZE
 };
 
 /// @func bbmod_mesh_load(_buffer, _format, _format_mask)
 /// @desc Loads a mesh from a bufffer.
-/// @param {real} _buffer The buffer to load the struct from.
-/// @param {real} _format A vertex format that the mesh uses.
+/// @param {buffer} _buffer The buffer to load the struct from.
+/// @param {vertex_format} _format A vertex format that the mesh uses.
 /// @param {real} _format_mask A vertex format mask.
 /// @return {BBMOD_EMesh} The loaded mesh.
 /// @private
@@ -165,7 +169,7 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 /// @param {BBMOD_EModel} _model
 /// @param {BBMOD_EMesh} _mesh
 /// @param {BBMOD_StaticBatch} _static_batch
-/// @param {array} _transform
+/// @param {real[]} _transform
 /// @private
 function _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 {
