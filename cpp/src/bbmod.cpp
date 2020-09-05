@@ -689,7 +689,7 @@ void BoneToBBMOD(id_t id, aiMatrix4x4& matrix, std::ofstream& fout, std::ofstrea
  *        * Time (double)
  *        * Rotation quaternion (4x f32)
  */
-void AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream& fout)
+bool AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream& fout)
 {
 	// Duration in ticks
 	FILE_WRITE_DATA(fout, animation->mDuration);
@@ -712,6 +712,10 @@ void AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream
 		{
 			++affectedBones;
 		}
+		else
+		{
+			return false;
+		}
 	}
 
 	FILE_WRITE_DATA(fout, affectedBones);
@@ -722,45 +726,49 @@ void AnimationToBBMOD(aiAnimation* animation, uint32_t numOfBones, std::ofstream
 		aiNodeAnim* nodeAnim = animation->mChannels[j];
 		const char* nodeAnimName = nodeAnim->mNodeName.C_Str();
 
-		if (gIndexBoneNameToIndex.find(nodeAnimName) != gIndexBoneNameToIndex.end())
+		if (gIndexBoneNameToIndex.find(nodeAnimName) == gIndexBoneNameToIndex.end())
 		{
-			// Bone id
-			id_t boneId = gIndexBoneNameToIndex.at(nodeAnimName);
-			FILE_WRITE_DATA(fout, boneId);
+			continue;
+		}
 
-			// Position keys
-			uint32_t positionKeyCount = nodeAnim->mNumPositionKeys;
-			FILE_WRITE_DATA(fout, positionKeyCount);
+		// Bone id
+		id_t boneId = gIndexBoneNameToIndex.at(nodeAnimName);
+		FILE_WRITE_DATA(fout, boneId);
 
-			for (uint32_t k = 0; k < positionKeyCount; ++k)
-			{
-				aiVectorKey& key = nodeAnim->mPositionKeys[k];
+		// Position keys
+		uint32_t positionKeyCount = nodeAnim->mNumPositionKeys;
+		FILE_WRITE_DATA(fout, positionKeyCount);
 
-				// Time
-				FILE_WRITE_DATA(fout, key.mTime);
+		for (uint32_t k = 0; k < positionKeyCount; ++k)
+		{
+			aiVectorKey& key = nodeAnim->mPositionKeys[k];
 
-				// Position
-				aiVector3D& position = key.mValue;
-				FILE_WRITE_VEC3(fout, position);
-			}
+			// Time
+			FILE_WRITE_DATA(fout, key.mTime);
 
-			// Rotation keys
-			uint32_t rotationKeyCount = nodeAnim->mNumRotationKeys;
-			FILE_WRITE_DATA(fout, rotationKeyCount);
+			// Position
+			aiVector3D& position = key.mValue;
+			FILE_WRITE_VEC3(fout, position);
+		}
 
-			for (uint32_t k = 0; k < rotationKeyCount; ++k)
-			{
-				aiQuatKey& key = nodeAnim->mRotationKeys[k];
+		// Rotation keys
+		uint32_t rotationKeyCount = nodeAnim->mNumRotationKeys;
+		FILE_WRITE_DATA(fout, rotationKeyCount);
 
-				// Time
-				FILE_WRITE_DATA(fout, key.mTime);
+		for (uint32_t k = 0; k < rotationKeyCount; ++k)
+		{
+			aiQuatKey& key = nodeAnim->mRotationKeys[k];
 
-				// Position
-				aiQuaternion& rotation = key.mValue;
-				FILE_WRITE_VEC4(fout, rotation);
-			}
+			// Time
+			FILE_WRITE_DATA(fout, key.mTime);
+
+			// Position
+			aiQuaternion& rotation = key.mValue;
+			FILE_WRITE_VEC4(fout, rotation);
 		}
 	}
+
+	return true;
 }
 
 /**
@@ -832,6 +840,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 	std::ofstream log(GetFilename(fout, "log", ".txt"), std::ios::out);
 
 	Assimp::Importer* importer = new Assimp::Importer();
+	importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 
 	int flags = (0
 		| aiProcessPreset_TargetRealtime_Quality
@@ -892,7 +901,11 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 				std::ofstream fanim(fname.c_str(), std::ios::out | std::ios::binary);
 
 				WriteHeader_BBANIM(fanim);
-				AnimationToBBMOD(animation, (uint32_t)gNextBoneId, fanim);
+				if (!AnimationToBBMOD(animation, (uint32_t)gNextBoneId, fanim))
+				{
+					std::cout << std::endl;
+					return BBMOD_ERR_CONVERSION_FAILED;
+				}
 
 				file.flush();
 				file.close();
