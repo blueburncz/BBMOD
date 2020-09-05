@@ -416,8 +416,8 @@ function BBMOD_Material(_shader) constructor
 	};
 
 	/// @func clone()
-	/// @desc Clones the material.
-	/// @return {BBMOD_Material} The created clone.
+	/// @desc Creates a copy of the material.
+	/// @return {BBMOD_Material} The created copy.
 	static clone = function () {
 		var _clone = new BBMOD_Material(get_shader());
 		_clone.material = bbmod_material_clone(material);
