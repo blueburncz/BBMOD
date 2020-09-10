@@ -241,7 +241,7 @@ function BBMOD_Material(_shader) constructor
 			var _on_apply = OnApply;
 			if (!is_undefined(_on_apply))
 			{
-				method(self, _on_apply)(self);
+				_on_apply(self);
 			}
 		}
 
