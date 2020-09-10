@@ -129,4 +129,7 @@ case EMode.Dynamic:
 	break;
 }
 
-//animation_player.update();
+if (TEST_ANIMATIONS)
+{
+	animation_player.update();
+}

@@ -73,15 +73,20 @@ for (var i = 0; i < BATCH_SIZE; ++i)
 	instance_create_layer(_x, _y, layer, OModel);
 }
 
-//paladin = new BBMOD_Model("Paladin.bbmod");
-//idle = new BBMOD_Animation("Idle.bbanim");
-//animation_player = new BBMOD_AnimationPlayer(paladin);
-//animation_player.OnEvent = function (_event, _animation) {
-//	switch (_event)
-//	{
-//	case BBMOD_EV_ANIMATION_END:
-//		show_debug_message("Animation has finished playing!");
-//		break;
-//	}
-//};
-//animation_player.play(idle, false);
+#macro TEST_ANIMATIONS false
+
+if (TEST_ANIMATIONS)
+{
+	paladin = new BBMOD_Model("Paladin.bbmod");
+	idle = new BBMOD_Animation("Idle.bbanim");
+	animation_player = new BBMOD_AnimationPlayer(paladin);
+	animation_player.OnEvent = function (_event, _animation) {
+		switch (_event)
+		{
+		case BBMOD_EV_ANIMATION_END:
+			show_debug_message("Animation has finished playing!");
+			break;
+		}
+	};
+	animation_player.play(idle, false);
+}

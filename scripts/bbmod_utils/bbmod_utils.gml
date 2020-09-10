@@ -90,7 +90,6 @@ function bbmod_load_matrix(_buffer)
 	{
 		_matrix[@ i] = buffer_read(_buffer, buffer_f32);
 	}
-	ce_matrix_transpose(_matrix);
 	return _matrix;
 }
 

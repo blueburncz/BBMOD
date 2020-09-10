@@ -6,7 +6,6 @@
     {"id":{"name":"bbmod_dynamic_batch","path":"scripts/bbmod_dynamic_batch/bbmod_dynamic_batch.yy",},"order":8,},
     {"id":{"name":"bbmod_error","path":"scripts/bbmod_error/bbmod_error.yy",},"order":9,},
     {"id":{"name":"ce_quaternion","path":"scripts/ce_quaternion/ce_quaternion.yy",},"order":3,},
-    {"id":{"name":"ce_matrix","path":"scripts/ce_matrix/ce_matrix.yy",},"order":4,},
     {"id":{"name":"bbmod_animation_key","path":"scripts/bbmod_animation_key/bbmod_animation_key.yy",},"order":4,},
     {"id":{"name":"BBMOD_ShDefaultAnimated","path":"shaders/BBMOD_ShDefaultAnimated/BBMOD_ShDefaultAnimated.yy",},"order":1,},
     {"id":{"name":"BBMOD_SprEnvBRDF","path":"sprites/BBMOD_SprEnvBRDF/BBMOD_SprEnvBRDF.yy",},"order":1,},
