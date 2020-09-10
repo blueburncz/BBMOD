@@ -220,13 +220,12 @@ function BBMOD_Animation() constructor
 	/// @return {BBMOD_Animation} Returns `self` to allow method chaining.
 	/// @private
 	static from_buffer = function (_buffer) {
-		_animation.Duration = buffer_read(_buffer, buffer_f64);
-		_animation.TicsPerSecond = buffer_read(_buffer, buffer_f64);
+		Duration = buffer_read(_buffer, buffer_f64);
+		TicsPerSecond = buffer_read(_buffer, buffer_f64);
 
 		var _mesh_bone_count = buffer_read(_buffer, buffer_u32);
 
-		var _bones = array_create(_mesh_bone_count, undefined);
-		_animation.Bones = _bones;
+		Bones = array_create(_mesh_bone_count, undefined);
 
 		var _affected_bone_count = buffer_read(_buffer, buffer_u32);
 
@@ -234,7 +233,7 @@ function BBMOD_Animation() constructor
 		{
 			var _bone_data = bbmod_animation_bone_load(_buffer);
 			var _bone_index = _bone_data[BBMOD_EAnimationBone.BoneIndex];
-			_bones[@ _bone_index] = _bone_data;
+			Bones[@ _bone_index] = _bone_data;
 		}
 
 		return self;

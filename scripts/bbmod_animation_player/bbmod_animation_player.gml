@@ -189,12 +189,12 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @var {array<real[]>} Array of 3D vectors for bone position overriding.
 	/// @see BBMOD_AnimationPlayer.set_bone_position
 	/// @private
-	BonePositionOverride = array_create(_bone_count, undefined);
+	BonePositionOverride = array_create(Model.BoneCount, undefined);
 
 	/// @var {array<real[]>} Array of quaternions for bone rotation overriding.
 	/// @see BBMOD_AnimationPlayer.set_bone_rotation
 	/// @private
-	BoneRotationOverride = array_create(_bone_count, undefined);
+	BoneRotationOverride = array_create(Model.BoneCount, undefined);
 
 	/// @var {bool} If `true`, then the animation playback is paused.
 	Paused = (argument_count > 1) ? argument[1] : false;
@@ -505,7 +505,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// the step event.
 	/// @return {BBMOD_AnimationPlayer} Returns `self` to allow method chaining.
 	static update = function () {
-		if (!Paused)
+		if (Paused)
 		{
 			return;
 		}
@@ -562,7 +562,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 
 			animate(_anim_inst, _animation_time);
 
-			_anim_player.AnimationInstanceLast = _anim_inst;
+			AnimationInstanceLast = _anim_inst;
 		}
 
 		return self;

@@ -430,19 +430,19 @@ function BBMOD_Model(_file) constructor
 		var _materials = (argument_count > 0) ? argument[0] : undefined;
 		var _transform = (argument_count > 1) ? argument[1] : undefined;
 
-		if (_materials != undefined)
-		{
-			_materials = ce_array_map(_materials, method(undefined, function (_m) {
-				return _m.material;
-			}));
-		}
-		else
+		if (is_undefined(_materials))
 		{
 			_materials = array_create(
 				MaterialCount,
 				is_undefined(_transform)
 					? BBMOD_MATERIAL_DEFAULT
 					: BBMOD_MATERIAL_DEFAULT_ANIMATED);
+		}
+		else
+		{
+			_materials = ce_array_map(_materials, method(undefined, function (_m) {
+				return _m.material;
+			}));
 		}
 
 		var _render_pass = global.bbmod_render_pass;

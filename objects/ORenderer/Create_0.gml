@@ -68,3 +68,8 @@ for (var i = 0; i < BATCH_SIZE; ++i)
 	var _y = (i div 8) * 5;
 	instance_create_layer(_x, _y, layer, OModel);
 }
+
+//paladin = new BBMOD_Model("Paladin.bbmod");
+//idle = new BBMOD_Animation("Idle.bbanim");
+//animation_player = new BBMOD_AnimationPlayer(paladin);
+//animation_player.play(idle, true);
