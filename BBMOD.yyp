@@ -17,7 +17,6 @@
     {"id":{"name":"BBMOD_ShSky","path":"shaders/BBMOD_ShSky/BBMOD_ShSky.yy",},"order":3,},
     {"id":{"name":"ORenderer","path":"objects/ORenderer/ORenderer.yy",},"order":1,},
     {"id":{"name":"bbmod_animation_bone","path":"scripts/bbmod_animation_bone/bbmod_animation_bone.yy",},"order":2,},
-    {"id":{"name":"ce_array_utils","path":"scripts/ce_array_utils/ce_array_utils.yy",},"order":6,},
     {"id":{"name":"RmTest","path":"rooms/RmTest/RmTest.yy",},"order":0,},
     {"id":{"name":"bbmod_dll","path":"scripts/bbmod_dll/bbmod_dll.yy",},"order":7,},
     {"id":{"name":"bbmod_shader","path":"scripts/bbmod_shader/bbmod_shader.yy",},"order":16,},
