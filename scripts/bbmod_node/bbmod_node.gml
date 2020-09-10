@@ -109,7 +109,7 @@ function bbmod_node_render(_model, _node, _materials, _transform)
 			continue;
 		}
 
-		if (bbmod_material_apply(_material) && !is_undefined(_transform))
+		if (_material.apply() && !is_undefined(_transform))
 		{
 			shader_set_uniform_f_array(shader_get_uniform(shader_current(), "u_mBones"), _transform);
 		}

@@ -186,7 +186,7 @@ function BBMOD_Material(_shader) constructor
 	BaseOpacity = sprite_get_texture(BBMOD_SprDefaultMaterial, 0);
 
 	/// @var {ptr} A texture with tangent-space normals in the RGB channels
-	/// and roughnes in the alpha channel.
+	/// and roughness in the alpha channel.
 	NormalRoughness = sprite_get_texture(BBMOD_SprDefaultMaterial, 1);
 
 	/// @var {ptr} A texture with metallic in the red channel and ambient occlusion
@@ -221,7 +221,9 @@ function BBMOD_Material(_shader) constructor
 	};
 
 	/// @func apply()
-	/// @desc Sets the current material to this one.
+	/// @desc Makes this material the current one.
+	/// @return {bool} Returns `true` if the material has changed or `false`
+	/// if this material already was the current one.
 	static apply = function () {
 		if (global.__bbmod_material_current == self)
 		{
