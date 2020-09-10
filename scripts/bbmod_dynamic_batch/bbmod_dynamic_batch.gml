@@ -43,7 +43,7 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	vertex_format = model.get_vertex_format(false, true);
 
 	vertex_begin(vertex_buffer, vertex_format);
-	_bbmod_model_to_dynamic_batch(model.model, self);
+	model.to_dynamic_batch(self);
 	vertex_end(vertex_buffer);
 
 	/// @func freeze()

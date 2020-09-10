@@ -2,7 +2,7 @@
 /// @see BBMOD_EAnimation
 enum BBMOD_EAnimationInstance
 {
-	/// @member {BBMOD_EAnimation} The animation to be played.
+	/// @member {BBMOD_Animation} The animation to be played.
 	/// @see BBMOD_EAnimation
 	/// @readonly
 	Animation,
@@ -45,7 +45,7 @@ enum BBMOD_EAnimationInstance
 
 /// @func bbmod_animation_instance_create(_animation)
 /// @desc Creates a new animation instance.
-/// @param {BBMOD_EAnimation} _animation An animation to create an instance of.
+/// @param {BBMOD_Animation} _animation An animation to create an instance of.
 /// @return {BBMOD_EAnimationInstance} The created animation instance.
 /// @private
 function bbmod_animation_instance_create(_animation)

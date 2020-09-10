@@ -46,7 +46,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// @see BBMOD_StaticBatch.finish
 	static add = function (_model, _transform) {
 		gml_pragma("forceinline");
-		_bbmod_model_to_static_batch(_model.model, self, _transform);
+		_model.to_static_batch(self, _transform);
 	}
 
 	/// @func finish()

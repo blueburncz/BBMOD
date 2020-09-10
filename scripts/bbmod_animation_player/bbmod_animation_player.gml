@@ -3,7 +3,7 @@
 /// {@link BBMOD_AnimationPlayer} instead.
 enum BBMOD_EAnimationPlayer
 {
-	/// @member {BBMOD_EModel} A model which the animation player animates.
+	/// @member {BBMOD_Model} A model which the animation player animates.
 	/// @see BBMOD_EModel
 	/// @readonly
 	Model,
@@ -29,13 +29,13 @@ enum BBMOD_EAnimationPlayer
 
 /// @func bbmod_animation_player_create(_model)
 /// @desc Creates a new animation player for given model.
-/// @param {BBMOD_EModel} _model A model.
+/// @param {BBMOD_Model} _model A model.
 /// @return {BBMOD_EAnimationPlayer} The created animation player.
 /// @deprecated This functions is deprecated. Please use {@link BBMOD_AnimationPlayer}
 /// instead.
 function bbmod_animation_player_create(_model)
 {
-	var _bone_count = _model[BBMOD_EModel.BoneCount];
+	var _bone_count = _model.BoneCount;
 	var _anim_player = array_create(BBMOD_EAnimationPlayer.SIZE, 0);
 	_anim_player[@ BBMOD_EAnimationPlayer.Model] = _model;
 	_anim_player[@ BBMOD_EAnimationPlayer.Animations] = ds_list_create();
@@ -93,7 +93,7 @@ function bbmod_animation_player_update(_anim_player, _current_time)
 
 		_anim_inst[@ BBMOD_EAnimationInstance.AnimationTime] = _animation_time;
 
-		var _bone_count = array_length(_animation[BBMOD_EAnimation.Bones]);
+		var _bone_count = array_length(_animation.Bones);
 		var _initialized = (!is_undefined(_anim_inst[BBMOD_EAnimationInstance.BoneTransform])
 			&& !is_undefined(_anim_inst[BBMOD_EAnimationInstance.TransformArray]));
 
@@ -135,16 +135,16 @@ function bbmod_animate(_animation_player, _animation_instance, _animation_time, 
 	var _model = _animation_player[BBMOD_EAnimationPlayer.Model];
 	var _animation = _animation_instance[BBMOD_EAnimationInstance.Animation];
 	var _anim_stack = global.__bbmod_anim_stack;
-	var _inverse_transform = _model[BBMOD_EModel.InverseTransformMatrix];
+	var _inverse_transform = _model.InverseTransformMatrix;
 	var _position_key_last = _animation_instance[BBMOD_EAnimationInstance.PositionKeyLast];
 	var _rotation_key_last = _animation_instance[BBMOD_EAnimationInstance.RotationKeyLast];
 	var _bone_transform = _animation_instance[BBMOD_EAnimationInstance.BoneTransform];
 	var _transform_array = _animation_instance[BBMOD_EAnimationInstance.TransformArray];
-	var _anim_bones = _animation[BBMOD_EAnimation.Bones];
+	var _anim_bones = _animation.Bones;
 	var _position_overrides = _animation_player[BBMOD_EAnimationPlayer.BonePositionOverride];
 	var _rotation_overrides = _animation_player[BBMOD_EAnimationPlayer.BoneRotationOverride];
 
-	ds_stack_push(_anim_stack, _model[BBMOD_EModel.Skeleton], matrix_build_identity());
+	ds_stack_push(_anim_stack, _model.Skeleton, matrix_build_identity());
 
 	var _mat_transform = matrix_build_identity();
 
@@ -487,7 +487,7 @@ function bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 /// @func bbmod_play(_animation_player, _animation[, _loop])
 /// @desc Starts playing an animation.
 /// @param {BBMOD_EAnimationPlayer} _animation_player An animation player.
-/// @param {BBMOD_EAnimation} _animation The animation to play.
+/// @param {BBMOD_Animation} _animation The animation to play.
 /// @param {bool} [_loop] `true` to loop the animation. Defaults to `false`.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.play} instead.
 function bbmod_play(_animation_player, _animation)
@@ -569,7 +569,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 
 	/// @var {BBMOD_EAnimationPlayer} The animation player that this struct wraps.
 	/// @private
-	animation_player = bbmod_animation_player_create(model.model);
+	animation_player = bbmod_animation_player_create(model);
 
 	/// @func update()
 	/// @desc Updates the animation player. This should be called every frame in

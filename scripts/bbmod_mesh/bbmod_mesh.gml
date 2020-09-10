@@ -81,14 +81,14 @@ function _bbmod_mesh_freeze(_mesh)
 function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 {
 	var _vertex_buffer = _dynamic_batch.vertex_buffer;
-	var _model = _dynamic_batch.model.model;
+	var _model = _dynamic_batch.model;
 
-	var _has_vertices = _model[BBMOD_EModel.HasVertices];
-	var _has_normals = _model[BBMOD_EModel.HasNormals];
-	var _has_uvs = _model[BBMOD_EModel.HasTextureCoords];
-	var _has_colors = _model[BBMOD_EModel.HasColors];
-	var _has_tangentw = _model[BBMOD_EModel.HasTangentW];
-	var _has_bones = _model[BBMOD_EModel.HasBones];
+	var _has_vertices = _model.HasVertices;
+	var _has_normals = _model.HasNormals;
+	var _has_uvs = _model.HasTextureCoords;
+	var _has_colors = _model.HasColors;
+	var _has_tangentw = _model.HasTangentW;
+	var _has_bones = _model.HasBones;
 
 	var _mesh_vertex_buffer = _mesh[BBMOD_EMesh.VertexBuffer];
 	var _vertex_count = vertex_get_number(_mesh_vertex_buffer);
@@ -166,7 +166,7 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 }
 
 /// @func _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
-/// @param {BBMOD_EModel} _model
+/// @param {BBMOD_Model} _model
 /// @param {BBMOD_EMesh} _mesh
 /// @param {BBMOD_StaticBatch} _static_batch
 /// @param {real[]} _transform
@@ -175,12 +175,12 @@ function _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 {
 	var _vertex_buffer = _static_batch.vertex_buffer;
 
-	var _has_vertices = _model[BBMOD_EModel.HasVertices];
-	var _has_normals = _model[BBMOD_EModel.HasNormals];
-	var _has_uvs = _model[BBMOD_EModel.HasTextureCoords];
-	var _has_colors = _model[BBMOD_EModel.HasColors];
-	var _has_tangentw = _model[BBMOD_EModel.HasTangentW];
-	var _has_bones = _model[BBMOD_EModel.HasBones];
+	var _has_vertices = _model.HasVertices;
+	var _has_normals = _model.HasNormals;
+	var _has_uvs = _model.HasTextureCoords;
+	var _has_colors = _model.HasColors;
+	var _has_tangentw = _model.HasTangentW;
+	var _has_bones = _model.HasBones;
 
 	var _mesh_vertex_buffer = _mesh[BBMOD_EMesh.VertexBuffer];
 

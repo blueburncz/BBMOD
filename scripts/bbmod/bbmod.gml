@@ -162,55 +162,40 @@ global.__bbmod_ibl_texel = 0;
 /// @param {string} _file The path to the file.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
-/// @return {BBMOD_EModel/BBMOD_EAnimation/BBMOD_NONE} The loaded model/animation on success or
+/// @return {BBMOD_Model/BBMOD_Animation/BBMOD_NONE} The loaded model/animation on success or
 /// {@link BBMOD_NONE} on fail.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Model}
 /// and {@link BBMOD_Animation} instead to load resources.
-function bbmod_load()
+function bbmod_load(_file)
 {
-	var _file = argument[0];
-	var _sha1 = (argument_count > 2) ? argument[2] : undefined;
-	var _bbmod = BBMOD_NONE;
+	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
+	var _ext = filename_ext(_file);
 
-	if (!file_exists(_file))
+	if (_ext == ".bbmod")
 	{
-		return _bbmod;
-	}
-
-	if (!is_undefined(_sha1))
-	{
-		if (sha1_file(_file) != _sha1)
+		try
 		{
-			return _bbmod;
+			return new BBMOD_Model(_file, _sha1);
+		}
+		catch (e)
+		{
+			return BBMOD_NONE;
 		}
 	}
 
-	var _buffer = buffer_load(_file);
-	buffer_seek(_buffer, buffer_seek_start, 0);
-
-	var _type = buffer_read(_buffer, buffer_string);
-	var _version = buffer_read(_buffer, buffer_u8);
-
-	if (_version == 1)
+	if (_ext == ".bbanim")
 	{
-		switch (_type)
+		try
 		{
-		case "bbmod":
-			_bbmod = bbmod_model_load(_buffer, _version);
-			break;
-
-		case "bbanim":
-			_bbmod = bbmod_animation_load(_buffer, _version);
-			break;
-
-		default:
-			break;
+			return new BBMOD_Animation(_file, _sha1);
+		}
+		catch (e)
+		{
+			return BBMOD_NONE;
 		}
 	}
 
-	buffer_delete(_buffer);
-
-	return _bbmod;
+	return BBMOD_NONE;
 }
 
 /// @func bbmod_set_camera_position(_x, _y, _z)

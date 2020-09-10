@@ -1,5 +1,5 @@
 /// @enum An enumeration of members of a legacy animation struct.
-/// @deprecated This legacy struct is deprecated. Please use
+/// @obsolete This legacy struct is obsolete. Please use
 /// {@link BBMOD_Animation} instead.
 enum BBMOD_EAnimation
 {
@@ -22,25 +22,25 @@ enum BBMOD_EAnimation
 
 /// @func bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
 /// @desc Creates a new animation transition between two specified animations.
-/// @param {BBMOD_EModel} _model A model.
-/// @param {BBMOD_EAnimation} _anim_from The first animation.
+/// @param {BBMOD_Model} _model A model.
+/// @param {BBMOD_Animation} _anim_from The first animation.
 /// @param {real} _time_from Animation time of the first animation.
-/// @param {BBMOD_EAnimation} _anim_to The second animation.
+/// @param {BBMOD_Animation} _anim_to The second animation.
 /// @param {real} _time_to Animation time of the second animation.
 /// @param {real} _duration The duration of the transition in seconds.
-/// @return {BBMOD_EAnimation} The created transition.
+/// @return {BBMOD_Animation} The created transition.
 /// @private
 function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
 {
 	var _anim_stack = global.__bbmod_anim_stack;
 
-	var _transition = array_create(BBMOD_EAnimation.SIZE, 0);
-	_transition[@ BBMOD_EAnimation.Version] = _anim_from[BBMOD_EAnimation.Version];
-	_transition[@ BBMOD_EAnimation.Duration] = _duration;
-	_transition[@ BBMOD_EAnimation.TicsPerSecond] = 1;
-	_transition[@ BBMOD_EAnimation.Bones] = array_create(_model[BBMOD_EModel.BoneCount], undefined);
+	var _transition = new BBMOD_Animation();
+	_transition.Version = _anim_from.Version;
+	_transition.Duration = _duration;
+	_transition.TicsPerSecond = 1;
+	_transition.Bones = array_create(_model.BoneCount, undefined);
 
-	ds_stack_push(_anim_stack, _model[BBMOD_EModel.Skeleton]);
+	ds_stack_push(_anim_stack, _model.Skeleton);
 
 	while (!ds_stack_empty(_anim_stack))
 	{
@@ -49,8 +49,8 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 
 		if (_bone_index >= 0)
 		{
-			var _bone_data_from = array_get(_anim_from[BBMOD_EAnimation.Bones], _bone_index);
-			var _bone_data_to = array_get(_anim_to[BBMOD_EAnimation.Bones], _bone_index);
+			var _bone_data_from = array_get(_anim_from.Bones, _bone_index);
+			var _bone_data_to = array_get(_anim_to.Bones, _bone_index);
 
 			if (!is_undefined(_bone_data_from)
 				&& !is_undefined(_bone_data_to))
@@ -93,7 +93,7 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 					_rotation_to,
 				];
 
-				array_set(_transition[BBMOD_EAnimation.Bones], _bone_index, _anim_bone);
+				array_set(_transition.Bones, _bone_index, _anim_bone);
 			}
 		}
 
@@ -109,39 +109,9 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 	return _transition;
 }
 
-/// @func bbmod_animation_load(_buffer, _version)
-/// @desc Loads an animation from a buffer.
-/// @param {buffer} _buffer The buffer to load the struct from.
-/// @param {real} _version The version of the animation file.
-/// @return {BBMOD_EAnimation} The loaded animation.
-/// @private
-function bbmod_animation_load(_buffer, _version)
-{
-	var _animation = array_create(BBMOD_EAnimation.SIZE, 0);
-	_animation[@ BBMOD_EAnimation.Version] = _version;
-	_animation[@ BBMOD_EAnimation.Duration] = buffer_read(_buffer, buffer_f64);
-	_animation[@ BBMOD_EAnimation.TicsPerSecond] = buffer_read(_buffer, buffer_f64);
-
-	var _mesh_bone_count = buffer_read(_buffer, buffer_u32);
-
-	var _bones = array_create(_mesh_bone_count, undefined);
-	_animation[@ BBMOD_EAnimation.Bones] = _bones;
-
-	var _affected_bone_count = buffer_read(_buffer, buffer_u32);
-
-	repeat (_affected_bone_count)
-	{
-		var _bone_data = bbmod_animation_bone_load(_buffer);
-		var _bone_index = _bone_data[BBMOD_EAnimationBone.BoneIndex];
-		_bones[@ _bone_index] = _bone_data;
-	}
-
-	return _animation;
-}
-
 /// @func bbmod_get_animation_time(_animation, _time_in_seconds)
 /// @desc Calculates animation time from current time in seconds.
-/// @param {BBMOD_EAnimation} _animation An animation.
+/// @param {BBMOD_Animation} _animation An animation.
 /// @param {real} _time_in_seconds The current time in seconds.
 /// @return {real} The animation time.
 /// @deprecated This function is deprecated. Please use
@@ -150,8 +120,8 @@ function bbmod_animation_load(_buffer, _version)
 function bbmod_get_animation_time(_animation, _time_in_seconds)
 {
 	gml_pragma("forceinline");
-	var _time_in_tics = _time_in_seconds * _animation[@ BBMOD_EAnimation.TicsPerSecond];
-	return (_time_in_tics mod _animation[@ BBMOD_EAnimation.Duration]);
+	var _time_in_tics = _time_in_seconds * _animation.TicsPerSecond;
+	return (_time_in_tics mod _animation.Duration);
 }
 
 /// @func bbmod_get_interpolated_position_key(_positions, _time[, _index])
@@ -213,18 +183,27 @@ function bbmod_get_interpolated_rotation_key(_rotations, _time)
 /// }
 /// ```
 /// @throws {BBMOD_Error} When the animation fails to load.
-function BBMOD_Animation(_file) constructor
+function BBMOD_Animation() constructor
 {
+	var _file = (argument_count > 0) ? argument[0] : undefined;
 	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
 
-	/// @var {BBMOD_EAnimation} The animation that this struct wraps.
-	/// @private
-	animation = bbmod_load(_file, _sha1);
+	/// @var {real} The version of the animation file.
+	/// @readonly
+	Version = 0;
 
-	if (animation == BBMOD_NONE)
-	{
-		throw new BBMOD_Error("Could not load file " + _file);
-	}
+	/// @var {real} The duration of the animation (in tics).
+	/// @readonly
+	Duration = 0;
+
+	/// @var {real} Number of animation tics per second.
+	/// @readonly
+	TicsPerSecond = 0;
+
+	/// @var {BBMOD_EAnimationBone[]} An array of animation bones.
+	/// @see BBMOD_EAnimationBone
+	/// @readonly
+	Bones = [];
 
 	/// @func get_animation_time(_time_in_seconds)
 	/// @desc Calculates animation time from current time in seconds.
@@ -234,4 +213,81 @@ function BBMOD_Animation(_file) constructor
 	static get_animation_time = function (_time_in_seconds) {
 		return bbmod_get_animation_time(animation, _time_in_seconds);
 	};
+
+	/// @func from_buffer(_buffer)
+	/// @desc Loads animation data from a buffer.
+	/// @param {buffer} _buffer The buffer to load the data from.
+	/// @return {BBMOD_Animation} Returns `self` to allow method chaining.
+	/// @private
+	static from_buffer = function (_buffer) {
+		_animation.Duration = buffer_read(_buffer, buffer_f64);
+		_animation.TicsPerSecond = buffer_read(_buffer, buffer_f64);
+
+		var _mesh_bone_count = buffer_read(_buffer, buffer_u32);
+
+		var _bones = array_create(_mesh_bone_count, undefined);
+		_animation.Bones = _bones;
+
+		var _affected_bone_count = buffer_read(_buffer, buffer_u32);
+
+		repeat (_affected_bone_count)
+		{
+			var _bone_data = bbmod_animation_bone_load(_buffer);
+			var _bone_index = _bone_data[BBMOD_EAnimationBone.BoneIndex];
+			_bones[@ _bone_index] = _bone_data;
+		}
+
+		return self;
+	};
+
+	/// @func from_file(_file[, _sha1])
+	/// @desc Loads animation data from a file.
+	/// @param {string} _file The path to the file.
+	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
+	/// does not match with this, then the animation will not be loaded.
+	/// @return {BBMOD_Animation} Returns `self` to allow method chaining.
+	/// @throws {BBMOD_Error} If loading fails.
+	/// @private
+	static from_file = function (_file) {
+		var _sha1 = (argument_count > 1) ? argument[1] : undefined;
+
+		if (!file_exists(_file))
+		{
+			throw new BBMOD_Error("File " + _file + " does not exist!");
+		}
+
+		if (!is_undefined(_sha1))
+		{
+			if (sha1_file(_file) != _sha1)
+			{
+				throw new BBMOD_Error("SHA1 does not match!");
+			}
+		}
+
+		var _buffer = buffer_load(_file);
+		buffer_seek(_buffer, buffer_seek_start, 0);
+
+		var _type = buffer_read(_buffer, buffer_string);
+		if (_type != "bbanim")
+		{
+			buffer_delete(_buffer);
+			throw new BBMOD_Error("Not a BBANIM file!");
+		}
+
+		Version = buffer_read(_buffer, buffer_u8);
+		if (Version != 1)
+		{
+			buffer_delete(_buffer);
+			throw new BBMOD_Error("Invalid version " + string(Version) + "!");
+		}
+
+		from_buffer(_buffer);
+		buffer_delete(_buffer);
+		return self;
+	};
+
+	if (_file != undefined)
+	{
+		from_file(_file, _sha1);
+	}
 }

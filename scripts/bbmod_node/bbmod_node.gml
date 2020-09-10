@@ -82,7 +82,7 @@ function bbmod_node_destroy(_node)
 
 /// @func bbmod_node_render(_model, _node, _materials, _transform)
 /// @desc Submits a node for rendering.
-/// @param {BBMOD_EModel} _model The model to which the node belongs.
+/// @param {BBMOD_Model} _model The model to which the node belongs.
 /// @param {BBMOD_ENode} _node The node.
 /// @param {BBMOD_EMaterial[]} _materials An array of materials, one for each
 /// material slot of the model.
@@ -169,7 +169,7 @@ function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
 }
 
 /// @func _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
-/// @param {BBMOD_EModel} _model
+/// @param {BBMOD_Model} _model
 /// @param {BBMOD_ENode} _node
 /// @param {BBMOD_StaticBatch} _static_batch
 /// @param {real[]} _transform
