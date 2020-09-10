@@ -51,6 +51,30 @@ else if (keyboard_check(ord("D")))
 
 z += (keyboard_check(ord("E")) - keyboard_check(ord("Q"))) * _move_speed;
 
+// Camera
+var _from = [x, y, z];
+var _dcos_up = dcos(direction_up);
+var _to = [
+	dcos(direction) * _dcos_up,
+	-dsin(direction) * _dcos_up,
+	dsin(direction_up)
+];
+var _right = [
+	dcos(direction - 90),
+	-dsin(direction - 90),
+	0
+];
+var _up = ce_vec3_clone(_to);
+ce_vec3_cross(_up, _right);
+ce_vec3_add(_to, _from);
+
+camera_set_view_mat(camera, matrix_build_lookat(
+	_from[0], _from[1], _from[2],
+	_to[0], _to[1], _to[2],
+	_up[0], _up[1], _up[2]));
+
+bbmod_set_camera_position(_from[0], _from[1], _from[2]);
+
 // Controls
 var _strength = keyboard_check(vk_shift) ? 0.1 : 0.01;
 var _diff = (keyboard_check(vk_add) - keyboard_check(vk_subtract)) * _strength;

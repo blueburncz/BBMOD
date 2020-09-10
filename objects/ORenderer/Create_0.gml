@@ -8,6 +8,16 @@ gpu_set_ztestenable(true);
 gpu_set_zwriteenable(true);
 gpu_set_tex_filter(true);
 
+camera = camera_create();
+
+var _fov = 60;
+var _aspect = window_get_width() / window_get_height();
+var _znear = 0.1;
+var _zfar = 8192;
+
+camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
+	-_fov, -_aspect, _znear, _zfar));
+
 x = 3;
 z = 0;
 direction = 180;
