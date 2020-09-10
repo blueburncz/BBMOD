@@ -507,32 +507,29 @@ function BBMOD_AnimationPlayer(_model) constructor
 	static update = function () {
 		if (Paused)
 		{
-			return;
+			return self;
 		}
 
 		Time += delta_time * 0.000001 * PlaybackSpeed;
-		
-		var _current_time = Time;
-		var _animations = Animations;
 
-		repeat (ds_list_size(_animations))
+		repeat (ds_list_size(Animations))
 		{
-			var _anim_inst = _animations[| 0];
+			var _anim_inst = Animations[| 0];
 
 			if (is_undefined(_anim_inst.AnimationStart))
 			{
-				_anim_inst.AnimationStart = _current_time;
+				_anim_inst.AnimationStart = Time;
 			}
 
 			var _animation_start = _anim_inst.AnimationStart;
 			var _animation = _anim_inst.Animation;
-			var _animation_time = bbmod_get_animation_time(_animation, _current_time - _animation_start);
+			var _animation_time = bbmod_get_animation_time(_animation, Time - _animation_start);
 			var _looped = (_animation_time < _anim_inst.AnimationTimeLast);
 
 			if (_looped && !_anim_inst.Loop)
 			{
 				ce_trigger_event(BBMOD_EV_ANIMATION_END, _animation);
-				ds_list_delete(_animations, 0);
+				ds_list_delete(Animations, 0);
 				continue;
 			}
 
