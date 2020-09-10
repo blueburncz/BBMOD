@@ -66,10 +66,4 @@ case EMode.Dynamic:
 	break;
 }
 
-matrix_stack_push(matrix_get(matrix_world));
-matrix_set(matrix_world, matrix_build(-5, -5, 0, -90, 0, 0, 1, 1, 1));
-mod_character.render([mat_paladin], animation_player.get_transform());
-matrix_set(matrix_world, matrix_stack_top());
-matrix_stack_pop();
-
 bbmod_material_reset();

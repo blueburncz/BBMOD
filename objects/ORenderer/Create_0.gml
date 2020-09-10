@@ -58,10 +58,3 @@ for (var i = 0; i < BATCH_SIZE; ++i)
 	var _y = (i div 8) * 5;
 	instance_create_layer(_x, _y, layer, OModel);
 }
-
-mat_paladin = new BBMOD_Material(BBMOD_ShDefaultAnimated,
-	sprite_get_texture(sprite_add("PaladinBaseOpacity.png", 0, false, true, 0, 0), 0));
-mod_character = new BBMOD_Model("Paladin.bbmod");
-anim_idle = new BBMOD_Animation("Idle.bbanim");
-animation_player = new BBMOD_AnimationPlayer(mod_character);
-animation_player.play(anim_idle, true);

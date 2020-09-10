@@ -104,5 +104,3 @@ case EMode.Dynamic:
 	}
 	break;
 }
-
-animation_player.update();

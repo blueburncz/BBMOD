@@ -13,7 +13,7 @@
   "option_tvos_topshelf_wide_2x": "${base_options_dir}\\tvos\\topshelf\\topshelf_wide_2x.png",
   "option_tvos_splashscreen": "${base_options_dir}\\tvos\\splash\\splash.png",
   "option_tvos_splashscreen_2x": "${base_options_dir}\\tvos\\splash\\splash_2x.png",
-  "option_tvos_splash_time": 10,
+  "option_tvos_splash_time": 0,
   "option_tvos_interpolate_pixels": true,
   "option_tvos_scale": 0,
   "option_tvos_texture_page": "2048x2048",

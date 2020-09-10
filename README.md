@@ -17,7 +17,6 @@ An online documentation for the latest release of BBMOD can be found at https://
 
 # Links
 * [Assimp](https://github.com/assimp/assimp)
-* [CE](https://github.com/slagtand-org/ce)
 * [Discord](https://discord.gg/ep2BGPm)
 * [Documentation](https://blueburn.cz/bbmod/docs/)
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)

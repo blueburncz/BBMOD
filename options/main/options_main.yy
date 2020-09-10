@@ -1,9 +1,9 @@
 {
-  "option_gameguid": "d650e7e1-7b3e-49bc-b745-463fca05e21b",
+  "option_gameguid": "7f62f330-f6a9-4573-9243-b17031c61ada",
   "option_game_speed": 60,
   "option_mips_for_3d_textures": false,
   "option_draw_colour": 4294967295,
-  "option_window_colour": 4278190080,
+  "option_window_colour": 255,
   "option_steam_app_id": "0",
   "option_sci_usesci": false,
   "option_author": "",
