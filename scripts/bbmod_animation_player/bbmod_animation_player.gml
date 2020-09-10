@@ -210,6 +210,11 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// quality of animation playback.
 	InterpolateFrames = true;
 
+	/// @var {function/undefined} A function executed when an animation event
+	/// occurs. It will be given two arguments - the event type and an
+	/// {@link BBMOD_Animation}. Use `undefined` for no function.
+	OnEvent = undefined;
+
 	/// @func animate(_animation_instance, _animation_time)
 	/// @desc Calculates skeleton's current transformation matrices.
 	/// @param {BBMOD_AnimationInstance} _animation_instance An animation instance.
@@ -528,7 +533,10 @@ function BBMOD_AnimationPlayer(_model) constructor
 
 			if (_looped && !_anim_inst.Loop)
 			{
-				ce_trigger_event(BBMOD_EV_ANIMATION_END, _animation);
+				if (OnEvent != undefined)
+				{
+					OnEvent(BBMOD_EV_ANIMATION_END, _animation);
+				}
 				ds_list_delete(Animations, 0);
 				continue;
 			}

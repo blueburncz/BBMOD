@@ -28,17 +28,7 @@
 
 /// @macro {string} An event triggered on animation end. The event data
 /// will containg the animation that was finished playing.
-/// @example
-/// ```gml
-/// /// @desc User event
-/// switch (ce_get_event())
-/// {
-/// case BBMOD_EV_ANIMATION_END:
-///     var _animation = ce_get_event_data();
-///     // Do something when _animation ends...
-///     break;
-/// }
-/// ```
+/// @see BBMOD_AnimationPlayer.OnEvent
 #macro BBMOD_EV_ANIMATION_END "bbmod_ev_animation_end"
 
 /// @macro {real} A flag used to tell that a model is rendered in a forward
@@ -93,6 +83,7 @@
 
 /// @macro {real} An index of the last found animation key, updated by
 /// {@link bbmod_find_animation_key}.
+/// @private
 #macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
 
 /// @var {ds_map} Mapping of vertex format masks to existing vertex formats.
@@ -102,17 +93,17 @@ global.__bbmod_vertex_formats = ds_map_create();
 /// @var {BBMOD_EMaterial} The default material.
 /// @see BBMOD_EMaterial
 /// @private
-global.__bbmod_material_default = bbmod_material_create(BBMOD_ShDefault);
+global.__bbmod_material_default = new BBMOD_Material(BBMOD_ShDefault);
 
 /// @var {BBMOD_EMaterial} The default material for animated models.
 /// @see BBMOD_EMaterial
 /// @private
-global.__bbmod_material_default_animated = bbmod_material_create(BBMOD_ShDefaultAnimated);
+global.__bbmod_material_default_animated = new BBMOD_Material(BBMOD_ShDefaultAnimated);
 
 /// @var {BBMOD_EMaterial} The default material for dynamically batched models.
 /// @see BBMOD_EMaterial
 /// @private
-global.__bbmod_material_default_batched = bbmod_material_create(BBMOD_ShDefaultBatched);
+global.__bbmod_material_default_batched = new BBMOD_Material(BBMOD_ShDefaultBatched);
 
 /// @var {BBMOD_EMaterial/BBMOD_NONE} The currently applied material.
 /// @private

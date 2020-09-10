@@ -76,4 +76,12 @@ for (var i = 0; i < BATCH_SIZE; ++i)
 //paladin = new BBMOD_Model("Paladin.bbmod");
 //idle = new BBMOD_Animation("Idle.bbanim");
 //animation_player = new BBMOD_AnimationPlayer(paladin);
-//animation_player.play(idle, true);
+//animation_player.OnEvent = function (_event, _animation) {
+//	switch (_event)
+//	{
+//	case BBMOD_EV_ANIMATION_END:
+//		show_debug_message("Animation has finished playing!");
+//		break;
+//	}
+//};
+//animation_player.play(idle, false);
