@@ -242,7 +242,7 @@ function BBMOD_DLL() constructor
 
 	/// @func set_left_handed(_left_handed)
 	/// @desc Enables/disables conversion to left-handed coordinate system.
-	/// This is by default **disabled**.
+	/// This is by default **enabled**.
 	/// @param {bool} _left_handed `true` to enable conversion to left-handed
 	/// coordinate system.
 	/// @throws {BBMOD_Error} If the operation fails.

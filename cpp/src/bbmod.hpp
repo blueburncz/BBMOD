@@ -22,7 +22,7 @@
 struct BBMODConfig
 {
 	/** Convert data to left-handed. */
-	bool leftHanded = false;
+	bool leftHanded = true;
 
 	/** Invert vertex winding order. */
 	bool invertWinding = false;
@@ -35,7 +35,7 @@ struct BBMODConfig
 	bool disableTextureCoords = false;
 
 	/** Disable saving vertex colors. */
-	bool disableVertexColors = false;
+	bool disableVertexColors = true;
 
 	/** Disable saving tangent vector and bitangent sign. */
 	bool disableTangentW = false;
