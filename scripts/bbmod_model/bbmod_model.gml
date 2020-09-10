@@ -438,12 +438,6 @@ function BBMOD_Model(_file) constructor
 					? BBMOD_MATERIAL_DEFAULT
 					: BBMOD_MATERIAL_DEFAULT_ANIMATED);
 		}
-		else
-		{
-			_materials = ce_array_map(_materials, method(undefined, function (_m) {
-				return _m.material;
-			}));
-		}
 
 		var _render_pass = global.bbmod_render_pass;
 
@@ -451,7 +445,7 @@ function BBMOD_Model(_file) constructor
 		repeat (array_length(_materials))
 		{
 			var _material = _materials[i++];
-			if ((_material[BBMOD_EMaterial.RenderPath] & _render_pass) == 0)
+			if ((_material.RenderPath & _render_pass) == 0)
 			{
 				// Do not render the model if it doesn't use any material that
 				// can be used in the current render pass.

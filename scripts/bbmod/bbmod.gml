@@ -45,16 +45,14 @@
 /// render path.
 /// @see BBMOD_RENDER_DEFERRED
 /// @see global.bbmod_render_pass
-/// @see BBMOD_Material.get_render_path
-/// @see BBMOD_Material.set_render_path
+/// @see BBMOD_Material.RenderPath
 #macro BBMOD_RENDER_FORWARD (1)
 
 /// @macro {real} A flag used to tell that a model is rendered in a deferred
 /// render path.
 /// @see BBMOD_RENDER_FORWARD
 /// @see global.bbmod_render_pass
-/// @see BBMOD_Material.get_render_path
-/// @see BBMOD_Material.set_render_path
+/// @see BBMOD_Material.RenderPath
 #macro BBMOD_RENDER_DEFERRED (1 << 1)
 
 /// @macro {real} How many bites to shift to read/write a "has vertices"
@@ -244,7 +242,7 @@ function bbmod_set_ibl_texture(_texture, _texel)
 		var _material = global.__bbmod_material_current;
 		if (_material != BBMOD_NONE)
 		{
-			var _shader = _material[BBMOD_EMaterial.Shader];
+			var _shader = _material.Shader;
 			_bbmod_shader_set_ibl(_shader, _texture, _texel);
 		}
 	}

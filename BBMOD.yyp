@@ -19,7 +19,6 @@
     {"id":{"name":"BBMOD_ShSky","path":"shaders/BBMOD_ShSky/BBMOD_ShSky.yy",},"order":3,},
     {"id":{"name":"ORenderer","path":"objects/ORenderer/ORenderer.yy",},"order":1,},
     {"id":{"name":"bbmod_animation_bone","path":"scripts/bbmod_animation_bone/bbmod_animation_bone.yy",},"order":2,},
-    {"id":{"name":"shader_sky_on_apply","path":"scripts/shader_sky_on_apply/shader_sky_on_apply.yy",},"order":0,},
     {"id":{"name":"ce_array_utils","path":"scripts/ce_array_utils/ce_array_utils.yy",},"order":6,},
     {"id":{"name":"RmTest","path":"rooms/RmTest/RmTest.yy",},"order":0,},
     {"id":{"name":"bbmod_dll","path":"scripts/bbmod_dll/bbmod_dll.yy",},"order":7,},
@@ -79,7 +78,6 @@
     {"folderPath":"folders/Rooms/Test.yy","order":1,"resourceVersion":"1.0","name":"Test","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Scripts/BBMOD/ThirdParty.yy","order":20,"resourceVersion":"1.0","name":"ThirdParty","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Scripts/BBMOD/ThirdParty/CE.yy","order":1,"resourceVersion":"1.0","name":"CE","tags":[],"resourceType":"GMFolder",},
-    {"folderPath":"folders/Scripts/Test.yy","order":2,"resourceVersion":"1.0","name":"Test","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":461609314234257646,"resourceVersion":"1.0","name":"audiogroup_default","resourceType":"GMAudioGroup",},

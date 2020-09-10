@@ -70,15 +70,14 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// @desc Submits the static batch for rendering.
 	/// @param {BBMOD_EMaterial} _material A material.
 	static render = function (_material) {
-		if ((_material.get_render_path() & global.bbmod_render_pass) == 0)
+		if ((_material.RenderPath & global.bbmod_render_pass) == 0)
 		{
 			// Do not render the mesh if it doesn't use a material that can be used
 			// in the current render path.
 			return;
 		}
 		_material.apply();
-		var _tex_base = _material.get_base_opacity();
-		vertex_submit(vertex_buffer, pr_trianglelist, _tex_base);
+		vertex_submit(vertex_buffer, pr_trianglelist, _material.BaseOpacity);
 	}
 
 	/// @func destroy()

@@ -60,16 +60,15 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	/// @param {real[]} _data An array containing data for each rendered instance.
 	/// @see BBMOD_DynamicBatch.render_object
 	static render = function (_material, _data) {
-		if ((_material.get_render_path() & global.bbmod_render_pass) == 0)
+		if ((_material.RenderPath & global.bbmod_render_pass) == 0)
 		{
 			// Do not render the mesh if it doesn't use a material that can be used
 			// in the current render path.
 			return;
 		}
 		_material.apply();
-		_bbmod_shader_set_dynamic_batch_data(_material.get_shader(), _data);
-		var _tex_base = _material.get_base_opacity();
-		vertex_submit(vertex_buffer, pr_trianglelist, _tex_base);
+		_bbmod_shader_set_dynamic_batch_data(_material.Shader, _data);
+		vertex_submit(vertex_buffer, pr_trianglelist, _material.BaseOpacity);
 	};
 
 	/// @func default_fn(_data, _index)

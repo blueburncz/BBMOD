@@ -102,7 +102,7 @@ function bbmod_node_render(_model, _node, _materials, _transform)
 		var _material_index = _mesh[BBMOD_EMesh.MaterialIndex];
 		var _material = _materials[_material_index];
 
-		if ((_material[BBMOD_EMaterial.RenderPath] & _render_pass) == 0)
+		if ((_material.RenderPath & _render_pass) == 0)
 		{
 			// Do not render the mesh if it doesn't use a material that can be used
 			// in the current render path.
@@ -114,7 +114,7 @@ function bbmod_node_render(_model, _node, _materials, _transform)
 			shader_set_uniform_f_array(shader_get_uniform(shader_current(), "u_mBones"), _transform);
 		}
 
-		var _tex_base = _material[BBMOD_EMaterial.BaseOpacity];
+		var _tex_base = _material.BaseOpacity;
 		vertex_submit(_mesh[BBMOD_EMesh.VertexBuffer], pr_trianglelist, _tex_base);
 	}
 
