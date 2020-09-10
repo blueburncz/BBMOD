@@ -1,5 +1,5 @@
 /// @enum An enumeration of members of a legacy bone struct.
-/// @see BBMOD_EAnimation
+/// @see BBMOD_Animation
 enum BBMOD_EAnimationBone
 {
 	/// @member {real} The index of the bone that this transforms.
