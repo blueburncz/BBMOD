@@ -73,47 +73,47 @@ function bbmod_animation_player_update(_anim_player, _current_time)
 	{
 		var _anim_inst = _animations[| 0];
 
-		if (is_undefined(_anim_inst[BBMOD_EAnimationInstance.AnimationStart]))
+		if (is_undefined(_anim_inst.AnimationStart))
 		{
-			_anim_inst[@ BBMOD_EAnimationInstance.AnimationStart] = _current_time;
+			_anim_inst.AnimationStart = _current_time;
 		}
-		var _animation_start = _anim_inst[BBMOD_EAnimationInstance.AnimationStart];
+		var _animation_start = _anim_inst.AnimationStart;
 
-		var _animation = _anim_inst[BBMOD_EAnimationInstance.Animation];
+		var _animation = _anim_inst.Animation;
 
 		var _animation_time = bbmod_get_animation_time(_animation, _current_time - _animation_start);
-		var _looped = (_animation_time < _anim_inst[BBMOD_EAnimationInstance.AnimationTimeLast]);
+		var _looped = (_animation_time < _anim_inst.AnimationTimeLast);
 
-		if (_looped && !_anim_inst[BBMOD_EAnimationInstance.Loop])
+		if (_looped && !_anim_inst.Loop)
 		{
 			ce_trigger_event(BBMOD_EV_ANIMATION_END, _animation);
 			ds_list_delete(_animations, 0);
 			continue;
 		}
 
-		_anim_inst[@ BBMOD_EAnimationInstance.AnimationTime] = _animation_time;
+		_anim_inst.AnimationTime = _animation_time;
 
 		var _bone_count = array_length(_animation.Bones);
-		var _initialized = (!is_undefined(_anim_inst[BBMOD_EAnimationInstance.BoneTransform])
-			&& !is_undefined(_anim_inst[BBMOD_EAnimationInstance.TransformArray]));
+		var _initialized = (!is_undefined(_anim_inst.BoneTransform)
+			&& !is_undefined(_anim_inst.TransformArray));
 
 		if (!_initialized)
 		{
-			_anim_inst[@ BBMOD_EAnimationInstance.BoneTransform] =
+			_anim_inst.BoneTransform =
 				array_create(_bone_count * 16, 0);
-			_anim_inst[@ BBMOD_EAnimationInstance.TransformArray] =
+			_anim_inst.TransformArray =
 				array_create(_bone_count * 16, 0);
 		}
 
 		if (!_initialized || _looped)
 		{
-			_anim_inst[@ BBMOD_EAnimationInstance.PositionKeyLast] =
+			_anim_inst.PositionKeyLast =
 				array_create(_bone_count, 0);
-			_anim_inst[@ BBMOD_EAnimationInstance.RotationKeyLast] =
+			_anim_inst.RotationKeyLast =
 				array_create(_bone_count, 0);
 		}
 
-		_anim_inst[@ BBMOD_EAnimationInstance.AnimationTimeLast] = _animation_time;
+		_anim_inst.AnimationTimeLast = _animation_time;
 
 		bbmod_animate(_anim_player, _anim_inst, _animation_time, _interpolate_frames);
 
@@ -133,13 +133,13 @@ function bbmod_animate(_animation_player, _animation_instance, _animation_time, 
 	//var _t = get_timer();
 
 	var _model = _animation_player[BBMOD_EAnimationPlayer.Model];
-	var _animation = _animation_instance[BBMOD_EAnimationInstance.Animation];
+	var _animation = _animation_instance.Animation;
 	var _anim_stack = global.__bbmod_anim_stack;
 	var _inverse_transform = _model.InverseTransformMatrix;
-	var _position_key_last = _animation_instance[BBMOD_EAnimationInstance.PositionKeyLast];
-	var _rotation_key_last = _animation_instance[BBMOD_EAnimationInstance.RotationKeyLast];
-	var _bone_transform = _animation_instance[BBMOD_EAnimationInstance.BoneTransform];
-	var _transform_array = _animation_instance[BBMOD_EAnimationInstance.TransformArray];
+	var _position_key_last = _animation_instance.PositionKeyLast;
+	var _rotation_key_last = _animation_instance.RotationKeyLast;
+	var _bone_transform = _animation_instance.BoneTransform;
+	var _transform_array = _animation_instance.TransformArray;
 	var _anim_bones = _animation.Bones;
 	var _position_overrides = _animation_player[BBMOD_EAnimationPlayer.BonePositionOverride];
 	var _rotation_overrides = _animation_player[BBMOD_EAnimationPlayer.BoneRotationOverride];
@@ -424,7 +424,7 @@ function bbmod_get_transform(_animation_player)
 	var _animation = _animation_player[BBMOD_EAnimationPlayer.AnimationInstanceLast];
 	if (!is_undefined(_animation))
 	{
-		return _animation[BBMOD_EAnimationInstance.TransformArray];
+		return _animation.TransformArray;
 	}
 	var _model = _animation_player[BBMOD_EAnimationPlayer.Model];
 	return bbmod_model_get_bindpose_transform(_model);
@@ -445,7 +445,7 @@ function bbmod_get_bone_transform(_animation_player, _bone_index)
 	{
 		return matrix_build_identity();
 	}
-	return array_get(_anim_inst[BBMOD_EAnimationInstance.BoneTransform], _bone_index);
+	return array_get(_anim_inst.BoneTransform, _bone_index);
 }
 
 /// @func bbmod_set_bone_position(_animation_player, _bone_id, _position)
@@ -503,18 +503,18 @@ function bbmod_play(_animation_player, _animation)
 	{
 		var _transition = bbmod_animation_create_transition(
 			_animation_player[BBMOD_EAnimationPlayer.Model],
-			_animation_last[BBMOD_EAnimationInstance.Animation],
-			_animation_last[BBMOD_EAnimationInstance.AnimationTime],
+			_animation_last.Animation,
+			_animation_last.AnimationTime,
 			_animation,
 			0,
 			0.1);
 
-		var _transition_animation_instance = bbmod_animation_instance_create(_transition);
+		var _transition_animation_instance = new BBMOD_AnimationInstance(_transition);
 		ds_list_add(_animation_list, _transition_animation_instance);
 	}
 
-	var _animation_instance = bbmod_animation_instance_create(_animation);
-	_animation_instance[@ BBMOD_EAnimationInstance.Loop] = _loop;
+	var _animation_instance = new BBMOD_AnimationInstance(_animation);
+	_animation_instance.Loop = _loop;
 	ds_list_add(_animation_list, _animation_instance);
 }
 

@@ -1,8 +1,9 @@
 /// @enum An enumeration of members of a legacy animation instance struct.
-/// @see BBMOD_EAnimation
+/// @obsolete This legacy struct is obsolete. Please use
+/// {@link BBMOD_AnimationInstance} instead.
 enum BBMOD_EAnimationInstance
 {
-	/// @member {BBMOD_Animation} The animation to be played.
+	/// @member {BBMOD_EAnimation} The animation to be played.
 	/// @see BBMOD_EAnimation
 	/// @readonly
 	Animation,
@@ -29,7 +30,7 @@ enum BBMOD_EAnimationInstance
 	/// @see BBMOD_ERotationKey
 	/// @readonly
 	RotationKeyLast,
-	/// @member {array<real[]>} An array of individual bone transformation matrices,
+	/// @member {array<matrix>} An array of individual bone transformation matrices,
 	/// without offsets. Useful for attachments.
 	/// @see bbmod_get_bone_transform
 	/// @readonly
@@ -43,22 +44,55 @@ enum BBMOD_EAnimationInstance
 	SIZE
 };
 
-/// @func bbmod_animation_instance_create(_animation)
-/// @desc Creates a new animation instance.
+/// @func BBMOD_AnimationInstance(_animation)
+/// @desc An instance of an animation. Used for animation playback.
 /// @param {BBMOD_Animation} _animation An animation to create an instance of.
-/// @return {BBMOD_EAnimationInstance} The created animation instance.
-/// @private
-function bbmod_animation_instance_create(_animation)
+/// @see BBMOD_Animation
+function BBMOD_AnimationInstance(_animation) constructor
 {
-	var _anim_inst = array_create(BBMOD_EAnimationInstance.SIZE, 0);
-	_anim_inst[@ BBMOD_EAnimationInstance.Animation] = _animation;
-	_anim_inst[@ BBMOD_EAnimationInstance.Loop] = false;
-	_anim_inst[@ BBMOD_EAnimationInstance.AnimationStart] = undefined;
-	_anim_inst[@ BBMOD_EAnimationInstance.AnimationTime] = 0;
-	_anim_inst[@ BBMOD_EAnimationInstance.AnimationTimeLast] = 0;
-	_anim_inst[@ BBMOD_EAnimationInstance.PositionKeyLast] = 0;
-	_anim_inst[@ BBMOD_EAnimationInstance.RotationKeyLast] = 0;
-	_anim_inst[@ BBMOD_EAnimationInstance.BoneTransform] = undefined;
-	_anim_inst[@ BBMOD_EAnimationInstance.TransformArray] = undefined;
-	return _anim_inst;
+	/// @var {BBMOD_Animation} The animation to be played.
+	/// @see BBMOD_Animation
+	/// @readonly
+	Animation = _animation;
+
+	/// @var {bool} If `true` then the animation should be looped.
+	/// @readonly
+	Loop = false;
+
+	/// @var {real} Time when the animation started playing (in seconds).
+	/// @private
+	AnimationStart = undefined;
+
+	/// @var {real} The current animation time.
+	/// @private
+	AnimationTime = 0;
+
+	/// @var {real} Animation time in last frame. Used to reset members in
+	/// looping animations or when switching between animations.
+	/// @private
+	AnimationTimeLast = 0;
+
+	/// @member {var} An index of a position key which was used last frame.
+	/// Used to optimize search of position keys in following frames.
+	/// @see BBMOD_EPositionKey
+	/// @private
+	PositionKeyLast = 0;
+
+	/// @var {real} An index of a rotation key which was used last frame.
+	/// Used to optimize search of rotation keys in following frames.
+	/// @see BBMOD_ERotationKey
+	/// @private
+	RotationKeyLast = 0;
+
+	/// @member {array<matrix>} An array of individual bone transformation matrices,
+	/// without offsets. Useful for attachments.
+	/// @see {@link BBMOD_AnimationPlayer.get_bone_transform}
+	/// @private
+	BoneTransform = undefined;
+
+	/// @member {real[]} An array containing transformation matrices of all bones.
+	/// Used to pass current model pose as a uniform to a vertex shader.
+	/// @see {@link BBMOD_AnimationPlayer.get_transform}
+	/// @private
+	TransformArray = undefined;
 }
