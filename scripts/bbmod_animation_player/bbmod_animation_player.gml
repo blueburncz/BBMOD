@@ -213,6 +213,19 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @var {function/undefined} A function executed when an animation event
 	/// occurs. It will be given two arguments - the event type and an
 	/// {@link BBMOD_Animation}. Use `undefined` for no function.
+	/// @example
+	/// ```gml
+	/// animation_player = new BBMOD_AnimationPlayer(model);
+	/// animation_player.OnEvent = function (_event, _animation) {
+	///     switch (_event)
+	///     {
+	///     case BBMOD_EV_ANIMATION_END:
+	///         // Do something when _animation ends...
+	///         break;
+	///     }
+	/// };
+	/// ```
+	/// @see BBMOD_EV_ANIMATION_END
 	OnEvent = undefined;
 
 	/// @func animate(_animation_instance, _animation_time)
