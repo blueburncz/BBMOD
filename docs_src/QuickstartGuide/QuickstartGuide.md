@@ -8,4 +8,4 @@ using BBMOD in your projects in no time.
 * [Loading files](./QuickstartLoadingFiles.html)
 * [Setting up materials](./QuickstartSettingUpMaterials.html)
 * [Playing animations](./QuickstartPlayingAnimations.html)
-* [Rendering models](./RenderingModels.html)
+* [Rendering models](./QuickstartRenderingModels.html)
