@@ -42,6 +42,12 @@ struct BBMODConfig
 
 	/** Disable saving bones and animations. */
 	bool disableBones = false;
+
+	/** Flip texture coordinates horizontally. */
+	bool flipTextureHorizontally = false;
+
+	/** Flip texture coordinates vertically. */
+	bool flipTextureVertically = true;
 };
 
 /** Converts a model from file fin to BBMOD and saves it to fout. */

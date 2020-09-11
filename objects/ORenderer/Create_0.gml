@@ -77,9 +77,13 @@ for (var i = 0; i < BATCH_SIZE; ++i)
 
 if (TEST_ANIMATIONS)
 {
-	paladin = new BBMOD_Model("Paladin.bbmod");
-	idle = new BBMOD_Animation("Idle.bbanim");
-	animation_player = new BBMOD_AnimationPlayer(paladin);
+	character = new BBMOD_Model("Monster.bbmod");
+	anim = new BBMOD_Animation("Dance.bbanim");
+	mat = new BBMOD_Material(BBMOD_ShDefaultAnimated);
+	mat.BaseOpacity = sprite_get_texture(sprite_add("BaseOpacity.png", 0, false, true, 0, 0), 0);
+	mat.NormalRoughness = sprite_get_texture(sprite_add("NormalRoughness.png", 0, false, true, 0, 0), 0);
+	mat.Emissive = sprite_get_texture(sprite_add("Emissive.png", 0, false, true, 0, 0), 0);
+	animation_player = new BBMOD_AnimationPlayer(character);
 	animation_player.OnEvent = function (_event, _animation) {
 		switch (_event)
 		{
@@ -88,5 +92,5 @@ if (TEST_ANIMATIONS)
 			break;
 		}
 	};
-	animation_player.play(idle, false);
+	animation_player.play(anim, false);
 }

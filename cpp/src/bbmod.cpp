@@ -451,7 +451,14 @@ void MeshToBBMOD(
 				if (mesh->HasTextureCoords(0))
 				{
 					aiVector3D texture = mesh->mTextureCoords[0][idx];
-					texture.y = 1.0f - texture.y;
+					if (config.flipTextureHorizontally)
+					{
+						texture.x = 1.0f - texture.x;
+					}
+					if (config.flipTextureVertically)
+					{
+						texture.y = 1.0f - texture.y;
+					}
 					FILE_WRITE_VEC2(fout, texture);
 				}
 			}

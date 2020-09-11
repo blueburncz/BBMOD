@@ -5,6 +5,7 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
+#include <regex>
 
 const char* gUsage = "Usage: BBMOD.exe [-h] input_file [output_file] [args...]";
 
@@ -35,6 +36,10 @@ void PrintHelp()
 		<< "                             Default is " << PRINT_BOOL(config.disableTangentW) << "." << std::endl
 		<< "  -duv/--disable-uv=true     Disable saving texture coordinates." << std::endl
 		<< "                             Default is " << PRINT_BOOL(config.disableTextureCoords) << "." << std::endl
+		<< "  -fuvx/--flip-uv-x=true     Flip texture coordinates horizontally." << std::endl
+		<< "                             Default is " << PRINT_BOOL(config.flipTextureHorizontally) << "." << std::endl
+		<< "  -fuvy/--flip-uv-y=true     Flip texture coordinates vertically." << std::endl
+		<< "                             Default is " << PRINT_BOOL(config.flipTextureVertically) << "." << std::endl
 		<< "  -iw/--invert-winding=true  Invert winding order of vertices." << std::endl
 		<< "                             Default is " << PRINT_BOOL(config.invertWinding) << "." << std::endl
 		<< "  -lh/--left-handed=true     Convert to left-handed coordinate system." << std::endl
@@ -54,6 +59,9 @@ int main(int argc, const char* argv[])
 	bool showHelp = false;
 	BBMODConfig config;
 
+	std::regex options_regex("(-[a-z]+|--[a-z\-]+)=(true|false)");
+	std::cmatch match;
+
 	for (int i = 1; i < argc; ++i)
 	{
 		if (*argv[i] == '-')
@@ -63,63 +71,53 @@ int main(int argc, const char* argv[])
 				PrintHelp();
 				return EXIT_SUCCESS;
 			}
-			else if (strcmp(argv[i], "-lh=true") == 0 || strcmp(argv[i], "--left-handed=true") == 0)
+			else if (std::regex_match(argv[i], match, options_regex))
 			{
-				config.leftHanded = true;
-			}
-			else if (strcmp(argv[i], "-lh=false") == 0 || strcmp(argv[i], "--left-handed=false") == 0)
-			{
-				config.leftHanded = false;
-			}
-			else if (strcmp(argv[i], "-iw=true") == 0 || strcmp(argv[i], "--invert-winding=true") == 0)
-			{
-				config.invertWinding = true;
-			}
-			else if (strcmp(argv[i], "-iw=false") == 0 || strcmp(argv[i], "--invert-winding=false") == 0)
-			{
-				config.invertWinding = false;
-			}
-			else if (strcmp(argv[i], "-dn=true") == 0 || strcmp(argv[i], "--disable-normal=true") == 0)
-			{
-				config.disableNormals = true;
-				config.disableTangentW = true;
-			}
-			else if (strcmp(argv[i], "-dn=false") == 0 || strcmp(argv[i], "--disable-normal=false") == 0)
-			{
-				config.disableNormals = false;
-				config.disableTangentW = false;
-			}
-			else if (strcmp(argv[i], "-duv=true") == 0 || strcmp(argv[i], "--disable-uv=true") == 0)
-			{
-				config.disableTextureCoords = true;
-			}
-			else if (strcmp(argv[i], "-duv=false") == 0 || strcmp(argv[i], "--disable-uv=false") == 0)
-			{
-				config.disableTextureCoords = false;
-			}
-			else if (strcmp(argv[i], "-dc=true") == 0 || strcmp(argv[i], "--disable-color=true") == 0)
-			{
-				config.disableVertexColors = true;
-			}
-			else if (strcmp(argv[i], "-dc=false") == 0 || strcmp(argv[i], "--disable-color=false") == 0)
-			{
-				config.disableVertexColors = false;
-			}
-			else if (strcmp(argv[i], "-dt=true") == 0 || strcmp(argv[i], "--disable-tangent=true") == 0)
-			{
-				config.disableTangentW = true;
-			}
-			else if (strcmp(argv[i], "-dt=false") == 0 || strcmp(argv[i], "--disable-tangent=false") == 0)
-			{
-				config.disableTangentW = false;
-			}
-			else if (strcmp(argv[i], "-db=true") == 0 || strcmp(argv[i], "--disable-bone=true") == 0)
-			{
-				config.disableBones = true;
-			}
-			else if (strcmp(argv[i], "-db=false") == 0 || strcmp(argv[i], "--disable-bone=false") == 0)
-			{
-				config.disableBones = false;
+				auto o = match[1];
+				bool b = (match[2] == "true");
+
+				if (o == "-lh" || o == "--left-handed")
+				{
+					config.leftHanded = b;
+				}
+				else if (o == "-iw" || o == "--invert-winding")
+				{
+					config.invertWinding = b;
+				}
+				else if (o == "-dn" || o == "--disable-normal")
+				{
+					config.disableNormals = b;
+					config.disableTangentW = b;
+				}
+				else if (o == "-duv"|| o == "--disable-uv")
+				{
+					config.disableTextureCoords = b;
+				}
+				else if (o == "-fuvx" || o == "--flip-uv-x")
+				{
+					config.flipTextureHorizontally = b;
+				}
+				else if (o == "-fuvy" || o == "--flip-uv-y")
+				{
+					config.flipTextureVertically = b;
+				}
+				else if (o == "-dc" || o == "--disable-color")
+				{
+					config.disableVertexColors = b;
+				}
+				else if (o == "-dt" || o == "--disable-tangent")
+				{
+					config.disableTangentW = b;
+				}
+				else if (o == "-db" || o == "--disable-bone")
+				{
+					config.disableBones = b;
+				}
+				else
+				{
+					PRINT_ERROR("Unrecognized option %s!", argv[i]);
+					return EXIT_FAILURE;
+				}
 			}
 			else
 			{

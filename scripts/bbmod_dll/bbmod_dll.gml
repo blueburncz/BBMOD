@@ -53,6 +53,14 @@ function BBMOD_DLL() constructor
 
 	dll_set_disable_uv = external_define(path, "bbmod_dll_set_disable_uv", dll_cdecl, ty_real, 1, ty_real);
 
+	dll_get_flip_uv_horizontally = external_define(path, "bbmod_dll_get_flip_uv_horizontally", dll_cdecl, ty_real, 0);
+
+	dll_set_flip_uv_horizontally = external_define(path, "bbmod_dll_set_flip_uv_horizontally", dll_cdecl, ty_real, 1, ty_real);
+
+	dll_get_flip_uv_vertically = external_define(path, "bbmod_dll_get_flip_uv_vertically", dll_cdecl, ty_real, 0);
+
+	dll_set_flip_uv_vertically = external_define(path, "bbmod_dll_set_flip_uv_vertically", dll_cdecl, ty_real, 1, ty_real);
+
 	dll_get_disable_color = external_define(path, "bbmod_dll_get_disable_color", dll_cdecl, ty_real, 0);
 
 	dll_set_disable_color = external_define(path, "bbmod_dll_set_disable_color", dll_cdecl, ty_real, 1, ty_real);
@@ -199,6 +207,50 @@ function BBMOD_DLL() constructor
 	static set_disable_uv = function (_disable) {
 		gml_pragma("forceinline");
 		var _retval = external_call(dll_set_disable_uv, _disable);
+		if (_retval != BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Error();
+		}
+	};
+
+	/// @func get_flip_uv_horizontally()
+	/// @desc Checks whether flipping texture coordinates horizontally is enabled.
+	/// @return {bool} Returns `true` if enabled.
+	static get_flip_uv_horizontally = function () {
+		gml_pragma("forceinline");
+		return external_call(dll_get_flip_uv_horizontally);
+	};
+
+	/// @func set_flip_uv_horizontally(_flip)
+	/// @desc Enables/disabled flipping texture coordinates horizontally. This is
+	/// by default **disabled**.
+	/// @param {bool} _flip `true` to enable.
+	/// @throws {BBMOD_Error} If the operation fails.
+	static set_flip_uv_horizontally = function (_flip) {
+		gml_pragma("forceinline");
+		var _retval = external_call(dll_get_flip_uv_horizontally, _flip);
+		if (_retval != BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Error();
+		}
+	};
+
+	/// @func get_flip_uv_vertically()
+	/// @desc Checks whether flipping texture coordinates vertically is enabled.
+	/// @return {bool} Returns `true` if enabled.
+	static get_flip_uv_vertically = function () {
+		gml_pragma("forceinline");
+		return external_call(dll_get_flip_uv_vertically);
+	};
+
+	/// @func set_flip_uv_vertically(_flip)
+	/// @desc Enables/disabled flipping texture coordinates vertically. This is
+	/// by default **enabled**.
+	/// @param {bool} _flip `true` to enable.
+	/// @throws {BBMOD_Error} If the operation fails.
+	static set_flip_uv_vertically = function (_flip) {
+		gml_pragma("forceinline");
+		var _retval = external_call(dll_get_flip_uv_vertically, _flip);
 		if (_retval != BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Error();

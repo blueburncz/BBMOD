@@ -60,6 +60,28 @@ GM_EXPORT gmreal_t bbmod_dll_set_disable_uv(gmreal_t disable)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_flip_uv_horizontally()
+{
+	return (gmreal_t)gConfig.flipTextureHorizontally;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_flip_uv_horizontally(gmreal_t flip)
+{
+	gConfig.flipTextureHorizontally = (bool)flip;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_flip_uv_vertically()
+{
+	return (gmreal_t)gConfig.flipTextureVertically;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_flip_uv_vertically(gmreal_t flip)
+{
+	gConfig.flipTextureVertically = (bool)flip;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_get_disable_color()
 {
 	return (gmreal_t)gConfig.disableVertexColors;
