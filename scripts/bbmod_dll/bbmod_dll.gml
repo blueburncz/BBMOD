@@ -319,7 +319,7 @@ function BBMOD_DLL() constructor
 	/// @throws {BBMOD_Error} If the operation fails.
 	static set_flip_uv_horizontally = function (_flip) {
 		gml_pragma("forceinline");
-		var _retval = external_call(dll_get_flip_uv_horizontally, _flip);
+		var _retval = external_call(dll_set_flip_uv_horizontally, _flip);
 		if (_retval != BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Error();
@@ -341,7 +341,7 @@ function BBMOD_DLL() constructor
 	/// @throws {BBMOD_Error} If the operation fails.
 	static set_flip_uv_vertically = function (_flip) {
 		gml_pragma("forceinline");
-		var _retval = external_call(dll_get_flip_uv_vertically, _flip);
+		var _retval = external_call(dll_set_flip_uv_vertically, _flip);
 		if (_retval != BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Error();
