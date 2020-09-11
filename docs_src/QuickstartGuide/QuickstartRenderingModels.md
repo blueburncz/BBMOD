@@ -34,15 +34,9 @@ bbmod_set_camera_position(x, y, z);
 
 /// @desc Draw
 camera_apply(camera);
-
-var _materials = [
-	mat_character_head,
-	mat_character_body
-];
-
-var _transform = animation_player.get_transform();
-
 bbmod_material_reset();
-mod_character.render(_materials, _transform);
+mod_character.render(
+	[mat_character_head, mat_character_body],
+	animation_player.get_transform());
 bbmod_material_reset();
 ```
