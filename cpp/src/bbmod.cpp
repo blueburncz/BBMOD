@@ -440,7 +440,10 @@ void MeshToBBMOD(
 				if (mesh->HasNormals())
 				{
 					normal = aiVector3D(mesh->mNormals[idx]);
-					//normal *= matrix;
+					if (config.flipNormals)
+					{
+						normal *= -1.0f;
+					}
 					FILE_WRITE_VEC3(fout, normal);
 				}
 			}

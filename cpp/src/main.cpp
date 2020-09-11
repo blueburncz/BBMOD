@@ -36,6 +36,8 @@ void PrintHelp()
 		<< "                             Default is " << PRINT_BOOL(config.disableTangentW) << "." << std::endl
 		<< "  -duv/--disable-uv=true     Disable saving texture coordinates." << std::endl
 		<< "                             Default is " << PRINT_BOOL(config.disableTextureCoords) << "." << std::endl
+		<< "  -fn/--flip-normal=true     Flip normal vectors." << std::endl
+		<< "                             Default is " << PRINT_BOOL(config.flipNormals) << "." << std::endl
 		<< "  -fuvx/--flip-uv-x=true     Flip texture coordinates horizontally." << std::endl
 		<< "                             Default is " << PRINT_BOOL(config.flipTextureHorizontally) << "." << std::endl
 		<< "  -fuvy/--flip-uv-y=true     Flip texture coordinates vertically." << std::endl
@@ -88,6 +90,10 @@ int main(int argc, const char* argv[])
 				{
 					config.disableNormals = b;
 					config.disableTangentW = b;
+				}
+				else if (o == "-fn" || o == "--flip-normal")
+				{
+					config.flipNormals = b;
 				}
 				else if (o == "-duv"|| o == "--disable-uv")
 				{

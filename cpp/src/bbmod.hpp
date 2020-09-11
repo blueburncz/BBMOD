@@ -48,6 +48,9 @@ struct BBMODConfig
 
 	/** Flip texture coordinates vertically. */
 	bool flipTextureVertically = true;
+
+	/** Flip normal vectors. */
+	bool flipNormals = false;
 };
 
 /** Converts a model from file fin to BBMOD and saves it to fout. */

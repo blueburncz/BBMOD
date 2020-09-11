@@ -49,6 +49,10 @@ function BBMOD_DLL() constructor
 
 	dll_set_disable_normal = external_define(path, "bbmod_dll_set_disable_normal", dll_cdecl, ty_real, 1, ty_real);
 
+	dll_get_flip_normal = external_define(path, "bbmod_dll_get_flip_normal", dll_cdecl, ty_real, 0);
+
+	dll_set_flip_normal = external_define(path, "bbmod_dll_set_flip_normal", dll_cdecl, ty_real, 1, ty_real);
+
 	dll_get_disable_uv = external_define(path, "bbmod_dll_get_disable_uv", dll_cdecl, ty_real, 0);
 
 	dll_set_disable_uv = external_define(path, "bbmod_dll_set_disable_uv", dll_cdecl, ty_real, 1, ty_real);
@@ -163,6 +167,28 @@ function BBMOD_DLL() constructor
 		}
 	};
 
+	/// @func get_flip_normal()
+	/// @desc Checks whether flipping vertex normals is enabled.
+	/// @return {bool} Returns `true` if enabled.
+	static get_flip_normal = function () {
+		gml_pragma("forceinline");
+		return external_call(dll_get_flip_normal);
+	};
+
+	/// @func set_flip_normal(_flip)
+	/// @desc Enables/disables flipping vertex normals. This is by default
+	/// **disabled**.
+	/// @param {bool} _flip `true` to enable.
+	/// @throws {BBMOD_Error} If the operation fails.
+	static set_flip_normal = function (_flip) {
+		gml_pragma("forceinline");
+		var _retval = external_call(dll_set_flip_normal, _flip);
+		if (_retval != BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Error();
+		}
+	};
+
 	/// @func get_disable_tangent()
 	/// @desc Checks whether tangent and bitangent vectors are disabled.
 	/// @return {bool} `true` if tangent and bitangent vectors are disabled.
@@ -222,7 +248,7 @@ function BBMOD_DLL() constructor
 	};
 
 	/// @func set_flip_uv_horizontally(_flip)
-	/// @desc Enables/disabled flipping texture coordinates horizontally. This is
+	/// @desc Enables/disables flipping texture coordinates horizontally. This is
 	/// by default **disabled**.
 	/// @param {bool} _flip `true` to enable.
 	/// @throws {BBMOD_Error} If the operation fails.
@@ -244,7 +270,7 @@ function BBMOD_DLL() constructor
 	};
 
 	/// @func set_flip_uv_vertically(_flip)
-	/// @desc Enables/disabled flipping texture coordinates vertically. This is
+	/// @desc Enables/disables flipping texture coordinates vertically. This is
 	/// by default **enabled**.
 	/// @param {bool} _flip `true` to enable.
 	/// @throws {BBMOD_Error} If the operation fails.
