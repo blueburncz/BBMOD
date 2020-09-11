@@ -62,7 +62,7 @@ function BBMOD_DLL() constructor
 {
 	/// @var {string} Path to the DLL file.
 	/// @readonly
-	path = (argument_count > 0) ? argument[0] : "BBMOD/DLL/BBMOD.dll";
+	path = (argument_count > 0) ? argument[0] : "BBMOD/BBMOD.dll";
 
 	if (!file_exists(path))
 	{
