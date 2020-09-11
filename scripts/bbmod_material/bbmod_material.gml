@@ -25,6 +25,10 @@
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_MATERIAL_DEFAULT_BATCHED global.__bbmod_material_default_batched
 
+/// @macro {BBMOD_Material} The default sky material.
+/// @see BBMOD_Material
+#macro BBMOD_MATERIAL_SKY global.__bbmod_material_sky
+
 /// @var {BBMOD_Material} The default material.
 /// @see BBMOD_Material
 /// @private
@@ -39,6 +43,20 @@ global.__bbmod_material_default_animated = new BBMOD_Material(BBMOD_ShDefaultAni
 /// @see BBMOD_Material
 /// @private
 global.__bbmod_material_default_batched = new BBMOD_Material(BBMOD_ShDefaultBatched);
+
+// FIXME: Initial IBL setup
+var _spr_sky = sprite_add("BBMOD/Skies/NoonSky.png", 0, false, true, 0, 0);
+var _mat_sky = new BBMOD_Material(BBMOD_ShSky);
+_mat_sky.BaseOpacity = sprite_get_texture(_spr_sky, 0);
+_mat_sky.OnApply = function (_material) {
+	var _shader = _material.Shader;
+	_bbmod_shader_set_exposure(_shader);
+};
+_mat_sky.Culling = cull_noculling;
+
+/// @macro {BBMOD_Material} The default sky material.
+/// @see BBMOD_Material
+global.__bbmod_material_sky = _mat_sky;
 
 /// @var {BBMOD_EMaterial/BBMOD_NONE} The currently applied material.
 /// @private

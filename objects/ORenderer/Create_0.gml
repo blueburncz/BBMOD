@@ -25,20 +25,7 @@ direction_up = 0;
 mouse_last_x = 0;
 mouse_last_y = 0;
 
-spr_sky = sprite_add("BBMOD/Skies/NoonSky.png", 0, false, true, 0, 0);
-spr_ibl = sprite_add("BBMOD/Skies/NoonIBL.png", 0, false, true, 0, 0);
-
-bbmod_set_ibl_sprite(spr_ibl, 0);
-
 mod_sphere = new BBMOD_Model("BBMOD/Models/Sphere.bbmod");
-
-mat_sky = new BBMOD_Material(BBMOD_ShSky);
-mat_sky.BaseOpacity = sprite_get_texture(spr_sky, 0);
-mat_sky.OnApply = function (_material) {
-	var _shader = _material.Shader;
-	_bbmod_shader_set_exposure(_shader);
-};
-mat_sky.Culling  = cull_noculling;
 
 #macro BATCH_SIZE 64
 

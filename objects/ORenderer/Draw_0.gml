@@ -5,7 +5,7 @@ bbmod_material_reset();
 
 matrix_stack_push(matrix_get(matrix_world));
 matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, 0, 1000, 1000, 1000));
-mod_sphere.render([mat_sky]);
+mod_sphere.render([BBMOD_MATERIAL_SKY]);
 matrix_set(matrix_world, matrix_stack_top());
 matrix_stack_pop();
 
