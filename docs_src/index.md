@@ -15,7 +15,7 @@ In this document you can find a guide that will help you get started with BBMOD 
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)
 * [GitHub](https://github.com/blueburn-cz/BBMOD)
 * [Xpanda](https://github.com/GameMakerDiscord/Xpanda)
-* [YoYo Games Marketplace]()
+* [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/9424/bbmod)
 
 ## Contents
 * [Quickstart guide](./QuickstartGuide.html)
