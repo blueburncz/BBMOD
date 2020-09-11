@@ -35,8 +35,6 @@ case EMode.Dynamic:
 	break;
 }
 
-bbmod_material_reset();
-
 if (TEST_ANIMATIONS)
 {
 	matrix_stack_push(matrix_get(matrix_world));
@@ -44,6 +42,6 @@ if (TEST_ANIMATIONS)
 	character.render([mat], animation_player.get_transform());
 	matrix_set(matrix_world, matrix_stack_top());
 	matrix_stack_pop();
-
-	bbmod_material_reset();
 }
+
+bbmod_material_reset();

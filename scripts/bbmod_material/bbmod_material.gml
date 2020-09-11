@@ -182,10 +182,6 @@ function bbmod_material_reset()
 		gpu_pop_state();
 		global.__bbmod_material_current = BBMOD_NONE;
 	}
-	else
-	{
-		gpu_push_state();
-	}
 }
 
 /// @func bbmod_material_on_apply_default(_material)
@@ -307,6 +303,8 @@ function BBMOD_Material(_shader) constructor
 		}
 
 		reset();
+		gpu_push_state();
+		global.__bbmod_material_current = self;
 
 		// Shader
 		var _shader = Shader;
@@ -341,6 +339,7 @@ function BBMOD_Material(_shader) constructor
 	/// @desc Resets the current material to {@link BBMOD_NONE}.
 	/// @see bbmod_material_reset
 	static reset = function () {
+		gml_pragma("forceinline");
 		bbmod_material_reset();
 	};
 }
