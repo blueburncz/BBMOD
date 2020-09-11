@@ -1,6 +1,6 @@
 #pragma include("Default_PS.xsh", "glsl")
 varying vec3 v_vVertex;
-//varying vec4 v_vColour;
+//varying vec4 v_vColor;
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 
@@ -224,56 +224,108 @@ vec3 xSpecularIBL(sampler2D ibl, vec2 texel, sampler2D brdf, vec3 f0, float roug
 }
 
 
+/// @param subsurface Color in RGB and thickness/intensity in A.
 /// @source https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
-vec3 xCheapSubsurface(vec3 subsurfaceColor, float subsurfaceIntensity, vec3 eye, vec3 normal, vec3 light, vec3 lightColor)
+vec3 xCheapSubsurface(vec4 subsurface, vec3 eye, vec3 normal, vec3 light, vec3 lightColor)
 {
 	const float fLTPower = 1.0;
 	const float fLTScale = 1.0;
 	vec3 vLTLight = light + normal;
 	float fLTDot = pow(clamp(dot(eye, -vLTLight), 0.0, 1.0), fLTPower) * fLTScale;
-	float fLT = fLTDot * subsurfaceIntensity;
-	return subsurfaceColor * lightColor * fLT;
+	float fLT = fLTDot * subsurface.a;
+	return subsurface.rgb * lightColor * fLT;
+}
+
+
+struct Material
+{
+	vec3 Base;
+	float Opacity;
+	vec3 Normal;
+	float Roughness;
+	float Metallic;
+	float AO;
+	vec4 Subsurface;
+	vec3 Emissive;
+	vec3 Specular;
+};
+
+Material UnpackMaterial(
+	sampler2D texBaseOpacity,
+	sampler2D texNormalRoughness,
+	sampler2D texMetallicAO,
+	sampler2D texSubsurface,
+	sampler2D texEmissive,
+	mat3 tbn,
+	vec2 uv)
+{
+	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	vec3 base = xGammaToLinear(baseOpacity.rgb);
+	float opacity = baseOpacity.a;
+
+	vec4 normalRoughness = texture2D(texNormalRoughness, uv);
+	vec3 normal = normalize(tbn * (normalRoughness.rgb * 2.0 - 1.0));
+	float roughness = normalRoughness.a;
+
+	vec4 metallicAO = texture2D(texMetallicAO, uv);
+	float metallic = metallicAO.r;
+	float AO = metallicAO.g;
+
+	vec4 subsurface = texture2D(texSubsurface, uv);
+	subsurface.rgb = xGammaToLinear(subsurface.rgb);
+
+	vec3 emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+
+	vec3 specular = mix(X_F0_DEFAULT, base, metallic);
+	base *= (1.0 - metallic);
+
+	return Material(
+		base,
+		opacity,
+		normal,
+		roughness,
+		metallic,
+		AO,
+		subsurface,
+		emissive,
+		specular);
 }
 
 void main()
 {
-	////////////////////////////////////////////////////////////////////////////
-	// Unpack material properties
-	vec4 baseOpacity = texture2D(u_texBaseOpacity, v_vTexCoord);
-	vec3 baseColor = xGammaToLinear(baseOpacity.rgb);
-	float opacity = baseOpacity.a;
+	Material material = UnpackMaterial(
+		u_texBaseOpacity,
+		u_texNormalRoughness,
+		u_texMetallicAO,
+		u_texSubsurface,
+		u_texEmissive,
+		v_mTBN,
+		v_vTexCoord);
 
-	vec4 normalRoughness = texture2D(u_texNormalRoughness, v_vTexCoord);
-	//normalRoughness.g = 1.0 - normalRoughness.g; // TODO: Comment out!
-	vec3 N = normalize(v_mTBN * (normalRoughness.rgb * 2.0 - 1.0));
-	float roughness = normalRoughness.a;
+	// TODO: Discard transparent pixels.
+	//if (material.Opacity < 0.9)
+	//{
+	//	discard;
+	//}
+	gl_FragColor.a = material.Opacity;
 
-	vec4 metallicAO = texture2D(u_texMetallicAO, v_vTexCoord);
-	float metallic = metallicAO.r;
-	float AO = metallicAO.g;
-
-	vec4 subsurface = texture2D(u_texSubsurface, v_vTexCoord);
-	vec3 subsurfaceColor = xGammaToLinear(subsurface.rgb);
-	float subsurfaceIntensity = subsurface.a;
-
-	vec3 emissive = xGammaToLinear(xDecodeRGBM(texture2D(u_texEmissive, v_vTexCoord)));
-
-	vec3 specularColor = mix(X_F0_DEFAULT, baseColor, metallic);
-	baseColor *= (1.0 - metallic);
-	////////////////////////////////////////////////////////////////////////////
-
+	vec3 N = material.Normal;
 	vec3 V = normalize(u_vCamPos - v_vVertex);
 	vec3 lightColor = xDiffuseIBL(u_texIBL, u_vIBLTexel, N);
 
-	gl_FragColor.rgb = (
-		baseColor * lightColor
-		+ xSpecularIBL(u_texIBL, u_vIBLTexel, u_texBRDF, specularColor, roughness, N, V)
-	) * AO
-	+ emissive
-	+ xCheapSubsurface(subsurfaceColor, subsurfaceIntensity, -V, N, N, lightColor);
-
+	// Diffuse
+	gl_FragColor.rgb = material.Base * lightColor;
+	// Specular
+	gl_FragColor.rgb += xSpecularIBL(u_texIBL, u_vIBLTexel, u_texBRDF, material.Specular, material.Roughness, N, V);
+	// Ambient occlusion
+	gl_FragColor.rgb *= material.AO;
+	// Emissive
+	gl_FragColor.rgb += material.Emissive;
+	// Subsurface scattering
+	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
+	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * u_fExposure);
+	// Gamma correction
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-	gl_FragColor.a = opacity;
 }
 // include("Default_PS.xsh")

@@ -47,7 +47,7 @@ void PrintHelp()
 		<< "                                     * 0 - Do not generate any normal vectors." << std::endl
 		<< "                                     * 1 - Generate flat normal vectors." << std::endl
 		<< "                                     * 2 - Generate smooth normal vectors." << std::endl
-		<< "                                   Default is " << PRINT_BOOL(config.genNormals) << "." << std::endl
+		<< "                                   Default is " << config.genNormals << "." << std::endl
 		<< "  -iw|--invert-winding=true|false  Invert winding order of vertices." << std::endl
 		<< "                                   Default is " << PRINT_BOOL(config.invertWinding) << "." << std::endl
 		<< "  -lh|--left-handed=true|false     Convert to left-handed coordinate system." << std::endl

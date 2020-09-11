@@ -6,12 +6,12 @@
 attribute vec4 in_Position;
 attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord0;
-//attribute vec4 in_Colour;
+//attribute vec4 in_Color;
 attribute vec4 in_TangentW;
 
 
 varying vec3 v_vVertex;
-//varying vec4 v_vColour;
+//varying vec4 v_vColor;
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 
@@ -23,7 +23,7 @@ void main()
 
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * vertexPos;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * vertexPos).xyz;
-	//v_vColour = in_Colour;
+	//v_vColor = in_Color;
 	v_vTexCoord = in_TextureCoord0;
 
 	vec4 tangent = vec4(in_TangentW.xyz, 0.0);
