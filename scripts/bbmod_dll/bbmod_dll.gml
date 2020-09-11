@@ -22,10 +22,42 @@
 /// @private
 #macro BBMOD_DLL_ERR_SAVE_FAILED 3
 
+/// @macro {real} A value used to tell that no normals should be generated
+/// if the model doesn't have any.
+/// @see BBMOD_NORMALS_FLAT
+/// @see BBMOD_NORMALS_SMOOTH
+/// @see BBMOD_DLL.set_gen_normal
+/// @see BBMOD_DLL.get_gen_normal
+#macro BBMOD_NORMALS_NONE 0
+
+/// @macro {real} A value used to tell that flat normals should be generated
+/// if the model doesn't have any.
+/// @see BBMOD_NORMALS_NONE
+/// @see BBMOD_NORMALS_SMOOTH
+/// @see BBMOD_DLL.set_gen_normal
+/// @see BBMOD_DLL.get_gen_normal
+#macro BBMOD_NORMALS_FLAT 1
+
+/// @macro {real} A value used to tell that smooth normals should be generated
+/// if the model doesn't have any.
+/// @see BBMOD_NORMALS_NONE
+/// @see BBMOD_NORMALS_FLAT
+/// @see BBMOD_DLL.set_gen_normal
+/// @see BBMOD_DLL.get_gen_normal
+#macro BBMOD_NORMALS_SMOOTH 2
+
 /// @func BBMOD_DLL([_path])
 /// @desc Loads a DLL which allows you to convert models into BBMOD.
 /// @param {string} [_path] The path to the DLL file. Defaults to "BBMOD/DLL/BBMOD.dll".
 /// @throws {BBMOD_Error} If the DLL file does not exist.
+/// @example
+/// ```gml
+/// var _dll = new BBMOD_DLL();
+/// _dll.set_gen_normal(BBMOD_NORMALS_FLAT);
+/// _dll.convert("House.fbx", "House.bbmod");
+/// _dll.destroy();
+/// mod_house = new BBMOD_Model("House.bbmod");
+/// ```
 function BBMOD_DLL() constructor
 {
 	/// @var {string} Path to the DLL file.
@@ -52,6 +84,10 @@ function BBMOD_DLL() constructor
 	dll_get_flip_normal = external_define(path, "bbmod_dll_get_flip_normal", dll_cdecl, ty_real, 0);
 
 	dll_set_flip_normal = external_define(path, "bbmod_dll_set_flip_normal", dll_cdecl, ty_real, 1, ty_real);
+
+	dll_get_gen_normal = external_define(path, "bbmod_dll_get_gen_normal", dll_cdecl, ty_real, 0);
+
+	dll_set_gen_normal = external_define(path, "bbmod_dll_set_gen_normal", dll_cdecl, ty_real, 1, ty_real);
 
 	dll_get_disable_uv = external_define(path, "bbmod_dll_get_disable_uv", dll_cdecl, ty_real, 0);
 
@@ -183,6 +219,35 @@ function BBMOD_DLL() constructor
 	static set_flip_normal = function (_flip) {
 		gml_pragma("forceinline");
 		var _retval = external_call(dll_set_flip_normal, _flip);
+		if (_retval != BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Error();
+		}
+	};
+
+	/// @func get_gen_normal()
+	/// @desc Checks whether generating normal vectors is enabled.
+	/// @return {real} Returns one of the `BBMOD_NORMALS_*` macros.
+	/// @see BBMOD_NORMALS_NONE
+	/// @see BBMOD_NORMALS_FLAT
+	/// @see BBMOD_NORMALS_SMOOTH
+	static get_gen_normal = function () {
+		gml_pragma("forceinline");
+		return external_call(dll_get_gen_normal);
+	};
+
+	/// @func set_gen_normal(_normals)
+	/// @desc Configures generating normal vectors. This is by default
+	/// set to {@link BBMOD_NORMALS_SMOOTH}. Vertex normals are required
+	/// by the default shaders!
+	/// @param {real} _normals Use one of the `BBMOD_NORMALS_*` macros.
+	/// @throws {BBMOD_Error} If the operation fails.
+	/// @see BBMOD_NORMALS_NONE
+	/// @see BBMOD_NORMALS_FLAT
+	/// @see BBMOD_NORMALS_SMOOTH
+	static set_gen_normal = function (_normals) {
+		gml_pragma("forceinline");
+		var _retval = external_call(dll_set_gen_normal, _normals);
 		if (_retval != BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Error();

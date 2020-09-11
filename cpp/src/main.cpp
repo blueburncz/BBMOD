@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <string>
 #include <regex>
+#include <cstdlib>
 
 const char* gUsage = "Usage: BBMOD.exe [-h] input_file [output_file] [args...]";
 
@@ -20,32 +21,37 @@ void PrintHelp()
 		<< std::endl
 		<< "Arguments:" << std::endl
 		<< std::endl
-		<< "  -h                         Show this help message and exit." << std::endl
-		<< "  input_file                 Path to the model to convert." << std::endl
-		<< "  output_file                Where to save the converted model. If not specified, " << std::endl
-		<< "                             then the input file path is used. Extensions .bbmod" << std::endl
-		<< "                             and .bbanim are added automatically." << std::endl
-		<< "  -db/--disable-bone=true    Disable saving bones and animations." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.disableBones) << "." << std::endl
-		<< "  -dc/--disable-color=true   Disable saving vertex colors." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.disableVertexColors) << "." << std::endl
-		<< "  -dn/--disable-normal=true  Disable saving normal vectors. This also automatically" << std::endl
-		<< "                             applies --disable-tangent." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.disableNormals) << "." << std::endl
-		<< "  -dt/--disable-tangent=true Disable saving tangent vectors and bitangent signs." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.disableTangentW) << "." << std::endl
-		<< "  -duv/--disable-uv=true     Disable saving texture coordinates." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.disableTextureCoords) << "." << std::endl
-		<< "  -fn/--flip-normal=true     Flip normal vectors." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.flipNormals) << "." << std::endl
-		<< "  -fuvx/--flip-uv-x=true     Flip texture coordinates horizontally." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.flipTextureHorizontally) << "." << std::endl
-		<< "  -fuvy/--flip-uv-y=true     Flip texture coordinates vertically." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.flipTextureVertically) << "." << std::endl
-		<< "  -iw/--invert-winding=true  Invert winding order of vertices." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.invertWinding) << "." << std::endl
-		<< "  -lh/--left-handed=true     Convert to left-handed coordinate system." << std::endl
-		<< "                             Default is " << PRINT_BOOL(config.leftHanded) << "." << std::endl
+		<< "  -h                               Show this help message and exit." << std::endl
+		<< "  input_file                       Path to the model to convert." << std::endl
+		<< "  output_file                      Where to save the converted model. If not specified, " << std::endl
+		<< "                                   then the input file path is used. Extensions .bbmod" << std::endl
+		<< "                                   and .bbanim are added automatically." << std::endl
+		<< "  -db|--disable-bone=true|false    Enable/disable saving bones and animations." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.disableBones) << "." << std::endl
+		<< "  -dc|--disable-color=true|false   Enable/disable saving vertex colors." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.disableVertexColors) << "." << std::endl
+		<< "  -dn|--disable-normal=true|false  Enable/disable saving normal vectors. This also automatically" << std::endl
+		<< "                                   applies --disable-tangent." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.disableNormals) << "." << std::endl
+		<< "  -dt|--disable-tangent=true|false Enable/disable saving tangent vectors and bitangent signs." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.disableTangentW) << "." << std::endl
+		<< "  -duv|--disable-uv=true|false     Enable/disable saving texture coordinates." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.disableTextureCoords) << "." << std::endl
+		<< "  -fn|--flip-normal=true|false     Enable/disable flipping normal vectors." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.flipNormals) << "." << std::endl
+		<< "  -fuvx|--flip-uv-x=true|false     Enable/disable flipping texture coordinates horizontally." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.flipTextureHorizontally) << "." << std::endl
+		<< "  -fuvy|--flip-uv-y=true|false     Enable/disable flipping texture coordinates vertically." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.flipTextureVertically) << "." << std::endl
+		<< "  -gn|--gen-normal=0|1|2           Enable/disable generating normal vectors if the model doesn't have any." << std::endl
+		<< "                                     * 0 - Do not generate any normal vectors." << std::endl
+		<< "                                     * 1 - Generate flat normal vectors." << std::endl
+		<< "                                     * 2 - Generate smooth normal vectors." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.genNormals) << "." << std::endl
+		<< "  -iw|--invert-winding=true|false  Invert winding order of vertices." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.invertWinding) << "." << std::endl
+		<< "  -lh|--left-handed=true|false     Convert to left-handed coordinate system." << std::endl
+		<< "                                   Default is " << PRINT_BOOL(config.leftHanded) << "." << std::endl
 		<< std::endl;
 }
 
@@ -61,7 +67,7 @@ int main(int argc, const char* argv[])
 	bool showHelp = false;
 	BBMODConfig config;
 
-	std::regex options_regex("(-[a-z]+|--[a-z\-]+)=(true|false)");
+	std::regex options_regex("(-[a-z]+|--[a-z\-]+)=(true|false|[0-9])");
 	std::cmatch match;
 
 	for (int i = 1; i < argc; ++i)
@@ -77,6 +83,7 @@ int main(int argc, const char* argv[])
 			{
 				auto o = match[1];
 				bool b = (match[2] == "true");
+				size_t i = (size_t)strtol(match[2].str().c_str(), (char**)NULL, 10);
 
 				if (o == "-lh" || o == "--left-handed")
 				{
@@ -94,6 +101,10 @@ int main(int argc, const char* argv[])
 				else if (o == "-fn" || o == "--flip-normal")
 				{
 					config.flipNormals = b;
+				}
+				else if (o == "-gn" || o == "--gen-normal")
+				{
+					config.genNormals = i;
 				}
 				else if (o == "-duv"|| o == "--disable-uv")
 				{

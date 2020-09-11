@@ -841,10 +841,31 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 	importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 
 	int flags = (0
-		| aiProcessPreset_TargetRealtime_Quality
+		// aiProcessPreset_TargetRealtime_Quality
+		| aiProcess_CalcTangentSpace
+		| aiProcess_JoinIdenticalVertices
+		| aiProcess_ImproveCacheLocality
+		| aiProcess_LimitBoneWeights
+		| aiProcess_RemoveRedundantMaterials
+		| aiProcess_SplitLargeMeshes
+		| aiProcess_Triangulate
+		| aiProcess_GenUVCoords
+		| aiProcess_SortByPType
+		| aiProcess_FindDegenerates
+		| aiProcess_FindInvalidData
+		//
 		| aiProcess_TransformUVCoords
 		| aiProcess_OptimizeGraph
 		| aiProcess_OptimizeMeshes);
+
+	if (config.genNormals == BBMOD_NORMALS_FLAT)
+	{
+		flags |= aiProcess_GenNormals;
+	}
+	else if (config.genNormals >= BBMOD_NORMALS_SMOOTH)
+	{
+		flags |= aiProcess_GenSmoothNormals;
+	}
 
 	if (config.leftHanded)
 	{

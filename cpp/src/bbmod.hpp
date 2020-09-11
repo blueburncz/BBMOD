@@ -18,6 +18,18 @@
 /** An error code returned when converted model is not saved. */
 #define BBMOD_ERR_SAVE_FAILED 3
 
+/** A value used to tell that no normals should be generated
+ * if the model doesn't have any. */
+#define BBMOD_NORMALS_NONE 0
+
+/** A value used to tell that flat normals should be generated
+ * if the model doesn't have any. */
+#define BBMOD_NORMALS_FLAT 1
+
+/** A value used to tell that smooth normals should be generated
+ * if the model doesn't have any. */
+#define BBMOD_NORMALS_SMOOTH 2
+
 /** Configuration structure. */
 struct BBMODConfig
 {
@@ -51,6 +63,14 @@ struct BBMODConfig
 
 	/** Flip normal vectors. */
 	bool flipNormals = false;
+
+	/**
+	 * Generate normals.
+	 * 0 - Disabled
+	 * 1 - Flat
+	 * 2 - Smooth
+	 */
+	size_t genNormals = BBMOD_NORMALS_SMOOTH;
 };
 
 /** Converts a model from file fin to BBMOD and saves it to fout. */

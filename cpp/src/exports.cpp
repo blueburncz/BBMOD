@@ -60,6 +60,17 @@ GM_EXPORT gmreal_t bbmod_dll_set_flip_normal(gmreal_t flip)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_gen_normal()
+{
+	return (gmreal_t)gConfig.genNormals;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_gen_normal(gmreal_t generate)
+{
+	gConfig.genNormals = generate;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_get_disable_uv()
 {
 	return (gmreal_t)gConfig.disableTextureCoords;
