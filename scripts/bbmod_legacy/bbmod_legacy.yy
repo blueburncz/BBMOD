@@ -6,7 +6,7 @@
     "path": "folders/Scripts/BBMOD.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod",
+  "name": "bbmod_legacy",
   "tags": [],
   "resourceType": "GMScript",
 }

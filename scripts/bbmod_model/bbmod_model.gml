@@ -161,29 +161,10 @@ function BBMOD_Model(_file) constructor
 	/// @readonly
 	Version = 0;
 
-	/// @var {bool} If `true` then the model has vertices (always `true`).
+	/// @var {BBMOD_VertexFormat} The vertex format of the model.
+	/// @see BBMOD_VertexFormat
 	/// @readonly
-	HasVertices = true;
-
-	/// @var {bool} If `true` then the model has normal vectors.
-	/// @readonly
-	HasNormals = false;
-
-	/// @var {bool} If `true` then the model has texture coordinates.
-	/// @readonly
-	HasTextureCoords = false;
-
-	/// @var {bool} If `true` then the model has vertex colors.
-	/// @readonly
-	HasColors = false;
-
-	/// @var {bool} If `true` then the model has tangent vectors and bitangent sign.
-	/// @readonly
-	HasTangentW = false;
-
-	/// @var {bool} If `true` then the model has vertex weights and bone indices.
-	/// @readonly
-	HasBones = false;
+	VertexFormat = undefined;
 
 	/// @var {real[]} The global inverse transform matrix.
 	/// @readonly
@@ -219,40 +200,28 @@ function BBMOD_Model(_file) constructor
 	/// @return {BBMOD_Model} Returns `self` to allow method chaining.
 	/// @private
 	static from_buffer = function (_buffer) {
-		var _vformat = undefined;
+		// Vertex format
+		var _vertices = buffer_read(_buffer, buffer_bool);
+		var _normals = buffer_read(_buffer, buffer_bool);
+		var _textureCoords = buffer_read(_buffer, buffer_bool);
+		var _colors = buffer_read(_buffer, buffer_bool);
+		var _tangentW = buffer_read(_buffer, buffer_bool);
+		var _bones = buffer_read(_buffer, buffer_bool);
 
-		HasVertices = buffer_read(_buffer, buffer_bool);
-		HasNormals = buffer_read(_buffer, buffer_bool);
-		HasTextureCoords = buffer_read(_buffer, buffer_bool);
-		HasColors = buffer_read(_buffer, buffer_bool);
-		HasTangentW = buffer_read(_buffer, buffer_bool);
-		HasBones = buffer_read(_buffer, buffer_bool);
+		VertexFormat = new BBMOD_VertexFormat(
+			_vertices,
+			_normals,
+			_textureCoords,
+			_colors,
+			_tangentW,
+			_bones,
+			false);
 
 		// Global inverse transform matrix
 		InverseTransformMatrix = bbmod_load_matrix(_buffer);
 
-		// Vertex format
-		var _mask = (0
-			| (HasVertices << BBMOD_VFORMAT_VERTEX)
-			| (HasNormals << BBMOD_VFORMAT_NORMAL)
-			| (HasTextureCoords << BBMOD_VFORMAT_TEXCOORD)
-			| (HasColors << BBMOD_VFORMAT_COLOR)
-			| (HasTangentW << BBMOD_VFORMAT_TANGENTW)
-			| (HasBones << BBMOD_VFORMAT_BONES));
-
-		if (is_undefined(_vformat))
-		{
-			_vformat = bbmod_get_vertex_format(
-				HasVertices,
-				HasNormals,
-				HasTextureCoords,
-				HasColors,
-				HasTangentW,
-				HasBones);
-		}
-
 		// Root node
-		RootNode = bbmod_node_load(_buffer, _vformat, _mask);
+		RootNode = bbmod_node_load(_buffer, VertexFormat);
 
 		// Skeleton
 		BoneCount = buffer_read(_buffer, buffer_u32);
@@ -388,7 +357,7 @@ function BBMOD_Model(_file) constructor
 	/// @param {bool} [_ids] `true` to include model instance ids in the vertex
 	/// format.
 	/// Defaults to `false`.
-	/// @return {real} The vertex format.
+	/// @return {BBMOD_VertexFormat} The vertex format.
 	/// @example
 	/// ```gml
 	/// static_batch = new BBMOD_StaticBatch(mod_tree.get_vertex_format());
@@ -397,13 +366,13 @@ function BBMOD_Model(_file) constructor
 		gml_pragma("forceinline");
 		var _bones = (argument_count > 0) ? argument[0] : true;
 		var _ids = (argument_count > 1) ? argument[1] : false;
-		return bbmod_get_vertex_format(
-			HasVertices,
-			HasNormals,
-			HasTextureCoords,
-			HasColors,
-			HasTangentW,
-			_bones ? HasBones : false,
+		return new BBMOD_VertexFormat(
+			VertexFormat.Vertices,
+			VertexFormat.Normals,
+			VertexFormat.TextureCoords,
+			VertexFormat.Colors,
+			VertexFormat.TangentW,
+			_bones ? VertexFormat.Bones : false,
 			_ids);
 	};
 

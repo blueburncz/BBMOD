@@ -17,18 +17,18 @@ enum BBMOD_EMesh
 /// @func bbmod_mesh_load(_buffer, _format, _format_mask)
 /// @desc Loads a mesh from a bufffer.
 /// @param {buffer} _buffer The buffer to load the struct from.
-/// @param {vertex_format} _format A vertex format that the mesh uses.
+/// @param {BBMOD_VertexFormat} _format A vertex format that the mesh uses.
 /// @param {real} _format_mask A vertex format mask.
 /// @return {BBMOD_EMesh} The loaded mesh.
 /// @private
-function bbmod_mesh_load(_buffer, _format, _format_mask)
+function bbmod_mesh_load(_buffer, _format)
 {
-	var _has_vertices = (_format_mask >> BBMOD_VFORMAT_VERTEX) & 1;
-	var _has_normals = (_format_mask >> BBMOD_VFORMAT_NORMAL) & 1;
-	var _has_uvs = (_format_mask >> BBMOD_VFORMAT_TEXCOORD) & 1;
-	var _has_colors = (_format_mask >> BBMOD_VFORMAT_COLOR) & 1;
-	var _has_tangentw = (_format_mask >> BBMOD_VFORMAT_TANGENTW) & 1;
-	var _has_bones = (_format_mask >> BBMOD_VFORMAT_BONES) & 1;
+	var _has_vertices = _format.Vertices;
+	var _has_normals = _format.Normals;
+	var _has_uvs = _format.TextureCoords;
+	var _has_colors = _format.Colors;
+	var _has_tangentw = _format.TangentW;
+	var _has_bones = _format.Bones;
 
 	var _mesh = array_create(BBMOD_EMesh.SIZE, 0);
 	_mesh[@ BBMOD_EMesh.MaterialIndex] = buffer_read(_buffer, buffer_u32);
@@ -47,7 +47,7 @@ function bbmod_mesh_load(_buffer, _format, _format_mask)
 		if (_size > 0)
 		{
 			var _vbuffer = vertex_create_buffer_from_buffer_ext(
-				_buffer, _format, buffer_tell(_buffer), _vertex_count);
+				_buffer, _format.Raw, buffer_tell(_buffer), _vertex_count);
 			_mesh[@ BBMOD_EMesh.VertexBuffer] = _vbuffer;
 			buffer_seek(_buffer, buffer_seek_relative, _size);
 		}
@@ -80,23 +80,22 @@ function _bbmod_mesh_freeze(_mesh)
 /// @private
 function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 {
-	var _vertex_buffer = _dynamic_batch.vertex_buffer;
-	var _model = _dynamic_batch.model;
-
-	var _has_vertices = _model.HasVertices;
-	var _has_normals = _model.HasNormals;
-	var _has_uvs = _model.HasTextureCoords;
-	var _has_colors = _model.HasColors;
-	var _has_tangentw = _model.HasTangentW;
-	var _has_bones = _model.HasBones;
-
+	var _vertex_buffer = _dynamic_batch.VertexBuffer;
+	var _model = _dynamic_batch.Model;
+	var _vertex_format = _model.VertexFormat;
+	var _has_vertices = _vertex_format.Vertices;
+	var _has_normals = _vertex_format.Normals;
+	var _has_uvs = _vertex_format.TextureCoords;
+	var _has_colors = _vertex_format.Colors;
+	var _has_tangentw = _vertex_format.TangentW;
+	var _has_bones = _vertex_format.Bones;
+	var _has_ids = _vertex_format.Ids;
 	var _mesh_vertex_buffer = _mesh[BBMOD_EMesh.VertexBuffer];
 	var _vertex_count = vertex_get_number(_mesh_vertex_buffer);
 	var _buffer = buffer_create_from_vertex_buffer(_mesh_vertex_buffer, buffer_fixed, 1);
-
 	var _id = 0;
 
-	repeat (_dynamic_batch.size)
+	repeat (_dynamic_batch.Size)
 	{
 		buffer_seek(_buffer, buffer_seek_start, 0);
 
@@ -156,6 +155,11 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 				}
 			}
 
+			if (_has_ids)
+			{
+				buffer_read(_buffer, buffer_f32);
+			}
+
 			vertex_float1(_vertex_buffer, _id);
 		}
 
@@ -173,18 +177,18 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 /// @private
 function _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 {
-	var _vertex_buffer = _static_batch.vertex_buffer;
-
-	var _has_vertices = _model.HasVertices;
-	var _has_normals = _model.HasNormals;
-	var _has_uvs = _model.HasTextureCoords;
-	var _has_colors = _model.HasColors;
-	var _has_tangentw = _model.HasTangentW;
-	var _has_bones = _model.HasBones;
-
+	var _vertex_buffer = _static_batch.VertexBuffer;
+	var _vertex_format = _model.VertexFormat;
+	var _has_vertices = _vertex_format.Vertices;
+	var _has_normals = _vertex_format.Normals;
+	var _has_uvs = _vertex_format.TextureCoords;
+	var _has_colors = _vertex_format.Colors;
+	var _has_tangentw = _vertex_format.TangentW;
+	var _has_bones = _vertex_format.Bones;
+	var _has_ids = _vertex_format.Ids;
 	var _mesh_vertex_buffer = _mesh[BBMOD_EMesh.VertexBuffer];
-
 	var _buffer = buffer_create_from_vertex_buffer(_mesh_vertex_buffer, buffer_fixed, 1);
+
 	buffer_seek(_buffer, buffer_seek_start, 0);
 
 	repeat (vertex_get_number(_mesh_vertex_buffer))
@@ -247,6 +251,11 @@ function _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 			{
 				buffer_read(_buffer, buffer_f32);
 			}
+		}
+
+		if (_has_ids)
+		{
+			buffer_read(_buffer, buffer_f32);
 		}
 	}
 

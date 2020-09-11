@@ -1,3 +1,12 @@
+/// @macro {real} An index of the last found animation key, updated by
+/// {@link bbmod_find_animation_key}.
+/// @private
+#macro BBMOD_KEY_INDEX_LAST global.__bbmod_key_index_last
+
+/// @var {real} An index of the last found animation key.
+/// @private
+global.__bbmod_key_index_last = 0;
+
 /// @enum An enumeration of members of a legacy animation key struct.
 /// This struct is never instantiated, it only serves as an interface for
 /// specific animation keys.

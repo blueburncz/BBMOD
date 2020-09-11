@@ -17,14 +17,13 @@ enum BBMOD_ENode
 	SIZE
 };
 
-/// @func bbmod_node_load(_buffer, _format, _format_mask)
+/// @func bbmod_node_load(_buffer, _format)
 /// @desc Loads a node from a buffer.
 /// @param {buffer} _buffer The buffer to load the struct from.
-/// @param {vertex_format} _format A vertex format for node's meshes.
-/// @param {real} _format_mask A vertex format mask.
+/// @param {BBMOD_VertexFormat} _format A vertex format for node's meshes.
 /// @return {BBMOD_ENode} The loaded node.
 /// @private
-function bbmod_node_load(_buffer, _format, _format_mask)
+function bbmod_node_load(_buffer, _format)
 {
 	var i = 0;
 
@@ -40,7 +39,7 @@ function bbmod_node_load(_buffer, _format, _format_mask)
 	//i = 0;
 	repeat (_model_count)
 	{
-		_models[@ i++] = bbmod_mesh_load(_buffer, _format, _format_mask);
+		_models[@ i++] = bbmod_mesh_load(_buffer, _format);
 	}
 
 	// Child nodes
@@ -51,7 +50,7 @@ function bbmod_node_load(_buffer, _format, _format_mask)
 	i = 0;
 	repeat (_child_count)
 	{
-		_children[@ i++] = bbmod_node_load(_buffer, _format, _format_mask);
+		_children[@ i++] = bbmod_node_load(_buffer, _format);
 	}
 
 	return _node;

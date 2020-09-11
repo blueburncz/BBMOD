@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"bbmod_vertex_format","path":"scripts/bbmod_vertex_format/bbmod_vertex_format.yy",},"order":21,},
     {"id":{"name":"bbmod_position_key","path":"scripts/bbmod_position_key/bbmod_position_key.yy",},"order":14,},
     {"id":{"name":"bbmod_bone","path":"scripts/bbmod_bone/bbmod_bone.yy",},"order":6,},
     {"id":{"name":"bbmod_animation_instance","path":"scripts/bbmod_animation_instance/bbmod_animation_instance.yy",},"order":3,},
@@ -25,7 +26,7 @@
     {"id":{"name":"bbmod_material","path":"scripts/bbmod_material/bbmod_material.yy",},"order":10,},
     {"id":{"name":"bbmod_mesh","path":"scripts/bbmod_mesh/bbmod_mesh.yy",},"order":11,},
     {"id":{"name":"bbmod_animation","path":"scripts/bbmod_animation/bbmod_animation.yy",},"order":1,},
-    {"id":{"name":"bbmod","path":"scripts/bbmod/bbmod.yy",},"order":0,},
+    {"id":{"name":"bbmod_legacy","path":"scripts/bbmod_legacy/bbmod_legacy.yy",},"order":0,},
     {"id":{"name":"ce_vec3","path":"scripts/ce_vec3/ce_vec3.yy",},"order":2,},
     {"id":{"name":"BBMOD_ShDefaultBatched","path":"shaders/BBMOD_ShDefaultBatched/BBMOD_ShDefaultBatched.yy",},"order":2,},
     {"id":{"name":"ce_vec4","path":"scripts/ce_vec4/ce_vec4.yy",},"order":1,},
@@ -121,6 +122,12 @@
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Skies","resourceVersion":"1.0","name":"NoonIBL.png","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"Paladin.bbmod","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"Idle.bbanim","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/BBMOD/DLL","resourceVersion":"1.0","name":"assimp-vc140-mt.dll","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/BBMOD/DLL","resourceVersion":"1.0","name":"BBMOD.dll","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/BBMOD/DLL","resourceVersion":"1.0","name":"LICENSE","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Models","resourceVersion":"1.0","name":"Sphere.bbmod","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Skies","resourceVersion":"1.0","name":"NoonIBL.png","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Skies","resourceVersion":"1.0","name":"NoonSky.png","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2.3.0.529",

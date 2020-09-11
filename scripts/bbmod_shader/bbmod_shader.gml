@@ -1,3 +1,20 @@
+/// @var {real[]} The current `[x,y,z]` position of the camera. This should be
+/// updated every frame before rendering models, otherwise the default PBR
+/// shaders won't work properly!
+/// @see bbmod_set_camera_position
+global.bbmod_camera_position = [0, 0, 0];
+
+/// @var {real} The current camera exposure.
+global.bbmod_camera_exposure = 0.1;
+
+/// @var {ptr} The texture that is currently used for IBL.
+/// @private
+global.__bbmod_ibl_texture = pointer_null;
+
+/// @var {ptr} A texel size of the IBL texture.
+/// @private
+global.__bbmod_ibl_texel = 0;
+
 /// @func _bbmod_shader_set_camera_position(_shader[, _camera_position])
 /// @param {shader} _shader
 /// @param {real[]} [_camera_position]
@@ -43,4 +60,56 @@ function _bbmod_shader_set_ibl(_shader, _texture, _texel)
 		_texel, _texel);
 	texture_set_stage(shader_get_sampler_index(_shader, "u_texBRDF"),
 		sprite_get_texture(BBMOD_SprEnvBRDF, 0));
+}
+
+/// @func bbmod_set_camera_position(_x, _y, _z)
+/// @desc Changes camera position to given coordinates.
+/// @param {real} _x The x position of the camera.
+/// @param {real} _y The y position of the camera.
+/// @param {real} _z The z position of the camera.
+/// @see global.bbmod_camera_position
+function bbmod_set_camera_position(_x, _y, _z)
+{
+	gml_pragma("forceinline");
+	var _position = global.bbmod_camera_position;
+	_position[@ 0] = _x;
+	_position[@ 1] = _y;
+	_position[@ 2] = _z;
+}
+
+/// @func bbmod_set_ibl_sprite(_sprite, _subimage)
+/// @desc Changes a texture used for image based lighting using a sprite.
+/// @param {real} _sprite The sprite index.
+/// @param {real} _subimage The sprite subimage to use.
+/// @note This texture must be a stripe of eight prefiltered octahedrons, the
+/// first seven being used for specular lighting and the last one for diffuse
+/// lighting.
+function bbmod_set_ibl_sprite(_sprite, _subimage)
+{
+	gml_pragma("forceinline");
+	var _texel = 1 / sprite_get_height(_sprite);
+	bbmod_set_ibl_texture(sprite_get_texture(_sprite, _subimage), _texel);
+}
+
+/// @func bbmod_set_ibl_texture(_texture, _texel)
+/// @desc Changes a texture used for image based lighting.
+/// @param {ptr} _texture The texture.
+/// @param {real} _texel The size of a texel.
+/// @note This texture must be a stripe of eight prefiltered octahedrons, the
+/// first seven being used for specular lighting and the last one for diffuse
+/// lighting.
+function bbmod_set_ibl_texture(_texture, _texel)
+{
+	global.__bbmod_ibl_texture = _texture;
+	global.__bbmod_ibl_texel = _texel;
+
+	if (_texture != pointer_null)
+	{
+		var _material = global.__bbmod_material_current;
+		if (_material != BBMOD_NONE)
+		{
+			var _shader = _material.Shader;
+			_bbmod_shader_set_ibl(_shader, _texture, _texel);
+		}
+	}
 }

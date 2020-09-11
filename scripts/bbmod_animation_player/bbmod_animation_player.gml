@@ -1,3 +1,12 @@
+/// @macro {string} An event triggered on animation end. The event data
+/// will containg the animation that was finished playing.
+/// @see BBMOD_AnimationPlayer.OnEvent
+#macro BBMOD_EV_ANIMATION_END "bbmod_ev_animation_end"
+
+/// @var {ds_stack} A stack used when posing skeletons to avoid recursion.
+/// @private
+global.__bbmod_anim_stack = ds_stack_create();
+
 /// @enum An enumeration of members of a legacy animation player struct.
 /// @obsolete This legacy struct is obsolete. Please use
 /// {@link BBMOD_AnimationPlayer} instead.

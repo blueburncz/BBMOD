@@ -28,29 +28,29 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 {
 	/// @var {BBMOD_Model} A model that is being batched.
 	/// @readonly
-	model = _model
+	Model = _model
 
 	/// @var {real} Number of model instances in the batch.
 	/// @readonly
-	size = _size;
+	Size = _size;
 
 	/// @var {vertex_buffer} A vertex buffer.
 	/// @private
-	vertex_buffer = vertex_create_buffer();
+	VertexBuffer = vertex_create_buffer();
 
 	/// @var {real} The format of the vertex buffer.
 	/// @private
-	vertex_format = model.get_vertex_format(false, true);
+	VertexFormat = Model.get_vertex_format(false, true);
 
-	vertex_begin(vertex_buffer, vertex_format);
-	model.to_dynamic_batch(self);
-	vertex_end(vertex_buffer);
+	vertex_begin(VertexBuffer, VertexFormat.Raw);
+	Model.to_dynamic_batch(self);
+	vertex_end(VertexBuffer);
 
 	/// @func freeze()
 	/// @desc Freezes the dynamic batch. This makes it render faster.
 	static freeze = function () {
 		gml_pragma("forceinline");
-		vertex_freeze(vertex_buffer);
+		vertex_freeze(VertexBuffer);
 	};
 
 	/// @func render(_material, _data)
@@ -68,7 +68,7 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 		}
 		_material.apply();
 		_bbmod_shader_set_dynamic_batch_data(_material.Shader, _data);
-		vertex_submit(vertex_buffer, pr_trianglelist, _material.BaseOpacity);
+		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
 	};
 
 	/// @func default_fn(_data, _index)
@@ -127,14 +127,14 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	static render_object = function (_object, _material) {
 		var _fn = (argument_count > 2) ? argument[2] : default_fn;
 		var _find = 0;
-		var _data_size = size * 8;
+		var _data_size = Size * 8;
 		var _data_empty = array_create(_data_size, 0);
 		var _data = array_create(_data_size, 0)
-		repeat (ceil(instance_number(_object) / size))
+		repeat (ceil(instance_number(_object) / Size))
 		{
 			array_copy(_data, 0, _data_empty, 0, _data_size);
 			var _index = 0;
-			repeat (size)
+			repeat (Size)
 			{
 				var _instance = instance_find(_object, _find++);
 				if (_instance == noone)
@@ -157,6 +157,6 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	/// ```
 	static destroy = function () {
 		gml_pragma("forceinline");
-		vertex_delete_buffer(vertex_buffer);
+		vertex_delete_buffer(VertexBuffer);
 	};
 }

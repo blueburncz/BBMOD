@@ -1,18 +1,18 @@
 /// @func BBMOD_StaticBatch(_vformat)
 /// @desc A static batch.
-/// @param {vertex_format} _vformat The vertex format of the static batch. All models
-/// added to the same static batch must have the same vertex format. This
-/// vertex format must not contain bone data!
+/// @param {BBMOD_VertexFormat} _vformat The vertex format of the static batch.
+/// All models added to the same static batch must have the same vertex format.
+/// This vertex format must not contain bone data!
 /// @see BBMOD_Model.get_vertex_format
 function BBMOD_StaticBatch(_vformat) constructor
 {
 	/// @var {vertex_buffer} A vertex buffer.
 	/// @private
-	vertex_buffer = vertex_create_buffer();
+	VertexBuffer = vertex_create_buffer();
 
-	/// @var {vertex_format} The format of the vertex buffer.
+	/// @var {BBMOD_VertexFormat} The format of the vertex buffer.
 	/// @private
-	vertex_format = _vformat;
+	VertexFormat = _vformat;
 
 	/// @func start()
 	/// @desc Begins adding models into the static batch.
@@ -20,8 +20,8 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// @see BBMOD_StaticBatch.finish
 	static start = function () {
 		gml_pragma("forceinline");
-		vertex_begin(vertex_buffer, vertex_format);
-	}
+		vertex_begin(VertexBuffer, VertexFormat.Raw);
+	};
 
 	/// @func add(_model, _transform)
 	/// @desc Adds a model to the static batch.
@@ -47,24 +47,23 @@ function BBMOD_StaticBatch(_vformat) constructor
 	static add = function (_model, _transform) {
 		gml_pragma("forceinline");
 		_model.to_static_batch(self, _transform);
-	}
+	};
 
 	/// @func finish()
 	/// @desc Ends adding models into the static batch.
 	/// @see BBMOD_StaticBatch.start
 	static finish = function () {
 		gml_pragma("forceinline");
-		vertex_end(vertex_buffer);
-	}
+		vertex_end(VertexBuffer);
+	};
 
 	/// @func freeze()
 	/// @desc Freezes the static batch. This makes it render faster, but disables
 	/// adding more models.
 	static freeze = function () {
 		gml_pragma("forceinline");
-		vertex_freeze(vertex_buffer);
-	}
-
+		vertex_freeze(VertexBuffer);
+	};
 
 	/// @func render(_material)
 	/// @desc Submits the static batch for rendering.
@@ -77,8 +76,8 @@ function BBMOD_StaticBatch(_vformat) constructor
 			return;
 		}
 		_material.apply();
-		vertex_submit(vertex_buffer, pr_trianglelist, _material.BaseOpacity);
-	}
+		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
+	};
 
 	/// @func destroy()
 	/// @desc Frees memory used by the static batch. Use this in combination with
@@ -90,6 +89,6 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// ```
 	static destroy = function () {
 		gml_pragma("forceinline");
-		vertex_delete_buffer(vertex_buffer);
+		vertex_delete_buffer(VertexBuffer);
 	};
 }

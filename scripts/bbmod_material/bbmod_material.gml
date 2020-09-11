@@ -1,3 +1,61 @@
+/// @macro {real} A flag used to tell that a model is rendered in a forward
+/// render path.
+/// @see BBMOD_RENDER_DEFERRED
+/// @see global.bbmod_render_pass
+/// @see BBMOD_Material.RenderPath
+#macro BBMOD_RENDER_FORWARD (1)
+
+/// @macro {real} A flag used to tell that a model is rendered in a deferred
+/// render path.
+/// @see BBMOD_RENDER_FORWARD
+/// @see global.bbmod_render_pass
+/// @see BBMOD_Material.RenderPath
+#macro BBMOD_RENDER_DEFERRED (1 << 1)
+
+/// @macro {BBMOD_Material} The default material.
+/// @see BBMOD_Material
+#macro BBMOD_MATERIAL_DEFAULT global.__bbmod_material_default
+
+/// @macro {BBMOD_Material} The default material for animated models.
+/// @see BBMOD_Material
+#macro BBMOD_MATERIAL_DEFAULT_ANIMATED global.__bbmod_material_default_animated
+
+/// @macro {BBMOD_Material} The default material for dynamically batched models.
+/// @see BBMOD_Material
+/// @see BBMOD_DynamicBatch
+#macro BBMOD_MATERIAL_DEFAULT_BATCHED global.__bbmod_material_default_batched
+
+/// @var {BBMOD_Material} The default material.
+/// @see BBMOD_Material
+/// @private
+global.__bbmod_material_default = new BBMOD_Material(BBMOD_ShDefault);
+
+/// @var {BBMOD_Material} The default material for animated models.
+/// @see BBMOD_Material
+/// @private
+global.__bbmod_material_default_animated = new BBMOD_Material(BBMOD_ShDefaultAnimated);
+
+/// @var {BBMOD_Material} The default material for dynamically batched models.
+/// @see BBMOD_Material
+/// @private
+global.__bbmod_material_default_batched = new BBMOD_Material(BBMOD_ShDefaultBatched);
+
+/// @var {BBMOD_EMaterial/BBMOD_NONE} The currently applied material.
+/// @private
+global.__bbmod_material_current = BBMOD_NONE;
+
+/// @var {real} The current render pass.
+/// @example
+/// ```gml
+/// if (global.bbmod_render_pass & BBMOD_RENDER_DEFERRED)
+/// {
+///     // Draw objects to a G-Buffer...
+/// }
+/// ```
+/// @see BBMOD_RENDER_FORWARD
+/// @see BBMOD_RENDER_DEFERRED
+global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
+
 /// @enum An enumeration of members of a legacy material struct.
 /// @obsolete This legacy struct is obsolete. Please use
 /// {@link BBMOD_Material} instead.
