@@ -24,6 +24,8 @@
 /// /// @desc Draw event
 /// car_batch.render_object(OCar, mat_car);
 /// ```
+///
+/// @see BBMOD_StaticBatch
 function BBMOD_DynamicBatch(_model, _size) constructor
 {
 	/// @var {BBMOD_Model} A model that is being batched.

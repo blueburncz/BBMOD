@@ -1,9 +1,31 @@
 /// @func BBMOD_StaticBatch(_vformat)
-/// @desc A static batch.
+///
+/// @desc A static batch is a structure that allows you to compose static models
+/// into a single one. Compared to {@link BBMOD_Model.render}, this drastically
+/// reduces draw calls and increases performance, but requires more memory.
+/// Current limitation is that the added models must use the same single material.
+///
 /// @param {BBMOD_VertexFormat} _vformat The vertex format of the static batch.
 /// All models added to the same static batch must have the same vertex format.
 /// This vertex format must not contain bone data!
+///
+/// @example
+/// ```gml
+/// mod_tree = new BBMOD_Model("Tree.bbmod");
+/// var _vformat = mod_tree.get_vertex_format();
+/// batch = new BBMOD_StaticBatch(_vformat);
+/// batch.start();
+/// with (OTree)
+/// {
+///     var _transform = matrix_build(x, y, z, 0, 0, direction, 1, 1, 1);
+///     other.batch.add(other.mod_tree, _transform);
+/// }
+/// batch.finish();
+/// batch.freeze();
+/// ```
+///
 /// @see BBMOD_Model.get_vertex_format
+/// @see BBMOD_DynamicBatch
 function BBMOD_StaticBatch(_vformat) constructor
 {
 	/// @var {vertex_buffer} A vertex buffer.
@@ -30,7 +52,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// @example
 	/// ```gml
 	/// mod_tree = new BBMOD_Model("Tree.bbmod");
-	/// var _vformat = mod_tree.get_vertex_format(false);
+	/// var _vformat = mod_tree.get_vertex_format();
 	/// batch = new BBMOD_StaticBatch(_vformat);
 	/// batch.start();
 	/// with (OTree)
