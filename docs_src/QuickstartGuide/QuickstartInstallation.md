@@ -1,25 +1,4 @@
 # Installation
-The BBMOD GML library can be installed using
-[Catalyst](https://github.com/GameMakerHub/Catalyst), the open-source package
-manager for GameMaker Studio 2. The installation process is fairly simple, using
-just a few commands.
+If you have downloaded BBMOD from the [YoYo Games Marketplace](https://marketplace.yoyogames.com/), you can add it to your project by navigating to `Marketplace` > `My Library`, selecting BBMOD and then clicking the import button.
 
-* First you initialize Catalyst in your project (if you haven't already):
-
-```cmd
-catalyst init
-```
-
-* Then you add BBMOD into your project's requirements:
-
-```cmd
-catalyst require blueburn-cz/bbmod 
-```
-
-* And then you install the required packages:
-
-```cmd
-catalyst install
-```
-
-All of these are of course run from your project's directory.
+If you have downloaded BBMOD from [GitHub](https://github.com/blueburn-cz/BBMOD/releases), you have to navigate to `Tools` > `Import Local Package` and then select the package from your computer.

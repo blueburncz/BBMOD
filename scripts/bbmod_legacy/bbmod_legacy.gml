@@ -1,5 +1,5 @@
 /// @macro {undefined} An empty value. This is for example used in the legacy
-/// scripts as a return value when animation/model loading fails or to unassign
+/// functions as a return value when animation/model loading fails or to unassign
 /// an existing one.
 /// @example
 /// ```gml

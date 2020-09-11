@@ -17,7 +17,7 @@
 /// Following code renders all instances of a car object in batches of 64.
 /// ```gml
 /// /// @desc Create event
-/// mod_car = new BBMOD_Model("car.bbmod");
+/// mod_car = new BBMOD_Model("Car.bbmod");
 /// mat_car = new BBMOD_Material(BBMOD_ShDefaultBatched, sprite_get_texture(SprCar, 0));
 /// car_batch = new BBMOD_DynamicBatch(mod_car, 64);
 ///

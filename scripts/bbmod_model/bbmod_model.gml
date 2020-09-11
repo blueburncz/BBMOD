@@ -79,9 +79,9 @@ function bbmod_model_freeze(_model)
 /// from. Use `undefined` to use the model's root bone. Defaults to `undefined`.
 /// @return {real/BBMOD_NONE} The id of the bone on success or {@link BBMOD_NONE}
 /// on fail.
-/// @note It is not recommened to use this script in release builds, because having
-/// many of these lookups can slow down your game! You should instead use the
-/// ids available from the `_log.txt` files, which are created during model
+/// @note It is not recommended to use this function in release builds, because
+/// having many of these lookups can slow down your game! You should instead use
+/// the ids available from the `_log.txt` files, which are created during model
 /// conversion.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Model.find_bone_id}
 /// instead.
@@ -308,7 +308,7 @@ function BBMOD_Model(_file) constructor
 	/// @desc Finds model's bone by its name.
 	/// @param {string} _bone_name The name of the bone.
 	/// @return {real} The id of the bone or {@link BBMOD_NONE} when it's not found.
-	/// @note It is not recommened to use this script in release builds, because
+	/// @note It is not recommended to use this method in release builds, because
 	/// having many of these lookups can slow down your game! You should instead
 	/// use the ids available from the `_log.txt` files, which are created during
 	/// model conversion.

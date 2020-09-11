@@ -68,7 +68,7 @@ enum BBMOD_EMaterial
 	Shader,
 	/// @member {function} A function that is executed when the shader is applied.
 	/// Must take the material  as the first argument. Use `undefined` if you don't
-	/// want to execute any script.
+	/// want to execute any function.
 	OnApply,
 	/// @member {real} A blend mode. Use one of the `bm_` constants. Defaults to
 	/// `bm_normal`.
@@ -213,9 +213,9 @@ function BBMOD_Material(_shader) constructor
 	/// @var {shader} A shader that the material uses.
 	Shader = _shader;
 
-	/// @var {function} A script that is executed when the shader is applied.
+	/// @var {function} A function that is executed when the shader is applied.
 	/// Must take the material as the first argument. Use `undefined`
-	/// if you don't want to execute any script. Defaults
+	/// if you don't want to execute any function. Defaults
 	/// to {@link bbmod_material_on_apply_default}.
 	OnApply = bbmod_material_on_apply_default;
 
