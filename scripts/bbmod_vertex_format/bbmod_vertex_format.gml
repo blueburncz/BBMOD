@@ -10,7 +10,7 @@
 /// @param {bool} _bones `true` if the vertex format must have vertex weights and bone
 /// indices.
 /// @param {bool} [_ids] `true` if the vertex format must have ids for dynamic batching.
-/// @return {vertex_format} The vertex format.
+/// @return {BBMOD_VertexFormat} The vertex format.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_VertexFomat} instead.
 function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones)
 {
@@ -20,6 +20,7 @@ function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, 
 }
 
 /// @func BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bones, _ids)
+/// @desc A wrapper of a raw GameMaker vertex format.
 /// @param {bool} _vertices If `true` then the vertex format must have vertices.
 /// @param {bool} _normals If `true` then the vertex format must have normal vectors.
 /// @param {bool} _uvs If `true` then the vertex format must have texture coordinates.
