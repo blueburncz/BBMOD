@@ -31,15 +31,15 @@
 	"\x1B[" TC_STRINGIFY(v1) ";" TC_STRINGIFY(v2) "m"
 
 #define PRINT_SUCCESS(fmt, ...) \
-	printf(TC2(TC_B_GREEN, TC_F_BLACK) "Success: " fmt TC1(TC_RESET) "\n", ##__VA_ARGS__)
+	printf(TC2(TC_B_GREEN, TC_F_BLACK) " Success: " TC1(TC_RESET) " " fmt "\n", ##__VA_ARGS__)
 
 #define PRINT_INFO(fmt, ...) \
-	printf(TC2(TC_B_CYAN, TC_F_BLACK) "Info: " fmt TC1(TC_RESET) "\n", ##__VA_ARGS__)
+	printf(TC2(TC_B_CYAN, TC_F_BLACK) " Info: " TC1(TC_RESET) " " fmt "\n", ##__VA_ARGS__)
 
 #define PRINT_WARNING(fmt, ...) \
-	printf(TC2(TC_B_YELLOW, TC_F_BLACK) "Warning: " fmt TC1(TC_RESET) "\n", ##__VA_ARGS__)
+	printf(TC2(TC_B_YELLOW, TC_F_BLACK) " Warning: " TC1(TC_RESET) " " fmt "\n", ##__VA_ARGS__)
 
 #define PRINT_ERROR(fmt, ...) \
-	printf(TC2(TC_B_RED, TC_F_BLACK) "Error: " fmt TC1(TC_RESET) "\n", ##__VA_ARGS__)
+	printf(TC2(TC_B_RED, TC_F_BLACK) " Error: " TC1(TC_RESET) " " fmt "\n", ##__VA_ARGS__)
 
 bool InitTerminal();
