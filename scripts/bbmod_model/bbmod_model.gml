@@ -1,55 +1,3 @@
-/// @enum An enumeration of members of a legacy model struct.
-/// @obsolete This legacy struct is obsolete. Please use
-/// {@link BBMOD_Model} instead.
-enum BBMOD_EModel
-{
-	/// @member {real} The version of the model file.
-	/// @readonly
-	Version,
-	/// @member {bool} If `true` then the model has vertices (always `true`).
-	/// @readonly
-	HasVertices,
-	/// @member {bool} If `true` then the model has normal vectors.
-	/// @readonly
-	HasNormals,
-	/// @member {bool} If `true` then the model has texture coordinates.
-	/// @readonly
-	HasTextureCoords,
-	/// @member {bool} If `true` then the model has vertex colors.
-	/// @readonly
-	HasColors,
-	/// @member {bool} If `true` then the model has tangent vectors and bitangent sign.
-	/// @readonly
-	HasTangentW,
-	/// @member {bool} If `true` then the model has vertex weights and bone indices.
-	/// @readonly
-	HasBones,
-	/// @member {real[]} The global inverse transform matrix.
-	/// @readonly
-	InverseTransformMatrix,
-	/// @member {BBMOD_ENode} The root node.
-	/// @see BBMOD_ENode
-	/// @readonly
-	RootNode,
-	/// @member {real} Number of bones.
-	/// @readonly
-	BoneCount,
-	/// @member {BBMOD_EBone} The root bone.
-	/// @see BBMOD_EBone
-	/// @readonly
-	Skeleton,
-	/// @member {real} Number of materials that the model uses.
-	/// @see BBMOD_EMaterial
-	/// @readonly
-	MaterialCount,
-	/// @member {string[]} Array of material names.
-	/// @see BBMOD_EMaterial
-	/// @readonly
-	MaterialNames,
-	/// @member The size of the struct.
-	SIZE
-};
-
 /// @func bbmod_model_destroy(_model)
 /// @desc Destroys a model.
 /// @param {BBMOD_Model} _model The model to destroy.
@@ -166,9 +114,17 @@ function BBMOD_Model(_file) constructor
 	/// @readonly
 	VertexFormat = undefined;
 
+	/// @var {BBMOD_EMesh[]} Array of meshes.
+	/// @readonly
+	Meshes = [];
+
 	/// @var {real[]} The global inverse transform matrix.
 	/// @readonly
 	InverseTransformMatrix = undefined;
+
+	/// @var {int} Number of nodes.
+	/// @readonly
+	NodeCount = 0;
 
 	/// @var {BBMOD_ENode} The root node.
 	/// @see BBMOD_ENode
@@ -177,12 +133,13 @@ function BBMOD_Model(_file) constructor
 
 	/// @var {real} Number of bones.
 	/// @readonly
+	// TODO: Replace with array_length(Skeleton)
 	BoneCount = 0;
 
-	/// @var {BBMOD_EBone} The root bone.
+	/// @var {BBMOD_EBone[]} Array of bones.
 	/// @see BBMOD_EBone
 	/// @readonly
-	Skeleton = undefined;
+	Skeleton = [];
 
 	/// @var {real} Number of materials that the model uses.
 	/// @see BBMOD_EMaterial
@@ -200,6 +157,8 @@ function BBMOD_Model(_file) constructor
 	/// @return {BBMOD_Model} Returns `self` to allow method chaining.
 	/// @private
 	static from_buffer = function (_buffer) {
+		var i;
+
 		// Vertex format
 		var _vertices = buffer_read(_buffer, buffer_bool);
 		var _normals = buffer_read(_buffer, buffer_bool);
@@ -207,6 +166,7 @@ function BBMOD_Model(_file) constructor
 		var _colors = buffer_read(_buffer, buffer_bool);
 		var _tangentW = buffer_read(_buffer, buffer_bool);
 		var _bones = buffer_read(_buffer, buffer_bool);
+		var _ids = buffer_read(_buffer, buffer_bool);
 
 		VertexFormat = new BBMOD_VertexFormat(
 			_vertices,
@@ -215,12 +175,23 @@ function BBMOD_Model(_file) constructor
 			_colors,
 			_tangentW,
 			_bones,
-			false);
+			_ids);
+
+		// Meshes
+		var _meshCount = buffer_read(_buffer, buffer_u32);
+		Meshes = array_create(_meshCount, undefined);
+
+		i = 0;
+		repeat (_meshCount)
+		{
+			Meshes[@ i++] = bbmod_mesh_load(_buffer, VertexFormat);
+		}
 
 		// Global inverse transform matrix
 		InverseTransformMatrix = bbmod_load_matrix(_buffer);
 
-		// Root node
+		// Node count and root node
+		NodeCount = buffer_read(_buffer, buffer_u32);
 		RootNode = bbmod_node_load(_buffer, VertexFormat);
 
 		// Skeleton
@@ -228,7 +199,13 @@ function BBMOD_Model(_file) constructor
 
 		if (BoneCount > 0)
 		{
-			Skeleton = bbmod_bone_load(_buffer);
+			Skeleton = array_create(BoneCount, undefined);
+
+			repeat (BoneCount)
+			{
+				var _bone = bbmod_bone_load(_buffer);
+				Skeleton[@ _bone[BBMOD_EBone.Index]] = _bone;
+			}
 		}
 
 		// Materials
@@ -236,9 +213,9 @@ function BBMOD_Model(_file) constructor
 
 		if (MaterialCount > 0)
 		{
-			var _material_names = array_create(MaterialCount, 0);
+			var _material_names = array_create(MaterialCount, undefined);
 
-			var i  = 0;
+			i  = 0;
 			repeat (MaterialCount)
 			{
 				_material_names[@ i++] = buffer_read(_buffer, buffer_string);
@@ -246,6 +223,7 @@ function BBMOD_Model(_file) constructor
 
 			MaterialNames = _material_names;
 		}
+
 
 		return self;
 	};
@@ -285,7 +263,7 @@ function BBMOD_Model(_file) constructor
 		}
 
 		Version = buffer_read(_buffer, buffer_u8);
-		if (Version != 1)
+		if (Version != BBMOD_VERSION)
 		{
 			buffer_delete(_buffer);
 			throw new BBMOD_Error("Invalid version " + string(Version) + "!");
@@ -301,7 +279,11 @@ function BBMOD_Model(_file) constructor
 	/// rendering faster, but it disables creating new batches of the model.
 	static freeze = function () {
 		gml_pragma("forceinline");
-		_bbmod_node_freeze(RootNode);
+		var i = 0;
+		repeat (array_length(Meshes))
+		{
+			_bbmod_mesh_freeze(Meshes[i++]);
+		}
 	};
 
 	/// @func find_bone_id(_bone_name)
@@ -435,7 +417,11 @@ function BBMOD_Model(_file) constructor
 	/// ```
 	static destroy = function () {
 		gml_pragma("forceinline");
-		bbmod_node_destroy(RootNode);
+		var i = 0;
+		repeat (array_length(Meshes))
+		{
+			bbmod_mesh_destroy(Meshes[i++]);
+		}
 	};
 
 	/// @func to_dynamic_batch(_model, _dynamic_batch)
@@ -445,7 +431,11 @@ function BBMOD_Model(_file) constructor
 	function to_dynamic_batch(_dynamic_batch)
 	{
 		gml_pragma("forceinline");
-		_bbmod_node_to_dynamic_batch(RootNode, _dynamic_batch);
+		var i = 0;
+		repeat (array_length(Meshes))
+		{
+			_bbmod_mesh_to_dynamic_batch(Meshes[i++], _dynamic_batch);
+		}
 	}
 
 	/// @func to_static_batch(_model, _static_batch, _transform)
@@ -456,7 +446,11 @@ function BBMOD_Model(_file) constructor
 	function to_static_batch(_static_batch, _transform)
 	{
 		gml_pragma("forceinline");
-		_bbmod_node_to_static_batch(self, RootNode, _static_batch, _transform);
+		var i = 0;
+		repeat (array_length(Meshes))
+		{
+			_bbmod_mesh_to_static_batch(self, Meshes[i++], _static_batch, _transform);
+		}
 	}
 
 	if (_file != undefined)

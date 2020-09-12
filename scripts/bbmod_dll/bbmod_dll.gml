@@ -1,3 +1,6 @@
+/// @macro {int} The supported version of BBMOD and BBANIM files.
+#macro BBMOD_VERSION 2
+
 /// @macro {real} A code returned from the DLL on fail, when none of `BBMOD_ERR_`
 /// is applicable.
 /// @private

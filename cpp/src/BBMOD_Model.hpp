@@ -57,7 +57,7 @@ struct BBMOD_Model
 
 	const aiScene* Scene = nullptr;
 
-	size_t Version = BBMOD_VERSION;
+	unsigned char Version = BBMOD_VERSION;
 
 	BBMOD_VertexFormat* VertexFormat = nullptr;
 	

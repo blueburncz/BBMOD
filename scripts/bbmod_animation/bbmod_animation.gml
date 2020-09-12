@@ -1,25 +1,3 @@
-/// @enum An enumeration of members of a legacy animation struct.
-/// @obsolete This legacy struct is obsolete. Please use
-/// {@link BBMOD_Animation} instead.
-enum BBMOD_EAnimation
-{
-	/// @member {real} The version of the animation file.
-	/// @readonly
-	Version,
-	/// @member {real} The duration of the animation (in tics).
-	/// @readonly
-	Duration,
-	/// @member {real} Number of animation tics per second.
-	/// @readonly
-	TicsPerSecond,
-	/// @member {BBMOD_EAnimationBone[]} An array of animation bones.
-	/// @see BBMOD_EAnimationBone
-	/// @readonly
-	Bones,
-	/// @member The size of the struct.
-	SIZE
-};
-
 /// @func bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
 /// @desc Creates a new animation transition between two specified animations.
 /// @param {BBMOD_Model} _model A model.
@@ -38,66 +16,63 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 	_transition.Version = _anim_from.Version;
 	_transition.Duration = _duration;
 	_transition.TicsPerSecond = 1;
-	_transition.Bones = array_create(_model.BoneCount, undefined);
+	_transition.Nodes = array_create(_model.NodeCount, undefined);
 
-	ds_stack_push(_anim_stack, _model.Skeleton);
+	ds_stack_push(_anim_stack, _model.RootNode);
 
 	while (!ds_stack_empty(_anim_stack))
 	{
-		var _bone = ds_stack_pop(_anim_stack);
-		var _bone_index = _bone[BBMOD_EBone.Index];
+		var _node = ds_stack_pop(_anim_stack);
+		var _node_index = _node[BBMOD_ENode.Index];
 
-		if (_bone_index >= 0)
+		var _node_data_from = array_get(_anim_from.Nodes, _node_index);
+		var _node_data_to = array_get(_anim_to.Nodes, _node_index);
+
+		if (!is_undefined(_node_data_from)
+			&& !is_undefined(_node_data_to))
 		{
-			var _bone_data_from = array_get(_anim_from.Bones, _bone_index);
-			var _bone_data_to = array_get(_anim_to.Bones, _bone_index);
+			var _positions, _rotations;
 
-			if (!is_undefined(_bone_data_from)
-				&& !is_undefined(_bone_data_to))
-			{
-				var _positions, _rotations;
+			// Keys from
+			_positions = _node_data_from[BBMOD_EAnimationNode.PositionKeys];
+			var _position_from = bbmod_get_interpolated_position_key(
+				_positions, _time_from);
 
-				// Keys from
-				_positions = _bone_data_from[BBMOD_EAnimationBone.PositionKeys];
-				var _position_from = bbmod_get_interpolated_position_key(
-					_positions, _time_from);
+			_rotations = _node_data_from[BBMOD_EAnimationNode.RotationKeys];
+			var _rotation_from = bbmod_get_interpolated_rotation_key(
+				_rotations, _time_from);
 
-				_rotations = _bone_data_from[BBMOD_EAnimationBone.RotationKeys];
-				var _rotation_from = bbmod_get_interpolated_rotation_key(
-					_rotations, _time_from);
+			_position_from[@ BBMOD_EPositionKey.Time] = 0;
+			_rotation_from[@ BBMOD_ERotationKey.Time] = 0;
 
-				_position_from[@ BBMOD_EPositionKey.Time] = 0;
-				_rotation_from[@ BBMOD_ERotationKey.Time] = 0;
+			// Keys to
+			_positions = _node_data_to[BBMOD_EAnimationNode.PositionKeys];
+			var _position_to = bbmod_get_interpolated_position_key(
+				_positions, _time_to);
 
-				// Keys to
-				_positions = _bone_data_to[BBMOD_EAnimationBone.PositionKeys];
-				var _position_to = bbmod_get_interpolated_position_key(
-					_positions, _time_to);
+			_rotations = _node_data_to[BBMOD_EAnimationNode.RotationKeys];
+			var _rotation_to = bbmod_get_interpolated_rotation_key(
+				_rotations, _time_to);
 
-				_rotations = _bone_data_to[BBMOD_EAnimationBone.RotationKeys];
-				var _rotation_to = bbmod_get_interpolated_rotation_key(
-					_rotations, _time_to);
+			_position_to[@ BBMOD_EPositionKey.Time] = _duration;
+			_rotation_to[@ BBMOD_ERotationKey.Time] = _duration;
 
-				_position_to[@ BBMOD_EPositionKey.Time] = _duration;
-				_rotation_to[@ BBMOD_ERotationKey.Time] = _duration;
+			// Create a bone with from,to keys
+			var _anim_bone = array_create(BBMOD_EAnimationNode.SIZE, 0);
+			_anim_bone[@ BBMOD_EAnimationNode.NodeIndex] = _node_index;
+			_anim_bone[@ BBMOD_EAnimationNode.PositionKeys] = [
+				_position_from,
+				_position_to,
+			];
+			_anim_bone[@ BBMOD_EAnimationNode.RotationKeys] = [
+				_rotation_from,
+				_rotation_to,
+			];
 
-				// Create a bone with from,to keys
-				var _anim_bone = array_create(BBMOD_EAnimationBone.SIZE, 0);
-				_anim_bone[@ BBMOD_EAnimationBone.BoneIndex] = _bone_index;
-				_anim_bone[@ BBMOD_EAnimationBone.PositionKeys] = [
-					_position_from,
-					_position_to,
-				];
-				_anim_bone[@ BBMOD_EAnimationBone.RotationKeys] = [
-					_rotation_from,
-					_rotation_to,
-				];
-
-				array_set(_transition.Bones, _bone_index, _anim_bone);
-			}
+			array_set(_transition.Nodes, _node_index, _anim_bone);
 		}
 
-		var _children = _bone[BBMOD_EBone.Children];
+		var _children = _node[BBMOD_ENode.Children];
 		var _child_count = array_length(_children);
 
 		for (var i = 0; i < _child_count; ++i)
@@ -200,10 +175,10 @@ function BBMOD_Animation() constructor
 	/// @readonly
 	TicsPerSecond = 0;
 
-	/// @var {BBMOD_EAnimationBone[]} An array of animation bones.
-	/// @see BBMOD_EAnimationBone
+	/// @var {BBMOD_EAnimationNode[]} An array of animation nodes.
+	/// @see BBMOD_EAnimationNode
 	/// @readonly
-	Bones = [];
+	Nodes = [];
 
 	/// @func get_animation_time(_time_in_seconds)
 	/// @desc Calculates animation time from current time in seconds.
@@ -223,17 +198,13 @@ function BBMOD_Animation() constructor
 		Duration = buffer_read(_buffer, buffer_f64);
 		TicsPerSecond = buffer_read(_buffer, buffer_f64);
 
-		var _mesh_bone_count = buffer_read(_buffer, buffer_u32);
+		var _node_count = buffer_read(_buffer, buffer_u32);
 
-		Bones = array_create(_mesh_bone_count, undefined);
-
-		var _affected_bone_count = buffer_read(_buffer, buffer_u32);
-
-		repeat (_affected_bone_count)
+		repeat (_node_count)
 		{
-			var _bone_data = bbmod_animation_bone_load(_buffer);
-			var _bone_index = _bone_data[BBMOD_EAnimationBone.BoneIndex];
-			Bones[@ _bone_index] = _bone_data;
+			var _node_data = bbmod_animation_node_load(_buffer);
+			var _node_index = _node_data[BBMOD_EAnimationNode.NodeIndex];
+			Nodes[@ _node_index] = _node_data;
 		}
 
 		return self;
@@ -274,7 +245,7 @@ function BBMOD_Animation() constructor
 		}
 
 		Version = buffer_read(_buffer, buffer_u8);
-		if (Version != 1)
+		if (Version != BBMOD_VERSION)
 		{
 			buffer_delete(_buffer);
 			throw new BBMOD_Error("Invalid version " + string(Version) + "!");

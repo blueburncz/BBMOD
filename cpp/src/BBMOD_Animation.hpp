@@ -59,7 +59,7 @@ struct BBMOD_Animation
 
 	bool Save(std::string path);
 
-	size_t Version = BBMOD_VERSION;
+	unsigned char Version = BBMOD_VERSION;
 
 	std::string Name;
 

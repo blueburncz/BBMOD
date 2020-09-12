@@ -5,11 +5,19 @@ enum BBMOD_ENode
 	/// @member {string} The name of the node.
 	/// @readonly
 	Name,
-	/// @member {BBMOD_EMesh} An array of meshes.
-	/// @see BBMOD_EMesh
+	/// @member {int} The node index.
+	/// @readonly
+	Index,
+	/// @member {bool} If `true` then the node is a bone.
+	/// @readonly
+	IsBone,
+	/// @member {matrix} A transformation matrix of the node.
+	/// @readonly
+	TransformMatrix,
+	/// @member {int[]} An array of meshes indices.
 	/// @readonly
 	Meshes,
-	/// @member An array of child nodes.
+	/// @member {BBMOD_ENode[]} An array of child nodes.
 	/// @see BBMOD_ENode
 	/// @readonly
 	Children,
@@ -25,21 +33,24 @@ enum BBMOD_ENode
 /// @private
 function bbmod_node_load(_buffer, _format)
 {
-	var i = 0;
+	var i;
 
 	var _node = array_create(BBMOD_ENode.SIZE, 0);
 	_node[@ BBMOD_ENode.Name] = buffer_read(_buffer, buffer_string);
+	_node[@ BBMOD_ENode.Index] = buffer_read(_buffer, buffer_f32);
+	_node[@ BBMOD_ENode.IsBone] = buffer_read(_buffer, buffer_bool);
+	_node[@ BBMOD_ENode.TransformMatrix] = bbmod_load_matrix(_buffer);
 
-	// Models
-	var _model_count = buffer_read(_buffer, buffer_u32);
-	var _models = array_create(_model_count, 0);
+	// Meshes
+	var _mesh_count = buffer_read(_buffer, buffer_u32);
+	var _meshes = array_create(_mesh_count, 0);
 
-	_node[@ BBMOD_ENode.Meshes] = _models;
+	_node[@ BBMOD_ENode.Meshes] = _meshes;
 
-	//i = 0;
-	repeat (_model_count)
+	i = 0;
+	repeat (_mesh_count)
 	{
-		_models[@ i++] = bbmod_mesh_load(_buffer, _format);
+		_meshes[@ i++] = buffer_read(_buffer, buffer_u32);
 	}
 
 	// Child nodes
@@ -56,29 +67,6 @@ function bbmod_node_load(_buffer, _format)
 	return _node;
 }
 
-/// @func bbmod_node_destroy(_node)
-/// @desc Frees resources used by a node from memory.
-/// @param {BBMOD_ENode} _node The node to destroy.
-/// @private
-function bbmod_node_destroy(_node)
-{
-	var _meshes = _node[BBMOD_ENode.Meshes];
-	var _children = _node[BBMOD_ENode.Children];
-	var i = 0;
-
-	//i = 0;
-	repeat (array_length(_meshes))
-	{
-		bbmod_mesh_destroy(_meshes[i++]);
-	}
-
-	i = 0;
-	repeat (array_length(_children))
-	{
-		bbmod_node_destroy(_children[i++]);
-	}
-}
-
 /// @func bbmod_node_render(_model, _node, _materials, _transform)
 /// @desc Submits a node for rendering.
 /// @param {BBMOD_Model} _model The model to which the node belongs.
@@ -90,14 +78,15 @@ function bbmod_node_destroy(_node)
 /// @private
 function bbmod_node_render(_model, _node, _materials, _transform)
 {
-	var _meshes = _node[BBMOD_ENode.Meshes];
+	var _meshes = _model.Meshes;
+	var _mesh_indices = _node[BBMOD_ENode.Meshes];
 	var _children = _node[BBMOD_ENode.Children];
 	var _render_pass = global.bbmod_render_pass;
 	var i = 0;
 
-	repeat (array_length(_meshes))
+	repeat (array_length(_mesh_indices))
 	{
-		var _mesh = _meshes[i++];
+		var _mesh = _meshes[_mesh_indices[i++]];
 		var _material_index = _mesh[BBMOD_EMesh.MaterialIndex];
 		var _material = _materials[_material_index];
 
@@ -121,72 +110,5 @@ function bbmod_node_render(_model, _node, _materials, _transform)
 	repeat (array_length(_children))
 	{
 		bbmod_node_render(_model, _children[i++], _materials, _transform);
-	}
-}
-
-/// @func _bbmod_node_freeze(_node)
-/// @param {BBMOD_ENode} _node
-/// @private
-function _bbmod_node_freeze(_node)
-{
-	var _meshes = _node[BBMOD_ENode.Meshes];
-	var _children = _node[BBMOD_ENode.Children];
-
-	var i = 0;
-	repeat (array_length(_meshes))
-	{
-		_bbmod_mesh_freeze(_meshes[i++]);
-	}
-
-	i = 0;
-	repeat (array_length(_children))
-	{
-		_bbmod_node_freeze(_children[i++]);
-	}
-}
-
-/// @func _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
-/// @param {BBMOD_ENode} _node
-/// @param {BBMOD_DynamicBatch} _dynamic_batch
-/// @private
-function _bbmod_node_to_dynamic_batch(_node, _dynamic_batch)
-{
-	var _meshes = _node[BBMOD_ENode.Meshes];
-	var _children = _node[BBMOD_ENode.Children];
-	var i = 0;
-
-	repeat (array_length(_meshes))
-	{
-		_bbmod_mesh_to_dynamic_batch(_meshes[i++], _dynamic_batch);
-	}
-
-	i = 0;
-	repeat (array_length(_children))
-	{
-		_bbmod_node_to_dynamic_batch(_children[i++], _dynamic_batch);
-	}
-}
-
-/// @func _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
-/// @param {BBMOD_Model} _model
-/// @param {BBMOD_ENode} _node
-/// @param {BBMOD_StaticBatch} _static_batch
-/// @param {real[]} _transform
-/// @private
-function _bbmod_node_to_static_batch(_model, _node, _static_batch, _transform)
-{
-	var _meshes = _node[BBMOD_ENode.Meshes];
-	var _children = _node[BBMOD_ENode.Children];
-	var i = 0;
-
-	repeat (array_length(_meshes))
-	{
-		_bbmod_mesh_to_static_batch(_model, _meshes[i++], _static_batch, _transform);
-	}
-
-	i = 0;
-	repeat (array_length(_children))
-	{
-		_bbmod_node_to_static_batch(_model, _children[i++], _static_batch, _transform);
 	}
 }

@@ -6,7 +6,7 @@
     "path": "folders/Scripts/BBMOD.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_animation_bone",
+  "name": "bbmod_animation_node",
   "tags": [],
   "resourceType": "GMScript",
 }

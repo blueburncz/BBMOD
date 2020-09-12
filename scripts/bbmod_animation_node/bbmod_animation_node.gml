@@ -1,11 +1,11 @@
-/// @enum An enumeration of members of a legacy bone struct.
+/// @enum An enumeration of members of a legacy animation node struct.
 /// @see BBMOD_Animation
-enum BBMOD_EAnimationBone
+enum BBMOD_EAnimationNode
 {
-	/// @member {real} The index of the bone that this transforms.
-	/// @see BBMOD_EBone.Index
+	/// @member {real} The index of the node that this transforms.
+	/// @see BBMOD_ENode.Index
 	/// @readonly
-	BoneIndex,
+	NodeIndex,
 	/// @member {BBMOD_EPositionKey[]} An array of position keys.
 	/// @see BBMOD_EPositionKey
 	/// @readonly
@@ -18,22 +18,22 @@ enum BBMOD_EAnimationBone
 	SIZE
 };
 
-/// @func bbmod_animation_bone_load(_buffer)
-/// @desc Loads a bone from a buffer.
+/// @func bbmod_animation_node_load(_buffer)
+/// @desc Loads an animation node from a buffer.
 /// @param {buffer} _buffer The buffer to load the struct from.
-/// @return {BBMOD_EAnimationBone} The loaded bone.
+/// @return {BBMOD_EAnimationNode} The loaded animation node.
 /// @private
-function bbmod_animation_bone_load(_buffer)
+function bbmod_animation_node_load(_buffer)
 {
 	var i = 0;
 
-	var _animation_bone = array_create(BBMOD_EAnimationBone.SIZE, 0);
-	_animation_bone[@ BBMOD_EAnimationBone.BoneIndex] = buffer_read(_buffer, buffer_f32);
+	var _animation_node = array_create(BBMOD_EAnimationNode.SIZE, 0);
+	_animation_node[@ BBMOD_EAnimationNode.NodeIndex] = buffer_read(_buffer, buffer_f32);
 
 	// Load position keys
 	var _position_key_count = buffer_read(_buffer, buffer_u32);
 	var _position_keys = array_create(_position_key_count, 0);
-	_animation_bone[@ BBMOD_EAnimationBone.PositionKeys] = _position_keys;
+	_animation_node[@ BBMOD_EAnimationNode.PositionKeys] = _position_keys;
 
 	//i = 0;
 	repeat (_position_key_count)
@@ -44,7 +44,7 @@ function bbmod_animation_bone_load(_buffer)
 	// Load rotation keys
 	var _rotation_key_count = buffer_read(_buffer, buffer_u32);
 	var _rotation_keys = array_create(_rotation_key_count, 0);
-	_animation_bone[@ BBMOD_EAnimationBone.RotationKeys] = _rotation_keys;
+	_animation_node[@ BBMOD_EAnimationNode.RotationKeys] = _rotation_keys;
 
 	i = 0;
 	repeat (_rotation_key_count)
@@ -52,5 +52,5 @@ function bbmod_animation_bone_load(_buffer)
 		_rotation_keys[@ i++] = bbmod_rotation_key_load(_buffer);
 	}
 
-	return _animation_bone;
+	return _animation_node;
 }

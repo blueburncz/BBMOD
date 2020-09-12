@@ -14,11 +14,10 @@ enum BBMOD_EMesh
 	SIZE
 };
 
-/// @func bbmod_mesh_load(_buffer, _format, _format_mask)
+/// @func bbmod_mesh_load(_buffer, _format)
 /// @desc Loads a mesh from a bufffer.
 /// @param {buffer} _buffer The buffer to load the struct from.
 /// @param {BBMOD_VertexFormat} _format A vertex format that the mesh uses.
-/// @param {real} _format_mask A vertex format mask.
 /// @return {BBMOD_EMesh} The loaded mesh.
 /// @private
 function bbmod_mesh_load(_buffer, _format)
@@ -29,6 +28,7 @@ function bbmod_mesh_load(_buffer, _format)
 	var _has_colors = _format.Colors;
 	var _has_tangentw = _format.TangentW;
 	var _has_bones = _format.Bones;
+	var _has_ids = _format.Ids;
 
 	var _mesh = array_create(BBMOD_EMesh.SIZE, 0);
 	_mesh[@ BBMOD_EMesh.MaterialIndex] = buffer_read(_buffer, buffer_u32);
@@ -42,7 +42,8 @@ function bbmod_mesh_load(_buffer, _format)
 			+ _has_uvs * 2 * buffer_sizeof(buffer_f32)
 			+ _has_colors * buffer_sizeof(buffer_u32)
 			+ _has_tangentw * 4 * buffer_sizeof(buffer_f32)
-			+ _has_bones * 8 * buffer_sizeof(buffer_f32));
+			+ _has_bones * 8 * buffer_sizeof(buffer_f32)
+			+ _has_ids * buffer_sizeof(buffer_f32));
 
 		if (_size > 0)
 		{
@@ -173,7 +174,7 @@ function _bbmod_mesh_to_dynamic_batch(_mesh, _dynamic_batch)
 /// @param {BBMOD_Model} _model
 /// @param {BBMOD_EMesh} _mesh
 /// @param {BBMOD_StaticBatch} _static_batch
-/// @param {real[]} _transform
+/// @param {matrix} _transform
 /// @private
 function _bbmod_mesh_to_static_batch(_model, _mesh, _static_batch, _transform)
 {

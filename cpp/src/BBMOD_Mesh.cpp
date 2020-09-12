@@ -257,6 +257,8 @@ bool BBMOD_Vertex::Save(std::ofstream& file)
 
 bool BBMOD_Mesh::Save(std::ofstream& file)
 {
+	FILE_WRITE_DATA(file, MaterialIndex);
+
 	size_t vertexCount = Data.size();
 	FILE_WRITE_DATA(file, vertexCount);
 

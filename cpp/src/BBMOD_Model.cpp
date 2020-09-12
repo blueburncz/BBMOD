@@ -123,7 +123,6 @@ bool BBMOD_Model::Save(std::string path)
 	FILE_WRITE_DATA(file, VertexFormat->Normals);
 	FILE_WRITE_DATA(file, VertexFormat->TextureCoords);
 	FILE_WRITE_DATA(file, VertexFormat->Colors);
-	FILE_WRITE_DATA(file, VertexFormat->Colors);
 	FILE_WRITE_DATA(file, VertexFormat->TangentW);
 	FILE_WRITE_DATA(file, VertexFormat->Bones);
 	FILE_WRITE_DATA(file, VertexFormat->Ids);
@@ -141,6 +140,8 @@ bool BBMOD_Model::Save(std::string path)
 
 	FILE_WRITE_MATRIX(file, InverseTransformMatrix);
 
+	FILE_WRITE_DATA(file, NodeCount);
+
 	if (!RootNode->Save(file))
 	{
 		return false;
@@ -157,6 +158,8 @@ bool BBMOD_Model::Save(std::string path)
 	}
 
 	size_t materialCount = MaterialNames.size();
+	FILE_WRITE_DATA(file, materialCount);
+
 	for (std::string& materialName : MaterialNames)
 	{
 		const char* str = materialName.c_str();
