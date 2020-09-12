@@ -35,7 +35,7 @@ function bbmod_node_load(_buffer, _format)
 {
 	var i;
 
-	var _node = array_create(BBMOD_ENode.SIZE, 0);
+	var _node = array_create(BBMOD_ENode.SIZE, undefined);
 	_node[@ BBMOD_ENode.Name] = buffer_read(_buffer, buffer_string);
 	_node[@ BBMOD_ENode.Index] = buffer_read(_buffer, buffer_f32);
 	_node[@ BBMOD_ENode.IsBone] = buffer_read(_buffer, buffer_bool);
@@ -43,7 +43,7 @@ function bbmod_node_load(_buffer, _format)
 
 	// Meshes
 	var _mesh_count = buffer_read(_buffer, buffer_u32);
-	var _meshes = array_create(_mesh_count, 0);
+	var _meshes = array_create(_mesh_count, undefined);
 
 	_node[@ BBMOD_ENode.Meshes] = _meshes;
 
@@ -55,7 +55,7 @@ function bbmod_node_load(_buffer, _format)
 
 	// Child nodes
 	var _child_count = buffer_read(_buffer, buffer_u32);
-	var _children = array_create(_child_count, 0);
+	var _children = array_create(_child_count, undefined);
 	_node[@ BBMOD_ENode.Children] = _children;
 
 	i = 0;

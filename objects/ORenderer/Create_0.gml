@@ -60,16 +60,16 @@ for (var i = 0; i < BATCH_SIZE; ++i)
 	instance_create_layer(_x, _y, layer, OModel);
 }
 
-#macro TEST_ANIMATIONS false
+#macro TEST_ANIMATIONS true
 
 if (TEST_ANIMATIONS)
 {
-	character = new BBMOD_Model("Monster.bbmod");
-	anim = new BBMOD_Animation("Dance.bbanim");
+	character = new BBMOD_Model("idle.bbmod");
+	anim = new BBMOD_Animation("idle.bbanim");
 	mat = new BBMOD_Material(BBMOD_ShDefaultAnimated);
-	mat.BaseOpacity = sprite_get_texture(sprite_add("BaseOpacity.png", 0, false, true, 0, 0), 0);
-	mat.NormalRoughness = sprite_get_texture(sprite_add("NormalRoughness.png", 0, false, true, 0, 0), 0);
-	mat.Emissive = sprite_get_texture(sprite_add("Emissive.png", 0, false, true, 0, 0), 0);
+	//mat.BaseOpacity = sprite_get_texture(sprite_add("BaseOpacity.png", 0, false, true, 0, 0), 0);
+	//mat.NormalRoughness = sprite_get_texture(sprite_add("NormalRoughness.png", 0, false, true, 0, 0), 0);
+	//mat.Emissive = sprite_get_texture(sprite_add("Emissive.png", 0, false, true, 0, 0), 0);
 	animation_player = new BBMOD_AnimationPlayer(character);
 	animation_player.OnEvent = function (_event, _animation) {
 		switch (_event)
@@ -79,5 +79,5 @@ if (TEST_ANIMATIONS)
 			break;
 		}
 	};
-	animation_player.play(anim, false);
+	animation_player.play(anim, true);
 }

@@ -224,7 +224,6 @@ function BBMOD_Model(_file) constructor
 			MaterialNames = _material_names;
 		}
 
-
 		return self;
 	};
 

@@ -43,7 +43,7 @@ function bbmod_position_key_interpolate(_pk1, _pk2, _factor)
 function bbmod_position_key_load(_buffer)
 {
 	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
-	_key[@ BBMOD_EPositionKey.Time] = buffer_read(_buffer, buffer_f64);;
+	_key[@ BBMOD_EPositionKey.Time] = buffer_read(_buffer, buffer_f64);
 	_key[@ BBMOD_EPositionKey.Position] = bbmod_load_vec3(_buffer);
 	return _key;
 }

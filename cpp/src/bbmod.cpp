@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <map>
 #include <string>
+#include <regex>
 
 static void StringReplaceUnsafe(std::string& str)
 {
@@ -34,16 +35,14 @@ static std::string GetFilename(const char* out, const char* name, const char* ex
 
 static std::string GetAnimationFilename(BBMOD_Animation* animation, int index, const char* out)
 {
-	std::string animationName = "";
+	std::string animationName = animation->Name;
+	std::regex pattern("\\|?(Armature|mixamo.com)\\|?");
+	animationName = std::regex_replace(animationName, pattern, "");
 
-	if (animation->Name.size() == 0)
+	if (animationName.size() == 0)
 	{
 		animationName.append("anim");
 		animationName.append(std::to_string(index));
-	}
-	else
-	{
-		animationName.append(animation->Name);
 	}
 
 	return GetFilename(out, animationName.c_str(), ".bbanim");

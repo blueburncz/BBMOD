@@ -13,7 +13,6 @@ CE_PRAGMA_ONCE;
 		var __current__ = __callstack__[0]; \
 		if (ds_map_exists(global.__ce_pragma_once, __current__)) \
 		{ \
-			show_debug_message("Onced " + __current__ + ", bitch!"); \
 			exit; \
 		} \
 		global.__ce_pragma_once[? __current__] = 1; \

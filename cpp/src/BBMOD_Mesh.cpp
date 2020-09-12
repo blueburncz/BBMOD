@@ -71,7 +71,7 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 			aiBone* bone = aiMesh->mBones[i];
 			std::string name = bone->mName.C_Str();
 
-			float boneId = (float)model->FindBoneByName(name)->Index;
+			float boneId = model->FindBoneByName(name)->Index;
 
 			for (uint32_t j = 0; j < bone->mNumWeights; ++j)
 			{
@@ -181,7 +181,7 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 					auto _vertexBones = vertexBones.at(idx);
 					for (uint32_t j = 0; j < 4; ++j)
 					{
-						vertex->Bones[j] = (j < _vertexBones.size()) ? _vertexBones[j] : 0;
+						vertex->Bones[j] = (j < _vertexBones.size()) ? _vertexBones[j] : 0.0f;
 					}
 				}
 

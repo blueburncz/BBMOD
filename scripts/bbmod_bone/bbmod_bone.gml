@@ -2,9 +2,6 @@
 /// @see BBMOD_EModel.Skeleton
 enum BBMOD_EBone
 {
-	/// @member {string} The name of the bone.
-	/// @readonly
-	Name,
 	/// @member {real} The index of the bone.
 	/// @readonly
 	Index,
@@ -23,7 +20,6 @@ enum BBMOD_EBone
 function bbmod_bone_load(_buffer)
 {
 	var _bone = array_create(BBMOD_EBone.SIZE, 0);
-	_bone[@ BBMOD_EBone.Name] = buffer_read(_buffer, buffer_string);
 	_bone[@ BBMOD_EBone.Index] = buffer_read(_buffer, buffer_f32);
 	_bone[@ BBMOD_EBone.OffsetMatrix] = bbmod_load_matrix(_buffer);
 	return _bone;

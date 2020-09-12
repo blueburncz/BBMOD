@@ -166,15 +166,15 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @private
 	AnimationInstanceLast = undefined;
 
-	/// @var {array<real[]>} Array of 3D vectors for bone position overriding.
+	/// @var {array<real[]>} Array of 3D vectors for node position overriding.
 	/// @see BBMOD_AnimationPlayer.set_bone_position
 	/// @private
-	BonePositionOverride = array_create(Model.BoneCount, undefined);
+	NodePositionOverride = array_create(Model.NodeCount, undefined);
 
 	/// @var {array<real[]>} Array of quaternions for bone rotation overriding.
 	/// @see BBMOD_AnimationPlayer.set_bone_rotation
 	/// @private
-	BoneRotationOverride = array_create(Model.BoneCount, undefined);
+	NodeRotationOverride = array_create(Model.NodeCount, undefined);
 
 	/// @var {bool} If `true`, then the animation playback is paused.
 	Paused = (argument_count > 1) ? argument[1] : false;
@@ -226,8 +226,8 @@ function BBMOD_AnimationPlayer(_model) constructor
 		var _transform_array = _animation_instance.TransformArray;
 		var _anim_nodes = _animation.Nodes;
 		var _skeleton = _model.Skeleton;
-		var _position_overrides = BonePositionOverride;
-		var _rotation_overrides = BoneRotationOverride;
+		var _position_overrides = NodePositionOverride;
+		var _rotation_overrides = NodeRotationOverride;
 		var _interpolate_frames = InterpolateFrames;
 
 		ds_stack_push(_anim_stack, _model.RootNode, matrix_build_identity());
@@ -240,20 +240,30 @@ function BBMOD_AnimationPlayer(_model) constructor
 			var _node = ds_stack_pop(_anim_stack);
 			var _transform = _node[BBMOD_ENode.TransformMatrix];
 			var _node_index = _node[BBMOD_ENode.Index];
-			var _matrix_new;
+
+			show_debug_message("");
+			show_debug_message(["node", _node[BBMOD_ENode.Name]]);
+			show_debug_message(["index", _node[BBMOD_ENode.Index]]);
+			show_debug_message(["is_bone", _node[BBMOD_ENode.IsBone]]);
 
 			var _node_data = _anim_nodes[_node_index];
 
+			show_debug_message(["has_data", _node_data != undefined]);
+
 			if (_node_data != undefined)
 			{
+				
+
 				#region Position
-				var _override = _position_overrides[_node_index];
+				var _override = undefined; //_position_overrides[_node_index];
 
 				if (_override == undefined)
 				{
 					var _positions = _node_data[BBMOD_EAnimationNode.PositionKeys];
 					var _positions_size = array_length(_positions);
 					var _index = _position_key_last[_node_index];
+
+					show_debug_message(["index_last", _index]);
 
 					var _position_key;
 					var _position_key_next;
@@ -276,6 +286,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 					#endregion Find position keys
 
 					_position_key_last[@ _node_index] = _index;
+					show_debug_message(["index_current", _index]);
 
 					if (_interpolate_frames)
 					{
@@ -308,7 +319,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 				#endregion
 
 				#region Rotation
-				var _override = _rotation_overrides[_node_index];
+				var _override = undefined; //_rotation_overrides[_node_index];
 				var _q10, _q11, _q12, _q13;
 
 				if (_override == undefined)
@@ -465,11 +476,12 @@ function BBMOD_AnimationPlayer(_model) constructor
 			}
 
 			// Final transform
-			_matrix_new = matrix_multiply(_transform, _matrix);
-			var _final_transform = matrix_multiply(_matrix_new, _inverse_transform);
+			var _matrix_new = matrix_multiply(_transform, _matrix);
 
 			if (_node[BBMOD_ENode.IsBone])
 			{
+				var _final_transform = matrix_multiply(_matrix_new, _inverse_transform);
+
 				var _arr = _bone_transform[_node_index];
 				if (!is_array(_arr))
 				{
@@ -534,14 +546,16 @@ function BBMOD_AnimationPlayer(_model) constructor
 
 			_anim_inst.AnimationTime = _animation_time;
 
-			var _bone_count = array_length(array_length(Model.Skeleton));
+			var _bone_count = Model.BoneCount;
+			var _node_count = Model.NodeCount;
+
 			var _initialized = (!is_undefined(_anim_inst.BoneTransform)
 				&& !is_undefined(_anim_inst.TransformArray));
 
 			if (!_initialized)
 			{
 				_anim_inst.BoneTransform =
-					array_create(_bone_count * 16, 0);
+					array_create(_bone_count * 16, undefined);
 				_anim_inst.TransformArray =
 					array_create(_bone_count * 16, 0);
 			}
@@ -549,9 +563,9 @@ function BBMOD_AnimationPlayer(_model) constructor
 			if (!_initialized || _looped)
 			{
 				_anim_inst.PositionKeyLast =
-					array_create(_bone_count, 0);
+					array_create(_node_count, 0);
 				_anim_inst.RotationKeyLast =
-					array_create(_bone_count, 0);
+					array_create(_node_count, 0);
 			}
 
 			_anim_inst.AnimationTimeLast = _animation_time;
@@ -632,7 +646,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @return {BBMOD_AnimationPlayer} Returns `self` to allow method chaining.
 	static set_bone_position = function (_bone_index, _position) {
 		gml_pragma("forceinline");
-		BonePositionOverride[@ _bone_index] = _position;
+		NodePositionOverride[@ _bone_index] = _position;
 		return self;
 	};
 
@@ -642,7 +656,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @param {real[]} _rotation A quaternion.
 	static set_bone_rotation = function (_bone_index, _rotation) {
 		gml_pragma("forceinline");
-		BoneRotationOverride[@ _bone_index] = _rotation;
+		NodeRotationOverride[@ _bone_index] = _rotation;
 		return self;
 	};
 

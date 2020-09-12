@@ -25,17 +25,17 @@ enum BBMOD_EAnimationNode
 /// @private
 function bbmod_animation_node_load(_buffer)
 {
-	var i = 0;
+	var i;
 
 	var _animation_node = array_create(BBMOD_EAnimationNode.SIZE, 0);
 	_animation_node[@ BBMOD_EAnimationNode.NodeIndex] = buffer_read(_buffer, buffer_f32);
 
 	// Load position keys
 	var _position_key_count = buffer_read(_buffer, buffer_u32);
-	var _position_keys = array_create(_position_key_count, 0);
+	var _position_keys = array_create(_position_key_count, undefined);
 	_animation_node[@ BBMOD_EAnimationNode.PositionKeys] = _position_keys;
 
-	//i = 0;
+	i = 0;
 	repeat (_position_key_count)
 	{
 		_position_keys[@ i++] = bbmod_position_key_load(_buffer);
@@ -43,7 +43,7 @@ function bbmod_animation_node_load(_buffer)
 
 	// Load rotation keys
 	var _rotation_key_count = buffer_read(_buffer, buffer_u32);
-	var _rotation_keys = array_create(_rotation_key_count, 0);
+	var _rotation_keys = array_create(_rotation_key_count, undefined);
 	_animation_node[@ BBMOD_EAnimationNode.RotationKeys] = _rotation_keys;
 
 	i = 0;

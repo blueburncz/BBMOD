@@ -198,9 +198,11 @@ function BBMOD_Animation() constructor
 		Duration = buffer_read(_buffer, buffer_f64);
 		TicsPerSecond = buffer_read(_buffer, buffer_f64);
 
-		var _node_count = buffer_read(_buffer, buffer_u32);
+		var _model_node_count = buffer_read(_buffer, buffer_u32);
+		Nodes = array_create(_model_node_count, undefined);
 
-		repeat (_node_count)
+		var _affected_node_count = buffer_read(_buffer, buffer_u32);
+		repeat (_affected_node_count)
 		{
 			var _node_data = bbmod_animation_node_load(_buffer);
 			var _node_index = _node_data[BBMOD_EAnimationNode.NodeIndex];

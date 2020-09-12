@@ -111,8 +111,11 @@ bool BBMOD_Animation::Save(std::string path)
 	FILE_WRITE_DATA(file, Duration);
 	FILE_WRITE_DATA(file, TicsPerSecond);
 
-	size_t nodeCount = AnimationNodes.size();
-	FILE_WRITE_DATA(file, nodeCount);
+	size_t modelNodeCount = Model->NodeCount;
+	FILE_WRITE_DATA(file, modelNodeCount);
+
+	size_t affectedNodeCount = AnimationNodes.size();
+	FILE_WRITE_DATA(file, affectedNodeCount);
 
 	for (BBMOD_AnimationNode* animationNode : AnimationNodes)
 	{

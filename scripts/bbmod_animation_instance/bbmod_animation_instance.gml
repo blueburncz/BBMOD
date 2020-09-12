@@ -26,17 +26,17 @@ function BBMOD_AnimationInstance(_animation) constructor
 	/// @private
 	AnimationTimeLast = 0;
 
-	/// @member {var} An index of a position key which was used last frame.
+	/// @var {real[]} An array of indices of position keys which were used last frame.
 	/// Used to optimize search of position keys in following frames.
 	/// @see BBMOD_EPositionKey
 	/// @private
-	PositionKeyLast = 0;
+	PositionKeyLast = [];
 
-	/// @var {real} An index of a rotation key which was used last frame.
+	/// @var {real[]} An array of indices of rotation keys which were used last frame.
 	/// Used to optimize search of rotation keys in following frames.
 	/// @see BBMOD_ERotationKey
 	/// @private
-	RotationKeyLast = 0;
+	RotationKeyLast = [];
 
 	/// @member {array<matrix>} An array of individual bone transformation matrices,
 	/// without offsets. Useful for attachments.
