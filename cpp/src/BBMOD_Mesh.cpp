@@ -258,6 +258,7 @@ bool BBMOD_Vertex::Save(std::ofstream& file)
 bool BBMOD_Mesh::Save(std::ofstream& file)
 {
 	size_t vertexCount = Data.size();
+	FILE_WRITE_DATA(file, vertexCount);
 
 	for (BBMOD_Vertex* vertex : Data)
 	{

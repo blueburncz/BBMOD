@@ -101,6 +101,11 @@ bool BBMOD_Animation::Save(std::string path)
 {
 	std::ofstream file(path, std::ios::out | std::ios::binary);
 
+	if (!file.is_open())
+	{
+		return false;
+	}
+
 	file.write("bbanim", sizeof(char) * 7);
 	FILE_WRITE_DATA(file, Version);
 	FILE_WRITE_DATA(file, Duration);

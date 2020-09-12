@@ -33,7 +33,7 @@ static BBMOD_Node* CollectNodes(BBMOD_Model* model, aiNode* nodeCurrent)
 	return node;
 }
 
-BBMOD_Model* BBMOD_Model::FromAssimp(aiScene* scene, const BBMODConfig& config)
+BBMOD_Model* BBMOD_Model::FromAssimp(const aiScene* scene, const BBMODConfig& config)
 {
 	BBMOD_Model* model = new BBMOD_Model();
 	model->Scene = scene;
@@ -70,6 +70,7 @@ BBMOD_Model* BBMOD_Model::FromAssimp(aiScene* scene, const BBMODConfig& config)
 					if (model->FindBoneByName(boneName) == nullptr)
 					{
 						BBMOD_Bone* bone = new BBMOD_Bone();
+						bone->Name = boneName;
 						bone->Index = (float)model->BoneCount++;
 						bone->OffsetMatrix = boneCurrent->mOffsetMatrix;
 						model->Skeleton.push_back(bone);
@@ -110,6 +111,11 @@ BBMOD_Model* BBMOD_Model::FromAssimp(aiScene* scene, const BBMODConfig& config)
 bool BBMOD_Model::Save(std::string path)
 {
 	std::ofstream file(path, std::ios::out | std::ios::binary);
+
+	if (!file.is_open())
+	{
+		return false;
+	}
 
 	file.write("bbmod", sizeof(char) * 6);
 	FILE_WRITE_DATA(file, Version);

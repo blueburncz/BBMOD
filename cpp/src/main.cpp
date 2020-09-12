@@ -67,7 +67,7 @@ int main(int argc, const char* argv[])
 	bool showHelp = false;
 	BBMODConfig config;
 
-	std::regex options_regex("(-[a-z]+|--[a-z\-]+)=(true|false|[0-9])");
+	std::regex options_regex("(-[a-z]+|--[a-z\\-]+)=(true|false|[0-9])");
 	std::cmatch match;
 
 	for (int i = 1; i < argc; ++i)
@@ -176,28 +176,8 @@ int main(int argc, const char* argv[])
 
 	if (retval != BBMOD_SUCCESS)
 	{
-		switch (retval)
-		{
-		case BBMOD_ERR_LOAD_FAILED:
-			PRINT_ERROR("Could not load the model!");
-			break;
-
-		case BBMOD_ERR_CONVERSION_FAILED:
-			PRINT_ERROR("Model conversion failed!");
-			break;
-
-		case BBMOD_ERR_SAVE_FAILED:
-			PRINT_ERROR("Could not save the model to \"%s\"!", fout);
-			break;
-
-		default:
-			break;
-		}
-
 		return EXIT_FAILURE;
 	}
-
-	PRINT_SUCCESS("Model saved to \"%s\"!", fout);
 
 	return EXIT_SUCCESS;
 }

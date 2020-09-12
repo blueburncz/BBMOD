@@ -11,7 +11,7 @@
 
 struct BBMOD_Model
 {
-	static BBMOD_Model* FromAssimp(aiScene* scene, const BBMODConfig& config);
+	static BBMOD_Model* FromAssimp(const aiScene* scene, const BBMODConfig& config);
 
 	BBMOD_Bone* FindBoneByName(std::string name)
 	{
@@ -55,7 +55,7 @@ struct BBMOD_Model
 
 	bool Save(std::string path);
 
-	aiScene* Scene = nullptr;
+	const aiScene* Scene = nullptr;
 
 	size_t Version = BBMOD_VERSION;
 
