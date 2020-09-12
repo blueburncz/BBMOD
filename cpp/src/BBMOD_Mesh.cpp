@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "utils.hpp"
 
 /** Encodes color into a single integer as ARGB. */
 static inline uint32_t EncodeColor(const aiColor4D& color)
@@ -49,6 +50,7 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 {
 	BBMOD_Mesh* mesh = new BBMOD_Mesh();
 
+	mesh->VertexFormat = model->VertexFormat;
 	mesh->MaterialIndex = aiMesh->mMaterialIndex;
 
 	uint32_t faceCount = aiMesh->mNumFaces;
@@ -57,7 +59,7 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 
 	////////////////////////////////////////////////////////////////////////////
 	// Gather vertex bones and weights
-	std::map<uint32_t, std::vector<int>> vertexBones;
+	std::map<uint32_t, std::vector<float>> vertexBones;
 	std::map<uint32_t, std::vector<float>> vertexWeights;
 
 	if (model->VertexFormat->Bones)
@@ -69,7 +71,7 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 			aiBone* bone = aiMesh->mBones[i];
 			std::string name = bone->mName.C_Str();
 
-			int boneId = model->FindBoneByName(name)->Index;
+			float boneId = (float)model->FindBoneByName(name)->Index;
 
 			for (uint32_t j = 0; j < bone->mNumWeights; ++j)
 			{
@@ -79,7 +81,7 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 				auto it = vertexBones.find(vertexId);
 				if (it == vertexBones.end())
 				{
-					std::vector<int> _bones;
+					std::vector<float> _bones;
 					vertexBones.emplace(std::make_pair(vertexId, _bones));
 
 					std::vector<float> _weights;
@@ -108,6 +110,7 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 			uint32_t idx = face.mIndices[f];
 
 			BBMOD_Vertex* vertex = new BBMOD_Vertex();
+			vertex->VertexFormat = mesh->VertexFormat;
 
 			// Vertex
 			vertex->Position = aiVector3D(aiMesh->mVertices[idx]);
@@ -198,4 +201,71 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 	}
 
 	return mesh;
+}
+
+bool BBMOD_Vertex::Save(std::ofstream& file)
+{
+	BBMOD_VertexFormat* vertexFormat = VertexFormat;
+
+	if (vertexFormat->Vertices)
+	{
+		FILE_WRITE_VEC3(file, Position);
+	}
+
+	if (vertexFormat->Normals)
+	{
+		FILE_WRITE_VEC3(file, Normal);
+	}
+
+	if (vertexFormat->TextureCoords)
+	{
+		FILE_WRITE_VEC2(file, Texture);
+	}
+
+	if (vertexFormat->Colors)
+	{
+		FILE_WRITE_DATA(file, Color);
+	}
+
+	if (vertexFormat->TangentW)
+	{
+		FILE_WRITE_VEC3(file, Tangent);
+		FILE_WRITE_DATA(file, BitangentSign);
+	}
+
+	if (vertexFormat->Bones)
+	{
+		for (size_t i = 0; i < 4; ++i)
+		{
+			FILE_WRITE_DATA(file, Bones[i]);
+		}
+
+		for (size_t i = 0; i < 4; ++i)
+		{
+			FILE_WRITE_DATA(file, Weights[i]);
+		}
+	}
+
+	if (vertexFormat->Ids)
+	{
+		FILE_WRITE_DATA(file, Id);
+	}
+
+	return true;
+}
+
+
+bool BBMOD_Mesh::Save(std::ofstream& file)
+{
+	size_t vertexCount = Data.size();
+
+	for (BBMOD_Vertex* vertex : Data)
+	{
+		if (!vertex->Save(file))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

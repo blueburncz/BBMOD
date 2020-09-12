@@ -1,4 +1,6 @@
 #include "BBMOD_Model.hpp"
+#include "utils.hpp"
+#include <fstream>
 
 static BBMOD_Node* CollectNodes(BBMOD_Model* model, aiNode* nodeCurrent)
 {
@@ -7,12 +9,12 @@ static BBMOD_Node* CollectNodes(BBMOD_Model* model, aiNode* nodeCurrent)
 
 	if (BBMOD_Bone* bone = model->FindBoneByName(node->Name))
 	{
-		node->Index = bone->Index;
+		node->Index = (float)bone->Index;
 		node->IsBone = true;
 	}
 	else
 	{
-		node->Index = model->NodeCount++;
+		node->Index = (float)model->NodeCount++;
 		node->IsBone = false;
 	}
 
@@ -68,7 +70,7 @@ BBMOD_Model* BBMOD_Model::FromAssimp(aiScene* scene, const BBMODConfig& config)
 					if (model->FindBoneByName(boneName) == nullptr)
 					{
 						BBMOD_Bone* bone = new BBMOD_Bone();
-						bone->Index = model->BoneCount++;
+						bone->Index = (float)model->BoneCount++;
 						bone->OffsetMatrix = boneCurrent->mOffsetMatrix;
 						model->Skeleton.push_back(bone);
 					}
@@ -96,8 +98,6 @@ BBMOD_Model* BBMOD_Model::FromAssimp(aiScene* scene, const BBMODConfig& config)
 	model->RootNode = CollectNodes(model, scene->mRootNode);
 	
 	// Materials
-	model->MaterialCount = scene->mNumMaterials;
-
 	for (size_t i = 0; i < scene->mNumMaterials; ++i)
 	{
 		aiMaterial* materialCurrent = scene->mMaterials[i];
@@ -105,4 +105,61 @@ BBMOD_Model* BBMOD_Model::FromAssimp(aiScene* scene, const BBMODConfig& config)
 	}
 
 	return model;
+}
+
+bool BBMOD_Model::Save(std::string path)
+{
+	std::ofstream file(path, std::ios::out | std::ios::binary);
+
+	file.write("bbmod", sizeof(char) * 6);
+	FILE_WRITE_DATA(file, Version);
+	FILE_WRITE_DATA(file, VertexFormat->Vertices);
+	FILE_WRITE_DATA(file, VertexFormat->Normals);
+	FILE_WRITE_DATA(file, VertexFormat->TextureCoords);
+	FILE_WRITE_DATA(file, VertexFormat->Colors);
+	FILE_WRITE_DATA(file, VertexFormat->Colors);
+	FILE_WRITE_DATA(file, VertexFormat->TangentW);
+	FILE_WRITE_DATA(file, VertexFormat->Bones);
+	FILE_WRITE_DATA(file, VertexFormat->Ids);
+
+	size_t meshCount = Meshes.size();
+	FILE_WRITE_DATA(file, meshCount);
+
+	for (BBMOD_Mesh* mesh : Meshes)
+	{
+		if (!mesh->Save(file))
+		{
+			return false;
+		}
+	}
+
+	FILE_WRITE_MATRIX(file, InverseTransformMatrix);
+
+	if (!RootNode->Save(file))
+	{
+		return false;
+	}
+
+	FILE_WRITE_DATA(file, BoneCount);
+
+	for (BBMOD_Bone* bone : Skeleton)
+	{
+		if (!bone->Save(file))
+		{
+			return false;
+		}
+	}
+
+	size_t materialCount = MaterialNames.size();
+	for (std::string& materialName : MaterialNames)
+	{
+		const char* str = materialName.c_str();
+		file.write(str, strlen(str) + 1);
+	}
+
+
+	file.flush();
+	file.close();
+
+	return true;
 }

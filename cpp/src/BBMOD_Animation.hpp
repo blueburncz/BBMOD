@@ -7,10 +7,13 @@
 #include <assimp/anim.h>
 #include <vector>
 #include <string>
+#include <fstream>
 
 struct BBMOD_AnimationKey
 {
-	double Time = 0;
+	double Time = 0.0;
+
+	virtual bool Save(std::ofstream& file);
 };
 
 struct BBMOD_PositionKey : public BBMOD_AnimationKey
@@ -20,6 +23,8 @@ struct BBMOD_PositionKey : public BBMOD_AnimationKey
 		, BBMOD_AnimationKey()
 	{
 	}
+
+	bool Save(std::ofstream& file);
 
 	aiVector3D Position;
 };
@@ -32,12 +37,16 @@ struct BBMOD_RotationKey : public BBMOD_AnimationKey
 	{
 	}
 
+	bool Save(std::ofstream& file);
+
 	aiQuaternion Rotation;
 };
 
 struct BBMOD_AnimationNode
 {
-	int Index = 0;
+	bool Save(std::ofstream& file);
+
+	float Index = 0.0f;
 
 	std::vector<BBMOD_PositionKey*> PositionKeys;
 
@@ -46,15 +55,19 @@ struct BBMOD_AnimationNode
 
 struct BBMOD_Animation
 {
-	static BBMOD_Animation* FromAssimp(aiAnimation* animation, BBMOD_Model* Model);
+	static BBMOD_Animation* FromAssimp(aiAnimation* animation, BBMOD_Model* model);
+
+	bool Save(std::string path);
 
 	size_t Version = BBMOD_VERSION;
 
 	std::string Name;
 
-	double Duration = 0;
+	double Duration = 0.0;
 
-	double TicsPerSecond = 20;
+	double TicsPerSecond = 20.0;
 
 	std::vector<BBMOD_AnimationNode*> AnimationNodes;
+
+	BBMOD_Model* Model = nullptr;
 };

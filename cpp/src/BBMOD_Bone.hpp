@@ -2,12 +2,13 @@
 
 #include <assimp/matrix4x4.h>
 #include <string>
+#include <fstream>
 
 struct BBMOD_Bone
 {
-	std::string Name;
+	bool Save(std::ofstream& file);
 
-	int Index = 0;
+	float Index = 0.0f;
 
 	aiMatrix4x4 OffsetMatrix;
 };

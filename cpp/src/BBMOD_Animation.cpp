@@ -1,13 +1,13 @@
 #include "BBMOD_Animation.hpp"
+#include "utils.hpp"
 
 BBMOD_Animation* BBMOD_Animation::FromAssimp(aiAnimation* aiAnimation, BBMOD_Model* model)
 {
 	BBMOD_Animation* animation = new BBMOD_Animation();
 
+	animation->Model = model;
 	animation->Name = aiAnimation->mName.C_Str();
-
 	animation->Duration = aiAnimation->mDuration;
-
 	animation->TicsPerSecond = aiAnimation->mTicksPerSecond;
 
 	for (size_t i = 0; i < aiAnimation->mNumChannels; ++i)
@@ -39,4 +39,86 @@ BBMOD_Animation* BBMOD_Animation::FromAssimp(aiAnimation* aiAnimation, BBMOD_Mod
 	}
 
 	return animation;
+}
+
+bool BBMOD_AnimationKey::Save(std::ofstream& file)
+{
+	FILE_WRITE_DATA(file, Time);
+	return true;
+}
+
+bool BBMOD_PositionKey::Save(std::ofstream& file)
+{
+	if (!BBMOD_AnimationKey::Save(file))
+	{
+		return false;
+	}
+	FILE_WRITE_VEC3(file, Position);
+	return true;
+}
+
+bool BBMOD_RotationKey::Save(std::ofstream& file)
+{
+	if (!BBMOD_AnimationKey::Save(file))
+	{
+		return false;
+	}
+	FILE_WRITE_QUAT(file, Rotation);
+	return true;
+}
+
+bool BBMOD_AnimationNode::Save(std::ofstream& file)
+{
+	FILE_WRITE_DATA(file, Index);
+
+	size_t positionKeyCount = PositionKeys.size();
+	FILE_WRITE_DATA(file, positionKeyCount);
+
+	for (BBMOD_PositionKey* key : PositionKeys)
+	{
+		if (!key->Save(file))
+		{
+			return false;
+		}
+	}
+
+	size_t rotationKeyCount = RotationKeys.size();
+	FILE_WRITE_DATA(file, rotationKeyCount);
+
+	for (BBMOD_RotationKey* key : RotationKeys)
+	{
+		if (!key->Save(file))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
+bool BBMOD_Animation::Save(std::string path)
+{
+	std::ofstream file(path, std::ios::out | std::ios::binary);
+
+	file.write("bbanim", sizeof(char) * 7);
+	FILE_WRITE_DATA(file, Version);
+	FILE_WRITE_DATA(file, Duration);
+	FILE_WRITE_DATA(file, TicsPerSecond);
+
+	size_t nodeCount = AnimationNodes.size();
+	FILE_WRITE_DATA(file, nodeCount);
+
+	for (BBMOD_AnimationNode* animationNode : AnimationNodes)
+	{
+		if (!animationNode->Save(file))
+		{
+			return true;
+		}
+	}
+
+	file.flush();
+	file.close();
+
+	return true;
 }

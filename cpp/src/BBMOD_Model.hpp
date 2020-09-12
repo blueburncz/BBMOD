@@ -53,6 +53,8 @@ struct BBMOD_Model
 		return nullptr;
 	}
 
+	bool Save(std::string path);
+
 	aiScene* Scene = nullptr;
 
 	size_t Version = BBMOD_VERSION;
@@ -70,8 +72,6 @@ struct BBMOD_Model
 	size_t BoneCount = 0;
 
 	std::vector<BBMOD_Bone*> Skeleton;
-
-	size_t MaterialCount = 0;
 
 	std::vector<std::string> MaterialNames;
 };
