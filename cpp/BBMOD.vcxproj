@@ -296,14 +296,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\BBMOD_Animation.cpp" />
+    <ClCompile Include="src\BBMOD_Mesh.cpp" />
+    <ClCompile Include="src\BBMOD_Bone.cpp" />
+    <ClCompile Include="src\BBMOD_Node.cpp" />
+    <ClCompile Include="src\BBMOD_Model.cpp" />
     <ClCompile Include="src\bbmod.cpp" />
     <ClCompile Include="src\exports.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\terminal.cpp" />
+    <ClCompile Include="src\BBMOD_VertexFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BBMOD_Animation.hpp" />
+    <ClInclude Include="src\BBMOD_Mesh.hpp" />
+    <ClInclude Include="src\BBMOD_Bone.hpp" />
+    <ClInclude Include="src\BBMOD_Node.hpp" />
+    <ClInclude Include="src\BBMOD_Model.hpp" />
     <ClInclude Include="src\bbmod.hpp" />
     <ClInclude Include="src\terminal.hpp" />
+    <ClInclude Include="src\BBMOD_VertexFormat.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
