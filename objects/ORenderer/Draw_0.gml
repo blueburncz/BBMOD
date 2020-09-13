@@ -37,8 +37,9 @@ case EMode.Dynamic:
 
 if (TEST_ANIMATIONS)
 {
+	var _scale = 0.01;
 	matrix_stack_push(matrix_get(matrix_world));
-	matrix_set(matrix_world, matrix_build(-10, -10, 0, -90, 0, 0, 1, 1, 1));
+	matrix_set(matrix_world, matrix_build(-10, -10, 0, -90, 0, 0, _scale, _scale, _scale));
 	character.render(undefined, animation_player.get_transform());
 	matrix_set(matrix_world, matrix_stack_top());
 	matrix_stack_pop();

@@ -60,24 +60,25 @@ for (var i = 0; i < BATCH_SIZE; ++i)
 	instance_create_layer(_x, _y, layer, OModel);
 }
 
-#macro TEST_ANIMATIONS true
+#macro TEST_ANIMATIONS false
 
 if (TEST_ANIMATIONS)
 {
-	character = new BBMOD_Model("idle.bbmod");
-	anim = new BBMOD_Animation("idle.bbanim");
-	mat = new BBMOD_Material(BBMOD_ShDefaultAnimated);
-	//mat.BaseOpacity = sprite_get_texture(sprite_add("BaseOpacity.png", 0, false, true, 0, 0), 0);
-	//mat.NormalRoughness = sprite_get_texture(sprite_add("NormalRoughness.png", 0, false, true, 0, 0), 0);
-	//mat.Emissive = sprite_get_texture(sprite_add("Emissive.png", 0, false, true, 0, 0), 0);
+	character = new BBMOD_Model("Brute.bbmod");
+	anim_idle = new BBMOD_Animation("Idle.bbanim");
+	anim_idle.TransitionIn = 0;
+	anim_attack = new BBMOD_Animation("Attack.bbanim");
+	anim_current = undefined;
 	animation_player = new BBMOD_AnimationPlayer(character);
 	animation_player.OnEvent = function (_event, _animation) {
 		switch (_event)
 		{
 		case BBMOD_EV_ANIMATION_END:
-			show_debug_message("Animation has finished playing!");
+			if (_animation == anim_attack)
+			{
+				anim_current = undefined;
+			}
 			break;
 		}
 	};
-	animation_player.play(anim, true);
 }

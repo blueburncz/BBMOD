@@ -56,9 +56,10 @@ _mat_sky.Culling = cull_noculling;
 
 /// @macro {BBMOD_Material} The default sky material.
 /// @see BBMOD_Material
+/// @private
 global.__bbmod_material_sky = _mat_sky;
 
-/// @var {BBMOD_EMaterial/BBMOD_NONE} The currently applied material.
+/// @var {BBMOD_Material/BBMOD_NONE} The currently applied material.
 /// @private
 global.__bbmod_material_current = BBMOD_NONE;
 
@@ -73,34 +74,6 @@ global.__bbmod_material_current = BBMOD_NONE;
 /// @see BBMOD_RENDER_FORWARD
 /// @see BBMOD_RENDER_DEFERRED
 global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
-
-/// @enum An enumeration of members of a legacy material struct.
-/// @obsolete This legacy struct is obsolete. Please use
-/// {@link BBMOD_Material} instead.
-enum BBMOD_EMaterial
-{
-	/// @member {real} A render path. See macros {@link BBMOD_RENDER_FORWARD} and
-	/// {@link BBMOD_RENDER_DEFERRED}.
-	RenderPath,
-	/// @member {shader} A shader that the material uses.
-	Shader,
-	/// @member {function} A function that is executed when the shader is applied.
-	/// Must take the material  as the first argument. Use `undefined` if you don't
-	/// want to execute any function.
-	OnApply,
-	/// @member {real} A blend mode. Use one of the `bm_` constants. Defaults to
-	/// `bm_normal`.
-	BlendMode,
-	/// @member {real} A culling mode. Use one of the `cull_` constants. Defaults to
-	/// `cull_counterclockwise`.
-	Culling,
-	/// @member {ptr} A diffuse texture.
-	Diffuse,
-	/// @member {ptr} A normal texture.
-	Normal,
-	/// @member The size of the struct.
-	SIZE
-};
 
 /// @func bbmod_material_create(_shader[, _base_opacity[, _normal_roughness]])
 /// @desc Creates a new material.
@@ -128,8 +101,8 @@ function bbmod_material_create(_shader)
 
 /// @func bbmod_material_clone(_material)
 /// @desc Creates a copy of a material.
-/// @param {BBMOD_EMaterial} _material The material to create a copy of.
-/// @return {BBMOD_EMaterial} The created material.
+/// @param {BBMOD_Material} _material The material to create a copy of.
+/// @return {BBMOD_Material} The created material.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Material.clone}
 /// instead.
 function bbmod_material_clone(_material)
@@ -140,7 +113,7 @@ function bbmod_material_clone(_material)
 
 /// @func bbmod_material_apply(_material)
 /// @desc Applies a material.
-/// @param {BBMOD_EMaterial} _material A material.
+/// @param {BBMOD_Material} _material A material.
 /// @return {bool} `true` if the material was applied or `false` if it was already
 /// the current one.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Material.apply}
@@ -186,7 +159,7 @@ function bbmod_material_reset()
 
 /// @func bbmod_material_on_apply_default(_material)
 /// @desc The default material application function.
-/// @param {BBMOD_EMaterial} _material The material.
+/// @param {BBMOD_Material} _material The material.
 function bbmod_material_on_apply_default(_material)
 {
 	var _shader = _material.Shader;

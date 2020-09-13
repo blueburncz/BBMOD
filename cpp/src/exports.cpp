@@ -67,7 +67,7 @@ GM_EXPORT gmreal_t bbmod_dll_get_gen_normal()
 
 GM_EXPORT gmreal_t bbmod_dll_set_gen_normal(gmreal_t generate)
 {
-	gConfig.genNormals = generate;
+	gConfig.genNormals = (size_t)generate;
 	return BBMOD_SUCCESS;
 }
 

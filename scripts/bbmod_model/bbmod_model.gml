@@ -56,12 +56,11 @@ function BBMOD_Model(_file) constructor
 	Skeleton = [];
 
 	/// @var {real} Number of materials that the model uses.
-	/// @see BBMOD_EMaterial
+	/// @see BBMOD_Material
 	/// @readonly
 	MaterialCount = 0;
 
 	/// @var {string[]} Array of material names.
-	/// @see BBMOD_EMaterial
 	/// @readonly
 	MaterialNames = [];
 
@@ -184,6 +183,33 @@ function BBMOD_Model(_file) constructor
 		}
 	};
 
+	/// @func find_node_id(_node_name)
+	/// @desc Finds model's node by its name.
+	/// @param {string} _node_name The name of the bone.
+	/// @return {real} The id of the bone or {@link BBMOD_NONE} when it's not found.
+	/// @note It is not recommended to use this method in release builds, because
+	/// having many of these lookups can slow down your game! You should instead
+	/// use the ids available from the `_log.txt` files, which are created during
+	/// model conversion.
+	static find_node_id = function (_node_name) {
+		var _node = (argument_count > 1) ? argument[1] : RootNode;
+		if (_node[BBMOD_ENode.Name] == _node_name)
+		{
+			return _node[BBMOD_ENode.Index];
+		}
+		var _children = _node[BBMOD_ENode.Children];
+		var i = 0;
+		repeat (array_length(_children))
+		{
+			var _found = find_node_id(_node_name, _children[i++]);
+			if (_found != BBMOD_NONE)
+			{
+				return _found;
+			}
+		}
+		return BBMOD_NONE;
+	};
+
 	/// @func find_bone_id(_bone_name)
 	/// @desc Finds model's bone by its name.
 	/// @param {string} _bone_name The name of the bone.
@@ -192,27 +218,11 @@ function BBMOD_Model(_file) constructor
 	/// having many of these lookups can slow down your game! You should instead
 	/// use the ids available from the `_log.txt` files, which are created during
 	/// model conversion.
+	/// @deprecated This method is deprecated. Please use {@link BBMOD_Model.find_node_id}
+	/// instead.
 	static find_bone_id = function (_bone_name) {
-		var _bone = (argument_count > 1) ? argument[1] : Skeleton;
-
-		if (_bone[BBMOD_EBone.Name] == _bone_name)
-		{
-			return _bone[BBMOD_EBone.Index];
-		}
-
-		var _children = _bone[BBMOD_EBone.Children];
-		var i = 0;
-
-		repeat (array_length(_children))
-		{
-			var _found = find_bone_id(_bone_name, _children[i++]);
-			if (_found != BBMOD_NONE)
-			{
-				return _found;
-			}
-		}
-
-		return BBMOD_NONE;
+		gml_pragma("forceinline");
+		return find_node_id(_bone_name);
 	};
 
 	/// @func get_bindpose_transform()
@@ -390,11 +400,11 @@ function bbmod_model_freeze(_model)
 /// having many of these lookups can slow down your game! You should instead use
 /// the ids available from the `_log.txt` files, which are created during model
 /// conversion.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.find_bone_id}
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.find_node_id}
 /// instead.
 function bbmod_model_find_bone_id(_model, _bone_name)
 {
-	return _model.find_bone_id(_bone_name);
+	return _model.find_node_id(_bone_name);
 }
 
 /// @func bbmod_model_get_bindpose_transform(_model)
@@ -428,7 +438,7 @@ function bbmod_model_get_vertex_format(_model)
 /// @func bbmod_render(_model[, _materials[, _transform]])
 /// @desc Submits a model for rendering.
 /// @param {BBMOD_Model} _model A model.
-/// @param {BBMOD_EMaterial[]/undefined} [_materials] An array of materials,
+/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
 /// one for each material slot of the model. If not specified, then
 /// the default material is used for each slot. Default is `undefined`.
 /// @param {real[]/undefined} [_transform] An array of transformation matrices

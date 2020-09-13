@@ -53,12 +53,12 @@ function BBMOD_AnimationPlayer(_model) constructor
 	AnimationInstanceLast = undefined;
 
 	/// @var {array<real[]>} Array of 3D vectors for node position overriding.
-	/// @see BBMOD_AnimationPlayer.set_bone_position
+	/// @see BBMOD_AnimationPlayer.set_node_position
 	/// @private
 	NodePositionOverride = array_create(Model.NodeCount, undefined);
 
 	/// @var {array<real[]>} Array of quaternions for bone rotation overriding.
-	/// @see BBMOD_AnimationPlayer.set_bone_rotation
+	/// @see BBMOD_AnimationPlayer.set_node_rotation
 	/// @private
 	NodeRotationOverride = array_create(Model.NodeCount, undefined);
 
@@ -108,7 +108,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 		var _inverse_transform = _model.InverseTransformMatrix;
 		var _position_key_last = _animation_instance.PositionKeyLast;
 		var _rotation_key_last = _animation_instance.RotationKeyLast;
-		var _bone_transform = _animation_instance.BoneTransform;
+		var _node_transform = _animation_instance.NodeTransform;
 		var _transform_array = _animation_instance.TransformArray;
 		var _anim_nodes = _animation.Nodes;
 		var _skeleton = _model.Skeleton;
@@ -349,19 +349,17 @@ function BBMOD_AnimationPlayer(_model) constructor
 
 			// Final transform
 			var _matrix_new = matrix_multiply(_transform, _matrix);
+			var _final_transform = matrix_multiply(_matrix_new, _inverse_transform);
+			var _arr = _node_transform[_node_index];
+			if (!is_array(_arr))
+			{
+				_arr = array_create(16, 0);
+				_node_transform[@ _node_index] = _arr;
+			}
+			array_copy(_arr, 0, _final_transform, 0, 16);
 
 			if (_node[BBMOD_ENode.IsBone])
 			{
-				var _final_transform = matrix_multiply(_matrix_new, _inverse_transform);
-
-				var _arr = _bone_transform[_node_index];
-				if (!is_array(_arr))
-				{
-					_arr = array_create(16, 0);
-					_bone_transform[@ _node_index] = _arr;
-				}
-				array_copy(_arr, 0, _final_transform, 0, 16);
-
 				var _offset_matrix = _skeleton[_node_index][BBMOD_EBone.OffsetMatrix];
 				_final_transform = matrix_multiply(_offset_matrix, _final_transform);
 				array_copy(_transform_array, _node_index * 16, _final_transform, 0, 16);
@@ -421,13 +419,13 @@ function BBMOD_AnimationPlayer(_model) constructor
 			var _bone_count = Model.BoneCount;
 			var _node_count = Model.NodeCount;
 
-			var _initialized = (!is_undefined(_anim_inst.BoneTransform)
+			var _initialized = (!is_undefined(_anim_inst.NodeTransform)
 				&& !is_undefined(_anim_inst.TransformArray));
 
 			if (!_initialized)
 			{
-				_anim_inst.BoneTransform =
-					array_create(_bone_count * 16, undefined);
+				_anim_inst.NodeTransform =
+					array_create(_node_count * 16, undefined);
 				_anim_inst.TransformArray =
 					array_create(_bone_count * 16, 0);
 			}
@@ -464,15 +462,15 @@ function BBMOD_AnimationPlayer(_model) constructor
 
 		ds_list_clear(_animation_list);
 
-		if (!is_undefined(_animation_last))
+		if (!is_undefined(_animation_last)
+			&& _animation_last.Animation.TransitionOut + _animation.TransitionIn > 0)
 		{
 			var _transition = bbmod_animation_create_transition(
 				Model,
 				_animation_last.Animation,
 				_animation_last.AnimationTime,
 				_animation,
-				0,
-				0.1);
+				0);
 
 			var _transition_animation_instance = new BBMOD_AnimationInstance(_transition);
 			ds_list_add(_animation_list, _transition_animation_instance);
@@ -489,6 +487,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @desc Returns an array of current transformation matrices of all bones.
 	/// @return {real[]} The array of transformation matrices.
 	static get_transform = function () {
+		gml_pragma("forceinline");
 		var _animation = AnimationInstanceLast;
 		if (!is_undefined(_animation))
 		{
@@ -497,18 +496,42 @@ function BBMOD_AnimationPlayer(_model) constructor
 		return Model.get_bindpose_transform();
 	};
 
-	/// @func get_bone_transform(_bone_index)
-	/// @desc Returns a transformation matrix of a bone, which can be used
+	/// @func get_node_transform(_node_index)
+	/// @desc Returns a transformation matrix of a node, which can be used
 	/// for example for attachments.
-	/// @param {real} _bone_index An index of a bone.
+	/// @param {real} _node_index An index of a node.
 	/// @return {real[]} The transformation matrix.
-	static get_bone_transform = function (_bone_index) {
+	static get_node_transform = function (_node_index) {
+		gml_pragma("forceinline");
 		var _anim_inst = AnimationInstanceLast;
 		if (is_undefined(_anim_inst))
 		{
 			return matrix_build_identity();
 		}
-		return _anim_inst.BoneTransform[_bone_index];
+		return _anim_inst.NodeTransform[_node_index];
+	};
+
+	/// @func get_bone_transform(_bone_index)
+	/// @desc Returns a transformation matrix of a bone, which can be used
+	/// for example for attachments.
+	/// @param {real} _bone_index An index of a bone.
+	/// @return {real[]} The transformation matrix.
+	/// @deprecated This method is deprecated. Please use
+	/// {@link BBMOD_AnimationPlayer.get_node_transform} instead.
+	static get_bone_transform = function (_bone_index) {
+		gml_pragma("forceinline");
+		return get_node_transform(_bone_index);
+	};
+
+	/// @func set_node_position(_node_index, _position)
+	/// @desc Changes a position of a node.
+	/// @param {real} _node_index An index of a node.
+	/// @param {real[]} _position An `[x,y,z]` position of a node.
+	/// @return {BBMOD_AnimationPlayer} Returns `self` to allow method chaining.
+	static set_node_position = function (_node_index, _position) {
+		gml_pragma("forceinline");
+		NodePositionOverride[@ _node_index] = _position;
+		return self;
 	};
 
 	/// @func set_bone_position(_bone_index, _position)
@@ -516,9 +539,21 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @param {real} _bone_index An index of a bone.
 	/// @param {real[]} _position An `[x,y,z]` position of a bone.
 	/// @return {BBMOD_AnimationPlayer} Returns `self` to allow method chaining.
+	/// @deprecated This method is deprecated. Please use
+	/// {@link BBMOD_AnimationPlayer.set_node_position} instead.
 	static set_bone_position = function (_bone_index, _position) {
 		gml_pragma("forceinline");
-		NodePositionOverride[@ _bone_index] = _position;
+		set_node_position(_bone_index, _position);
+		return self;
+	};
+
+	/// @func set_node_rotation(_node_index, _rotation)
+	/// @desc Changes a rotation of a node.
+	/// @param {real} _node_index An index of a node.
+	/// @param {real[]} _rotation A quaternion.
+	static set_node_rotation = function (_node_index, _rotation) {
+		gml_pragma("forceinline");
+		NodeRotationOverride[@ _node_index] = _rotation;
 		return self;
 	};
 
@@ -526,9 +561,11 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @desc Changes a rotation of a bone.
 	/// @param {real} _bone_index An index of a bone.
 	/// @param {real[]} _rotation A quaternion.
+	/// @deprecated This method is deprecated. Please use
+	/// {@link BBMOD_AnimationPlayer.set_node_rotation} instead.
 	static set_bone_rotation = function (_bone_index, _rotation) {
 		gml_pragma("forceinline");
-		NodeRotationOverride[@ _bone_index] = _rotation;
+		set_node_rotation(_bone_index, _rotation);
 		return self;
 	};
 
@@ -590,8 +627,8 @@ function bbmod_animation_player_update(_anim_player, _current_time)
 /// @desc Returns an array of current transformation matrices for animated models.
 /// @param {BBMOD_AnimationPlayer} _animation_player An animation player.
 /// @return {real[]} The array of transformation matrices.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.get_transform}
-/// instead.
+/// @deprecated This function is deprecated. Please
+/// use {@link BBMOD_AnimationPlayer.get_transform} instead.
 function bbmod_get_transform(_animation_player)
 {
 	gml_pragma("forceinline");
@@ -604,12 +641,12 @@ function bbmod_get_transform(_animation_player)
 /// @param {BBMOD_AnimationPlayer} _animation_player An animation player.
 /// @param {real} _bone_index The index of the bone.
 /// @return {real[]} The transformation matrix.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.get_bone_transform}
-/// instead.
+/// @deprecated This function is deprecated. Please use
+/// {@link BBMOD_AnimationPlayer.get_node_transform} instead.
 function bbmod_get_bone_transform(_animation_player, _bone_index)
 {
 	gml_pragma("forceinline");
-	return _animation_player.get_bone_transform(_bone_index);
+	return _animation_player.get_node_transform(_bone_index);
 }
 
 /// @func bbmod_set_bone_position(_animation_player, _bone_id, _position)
@@ -621,12 +658,12 @@ function bbmod_get_bone_transform(_animation_player, _bone_index)
 /// or `undefined` to disable the override.
 /// @note This should be used before {@link bbmod_animation_player_update}
 /// is executed.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.set_bone_position}
-/// instead.
+/// @deprecated This function is deprecated. Please use
+/// {@link BBMOD_AnimationPlayer.set_node_position} instead.
 function bbmod_set_bone_position(_animation_player, _bone_id, _position)
 {
 	gml_pragma("forceinline");
-	_animation_player.set_bone_position(_bone_id, _position);
+	_animation_player.set_node_position(_bone_id, _position);
 }
 
 /// @func bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
@@ -638,12 +675,12 @@ function bbmod_set_bone_position(_animation_player, _bone_id, _position)
 /// or `undefined` to disable the override.
 /// @note This should be used before {@link bbmod_animation_player_update}
 /// is executed.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.set_bone_rotation}
-/// instead.
+/// @deprecated This function is deprecated. Please use
+/// {@link BBMOD_AnimationPlayer.set_node_rotation} instead.
 function bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 {
 	gml_pragma("forceinline");
-	_animation_player.set_bone_rotation(_bone_id, _quaternion);
+	_animation_player.set_node_rotation(_bone_id, _quaternion);
 }
 
 /// @func bbmod_play(_animation_player, _animation[, _loop])

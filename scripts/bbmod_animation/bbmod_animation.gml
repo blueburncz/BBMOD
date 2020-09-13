@@ -37,6 +37,14 @@ function BBMOD_Animation() constructor
 	/// @readonly
 	Nodes = [];
 
+	/// @var {real} Duration of transition into this animation (in seconds).
+	/// Must be a value greater or equal to 0!
+	TransitionIn = 0.1;
+
+	/// @var {real} Duration of transition out of this animation (in seconds).
+	/// Must be a value greater or equal to 0!
+	TransitionOut = 0;
+
 	/// @func get_animation_time(_time_in_seconds)
 	/// @desc Calculates animation time from current time in seconds.
 	/// @param {real} _time_in_seconds The current time in seconds.
@@ -121,19 +129,19 @@ function BBMOD_Animation() constructor
 	}
 }
 
-/// @func bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
+/// @func bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to)
 /// @desc Creates a new animation transition between two specified animations.
 /// @param {BBMOD_Model} _model A model.
 /// @param {BBMOD_Animation} _anim_from The first animation.
 /// @param {real} _time_from Animation time of the first animation.
 /// @param {BBMOD_Animation} _anim_to The second animation.
 /// @param {real} _time_to Animation time of the second animation.
-/// @param {real} _duration The duration of the transition in seconds.
 /// @return {BBMOD_Animation} The created transition.
 /// @private
-function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to, _duration)
+function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim_to, _time_to)
 {
 	var _anim_stack = global.__bbmod_anim_stack;
+	var _duration = _anim_from.TransitionOut + _anim_to.TransitionIn;
 
 	var _transition = new BBMOD_Animation();
 	_transition.Version = _anim_from.Version;

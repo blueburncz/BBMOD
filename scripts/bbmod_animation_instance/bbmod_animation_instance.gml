@@ -38,11 +38,11 @@ function BBMOD_AnimationInstance(_animation) constructor
 	/// @private
 	RotationKeyLast = [];
 
-	/// @member {array<matrix>} An array of individual bone transformation matrices,
+	/// @member {array<matrix>} An array of individual node transformation matrices,
 	/// without offsets. Useful for attachments.
-	/// @see {@link BBMOD_AnimationPlayer.get_bone_transform}
+	/// @see {@link BBMOD_AnimationPlayer.get_node_transform}
 	/// @private
-	BoneTransform = undefined;
+	NodeTransform = undefined;
 
 	/// @member {real[]} An array containing transformation matrices of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.

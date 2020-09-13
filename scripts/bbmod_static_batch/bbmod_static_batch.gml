@@ -89,7 +89,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 
 	/// @func render(_material)
 	/// @desc Submits the static batch for rendering.
-	/// @param {BBMOD_EMaterial} _material A material.
+	/// @param {BBMOD_Material} _material A material.
 	static render = function (_material) {
 		if ((_material.RenderPath & global.bbmod_render_pass) == 0)
 		{

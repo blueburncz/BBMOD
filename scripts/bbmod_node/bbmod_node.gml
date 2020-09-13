@@ -71,7 +71,7 @@ function bbmod_node_load(_buffer, _format)
 /// @desc Submits a node for rendering.
 /// @param {BBMOD_Model} _model The model to which the node belongs.
 /// @param {BBMOD_ENode} _node The node.
-/// @param {BBMOD_EMaterial[]} _materials An array of materials, one for each
+/// @param {BBMOD_Material[]} _materials An array of materials, one for each
 /// material slot of the model.
 /// @param {real[]/undefined} _transform An array of transformation matrices
 /// (for animated models) or `undefined`.
