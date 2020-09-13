@@ -48,6 +48,20 @@ static std::string GetAnimationFilename(BBMOD_Animation* animation, int index, c
 	return GetFilename(out, animationName.c_str(), ".bbanim");
 }
 
+static void LogNode(std::ofstream& log, BBMOD_Node* node, size_t indent)
+{
+	for (size_t i = 0; i < indent * 4; ++i)
+	{
+		log << " ";
+	}
+	log << (int)node->Index << ": " << node->Name << (node->IsBone ? " [bone]" : "") << std::endl;
+	++indent;
+	for (BBMOD_Node* child : node->Children)
+	{
+		LogNode(log, child, indent);
+	}
+}
+
 int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 {
 	std::ofstream log(GetFilename(fout, "log", ".txt"), std::ios::out);
@@ -113,6 +127,31 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 
 	PRINT_SUCCESS("Model saved to \"%s\"!", fout);
 
+	log << "Vertex format:" << std::endl;
+	log << "==============" << std::endl;
+	BBMOD_VertexFormat* vformat = model->VertexFormat;
+	if (vformat->Vertices) { log << "Position 3D" << std::endl; }
+	if (vformat->Normals) { log << "Normal" << std::endl; }
+	if (vformat->TextureCoords) { log << "Texture coords" << std::endl; }
+	if (vformat->Colors) { log << "Color" << std::endl; }
+	if (vformat->TangentW) { log << "Tangent & bitangent sign" << std::endl; }
+	if (vformat->Bones) { log << "Bone indices and weights" << std::endl; }
+	if (vformat->Ids) { log << "Ids" << std::endl; }
+	log << std::endl;
+
+	log << "Nodes:" << std::endl;
+	log << "======" << std::endl;
+	LogNode(log, model->RootNode, 0);
+	log << std::endl;
+
+	log << "Materials:" << std::endl;
+	log << "==========" << std::endl;
+	for (size_t i = 0; i < model->MaterialNames.size(); ++i)
+	{
+		log << i << ": " << model->MaterialNames[i] << std::endl;
+	}
+	log << std::endl;
+
 	// Write animations
 	if (!config.disableBones)
 	{
@@ -142,6 +181,9 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 			}
 		}
 	}
+
+	log.flush();
+	log.close();
 
 	return BBMOD_SUCCESS;
 }

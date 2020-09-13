@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include "utils.hpp"
+#include <iostream>
 
 /** Encodes color into a single integer as ARGB. */
 static inline uint32_t EncodeColor(const aiColor4D& color)
@@ -164,7 +165,7 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 
 					// Bitangent sign
 					aiVector3D& bitangent = aiMesh->mBitangents[idx];
-					float sign = GetBitangentSign(normal, vertex->Tangent, bitangent);
+					vertex->BitangentSign = GetBitangentSign(normal, vertex->Tangent, bitangent);
 				}
 				else
 				{
@@ -250,6 +251,7 @@ bool BBMOD_Vertex::Save(std::ofstream& file)
 	{
 		FILE_WRITE_DATA(file, Id);
 	}
+
 
 	return true;
 }

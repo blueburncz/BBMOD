@@ -1,7 +1,11 @@
 #pragma once
 
+#include <fstream>
+
 struct BBMOD_VertexFormat
 {
+	bool Save(std::ofstream& file);
+
 	bool Vertices = true;
 
 	bool Normals = false;

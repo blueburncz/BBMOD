@@ -119,13 +119,11 @@ bool BBMOD_Model::Save(std::string path)
 
 	file.write("bbmod", sizeof(char) * 6);
 	FILE_WRITE_DATA(file, Version);
-	FILE_WRITE_DATA(file, VertexFormat->Vertices);
-	FILE_WRITE_DATA(file, VertexFormat->Normals);
-	FILE_WRITE_DATA(file, VertexFormat->TextureCoords);
-	FILE_WRITE_DATA(file, VertexFormat->Colors);
-	FILE_WRITE_DATA(file, VertexFormat->TangentW);
-	FILE_WRITE_DATA(file, VertexFormat->Bones);
-	FILE_WRITE_DATA(file, VertexFormat->Ids);
+	
+	if (!VertexFormat->Save(file))
+	{
+		return false;
+	}
 
 	size_t meshCount = Meshes.size();
 	FILE_WRITE_DATA(file, meshCount);
@@ -165,7 +163,6 @@ bool BBMOD_Model::Save(std::string path)
 		const char* str = materialName.c_str();
 		file.write(str, strlen(str) + 1);
 	}
-
 
 	file.flush();
 	file.close();
