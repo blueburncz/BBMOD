@@ -181,8 +181,6 @@
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD","resourceVersion":"1.0","name":"BBMOD.dll","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD","resourceVersion":"1.0","name":"BBMOD.exe","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD","resourceVersion":"1.0","name":"LICENSE","resourceType":"GMIncludedFile",},
-    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"idle.bbanim","resourceType":"GMIncludedFile",},
-    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"idle.bbmod","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Models","resourceVersion":"1.0","name":"Sphere.bbmod","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Skies","resourceVersion":"1.0","name":"NoonIBL.png","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD/Skies","resourceVersion":"1.0","name":"NoonSky.png","resourceType":"GMIncludedFile",},
@@ -190,6 +188,8 @@
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD","resourceVersion":"1.0","name":"assimp-vc140-mt.dll","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD","resourceVersion":"1.0","name":"LICENSE","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/BBMOD","resourceVersion":"1.0","name":"BBMOD.dll","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"idle.bbmod","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"idle.bbanim","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2.3.0.529",
