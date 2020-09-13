@@ -54,12 +54,26 @@ function _bbmod_shader_set_exposure(_shader)
 /// @private
 function _bbmod_shader_set_ibl(_shader, _texture, _texel)
 {
-	texture_set_stage(shader_get_sampler_index(_shader, "u_texIBL"),
-		_texture);
+	var _ibl = shader_get_sampler_index(_shader, "u_texIBL");
+	texture_set_stage(_ibl, _texture);
+	gpu_set_tex_max_mip_ext(_ibl, mip_off);
+
+	var _brdf = shader_get_sampler_index(_shader, "u_texBRDF");
+	texture_set_stage(_brdf, sprite_get_texture(BBMOD_SprEnvBRDF, 0));
+	gpu_set_tex_max_mip_ext(_brdf, mip_off);
+
 	shader_set_uniform_f(shader_get_uniform(_shader, "u_vIBLTexel"),
 		_texel, _texel);
-	texture_set_stage(shader_get_sampler_index(_shader, "u_texBRDF"),
-		sprite_get_texture(BBMOD_SprEnvBRDF, 0));
+}
+
+/// @func _bbmod_shader_set_alpha_test(_shader, _alpha_test)
+/// @param {shader} _shader
+/// @param {real} _alpha_test
+/// @private
+function _bbmod_shader_set_alpha_test(_shader, _alpha_test)
+{
+	shader_set_uniform_f(shader_get_uniform(_shader, "u_fAlphaTest"),
+		_alpha_test);
 }
 
 /// @func bbmod_set_camera_position(_x, _y, _z)

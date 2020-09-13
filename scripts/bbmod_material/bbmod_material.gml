@@ -48,11 +48,8 @@ global.__bbmod_material_default_batched = new BBMOD_Material(BBMOD_ShDefaultBatc
 var _spr_sky = sprite_add("BBMOD/Skies/NoonSky.png", 0, false, true, 0, 0);
 var _mat_sky = new BBMOD_Material(BBMOD_ShSky);
 _mat_sky.BaseOpacity = sprite_get_texture(_spr_sky, 0);
-_mat_sky.OnApply = function (_material) {
-	var _shader = _material.Shader;
-	_bbmod_shader_set_exposure(_shader);
-};
 _mat_sky.Culling = cull_noculling;
+_mat_sky.Mipmapping = false;
 
 /// @macro {BBMOD_Material} The default sky material.
 /// @see BBMOD_Material
@@ -75,94 +72,19 @@ global.__bbmod_material_current = BBMOD_NONE;
 /// @see BBMOD_RENDER_DEFERRED
 global.bbmod_render_pass = BBMOD_RENDER_FORWARD;
 
-/// @func bbmod_material_create(_shader[, _base_opacity[, _normal_roughness]])
-/// @desc Creates a new material.
-/// @param {ptr} _shader A shader that the material uses.
-/// @param {ptr} [_base_opacity] A texture with base color in RGB and opacity in alpha.
-/// @param {ptr} [_normal_roughness] A texture with normals in RGB and roughness in alpha.
-/// @return {BBMOD_Material} The created material.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Material} instead.
-function bbmod_material_create(_shader)
-{
-	gml_pragma("forceinline");
-	var _base_opacity = (argument_count > 1) ? argument[1] : undefined;
-	var _normal_roughness = (argument_count > 2) ? argument[2] : undefined;
-	var _material = new BBMOD_Material(_shader);
-	if (_base_opacity != undefined)
-	{
-		_material.BaseOpacity = _base_opacity;
-	}
-	if (_normal_roughness != undefined)
-	{
-		_material.NormalRoughness = _normal_roughness;
-	}
-	return _material;
-}
-
-/// @func bbmod_material_clone(_material)
-/// @desc Creates a copy of a material.
-/// @param {BBMOD_Material} _material The material to create a copy of.
-/// @return {BBMOD_Material} The created material.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Material.clone}
-/// instead.
-function bbmod_material_clone(_material)
-{
-	gml_pragma("forceinline");
-	return _material.clone();
-}
-
-/// @func bbmod_material_apply(_material)
-/// @desc Applies a material.
-/// @param {BBMOD_Material} _material A material.
-/// @return {bool} `true` if the material was applied or `false` if it was already
-/// the current one.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Material.apply}
-/// instead.
-function bbmod_material_apply(_material)
-{
-	gml_pragma("forceinline");
-	return _material.apply();
-}
-
-/// @func bbmod_material_reset()
-/// @desc Resets the current material to {@link BBMOD_NONE}. Every block of code
-/// rendering models must start and end with this function!
-/// @example
-/// ```gml
-/// bbmod_material_reset();
-///
-/// // Render static batch of trees
-/// tree_batch.render(mat_tree);
-///
-/// // Render characters
-/// var _world = matrix_get(matrix_world);
-/// with (OCharacter)
-/// {
-///     matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, direction, 1, 1, 1));
-///     model.render(materials, animation_player.get_transform());
-/// }
-/// matrix_set(matrix_world, _world);
-///
-/// bbmod_material_reset();
-/// ```
-/// @see BBMOD_Material.reset
-function bbmod_material_reset()
-{
-	gml_pragma("forceinline");
-	if (global.__bbmod_material_current != BBMOD_NONE)
-	{
-		shader_reset();
-		gpu_pop_state();
-		global.__bbmod_material_current = BBMOD_NONE;
-	}
-}
-
 /// @func bbmod_material_on_apply_default(_material)
 /// @desc The default material application function.
 /// @param {BBMOD_Material} _material The material.
 function bbmod_material_on_apply_default(_material)
 {
 	var _shader = _material.Shader;
+
+	if (!_material.Mipmapping)
+	{
+		gpu_set_tex_mip_enable(mip_off);
+	}
+
+	_bbmod_shader_set_alpha_test(_shader, _material.AlphaTest);
 
 	texture_set_stage(shader_get_sampler_index(_shader, "u_texNormalRoughness"),
 		_material.NormalRoughness);
@@ -225,6 +147,12 @@ function BBMOD_Material(_shader) constructor
 	/// @var {real} The function used for depth testing when {@link BBMOD_Material.ZTest}
 	/// is enabled. Use one of the `cmpfunc_` constants. Default value is `cmpfunc_lessequal`.
 	ZFunc = cmpfunc_lessequal;
+
+	/// @var {real} Discard pixels with alpha less than this value. Use values in range 0..1.
+	AlphaTest = 1;
+
+	/// @var {bool} Use `false` to disable mimapping for this material.
+	Mipmapping = true;
 
 	/// @var {ptr} A texture with a base color in the RGB channels and opacity in the
 	/// alpha channel.
@@ -315,4 +243,86 @@ function BBMOD_Material(_shader) constructor
 		gml_pragma("forceinline");
 		bbmod_material_reset();
 	};
+}
+
+/// @func bbmod_material_create(_shader[, _base_opacity[, _normal_roughness]])
+/// @desc Creates a new material.
+/// @param {ptr} _shader A shader that the material uses.
+/// @param {ptr} [_base_opacity] A texture with base color in RGB and opacity in alpha.
+/// @param {ptr} [_normal_roughness] A texture with normals in RGB and roughness in alpha.
+/// @return {BBMOD_Material} The created material.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Material} instead.
+function bbmod_material_create(_shader)
+{
+	gml_pragma("forceinline");
+	var _base_opacity = (argument_count > 1) ? argument[1] : undefined;
+	var _normal_roughness = (argument_count > 2) ? argument[2] : undefined;
+	var _material = new BBMOD_Material(_shader);
+	if (_base_opacity != undefined)
+	{
+		_material.BaseOpacity = _base_opacity;
+	}
+	if (_normal_roughness != undefined)
+	{
+		_material.NormalRoughness = _normal_roughness;
+	}
+	return _material;
+}
+
+/// @func bbmod_material_clone(_material)
+/// @desc Creates a copy of a material.
+/// @param {BBMOD_Material} _material The material to create a copy of.
+/// @return {BBMOD_Material} The created material.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Material.clone}
+/// instead.
+function bbmod_material_clone(_material)
+{
+	gml_pragma("forceinline");
+	return _material.clone();
+}
+
+/// @func bbmod_material_apply(_material)
+/// @desc Applies a material.
+/// @param {BBMOD_Material} _material A material.
+/// @return {bool} `true` if the material was applied or `false` if it was already
+/// the current one.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Material.apply}
+/// instead.
+function bbmod_material_apply(_material)
+{
+	gml_pragma("forceinline");
+	return _material.apply();
+}
+
+/// @func bbmod_material_reset()
+/// @desc Resets the current material to {@link BBMOD_NONE}. Every block of code
+/// rendering models must start and end with this function!
+/// @example
+/// ```gml
+/// bbmod_material_reset();
+///
+/// // Render static batch of trees
+/// tree_batch.render(mat_tree);
+///
+/// // Render characters
+/// var _world = matrix_get(matrix_world);
+/// with (OCharacter)
+/// {
+///     matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, direction, 1, 1, 1));
+///     model.render(materials, animation_player.get_transform());
+/// }
+/// matrix_set(matrix_world, _world);
+///
+/// bbmod_material_reset();
+/// ```
+/// @see BBMOD_Material.reset
+function bbmod_material_reset()
+{
+	gml_pragma("forceinline");
+	if (global.__bbmod_material_current != BBMOD_NONE)
+	{
+		shader_reset();
+		gpu_pop_state();
+		global.__bbmod_material_current = BBMOD_NONE;
+	}
 }

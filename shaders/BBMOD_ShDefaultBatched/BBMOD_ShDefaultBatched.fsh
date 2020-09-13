@@ -28,6 +28,9 @@ uniform vec2 u_vIBLTexel;
 // Preintegrated env. BRDF
 uniform sampler2D u_texBRDF;
 
+// Pixels with alpha less than this value will be discarded.
+uniform float u_fAlphaTest;
+
 // Camera's position in world space
 uniform vec3 u_vCamPos;
 
@@ -302,11 +305,10 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
-	// TODO: Discard transparent pixels.
-	//if (material.Opacity < 0.9)
-	//{
-	//	discard;
-	//}
+	if (material.Opacity < u_fAlphaTest)
+	{
+		discard;
+	}
 	gl_FragColor.a = material.Opacity;
 
 	vec3 N = material.Normal;

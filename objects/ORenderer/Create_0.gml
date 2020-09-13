@@ -7,6 +7,7 @@ application_surface_scale = 2;
 gpu_set_ztestenable(true);
 gpu_set_zwriteenable(true);
 gpu_set_tex_filter(true);
+gpu_set_tex_mip_enable(mip_on);
 
 camera = camera_create();
 
