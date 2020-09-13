@@ -240,20 +240,10 @@ function BBMOD_AnimationPlayer(_model) constructor
 			var _node = ds_stack_pop(_anim_stack);
 			var _transform = _node[BBMOD_ENode.TransformMatrix];
 			var _node_index = _node[BBMOD_ENode.Index];
-
-			show_debug_message("");
-			show_debug_message(["node", _node[BBMOD_ENode.Name]]);
-			show_debug_message(["index", _node[BBMOD_ENode.Index]]);
-			show_debug_message(["is_bone", _node[BBMOD_ENode.IsBone]]);
-
 			var _node_data = _anim_nodes[_node_index];
-
-			show_debug_message(["has_data", _node_data != undefined]);
 
 			if (_node_data != undefined)
 			{
-				
-
 				#region Position
 				var _override = undefined; //_position_overrides[_node_index];
 
@@ -262,9 +252,6 @@ function BBMOD_AnimationPlayer(_model) constructor
 					var _positions = _node_data[BBMOD_EAnimationNode.PositionKeys];
 					var _positions_size = array_length(_positions);
 					var _index = _position_key_last[_node_index];
-
-					show_debug_message(["index_last", _index]);
-
 					var _position_key;
 					var _position_key_next;
 
@@ -286,7 +273,6 @@ function BBMOD_AnimationPlayer(_model) constructor
 					#endregion Find position keys
 
 					_position_key_last[@ _node_index] = _index;
-					show_debug_message(["index_current", _index]);
 
 					if (_interpolate_frames)
 					{

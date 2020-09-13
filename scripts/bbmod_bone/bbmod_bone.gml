@@ -19,7 +19,7 @@ enum BBMOD_EBone
 /// @private
 function bbmod_bone_load(_buffer)
 {
-	var _bone = array_create(BBMOD_EBone.SIZE, 0);
+	var _bone = array_create(BBMOD_EBone.SIZE, undefined);
 	_bone[@ BBMOD_EBone.Index] = buffer_read(_buffer, buffer_f32);
 	_bone[@ BBMOD_EBone.OffsetMatrix] = bbmod_load_matrix(_buffer);
 	return _bone;

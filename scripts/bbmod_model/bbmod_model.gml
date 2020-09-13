@@ -1,89 +1,3 @@
-/// @func bbmod_model_destroy(_model)
-/// @desc Destroys a model.
-/// @param {BBMOD_Model} _model The model to destroy.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.destroy}
-/// instead.
-function bbmod_model_destroy(_model)
-{
-	_model.destroy();
-}
-
-/// @func bbmod_model_freeze(_model)
-/// @desc Freezes all vertex buffers used by a model. This should make its
-/// rendering faster, but it disables creating new batches of the model.
-/// @param {BBMOD_Model} _model The model to freeze.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.freeze}
-/// instead.
-function bbmod_model_freeze(_model)
-{
-	_model.freeze();
-}
-
-/// @func bbmod_model_find_bone_id(_model, _bone_name[, _bone])
-/// @desc Seaches for a bone id assigned to given bone name.
-/// @param {BBMOD_Model} _model The model.
-/// @param {string} _bone_name The name of the bone.
-/// @param {BBMOD_EBone/undefined} [_bone] The bone to start searching
-/// from. Use `undefined` to use the model's root bone. Defaults to `undefined`.
-/// @return {real/BBMOD_NONE} The id of the bone on success or {@link BBMOD_NONE}
-/// on fail.
-/// @note It is not recommended to use this function in release builds, because
-/// having many of these lookups can slow down your game! You should instead use
-/// the ids available from the `_log.txt` files, which are created during model
-/// conversion.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.find_bone_id}
-/// instead.
-function bbmod_model_find_bone_id(_model, _bone_name)
-{
-	return _model.find_bone_id(_bone_name);
-}
-
-/// @func bbmod_model_get_bindpose_transform(_model)
-/// @desc Creates a transformation array with model's bindpose.
-/// @param {BBMOD_Model} _model A model.
-/// @return {real[]} The created array.
-/// @deprected This function is deprecated. Please use
-/// {@link BBMOD_Model.get_bindpose_transform} instead.
-function bbmod_model_get_bindpose_transform(_model)
-{
-	return _model.get_bindpose_transform();
-}
-
-/// @func bbmod_model_get_vertex_format(_model[, _bones[, _ids]])
-/// @desc Retrieves a vertex format of a model.
-/// @param {BBMOD_Model} _model The model.
-/// @param {bool} [_bones] Use `false` to disable bones. Defaults to `true`.
-/// @param {bool} [_ids] Use `true` to force ids for dynamic batching. Defaults
-/// to `false`.
-/// @return {real} The vertex format.
-/// @deprecated This function is deprecated. Please use
-/// {@link BBMOD_Model.get_vertex_format} instead.
-function bbmod_model_get_vertex_format(_model)
-{
-	gml_pragma("forceinline");
-	var _bones = (argument_count > 1) ? argument[1] : true;
-	var _ids = (argument_count > 2) ? argument[2] : false;
-	return _model.get_vertex_format(_bones, _ids);
-}
-
-/// @func bbmod_render(_model[, _materials[, _transform]])
-/// @desc Submits a model for rendering.
-/// @param {BBMOD_Model} _model A model.
-/// @param {BBMOD_EMaterial[]/undefined} [_materials] An array of materials,
-/// one for each material slot of the model. If not specified, then
-/// the default material is used for each slot. Default is `undefined`.
-/// @param {real[]/undefined} [_transform] An array of transformation matrices
-/// (for animated models) or `undefined`.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.render}
-/// instead.
-function bbmod_render(_model)
-{
-	gml_pragma("forceinline");
-	var _materials = (argument_count > 1) ? argument[1] : undefined;
-	var _transform = (argument_count > 2) ? argument[2] : undefined;
-	_model.render(_materials, _transform);
-}
-
 /// @func BBMOD_Model(_file[, _sha1])
 /// @desc A model.
 /// @param {string} _file The "*.bbmod" model file to load.
@@ -160,22 +74,7 @@ function BBMOD_Model(_file) constructor
 		var i;
 
 		// Vertex format
-		var _vertices = buffer_read(_buffer, buffer_bool);
-		var _normals = buffer_read(_buffer, buffer_bool);
-		var _textureCoords = buffer_read(_buffer, buffer_bool);
-		var _colors = buffer_read(_buffer, buffer_bool);
-		var _tangentW = buffer_read(_buffer, buffer_bool);
-		var _bones = buffer_read(_buffer, buffer_bool);
-		var _ids = buffer_read(_buffer, buffer_bool);
-
-		VertexFormat = new BBMOD_VertexFormat(
-			_vertices,
-			_normals,
-			_textureCoords,
-			_colors,
-			_tangentW,
-			_bones,
-			_ids);
+		VertexFormat = bbmod_vertex_format_load(_buffer);
 
 		// Meshes
 		var _meshCount = buffer_read(_buffer, buffer_u32);
@@ -456,4 +355,90 @@ function BBMOD_Model(_file) constructor
 	{
 		from_file(_file, _sha1);
 	}
+}
+
+/// @func bbmod_model_destroy(_model)
+/// @desc Destroys a model.
+/// @param {BBMOD_Model} _model The model to destroy.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.destroy}
+/// instead.
+function bbmod_model_destroy(_model)
+{
+	_model.destroy();
+}
+
+/// @func bbmod_model_freeze(_model)
+/// @desc Freezes all vertex buffers used by a model. This should make its
+/// rendering faster, but it disables creating new batches of the model.
+/// @param {BBMOD_Model} _model The model to freeze.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.freeze}
+/// instead.
+function bbmod_model_freeze(_model)
+{
+	_model.freeze();
+}
+
+/// @func bbmod_model_find_bone_id(_model, _bone_name[, _bone])
+/// @desc Seaches for a bone id assigned to given bone name.
+/// @param {BBMOD_Model} _model The model.
+/// @param {string} _bone_name The name of the bone.
+/// @param {BBMOD_EBone/undefined} [_bone] The bone to start searching
+/// from. Use `undefined` to use the model's root bone. Defaults to `undefined`.
+/// @return {real/BBMOD_NONE} The id of the bone on success or {@link BBMOD_NONE}
+/// on fail.
+/// @note It is not recommended to use this function in release builds, because
+/// having many of these lookups can slow down your game! You should instead use
+/// the ids available from the `_log.txt` files, which are created during model
+/// conversion.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.find_bone_id}
+/// instead.
+function bbmod_model_find_bone_id(_model, _bone_name)
+{
+	return _model.find_bone_id(_bone_name);
+}
+
+/// @func bbmod_model_get_bindpose_transform(_model)
+/// @desc Creates a transformation array with model's bindpose.
+/// @param {BBMOD_Model} _model A model.
+/// @return {real[]} The created array.
+/// @deprected This function is deprecated. Please use
+/// {@link BBMOD_Model.get_bindpose_transform} instead.
+function bbmod_model_get_bindpose_transform(_model)
+{
+	return _model.get_bindpose_transform();
+}
+
+/// @func bbmod_model_get_vertex_format(_model[, _bones[, _ids]])
+/// @desc Retrieves a vertex format of a model.
+/// @param {BBMOD_Model} _model The model.
+/// @param {bool} [_bones] Use `false` to disable bones. Defaults to `true`.
+/// @param {bool} [_ids] Use `true` to force ids for dynamic batching. Defaults
+/// to `false`.
+/// @return {real} The vertex format.
+/// @deprecated This function is deprecated. Please use
+/// {@link BBMOD_Model.get_vertex_format} instead.
+function bbmod_model_get_vertex_format(_model)
+{
+	gml_pragma("forceinline");
+	var _bones = (argument_count > 1) ? argument[1] : true;
+	var _ids = (argument_count > 2) ? argument[2] : false;
+	return _model.get_vertex_format(_bones, _ids);
+}
+
+/// @func bbmod_render(_model[, _materials[, _transform]])
+/// @desc Submits a model for rendering.
+/// @param {BBMOD_Model} _model A model.
+/// @param {BBMOD_EMaterial[]/undefined} [_materials] An array of materials,
+/// one for each material slot of the model. If not specified, then
+/// the default material is used for each slot. Default is `undefined`.
+/// @param {real[]/undefined} [_transform] An array of transformation matrices
+/// (for animated models) or `undefined`.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_Model.render}
+/// instead.
+function bbmod_render(_model)
+{
+	gml_pragma("forceinline");
+	var _materials = (argument_count > 1) ? argument[1] : undefined;
+	var _transform = (argument_count > 2) ? argument[2] : undefined;
+	_model.render(_materials, _transform);
 }

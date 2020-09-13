@@ -24,7 +24,7 @@ enum BBMOD_ERotationKey
 /// @private
 function bbmod_rotation_key_interpolate(_rk1, _rk2, _factor)
 {
-	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
+	var _key = array_create(BBMOD_EPositionKey.SIZE, undefined);
 	_key[@ BBMOD_ERotationKey.Time] = lerp(
 		_rk1[BBMOD_ERotationKey.Time],
 		_rk2[BBMOD_ERotationKey.Time],
@@ -42,7 +42,7 @@ function bbmod_rotation_key_interpolate(_rk1, _rk2, _factor)
 /// @private
 function bbmod_rotation_key_load(_buffer)
 {
-	var _key = array_create(BBMOD_ERotationKey.SIZE, 0);
+	var _key = array_create(BBMOD_ERotationKey.SIZE, undefined);
 	_key[@ BBMOD_ERotationKey.Time] = buffer_read(_buffer, buffer_f64);
 	_key[@ BBMOD_ERotationKey.Rotation] = bbmod_load_quaternion(_buffer);
 	return _key;

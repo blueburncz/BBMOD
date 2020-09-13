@@ -27,7 +27,7 @@ function bbmod_animation_node_load(_buffer)
 {
 	var i;
 
-	var _animation_node = array_create(BBMOD_EAnimationNode.SIZE, 0);
+	var _animation_node = array_create(BBMOD_EAnimationNode.SIZE, undefined);
 	_animation_node[@ BBMOD_EAnimationNode.NodeIndex] = buffer_read(_buffer, buffer_f32);
 
 	// Load position keys

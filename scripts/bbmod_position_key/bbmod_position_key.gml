@@ -24,7 +24,7 @@ enum BBMOD_EPositionKey
 /// @private
 function bbmod_position_key_interpolate(_pk1, _pk2, _factor)
 {
-	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
+	var _key = array_create(BBMOD_EPositionKey.SIZE, undefined);
 	_key[@ BBMOD_EPositionKey.Time] = lerp(
 		_pk1[BBMOD_EPositionKey.Time],
 		_pk2[BBMOD_EPositionKey.Time],
@@ -42,7 +42,7 @@ function bbmod_position_key_interpolate(_pk1, _pk2, _factor)
 /// @private
 function bbmod_position_key_load(_buffer)
 {
-	var _key = array_create(BBMOD_EPositionKey.SIZE, 0);
+	var _key = array_create(BBMOD_EPositionKey.SIZE, undefined);
 	_key[@ BBMOD_EPositionKey.Time] = buffer_read(_buffer, buffer_f64);
 	_key[@ BBMOD_EPositionKey.Position] = bbmod_load_vec3(_buffer);
 	return _key;

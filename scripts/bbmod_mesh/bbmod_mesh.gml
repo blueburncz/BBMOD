@@ -30,7 +30,7 @@ function bbmod_mesh_load(_buffer, _format)
 	var _has_bones = _format.Bones;
 	var _has_ids = _format.Ids;
 
-	var _mesh = array_create(BBMOD_EMesh.SIZE, 0);
+	var _mesh = array_create(BBMOD_EMesh.SIZE, undefined);
 	_mesh[@ BBMOD_EMesh.MaterialIndex] = buffer_read(_buffer, buffer_u32);
 
 	var _vertex_count = buffer_read(_buffer, buffer_u32);

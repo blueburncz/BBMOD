@@ -1,24 +1,3 @@
-/// @func bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones[, _ids])
-/// @desc Creates a new vertex format or retrieves an existing one with specified
-/// properties.
-/// @param {bool} _vertices `true` if the vertex format must have vertices.
-/// @param {bool} _normals `true` if the vertex format must have normal vectors.
-/// @param {bool} _uvs `true` if the vertex format must have texture coordinates.
-/// @param {bool} _colors `true` if the vertex format must have vertex colors.
-/// @param {bool} _tangentw `true` if the vertex format must have tangent vectors and
-/// bitangent signs.
-/// @param {bool} _bones `true` if the vertex format must have vertex weights and bone
-/// indices.
-/// @param {bool} [_ids] `true` if the vertex format must have ids for dynamic batching.
-/// @return {BBMOD_VertexFormat} The vertex format.
-/// @deprecated This function is deprecated. Please use {@link BBMOD_VertexFomat} instead.
-function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones)
-{
-	gml_pragma("forceinline");
-	var _ids = (argument_count > 6) ? argument[6] : false;
-	return new BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bones, _ids);
-}
-
 /// @func BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bones, _ids)
 /// @desc A wrapper of a raw GameMaker vertex format.
 /// @param {bool} _vertices If `true` then the vertex format must have vertices.
@@ -132,4 +111,49 @@ function BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bone
 		Raw = vertex_format_end();
 		Formats[? _hash] = Raw;
 	}
+}
+
+/// @func bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones[, _ids])
+/// @desc Creates a new vertex format or retrieves an existing one with specified
+/// properties.
+/// @param {bool} _vertices `true` if the vertex format must have vertices.
+/// @param {bool} _normals `true` if the vertex format must have normal vectors.
+/// @param {bool} _uvs `true` if the vertex format must have texture coordinates.
+/// @param {bool} _colors `true` if the vertex format must have vertex colors.
+/// @param {bool} _tangentw `true` if the vertex format must have tangent vectors and
+/// bitangent signs.
+/// @param {bool} _bones `true` if the vertex format must have vertex weights and bone
+/// indices.
+/// @param {bool} [_ids] `true` if the vertex format must have ids for dynamic batching.
+/// @return {BBMOD_VertexFormat} The vertex format.
+/// @deprecated This function is deprecated. Please use {@link BBMOD_VertexFomat} instead.
+function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones)
+{
+	gml_pragma("forceinline");
+	var _ids = (argument_count > 6) ? argument[6] : false;
+	return new BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bones, _ids);
+}
+
+/// @func bbmod_vertex_format_load(_buffer)
+/// @param {buffer} _buffer
+/// @return {BBMOD_VertexBuffer}
+/// @private
+function bbmod_vertex_format_load(_buffer)
+{
+	var _vertices = buffer_read(_buffer, buffer_bool);
+	var _normals = buffer_read(_buffer, buffer_bool);
+	var _textureCoords = buffer_read(_buffer, buffer_bool);
+	var _colors = buffer_read(_buffer, buffer_bool);
+	var _tangentW = buffer_read(_buffer, buffer_bool);
+	var _bones = buffer_read(_buffer, buffer_bool);
+	var _ids = buffer_read(_buffer, buffer_bool);
+
+	return new BBMOD_VertexFormat(
+		_vertices,
+		_normals,
+		_textureCoords,
+		_colors,
+		_tangentW,
+		_bones,
+		_ids);
 }
