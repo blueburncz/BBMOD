@@ -16,10 +16,10 @@ BBMOD_Animation* BBMOD_Animation::FromAssimp(aiAnimation* aiAnimation, BBMOD_Mod
 
 		BBMOD_AnimationNode* animationNode = new BBMOD_AnimationNode();
 		animationNode->Index = model->FindNodeByName(channel->mNodeName.C_Str(), model->RootNode)->Index;
-
+		
 		for (size_t j = 0; j < channel->mNumPositionKeys; ++j)
 		{
-			aiVectorKey& key = channel->mPositionKeys[i];
+			aiVectorKey& key = channel->mPositionKeys[j];
 			BBMOD_PositionKey* positionKey = new BBMOD_PositionKey();
 			positionKey->Time = key.mTime;
 			positionKey->Position = key.mValue;
@@ -28,7 +28,7 @@ BBMOD_Animation* BBMOD_Animation::FromAssimp(aiAnimation* aiAnimation, BBMOD_Mod
 
 		for (size_t j = 0; j < channel->mNumRotationKeys; ++j)
 		{
-			aiQuatKey& key = channel->mRotationKeys[i];
+			aiQuatKey& key = channel->mRotationKeys[j];
 			BBMOD_RotationKey* rotationKey = new BBMOD_RotationKey();
 			rotationKey->Time = key.mTime;
 			rotationKey->Rotation = key.mValue;
