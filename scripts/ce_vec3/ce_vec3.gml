@@ -1,25 +1,18 @@
-CE_PRAGMA_ONCE;
-
-/// @func ce_vec3_create(_x[, _y, _z])
-/// @desc Creates a new vector with given components. If only the first value
-/// is supplied, then it is used for every component.
-/// @param {real} _x The first vector component.
-/// @param {real} [_y] The second vector component.
-/// @param {real} [_z] The third vector component.
+/// @func ce_vec3_create([_x[, _y[, _z]]])
+/// @desc Creates a new 3D vector.
+/// @param {real} [_x] The first vector component. Defaults to 0.
+/// @param {real} [_y] The second vector component. Defaults to `_x`.
+/// @param {real} [_z] The third vector component. Defaults to `_y`.
 /// @return {array} The created vector.
 /// @note One could also just write `[x, y, z]`, which would give the same
 /// result.
 function ce_vec3_create()
 {
 	gml_pragma("forceinline");
-	if (argument_count == 1)
-	{
-		return array_create(3, argument[0]);
-	}
-	if (argument_count == 3)
-	{
-		return [argument[0], argument[1], argument[2]];
-	}
+	var _x = (argument_count > 0) ? argument[0] : 0;
+	var _y = (argument_count > 1) ? argument[1] : _x;
+	var _z = (argument_count > 2) ? argument[2] : _y;
+	return [_x, _y, _z];
 }
 
 /// @func ce_vec3_abs(_v)
@@ -64,8 +57,9 @@ function ce_vec3_ceil(_v)
 function ce_vec3_clamp_length(_v, _min, _max)
 {
 	gml_pragma("forceinline");
+	var _length = ce_vec3_length(_v);
 	ce_vec3_normalize(_v);
-	ce_vec3_scale(_v, clamp(ce_vec3_length(_v), _min, _max));
+	ce_vec3_scale(_v, clamp(_length, _min, _max));
 }
 
 /// @func ce_vec3_clone(_v)

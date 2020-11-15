@@ -31,11 +31,11 @@ enum BBMOD_EAnimationKey
 /// @param {real} [_index] An index where to start looking. Defaults to 0.
 /// @return {real} Index of found animation key.
 /// @private
-function bbmod_find_animation_key(_keys, _animation_time)
+function bbmod_find_animation_key(_keys, _animation_time, _index)
 {
 	gml_pragma("forceinline");
 
-	var _index = (argument_count > 2) ? argument[2] : 0;
+	_index = !is_undefined(_index) ? _index : 0;
 	var _key_count = array_length(_keys);
 
 	repeat (_key_count)

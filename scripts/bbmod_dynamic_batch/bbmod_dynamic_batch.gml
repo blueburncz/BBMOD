@@ -50,9 +50,11 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 
 	/// @func freeze()
 	/// @desc Freezes the dynamic batch. This makes it render faster.
+	/// @return {BBMOD_DynamicBatch} Returns `self` to allow method chaining.
 	static freeze = function () {
 		gml_pragma("forceinline");
 		vertex_freeze(VertexBuffer);
+		return self;
 	};
 
 	/// @func render(_material, _data)
@@ -60,6 +62,7 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	/// @param {BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {real[]} _data An array containing data for each rendered instance.
+	/// @return {BBMOD_DynamicBatch} Returns `self` to allow method chaining.
 	/// @see BBMOD_DynamicBatch.render_object
 	static render = function (_material, _data) {
 		if ((_material.RenderPath & global.bbmod_render_pass) == 0)
@@ -71,6 +74,7 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 		_material.apply();
 		_bbmod_shader_set_dynamic_batch_data(_material.Shader, _data);
 		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
+		return self;
 	};
 
 	/// @func default_fn(_data, _index)
@@ -105,6 +109,7 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	/// @param {function} [_fn] A function that writes instance data to an array
 	/// which is then passed to the material's shader. Must return number of
 	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}.
+	/// @return {BBMOD_DynamicBatch} Returns `self` to allow method chaining.
 	/// @example
 	/// ```gml
 	/// car_batch.render_object(OCar, mat_car, function (_data, _index) {
@@ -126,27 +131,34 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 	/// variation of it.
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.default_fn
-	static render_object = function (_object, _material) {
-		var _fn = (argument_count > 2) ? argument[2] : default_fn;
-		var _find = 0;
-		var _data_size = Size * 8;
-		var _data_empty = array_create(_data_size, 0);
-		var _data = array_create(_data_size, 0)
-		repeat (ceil(instance_number(_object) / Size))
+	static render_object = function (_object, _material, _fn) {
+		_fn = !is_undefined(_fn) ? _fn : default_fn;
+
+		static _data_size = Size * 8;
+		static _data_empty = array_create(_data_size, 0);
+		static _data = array_create(_data_size, 0)
+
+		array_copy(_data, 0, _data_empty, 0, _data_size);
+
+		var _index = 0;
+
+		with (_object)
 		{
-			array_copy(_data, 0, _data_empty, 0, _data_size);
-			var _index = 0;
-			repeat (Size)
+			_index += method(self, _fn)(_data, _index);
+			if (_index >= _data_size)
 			{
-				var _instance = instance_find(_object, _find++);
-				if (_instance == noone)
-				{
-					break;
-				}
-				_index += method(_instance, _fn)(_data, _index);
+				other.render(_material, _data);
+				array_copy(_data, 0, _data_empty, 0, _data_size);
+				_index = 0;
 			}
+		}
+
+		if (_index > 0)
+		{
 			render(_material, _data);
 		}
+
+		return self;
 	};
 
 	/// @func destroy()

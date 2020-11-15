@@ -15,11 +15,8 @@
 /// }
 /// ```
 /// @throws {BBMOD_Error} When the animation fails to load.
-function BBMOD_Animation() constructor
+function BBMOD_Animation(_file, _sha1) constructor
 {
-	var _file = (argument_count > 0) ? argument[0] : undefined;
-	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
-
 	/// @var {real} The version of the animation file.
 	/// @readonly
 	Version = 0;
@@ -51,7 +48,9 @@ function BBMOD_Animation() constructor
 	/// @return {real} The animation time.
 	/// @private
 	static get_animation_time = function (_time_in_seconds) {
-		return bbmod_get_animation_time(animation, _time_in_seconds);
+		gml_pragma("forceinline");
+		var _time_in_tics = _time_in_seconds * TicsPerSecond;
+		return (_time_in_tics mod Duration);
 	};
 
 	/// @func from_buffer(_buffer)
@@ -85,9 +84,7 @@ function BBMOD_Animation() constructor
 	/// @return {BBMOD_Animation} Returns `self` to allow method chaining.
 	/// @throws {BBMOD_Error} If loading fails.
 	/// @private
-	static from_file = function (_file) {
-		var _sha1 = (argument_count > 1) ? argument[1] : undefined;
-
+	static from_file = function (_file, _sha1) {
 		if (!file_exists(_file))
 		{
 			throw new BBMOD_Error("File " + _file + " does not exist!");
@@ -226,8 +223,7 @@ function bbmod_animation_create_transition(_model, _anim_from, _time_from, _anim
 function bbmod_get_animation_time(_animation, _time_in_seconds)
 {
 	gml_pragma("forceinline");
-	var _time_in_tics = _time_in_seconds * _animation.TicsPerSecond;
-	return (_time_in_tics mod _animation.Duration);
+	return _animation.get_animation_time(_time_in_seconds);
 }
 
 /// @func bbmod_get_interpolated_position_key(_positions, _time[, _index])
@@ -239,9 +235,9 @@ function bbmod_get_animation_time(_animation, _time_in_seconds)
 /// position keys for specified time. Defaults to 0.
 /// @return {BBMOD_EPositionKey} The interpolated position key.
 /// @private
-function bbmod_get_interpolated_position_key(_positions, _time)
+function bbmod_get_interpolated_position_key(_positions, _time, _index)
 {
-	var _index = (argument_count > 2) ? argument[2] : 0;
+	_index = !is_undefined(_index) ? _index : 0;
 	var k = bbmod_find_animation_key(_positions, _time, _index);
 	var _position_key = bbmod_get_animation_key(_positions, k);
 	var _position_key_next = bbmod_get_animation_key(_positions, k + 1);
@@ -260,9 +256,9 @@ function bbmod_get_interpolated_position_key(_positions, _time)
 /// rotation keys for specified time. Defaults to 0.
 /// @return {BBMOD_ERotationKey} The interpolated rotation key.
 /// @private
-function bbmod_get_interpolated_rotation_key(_rotations, _time)
+function bbmod_get_interpolated_rotation_key(_rotations, _time, _index)
 {
-	var _index = (argument_count > 2) ? argument[2] : 0;
+	_index = !is_undefined(_index) ? _index : 0;
 	var k = bbmod_find_animation_key(_rotations, _time, _index);
 	var _rotation_key = bbmod_get_animation_key(_rotations, k);
 	var _rotation_key_next = bbmod_get_animation_key(_rotations, k + 1);

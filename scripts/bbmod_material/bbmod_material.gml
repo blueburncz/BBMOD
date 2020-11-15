@@ -84,6 +84,11 @@ function bbmod_material_on_apply_default(_material)
 		gpu_set_tex_mip_enable(mip_off);
 	}
 
+	if (!_material.Filtering)
+	{
+		gpu_set_tex_filter(false);
+	}
+
 	_bbmod_shader_set_alpha_test(_shader, _material.AlphaTest);
 
 	texture_set_stage(shader_get_sampler_index(_shader, "u_texNormalRoughness"),
@@ -152,7 +157,14 @@ function BBMOD_Material(_shader) constructor
 	AlphaTest = 1;
 
 	/// @var {bool} Use `false` to disable mimapping for this material.
+	/// @note Mipmapping needs to be enabled in the first place using `gpu_set_tex_mip_enable`
+	/// for this to have any effect.
 	Mipmapping = true;
+
+	/// @var {bool} Use `false` to disable linear texture filtering for this material.
+	/// @note Texture filtering needs to be enabled in the first place using `gpu_set_tex_filter`
+	/// for this to have any effect.
+	Filtering = true;
 
 	/// @var {ptr} A texture with a base color in the RGB channels and opacity in the
 	/// alpha channel.
@@ -252,11 +264,9 @@ function BBMOD_Material(_shader) constructor
 /// @param {ptr} [_normal_roughness] A texture with normals in RGB and roughness in alpha.
 /// @return {BBMOD_Material} The created material.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Material} instead.
-function bbmod_material_create(_shader)
+function bbmod_material_create(_shader, _base_opacity, _normal_roughness)
 {
 	gml_pragma("forceinline");
-	var _base_opacity = (argument_count > 1) ? argument[1] : undefined;
-	var _normal_roughness = (argument_count > 2) ? argument[2] : undefined;
 	var _material = new BBMOD_Material(_shader);
 	if (_base_opacity != undefined)
 	{

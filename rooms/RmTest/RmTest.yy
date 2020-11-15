@@ -47,7 +47,7 @@
   },
   "parent": {
     "name": "Test",
-    "path": "folders/Rooms/Test.yy",
+    "path": "folders/Test.yy",
   },
   "resourceVersion": "1.0",
   "name": "RmTest",

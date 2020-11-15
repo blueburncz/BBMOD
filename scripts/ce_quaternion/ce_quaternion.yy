@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "CE",
-    "path": "folders/Scripts/BBMOD/ThirdParty/CE.yy",
+    "name": "Math",
+    "path": "folders/CE/Scripts/Math.yy",
   },
   "resourceVersion": "1.0",
   "name": "ce_quaternion",

@@ -1,5 +1,3 @@
-CE_PRAGMA_ONCE;
-
 /// @func ce_quaternion_create(_x, _y, _z, _w)
 /// @desc Creates a quaternion.
 /// @param {real} _x The x component of the quaternion.

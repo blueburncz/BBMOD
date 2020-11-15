@@ -127,10 +127,10 @@ function BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bone
 /// @param {bool} [_ids] `true` if the vertex format must have ids for dynamic batching.
 /// @return {BBMOD_VertexFormat} The vertex format.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_VertexFomat} instead.
-function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones)
+function bbmod_get_vertex_format(_vertices, _normals, _uvs, _colors, _tangentw, _bones, _ids)
 {
 	gml_pragma("forceinline");
-	var _ids = (argument_count > 6) ? argument[6] : false;
+	_ids = !is_undefined(_ids) ? _ids : false;
 	return new BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bones, _ids);
 }
 

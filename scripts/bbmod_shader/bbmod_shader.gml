@@ -5,7 +5,7 @@
 global.bbmod_camera_position = [0, 0, 0];
 
 /// @var {real} The current camera exposure.
-global.bbmod_camera_exposure = 0.1;
+global.bbmod_camera_exposure = 1.0;
 
 /// @var {ptr} The texture that is currently used for IBL.
 /// @private
@@ -19,9 +19,11 @@ global.__bbmod_ibl_texel = 0;
 /// @param {shader} _shader
 /// @param {real[]} [_camera_position]
 /// @private
-function _bbmod_shader_set_camera_position(_shader)
+function _bbmod_shader_set_camera_position(_shader, _camera_position)
 {
-	var _camera_position = (argument_count > 1) ? argument[1] : global.bbmod_camera_position;
+	_camera_position = !is_undefined(_camera_position)
+		? _camera_position
+		: global.bbmod_camera_position;
 	shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vCamPos"),
 		_camera_position);
 }
@@ -40,9 +42,9 @@ function _bbmod_shader_set_dynamic_batch_data(_shader, _data)
 /// @param {shader} _shader
 /// @param {real} [_exposure]
 /// @private
-function _bbmod_shader_set_exposure(_shader)
+function _bbmod_shader_set_exposure(_shader, _exposure)
 {
-	var _exposure = (argument_count > 1) ? argument[1] : global.bbmod_camera_exposure;
+	_exposure = !is_undefined(_exposure) ? _exposure : global.bbmod_camera_exposure;
 	shader_set_uniform_f(shader_get_uniform(_shader, "u_fExposure"),
 		_exposure);
 }
@@ -55,12 +57,12 @@ function _bbmod_shader_set_exposure(_shader)
 function _bbmod_shader_set_ibl(_shader, _texture, _texel)
 {
 	var _ibl = shader_get_sampler_index(_shader, "u_texIBL");
+	gpu_set_tex_mip_enable_ext(_ibl, mip_off);
 	texture_set_stage(_ibl, _texture);
-	gpu_set_tex_max_mip_ext(_ibl, mip_off);
 
 	var _brdf = shader_get_sampler_index(_shader, "u_texBRDF");
+	gpu_set_tex_mip_enable_ext(_brdf, mip_off);
 	texture_set_stage(_brdf, sprite_get_texture(BBMOD_SprEnvBRDF, 0));
-	gpu_set_tex_max_mip_ext(_brdf, mip_off);
 
 	shader_set_uniform_f(shader_get_uniform(_shader, "u_vIBLTexel"),
 		_texel, _texel);

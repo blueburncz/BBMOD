@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Scripts",
-    "path": "folders/BBMOD/Scripts.yy",
+    "name": "Utils",
+    "path": "folders/CE/Scripts/Utils.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_legacy",
+  "name": "ce_array_utils",
   "tags": [],
   "resourceType": "GMScript",
 }

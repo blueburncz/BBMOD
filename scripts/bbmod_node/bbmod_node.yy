@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "BBMOD",
-    "path": "folders/Scripts/BBMOD.yy",
+    "name": "Model",
+    "path": "folders/BBMOD/Scripts/Model.yy",
   },
   "resourceVersion": "1.0",
   "name": "bbmod_node",

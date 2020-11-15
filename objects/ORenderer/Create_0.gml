@@ -61,25 +61,14 @@ for (var i = 0; i < BATCH_SIZE; ++i)
 	instance_create_layer(_x, _y, layer, OModel);
 }
 
-#macro TEST_ANIMATIONS false
+#macro TEST_ANIMATIONS true
 
 if (TEST_ANIMATIONS)
 {
-	character = new BBMOD_Model("Brute.bbmod");
-	anim_idle = new BBMOD_Animation("Idle.bbanim");
-	anim_idle.TransitionIn = 0;
-	anim_attack = new BBMOD_Animation("Attack.bbanim");
-	anim_current = undefined;
+	character = new BBMOD_Model("Assets/Character.bbmod");
+	anim_idle = new BBMOD_Animation("Assets/Idle.bbanim");
 	animation_player = new BBMOD_AnimationPlayer(character);
-	animation_player.OnEvent = function (_event, _animation) {
-		switch (_event)
-		{
-		case BBMOD_EV_ANIMATION_END:
-			if (_animation == anim_attack)
-			{
-				anim_current = undefined;
-			}
-			break;
-		}
-	};
+	animation_player.play(anim_idle, true);
+	sum = 0;
+	times = 0;
 }

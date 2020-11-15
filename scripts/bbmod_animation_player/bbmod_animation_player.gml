@@ -36,7 +36,7 @@ global.__bbmod_anim_stack = ds_stack_create();
 /// ```
 /// @see BBMOD_Model
 /// @see BBMOD_Animation
-function BBMOD_AnimationPlayer(_model) constructor
+function BBMOD_AnimationPlayer(_model, _paused) constructor
 {
 	/// @var {BBMOD_Model} A model that the animation player animates.
 	/// @readonly
@@ -63,7 +63,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	NodeRotationOverride = array_create(Model.NodeCount, undefined);
 
 	/// @var {bool} If `true`, then the animation playback is paused.
-	Paused = (argument_count > 1) ? argument[1] : false;
+	Paused = !is_undefined(_paused) ? _paused : false;
 
 	/// @var {real} The current animation playback time.
 	Time = 0;
@@ -98,6 +98,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @desc Calculates skeleton's current transformation matrices.
 	/// @param {BBMOD_AnimationInstance} _animation_instance An animation instance.
 	/// @param {real} _animation_time The current animation time.
+	/// @return {BBMOD_AnimationPlayer} Returns `self` to allow method chaining.
 	/// @private
 	static animate = function (_animation_instance, _animation_time) {
 		//var _t = get_timer();
@@ -376,19 +377,22 @@ function BBMOD_AnimationPlayer(_model) constructor
 		}
 
 		//show_debug_message(get_timer() - _t);
+
+		return self;
 	}
 
 	/// @func update()
 	/// @desc Updates the animation player. This should be called every frame in
 	/// the step event.
+	/// @param {real} _delta_time The `delta_time`.
 	/// @return {BBMOD_AnimationPlayer} Returns `self` to allow method chaining.
-	static update = function () {
+	static update = function (_delta_time) {
 		if (Paused)
 		{
 			return self;
 		}
 
-		Time += delta_time * 0.000001 * PlaybackSpeed;
+		Time += _delta_time * 0.000001 * PlaybackSpeed;
 
 		repeat (ds_list_size(Animations))
 		{
@@ -454,8 +458,8 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// @param {bool} [_loop] If `true` then the animation will be looped. Defaults
 	/// to `false`.
 	/// @return {BBMOD_AnimationPlayer} Returns `self` to allow method chaining.
-	static play = function (_animation) {
-		var _loop = (argument_count > 1) ? argument[1] : false;
+	static play = function (_animation, _loop) {
+		_loop = !is_undefined(_loop) ? _loop : false;
 		//Time = 0;
 		var _animation_list = Animations;
 		var _animation_last = AnimationInstanceLast;
@@ -578,7 +582,7 @@ function BBMOD_AnimationPlayer(_model) constructor
 	/// delete animation_player;
 	/// ```
 	static destroy = function () {
-		ds_list_destroy(_animation_player.Animations);
+		ds_list_destroy(Animations);
 	};
 }
 
@@ -616,10 +620,12 @@ function bbmod_animation_player_destroy(_animation_player)
 /// improves framerate. Defaults to `true`.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.update}
 /// instead.
-function bbmod_animation_player_update(_anim_player, _current_time)
+function bbmod_animation_player_update(_anim_player, _current_time, _interpolate_frames)
 {
 	gml_pragma("forceinline");
-	_anim_player.InterpolateFrames = (argument_count > 2) ? argument[2] : true;
+	_anim_player.InterpolateFrames = !is_undefined(_interpolate_frames)
+		? _interpolate_frames
+		: true;
 	_anim_player.update();
 }
 
@@ -689,9 +695,9 @@ function bbmod_set_bone_rotation(_animation_player, _bone_id, _quaternion)
 /// @param {BBMOD_Animation} _animation The animation to play.
 /// @param {bool} [_loop] `true` to loop the animation. Defaults to `false`.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_AnimationPlayer.play} instead.
-function bbmod_play(_animation_player, _animation)
+function bbmod_play(_animation_player, _animation, _loop)
 {
 	gml_pragma("forceinline");
-	var _loop = (argument_count > 2) ? argument[2] : false;
+	_loop = !is_undefined(_loop) ? _loop : false;
 	_animation_player.play(_animation, _loop);
 }

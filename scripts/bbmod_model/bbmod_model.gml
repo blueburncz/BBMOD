@@ -15,10 +15,8 @@
 /// }
 /// ```
 /// @throws {BBMOD_Error} When the model fails to load.
-function BBMOD_Model(_file) constructor
+function BBMOD_Model(_file, _sha1) constructor
 {
-	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
-
 	/// @var {real} The version of the model file.
 	/// @readonly
 	Version = 0;
@@ -60,9 +58,21 @@ function BBMOD_Model(_file) constructor
 	/// @readonly
 	MaterialCount = 0;
 
-	/// @var {string[]} Array of material names.
+	/// @var {string[]} An array of material names.
+	/// @see BBMOD_Model.Materials
+	/// @see BBMOD_Model.get_material
+	/// @see BBMOD_Model.set_material
 	/// @readonly
 	MaterialNames = [];
+
+	/// @var {BBMOD_Material[]} An array of materials. Each entry defaults to
+	/// {@link BBMOD_MATERIAL_DEFAULT} or {@link BBMOD_MATERIAL_DEFAULT_ANIMATED}
+	/// for animated models.
+	/// @see BBMOD_Model.MaterialNames
+	/// @see BBMOD_Model.get_material
+	/// @see BBMOD_Model.set_material
+	/// @see BBMOD_Material
+	Materials = [];
 
 	/// @func from_buffer(_buffer)
 	/// @desc Loads model data from a buffer.
@@ -111,6 +121,10 @@ function BBMOD_Model(_file) constructor
 
 		if (MaterialCount > 0)
 		{
+			var _material_default = (BoneCount > 0)
+				? BBMOD_MATERIAL_DEFAULT_ANIMATED
+				: BBMOD_MATERIAL_DEFAULT;
+			Materials = array_create(MaterialCount, _material_default);
 			var _material_names = array_create(MaterialCount, undefined);
 
 			i  = 0;
@@ -133,9 +147,7 @@ function BBMOD_Model(_file) constructor
 	/// @return {BBMOD_Model} Returns `self` to allow method chaining.
 	/// @throws {BBMOD_Error} If loading fails.
 	/// @private
-	static from_file = function (_file) {
-		var _sha1 = (argument_count > 1) ? argument[1] : undefined;
-
+	static from_file = function (_file, _sha1) {
 		if (!file_exists(_file))
 		{
 			throw new BBMOD_Error("File " + _file + " does not exist!");
@@ -174,6 +186,7 @@ function BBMOD_Model(_file) constructor
 	/// @func freeze()
 	/// @desc Freezes all vertex buffers used by the model. This should make its
 	/// rendering faster, but it disables creating new batches of the model.
+	/// @return {BBMOD_Model} Returns `self` to allow method chaining.
 	static freeze = function () {
 		gml_pragma("forceinline");
 		var i = 0;
@@ -181,6 +194,7 @@ function BBMOD_Model(_file) constructor
 		{
 			_bbmod_mesh_freeze(Meshes[i++]);
 		}
+		return self;
 	};
 
 	/// @func find_node_id(_node_name)
@@ -239,6 +253,52 @@ function BBMOD_Model(_file) constructor
 		return _transform;
 	};
 
+	/// @func get_material(_name)
+	/// @desc Retrieves a material by its name.
+	/// @param {string} _name The name of the material.
+	/// @return {BBMOD_Material} The material.
+	/// @throws {BBMOD_Error} If the model doesn't have a material with given name.
+	/// @see BBMOD_Model.Materials
+	/// @see BBMOD_Model.MaterialNames
+	/// @see BBMOD_Model.set_material
+	/// @see BBMOD_Material
+	static get_material = function (_name) {
+		var i = 0;
+		repeat (MaterialCount)
+		{
+			if (MaterialNames[i] == _name)
+			{
+				return Materials[i];
+			}
+			++i;
+		}
+		throw new BBMOD_Error("No such material found!");
+	};
+
+	/// @func set_material(_name, _material)
+	/// @desc Sets a material.
+	/// @param {string} _name The name of the material slot.
+	/// @param {BBMOD_Material} _material The material.
+	/// @throws {BBMOD_Error} If the model doesn't have a material with given name.
+	/// @return {BBMOD_Model} Returns `self` to allow method chaining.
+	/// @see BBMOD_Model.Materials
+	/// @see BBMOD_Model.MaterialNames
+	/// @see BBMOD_Model.get_material
+	/// @see BBMOD_Material
+	static set_material = function (_name, _material) {
+		var i = 0;
+		repeat (MaterialCount)
+		{
+			if (MaterialNames[i] == _name)
+			{
+				Materials[@ i] = _material;
+				return self;
+			}
+			++i;
+		}
+		throw new BBMOD_Error("No such material found!");
+	};
+
 	/// @func get_vertex_format([_bones[, _ids]])
 	/// @desc Retrieves or creates a vertex format compatible with the model.
 	/// This can be used when creating a {@link BBMOD_StaticBatch}.
@@ -252,10 +312,10 @@ function BBMOD_Model(_file) constructor
 	/// ```gml
 	/// static_batch = new BBMOD_StaticBatch(mod_tree.get_vertex_format());
 	/// ```
-	static get_vertex_format = function () {
+	static get_vertex_format = function (_bones, _ids) {
 		gml_pragma("forceinline");
-		var _bones = (argument_count > 0) ? argument[0] : true;
-		var _ids = (argument_count > 1) ? argument[1] : false;
+		_bones = !is_undefined(_bones) ? _bones : true;
+		_ids = !is_undefined(_ids) ? _ids : false;
 		return new BBMOD_VertexFormat(
 			VertexFormat.Vertices,
 			VertexFormat.Normals,
@@ -270,9 +330,10 @@ function BBMOD_Model(_file) constructor
 	/// @desc Submits the model for rendering.
 	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
 	/// one for each material slot of the model. If not specified, then
-	/// the default material is used for each slot. Defaults to `undefined`.
+	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {real[]/undefined} [_transform] An array of transformation matrices
 	/// (for animated models) or `undefined`.
+	/// @return {BBMOD_Model} Returns `self` to allow method chaining.
 	/// @example
 	/// ```gml
 	/// bbmod_material_reset();
@@ -285,20 +346,13 @@ function BBMOD_Model(_file) constructor
 	/// @see BBMOD_Material
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
-	static render = function () {
-		var _materials = (argument_count > 0) ? argument[0] : undefined;
-		var _transform = (argument_count > 1) ? argument[1] : undefined;
-
-		if (is_undefined(_materials))
-		{
-			_materials = array_create(
-				MaterialCount,
-				is_undefined(_transform)
-					? BBMOD_MATERIAL_DEFAULT
-					: BBMOD_MATERIAL_DEFAULT_ANIMATED);
-		}
-
+	static render = function (_materials, _transform) {
 		var _render_pass = global.bbmod_render_pass;
+
+		if (_materials == undefined)
+		{
+			_materials = Materials;
+		}
 
 		var i = 0;
 		repeat (array_length(_materials))
@@ -313,6 +367,7 @@ function BBMOD_Model(_file) constructor
 		}
 
 		bbmod_node_render(self, RootNode, _materials, _transform);
+		return self;
 	};
 
 	/// @func destroy()
@@ -335,6 +390,7 @@ function BBMOD_Model(_file) constructor
 	/// @func to_dynamic_batch(_model, _dynamic_batch)
 	/// @param {BBMOD_Model} _model
 	/// @param {BBMOD_DynamicBatch} _dynamic_batch
+	/// @return {BBMOD_DynamicBatch} Returns `self` to allow method chaining.
 	/// @private
 	function to_dynamic_batch(_dynamic_batch)
 	{
@@ -344,12 +400,14 @@ function BBMOD_Model(_file) constructor
 		{
 			_bbmod_mesh_to_dynamic_batch(Meshes[i++], _dynamic_batch);
 		}
+		return self;
 	}
 
 	/// @func to_static_batch(_model, _static_batch, _transform)
 	/// @param {BBMOD_Model} _model
 	/// @param {BBMOD_StaticBatch} _static_batch
 	/// @param {matrix} _transform
+	/// @return {BBMOD_DynamicBatch} Returns `self` to allow method chaining.
 	/// @private
 	function to_static_batch(_static_batch, _transform)
 	{
@@ -359,6 +417,7 @@ function BBMOD_Model(_file) constructor
 		{
 			_bbmod_mesh_to_static_batch(self, Meshes[i++], _static_batch, _transform);
 		}
+		return self;
 	}
 
 	if (_file != undefined)
@@ -427,11 +486,9 @@ function bbmod_model_get_bindpose_transform(_model)
 /// @return {real} The vertex format.
 /// @deprecated This function is deprecated. Please use
 /// {@link BBMOD_Model.get_vertex_format} instead.
-function bbmod_model_get_vertex_format(_model)
+function bbmod_model_get_vertex_format(_model, _bones, _ids)
 {
 	gml_pragma("forceinline");
-	var _bones = (argument_count > 1) ? argument[1] : true;
-	var _ids = (argument_count > 2) ? argument[2] : false;
 	return _model.get_vertex_format(_bones, _ids);
 }
 
@@ -445,10 +502,8 @@ function bbmod_model_get_vertex_format(_model)
 /// (for animated models) or `undefined`.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Model.render}
 /// instead.
-function bbmod_render(_model)
+function bbmod_render(_model, _materials, _transform)
 {
 	gml_pragma("forceinline");
-	var _materials = (argument_count > 1) ? argument[1] : undefined;
-	var _transform = (argument_count > 2) ? argument[2] : undefined;
 	_model.render(_materials, _transform);
 }

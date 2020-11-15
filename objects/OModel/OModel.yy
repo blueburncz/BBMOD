@@ -25,7 +25,7 @@
   "overriddenProperties": [],
   "parent": {
     "name": "Test",
-    "path": "folders/Objects/Test.yy",
+    "path": "folders/Test.yy",
   },
   "resourceVersion": "1.0",
   "name": "OModel",

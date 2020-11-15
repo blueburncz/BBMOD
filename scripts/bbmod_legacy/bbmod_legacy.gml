@@ -25,9 +25,8 @@
 /// {@link BBMOD_NONE} on fail.
 /// @deprecated This function is deprecated. Please use {@link BBMOD_Model}
 /// and {@link BBMOD_Animation} instead to load resources.
-function bbmod_load(_file)
+function bbmod_load(_file, _sha1)
 {
-	var _sha1 = (argument_count > 1) ? argument[1] : undefined;
 	var _ext = filename_ext(_file);
 
 	if (_ext == ".bbmod")

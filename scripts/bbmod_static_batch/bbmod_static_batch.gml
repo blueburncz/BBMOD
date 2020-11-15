@@ -40,15 +40,18 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// @desc Begins adding models into the static batch.
 	/// @see BBMOD_StaticBatch.add
 	/// @see BBMOD_StaticBatch.finish
+	/// @return {BBMOD_StaticBatch} Returns `self` to allow method chaining.
 	static start = function () {
 		gml_pragma("forceinline");
 		vertex_begin(VertexBuffer, VertexFormat.Raw);
+		return self;
 	};
 
 	/// @func add(_model, _transform)
 	/// @desc Adds a model to the static batch.
 	/// @param {BBMOD_Model} _model The model.
 	/// @param {real[]} _transform A transformation matrix of the model.
+	/// @return {BBMOD_StaticBatch} Returns `self` to allow method chaining.
 	/// @example
 	/// ```gml
 	/// mod_tree = new BBMOD_Model("Tree.bbmod");
@@ -69,27 +72,33 @@ function BBMOD_StaticBatch(_vformat) constructor
 	static add = function (_model, _transform) {
 		gml_pragma("forceinline");
 		_model.to_static_batch(self, _transform);
+		return self;
 	};
 
 	/// @func finish()
 	/// @desc Ends adding models into the static batch.
+	/// @return {BBMOD_StaticBatch} Returns `self` to allow method chaining.
 	/// @see BBMOD_StaticBatch.start
 	static finish = function () {
 		gml_pragma("forceinline");
 		vertex_end(VertexBuffer);
+		return self;
 	};
 
 	/// @func freeze()
 	/// @desc Freezes the static batch. This makes it render faster, but disables
 	/// adding more models.
+	/// @return {BBMOD_StaticBatch} Returns `self` to allow method chaining.
 	static freeze = function () {
 		gml_pragma("forceinline");
 		vertex_freeze(VertexBuffer);
+		return self;
 	};
 
 	/// @func render(_material)
 	/// @desc Submits the static batch for rendering.
 	/// @param {BBMOD_Material} _material A material.
+	/// @return {BBMOD_StaticBatch} Returns `self` to allow method chaining.
 	static render = function (_material) {
 		if ((_material.RenderPath & global.bbmod_render_pass) == 0)
 		{
@@ -99,6 +108,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 		}
 		_material.apply();
 		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
+		return self;
 	};
 
 	/// @func destroy()

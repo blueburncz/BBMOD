@@ -131,25 +131,5 @@ case EMode.Dynamic:
 
 if (TEST_ANIMATIONS)
 {
-	var _animation = anim_current;
-	var _loop = false;
-
-	if (_animation != anim_attack && mouse_check_button_pressed(mb_left))
-	{
-		_animation = anim_attack;
-	}
-
-	if (_animation == undefined)
-	{
-		_animation = anim_idle;
-		_loop = true;
-	}
-
-	if (anim_current != _animation)
-	{
-		animation_player.play(_animation, _loop);
-		anim_current = _animation;
-	}
-
-	animation_player.update();
+	animation_player.update(delta_time);
 }
