@@ -1,8 +1,5 @@
 #pragma include("Default_VS.xsh", "glsl")
 
-#define in_TangentW in_TextureCoord1
-
-
 attribute vec4 in_Position;
 attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord0;

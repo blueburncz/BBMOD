@@ -1,10 +1,6 @@
 #pragma include("Default_VS.xsh", "glsl")
 #define MAX_BATCH_DATA_SIZE 128
 
-#define in_TangentW in_TextureCoord1
-
-#define in_Id in_TextureCoord2
-
 attribute vec4 in_Position;
 attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord0;

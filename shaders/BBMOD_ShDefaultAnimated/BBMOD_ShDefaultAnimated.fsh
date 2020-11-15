@@ -268,7 +268,7 @@ Material UnpackMaterial(
 
 	vec4 normalRoughness = texture2D(texNormalRoughness, uv);
 	vec3 normal = normalize(tbn * (normalRoughness.rgb * 2.0 - 1.0));
-	float roughness = normalRoughness.a;
+	float roughness = mix(0.1, 0.9, normalRoughness.a);
 
 	vec4 metallicAO = texture2D(texMetallicAO, uv);
 	float metallic = metallicAO.r;

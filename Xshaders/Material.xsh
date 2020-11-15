@@ -1,47 +1,54 @@
-#pragma include("Color.xsh", "glsl")
+#pragma include("BRDF.xsh")
+#pragma include("Color.xsh")
+#pragma include("RGBM.xsh")
 
 struct Material
 {
-	vec3 Base;
+	Vec3 Base;
 	float Opacity;
-	vec3 Normal;
+	Vec3 Normal;
 	float Roughness;
 	float Metallic;
 	float AO;
-	vec4 Subsurface;
-	vec3 Emissive;
-	vec3 Specular;
+	Vec4 Subsurface;
+	Vec3 Emissive;
+	Vec3 Specular;
 };
 
 Material UnpackMaterial(
-	sampler2D texBaseOpacity,
-	sampler2D texNormalRoughness,
-	sampler2D texMetallicAO,
-	sampler2D texSubsurface,
-	sampler2D texEmissive,
-	mat3 tbn,
-	vec2 uv)
+	Texture2D texBaseOpacity,
+	Texture2D texNormalRoughness,
+	Texture2D texMetallicAO,
+	Texture2D texSubsurface,
+	Texture2D texEmissive,
+	Mat3 tbn,
+	Vec2 uv)
 {
-	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
-	vec3 base = xGammaToLinear(baseOpacity.rgb);
+	Vec4 baseOpacity = Sample(texBaseOpacity, uv);
+	Vec3 base = xGammaToLinear(baseOpacity.rgb);
 	float opacity = baseOpacity.a;
 
-	vec4 normalRoughness = texture2D(texNormalRoughness, uv);
+	Vec4 normalRoughness = Sample(texNormalRoughness, uv);
+#if XGLSL
 	vec3 normal = normalize(tbn * (normalRoughness.rgb * 2.0 - 1.0));
-	float roughness = normalRoughness.a;
+#else
+	float3 normal = mul(normalRoughness.rgb * 2.0 - 1.0, tbn);
+#endif
+	float roughness = Lerp(0.1, 0.9, normalRoughness.a);
 
-	vec4 metallicAO = texture2D(texMetallicAO, uv);
+	Vec4 metallicAO = Sample(texMetallicAO, uv);
 	float metallic = metallicAO.r;
 	float AO = metallicAO.g;
 
-	vec4 subsurface = texture2D(texSubsurface, uv);
+	Vec4 subsurface = Sample(texSubsurface, uv);
 	subsurface.rgb = xGammaToLinear(subsurface.rgb);
 
-	vec3 emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+	Vec3 emissive = xGammaToLinear(xDecodeRGBM(Sample(texEmissive, uv)));
 
-	vec3 specular = mix(X_F0_DEFAULT, base, metallic);
+	Vec3 specular = Lerp(X_F0_DEFAULT, base, metallic);
 	base *= (1.0 - metallic);
 
+#if XGLSL
 	return Material(
 		base,
 		opacity,
@@ -52,4 +59,17 @@ Material UnpackMaterial(
 		subsurface,
 		emissive,
 		specular);
+#else
+	Material material;
+	material.Base = base;
+	material.Opacity = opacity;
+	material.Normal = normal;
+	material.Roughness = roughness;
+	material.Metallic = metallic;
+	material.AO = AO;
+	material.Subsurface = subsurface;
+	material.Emissive = emissive;
+	material.Specular = specular;
+	return material;
+#endif
 }

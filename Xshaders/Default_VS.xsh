@@ -4,15 +4,6 @@
 #define MAX_BATCH_DATA_SIZE 128
 #endif
 
-#define in_TangentW in_TextureCoord1
-
-#if ANIMATED
-#define in_BoneIndex in_TextureCoord2
-#define in_BoneWeight in_TextureCoord3
-#elif BATCHED
-#define in_Id in_TextureCoord2
-#endif
-
 attribute vec4 in_Position;
 attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord0;

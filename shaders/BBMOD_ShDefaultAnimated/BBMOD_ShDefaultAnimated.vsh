@@ -1,11 +1,6 @@
 #pragma include("Default_VS.xsh", "glsl")
 #define MAX_BONES 64
 
-#define in_TangentW in_TextureCoord1
-
-#define in_BoneIndex in_TextureCoord2
-#define in_BoneWeight in_TextureCoord3
-
 attribute vec4 in_Position;
 attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord0;
