@@ -27,7 +27,7 @@ global.__bbmod_anim_stack = ds_stack_create();
 /// animation_player.play(OResourceManager.anim_idle, true);
 ///
 /// /// @desc Step event of OCharacter
-/// animation_player.update();
+/// animation_player.update(delta_time);
 ///
 /// /// @desc Draw event of OCharacter
 /// bbmod_material_reset();
@@ -381,7 +381,7 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 		return self;
 	}
 
-	/// @func update()
+	/// @func update(_delta_time)
 	/// @desc Updates the animation player. This should be called every frame in
 	/// the step event.
 	/// @param {real} _delta_time The `delta_time`.
@@ -626,7 +626,7 @@ function bbmod_animation_player_update(_anim_player, _current_time, _interpolate
 	_anim_player.InterpolateFrames = !is_undefined(_interpolate_frames)
 		? _interpolate_frames
 		: true;
-	_anim_player.update();
+	_anim_player.update(delta_time);
 }
 
 /// @func bbmod_get_transform(_animation_player)

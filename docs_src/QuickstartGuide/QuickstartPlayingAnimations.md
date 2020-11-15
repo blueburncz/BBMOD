@@ -29,7 +29,7 @@ if (anim_current != _anim_last)
     animation_player.play(anim_current, true);
 }
 
-animation_player.update();
+animation_player.update(delta_time);
 ```
 
 Also do not forget to destroy the `BBMOD_AnimationPlayer` when the instance is destroyed,
