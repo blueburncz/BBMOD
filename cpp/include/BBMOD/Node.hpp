@@ -1,13 +1,20 @@
 #pragma once
 
-#include <assimp/matrix4x4.h>
+#include <BBMOD/Matrix.hpp>
+
 #include <string>
 #include <vector>
 #include <fstream>
 
-struct BBMOD_Node
+struct SNode
 {
+	SNode() : TransformMatrix MATRIX_IDENTITY
+	{
+	}
+
 	bool Save(std::ofstream& file);
+
+	static SNode* Load(std::ifstream& file);
 
 	std::string Name;
 
@@ -15,9 +22,9 @@ struct BBMOD_Node
 
 	bool IsBone = false;
 
-	aiMatrix4x4 TransformMatrix;
+	matrix_t TransformMatrix;
 
 	std::vector<size_t> Meshes;
 
-	std::vector<BBMOD_Node*> Children;
+	std::vector<SNode*> Children;
 };

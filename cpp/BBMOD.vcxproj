@@ -296,27 +296,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\BBMOD_Animation.cpp" />
-    <ClCompile Include="src\BBMOD_Mesh.cpp" />
-    <ClCompile Include="src\BBMOD_Bone.cpp" />
-    <ClCompile Include="src\BBMOD_Node.cpp" />
-    <ClCompile Include="src\BBMOD_Model.cpp" />
-    <ClCompile Include="src\bbmod.cpp" />
+    <ClCompile Include="src\BBMOD\Animation.cpp" />
+    <ClCompile Include="src\BBMOD\Mesh.cpp" />
+    <ClCompile Include="src\BBMOD\Bone.cpp" />
+    <ClCompile Include="src\BBMOD\Node.cpp" />
+    <ClCompile Include="src\BBMOD\Model.cpp" />
+    <ClCompile Include="src\bbmod\Importer.cpp" />
     <ClCompile Include="src\exports.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\terminal.cpp" />
-    <ClCompile Include="src\BBMOD_VertexFormat.cpp" />
+    <ClCompile Include="src\BBMOD\VertexFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\BBMOD_Animation.hpp" />
-    <ClInclude Include="src\BBMOD_Mesh.hpp" />
-    <ClInclude Include="src\BBMOD_Bone.hpp" />
-    <ClInclude Include="src\BBMOD_Node.hpp" />
-    <ClInclude Include="src\BBMOD_Model.hpp" />
-    <ClInclude Include="src\bbmod.hpp" />
-    <ClInclude Include="src\terminal.hpp" />
-    <ClInclude Include="src\BBMOD_VertexFormat.hpp" />
-    <ClInclude Include="src\utils.hpp" />
+    <ClInclude Include="include\BBMOD\Animation.hpp" />
+    <ClInclude Include="include\BBMOD\common.hpp" />
+    <ClInclude Include="include\BBMOD\Config.hpp" />
+    <ClInclude Include="include\BBMOD\Math.hpp" />
+    <ClInclude Include="include\BBMOD\Matrix.hpp" />
+    <ClInclude Include="include\BBMOD\Mesh.hpp" />
+    <ClInclude Include="include\BBMOD\Bone.hpp" />
+    <ClInclude Include="include\BBMOD\Node.hpp" />
+    <ClInclude Include="include\BBMOD\Model.hpp" />
+    <ClInclude Include="include\bbmod\Importer.hpp" />
+    <ClInclude Include="include\BBMOD\Quaternion.hpp" />
+    <ClInclude Include="include\BBMOD\Vector2.hpp" />
+    <ClInclude Include="include\BBMOD\Vector3.hpp" />
+    <ClInclude Include="include\BBMOD\Vector4.hpp" />
+    <ClInclude Include="include\terminal.hpp" />
+    <ClInclude Include="include\BBMOD\VertexFormat.hpp" />
+    <ClInclude Include="include\utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

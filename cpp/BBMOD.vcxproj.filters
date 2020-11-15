@@ -24,60 +24,84 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\bbmod.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\terminal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\exports.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BBMOD_VertexFormat.cpp">
+    <ClCompile Include="src\BBMOD\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BBMOD_Node.cpp">
+    <ClCompile Include="src\BBMOD\Bone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BBMOD_Model.cpp">
+    <ClCompile Include="src\BBMOD\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BBMOD_Mesh.cpp">
+    <ClCompile Include="src\BBMOD\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BBMOD_Bone.cpp">
+    <ClCompile Include="src\BBMOD\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BBMOD_Animation.cpp">
+    <ClCompile Include="src\BBMOD\VertexFormat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bbmod\Importer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\bbmod.hpp">
+    <ClInclude Include="include\terminal.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\terminal.hpp">
+    <ClInclude Include="include\utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\BBMOD_VertexFormat.hpp">
+    <ClInclude Include="include\BBMOD\Animation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\BBMOD_Node.hpp">
+    <ClInclude Include="include\BBMOD\Bone.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\BBMOD_Model.hpp">
+    <ClInclude Include="include\BBMOD\Mesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\BBMOD_Mesh.hpp">
+    <ClInclude Include="include\BBMOD\Model.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\BBMOD_Bone.hpp">
+    <ClInclude Include="include\BBMOD\Node.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\BBMOD_Animation.hpp">
+    <ClInclude Include="include\BBMOD\VertexFormat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils.hpp">
+    <ClInclude Include="include\BBMOD\common.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBMOD\Config.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bbmod\Importer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBMOD\Matrix.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBMOD\Quaternion.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBMOD\Math.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBMOD\Vector3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBMOD\Vector2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBMOD\Vector4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

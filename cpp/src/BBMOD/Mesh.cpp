@@ -1,11 +1,13 @@
-#include "BBMOD_Mesh.hpp"
-#include "BBMOD_Model.hpp"
-#include "bbmod.hpp"
-#include "terminal.hpp"
+#include <BBMOD/Mesh.hpp>
+#include <BBMOD/Model.hpp>
+#include <terminal.hpp>
+#include <utils.hpp>
+
+#include <assimp/scene.h>
+
 #include <map>
 #include <vector>
 #include <string>
-#include "utils.hpp"
 #include <iostream>
 
 /** Encodes color into a single integer as ARGB. */
@@ -47,9 +49,22 @@ static inline float GetBitangentSign(
 	return (dot < 0.0f) ? -1.0f : 1.0f;
 }
 
-BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBMODConfig& config)
+static inline void AssimpToVec2(aiVector2D& from, vec2_t to)
 {
-	BBMOD_Mesh* mesh = new BBMOD_Mesh();
+	to[0] = from.x;
+	to[1] = from.y;
+}
+
+static inline void AssimpToVec3(aiVector3D& from, vec3_t to)
+{
+	to[0] = from.x;
+	to[1] = from.y;
+	to[2] = from.z;
+}
+
+SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
+{
+	SMesh* mesh = new SMesh();
 
 	mesh->VertexFormat = model->VertexFormat;
 	mesh->MaterialIndex = aiMesh->mMaterialIndex;
@@ -106,15 +121,15 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 			exit(EXIT_FAILURE);
 		}
 
-		for (unsigned int f = config.invertWinding ? face.mNumIndices - 1 : 0; f >= 0 && f < face.mNumIndices; f += config.invertWinding ? -1 : +1)
+		for (unsigned int f = config.InvertWinding ? face.mNumIndices - 1 : 0; f >= 0 && f < face.mNumIndices; f += config.InvertWinding ? -1 : +1)
 		{
 			uint32_t idx = face.mIndices[f];
 
-			BBMOD_Vertex* vertex = new BBMOD_Vertex();
+			SVertex* vertex = new SVertex();
 			vertex->VertexFormat = mesh->VertexFormat;
 
 			// Vertex
-			vertex->Position = aiVector3D(aiMesh->mVertices[idx]);
+			AssimpToVec3(aiMesh->mVertices[idx], vertex->Position);
 
 			// Normal
 			aiVector3D normal;
@@ -123,11 +138,11 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 				normal = aiMesh->HasNormals()
 					? aiVector3D(aiMesh->mNormals[idx])
 					: aiVector3D();
-				if (config.flipNormals)
+				if (config.FlipNormals)
 				{
 					normal *= -1.0f;
 				}
-				vertex->Normal = normal;
+				AssimpToVec3(normal, vertex->Normal);
 			}
 
 			// Texture
@@ -136,15 +151,16 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 				aiVector3D texture = aiMesh->HasTextureCoords(0)
 					? aiMesh->mTextureCoords[0][idx]
 					: aiVector3D();
-				if (config.flipTextureHorizontally)
+				if (config.FlipTextureHorizontally)
 				{
 					texture.x = 1.0f - texture.x;
 				}
-				if (config.flipTextureVertically)
+				if (config.FlipTextureVertically)
 				{
 					texture.y = 1.0f - texture.y;
 				}
-				vertex->Texture = aiVector2D(texture.x, texture.y);
+				vertex->Texture[0] = texture.x;
+				vertex->Texture[1] = texture.y;
 			}
 
 			// Color
@@ -161,15 +177,14 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 				if (aiMesh->HasTangentsAndBitangents())
 				{
 					// Tangent
-					vertex->Tangent = aiVector3D(aiMesh->mTangents[idx]);
+					AssimpToVec3(aiMesh->mTangents[idx], vertex->Tangent);
 
 					// Bitangent sign
-					aiVector3D& bitangent = aiMesh->mBitangents[idx];
-					vertex->BitangentSign = GetBitangentSign(normal, vertex->Tangent, bitangent);
+					aiVector3D bitangent = aiMesh->mBitangents[idx];
+					vertex->BitangentSign = GetBitangentSign(normal, aiMesh->mTangents[idx], bitangent);
 				}
 				else
 				{
-					vertex->Tangent = aiVector3D(0.0f, 0.0f, 0.0f);
 					vertex->BitangentSign = 1.0f;
 				}
 			}
@@ -204,9 +219,9 @@ BBMOD_Mesh* BBMOD_Mesh::FromAssimp(aiMesh* aiMesh, BBMOD_Model* model, const BBM
 	return mesh;
 }
 
-bool BBMOD_Vertex::Save(std::ofstream& file)
+bool SVertex::Save(std::ofstream& file)
 {
-	BBMOD_VertexFormat* vertexFormat = VertexFormat;
+	SVertexFormat* vertexFormat = VertexFormat;
 
 	if (vertexFormat->Vertices)
 	{
@@ -252,19 +267,69 @@ bool BBMOD_Vertex::Save(std::ofstream& file)
 		FILE_WRITE_DATA(file, Id);
 	}
 
-
 	return true;
 }
 
+SVertex* SVertex::Load(std::ifstream& file, SVertexFormat* vertexFormat)
+{
+	SVertex* vertex = new SVertex();
+	vertex->VertexFormat = vertexFormat;
 
-bool BBMOD_Mesh::Save(std::ofstream& file)
+	if (vertexFormat->Vertices)
+	{
+		FILE_READ_VEC3(file, vertex->Position);
+	}
+
+	if (vertexFormat->Normals)
+	{
+		FILE_READ_VEC3(file, vertex->Normal);
+	}
+
+	if (vertexFormat->TextureCoords)
+	{
+		FILE_READ_VEC2(file, vertex->Texture);
+	}
+
+	if (vertexFormat->Colors)
+	{
+		FILE_READ_DATA(file, vertex->Color);
+	}
+
+	if (vertexFormat->TangentW)
+	{
+		FILE_READ_VEC3(file, vertex->Tangent);
+		FILE_READ_DATA(file, vertex->BitangentSign);
+	}
+
+	if (vertexFormat->Bones)
+	{
+		for (size_t i = 0; i < 4; ++i)
+		{
+			FILE_READ_DATA(file, vertex->Bones[i]);
+		}
+
+		for (size_t i = 0; i < 4; ++i)
+		{
+			FILE_READ_DATA(file, vertex->Weights[i]);
+		}
+	}
+
+	if (vertexFormat->Ids)
+	{
+		FILE_READ_DATA(file, vertex->Id);
+	}
+
+	return vertex;
+}
+
+bool SMesh::Save(std::ofstream& file)
 {
 	FILE_WRITE_DATA(file, MaterialIndex);
 
 	size_t vertexCount = Data.size();
 	FILE_WRITE_DATA(file, vertexCount);
 
-	for (BBMOD_Vertex* vertex : Data)
+	for (SVertex* vertex : Data)
 	{
 		if (!vertex->Save(file))
 		{
@@ -273,4 +338,23 @@ bool BBMOD_Mesh::Save(std::ofstream& file)
 	}
 
 	return true;
+}
+
+SMesh* SMesh::Load(std::ifstream& file, SVertexFormat* vertexFormat)
+{
+	SMesh* mesh = new SMesh();
+	mesh->VertexFormat = vertexFormat;
+
+	FILE_READ_DATA(file, mesh->MaterialIndex);
+
+	size_t vertexCount;
+	FILE_READ_DATA(file, vertexCount);
+
+	for (size_t i = 0; i < vertexCount; ++i)
+	{
+		SVertex* vertex = SVertex::Load(file, vertexFormat);
+		mesh->Data.push_back(vertex);
+	}
+
+	return mesh;
 }

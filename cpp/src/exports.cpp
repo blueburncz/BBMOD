@@ -1,6 +1,6 @@
 #ifdef _WINDLL
 
-#include "bbmod.hpp"
+#include <BBMOD/Importer.hpp>
 
 #define GM_EXPORT extern "C" __declspec (dllexport)
 
@@ -14,126 +14,126 @@ typedef const char* gmstring_t;
 
 typedef void* gmptr_t;
 
-BBMODConfig gConfig;
+SConfig gConfig;
 
 GM_EXPORT gmreal_t bbmod_dll_get_left_handed()
 {
-	return (gmreal_t)gConfig.leftHanded;
+	return (gmreal_t)gConfig.LeftHanded;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_left_handed(gmreal_t leftHanded)
 {
-	gConfig.leftHanded = (bool)leftHanded;
+	gConfig.LeftHanded = (bool)leftHanded;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_invert_winding()
 {
-	return (gmreal_t)gConfig.invertWinding;
+	return (gmreal_t)gConfig.InvertWinding;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_invert_winding(gmreal_t invertWinding)
 {
-	gConfig.invertWinding = (bool)invertWinding;
+	gConfig.InvertWinding = (bool)invertWinding;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_disable_normal()
 {
-	 return (gmreal_t)gConfig.disableNormals;
+	 return (gmreal_t)gConfig.DisableNormals;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_disable_normal(gmreal_t disable)
 {
-	gConfig.disableNormals = (bool)disable;
+	gConfig.DisableNormals = (bool)disable;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_flip_normal()
 {
-	return (gmreal_t)gConfig.flipNormals;
+	return (gmreal_t)gConfig.FlipNormals;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_flip_normal(gmreal_t flip)
 {
-	gConfig.flipNormals = (bool)flip;
+	gConfig.FlipNormals = (bool)flip;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_gen_normal()
 {
-	return (gmreal_t)gConfig.genNormals;
+	return (gmreal_t)gConfig.GenNormals;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_gen_normal(gmreal_t generate)
 {
-	gConfig.genNormals = (size_t)generate;
+	gConfig.GenNormals = (size_t)generate;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_disable_uv()
 {
-	return (gmreal_t)gConfig.disableTextureCoords;
+	return (gmreal_t)gConfig.DisableTextureCoords;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_disable_uv(gmreal_t disable)
 {
-	gConfig.disableTextureCoords = (bool)disable;
+	gConfig.DisableTextureCoords = (bool)disable;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_flip_uv_horizontally()
 {
-	return (gmreal_t)gConfig.flipTextureHorizontally;
+	return (gmreal_t)gConfig.FlipTextureHorizontally;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_flip_uv_horizontally(gmreal_t flip)
 {
-	gConfig.flipTextureHorizontally = (bool)flip;
+	gConfig.FlipTextureHorizontally = (bool)flip;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_flip_uv_vertically()
 {
-	return (gmreal_t)gConfig.flipTextureVertically;
+	return (gmreal_t)gConfig.FlipTextureVertically;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_flip_uv_vertically(gmreal_t flip)
 {
-	gConfig.flipTextureVertically = (bool)flip;
+	gConfig.FlipTextureVertically = (bool)flip;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_disable_color()
 {
-	return (gmreal_t)gConfig.disableVertexColors;
+	return (gmreal_t)gConfig.DisableVertexColors;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_disable_color(gmreal_t disable)
 {
-	gConfig.disableVertexColors = (bool)disable;
+	gConfig.DisableVertexColors = (bool)disable;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_disable_tangent()
 {
-	return (gmreal_t)gConfig.disableTangentW;
+	return (gmreal_t)gConfig.DisableTangentW;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_disable_tangent(gmreal_t disable)
 {
-	gConfig.disableTangentW = (bool)disable;
+	gConfig.DisableTangentW = (bool)disable;
 	return BBMOD_SUCCESS;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_get_disable_bone()
 {
-	return (gmreal_t)gConfig.disableBones;
+	return (gmreal_t)gConfig.DisableBones;
 }
 
 GM_EXPORT gmreal_t bbmod_dll_set_disable_bone(gmreal_t disable)
 {
-	gConfig.disableBones = (bool)disable;
+	gConfig.DisableBones = (bool)disable;
 	return BBMOD_SUCCESS;
 }
 

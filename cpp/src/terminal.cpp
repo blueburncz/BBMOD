@@ -1,4 +1,4 @@
-#include "terminal.hpp"
+#include <terminal.hpp>
 
 #ifdef _WIN32
 #include <Windows.h>

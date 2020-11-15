@@ -2,9 +2,11 @@
 
 #include <fstream>
 
-struct BBMOD_VertexFormat
+struct SVertexFormat
 {
 	bool Save(std::ofstream& file);
+
+	static SVertexFormat* Load(std::ifstream& file);
 
 	bool Vertices = true;
 

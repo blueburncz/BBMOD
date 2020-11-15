@@ -1,10 +1,12 @@
-#include "bbmod.hpp"
-#include "terminal.hpp"
-#include "BBMOD_Model.hpp"
-#include "BBMOD_Animation.hpp"
+#include <BBMOD/Importer.hpp>
+#include <BBMOD/Model.hpp>
+#include <BBMOD/Animation.hpp>
+#include <terminal.hpp>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
 #include <fstream>
 #include <iostream>
 #include <filesystem>
@@ -33,7 +35,7 @@ static std::string GetFilename(const char* out, const char* name, const char* ex
 	return std::filesystem::path(out).replace_filename(fname.c_str()).replace_extension(extension).string();
 }
 
-static std::string GetAnimationFilename(BBMOD_Animation* animation, int index, const char* out)
+static std::string GetAnimationFilename(SAnimation* animation, int index, const char* out)
 {
 	std::string animationName = animation->Name;
 	std::regex pattern("\\|?(Armature|mixamo.com)\\|?");
@@ -48,7 +50,7 @@ static std::string GetAnimationFilename(BBMOD_Animation* animation, int index, c
 	return GetFilename(out, animationName.c_str(), ".bbanim");
 }
 
-static void LogNode(std::ofstream& log, BBMOD_Node* node, size_t indent)
+static void LogNode(std::ofstream& log, SNode* node, size_t indent)
 {
 	for (size_t i = 0; i < indent * 4; ++i)
 	{
@@ -56,18 +58,18 @@ static void LogNode(std::ofstream& log, BBMOD_Node* node, size_t indent)
 	}
 	log << (int)node->Index << ": " << node->Name << (node->IsBone ? " [bone]" : "") << std::endl;
 	++indent;
-	for (BBMOD_Node* child : node->Children)
+	for (SNode* child : node->Children)
 	{
 		LogNode(log, child, indent);
 	}
 }
 
-int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
+int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 {
 	std::ofstream log(GetFilename(fout, "log", ".txt"), std::ios::out);
 
 	Assimp::Importer* importer = new Assimp::Importer();
-	importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
+	//importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 
 	int flags = (0
 		// aiProcessPreset_TargetRealtime_Quality
@@ -87,16 +89,16 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 		| aiProcess_OptimizeGraph
 		| aiProcess_OptimizeMeshes);
 
-	if (config.genNormals == BBMOD_NORMALS_FLAT)
+	if (config.GenNormals == BBMOD_NORMALS_FLAT)
 	{
 		flags |= aiProcess_GenNormals;
 	}
-	else if (config.genNormals >= BBMOD_NORMALS_SMOOTH)
+	else if (config.GenNormals >= BBMOD_NORMALS_SMOOTH)
 	{
 		flags |= aiProcess_GenSmoothNormals;
 	}
 
-	if (config.leftHanded)
+	if (config.LeftHanded)
 	{
 		flags |= aiProcess_ConvertToLeftHanded;
 	}
@@ -111,7 +113,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 	}
 
 	// Write BBMOD
-	BBMOD_Model* model = BBMOD_Model::FromAssimp(scene, config);
+	SModel* model = SModel::FromAssimp(scene, config);
 
 	if (!model)
 	{
@@ -129,7 +131,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 
 	log << "Vertex format:" << std::endl;
 	log << "==============" << std::endl;
-	BBMOD_VertexFormat* vformat = model->VertexFormat;
+	SVertexFormat* vformat = model->VertexFormat;
 	if (vformat->Vertices) { log << "Position 3D" << std::endl; }
 	if (vformat->Normals) { log << "Normal" << std::endl; }
 	if (vformat->TextureCoords) { log << "Texture coords" << std::endl; }
@@ -170,7 +172,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 	log << std::endl;
 
 	// Write animations
-	if (!config.disableBones)
+	if (!config.DisableBones)
 	{
 		uint32_t numOfAnimations = scene->mNumAnimations;
 
@@ -178,7 +180,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const BBMODConfig& config)
 		{
 			for (uint32_t i = 0; i < numOfAnimations; ++i)
 			{
-				BBMOD_Animation* animation = BBMOD_Animation::FromAssimp(scene->mAnimations[i], model);
+				SAnimation* animation = SAnimation::FromAssimp(scene->mAnimations[i], model, config);
 		
 				if (!animation)
 				{
