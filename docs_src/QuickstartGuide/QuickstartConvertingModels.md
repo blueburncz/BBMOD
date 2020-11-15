@@ -5,7 +5,7 @@ GML using a DLL.
 --------------------------------------------------------------------------------
 
 ## Using CLI
-If you are comfortable with using CMD or PowerShell, all you have to do to convert a model is to run `BBMOD.exe` with path to the model you want to convert as the first parameter.
+If you are comfortable with using CMD or PowerShell, all you have to do to convert a model is to run `BBMOD.exe` (can be found in the Included Files) with path to the model you want to convert as the first parameter.
 
 If you don't have any previous experience with any of those, follow these steps:
 
