@@ -137,6 +137,39 @@ GM_EXPORT gmreal_t bbmod_dll_set_disable_bone(gmreal_t disable)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_optimize_materials()
+{
+	return (gmreal_t)gConfig.OptimizeMaterials;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_optimize_materials(gmreal_t optimize)
+{
+	gConfig.OptimizeMaterials = (bool)optimize;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_optimize_meshes()
+{
+	return (gmreal_t)gConfig.OptimizeMeshes;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_optimize_meshes(gmreal_t optimize)
+{
+	gConfig.OptimizeMeshes = (bool)optimize;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_optimize_nodes()
+{
+	return (gmreal_t)gConfig.OptimizeNodes;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_optimize_nodes(gmreal_t optimize)
+{
+	gConfig.OptimizeNodes = (bool)optimize;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_convert(gmstring_t fin, gmstring_t fout)
 {
 	return ConvertToBBMOD(fin, fout, gConfig);

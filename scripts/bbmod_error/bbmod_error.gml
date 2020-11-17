@@ -5,5 +5,5 @@ function BBMOD_Error(_msg) constructor
 {
 	/// @var {string} The error message.
 	/// @readonly
-	msg = !is_undefined(_msg) ? _msg : "";
+	Message = !is_undefined(_msg) ? _msg : "";
 }

@@ -50,6 +50,15 @@ struct SConfig
 	/** Flip normal vectors. */
 	bool FlipNormals = false;
 
+	/** Removes redundant/unreferenced materials. */
+	bool OptimizeMaterials = true;
+
+	/** Optimizes node hierarchy by joining multiple nodes into one. */
+	bool OptimizeNodes = true;
+
+	/** Reduces number of meshes. */
+	bool OptimizeMeshes = true;
+
 	/**
 	 * Configures generation of normal vectors.
 	 * 
