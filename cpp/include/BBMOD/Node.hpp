@@ -22,6 +22,8 @@ struct SNode
 
 	bool IsBone = false;
 
+	bool Visible = true;
+
 	matrix_t TransformMatrix;
 
 	std::vector<size_t> Meshes;

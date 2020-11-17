@@ -15,6 +15,10 @@ enum BBMOD_ENode
 	/// @member {bool} If `true` then the node is a bone.
 	/// @readonly
 	IsBone,
+	/// @member {bool} Set to `false` to disable rendering of the node and its
+	/// child nodes.
+	/// @readonly
+	Visible,
 	/// @member {matrix} A transformation matrix of the node.
 	/// @readonly
 	TransformMatrix,
@@ -43,6 +47,7 @@ function bbmod_node_load(_buffer, _format)
 	_node[@ BBMOD_ENode.Name] = buffer_read(_buffer, buffer_string);
 	_node[@ BBMOD_ENode.Index] = buffer_read(_buffer, buffer_f32);
 	_node[@ BBMOD_ENode.IsBone] = buffer_read(_buffer, buffer_bool);
+	_node[@ BBMOD_ENode.Visible] = true;
 	_node[@ BBMOD_ENode.TransformMatrix] = bbmod_load_matrix(_buffer);
 
 	// Meshes
@@ -91,6 +96,11 @@ function bbmod_node_render(_model, _node, _materials, _transform)
 	while (!ds_stack_empty(_render_stack))
 	{
 		_node = ds_stack_pop(_render_stack);
+
+		if (!_node[BBMOD_ENode.Visible])
+		{
+			continue;
+		}
 
 		var _mesh_indices = _node[BBMOD_ENode.Meshes];
 		var _children = _node[BBMOD_ENode.Children];

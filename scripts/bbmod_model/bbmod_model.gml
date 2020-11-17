@@ -197,6 +197,35 @@ function BBMOD_Model(_file, _sha1) constructor
 		return self;
 	};
 
+	/// @func find_node(_id_or_name)
+	/// @desc Finds a legacy node struct by its name or id.
+	/// @param {real/string} _id_or_name The id or the name of the node.
+	/// @return {BBMOD_ENode/BBMOD_NONE} Returns the found legacy node struct or
+	/// `BBMOD_NONE`.
+	static find_node = function (_id_or_name) {
+		var _is_name = is_string(_id_or_name);
+		var _node = (argument_count > 1) ? argument[1] : RootNode;
+		if (_is_name && _node[BBMOD_ENode.Name] == _id_or_name)
+		{
+			return _node;
+		}
+		if (!_is_name && _node[BBMOD_ENode.Index] == _id_or_name)
+		{
+			return _node;
+		}
+		var _children = _node[BBMOD_ENode.Children];
+		var i = 0;
+		repeat (array_length(_children))
+		{
+			var _found = find_node(_id_or_name, _children[i++]);
+			if (_found != BBMOD_NONE)
+			{
+				return _found;
+			}
+		}
+		return BBMOD_NONE;
+	};
+
 	/// @func find_node_id(_node_name)
 	/// @desc Finds model's node by its name.
 	/// @param {string} _node_name The name of the bone.
@@ -206,20 +235,11 @@ function BBMOD_Model(_file, _sha1) constructor
 	/// use the ids available from the `_log.txt` files, which are created during
 	/// model conversion.
 	static find_node_id = function (_node_name) {
-		var _node = (argument_count > 1) ? argument[1] : RootNode;
-		if (_node[BBMOD_ENode.Name] == _node_name)
+		gml_pragma("forceinline");
+		var _node = find_node(_node_name);
+		if (_node != BBMOD_NONE)
 		{
 			return _node[BBMOD_ENode.Index];
-		}
-		var _children = _node[BBMOD_ENode.Children];
-		var i = 0;
-		repeat (array_length(_children))
-		{
-			var _found = find_node_id(_node_name, _children[i++]);
-			if (_found != BBMOD_NONE)
-			{
-				return _found;
-			}
 		}
 		return BBMOD_NONE;
 	};
@@ -279,8 +299,8 @@ function BBMOD_Model(_file, _sha1) constructor
 	/// @desc Sets a material.
 	/// @param {string} _name The name of the material slot.
 	/// @param {BBMOD_Material} _material The material.
-	/// @throws {BBMOD_Error} If the model doesn't have a material with given name.
 	/// @return {BBMOD_Model} Returns `self` to allow method chaining.
+	/// @throws {BBMOD_Error} If the model doesn't have a material with given name.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
