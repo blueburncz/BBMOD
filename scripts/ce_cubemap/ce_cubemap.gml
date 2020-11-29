@@ -202,5 +202,9 @@ function CE_Cubemap(_resolution) constructor
 				surface_free(_surface);
 			}
 		}
+		if (surface_exists(Surface))
+		{
+			surface_free(Surface);
+		}
 	};
 }
