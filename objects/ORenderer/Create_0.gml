@@ -1,4 +1,4 @@
-show_debug_overlay(true);
+//show_debug_overlay(true);
 
 application_surface_enable(true);
 application_surface_draw_enable(false);
@@ -27,6 +27,10 @@ mouse_last_x = 0;
 mouse_last_y = 0;
 
 mod_sphere = new BBMOD_Model("BBMOD/Models/Sphere.bbmod");
+
+#macro TEST_CUBEMAP true
+
+cubemap = new CE_Cubemap(128);
 
 #macro BATCH_SIZE 64
 

@@ -133,3 +133,17 @@ if (TEST_ANIMATIONS)
 {
 	animation_player.update(delta_time);
 }
+
+if (TEST_CUBEMAP)
+{
+	if (keyboard_check(vk_control)
+		&& keyboard_check_pressed(ord("S"))
+		&& surface_exists(cubemap.Surface))
+	{
+		var _path = get_save_filename("PNG|*.png", "");
+		if (_path != "")
+		{
+			surface_save(cubemap.Surface, _path);
+		}
+	}
+}
