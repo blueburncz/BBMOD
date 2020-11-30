@@ -17,7 +17,6 @@ enum BBMOD_ENode
 	IsBone,
 	/// @member {bool} Set to `false` to disable rendering of the node and its
 	/// child nodes.
-	/// @readonly
 	Visible,
 	/// @member {matrix} A transformation matrix of the node.
 	/// @readonly
