@@ -2,7 +2,7 @@
 > 3D model format for GameMaker Studio 2
 
 [![License](https://img.shields.io/github/license/blueburn-cz/BBMOD)](LICENSE)
-[![Discord](https://img.shields.io/discord/298884075585011713?label=Discord)](https://discord.gg/v4Qf4Dq)
+[![Discord](https://img.shields.io/discord/298884075585011713?label=Discord)](https://discord.gg/ep2BGPm)
 
 # Table of Contents
 * [About](#about)
