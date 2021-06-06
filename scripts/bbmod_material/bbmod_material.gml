@@ -50,6 +50,7 @@ var _mat_sky = new BBMOD_Material(BBMOD_ShSky);
 _mat_sky.BaseOpacity = sprite_get_texture(_spr_sky, 0);
 _mat_sky.Culling = cull_noculling;
 _mat_sky.Mipmapping = false;
+_mat_sky.ZWrite = false;
 
 /// @macro {BBMOD_Material} The default sky material.
 /// @see BBMOD_Material
