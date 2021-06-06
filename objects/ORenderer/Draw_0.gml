@@ -42,7 +42,7 @@ function render_scene()
 		var _scale = 1;
 		matrix_stack_push(matrix_get(matrix_world));
 		matrix_set(matrix_world, matrix_build(-10, -10, 0, 0, 0, 0, _scale, _scale, _scale));
-		character.render(undefined, animation_player.get_transform());
+		animation_player.render();
 		matrix_set(matrix_world, matrix_stack_top());
 		matrix_stack_pop();
 	}

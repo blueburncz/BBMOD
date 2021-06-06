@@ -575,6 +575,18 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 		return self;
 	};
 
+	/// @func render([_materials])
+	/// @desc Renders the animated model.
+	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
+	/// one for each material slot of the model. If not specified, then
+	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @return {BBMOD_AnimationPlayer} Returns `self` to allow method chaining.
+	static render = function (_materials) {
+		gml_pragma("forceinline");
+		Model.render(_materials, get_transform());
+		return self;
+	};
+
 	/// @func destroy()
 	/// @desc Frees memory used by the animation player. Use this in combination
 	/// with `delete` to destroy the struct.
