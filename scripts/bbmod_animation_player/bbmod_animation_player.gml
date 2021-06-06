@@ -129,200 +129,202 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 			var _node_index = _node[BBMOD_ENode.Index];
 			var _node_data = _anim_nodes[_node_index];
 
-			if (_node_data != undefined)
+			ce_matrix_copy(_transform, _mat_transform);
+
+			#region Position
+			var _override = _position_overrides[_node_index];
+
+			if (_override != undefined)
 			{
-				#region Position
-				var _override = _position_overrides[_node_index];
+				_mat_transform[12] = _override[0];
+				_mat_transform[13] = _override[1];
+				_mat_transform[14] = _override[2];
+			}
+			else if (_node_data != undefined)
+			{
+				var _positions = _node_data[BBMOD_EAnimationNode.PositionKeys];
+				var _positions_size = array_length(_positions);
+				var _index = _position_key_last[_node_index];
+				var _position_key;
+				var _position_key_next;
 
-				if (_override == undefined)
+				#region Find position keys
+				repeat (_positions_size)
 				{
-					var _positions = _node_data[BBMOD_EAnimationNode.PositionKeys];
-					var _positions_size = array_length(_positions);
-					var _index = _position_key_last[_node_index];
-					var _position_key;
-					var _position_key_next;
-
-					#region Find position keys
-					repeat (_positions_size)
+					if (_index + 1 >= _positions_size)
 					{
-						if (_index + 1 >= _positions_size)
-						{
-							_index = 0;
-						}
-						_position_key = _positions[_index];
-						_position_key_next = _positions[clamp(_index + 1, 0, _positions_size - 1)];
-						if (_animation_time < _position_key_next[BBMOD_EAnimationKey.Time])
-						{
-							break;
-						}
-						++_index;
+						_index = 0;
 					}
-					#endregion Find position keys
-
-					_position_key_last[@ _node_index] = _index;
-
-					if (_interpolate_frames)
+					_position_key = _positions[_index];
+					_position_key_next = _positions[clamp(_index + 1, 0, _positions_size - 1)];
+					if (_animation_time < _position_key_next[BBMOD_EAnimationKey.Time])
 					{
-						var _position_key_time = _position_key[BBMOD_EAnimationKey.Time];
-						var _delta_time = _position_key_next[BBMOD_EAnimationKey.Time] - _position_key_time;
-						var _factor = (_delta_time == 0) ? 0 : (_animation_time - _position_key_time) / _delta_time;
-
-						var _pos_from = _position_key[BBMOD_EPositionKey.Position];
-						var _pos_to = _position_key_next[BBMOD_EPositionKey.Position];
-
-						_mat_transform[12] = lerp(_pos_from[0], _pos_to[0], _factor);
-						_mat_transform[13] = lerp(_pos_from[1], _pos_to[1], _factor);
-						_mat_transform[14] = lerp(_pos_from[2], _pos_to[2], _factor);
+						break;
 					}
-					else // Interpolated
-					{
-						var _pos_from = _position_key[BBMOD_EPositionKey.Position];
-
-						_mat_transform[12] = _pos_from[0];
-						_mat_transform[13] = _pos_from[1];
-						_mat_transform[14] = _pos_from[2];
-					} // No interpolation
+					++_index;
 				}
-				else // Animation
+				#endregion Find position keys
+
+				_position_key_last[@ _node_index] = _index;
+
+				if (_interpolate_frames)
 				{
-					_mat_transform[12] = _override[0];
-					_mat_transform[13] = _override[1];
-					_mat_transform[14] = _override[2];
-				} // Override
-				#endregion
+					var _position_key_time = _position_key[BBMOD_EAnimationKey.Time];
+					var _delta_time = _position_key_next[BBMOD_EAnimationKey.Time] - _position_key_time;
+					var _factor = (_delta_time == 0) ? 0 : (_animation_time - _position_key_time) / _delta_time;
 
-				#region Rotation
-				var _override = _rotation_overrides[_node_index];
-				var _q10, _q11, _q12, _q13;
+					var _pos_from = _position_key[BBMOD_EPositionKey.Position];
+					var _pos_to = _position_key_next[BBMOD_EPositionKey.Position];
 
-				if (_override == undefined)
-				{
-					var _rotations = _node_data[BBMOD_EAnimationNode.RotationKeys];
-					var _rotations_size = array_length(_rotations);
-					var _index = _rotation_key_last[_node_index];
-
-					var _rotation_key;
-					var _rotation_key_next;
-
-					#region Find rotation keys
-					repeat (_rotations_size)
-					{
-						if (_index + 1 >= _rotations_size)
-						{
-							_index = 0;
-						}
-						_rotation_key = _rotations[_index];
-						_rotation_key_next = _rotations[clamp(_index + 1, 0, _rotations_size - 1)];
-						if (_animation_time < _rotation_key_next[BBMOD_EAnimationKey.Time])
-						{
-							break;
-						}
-						++_index;
-					}
-					#endregion Find rotation keys
-
-					_rotation_key_last[@ _node_index] = _index;
-
-					if (_interpolate_frames)
-					{
-						var _rotation_key_time = _rotation_key[BBMOD_EAnimationKey.Time];
-						var _delta_time = _rotation_key_next[BBMOD_EAnimationKey.Time] - _rotation_key_time;
-						var _factor = (_delta_time == 0) ? 0 : (_animation_time - _rotation_key_time) / _delta_time;
-
-						var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
-						var _rot_to = _rotation_key_next[BBMOD_ERotationKey.Rotation];
-
-						#region Quaternion slerp
-						_q10 = _rot_from[0];
-						_q11 = _rot_from[1];
-						_q12 = _rot_from[2];
-						_q13 = _rot_from[3];
-
-						var _q20 = _rot_to[0];
-						var _q21 = _rot_to[1];
-						var _q22 = _rot_to[2];
-						var _q23 = _rot_to[3];
-
-						#region Normalize q1
-						var _q1norm = 1 / sqrt(_q10 * _q10
-							+ _q11 * _q11
-							+ _q12 * _q12
-							+ _q13 * _q13);
-
-						_q10 *= _q1norm;
-						_q11 *= _q1norm;
-						_q12 *= _q1norm;
-						_q13 *= _q1norm;
-						#endregion Normalize q1
-
-						#region Normalize q2
-						var _q2norm = 1 / sqrt(_q20 * _q20
-							+ _q21 * _q21
-							+ _q22 * _q22
-							+ _q23 * _q23);
-
-						_q20 *= _q2norm;
-						_q21 *= _q2norm;
-						_q22 *= _q2norm;
-						_q23 *= _q2norm;
-						#endregion Normalize q2
-
-						var _dot = _q10 * _q20
-							+ _q11 * _q21
-							+ _q12 * _q22
-							+ _q13 * _q23;
-
-						if (_dot < 0)
-						{
-							_dot = -_dot;
-							_q20 *= -1;
-							_q21 *= -1;
-							_q22 *= -1;
-							_q23 *= -1;
-						}
-
-						if (_dot > 0.9995)
-						{
-							_q10 = lerp(_q10, _q20, _factor);
-							_q11 = lerp(_q11, _q21, _factor);
-							_q12 = lerp(_q12, _q22, _factor);
-							_q13 = lerp(_q13, _q23, _factor);
-						}
-						else
-						{
-							var _theta_0 = arccos(_dot);
-							var _theta = _theta_0 * _factor;
-							var _sin_theta = sin(_theta);
-							var _sin_theta_0 = sin(_theta_0);
-							var _s2 = _sin_theta / _sin_theta_0;
-							var _s1 = cos(_theta) - (_dot * _s2);
-
-							_q10 = (_q10 * _s1) + (_q20 * _s2);
-							_q11 = (_q11 * _s1) + (_q21 * _s2);
-							_q12 = (_q12 * _s1) + (_q22 * _s2);
-							_q13 = (_q13 * _s1) + (_q23 * _s2);
-						}
-						#endregion Quaternion slerp
-					}
-					else // Interpolated
-					{
-						var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
-
-						_q10 = _rot_from[0];
-						_q11 = _rot_from[1];
-						_q12 = _rot_from[2];
-						_q13 = _rot_from[3];
-					} // No interpolation
+					_mat_transform[12] = lerp(_pos_from[0], _pos_to[0], _factor);
+					_mat_transform[13] = lerp(_pos_from[1], _pos_to[1], _factor);
+					_mat_transform[14] = lerp(_pos_from[2], _pos_to[2], _factor);
 				}
-				else // Animation
+				else // Interpolated
 				{
-					_q10 = _override[0];
-					_q11 = _override[1];
-					_q12 = _override[2];
-					_q13 = _override[3];
-				} // Override
+					var _pos_from = _position_key[BBMOD_EPositionKey.Position];
 
-				#region Quaternion to matrix
+					_mat_transform[12] = _pos_from[0];
+					_mat_transform[13] = _pos_from[1];
+					_mat_transform[14] = _pos_from[2];
+				} // No interpolation
+			}
+			#endregion // Position
+
+			#region Rotation
+			var _override = _rotation_overrides[_node_index];
+			var _q10 = undefined, _q11, _q12, _q13;
+
+			if (_override != undefined)
+			{
+				_q10 = _override[0];
+				_q11 = _override[1];
+				_q12 = _override[2];
+				_q13 = _override[3];
+			}
+			else if (_node_data != undefined)
+			{
+				var _rotations = _node_data[BBMOD_EAnimationNode.RotationKeys];
+				var _rotations_size = array_length(_rotations);
+				var _index = _rotation_key_last[_node_index];
+
+				var _rotation_key;
+				var _rotation_key_next;
+
+				#region Find rotation keys
+				repeat (_rotations_size)
+				{
+					if (_index + 1 >= _rotations_size)
+					{
+						_index = 0;
+					}
+					_rotation_key = _rotations[_index];
+					_rotation_key_next = _rotations[clamp(_index + 1, 0, _rotations_size - 1)];
+					if (_animation_time < _rotation_key_next[BBMOD_EAnimationKey.Time])
+					{
+						break;
+					}
+					++_index;
+				}
+				#endregion Find rotation keys
+
+				_rotation_key_last[@ _node_index] = _index;
+
+				if (_interpolate_frames)
+				{
+					var _rotation_key_time = _rotation_key[BBMOD_EAnimationKey.Time];
+					var _delta_time = _rotation_key_next[BBMOD_EAnimationKey.Time] - _rotation_key_time;
+					var _factor = (_delta_time == 0) ? 0 : (_animation_time - _rotation_key_time) / _delta_time;
+
+					var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
+					var _rot_to = _rotation_key_next[BBMOD_ERotationKey.Rotation];
+
+					#region Quaternion slerp
+					_q10 = _rot_from[0];
+					_q11 = _rot_from[1];
+					_q12 = _rot_from[2];
+					_q13 = _rot_from[3];
+
+					var _q20 = _rot_to[0];
+					var _q21 = _rot_to[1];
+					var _q22 = _rot_to[2];
+					var _q23 = _rot_to[3];
+
+					#region Normalize q1
+					var _q1norm = 1 / sqrt(_q10 * _q10
+						+ _q11 * _q11
+						+ _q12 * _q12
+						+ _q13 * _q13);
+
+					_q10 *= _q1norm;
+					_q11 *= _q1norm;
+					_q12 *= _q1norm;
+					_q13 *= _q1norm;
+					#endregion Normalize q1
+
+					#region Normalize q2
+					var _q2norm = 1 / sqrt(_q20 * _q20
+						+ _q21 * _q21
+						+ _q22 * _q22
+						+ _q23 * _q23);
+
+					_q20 *= _q2norm;
+					_q21 *= _q2norm;
+					_q22 *= _q2norm;
+					_q23 *= _q2norm;
+					#endregion Normalize q2
+
+					var _dot = _q10 * _q20
+						+ _q11 * _q21
+						+ _q12 * _q22
+						+ _q13 * _q23;
+
+					if (_dot < 0)
+					{
+						_dot = -_dot;
+						_q20 *= -1;
+						_q21 *= -1;
+						_q22 *= -1;
+						_q23 *= -1;
+					}
+
+					if (_dot > 0.9995)
+					{
+						_q10 = lerp(_q10, _q20, _factor);
+						_q11 = lerp(_q11, _q21, _factor);
+						_q12 = lerp(_q12, _q22, _factor);
+						_q13 = lerp(_q13, _q23, _factor);
+					}
+					else
+					{
+						var _theta_0 = arccos(_dot);
+						var _theta = _theta_0 * _factor;
+						var _sin_theta = sin(_theta);
+						var _sin_theta_0 = sin(_theta_0);
+						var _s2 = _sin_theta / _sin_theta_0;
+						var _s1 = cos(_theta) - (_dot * _s2);
+
+						_q10 = (_q10 * _s1) + (_q20 * _s2);
+						_q11 = (_q11 * _s1) + (_q21 * _s2);
+						_q12 = (_q12 * _s1) + (_q22 * _s2);
+						_q13 = (_q13 * _s1) + (_q23 * _s2);
+					}
+					#endregion Quaternion slerp
+				}
+				else // Interpolated
+				{
+					var _rot_from = _rotation_key[BBMOD_ERotationKey.Rotation];
+
+					_q10 = _rot_from[0];
+					_q11 = _rot_from[1];
+					_q12 = _rot_from[2];
+					_q13 = _rot_from[3];
+				} // No interpolation
+			}
+
+			#region Quaternion to matrix
+			if (_q10 != undefined)
+			{
 				var _q0sqr = _q10 * _q10;
 				var _q1sqr = _q11 * _q11;
 				var _q2sqr = _q12 * _q12;
@@ -342,11 +344,11 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 				_mat_transform[8] = 2 * (_q0q2 + _q3q1);
 				_mat_transform[9] = 2 * (_q1q2 - _q3q0);
 				_mat_transform[10] = 1 - 2 * (_q0sqr + _q1sqr);
-				#endregion Quaternion to matrix
-				#endregion Rotation
-
-				_transform = _mat_transform;
 			}
+			#endregion Quaternion to matrix
+			#endregion Rotation
+
+			_transform = _mat_transform;
 
 			// Final transform
 			var _matrix_new = matrix_multiply(_transform, _matrix);
