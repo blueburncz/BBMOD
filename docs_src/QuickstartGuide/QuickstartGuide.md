@@ -1,11 +1,15 @@
 # Quickstart guide
-In this section you can find a quickstart guide which should help you start
-using BBMOD in your projects in no time.
+In this section you will learn how to install BBMOD into your project, convert
+3rd-party model formats into BBMOD, load and render models with basic materials,
+as well as how to play animations.
 
 ## Contents
 * [Installation](./QuickstartInstallation.html)
 * [Converting models](./QuickstartConvertingModels.html)
-* [Loading files](./QuickstartLoadingFiles.html)
-* [Setting up materials](./QuickstartSettingUpMaterials.html)
-* [Playing animations](./QuickstartPlayingAnimations.html)
+* [Loading models](./QuickstartLoadingModels.html)
+* [Materials](./QuickstartMaterials.html)
 * [Rendering models](./QuickstartRenderingModels.html)
+* [Animations](./QuickstartAnimations.html)
+* [Animation events](./QuickstartAnimationEvents.html)
+* [Bone attachments](./QuickstartBoneAttachments.html)
+* [Transforming bones](./QuickstartTransformingBones.html)

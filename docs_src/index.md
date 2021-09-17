@@ -1,22 +1,24 @@
 # BBMOD
-Welcome to the official documentation for the latest version of BBMOD!
+Welcome to the official documentation of BBMOD 3.0.0!
 
-BBMOD is a 3D model and animation format specially crafted for GameMaker Studio 2. It is accompanied by a conversion tool (BBMOD CLI), as well as GML library that allows you to load, animate and render BBMOD files without any hassle.
+BBMOD is an advanced 3D rendering solution for GameMaker Studio 2. It consists
+of a custom model and animation file formats (`*.bbmod`, `*.bbanim`), a model
+convertor (BBMOD CLI), a powerful and easy to use GML library, as well as PBR
+shaders using which you can render models textured in professional, industry
+standard software.
 
-BBMOD CLI utilizes [Assimp](https://github.com/assimp/assimp) to load third-party model formats, so any model that Assimp can load can be converted to BBMOD. A few examples of such model formats are `OBJ`, `COLLADA` or the industry standard `FBX`.
+If you are a new user, see the [Quickstart guide](./QuickstartGuide.html) for a
+quick overview of how to use BBMOD.
 
-BBMOD also comes with PBR shaders, fully supporting metallic workflow. This makes it compatible with assets that you would use in professional 3D game engines.
-
-In this document you can find a guide that will help you get started with BBMOD easily, as well as a documentation for the entire Scripting API.
-
-## Links
-* [Assimp](https://github.com/assimp/assimp)
-* [Discord](https://discord.gg/ep2BGPm)
-* [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)
-* [GitHub](https://github.com/blueburn-cz/BBMOD)
-* [Xpanda](https://github.com/GameMakerDiscord/Xpanda)
-* [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/9424/bbmod)
+If you have experience with older versions of BBMOD, see
+[Migrating from 2.5.0](./MigratingFrom2.5.0.html) to learn how to upgrade to the
+latest version of BBMOD.
 
 ## Contents
+* [Changelog 3.0.0](./Changelog3.0.0.html)
+* [Migrating from 2.5.0](./MigratingFrom2.5.0.html)
 * [Quickstart guide](./QuickstartGuide.html)
+* [Advanced topics](./AdvancedTopics.html)
+* [Modules](./Modules.html)
 * [Scripting API](./ScriptingAPI.html)
+* [Links](./Links.html)
