@@ -1,8 +1,6 @@
 randomize();
 show_debug_overlay(false);
 display_set_gui_maximize(1, 1);
-gpu_set_tex_filter(true);
-gpu_set_tex_mip_enable(mip_on);
 audio_falloff_set_model(audio_falloff_linear_distance);
 
 renderer = new BBMOD_Renderer()
@@ -92,3 +90,12 @@ modLever.Materials[@ 1] = matWood;
 modLever.freeze();
 
 _objImporter.destroy();
+
+// Any object/struct that has a render method can be added to the renderer.
+renderer.add({
+	render: method(self, function () {
+		matrix_set(matrix_world, matrix_build_identity());
+		batchShell.render_object(OShell, matShell);
+		batchSign.render(matWood);
+	})
+});

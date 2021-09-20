@@ -90,10 +90,13 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 		}
 
 		gpu_set_tex_mip_enable_ext(UBRDF, mip_off);
+		gpu_set_tex_filter_ext(UBRDF, true);
+		gpu_set_tex_repeat_ext(UBRDF, false);
 		set_sampler(UBRDF, _texBRDF);
 
 		gpu_set_tex_mip_enable_ext(UIBL, mip_off);
 		gpu_set_tex_filter_ext(UIBL, true);
+		gpu_set_tex_repeat_ext(UIBL, false);
 		set_sampler(UIBL, _texture);
 
 		var _texel = global.__bbmodIblTexel;

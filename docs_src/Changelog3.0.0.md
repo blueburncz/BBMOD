@@ -53,6 +53,7 @@ This major release of BBMOD focuses on modularity of the GML library, increased 
 * Renamed `BBMOD_Material`'s `RenderPath` property to `RenderPass`.
 * Added a new function `bbmod_get_materials` which returns an array of all existing materials.
 * Added a new read-only property `Priority` to `BBMOD_Material`. This property determines the order of materials in the array returned by `bbmod_get_materials`.
+* Added a new property `Repeat` to `BBMOD_Material` using which you can configure texture repeat for the material.
 * Added a new method `BBMOD_Material.set_priority`, using which you can change the `Priority` property of a `BBMOD_Material`.
 * Added new properties `TextureOffset` and `TextureScale` to `BBMOD_Material`, using which you can control its texture coordinates within a texture page.
 * Method `BBMOD_Material.apply` now returns the `self` (`BBMOD_Material`) instead of a boolean.

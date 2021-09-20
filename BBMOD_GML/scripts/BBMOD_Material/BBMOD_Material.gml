@@ -148,16 +148,17 @@ function BBMOD_Material(_shader) constructor
 	/// in range 0..1.
 	AlphaTest = 1.0;
 
-	/// @var {bool} Use `false` to disable mimapping for this material.
-	/// @note Mipmapping needs to be enabled in the first place using
-	/// `gpu_set_tex_mip_enable` for this to have any effect.
+	/// @var {bool} Use `false` to disable mimapping for this material. Default
+	/// value is `true`.
 	Mipmapping = true;
 
 	/// @var {bool} Use `false` to disable linear texture filtering for this
-	/// material.
-	/// @note Texture filtering needs to be enabled in the first place using
-	/// `gpu_set_tex_filter` for this to have any effect.
+	/// material. Default value is `true`.
 	Filtering = true;
+
+	/// @var {bool} Use `true` to enable texture repeat for this material.
+	/// Default value is `false`.
+	Repeat = false;
 
 	/// @var {ptr} A texture with a base color in the RGB channels and opacity
 	/// in the alpha channel.
@@ -185,6 +186,10 @@ function BBMOD_Material(_shader) constructor
 		_dest.ZWrite = ZWrite;
 		_dest.ZTest = ZTest;
 		_dest.ZFunc = ZFunc;
+		_dest.AlphaTest = AlphaTest;
+		_dest.Mipmapping = Mipmapping;
+		_dest.Filtering = Filtering;
+		_dest.Repeat = Repeat;
 
 		if (_dest.BaseOpacitySprite != undefined)
 		{
@@ -204,6 +209,8 @@ function BBMOD_Material(_shader) constructor
 
 		_dest.TextureOffset = TextureOffset;
 		_dest.TextureScale = TextureScale;
+
+		_dest.set_priority(Priority);
 		return self;
 	};
 
@@ -224,37 +231,26 @@ function BBMOD_Material(_shader) constructor
 		if (global.__bbmodMaterialCurrent != self)
 		{
 			reset();
-			Shader.set();
-			Shader.set_material(self);
 
 			gpu_push_state();
 			gpu_set_blendmode(BlendMode);
 			gpu_set_cullmode(Culling);
 			gpu_set_zwriteenable(ZWrite);
 			gpu_set_ztestenable(ZTest);
+			gpu_set_zfunc(ZFunc);
+			gpu_set_tex_mip_enable(Mipmapping ? mip_on : mip_off);
+			gpu_set_tex_filter(Filtering);
+			gpu_set_tex_repeat(Repeat);
 
-			if (ZTest)
-			{
-				gpu_set_zfunc(ZFunc);
-			}
-
-			if (!Mipmapping)
-			{
-				gpu_set_tex_mip_enable(mip_off);
-			}
-
-			if (!Filtering)
-			{
-				gpu_set_tex_filter(false);
-			}
+			Shader.set();
+			Shader.set_material(self);
 
 			global.__bbmodMaterialCurrent = self;
 		}
 
-		var _onApply = OnApply;
-		if (_onApply != undefined)
+		if (OnApply != undefined)
 		{
-			_onApply(self);
+			OnApply(self);
 		}
 
 		return self;
@@ -304,7 +300,9 @@ function BBMOD_Material(_shader) constructor
 		gml_pragma("forceinline");
 		Priority = _p;
 		array_sort(bbmod_get_materials(), function (_m1, _m2) {
-			return (_m1.Priority - _m2.Priority);
+			if (_m2.Priority > _m1.Priority) return -1;
+			if (_m2.Priority < _m1.Priority) return +1;
+			return 0;
 		});
 		return self;
 	};
@@ -318,6 +316,15 @@ function BBMOD_Material(_shader) constructor
 		gml_pragma("forceinline");
 		bbmod_material_reset();
 		return self;
+	};
+
+	/// @func has_commands()
+	/// @desc Checks whether the material has any render commands waiting for
+	/// submission.
+	/// @return {bool} Returns true if the material's render queue is not empty.
+	static has_commands = function () {
+		gml_pragma("forceinline");
+		return !ds_list_empty(RenderCommands);
 	};
 
 	/// @func submit_queue()

@@ -52,7 +52,9 @@ function __bbmod_material_sky()
 		_material.Culling = cull_noculling;
 		_material.Mipmapping = false;
 		_material.ZWrite = false;
-		_material.Filtering = false;
+		_material.ZTest = false;
+		_material.Filtering = true;
+		_material.set_priority(-$FFFFFFFF);
 	}
 
 	return _material;

@@ -58,6 +58,7 @@
     {"id":{"name":"SndFootstep2","path":"sounds/SndFootstep2/SndFootstep2.yy",},"order":2,},
     {"id":{"name":"BBMOD_Material","path":"scripts/BBMOD_Material/BBMOD_Material.yy",},"order":8,},
     {"id":{"name":"BBMOD_Quaternion","path":"scripts/BBMOD_Quaternion/BBMOD_Quaternion.yy",},"order":1,},
+    {"id":{"name":"OShellSpawner","path":"objects/OShellSpawner/OShellSpawner.yy",},"order":12,},
     {"id":{"name":"SprCharacterCollisionMask","path":"sprites/SprCharacterCollisionMask/SprCharacterCollisionMask.yy",},"order":4,},
     {"id":{"name":"BBMOD_AnimationPlayer","path":"scripts/BBMOD_AnimationPlayer/BBMOD_AnimationPlayer.yy",},"order":4,},
     {"id":{"name":"BBMOD_AnimationInstance","path":"scripts/BBMOD_AnimationInstance/BBMOD_AnimationInstance.yy",},"order":1,},

@@ -12,7 +12,7 @@ if (z <= 0 && !onGround)
 		SndShell6,
 		SndShell7,
 	);
-	audio_play_sound_at(_sound, x, y, z, 1, 50, 1, false, 1);
+	audio_play_sound_at(_sound, x, y, z, 1, 100, 1, false, 1);
 
 	friction = 0.01;
 	onGround = true;

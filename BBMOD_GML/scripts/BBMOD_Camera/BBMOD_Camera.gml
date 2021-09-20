@@ -46,8 +46,8 @@ function BBMOD_Camera() constructor
 	ZNear = 0.1;
 
 	/// @var {real} Distance to the far clipping plane. Anything farther from
-	/// the camera than this will not be visible. Defaults to `8192`.
-	ZFar = 8192.0;
+	/// the camera than this will not be visible. Defaults to `32768`.
+	ZFar = 32768.0;
 
 	/// @var {uint/undefined} An id of an instance to follow or `undefined`. The
 	/// object must have a `z` variable (position on the z axis) defined!

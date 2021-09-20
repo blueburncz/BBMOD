@@ -117,10 +117,6 @@ function BBMOD_Renderer() constructor
 	/// to the current render target.
 	/// @return {BBMOD_Renderer} Returns `self`.
 	static render = function () {
-		gpu_push_state();
-		gpu_set_ztestenable(true);
-		gpu_set_zwriteenable(true);
-
 		var _world = matrix_get(matrix_world);
 
 		var i = 0;
@@ -139,13 +135,15 @@ function BBMOD_Renderer() constructor
 		repeat (array_length(_materials))
 		{
 			var _material = _materials[i++];
-			_material.apply();
-			_material.submit_queue();
+			if (_material.has_commands())
+			{
+				_material.apply();
+				_material.submit_queue();
+			}
 		}
 
 		bbmod_material_reset();
 		matrix_set(matrix_world, _world);
-		gpu_pop_state();
 
 		return self;
 	};
