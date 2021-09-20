@@ -48,26 +48,49 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 		return self;
 	};
 
+	/// @func set_exposure(_value)
+	/// @desc Sets the `bbmod_Exposure` uniform.
+	/// @param {real} _value The new camera exposure.
+	/// @return {BBMOD_PBRShader} Returns `self`.
 	static set_exposure = function (_value) {
 		gml_pragma("forceinline");
 		return set_uniform_f(UExposure, _value);
 	};
 
+	/// @func set_normal_roughness(_texture)
+	/// @desc Sets the `bbmod_NormalRoughness` uniform.
+	/// @param {real} _texture The new texture with normal vector in the RGB
+	/// channels and roughness in the A channel.
+	/// @return {BBMOD_PBRShader} Returns `self`.
 	static set_normal_roughness = function (_texture) {
 		gml_pragma("forceinline");
 		return set_sampler(UNormalRoughness, _texture);
 	};
 
+	/// @func set_metallic_ao(_texture)
+	/// @desc Sets the `bbmod_MetallicAO` uniform.
+	/// @param {real} _texture The new texture with metalness in the R channel
+	/// and ambient occlusion in the G channel.
+	/// @return {BBMOD_PBRShader} Returns `self`.
 	static set_metallic_ao = function (_texture) {
 		gml_pragma("forceinline");
 		return set_sampler(UMetallicAO, _texture);
 	};
 
+	/// @func set_subsurface(_texture)
+	/// @desc Sets the `bbmod_Subsurface` uniform.
+	/// @param {real} _texture The new texture with subsurface color in the
+	/// RGB channels and its intensity in the A channel.
+	/// @return {BBMOD_PBRShader} Returns `self`.
 	static set_subsurface = function (_texture) {
 		gml_pragma("forceinline");
 		return set_sampler(USubsurface, _texture);
 	};
 
+	/// @func set_emissive(_texture)
+	/// @desc Sets the `bbmod_Emissive` uniform.
+	/// @param {real} _texture The new RGBM encoded emissive color.
+	/// @return {BBMOD_PBRShader} Returns `self`.
 	static set_emissive = function (_texture) {
 		gml_pragma("forceinline");
 		return set_sampler(UEmissive, _texture);
