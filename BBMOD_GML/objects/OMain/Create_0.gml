@@ -8,13 +8,13 @@ audio_falloff_set_model(audio_falloff_linear_distance);
 renderer = new BBMOD_Renderer()
 	.add(OCharacter)
 	.add(OGun)
+	.add(OLever)
 	.add(OSky);
 
 renderer.UseAppSurface = true;
 renderer.RenderScale = 2;
 
 modSky = new BBMOD_Model("Data/BBMOD/Models/Sphere.bbmod");
-modSky.Materials[@ 0] = BBMOD_MATERIAL_SKY;
 modSky.freeze();
 
 modCharacter = new BBMOD_Model("Data/Assets/Character/Character.bbmod");
@@ -76,11 +76,19 @@ matShell = BBMOD_MATERIAL_PBR_BATCHED.clone()
 matShell.Culling = cull_noculling;
 
 batchShell = new BBMOD_DynamicBatch(modShell, 32);
+batchShell.freeze();
 
-modSign = _objImporter.import("Data/Assets/Sign.obj");
-matSign = BBMOD_MATERIAL_PBR.clone()
+matWood = BBMOD_MATERIAL_PBR.clone()
 	.set_base_opacity($A7C5FF, 1.0);
 
+modSign = _objImporter.import("Data/Assets/Sign.obj");
+
 batchSign = new BBMOD_StaticBatch(modSign.VertexFormat);
+
+modLever = _objImporter.import("Data/Assets/Lever.obj");
+modLever.Materials[@ 0] = BBMOD_MATERIAL_PBR.clone()
+	.set_base_opacity(c_silver, 1.0);
+modLever.Materials[@ 1] = matWood;
+modLever.freeze();
 
 _objImporter.destroy();

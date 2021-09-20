@@ -31,6 +31,9 @@ if (camera.Position.Z < 0.0)
 	camera.update_matrices();
 }
 
+// Increase camera exposure during nighttime
+camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 0.025, delta_time);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Player controls
 speed = 0;
