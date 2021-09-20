@@ -1,8 +1,8 @@
 event_inherited();
 
 speedWalk = 0.4;
+
 dead = false;
-destroy = false;
 
 directionBody = direction;
 

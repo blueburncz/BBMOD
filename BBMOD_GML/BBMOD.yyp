@@ -23,6 +23,7 @@
     {"id":{"name":"BBMOD_IRenderable","path":"scripts/BBMOD_IRenderable/BBMOD_IRenderable.yy",},"order":1,},
     {"id":{"name":"BBMOD_Animation","path":"scripts/BBMOD_Animation/BBMOD_Animation.yy",},"order":0,},
     {"id":{"name":"BBMOD_ShPBRAnimated","path":"shaders/BBMOD_ShPBRAnimated/BBMOD_ShPBRAnimated.yy",},"order":2,},
+    {"id":{"name":"CStateMachine","path":"scripts/CStateMachine/CStateMachine.yy",},"order":2,},
     {"id":{"name":"bbmod_ibl","path":"scripts/bbmod_ibl/bbmod_ibl.yy",},"order":3,},
     {"id":{"name":"BBMOD_Renderer","path":"scripts/BBMOD_Renderer/BBMOD_Renderer.yy",},"order":2,},
     {"id":{"name":"bbmod_mesh_to_colmesh","path":"scripts/bbmod_mesh_to_colmesh/bbmod_mesh_to_colmesh.yy",},"order":0,},

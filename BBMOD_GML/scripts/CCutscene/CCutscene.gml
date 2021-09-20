@@ -3,21 +3,24 @@
 global.__cutscene = undefined;
 
 /// @func GetCutscene()
-/// @return {CCutscene/undefined}
+/// @desc Retrieves the currently active cutscene.
+/// @return {CCutscene/undefined} The active cutscene or undefined.
 function GetCutscene()
 {
+	gml_pragma("forceinline");
 	return global.__cutscene;
 }
 
 /// @func CStage(_text)
-/// @param {string} _text
+/// @desc A stage of a cutscene.
+/// @param {string} _text The stage's subtitle.
 function CStage(_text) constructor
 {
 	/// @var {CCutscene}
 	/// @private
 	Cutscene = undefined;
 
-	/// @var {string}
+	/// @var {string} The stage's subtitle.
 	Text = _text;
 
 	/// @var {uint} The duration of the stage in ms.
@@ -29,38 +32,47 @@ function CStage(_text) constructor
 	/// @private
 	CurrentTime = 0;
 
-	/// @var {func}
+	/// @var {func} A function executed when the cutscene enters this stage.
 	OnEnter = function () {};
 
-	/// @var {func}
+	/// @var {func} A function executed while the cutscene is in the stage.
+	/// Should take `delta_time` as the first argument.
 	OnUpdate = function (_deltaTime) {};
 
-	/// @var {func}
+	/// @var {func} A function executed when the cutscene leaves this stage.
 	OnLeave = function () {};
 
 	/// @func GetProgress()
-	/// @return {real}
+	/// @desc Retrieves the progress of the stage, computed from how long has
+	/// the stage been active divided by its duration.
+	/// @return {real} A value in range 0..1, where 0 is the beginning of the
+	/// stage and 1 is the end of the stage.
 	static GetProgress = function () {
 		gml_pragma("forceinline");
 		return clamp(CurrentTime / Duration, 0.0, 1.0);
 	};
 
 	/// @func GetText()
-	/// @return {string}
+	/// @desc Retrieves the stage text, shortened based on the progress of the
+	/// stage, i.e. progress 0 does not show any text and progress 1 show the
+	/// entire text.
+	/// @return {string} The shortened stage text.
 	static GetText = function () {
 		gml_pragma("forceinline");
 		return string_copy(Text, 1, string_length(Text) * GetProgress());
 	};
 
 	/// @func HasNext()
-	/// @return {bool}
+	/// @desc Checks whether the cutscene has a next stage.
+	/// @return {bool} Returns true if the cutscene has a next stage.
 	static HasNext = function () {
 		gml_pragma("forceinline");
 		return Cutscene.HasNext();
 	};
 
 	/// @func Next()
-	/// @return {CStage}
+	/// @desc Goes to the next stage of the cutscene.
+	/// @return {CStage} Returns `self`.
 	static Next = function () {
 		gml_pragma("forceinline");
 		Cutscene.Next();
@@ -69,27 +81,26 @@ function CStage(_text) constructor
 }
 
 /// @func CCutscene()
+/// @desc A cutscene composed from stages.
+/// @see CStage
 function CCutscene() constructor
 {
-	/// @var {CStage}
+	/// @var {CStage[]} An array of the cutscene's stages.
 	/// @readonly
 	Stages = [];
 
-	/// @var {uint}
+	/// @var {uint} The index of the current stage.
 	/// @readonly
 	Current = 0;
 
-	/// @var {uint}
-	/// @private
-	CurrentTime = 0;
-
-	/// @var {bool}
+	/// @var {bool} If true then the cutscene is currently playing.
 	/// @readonly
 	Active = false;
 
 	/// @func AddStage(_stage)
-	/// @param {CStage} _stage
-	/// @return {CCutscene}
+	/// @desc Adds a stage to the cutscene.
+	/// @param {CStage} _stage The stage to add.
+	/// @return {CCutscene} Returns `self`.
 	static AddStage = function (_stage) {
 		gml_pragma("forceinline");
 		array_push(Stages, _stage);
@@ -98,14 +109,16 @@ function CCutscene() constructor
 	};
 
 	/// @func GetStage()
-	/// @return {CStage}
+	/// @desc Retrieves the current stage of the cutscene.
+	/// @return {CStage} The current stage.
 	static GetStage = function () {
 		gml_pragma("forceinline");
 		return Stages[Current];
 	};
 
 	/// @func Start()
-	/// @return {CCutscene}
+	/// @desc Starts playing the cutscene.
+	/// @return {CCutscene} Returns `self`.
 	static Start = function () {
 		if (array_length(Stages) == 0)
 		{
@@ -121,8 +134,9 @@ function CCutscene() constructor
 	};
 
 	/// @func Update(_deltaTime)
-	/// @param {uint} _deltaTime
-	/// @return {CCutscene}
+	/// @desc Updates the cutscene. This should be executed each Step!
+	/// @param {uint} _deltaTime The `delta_time`.
+	/// @return {CCutscene} Returns `self`.
 	static Update = function (_deltaTime) {
 		var _stage = Stages[Current];
 		_stage.CurrentTime += _deltaTime / 1000.0;
@@ -134,14 +148,16 @@ function CCutscene() constructor
 	};
 
 	/// @func HasNext()
-	/// @return {bool}
+	/// @desc Checks whether the cutscene has a next stage.
+	/// @return {bool} Returns true if the cutscene has a next stage.
 	static HasNext = function () {
 		gml_pragma("forceinline");
 		return (Current < array_length(Stages) - 1);
 	};
 
 	/// @func Next()
-	/// @return {CCutscene}
+	/// @desc Goes to the next stage of the cutscene.
+	/// @return {CCutscene} Returns `self`.
 	static Next = function () {
 		var _stageCurrent = Stages[Current];
 		if (_stageCurrent.GetProgress() < 1.0)

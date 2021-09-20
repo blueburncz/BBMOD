@@ -7,6 +7,7 @@
 /// @return {real} Returns the distance (from the origin) at which the
 /// ray intersects the AABB. If -1 is returned, then they do not in
 /// intersect.
+/// @source https://gamephysicscookbook.com/
 function raycast_aabb(_origin, _direction, _min, _max)
 {
 	static CMP = function (_x, _y) {
