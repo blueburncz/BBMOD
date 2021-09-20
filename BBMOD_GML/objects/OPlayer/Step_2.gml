@@ -1,8 +1,5 @@
 event_inherited();
 
-var _scale = 10;
-matrixBody = matrix_build(x, y, z, 0, 0, directionBody, _scale, _scale, _scale);
-
 if (hasGun)
 {
 	var _dqHand = animationPlayer.get_node_transform(19); // RightHandIndex1

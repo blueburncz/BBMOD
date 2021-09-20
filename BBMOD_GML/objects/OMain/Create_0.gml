@@ -44,7 +44,6 @@ animWalk.add_event(0, "Footstep").add_event(32, "Footstep");
 animZombieIdle = new BBMOD_Animation("Data/Assets/Character/Zombie_Root_Idle.bbanim");
 animZombieWalk = new BBMOD_Animation("Data/Assets/Character/Zombie_Root_Walk.bbanim");
 animZombieWalk.add_event(0, "Footstep").add_event(32, "Footstep");
-animZombieAttack = new BBMOD_Animation("Data/Assets/Character/Zombie_Root_Attack.bbanim");
 animZombieDeath = new BBMOD_Animation("Data/Assets/Character/Zombie_Root_Death.bbanim");
 
 var _objImporter = new BBMOD_OBJImporter();

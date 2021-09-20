@@ -23,10 +23,6 @@ if (active)
 			mp_potential_step_object(_player.x, _player.y, speedWalk, OZombie);
 			_animation = OMain.animZombieWalk;
 		}
-		else
-		{
-			_animation = OMain.animZombieAttack;
-		}
 		direction = point_direction(x, y, _player.x, _player.y);
 	}
 }

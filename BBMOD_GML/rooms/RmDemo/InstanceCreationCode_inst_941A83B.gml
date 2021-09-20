@@ -21,7 +21,7 @@ cutscene.AddStage(_stage);
 _stage = new CStage(
 	"Now get ready, because they are after you!",
 );
-_stage.OnLeave = function () {
+_stage.OnExit = function () {
 	with (OZombie)
 	{
 		active = true;

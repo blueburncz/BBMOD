@@ -40,7 +40,7 @@ function CStage(_text) constructor
 	OnUpdate = function (_deltaTime) {};
 
 	/// @var {func} A function executed when the cutscene leaves this stage.
-	OnLeave = function () {};
+	OnExit = function () {};
 
 	/// @func GetProgress()
 	/// @desc Retrieves the progress of the stage, computed from how long has
@@ -166,7 +166,7 @@ function CCutscene() constructor
 			_stageCurrent.CurrentTime = _stageCurrent.Duration;
 			return self;
 		}
-		_stageCurrent.OnLeave();
+		_stageCurrent.OnExit();
 		if (!HasNext())
 		{
 			// The end of the cutscene

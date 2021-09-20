@@ -71,8 +71,11 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// @readonly
 	AnimationLoops = false;
 
-	/// @var {BBMOD_AnimationInstance} The last played animation instance.
-	/// @see BBMOD_AnimationInstance
+	/// @var {BBMOD_Animation/BBMOD_NONE}
+	/// @private
+	AnimationLast = BBMOD_NONE;
+
+	/// @var {BBMOD_AnimationInstance}
 	/// @private
 	AnimationInstanceLast = undefined;
 
@@ -92,6 +95,8 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// @readonly
 	Time = 0;
 
+	/// @var {real[]/undefined}
+	/// @private
 	Frame = undefined;
 
 	/// @var {real} Controls animation playback speed. Must be a positive number!
@@ -301,14 +306,19 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 			{
 				if (_animInst.Loop)
 				{
-					_animationTime = (_animationTime mod _animation.Duration);
+					_animationTime %= _animation.Duration;
 					_animInst.EventExecuted = -1;
+					Time %= (_animation.Duration / _animation.TicsPerSecond);
 					trigger_event(BBMOD_EV_ANIMATION_LOOP, _animation);
 				}
 				else
 				{
 					trigger_event(BBMOD_EV_ANIMATION_END, _animation);
 					ds_list_delete(Animations, 0);
+					if (!_animation.IsTransition)
+					{
+						Animation = BBMOD_NONE;
+					}
 					continue;
 				}
 			}
@@ -393,10 +403,15 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// Defaults to `false`.
 	/// @return {BBMOD_AnimationPlayer} Returns `self`.
 	static play = function (_animation, _loop) {
-		trigger_event(BBMOD_EV_ANIMATION_CHANGE, Animation);
-
 		Animation = _animation;
 		AnimationLoops = (_loop != undefined) ? _loop : false;
+
+		if (AnimationLast != _animation)
+		{
+			trigger_event(BBMOD_EV_ANIMATION_CHANGE, Animation);
+			AnimationLast = _animation;
+		}
+
 		Time = 0;
 
 		var _animationList = Animations;
@@ -425,9 +440,9 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 		return self;
 	};
 
-	/// @func change(_animaton[, _loop])
+	/// @func change(_animation[, _loop])
 	/// @desc Starts playing an animation from its start, only if it is a
-	/// different one that the currently played animation.
+	/// different one that the last played animation.
 	/// @param {BBMOD_Animation} _animation The animation to change to,
 	/// @param {bool} [_loop] If `true` then the animation will be looped.
 	/// Defaults to `false`.
@@ -435,7 +450,7 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// @see BBMOD_AnimationPlayer.Animation
 	static change = function (_animation, _loop) {
 		gml_pragma("forceinline");
-		if (Animation != _animation || AnimationLoops != _loop)
+		if (AnimationLast != _animation)
 		{
 			play(_animation, _loop);
 		}

@@ -67,6 +67,10 @@ function BBMOD_Animation(_file, _sha1) constructor
 	/// @private
 	FramesBone = [];
 
+	/// @var {bool}
+	/// @private
+	IsTransition = false;
+
 	/// @var {real} Duration of transition into this animation (in seconds).
 	/// Must be a value greater or equal to 0!
 	TransitionIn = 0.1;
@@ -264,6 +268,7 @@ function BBMOD_Animation(_file, _sha1) constructor
 			: BBMOD_BONE_SPACE_WORLD;
 		_transition.Duration = (TransitionOut + _animTo.TransitionIn) * TicsPerSecond;
 		_transition.TicsPerSecond = TicsPerSecond;
+		_transition.IsTransition = true;
 
 		var _frameFrom, _frameTo, _framesDest;
 
