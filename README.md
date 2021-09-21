@@ -30,6 +30,7 @@ This repo includes a demo project (screenshots above). You can also download a b
 * [Discord](https://discord.gg/ep2BGPm)
 * [Documentation](https://blueburn.cz/bbmod/docs/3/)
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)
+* [Official website](https://blueburn.cz/index.php?menu=bbmod)
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
 # Special thanks
