@@ -11,10 +11,10 @@
     "path": "audiogroups/audiogroup_default",
   },
   "soundFile": "SndSwitchOn.ogg",
-  "duration": 1.026871,
+  "duration": 0.34966,
   "parent": {
-    "name": "Shell",
-    "path": "folders/Demo/Sounds/Shell.yy",
+    "name": "Switch",
+    "path": "folders/Demo/Sounds/Switch.yy",
   },
   "resourceVersion": "1.0",
   "name": "SndSwitchOn",

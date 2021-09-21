@@ -11,7 +11,7 @@
     "path": "audiogroups/audiogroup_default",
   },
   "soundFile": "SndShell0.ogg",
-  "duration": 2.237208,
+  "duration": 0.883447,
   "parent": {
     "name": "Shell",
     "path": "folders/Demo/Sounds/Shell.yy",
