@@ -25,6 +25,7 @@ An online documentation for the latest release of BBMOD can be found at https://
 # Links
 * [Discord](https://discord.gg/ep2BGPm)
 * [Documentation](https://blueburn.cz/bbmod/docs/3/)
+* [Download demo](https://www.dropbox.com/s/hyyqy3ut9j7w18f/BBMOD_3.0.0_Demo_YYC.zip?dl=0)
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
