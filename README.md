@@ -4,11 +4,10 @@
 [![License](https://img.shields.io/github/license/blueburn-cz/BBMOD)](LICENSE)
 [![Discord](https://img.shields.io/discord/298884075585011713?label=Discord)](https://discord.gg/ep2BGPm)
 
-![Screenshot](screenshot.png)
-
 # Table of Contents
 * [About](#about)
 * [Documentation and help](#documentation-and-help)
+* [Demo project](#demo-project)
 * [Links](Links)
 * [Special thanks](#special-thanks)
 
@@ -22,10 +21,13 @@ standard software.
 # Documentation and help
 An online documentation for the latest release of BBMOD can be found at https://blueburn.cz/bbmod/docs/3/. The documentation source is available in the `docs_src` folder and it can be built into an HTML format using [GMDoc](https://marketplace.yoyogames.com/assets/10014/gmdoc-2). If you need any additional help, feel free to contact us on the [GMC forums](https://forum.yoyogames.com/index.php?threads/60628), or you can join our [Discord server](https://discord.gg/ep2BGPm).
 
+# Demo project
+![Screenshot](screenshot.png)
+This repo includes a demo project (screenshot above). You can also download a binary under [releases](https://github.com/blueburn-cz/BBMOD/releases).
+
 # Links
 * [Discord](https://discord.gg/ep2BGPm)
 * [Documentation](https://blueburn.cz/bbmod/docs/3/)
-* [Download demo](https://www.dropbox.com/s/hyyqy3ut9j7w18f/BBMOD_3.0.0_Demo_YYC.zip?dl=0)
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
