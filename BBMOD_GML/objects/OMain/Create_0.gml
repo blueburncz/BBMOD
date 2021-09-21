@@ -1,7 +1,8 @@
 randomize();
-show_debug_overlay(false);
 display_set_gui_maximize(1, 1);
 audio_falloff_set_model(audio_falloff_linear_distance);
+
+debugOverlay = false;
 
 renderer = new BBMOD_Renderer()
 	.add(OCharacter)

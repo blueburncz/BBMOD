@@ -1,3 +1,4 @@
+// Puts all signs into a static batch
 batchSign.start();
 
 with (OSign)

@@ -7,7 +7,6 @@ cutscene.AddStage(new CStage(
 )).AddStage(new CStage(
 	"Static batch is a way of rendering non-moving objects in a single draw call."
 )).AddStage(new CStage(
-	"..."
-)).AddStage(new CStage(
-	"Pretty handy!"
+	"You can press F1 to enable the debug overlay and see that there's much less"
+	+ " draw calls than instances!"
 ));

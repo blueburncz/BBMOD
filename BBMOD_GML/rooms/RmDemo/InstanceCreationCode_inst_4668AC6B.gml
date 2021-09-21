@@ -5,4 +5,7 @@ cutscene.AddStage(new CStage(
 	+ " in a single draw call."
 )).AddStage(new CStage(
 	"Like these gun shells!"
+)).AddStage(new CStage(
+	"You can press F1 to enable the debug overlay and see that there's much less"
+	+ " draw calls than instances!"
 ));

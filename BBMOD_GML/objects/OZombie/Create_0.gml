@@ -2,7 +2,6 @@ event_inherited();
 
 active = false;
 timeout = random_range(500, 1000);
-attacking = false;
 
 materials = [choose(OMain.matZombie0, OMain.matZombie1)];
 
