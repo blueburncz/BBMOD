@@ -1,28 +1,53 @@
 {
   "_version": 2,
-  "project": "BBMOD.yyp",
+  "project": "BBMOD_GML/BBMOD.yyp",
   "project_name": "BBMOD",
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": "bbmod",
+  "version": "3.0.0",
   "analytics": "",
   "api": {
     "rating": ""
   },
   "toc": {
     "BBMOD Docs": "index.md",
+    "Changelog 3.0.0": "Changelog3.0.0.md",
+    "Migrating from 2.5.0": "MigratingFrom2.5.0.md",
     "Quickstart guide": {
       "file": "QuickstartGuide/QuickstartGuide.md",
       "pages": {
         "Installation": "QuickstartGuide/QuickstartInstallation.md",
         "Converting models": "QuickstartGuide/QuickstartConvertingModels.md",
-        "Loading files": "QuickstartGuide/QuickstartLoadingFiles.md",
-        "Setting up materials": "QuickstartGuide/QuickstartSettingUpMaterials.md",
-        "Playing animations": "QuickstartGuide/QuickstartPlayingAnimations.md",
-        "Animation events": "QuickstartGuide/QuickstartAnimationEvents.md",
+        "Loading models": "QuickstartGuide/QuickstartLoadingModels.md",
+        "Materials": "QuickstartGuide/QuickstartMaterials.md",
         "Rendering models": "QuickstartGuide/QuickstartRenderingModels.md",
+        "Animations": "QuickstartGuide/QuickstartAnimations.md",
+        "Animation events": "QuickstartGuide/QuickstartAnimationEvents.md",
+        "Bone attachments": "QuickstartGuide/QuickstartBoneAttachments.md",
         "Transforming bones": "QuickstartGuide/QuickstartTransformingBones.md"
       }
-    }
+    },
+    "Advanced topics": {
+      "file": "AdvancedTopics/AdvancedTopics.md",
+      "pages": {
+        "Animation optimization levels": "AdvancedTopics/AnimationOptimizationLevels.md"
+      }
+    },
+    "Modules": {
+      "file": "Modules/Modules.md",
+      "pages": {
+        "Core module": "Modules/CoreModule.md",
+        "DLL module": "Modules/DLLModule.md",
+        "Mesh builder module": "Modules/MeshBuilderModule.md",
+        "Importer module": "Modules/ImporterModule.md",
+        "Camera module": "Modules/CameraModule.md",
+        "Renderer module": "Modules/RendererModule.md",
+        "PBR module": "Modules/PBRModule.md",
+        "ColMesh module": "Modules/ColMeshModule.md"
+      }
+    },
+    "Scripting API": {},
+    "Links": "Links.md"
   }
 }
