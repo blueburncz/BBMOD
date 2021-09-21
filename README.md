@@ -8,6 +8,7 @@
 * [About](#about)
 * [Documentation and help](#documentation-and-help)
 * [Demo project](#demo-project)
+* [Support the project](#support-the-project)
 * [Links](Links)
 * [Special thanks](#special-thanks)
 
@@ -25,6 +26,11 @@ An online documentation for the latest release of BBMOD can be found at https://
 ![Day](screenshots/day.png)
 ![Night](screenshots/night.png)
 This repo includes a demo project (screenshots above). You can also download a binary under [releases](https://github.com/blueburn-cz/BBMOD/releases).
+
+# Support the project
+![BBMOD GUI](screenshots/gui.png)
+
+BBMOD is released for free because we would love to support *everyone's* creativity. If you would like to financially support the development of the project, purchase [BBMOD GUI](https://marketplace.yoyogames.com/assets/10211/bbmod-gui-3) - a model convertor with live preview and much more!
 
 # Links
 * [Discord](https://discord.gg/ep2BGPm)
