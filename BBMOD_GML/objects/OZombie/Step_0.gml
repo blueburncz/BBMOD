@@ -1,5 +1,10 @@
 event_inherited();
 
+if (totallyDead)
+{
+	exit;
+}
+
 var _animation = OMain.animZombieIdle;
 var _animationLoop = true;
 
