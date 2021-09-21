@@ -1,0 +1,1 @@
+cutscene = new CCutscene().AddStage(new CStage("Not this one either!"));
