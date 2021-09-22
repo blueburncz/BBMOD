@@ -11,10 +11,6 @@ This major release of BBMOD focuses on modularity of the GML library, increased 
 * Added new option `--optimize-animations` (`-oa`) using which you can configure the animation optimization level.
 * Added new option `--sampling-rate` (`-sr`) using which you can configure the animation sampling rate (fps).
 
-## BBMOD GUI:
-* Added animation optimization level configuration.
-* Added animation sampling rate configuration.
-
 ## GML API:
 **General:**
 * Moved included files from `./BBMOD` to `./Data/BBMOD`.
