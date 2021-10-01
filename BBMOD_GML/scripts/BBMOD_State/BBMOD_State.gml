@@ -1,8 +1,10 @@
 /// @func BBMOD_State(_name)
+/// @extends BBMOD_Struct
 /// @desc A state of a state machine.
 /// @param {string} _name The name of the state.
 /// @see BBMOD_StateMachine
-function BBMOD_State(_name) constructor
+function BBMOD_State(_name)
+	: BBMOD_Struct() constructor
 {
 	/// @var {BBMOD_StateMachine}
 	/// @private

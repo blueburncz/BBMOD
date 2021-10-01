@@ -1,4 +1,5 @@
 /// @func BBMOD_IRenderable()
+/// @interface
 /// @desc An interface describing renderable objects. Any struct or object that
 /// implements this interface can be rendered using a {@link BBMOD_Renderer}.
 /// @example

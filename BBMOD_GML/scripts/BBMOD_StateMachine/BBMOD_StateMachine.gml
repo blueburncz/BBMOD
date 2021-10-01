@@ -1,7 +1,9 @@
 /// @func BBMOD_StateMachine()
+/// @extends BBMOD_Struct
 /// @desc A state machine.
 /// @see BBMOD_State
-function BBMOD_StateMachine() constructor
+function BBMOD_StateMachine()
+	: BBMOD_Struct() constructor
 {
 	/// @var {BBMOD_State[]} An array of sates.
 	/// @private

@@ -16,7 +16,7 @@ function BBMOD_AnimationStateMachine(_model)
 	AnimationPlayer = new BBMOD_AnimationPlayer(_model);
 
 	static update = function (_deltaTime) {
-		method(Super.update, self)(_deltaTime);
+		method(self, Super.update)(_deltaTime);
 		if (State != undefined)
 		{
 			AnimationPlayer.change(State.Animation, State.Loop);
@@ -26,7 +26,7 @@ function BBMOD_AnimationStateMachine(_model)
 	};
 
 	static destroy = function () {
-		method(Super.destroy, self)();
+		method(self, Super.destroy)();
 		AnimationPlayer.destroy();
 	};
 }

@@ -20,10 +20,13 @@
 
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
 ///
+/// @extends BBMOD_Struct
+///
+/// @implements {BBMOD_IEventListener}
+/// @implements {BBMOD_IRenderable}
+///
 /// @desc An animation player. Each instance of an animated model should have
 /// its own animation player.
-///
-/// @implements {BBMOD_IRenderable}
 ///
 /// @param {BBMOD_Model} _model A model that the animation player animates.
 /// @param {bool} [_paused] If `true` then the animation player is created
@@ -52,10 +55,18 @@
 /// bbmod_material_reset();
 /// ```
 ///
-/// @see BBMOD_Model
 /// @see BBMOD_Animation
-function BBMOD_AnimationPlayer(_model, _paused) constructor
+/// @see BBMOD_EventListener
+/// @see BBMOD_Model
+function BBMOD_AnimationPlayer(_model, _paused)
+	: BBMOD_Struct() constructor
 {
+	implement(BBMOD_IEventListener);
+
+	static Super = {
+		destroy: destroy,
+	};
+
 	/// @var {BBMOD_Model} A model that the animation player animates.
 	/// @readonly
 	Model = _model;
@@ -104,10 +115,6 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// @var {real} Controls animation playback speed. Must be a positive number!
 	PlaybackSpeed = 1;
 
-	/// @var {ds_map<string, func[]>/undefined} Map of event listeners.
-	/// @private
-	EventListeners = undefined;
-
 	/// @var {real[]} An array of node transforms in world space.
 	/// Useful for attachments.
 	/// @see BBMOD_AnimationPlayer.get_node_transform
@@ -119,106 +126,6 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @private
 	TransformArray = array_create(Model.BoneCount * 8, 0.0);
-
-	/// @func on_event([_event, ]_listener)
-	/// @desc Adds a listener for a specific event.
-	/// @param {string} [_event] The event name. If not specified, then the
-	/// listener is executed on every event.
-	/// @param {func} _listener A function executed when the event occurs.
-	/// Should take the event data as the first argument and the event name
-	/// as the second argument.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
-	/// ```gml
-	/// animWalk = new BBMOD_Animation("Data/Character_Walk.bbanim");
-	/// animWalk.add_event(0, "Footstep")
-	///     .add_event(16, "Footstep");
-	/// animationPlayer.on_event("Footstep", method(self, function () {
-	///     // Play footstep sound...
-	/// }));
-	/// animationPlayer.on_event(function (_data, _event) {
-	///     // This function will be executed on every event...
-	/// });
-	/// ```
-	/// @see BBMOD_AnimationPlayer.off_event
-	static on_event = function (_event, _listener) {
-		gml_pragma("forceinline");
-		if (is_method(_event))
-		{
-			_listener = _event;
-			_event = __BBMOD_EV_ALL;
-		}
-		if (EventListeners == undefined)
-		{
-			EventListeners = ds_map_create();
-		}
-		if (!ds_map_exists(EventListeners, _event))
-		{
-			EventListeners[? _event] = [];
-		}
-		array_push(EventListeners[? _event], _listener);
-		return self;
-	};
-
-	/// @func off_event([_event])
-	/// @desc Removes event listeners.
-	/// @param {string} [_event] The name of the event for which should be the
-	/// listener removed. If not specified, then listeners for all events are
-	/// removed.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
-	/// @see BBMOD_AnimationPlayer.on_event
-	static off_event = function (_event) {
-		gml_pragma("forceinline");
-		if (EventListeners == undefined)
-		{
-			return self;
-		}
-		if (_event != undefined)
-		{
-			ds_map_delete(EventListeners, _event);
-		}
-		else
-		{
-			ds_map_destroy(EventListeners);
-		}
-		return self;
-	};
-
-	/// @func trigger_event(_event, _data)
-	/// @desc Triggers an event in the animation player.
-	/// @param {string} _event The event name.
-	/// @param {any} _data The event data.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
-	static trigger_event = function (_event, _data) {
-		gml_pragma("forceinline");
-		if (EventListeners == undefined)
-		{
-			return self;
-		}
-
-		var _events, i;
-
-		if (ds_map_exists(EventListeners, _event))
-		{
-			_events = EventListeners[? _event];
-			i = 0;
-			repeat (array_length(_events))
-			{
-				_events[i++](_data, _event);
-			}
-		}
-
-		if (ds_map_exists(EventListeners, __BBMOD_EV_ALL))
-		{
-			_events = EventListeners[? __BBMOD_EV_ALL];
-			i = 0;
-			repeat (array_length(_events))
-			{
-				_events[i++](_data, _event);
-			}
-		}
-
-		return self;
-	};
 
 	static animate = function (_animationInstance, _animationTime) {
 		var _model = Model;
@@ -570,13 +477,8 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 		return self;
 	};
 
-	/// @func destroy()
-	/// @desc Frees memory used by the animation player.
 	static destroy = function () {
+		method(self, Super.destroy)();
 		ds_list_destroy(Animations);
-		if (EventListeners != undefined)
-		{
-			ds_map_destroy(EventListeners);
-		}
 	};
 }
