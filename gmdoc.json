@@ -12,7 +12,13 @@
   },
   "toc": {
     "BBMOD Docs": "index.md",
-    "Changelog 3.0.0": "Changelog3.0.0.md",
+    "Changelog": {
+      "file": "Changelog/Changelog.md",
+      "pages": {
+        "3.1.0": "Changelog/Changelog3.1.0.md",
+        "3.0.0": "Changelog/Changelog3.0.0.md"
+      }
+    },
     "Migrating from 2.5.0": "MigratingFrom2.5.0.md",
     "Quickstart guide": {
       "file": "QuickstartGuide/QuickstartGuide.md",
@@ -44,6 +50,7 @@
         "Camera module": "Modules/CameraModule.md",
         "Renderer module": "Modules/RendererModule.md",
         "PBR module": "Modules/PBRModule.md",
+        "State machine module": "Modules/StateMachineModule.md",
         "ColMesh module": "Modules/ColMeshModule.md"
       }
     },

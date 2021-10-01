@@ -15,7 +15,7 @@ If you have experience with older versions of BBMOD, see
 latest version of BBMOD.
 
 ## Contents
-* [Changelog 3.0.0](./Changelog3.0.0.html)
+* [Changelog](./Changelog.html)
 * [Migrating from 2.5.0](./MigratingFrom2.5.0.html)
 * [Quickstart guide](./QuickstartGuide.html)
 * [Advanced topics](./AdvancedTopics.html)

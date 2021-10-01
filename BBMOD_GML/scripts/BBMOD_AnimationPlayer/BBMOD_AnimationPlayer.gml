@@ -16,6 +16,8 @@
 /// @see BBMOD_AnimationPlayer.on_event
 #macro BBMOD_EV_ANIMATION_LOOP "bbmod_ev_animation_loop"
 
+#macro __BBMOD_EV_ALL "__bbmod_ev_all"
+
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
 ///
 /// @desc An animation player. Each instance of an animated model should have
@@ -118,11 +120,13 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// @private
 	TransformArray = array_create(Model.BoneCount * 8, 0.0);
 
-	/// @func on_event(_event, _listener)
+	/// @func on_event([_event, ]_listener)
 	/// @desc Adds a listener for a specific event.
-	/// @param {string} _event The event name.
+	/// @param {string} [_event] The event name. If not specified, then the
+	/// listener is executed on every event.
 	/// @param {func} _listener A function executed when the event occurs.
-	/// Should take the event data as the first argument.
+	/// Should take the event data as the first argument and the event name
+	/// as the second argument.
 	/// @return {BBMOD_AnimationPlayer} Returns `self`.
 	/// ```gml
 	/// animWalk = new BBMOD_Animation("Data/Character_Walk.bbanim");
@@ -131,10 +135,18 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// animationPlayer.on_event("Footstep", method(self, function () {
 	///     // Play footstep sound...
 	/// }));
+	/// animationPlayer.on_event(function (_data, _event) {
+	///     // This function will be executed on every event...
+	/// });
 	/// ```
 	/// @see BBMOD_AnimationPlayer.off_event
 	static on_event = function (_event, _listener) {
 		gml_pragma("forceinline");
+		if (is_method(_event))
+		{
+			_listener = _event;
+			_event = __BBMOD_EV_ALL;
+		}
 		if (EventListeners == undefined)
 		{
 			EventListeners = ds_map_create();
@@ -178,17 +190,33 @@ function BBMOD_AnimationPlayer(_model, _paused) constructor
 	/// @return {BBMOD_AnimationPlayer} Returns `self`.
 	static trigger_event = function (_event, _data) {
 		gml_pragma("forceinline");
-		if (EventListeners == undefined
-			|| !ds_map_exists(EventListeners, _event))
+		if (EventListeners == undefined)
 		{
 			return self;
 		}
-		var _events = EventListeners[? _event];
-		var i = 0;
-		repeat (array_length(_events))
+
+		var _events, i;
+
+		if (ds_map_exists(EventListeners, _event))
 		{
-			_events[i++](_data);
+			_events = EventListeners[? _event];
+			i = 0;
+			repeat (array_length(_events))
+			{
+				_events[i++](_data, _event);
+			}
 		}
+
+		if (ds_map_exists(EventListeners, __BBMOD_EV_ALL))
+		{
+			_events = EventListeners[? __BBMOD_EV_ALL];
+			i = 0;
+			repeat (array_length(_events))
+			{
+				_events[i++](_data, _event);
+			}
+		}
+
 		return self;
 	};
 

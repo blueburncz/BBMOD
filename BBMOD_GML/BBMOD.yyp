@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"BBMOD_State","path":"scripts/BBMOD_State/BBMOD_State.yy",},"order":1,},
     {"id":{"name":"BBMOD_ShDefaultAnimated","path":"shaders/BBMOD_ShDefaultAnimated/BBMOD_ShDefaultAnimated.yy",},"order":1,},
     {"id":{"name":"BBMOD_Vec3","path":"scripts/BBMOD_Vec3/BBMOD_Vec3.yy",},"order":3,},
     {"id":{"name":"OSign","path":"objects/OSign/OSign.yy",},"order":10,},
@@ -12,6 +13,7 @@
     {"id":{"name":"SndShell2","path":"sounds/SndShell2/SndShell2.yy",},"order":2,},
     {"id":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},"order":0,},
     {"id":{"name":"SndShell5","path":"sounds/SndShell5/SndShell5.yy",},"order":5,},
+    {"id":{"name":"BBMOD_AnimationState","path":"scripts/BBMOD_AnimationState/BBMOD_AnimationState.yy",},"order":3,},
     {"id":{"name":"OPlayer","path":"objects/OPlayer/OPlayer.yy",},"order":5,},
     {"id":{"name":"SndFootstep4","path":"sounds/SndFootstep4/SndFootstep4.yy",},"order":4,},
     {"id":{"name":"BBMOD_ShPBRBatched","path":"shaders/BBMOD_ShPBRBatched/BBMOD_ShPBRBatched.yy",},"order":3,},
@@ -55,12 +57,14 @@
     {"id":{"name":"BBMOD_Vec4","path":"scripts/BBMOD_Vec4/BBMOD_Vec4.yy",},"order":4,},
     {"id":{"name":"bbmod_model_to_colmesh","path":"scripts/bbmod_model_to_colmesh/bbmod_model_to_colmesh.yy",},"order":1,},
     {"id":{"name":"SndFootstep1","path":"sounds/SndFootstep1/SndFootstep1.yy",},"order":1,},
+    {"id":{"name":"BBMOD_StateMachine","path":"scripts/BBMOD_StateMachine/BBMOD_StateMachine.yy",},"order":0,},
     {"id":{"name":"SndFootstep2","path":"sounds/SndFootstep2/SndFootstep2.yy",},"order":2,},
     {"id":{"name":"BBMOD_Material","path":"scripts/BBMOD_Material/BBMOD_Material.yy",},"order":8,},
     {"id":{"name":"BBMOD_Quaternion","path":"scripts/BBMOD_Quaternion/BBMOD_Quaternion.yy",},"order":1,},
     {"id":{"name":"OShellSpawner","path":"objects/OShellSpawner/OShellSpawner.yy",},"order":12,},
     {"id":{"name":"SprCharacterCollisionMask","path":"sprites/SprCharacterCollisionMask/SprCharacterCollisionMask.yy",},"order":4,},
     {"id":{"name":"BBMOD_AnimationPlayer","path":"scripts/BBMOD_AnimationPlayer/BBMOD_AnimationPlayer.yy",},"order":4,},
+    {"id":{"name":"BBMOD_AnimationStateMachine","path":"scripts/BBMOD_AnimationStateMachine/BBMOD_AnimationStateMachine.yy",},"order":2,},
     {"id":{"name":"BBMOD_AnimationInstance","path":"scripts/BBMOD_AnimationInstance/BBMOD_AnimationInstance.yy",},"order":1,},
     {"id":{"name":"BBMOD_Camera","path":"scripts/BBMOD_Camera/BBMOD_Camera.yy",},"order":1,},
     {"id":{"name":"BBMOD_Importer","path":"scripts/BBMOD_Importer/BBMOD_Importer.yy",},"order":1,},
@@ -139,6 +143,7 @@
     {"folderPath":"folders/Demo/Sounds/Gunshot.yy","order":11,"resourceVersion":"1.0","name":"Gunshot","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Demo/Sounds/Shell.yy","order":12,"resourceVersion":"1.0","name":"Shell","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Demo/Sounds/Switch.yy","order":13,"resourceVersion":"1.0","name":"Switch","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/BBMOD/StateMachine.yy","order":9,"resourceVersion":"1.0","name":"StateMachine","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":-1,"resourceVersion":"1.3","name":"audiogroup_default","resourceType":"GMAudioGroup",},
@@ -201,7 +206,7 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","resourceVersion":"1.0","name":"BBMOD.dll","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
-    "IDEVersion": "2.3.4.583",
+    "IDEVersion": "2.3.5.589",
   },
   "resourceVersion": "1.4",
   "name": "BBMOD",
