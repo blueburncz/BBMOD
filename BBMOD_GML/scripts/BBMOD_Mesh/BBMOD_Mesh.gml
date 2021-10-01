@@ -1,9 +1,15 @@
 /// @func BBMOD_Mesh(_vertexFormat)
+/// @extends BBMOD_Struct
 /// @desc A mesh struct.
 /// @param {BBMOD_VertexFormat} _vertexFormat The vertex format of the mesh.
 /// @see BBMOD_Node
-function BBMOD_Mesh(_vertexFormat) constructor
+function BBMOD_Mesh(_vertexFormat)
+	: BBMOD_Struct() constructor
 {
+	static Super = {
+		destroy: destroy,
+	};
+
 	/// @var {real} An index of a material that the mesh uses.
 	/// @see BBMOD_Model.MaterialCount
 	/// @see BBMOD_Model.MaterialNames
@@ -289,11 +295,8 @@ function BBMOD_Mesh(_vertexFormat) constructor
 		return self;
 	};
 
-	/// @func destroy()
-	/// @desc Destroys the mesh.
-	/// @private
 	static destroy = function () {
-		gml_pragma("forceinline");
+		method(self, Super.destroy)();
 		vertex_delete_buffer(VertexBuffer);
 	};
 }

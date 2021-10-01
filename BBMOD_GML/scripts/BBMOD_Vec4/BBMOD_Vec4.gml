@@ -1,4 +1,4 @@
-/// @func BBMOD_Vec4([_x[, _y, _z, _w]]) constructor
+/// @func BBMOD_Vec4([_x[, _y, _z, _w]])
 /// @desc A 3D vector.
 /// @param {real} [_x] The first component of the vector. Defaults to 0.
 /// @param {real} [_y] The second component of the vector. Defaults to `_x`.

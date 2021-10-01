@@ -1,4 +1,4 @@
-/// @func BBMOD_Vec2([_x[, _y]]) constructor
+/// @func BBMOD_Vec2([_x[, _y]])
 /// @desc A 2D vector.
 /// @param {real} [_x] The first component of the vector. Defaults to 0.
 /// @param {real} [_y] The second component of the vector. Defaults to `_x`.

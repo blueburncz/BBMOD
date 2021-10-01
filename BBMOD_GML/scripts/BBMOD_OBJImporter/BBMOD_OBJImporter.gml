@@ -9,8 +9,13 @@
 /// modFence = _objImporter.import("Data/Assets/Fence.obj");
 /// _objImporter.destroy();
 /// ```
-function BBMOD_OBJImporter() : BBMOD_Importer() constructor
+function BBMOD_OBJImporter()
+	: BBMOD_Importer() constructor
 {
+	static Super = {
+		destroy: destroy,
+	};
+
 	Vertices = ds_list_create();
 
 	Normals = ds_list_create();
@@ -235,6 +240,7 @@ function BBMOD_OBJImporter() : BBMOD_Importer() constructor
 	};
 
 	static destroy = function () {
+		method(self, Super.destroy)();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Normals);
 		ds_list_destroy(TextureCoords);

@@ -1,6 +1,8 @@
 /// @func BBMOD_Importer()
+/// @extends BBMOD_Struct
 /// @desc Base class for model importers.
-function BBMOD_Importer() constructor
+function BBMOD_Importer()
+	: BBMOD_Struct() constructor
 {
 	/// @var {bool} If true then UV texture coordinates of imported models
 	/// will be flipped horizontally. Defaults to false.
@@ -27,10 +29,5 @@ function BBMOD_Importer() constructor
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	static import = function (_path) {
 		throw new BBMOD_NotImplementedException();
-	};
-
-	/// @func destroy()
-	/// @desc Frees resources used by the importer from memory.
-	static destroy = function () {
 	};
 }

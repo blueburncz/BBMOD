@@ -1,4 +1,5 @@
 /// @func BBMOD_MeshBuilder()
+/// @extends BBMOD_Struct
 /// @desc Allows you to build meshes through code.
 /// @example
 /// Following code shows how you can create a plane mesh using the mesh builder.
@@ -24,8 +25,13 @@
 /// @see BBMOD_Mesh
 /// @see BBMOD_Vertex
 /// @see BBMOD_VertexFormat
-function BBMOD_MeshBuilder() constructor
+function BBMOD_MeshBuilder()
+	: BBMOD_Struct() constructor
 {
+	static Super = {
+		destroy: destroy,
+	};
+
 	/// @var {ds_list<BBMOD_Vertex>} List of mesh vertices.
 	/// @readonly
 	Vertices = ds_list_create();
@@ -225,9 +231,8 @@ function BBMOD_MeshBuilder() constructor
 		return _mesh;
 	};
 
-	/// @func destroy()
-	/// @desc Frees resources used by the mesh builder from memory.
 	static destroy = function () {
+		method(self, Super.destroy)();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Faces);
 	};

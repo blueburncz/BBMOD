@@ -1,5 +1,7 @@
 /// @func BBMOD_StaticBatch(_vformat)
 ///
+/// @extends BBMOD_Struct
+///
 /// @desc A static batch is a structure that allows you to compose static models
 /// into a single one. Compared to {@link BBMOD_Model.submit}, this drastically
 /// reduces draw calls and increases performance, but requires more memory.
@@ -26,8 +28,13 @@
 ///
 /// @see BBMOD_Model.get_vertex_format
 /// @see BBMOD_DynamicBatch
-function BBMOD_StaticBatch(_vformat) constructor
+function BBMOD_StaticBatch(_vformat)
+	: BBMOD_Struct() constructor
 {
+	static Super = {
+		destroy: destroy,
+	};
+
 	/// @var {vertex_buffer} A vertex buffer.
 	/// @private
 	VertexBuffer = vertex_create_buffer();
@@ -124,10 +131,8 @@ function BBMOD_StaticBatch(_vformat) constructor
 		return self;
 	};
 
-	/// @func destroy()
-	/// @desc Frees memory used by the static batch.
 	static destroy = function () {
-		gml_pragma("forceinline");
+		method(self, Super.destroy)();
 		vertex_delete_buffer(VertexBuffer);
 	};
 }

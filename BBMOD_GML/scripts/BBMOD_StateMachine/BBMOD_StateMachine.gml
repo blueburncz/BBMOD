@@ -5,6 +5,10 @@
 function BBMOD_StateMachine()
 	: BBMOD_Struct() constructor
 {
+	static Super = {
+		destroy: destroy,
+	};
+
 	/// @var {BBMOD_State[]} An array of sates.
 	/// @private
 	StateArray = [];
@@ -121,9 +125,8 @@ function BBMOD_StateMachine()
 		return self;
 	};
 
-	/// @func destroy()
-	/// @desc Frees resources used by the state machine from memory.
 	static destroy = function () {
+		method(self, Super.destroy)();
 		for (var i = array_length(StateArray) - 1; i >= 0; --i)
 		{
 			StateArray[i].destroy();

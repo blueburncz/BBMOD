@@ -1,6 +1,7 @@
 /// @func BBMOD_Model(_file[, _sha1])
-/// @desc A model.
+/// @extends BBMOD_Struct
 /// @implements {BBMOD_IRenderable}
+/// @desc A model.
 /// @param {string} _file The "*.bbmod" model file to load.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
@@ -16,8 +17,15 @@
 /// }
 /// ```
 /// @throws {BBMOD_Exception} When the model fails to load.
-function BBMOD_Model(_file, _sha1) constructor
+function BBMOD_Model(_file, _sha1)
+	: BBMOD_Struct() constructor
 {
+	implement(BBMOD_IRenderable);
+
+	static Super = {
+		destroy: destroy,
+	};
+
 	/// @var {real} The version of the model file.
 	/// @readonly
 	Version = BBMOD_VERSION;
@@ -370,10 +378,8 @@ function BBMOD_Model(_file, _sha1) constructor
 		return self;
 	};
 
-	/// @func destroy()
-	/// @desc Frees memory used by the model.
 	static destroy = function () {
-		gml_pragma("forceinline");
+		method(self, Super.destroy)();
 		var i = 0;
 		repeat (array_length(Meshes))
 		{

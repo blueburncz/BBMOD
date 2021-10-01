@@ -91,11 +91,17 @@ function bbmod_get_materials()
 }
 
 /// @func BBMOD_Material(_shader)
+/// @extends BBMOD_Struct
 /// @desc A material that can be used when rendering models.
 /// @param {BBMOD_Shader} _shader A shader that the material uses.
 /// @see BBMOD_Shader
-function BBMOD_Material(_shader) constructor
+function BBMOD_Material(_shader)
+	: BBMOD_Struct() constructor
 {
+	static Super = {
+		destroy: destroy,
+	};
+
 	/// @var {uint} Passes in which is the material rendered. Defaults to
 	/// {@link BBMOD_RENDER_FORWARD}.
 	/// @see BBMOD_RENDER_DEFERRED
@@ -363,9 +369,9 @@ function BBMOD_Material(_shader) constructor
 		ds_list_clear(RenderCommands);
 	};
 
-	/// @func destroy()
-	/// @desc Frees resources used by the material from memory.
 	static destroy = function () {
+		method(self, Super.destroy)();
+
 		ds_list_destroy(RenderCommands);
 
 		if (BaseOpacitySprite != undefined)

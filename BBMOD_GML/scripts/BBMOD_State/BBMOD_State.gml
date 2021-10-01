@@ -40,9 +40,4 @@ function BBMOD_State(_name)
 		gml_pragma("forceinline");
 		return (current_time - ActiveSince);
 	};
-
-	/// @func destroy()
-	/// @desc Frees resource used by the state from memory.
-	static destroy = function () {
-	};
 }

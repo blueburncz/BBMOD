@@ -1,4 +1,5 @@
 /// @func BBMOD_Renderer()
+/// @extends BBMOD_Struct
 /// @desc Implements a basic renderer which automatically renders all added
 /// [renderables](./BBMOD_Renderer.Renderables.html) sorted by
 /// [materials](./BBMOD_Material.html), sorted by their
@@ -35,7 +36,8 @@
 /// ```
 /// @see BBMOD_IRenderable
 /// @see BBMOD_Camera
-function BBMOD_Renderer() constructor
+function BBMOD_Renderer()
+	: BBMOD_Struct() constructor
 {
 	/// @var {BBMOD_IRenderable[]} An array of renderable objects and structs.
 	/// These are automatically rendered in {@link BBMOD_Renderer.render}.
@@ -162,10 +164,5 @@ function BBMOD_Renderer() constructor
 			gpu_pop_state();
 		}
 		return self;
-	};
-
-	/// @func destroy()
-	/// @desc Frees resources used by the renderer from memory.
-	static destroy = function () {
 	};
 }

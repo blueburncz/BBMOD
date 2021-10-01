@@ -1,5 +1,7 @@
 /// @func BBMOD_DynamicBatch(_model, _size)
 ///
+/// @extends BBMOD_Struct
+///
 /// @desc A dynamic batch is a structure that allows you to render multiple
 /// instances of a single model at once, each with its own position, scale and
 /// rotation. Compared to {@link BBMOD_Model.submit}, this drastically reduces
@@ -26,8 +28,13 @@
 /// ```
 ///
 /// @see BBMOD_StaticBatch
-function BBMOD_DynamicBatch(_model, _size) constructor
+function BBMOD_DynamicBatch(_model, _size)
+	: BBMOD_Struct() constructor
 {
+	static Super = {
+		destroy: destroy,
+	};
+
 	/// @var {BBMOD_Model} A model that is being batched.
 	/// @readonly
 	Model = _model
@@ -226,10 +233,8 @@ function BBMOD_DynamicBatch(_model, _size) constructor
 		return self;
 	};
 
-	/// @func destroy()
-	/// @desc Frees memory used by the dynamic batch.
 	static destroy = function () {
-		gml_pragma("forceinline");
+		method(self, Super.destroy)();
 		vertex_delete_buffer(VertexBuffer);
 	};
 }

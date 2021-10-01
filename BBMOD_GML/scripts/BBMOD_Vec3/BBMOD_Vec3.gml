@@ -16,7 +16,7 @@
 /// @see BBMOD_Vec3
 #macro BBMOD_VEC3_UP new BBMOD_Vec3(0.0, 0.0, 1.0)
 
-/// @func BBMOD_Vec3([_x[, _y, _z]]) constructor
+/// @func BBMOD_Vec3([_x[, _y, _z]])
 /// @desc A 3D vector.
 /// @param {real} [_x] The first component of the vector. Defaults to 0.
 /// @param {real} [_y] The second component of the vector. Defaults to `_x`.

@@ -3,6 +3,7 @@
 global.__bbmodRenderStack = ds_stack_create();
 
 /// @func BBMOD_Node(_model)
+/// @implements {BBMOD_IRenderable}
 /// @desc A node struct.
 /// @param {BBMOD_Model} _model The model which contains this node.
 /// @see BBMOD_Model.RootNode

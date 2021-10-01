@@ -2,7 +2,7 @@
 
 ## GML API:
 **Core module:**
-* Added new struct `BBMOD_Struct`, which is a new base struct for all other BBMOD structs.
+* Added new struct `BBMOD_Struct` which is a base struct for BBMOD structs that require more OOP functionality.
 * Moved methods `on_event`, `off_event` and `trigger_event` of `BBMOD_AnimationPlayer` into a new interface `BBMOD_IEventListener`.
 * Struct `BBMOD_AnimationPlayer` now implements interface `BBMOD_EventListener`.
 * Listeners passed to method `BBMOD_EventListener.on_event` can now take the event name as the second argument.

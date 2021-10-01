@@ -1,5 +1,6 @@
 /// @func BBMOD_Struct()
-/// @desc Base struct for all other BBMOD structs.
+/// @desc Base struct for BBMOD structs. More lightweight structs do not have to
+/// inherit from this.
 function BBMOD_Struct() constructor
 {
 	/// @var {func[]} An array of implemented interfaces.
