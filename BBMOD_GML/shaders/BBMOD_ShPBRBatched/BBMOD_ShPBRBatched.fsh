@@ -296,6 +296,8 @@ Material UnpackMaterial(
 
 void main()
 {
+	vec4 fragment_color = gl_FragColor;
+	
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
 		bbmod_NormalRoughness,
@@ -304,30 +306,32 @@ void main()
 		bbmod_Emissive,
 		v_mTBN,
 		v_vTexCoord);
-
+	
+	fragment_color.a = material.Opacity;
 	if (material.Opacity < bbmod_AlphaTest)
 	{
-		discard;
+		fragment_color.a = 0.;
 	}
-	gl_FragColor.a = material.Opacity;
 
 	vec3 N = material.Normal;
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);
 	vec3 lightColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
 
 	// Diffuse
-	gl_FragColor.rgb = material.Base * lightColor;
+	fragment_color.rgb = material.Base * lightColor;
 	// Specular
-	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, bbmod_BRDF, material.Specular, material.Roughness, N, V);
+	fragment_color.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, bbmod_BRDF, material.Specular, material.Roughness, N, V);
 	// Ambient occlusion
-	gl_FragColor.rgb *= material.AO;
+	fragment_color.rgb *= material.AO;
 	// Emissive
-	gl_FragColor.rgb += material.Emissive;
+	fragment_color.rgb += material.Emissive;
 	// Subsurface scattering
-	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
+	fragment_color.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
 	// Exposure
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+	fragment_color.rgb = vec3(1.0) - exp(-fragment_color.rgb * bbmod_Exposure);
 	// Gamma correction
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	fragment_color.rgb = xLinearToGamma(fragment_color.rgb);
+	
+	gl_FragColor = fragment_color;
 }
 // include("Uber_PS.xsh")

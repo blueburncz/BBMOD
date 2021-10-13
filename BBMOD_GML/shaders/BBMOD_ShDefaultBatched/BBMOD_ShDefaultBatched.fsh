@@ -14,7 +14,7 @@ void main()
 	vec4 baseOpacity = texture2D(gm_BaseTexture, v_vTexCoord);
 	if (baseOpacity.a < bbmod_AlphaTest)
 	{
-		discard;
+		baseOpacity.a = 0.;
 	}
 	gl_FragColor = baseOpacity;
 }
