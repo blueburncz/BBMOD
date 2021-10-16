@@ -30,7 +30,7 @@ function __bbmod_shader_default_animated()
 
 function __bbmod_shader_default_batched()
 {
-	static _shader = new BBMOD_Shader(BBMOD_ShDefaultAnimated, BBMOD_VFORMAT_DEFAULT_BATCHED);
+	static _shader = new BBMOD_Shader(BBMOD_ShDefaultBatched, BBMOD_VFORMAT_DEFAULT_BATCHED);
 	return _shader;
 }
 
