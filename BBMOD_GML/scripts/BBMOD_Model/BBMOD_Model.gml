@@ -1,5 +1,5 @@
 /// @func BBMOD_Model(_file[, _sha1])
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 /// @implements {BBMOD_IRenderable}
 /// @desc A model.
 /// @param {string} _file The "*.bbmod" model file to load.
@@ -18,7 +18,7 @@
 /// ```
 /// @throws {BBMOD_Exception} When the model fails to load.
 function BBMOD_Model(_file, _sha1)
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	implement(BBMOD_IRenderable);
 

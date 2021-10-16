@@ -1,10 +1,10 @@
 /// @func BBMOD_Mesh(_vertexFormat)
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 /// @desc A mesh struct.
 /// @param {BBMOD_VertexFormat} _vertexFormat The vertex format of the mesh.
 /// @see BBMOD_Node
 function BBMOD_Mesh(_vertexFormat)
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	static Super = {
 		destroy: destroy,

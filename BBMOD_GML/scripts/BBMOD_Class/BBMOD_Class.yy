@@ -6,7 +6,7 @@
     "path": "folders/BBMOD/Core.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_Struct",
+  "name": "BBMOD_Class",
   "tags": [],
   "resourceType": "GMScript",
 }

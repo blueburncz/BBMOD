@@ -1,6 +1,6 @@
 /// @func BBMOD_StaticBatch(_vformat)
 ///
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 ///
 /// @desc A static batch is a structure that allows you to compose static models
 /// into a single one. Compared to {@link BBMOD_Model.submit}, this drastically
@@ -29,7 +29,7 @@
 /// @see BBMOD_Model.get_vertex_format
 /// @see BBMOD_DynamicBatch
 function BBMOD_StaticBatch(_vformat)
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	static Super = {
 		destroy: destroy,

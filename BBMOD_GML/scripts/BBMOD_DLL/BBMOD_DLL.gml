@@ -23,7 +23,7 @@
 #macro BBMOD_DLL_ERR_SAVE_FAILED 3
 
 /// @func BBMOD_DLL([_path])
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 /// @desc Loads a DLL which allows you to convert models into BBMOD.
 /// @param {string} [_path] The path to the DLL file. Defaults to
 /// "Data/BBMOD/BBMOD.dll".
@@ -37,7 +37,7 @@
 /// modHouse = new BBMOD_Model("House.bbmod");
 /// ```
 function BBMOD_DLL(_path)
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	static Super = {
 		destroy: destroy,

@@ -1,9 +1,9 @@
 /// @func BBMOD_StateMachine()
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 /// @desc A state machine.
 /// @see BBMOD_State
 function BBMOD_StateMachine()
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	static Super = {
 		destroy: destroy,

@@ -1,8 +1,8 @@
 /// @func BBMOD_Importer()
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 /// @desc Base class for model importers.
 function BBMOD_Importer()
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	/// @var {bool} If true then UV texture coordinates of imported models
 	/// will be flipped horizontally. Defaults to false.

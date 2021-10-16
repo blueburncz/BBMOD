@@ -91,12 +91,12 @@ function bbmod_get_materials()
 }
 
 /// @func BBMOD_Material(_shader)
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 /// @desc A material that can be used when rendering models.
 /// @param {BBMOD_Shader} _shader A shader that the material uses.
 /// @see BBMOD_Shader
 function BBMOD_Material(_shader)
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	static Super = {
 		destroy: destroy,

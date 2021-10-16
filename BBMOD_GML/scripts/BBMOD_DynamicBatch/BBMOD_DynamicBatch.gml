@@ -1,6 +1,6 @@
 /// @func BBMOD_DynamicBatch(_model, _size)
 ///
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 ///
 /// @desc A dynamic batch is a structure that allows you to render multiple
 /// instances of a single model at once, each with its own position, scale and
@@ -29,7 +29,7 @@
 ///
 /// @see BBMOD_StaticBatch
 function BBMOD_DynamicBatch(_model, _size)
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	static Super = {
 		destroy: destroy,

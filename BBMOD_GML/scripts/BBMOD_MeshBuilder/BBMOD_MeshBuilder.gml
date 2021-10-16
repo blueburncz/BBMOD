@@ -1,5 +1,5 @@
 /// @func BBMOD_MeshBuilder()
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 /// @desc Allows you to build meshes through code.
 /// @example
 /// Following code shows how you can create a plane mesh using the mesh builder.
@@ -26,7 +26,7 @@
 /// @see BBMOD_Vertex
 /// @see BBMOD_VertexFormat
 function BBMOD_MeshBuilder()
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	static Super = {
 		destroy: destroy,

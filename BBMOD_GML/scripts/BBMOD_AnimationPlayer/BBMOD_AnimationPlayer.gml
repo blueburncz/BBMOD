@@ -20,7 +20,7 @@
 
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
 ///
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 ///
 /// @implements {BBMOD_IEventListener}
 /// @implements {BBMOD_IRenderable}
@@ -59,7 +59,7 @@
 /// @see BBMOD_EventListener
 /// @see BBMOD_Model
 function BBMOD_AnimationPlayer(_model, _paused)
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	implement(BBMOD_IEventListener);
 

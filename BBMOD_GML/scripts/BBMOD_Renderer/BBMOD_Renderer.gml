@@ -1,5 +1,5 @@
 /// @func BBMOD_Renderer()
-/// @extends BBMOD_Struct
+/// @extends BBMOD_Class
 /// @desc Implements a basic renderer which automatically renders all added
 /// [renderables](./BBMOD_Renderer.Renderables.html) sorted by
 /// [materials](./BBMOD_Material.html), sorted by their
@@ -37,7 +37,7 @@
 /// @see BBMOD_IRenderable
 /// @see BBMOD_Camera
 function BBMOD_Renderer()
-	: BBMOD_Struct() constructor
+	: BBMOD_Class() constructor
 {
 	/// @var {BBMOD_IRenderable[]} An array of renderable objects and structs.
 	/// These are automatically rendered in {@link BBMOD_Renderer.render}.

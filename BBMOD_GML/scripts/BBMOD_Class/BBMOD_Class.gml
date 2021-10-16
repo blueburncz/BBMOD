@@ -1,7 +1,6 @@
-/// @func BBMOD_Struct()
-/// @desc Base struct for BBMOD structs. More lightweight structs do not have to
-/// inherit from this.
-function BBMOD_Struct() constructor
+/// @func BBMOD_Class()
+/// @desc Base for BBMOD structs that require more OOP functionality.
+function BBMOD_Class() constructor
 {
 	/// @var {func[]} An array of implemented interfaces.
 	/// @private
@@ -14,7 +13,7 @@ function BBMOD_Struct() constructor
 
 	/// @func implement(_interface)
 	/// @desc Implements an interface into the struct.
-	/// @return {BBMOD_Struct} Returns `self`.
+	/// @return {BBMOD_Class} Returns `self`.
 	/// @throws {BBMOD_Exception} If the struct already implements the interface.
 	static implement = function (_interface) {
 		gml_pragma("forceinline");

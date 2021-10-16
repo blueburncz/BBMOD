@@ -1,19 +1,26 @@
-/// @func BBMOD_AnimationStateMachine(_model)
+/// @func BBMOD_AnimationStateMachine(_animationPlayer)
 /// @extends BBMOD_StateMachine
 /// @desc A state machine that controls animation playback.
-/// @param {BBMOD_Model} _model A model that the state machine animates.
+/// @param {BBMOD_AnimationPlayer} _animationPlayer The animation player to control.
+/// @see BBMOD_AnimationPlayer
 /// @see BBMOD_AnimationState
-function BBMOD_AnimationStateMachine(_model)
+function BBMOD_AnimationStateMachine(_animationPlayer)
 	: BBMOD_StateMachine() constructor
 {
 	static Super = {
 		update: update,
-		destroy: destroy,
 	};
 
 	/// @var {BBMOD_AnimationPlayer} The state machine's animation player.
 	/// @readonly
-	AnimationPlayer = new BBMOD_AnimationPlayer(_model);
+	AnimationPlayer = _animationPlayer;
+
+	AnimationPlayer.on_event(method(self, function (_data, _event) {
+		if (State != undefined)
+		{
+			State.trigger_event(_event, _data);
+		}
+	}));
 
 	static update = function (_deltaTime) {
 		method(self, Super.update)(_deltaTime);
@@ -23,10 +30,5 @@ function BBMOD_AnimationStateMachine(_model)
 		}
 		AnimationPlayer.update(_deltaTime);
 		return self;
-	};
-
-	static destroy = function () {
-		method(self, Super.destroy)();
-		AnimationPlayer.destroy();
 	};
 }
