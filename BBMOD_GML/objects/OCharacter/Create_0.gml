@@ -34,3 +34,5 @@ animationPlayer.on_event("Footstep", method(self, function () {
 	);
 	audio_play_sound_at(_sound, x, y, z, 1, 200, 1, false, 1);
 }));
+
+animationStateMachine = new BBMOD_AnimationStateMachine(animationPlayer);

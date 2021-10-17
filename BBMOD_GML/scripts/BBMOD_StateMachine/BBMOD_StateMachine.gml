@@ -5,7 +5,7 @@
 function BBMOD_StateMachine()
 	: BBMOD_Class() constructor
 {
-	static Super = {
+	static Super_Class = {
 		destroy: destroy,
 	};
 
@@ -18,13 +18,23 @@ function BBMOD_StateMachine()
 	StateInitial = undefined;
 
 	/// @var {BBMOD_State/undefined} The current state.
-	/// @private
+	/// @readonly
 	State = undefined;
 
 	/// @var {func/undefined} A function executed when the state changes.
-	/// It must take the state machine as the first argument and its previous
+	/// It should take the state machine as the first argument and its previous
 	/// state as the second argument.
 	OnStateChange = undefined;
+
+	/// @var {func/undefined} A function executed in the update method *before*
+	/// the current state is updated. It should take the state machine as the
+	/// first argument and delta time as the second argument.
+	OnPreUpdate = undefined;
+
+	/// @var {func/undefined} A function executed in the update method *after*
+	/// the current state is updated. It should take the state machine as the
+	/// first argument and delta time as the second argument.
+	OnPostUpdate = undefined;
 
 	/// @func add_state(_state[, _initial])
 	/// @desc Adds a state to the state machine.
@@ -47,14 +57,6 @@ function BBMOD_StateMachine()
 			StateInitial = _state;
 		}
 		return self;
-	};
-
-	/// @func get_state()
-	/// @desc Retrieves the current state.
-	/// @return {BBMOD_State/undefined} The current state.
-	static get_state = function () {
-		gml_pragma("forceinline");
-		return State;
 	};
 
 	/// @func change_state(_state)
@@ -112,6 +114,11 @@ function BBMOD_StateMachine()
 	static update = function (_deltaTime) {
 		gml_pragma("forceinline");
 
+		if (OnPreUpdate != undefined)
+		{
+			OnPreUpdate(self, _deltaTime);
+		}
+
 		if (State == undefined && StateInitial != undefined)
 		{
 			change_state(StateInitial);
@@ -122,11 +129,16 @@ function BBMOD_StateMachine()
 			State.OnUpdate(State);
 		}
 
+		if (OnPostUpdate != undefined)
+		{
+			OnPostUpdate(self, _deltaTime);
+		}
+
 		return self;
 	};
 
 	static destroy = function () {
-		method(self, Super.destroy)();
+		method(self, Super_Class.destroy)();
 		for (var i = array_length(StateArray) - 1; i >= 0; --i)
 		{
 			StateArray[i].destroy();

@@ -6,7 +6,7 @@
 function BBMOD_PBRShader(_shader, _vertexFormat)
 	: BBMOD_Shader(_shader, _vertexFormat) constructor
 {
-	static Super = {
+	static Super_Shader = {
 		set_material: set_material,
 	};
 
@@ -130,7 +130,7 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
-		method(self, Super.set_material)(_material);
+		method(self, Super_Shader.set_material)(_material);
 		set_metallic_ao(_material.MetallicAO);
 		set_normal_roughness(_material.NormalRoughness);
 		set_subsurface(_material.Subsurface);

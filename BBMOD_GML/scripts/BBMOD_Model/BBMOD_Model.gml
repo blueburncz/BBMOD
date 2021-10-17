@@ -22,7 +22,7 @@ function BBMOD_Model(_file, _sha1)
 {
 	implement(BBMOD_IRenderable);
 
-	static Super = {
+	static Super_Class = {
 		destroy: destroy,
 	};
 
@@ -378,15 +378,6 @@ function BBMOD_Model(_file, _sha1)
 		return self;
 	};
 
-	static destroy = function () {
-		method(self, Super.destroy)();
-		var i = 0;
-		repeat (array_length(Meshes))
-		{
-			Meshes[i++].destroy();
-		}
-	};
-
 	/// @func to_dynamic_batch(_dynamicBatch)
 	/// @param {BBMOD_DynamicBatch} _dynamicBatch
 	/// @return {BBMOD_DynamicBatch} Returns `self`.
@@ -415,6 +406,15 @@ function BBMOD_Model(_file, _sha1)
 			Meshes[i++].to_static_batch(self, _staticBatch, _transform);
 		}
 		return self;
+	};
+
+	static destroy = function () {
+		method(self, Super_Class.destroy)();
+		var i = 0;
+		repeat (array_length(Meshes))
+		{
+			Meshes[i++].destroy();
+		}
 	};
 
 	if (_file != undefined)

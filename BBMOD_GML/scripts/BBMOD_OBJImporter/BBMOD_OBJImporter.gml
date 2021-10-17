@@ -12,7 +12,7 @@
 function BBMOD_OBJImporter()
 	: BBMOD_Importer() constructor
 {
-	static Super = {
+	static Super_Importer = {
 		destroy: destroy,
 	};
 
@@ -240,7 +240,7 @@ function BBMOD_OBJImporter()
 	};
 
 	static destroy = function () {
-		method(self, Super.destroy)();
+		method(self, Super_Importer.destroy)();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Normals);
 		ds_list_destroy(TextureCoords);

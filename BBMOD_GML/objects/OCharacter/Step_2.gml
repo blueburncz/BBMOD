@@ -1,6 +1,6 @@
 event_inherited();
 
-animationPlayer.update(delta_time);
+animationStateMachine.update(delta_time);
 
 // Slow turn body towards direction
 directionBody += angle_difference(direction, directionBody) * 0.2;

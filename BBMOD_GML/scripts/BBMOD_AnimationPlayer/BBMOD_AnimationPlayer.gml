@@ -63,7 +63,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 {
 	implement(BBMOD_IEventListener);
 
-	static Super = {
+	static Super_Class = {
 		destroy: destroy,
 	};
 
@@ -478,7 +478,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	};
 
 	static destroy = function () {
-		method(self, Super.destroy)();
+		method(self, Super_Class.destroy)();
 		ds_list_destroy(Animations);
 	};
 }

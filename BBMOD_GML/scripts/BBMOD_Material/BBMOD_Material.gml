@@ -98,7 +98,7 @@ function bbmod_get_materials()
 function BBMOD_Material(_shader)
 	: BBMOD_Class() constructor
 {
-	static Super = {
+	static Super_Class = {
 		destroy: destroy,
 	};
 
@@ -370,7 +370,7 @@ function BBMOD_Material(_shader)
 	};
 
 	static destroy = function () {
-		method(self, Super.destroy)();
+		method(self, Super_Class.destroy)();
 
 		ds_list_destroy(RenderCommands);
 

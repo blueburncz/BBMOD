@@ -7,7 +7,7 @@
 function BBMOD_AnimationStateMachine(_animationPlayer)
 	: BBMOD_StateMachine() constructor
 {
-	static Super = {
+	static Super_StateMachine = {
 		update: update,
 	};
 
@@ -23,7 +23,7 @@ function BBMOD_AnimationStateMachine(_animationPlayer)
 	}));
 
 	static update = function (_deltaTime) {
-		method(self, Super.update)(_deltaTime);
+		method(self, Super_StateMachine.update)(_deltaTime);
 		if (State != undefined)
 		{
 			AnimationPlayer.change(State.Animation, State.Loop);

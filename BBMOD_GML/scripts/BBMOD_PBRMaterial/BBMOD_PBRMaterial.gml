@@ -31,7 +31,7 @@
 function BBMOD_PBRMaterial(_shader)
 	: BBMOD_Material(_shader) constructor
 {
-	static Super = {
+	static Super_Material = {
 		copy: copy,
 		destroy: destroy,
 	};
@@ -207,7 +207,7 @@ function BBMOD_PBRMaterial(_shader)
 	};
 
 	static copy = function (_dest) {
-		method(self, Super.copy)(_dest);
+		method(self, Super_Material.copy)(_dest);
 
 		// NormalRoughness
 		if (_dest.NormalRoughnessSprite != undefined)
@@ -287,7 +287,7 @@ function BBMOD_PBRMaterial(_shader)
 	};
 
 	static destroy = function () {
-		method(self, Super.destroy)();
+		method(self, Super_Material.destroy)();
 		if (NormalRoughnessSprite != undefined)
 		{
 			sprite_delete(NormalRoughnessSprite);

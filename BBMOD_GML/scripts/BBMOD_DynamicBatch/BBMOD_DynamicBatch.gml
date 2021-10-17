@@ -31,7 +31,7 @@
 function BBMOD_DynamicBatch(_model, _size)
 	: BBMOD_Class() constructor
 {
-	static Super = {
+	static Super_Class = {
 		destroy: destroy,
 	};
 
@@ -234,7 +234,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	};
 
 	static destroy = function () {
-		method(self, Super.destroy)();
+		method(self, Super_Class.destroy)();
 		vertex_delete_buffer(VertexBuffer);
 	};
 }

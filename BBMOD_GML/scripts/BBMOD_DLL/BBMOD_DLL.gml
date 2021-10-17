@@ -39,7 +39,7 @@
 function BBMOD_DLL(_path)
 	: BBMOD_Class() constructor
 {
-	static Super = {
+	static Super_Class = {
 		destroy: destroy,
 	};
 
@@ -539,10 +539,8 @@ function BBMOD_DLL(_path)
 		return self;
 	};
 
-	/// @func destroy()
-	/// @desc Frees memory used by the DLL.
 	static destroy = function () {
-		method(self, Super.destroy)();
+		method(self, Super_Class.destroy)();
 		external_free(Path);
 	};
 }

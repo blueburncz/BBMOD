@@ -28,7 +28,7 @@
 function BBMOD_MeshBuilder()
 	: BBMOD_Class() constructor
 {
-	static Super = {
+	static Super_Class = {
 		destroy: destroy,
 	};
 
@@ -232,7 +232,7 @@ function BBMOD_MeshBuilder()
 	};
 
 	static destroy = function () {
-		method(self, Super.destroy)();
+		method(self, Super_Class.destroy)();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Faces);
 	};
