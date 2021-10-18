@@ -1,7 +1,46 @@
 /// @func BBMOD_AnimationStateMachine(_animationPlayer)
+///
 /// @extends BBMOD_StateMachine
+///
 /// @desc A state machine that controls animation playback.
+///
 /// @param {BBMOD_AnimationPlayer} _animationPlayer The animation player to control.
+///
+/// @example
+/// ```gml
+/// // Create event
+/// animationPlayer = new BBMOD_AnimationPlayer(model);
+///
+/// animationStateMachine = new BBMOD_AnimationStateMachine(animationPlayer);
+/// animationStateMachine.OnEnter = method(self, function () {
+///     animationStateMachine.change_state(stateIdle);
+/// });
+/// animationStateMachine.OnPreUpdate = method(self, function () {
+///     if (hp <= 0 && animationStateMachine.State != stateDead)
+///     {
+///         animationStateMachine.change_state(stateDead);
+///     }
+/// });
+///
+/// stateIdle = new BBMOD_AnimationState("Idle", animIdle);
+/// animationStateMachine.add_state(stateIdle);
+///
+/// stateDead = new BBMOD_AnimationState("Dead", animDead);
+/// stateDead.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
+///     animationStateMachine.finish();
+/// }));
+/// animationStateMachine.add_state(stateDead);
+///
+/// animationStateMachine.start();
+/// 
+/// // Step event
+/// animationStateMachine.update();
+/// 
+/// // Clean Up event
+/// animationPlayer.destroy();
+/// animationStateMachine.destroy();
+/// ```
+///
 /// @see BBMOD_AnimationPlayer
 /// @see BBMOD_AnimationState
 function BBMOD_AnimationStateMachine(_animationPlayer)
