@@ -7,13 +7,22 @@
 /// @param {BBMOD_AnimationPlayer} _animationPlayer The animation player to control.
 ///
 /// @example
+/// Following code shows an animation state machine which goes to the "Idle" state
+/// on start and independently on the current state switches to "Dead" state when
+/// variable `hp` meets 0. After the death animation ends, the state machine enters
+/// the final state and the instance is destroyed.
+///
 /// ```gml
 /// // Create event
+/// destroy = false;
 /// animationPlayer = new BBMOD_AnimationPlayer(model);
 ///
 /// animationStateMachine = new BBMOD_AnimationStateMachine(animationPlayer);
 /// animationStateMachine.OnEnter = method(self, function () {
 ///     animationStateMachine.change_state(stateIdle);
+/// });
+/// animationStateMachine.OnExit = method(self, function () {
+///     destroy = true;
 /// });
 /// animationStateMachine.OnPreUpdate = method(self, function () {
 ///     if (hp <= 0 && animationStateMachine.State != stateDead)
@@ -35,6 +44,10 @@
 /// 
 /// // Step event
 /// animationStateMachine.update();
+/// if (destroy)
+/// {
+///     instance_destroy();
+/// }
 /// 
 /// // Clean Up event
 /// animationPlayer.destroy();
