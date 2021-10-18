@@ -8,7 +8,7 @@
 * Listeners passed to method `BBMOD_EventListener.on_event` can now take the event name as the second argument.
 * The event name argument of method `BBMOD_EventListener.on_event` is now optional. If it is not specified, then the listener is executed on every event.
 * Fixed material `BBMOD_VFORMAT_DEFAULT_BATCHED`, which by accident used shader `BBMOD_ShDefaultAnimated`.
-* Added method `BBMOD_Quaternion.FromEuler`.
+* Added method `BBMOD_Quaternion.FromEuler` which initializes a quaternion using euler angles.
 
 **State machine module:**
 * Added a new module - State machine.
