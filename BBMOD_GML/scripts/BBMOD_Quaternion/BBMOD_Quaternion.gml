@@ -148,6 +148,54 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 		return self;
 	};
 
+	/// @func FromEuler(_x, _y, _z)
+	/// @desc Initializes the quaternion using euler angles.
+	/// @param {real} _x The rotation around the X axis (in degrees).
+	/// @param {real} _y The rotation around the Y axis (in degrees).
+	/// @param {real} _z The rotation around the Z axis (in degrees).
+	/// @return {BBMOD_Quaternion} Returns `self`.
+	/// @note The order of rotations is YXZ, same as in the `matrix_build`
+	/// function.
+	static FromEuler = function (_x, _y, _z) {
+		gml_pragma("forceinline");
+
+		// Inline of:
+		//var _rot = new BBMOD_Quaternion()
+		//	.FromAxisAngle(BBMOD_VEC3_RIGHT, _y);
+		//_rot = _rot.Mul(new BBMOD_Quaternion()
+		//	.FromAxisAngle(BBMOD_VEC3_FORWARD, _x));
+		//_rot = _rot.Mul(new BBMOD_Quaternion()
+		//	.FromAxisAngle(BBMOD_VEC3_UP, _z));
+
+		_x = -_x * 0.5;
+		_y = -_y * 0.5;
+		_z = -_z * 0.5;
+
+		var _q2 = dsin(_y);
+		var _q2W = dcos(_y);
+		var _temp;
+
+		_temp = dsin(_x);
+
+		var _qX = _q2W * _temp;
+		var _qZ = -_q2 * _temp;
+
+		_temp = dcos(_x);
+
+		var _qY = _q2 * _temp;
+		var _qW = _q2W * _temp;
+
+		_q2 = dsin(_z);
+		_q2W = dcos(_z);
+
+		X = (_qX * _q2W) + (_qY * _q2);
+		Y = (_qY * _q2W) - (_qX * _q2);
+		Z = (_qW * _q2) + (_qZ * _q2W);
+		W = (_qW * _q2W) - (_qZ * _q2);
+
+		return self;
+	};
+
 	/// @func FromLookRotation(_forward, _up)
 	/// @desc Initializes the quaternion using a forward and an up vector. These
 	/// vectors must not be parallel! If they are, the quaternion will be set to an
