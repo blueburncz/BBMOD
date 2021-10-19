@@ -45,7 +45,9 @@ if (!GetCutscene()
 	if (z == 0)
 	{
 		// Shooting
-		if (hasGun && camera.MouseLook && mouse_check_button_pressed(mb_right))
+		if (hasGun
+			&& camera.MouseLook
+			&& mouse_check_button_pressed(mb_right))
 		{
 			aiming = !aiming;
 		}
@@ -54,9 +56,10 @@ if (!GetCutscene()
 		{
 			direction = camera.Direction;
 
-			if (_mouseLeftPressed)
+			if (_mouseLeftPressed
+				&& animationStateMachine.State == stateAim)
 			{
-				animationPlayer.play(OMain.animShoot);
+				animationStateMachine.change_state(stateShoot);
 
 				// Compute the position where a gun shell will be spawned
 				var _shellPos = matrix_transform_vertex(matrixGun, -0.1, 0, 0.2);
@@ -123,7 +126,6 @@ if (!GetCutscene()
 			if (point_distance(x, y, _gun.x, _gun.y) < 20)
 			{
 				pickupTarget = _gun;
-				animationPlayer.play(OMain.animInteractGround);
 			}
 		}
 	}
@@ -137,35 +139,6 @@ if (!GetCutscene()
 		direction = point_direction(0, 0, _moveX, _moveY) + camera.Direction;
 		speed = keyboard_check(vk_shift) ? speedWalk : speedRun;
 	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Animation playback
-if (z > 0)
-{
-	animationPlayer.change(OMain.animJump, true);
-}
-else if (animationPlayer.Animation == OMain.animInteractGround)
-{
-}
-else if (aiming)
-{
-	if (animationPlayer.Animation != OMain.animShoot)
-	{
-		animationPlayer.change(OMain.animAim, true);
-	}
-}
-else if (speed >= speedRun)
-{
-	animationPlayer.change(OMain.animRun, true);
-}
-else if (speed >= speedWalk)
-{
-	animationPlayer.change(OMain.animWalk, true);
-}
-else
-{
-	animationPlayer.change(OMain.animIdle, true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
