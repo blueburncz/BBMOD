@@ -159,39 +159,33 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	static FromEuler = function (_x, _y, _z) {
 		gml_pragma("forceinline");
 
-		// Inline of:
-		//var _rot = new BBMOD_Quaternion()
-		//	.FromAxisAngle(BBMOD_VEC3_RIGHT, _y);
-		//_rot = _rot.Mul(new BBMOD_Quaternion()
-		//	.FromAxisAngle(BBMOD_VEC3_FORWARD, _x));
-		//_rot = _rot.Mul(new BBMOD_Quaternion()
-		//	.FromAxisAngle(BBMOD_VEC3_UP, _z));
-
 		_x = -_x * 0.5;
 		_y = -_y * 0.5;
 		_z = -_z * 0.5;
 
-		var _q2 = dsin(_y);
-		var _q2W = dcos(_y);
-		var _temp;
+		var _q1Sin, _q1Cos, _temp;
+		var _qX, _qY, _qZ, _qW;
+
+		_q1Sin = dsin(_z);
+		_q1Cos = dcos(_z);
 
 		_temp = dsin(_x);
 
-		var _qX = _q2W * _temp;
-		var _qZ = -_q2 * _temp;
+		_qX = _q1Cos * _temp;
+		_qY = _q1Sin * _temp;
 
 		_temp = dcos(_x);
 
-		var _qY = _q2 * _temp;
-		var _qW = _q2W * _temp;
+		_qZ = _q1Sin * _temp;
+		_qW = _q1Cos * _temp;
 
-		_q2 = dsin(_z);
-		_q2W = dcos(_z);
+		_q1Sin = dsin(_y);
+		_q1Cos = dcos(_y);
 
-		X = (_qX * _q2W) + (_qY * _q2);
-		Y = (_qY * _q2W) - (_qX * _q2);
-		Z = (_qW * _q2) + (_qZ * _q2W);
-		W = (_qW * _q2W) - (_qZ * _q2);
+		X = _qX * _q1Cos - _qZ * _q1Sin;
+		Y = _qW * _q1Sin + _qY * _q1Cos;
+		Z = _qZ * _q1Cos + _qX * _q1Sin;
+		W = _qW * _q1Cos - _qY * _q1Sin;
 
 		return self;
 	};
@@ -492,7 +486,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	static ToMatrix = function (_dest, _index) {
 		gml_pragma("forceinline");
 
-		_dest = (_dest != undefined) ? _dest : array_create(16, 0.0);
+		_dest = (_dest != undefined) ? _dest : matrix_build_identity();
 		_index = (_index != undefined) ? _index : 0;
 
 		var _temp0, _temp1, _temp2;
