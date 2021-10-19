@@ -1,4 +1,7 @@
 # Changelog 3.1.0
+This release of BBMOD adds a new module "State machine", which includes an
+implementation of a general-purpose state machine, as well as a state machine
+for animation playback control.
 
 ## GML API:
 **Core module:**

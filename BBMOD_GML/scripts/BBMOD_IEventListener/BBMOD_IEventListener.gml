@@ -1,5 +1,20 @@
 /// @func BBMOD_IEventListener()
+///
 /// @interface
+///
+/// @example
+/// ```gml
+/// function MyEventListener() : BBMOD_Class() constructor
+/// {
+///     implement(BBMOD_IEventListener);
+///
+///     on_event("test", function () {
+///         show_debug_message("It is working!");
+///     });
+/// }
+///
+/// new MyEventListener().trigger_event("test"); // Prints "It is working!"
+/// ```
 function BBMOD_IEventListener() constructor
 {
 	/// @var {ds_map<string, func[]>/undefined} Map of event listeners.

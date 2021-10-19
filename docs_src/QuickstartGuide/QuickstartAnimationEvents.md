@@ -23,3 +23,4 @@ animationPlayer.on_event(BBMOD_EV_ANIMATION_END, method(self, function (_animati
 })).on_event("Footstep", method(self, function () {
     // Play footstep sound...
 }));
+```
