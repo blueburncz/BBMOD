@@ -13,7 +13,7 @@
   "toc": {
     "BBMOD Docs": "index.md",
     "Changelog": {
-      "file": "Changelog/Changelog.md",
+      "file": "Changelog/Changelog_.md",
       "pages": {
         "3.1.0": "Changelog/Changelog3.1.0.md",
         "3.0.0": "Changelog/Changelog3.0.0.md"
