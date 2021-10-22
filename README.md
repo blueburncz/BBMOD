@@ -30,7 +30,7 @@ This repo includes a demo project (screenshots above). You can also download a b
 # Support the project
 ![BBMOD GUI](screenshots/gui.png)
 
-BBMOD is released for free because we would love to support *everyone's* creativity. If you would like to financially support the development of the project, purchase [BBMOD GUI](https://marketplace.yoyogames.com/assets/10211/bbmod-gui-3) - a model convertor with live preview and much more!
+BBMOD is released for free because we would love to support *everyone's* creativity. If you would like to financially support the development of the project, purchase [BBMOD GUI](https://blueburn.cz/index.php?menu=bbmod_gui) - a model convertor with live preview and much more!
 
 # Links
 * [Discord](https://discord.gg/ep2BGPm)
