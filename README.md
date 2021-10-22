@@ -8,7 +8,7 @@
 * [About](#about)
 * [Documentation and help](#documentation-and-help)
 * [Demo project](#demo-project)
-* [Support the project](#support-the-project)
+* [BBMOD GUI](#bbmod-gui)
 * [Links](Links)
 * [Special thanks](#special-thanks)
 
@@ -27,12 +27,20 @@ An online documentation for the latest release of BBMOD can be found at https://
 ![Night](screenshots/night.png)
 This repo includes a demo project (screenshots above). You can also download a binary under [releases](https://github.com/blueburn-cz/BBMOD/releases).
 
-# Support the project
+# BBMOD GUI
 ![BBMOD GUI](screenshots/gui.png)
 
-BBMOD is released for free because we would love to support *everyone's* creativity. If you would like to financially support the development of the project, purchase [BBMOD GUI](https://blueburn.cz/index.php?menu=bbmod_gui) - a model convertor with live preview and much more!
+Become our Patron and get to the next level of 3D game development in GameMaker with BBMOD GUI - a graphical user interface using which you can
+
+* convert models to BBMOD,
+* preview their animations,
+* configure their materials,
+* create custom image based lighting textures.
+
+All with a live preview, wrapped in a familiar interface that will make you feel at home. Get BBMOD GUI [here](https://blueburn.cz/index.php?menu=bbmod_gui).
 
 # Links
+* [BBMOD GUI](https://blueburn.cz/index.php?menu=bbmod_gui)
 * [Discord](https://discord.gg/ep2BGPm)
 * [Documentation](https://blueburn.cz/bbmod/docs/3/)
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)
