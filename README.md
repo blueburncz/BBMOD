@@ -45,6 +45,7 @@ All with a live preview, wrapped in a familiar interface that will make you feel
 * [Documentation](https://blueburn.cz/bbmod/docs/3/)
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)
 * [Official website](https://blueburn.cz/index.php?menu=bbmod)
+* [Patreon](https://www.patreon.com/blueburn)
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
 # Special thanks

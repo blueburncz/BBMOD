@@ -349,13 +349,13 @@ function BBMOD_Vec2(_x, _y) constructor
 	/// @return {BBMOD_Vec2} The created vector.
 	static Reflect = function (_v) {
 		gml_pragma("forceinline");
-		var _dot = (
+		var _dot2 = (
 			  X * _v.X
 			+ Y * _v.Y
-		);
+		) * 2.0;
 		return new BBMOD_Vec2(
-			X * 2.0 - _dot * _v.X,
-			Y * 2.0 - _dot * _v.Y,
+			X - (_dot2 * _v.X),
+			Y - (_dot2 * _v.Y),
 		);
 	};
 

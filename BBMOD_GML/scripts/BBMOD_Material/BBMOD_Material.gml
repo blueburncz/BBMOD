@@ -367,6 +367,7 @@ function BBMOD_Material(_shader)
 			vertex_submit(_command.VertexBuffer, pr_trianglelist, _command.Texture);
 		}
 		ds_list_clear(RenderCommands);
+		return self;
 	};
 
 	static destroy = function () {

@@ -409,17 +409,17 @@ function BBMOD_Vec4(_x, _y, _z, _w) constructor
 	/// @return {BBMOD_Vec4} The created vector.
 	static Reflect = function (_v) {
 		gml_pragma("forceinline");
-		var _dot = (
+		var _dot2 = (
 			  X * _v.X
 			+ Y * _v.Y
 			+ Z * _v.Z
 			+ W * _v.W
-		);
+		) * 2.0;
 		return new BBMOD_Vec4(
-			X * 2.0 - _dot * _v.X,
-			Y * 2.0 - _dot * _v.Y,
-			Z * 2.0 - _dot * _v.Z,
-			W * 2.0 - _dot * _v.W,
+			X - (_dot2 * _v.X),
+			Y - (_dot2 * _v.Y),
+			Z - (_dot2 * _v.Z),
+			W - (_dot2 * _v.W),
 		);
 	};
 

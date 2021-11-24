@@ -14,5 +14,4 @@ provides a much more sophisticated way to create such rendering pipelines.
 
 ## Scripting API
 ### Structs
-* [BBMOD_IRenderable](./BBMOD_IRenderable.html)
 * [BBMOD_Renderer](./BBMOD_Renderer.html)
