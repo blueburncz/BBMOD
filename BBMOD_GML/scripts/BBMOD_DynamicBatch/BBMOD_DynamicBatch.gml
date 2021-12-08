@@ -31,6 +31,8 @@
 function BBMOD_DynamicBatch(_model, _size)
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_Class = {
 		destroy: destroy,
 	};
@@ -65,22 +67,30 @@ function BBMOD_DynamicBatch(_model, _size)
 	};
 
 	/// @func submit(_material, _data)
+	///
 	/// @desc Immediately submits the dynamic batch for rendering.
+	///
 	/// @param {BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {real[]} _data An array containing data for each rendered instance.
+	///
 	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	///
+	/// @note The dynamic batch is *not* submitted if the material used is not
+	/// compatible with the current render pass!
+	///
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
+	/// @see BBMOD_Material
+	/// @see BBMOD_ERenderPass
 	static submit = function (_material, _data) {
 		gml_pragma("forceinline");
-		if ((_material.RenderPass & global.bbmod_render_pass) == 0)
+		if (!_material.apply())
 		{
-			return;
+			return self;
 		}
-		_material.apply();
-		_material.Shader.set_batch_data(_data);
+		BBMOD_SHADER_CURRENT.set_batch_data(_data);
 		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
 		return self;
 	};
@@ -94,6 +104,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
+	/// @see BBMOD_Material
 	static render = function (_material, _data) {
 		gml_pragma("forceinline");
 		var _renderCommand = new BBMOD_RenderCommand();

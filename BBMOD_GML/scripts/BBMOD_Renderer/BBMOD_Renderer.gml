@@ -39,6 +39,8 @@
 function BBMOD_Renderer()
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {BBMOD_IRenderable[]} An array of renderable objects and structs.
 	/// These are automatically rendered in {@link BBMOD_Renderer.render}.
 	/// @readonly
@@ -132,15 +134,16 @@ function BBMOD_Renderer()
 
 		bbmod_material_reset();
 
-		var _materials = bbmod_get_materials();
+		global.bbmod_render_pass = BBMOD_ERenderPass.Forward;
+		var _materials = bbmod_get_materials(BBMOD_ERenderPass.Forward);
 		var i = 0;
 		repeat (array_length(_materials))
 		{
 			var _material = _materials[i++];
-			if (_material.has_commands())
+			if (_material.has_commands()
+				&& _material.apply())
 			{
-				_material.apply();
-				_material.submit_queue();
+				_material.submit_queue().clear_queue();
 			}
 		}
 
@@ -158,9 +161,11 @@ function BBMOD_Renderer()
 	static present = function () {
 		if (UseAppSurface)
 		{
+			var _windowWidth = window_get_width();
+			var _windowHeight = window_get_height();
 			gpu_push_state();
 			gpu_set_tex_filter(true);
-			draw_surface_stretched(application_surface, 0, 0, window_get_width(), window_get_height());
+			draw_surface_stretched(application_surface, 0, 0, _windowWidth, _windowHeight);
 			gpu_pop_state();
 		}
 		return self;

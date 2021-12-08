@@ -59,6 +59,8 @@
 function BBMOD_AnimationStateMachine(_animationPlayer)
 	: BBMOD_StateMachine() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_StateMachine = {
 		update: update,
 	};

@@ -39,6 +39,8 @@
 function BBMOD_DLL(_path)
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_Class = {
 		destroy: destroy,
 	};

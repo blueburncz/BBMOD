@@ -61,6 +61,8 @@
 function BBMOD_AnimationPlayer(_model, _paused)
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	implement(BBMOD_IEventListener);
 
 	static Super_Class = {

@@ -66,6 +66,8 @@
 function BBMOD_AnimationState(_name, _animation, _loop=false)
 	: BBMOD_State(_name) constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	implement(BBMOD_IEventListener);
 
 	/// @var {BBMOD_Animation} The animation played while the state is active.

@@ -20,6 +20,8 @@
 function BBMOD_Model(_file, _sha1)
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	implement(BBMOD_IRenderable);
 
 	static Super_Class = {
@@ -328,13 +330,17 @@ function BBMOD_Model(_file, _sha1)
 	};
 
 	/// @func submit([_materials[, _transform]])
+	///
 	/// @desc Immediately submits the model for rendering.
+	///
 	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
 	/// one for each material slot of the model. If not specified, then
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {real[]/undefined} [_transform] An array of transformation matrices
 	/// (for animated models) or `undefined`.
+	///
 	/// @return {BBMOD_Model} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// bbmod_material_reset();
@@ -344,9 +350,14 @@ function BBMOD_Model(_file, _sha1)
 	/// modCharacter.submit([mat_head, mat_body], animationPlayer.get_transform());
 	/// bbmod_material_reset();
 	/// ```
+	///
+	/// @note Only parts of the model that use materials compatible with the
+	/// current render pass are submitted!
+	///
 	/// @see BBMOD_Material
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
+	/// @see BBMOD_ERenderPass
 	static submit = function (_materials, _transform) {
 		gml_pragma("forceinline");
 		if (_materials == undefined)
@@ -374,7 +385,7 @@ function BBMOD_Model(_file, _sha1)
 		{
 			_materials = Materials;
 		}
-		RootNode.render(_materials, _transform);
+		RootNode.render(_materials, _transform, matrix_get(matrix_world));
 		return self;
 	};
 

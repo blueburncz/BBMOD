@@ -460,6 +460,56 @@ function BBMOD_Vec4(_x, _y, _z, _w) constructor
 		);
 	};
 
+	/// @func Set([_x[, _y, _z, _w]])
+	/// @desc Sets vector components in-place.
+	/// @param {real} [_x] The new value of the first component. Defaults to 0.
+	/// @param {real} [_y] The new value of the second component. Defaults to `_x`.
+	/// @param {real} [_z] The new value of the third component. Defaults to `_x`.
+	/// @param {real} [_w] The new value of the fourth component. Defaults to `_x`.
+	/// @return {BBMOD_Vec3} Returns `self`.
+	static Set = function (_x, _y, _z, _w) {
+		gml_pragma("forceinline");
+		X = (_x != undefined) ? _x : 0.0;
+		Y = (_y != undefined) ? _y : X;
+		Z = (_z != undefined) ? _z : X;
+		W = (_w != undefined) ? _w : X;
+		return self;
+	};
+
+	/// @func SetIndex(_index, _value)
+	/// @desc Sets vector component in-place.
+	/// @param {uint} _index The index of the component, starting at 0.
+	/// @param {real} _value The new value of the component.
+	/// @return {BBMOD_Vec4} Returns `self`.
+	/// @throws {BBMOD_OutOfRangeException} If the given index is out of range
+	/// of possible values.
+	static SetIndex = function (_index, _value) {
+		gml_pragma("forceinline");
+		switch (_index)
+		{
+		case 0:
+			X = _value;
+			break;
+
+		case 1:
+			Y = _value;
+			break;
+
+		case 2:
+			Z = _value;
+			break;
+
+		case 3:
+			W = _value;
+			break;
+
+		default:
+			throw new BBMOD_OutOfRangeException();
+			break;
+		}
+		return self;
+	};
+
 	/// @func Sub(_v)
 	/// @desc Subtracts vector `_v` from this vector and returns the result
 	/// as a new vector.

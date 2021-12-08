@@ -31,6 +31,8 @@
 function BBMOD_StaticBatch(_vformat)
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_Class = {
 		destroy: destroy,
 	};
@@ -103,16 +105,25 @@ function BBMOD_StaticBatch(_vformat)
 	};
 
 	/// @func submit(_material)
+	///
 	/// @desc Immediately submits the static batch for rendering.
+	///
 	/// @param {BBMOD_Material} _material A material.
+	///
 	/// @return {BBMOD_StaticBatch} Returns `self`.
+	///
+	/// @note The static batch is *not* submitted if the material used is not
+	/// compatible with the current render pass!
+	///
+	/// @see BBMOD_StaticBatch.render
+	/// @see BBMOD_Material
+	/// @see BBMOD_ERenderPass
 	static submit = function (_material) {
 		gml_pragma("forceinline");
-		if ((_material.RenderPass & global.bbmod_render_pass) == 0)
+		if (!_material.apply())
 		{
 			return self;
 		}
-		_material.apply();
 		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
 		return self;
 	};
@@ -121,6 +132,8 @@ function BBMOD_StaticBatch(_vformat)
 	/// @desc Enqueues the static batch for rendering.
 	/// @param {BBMOD_Material} _material A material.
 	/// @return {BBMOD_StaticBatch} Returns `self`.
+	/// @see BBMOD_StaticBatch.submit
+	/// @see BBMOD_Material
 	static render = function (_material) {
 		gml_pragma("forceinline");
 		var _renderCommand = new BBMOD_RenderCommand();

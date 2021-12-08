@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Core",
-    "path": "folders/BBMOD/Core.yy",
+    "name": "Rendering",
+    "path": "folders/BBMOD/Core/Rendering.yy",
   },
   "resourceVersion": "1.0",
   "name": "BBMOD_Material",

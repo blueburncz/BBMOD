@@ -1,4 +1,4 @@
-# PBR module
+# PBR submodule
 This module contains physically based (PBR) shaders and materials with full
 support for the metallic-roughness workflow. Using this module you can render
 models textured in professional, industry standard software like

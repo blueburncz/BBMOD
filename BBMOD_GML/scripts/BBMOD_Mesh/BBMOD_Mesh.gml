@@ -6,6 +6,8 @@
 function BBMOD_Mesh(_vertexFormat)
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_Class = {
 		destroy: destroy,
 	};
@@ -80,14 +82,13 @@ function BBMOD_Mesh(_vertexFormat)
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private
 	static submit = function (_material, _transform) {
-		if ((_material.RenderPass & global.bbmod_render_pass) == 0)
+		if (!_material.apply())
 		{
 			return self;
 		}
-		_material.apply();
 		if (_transform != undefined)
 		{
-			_material.Shader.set_bones(_transform);
+			BBMOD_SHADER_CURRENT.set_bones(_transform);
 		}
 		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
 		return self;
@@ -98,13 +99,13 @@ function BBMOD_Mesh(_vertexFormat)
 	/// @func {real[]/undefined} [_transform]
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private
-	static render = function (_material, _transform) {
+	static render = function (_material, _transform, _matrix) {
 		gml_pragma("forceinline");
 		var _renderCommand = new BBMOD_RenderCommand();
 		_renderCommand.VertexBuffer = VertexBuffer;
 		_renderCommand.Texture = _material.BaseOpacity;
 		_renderCommand.BoneTransform = _transform;
-		_renderCommand.Matrix = matrix_get(matrix_world);
+		_renderCommand.Matrix = _matrix;
 		ds_list_add(_material.RenderCommands, _renderCommand);
 		return self;
 	};

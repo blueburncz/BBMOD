@@ -22,8 +22,6 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 
 	UEmissive = get_sampler_index("bbmod_Emissive");
 
-	UBRDF = get_sampler_index("bbmod_BRDF");
-
 	UIBL = get_sampler_index("bbmod_IBL");
 
 	UIBLTexel = get_uniform("bbmod_IBLTexel");
@@ -104,18 +102,11 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 	/// @see bbmod_set_ibl_sprite
 	/// @see bbmod_set_ibl_texture
 	static set_ibl = function () {
-		static _texBRDF = sprite_get_texture(BBMOD_SprEnvBRDF, 0);
-
 		var _texture = global.__bbmodIblTexture;
 		if (_texture == pointer_null)
 		{
 			return self;
 		}
-
-		gpu_set_tex_mip_enable_ext(UBRDF, mip_off);
-		gpu_set_tex_filter_ext(UBRDF, true);
-		gpu_set_tex_repeat_ext(UBRDF, false);
-		set_sampler(UBRDF, _texBRDF);
 
 		gpu_set_tex_mip_enable_ext(UIBL, mip_off);
 		gpu_set_tex_filter_ext(UIBL, true);
@@ -140,32 +131,4 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 		set_ibl();
 		return self;
 	};
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Camera
-//
-
-/// @var {real[]} The current `[x,y,z]` position of the camera. This should be
-/// updated every frame before rendering models.
-/// @see bbmod_set_camera_position
-global.bbmod_camera_position = new BBMOD_Vec3();
-
-/// @var {real} The current camera exposure.
-global.bbmod_camera_exposure = 1.0;
-
-/// @func bbmod_set_camera_position(_x, _y, _z)
-/// @desc Changes camera position to given coordinates.
-/// @param {real} _x The x position of the camera.
-/// @param {real} _y The y position of the camera.
-/// @param {real} _z The z position of the camera.
-/// @see global.bbmod_camera_position
-function bbmod_set_camera_position(_x, _y, _z)
-{
-	gml_pragma("forceinline");
-	var _position = global.bbmod_camera_position;
-	_position.X = _x;
-	_position.Y = _y;
-	_position.Z = _z;
 }

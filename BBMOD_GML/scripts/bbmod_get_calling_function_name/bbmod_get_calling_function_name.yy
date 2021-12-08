@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Core",
-    "path": "folders/BBMOD/Core.yy",
+    "name": "Utils",
+    "path": "folders/BBMOD/Core/Utils.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_core_init",
+  "name": "bbmod_get_calling_function_name",
   "tags": [],
   "resourceType": "GMScript",
 }

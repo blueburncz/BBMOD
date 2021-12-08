@@ -5,6 +5,8 @@
 function BBMOD_StateMachine()
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_Class = {
 		destroy: destroy,
 	};
@@ -82,8 +84,6 @@ function BBMOD_StateMachine()
 	/// @desc Adds a state to the state machine.
 	/// @param {BBMOD_State} _state The state to add.
 	/// @return {BBMOD_StateMachine} Returns `self`.
-	/// @throws {BBMOD_Exception} If the added state should be initial but the state
-	/// machine already has an initial state.
 	static add_state = function (_state) {
 		gml_pragma("forceinline");
 		_state.StateMachine = self;

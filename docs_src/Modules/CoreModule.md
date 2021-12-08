@@ -6,12 +6,19 @@ performance, as well as a math library for easier manipulation with vectors,
 quaternions etc.
 
 ## Scripting API
+### Enums
+* [BBMOD_ERenderPass](./BBMOD_ERenderPass.html)
+
 ### Functions
+* [bbmod_camera_set_position](./bbmod_set_camera_position.html)
+* [bbmod_class_get_name](./bbmod_class_get_name.html)
+* [bbmod_get_calling_function_name](./bbmod_get_calling_function_name.html)
 * [bbmod_get_materials](./bbmod_get_materials.html)
 * [bbmod_lerp_delta_time](./bbmod_lerp_delta_time.html)
 * [bbmod_material_reset](./bbmod_material_reset.html)
 
 ### Macros
+* [BBMOD_CLASS_GENERATED_BODY](./BBMOD_CLASS_GENERATED_BODY.html)
 * [BBMOD_EV_ANIMATION_CHANGE](./BBMOD_EV_ANIMATION_CHANGE.html)
 * [BBMOD_EV_ANIMATION_END](./BBMOD_EV_ANIMATION_END.html)
 * [BBMOD_EV_ANIMATION_LOOP](./BBMOD_EV_ANIMATION_LOOP.html)
@@ -41,6 +48,9 @@ quaternions etc.
 * [BBMOD_Animation](./BBMOD_Animation.html)
 * [BBMOD_AnimationInstance](./BBMOD_AnimationInstance.html)
 * [BBMOD_AnimationPlayer](./BBMOD_AnimationPlayer.html)
+* [BBMOD_BaseShader](./BBMOD_BaseShader.html)
+* [BBMOD_Class](./BBMOD_Class.html)
+* [BBMOD_Color](./BBMOD_Color.html)
 * [BBMOD_DynamicBatch](./BBMOD_DynamicBatch.html)
 * [BBMOD_Exception](./BBMOD_Exception.html)
 * [BBMOD_IEventListener](./BBMOD_IEventListener.html)
@@ -61,4 +71,6 @@ quaternions etc.
 * [BBMOD_VertexFormat](./BBMOD_VertexFormat.html)
 
 ### Variables
+* [global.bbmod_camera_exposure](./global.bbmod_camera_exposure.html)
+* [global.bbmod_camera_position](./global.bbmod_camera_position.html)
 * [global.bbmod_render_pass](./global.bbmod_render_pass.html)

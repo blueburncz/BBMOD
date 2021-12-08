@@ -4,6 +4,8 @@
 function BBMOD_Importer()
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {bool} If true then UV texture coordinates of imported models
 	/// will be flipped horizontally. Defaults to false.
 	FlipUVHorizontally = false;

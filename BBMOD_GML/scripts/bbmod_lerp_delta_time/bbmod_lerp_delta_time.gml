@@ -1,4 +1,4 @@
-/// @func bbmod_lerp_delta_time()
+/// @func bbmod_lerp_delta_time(_from, _to, _factor, _deltaTime)
 /// @desc Linearly interpolates two values, taking delta time into account.
 /// @param {real} _from The value to interpolate from.
 /// @param {real} _to The value to interpolate to.

@@ -3,7 +3,7 @@
   "isCompatibility": false,
   "parent": {
     "name": "Renderer",
-    "path": "folders/BBMOD/Renderer.yy",
+    "path": "folders/BBMOD/Rendering/Renderer.yy",
   },
   "resourceVersion": "1.0",
   "name": "BBMOD_Renderer",

@@ -6,6 +6,8 @@
 function BBMOD_State(_name)
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {BBMOD_StateMachine/undefined} The state machine to which this state
 	/// belongs.
 	/// @readonly

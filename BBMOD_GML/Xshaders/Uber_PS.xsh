@@ -79,7 +79,7 @@ void main()
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightColor;
 	// Specular
-	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, bbmod_BRDF, material.Specular, material.Roughness, N, V);
+	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
 	// Ambient occlusion
 	gl_FragColor.rgb *= material.AO;
 	// Emissive

@@ -5,7 +5,7 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": "bbmod",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
@@ -15,6 +15,7 @@
     "Changelog": {
       "file": "Changelog/Changelog_.md",
       "pages": {
+        "3.1.2": "Changelog/Changelog3.1.2.md",
         "3.1.1": "Changelog/Changelog3.1.1.md",
         "3.1.0": "Changelog/Changelog3.1.0.md",
         "3.0.0": "Changelog/Changelog3.0.0.md"
@@ -49,8 +50,14 @@
         "Mesh builder module": "Modules/MeshBuilderModule.md",
         "Importer module": "Modules/ImporterModule.md",
         "Camera module": "Modules/CameraModule.md",
-        "Renderer module": "Modules/RendererModule.md",
-        "PBR module": "Modules/PBRModule.md",
+        "Rendering module": {
+          "file": "Modules/Rendering/RenderingModule.md",
+          "pages": {
+            "Cubemap submodule": "Modules/Rendering/CubemapSubmodule.md",
+            "PBR submodule": "Modules/Rendering/PBRSubmodule.md",
+            "Renderer submodule": "Modules/Rendering/RendererSubmodule.md"
+          }
+        },
         "State machine module": "Modules/StateMachineModule.md",
         "ColMesh module": "Modules/ColMeshModule.md"
       }

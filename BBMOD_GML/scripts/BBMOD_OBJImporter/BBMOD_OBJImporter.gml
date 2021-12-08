@@ -12,6 +12,8 @@
 function BBMOD_OBJImporter()
 	: BBMOD_Importer() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_Importer = {
 		destroy: destroy,
 	};
@@ -76,6 +78,7 @@ function BBMOD_OBJImporter()
 			_line = _split[1];
 
 			// Build mesh
+			// TODO: Deduplicate code
 			if (_keyword != "f" && _meshBuilder != undefined)
 			{
 				_meshBuilder.make_tangents();
@@ -228,13 +231,38 @@ function BBMOD_OBJImporter()
 
 			file_text_readln(_file);
 
-			if (_keyword == "")
+			if (file_text_eof(_file))
 			{
 				break;
 			}
 		}
 
 		file_text_close(_file);
+
+		// Build mesh
+		// TODO: Deduplicate code
+		if (_meshBuilder != undefined)
+		{
+			_meshBuilder.make_tangents();
+			var _mesh = _meshBuilder.build();
+
+			var _meshIndex = array_length(_model.Meshes);
+			array_push(_model.Meshes, _mesh);
+			array_push(_node.Meshes, _meshIndex);
+			_node.set_renderable();
+
+			if (_material == undefined)
+			{
+				_material = 0;
+				_model.MaterialCount = 1;
+				array_push(_model.Materials, BBMOD_MATERIAL_DEFAULT);
+				array_push(_model.MaterialNames, "Material");
+			}
+			_mesh.MaterialIndex = _material;
+
+			_meshBuilder.destroy();
+			_meshBuilder = undefined;
+		}
 
 		return _model;
 	};

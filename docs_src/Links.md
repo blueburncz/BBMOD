@@ -4,5 +4,6 @@
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628) - Forum thread.
 * [GitHub](https://github.com/blueburn-cz/BBMOD) - BBMOD's GitHub repository.
 * [Patreon](https://www.patreon.com/blueburn) - Support the development of BBMOD.
+* [Trello board](https://trello.com/b/XKnnTduD/bbmod) - See features planned for future releases.
 * [Xpanda](https://github.com/GameMakerDiscord/Xpanda) - Used to manage shaders.
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3) - Get BBMOD from the Marketplace.

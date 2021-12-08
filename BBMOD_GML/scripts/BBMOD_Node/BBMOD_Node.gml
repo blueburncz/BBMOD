@@ -202,7 +202,7 @@ function BBMOD_Node(_model) constructor
 	/// @param {real[]/undefined} _transform An array of transformation matrices
 	/// (for animated models) or `undefined`.
 	/// @private
-	static render = function (_materials, _transform) {
+	static render = function (_materials, _transform, _matrix) {
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;
 		var _node = self;
@@ -228,7 +228,7 @@ function BBMOD_Node(_model) constructor
 				var _materialIndex = _mesh.MaterialIndex;
 				var _material = _materials[_materialIndex];
 
-				_mesh.render(_material, _transform);
+				_mesh.render(_material, _transform, _matrix);
 			}
 
 			i = 0;
