@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Core",
-    "path": "folders/BBMOD/Core.yy",
+    "name": "Lights",
+    "path": "folders/BBMOD/Core/Lights.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_common",
+  "name": "BBMOD_ImageBasedLight",
   "tags": [],
   "resourceType": "GMScript",
 }

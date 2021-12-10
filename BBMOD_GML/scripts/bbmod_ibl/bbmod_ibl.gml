@@ -2,14 +2,6 @@
 /// @see BBMOD_PBRMaterial
 #macro BBMOD_MATERIAL_SKY __bbmod_material_sky()
 
-/// @var {ptr} The texture that is currently used for IBL.
-/// @private
-global.__bbmodIblTexture = pointer_null;
-
-/// @var {real} A texel size of the IBL texture.
-/// @private
-global.__bbmodIblTexel = 0;
-
 /// @func bbmod_set_ibl_sprite(_sprite, _subimage)
 /// @desc Changes a texture used for image based lighting using a sprite.
 /// @param {real} _sprite The sprite index.
@@ -17,6 +9,7 @@ global.__bbmodIblTexel = 0;
 /// @note This texture must be a stripe of eight prefiltered octahedrons, the
 /// first seven being used for specular lighting and the last one for diffuse
 /// lighting.
+/// @deprecated Please use {@link bbmod_ibl_set} instead.
 function bbmod_set_ibl_sprite(_sprite, _subimage)
 {
 	gml_pragma("forceinline");
@@ -31,8 +24,16 @@ function bbmod_set_ibl_sprite(_sprite, _subimage)
 /// @note This texture must be a stripe of eight prefiltered octahedrons, the
 /// first seven being used for specular lighting and the last one for diffuse
 /// lighting.
+/// @deprecated Please use {@link bbmod_ibl_set} instead.
 function bbmod_set_ibl_texture(_texture, _texel)
 {
-	global.__bbmodIblTexture = _texture;
-	global.__bbmodIblTexel = _texel;
+	gml_pragma("forceinline");
+	if (_texture != pointer_null)
+	{
+		global.__bbmodImageBasedLight = new BBMOD_ImageBasedLight(_texture);
+	}
+	else
+	{
+		global.__bbmodImageBasedLight = undefined;
+	}
 }

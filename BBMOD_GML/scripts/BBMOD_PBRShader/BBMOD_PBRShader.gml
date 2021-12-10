@@ -7,12 +7,9 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 	: BBMOD_Shader(_shader, _vertexFormat) constructor
 {
 	static Super_Shader = {
+		on_set: on_set,
 		set_material: set_material,
 	};
-
-	UCamPos = get_uniform("bbmod_CamPos");
-
-	UExposure = get_uniform("bbmod_Exposure");
 
 	UNormalRoughness = get_sampler_index("bbmod_NormalRoughness");
 
@@ -25,35 +22,6 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 	UIBL = get_sampler_index("bbmod_IBL");
 
 	UIBLTexel = get_uniform("bbmod_IBLTexel");
-
-	/// @func set_cam_pos(_x[, _y, _z])
-	/// @desc Sets a fragment shader uniform `bbmod_CamPos` to the given position.
-	/// @param {BBMOD_Vec3/real} _x Either a vector with the camera's position
-	/// or the x position of the camera.
-	/// @param {real} [_y] The y position of the camera.
-	/// @param {real} [_z] The z position of the camera.
-	/// @return {BBMOD_Shader} Returns `self`.
-	static set_cam_pos = function (_x, _y, _z) {
-		gml_pragma("forceinline");
-		if (is_struct(_x))
-		{
-			set_uniform_f3(UCamPos, _x.X, _x.Y, _x.Z);
-		}
-		else
-		{
-			set_uniform_f3(UCamPos, _x, _y, _z);
-		}
-		return self;
-	};
-
-	/// @func set_exposure(_value)
-	/// @desc Sets the `bbmod_Exposure` uniform.
-	/// @param {real} _value The new camera exposure.
-	/// @return {BBMOD_PBRShader} Returns `self`.
-	static set_exposure = function (_value) {
-		gml_pragma("forceinline");
-		return set_uniform_f(UExposure, _value);
-	};
 
 	/// @func set_normal_roughness(_texture)
 	/// @desc Sets the `bbmod_NormalRoughness` uniform.
@@ -94,15 +62,23 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 		return set_sampler(UEmissive, _texture);
 	};
 
-	/// @func set_ibl()
+	/// @func set_ibl([_ibl])
 	/// @desc Sets a fragment shader uniform `bbmod_IBLTexel` and samplers
 	/// `bbmod_IBL` and `bbmod_BRDF`. These are required for image based
 	/// lighting.
+	/// @param {BBMOD_ImageBasedLight} [_ibl] The image based light. Defaults to
+	/// the one defined using {@link bbmod_ibl_set}.
 	/// @return {BBMOD_PBRShader} Returns `self`.
-	/// @see bbmod_set_ibl_sprite
-	/// @see bbmod_set_ibl_texture
-	static set_ibl = function () {
-		var _texture = global.__bbmodIblTexture;
+	static set_ibl = function (_ibl=undefined) {
+		gml_pragma("forceinline");
+
+		_ibl ??= global.__bbmodImageBasedLight;
+		if (_ibl == undefined)
+		{
+			return self;
+		}
+
+		var _texture = _ibl.Texture;
 		if (_texture == pointer_null)
 		{
 			return self;
@@ -113,10 +89,16 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 		gpu_set_tex_repeat_ext(UIBL, false);
 		set_sampler(UIBL, _texture);
 
-		var _texel = global.__bbmodIblTexel;
+		var _texel = _ibl.Texel;
 		set_uniform_f(UIBLTexel, _texel, _texel);
 
 		return self;
+	};
+
+	static on_set = function () {
+		gml_pragma("forceinline");
+		method(self, Super_Shader.on_set)();
+		set_ibl();
 	};
 
 	static set_material = function (_material) {
@@ -126,9 +108,6 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 		set_normal_roughness(_material.NormalRoughness);
 		set_subsurface(_material.Subsurface);
 		set_emissive(_material.Emissive);
-		set_cam_pos(global.bbmod_camera_position);
-		set_exposure(global.bbmod_camera_exposure);
-		set_ibl();
 		return self;
 	};
 }

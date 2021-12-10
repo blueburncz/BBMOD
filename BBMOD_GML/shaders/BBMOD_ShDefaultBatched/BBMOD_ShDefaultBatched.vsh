@@ -1,71 +1,127 @@
 #pragma include("Uber_VS.xsh", "glsl")
+////////////////////////////////////////////////////////////////////////////////
+// Defines
+
 #define MAX_BATCH_DATA_SIZE 128
 
+#define MAX_POINT_LIGHTS 8
+
+////////////////////////////////////////////////////////////////////////////////
+// Attributes
 attribute vec4 in_Position;
 attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord0;
 //attribute vec4 in_Color;
 attribute vec4 in_TangentW;
 
+
 attribute float in_Id;
 
+////////////////////////////////////////////////////////////////////////////////
+// Uniforms
+uniform vec2 bbmod_TextureOffset;
+uniform vec2 bbmod_TextureScale;
+
+
+uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
+
+// RGBM encoded ambient light color on the upper hemisphere.
+uniform vec4 bbmod_LightAmbientUp;
+
+/// RGBM encoded ambient light color on the lower hemisphere.
+uniform vec4 bbmod_LightAmbientDown;
+
+// Direction of the directional light
+uniform vec3 bbmod_LightDirectionalDir;
+
+// RGBM encoded color of the directional light
+uniform vec4 bbmod_LightDirectionalColor;
+
+// [(x, y, z, range), (r, g, b, m), ...]
+uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
+
+////////////////////////////////////////////////////////////////////////////////
+// Varyings
 varying vec3 v_vVertex;
 //varying vec4 v_vColor;
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
+varying float v_fDepth;
 
-uniform vec2 bbmod_TextureOffset;
-uniform vec2 bbmod_TextureScale;
+varying vec3 v_vLight;
 
-uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
+////////////////////////////////////////////////////////////////////////////////
+// Includes
+#define X_GAMMA 2.2
 
-/// @desc Multiplies quaternions q1 and q2.
-vec4 xQuaternionMultiply(vec4 _q1, vec4 _q2)
+/// @desc Converts gamma space color to linear space.
+vec3 xGammaToLinear(vec3 rgb)
 {
-	float _q10 = _q1.x;
-	float _q11 = _q1.y;
-	float _q12 = _q1.z;
-	float _q13 = _q1.w;
-	float _q20 = _q2.x;
-	float _q21 = _q2.y;
-	float _q22 = _q2.z;
-	float _q23 = _q2.w;
-
-	vec4 q = vec4(0.0, 0.0, 0.0, 0.0);
-
-	q.x = _q11 * _q22 - _q12 * _q21
-		+ _q13 * _q20 + _q10 * _q23;
-	q.y = _q12 * _q20 - _q10 * _q22
-		+ _q13 * _q21 + _q11 * _q23;
-	q.z = _q10 * _q21 - _q11 * _q20
-		+ _q13 * _q22 + _q12 * _q23;
-	q.w = _q13 * _q23 - _q10 * _q20
-		- _q11 * _q21 - _q12 * _q22;
-
-	return q;
+	return pow(rgb, vec3(X_GAMMA));
 }
 
-/// @desc Rotates vector v by quaternion q.
-vec4 xQuaternionRotate(vec4 q, vec4 v)
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
 {
-	q = normalize(q);
-	vec4 V = vec4(v.x, v.y, v.z, 0.0);
-	vec4 conjugate = vec4(-q.x, -q.y, -q.z, q.w);
-	vec4 rot = xQuaternionMultiply(q, V);
-	rot = xQuaternionMultiply(rot, conjugate);
-	return rot;
+	return pow(rgb, vec3(1.0 / X_GAMMA));
 }
 
-void main()
+/// @desc Gets color's luminance.
+float xLuminance(vec3 rgb)
 {
+	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
+}
+
+/// @note Input color should be in gamma space.
+/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
+vec4 xEncodeRGBM(vec3 color)
+{
+	vec4 rgbm;
+	color *= 1.0 / 6.0;
+	rgbm.a = clamp(max(max(color.r, color.g), max(color.b, 0.000001)), 0.0, 1.0);
+	rgbm.a = ceil(rgbm.a * 255.0) / 255.0;
+	rgbm.rgb = color / rgbm.a;
+	return rgbm;
+}
+
+/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
+vec3 xDecodeRGBM(vec4 rgbm)
+{
+	return 6.0 * rgbm.rgb * rgbm.a;
+}
+
+vec3 QuaternionRotate(vec4 q, vec3 v)
+{
+	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
+}
+
+
+/// @desc Transforms vertex and normal by animation and/or batch data.
+/// @param vertex Variable to hold the transformed vertex.
+/// @param normal Variable to hold the transformed normal.
+void Transform(out vec4 vertex, out vec4 normal)
+{
+	vertex = in_Position;
+	normal = vec4(in_Normal, 0.0);
+
+
 	int idx = int(in_Id) * 2;
 	vec4 posScale = bbmod_BatchData[idx];
 	vec4 rot = bbmod_BatchData[idx + 1];
-	vec4 position = vec4(posScale.xyz + (xQuaternionRotate(rot, in_Position).xyz * posScale.w), in_Position.w);
-	vec4 normal = vec4(in_Normal, 0.0);
-	normal = xQuaternionRotate(rot, normal);
+
+	vertex = vec4(posScale.xyz + (QuaternionRotate(rot, vertex.xyz) * posScale.w), 1.0);
+	normal = vec4(QuaternionRotate(rot, normal.xyz), 0.0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Main
+void main()
+{
+	vec4 position, normal;
+	Transform(position, normal);
 
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
+	v_fDepth = (gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position).z;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 	//v_vColor = in_Color;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
@@ -76,5 +132,31 @@ void main()
 	vec3 T = (gm_Matrices[MATRIX_WORLD] * tangent).xyz;
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
 	v_mTBN = mat3(T, B, N);
+
+	////////////////////////////////////////////////////////////////////////////
+	// Lighting
+	N = normalize(N);
+	v_vLight = vec3(0.0);
+
+	// Ambient
+	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	v_vLight += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
+
+	// Directional
+	vec3 L = normalize(-bbmod_LightDirectionalDir);
+	float NdotL = max(dot(N, L), 0.0);
+	v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL;
+
+	// Point
+	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	{
+		vec4 positionRange = bbmod_LightPointData[i * 2];
+		L = positionRange.xyz - v_vVertex;
+		float dist = length(L);
+		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
+		NdotL = max(dot(N, normalize(L)), 0.0);
+		v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
+	}
 }
 // include("Uber_VS.xsh")

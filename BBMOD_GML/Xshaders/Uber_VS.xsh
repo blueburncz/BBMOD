@@ -1,9 +1,19 @@
+////////////////////////////////////////////////////////////////////////////////
+// Defines
 #if ANIMATED
 #define MAX_BONES 64
-#elif BATCHED
+#endif
+
+#if BATCHED
 #define MAX_BATCH_DATA_SIZE 128
 #endif
 
+#if !PBR
+#define MAX_POINT_LIGHTS 8
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+// Attributes
 attribute vec4 in_Position;
 attribute vec3 in_Normal;
 attribute vec2 in_TextureCoord0;
@@ -13,39 +23,85 @@ attribute vec4 in_TangentW;
 #if ANIMATED
 attribute vec4 in_BoneIndex;
 attribute vec4 in_BoneWeight;
-#elif BATCHED
+#endif
+
+#if BATCHED
 attribute float in_Id;
 #endif
 
-varying vec3 v_vVertex;
-//varying vec4 v_vColor;
-varying vec2 v_vTexCoord;
-varying mat3 v_mTBN;
-
+////////////////////////////////////////////////////////////////////////////////
+// Uniforms
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
 #if ANIMATED
 uniform vec4 bbmod_Bones[2 * MAX_BONES];
+#endif
 
-vec3 xQuaternionRotate(vec4 q, vec3 v)
+#if BATCHED
+uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
+#endif
+
+#if !PBR
+// RGBM encoded ambient light color on the upper hemisphere.
+uniform vec4 bbmod_LightAmbientUp;
+
+/// RGBM encoded ambient light color on the lower hemisphere.
+uniform vec4 bbmod_LightAmbientDown;
+
+// Direction of the directional light
+uniform vec3 bbmod_LightDirectionalDir;
+
+// RGBM encoded color of the directional light
+uniform vec4 bbmod_LightDirectionalColor;
+
+// [(x, y, z, range), (r, g, b, m), ...]
+uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+// Varyings
+varying vec3 v_vVertex;
+//varying vec4 v_vColor;
+varying vec2 v_vTexCoord;
+varying mat3 v_mTBN;
+varying float v_fDepth;
+
+#if !PBR
+varying vec3 v_vLight;
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+// Includes
+#if !PBR
+#pragma include("Color.xsh", "glsl")
+
+#pragma include("RGBM.xsh", "glsl")
+#endif
+
+#if ANIMATED || BATCHED
+vec3 QuaternionRotate(vec4 q, vec3 v)
 {
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
-
-vec3 xDualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
-{
-	return (xQuaternionRotate(real, v)
-		+ 2.0 * (real.w * dual.xyz - dual.w * real.xyz + cross(real.xyz, dual.xyz)));
-}
-#elif BATCHED
-uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
-
-#pragma include("Quaternion.xsh", "glsl")
 #endif
 
-void main()
+#if ANIMATED
+vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 {
+	return (QuaternionRotate(real, v)
+		+ 2.0 * (real.w * dual.xyz - dual.w * real.xyz + cross(real.xyz, dual.xyz)));
+}
+#endif
+
+/// @desc Transforms vertex and normal by animation and/or batch data.
+/// @param vertex Variable to hold the transformed vertex.
+/// @param normal Variable to hold the transformed normal.
+void Transform(out vec4 vertex, out vec4 normal)
+{
+	vertex = in_Position;
+	normal = vec4(in_Normal, 0.0);
+
 #if ANIMATED
 	// Source:
 	// https://www.cs.utah.edu/~ladislav/kavan07skinning/kavan07skinning.pdf
@@ -83,21 +139,29 @@ void main()
 	blendReal /= len;
 	blendDual /= len;
 
-	vec4 position = vec4(xDualQuaternionTransform(blendReal, blendDual, in_Position.xyz), 1.0);
-	vec4 normal = vec4(xQuaternionRotate(blendReal, in_Normal), 0.0);
-#elif BATCHED
+	vertex = vec4(DualQuaternionTransform(blendReal, blendDual, vertex.xyz), 1.0);
+	normal = vec4(QuaternionRotate(blendReal, normal.xyz), 0.0);
+#endif
+
+#if BATCHED
 	int idx = int(in_Id) * 2;
 	vec4 posScale = bbmod_BatchData[idx];
 	vec4 rot = bbmod_BatchData[idx + 1];
-	vec4 position = vec4(posScale.xyz + (xQuaternionRotate(rot, in_Position).xyz * posScale.w), in_Position.w);
-	vec4 normal = vec4(in_Normal, 0.0);
-	normal = xQuaternionRotate(rot, normal);
-#else
-	vec4 position = in_Position;
-	vec4 normal = vec4(in_Normal, 0.0);
+
+	vertex = vec4(posScale.xyz + (QuaternionRotate(rot, vertex.xyz) * posScale.w), 1.0);
+	normal = vec4(QuaternionRotate(rot, normal.xyz), 0.0);
 #endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Main
+void main()
+{
+	vec4 position, normal;
+	Transform(position, normal);
 
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
+	v_fDepth = (gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position).z;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 	//v_vColor = in_Color;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
@@ -108,4 +172,32 @@ void main()
 	vec3 T = (gm_Matrices[MATRIX_WORLD] * tangent).xyz;
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
 	v_mTBN = mat3(T, B, N);
+
+#if !PBR
+	////////////////////////////////////////////////////////////////////////////
+	// Lighting
+	N = normalize(N);
+	v_vLight = vec3(0.0);
+
+	// Ambient
+	Vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	Vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	v_vLight += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
+
+	// Directional
+	vec3 L = normalize(-bbmod_LightDirectionalDir);
+	float NdotL = max(dot(N, L), 0.0);
+	v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL;
+
+	// Point
+	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	{
+		Vec4 positionRange = bbmod_LightPointData[i * 2];
+		L = positionRange.xyz - v_vVertex;
+		float dist = length(L);
+		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
+		NdotL = max(dot(N, normalize(L)), 0.0);
+		v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
+	}
+#endif
 }

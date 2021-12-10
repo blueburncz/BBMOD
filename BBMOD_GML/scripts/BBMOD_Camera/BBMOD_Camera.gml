@@ -326,8 +326,8 @@ function BBMOD_Camera() constructor
 	static apply = function () {
 		gml_pragma("forceinline");
 		camera_apply(Raw);
-		Position.Copy(global.bbmod_camera_position);
-		global.bbmod_camera_exposure = Exposure;
+		bbmod_camera_set_position(Position.Clone());
+		bbmod_camera_set_exposure(Exposure);
 		return self;
 	};
 }
