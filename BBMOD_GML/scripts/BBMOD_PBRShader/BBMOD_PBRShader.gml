@@ -72,24 +72,21 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");
 
-		_ibl ??= global.__bbmodImageBasedLight;
-		if (_ibl == undefined)
-		{
-			return self;
-		}
+		static _iblNull = sprite_get_texture(BBMOD_SprIBLNull, 0);
+		var _texture = _iblNull;
+		var _texel = 0.0;
 
-		var _texture = _ibl.Texture;
-		if (_texture == pointer_null)
+		_ibl ??= global.__bbmodImageBasedLight;
+		if (_ibl != undefined)
 		{
-			return self;
+			_texture = _ibl.Texture;
+			_texel = _ibl.Texel;
 		}
 
 		gpu_set_tex_mip_enable_ext(UIBL, mip_off);
 		gpu_set_tex_filter_ext(UIBL, true);
 		gpu_set_tex_repeat_ext(UIBL, false);
 		set_sampler(UIBL, _texture);
-
-		var _texel = _ibl.Texel;
 		set_uniform_f(UIBLTexel, _texel, _texel);
 
 		return self;

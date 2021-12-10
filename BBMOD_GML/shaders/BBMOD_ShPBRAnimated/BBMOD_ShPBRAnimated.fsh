@@ -20,18 +20,6 @@ uniform vec3 bbmod_CamPos;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-// The color of the fog.
-uniform vec4 bbmod_FogColor;
-
-// Maximum fog intensity.
-uniform float bbmod_FogIntensity;
-
-// Distance at which the fog starts.
-uniform float bbmod_FogStart;
-
-// 1.0 / (fogEnd - fogStart)
-uniform float bbmod_FogRcpRange;
-
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
 
@@ -383,10 +371,6 @@ void main()
 	// Subsurface scattering
 	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
 
-	// Fog
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
-	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction

@@ -112,7 +112,7 @@ function BBMOD_Shader(_shader, _vertexFormat)
 	};
 
 	/// @func set_ambient_light([_up[, _down]])
-	/// @desc Sets the `bbmod_AmbientUp`, `bbmod_AmbientDown` uniforms.
+	/// @desc Sets the `bbmod_LightAmbientUp`, `bbmod_LightAmbientDown` uniforms.
 	/// @param {BBMOD_Color} [_up] RGBM encoded ambient light color on
 	/// the upper hemisphere. Defaults to the color defined using
 	/// {@link bbmod_light_ambient_set_up}.
@@ -304,11 +304,11 @@ function bbmod_camera_set_exposure(_exposure)
 
 /// @var {BBMOD_Color}
 /// @private
-global.__bbmodAmbientLightUp = new BBMOD_Color();
+global.__bbmodAmbientLightUp = BBMOD_C_WHITE;
 
 /// @var {BBMOD_Color}
 /// @private
-global.__bbmodAmbientLightDown = new BBMOD_Color().FromConstant(c_gray);
+global.__bbmodAmbientLightDown = BBMOD_C_GRAY;
 
 /// @func bbmod_light_ambient_set(_color)
 /// @desc Defines color of the ambient light passed to shaders.
@@ -572,7 +572,7 @@ function bbmod_light_point_clear(_index)
 
 /// @var {BBMOD_Color}
 /// @private
-global.__bbmodFogColor = new BBMOD_Color();
+global.__bbmodFogColor = BBMOD_C_WHITE;
 
 /// @var {real}
 /// @private

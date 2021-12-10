@@ -1,4 +1,4 @@
-/// @macro {BBMOD_PBRMaterial} The default sky material.
+/// @macro {BBMOD_PBRMaterial} A material for rendering RGBM encoded skies.
 /// @see BBMOD_PBRMaterial
 #macro BBMOD_MATERIAL_SKY __bbmod_material_sky()
 

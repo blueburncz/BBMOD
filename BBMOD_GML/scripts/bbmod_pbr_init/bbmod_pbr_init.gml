@@ -37,18 +37,10 @@ function __bbmod_material_pbr_batched()
 function __bbmod_material_sky()
 {
 	static _material = undefined;
-
 	if (_material == undefined)
 	{
-		var _sprIbl = sprite_add("Data/BBMOD/Skies/IBL+80.png", 0, false, true, 0, 0);
-		var _sprSky = sprite_add("Data/BBMOD/Skies/Sky+80.png", 0, false, true, 0, 0);
-
-		bbmod_set_ibl_sprite(_sprIbl, 0);
-
 		var _skSky = new BBMOD_PBRShader(BBMOD_ShSky, new BBMOD_VertexFormat(true));
-
 		_material = new BBMOD_PBRMaterial(_skSky);
-		_material.BaseOpacity = sprite_get_texture(_sprSky, 0);
 		_material.Culling = cull_noculling;
 		_material.Mipmapping = false;
 		_material.ZWrite = false;
@@ -56,6 +48,5 @@ function __bbmod_material_sky()
 		_material.Filtering = true;
 		_material.set_priority(-$FFFFFFFF);
 	}
-
 	return _material;
 }

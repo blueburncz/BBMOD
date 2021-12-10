@@ -22,18 +22,6 @@ uniform vec3 bbmod_CamPos;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-// The color of the fog.
-uniform vec4 bbmod_FogColor;
-
-// Maximum fog intensity.
-uniform float bbmod_FogIntensity;
-
-// Distance at which the fog starts.
-uniform float bbmod_FogStart;
-
-// 1.0 / (fogEnd - fogStart)
-uniform float bbmod_FogRcpRange;
-
 #if PBR
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
@@ -55,6 +43,18 @@ uniform sampler2D bbmod_IBL;
 
 // Texel size of one octahedron.
 uniform vec2 bbmod_IBLTexel;
+#else
+// The color of the fog.
+uniform vec4 bbmod_FogColor;
+
+// Maximum fog intensity.
+uniform float bbmod_FogIntensity;
+
+// Distance at which the fog starts.
+uniform float bbmod_FogStart;
+
+// 1.0 / (fogEnd - fogStart)
+uniform float bbmod_FogRcpRange;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,12 +119,12 @@ void main()
 
 	// Diffuse
 	gl_FragColor.rgb = xGammaToLinear(baseOpacity.rgb) * v_vLight;
-#endif
-
 	// Fog
 	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
+#endif
+
 	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction

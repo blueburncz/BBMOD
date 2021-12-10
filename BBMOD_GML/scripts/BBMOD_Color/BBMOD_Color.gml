@@ -92,6 +92,25 @@
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
 /// @param {real} [_alpha] The value of the alpha channel. Use values in range 0..1.
 /// Defaults to 1.
+/// @see BBMOD_C_AQUA
+/// @see BBMOD_C_BLACK
+/// @see BBMOD_C_BLUE
+/// @see BBMOD_C_DKGRAY
+/// @see BBMOD_C_FUCHSIA
+/// @see BBMOD_C_GRAY
+/// @see BBMOD_C_GREEN
+/// @see BBMOD_C_LIME
+/// @see BBMOD_C_LTGRAY
+/// @see BBMOD_C_MAROON
+/// @see BBMOD_C_NAVY
+/// @see BBMOD_C_OLIVE
+/// @see BBMOD_C_ORANGE
+/// @see BBMOD_C_PURPLE
+/// @see BBMOD_C_RED
+/// @see BBMOD_C_SILVER
+/// @see BBMOD_C_TEAL
+/// @see BBMOD_C_WHITE
+/// @see BBMOD_C_YELLOW
 /// @see BBMOD_RGBM_VALUE_MAX
 function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) constructor
 {
@@ -139,6 +158,26 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 		Green = _green;
 		Blue = _blue;
 		Alpha = _alpha;
+		return self;
+	};
+
+	/// @func FromHex(_hex)
+	/// @desc Initializes the color using `RRGGBB` hexadecimal format. Alpha
+	/// channel is set to 1.
+	/// @param {uint} _hex The hexadecimal color.
+	/// @return {BBMOD_Color} Returns `self`.
+	/// @example
+	/// ```gml
+	/// new BBMOD_Color().FromHex($FF0000); // Same as FromConstant(c_red)
+	/// new BBMOD_Color().FromHex($00FF00); // Same as FromConstant(c_lime)
+	/// new BBMOD_Color().FromHex($0000FF); // Same as FromConstant(c_blue)
+	/// ```
+	static FromHex = function (_hex) {
+		gml_pragma("forceinline");
+		Red = color_get_blue(_hex);
+		Green = color_get_green(_hex);
+		Blue = color_get_red(_hex);
+		Alpha = 1.0;
 		return self;
 	};
 

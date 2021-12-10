@@ -33,7 +33,6 @@ uniform float bbmod_FogStart;
 // 1.0 / (fogEnd - fogStart)
 uniform float bbmod_FogRcpRange;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
 #define X_GAMMA 2.2
@@ -88,11 +87,11 @@ void main()
 
 	// Diffuse
 	gl_FragColor.rgb = xGammaToLinear(baseOpacity.rgb) * v_vLight;
-
 	// Fog
 	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
+
 	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction

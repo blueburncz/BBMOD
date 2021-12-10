@@ -323,6 +323,9 @@ function BBMOD_Camera() constructor
 	/// model.submit();
 	/// bbmod_material_reset();
 	/// ```
+	/// @note This also overrides the camera position and exposure passed to
+	/// shaders using {@link bbmod_camera_set_position} and
+	/// {@link bbmod_camera_set_exposure} respectively!
 	static apply = function () {
 		gml_pragma("forceinline");
 		camera_apply(Raw);

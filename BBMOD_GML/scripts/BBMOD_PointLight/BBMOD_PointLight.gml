@@ -10,7 +10,7 @@ function BBMOD_PointLight(_color=undefined, _position=undefined, _range=1.0)
 	BBMOD_CLASS_GENERATED_BODY;
 
 	/// @var {BBMOD_Color} The color of the light. Defaults to white.
-	Color = _color ?? new BBMOD_Color();
+	Color = _color ?? BBMOD_C_WHITE;
 
 	if (_position != undefined)
 	{
