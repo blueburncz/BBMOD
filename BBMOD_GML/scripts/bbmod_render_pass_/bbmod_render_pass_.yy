@@ -6,7 +6,7 @@
     "path": "folders/BBMOD/Core/Rendering.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_ERenderPass",
+  "name": "bbmod_render_pass_",
   "tags": [],
   "resourceType": "GMScript",
 }

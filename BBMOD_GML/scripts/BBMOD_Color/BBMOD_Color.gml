@@ -6,6 +6,82 @@
 /// colors. This is always at least 255.
 #macro BBMOD_RGBM_VALUE_MAX (255.0 * BBMOD_RGBM_RANGE)
 
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_aqua)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_AQUA (new BBMOD_Color().FromConstant(c_aqua))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_black)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_BLACK (new BBMOD_Color().FromConstant(c_black))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_blue)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_BLUE (new BBMOD_Color().FromConstant(c_blue))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_dkgray)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_DKGRAY (new BBMOD_Color().FromConstant(c_dkgray))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_fuchsia)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_FUCHSIA (new BBMOD_Color().FromConstant(c_fuchsia))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_gray)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_GRAY (new BBMOD_Color().FromConstant(c_gray))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_green)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_GREEN (new BBMOD_Color().FromConstant(c_green))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_lime)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_LIME (new BBMOD_Color().FromConstant(c_lime))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_ltgray)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_LTGRAY (new BBMOD_Color().FromConstant(c_ltgray))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_maroon)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_MAROON (new BBMOD_Color().FromConstant(c_maroon))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_navy)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_NAVY (new BBMOD_Color().FromConstant(c_navy))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_olive)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_OLIVE (new BBMOD_Color().FromConstant(c_olive))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_orange)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_ORANGE (new BBMOD_Color().FromConstant(c_orange))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_purple)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_PURPLE (new BBMOD_Color().FromConstant(c_purple))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_red)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_RED (new BBMOD_Color().FromConstant(c_red))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_silver)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_SILVER (new BBMOD_Color().FromConstant(c_silver))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_teal)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_TEAL (new BBMOD_Color().FromConstant(c_teal))
+
+/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_white)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_WHITE (new BBMOD_Color().FromConstant(c_white))
+
+///@macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_yellow)`.
+/// @see BBMOD_Color
+#macro BBMOD_C_YELLOW (new BBMOD_Color().FromConstant(c_yellow))
+
 /// @func BBMOD_Color([_red, _green, _blue])
 /// @desc A color with support for high dynamic range.
 /// @param {real} [_red] The value of the red channel. Use values in range

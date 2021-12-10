@@ -83,7 +83,7 @@
     {"id":{"name":"BBMOD_Mesh","path":"scripts/BBMOD_Mesh/BBMOD_Mesh.yy",},"order":1,},
     {"id":{"name":"OCharacter","path":"objects/OCharacter/OCharacter.yy",},"order":4,},
     {"id":{"name":"SprPlayer","path":"sprites/SprPlayer/SprPlayer.yy",},"order":0,},
-    {"id":{"name":"BBMOD_ERenderPass","path":"scripts/BBMOD_ERenderPass/BBMOD_ERenderPass.yy",},"order":2,},
+    {"id":{"name":"bbmod_render_pass_","path":"scripts/bbmod_render_pass_/bbmod_render_pass_.yy",},"order":2,},
     {"id":{"name":"SndFootstep0","path":"sounds/SndFootstep0/SndFootstep0.yy",},"order":0,},
     {"id":{"name":"BBMOD_ShDefault","path":"shaders/BBMOD_ShDefault/BBMOD_ShDefault.yy",},"order":4,},
     {"id":{"name":"OShell","path":"objects/OShell/OShell.yy",},"order":9,},

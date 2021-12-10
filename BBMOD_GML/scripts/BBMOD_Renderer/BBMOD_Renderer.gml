@@ -27,7 +27,7 @@
 /// // Draw event
 /// camera.apply();
 /// renderer.render();
-/// 
+///
 /// // Post-Draw event
 /// renderer.present();
 ///
@@ -133,8 +133,8 @@ function BBMOD_Renderer()
 		}
 
 		bbmod_material_reset();
+		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
-		global.bbmod_render_pass = BBMOD_ERenderPass.Forward;
 		var _materials = bbmod_get_materials(BBMOD_ERenderPass.Forward);
 		var i = 0;
 		repeat (array_length(_materials))

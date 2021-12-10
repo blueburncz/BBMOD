@@ -2,18 +2,6 @@
 /// @private
 global.__bbmodMaterialCurrent = BBMOD_NONE;
 
-/// @var {real} The current render pass. Its initial value is
-/// {@link BBMOD_ERenderPass.Forward}.
-/// @example
-/// ```gml
-/// if (global.bbmod_render_pass & (1 << BBMOD_ERenderPass.Forward))
-/// {
-///     // Draw objects to a G-Buffer...
-/// }
-/// ```
-/// @see BBMOD_ERenderPass
-global.bbmod_render_pass = BBMOD_ERenderPass.Forward;
-
 // Array of all existing materials.
 global.__bbmodMaterialsAll = [];
 
@@ -178,7 +166,7 @@ function BBMOD_Material(_shader=undefined)
 	/// @return {bool} Returns `true` if the material was applied.
 	/// @see BBMOD_Material.reset
 	static apply = function () {
-		if ((RenderPass & (1 << global.bbmod_render_pass)) == 0)
+		if ((RenderPass & (1 << bbmod_render_pass_get())) == 0)
 		{
 			return false;
 		}
@@ -197,7 +185,7 @@ function BBMOD_Material(_shader=undefined)
 			gpu_set_tex_repeat(Repeat);
 		}
 
-		var _shader = Shaders[global.bbmod_render_pass];
+		var _shader = Shaders[bbmod_render_pass_get()];
 		if (BBMOD_SHADER_CURRENT != _shader)
 		{
 			if (BBMOD_SHADER_CURRENT != BBMOD_NONE)
@@ -274,6 +262,7 @@ function BBMOD_Material(_shader=undefined)
 	/// @param {BBMOD_Shader} _shader The shader used in the render pass.
 	/// @return {BBMOD_Material} Returns `self`.
 	/// @see BBMOD_Material.get_shader
+	/// @see bbmod_render_pass_set
 	/// @see BBMOD_ERenderPass
 	static set_shader = function (_pass, _shader) {
 		gml_pragma("forceinline");
