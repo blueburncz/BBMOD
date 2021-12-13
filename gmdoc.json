@@ -34,7 +34,8 @@
         "Animations": "QuickstartGuide/QuickstartAnimations.md",
         "Animation events": "QuickstartGuide/QuickstartAnimationEvents.md",
         "Bone attachments": "QuickstartGuide/QuickstartBoneAttachments.md",
-        "Transforming bones": "QuickstartGuide/QuickstartTransformingBones.md"
+        "Transforming bones": "QuickstartGuide/QuickstartTransformingBones.md",
+        "Vertex lights and fog": "QuickstartGuide/QuickstartVertexLightsAndFog.md"
       }
     },
     "Advanced topics": {
