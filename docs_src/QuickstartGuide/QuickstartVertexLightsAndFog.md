@@ -84,6 +84,13 @@ You can also remove a light at specific index using
 [bbmod_light_point_remove_index](./bbmod_light_point_remove_index.html) or
 remove all added lights with [bbmod_light_point_clear](./bbmod_light_point_clear.html).
 
+## Temporarily disabling lights
+Since version 3.1.4 it is possible to temporarily disable lights by setting
+their [Enabled](./BBMOD_Light.Enabled.html) property to `false`. This is useful
+for example if you want to disable lights that are out of view enable them once
+they are visible again, without having to call the appropriate set/add/remove
+functions.
+
 ## Fog
 When fog is enabled, all objects at distance start to fade into the color of the
 fog. To enable fog use function [bbmod_fog_set](./bbmod_fog_set.html).
@@ -104,6 +111,5 @@ Individual properties of the fog can also be configured using functions
 [bbmod_fog_set_color](./bbmod_fog_set_color.html),
 [bbmod_fog_set_intensity](./bbmod_fog_set_intensity.html),
 [bbmod_fog_set_start](./bbmod_fog_set_start.html) and
-[bbmod_fog_set_end](./bbmod_fog_set_end.html).
-
-To disable the fog again, simply set its intensity to 0.
+[bbmod_fog_set_end](./bbmod_fog_set_end.html). To disable the fog again, simply
+set its intensity to 0.

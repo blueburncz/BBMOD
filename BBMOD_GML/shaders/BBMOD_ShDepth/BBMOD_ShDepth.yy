@@ -1,11 +1,11 @@
 {
   "type": 1,
   "parent": {
-    "name": "BBMOD",
-    "path": "BBMOD.yyp",
+    "name": "DepthBuffer",
+    "path": "folders/BBMOD/Rendering/DepthBuffer.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_ShPBRAnimated",
+  "name": "BBMOD_ShDepth",
   "tags": [],
   "resourceType": "GMShader",
 }

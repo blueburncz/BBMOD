@@ -59,6 +59,30 @@ function BBMOD_Renderer()
 	/// have any effect. Defaults to 1.
 	RenderScale = 1.0;
 
+	/// @var {bool} Enables rendering into a shadowmap in the shadows render pass.
+	/// Defauls to `false`.
+	/// @see BBMOD_Renderer.ShadowmapArea
+	/// @see BBMOD_Renderer.ShadowmapResolution
+	EnableShadows = false;
+
+	/// @var {surface} The surface used for rendering the scene's depth from the
+	/// directional light's view.
+	/// @private
+	SurShadowmap = noone;
+
+	/// @var {real} The area captured by the shadowmap. Defaults to 512.
+	ShadowmapArea = 512;
+
+	/// @var {uint} The resolution of the shadowmap surface. Must be power of 2.
+	/// Defaults to 2048.
+	ShadowmapResolution = 2048;
+
+	/// @var {real} When rendering shadows, offsets vertex position by its normal
+	/// scaled by this value. Defaults to 1. Increasing the value can remove some
+	/// artifacts but using too high value could make the objects appear flying
+	/// above the ground.
+	ShadowmapNormalOffset = 1;
+
 	/// @func add(_renderable)
 	/// @desc Adds a renderable object or struct to the renderer.
 	/// @param {BBMOD_IRenderable} _renderable The renderable object or struct
@@ -116,12 +140,106 @@ function BBMOD_Renderer()
 		return self;
 	};
 
+	static get_shadowmap_view = function () {
+		gml_pragma("forceinline");
+		var _directionalLight = bbmod_light_directional_get();
+		if (_directionalLight == undefined)
+		{
+			return matrix_build_identity();
+		}
+		// TODO: Get camera position
+		var _directionalLightPosition = bbmod_camera_get_position();
+		var _directionalLightDirection = _directionalLight.Direction;
+		return matrix_build_lookat(
+			_directionalLightPosition.X,
+			_directionalLightPosition.Y,
+			_directionalLightPosition.Z,
+			_directionalLightPosition.X + _directionalLightDirection.X,
+			_directionalLightPosition.Y + _directionalLightDirection.Y,
+			_directionalLightPosition.Z + _directionalLightDirection.Z,
+			0.0, 0.0, 1.0); // TODO: Find the up vector
+	};
+
+	static get_shadowmap_projection = function () {
+		gml_pragma("forceinline");
+		return matrix_build_projection_ortho(
+			ShadowmapArea, ShadowmapArea, -ShadowmapArea * 0.5, ShadowmapArea * 0.5);
+	};
+
+	static get_shadowmap_matrix = function () {
+		gml_pragma("forceinline");
+		if (bbmod_light_directional_get() == undefined)
+		{
+			return matrix_build_identity();
+		}
+		return matrix_multiply(
+			get_shadowmap_view(),
+			get_shadowmap_projection());
+	};
+
+	/// @func render_shadowmap()
+	/// @desc Renders shadowmap.
+	/// @note This modifies render pass and view and projection matrices and
+	/// for optimization reasons it does not reset them back! Make sure to do
+	/// that yourself in the calling function if needed.
+	/// @private
+	static render_shadowmap = function () {
+		gml_pragma("forceinline");
+
+		var _directionalLight = bbmod_light_directional_get();
+		if (_directionalLight == undefined)
+		{
+			_directionalLight = new BBMOD_DirectionalLight();
+			_directionalLight.CastShadows = false;
+		}
+
+		var _castShadows = (EnableShadows && _directionalLight.CastShadows);
+		if (_castShadows)
+		{
+			SurShadowmap = bbmod_surface_check(SurShadowmap, ShadowmapResolution, ShadowmapResolution);
+		}
+		else
+		{
+			SurShadowmap = bbmod_surface_check(SurShadowmap, 1, 1);
+		}
+
+		surface_set_target(SurShadowmap);
+		draw_clear(c_red);
+		if (_castShadows)
+		{
+			matrix_set(matrix_view, get_shadowmap_view());
+			matrix_set(matrix_projection, get_shadowmap_projection());
+			var _shadowmapArea = ShadowmapArea;
+			bbmod_render_pass_set(BBMOD_ERenderPass.Shadows);
+			var _materials = bbmod_get_materials(BBMOD_ERenderPass.Shadows);
+			var m = 0;
+			repeat (array_length(_materials))
+			{
+				var _material = _materials[m++];
+				if (!_material.has_commands()
+					|| !_material.apply())
+				{
+					continue;
+				}
+				try
+				{
+					BBMOD_SHADER_CURRENT.set_zfar(_shadowmapArea);
+				}
+				catch (_ignore) {}
+				_material.submit_queue();
+			}
+		}
+		surface_reset_target();
+	};
+
 	/// @func render()
 	/// @desc Renders all added [renderables](./BBMOD_Renderer.Renderables.html)
 	/// to the current render target.
 	/// @return {BBMOD_Renderer} Returns `self`.
 	static render = function () {
 		var _world = matrix_get(matrix_world);
+		var _view = matrix_get(matrix_view);
+		var _projection = matrix_get(matrix_projection);
 
 		var i = 0;
 		repeat (array_length(Renderables))
@@ -133,23 +251,47 @@ function BBMOD_Renderer()
 		}
 
 		bbmod_material_reset();
-		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
+		////////////////////////////////////////////////////////////////////////
+		// Shadow map
+		render_shadowmap();
+
+		////////////////////////////////////////////////////////////////////////
+		// Forward pass
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
+
+		var _shadowmapTexture = surface_get_texture(SurShadowmap);
+		var _shadowmapMatrix = get_shadowmap_matrix();
+		var _shadowmapArea = ShadowmapArea;
+		var _shadowmapNormalOffset = ShadowmapNormalOffset;
+
+		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 		var _materials = bbmod_get_materials(BBMOD_ERenderPass.Forward);
 		var i = 0;
 		repeat (array_length(_materials))
 		{
 			var _material = _materials[i++];
-			if (_material.has_commands()
-				&& _material.apply())
+			if (!_material.has_commands()
+				|| !_material.apply())
 			{
-				_material.submit_queue().clear_queue();
+				continue;
 			}
+			try
+			{
+				BBMOD_SHADER_CURRENT.set_shadowmap(
+					_shadowmapTexture,
+					_shadowmapMatrix,
+					_shadowmapArea,
+					_shadowmapNormalOffset);
+			}
+			catch (_ignore) {}
+			_material.submit_queue().clear_queue();
 		}
 
 		bbmod_material_reset();
-		matrix_set(matrix_world, _world);
 
+		matrix_set(matrix_world, _world);
 		return self;
 	};
 

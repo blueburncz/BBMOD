@@ -43,18 +43,6 @@ uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 #endif
 
 #if !PBR
-// RGBM encoded ambient light color on the upper hemisphere.
-uniform vec4 bbmod_LightAmbientUp;
-
-/// RGBM encoded ambient light color on the lower hemisphere.
-uniform vec4 bbmod_LightAmbientDown;
-
-// Direction of the directional light
-uniform vec3 bbmod_LightDirectionalDir;
-
-// RGBM encoded color of the directional light
-uniform vec4 bbmod_LightDirectionalColor;
-
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 #endif
@@ -67,13 +55,13 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-#if !PBR
+#if !OUTPUT_DEPTH && !PBR
 varying vec3 v_vLight;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
-#if !PBR
+#if !OUTPUT_DEPTH && !PBR
 #pragma include("Color.xsh", "glsl")
 
 #pragma include("RGBM.xsh", "glsl")
@@ -173,30 +161,19 @@ void main()
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
 	v_mTBN = mat3(T, B, N);
 
-#if !PBR
+#if !OUTPUT_DEPTH && !PBR
 	////////////////////////////////////////////////////////////////////////////
-	// Lighting
+	// Point lights
 	N = normalize(N);
 	v_vLight = vec3(0.0);
 
-	// Ambient
-	Vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	Vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	v_vLight += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
-
-	// Directional
-	vec3 L = normalize(-bbmod_LightDirectionalDir);
-	float NdotL = max(dot(N, L), 0.0);
-	v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL;
-
-	// Point
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
 	{
 		Vec4 positionRange = bbmod_LightPointData[i * 2];
-		L = positionRange.xyz - v_vVertex;
+		vec3 L = positionRange.xyz - v_vVertex;
 		float dist = length(L);
 		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
-		NdotL = max(dot(N, normalize(L)), 0.0);
+		float NdotL = max(dot(N, normalize(L)), 0.0);
 		v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
 	}
 #endif

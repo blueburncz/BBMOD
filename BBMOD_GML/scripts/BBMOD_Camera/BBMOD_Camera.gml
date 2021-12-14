@@ -330,6 +330,7 @@ function BBMOD_Camera() constructor
 		gml_pragma("forceinline");
 		camera_apply(Raw);
 		bbmod_camera_set_position(Position.Clone());
+		bbmod_camera_set_zfar(ZFar);
 		bbmod_camera_set_exposure(Exposure);
 		return self;
 	};

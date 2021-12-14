@@ -17,6 +17,9 @@ uniform float bbmod_AlphaTest;
 // Camera's position in world space
 uniform vec3 bbmod_CamPos;
 
+// Distance to the far clipping plane.
+uniform float bbmod_ZFar;
+
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
@@ -40,6 +43,7 @@ uniform sampler2D bbmod_IBL;
 
 // Texel size of one octahedron.
 uniform vec2 bbmod_IBLTexel;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
@@ -80,6 +84,7 @@ vec3 xDecodeRGBM(vec4 rgbm)
 {
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
+
 
 #define X_PI   3.14159265359
 #define X_2_PI 6.28318530718
@@ -337,6 +342,7 @@ Material UnpackMaterial(
 		specular);
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Main
 void main()
@@ -370,7 +376,6 @@ void main()
 	gl_FragColor.rgb += material.Emissive;
 	// Subsurface scattering
 	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
-
 	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction

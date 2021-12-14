@@ -23,6 +23,8 @@ function BBMOD_Shader(_shader, _vertexFormat)
 
 	UCamPos = get_uniform("bbmod_CamPos");
 
+	UZFar = get_uniform("bbmod_ZFar");
+
 	UExposure = get_uniform("bbmod_Exposure");
 
 	ULightAmbientUp = get_uniform("bbmod_LightAmbientUp");
@@ -42,6 +44,16 @@ function BBMOD_Shader(_shader, _vertexFormat)
 	UFogStart = get_uniform("bbmod_FogStart");
 
 	UFogRcpRange = get_uniform("bbmod_FogRcpRange");
+
+	UShadowmap = get_sampler_index("bbmod_Shadowmap");
+
+	UShadowmapMatrix = get_uniform("bbmod_ShadowmapMatrix");
+
+	UShadowmapTexel = get_uniform("bbmod_ShadowmapTexel");
+
+	UShadowmapArea = get_uniform("bbmod_ShadowmapArea");
+
+	UShadowmapNormalOffset = get_uniform("bbmod_ShadowmapNormalOffset");
 
 	/// @func set_texture_offset(_offset)
 	/// @desc Sets the `bbmod_TextureOffset` uniform to the given offset.
@@ -91,13 +103,24 @@ function BBMOD_Shader(_shader, _vertexFormat)
 
 	/// @func set_cam_pos([_pos])
 	/// @desc Sets a fragment shader uniform `bbmod_CamPos` to the given position.
-	/// @param {BBMOD_Vec3} [_pos[ The camera position. Defaults to the value
+	/// @param {BBMOD_Vec3} [_pos] The camera position. Defaults to the value
 	/// defined using {@link bbmod_camera_set_position}.
 	/// @return {BBMOD_Shader} Returns `self`.
 	static set_cam_pos = function (_pos=undefined) {
 		gml_pragma("forceinline");
 		_pos ??= global.bbmod_camera_position;
 		return set_uniform_f3(UCamPos, _pos.X, _pos.Y, _pos.Z);
+	};
+
+	/// @func set_zfar([_value])
+	/// @desc Sets a fragment shader uniform `bbmod_ClipFar` to the given position.
+	/// @param {BBMOD_Vec3} [_pos] The distance to the far clipping plane. Defaults
+	/// to the value defined using {@link bbmod_camera_set_zfar}.
+	/// @return {BBMOD_Shader} Returns `self`.
+	static set_zfar = function (_value=undefined) {
+		gml_pragma("forceinline");
+		_value ??= global.__bbmodZFar;
+		return set_uniform_f(UZFar, _value);
 	};
 
 	/// @func set_exposure([_value])
@@ -133,13 +156,14 @@ function BBMOD_Shader(_shader, _vertexFormat)
 	/// @desc Sets uniforms `bbmod_LightDirectionalDir` and
 	/// `bbmod_LightDirectionalColor`.
 	/// @param {BBMOD_DirectionalLight} [_light] The directional light. Defaults
-	/// to the light set using {@link bbmod_light_directional_set}.
+	/// to the light set using {@link bbmod_light_directional_set}. If the light
+	/// is not enabled then it is not passed.
 	/// @return {BBMOD_PBRShader} Returns `self`.
 	/// @see BBMOD_DirectionalLight
 	static set_directional_light = function (_light=undefined) {
 		gml_pragma("forceinline");
 		_light ??= global.__bbmodDirectionalLight;
-		if (_light != undefined)
+		if (_light != undefined	&& _light.Enabled)
 		{
 			var _direction = _light.Direction;
 			set_uniform_f3(ULightDirectionalDir, _direction.X, _direction.Y, _direction.Z);
@@ -154,23 +178,33 @@ function BBMOD_Shader(_shader, _vertexFormat)
 	};
 
 	/// @func set_point_lights([_lights])
-	/// @desc Sets uniform `bbmod_LightPointData`
+	/// @desc Sets uniform `bbmod_LightPointData`.
 	/// @param {BBMOD_PointLight[]} [_lights] An array of point lights. Defaults
-	/// to the lights defined using {@link bbmod_light_point_add}.
+	/// to the lights defined using {@link bbmod_light_point_add}. Only enabled
+	/// lights will be used.
 	/// @return {BBMOD_PBRShader} Returns `self`.
 	static set_point_lights = function (_lights=undefined) {
 		gml_pragma("forceinline");
 		_lights ??= global.__bbmodPointLights;
 		var _maxLights = MaxPointLights;
-		var _data = array_create(_maxLights * 8, 0.0);
-		var _imax = min(array_length(_lights), _maxLights);
-		for (var i = 0; i < _imax; ++i)
+		var _index = 0;
+		var _indexMax = _maxLights * 8;
+		var _data = array_create(_indexMax, 0.0);
+		var i = 0;
+		repeat (array_length(_lights))
 		{
-			var _index = i * 8;
-			var _light = _lights[i];
-			_light.Position.ToArray(_data, _index);
-			_data[@ _index + 3] = _light.Range;
-			_light.Color.ToRGBM(_data, _index + 4);
+			var _light = _lights[i++];
+			if (_light.Enabled)
+			{
+				_light.Position.ToArray(_data, _index);
+				_data[@ _index + 3] = _light.Range;
+				_light.Color.ToRGBM(_data, _index + 4);
+				_index += 8;
+				if (_index >= _indexMax)
+				{
+					break;
+				}
+			}
 		}
 		set_uniform_f_array(ULightPointData, _data);
 		return self;
@@ -199,6 +233,31 @@ function BBMOD_Shader(_shader, _vertexFormat)
 		set_uniform_f(UFogIntensity, _intensity);
 		set_uniform_f(UFogStart, _start);
 		set_uniform_f(UFogRcpRange, _rcpFogRange);
+		return self;
+	};
+
+	/// @func set_shadowmap(_texture, _matrix, _area, _normalOffset)
+	/// @desc Sets uniforms `bbmod_Shadowmap`, `bbmod_ShadowmapMatrix`,
+	/// `bbmod_ShadowmapArea` and `bbmod_ShadowmapNormalOffset`, required for
+	/// shadow mapping.
+	/// @param {ptr} _texture The shadowmap texture.
+	/// @param {real[16]} _matrix The world-view-projection matrix used when
+	/// rendering the shadowmap.
+	/// @param {real} _area The area that the shadowmap captures.
+	/// @param {real} _normalOffset The area that the shadowmap captures.
+	/// @return {BBMOD_Shader} Returns `self`.
+	static set_shadowmap = function (_texture, _matrix, _area, _normalOffset) {
+		gml_pragma("forceinline");
+		set_sampler(UShadowmap, _texture);
+		gpu_set_tex_mip_enable_ext(UShadowmap, false);
+		gpu_set_tex_filter_ext(UShadowmap, true);
+		gpu_set_tex_repeat_ext(UShadowmap, false);
+		set_uniform_f2(UShadowmapTexel,
+			texture_get_texel_width(_texture),
+			texture_get_texel_height(_texture));
+		set_uniform_f(UShadowmapArea, _area);
+		set_uniform_f(UShadowmapNormalOffset, _normalOffset);
+		set_uniform_matrix_array(UShadowmapMatrix, _matrix);
 		return self;
 	};
 
@@ -236,6 +295,10 @@ function BBMOD_Shader(_shader, _vertexFormat)
 /// @deprecated Please use {@link bbmod_camera_get_position} and
 /// {@link bbmod_camera_set_position} instead.
 global.bbmod_camera_position = new BBMOD_Vec3();
+
+/// @var {real} Distance to the far clipping plane.
+/// @private
+global.__bbmodZFar = 1.0;
 
 /// @var {real} The current camera exposure.
 /// @deprecated Please use {@link bbmod_camera_get_exposure} and
@@ -275,6 +338,26 @@ function bbmod_camera_set_position(_position)
 {
 	gml_pragma("forceinline");
 	global.bbmod_camera_position = _position;
+}
+
+/// @func bbmod_camera_get_zfar()
+/// @desc
+/// @return {real}
+/// @see bbmod_camera_set_zfar
+function bbmod_camera_get_zfar()
+{
+	gml_pragma("forceinline");
+	return global.__bbmodZFar;
+}
+
+/// @func bbmod_camera_set_zfar(_value)
+/// @desc
+/// @param {real} _value
+/// @see bbmod_camera_get_zfar
+function bbmod_camera_set_zfar(_value)
+{
+	gml_pragma("forceinline");
+	global.__bbmodZFar = _value;
 }
 
 /// @func bbmod_camera_get_exposure()

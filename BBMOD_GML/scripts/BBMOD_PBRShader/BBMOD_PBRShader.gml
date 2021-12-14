@@ -67,7 +67,8 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 	/// `bbmod_IBL` and `bbmod_BRDF`. These are required for image based
 	/// lighting.
 	/// @param {BBMOD_ImageBasedLight} [_ibl] The image based light. Defaults to
-	/// the one defined using {@link bbmod_ibl_set}.
+	/// the one defined using {@link bbmod_ibl_set}. If the light is not enabled
+	/// then it is not passed.
 	/// @return {BBMOD_PBRShader} Returns `self`.
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");
@@ -77,7 +78,7 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 		var _texel = 0.0;
 
 		_ibl ??= global.__bbmodImageBasedLight;
-		if (_ibl != undefined)
+		if (_ibl != undefined && _ibl.Enabled)
 		{
 			_texture = _ibl.Texture;
 			_texel = _ibl.Texel;

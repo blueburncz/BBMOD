@@ -2,7 +2,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Defines
 
-#define MAX_BATCH_DATA_SIZE 128
 
 #define MAX_POINT_LIGHTS 8
 
@@ -15,7 +14,6 @@ attribute vec2 in_TextureCoord0;
 attribute vec4 in_TangentW;
 
 
-attribute float in_Id;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Uniforms
@@ -23,7 +21,6 @@ uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
 
-uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
@@ -36,52 +33,10 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-varying vec3 v_vLight;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
-#define X_GAMMA 2.2
 
-/// @desc Converts gamma space color to linear space.
-vec3 xGammaToLinear(vec3 rgb)
-{
-	return pow(rgb, vec3(X_GAMMA));
-}
-
-/// @desc Converts linear space color to gamma space.
-vec3 xLinearToGamma(vec3 rgb)
-{
-	return pow(rgb, vec3(1.0 / X_GAMMA));
-}
-
-/// @desc Gets color's luminance.
-float xLuminance(vec3 rgb)
-{
-	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
-}
-
-/// @note Input color should be in gamma space.
-/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
-vec4 xEncodeRGBM(vec3 color)
-{
-	vec4 rgbm;
-	color *= 1.0 / 6.0;
-	rgbm.a = clamp(max(max(color.r, color.g), max(color.b, 0.000001)), 0.0, 1.0);
-	rgbm.a = ceil(rgbm.a * 255.0) / 255.0;
-	rgbm.rgb = color / rgbm.a;
-	return rgbm;
-}
-
-/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
-vec3 xDecodeRGBM(vec4 rgbm)
-{
-	return 6.0 * rgbm.rgb * rgbm.a;
-}
-
-vec3 QuaternionRotate(vec4 q, vec3 v)
-{
-	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
-}
 
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
@@ -93,12 +48,6 @@ void Transform(out vec4 vertex, out vec4 normal)
 	normal = vec4(in_Normal, 0.0);
 
 
-	int idx = int(in_Id) * 2;
-	vec4 posScale = bbmod_BatchData[idx];
-	vec4 rot = bbmod_BatchData[idx + 1];
-
-	vertex = vec4(posScale.xyz + (QuaternionRotate(rot, vertex.xyz) * posScale.w), 1.0);
-	normal = vec4(QuaternionRotate(rot, normal.xyz), 0.0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,19 +70,5 @@ void main()
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
 	v_mTBN = mat3(T, B, N);
 
-	////////////////////////////////////////////////////////////////////////////
-	// Point lights
-	N = normalize(N);
-	v_vLight = vec3(0.0);
-
-	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
-	{
-		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec3 L = positionRange.xyz - v_vVertex;
-		float dist = length(L);
-		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
-		float NdotL = max(dot(N, normalize(L)), 0.0);
-		v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
-	}
 }
 // include("Uber_VS.xsh")

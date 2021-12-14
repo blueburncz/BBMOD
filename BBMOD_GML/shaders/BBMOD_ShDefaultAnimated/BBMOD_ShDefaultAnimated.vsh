@@ -26,18 +26,6 @@ uniform vec2 bbmod_TextureScale;
 uniform vec4 bbmod_Bones[2 * MAX_BONES];
 
 
-// RGBM encoded ambient light color on the upper hemisphere.
-uniform vec4 bbmod_LightAmbientUp;
-
-/// RGBM encoded ambient light color on the lower hemisphere.
-uniform vec4 bbmod_LightAmbientDown;
-
-// Direction of the directional light
-uniform vec3 bbmod_LightDirectionalDir;
-
-// RGBM encoded color of the directional light
-uniform vec4 bbmod_LightDirectionalColor;
-
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
@@ -172,28 +160,17 @@ void main()
 	v_mTBN = mat3(T, B, N);
 
 	////////////////////////////////////////////////////////////////////////////
-	// Lighting
+	// Point lights
 	N = normalize(N);
 	v_vLight = vec3(0.0);
 
-	// Ambient
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	v_vLight += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
-
-	// Directional
-	vec3 L = normalize(-bbmod_LightDirectionalDir);
-	float NdotL = max(dot(N, L), 0.0);
-	v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL;
-
-	// Point
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
 	{
 		vec4 positionRange = bbmod_LightPointData[i * 2];
-		L = positionRange.xyz - v_vVertex;
+		vec3 L = positionRange.xyz - v_vVertex;
 		float dist = length(L);
 		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
-		NdotL = max(dot(N, normalize(L)), 0.0);
+		float NdotL = max(dot(N, normalize(L)), 0.0);
 		v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
 	}
 }

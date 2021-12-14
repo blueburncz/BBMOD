@@ -266,7 +266,7 @@ function BBMOD_Animation(_file, _sha1) constructor
 		_transition.Spaces = (Spaces & BBMOD_BONE_SPACE_PARENT)
 			? BBMOD_BONE_SPACE_PARENT
 			: BBMOD_BONE_SPACE_WORLD;
-		_transition.Duration = (TransitionOut + _animTo.TransitionIn) * TicsPerSecond;
+		_transition.Duration = round((TransitionOut + _animTo.TransitionIn) * TicsPerSecond);
 		_transition.TicsPerSecond = TicsPerSecond;
 		_transition.IsTransition = true;
 
