@@ -6,7 +6,7 @@
     "path": "folders/BBMOD/Core/Rendering.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_Shader",
+  "name": "BBMOD_BaseMaterial",
   "tags": [],
   "resourceType": "GMScript",
 }

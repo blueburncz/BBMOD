@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Rendering",
-    "path": "folders/BBMOD/Core/Rendering.yy",
+    "name": "DefaultMaterial",
+    "path": "folders/BBMOD/Core/DefaultMaterial.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_Material",
+  "name": "BBMOD_DefaultShader",
   "tags": [],
   "resourceType": "GMScript",
 }

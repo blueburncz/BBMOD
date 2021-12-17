@@ -29,6 +29,9 @@ enum BBMOD_ERenderPass
 	Forward,
 	/// @member Render pass where alpha-blended objects are rendered.
 	Alpha,
+	/// @member Render pass where instance IDs are rendered into an off-screen
+	/// buffer.
+	Id,
 	/// @member Total number of members of this enum.
 	SIZE
 };
@@ -56,7 +59,7 @@ function bbmod_render_pass_get()
 /// @param {BBMOD_ERenderPass} _pass The render pass. By default this is set to
 /// {@link BBMOD_ERenderPass.Forward}.
 /// @see bbmod_render_pass_get
-/// @see BBMOD_Material.set_shader
+/// @see BBMOD_BaseMaterial.set_shader
 /// @see BBMOD_ERenderPass
 function bbmod_render_pass_set(_pass)
 {

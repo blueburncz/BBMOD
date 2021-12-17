@@ -56,16 +56,18 @@ modGun = _objImporter.import("Data/Assets/Pistol.obj");
 modGun.freeze();
 
 matGun0 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(c_silver, 1.0)
+	.set_base_opacity(BBMOD_C_SILVER, 1.0)
+	.set_specular_color(BBMOD_C_SILVER)
+	.set_normal_smoothness(BBMOD_VEC3_UP, 0.8)
 	//.set_normal_roughness(BBMOD_VEC3_UP, 0.3)
 	//.set_metallic_ao(1.0, 1.0)
 	;
 
 matGun1 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity($101010, 1.0);
+	.set_base_opacity(new BBMOD_Color(32, 32, 32), 1.0);
 
 matGun2 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(c_black, 1.0);
+	.set_base_opacity(BBMOD_C_BLACK, 1.0);
 
 modGun.Materials[@ 0] = matGun0;
 modGun.Materials[@ 1] = matGun1;
@@ -75,7 +77,9 @@ modGun.Materials[@ 2] = matGun2;
 modShell = _objImporter.import("Data/Assets/Shell.obj");
 
 matShell = BBMOD_MATERIAL_DEFAULT_BATCHED.clone()
-	.set_base_opacity($56DAE8, 1.0)
+	.set_base_opacity(new BBMOD_Color().FromHex($E8DA56), 1.0)
+	.set_specular_color(new BBMOD_Color().FromConstant($E8DA56))
+	.set_normal_smoothness(BBMOD_VEC3_UP, 0.7)
 	//.set_normal_roughness(BBMOD_VEC3_UP, 0.3)
 	//.set_metallic_ao(1.0, 1.0)
 	;
@@ -86,11 +90,11 @@ batchShell.freeze();
 
 // Prepare static batch for signs
 matWood = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity($A7C5FF, 1.0);
+	.set_base_opacity(new BBMOD_Color().FromHex($FFC5A7), 1.0);
 
 modLever = _objImporter.import("Data/Assets/Lever.obj");
 modLever.Materials[@ 0] = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(c_silver, 1.0);
+	.set_base_opacity(BBMOD_C_SILVER, 1.0);
 modLever.Materials[@ 1] = matWood;
 modLever.freeze();
 
@@ -101,7 +105,7 @@ batchSign = new BBMOD_StaticBatch(modSign.VertexFormat);
 modPlane = _objImporter.import("Data/Assets/Plane.obj");
 modPlane.freeze();
 matGrass = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(c_white, 1.0);
+	.set_base_opacity(BBMOD_C_WHITE, 1.0);
 modPlane.Materials[0] = matGrass;
 
 _objImporter.destroy();

@@ -10,39 +10,22 @@ varying float v_fDepth;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Uniforms
+// Material
+#define bbmod_BaseOpacity gm_BaseTexture  // RGB: Base color, A: Opacity
+uniform sampler2D bbmod_NormalRoughness;  // RGB: Tangent space normal, A: Roughness
+uniform sampler2D bbmod_MetallicAO;       // R: Metallic, G: Ambient occlusion
+uniform sampler2D bbmod_Subsurface;       // RGB: Subsurface color, A: Intensity
+uniform sampler2D bbmod_Emissive;         // RGBA: RGBM encoded emissive color
+uniform float bbmod_AlphaTest;            // Pixels with alpha less than this value will be discarded
 
-// Pixels with alpha less than this value will be discarded.
-uniform float bbmod_AlphaTest;
+// Camera
+uniform vec3 bbmod_CamPos;    // Camera's position in world space
+uniform float bbmod_ZFar;     // Distance to the far clipping plane
+uniform float bbmod_Exposure; // Camera's exposure value
 
-// Camera's position in world space
-uniform vec3 bbmod_CamPos;
-
-// Distance to the far clipping plane.
-uniform float bbmod_ZFar;
-
-// Camera's exposure value
-uniform float bbmod_Exposure;
-
-// RGB: Base color, A: Opacity
-#define bbmod_BaseOpacity gm_BaseTexture
-
-// RGB: Tangent space normal, A: Roughness
-uniform sampler2D bbmod_NormalRoughness;
-
-// R: Metallic, G: Ambient occlusion
-uniform sampler2D bbmod_MetallicAO;
-
-// RGB: Subsurface color, A: Intensity
-uniform sampler2D bbmod_Subsurface;
-
-// RGBM encoded emissive color
-uniform sampler2D bbmod_Emissive;
-
-// Prefiltered octahedron env. map
-uniform sampler2D bbmod_IBL;
-
-// Texel size of one octahedron.
-uniform vec2 bbmod_IBLTexel;
+// Image based lighting
+uniform sampler2D bbmod_IBL; // Prefiltered octahedron env. map
+uniform vec2 bbmod_IBLTexel; // Texel size of one octahedron
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -287,6 +270,7 @@ vec3 xCheapSubsurface(vec4 subsurface, vec3 eye, vec3 normal, vec3 light, vec3 l
 	return subsurface.rgb * lightColor * fLT;
 }
 
+#define F0_DEFAULT vec3(0.04)
 
 struct Material
 {
@@ -296,51 +280,59 @@ struct Material
 	float Roughness;
 	float Metallic;
 	float AO;
+	vec3 Specular;
 	vec4 Subsurface;
 	vec3 Emissive;
-	vec3 Specular;
 };
 
+/// @desc Unpacks material from textures.
+/// @param texBaseOpacity     RGB: base color, A: opacity
+/// @param texNormalRoughness RGB: tangent-space normal vector, A: roughness
+/// @param texMetallicAO      R: metallic, G: ambient occlusion
+/// @param texSubsurface      RGB: subsurface color, A: intensity
+/// @param texEmissive        RGBA: RGBM encoded emissive color
+/// @param TBN                Tangent-bitangent-normal matrix
+/// @param uv                 Texture coordinates
 Material UnpackMaterial(
 	sampler2D texBaseOpacity,
 	sampler2D texNormalRoughness,
 	sampler2D texMetallicAO,
 	sampler2D texSubsurface,
 	sampler2D texEmissive,
-	mat3 tbn,
+	mat3 TBN,
 	vec2 uv)
 {
+	Material m;
+
+	// Base color and opacity
 	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
-	vec3 base = xGammaToLinear(baseOpacity.rgb);
-	float opacity = baseOpacity.a;
+	m.Base = xGammaToLinear(baseOpacity.rgb);
+	m.Opacity = baseOpacity.a;
 
+	// Normal vector and roughness
 	vec4 normalRoughness = texture2D(texNormalRoughness, uv);
-	vec3 normal = normalize(tbn * (normalRoughness.rgb * 2.0 - 1.0));
-	float roughness = mix(0.1, 0.9, normalRoughness.a);
+	m.Normal = normalize(TBN * (normalRoughness.rgb * 2.0 - 1.0));
+	m.Roughness = mix(0.1, 0.9, normalRoughness.a);
 
+	// Metallic and ambient occlusion
 	vec4 metallicAO = texture2D(texMetallicAO, uv);
-	float metallic = metallicAO.r;
-	float AO = metallicAO.g;
+	m.Metallic = metallicAO.r;
+	m.AO = metallicAO.g;
 
+	// Specular color
+	m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
+	m.Base *= (1.0 - m.Metallic);
+
+	// Subsurface (color and intensity)
 	vec4 subsurface = texture2D(texSubsurface, uv);
-	subsurface.rgb = xGammaToLinear(subsurface.rgb);
+	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
 
-	vec3 emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+	// Emissive color
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
 
-	vec3 specular = mix(X_F0_DEFAULT, base, metallic);
-	base *= (1.0 - metallic);
-
-	return Material(
-		base,
-		opacity,
-		normal,
-		roughness,
-		metallic,
-		AO,
-		subsurface,
-		emissive,
-		specular);
+	return m;
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////////////

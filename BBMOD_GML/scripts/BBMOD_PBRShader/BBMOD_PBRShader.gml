@@ -1,12 +1,12 @@
 /// @func BBMOD_PBRShader(_shader, _vertexFormat)
-/// @extends BBMOD_Shader
+/// @extends BBMOD_BaseShader
 /// @desc A wrapper for a raw GameMaker shader resource using PBR.
 /// @param {shader} _shader The shader resource.
 /// @param {BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
 function BBMOD_PBRShader(_shader, _vertexFormat)
-	: BBMOD_Shader(_shader, _vertexFormat) constructor
+	: BBMOD_BaseShader(_shader, _vertexFormat) constructor
 {
-	static Super_Shader = {
+	static Super_BaseShader = {
 		on_set: on_set,
 		set_material: set_material,
 	};
@@ -95,13 +95,13 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 
 	static on_set = function () {
 		gml_pragma("forceinline");
-		method(self, Super_Shader.on_set)();
+		method(self, Super_BaseShader.on_set)();
 		set_ibl();
 	};
 
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
-		method(self, Super_Shader.set_material)(_material);
+		method(self, Super_BaseShader.set_material)(_material);
 		set_metallic_ao(_material.MetallicAO);
 		set_normal_roughness(_material.NormalRoughness);
 		set_subsurface(_material.Subsurface);

@@ -108,7 +108,7 @@ function BBMOD_StaticBatch(_vformat)
 	///
 	/// @desc Immediately submits the static batch for rendering.
 	///
-	/// @param {BBMOD_Material} _material A material.
+	/// @param {BBMOD_BaseMaterial} _material A material.
 	///
 	/// @return {BBMOD_StaticBatch} Returns `self`.
 	///
@@ -116,7 +116,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// compatible with the current render pass!
 	///
 	/// @see BBMOD_StaticBatch.render
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_ERenderPass
 	static submit = function (_material) {
 		gml_pragma("forceinline");
@@ -130,10 +130,10 @@ function BBMOD_StaticBatch(_vformat)
 
 	/// @func render(_material)
 	/// @desc Enqueues the static batch for rendering.
-	/// @param {BBMOD_Material} _material A material.
+	/// @param {BBMOD_BaseMaterial} _material A material.
 	/// @return {BBMOD_StaticBatch} Returns `self`.
 	/// @see BBMOD_StaticBatch.submit
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	static render = function (_material) {
 		gml_pragma("forceinline");
 		var _renderCommand = new BBMOD_RenderCommand();

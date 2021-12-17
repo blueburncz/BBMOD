@@ -12,88 +12,61 @@ varying vec3 v_vLight;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Uniforms
+// Material
+#define bbmod_BaseOpacity gm_BaseTexture  // RGB: Base color, A: Opacity
+#if PBR
+uniform sampler2D bbmod_NormalRoughness;  // RGB: Tangent space normal, A: Roughness
+uniform sampler2D bbmod_MetallicAO;       // R: Metallic, G: Ambient occlusion
+uniform sampler2D bbmod_Subsurface;       // RGB: Subsurface color, A: Intensity
+uniform sampler2D bbmod_Emissive;         // RGBA: RGBM encoded emissive color
+#else
+uniform sampler2D bbmod_NormalSmoothness; // RGB: Tangent space normal, A: Smoothness
+uniform sampler2D bbmod_SpecularColor;    // RGB: Specular color
+#endif
+uniform float bbmod_AlphaTest;            // Pixels with alpha less than this value will be discarded
 
-// Pixels with alpha less than this value will be discarded.
-uniform float bbmod_AlphaTest;
-
-// Camera's position in world space
-uniform vec3 bbmod_CamPos;
-
-// Distance to the far clipping plane.
-uniform float bbmod_ZFar;
-
-// Camera's exposure value
-uniform float bbmod_Exposure;
+// Camera
+uniform vec3 bbmod_CamPos;    // Camera's position in world space
+uniform float bbmod_ZFar;     // Distance to the far clipping plane
+uniform float bbmod_Exposure; // Camera's exposure value
 
 #if PBR
-// RGB: Base color, A: Opacity
-#define bbmod_BaseOpacity gm_BaseTexture
-
-// RGB: Tangent space normal, A: Roughness
-uniform sampler2D bbmod_NormalRoughness;
-
-// R: Metallic, G: Ambient occlusion
-uniform sampler2D bbmod_MetallicAO;
-
-// RGB: Subsurface color, A: Intensity
-uniform sampler2D bbmod_Subsurface;
-
-// RGBM encoded emissive color
-uniform sampler2D bbmod_Emissive;
-
-// Prefiltered octahedron env. map
-uniform sampler2D bbmod_IBL;
-
-// Texel size of one octahedron.
-uniform vec2 bbmod_IBLTexel;
-#else
-// The color of the fog.
-uniform vec4 bbmod_FogColor;
-
-// Maximum fog intensity.
-uniform float bbmod_FogIntensity;
-
-// Distance at which the fog starts.
-uniform float bbmod_FogStart;
-
-// 1.0 / (fogEnd - fogStart)
-uniform float bbmod_FogRcpRange;
+// Image based lighting
+uniform sampler2D bbmod_IBL; // Prefiltered octahedron env. map
+uniform vec2 bbmod_IBLTexel; // Texel size of one octahedron
 #endif
 
-#if !PBR
-// RGBM encoded ambient light color on the upper hemisphere.
-uniform vec4 bbmod_LightAmbientUp;
+#if !PBR && !OUTPUT_DEPTH
+// Fog
+uniform vec4 bbmod_FogColor;      // The color of the fog
+uniform float bbmod_FogIntensity; // Maximum fog intensity
+uniform float bbmod_FogStart;     // Distance at which the fog starts
+uniform float bbmod_FogRcpRange;  // 1.0 / (fogEnd - fogStart)
 
-/// RGBM encoded ambient light color on the lower hemisphere.
-uniform vec4 bbmod_LightAmbientDown;
+// Ambient light
+uniform vec4 bbmod_LightAmbientUp;   // RGBM encoded ambient light color on the upper hemisphere.
+uniform vec4 bbmod_LightAmbientDown; // RGBM encoded ambient light color on the lower hemisphere.
 
-// Direction of the directional light
-uniform vec3 bbmod_LightDirectionalDir;
+// Directional light
+uniform vec3 bbmod_LightDirectionalDir;   // Direction of the directional light
+uniform vec4 bbmod_LightDirectionalColor; // RGBM encoded color of the directional light
 
-// RGBM encoded color of the directional light
-uniform vec4 bbmod_LightDirectionalColor;
-
-// Shadowmap texture
-uniform Texture2D bbmod_Shadowmap;
-
-// WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
-uniform Mat4 bbmod_ShadowmapMatrix;
-
-// (1.0/shadowmapWidth, 1.0/shadowmapHeight)
-uniform Vec2 bbmod_ShadowmapTexel;
-
-// The area that the shadowmap captures.
-uniform float bbmod_ShadowmapArea;
-
-// Offsets vertex position by its normal scaled by this value.
-uniform float bbmod_ShadowmapNormalOffset;
+// Shadow mapping
+uniform float bbmod_ShadowmapEnable;       // 1.0 to enable shadows
+uniform sampler2D bbmod_Shadowmap;         // Shadowmap texture
+uniform mat4 bbmod_ShadowmapMatrix;        // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
+uniform vec2 bbmod_ShadowmapTexel;         // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
+uniform float bbmod_ShadowmapArea;         // The area that the shadowmap captures
+uniform float bbmod_ShadowmapNormalOffset; // Offsets vertex position by its normal scaled by this value
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
+#if !OUTPUT_DEPTH
 #pragma include("Color.xsh", "glsl")
 
 #pragma include("RGBM.xsh", "glsl")
+#endif
 
 #if !PBR
 #pragma include("DepthEncoding.xsh")
@@ -108,7 +81,11 @@ uniform float bbmod_ShadowmapNormalOffset;
 
 #pragma include("CheapSubsurface.xsh", "glsl")
 
-#pragma include("Material.xsh", "glsl")
+#pragma include("MetallicRoughnessMaterial.xsh", "glsl")
+#endif
+
+#if !PBR && !OUTPUT_DEPTH
+#pragma include("SpecularColorSmoothnessMaterial.xsh", "glsl")
 #endif
 
 #if !OUTPUT_DEPTH && !PBR
@@ -163,7 +140,7 @@ float xShadowMapPCF(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 void main()
 {
 #if OUTPUT_DEPTH
-	Vec4 baseOpacity = Sample(gm_BaseTexture, v_vTexCoord);
+	Vec4 baseOpacity = texture2D(bbmod_BaseOpacity, v_vTexCoord);
 	if (baseOpacity.a < bbmod_AlphaTest)
 	{
 		discard;
@@ -202,32 +179,59 @@ void main()
 	// Subsurface scattering
 	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
 #else
-	Vec4 baseOpacity = Sample(gm_BaseTexture, v_vTexCoord);
-	if (baseOpacity.a < bbmod_AlphaTest)
+	Material material = UnpackMaterial(
+		bbmod_BaseOpacity,
+		bbmod_NormalSmoothness,
+		bbmod_SpecularColor,
+		v_mTBN,
+		v_vTexCoord);
+
+	if (material.Opacity < bbmod_AlphaTest)
 	{
 		discard;
 	}
-	gl_FragColor.a = baseOpacity.a;
+	gl_FragColor.a = material.Opacity;
 
-	vec3 N = normalize(v_mTBN[2]);
+	vec3 N = material.Normal;
 	vec3 lightDiffuse = v_vLight;
+	vec3 lightSpecular = vec3(0.0);
 
 	// Ambient light
 	Vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
 	Vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
-	Vec3 posShadowMap = (bbmod_ShadowmapMatrix * vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
-	posShadowMap.xy = posShadowMap.xy * 0.5 + 0.5;
-	posShadowMap.y = 1.0 - posShadowMap.y;
-	posShadowMap.z /= bbmod_ShadowmapArea;
-	float shadow = xShadowMapPCF(bbmod_Shadowmap, bbmod_ShadowmapTexel, posShadowMap.xy, posShadowMap.z);
+	float shadow = 0.0;
+	if (bbmod_ShadowmapEnable == 1.0)
+	{
+		Vec3 posShadowMap = (bbmod_ShadowmapMatrix * vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
+		posShadowMap.xy = posShadowMap.xy * 0.5 + 0.5;
+		posShadowMap.y = 1.0 - posShadowMap.y;
+		posShadowMap.z /= bbmod_ShadowmapArea;
+		shadow = xShadowMapPCF(bbmod_Shadowmap, bbmod_ShadowmapTexel, posShadowMap.xy, posShadowMap.z);
+	}
 	// Directional light
 	vec3 L = normalize(-bbmod_LightDirectionalDir);
 	float NdotL = max(dot(N, L), 0.0);
-	lightDiffuse += xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL * (1.0 - shadow);
+	float specularPower = exp2(1.0 + (material.Smoothness * 10.0));
+	vec3 V = normalize(bbmod_CamPos - v_vVertex);
+	vec3 f0 = material.Specular;
+	vec3 H = normalize(L + V);
+	float NdotH = max(dot(N, H), 0.0);
+	float VdotH = max(dot(V, H), 0.0);
+	vec3 fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
+	float visibility = 0.25;
+	float A = specularPower / log(2.0);
+	float blinnPhong = exp2(A * NdotH - A);
+	float blinnNormalization = (specularPower + 8.0) / 8.0;
+	float normalDistribution = blinnPhong * blinnNormalization;
+	vec3 lightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL * (1.0 - shadow);
+	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
+	lightDiffuse += lightColor; // * (1.0 - fresnel);
 	// Diffuse
-	gl_FragColor.rgb = xGammaToLinear(baseOpacity.rgb) * lightDiffuse;
+	gl_FragColor.rgb = material.Base * lightDiffuse;
+	// Specular
+	gl_FragColor.rgb += lightSpecular;
 	// Fog
 	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);

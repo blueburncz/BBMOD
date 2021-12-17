@@ -59,7 +59,7 @@ function BBMOD_Model(_file, _sha1)
 	OffsetArray = [];
 
 	/// @var {real} Number of materials that the model uses.
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	/// @readonly
 	MaterialCount = 0;
 
@@ -70,13 +70,13 @@ function BBMOD_Model(_file, _sha1)
 	/// @readonly
 	MaterialNames = [];
 
-	/// @var {BBMOD_Material[]} An array of materials. Each entry defaults to
+	/// @var {BBMOD_BaseMaterial[]} An array of materials. Each entry defaults to
 	/// {@link BBMOD_MATERIAL_DEFAULT} or {@link BBMOD_MATERIAL_DEFAULT_ANIMATED}
 	/// for animated models.
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	Materials = [];
 
 	/// @func from_buffer(_buffer)
@@ -257,13 +257,13 @@ function BBMOD_Model(_file, _sha1)
 	/// @func get_material(_name)
 	/// @desc Retrieves a material by its name.
 	/// @param {string} _name The name of the material.
-	/// @return {BBMOD_Material} The material.
+	/// @return {BBMOD_BaseMaterial} The material.
 	/// @throws {BBMOD_Exception} If the model does not have a material with
 	/// given name.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.set_material
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	static get_material = function (_name) {
 		var i = 0;
 		repeat (MaterialCount)
@@ -280,14 +280,14 @@ function BBMOD_Model(_file, _sha1)
 	/// @func set_material(_name, _material)
 	/// @desc Sets a material.
 	/// @param {string} _name The name of the material slot.
-	/// @param {BBMOD_Material} _material The material.
+	/// @param {BBMOD_BaseMaterial} _material The material.
 	/// @return {BBMOD_Model} Returns `self`.
 	/// @throws {BBMOD_Exception} If the model does not have a material with
 	/// given name.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	static set_material = function (_name, _material) {
 		var i = 0;
 		repeat (MaterialCount)
@@ -333,7 +333,7 @@ function BBMOD_Model(_file, _sha1)
 	///
 	/// @desc Immediately submits the model for rendering.
 	///
-	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
+	/// @param {BBMOD_BaseMaterial[]/undefined} [_materials] An array of materials,
 	/// one for each material slot of the model. If not specified, then
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {real[]/undefined} [_transform] An array of transformation matrices
@@ -354,7 +354,7 @@ function BBMOD_Model(_file, _sha1)
 	/// @note Only parts of the model that use materials compatible with the
 	/// current render pass are submitted!
 	///
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	/// @see BBMOD_ERenderPass
@@ -370,13 +370,13 @@ function BBMOD_Model(_file, _sha1)
 
 	/// @func render([_materials[, _transform]])
 	/// @desc Enqueues the model for rendering.
-	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
+	/// @param {BBMOD_BaseMaterial[]/undefined} [_materials] An array of materials,
 	/// one for each material slot of the model. If not specified, then
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {real[]/undefined} [_transform] An array of transformation matrices
 	/// (for animated models) or `undefined`.
 	/// @return {BBMOD_Model} Returns `self`.
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	static render = function (_materials, _transform) {

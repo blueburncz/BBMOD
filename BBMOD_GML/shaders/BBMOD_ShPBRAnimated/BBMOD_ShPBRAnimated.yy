@@ -1,8 +1,8 @@
 {
   "type": 1,
   "parent": {
-    "name": "BBMOD",
-    "path": "BBMOD.yyp",
+    "name": "PBR",
+    "path": "folders/BBMOD/Rendering/PBR.yy",
   },
   "resourceVersion": "1.0",
   "name": "BBMOD_ShPBRAnimated",

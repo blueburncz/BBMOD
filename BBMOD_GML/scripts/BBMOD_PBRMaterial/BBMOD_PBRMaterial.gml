@@ -25,16 +25,16 @@
 #macro BBMOD_MATERIAL_PBR_BATCHED __bbmod_material_pbr_batched()
 
 /// @func BBMOD_PBRMaterial([_shader])
-/// @extends BBMOD_Material
+/// @extends BBMOD_BaseMaterial
 /// @desc A PBR material using the metallic-rougness workflow.
 /// @param {BBMOD_Shader/undefined} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
 function BBMOD_PBRMaterial(_shader=undefined)
-	: BBMOD_Material(_shader) constructor
+	: BBMOD_BaseMaterial(_shader) constructor
 {
-	static Super_Material = {
+	static Super_BaseMaterial = {
 		copy: copy,
 		destroy: destroy,
 	};
@@ -195,7 +195,7 @@ function BBMOD_PBRMaterial(_shader=undefined)
 	};
 
 	static copy = function (_dest) {
-		method(self, Super_Material.copy)(_dest);
+		method(self, Super_BaseMaterial.copy)(_dest);
 
 		// NormalRoughness
 		if (_dest.NormalRoughnessSprite != undefined)
@@ -275,14 +275,14 @@ function BBMOD_PBRMaterial(_shader=undefined)
 	};
 
 	static destroy = function () {
-		method(self, Super_Material.destroy)();
+		method(self, Super_BaseMaterial.destroy)();
 		if (NormalRoughnessSprite != undefined)
 		{
 			sprite_delete(NormalRoughnessSprite);
 		}
-		if (MetallicAO != undefined)
+		if (MetallicAOSprite != undefined)
 		{
-			sprite_delete(MetallicAO);
+			sprite_delete(MetallicAOSprite);
 		}
 		if (SubsurfaceSprite != undefined)
 		{

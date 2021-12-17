@@ -77,7 +77,7 @@ function BBMOD_Mesh(_vertexFormat)
 	};
 
 	/// @func submit(_material[, _transform])
-	/// @func {BBMOD_Material} _material
+	/// @func {BBMOD_BaseMaterial} _material
 	/// @func {real[]/undefined} [_transform]
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private
@@ -95,7 +95,7 @@ function BBMOD_Mesh(_vertexFormat)
 	};
 
 	/// @func render(_material[, _transform])
-	/// @func {BBMOD_Material} _material
+	/// @func {BBMOD_BaseMaterial} _material
 	/// @func {real[]/undefined} [_transform]
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private

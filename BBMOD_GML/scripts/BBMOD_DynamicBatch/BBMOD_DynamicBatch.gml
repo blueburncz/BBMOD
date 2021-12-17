@@ -70,7 +70,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	///
 	/// @desc Immediately submits the dynamic batch for rendering.
 	///
-	/// @param {BBMOD_Material} _material A material. Must use a shader that
+	/// @param {BBMOD_BaseMaterial} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {real[]} _data An array containing data for each rendered instance.
 	///
@@ -82,7 +82,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_ERenderPass
 	static submit = function (_material, _data) {
 		gml_pragma("forceinline");
@@ -97,14 +97,14 @@ function BBMOD_DynamicBatch(_model, _size)
 
 	/// @func render(_material, _data)
 	/// @desc Enqueues the dynamic batch for rendering.
-	/// @param {BBMOD_Material} _material A material. Must use a shader that
+	/// @param {BBMOD_BaseMaterial} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {real[]} _data An array containing data for each rendered instance.
 	/// @return {BBMOD_DynamicBatch} Returns `self`.
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
-	/// @see BBMOD_Material
+	/// @see BBMOD_BaseMaterial
 	static render = function (_material, _data) {
 		gml_pragma("forceinline");
 		var _renderCommand = new BBMOD_RenderCommand();
@@ -172,7 +172,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @desc Immediately submits all instances of an object for rendering in
 	/// batches of {@link BBMOD_DynamicBatch.size}.
 	/// @param {real} _object An object to submit.
-	/// @param {BBMOD_Material} _material A material to use.
+	/// @param {BBMOD_BaseMaterial} _material A material to use.
 	/// @param {func} [_fn] A function that writes instance data to an array
 	/// which is then passed to the material's shader. Must return number of
 	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}.
@@ -210,7 +210,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @desc Enqueues all instances of an object for rendering in batches of
 	/// {@link BBMOD_DynamicBatch.size}.
 	/// @param {real} _object An object to render.
-	/// @param {BBMOD_Material} _material A material to use.
+	/// @param {BBMOD_BaseMaterial} _material A material to use.
 	/// @param {func} [_fn] A function that writes instance data to an array
 	/// which is then passed to the material's shader. Must return number of
 	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}.

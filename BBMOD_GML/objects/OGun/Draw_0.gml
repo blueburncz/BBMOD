@@ -1,4 +1,4 @@
-var _z = z + dsin(current_time * 0.25);
+var _z = z + 2 + dsin(current_time * 0.25) * 0.5 + 0.5;
 var _direction = current_time * 0.1;
 var _scale = 10;
 matrix_set(matrix_world,
