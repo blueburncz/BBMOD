@@ -81,8 +81,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	};
 
 	/// @func set_zfar([_value])
-	/// @desc Sets a fragment shader uniform `bbmod_ClipFar` to the given position.
-	/// @param {BBMOD_Vec3} [_pos] The distance to the far clipping plane. Defaults
+	/// @desc Sets a fragment shader uniform `bbmod_ClipFar` to the given value.
+	/// @param {BBMOD_Vec3} [_value] The distance to the far clipping plane. Defaults
 	/// to the value defined using {@link bbmod_camera_set_zfar}.
 	/// @return {BBMOD_Shader} Returns `self`.
 	static set_zfar = function (_value=undefined) {
@@ -178,8 +178,8 @@ function bbmod_camera_set_position(_position)
 }
 
 /// @func bbmod_camera_get_zfar()
-/// @desc
-/// @return {real}
+/// @desc Retrieves distance to the far clipping plane passed to shaders.
+/// @return {real} The distance to the far clipping plane.
 /// @see bbmod_camera_set_zfar
 function bbmod_camera_get_zfar()
 {
@@ -188,8 +188,8 @@ function bbmod_camera_get_zfar()
 }
 
 /// @func bbmod_camera_set_zfar(_value)
-/// @desc
-/// @param {real} _value
+/// @desc Defines distance to the far clipping plane passed to shaders.
+/// @param {real} _value The new distance to the far clipping plane.
 /// @see bbmod_camera_get_zfar
 function bbmod_camera_set_zfar(_value)
 {

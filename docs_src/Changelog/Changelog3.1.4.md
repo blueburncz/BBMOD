@@ -15,6 +15,8 @@ This release brings an upgrade to the default shaders, which now support the spe
 * Added method `BBMOD_DefaultShader.set_shadowmap`, which is used to set uniforms `bbmod_ShadowmapEnable`, `bbmod_Shadowmap`, `bbmod_ShadowmapMatrix`,`bbmod_ShadowmapArea` and `bbmod_ShadowmapNormalOffset` required for shadow mapping.
 * Added new struct `BBMOD_Shader`, which is now the base class for wrappers of raw GameMaker shader resources.
 * Struct `BBMOD_BaseShader` is now base class for shaders with BBMOD-specific code. General-purpose code was moved to `BBMOD_Shader`.
+* Added new functions `bbmod_camera_get_zfar` and `bbmod_camera_set_zfar`, using which you can configure the distance to the far clipping plane passed to shaders.
+* Added new method `BBMOD_BaseShader.set_zfar`, which is used to set uniform `bbmod_ZFar`.
 * Added new property `Enabled` to `BBMOD_Light`, using which you can enable/disable lights without having to call appropriate set/add/remove functions.
 * Added new member `BBMOD_ERenderPass.Id`, which is a render pass during which can instance IDs be rendered into an off-screen surface.
 * Fixed `BBMOD_Animation.create_transition`, which did not round transition duration, causing errors in animation playback.
