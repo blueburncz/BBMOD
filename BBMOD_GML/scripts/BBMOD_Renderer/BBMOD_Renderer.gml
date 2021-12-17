@@ -1,9 +1,15 @@
 /// @func BBMOD_Renderer()
+///
 /// @extends BBMOD_Class
-/// @desc Implements a basic renderer which automatically renders all added
-/// [renderables](./BBMOD_Renderer.Renderables.html) sorted by
-/// [materials](./BBMOD_Material.html), sorted by their
-/// [priority](./BBMOD_Material.Priority.html).
+///
+/// @desc Implements a basic renderer, which executes
+/// [render commands](./BBMOD_RenderCommand.html) created with method
+/// [render](./BBMOD_Model.render.html).
+///
+/// Currently supports two render passes -
+/// [BBMOD_ERenderPass.Shadows](./BBMOD_ERenderPass.Shadows.html) and
+/// [BBMOD_ERenderPass.Forward](./BBMOD_ERenderPass.Forward.html).
+///
 /// @example
 /// Following code is a typical use of the renderer.
 /// ```gml
@@ -15,6 +21,7 @@
 ///     .add(OSky);
 /// renderer.UseAppSurface = true;
 /// renderer.RenderScale = 2.0;
+/// renderer.EnableShadows = true;
 ///
 /// camera = new BBMOD_Camera();
 /// camera.FollowObject = OPlayer;
@@ -34,6 +41,7 @@
 /// // Clean Up event
 /// renderer.destroy();
 /// ```
+///
 /// @see BBMOD_IRenderable
 /// @see BBMOD_Camera
 function BBMOD_Renderer()
