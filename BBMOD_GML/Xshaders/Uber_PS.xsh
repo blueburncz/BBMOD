@@ -98,18 +98,18 @@ float xShadowMapCompare(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ
 		return 0.0;
 	}
 	vec2 res = 1.0 / texel;
-	vec2 st = uv*res - 0.5;
+	vec2 st = uv * res;
 	vec2 iuv = floor(st);
 	vec2 fuv = fract(st);
-	vec3 s = texture2D(shadowMap, (iuv + vec2(0.5, 0.5)) / res).rgb;
+	vec3 s = texture2D(shadowMap, iuv / res).rgb;
 	if (s == vec3(1.0, 0.0, 0.0))
 	{
 		return 0.0;
 	}
 	float a = step(xDecodeDepth(s), compareZ);
-	float b = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(1.5, 0.5)) / res).rgb), compareZ);
-	float c = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(0.5, 1.5)) / res).rgb), compareZ);
-	float d = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(1.5, 1.5)) / res).rgb), compareZ);
+	float b = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(1.0, 0.0)) / res).rgb), compareZ);
+	float c = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(0.0, 1.0)) / res).rgb), compareZ);
+	float d = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(1.0, 1.0)) / res).rgb), compareZ);
 	return mix(
 		mix(a, b, fuv.x),
 		mix(c, d, fuv.x),

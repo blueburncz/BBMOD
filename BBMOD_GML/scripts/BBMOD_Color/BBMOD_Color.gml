@@ -207,10 +207,10 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 	static Mix = function (_color, _factor) {
 		gml_pragma("forceinline");
 		return new BBMOD_Color(
-			lerp(Red, Color.Red, _factor),
-			lerp(Green, Color.Green, _factor),
-			lerp(Blue, Color.Blue, _factor),
-			lerp(Alpha, Color.Alpha, _factor));
+			lerp(Red, _color.Red, _factor),
+			lerp(Green, _color.Green, _factor),
+			lerp(Blue, _color.Blue, _factor),
+			lerp(Alpha, _color.Alpha, _factor));
 	};
 
 	/// @func ToConstant()

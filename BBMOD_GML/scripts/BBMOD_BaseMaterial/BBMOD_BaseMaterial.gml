@@ -222,23 +222,22 @@ function BBMOD_BaseMaterial(_shader=undefined)
 		return sprite_create_from_surface(_sur, 0, 0, 1, 1, false, false, 0, 0);
 	};
 
-	/// @func set_base_opacity(_baseColor, _opacity)
+	/// @func set_base_opacity(_color)
 	/// @desc Changes the base color and opacity to a uniform value for the
 	/// entire material.
-	/// @param {BBMOD_Color} _baseColor The new base color.
-	/// @param {real} _opacity The new opacity. Use values in range 0..1.
+	/// @param {BBMOD_Color} _color The new base color and opacity.
 	/// @return {BBMOD_BaseMaterial} Returns `self`.
-	static set_base_opacity = function (_baseColor, _opacity) {
+	static set_base_opacity = function (_color) {
 		if (BaseOpacitySprite != undefined)
 		{
 			sprite_delete(BaseOpacitySprite);
 		}
-		var _isReal = is_real(_baseColor);
+		var _isReal = is_real(_color);
 		BaseOpacitySprite = _make_sprite(
-			_isReal ? color_get_red(_baseColor) : _baseColor.Red,
-			_isReal ? color_get_green(_baseColor) : _baseColor.Green,
-			_isReal ? color_get_blue(_baseColor) : _baseColor.Blue,
-			_opacity,
+			_isReal ? color_get_red(_color) : _color.Red,
+			_isReal ? color_get_green(_color) : _color.Green,
+			_isReal ? color_get_blue(_color) : _color.Blue,
+			_isReal ? argument[1] : _color.Alpha,
 		);
 		BaseOpacity = sprite_get_texture(BaseOpacitySprite, 0);
 		return self;

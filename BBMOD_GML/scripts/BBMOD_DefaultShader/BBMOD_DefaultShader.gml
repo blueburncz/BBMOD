@@ -173,8 +173,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	};
 
 	/// @func set_shadowmap(_texture, _matrix, _area, _normalOffset)
-	/// @desc Sets uniforms `bbmod_Shadowmap`, `bbmod_ShadowmapMatrix`,
-	/// `bbmod_ShadowmapArea` and `bbmod_ShadowmapNormalOffset`, required for
+	/// @desc Sets uniforms `bbmod_ShadowmapEnable`, `bbmod_Shadowmap`,
+	/// `bbmod_ShadowmapMatrix`, `bbmod_ShadowmapArea` and `bbmod_ShadowmapNormalOffset`, required for
 	/// shadow mapping.
 	/// @param {ptr} _texture The shadowmap texture.
 	/// @param {real[16]} _matrix The world-view-projection matrix used when
@@ -186,7 +186,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 		gml_pragma("forceinline");
 		set_uniform_f(UShadowmapEnable, 1.0);
 		set_sampler(UShadowmap, _texture);
-		gpu_set_tex_mip_enable_ext(UShadowmap, false);
+		gpu_set_tex_mip_enable_ext(UShadowmap, true);
 		gpu_set_tex_filter_ext(UShadowmap, true);
 		gpu_set_tex_repeat_ext(UShadowmap, false);
 		set_uniform_f2(UShadowmapTexel,

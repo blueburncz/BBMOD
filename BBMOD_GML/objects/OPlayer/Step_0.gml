@@ -83,6 +83,9 @@ if (!GetCutscene()
 
 				audio_play_sound_at(_sound, _shellPos[0], _shellPos[1], _shellPos[2], 150, 1000, 1, false, 1);
 
+				var _light = instance_create_depth(_shellPos[0], _shellPos[1], 0, OGunshotLight);
+				_light.z = _shellPos[2];
+
 				// Determine which enemy was shot using a raycast against an AABB at its position.
 				var _origin = camera.Position;
 				var _direction = camera.get_forward();

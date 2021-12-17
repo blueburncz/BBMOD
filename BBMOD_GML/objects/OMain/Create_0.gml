@@ -8,10 +8,6 @@ debugOverlay = false;
 ////////////////////////////////////////////////////////////////////////////////
 // Load resources
 
-BBMOD_MATERIAL_DEFAULT.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH);
-BBMOD_MATERIAL_DEFAULT_ANIMATED.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED);
-BBMOD_MATERIAL_DEFAULT_BATCHED.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_BATCHED);
-
 // Sky model
 modSky = new BBMOD_Model("Data/BBMOD/Models/Sphere.bbmod");
 modSky.freeze();
@@ -20,7 +16,8 @@ modSky.freeze();
 modCharacter = new BBMOD_Model("Data/Assets/Character/Character.bbmod");
 modCharacter.freeze();
 
-matPlayer = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone();
+matPlayer = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 matPlayer.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
 modCharacter.Materials[0] = matPlayer;
 
@@ -36,10 +33,12 @@ animWalk = new BBMOD_Animation("Data/Assets/Character/Character_Walk.bbanim");
 animWalk.add_event(0, "Footstep").add_event(32, "Footstep");
 
 // Zombie
-matZombie0 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone();
+matZombie0 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 matZombie0.BaseOpacity = sprite_get_texture(SprZombie, 0);
 
-matZombie1 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone();
+matZombie1 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 matZombie1.BaseOpacity = sprite_get_texture(SprZombie, 1);
 
 animZombieIdle = new BBMOD_Animation("Data/Assets/Character/Zombie_Idle.bbanim");
@@ -56,18 +55,18 @@ modGun = _objImporter.import("Data/Assets/Pistol.obj");
 modGun.freeze();
 
 matGun0 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(BBMOD_C_SILVER, 1.0)
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+	.set_base_opacity(BBMOD_C_SILVER)
 	.set_specular_color(BBMOD_C_SILVER)
-	.set_normal_smoothness(BBMOD_VEC3_UP, 0.8)
-	//.set_normal_roughness(BBMOD_VEC3_UP, 0.3)
-	//.set_metallic_ao(1.0, 1.0)
-	;
+	.set_normal_smoothness(BBMOD_VEC3_UP, 0.8);
 
 matGun1 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(new BBMOD_Color(32, 32, 32), 1.0);
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+	.set_base_opacity(new BBMOD_Color(32, 32, 32));
 
 matGun2 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(BBMOD_C_BLACK, 1.0);
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+	.set_base_opacity(BBMOD_C_BLACK);
 
 modGun.Materials[@ 0] = matGun0;
 modGun.Materials[@ 1] = matGun1;
@@ -77,12 +76,9 @@ modGun.Materials[@ 2] = matGun2;
 modShell = _objImporter.import("Data/Assets/Shell.obj");
 
 matShell = BBMOD_MATERIAL_DEFAULT_BATCHED.clone()
-	.set_base_opacity(new BBMOD_Color().FromHex($E8DA56), 1.0)
+	.set_base_opacity(new BBMOD_Color().FromHex($E8DA56))
 	.set_specular_color(new BBMOD_Color().FromConstant($E8DA56))
-	.set_normal_smoothness(BBMOD_VEC3_UP, 0.7)
-	//.set_normal_roughness(BBMOD_VEC3_UP, 0.3)
-	//.set_metallic_ao(1.0, 1.0)
-	;
+	.set_normal_smoothness(BBMOD_VEC3_UP, 0.7);
 matShell.Culling = cull_noculling;
 
 batchShell = new BBMOD_DynamicBatch(modShell, 32);
@@ -90,11 +86,13 @@ batchShell.freeze();
 
 // Prepare static batch for signs
 matWood = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(new BBMOD_Color().FromHex($FFC5A7), 1.0);
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+	.set_base_opacity(new BBMOD_Color().FromHex($FFC5A7));
 
 modLever = _objImporter.import("Data/Assets/Lever.obj");
 modLever.Materials[@ 0] = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(BBMOD_C_SILVER, 1.0);
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+	.set_base_opacity(BBMOD_C_SILVER);
 modLever.Materials[@ 1] = matWood;
 modLever.freeze();
 
@@ -138,10 +136,3 @@ renderer.add({
 		modPlane.render();
 	})
 });
-
-bbmod_light_ambient_set_up(new BBMOD_Color(117.9, 152.1, 221.0));
-bbmod_light_ambient_set_down(BBMOD_C_GRAY);
-
-light = new BBMOD_DirectionalLight();
-light.CastShadows = true;
-bbmod_light_directional_set(light);
