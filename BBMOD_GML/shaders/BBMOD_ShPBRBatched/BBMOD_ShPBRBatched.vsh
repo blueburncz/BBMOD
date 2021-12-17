@@ -25,6 +25,7 @@ uniform vec2 bbmod_TextureScale;
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Varyings
 varying vec3 v_vVertex;

@@ -28,6 +28,11 @@ uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
+uniform float bbmod_ShadowmapEnableVS;     // 1.0 to enable shadows
+uniform mat4 bbmod_ShadowmapMatrix;        // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
+uniform float bbmod_ShadowmapArea;         // The area that the shadowmap captures
+uniform float bbmod_ShadowmapNormalOffset; // Offsets vertex position by its normal scaled by this value
+
 ////////////////////////////////////////////////////////////////////////////////
 // Varyings
 varying vec3 v_vVertex;
@@ -37,6 +42,7 @@ varying mat3 v_mTBN;
 varying float v_fDepth;
 
 varying vec3 v_vLight;
+varying vec3 v_vPosShadowmap;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
@@ -134,6 +140,16 @@ void main()
 		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
 		float NdotL = max(dot(N, normalize(L)), 0.0);
 		v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+	// Vertex position in shadowmap
+	if (bbmod_ShadowmapEnableVS == 1.0)
+	{
+		v_vPosShadowmap = (bbmod_ShadowmapMatrix * vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
+		v_vPosShadowmap.xy = v_vPosShadowmap.xy * 0.5 + 0.5;
+		v_vPosShadowmap.y = 1.0 - v_vPosShadowmap.y;
+		v_vPosShadowmap.z /= bbmod_ShadowmapArea;
 	}
 }
 // include("Uber_VS.xsh")

@@ -117,7 +117,7 @@ renderer = new BBMOD_Renderer()
 	.add(OSky);
 
 renderer.UseAppSurface = true;
-renderer.RenderScale = 2;
+renderer.RenderScale = 2.0;
 renderer.EnableShadows = true;
 
 // Any object/struct that has a render method can be added to the renderer:

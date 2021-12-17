@@ -20,7 +20,6 @@
 ///     .add(OTerrain)
 ///     .add(OSky);
 /// renderer.UseAppSurface = true;
-/// renderer.RenderScale = 2.0;
 /// renderer.EnableShadows = true;
 ///
 /// camera = new BBMOD_Camera();
@@ -64,7 +63,7 @@ function BBMOD_Renderer()
 
 	/// @var {real} Resolution multiplier for the `application_surface`.
 	/// {@link BBMOD_Renderer.UseAppSurface} must be enabled for this to
-	/// have any effect. Defaults to 1.
+	/// have any effect. Defaults to 1. Use lower values to improve framerate.
 	RenderScale = 1.0;
 
 	/// @var {bool} Enables rendering into a shadowmap in the shadows render pass.

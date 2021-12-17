@@ -8,6 +8,7 @@ varying mat3 v_mTBN;
 varying float v_fDepth;
 
 varying vec3 v_vLight;
+varying vec3 v_vPosShadowmap;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Uniforms
@@ -38,12 +39,9 @@ uniform vec3 bbmod_LightDirectionalDir;   // Direction of the directional light
 uniform vec4 bbmod_LightDirectionalColor; // RGBM encoded color of the directional light
 
 // Shadow mapping
-uniform float bbmod_ShadowmapEnable;       // 1.0 to enable shadows
-uniform sampler2D bbmod_Shadowmap;         // Shadowmap texture
-uniform mat4 bbmod_ShadowmapMatrix;        // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
-uniform vec2 bbmod_ShadowmapTexel;         // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
-uniform float bbmod_ShadowmapArea;         // The area that the shadowmap captures
-uniform float bbmod_ShadowmapNormalOffset; // Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapEnablePS; // 1.0 to enable shadows
+uniform sampler2D bbmod_Shadowmap;     // Shadowmap texture
+uniform vec2 bbmod_ShadowmapTexel;     // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
@@ -155,49 +153,37 @@ Material UnpackMaterial(
 	return m;
 }
 
-/// @source https://iquilezles.org/www/articles/hwinterpolation/hwinterpolation.htm
-float xShadowMapCompare(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
+// Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
+float InterleavedGradientNoise(vec2 positionScreen)
 {
-	if (uv.x < 0.0 || uv.y < 0.0
-		|| uv.x > 1.0 || uv.y > 1.0)
-	{
-		return 0.0;
-	}
-	vec2 res = 1.0 / texel;
-	vec2 st = uv * res;
-	vec2 iuv = floor(st);
-	vec2 fuv = fract(st);
-	vec3 s = texture2D(shadowMap, iuv / res).rgb;
-	if (s == vec3(1.0, 0.0, 0.0))
-	{
-		return 0.0;
-	}
-	float a = step(xDecodeDepth(s), compareZ);
-	float b = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(1.0, 0.0)) / res).rgb), compareZ);
-	float c = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(0.0, 1.0)) / res).rgb), compareZ);
-	float d = step(xDecodeDepth(texture2D(shadowMap, (iuv + vec2(1.0, 1.0)) / res).rgb), compareZ);
-	return mix(
-		mix(a, b, fuv.x),
-		mix(c, d, fuv.x),
-		fuv.y);
+	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
 }
 
-/// @source https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
-float xShadowMapPCF(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
+vec2 VogelDiskSample(float sampleIndex, float samplesCount, float phi)
 {
-	const float size = 2.0;
-	const float sampleCount = (size * 2.0 + 1.0) * (size * 2.0 + 1.0);
-	float shadow = 0.0;
-	for (float x = -size; x <= size; x += 1.0)
+	float GoldenAngle = 2.4;
+	float r = sqrt(sampleIndex + 0.5) / sqrt(samplesCount);
+	float theta = sampleIndex * GoldenAngle + phi;
+	float sine = sin(theta);
+	float cosine = cos(theta);
+	return vec2(r * cosine, r * sine);
+}
+
+float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
+{
+	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
 	{
-		for (float y = -size; y <= size; y += 1.0)
-		{
-			vec2 uv2 = uv + vec2(x, y) * texel;
-			shadow += xShadowMapCompare(shadowMap, texel, uv2, compareZ);
-		}
+		return 0.0;
 	}
-	shadow /= sampleCount;
-	return shadow;
+	float shadow = 0.0;
+	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
+	for (float i = 0.0; i < 6.0; ++i)
+	{
+		vec2 uv2 = uv + VogelDiskSample(i, 6.0, noise) * texel * 4.0;
+		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
+	}
+	return (shadow / 6.0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -227,13 +213,9 @@ void main()
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
-	if (bbmod_ShadowmapEnable == 1.0)
+	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		vec3 posShadowMap = (bbmod_ShadowmapMatrix * vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
-		posShadowMap.xy = posShadowMap.xy * 0.5 + 0.5;
-		posShadowMap.y = 1.0 - posShadowMap.y;
-		posShadowMap.z /= bbmod_ShadowmapArea;
-		shadow = xShadowMapPCF(bbmod_Shadowmap, bbmod_ShadowmapTexel, posShadowMap.xy, posShadowMap.z);
+		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
 	}
 	// Directional light
 	vec3 L = normalize(-bbmod_LightDirectionalDir);

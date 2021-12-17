@@ -29,6 +29,7 @@ uniform vec4 bbmod_Bones[2 * MAX_BONES];
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Varyings
 varying vec3 v_vVertex;

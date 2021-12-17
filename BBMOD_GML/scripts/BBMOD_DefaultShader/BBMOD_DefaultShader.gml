@@ -38,7 +38,9 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	UFogRcpRange = get_uniform("bbmod_FogRcpRange");
 
-	UShadowmapEnable = get_uniform("bbmod_ShadowmapEnable");
+	UShadowmapEnableVS = get_uniform("bbmod_ShadowmapEnableVS");
+
+	UShadowmapEnablePS = get_uniform("bbmod_ShadowmapEnablePS");
 
 	UShadowmap = get_sampler_index("bbmod_Shadowmap");
 
@@ -184,7 +186,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {BBMOD_Shader} Returns `self`.
 	static set_shadowmap = function (_texture, _matrix, _area, _normalOffset) {
 		gml_pragma("forceinline");
-		set_uniform_f(UShadowmapEnable, 1.0);
+		set_uniform_f(UShadowmapEnableVS, 1.0);
+		set_uniform_f(UShadowmapEnablePS, 1.0);
 		set_sampler(UShadowmap, _texture);
 		gpu_set_tex_mip_enable_ext(UShadowmap, true);
 		gpu_set_tex_filter_ext(UShadowmap, true);
@@ -205,7 +208,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 		set_directional_light();
 		set_point_lights();
 		set_fog();
-		set_uniform_f(UShadowmapEnable, 0.0);
+		set_uniform_f(UShadowmapEnableVS, 0.0);
+		set_uniform_f(UShadowmapEnablePS, 0.0);
 	};
 
 	static set_material = function (_material) {
