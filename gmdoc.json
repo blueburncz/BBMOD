@@ -36,7 +36,7 @@
         "Animation events": "QuickstartGuide/QuickstartAnimationEvents.md",
         "Bone attachments": "QuickstartGuide/QuickstartBoneAttachments.md",
         "Transforming bones": "QuickstartGuide/QuickstartTransformingBones.md",
-        "Vertex lights and fog": "QuickstartGuide/QuickstartVertexLightsAndFog.md"
+        "Dynamic lights and fog": "QuickstartGuide/QuickstartDynamicLightsAndFog.md"
       }
     },
     "Advanced topics": {
@@ -57,6 +57,7 @@
           "file": "Modules/Rendering/RenderingModule.md",
           "pages": {
             "Cubemap submodule": "Modules/Rendering/CubemapSubmodule.md",
+            "Depth buffer submodule": "Modules/Rendering/DepthBufferSubmodule.md",
             "PBR submodule": "Modules/Rendering/PBRSubmodule.md",
             "Renderer submodule": "Modules/Rendering/RendererSubmodule.md"
           }

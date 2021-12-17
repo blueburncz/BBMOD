@@ -13,4 +13,4 @@ as well as how to play animations.
 * [Animation events](./QuickstartAnimationEvents.html)
 * [Bone attachments](./QuickstartBoneAttachments.html)
 * [Transforming bones](./QuickstartTransformingBones.html)
-* [Vertex lights and fog](./QuickstartVertexLightsAndFog.html)
+* [Dynamic lights and fog](./QuickstartDynamicLightsAndFog.html)
