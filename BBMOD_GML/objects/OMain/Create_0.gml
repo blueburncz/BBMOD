@@ -117,8 +117,12 @@ renderer = new BBMOD_Renderer()
 	.add(OSky);
 
 renderer.UseAppSurface = true;
-renderer.RenderScale = 2.0;
 renderer.EnableShadows = true;
+renderer.EnablePostProcessing = true;
+renderer.ChromaticAberration = 3.0;
+renderer.ColorGradingLUT = sprite_get_texture(SprColorGrading, 0);
+renderer.Vignette = 0.8;
+renderer.Antialiasing = BBMOD_EAntialiasing.FXAA;
 
 // Any object/struct that has a render method can be added to the renderer:
 renderer.add({

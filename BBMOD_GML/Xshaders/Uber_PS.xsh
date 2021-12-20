@@ -1,4 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
+// Defines
+#if !OUTPUT_DEPTH && !PBR
+#define SHADOWMAP_SAMPLE_COUNT 6
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
 // Varyings
 varying vec3 v_vVertex;
 //varying vec4 v_vColor;
@@ -94,11 +100,11 @@ float InterleavedGradientNoise(vec2 positionScreen)
 	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
 }
 
-vec2 VogelDiskSample(float sampleIndex, float samplesCount, float phi)
+vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
 {
 	float GoldenAngle = 2.4;
-	float r = sqrt(sampleIndex + 0.5) / sqrt(samplesCount);
-	float theta = sampleIndex * GoldenAngle + phi;
+	float r = sqrt(float(sampleIndex) + 0.5) / sqrt(float(samplesCount));
+	float theta = float(sampleIndex) * GoldenAngle + phi;
 	float sine = sin(theta);
 	float cosine = cos(theta);
 	return vec2(r * cosine, r * sine);
@@ -112,12 +118,12 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	}
 	float shadow = 0.0;
 	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
-	for (float i = 0.0; i < 6.0; ++i)
+	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
 	{
-		vec2 uv2 = uv + VogelDiskSample(i, 6.0, noise) * texel * 4.0;
+		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
 		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
 	}
-	return (shadow / 6.0);
+	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }
 #endif
 

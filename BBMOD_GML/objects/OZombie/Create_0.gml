@@ -3,6 +3,9 @@ event_inherited();
 // If true then the zombie will change to the "Idle" state after the timeout.
 active = false;
 
+// If true then the zombie is dead.
+dead = false;
+
 // Number of ms till the zombie changes to the "Idle" state.
 timeout = random_range(500, 1000);
 
@@ -86,6 +89,7 @@ animationStateMachine.add_state(stateWalk);
 stateDeath = new BBMOD_AnimationState("Death", OMain.animZombieDeath);
 stateDeath.OnEnter = method(self, function () {
 	mask_index = noone;
+	dead = true;
 });
 stateDeath.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
 	animationStateMachine.finish();

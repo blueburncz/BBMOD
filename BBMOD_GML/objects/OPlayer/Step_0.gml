@@ -3,6 +3,7 @@ var _mouseLeftPressed = mouse_check_button_pressed(mb_left);
 ////////////////////////////////////////////////////////////////////////////////
 // Update camera
 camera.AspectRatio = window_get_width() / window_get_height();
+camera.MouseSensitivity = aiming ? 0.25 : 1.0;
 
 if (!camera.MouseLook && mouse_check_button(mb_any))
 {

@@ -11,5 +11,5 @@ function bbmod_lerp_delta_time(_from, _to, _factor, _deltaTime)
 	return lerp(
 		_from,
 		_to,
-		1.0 - power(1.0 - _factor, _deltaTime / game_get_speed(gamespeed_microseconds)));
+		_factor * (_deltaTime / game_get_speed(gamespeed_microseconds)));
 }

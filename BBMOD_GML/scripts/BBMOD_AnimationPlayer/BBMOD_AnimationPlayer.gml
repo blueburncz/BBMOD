@@ -114,6 +114,18 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @private
 	Frame = undefined;
 
+	/// @var {int} Number of frames (calls to {@link BBMOD_AnimationPlayer.update})
+	/// to skip. Defaults to 0 (frame skipping is disabled). Increasing the value
+	/// increases performance. Use `infinity` to disable computing animation frames
+	/// entirely.
+	/// @note This does not affect animation events. These are still triggered
+	/// even if the frame is skipped.
+	Frameskip = 0;
+
+	/// @var {uint}
+	/// @private
+	FrameskipCurrent = 0;
+
 	/// @var {real} Controls animation playback speed. Must be a positive number!
 	PlaybackSpeed = 1;
 
@@ -292,33 +304,45 @@ function BBMOD_AnimationPlayer(_model, _paused)
 			//static _sum = 0;
 			//var _t = get_timer();
 
-			if (_animation.Spaces & BBMOD_BONE_SPACE_PARENT)
+			if (FrameskipCurrent == 0)
 			{
-				animate(_animInst, _animationTime);
-			}
-			else if (_animation.Spaces & BBMOD_BONE_SPACE_WORLD)
-			{
-				var _frame = _animation.FramesWorld[_animationTime];
-				var _transformArray = TransformArray;
-				var _offsetArray = Model.OffsetArray;
-
-				array_copy(NodeTransform, 0, _frame, 0, _nodeSize);
-				array_copy(_transformArray, 0, _frame, 0, _boneSize);
-
-				var _index = 0;
-				repeat (Model.BoneCount)
+				if (_animation.Spaces & BBMOD_BONE_SPACE_PARENT)
 				{
-					bbmod_dual_quaternion_array_multiply(
-						_offsetArray, _index,
-						_frame, _index,
-						_transformArray, _index);
-					_index += 8;
+					animate(_animInst, _animationTime);
+				}
+				else if (_animation.Spaces & BBMOD_BONE_SPACE_WORLD)
+				{
+					var _frame = _animation.FramesWorld[_animationTime];
+					var _transformArray = TransformArray;
+					var _offsetArray = Model.OffsetArray;
+
+					array_copy(NodeTransform, 0, _frame, 0, _nodeSize);
+					array_copy(_transformArray, 0, _frame, 0, _boneSize);
+
+					var _index = 0;
+					repeat (Model.BoneCount)
+					{
+						bbmod_dual_quaternion_array_multiply(
+							_offsetArray, _index,
+							_frame, _index,
+							_transformArray, _index);
+						_index += 8;
+					}
+				}
+				else if (_animation.Spaces & BBMOD_BONE_SPACE_BONE)
+				{
+					array_copy(TransformArray, 0, _animation.FramesBone[_animationTime], 0, _boneSize);
+					// TODO: Just use the animation's array right away?
 				}
 			}
-			else if (_animation.Spaces & BBMOD_BONE_SPACE_BONE)
+
+			if (Frameskip == infinity)
 			{
-				array_copy(TransformArray, 0, _animation.FramesBone[_animationTime], 0, _boneSize);
-				// TODO: Just use the animation's array right away?
+				FrameskipCurrent = -1;
+			}
+			else if (++FrameskipCurrent > Frameskip)
+			{
+				FrameskipCurrent = 0;
 			}
 
 			//var _current = get_timer() - _t;

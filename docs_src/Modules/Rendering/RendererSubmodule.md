@@ -1,4 +1,4 @@
-# Renderer module
+# Renderer submodule
 When working on a 3D game in GameMaker, it is common to replace its default
 rendering pipeline by:
 
@@ -13,5 +13,8 @@ property and [render queues](./BBMOD_RenderCommand.html), this module
 provides a much more sophisticated way to create such rendering pipelines.
 
 ## Scripting API
+### Enums
+* [BBMOD_EAntialiasing](./BBMOD_EAntialiasing.html)
+
 ### Structs
 * [BBMOD_Renderer](./BBMOD_Renderer.html)

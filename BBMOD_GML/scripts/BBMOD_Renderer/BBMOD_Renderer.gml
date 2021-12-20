@@ -48,6 +48,10 @@ function BBMOD_Renderer()
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
+	static Super_Class = {
+		destroy: destroy,
+	};
+
 	/// @var {BBMOD_IRenderable[]} An array of renderable objects and structs.
 	/// These are automatically rendered in {@link BBMOD_Renderer.render}.
 	/// @readonly
@@ -89,6 +93,44 @@ function BBMOD_Renderer()
 	/// artifacts but using too high value could make the objects appear flying
 	/// above the ground.
 	ShadowmapNormalOffset = 1;
+
+	/// @var {bool} Enables post-processing effects. Defaults to `false`. Enabling
+	/// this requires the [Post-processing submodule](./PostProcessingSubmodule.html)!
+	/// @note {@link BBMOD_Renderer.UseAppSurface} must be enabled for this to
+	/// have any effect!
+	EnablePostProcessing = false;
+
+	/// @var {surface}
+	/// @private
+	SurPostProcess = noone;
+
+	/// @var {ptr} The lookup table texture used for color grading.
+	/// @note Post-processing must be enabled for this to have any effect!
+	/// @see BBMOD_Renderer.EnablePostProcessing
+	ColorGradingLUT = sprite_get_texture(BBMOD_SprColorGradingLUT, 0);
+
+	/// @var {real} The strength of the chromatic aberration effect. Use 0 to
+	/// disable the effect. Defaults to 0.
+	/// @note Post-processing must be enabled for this to have any effect!
+	/// @see BBMOD_Renderer.EnablePostProcessing
+	ChromaticAberration = 0.0;
+
+	/// @var {real} The strength of the grayscale effect. Use values in range 0..1,
+	/// where 0 means the original color and 1 means grayscale. Defaults to 0.
+	/// @note Post-processing must be enabled for this to have any effect!
+	/// @see BBMOD_Renderer.EnablePostProcessing
+	Grayscale = 0.0;
+
+	/// @var {real} The strength of the vignette effect. Defaults to 0. The higher
+	/// the value the darker the screen closer to edges gets.
+	/// @note Post-processing must be enabled for this to have any effect!
+	/// @see BBMOD_Renderer.EnablePostProcessing
+	Vignette = 0.0;
+
+	/// @var {BBMOD_EAntialiasing} Antialiasing technique to use. Defaults to
+	/// {@link BBMOD_EAntialiasing.None}.
+	/// @see BBMOD_EAntialiasing
+	Antialiasing = BBMOD_EAntialiasing.None;
 
 	/// @func add(_renderable)
 	/// @desc Adds a renderable object or struct to the renderer.
@@ -309,13 +351,66 @@ function BBMOD_Renderer()
 	static present = function () {
 		if (UseAppSurface)
 		{
+			var _surFinal = application_surface;
 			var _windowWidth = window_get_width();
 			var _windowHeight = window_get_height();
+			var _texelWidth = 1.0 / _windowWidth;
+			var _texelHeight = 1.0 / _windowHeight;
 			gpu_push_state();
 			gpu_set_tex_filter(true);
-			draw_surface_stretched(application_surface, 0, 0, _windowWidth, _windowHeight);
+			////////////////////////////////////////////////////////////////////
+			// Post-processing
+			if (EnablePostProcessing)
+			{
+				if (Antialiasing != BBMOD_EAntialiasing.None)
+				{
+					SurPostProcess = bbmod_surface_check(SurPostProcess, _windowWidth, _windowHeight);
+					surface_set_target(SurPostProcess);
+				}
+				var _shader = BBMOD_ShPostProcess;
+				shader_set(_shader);
+				texture_set_stage(shader_get_sampler_index(_shader, "u_texLut"), ColorGradingLUT);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_fDistortion"), ChromaticAberration);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_fGrayscale"), Grayscale);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_fVignette"), Vignette);
+				draw_surface_stretched(application_surface, 0, 0, _windowWidth, _windowHeight);
+				shader_reset();
+				if (Antialiasing != BBMOD_EAntialiasing.None)
+				{
+					surface_reset_target();
+					_surFinal = SurPostProcess;
+				}
+			}
+			////////////////////////////////////////////////////////////////////
+			// Anti-aliasing
+			if (Antialiasing == BBMOD_EAntialiasing.FXAA)
+			{
+				var _shader = BBMOD_ShFXAA;
+				shader_set(_shader);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexelVS"), _texelWidth, _texelHeight);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexelPS"), _texelWidth, _texelHeight);
+				draw_surface_stretched(_surFinal, 0, 0, _windowWidth, _windowHeight);
+				shader_reset();
+			}
+			else if (!EnablePostProcessing)
+			{
+				draw_surface_stretched(application_surface, 0, 0, _windowWidth, _windowHeight);
+			}
 			gpu_pop_state();
 		}
 		return self;
+	};
+
+	static destroy = function () {
+		method(self, Super_Class.destroy)();
+		if (surface_exists(SurShadowmap))
+		{
+			surface_free(SurShadowmap);
+		}
+		if (surface_exists(SurPostProcess))
+		{
+			surface_free(SurPostProcess);
+		}
 	};
 }
