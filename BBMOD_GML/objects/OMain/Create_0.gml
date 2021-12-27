@@ -1,4 +1,5 @@
 randomize();
+os_powersave_enable(false);
 display_set_gui_maximize(1, 1);
 audio_falloff_set_model(audio_falloff_linear_distance);
 
@@ -117,6 +118,7 @@ renderer = new BBMOD_Renderer()
 	.add(OSky);
 
 renderer.UseAppSurface = true;
+renderer.RenderScale = 1.0;
 renderer.EnableShadows = true;
 renderer.EnablePostProcessing = true;
 renderer.ChromaticAberration = 3.0;

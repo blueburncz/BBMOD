@@ -1,3 +1,6 @@
+// FIXME: Temporary fix!
+precision highp float;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Defines
 #if ANIMATED
@@ -191,7 +194,9 @@ void main()
 	{
 		v_vPosShadowmap = (bbmod_ShadowmapMatrix * vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
 		v_vPosShadowmap.xy = v_vPosShadowmap.xy * 0.5 + 0.5;
+	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
 		v_vPosShadowmap.y = 1.0 - v_vPosShadowmap.y;
+	#endif
 		v_vPosShadowmap.z /= bbmod_ShadowmapArea;
 	}
 #endif

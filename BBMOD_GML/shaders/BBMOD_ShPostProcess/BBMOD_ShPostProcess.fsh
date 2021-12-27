@@ -34,7 +34,7 @@ float Luminance(vec3 color)
 /// @source http://john-chapman-graphics.blogspot.cz/2013/02/pseudo-lens-flare.html
 vec3 xChromaticAberration(
 	sampler2D tex,
-	vec2 uv, 
+	vec2 uv,
 	vec2 direction,
 	vec3 distortion)
 {
@@ -48,7 +48,7 @@ vec3 xChromaticAberration(
 
 void main()
 {
-	vec2 vec = 0.5 - v_vTexCoord;
+	highp vec2 vec = 0.5 - v_vTexCoord;
 	float vecLen = length(vec);
 	vec3 color;
 

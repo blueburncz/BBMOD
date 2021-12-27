@@ -1,4 +1,7 @@
 #pragma include("Uber_VS.xsh", "glsl")
+// FIXME: Temporary fix!
+precision highp float;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Defines
 #define MAX_BONES 64
