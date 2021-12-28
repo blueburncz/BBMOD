@@ -7,4 +7,4 @@ matrix_set(matrix_world, matrix_build(
 	0, 0, 0,
 	1000, 1000, 1000));
 
-OMain.modSky.render();
+OMain.modSky.render([day ? matSkyDay : matSkyNight]);

@@ -34,6 +34,8 @@
 function BBMOD_PBRMaterial(_shader=undefined)
 	: BBMOD_BaseMaterial(_shader) constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_BaseMaterial = {
 		copy: copy,
 		destroy: destroy,

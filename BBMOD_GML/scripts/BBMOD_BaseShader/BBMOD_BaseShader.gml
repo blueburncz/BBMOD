@@ -102,6 +102,13 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		return set_uniform_f(UExposure, _value);
 	};
 
+	// FIXME: This was added here only to temporarily resolve
+	// `try { BBMOD_SHADER_CURRENT.set_shadowmap(...); } catch (...) {}`
+	// on Opera GX!
+	static set_shadowmap = function () {
+		return self;
+	};
+
 	static on_set = function () {
 		gml_pragma("forceinline");
 		set_cam_pos();

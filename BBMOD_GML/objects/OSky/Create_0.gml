@@ -23,8 +23,6 @@ sunLight.CastShadows = true;
 bbmod_light_directional_set(sunLight);
 
 SetSky = function (_day) {
-	OMain.modSky.Materials[@ 0] = _day ? matSkyDay : matSkyNight;
-
 	// For PBR materials
 	bbmod_ibl_set(_day ? iblDay : iblNight);
 

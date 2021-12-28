@@ -257,11 +257,7 @@ function BBMOD_Renderer()
 				{
 					continue;
 				}
-				try
-				{
-					BBMOD_SHADER_CURRENT.set_zfar(_shadowmapArea);
-				}
-				catch (_ignore) {}
+				BBMOD_SHADER_CURRENT.set_zfar(_shadowmapArea);
 				_material.submit_queue();
 			}
 			surface_reset_target();
@@ -324,15 +320,11 @@ function BBMOD_Renderer()
 			}
 			if (_passShadowmap)
 			{
-				try
-				{
-					BBMOD_SHADER_CURRENT.set_shadowmap(
-						_shadowmapTexture,
-						_shadowmapMatrix,
-						_shadowmapArea,
-						_shadowmapNormalOffset);
-				}
-				catch (_ignore) {}
+				BBMOD_SHADER_CURRENT.set_shadowmap(
+					_shadowmapTexture,
+					_shadowmapMatrix,
+					_shadowmapArea,
+					_shadowmapNormalOffset);
 			}
 			_material.submit_queue().clear_queue();
 		}

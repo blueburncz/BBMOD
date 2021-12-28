@@ -39,8 +39,8 @@ function __bbmod_material_sky()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		var _skSky = new BBMOD_PBRShader(BBMOD_ShSky, new BBMOD_VertexFormat(true));
-		_material = new BBMOD_PBRMaterial(_skSky);
+		var _skSky = new BBMOD_BaseShader(BBMOD_ShSky, new BBMOD_VertexFormat(true));
+		_material = new BBMOD_BaseMaterial(_skSky);
 		_material.Culling = cull_noculling;
 		_material.Mipmapping = false;
 		_material.ZWrite = false;
