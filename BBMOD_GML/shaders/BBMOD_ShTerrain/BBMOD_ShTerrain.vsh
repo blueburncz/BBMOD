@@ -1,19 +1,12 @@
+#pragma include("Uber_VS.xsh", "glsl")
 // FIXME: Temporary fix!
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Defines
-#if defined(X_ANIMATED)
-#define MAX_BONES 64
-#endif
 
-#if defined(X_BATCHED)
-#define MAX_BATCH_DATA_SIZE 128
-#endif
 
-#if !defined(X_PBR)
 #define MAX_POINT_LIGHTS 8
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Attributes
@@ -23,39 +16,22 @@ attribute vec2 in_TextureCoord0;
 //attribute vec4 in_Color;
 attribute vec4 in_TangentW;
 
-#if defined(X_ANIMATED)
-attribute vec4 in_BoneIndex;
-attribute vec4 in_BoneWeight;
-#endif
 
-#if defined(X_BATCHED)
-attribute float in_Id;
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Uniforms
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
-#if defined(X_ANIMATED)
-uniform vec4 bbmod_Bones[2 * MAX_BONES];
-#endif
 
-#if defined(X_BATCHED)
-uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
-#endif
 
-#if !defined(X_PBR)
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-#endif
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
 uniform float bbmod_ShadowmapEnableVS;     // 1.0 to enable shadows
 uniform mat4 bbmod_ShadowmapMatrix;        // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
 uniform float bbmod_ShadowmapArea;         // The area that the shadowmap captures
 uniform float bbmod_ShadowmapNormalOffset; // Offsets vertex position by its normal scaled by this value
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Varyings
@@ -65,36 +41,51 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
-#if defined(X_TERRAIN)
 varying vec2 v_vSplatmapCoord;
-#endif
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
-#pragma include("Color.xsh", "glsl")
+#define X_GAMMA 2.2
 
-#pragma include("RGBM.xsh", "glsl")
-#endif
-
-#if defined(X_ANIMATED) || defined(X_BATCHED)
-vec3 QuaternionRotate(vec4 q, vec3 v)
+/// @desc Converts gamma space color to linear space.
+vec3 xGammaToLinear(vec3 rgb)
 {
-	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
+	return pow(rgb, vec3(X_GAMMA));
 }
-#endif
 
-#if defined(X_ANIMATED)
-vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
 {
-	return (QuaternionRotate(real, v)
-		+ 2.0 * (real.w * dual.xyz - dual.w * real.xyz + cross(real.xyz, dual.xyz)));
+	return pow(rgb, vec3(1.0 / X_GAMMA));
 }
-#endif
+
+/// @desc Gets color's luminance.
+float xLuminance(vec3 rgb)
+{
+	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
+}
+
+/// @note Input color should be in gamma space.
+/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
+vec4 xEncodeRGBM(vec3 color)
+{
+	vec4 rgbm;
+	color *= 1.0 / 6.0;
+	rgbm.a = clamp(max(max(color.r, color.g), max(color.b, 0.000001)), 0.0, 1.0);
+	rgbm.a = ceil(rgbm.a * 255.0) / 255.0;
+	rgbm.rgb = color / rgbm.a;
+	return rgbm;
+}
+
+/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
+vec3 xDecodeRGBM(vec4 rgbm)
+{
+	return 6.0 * rgbm.rgb * rgbm.a;
+}
+
+
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
@@ -104,55 +95,7 @@ void Transform(out vec4 vertex, out vec4 normal)
 	vertex = in_Position;
 	normal = vec4(in_Normal, 0.0);
 
-#if defined(X_ANIMATED)
-	// Source:
-	// https://www.cs.utah.edu/~ladislav/kavan07skinning/kavan07skinning.pdf
-	// https://www.cs.utah.edu/~ladislav/dq/dqs.cg
-	ivec4 i = ivec4(in_BoneIndex) * 2;
-	ivec4 j = i + 1;
 
-	vec4 real0 = bbmod_Bones[i.x];
-	vec4 real1 = bbmod_Bones[i.y];
-	vec4 real2 = bbmod_Bones[i.z];
-	vec4 real3 = bbmod_Bones[i.w];
-
-	vec4 dual0 = bbmod_Bones[j.x];
-	vec4 dual1 = bbmod_Bones[j.y];
-	vec4 dual2 = bbmod_Bones[j.z];
-	vec4 dual3 = bbmod_Bones[j.w];
-
-	if (dot(real0, real1) < 0.0) { real1 *= -1.0; dual1 *= -1.0; }
-	if (dot(real0, real2) < 0.0) { real2 *= -1.0; dual2 *= -1.0; }
-	if (dot(real0, real3) < 0.0) { real3 *= -1.0; dual3 *= -1.0; }
-
-	vec4 blendReal =
-		  real0 * in_BoneWeight.x
-		+ real1 * in_BoneWeight.y
-		+ real2 * in_BoneWeight.z
-		+ real3 * in_BoneWeight.w;
-
-	vec4 blendDual =
-		  dual0 * in_BoneWeight.x
-		+ dual1 * in_BoneWeight.y
-		+ dual2 * in_BoneWeight.z
-		+ dual3 * in_BoneWeight.w;
-
-	float len = length(blendReal);
-	blendReal /= len;
-	blendDual /= len;
-
-	vertex = vec4(DualQuaternionTransform(blendReal, blendDual, vertex.xyz), 1.0);
-	normal = vec4(QuaternionRotate(blendReal, normal.xyz), 0.0);
-#endif
-
-#if defined(X_BATCHED)
-	int idx = int(in_Id) * 2;
-	vec4 posScale = bbmod_BatchData[idx];
-	vec4 rot = bbmod_BatchData[idx + 1];
-
-	vertex = vec4(posScale.xyz + (QuaternionRotate(rot, vertex.xyz) * posScale.w), 1.0);
-	normal = vec4(QuaternionRotate(rot, normal.xyz), 0.0);
-#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -175,11 +118,8 @@ void main()
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
 	v_mTBN = mat3(T, B, N);
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
 	// Splatmap coords
-	#if defined(X_TERRAIN)
 	v_vSplatmapCoord = in_TextureCoord0;
-	#endif
 
 	////////////////////////////////////////////////////////////////////////////
 	// Point lights
@@ -188,7 +128,7 @@ void main()
 
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
 	{
-		Vec4 positionRange = bbmod_LightPointData[i * 2];
+		vec4 positionRange = bbmod_LightPointData[i * 2];
 		vec3 L = positionRange.xyz - v_vVertex;
 		float dist = length(L);
 		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
@@ -207,5 +147,5 @@ void main()
 	#endif
 		v_vPosShadowmap.z /= bbmod_ShadowmapArea;
 	}
-#endif
 }
+// include("Uber_VS.xsh")

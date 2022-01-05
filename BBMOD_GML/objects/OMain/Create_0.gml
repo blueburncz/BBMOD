@@ -120,6 +120,9 @@ renderer = new BBMOD_Renderer()
 renderer.UseAppSurface = true;
 renderer.RenderScale = 1.0;
 renderer.EnableShadows = true;
+renderer.ShadowmapArea *= 4;
+renderer.ShadowmapResolution *= 4;
+renderer.ShadowmapNormalOffset *= 2;
 renderer.EnablePostProcessing = true;
 renderer.ChromaticAberration = 3.0;
 renderer.ColorGradingLUT = sprite_get_texture(SprColorGrading, 0);
@@ -135,10 +138,76 @@ renderer.add({
 	})
 });
 
-renderer.add({
-	render: method(self, function () {
-		var _scale = max(room_width, room_height);
-		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, _scale, _scale, _scale));
-		modPlane.render();
-	})
+//renderer.add({
+//	render: method(self, function () {
+//		var _scale = max(room_width, room_height);
+//		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, _scale, _scale, _scale));
+//		modPlane.render();
+//	})
+//});
+
+var _sh = new BBMOD_DefaultShader(BBMOD_ShTerrain, BBMOD_MATERIAL_DEFAULT);
+var _m = new BBMOD_DefaultMaterial(_sh);
+_m.TextureScale = new BBMOD_Vec2(64.0, 64.0);
+_m.Repeat = true;
+
+var _m1 = _m.clone();
+_m1.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH);
+_m1.BaseOpacity = sprite_get_texture(SprTextures, 0);
+_m1.ZWrite = false;
+_m1.ZTest = cmpfunc_equal;
+
+var _m2 = _m.clone();
+_m2.BaseOpacity = sprite_get_texture(SprTextures, 1);
+_m1.ZWrite = false;
+_m1.ZTest = cmpfunc_equal;
+
+var _m3 = _m.clone();
+_m3.BaseOpacity = sprite_get_texture(SprTextures, 2);
+_m1.ZWrite = false;
+_m1.ZTest = cmpfunc_equal;
+
+var _m4 = _m.clone();
+_m4.BaseOpacity = sprite_get_texture(SprTextures, 3);
+_m1.ZWrite = false;
+_m1.ZTest = cmpfunc_equal;
+
+splatmap = sprite_add("splatmap.png", 0, false, false, 0, 0);
+
+
+_m1.OnApply = method(self, function () {
+	var _shader = BBMOD_SHADER_CURRENT.Raw;
+	var _uSplatmap = shader_get_sampler_index(_shader, "bbmod_Splatmap");
+	var _uSplatmapIndex = shader_get_uniform(_shader, "bbmod_SplatmapIndex");
+	texture_set_stage(_uSplatmap, sprite_get_texture(splatmap, 0));
+	shader_set_uniform_i(_uSplatmapIndex, -1);
 });
+_m2.OnApply = method(self, function () {
+	var _shader = BBMOD_SHADER_CURRENT.Raw;
+	var _uSplatmap = shader_get_sampler_index(_shader, "bbmod_Splatmap");
+	var _uSplatmapIndex = shader_get_uniform(_shader, "bbmod_SplatmapIndex");
+	texture_set_stage(_uSplatmap, sprite_get_texture(splatmap, 0));
+	shader_set_uniform_i(_uSplatmapIndex, 0);
+});
+_m3.OnApply = method(self, function () {
+	var _shader = BBMOD_SHADER_CURRENT.Raw;
+	var _uSplatmap = shader_get_sampler_index(_shader, "bbmod_Splatmap");
+	var _uSplatmapIndex = shader_get_uniform(_shader, "bbmod_SplatmapIndex");
+	texture_set_stage(_uSplatmap, sprite_get_texture(splatmap, 0));
+	shader_set_uniform_i(_uSplatmapIndex, 1);
+});
+_m4.OnApply = method(self, function () {
+	var _shader = BBMOD_SHADER_CURRENT.Raw;
+	var _uSplatmap = shader_get_sampler_index(_shader, "bbmod_Splatmap");
+	var _uSplatmapIndex = shader_get_uniform(_shader, "bbmod_SplatmapIndex");
+	texture_set_stage(_uSplatmap, sprite_get_texture(splatmap, 0));
+	shader_set_uniform_i(_uSplatmapIndex, 2);
+});
+
+terrain = new BBMOD_Terrain().from_heightmap(SprHeightmap, 0, 128 * 4 * 2);
+terrain.Layer[0] = _m1;
+terrain.Layer[1] = _m2;
+terrain.Layer[2] = _m3;
+terrain.Layer[3] = _m4;
+terrain.Splatmap = sprite_get_texture(splatmap, 0);
+terrain.build_mesh();

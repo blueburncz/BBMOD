@@ -50,6 +50,8 @@ uniform float bbmod_ShadowmapEnablePS; // 1.0 to enable shadows
 uniform sampler2D bbmod_Shadowmap;     // Shadowmap texture
 uniform vec2 bbmod_ShadowmapTexel;     // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
 
+// Terrain
+
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
 #define X_GAMMA 2.2

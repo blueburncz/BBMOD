@@ -1,5 +1,7 @@
 event_inherited();
 
+z = OMain.terrain.get_height_xy(x, y);
+
 // If true then the zombie will change to the "Idle" state after the timeout.
 active = false;
 

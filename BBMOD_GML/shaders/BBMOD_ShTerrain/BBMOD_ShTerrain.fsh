@@ -1,11 +1,10 @@
+#pragma include("Uber_PS.xsh", "glsl")
 // FIXME: Temporary fix!
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Defines
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
 #define SHADOWMAP_SAMPLE_COUNT 16
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Varyings
@@ -15,27 +14,16 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
-#if defined(X_TERRAIN)
 varying vec2 v_vSplatmapCoord;
-#endif
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Uniforms
 // Material
 #define bbmod_BaseOpacity gm_BaseTexture  // RGB: Base color, A: Opacity
-#if defined(X_PBR)
-uniform sampler2D bbmod_NormalRoughness;  // RGB: Tangent space normal, A: Roughness
-uniform sampler2D bbmod_MetallicAO;       // R: Metallic, G: Ambient occlusion
-uniform sampler2D bbmod_Subsurface;       // RGB: Subsurface color, A: Intensity
-uniform sampler2D bbmod_Emissive;         // RGBA: RGBM encoded emissive color
-#else
 uniform sampler2D bbmod_NormalSmoothness; // RGB: Tangent space normal, A: Smoothness
 uniform sampler2D bbmod_SpecularColor;    // RGB: Specular color
-#endif
 uniform float bbmod_AlphaTest;            // Pixels with alpha less than this value will be discarded
 
 // Camera
@@ -43,13 +31,7 @@ uniform vec3 bbmod_CamPos;    // Camera's position in world space
 uniform float bbmod_ZFar;     // Distance to the far clipping plane
 uniform float bbmod_Exposure; // Camera's exposure value
 
-#if defined(X_PBR)
-// Image based lighting
-uniform sampler2D bbmod_IBL; // Prefiltered octahedron env. map
-uniform vec2 bbmod_IBLTexel; // Texel size of one octahedron
-#endif
 
-#if !defined(X_PBR) && !defined(X_OUTPUT_DEPTH)
 // Fog
 uniform vec4 bbmod_FogColor;      // The color of the fog
 uniform float bbmod_FogIntensity; // Maximum fog intensity
@@ -70,41 +52,120 @@ uniform sampler2D bbmod_Shadowmap;     // Shadowmap texture
 uniform vec2 bbmod_ShadowmapTexel;     // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
 
 // Terrain
-#if defined(X_TERRAIN)
 uniform sampler2D bbmod_Splatmap; // Splatmap texture
 uniform int bbmod_SplatmapIndex;  // Splatmap channel to read. Use -1 for none.
-#endif
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
-#if !defined(X_OUTPUT_DEPTH)
-#pragma include("Color.xsh", "glsl")
+#define X_GAMMA 2.2
 
-#pragma include("RGBM.xsh", "glsl")
-#endif
+/// @desc Converts gamma space color to linear space.
+vec3 xGammaToLinear(vec3 rgb)
+{
+	return pow(rgb, vec3(X_GAMMA));
+}
 
-#if !defined(X_PBR)
-#pragma include("DepthEncoding.xsh")
-#endif
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
+{
+	return pow(rgb, vec3(1.0 / X_GAMMA));
+}
 
-#if defined(X_PBR)
-#pragma include("BRDF.xsh", "glsl")
+/// @desc Gets color's luminance.
+float xLuminance(vec3 rgb)
+{
+	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
+}
 
-#pragma include("OctahedronMapping.xsh", "glsl")
+/// @note Input color should be in gamma space.
+/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
+vec4 xEncodeRGBM(vec3 color)
+{
+	vec4 rgbm;
+	color *= 1.0 / 6.0;
+	rgbm.a = clamp(max(max(color.r, color.g), max(color.b, 0.000001)), 0.0, 1.0);
+	rgbm.a = ceil(rgbm.a * 255.0) / 255.0;
+	rgbm.rgb = color / rgbm.a;
+	return rgbm;
+}
 
-#pragma include("IBL.xsh")
+/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
+vec3 xDecodeRGBM(vec4 rgbm)
+{
+	return 6.0 * rgbm.rgb * rgbm.a;
+}
 
-#pragma include("CheapSubsurface.xsh", "glsl")
+/// @param d Linearized depth to encode.
+/// @return Encoded depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+vec3 xEncodeDepth(float d)
+{
+	const float inv255 = 1.0 / 255.0;
+	vec3 enc;
+	enc.x = d;
+	enc.y = d * 255.0;
+	enc.z = enc.y * 255.0;
+	enc = fract(enc);
+	float temp = enc.z * inv255;
+	enc.x -= enc.y * inv255;
+	enc.y -= temp;
+	enc.z -= temp;
+	return enc;
+}
 
-#pragma include("MetallicRoughnessMaterial.xsh", "glsl")
-#endif
+/// @param c Encoded depth.
+/// @return Docoded linear depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+float xDecodeDepth(vec3 c)
+{
+	const float inv255 = 1.0 / 255.0;
+	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
+}
 
-#if !defined(X_PBR) && !defined(X_OUTPUT_DEPTH)
-#pragma include("SpecularColorSmoothnessMaterial.xsh", "glsl")
-#endif
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
+
+struct Material
+{
+	vec3 Base;
+	float Opacity;
+	vec3 Normal;
+	float Smoothness;
+	vec3 Specular;
+};
+
+/// @desc Unpacks material from textures.
+/// @param texBaseOpacity      RGB: base color, A: opacity
+/// @param texNormalSmoothness RGB: tangent-space normal vector, A: smoothness
+/// @param texSpecularColor    RGB: specular color
+/// @param TBN                 Tangent-bitangent-normal matrix
+/// @param uv                  Texture coordinates
+Material UnpackMaterial(
+	sampler2D texBaseOpacity,
+	sampler2D texNormalSmoothness,
+	sampler2D texSpecularColor,
+	mat3 TBN,
+	vec2 uv)
+{
+	Material m;
+
+	// Base color and opacity
+	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	m.Base = xGammaToLinear(baseOpacity.rgb);
+	m.Opacity = baseOpacity.a;
+
+	// Normal vector and smoothness
+	vec4 normalSmoothness = texture2D(texNormalSmoothness, uv);
+	//m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
+	m.Normal = normalize(TBN[2]);
+	m.Smoothness = normalSmoothness.a;
+
+	// Specular color
+	vec4 specularColor = texture2D(texSpecularColor, uv);
+	m.Specular = xGammaToLinear(specularColor.rgb);
+
+	return m;
+}
+
 // Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
 float InterleavedGradientNoise(vec2 positionScreen)
 {
@@ -137,52 +198,11 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	}
 	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Main
 void main()
 {
-#if defined(X_OUTPUT_DEPTH)
-	Vec4 baseOpacity = texture2D(bbmod_BaseOpacity, v_vTexCoord);
-	if (baseOpacity.a < bbmod_AlphaTest)
-	{
-		discard;
-	}
-	gl_FragColor.rgb = xEncodeDepth(v_fDepth / bbmod_ZFar);
-	gl_FragColor.a = 1.0;
-#else
-#if defined(X_PBR)
-	Material material = UnpackMaterial(
-		bbmod_BaseOpacity,
-		bbmod_NormalRoughness,
-		bbmod_MetallicAO,
-		bbmod_Subsurface,
-		bbmod_Emissive,
-		v_mTBN,
-		v_vTexCoord);
-
-	if (material.Opacity < bbmod_AlphaTest)
-	{
-		discard;
-	}
-	gl_FragColor.a = material.Opacity;
-
-	vec3 N = material.Normal;
-	vec3 V = normalize(bbmod_CamPos - v_vVertex);
-	vec3 lightColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
-
-	// Diffuse
-	gl_FragColor.rgb = material.Base * lightColor;
-	// Specular
-	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
-	// Ambient occlusion
-	gl_FragColor.rgb *= material.AO;
-	// Emissive
-	gl_FragColor.rgb += material.Emissive;
-	// Subsurface scattering
-	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
-#else
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
 		bbmod_NormalSmoothness,
@@ -201,8 +221,8 @@ void main()
 	vec3 lightSpecular = vec3(0.0);
 
 	// Ambient light
-	Vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	Vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
@@ -236,18 +256,15 @@ void main()
 	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-#if defined(X_TERRAIN)
 	// Splatmap
 	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
 	if (bbmod_SplatmapIndex > 0)
 	{
 		gl_FragColor.a *= splatmap[bbmod_SplatmapIndex];
 	}
-#endif
-#endif
 	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-#endif
 }
+// include("Uber_PS.xsh")
