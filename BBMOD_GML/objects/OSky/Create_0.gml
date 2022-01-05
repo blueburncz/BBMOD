@@ -22,6 +22,8 @@ sunLight = new BBMOD_DirectionalLight();
 sunLight.CastShadows = true;
 bbmod_light_directional_set(sunLight);
 
+bbmod_fog_set(BBMOD_C_WHITE, 0.8, 100, 1500);
+
 SetSky = function (_day) {
 	// For PBR materials
 	bbmod_ibl_set(_day ? iblDay : iblNight);

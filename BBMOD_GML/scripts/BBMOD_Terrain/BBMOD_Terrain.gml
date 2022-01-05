@@ -115,7 +115,20 @@ function BBMOD_Terrain() constructor
 
 	static get_height_xy = function (_x, _y) {
 		gml_pragma("forceinline");
-		return get_height(floor(_x / 4), floor(_y / 4));
+		var _imax = ds_grid_width(Height) - 1;
+		var _jmax = ds_grid_height(Height) - 1;
+		var _x4 = _x / 4;
+		var _y4 = _y / 4;
+		var _i1 = floor(_x4);
+		var _j1 = floor(_y4);
+		var _h1 = Height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
+		var _h2 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
+		var _h3 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		var _h4 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		return lerp(
+			lerp(_h1, _h2, frac(_x4)),
+			lerp(_h3, _h4, frac(_x4)),
+			frac(_y4));
 	};
 
 	static build_normals = function (_scale) {
@@ -222,35 +235,51 @@ function BBMOD_Terrain() constructor
 				var _n4Y = NormalSmoothY[# _i, _j + 1];
 				var _n4Z = NormalSmoothZ[# _i, _j + 1];
 
+				var _t1X = - _n1X * _n1Y;
+				var _t1Y = _n1X * _n1X - (-_n1Z) * _n1Z;
+				var _t1Z = (-_n1Z) * _n1Y;
+
+				var _t2X = - _n2X * _n2Y;
+				var _t2Y = _n2X * _n2X - (-_n2Z) * _n2Z;
+				var _t2Z = (-_n2Z) * _n2Y;
+
+				var _t3X = - _n3X * _n3Y;
+				var _t3Y = _n3X * _n3X - (-_n3Z) * _n3Z;
+				var _t3Z = (-_n3Z) * _n3Y;
+
+				var _t4X = - _n4X * _n4Y;
+				var _t4Y = _n4X * _n4X - (-_n4Z) * _n4Z;
+				var _t4Z = (-_n4Z) * _n4Y;
+
 				vertex_position_3d(_vbuffer, _x1, _y1, _z1);
 				vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
 				vertex_texcoord(_vbuffer, _u1, _v1);
-				vertex_float4(_vbuffer, 1, 0, 0, 1);
+				vertex_float4(_vbuffer, _t1X, _t1Y, _t1Z, 1);
 
 				vertex_position_3d(_vbuffer, _x3, _y3, _z3);
 				vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
 				vertex_texcoord(_vbuffer, _u3, _v3);
-				vertex_float4(_vbuffer, 1, 0, 0, 1);
+				vertex_float4(_vbuffer, _t3X, _t3Y, _t3Z, 1);
 
 				vertex_position_3d(_vbuffer, _x4, _y4, _z4);
 				vertex_normal(_vbuffer, _n4X, _n4Y, _n4Z);
 				vertex_texcoord(_vbuffer, _u4, _v4);
-				vertex_float4(_vbuffer, 1, 0, 0, 1);
+				vertex_float4(_vbuffer, _t4X, _t4Y, _t4Z, 1);
 
 				vertex_position_3d(_vbuffer, _x1, _y1, _z1);
 				vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
 				vertex_texcoord(_vbuffer, _u1, _v1);
-				vertex_float4(_vbuffer, 1, 0, 0, 1);
+				vertex_float4(_vbuffer, _t1X, _t1Y, _t1Z, 1);
 
 				vertex_position_3d(_vbuffer, _x2, _y2, _z2);
 				vertex_normal(_vbuffer, _n2X, _n2Y, _n2Z);
 				vertex_texcoord(_vbuffer, _u2, _v2);
-				vertex_float4(_vbuffer, 1, 0, 0, 1);
+				vertex_float4(_vbuffer, _t2X, _t2Y, _t2Z, 1);
 
 				vertex_position_3d(_vbuffer, _x3, _y3, _z3);
 				vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
 				vertex_texcoord(_vbuffer, _u3, _v3);
-				vertex_float4(_vbuffer, 1, 0, 0, 1);
+				vertex_float4(_vbuffer, _t3X, _t3Y, _t3Z, 1);
 
 				++_j;
 			}
@@ -288,7 +317,6 @@ function BBMOD_Terrain() constructor
 			var _mat = Layer[i];
 			if (_mat != undefined)
 			{
-				gml_pragma("forceinline");
 				var _renderCommand = new BBMOD_RenderCommand();
 				_renderCommand.VertexBuffer = VertexBuffer;
 				_renderCommand.Texture = _mat.BaseOpacity;

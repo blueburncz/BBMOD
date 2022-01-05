@@ -1,5 +1,4 @@
 z = 0;
-zprevious = z;
 zspeed = 0;
 
 render = function () {

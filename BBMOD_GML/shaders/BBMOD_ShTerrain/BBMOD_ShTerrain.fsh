@@ -155,8 +155,7 @@ Material UnpackMaterial(
 
 	// Normal vector and smoothness
 	vec4 normalSmoothness = texture2D(texNormalSmoothness, uv);
-	//m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
-	m.Normal = normalize(TBN[2]);
+	m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
 	m.Smoothness = normalSmoothness.a;
 
 	// Specular color
@@ -253,12 +252,13 @@ void main()
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Fog
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
+	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
+		* mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 	// Splatmap
 	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
-	if (bbmod_SplatmapIndex > 0)
+	if (bbmod_SplatmapIndex >= 0)
 	{
 		gl_FragColor.a *= splatmap[bbmod_SplatmapIndex];
 	}

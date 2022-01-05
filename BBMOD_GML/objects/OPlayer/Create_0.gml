@@ -46,7 +46,7 @@ animationStateMachine.OnPreUpdate = method(self, function () {
 	var _terrainHeight = OMain.terrain.get_height_xy(x, y);
 
 	// Go to state "Jump" if the player is above the ground.
-	if (z > _terrainHeight
+	if (z > _terrainHeight + 5
 		&& _stateCurrent != stateJump)
 	{
 		animationStateMachine.change_state(stateJump);
