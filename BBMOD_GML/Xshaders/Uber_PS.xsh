@@ -201,8 +201,8 @@ void main()
 	vec3 lightSpecular = vec3(0.0);
 
 	// Ambient light
-	Vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	Vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
@@ -233,8 +233,7 @@ void main()
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Fog
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
-		* mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
+	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor)) * ((ambientUp + ambientDown) * 0.5);
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 #if defined(X_TERRAIN)
