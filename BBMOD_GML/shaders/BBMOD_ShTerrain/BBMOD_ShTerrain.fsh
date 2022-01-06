@@ -244,7 +244,8 @@ void main()
 	float blinnPhong = exp2(A * NdotH - A);
 	float blinnNormalization = (specularPower + 8.0) / 8.0;
 	float normalDistribution = blinnPhong * blinnNormalization;
-	vec3 lightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL * (1.0 - shadow);
+	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+	vec3 lightColor = directionalLightColor * NdotL * (1.0 - shadow);
 	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 	lightDiffuse += lightColor; // * (1.0 - fresnel);
 	// Diffuse
@@ -252,7 +253,8 @@ void main()
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Fog
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor)) * ((ambientUp + ambientDown) * 0.5);
+	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
+		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 	// Splatmap
