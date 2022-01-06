@@ -23,9 +23,10 @@ camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.
 
 camera.update(delta_time);
 
-if (camera.Position.Z < 0.0)
+var _cameraHeight = OMain.terrain.get_height_xy(camera.Position.X, camera.Position.Y) + 1.0;
+if (camera.Position.Z < _cameraHeight)
 {
-	camera.Position.Z = 0.0;
+	camera.Position.Z = _cameraHeight;
 
 	// We have to update the camera's matrices if we change its position or
 	// target after we call its update method.
