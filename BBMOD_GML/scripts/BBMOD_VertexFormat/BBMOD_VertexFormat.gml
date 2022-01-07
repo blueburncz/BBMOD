@@ -75,13 +75,13 @@ function BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bone
 	static get_byte_size = function () {
 		gml_pragma("forceinline");
 		return (0
-			+ (4 * 3 * Vertices)
-			+ (4 * 3 * Normals)
-			+ (4 * 2 * TextureCoords)
-			+ (4 * 1 * Colors)
-			+ (4 * 4 * TangentW)
-			+ (4 * 8 * Bones)
-			+ (4 * 1 * Ids)
+			+ (buffer_sizeof(buffer_f32) * 3 * Vertices)
+			+ (buffer_sizeof(buffer_f32) * 3 * Normals)
+			+ (buffer_sizeof(buffer_f32) * 2 * TextureCoords)
+			+ (buffer_sizeof(buffer_u32) * 1 * Colors)
+			+ (buffer_sizeof(buffer_f32) * 4 * TangentW)
+			+ (buffer_sizeof(buffer_f32) * 8 * Bones)
+			+ (buffer_sizeof(buffer_f32) * 1 * Ids)
 		);
 	};
 
