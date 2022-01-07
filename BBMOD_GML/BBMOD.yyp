@@ -12,6 +12,7 @@
     {"id":{"name":"SndGunshot2","path":"sounds/SndGunshot2/SndGunshot2.yy",},"order":2,},
     {"id":{"name":"BBMOD_Model","path":"scripts/BBMOD_Model/BBMOD_Model.yy",},"order":2,},
     {"id":{"name":"SndShell4","path":"sounds/SndShell4/SndShell4.yy",},"order":4,},
+    {"id":{"name":"bbmod_buffer_async","path":"scripts/bbmod_buffer_async/bbmod_buffer_async.yy",},"order":3,},
     {"id":{"name":"BBMOD_DefaultShader","path":"scripts/BBMOD_DefaultShader/BBMOD_DefaultShader.yy",},"order":0,},
     {"id":{"name":"BBMOD_ImageBasedLight","path":"scripts/BBMOD_ImageBasedLight/BBMOD_ImageBasedLight.yy",},"order":3,},
     {"id":{"name":"SndShell2","path":"sounds/SndShell2/SndShell2.yy",},"order":2,},
@@ -33,6 +34,7 @@
     {"id":{"name":"BBMOD_Color","path":"scripts/BBMOD_Color/BBMOD_Color.yy",},"order":4,},
     {"id":{"name":"bbmod_mesh_to_colmesh","path":"scripts/bbmod_mesh_to_colmesh/bbmod_mesh_to_colmesh.yy",},"order":0,},
     {"id":{"name":"bbmod_defines","path":"scripts/bbmod_defines/bbmod_defines.yy",},"order":5,},
+    {"id":{"name":"HTML5_OMain","path":"objects/HTML5_OMain/HTML5_OMain.yy",},"order":1,},
     {"id":{"name":"BBMOD_Vec2","path":"scripts/BBMOD_Vec2/BBMOD_Vec2.yy",},"order":2,},
     {"id":{"name":"SndGunshot0","path":"sounds/SndGunshot0/SndGunshot0.yy",},"order":0,},
     {"id":{"name":"SndFootstep7","path":"sounds/SndFootstep7/SndFootstep7.yy",},"order":7,},
@@ -62,6 +64,7 @@
     {"id":{"name":"BBMOD_ShPBR","path":"shaders/BBMOD_ShPBR/BBMOD_ShPBR.yy",},"order":6,},
     {"id":{"name":"SndShell6","path":"sounds/SndShell6/SndShell6.yy",},"order":6,},
     {"id":{"name":"OLever","path":"objects/OLever/OLever.yy",},"order":11,},
+    {"id":{"name":"HTML5_RmTest","path":"rooms/HTML5_RmTest/HTML5_RmTest.yy",},"order":0,},
     {"id":{"name":"BBMOD_ShSky","path":"shaders/BBMOD_ShSky/BBMOD_ShSky.yy",},"order":4,},
     {"id":{"name":"BBMOD_SprColorGradingLUT","path":"sprites/BBMOD_SprColorGradingLUT/BBMOD_SprColorGradingLUT.yy",},"order":1,},
     {"id":{"name":"BBMOD_Node","path":"scripts/BBMOD_Node/BBMOD_Node.yy",},"order":3,},
@@ -143,6 +146,7 @@
     "children": [],
   },
   "RoomOrderNodes": [
+    {"roomId":{"name":"HTML5_RmTest","path":"rooms/HTML5_RmTest/HTML5_RmTest.yy",},},
     {"roomId":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},},
   ],
   "Folders": [
@@ -181,6 +185,7 @@
     {"folderPath":"folders/BBMOD/Rendering/DepthBuffer.yy","order":3,"resourceVersion":"1.0","name":"DepthBuffer","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/BBMOD/Rendering/PostProcessing.yy","order":4,"resourceVersion":"1.0","name":"PostProcessing","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/BBMOD/Rendering/FXAA.yy","order":5,"resourceVersion":"1.0","name":"FXAA","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/HTML5.yy","order":2,"resourceVersion":"1.0","name":"HTML5","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":-1,"resourceVersion":"1.3","name":"audiogroup_default","resourceType":"GMAudioGroup",},

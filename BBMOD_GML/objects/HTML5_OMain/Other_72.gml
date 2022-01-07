@@ -1,0 +1,1 @@
+bbmod_buffer_load_async_update(async_load);

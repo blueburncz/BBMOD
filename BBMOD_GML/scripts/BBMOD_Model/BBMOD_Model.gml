@@ -1,8 +1,8 @@
-/// @func BBMOD_Model(_file[, _sha1])
+/// @func BBMOD_Model([_file[, _sha1]])
 /// @extends BBMOD_Class
 /// @implements {BBMOD_IRenderable}
 /// @desc A model.
-/// @param {string} _file The "*.bbmod" model file to load.
+/// @param {string} [_file] The "*.bbmod" model file to load.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
 /// @example
@@ -17,7 +17,7 @@
 /// }
 /// ```
 /// @throws {BBMOD_Exception} When the model fails to load.
-function BBMOD_Model(_file, _sha1)
+function BBMOD_Model(_file=undefined, _sha1=undefined)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -83,9 +83,21 @@ function BBMOD_Model(_file, _sha1)
 	/// @desc Loads model data from a buffer.
 	/// @param {buffer} _buffer The buffer to load the data from.
 	/// @return {BBMOD_Model} Returns `self`.
-	/// @private
+	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
 		var i;
+
+		var _type = buffer_read(_buffer, buffer_string);
+		if (_type != "bbmod")
+		{
+			throw new BBMOD_Exception("Buffer does not contain a BBMOD!");
+		}
+
+		Version = buffer_read(_buffer, buffer_u8);
+		if (Version != BBMOD_VERSION)
+		{
+			throw new BBMOD_Exception("Invalid version " + string(Version) + "!");
+		}
 
 		// Vertex format
 		VertexFormat = bbmod_vertex_format_load(_buffer);
@@ -155,7 +167,6 @@ function BBMOD_Model(_file, _sha1)
 	/// does not match with this, then the model will not be loaded.
 	/// @return {BBMOD_Model} Returns `self`.
 	/// @throws {BBMOD_Exception} If loading fails.
-	/// @private
 	static from_file = function (_file, _sha1) {
 		if (!file_exists(_file))
 		{
@@ -173,22 +184,72 @@ function BBMOD_Model(_file, _sha1)
 		var _buffer = buffer_load(_file);
 		buffer_seek(_buffer, buffer_seek_start, 0);
 
-		var _type = buffer_read(_buffer, buffer_string);
-		if (_type != "bbmod")
+		try
+		{
+			from_buffer(_buffer);
+			buffer_delete(_buffer);
+		}
+		catch (_e)
 		{
 			buffer_delete(_buffer);
-			throw new BBMOD_Exception("Not a BBMOD file!");
+			throw _e;
 		}
 
-		Version = buffer_read(_buffer, buffer_u8);
-		if (Version != BBMOD_VERSION)
+		return self;
+	};
+
+	/// @func from_file_async(_file[, _sha1[, _callback]])
+	/// @desc
+	/// @param {string} _file
+	/// @param {string} [_sha1]
+	/// @param {function} [_callback]
+	/// @return {BBMOD_Model} Returns `self`.
+	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
+		if (_sha1 != undefined)
 		{
-			buffer_delete(_buffer);
-			throw new BBMOD_Exception("Invalid version " + string(Version) + "!");
+			if (sha1_file(_file) != _sha1)
+			{
+				_callback(new BBMOD_Exception("SHA1 does not match!"));
+				return self;
+			}
 		}
 
-		from_buffer(_buffer);
-		buffer_delete(_buffer);
+		var _struct = {
+			Model: self,
+			FromBuffer: method(self, from_buffer),
+			Callback: _callback,
+		};
+
+		bbmod_buffer_load_async(_file, method(_struct, function (_err, _buffer) {
+			var _callback = Callback;
+			if (_err)
+			{
+				if (_callback != undefined)
+				{
+					_callback(_err);
+				}
+				return;
+			}
+
+			try
+			{
+				FromBuffer(_buffer);
+			}
+			catch (_err2)
+			{
+				if (_callback != undefined)
+				{
+					_callback(_err2);
+				}
+				return;
+			}
+
+			if (_callback != undefined)
+			{
+				_callback(undefined, Model);
+			}
+		}));
+
 		return self;
 	};
 
@@ -360,8 +421,11 @@ function BBMOD_Model(_file, _sha1)
 	/// @see BBMOD_ERenderPass
 	static submit = function (_materials, _transform) {
 		gml_pragma("forceinline");
-		_materials ??= Materials;
-		RootNode.submit(_materials, _transform);
+		if (RootNode != undefined)
+		{
+			_materials ??= Materials;
+			RootNode.submit(_materials, _transform);
+		}
 		return self;
 	};
 
@@ -378,11 +442,11 @@ function BBMOD_Model(_file, _sha1)
 	/// @see bbmod_material_reset
 	static render = function (_materials, _transform) {
 		gml_pragma("forceinline");
-		if (_materials == undefined)
+		if (RootNode != undefined)
 		{
-			_materials = Materials;
+			_materials ??= Materials;
+			RootNode.render(_materials, _transform, matrix_get(matrix_world));
 		}
-		RootNode.render(_materials, _transform, matrix_get(matrix_world));
 		return self;
 	};
 
