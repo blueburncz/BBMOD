@@ -32,34 +32,16 @@ function BBMOD_Mesh(_vertexFormat)
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private
 	static from_buffer = function (_buffer) {
-		var _format = VertexFormat;
-		var _hasVertices = _format.Vertices;
-		var _hasNormals = _format.Normals;
-		var _hasUvs = _format.TextureCoords;
-		var _hasColors = _format.Colors;
-		var _hasTangentW = _format.TangentW;
-		var _hasBones = _format.Bones;
-		var _hasIds = _format.Ids;
-
 		MaterialIndex = buffer_read(_buffer, buffer_u32);
 
 		var _vertexCount = buffer_read(_buffer, buffer_u32);
 		if (_vertexCount > 0)
 		{
-			var _size = _vertexCount * (0
-				+ _hasVertices * 3 * buffer_sizeof(buffer_f32)
-				+ _hasNormals * 3 * buffer_sizeof(buffer_f32)
-				+ _hasUvs * 2 * buffer_sizeof(buffer_f32)
-				+ _hasColors * buffer_sizeof(buffer_u32)
-				+ _hasTangentW * 4 * buffer_sizeof(buffer_f32)
-				+ _hasBones * 8 * buffer_sizeof(buffer_f32)
-				+ _hasIds * buffer_sizeof(buffer_f32));
-
+			var _size = _vertexCount * VertexFormat.get_byte_size();
 			if (_size > 0)
 			{
-				var _vbuffer = vertex_create_buffer_from_buffer_ext(
-					_buffer, _format.Raw, buffer_tell(_buffer), _vertexCount);
-				VertexBuffer = _vbuffer;
+				VertexBuffer = vertex_create_buffer_from_buffer_ext(
+					_buffer, VertexFormat.Raw, buffer_tell(_buffer), _vertexCount);
 				buffer_seek(_buffer, buffer_seek_relative, _size);
 			}
 		}
@@ -169,7 +151,7 @@ function BBMOD_Mesh(_vertexFormat)
 					var _g = buffer_read(_buffer, buffer_u8);
 					var _r = buffer_read(_buffer, buffer_u8);
 
-					vertex_float4(_vertexBuffer, _a, _b, _g, _r);
+					vertex_color(_vertexBuffer, make_color_rgb(_r, _g, _b), _a);
 				}
 
 				if (_hasTangentW)
@@ -264,7 +246,7 @@ function BBMOD_Mesh(_vertexFormat)
 				var _g = buffer_read(_buffer, buffer_u8);
 				var _r = buffer_read(_buffer, buffer_u8);
 
-				vertex_float4(_vertexBuffer, _a, _b, _g, _r);
+				vertex_color(_vertexBuffer, make_color_rgb(_r, _g, _b), _a);
 			}
 
 			if (_hasTangentW)
