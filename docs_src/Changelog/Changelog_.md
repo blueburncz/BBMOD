@@ -2,6 +2,7 @@
 In this section you can find changelogs for all releases of BBMOD since 3.0.0.
 
 ## Contents
+* [3.1.7](./Changelog3.1.7.html)
 * [3.1.6](./Changelog3.1.6.html)
 * [3.1.5](./Changelog3.1.5.html)
 * [3.1.4](./Changelog3.1.4.html)

@@ -1,7 +1,7 @@
 cutscene = new CCutscene();
 
 var _stage = new CStage(
-	"Hello, welcome to the BBMOD 3.1.6 demo! You can use the E key to interact"
+	"Hello, welcome to the BBMOD 3.1.7 demo! You can use the E key to interact"
 	+ " with objects, like this sign."
 );
 cutscene.AddStage(_stage);

@@ -1,5 +1,5 @@
 # BBMOD
-Welcome to the official documentation of BBMOD 3.1.6!
+Welcome to the official documentation of BBMOD 3.1.7!
 
 BBMOD is an advanced 3D rendering solution for GameMaker Studio 2. It consists
 of a custom model and animation file formats (`*.bbmod`, `*.bbanim`), a model

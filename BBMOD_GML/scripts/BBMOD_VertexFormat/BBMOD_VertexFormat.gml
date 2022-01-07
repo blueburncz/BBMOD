@@ -78,7 +78,7 @@ function BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bone
 			+ (4 * 3 * Vertices)
 			+ (4 * 3 * Normals)
 			+ (4 * 2 * TextureCoords)
-			+ (4 * 4 * Colors)
+			+ (4 * 1 * Colors)
 			+ (4 * 4 * TangentW)
 			+ (4 * 4 * Bones)
 			+ (4 * 1 * Ids)
