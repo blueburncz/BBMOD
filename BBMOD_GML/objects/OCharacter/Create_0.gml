@@ -1,7 +1,7 @@
 event_inherited();
 
 // The character's speed when they're walking.
-speedWalk = 0.4;
+speedWalk = 0.225;
 
 // The direction of the character's body. This is used to slowly turn it towards
 // the look direction.

@@ -1,7 +1,7 @@
 event_inherited();
 
 // The player speed when they're running.
-speedRun = 2.0;
+speedRun = 1.75;
 
 // The id of the item that the player is picking up (or undefined).
 pickupTarget = undefined;
