@@ -136,7 +136,7 @@ function BBMOD_Model(_file, _sha1)
 			Materials = array_create(MaterialCount, _materialDefault);
 			var _materialNames = array_create(MaterialCount, undefined);
 
-			i  = 0;
+			i = 0;
 			repeat (MaterialCount)
 			{
 				_materialNames[@ i++] = buffer_read(_buffer, buffer_string);
@@ -360,10 +360,7 @@ function BBMOD_Model(_file, _sha1)
 	/// @see BBMOD_ERenderPass
 	static submit = function (_materials, _transform) {
 		gml_pragma("forceinline");
-		if (_materials == undefined)
-		{
-			_materials = Materials;
-		}
+		_materials ??= Materials;
 		RootNode.submit(_materials, _transform);
 		return self;
 	};

@@ -31,7 +31,7 @@
 /// };
 /// ```
 /// @see BBMOD_Renderer
-function BBMOD_IRenderable() constructor
+function BBMOD_IRenderable()
 {
 	/// @func render()
 	/// @desc Enqueues the object for rendering.

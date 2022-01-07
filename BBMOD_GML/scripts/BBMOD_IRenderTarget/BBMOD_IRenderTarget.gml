@@ -1,6 +1,6 @@
 /// @func BBMOD_IRenderTarget()
 /// @desc An interface for structs which can be used as a render target.
-function BBMOD_IRenderTarget() constructor
+function BBMOD_IRenderTarget()
 {
 	/// @func set_target()
 	/// @desc Sets the render target.
