@@ -6,7 +6,7 @@
     "path": "folders/BBMOD/Core/Utils.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_buffer_async",
+  "name": "bbmod_async",
   "tags": [],
   "resourceType": "GMScript",
 }
