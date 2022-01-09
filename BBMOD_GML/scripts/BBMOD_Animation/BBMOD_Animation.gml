@@ -37,8 +37,12 @@
 /// buffer_delete(_buffer);
 /// ```
 /// @throws {BBMOD_Exception} When the animation fails to load.
-function BBMOD_Animation(_file, _sha1) constructor
+function BBMOD_Animation(_file=undefined, _sha1=undefined) constructor
 {
+	/// @var {bool} If `false` then the animation has not been loaded yet.
+	/// @readonly
+	IsLoaded = false;
+
 	/// @var {real} The version of the animation file.
 	/// @readonly
 	Version = BBMOD_VERSION;
@@ -148,7 +152,7 @@ function BBMOD_Animation(_file, _sha1) constructor
 		var _type = buffer_read(_buffer, buffer_string);
 		if (_type != "bbanim")
 		{
-			throw new BBMOD_Exception("Not a BBANIM!");
+			throw new BBMOD_Exception("Buffer does not contain a BBANIM!");
 		}
 
 		Version = buffer_read(_buffer, buffer_u8);
@@ -192,6 +196,8 @@ function BBMOD_Animation(_file, _sha1) constructor
 			}
 		}
 
+		IsLoaded = true;
+
 		return self;
 	};
 
@@ -216,26 +222,78 @@ function BBMOD_Animation(_file, _sha1) constructor
 			}
 		}
 
-		var _error = undefined;
 		var _buffer = buffer_load(_file);
-
 		buffer_seek(_buffer, buffer_seek_start, 0);
 
 		try
 		{
 			from_buffer(_buffer);
+			buffer_delete(_buffer);
 		}
 		catch (_e)
 		{
-			_error = _e;
+			buffer_delete(_buffer);
+			throw _e;
 		}
 
-		buffer_delete(_buffer);
+		return self;
+	};
 
-		if (_error)
+	/// @func from_file_async(_file[, _sha1[, _callback]])
+	/// @desc Asynchronnously loads an animation from a file.
+	/// @param {string} _file The path to the file.
+	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
+	/// does not match with this, then the animation will not be loaded.
+	/// @param {function} [_callback] The function to execute when the animation is
+	/// loaded or if an error occurs. It must take the error as the first argument
+	/// and the animation as the second argument. If no error occurs, then `undefined`
+	/// is passed.
+	/// @return {BBMOD_Animation} Returns `self`.
+	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
+		if (_sha1 != undefined)
 		{
-			throw _error;
+			if (sha1_file(_file) != _sha1)
+			{
+				_callback(new BBMOD_Exception("SHA1 does not match!"));
+				return self;
+			}
 		}
+
+		var _struct = {
+			Animation: self,
+			FromBuffer: method(self, from_buffer),
+			Callback: _callback,
+		};
+
+		bbmod_buffer_load_async(_file, method(_struct, function (_err, _buffer) {
+			var _callback = Callback;
+			if (_err)
+			{
+				if (_callback != undefined)
+				{
+					_callback(_err, Animation);
+				}
+				return;
+			}
+
+			try
+			{
+				FromBuffer(_buffer);
+			}
+			catch (_err2)
+			{
+				if (_callback != undefined)
+				{
+					_callback(_err2, Animation);
+				}
+				return;
+			}
+
+			if (_callback != undefined)
+			{
+				_callback(undefined, Animation);
+			}
+		}));
 
 		return self;
 	};

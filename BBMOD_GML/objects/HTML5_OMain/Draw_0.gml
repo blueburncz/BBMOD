@@ -1,5 +1,11 @@
+draw_clear(c_black);
 bbmod_material_reset();
-matrix_set(matrix_world, matrix_build(room_width * 0.5, room_height * 0.5, 0, 0, 90, 0, 64, 64, 64));
-model.submit();
+var _matrix = matrix_build_identity();
+_matrix = matrix_multiply(_matrix, matrix_build(0, 0, 0, 0, -90, 0, 1, 1, 1));
+_matrix = matrix_multiply(_matrix, matrix_build(0, 0, 0, 0, 0, 90, 1, 1, 1));
+_matrix = matrix_multiply(_matrix, matrix_build(0, 0, 0, -25, -45, 0, 1, 1, 1));
+_matrix = matrix_multiply(_matrix, matrix_build(room_width * 0.5, room_height - 64, 0, 0, 0, 0, 64, 64, 64));
+matrix_set(matrix_world, _matrix);
+animationPlayer.submit();
 matrix_set(matrix_world, matrix_build_identity());
 bbmod_material_reset();

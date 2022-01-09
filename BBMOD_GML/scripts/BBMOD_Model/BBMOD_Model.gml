@@ -28,6 +28,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		destroy: destroy,
 	};
 
+	/// @var {bool} If `false` then the model has not been loaded yet.
+	/// @readonly
+	IsLoaded = false;
+
 	/// @var {real} The version of the model file.
 	/// @readonly
 	Version = BBMOD_VERSION;
@@ -85,8 +89,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @return {BBMOD_Model} Returns `self`.
 	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
-		var i;
-
 		var _type = buffer_read(_buffer, buffer_string);
 		if (_type != "bbmod")
 		{
@@ -96,7 +98,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		Version = buffer_read(_buffer, buffer_u8);
 		if (Version != BBMOD_VERSION)
 		{
-			throw new BBMOD_Exception("Invalid version " + string(Version) + "!");
+			throw new BBMOD_Exception(
+				"Invalid BBMOD version " + string(Version) + "!");
 		}
 
 		// Vertex format
@@ -106,7 +109,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		var _meshCount = buffer_read(_buffer, buffer_u32);
 		Meshes = array_create(_meshCount, undefined);
 
-		i = 0;
+		var i = 0;
 		repeat (_meshCount)
 		{
 			Meshes[@ i++] = new BBMOD_Mesh(VertexFormat).from_buffer(_buffer);
@@ -157,6 +160,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			MaterialNames = _materialNames;
 		}
 
+		IsLoaded = true;
+
 		return self;
 	};
 
@@ -199,10 +204,14 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func from_file_async(_file[, _sha1[, _callback]])
-	/// @desc
-	/// @param {string} _file
-	/// @param {string} [_sha1]
-	/// @param {function} [_callback]
+	/// @desc Asynchronnously loads the model from a file.
+	/// @param {string} _file The path to the file.
+	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
+	/// does not match with this, then the model will not be loaded.
+	/// @param {function} [_callback] The function to execute when the model is
+	/// loaded or if an error occurs. It must take the error as the first argument
+	/// and the model as the second argument. If no error occurs, then `undefined`
+	/// is passed.
 	/// @return {BBMOD_Model} Returns `self`.
 	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
 		if (_sha1 != undefined)
@@ -214,9 +223,9 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			}
 		}
 
+		var _model = self;
 		var _struct = {
-			Model: self,
-			FromBuffer: method(self, from_buffer),
+			Model: _model,
 			Callback: _callback,
 		};
 
@@ -226,20 +235,20 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			{
 				if (_callback != undefined)
 				{
-					_callback(_err);
+					_callback(_err, Model);
 				}
 				return;
 			}
 
 			try
 			{
-				FromBuffer(_buffer);
+				Model.from_buffer(_buffer);
 			}
 			catch (_err2)
 			{
 				if (_callback != undefined)
 				{
-					_callback(_err2);
+					_callback(_err2, Model);
 				}
 				return;
 			}
