@@ -14,11 +14,13 @@ uniform float u_fVignette;
 /// Needs to have interpolation enabled!
 vec3 ColorGrade(vec3 color, sampler2D lut)
 {
+	// This clamp fixes color grading on HTML5. May be precision issues?
+	color = clamp(color, vec3(0.03), vec3(0.97));
 	// TODO: Clean up color grading shader
 	const vec3 texel = vec3(16.0 / 256.0, 1.0 / 16.0, 0.0);
 	vec2 uv = vec2(color.x * texel.x, color.y);
 	float z15 = color.z * 15.0;
-	vec2 uv1 = uv + (floor(z15) * texel.xz) + vec2(0.5 / 256.0, 0.5 / 16.0);
+	vec2 uv1 = uv + (floor(z15) * texel.xz);
 	vec2 uv2 = uv1 + texel.xz;
 	return mix(
 		texture2D(lut, uv1).rgb,

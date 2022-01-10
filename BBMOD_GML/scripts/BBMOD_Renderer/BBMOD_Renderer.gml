@@ -361,7 +361,11 @@ function BBMOD_Renderer()
 				}
 				var _shader = BBMOD_ShPostProcess;
 				shader_set(_shader);
-				texture_set_stage(shader_get_sampler_index(_shader, "u_texLut"), ColorGradingLUT);
+				var _uLut = shader_get_sampler_index(_shader, "u_texLut");
+				texture_set_stage(_uLut, ColorGradingLUT);
+				gpu_set_tex_filter_ext(_uLut, true);
+				gpu_set_tex_mip_enable_ext(_uLut, mip_off);
+				gpu_set_tex_repeat_ext(_uLut, false);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fDistortion"), ChromaticAberration);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fGrayscale"), Grayscale);
