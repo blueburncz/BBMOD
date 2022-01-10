@@ -1,5 +1,10 @@
-bbmod_light_ambient_set_down(BBMOD_C_WHITE);
-bbmod_light_ambient_set_up(BBMOD_C_GRAY);
+z = 0;
+
+camera = new BBMOD_Camera();
+camera.FollowObject = self;
+camera.Zoom = 4;
+camera.Offset.Set(0, 0, 2);
+camera.Direction = 180;
 
 model = new BBMOD_Model()
 	.from_file_async("Data/Assets/Character/Character.bbmod", undefined, function (_err, _model) {
@@ -13,7 +18,7 @@ model = new BBMOD_Model()
 	});
 
 animation = new BBMOD_Animation()
-	.from_file_async("Data/Assets/Character/Character_Run.bbanim");
+	.from_file_async("Data/Assets/Character/Character_Idle.bbanim");
 
 animationPlayer = new BBMOD_AnimationPlayer(model);
 animationPlayer.play(animation, true);
