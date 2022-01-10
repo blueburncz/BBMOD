@@ -278,7 +278,13 @@ function BBMOD_Camera() constructor
 	/// @return {real[16]} The view matrix.
 	static get_view_mat = function () {
 		gml_pragma("forceinline");
-		return camera_get_view_mat(Raw);
+		var _view = matrix_get(matrix_view);
+		var _proj = matrix_get(matrix_projection);
+		camera_apply(Raw);
+		var _retval = matrix_get(matrix_view);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _proj);
+		return _retval;
 	};
 
 	/// @func get_right()

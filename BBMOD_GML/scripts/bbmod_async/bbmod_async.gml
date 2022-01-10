@@ -2,6 +2,10 @@
 /// @private
 global.__bbmodAsyncCallback = ds_map_create();
 
+/// @var {ds_map<real, function>}
+/// @private
+global.__bbmodSpriteCallback = ds_map_create();
+
 /// @func bbmod_buffer_load_async(_file, _callback)
 /// @desc Asynchronnously loads a buffer from a file.
 /// @param {string} _file The path to the file to load the buffer from.
@@ -25,10 +29,25 @@ function bbmod_buffer_load_async(_file, _callback)
 	var _buffer = buffer_create(1, buffer_grow, 1);
 	var _id = buffer_load_async(_buffer, _file, 0, -1);
 	global.__bbmodAsyncCallback[? _id] = {
-		//File: _file,
 		Buffer: _buffer,
 		Callback: _callback,
 	};
+}
+
+function bbmod_sprite_add_async(_file, _callback)
+{
+	var _id = sprite_add(_file, 0, false, false, 0, 0);
+
+	if (os_browser == browser_not_a_browser)
+	{
+		_callback(undefined, _id);
+	}
+	else
+	{
+		global.__bbmodSpriteCallback[? _id] = {
+			Callback: _callback,
+		};
+	}
 }
 
 /// @func bbmod_async_update(_asyncLoad)

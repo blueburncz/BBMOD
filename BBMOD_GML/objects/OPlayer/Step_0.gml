@@ -8,16 +8,15 @@ camera.MouseSensitivity = aiming ? 0.25 : 1.0;
 if (!camera.MouseLook && mouse_check_button(mb_any))
 {
 	camera.set_mouselook(true);
-	window_set_cursor(cr_none);
-
 	// Consume the mouse press when just activating the mouselook.
 	_mouseLeftPressed = false;
 }
 else if (keyboard_check_pressed(vk_escape))
 {
 	camera.set_mouselook(false);
-	window_set_cursor(cr_arrow);
 }
+
+window_set_cursor(camera.MouseLook ? cr_none : cr_default);
 
 camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.2, delta_time);
 

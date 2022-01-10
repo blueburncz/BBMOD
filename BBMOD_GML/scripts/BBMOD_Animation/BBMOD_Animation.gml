@@ -259,9 +259,9 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined) constructor
 			}
 		}
 
+		var _animation = self;
 		var _struct = {
-			Animation: self,
-			FromBuffer: method(self, from_buffer),
+			Animation: _animation,
 			Callback: _callback,
 		};
 
@@ -278,7 +278,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined) constructor
 
 			try
 			{
-				FromBuffer(_buffer);
+				Animation.from_buffer(_buffer);
 			}
 			catch (_err2)
 			{

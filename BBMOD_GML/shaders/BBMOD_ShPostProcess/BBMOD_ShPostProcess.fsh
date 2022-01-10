@@ -1,3 +1,6 @@
+// FIXME: Temporary fix!
+precision highp float;
+
 varying vec2 v_vTexCoord;
 
 uniform sampler2D u_texLut;
@@ -11,15 +14,16 @@ uniform float u_fVignette;
 /// Needs to have interpolation enabled!
 vec3 ColorGrade(vec3 color, sampler2D lut)
 {
-	vec2 uv = vec2(color.x * 0.05859375, color.y);
-	float b15 = color.b * 15.0;
-	float z0 = floor(b15) * 0.0625;
-	float z1 = z0 + 0.0625;
-	vec2 uv2 = uv + 0.001953125;
+	// TODO: Clean up color grading shader
+	const vec3 texel = vec3(16.0 / 256.0, 1.0 / 16.0, 0.0);
+	vec2 uv = vec2(color.x * texel.x, color.y);
+	float z15 = color.z * 15.0;
+	vec2 uv1 = uv + (floor(z15) * texel.xz) + vec2(0.5 / 256.0, 0.5 / 16.0);
+	vec2 uv2 = uv1 + texel.xz;
 	return mix(
-		texture2D(lut, uv2 + vec2(z0, 0.0)).rgb,
-		texture2D(lut, uv2 + vec2(z1, 0.0)).rgb,
-		fract(b15));
+		texture2D(lut, uv1).rgb,
+		texture2D(lut, uv2).rgb,
+		fract(z15));
 }
 
 float Luminance(vec3 color)
@@ -48,7 +52,7 @@ vec3 xChromaticAberration(
 
 void main()
 {
-	highp vec2 vec = 0.5 - v_vTexCoord;
+	vec2 vec = 0.5 - v_vTexCoord;
 	float vecLen = length(vec);
 	vec3 color;
 

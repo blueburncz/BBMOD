@@ -2,30 +2,31 @@ event_inherited();
 
 day = true;
 
-sprSkyDay = sprite_add("Data/BBMOD/Skies/Sky+60.png", 0, false, true, 0, 0);
-sprIblDay = sprite_add("Data/BBMOD/Skies/IBL+60.png", 0, false, true, 0, 0);
-
-iblDay = new BBMOD_ImageBasedLight(sprite_get_texture(sprIblDay, 0));
-
 matSkyDay = BBMOD_MATERIAL_SKY.clone();
-matSkyDay.BaseOpacity = sprite_get_texture(sprSkyDay, 0);
-
-sprSkyNight = sprite_add("Data/BBMOD/Skies/Sky-15.png", 0, false, true, 0, 0);
-sprIblNight = sprite_add("Data/BBMOD/Skies/IBL-15.png", 0, false, true, 0, 0);
-
-iblNight = new BBMOD_ImageBasedLight(sprite_get_texture(sprIblNight, 0));
+matSkyDay.BaseOpacity = -1;
 
 matSkyNight = BBMOD_MATERIAL_SKY.clone();
-matSkyNight.BaseOpacity = sprite_get_texture(sprSkyNight, 0);
+matSkyNight.BaseOpacity = -1;
 
 sunLight = new BBMOD_DirectionalLight();
 sunLight.CastShadows = true;
 bbmod_light_directional_set(sunLight);
 
-SetSky = function (_day) {
-	// For PBR materials
-	bbmod_ibl_set(_day ? iblDay : iblNight);
+bbmod_sprite_add_async("Data/BBMOD/Skies/Sky+60.png", method(self, function (_err, _sprite) {
+	if (!_err)
+	{
+		matSkyDay.BaseOpacity = sprite_get_texture(_sprite, 0);
+	}
+}));
 
+bbmod_sprite_add_async("Data/BBMOD/Skies/Sky-15.png", method(self, function (_err, _sprite) {
+	if (!_err)
+	{
+		matSkyNight.BaseOpacity = sprite_get_texture(_sprite, 0);
+	}
+}));
+
+SetSky = function (_day) {
 	// Simulate sky color with dynamic lights for the default materials
 	if (_day)
 	{

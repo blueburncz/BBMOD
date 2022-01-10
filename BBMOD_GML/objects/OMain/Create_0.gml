@@ -18,25 +18,54 @@ modSky = new BBMOD_Model()
 		}
 	});
 
-// Character
-modCharacter = new BBMOD_Model("Data/Assets/Character/Character.bbmod");
-modCharacter.freeze();
-
+// Player material
 matPlayer = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 matPlayer.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
-modCharacter.Materials[0] = matPlayer;
 
-animAim = new BBMOD_Animation("Data/Assets/Character/Character_Aim.bbanim");
-animShoot = new BBMOD_Animation("Data/Assets/Character/Character_Shoot.bbanim");
-animIdle = new BBMOD_Animation("Data/Assets/Character/Character_Idle.bbanim");
-animInteractGround = new BBMOD_Animation("Data/Assets/Character/Character_Interact_ground.bbanim");
-animInteractGround.add_event(52, "PickUp");
-animJump = new BBMOD_Animation("Data/Assets/Character/Character_Jump.bbanim");
-animRun = new BBMOD_Animation("Data/Assets/Character/Character_Run.bbanim");
-animRun.add_event(0, "Footstep").add_event(16, "Footstep");
-animWalk = new BBMOD_Animation("Data/Assets/Character/Character_Walk.bbanim");
-animWalk.add_event(0, "Footstep").add_event(32, "Footstep");
+// Character model
+modCharacter = new BBMOD_Model()
+	.from_file_async("Data/Assets/Character/Character.bbmod", undefined, method(self, function (_err, _model) {
+		if (!_err)
+		{
+			_model.Materials[0] = matPlayer;
+			_model.freeze();
+		}
+	}));
+
+animAim = new BBMOD_Animation().from_file_async("Data/Assets/Character/Character_Aim.bbanim");
+
+animShoot = new BBMOD_Animation().from_file_async("Data/Assets/Character/Character_Shoot.bbanim");
+
+animIdle = new BBMOD_Animation().from_file_async("Data/Assets/Character/Character_Idle.bbanim");
+
+animInteractGround = new BBMOD_Animation()
+	.from_file_async("Data/Assets/Character/Character_Interact_ground.bbanim", undefined, function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(52, "PickUp");
+		}
+	});
+
+animJump = new BBMOD_Animation().from_file_async("Data/Assets/Character/Character_Jump.bbanim");
+
+animRun = new BBMOD_Animation()
+	.from_file_async("Data/Assets/Character/Character_Run.bbanim", undefined, function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(0, "Footstep")
+				.add_event(16, "Footstep");
+		}
+	});
+
+animWalk = new BBMOD_Animation()
+	.from_file_async("Data/Assets/Character/Character_Walk.bbanim", undefined, function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(0, "Footstep")
+				.add_event(32, "Footstep");
+		}
+	});
 
 // Zombie
 matZombie0 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
@@ -47,10 +76,18 @@ matZombie1 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 matZombie1.BaseOpacity = sprite_get_texture(SprZombie, 1);
 
-animZombieIdle = new BBMOD_Animation("Data/Assets/Character/Zombie_Idle.bbanim");
-animZombieWalk = new BBMOD_Animation("Data/Assets/Character/Zombie_Walk.bbanim");
-animZombieWalk.add_event(0, "Footstep").add_event(32, "Footstep");
-animZombieDeath = new BBMOD_Animation("Data/Assets/Character/Zombie_Death.bbanim");
+animZombieIdle = new BBMOD_Animation().from_file_async("Data/Assets/Character/Zombie_Idle.bbanim");
+
+animZombieWalk = new BBMOD_Animation()
+	.from_file_async("Data/Assets/Character/Zombie_Walk.bbanim", undefined, function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(0, "Footstep")
+				.add_event(32, "Footstep");
+		}
+	});
+
+animZombieDeath = new BBMOD_Animation().from_file_async("Data/Assets/Character/Zombie_Death.bbanim");
 
 ////////////////////////////////////////////////////////////////////////////////
 // Import OBJ models
@@ -120,7 +157,8 @@ renderer = new BBMOD_Renderer()
 	.add(OCharacter)
 	.add(OGun)
 	.add(OLever)
-	.add(OSky);
+	.add(OSky)
+	;
 
 renderer.UseAppSurface = true;
 renderer.RenderScale = 1.0;
