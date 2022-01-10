@@ -10,8 +10,13 @@ debugOverlay = false;
 // Load resources
 
 // Sky model
-modSky = new BBMOD_Model("Data/BBMOD/Models/Sphere.bbmod");
-modSky.freeze();
+modSky = new BBMOD_Model()
+	.from_file_async("Data/BBMOD/Models/Sphere.bbmod", undefined, function (_err, _model) {
+		if (!_err)
+		{
+			_model.freeze();
+		}
+	});
 
 // Character
 modCharacter = new BBMOD_Model("Data/Assets/Character/Character.bbmod");

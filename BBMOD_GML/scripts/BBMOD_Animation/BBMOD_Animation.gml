@@ -320,6 +320,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined) constructor
 		}
 
 		var _transition = new BBMOD_Animation();
+		_transition.IsLoaded = true;
 		_transition.Version = Version;
 		_transition.Spaces = (Spaces & BBMOD_BONE_SPACE_PARENT)
 			? BBMOD_BONE_SPACE_PARENT
