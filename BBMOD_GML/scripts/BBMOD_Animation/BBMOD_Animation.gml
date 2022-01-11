@@ -3,11 +3,16 @@
 #macro BBMOD_BONE_SPACE_BONE (1 << 2)
 
 /// @func BBMOD_Animation([_file[, _sha1]])
+///
+/// @extends BBMOD_Class
+///
 /// @desc An animation which can be played using {@link BBMOD_AnimationPlayer}.
+///
 /// @param {string} [_file] A "*.bbanim" animation file to load. If not
 /// specified, then an empty animation is created.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
+///
 /// @example
 /// Following code loads an animation from a file `Walk.bbanim`:
 ///
@@ -36,9 +41,13 @@
 /// }
 /// buffer_delete(_buffer);
 /// ```
+///
 /// @throws {BBMOD_Exception} When the animation fails to load.
-function BBMOD_Animation(_file=undefined, _sha1=undefined) constructor
+function BBMOD_Animation(_file=undefined, _sha1=undefined)
+	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {bool} If `false` then the animation has not been loaded yet.
 	/// @readonly
 	IsLoaded = false;

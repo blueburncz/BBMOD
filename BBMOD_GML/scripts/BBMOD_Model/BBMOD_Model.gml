@@ -1,10 +1,15 @@
 /// @func BBMOD_Model([_file[, _sha1]])
-/// @extends BBMOD_Class
+///
+/// @extends BBMOD_Resource
+///
 /// @implements {BBMOD_IRenderable}
+///
 /// @desc A model.
+///
 /// @param {string} [_file] The "*.bbmod" model file to load.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
+///
 /// @example
 /// ```gml
 /// try
@@ -16,21 +21,18 @@
 ///     // The model failed to load!
 /// }
 /// ```
+///
 /// @throws {BBMOD_Exception} When the model fails to load.
 function BBMOD_Model(_file=undefined, _sha1=undefined)
-	: BBMOD_Class() constructor
+	: BBMOD_Resource() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
 	implement(BBMOD_IRenderable);
 
-	static Super_Class = {
+	static Super_Resource = {
 		destroy: destroy,
 	};
-
-	/// @var {bool} If `false` then the model has not been loaded yet.
-	/// @readonly
-	IsLoaded = false;
 
 	/// @var {real} The version of the model file.
 	/// @readonly
@@ -161,103 +163,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		}
 
 		IsLoaded = true;
-
-		return self;
-	};
-
-	/// @func from_file(_file[, _sha1])
-	/// @desc Loads model data from a file.
-	/// @param {string} _file The path to the file.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the model will not be loaded.
-	/// @return {BBMOD_Model} Returns `self`.
-	/// @throws {BBMOD_Exception} If loading fails.
-	static from_file = function (_file, _sha1) {
-		if (!file_exists(_file))
-		{
-			throw new BBMOD_Exception("File " + _file + " does not exist!");
-		}
-
-		if (_sha1 != undefined)
-		{
-			if (sha1_file(_file) != _sha1)
-			{
-				throw new BBMOD_Exception("SHA1 does not match!");
-			}
-		}
-
-		var _buffer = buffer_load(_file);
-		buffer_seek(_buffer, buffer_seek_start, 0);
-
-		try
-		{
-			from_buffer(_buffer);
-			buffer_delete(_buffer);
-		}
-		catch (_e)
-		{
-			buffer_delete(_buffer);
-			throw _e;
-		}
-
-		return self;
-	};
-
-	/// @func from_file_async(_file[, _sha1[, _callback]])
-	/// @desc Asynchronnously loads the model from a file.
-	/// @param {string} _file The path to the file.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the model will not be loaded.
-	/// @param {function} [_callback] The function to execute when the model is
-	/// loaded or if an error occurs. It must take the error as the first argument
-	/// and the model as the second argument. If no error occurs, then `undefined`
-	/// is passed.
-	/// @return {BBMOD_Model} Returns `self`.
-	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
-		if (_sha1 != undefined)
-		{
-			if (sha1_file(_file) != _sha1)
-			{
-				_callback(new BBMOD_Exception("SHA1 does not match!"));
-				return self;
-			}
-		}
-
-		var _model = self;
-		var _struct = {
-			Model: _model,
-			Callback: _callback,
-		};
-
-		bbmod_buffer_load_async(_file, method(_struct, function (_err, _buffer) {
-			var _callback = Callback;
-			if (_err)
-			{
-				if (_callback != undefined)
-				{
-					_callback(_err, Model);
-				}
-				return;
-			}
-
-			try
-			{
-				Model.from_buffer(_buffer);
-			}
-			catch (_err2)
-			{
-				if (_callback != undefined)
-				{
-					_callback(_err2, Model);
-				}
-				return;
-			}
-
-			if (_callback != undefined)
-			{
-				_callback(undefined, Model);
-			}
-		}));
 
 		return self;
 	};
@@ -490,7 +395,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		method(self, Super_Resource.destroy)();
 		var i = 0;
 		repeat (array_length(Meshes))
 		{
