@@ -13,6 +13,10 @@ function BBMOD_ResourceManager()
 	/// @private
 	Resources = ds_map_create();
 
+	/// @var {uint} Number of resources that are currently loading.
+	/// @readonly
+	Loading = 0;
+
 	/// @func add(_uniqueName, _resource)
 	/// @desc Adds a resource to the resource manager.
 	/// @param {string} _uniqueName The name of the resource. Must be unique!
@@ -107,9 +111,21 @@ function BBMOD_ResourceManager()
 			return undefined;
 		}
 
+		
 		_res.Manager = self;
-		_res.from_file_async(_path, _sha1, _onLoad);
-
+		var _manager = self;
+		var _struct = {
+			Manager: _manager,
+			Callback: _onLoad,
+		};
+		++Loading;
+		_res.from_file_async(_path, _sha1, method(_struct, function (_err, _res) {
+			--Manager.Loading;
+			if (Callback != undefined)
+			{
+				Callback(_err, _res);
+			}
+		}));
 		_resources[? _path] = _res;
 
 		return _res;
