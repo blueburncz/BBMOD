@@ -86,6 +86,32 @@ function BBMOD_ResourceManager()
 		return self;
 	};
 
+	/// @func async_image_loaded_update(_asyncLoad)
+	/// @desc Must be executed in the "Async - Image Loaded" event!
+	/// @param {ds_map} _asyncLoad The `async_load` map.
+	/// @return {BBMOD_ResourceManager} Returns `self`.
+	/// @note This calls {@link bbmod_async_image_loaded_update}, so you do not
+	/// need to call it again!
+	/// @see bbmod_async_image_loaded_update
+	static async_image_loaded_update = function (_asyncLoad) {
+		gml_pragma("forceinline");
+		bbmod_async_image_loaded_update(_asyncLoad);
+		return self;
+	};
+
+	/// @func async_save_load_update(_asyncLoad)
+	/// @desc Must be executed in the "Async - Save/Load" event!
+	/// @param {ds_map} _asyncLoad The `async_load` map.
+	/// @return {BBMOD_ResourceManager} Returns `self`.
+	/// @note This calls {@link bbmod_async_image_loaded_update}, so you do not
+	/// need to call it again!
+	/// @see bbmod_async_image_loaded_update
+	static async_save_load_update = function (_asyncLoad) {
+		gml_pragma("forceinline");
+		bbmod_async_save_load_update(_asyncLoad);
+		return self;
+	};
+
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		var _resources = Resources;

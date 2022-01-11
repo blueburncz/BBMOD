@@ -164,7 +164,9 @@ function BBMOD_Camera() constructor
 		if (AudioListener)
 		{
 			audio_listener_position(Position.X, Position.Y, Position.Z);
-			audio_listener_orientation(Target.X, Target.Y, Target.Z, Up.X, Up.Y, Up.Z);
+			audio_listener_orientation(
+				Target.X - Position.X, Target.Y - Position.Y, Target.Z - Position.Z,
+				Up.X, Up.Y, Up.Z);
 		}
 		return self;
 	}
@@ -278,6 +280,13 @@ function BBMOD_Camera() constructor
 	/// @return {real[16]} The view matrix.
 	static get_view_mat = function () {
 		gml_pragma("forceinline");
+
+		if (os_browser == browser_not_a_browser)
+		{
+			// This returns a struct in HTML5 for some reason...
+			return camera_get_view_mat(Raw);
+		}
+
 		var _view = matrix_get(matrix_view);
 		var _proj = matrix_get(matrix_projection);
 		camera_apply(Raw);
