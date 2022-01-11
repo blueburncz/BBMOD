@@ -4,13 +4,13 @@ matPlayer = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 matPlayer.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
 
-animAim = OMain.resourceManager.get("Data/Assets/Character/Character_Aim.bbanim");
+animAim = OMain.resourceManager.load("Data/Assets/Character/Character_Aim.bbanim");
 
-animShoot = OMain.resourceManager.get("Data/Assets/Character/Character_Shoot.bbanim");
+animShoot = OMain.resourceManager.load("Data/Assets/Character/Character_Shoot.bbanim");
 
-animIdle = OMain.resourceManager.get("Data/Assets/Character/Character_Idle.bbanim");
+animIdle = OMain.resourceManager.load("Data/Assets/Character/Character_Idle.bbanim");
 
-animInteractGround = OMain.resourceManager.get(
+animInteractGround = OMain.resourceManager.load(
 	"Data/Assets/Character/Character_Interact_ground.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -20,9 +20,9 @@ animInteractGround = OMain.resourceManager.get(
 		}
 	});
 
-animJump = OMain.resourceManager.get("Data/Assets/Character/Character_Jump.bbanim");
+animJump = OMain.resourceManager.load("Data/Assets/Character/Character_Jump.bbanim");
 
-animRun = OMain.resourceManager.get(
+animRun = OMain.resourceManager.load(
 	"Data/Assets/Character/Character_Run.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -33,7 +33,7 @@ animRun = OMain.resourceManager.get(
 		}
 	});
 
-animWalk = OMain.resourceManager.get(
+animWalk = OMain.resourceManager.load(
 	"Data/Assets/Character/Character_Walk.bbanim",
 	undefined,
 	function (_err, _animation) {

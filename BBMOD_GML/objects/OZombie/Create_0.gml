@@ -8,9 +8,9 @@ matZombie1 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 matZombie1.BaseOpacity = sprite_get_texture(SprZombie, 1);
 
-animIdle = OMain.resourceManager.get("Data/Assets/Character/Zombie_Idle.bbanim");
+animIdle = OMain.resourceManager.load("Data/Assets/Character/Zombie_Idle.bbanim");
 
-animWalk = OMain.resourceManager.get(
+animWalk = OMain.resourceManager.load(
 	"Data/Assets/Character/Zombie_Walk.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -21,7 +21,7 @@ animWalk = OMain.resourceManager.get(
 		}
 	});
 
-animDeath = OMain.resourceManager.get("Data/Assets/Character/Zombie_Death.bbanim");
+animDeath = OMain.resourceManager.load("Data/Assets/Character/Zombie_Death.bbanim");
 
 // If true then the zombie is dead.
 dead = false;

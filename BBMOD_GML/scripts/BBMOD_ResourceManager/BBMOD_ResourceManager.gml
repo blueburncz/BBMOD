@@ -13,7 +13,50 @@ function BBMOD_ResourceManager()
 	/// @private
 	Resources = ds_map_create();
 
-	/// @func get(_path[, _sha1[, _onLoad]])
+	/// @func add(_uniqueName, _resource)
+	/// @desc Adds a resource to the resource manager.
+	/// @param {string} _uniqueName The name of the resource. Must be unique!
+	/// @param {BBMOD_Resource} _resource The resource to add.
+	/// @return {BBMOD_ResourceManager} Returns `self`.
+	/// @throws {BBMOD_Exception} If the resource is already added to a manager.
+	static add = function (_uniqueName, _resource) {
+		gml_pragma("forceinline");
+		if (_resource.Manager != undefined)
+		{
+			throw new BBMOD_Exception("Resource is already added to a manager!");
+		}
+		Resources[? _uniqueName] = _resource;
+		_resource.Manager = self;
+		return self;
+	};
+
+	/// @func has(_pathOrUniqueName)
+	/// @desc Checks if the resource manager has a resource.
+	/// @param {string} _pathOrUniqueName The path to the resource file or unique
+	/// name of the resource.
+	/// @return {bool} Returns `true` if the resource manager has the resource.
+	static has = function (_pathOrUniqueName) {
+		gml_pragma("forceinline");
+		return ds_map_exists(Resources, _pathOrUniqueName);
+	};
+
+	/// @func get(_pathOrUniqueName)
+	/// @desc Retrieves a reference to a resource.
+	/// @param {string} _pathOrUniqueName The path to the resource file or unique
+	/// name of the resource.
+	/// @return {BBMOD_Resource} The resource.
+	/// @see BBMOD_ResourceManager.has
+	/// @throws {BBMOD_Exception} If the resource manager does not have such resource.
+	static get = function (_pathOrUniqueName) {
+		gml_pragma("forceinline");
+		if (!ds_map_exists(Resources, _pathOrUniqueName))
+		{
+			throw new BBMOD_Exception("Resource not found!");
+		}
+		return Resources[? _pathOrUniqueName].ref();
+	};
+
+	/// @func load(_path[, _sha1[, _onLoad]])
 	///
 	/// @desc Asynchronnously loads a resource from a file or retrieves
 	/// a reference to it if it is already loaded.
@@ -32,7 +75,7 @@ function BBMOD_ResourceManager()
 	/// @note Currently supported files formats are `*.bbmod` for {@link BBMOD_Model},
 	/// `*.bbanim` for {@link BBMOD_Animation} and `*.png`, `*.gif`, `*.jpg/jpeg` for
 	/// {@link BBMOD_Sprite}.
-	static get = function (_path, _sha1=undefined, _onLoad=undefined) {
+	static load = function (_path, _sha1=undefined, _onLoad=undefined) {
 		var _resources = Resources;
 
 		if (ds_map_exists(_resources, _path))

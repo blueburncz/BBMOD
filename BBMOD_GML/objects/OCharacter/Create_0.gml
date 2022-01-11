@@ -1,6 +1,6 @@
 event_inherited();
 
-modCharacter = OMain.resourceManager.get(
+modCharacter = OMain.resourceManager.load(
 	"Data/Assets/Character/Character.bbmod",
 	undefined,
 	method(self, function (_err, _model) {

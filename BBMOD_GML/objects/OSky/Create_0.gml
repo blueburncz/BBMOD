@@ -1,6 +1,6 @@
 event_inherited();
 
-modSky = OMain.resourceManager.get(
+modSky = OMain.resourceManager.load(
 	"Data/BBMOD/Models/Sphere.bbmod",
 	undefined,
 	function (_err, _model) {
