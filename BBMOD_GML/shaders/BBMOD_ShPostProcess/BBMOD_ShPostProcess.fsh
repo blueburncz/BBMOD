@@ -3,11 +3,12 @@ precision highp float;
 
 varying vec2 v_vTexCoord;
 
-uniform sampler2D u_texLut;
-uniform vec2 u_vTexel;
-uniform float u_fDistortion;
-uniform float u_fGrayscale;
-uniform float u_fVignette;
+uniform sampler2D u_texLut;    // Color grading LUT
+uniform vec2 u_vTexel;         // 1/ScreenWidth, 1/ScreenHeight
+uniform float u_fDistortion;   // The strength of the chromatic aberration effect
+uniform float u_fGrayscale;    // The strength of the grayscale effect
+uniform float u_fVignette;     // The strength of the vignette effect
+uniform vec3 u_vVignetteColor; // The color of the vignette effect
 
 /// @param color The original RGB color.
 /// @param lut Texture of color-grading lookup table (256x16).
@@ -81,7 +82,7 @@ void main()
 	// Vignette
 	if (u_fVignette != 0.0)
 	{
-		color *= 1.0 - (vecLen * vecLen * u_fVignette);
+		color = mix(color, u_vVignetteColor, vecLen * vecLen * u_fVignette);
 	}
 
 	gl_FragColor.rgb = color;

@@ -1,8 +1,5 @@
 event_inherited();
 
-// If true then the zombie will change to the "Idle" state after the timeout.
-active = false;
-
 // If true then the zombie is dead.
 dead = false;
 
@@ -51,13 +48,10 @@ animationStateMachine.OnPostUpdate = method(self, function () {
 // "Idle" state.
 stateDeactivated = new BBMOD_AnimationState("Deactivated", OMain.animZombieIdle, true);
 stateDeactivated.OnUpdate = method(self, function () {
-	if (active)
+	timeout -= delta_time * 0.001;
+	if (timeout <= 0)
 	{
-		timeout -= delta_time * 0.001;
-		if (timeout <= 0)
-		{
-			animationStateMachine.change_state(stateIdle);
-		}
+		animationStateMachine.change_state(stateIdle);
 	}
 });
 animationStateMachine.add_state(stateDeactivated);

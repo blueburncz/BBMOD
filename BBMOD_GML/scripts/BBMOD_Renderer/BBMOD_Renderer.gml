@@ -121,11 +121,15 @@ function BBMOD_Renderer()
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	Grayscale = 0.0;
 
-	/// @var {real} The strength of the vignette effect. Defaults to 0. The higher
-	/// the value the darker the screen closer to edges gets.
+	/// @var {real} The strength of the vignette effect. Defaults to 0.
 	/// @note Post-processing must be enabled for this to have any effect!
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	Vignette = 0.0;
+
+	/// @var {uint} The color of the vignette effect. Defaults to `c_black`.
+	/// @note Post-processing must be enabled for this to have any effect!
+	/// @see BBMOD_Renderer.EnablePostProcessing
+	VignetteColor = c_black;
 
 	/// @var {BBMOD_EAntialiasing} Antialiasing technique to use. Defaults to
 	/// {@link BBMOD_EAntialiasing.None}.
@@ -370,6 +374,10 @@ function BBMOD_Renderer()
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fDistortion"), ChromaticAberration);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fGrayscale"), Grayscale);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fVignette"), Vignette);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_vVignetteColor"),
+					color_get_red(VignetteColor) / 255,
+					color_get_green(VignetteColor) / 255,
+					color_get_blue(VignetteColor) / 255);
 				draw_surface_stretched(application_surface, 0, 0, _windowWidth, _windowHeight);
 				shader_reset();
 				if (Antialiasing != BBMOD_EAntialiasing.None)

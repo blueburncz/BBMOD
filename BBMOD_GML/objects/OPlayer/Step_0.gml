@@ -38,8 +38,7 @@ camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 
 // Player controls
 speed = 0;
 
-if (!GetCutscene()
-	&& !dead
+if (!dead
 	&& animationPlayer.Animation != OMain.animInteractGround)
 {
 	if (z == 0)
@@ -94,7 +93,7 @@ if (!GetCutscene()
 
 				with (OZombie)
 				{
-					if (!active || dead)
+					if (dead)
 					{
 						continue;
 					}

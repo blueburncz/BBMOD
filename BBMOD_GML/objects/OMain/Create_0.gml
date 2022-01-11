@@ -139,10 +139,6 @@ modLever.Materials[@ 0] = BBMOD_MATERIAL_DEFAULT.clone()
 modLever.Materials[@ 1] = matWood;
 modLever.freeze();
 
-modSign = _objImporter.import("Data/Assets/Sign.obj");
-
-batchSign = new BBMOD_StaticBatch(modSign.VertexFormat);
-
 modPlane = _objImporter.import("Data/Assets/Plane.obj");
 modPlane.freeze();
 matGrass = BBMOD_MATERIAL_DEFAULT.clone()
@@ -174,7 +170,6 @@ renderer.add({
 	render: method(self, function () {
 		matrix_set(matrix_world, matrix_build_identity());
 		batchShell.render_object(OShell, matShell);
-		batchSign.render(matWood);
 	})
 });
 

@@ -21,3 +21,7 @@
 ### Resource manager module:
 * Added new module - Resource manager.
 * Added new struct `BBMOD_ResourceManager`, using which you can load any BBMOD resource. These are automatically destroyed when the resource manager is destroyed.
+
+### Rendering module:
+#### Renderer submodule:
+* Added new property `VignetteColor` to `BBMOD_Renderer`, which is the color of the vignette effect.

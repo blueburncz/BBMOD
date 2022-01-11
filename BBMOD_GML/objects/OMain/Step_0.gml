@@ -1,9 +1,3 @@
-var _cutscene = GetCutscene();
-if (_cutscene)
-{
-	_cutscene.Update(delta_time);
-}
-
 if (keyboard_check_pressed(vk_f1))
 {
 	debugOverlay = !debugOverlay;
@@ -18,8 +12,7 @@ var _playerY = OPlayer.y;
 var _grayscale = 0.0;
 with (OZombie)
 {
-	if (active
-		&& !dead
+	if (!dead
 		&& point_distance(x, y, _playerX, _playerY) < 100)
 	{
 		_grayscale = 0.75;
