@@ -1,12 +1,18 @@
 event_inherited();
 
-matZombie0 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
-matZombie0.BaseOpacity = sprite_get_texture(SprZombie, 0);
+matZombie0 = OMain.resourceManager.add_or_get("matZombie0", function () {
+	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
+	_material.BaseOpacity = sprite_get_texture(SprZombie, 0);
+	return _material;
+});
 
-matZombie1 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
-matZombie1.BaseOpacity = sprite_get_texture(SprZombie, 1);
+matZombie1 = OMain.resourceManager.add_or_get("matZombie1", function () {
+	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
+	_material.BaseOpacity = sprite_get_texture(SprZombie, 1);
+	return _material;
+});
 
 animIdle = OMain.resourceManager.load("Data/Assets/Character/Zombie_Idle.bbanim");
 

@@ -1,8 +1,11 @@
 event_inherited();
 
-matPlayer = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
-matPlayer.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
+matPlayer = OMain.resourceManager.add_or_get("matPlayer", function () {
+	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
+	_material.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
+	return _material;
+});
 
 animAim = OMain.resourceManager.load("Data/Assets/Character/Character_Aim.bbanim");
 

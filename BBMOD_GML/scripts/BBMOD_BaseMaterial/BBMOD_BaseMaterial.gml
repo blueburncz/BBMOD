@@ -14,7 +14,7 @@ for (var i = 0; i < BBMOD_ERenderPass.SIZE; ++i)
 global.__bbmodMaterials = _materials;
 
 /// @func BBMOD_BaseMaterial([_shader])
-/// @extends BBMOD_Class
+/// @extends BBMOD_Resource
 /// @desc A material that can be used when rendering models.
 /// @param {BBMOD_Shader/undefined} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
@@ -22,11 +22,11 @@ global.__bbmodMaterials = _materials;
 /// specific render passes.
 /// @see BBMOD_Shader
 function BBMOD_BaseMaterial(_shader=undefined)
-	: BBMOD_Class() constructor
+	: BBMOD_Resource() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
+	static Super_Resource = {
 		destroy: destroy,
 	};
 
@@ -385,7 +385,7 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		method(self, Super_Resource.destroy)();
 
 		ds_list_destroy(RenderCommands);
 

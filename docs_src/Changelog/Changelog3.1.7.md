@@ -10,6 +10,7 @@
 * Added new struct `BBMOD_Resource`, which is now the base struct for all BBMOD resources. This struct contains methods `from_file` and `from_file_async`, using which you can load resources from file synchronnously or asynchronnously. When using asynchronnous loading, property `IsLoaded` is `false` until the resource is loaded. Asynchronnous loading of files is required for example on the HTML5 platform.
 * Added new struct `BBMOD_Sprite`, which is a sprite resource.
 * Structs `BBMOD_Model` and `BBMOD_Animation` now inherit from `BBMOD_Resource`.
+* Struct `BBMOD_BaseMaterial` now inherits from `BBOMD_Resource` too, though it does not yet support loading from files/buffers.
 * Arguments of the `BBMOD_Model` constructor are now optional.
 * Fixed method `BBMOD_VertexFormat.get_byte_size`, which returned incorrect values when the vertex format included vertex colors or bones.
 * Fixed creating dynamic and static batches with models that have vertex colors.

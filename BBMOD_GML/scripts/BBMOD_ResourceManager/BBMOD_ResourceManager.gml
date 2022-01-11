@@ -1,5 +1,6 @@
 /// @func BBMOD_ResourceManager()
 /// @extends BBMOD_Class
+
 function BBMOD_ResourceManager()
 	: BBMOD_Class() constructor
 {
@@ -60,6 +61,36 @@ function BBMOD_ResourceManager()
 		return Resources[? _pathOrUniqueName].ref();
 	};
 
+	/// @func add_or_get(_uniqueName, _fn)
+	///
+	/// @desc Either adds a resource to the resource manager or retrieves
+	/// a reference to it if it already exists.
+	///
+	/// @param {string} _uniqueName The name of the resource. Must be unique!
+	/// @param {function} _fn A function which creates the resource if it
+	/// does not exist yet. Must take no arguments and must return the created
+	/// resource.
+	///
+	/// @example
+	/// ```gml
+	/// /// @desc Create event
+	/// material = resourceManager.add_or_get("material", function () {
+	///     var _mat = BBMOD_MATERIAL_DEFAULT.clone();
+	///     _mat.BaseOpacity = sprite_get_texture(SprBaseOpacity, 0);
+	///     return _mat;
+	/// });
+	/// ```
+	static add_or_get = function (_uniqueName, _fn) {
+		gml_pragma("forceinline");
+		if (ds_map_exists(Resources, _uniqueName))
+		{
+			return Resources[? _uniqueName].ref();
+		}
+		var _res = _fn();
+		add(_uniqueName, _res);
+		return _res;
+	};
+
 	/// @func load(_path[, _sha1[, _onLoad]])
 	///
 	/// @desc Asynchronnously loads a resource from a file or retrieves
@@ -111,7 +142,7 @@ function BBMOD_ResourceManager()
 			return undefined;
 		}
 
-		
+
 		_res.Manager = self;
 		var _manager = self;
 		var _struct = {

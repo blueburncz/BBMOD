@@ -1,9 +1,0 @@
-event_inherited();
-matPlayer.destroy();
-animAim.free();
-animShoot.free();
-animIdle.free();
-animInteractGround.free();
-animJump.free();
-animRun.free();
-animWalk.free();
