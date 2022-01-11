@@ -1,7 +1,7 @@
 {
   "spriteId": null,
   "solid": false,
-  "visible": false,
+  "visible": true,
   "spriteMaskId": null,
   "persistent": false,
   "parentObjectId": {
@@ -29,8 +29,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Objects",
-    "path": "folders/Demo/Objects.yy",
+    "name": "Characters",
+    "path": "folders/Demo/Objects/Characters.yy",
   },
   "resourceVersion": "1.0",
   "name": "OCharacter",

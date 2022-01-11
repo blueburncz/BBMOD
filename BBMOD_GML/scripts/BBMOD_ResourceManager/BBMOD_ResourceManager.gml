@@ -78,11 +78,16 @@ function BBMOD_ResourceManager()
 	/// @param {BBMOD_Resource/string} _resourceOrPath
 	/// @return {BBMOD_ResourceManager} Returns `self`.
 	static free = function (_resourceOrPath) {
+		// Note: Resource removes itself from the map
 		var _resources = Resources;
-		var _path = is_struct(_resourceOrPath)
-			? _resourceOrPath.Path
-			: _resourceOrPath;
-		_resources[? _path].free(); // Note: Resource removes itself from the map
+		if (is_struct(_resourceOrPath))
+		{
+			_resourceOrPath.free();
+		}
+		else
+		{
+			_resources[? _resourceOrPath].free();
+		}
 		return self;
 	};
 
@@ -119,7 +124,8 @@ function BBMOD_ResourceManager()
 		repeat (ds_map_size(_resources))
 		{
 			var _res = _resources[? _key];
-			_res.Manager = undefined; // Note: Do not remove resource from the map
+			_res.Manager = undefined; // Do not remove from the map, we destroy it anyways
+			_res.Counter = 0; // Otherwise we could call destroy multiple times
 			_res.destroy();
 			_key = ds_map_find_next(_resources, _key);
 		}

@@ -6,91 +6,12 @@ audio_falloff_set_model(audio_falloff_linear_distance);
 // If true then debug overlay is enabled.
 debugOverlay = false;
 
-////////////////////////////////////////////////////////////////////////////////
-// Load resources
-
-// Sky model
-modSky = new BBMOD_Model()
-	.from_file_async("Data/BBMOD/Models/Sphere.bbmod", undefined, function (_err, _model) {
-		if (!_err)
-		{
-			_model.freeze();
-		}
-	});
-
-// Player material
-matPlayer = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
-matPlayer.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
-
-// Character model
-modCharacter = new BBMOD_Model()
-	.from_file_async("Data/Assets/Character/Character.bbmod", undefined, method(self, function (_err, _model) {
-		if (!_err)
-		{
-			_model.Materials[0] = matPlayer;
-			_model.freeze();
-		}
-	}));
-
-animAim = new BBMOD_Animation().from_file_async("Data/Assets/Character/Character_Aim.bbanim");
-
-animShoot = new BBMOD_Animation().from_file_async("Data/Assets/Character/Character_Shoot.bbanim");
-
-animIdle = new BBMOD_Animation().from_file_async("Data/Assets/Character/Character_Idle.bbanim");
-
-animInteractGround = new BBMOD_Animation()
-	.from_file_async("Data/Assets/Character/Character_Interact_ground.bbanim", undefined, function (_err, _animation) {
-		if (!_err)
-		{
-			_animation.add_event(52, "PickUp");
-		}
-	});
-
-animJump = new BBMOD_Animation().from_file_async("Data/Assets/Character/Character_Jump.bbanim");
-
-animRun = new BBMOD_Animation()
-	.from_file_async("Data/Assets/Character/Character_Run.bbanim", undefined, function (_err, _animation) {
-		if (!_err)
-		{
-			_animation.add_event(0, "Footstep")
-				.add_event(16, "Footstep");
-		}
-	});
-
-animWalk = new BBMOD_Animation()
-	.from_file_async("Data/Assets/Character/Character_Walk.bbanim", undefined, function (_err, _animation) {
-		if (!_err)
-		{
-			_animation.add_event(0, "Footstep")
-				.add_event(32, "Footstep");
-		}
-	});
-
-// Zombie
-matZombie0 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
-matZombie0.BaseOpacity = sprite_get_texture(SprZombie, 0);
-
-matZombie1 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
-matZombie1.BaseOpacity = sprite_get_texture(SprZombie, 1);
-
-animZombieIdle = new BBMOD_Animation().from_file_async("Data/Assets/Character/Zombie_Idle.bbanim");
-
-animZombieWalk = new BBMOD_Animation()
-	.from_file_async("Data/Assets/Character/Zombie_Walk.bbanim", undefined, function (_err, _animation) {
-		if (!_err)
-		{
-			_animation.add_event(0, "Footstep")
-				.add_event(32, "Footstep");
-		}
-	});
-
-animZombieDeath = new BBMOD_Animation().from_file_async("Data/Assets/Character/Zombie_Death.bbanim");
+resourceManager = new BBMOD_ResourceManager();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Import OBJ models
+// TODO: Convert these to BBMOD
+
 var _objImporter = new BBMOD_OBJImporter();
 _objImporter.FlipUVVertically = true;
 
@@ -127,18 +48,6 @@ matShell.Culling = cull_noculling;
 batchShell = new BBMOD_DynamicBatch(modShell, 32);
 batchShell.freeze();
 
-// Prepare static batch for signs
-matWood = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
-	.set_base_opacity(new BBMOD_Color().FromHex($FFC5A7));
-
-modLever = _objImporter.import("Data/Assets/Lever.obj");
-modLever.Materials[@ 0] = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
-	.set_base_opacity(BBMOD_C_SILVER);
-modLever.Materials[@ 1] = matWood;
-modLever.freeze();
-
 modPlane = _objImporter.import("Data/Assets/Plane.obj");
 modPlane.freeze();
 matGrass = BBMOD_MATERIAL_DEFAULT.clone()
@@ -149,12 +58,7 @@ _objImporter.destroy();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Create a renderer
-renderer = new BBMOD_Renderer()
-	.add(OCharacter)
-	.add(OGun)
-	.add(OLever)
-	.add(OSky)
-	;
+renderer = new BBMOD_Renderer();
 
 renderer.UseAppSurface = true;
 renderer.RenderScale = 1.0;
@@ -180,3 +84,12 @@ renderer.add({
 		modPlane.render();
 	})
 });
+
+repeat (10)
+{
+	instance_create_layer(
+		random(room_width),
+		random(room_height),
+		"Instances",
+		OZombie);
+}

@@ -1,5 +1,5 @@
 matrix_set(matrix_world, matrixBody);
-animationPlayer.render();
+animationPlayer.render([matPlayer]);
 
 if (hasGun)
 {

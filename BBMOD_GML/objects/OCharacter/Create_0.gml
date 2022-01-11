@@ -1,5 +1,15 @@
 event_inherited();
 
+modCharacter = OMain.resourceManager.get(
+	"Data/Assets/Character/Character.bbmod",
+	undefined,
+	method(self, function (_err, _model) {
+		if (!_err)
+		{
+			_model.freeze();
+		}
+	}));
+
 // The character's speed when they're walking.
 speedWalk = 0.4;
 
@@ -15,7 +25,7 @@ dead = false;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Animation player
-animationPlayer = new BBMOD_AnimationPlayer(OMain.modCharacter);
+animationPlayer = new BBMOD_AnimationPlayer(modCharacter);
 
 animationPlayer.on_event("Footstep", method(self, function () {
 	// Play a random footstep sound at the character's position when a "Footstep"

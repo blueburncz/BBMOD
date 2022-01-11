@@ -4,7 +4,7 @@
 
 /// @func BBMOD_Animation([_file[, _sha1]])
 ///
-/// @extends BBMOD_Class
+/// @extends BBMOD_Resource
 ///
 /// @desc An animation which can be played using {@link BBMOD_AnimationPlayer}.
 ///
@@ -44,7 +44,7 @@
 ///
 /// @throws {BBMOD_Exception} When the animation fails to load.
 function BBMOD_Animation(_file=undefined, _sha1=undefined)
-	: BBMOD_Class() constructor
+	: BBMOD_Resource() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
@@ -206,103 +206,6 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		}
 
 		IsLoaded = true;
-
-		return self;
-	};
-
-	/// @func from_file(_file[, _sha1])
-	/// @desc Loads animation data from a file.
-	/// @param {string} _file The path to the file.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the animation will not be loaded.
-	/// @return {BBMOD_Animation} Returns `self`.
-	/// @throws {BBMOD_Exception} If loading fails.
-	static from_file = function (_file, _sha1) {
-		if (!file_exists(_file))
-		{
-			throw new BBMOD_Exception("File " + _file + " does not exist!");
-		}
-
-		if (_sha1 != undefined)
-		{
-			if (sha1_file(_file) != _sha1)
-			{
-				throw new BBMOD_Exception("SHA1 does not match!");
-			}
-		}
-
-		var _buffer = buffer_load(_file);
-		buffer_seek(_buffer, buffer_seek_start, 0);
-
-		try
-		{
-			from_buffer(_buffer);
-			buffer_delete(_buffer);
-		}
-		catch (_e)
-		{
-			buffer_delete(_buffer);
-			throw _e;
-		}
-
-		return self;
-	};
-
-	/// @func from_file_async(_file[, _sha1[, _callback]])
-	/// @desc Asynchronnously loads an animation from a file.
-	/// @param {string} _file The path to the file.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the animation will not be loaded.
-	/// @param {function} [_callback] The function to execute when the animation is
-	/// loaded or if an error occurs. It must take the error as the first argument
-	/// and the animation as the second argument. If no error occurs, then `undefined`
-	/// is passed.
-	/// @return {BBMOD_Animation} Returns `self`.
-	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
-		if (_sha1 != undefined)
-		{
-			if (sha1_file(_file) != _sha1)
-			{
-				_callback(new BBMOD_Exception("SHA1 does not match!"));
-				return self;
-			}
-		}
-
-		var _animation = self;
-		var _struct = {
-			Animation: _animation,
-			Callback: _callback,
-		};
-
-		bbmod_buffer_load_async(_file, method(_struct, function (_err, _buffer) {
-			var _callback = Callback;
-			if (_err)
-			{
-				if (_callback != undefined)
-				{
-					_callback(_err, Animation);
-				}
-				return;
-			}
-
-			try
-			{
-				Animation.from_buffer(_buffer);
-			}
-			catch (_err2)
-			{
-				if (_callback != undefined)
-				{
-					_callback(_err2, Animation);
-				}
-				return;
-			}
-
-			if (_callback != undefined)
-			{
-				_callback(undefined, Animation);
-			}
-		}));
 
 		return self;
 	};

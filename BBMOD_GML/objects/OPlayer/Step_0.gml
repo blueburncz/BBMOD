@@ -39,7 +39,7 @@ camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 
 speed = 0;
 
 if (!dead
-	&& animationPlayer.Animation != OMain.animInteractGround)
+	&& animationPlayer.Animation != animInteractGround)
 {
 	if (z == 0)
 	{

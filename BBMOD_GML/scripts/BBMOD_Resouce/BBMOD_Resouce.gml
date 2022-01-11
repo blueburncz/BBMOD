@@ -84,6 +84,8 @@ function BBMOD_Resource()
 	/// @return {BBMOD_Resource} Returns `self`.
 	/// @throws {BBMOD_Exception} If loading fails.
 	static from_file = function (_file, _sha1) {
+		Path = _file;
+
 		check_file(_file, _sha1);
 
 		var _buffer = buffer_load(_file);
@@ -114,6 +116,8 @@ function BBMOD_Resource()
 	/// is passed.
 	/// @return {BBMOD_Resource} Returns `self`.
 	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
+		Path = _file;
+
 		if (!check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
 		{
 			return self;
@@ -181,12 +185,12 @@ function BBMOD_Resource()
 		return false;
 	};
 
-
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		if (Manager != undefined)
 		{
 			ds_map_delete(Manager.Resources, Path);
+			Manager = undefined;
 		}
 	};
 }

@@ -1,7 +1,7 @@
 {
   "spriteId": null,
   "solid": false,
-  "visible": false,
+  "visible": true,
   "spriteMaskId": null,
   "persistent": false,
   "parentObjectId": {
@@ -26,8 +26,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Objects",
-    "path": "folders/Demo/Objects.yy",
+    "name": "Items",
+    "path": "folders/Demo/Objects/Items.yy",
   },
   "resourceVersion": "1.0",
   "name": "OGun",

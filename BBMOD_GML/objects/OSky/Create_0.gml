@@ -1,5 +1,15 @@
 event_inherited();
 
+modSky = OMain.resourceManager.get(
+	"Data/BBMOD/Models/Sphere.bbmod",
+	undefined,
+	function (_err, _model) {
+		if (!_err)
+		{
+			_model.freeze();
+		}
+	});
+
 day = true;
 
 matSkyDay = BBMOD_MATERIAL_SKY.clone();

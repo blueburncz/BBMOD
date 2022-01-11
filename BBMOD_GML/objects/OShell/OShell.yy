@@ -27,8 +27,8 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Objects",
-    "path": "folders/Demo/Objects.yy",
+    "name": "Effects",
+    "path": "folders/Demo/Objects/Effects.yy",
   },
   "resourceVersion": "1.0",
   "name": "OShell",

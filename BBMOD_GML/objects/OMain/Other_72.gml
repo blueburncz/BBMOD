@@ -1,1 +1,1 @@
-bbmod_async_save_load_update(async_load);
+resourceManager.async_save_load_update(async_load);

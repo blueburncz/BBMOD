@@ -1,5 +1,49 @@
 event_inherited();
 
+matPlayer = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
+matPlayer.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
+
+animAim = OMain.resourceManager.get("Data/Assets/Character/Character_Aim.bbanim");
+
+animShoot = OMain.resourceManager.get("Data/Assets/Character/Character_Shoot.bbanim");
+
+animIdle = OMain.resourceManager.get("Data/Assets/Character/Character_Idle.bbanim");
+
+animInteractGround = OMain.resourceManager.get(
+	"Data/Assets/Character/Character_Interact_ground.bbanim",
+	undefined,
+	function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(52, "PickUp");
+		}
+	});
+
+animJump = OMain.resourceManager.get("Data/Assets/Character/Character_Jump.bbanim");
+
+animRun = OMain.resourceManager.get(
+	"Data/Assets/Character/Character_Run.bbanim",
+	undefined,
+	function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(0, "Footstep")
+				.add_event(16, "Footstep");
+		}
+	});
+
+animWalk = OMain.resourceManager.get(
+	"Data/Assets/Character/Character_Walk.bbanim",
+	undefined,
+	function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(0, "Footstep")
+				.add_event(32, "Footstep");
+		}
+	});
+
 // The player speed when they're running.
 speedRun = 2.0;
 
@@ -25,7 +69,7 @@ zoomIdle = 50;
 zoomAim = 5;
 
 camera = new BBMOD_Camera();
-camera.FollowObject = id;
+camera.FollowObject = self;
 camera.FollowFactor = 0.25;
 camera.Offset = new BBMOD_Vec3(10, 0, 25);
 camera.Zoom = zoomIdle;
@@ -69,7 +113,7 @@ animationStateMachine.OnPreUpdate = method(self, function () {
 	}
 });
 
-stateIdle = new BBMOD_AnimationState("Idle", OMain.animIdle, true);
+stateIdle = new BBMOD_AnimationState("Idle", animIdle, true);
 stateIdle.OnUpdate = method(self, function () {
 	// Go to state "Run" if the player's speed is greater or equal to the
 	// running speed.
@@ -89,7 +133,7 @@ stateIdle.OnUpdate = method(self, function () {
 });
 animationStateMachine.add_state(stateIdle);
 
-stateWalk = new BBMOD_AnimationState("Walk", OMain.animWalk, true);
+stateWalk = new BBMOD_AnimationState("Walk", animWalk, true);
 stateWalk.OnUpdate = method(self, function () {
 	// Go to the "Idle" state if the player's speed is less than the walking
 	// speed.
@@ -109,7 +153,7 @@ stateWalk.OnUpdate = method(self, function () {
 });
 animationStateMachine.add_state(stateWalk);
 
-stateRun = new BBMOD_AnimationState("Run", OMain.animRun, true);
+stateRun = new BBMOD_AnimationState("Run", animRun, true);
 stateRun.OnUpdate = method(self, function () {
 	// Go to the "Walk" state if the player's speed is less than the running
 	// speed.
@@ -121,7 +165,7 @@ stateRun.OnUpdate = method(self, function () {
 });
 animationStateMachine.add_state(stateRun);
 
-stateJump = new BBMOD_AnimationState("Jump", OMain.animJump, true);
+stateJump = new BBMOD_AnimationState("Jump", animJump, true);
 stateJump.OnUpdate = method(self, function () {
 	// Go to the "Idle" state when player falls on the ground.
 	if (z <= 0)
@@ -132,7 +176,7 @@ stateJump.OnUpdate = method(self, function () {
 });
 animationStateMachine.add_state(stateJump);
 
-stateAim = new BBMOD_AnimationState("Aim", OMain.animAim, true);
+stateAim = new BBMOD_AnimationState("Aim", animAim, true);
 stateAim.OnUpdate = method(self, function () {
 	// Go to the "Idle" state when the player is not aiming.
 	if (!aiming)
@@ -143,14 +187,14 @@ stateAim.OnUpdate = method(self, function () {
 });
 animationStateMachine.add_state(stateAim);
 
-stateShoot = new BBMOD_AnimationState("Shoot", OMain.animShoot);
+stateShoot = new BBMOD_AnimationState("Shoot", animShoot);
 stateShoot.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
 	// Go to the "Aim" state at the end of the shooting animation.
 	animationStateMachine.change_state(stateAim);
 }));
 animationStateMachine.add_state(stateShoot);
 
-stateInteractGround = new BBMOD_AnimationState("InteractGround", OMain.animInteractGround);
+stateInteractGround = new BBMOD_AnimationState("InteractGround", animInteractGround);
 stateInteractGround.on_event("PickUp", method(self, function () {
 	// Pick up an item.
 	if (instance_exists(pickupTarget))

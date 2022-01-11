@@ -1,5 +1,28 @@
 event_inherited();
 
+matZombie0 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
+matZombie0.BaseOpacity = sprite_get_texture(SprZombie, 0);
+
+matZombie1 = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
+matZombie1.BaseOpacity = sprite_get_texture(SprZombie, 1);
+
+animIdle = OMain.resourceManager.get("Data/Assets/Character/Zombie_Idle.bbanim");
+
+animWalk = OMain.resourceManager.get(
+	"Data/Assets/Character/Zombie_Walk.bbanim",
+	undefined,
+	function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(0, "Footstep")
+				.add_event(32, "Footstep");
+		}
+	});
+
+animDeath = OMain.resourceManager.get("Data/Assets/Character/Zombie_Death.bbanim");
+
 // If true then the zombie is dead.
 dead = false;
 
@@ -10,7 +33,7 @@ timeout = random_range(500, 1000);
 destroy = false;
 
 // Randomly choose material.
-materials = [choose(OMain.matZombie0, OMain.matZombie1)];
+materials = [choose(matZombie0, matZombie1)];
 
 // Rotate the zombie towards the player on spawn.
 direction = point_direction(x, y, OPlayer.x, OPlayer.y);
@@ -46,7 +69,7 @@ animationStateMachine.OnPostUpdate = method(self, function () {
 
 // When the zombie is activated, wait for the timeout and then switch to the
 // "Idle" state.
-stateDeactivated = new BBMOD_AnimationState("Deactivated", OMain.animZombieIdle, true);
+stateDeactivated = new BBMOD_AnimationState("Deactivated", animIdle, true);
 stateDeactivated.OnUpdate = method(self, function () {
 	timeout -= delta_time * 0.001;
 	if (timeout <= 0)
@@ -57,7 +80,7 @@ stateDeactivated.OnUpdate = method(self, function () {
 animationStateMachine.add_state(stateDeactivated);
 
 // When the player is out of the zombie's range, change to the "Walk" state.
-stateIdle = new BBMOD_AnimationState("Idle", OMain.animZombieIdle, true);
+stateIdle = new BBMOD_AnimationState("Idle", animIdle, true);
 stateIdle.OnUpdate = method(self, function () {
 	if (!playerInRange())
 	{
@@ -67,7 +90,7 @@ stateIdle.OnUpdate = method(self, function () {
 animationStateMachine.add_state(stateIdle);
 
 // When the player is within the zombie's range again, change to the "Idle" state.
-stateWalk = new BBMOD_AnimationState("Walk", OMain.animZombieWalk, true);
+stateWalk = new BBMOD_AnimationState("Walk", animWalk, true);
 stateWalk.OnUpdate = method(self, function () {
 	if (playerInRange())
 	{
@@ -80,7 +103,7 @@ animationStateMachine.add_state(stateWalk);
 
 // When the zombie is killed, remove its collision mask and enter the final state
 // of the state machine after the death animation is finished.
-stateDeath = new BBMOD_AnimationState("Death", OMain.animZombieDeath);
+stateDeath = new BBMOD_AnimationState("Death", animDeath);
 stateDeath.OnEnter = method(self, function () {
 	mask_index = noone;
 	dead = true;
