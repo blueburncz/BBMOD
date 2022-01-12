@@ -1,6 +1,6 @@
 event_inherited();
 
-matPlayer = OMain.resourceManager.add_or_get("matPlayer", function () {
+matPlayer = OMain.resourceManager.get_or_add("matPlayer", function () {
 	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 	_material.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));

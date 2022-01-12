@@ -1,13 +1,13 @@
 event_inherited();
 
-matZombie0 = OMain.resourceManager.add_or_get("matZombie0", function () {
+matZombie0 = OMain.resourceManager.get_or_add("matZombie0", function () {
 	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 	_material.BaseOpacity = sprite_get_texture(SprZombie, 0);
 	return _material;
 });
 
-matZombie1 = OMain.resourceManager.add_or_get("matZombie1", function () {
+matZombie1 = OMain.resourceManager.get_or_add("matZombie1", function () {
 	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 	_material.BaseOpacity = sprite_get_texture(SprZombie, 1);

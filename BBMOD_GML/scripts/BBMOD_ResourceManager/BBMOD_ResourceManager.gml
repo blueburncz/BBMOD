@@ -1,6 +1,5 @@
 /// @func BBMOD_ResourceManager()
 /// @extends BBMOD_Class
-
 function BBMOD_ResourceManager()
 	: BBMOD_Class() constructor
 {
@@ -61,32 +60,38 @@ function BBMOD_ResourceManager()
 		return Resources[? _pathOrUniqueName].ref();
 	};
 
-	/// @func add_or_get(_uniqueName, _fn)
+	/// @func get_or_add(_uniqueName, _onAdd)
 	///
-	/// @desc Either adds a resource to the resource manager or retrieves
-	/// a reference to it if it already exists.
+	/// @desc Retrieves a reference to a resource. If the resource does not
+	/// exist yet, then it is added.
 	///
 	/// @param {string} _uniqueName The name of the resource. Must be unique!
-	/// @param {function} _fn A function which creates the resource if it
+	/// @param {function} _onAdd A function which creates the resource if it
 	/// does not exist yet. Must take no arguments and must return the created
 	/// resource.
 	///
 	/// @example
+	/// Following code shows Create event of an object, where it assings its
+	/// material using this method. When the first instance is created, it
+	/// creates the material and adds it to the resource manager. When other
+	/// instances are created, the material already exists and so they only
+	/// get a reference to it.
+	///
 	/// ```gml
 	/// /// @desc Create event
-	/// material = resourceManager.add_or_get("material", function () {
+	/// material = resourceManager.get_or_add("material", function () {
 	///     var _mat = BBMOD_MATERIAL_DEFAULT.clone();
 	///     _mat.BaseOpacity = sprite_get_texture(SprBaseOpacity, 0);
 	///     return _mat;
 	/// });
 	/// ```
-	static add_or_get = function (_uniqueName, _fn) {
+	static get_or_add = function (_uniqueName, _onAdd) {
 		gml_pragma("forceinline");
 		if (ds_map_exists(Resources, _uniqueName))
 		{
 			return Resources[? _uniqueName].ref();
 		}
-		var _res = _fn();
+		var _res = _onAdd();
 		add(_uniqueName, _res);
 		return _res;
 	};
