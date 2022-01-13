@@ -20,9 +20,6 @@ directionBody = direction;
 // A matrix used when rendering the character's body.
 matrixBody = matrix_build_identity();
 
-// If true then the character is dead.
-dead = false;
-
 ////////////////////////////////////////////////////////////////////////////////
 // Animation player
 animationPlayer = new BBMOD_AnimationPlayer(modCharacter);

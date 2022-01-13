@@ -1,5 +1,38 @@
 event_inherited();
 
+// The player speed when they're running.
+speedRun = 2.0;
+
+// The id of the item that the player is picking up (or undefined).
+pickupTarget = undefined;
+
+// If true then the player has a gun.
+hasGun = false;
+
+// If true then the player is aiming.
+aiming = false;
+
+// The matrix used when we render a gun in the player's hand.
+matrixGun = matrix_build_identity();
+
+////////////////////////////////////////////////////////////////////////////////
+// Camera
+
+// Define how for the camera is from the player when they aren't aiming.
+zoomIdle = 50;
+
+// Define how for the camera is from the player when the are aiming.
+zoomAim = 5;
+
+camera = new BBMOD_Camera();
+camera.FollowObject = self;
+camera.FollowFactor = 0.25;
+camera.Offset = new BBMOD_Vec3(10, 0, 25);
+camera.Zoom = zoomIdle;
+camera.MouseSensitivity = 0.75;
+
+////////////////////////////////////////////////////////////////////////////////
+// Load resources
 matPlayer = OMain.resourceManager.get_or_add("matPlayer", function () {
 	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
@@ -46,37 +79,6 @@ animWalk = OMain.resourceManager.load(
 				.add_event(32, "Footstep");
 		}
 	});
-
-// The player speed when they're running.
-speedRun = 2.0;
-
-// The id of the item that the player is picking up (or undefined).
-pickupTarget = undefined;
-
-// If true then the player has a gun.
-hasGun = false;
-
-// If true then the player is aiming.
-aiming = false;
-
-// The matrix used when we render a gun in the player's hand.
-matrixGun = matrix_build_identity();
-
-////////////////////////////////////////////////////////////////////////////////
-// Camera
-
-// Define how for the camera is from the player when they aren't aiming.
-zoomIdle = 50;
-
-// Define how for the camera is from the player when the are aiming.
-zoomAim = 5;
-
-camera = new BBMOD_Camera();
-camera.FollowObject = self;
-camera.FollowFactor = 0.25;
-camera.Offset = new BBMOD_Vec3(10, 0, 25);
-camera.Zoom = zoomIdle;
-camera.MouseSensitivity = 0.75;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Animation state machine

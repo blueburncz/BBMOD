@@ -12,7 +12,7 @@ var _playerY = OPlayer.y;
 var _grayscale = 0.0;
 with (OZombie)
 {
-	if (!dead
+	if (hp > 0
 		&& point_distance(x, y, _playerX, _playerY) < 100)
 	{
 		_grayscale = 0.75;

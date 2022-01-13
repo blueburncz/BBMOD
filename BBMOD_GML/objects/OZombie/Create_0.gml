@@ -1,5 +1,27 @@
 event_inherited();
 
+knockback = new BBMOD_Vec3();
+
+// Zombie dies when hp reaches 0.
+hp = 100;
+
+// Number of ms till the zombie changes to the "Idle" state.
+timeout = random_range(500, 1000);
+
+// If true then the zombie will be destroyed.
+destroy = false;
+
+// Rotate the zombie towards the player on spawn.
+direction = point_direction(x, y, OPlayer.x, OPlayer.y);
+directionBody = direction;
+
+// Returns true if the player is within the zombie's attack range.
+playerInRange = function () {
+	return (point_distance(x, y, OPlayer.x, OPlayer.y) <= 25);
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Load resources
 matZombie0 = OMain.resourceManager.get_or_add("matZombie0", function () {
 	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
@@ -13,6 +35,9 @@ matZombie1 = OMain.resourceManager.get_or_add("matZombie1", function () {
 	_material.BaseOpacity = sprite_get_texture(SprZombie, 1);
 	return _material;
 });
+
+// Randomly choose material.
+materials = [choose(matZombie0, matZombie1)];
 
 animIdle = OMain.resourceManager.load("Data/Assets/Character/Zombie_Idle.bbanim");
 
@@ -29,26 +54,8 @@ animWalk = OMain.resourceManager.load(
 
 animDeath = OMain.resourceManager.load("Data/Assets/Character/Zombie_Death.bbanim");
 
-// If true then the zombie is dead.
-dead = false;
-
-// Number of ms till the zombie changes to the "Idle" state.
-timeout = random_range(500, 1000);
-
-// If true then the zombie will be destroyed.
-destroy = false;
-
-// Randomly choose material.
-materials = [choose(matZombie0, matZombie1)];
-
-// Rotate the zombie towards the player on spawn.
-direction = point_direction(x, y, OPlayer.x, OPlayer.y);
-directionBody = direction;
-
-// Returns true if the player is within the zombie's attack range.
-playerInRange = function () {
-	return (point_distance(x, y, OPlayer.x, OPlayer.y) <= 25);
-};
+////////////////////////////////////////////////////////////////////////////////
+// Animation state machine
 
 // Enter the "Deactivated" state on the start of the state machine.
 animationStateMachine.OnEnter = method(self, function () {
@@ -58,9 +65,17 @@ animationStateMachine.OnEnter = method(self, function () {
 // Regardless on the current state, go to state "Death" if the zombie
 // is dead.
 animationStateMachine.OnPreUpdate = method(self, function () {
-	if (dead && animationStateMachine.State != stateDeath)
+	if (animationStateMachine.State != stateDeath)
 	{
-		animationStateMachine.change_state(stateDeath);
+		if (hp <= 0)
+		{
+			animationStateMachine.change_state(stateDeath);
+			return;
+		}
+		x += knockback.X;
+		y += knockback.Y;
+		z += knockback.Z;
+		knockback = knockback.Scale(0.9);
 	}
 });
 
@@ -112,7 +127,7 @@ animationStateMachine.add_state(stateWalk);
 stateDeath = new BBMOD_AnimationState("Death", animDeath);
 stateDeath.OnEnter = method(self, function () {
 	mask_index = noone;
-	dead = true;
+	hp = 0;
 });
 stateDeath.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
 	animationStateMachine.finish();

@@ -38,8 +38,7 @@ camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 
 // Player controls
 speed = 0;
 
-if (!dead
-	&& animationPlayer.Animation != animInteractGround)
+if (animationPlayer.Animation != animInteractGround)
 {
 	if (z == 0)
 	{
@@ -93,7 +92,7 @@ if (!dead
 
 				with (OZombie)
 				{
-					if (dead)
+					if (hp <= 0)
 					{
 						continue;
 					}
@@ -109,7 +108,11 @@ if (!dead
 
 				if (_hitId != noone)
 				{
-					_hitId.dead = true;
+					_hitId.hp -= irandom_range(30, 35);
+					_hitId.knockback = new BBMOD_Vec3(
+						lengthdir_x(4, camera.Direction),
+						lengthdir_y(4, camera.Direction),
+						0);
 				}
 			}
 		}
