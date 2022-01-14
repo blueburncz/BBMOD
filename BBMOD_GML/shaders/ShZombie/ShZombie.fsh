@@ -283,13 +283,6 @@ void main()
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
-	// Dissolve
-	gl_FragColor.rgb = mix(
-		gl_FragColor.rgb,
-		u_vDissolveColor,
-		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
-	// Silhouette
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
 	// Fog
 	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
@@ -298,4 +291,11 @@ void main()
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	// Dissolve
+	gl_FragColor.rgb = mix(
+		gl_FragColor.rgb,
+		u_vDissolveColor,
+		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
+	// Silhouette
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
 }

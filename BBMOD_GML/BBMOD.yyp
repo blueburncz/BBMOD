@@ -14,6 +14,7 @@
     {"id":{"name":"bbmod_async","path":"scripts/bbmod_async/bbmod_async.yy",},"order":3,},
     {"id":{"name":"BBMOD_DefaultShader","path":"scripts/BBMOD_DefaultShader/BBMOD_DefaultShader.yy",},"order":0,},
     {"id":{"name":"BBMOD_ImageBasedLight","path":"scripts/BBMOD_ImageBasedLight/BBMOD_ImageBasedLight.yy",},"order":3,},
+    {"id":{"name":"SprFloor","path":"sprites/SprFloor/SprFloor.yy",},"order":6,},
     {"id":{"name":"SndShell2","path":"sounds/SndShell2/SndShell2.yy",},"order":2,},
     {"id":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},"order":0,},
     {"id":{"name":"SndShell5","path":"sounds/SndShell5/SndShell5.yy",},"order":5,},

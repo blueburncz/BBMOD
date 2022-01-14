@@ -50,9 +50,13 @@ batchShell.freeze();
 
 modPlane = _objImporter.import("Data/Assets/Plane.obj");
 modPlane.freeze();
-matGrass = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(BBMOD_C_WHITE, 1.0);
-modPlane.Materials[0] = matGrass;
+matFloor = BBMOD_MATERIAL_DEFAULT.clone()
+	.set_base_opacity(BBMOD_C_WHITE, 1.0)
+	.set_specular_color(BBMOD_C_GRAY);
+matFloor.NormalSmoothness = sprite_get_texture(SprFloor, 0);
+matFloor.Repeat = true;
+matFloor.TextureScale = matFloor.TextureScale.Scale(20.0);
+modPlane.Materials[0] = matFloor;
 
 _objImporter.destroy();
 
