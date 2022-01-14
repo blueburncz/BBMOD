@@ -6,18 +6,6 @@ if (keyboard_check_pressed(vk_f1))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Grayscale effect when zombies are near the player
-var _playerX = OPlayer.x;
-var _playerY = OPlayer.y;
-
-var _grayscale = 0.0;
-with (OZombie)
-{
-	if (hp > 0
-		&& point_distance(x, y, _playerX, _playerY) < 100)
-	{
-		_grayscale = 0.75;
-		break;
-	}
-}
+var _grayscale = (OPlayer.hp < OPlayer.hpMax * 0.15) ? 0.75 : 0.0;
 
 renderer.Grayscale = bbmod_lerp_delta_time(renderer.Grayscale, _grayscale, 0.01, delta_time);

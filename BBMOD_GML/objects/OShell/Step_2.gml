@@ -16,4 +16,5 @@ if (z <= 0 && !onGround)
 
 	friction = 0.01;
 	onGround = true;
+	alarm[0] = 600;
 }

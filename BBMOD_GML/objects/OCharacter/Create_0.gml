@@ -10,6 +10,12 @@ modCharacter = OMain.resourceManager.load(
 		}
 	}));
 
+// Maximum hitpoints.
+hpMax = 100;
+
+// Current number of hitpoints. Character dies if reaches 0.
+hp = hpMax;
+
 // The character's speed when they're walking.
 speedWalk = 0.4;
 

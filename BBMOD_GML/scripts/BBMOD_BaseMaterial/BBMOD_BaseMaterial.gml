@@ -65,7 +65,7 @@ function BBMOD_BaseMaterial(_shader=undefined)
 
 	/// @var {real} A culling mode. Use one of the `cull_` constants. Default
 	/// value is `cull_counterclockwise`.
-	Culling = cull_noculling;// cull_counterclockwise;
+	Culling = cull_counterclockwise;
 
 	/// @var {bool} If `true` then models using this material should write to
 	/// the depth buffer. Default value is `true`.
