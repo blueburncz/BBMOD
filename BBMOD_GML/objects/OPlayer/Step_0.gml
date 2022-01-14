@@ -113,6 +113,7 @@ if (animationPlayer.Animation != animInteractGround)
 						lengthdir_x(4, camera.Direction),
 						lengthdir_y(4, camera.Direction),
 						0);
+					_hitId.silhouette = 1.0;
 				}
 			}
 		}

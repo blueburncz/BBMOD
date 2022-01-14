@@ -55,6 +55,9 @@ uniform float u_fDissolveThreshold;
 uniform float u_fDissolveRange;
 uniform vec2 u_vDissolveScale;
 
+// Silhouette effect
+uniform vec4 u_vSilhouette;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
 #define X_GAMMA 2.2
@@ -285,6 +288,8 @@ void main()
 		gl_FragColor.rgb,
 		u_vDissolveColor,
 		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
+	// Silhouette
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
 	// Fog
 	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);

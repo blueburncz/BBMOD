@@ -20,6 +20,9 @@ playerInRange = function () {
 // Strength of the dissolve shader effect.
 dissolve = 0;
 
+// Strength of the silhouette shader effect.
+silhouette = 0;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Create a custom material. Each zombie has its own since each instance needs
 // to pass its own values for the dissolve effect.
@@ -32,10 +35,12 @@ material.OnApply = method(self, function (_material) {
 	var _dissolveThreshold = _shader.get_uniform("u_fDissolveThreshold");
 	var _dissolveRange = _shader.get_uniform("u_fDissolveRange");
 	var _dissolveScale = _shader.get_uniform("u_vDissolveScale");
+	var _silhouette = _shader.get_uniform("u_vSilhouette");
 	_shader.set_uniform_f3(_dissolveColor, 0.0, 1.0, 0.5);
 	_shader.set_uniform_f(_dissolveThreshold, dissolve);
 	_shader.set_uniform_f(_dissolveRange, 0.3);
 	_shader.set_uniform_f2(_dissolveScale, 20.0, 20.0);
+	_shader.set_uniform_f4(_silhouette, 1.0, 1.0, 1.0, silhouette);
 });
 
 ////////////////////////////////////////////////////////////////////////////////
