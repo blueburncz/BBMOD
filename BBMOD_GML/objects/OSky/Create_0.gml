@@ -1,5 +1,7 @@
 event_inherited();
 
+timeout = 30;
+
 modSky = OMain.resourceManager.load(
 	"Data/BBMOD/Models/Sphere.bbmod",
 	undefined,

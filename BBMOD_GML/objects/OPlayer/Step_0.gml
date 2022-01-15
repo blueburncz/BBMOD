@@ -32,18 +32,19 @@ if (camera.Position.Z < 0.0)
 }
 
 // Increase camera exposure during nighttime
-camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 0.025, delta_time);
+camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 0.05, delta_time);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Player controls
-speed = 0;
+speed *= 0.9;
 
-if (animationPlayer.Animation != animInteractGround)
+if (animationPlayer.Animation != animInteractGround
+	&& animationPlayer.Animation != animKick)
 {
 	if (z == 0)
 	{
 		// Shooting
-		if (hasGun
+		if (ammo > 0
 			&& camera.MouseLook
 			&& mouse_check_button_pressed(mb_right))
 		{
@@ -55,7 +56,7 @@ if (animationPlayer.Animation != animInteractGround)
 			direction = camera.Direction;
 
 			if (_mouseLeftPressed
-				&& animationStateMachine.State == stateAim)
+				/*&& animationStateMachine.State == stateAim*/)
 			{
 				animationStateMachine.change_state(stateShoot);
 
@@ -115,12 +116,51 @@ if (animationPlayer.Animation != animInteractGround)
 						lengthdir_y(4, camera.Direction),
 						0);
 					_hitId.hurt = 1.0;
-
-					var _floatingText = instance_create_layer(_hitId.x, _hitId.y, "Instances", OFloatingText);
+					var _floatingText = instance_create_layer(_hitId.x, _hitId.y, layer, OFloatingText);
 					_floatingText.z = _hitId.z + 42;
 					_floatingText.text = "-" + string(_damage);
 				}
+
+				if (--ammo == 0)
+				{
+					aiming = false;
+				}
 			}
+		}
+		else if (_mouseLeftPressed)
+		{
+			// Punch
+			animationStateMachine.change_state(punchRight ? statePunchRight : statePunchLeft);
+			punchRight = !punchRight;
+			speed = 2;
+			var _zombie = instance_nearest(x, y, OZombie);
+			if (_zombie != noone)
+			{
+				var _dist = point_distance(x, y, _zombie.x, _zombie.y);
+				if (_dist < 30)
+				{
+					if (_dist > 10)
+					{
+						direction = point_direction(x, y, _zombie.x, _zombie.y);
+					}
+					var _damage = irandom_range(5, 10);
+					_zombie.hp -= _damage;
+					_zombie.knockback = new BBMOD_Vec3(
+						lengthdir_x(4, camera.Direction),
+						lengthdir_y(4, camera.Direction),
+						0);
+					_zombie.hurt = 1.0;
+					var _floatingText = instance_create_layer(_zombie.x, _zombie.y, layer, OFloatingText);
+					_floatingText.z = _zombie.z + 42;
+					_floatingText.text = "-" + string(_damage);
+				}
+			}
+		}
+
+		// Kick
+		if (keyboard_check_pressed(ord("F")))
+		{
+			animationStateMachine.change_state(stateKick);
 		}
 
 		if (keyboard_check_pressed(vk_space))
@@ -128,8 +168,7 @@ if (animationPlayer.Animation != animInteractGround)
 			// Jump
 			zspeed += 2;
 		}
-		else if (!hasGun
-			&& keyboard_check_pressed(ord("E"))
+		else if (keyboard_check_pressed(ord("E"))
 			&& instance_exists(OGun))
 		{
 			// Pick up a gun
@@ -148,7 +187,11 @@ if (animationPlayer.Animation != animInteractGround)
 	{
 		aiming = false;
 		direction = point_direction(0, 0, _moveX, _moveY) + camera.Direction;
-		speed = keyboard_check(vk_shift) ? speedWalk : speedRun;
+		speed = (keyboard_check(vk_shift)
+			|| animationPlayer.Animation == animPunchLeft
+			|| animationPlayer.Animation == animPunchRight)
+			? speedWalk
+			: speedRun;
 	}
 }
 

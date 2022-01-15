@@ -1,6 +1,6 @@
 event_inherited();
 
-if (hasGun)
+if (ammo > 0)
 {
 	var _dqHand = animationPlayer.get_node_transform(19); // 19 = RightHandIndex1
 	var _matrixHand = _dqHand.ToMatrix();

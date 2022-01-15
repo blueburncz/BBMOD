@@ -6,14 +6,16 @@ speedRun = 2.0;
 // The id of the item that the player is picking up (or undefined).
 pickupTarget = undefined;
 
-// If true then the player has a gun.
-hasGun = false;
+// Number of ammo that the player has.
+ammo = 0;
 
 // If true then the player is aiming.
 aiming = false;
 
 // The matrix used when we render a gun in the player's hand.
 matrixGun = matrix_build_identity();
+
+punchRight = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Camera
@@ -43,6 +45,36 @@ matPlayer = OMain.resourceManager.get_or_add("matPlayer", function () {
 animAim = OMain.resourceManager.load("Data/Assets/Character/Character_Aim.bbanim");
 
 animShoot = OMain.resourceManager.load("Data/Assets/Character/Character_Shoot.bbanim");
+
+animPunchLeft = OMain.resourceManager.load(
+	"Data/Assets/Character/Character_PunchLeft.bbanim",
+	undefined,
+	function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(3, "Footstep");
+		}
+	});
+
+animPunchRight = OMain.resourceManager.load(
+	"Data/Assets/Character/Character_PunchRight.bbanim",
+	undefined,
+	function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(3, "Footstep");
+		}
+	});
+
+animKick = OMain.resourceManager.load(
+	"Data/Assets/Character/Character_Kick.bbanim",
+	undefined,
+	function (_err, _animation) {
+		if (!_err)
+		{
+			_animation.add_event(35, "Kick");
+		}
+	});
 
 animIdle = OMain.resourceManager.load("Data/Assets/Character/Character_Idle.bbanim");
 
@@ -199,19 +231,37 @@ stateShoot.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
 }));
 animationStateMachine.add_state(stateShoot);
 
+statePunchLeft = new BBMOD_AnimationState("PunchLeft", animPunchLeft);
+statePunchLeft.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
+	// Go to the "Idle" state at the end of the punching animation.
+	animationStateMachine.change_state(stateIdle);
+}));
+animationStateMachine.add_state(statePunchLeft);
+
+statePunchRight = new BBMOD_AnimationState("PunchRight", animPunchRight);
+statePunchRight.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
+	// Go to the "Idle" state at the end of the punching animation.
+	animationStateMachine.change_state(stateIdle);
+}));
+animationStateMachine.add_state(statePunchRight);
+
+stateKick = new BBMOD_AnimationState("Kick", animKick);
+stateKick.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
+	// Go to the "Idle" state at the end of the kicking animation.
+	animationStateMachine.change_state(stateIdle);
+}));
+animationStateMachine.add_state(stateKick);
+
 stateInteractGround = new BBMOD_AnimationState("InteractGround", animInteractGround);
 stateInteractGround.on_event("PickUp", method(self, function () {
 	// Pick up an item.
 	if (instance_exists(pickupTarget))
 	{
-		if (point_distance(x, y, pickupTarget.x, pickupTarget.y) < 20)
+		if (pickupTarget.object_index == OGun)
 		{
-			if (pickupTarget.object_index == OGun)
-			{
-				hasGun = true;
-			}
-			instance_destroy(pickupTarget);
+			ammo += pickupTarget.ammo;
 		}
+		instance_destroy(pickupTarget);
 	}
 	pickupTarget = undefined;
 }));

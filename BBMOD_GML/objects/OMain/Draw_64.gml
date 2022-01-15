@@ -24,7 +24,8 @@ with (OZombie)
 	var _x = round(_screenPos.X - _width * 0.5);
 	var _y = round(_screenPos.Y - _height * 0.5);
 	draw_rectangle_color(_x, _y, _x + _width, _y + _height, 0, 0, 0, 0, false);
-	draw_rectangle_color(_x + 2, _y + 2, _x + 2 + (_width - 4) * (hp / hpMax), _y + 2 + _height - 4, c_red, c_red, c_red, c_red, false);
+	draw_rectangle_color(_x + 2, _y + 2, _x + 2 + (_width - 4) * (hp / hpMax), _y + 2 + _height - 4,
+		c_red, c_red, c_red, c_red, false);
 }
 
 // Draw floating text
@@ -51,3 +52,9 @@ if (OPlayer.aiming)
 		round(_windowWidth / 2),
 		round(_windowHeight / 2));
 }
+
+draw_text(0, 0, string(ceil(waveTimeout)) + "s");
+draw_text(0, 20, string(score) + "+" + string(scoreBonus));
+
+var _text = string(OPlayer.ammo);
+draw_text(_windowWidth - string_width(_text), _windowHeight - string_height(_text), _text);

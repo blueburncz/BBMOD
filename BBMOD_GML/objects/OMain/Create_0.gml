@@ -6,6 +6,10 @@ audio_falloff_set_model(audio_falloff_linear_distance);
 // If true then debug overlay is enabled.
 debugOverlay = false;
 
+scoreBonus = 0;
+wave = 1;
+waveTimeout = 10;
+
 resourceManager = new BBMOD_ResourceManager();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,12 +91,3 @@ renderer.add({
 		modPlane.render();
 	})
 });
-
-repeat (10)
-{
-	instance_create_layer(
-		random(room_width),
-		random(room_height),
-		"Instances",
-		OZombie);
-}

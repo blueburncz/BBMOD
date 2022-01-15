@@ -18,7 +18,7 @@ directionBody = direction;
 
 // Returns true if the player is within the zombie's attack range.
 playerInRange = function () {
-	return (point_distance(x, y, OPlayer.x, OPlayer.y) <= 25);
+	return (point_distance(x, y, OPlayer.x, OPlayer.y) <= 30);
 };
 
 // Strength of the dissolve shader effect.
@@ -83,18 +83,19 @@ animationStateMachine.OnEnter = method(self, function () {
 // Regardless on the current state, go to state "Death" if the zombie
 // is dead.
 animationStateMachine.OnPreUpdate = method(self, function () {
-	if (animationStateMachine.State != stateDeath
-		&& animationStateMachine.State != stateAttack)
+	if (animationStateMachine.State != stateAttack)
 	{
-		if (hp <= 0)
-		{
-			animationStateMachine.change_state(stateDeath);
-			return;
-		}
 		x += knockback.X;
 		y += knockback.Y;
 		z += knockback.Z;
 		knockback = knockback.Scale(0.9);
+
+		if (hp <= 0
+			&& animationStateMachine.State != stateDeath)
+		{
+			animationStateMachine.change_state(stateDeath);
+			return;
+		}
 	}
 });
 
@@ -155,13 +156,15 @@ animationStateMachine.add_state(stateWalk);
 // Attack the player.
 stateAttack = new BBMOD_AnimationState("Attack", animAttack);
 stateAttack.on_event("Attack", method(self, function () {
-	if (playerInRange())
+	if (hp > 0
+		&& playerInRange())
 	{
 		OPlayer.hp -= irandom_range(10, 15);
 		OPlayer.hurt = 1.0;
 	}
 }));
 stateAttack.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
+	knockback.Set(0.0);
 	animationStateMachine.change_state(stateIdle);
 }));
 animationStateMachine.add_state(stateAttack);
