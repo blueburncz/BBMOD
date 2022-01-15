@@ -5,7 +5,7 @@
     "path": "folders/Demo/Shaders.yy",
   },
   "resourceVersion": "1.0",
-  "name": "ShZombie",
+  "name": "ShFloatingText",
   "tags": [],
   "resourceType": "GMShader",
 }

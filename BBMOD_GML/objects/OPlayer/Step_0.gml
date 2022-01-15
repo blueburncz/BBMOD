@@ -108,12 +108,17 @@ if (animationPlayer.Animation != animInteractGround)
 
 				if (_hitId != noone)
 				{
-					_hitId.hp -= irandom_range(30, 35);
+					var _damage = irandom_range(30, 35);
+					_hitId.hp -= _damage;
 					_hitId.knockback = new BBMOD_Vec3(
 						lengthdir_x(4, camera.Direction),
 						lengthdir_y(4, camera.Direction),
 						0);
 					_hitId.hurt = 1.0;
+
+					var _floatingText = instance_create_layer(_hitId.x, _hitId.y, "Instances", OFloatingText);
+					_floatingText.z = _hitId.z + 42;
+					_floatingText.text = "-" + string(_damage);
 				}
 			}
 		}
