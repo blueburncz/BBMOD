@@ -1,4 +1,3 @@
-#pragma include("Uber_PS.xsh", "glsl")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -106,4 +105,3 @@ void main()
 	gl_FragColor.rgb = xEncodeDepth(v_fDepth / bbmod_ZFar);
 	gl_FragColor.a = 1.0;
 }
-// include("Uber_PS.xsh")

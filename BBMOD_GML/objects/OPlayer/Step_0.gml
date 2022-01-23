@@ -31,15 +31,11 @@ if (camera.Position.Z < 0.0)
 	camera.update_matrices();
 }
 
-// Increase camera exposure during nighttime
-camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 0.05, delta_time);
-
 ////////////////////////////////////////////////////////////////////////////////
 // Player controls
 speed *= 0.9;
 
-if (animationPlayer.Animation != animInteractGround
-	&& animationPlayer.Animation != animKick)
+if (animationPlayer.Animation != animInteractGround)
 {
 	if (z == 0)
 	{
@@ -99,7 +95,7 @@ if (animationPlayer.Animation != animInteractGround
 					}
 					var _min = new BBMOD_Vec3(x - 5, y - 5, z);
 					var _max = new BBMOD_Vec3(x + 5, y + 5, z + 36);
-					var _dist = raycast_aabb(_origin, _direction, _min, _max);
+					var _dist = RaycastAABB(_origin, _direction, _min, _max);
 					if (_dist != -1 && _dist < _hitDist)
 					{
 						_hitId = id;
@@ -109,7 +105,7 @@ if (animationPlayer.Animation != animInteractGround
 
 				if (_hitId != noone)
 				{
-					var _damage = irandom_range(30, 35);
+					var _damage = irandom_range(45, 55);
 					_hitId.hp -= _damage;
 					_hitId.knockback = new BBMOD_Vec3(
 						lengthdir_x(4, camera.Direction),
@@ -143,7 +139,7 @@ if (animationPlayer.Animation != animInteractGround
 					{
 						direction = point_direction(x, y, _zombie.x, _zombie.y);
 					}
-					var _damage = irandom_range(5, 10);
+					var _damage = irandom_range(10, 20);
 					_zombie.hp -= _damage;
 					_zombie.knockback = new BBMOD_Vec3(
 						lengthdir_x(4, camera.Direction),
@@ -155,12 +151,6 @@ if (animationPlayer.Animation != animInteractGround
 					_floatingText.text = "-" + string(_damage);
 				}
 			}
-		}
-
-		// Kick
-		if (keyboard_check_pressed(ord("F")))
-		{
-			animationStateMachine.change_state(stateKick);
 		}
 
 		if (keyboard_check_pressed(vk_space))

@@ -1,4 +1,4 @@
-/// @func raycast_aabb(_origin, _direction, _min, _max)
+/// @func RaycastAABB(_origin, _direction, _min, _max)
 /// @desc Checks whether a ray intersects an AABB.
 /// @param {BBMOD_Vec3} _origin The origin of the ray.
 /// @param {BBMOD_Vec3} _direction The ray's direction.
@@ -8,7 +8,7 @@
 /// ray intersects the AABB. If -1 is returned, then they do not in
 /// intersect.
 /// @source https://gamephysicscookbook.com/
-function raycast_aabb(_origin, _direction, _min, _max)
+function RaycastAABB(_origin, _direction, _min, _max)
 {
 	static CMP = function (_x, _y) {
 		return (abs(_x - _y) <= math_get_epsilon() * max(1.0, abs(_x), abs(_y)));

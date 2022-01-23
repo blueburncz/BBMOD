@@ -66,16 +66,6 @@ animPunchRight = OMain.resourceManager.load(
 		}
 	});
 
-animKick = OMain.resourceManager.load(
-	"Data/Assets/Character/Character_Kick.bbanim",
-	undefined,
-	function (_err, _animation) {
-		if (!_err)
-		{
-			_animation.add_event(35, "Kick");
-		}
-	});
-
 animIdle = OMain.resourceManager.load("Data/Assets/Character/Character_Idle.bbanim");
 
 animInteractGround = OMain.resourceManager.load(
@@ -245,14 +235,16 @@ statePunchRight.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
 }));
 animationStateMachine.add_state(statePunchRight);
 
-stateKick = new BBMOD_AnimationState("Kick", animKick);
-stateKick.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {
-	// Go to the "Idle" state at the end of the kicking animation.
-	animationStateMachine.change_state(stateIdle);
-}));
-animationStateMachine.add_state(stateKick);
-
 stateInteractGround = new BBMOD_AnimationState("InteractGround", animInteractGround);
+stateInteractGround.OnUpdate = method(self, function () {
+	// Rotate towards an item.
+	if (pickupTarget != undefined
+		&& instance_exists(pickupTarget)
+		&& point_distance(x, y, pickupTarget.x, pickupTarget.y) > 5)
+	{
+		direction = point_direction(x, y, pickupTarget.x, pickupTarget.y);
+	}
+});
 stateInteractGround.on_event("PickUp", method(self, function () {
 	// Pick up an item.
 	if (instance_exists(pickupTarget))

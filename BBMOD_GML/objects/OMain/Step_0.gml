@@ -24,7 +24,7 @@ if (!instance_exists(OZombie)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Screen effects based on players health etc.
-var _grayscale = (OPlayer.hp < OPlayer.hpMax * 0.15) ? 0.75 : 0.0;
+var _grayscale = (OPlayer.hp < OPlayer.hpMax * 0.25) ? 0.75 : 0.0;
 renderer.Grayscale = bbmod_lerp_delta_time(renderer.Grayscale, _grayscale, 0.1, delta_time);
 
 var _hurt = OPlayer.hurt;

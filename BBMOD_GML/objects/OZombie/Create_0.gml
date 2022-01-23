@@ -2,12 +2,14 @@ event_inherited();
 
 knockback = new BBMOD_Vec3();
 
+dropGun = choose(true, false);
+
 // Number of ms till the zombie changes to the "Idle" state.
 timeout = random_range(500, 1000);
 
 // Number of ms till the zombie changes from "Idle" to "Attack" state if player
 // is in range.
-timetoutAttack = undefined;
+timeoutAttack = undefined;
 
 // If true then the zombie will be destroyed.
 destroy = false;
@@ -28,7 +30,7 @@ dissolve = 0;
 // Create a custom material. Each zombie has its own since each instance needs
 // to pass its own values for the dissolve effect.
 
-material = mat_zombie().clone();
+material = MatZombie().clone();
 material.BaseOpacity = sprite_get_texture(SprZombie, choose(0, 1));
 material.OnApply = method(self, function (_material) {
 	var _shader = BBMOD_SHADER_CURRENT;
@@ -123,7 +125,7 @@ animationStateMachine.add_state(stateDeactivated);
 // When the player is out of the zombie's range, change to the "Walk" state.
 stateIdle = new BBMOD_AnimationState("Idle", animIdle, true);
 stateIdle.OnEnter = method(self, function () {
-	timeoutAttack = random_range(100, 500);
+	timeoutAttack = random(100);
 });
 stateIdle.OnUpdate = method(self, function () {
 	if (!playerInRange())

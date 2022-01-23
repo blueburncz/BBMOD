@@ -6,7 +6,7 @@
     "path": "folders/Demo/Scripts.yy",
   },
   "resourceVersion": "1.0",
-  "name": "ray_intersects_aabb",
+  "name": "RaycastAABB",
   "tags": [],
   "resourceType": "GMScript",
 }

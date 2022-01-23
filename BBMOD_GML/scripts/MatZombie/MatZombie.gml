@@ -1,4 +1,4 @@
-function mat_zombie()
+function MatZombie()
 {
 	static _shader = undefined;
 	static _shaderDepth = undefined;

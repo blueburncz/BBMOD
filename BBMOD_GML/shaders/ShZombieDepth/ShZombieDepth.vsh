@@ -1,4 +1,3 @@
-#pragma include("Uber_VS.xsh", "glsl")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -126,4 +125,3 @@ void main()
 	v_mTBN = mat3(T, B, N);
 
 }
-// include("Uber_VS.xsh")

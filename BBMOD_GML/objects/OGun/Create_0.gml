@@ -1,3 +1,3 @@
 event_inherited();
 
-ammo = irandom_range(3, 10);
+ammo = irandom_range(3, 6);

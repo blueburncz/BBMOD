@@ -276,14 +276,11 @@ function BBMOD_AnimationPlayer(_model, _paused)
 				}
 				else
 				{
-					if (!_animation.IsTransition)
-					{
-						trigger_event(BBMOD_EV_ANIMATION_END, _animation);
-					}
 					ds_list_delete(Animations, 0);
 					if (!_animation.IsTransition)
 					{
 						Animation = BBMOD_NONE;
+						trigger_event(BBMOD_EV_ANIMATION_END, _animation);
 					}
 					continue;
 				}
@@ -428,7 +425,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @see BBMOD_AnimationPlayer.Animation
 	static change = function (_animation, _loop) {
 		gml_pragma("forceinline");
-		if (AnimationLast != _animation)
+		if (Animation != _animation)
 		{
 			play(_animation, _loop);
 		}

@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Materials",
-    "path": "folders/Demo/Materials.yy",
+    "name": "Scripts",
+    "path": "folders/Demo/Scripts.yy",
   },
   "resourceVersion": "1.0",
-  "name": "mat_zombie",
+  "name": "WorldToScreen",
   "tags": [],
   "resourceType": "GMScript",
 }
