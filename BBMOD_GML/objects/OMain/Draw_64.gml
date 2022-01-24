@@ -1,5 +1,6 @@
 var _windowWidth = window_get_width();
 var _windowHeight = window_get_height();
+var _font = draw_get_font();
 
 var _cam = OPlayer.camera;
 var _viewProjMat = matrix_multiply(_cam.get_view_mat(), _cam.get_proj_mat());
@@ -23,16 +24,13 @@ with (OZombie)
 	var _height = 10;
 	var _x = round(_screenPos.X - _width * 0.5);
 	var _y = round(_screenPos.Y - _height * 0.5);
-	draw_set_alpha(0.75);
 	draw_rectangle_color(_x, _y, _x + _width, _y + _height, 0, 0, 0, 0, false);
-	draw_set_alpha(1);
 	draw_rectangle_color(_x + 2, _y + 2, _x + 2 + (_width - 4) * (hp / hpMax), _y + 2 + _height - 4,
 		c_red, c_red, c_maroon, c_maroon, false);
 }
 
 // Draw floating text
-var _font = draw_get_font();
-draw_set_font(FntFloatingText);
+draw_set_font(Fnt16);
 with (OFloatingText)
 {
 	var _screenPos = WorldToScreen(
@@ -42,8 +40,7 @@ with (OFloatingText)
 		// Floating text is outside of the screen.
 		continue;
 	}
-	draw_text_color(_screenPos.X + 2, _screenPos.Y + 2, text, 0, 0, 0, 0, 1);
-	draw_text(_screenPos.X, _screenPos.Y, text);
+	DrawTextShadow(_screenPos.X, _screenPos.Y, text);
 }
 draw_set_font(_font);
 
@@ -55,8 +52,28 @@ if (OPlayer.aiming)
 		round(_windowHeight / 2));
 }
 
-draw_text(0, 0, string(ceil(waveTimeout)) + "s");
-draw_text(0, 20, string(score) + "+" + string(scoreBonus));
+// Draw score
+draw_set_font(Fnt24);
+draw_set_halign(fa_center);
+var _text = string(score);
+if (scoreBonus > 0)
+{
+	_text += "+" + string(scoreBonus);
+}
+DrawTextShadow(floor(_windowWidth * 0.5), 16, _text);
 
-var _text = string(OPlayer.ammo);
-draw_text(_windowWidth - string_width(_text), _windowHeight - string_height(_text), _text);
+// Draw time remaining till the next wave is spawned
+draw_set_font(Fnt16);
+draw_set_halign(fa_right);
+DrawTextShadow(_windowWidth - 16, 16, string(ceil(waveTimeout)) + "s", (waveTimeout > 5.0) ? c_white : c_red);
+
+// Draw ammo
+if (OPlayer.ammo > 0)
+{
+	draw_set_valign(fa_bottom);
+	DrawTextShadow(_windowWidth - 16, _windowHeight - 16, OPlayer.ammo);
+	draw_set_valign(fa_top);
+}
+
+draw_set_halign(fa_left);
+draw_set_font(_font);

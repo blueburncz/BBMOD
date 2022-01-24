@@ -17,7 +17,7 @@
 
 ### Camera module:
 * Fixed mouselook on HTML5.
-* Fixed audio listener orientation... maybe?
+* Fixed audio listener orientation.
 
 ### Resource manager module:
 * Added new module - Resource manager.

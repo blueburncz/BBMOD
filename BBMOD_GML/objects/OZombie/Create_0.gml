@@ -2,7 +2,7 @@ event_inherited();
 
 knockback = new BBMOD_Vec3();
 
-dropGun = choose(true, false);
+dropGun = false;
 
 // Number of ms till the zombie changes to the "Idle" state.
 timeout = random_range(500, 1000);
@@ -114,7 +114,7 @@ animationStateMachine.OnPostUpdate = method(self, function () {
 // "Idle" state.
 stateDeactivated = new BBMOD_AnimationState("Deactivated", animIdle, true);
 stateDeactivated.OnUpdate = method(self, function () {
-	timeout -= delta_time * 0.001;
+	timeout -= DELTA_TIME * 0.001;
 	if (timeout <= 0)
 	{
 		animationStateMachine.change_state(stateIdle);
@@ -134,7 +134,7 @@ stateIdle.OnUpdate = method(self, function () {
 		return;
 	}
 
-	timeoutAttack -= delta_time * 0.001;
+	timeoutAttack -= DELTA_TIME * 0.001;
 	if (timeoutAttack <= 0)
 	{
 		animationStateMachine.change_state(stateAttack);
@@ -151,7 +151,7 @@ stateWalk.OnUpdate = method(self, function () {
 		animationStateMachine.change_state(stateIdle);
 		return;
 	}
-	mp_potential_step_object(OPlayer.x, OPlayer.y, speedWalk, OZombie);
+	mp_potential_step_object(OPlayer.x, OPlayer.y, speedWalk * global.gameSpeed, OZombie);
 });
 animationStateMachine.add_state(stateWalk);
 

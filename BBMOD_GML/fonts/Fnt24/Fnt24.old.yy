@@ -6,7 +6,7 @@
   "applyKerning": 0,
   "fontName": "Arial Black",
   "styleName": "Black",
-  "size": 16.0,
+  "size": 24.0,
   "bold": false,
   "italic": false,
   "charset": 0,
@@ -293,7 +293,7 @@
     "path": "folders/Demo/Fonts.yy",
   },
   "resourceVersion": "1.0",
-  "name": "FntFloatingText",
+  "name": "Fnt24",
   "tags": [],
   "resourceType": "GMFont",
 }

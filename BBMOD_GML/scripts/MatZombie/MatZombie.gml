@@ -10,6 +10,7 @@ function MatZombie()
 		_material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 			.set_shader(BBMOD_ERenderPass.Forward, _shader)
 			.set_shader(BBMOD_ERenderPass.Shadows, _shaderDepth); // Enable casting shadows
+		_material.Culling = cull_noculling;
 	}
 	return _material;
 }

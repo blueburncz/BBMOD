@@ -144,7 +144,7 @@ stateIdle = new BBMOD_AnimationState("Idle", animIdle, true);
 stateIdle.OnUpdate = method(self, function () {
 	// Go to state "Run" if the player's speed is greater or equal to the
 	// running speed.
-	if (speed >= speedRun)
+	if (speedCurrent >= speedRun)
 	{
 		animationStateMachine.change_state(stateRun);
 		return;
@@ -152,7 +152,7 @@ stateIdle.OnUpdate = method(self, function () {
 
 	// Go to state "Walk" if the player's speed is greater or equal to the
 	// walking speed.
-	if (speed >= speedWalk)
+	if (speedCurrent >= speedWalk)
 	{
 		animationStateMachine.change_state(stateWalk);
 		return;
@@ -164,7 +164,7 @@ stateWalk = new BBMOD_AnimationState("Walk", animWalk, true);
 stateWalk.OnUpdate = method(self, function () {
 	// Go to the "Idle" state if the player's speed is less than the walking
 	// speed.
-	if (speed < speedWalk)
+	if (speedCurrent < speedWalk)
 	{
 		animationStateMachine.change_state(stateIdle);
 		return;
@@ -172,7 +172,7 @@ stateWalk.OnUpdate = method(self, function () {
 
 	// Go to the "Run" state if the player's speed is greater than the walking
 	// speed.
-	if (speed >= speedRun)
+	if (speedCurrent >= speedRun)
 	{
 		animationStateMachine.change_state(stateRun);
 		return;
@@ -184,7 +184,7 @@ stateRun = new BBMOD_AnimationState("Run", animRun, true);
 stateRun.OnUpdate = method(self, function () {
 	// Go to the "Walk" state if the player's speed is less than the running
 	// speed.
-	if (speed < speedRun)
+	if (speedCurrent < speedRun)
 	{
 		animationStateMachine.change_state(stateWalk);
 		return;

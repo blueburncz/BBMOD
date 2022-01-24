@@ -1,3 +1,7 @@
+#macro DELTA_TIME (delta_time * global.gameSpeed)
+
+global.gameSpeed = 1.0;
+
 randomize();
 os_powersave_enable(false);
 display_set_gui_maximize(1, 1);
