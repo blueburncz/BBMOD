@@ -85,13 +85,13 @@ animationStateMachine.OnEnter = method(self, function () {
 // Regardless on the current state, go to state "Death" if the zombie
 // is dead.
 animationStateMachine.OnPreUpdate = method(self, function () {
+	x += knockback.X;
+	y += knockback.Y;
+	z += knockback.Z;
+	knockback = knockback.Scale(0.9);
+
 	if (animationStateMachine.State != stateAttack)
 	{
-		x += knockback.X;
-		y += knockback.Y;
-		z += knockback.Z;
-		knockback = knockback.Scale(0.9);
-
 		if (hp <= 0
 			&& animationStateMachine.State != stateDeath)
 		{
@@ -158,11 +158,33 @@ animationStateMachine.add_state(stateWalk);
 // Attack the player.
 stateAttack = new BBMOD_AnimationState("Attack", animAttack);
 stateAttack.on_event("Attack", method(self, function () {
-	if (hp > 0
-		&& playerInRange())
+	if (hp > 0)
 	{
-		OPlayer.hp -= irandom_range(10, 15);
-		OPlayer.hurt = 1.0;
+		var _index;
+
+		if (playerInRange())
+		{
+			OPlayer.hp -= irandom_range(10, 15);
+			OPlayer.hurt = 1.0;
+
+			_index = audio_play_sound_at(
+				SndPunch,
+				x + lengthdir_x(30, direction),
+				y + lengthdir_y(30, direction),
+				z + 30,
+				10, 200, 1, false, 1);
+		}
+		else
+		{
+			_index = audio_play_sound_at(
+				SndWhoosh,
+				x + lengthdir_x(30, direction),
+				y + lengthdir_y(30, direction),
+				z + 30,
+				10, 200, 1, false, 1);
+		}
+
+		audio_sound_pitch(_index, random_range(0.5, 0.8));
 	}
 }));
 stateAttack.on_event(BBMOD_EV_ANIMATION_END, method(self, function () {

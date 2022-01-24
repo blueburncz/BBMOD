@@ -29,8 +29,9 @@ with (OZombie)
 		c_red, c_red, c_maroon, c_maroon, false);
 }
 
-// Draw floating text
 draw_set_font(Fnt16);
+
+// Draw floating text
 with (OFloatingText)
 {
 	var _screenPos = WorldToScreen(
@@ -42,6 +43,28 @@ with (OFloatingText)
 	}
 	DrawTextShadow(_screenPos.X, _screenPos.Y, text);
 }
+
+// Draw item pickup text
+with (OGun)
+{
+	if (OPlayer.pickupTarget == id)
+	{
+		continue;
+	}
+	if (point_distance(x, y, OPlayer.x, OPlayer.y) > pickupRange)
+	{
+		continue;
+	}
+	var _screenPos = WorldToScreen(
+		new BBMOD_Vec3(x, y, z), _viewProjMat, _windowWidth, _windowHeight);
+	if (!_screenPos)
+	{
+		// Text is outside of the screen.
+		continue;
+	}
+	DrawTextShadow(_screenPos.X, _screenPos.Y, "E");
+}
+
 draw_set_font(_font);
 
 // Draw crosshair
@@ -72,6 +95,16 @@ if (OPlayer.ammo > 0)
 {
 	draw_set_valign(fa_bottom);
 	DrawTextShadow(_windowWidth - 16, _windowHeight - 16, OPlayer.ammo);
+	draw_set_valign(fa_top);
+}
+
+// Draw pause text
+if (global.gameSpeed == 0)
+{
+	draw_set_font(Fnt48);
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_bottom);
+	DrawTextShadow(round(_windowWidth * 0.5), _windowHeight - 16, "PAUSE");
 	draw_set_valign(fa_top);
 }
 

@@ -109,6 +109,13 @@ if (global.gameSpeed > 0.0)
 							var _floatingText = instance_create_layer(x, y, layer, OFloatingText);
 							_floatingText.z = z + 42;
 							_floatingText.text = "-" + string(_damage);
+							var _index = audio_play_sound_at(
+								choose(SndZombie0, SndZombie1),
+								x,
+								y,
+								z + 30,
+								10, 1000, 1, false, 1);
+							audio_sound_pitch(_index, random_range(1.0, 1.5));
 						}
 					}
 
@@ -124,6 +131,8 @@ if (global.gameSpeed > 0.0)
 				animationStateMachine.change_state(punchRight ? statePunchRight : statePunchLeft);
 				punchRight = !punchRight;
 				speedCurrent = 2;
+
+				var _hit = false;
 				var _zombie = instance_nearest(x, y, OZombie);
 				if (_zombie != noone)
 				{
@@ -144,7 +153,33 @@ if (global.gameSpeed > 0.0)
 						var _floatingText = instance_create_layer(_zombie.x, _zombie.y, layer, OFloatingText);
 						_floatingText.z = _zombie.z + 42;
 						_floatingText.text = "-" + string(_damage);
+						var _index = audio_play_sound_at(
+							SndPunch,
+							x + lengthdir_x(30, direction),
+							y + lengthdir_y(30, direction),
+							z + 30,
+							10, 200, 1, false, 1);
+						audio_sound_pitch(_index, random_range(0.75, 1));
+						var _index = audio_play_sound_at(
+							choose(SndZombie0, SndZombie1),
+							_zombie.x,
+							_zombie.y,
+							_zombie.z + 30,
+							10, 200, 1, false, 1);
+						audio_sound_pitch(_index, random_range(1.0, 1.5));
+						_hit = true;
 					}
+				}
+
+				if (!_hit)
+				{
+					var _index = audio_play_sound_at(
+						SndWhoosh,
+						x + lengthdir_x(30, direction),
+						y + lengthdir_y(30, direction),
+						z + 30,
+						10, 200, 1, false, 1);
+					audio_sound_pitch(_index, random_range(0.75, 1));
 				}
 			}
 
@@ -152,13 +187,14 @@ if (global.gameSpeed > 0.0)
 			{
 				// Jump
 				zspeed += 2;
+				aiming = false;
 			}
 			else if (keyboard_check_pressed(ord("E"))
 				&& instance_exists(OGun))
 			{
 				// Pick up a gun
 				var _gun = instance_nearest(x, y, OGun);
-				if (point_distance(x, y, _gun.x, _gun.y) < 20)
+				if (point_distance(x, y, _gun.x, _gun.y) < _gun.pickupRange)
 				{
 					pickupTarget = _gun;
 				}
