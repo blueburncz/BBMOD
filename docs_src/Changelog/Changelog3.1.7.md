@@ -1,4 +1,5 @@
 # Changelog 3.1.7
+This release mainly focuses on HTML5 support. It adds means for asynchronnous loading of BBMOD model and animations, as well as regular buffers and sprites, which is required for HTML5. Mouselook was also fixed using a JavaScript extension. Additionally there is now a new resource manager module, which greatly simplifies loading or resources, retrieval of already loaded resources and freeing of all loaded resources from memory. The demo project was also reworked into a minigame to show off these new features.
 
 ## GML API:
 ### Core module:
@@ -26,3 +27,4 @@
 ### Rendering module:
 #### Renderer submodule:
 * Added new property `VignetteColor` to `BBMOD_Renderer`, which is the color of the vignette effect.
+* When a renderer with enabled `UseAppSurface` is destroyed, it again enables automatic rendering of the application surface.
