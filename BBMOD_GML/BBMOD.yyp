@@ -24,6 +24,7 @@
     {"id":{"name":"BBMOD_AnimationState","path":"scripts/BBMOD_AnimationState/BBMOD_AnimationState.yy",},"order":3,},
     {"id":{"name":"OPlayer","path":"objects/OPlayer/OPlayer.yy",},"order":1,},
     {"id":{"name":"SndFootstep4","path":"sounds/SndFootstep4/SndFootstep4.yy",},"order":4,},
+    {"id":{"name":"RmGameOver","path":"rooms/RmGameOver/RmGameOver.yy",},"order":1,},
     {"id":{"name":"BBMOD_ShPBRBatched","path":"shaders/BBMOD_ShPBRBatched/BBMOD_ShPBRBatched.yy",},"order":8,},
     {"id":{"name":"bbmod_array_from_buffer","path":"scripts/bbmod_array_from_buffer/bbmod_array_from_buffer.yy",},"order":0,},
     {"id":{"name":"BBMOD_VertexFormat","path":"scripts/BBMOD_VertexFormat/BBMOD_VertexFormat.yy",},"order":5,},
@@ -100,6 +101,7 @@
     {"id":{"name":"SndGunshot3","path":"sounds/SndGunshot3/SndGunshot3.yy",},"order":3,},
     {"id":{"name":"BBMOD_IEventListener","path":"scripts/BBMOD_IEventListener/BBMOD_IEventListener.yy",},"order":0,},
     {"id":{"name":"BBMOD_Mesh","path":"scripts/BBMOD_Mesh/BBMOD_Mesh.yy",},"order":1,},
+    {"id":{"name":"OGameOver","path":"objects/OGameOver/OGameOver.yy",},"order":7,},
     {"id":{"name":"OCharacter","path":"objects/OCharacter/OCharacter.yy",},"order":0,},
     {"id":{"name":"SprPlayer","path":"sprites/SprPlayer/SprPlayer.yy",},"order":0,},
     {"id":{"name":"bbmod_render_pass_","path":"scripts/bbmod_render_pass_/bbmod_render_pass_.yy",},"order":2,},
@@ -156,6 +158,7 @@
   },
   "RoomOrderNodes": [
     {"roomId":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},},
+    {"roomId":{"name":"RmGameOver","path":"rooms/RmGameOver/RmGameOver.yy",},},
   ],
   "Folders": [
     {"folderPath":"folders/Demo/Sprites.yy","order":4,"resourceVersion":"1.0","name":"Sprites","tags":[],"resourceType":"GMFolder",},

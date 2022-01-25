@@ -79,9 +79,9 @@ if (OPlayer.aiming)
 draw_set_font(Fnt24);
 draw_set_halign(fa_center);
 var _text = string(score);
-if (scoreBonus > 0)
+if (global.scoreBonus > 0)
 {
-	_text += "+" + string(scoreBonus);
+	_text += "+" + string(global.scoreBonus);
 }
 DrawTextShadow(floor(_windowWidth * 0.5), 16, _text);
 

@@ -10,7 +10,8 @@ audio_falloff_set_model(audio_falloff_linear_distance);
 // If true then debug overlay is enabled.
 debugOverlay = false;
 
-scoreBonus = 0;
+score = 0;
+global.scoreBonus = 0;
 wave = 1;
 waveTimeout = 10;
 

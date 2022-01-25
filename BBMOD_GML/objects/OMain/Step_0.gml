@@ -10,7 +10,7 @@ waveTimeout -= DELTA_TIME * 0.000001;
 if (!instance_exists(OZombie)
 	|| waveTimeout <= 0)
 {
-	scoreBonus += max(ceil(waveTimeout), 0);
+	global.scoreBonus += max(ceil(waveTimeout), 0);
 	repeat (++wave)
 	{
 		instance_create_layer(
@@ -24,12 +24,12 @@ if (!instance_exists(OZombie)
 		dropGun = true;
 		break;
 	}
-	waveTimeout = min(wave * 5, 60);
+	waveTimeout = wave * 5;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Screen effects based on players health etc.
-var _grayscale = (OPlayer.hp < OPlayer.hpMax * 0.25) ? 0.75 : 0.0;
+var _grayscale = (OPlayer.hp <= ceil(OPlayer.hpMax / 3.0)) ? 0.75 : 0.0;
 renderer.Grayscale = bbmod_lerp_delta_time(renderer.Grayscale, _grayscale, 0.1, DELTA_TIME);
 
 var _hurt = OPlayer.hurt;

@@ -416,5 +416,10 @@ function BBMOD_Renderer()
 		{
 			surface_free(SurPostProcess);
 		}
+		if (UseAppSurface)
+		{
+			application_surface_enable(false);
+			application_surface_draw_enable(true);
+		}
 	};
 }

@@ -150,8 +150,8 @@ if (global.gameSpeed > 0.0)
 						var _damage = irandom_range(10, 20);
 						_zombie.hp -= _damage;
 						_zombie.knockback = new BBMOD_Vec3(
-							lengthdir_x(4, camera.Direction),
-							lengthdir_y(4, camera.Direction),
+							lengthdir_x(4, direction),
+							lengthdir_y(4, direction),
 							0);
 						_zombie.hurt = 1.0;
 						var _floatingText = instance_create_layer(_zombie.x, _zombie.y, layer, OFloatingText);
@@ -252,4 +252,11 @@ else
 	animationPlayer.set_node_rotation(_chestIndex, undefined);
 	animationPlayer.set_node_rotation(_neckIndex, undefined);
 	animationPlayer.set_node_rotation(_rightArmIndex, undefined);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Game over
+if (hp <= 0.0)
+{
+	room_goto(RmGameOver);
 }

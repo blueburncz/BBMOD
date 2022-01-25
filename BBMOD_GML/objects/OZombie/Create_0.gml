@@ -167,13 +167,13 @@ animationStateMachine.add_state(stateWalk);
 // Attack the player.
 stateAttack = new BBMOD_AnimationState("Attack", animAttack);
 stateAttack.on_event("Attack", method(self, function () {
-	if (hp > 0)
+	if (hp > 0 && z >= 0)
 	{
 		var _index;
 
 		if (playerInRange())
 		{
-			OPlayer.hp -= irandom_range(10, 15);
+			OPlayer.hp -= OPlayer.hpMax / 3.0;
 			OPlayer.hurt = 1.0;
 
 			_index = audio_play_sound_at(
