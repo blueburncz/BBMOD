@@ -15,6 +15,7 @@ This release mainly focuses on HTML5 support. It adds means for asynchronnous lo
 * Arguments of the `BBMOD_Model` constructor are now optional.
 * Fixed method `BBMOD_VertexFormat.get_byte_size`, which returned incorrect values when the vertex format included vertex colors or bones.
 * Fixed creating dynamic and static batches with models that have vertex colors.
+* Animation transitions do no longer trigger event `BBMOD_EV_ANIMATION_END`. This caused unexpected behavior of animation playback, animation state machines etc.
 
 ### Camera module:
 * Fixed mouselook on HTML5.

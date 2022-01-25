@@ -1,5 +1,6 @@
 /// @func BBMOD_Resource()
 /// @extends BBMOD_Class
+/// @desc Base struct for all BBMOD resources.
 function BBMOD_Resource()
 	: BBMOD_Class() constructor
 {
@@ -106,7 +107,9 @@ function BBMOD_Resource()
 	};
 
 	/// @func from_file_async(_file[, _sha1[, _callback]])
+	///
 	/// @desc Asynchronnously loads the resource from a file.
+	///
 	/// @param {string} _file The path to the file.
 	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
 	/// does not match with this, then the resource will not be loaded.
@@ -114,7 +117,13 @@ function BBMOD_Resource()
 	/// loaded or if an error occurs. It must take the error as the first argument
 	/// and the resource as the second argument. If no error occurs, then `undefined`
 	/// is passed.
+	///
 	/// @return {BBMOD_Resource} Returns `self`.
+	///
+	/// @note Do not forget to call {@link bbmod_async_save_load_update} and
+	/// {@link bbmod_async_image_loaded_update} in appropriate events when using
+	/// asynchronnous loading! You can also use {@link BBMOD_ResourceManager} for
+	/// unified asynchronnous loading of resources.
 	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
 		Path = _file;
 

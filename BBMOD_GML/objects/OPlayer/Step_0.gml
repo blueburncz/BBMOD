@@ -103,6 +103,7 @@ if (global.gameSpeed > 0.0)
 						var _max = new BBMOD_Vec3(x + 5, y + 5, z + 36);
 						if (RaycastAABB(_origin, _direction, _min, _max) != -1)
 						{
+							// TODO: Make RecieveDamage method
 							var _damage = irandom_range(45, 55);
 							hp -= _damage;
 							knockback = new BBMOD_Vec3(
@@ -147,6 +148,7 @@ if (global.gameSpeed > 0.0)
 						{
 							direction = point_direction(x, y, _zombie.x, _zombie.y);
 						}
+						// TODO: Make RecieveDamage method
 						var _damage = irandom_range(10, 20);
 						_zombie.hp -= _damage;
 						_zombie.knockback = new BBMOD_Vec3(

@@ -1,5 +1,42 @@
 /// @func BBMOD_ResourceManager()
+///
 /// @extends BBMOD_Class
+///
+/// @desc Using this struct you can easily load, retrieve and free from memory
+/// any BBMOD resources.
+///
+/// @example
+/// Create a resource manager in `OMain`:
+/// ```gml
+/// /// @desc Create event
+/// resourceManager = new BBMOD_ResourceManager();
+///
+/// /// @desc Clean Up event
+/// resourceManager.destroy();
+///
+/// /// @desc Async - Image Loaded event
+/// resourceManager.async_image_loaded_update(async_load);
+///
+/// /// @desc Async - Save/Load event
+/// resourceManager.async_save_load_update(async_load);
+/// ```
+///
+/// Use the resource manager in another object to load its model or just retrieve
+/// a reference to it, if it is already loaded.
+/// ```gml
+/// /// @desc Create event
+/// model = OMain.resourceManager.load("Data/Model.bbmod");
+///
+/// /// @desc Clean Up event
+/// // Free the reference. This is not necessary if you do not want to unload the
+/// // model when all instances are destroyed. It will always be unloaded when the
+/// // resource manager is destroyed.
+/// model.free();
+///
+/// /// @desc Draw event
+/// matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, 0, 1, 1, 1));
+/// model.render();
+/// ```
 function BBMOD_ResourceManager()
 	: BBMOD_Class() constructor
 {
@@ -36,8 +73,8 @@ function BBMOD_ResourceManager()
 
 	/// @func has(_pathOrUniqueName)
 	/// @desc Checks if the resource manager has a resource.
-	/// @param {string} _pathOrUniqueName The path to the resource file or unique
-	/// name of the resource.
+	/// @param {string} _pathOrUniqueName The path to the resource file or
+	/// unique name of the resource.
 	/// @return {bool} Returns `true` if the resource manager has the resource.
 	static has = function (_pathOrUniqueName) {
 		gml_pragma("forceinline");
@@ -46,11 +83,12 @@ function BBMOD_ResourceManager()
 
 	/// @func get(_pathOrUniqueName)
 	/// @desc Retrieves a reference to a resource.
-	/// @param {string} _pathOrUniqueName The path to the resource file or unique
-	/// name of the resource.
+	/// @param {string} _pathOrUniqueName The path to the resource file or
+	/// unique name of the resource.
 	/// @return {BBMOD_Resource} The resource.
 	/// @see BBMOD_ResourceManager.has
-	/// @throws {BBMOD_Exception} If the resource manager does not have such resource.
+	/// @throws {BBMOD_Exception} If the resource manager does not have such
+	/// resource.
 	static get = function (_pathOrUniqueName) {
 		gml_pragma("forceinline");
 		if (!ds_map_exists(Resources, _pathOrUniqueName))
@@ -99,7 +137,7 @@ function BBMOD_ResourceManager()
 	/// @func load(_path[, _sha1[, _onLoad]])
 	///
 	/// @desc Asynchronnously loads a resource from a file or retrieves
-	/// a reference to it if it is already loaded.
+	/// a reference to it, if it is already loaded.
 	///
 	/// @param {string} _path The path to the resource.
 	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
@@ -113,8 +151,8 @@ function BBMOD_ResourceManager()
 	/// @return {BBMOD_Resource/undefined} The resource.
 	///
 	/// @note Currently supported files formats are `*.bbmod` for {@link BBMOD_Model},
-	/// `*.bbanim` for {@link BBMOD_Animation} and `*.png`, `*.gif`, `*.jpg/jpeg` for
-	/// {@link BBMOD_Sprite}.
+	/// `*.bbanim` for {@link BBMOD_Animation} and `*.png`, `*.gif`, `*.jpg/jpeg`
+	/// for {@link BBMOD_Sprite}.
 	static load = function (_path, _sha1=undefined, _onLoad=undefined) {
 		var _resources = Resources;
 

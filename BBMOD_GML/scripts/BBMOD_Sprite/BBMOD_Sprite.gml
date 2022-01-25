@@ -1,8 +1,13 @@
 /// @func BBMOD_Sprite([_file[, _sha1]])
+///
 /// @extends BBMOD_Resource
+///
 /// @desc A sprite.
-/// @param {string} [_file]
-/// @param {string} [_sha1]
+///
+/// @param {string} [_file] The file to load the sprite ffrom.
+/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
+/// not match with this, then the model will not be loaded.
+///
 /// @throws {BBMOD_Exception} When the sprite fails to load.
 function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
@@ -18,11 +23,11 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	/// @readonly
 	Raw = undefined;
 
-	/// @var {uint}
+	/// @var {uint} The width of the sprite.
 	/// @readonly
 	Width = 0;
 
-	/// @var {uint}
+	/// @var {uint} The height of the sprite.
 	/// @readonly
 	Height = 0;
 

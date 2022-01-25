@@ -67,6 +67,7 @@
             "Renderer submodule": "Modules/Rendering/RendererSubmodule.md"
           }
         },
+        "Resource manager module": "Modules/ResourceManagerModule.md",
         "State machine module": "Modules/StateMachineModule.md",
         "ColMesh module": "Modules/ColMeshModule.md"
       }

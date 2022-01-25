@@ -35,6 +35,9 @@ function bbmod_empty_callback(_err, _res=undefined)
 ///     // Use the loaded buffer here...
 /// });
 /// ```
+///
+/// @note You must call {@link bbmod_async_save_load_update} in an appropriate
+/// event for this function to work!
 function bbmod_buffer_load_async(_file, _callback)
 {
 	var _buffer = buffer_create(1, buffer_grow, 1);
@@ -109,6 +112,9 @@ function bbmod_async_save_load_update(_asyncLoad)
 ///     // Use the loaded sprite here...
 /// });
 /// ```
+///
+/// @note You must call {@link bbmod_async_image_loaded_update} in an appropriate
+/// event for this function to work!
 function bbmod_sprite_add_async(_file, _callback)
 {
 	var _id = sprite_add(_file, 0, false, false, 0, 0);

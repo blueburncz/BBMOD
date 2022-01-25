@@ -1,5 +1,5 @@
 {
-  "option_windows_display_name": "Created with GameMaker Studio 2",
+  "option_windows_display_name": "BBMOD Demo",
   "option_windows_executable_name": "${project_name}.exe",
   "option_windows_version": "3.1.7.0",
   "option_windows_company_info": "BlueBurn",

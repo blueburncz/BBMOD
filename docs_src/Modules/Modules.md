@@ -13,5 +13,6 @@ individual modules.
 * [Importer module](./ImporterModule.html)
 * [Camera module](./CameraModule.html)
 * [Rendering module](./RenderingModule.html)
+* [Resource manager module](./ResourceManagerModule.html)
 * [State machine module](./StateMachineModule.html)
 * [ColMesh module](./ColMeshModule.html)

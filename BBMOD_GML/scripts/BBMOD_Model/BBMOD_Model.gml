@@ -329,6 +329,9 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @note Only parts of the model that use materials compatible with the
 	/// current render pass are submitted!
 	///
+	/// This method does not do anything if the model has not been loaded yet.
+	///
+	/// @see BBMOD_Resource.IsLoaded
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
@@ -344,13 +347,20 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func render([_materials[, _transform]])
+	///
 	/// @desc Enqueues the model for rendering.
+	///
 	/// @param {BBMOD_BaseMaterial[]/undefined} [_materials] An array of materials,
 	/// one for each material slot of the model. If not specified, then
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {real[]/undefined} [_transform] An array of transformation matrices
 	/// (for animated models) or `undefined`.
+	///
 	/// @return {BBMOD_Model} Returns `self`.
+	///
+	/// @note This method does not do anything if the model has not been loaded yet.
+	///
+	/// @see BBMOD_Resource.IsLoaded
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
