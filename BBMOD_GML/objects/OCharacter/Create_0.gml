@@ -16,6 +16,7 @@ hpMax = 100;
 // Current number of hitpoints. Character dies if reaches 0.
 hp = hpMax;
 
+// Controls the screen flash effect for the player and model flash for zombies.
 hurt = 0.0;
 
 // The character's speed when they're walking.

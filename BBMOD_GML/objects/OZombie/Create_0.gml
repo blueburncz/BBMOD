@@ -1,7 +1,9 @@
 event_inherited();
 
+// Knockback vector.
 knockback = new BBMOD_Vec3();
 
+// If true then the zombie drops a gun when killed.
 dropGun = false;
 
 // Number of ms till the zombie changes to the "Idle" state.
@@ -85,10 +87,12 @@ animationStateMachine.OnEnter = method(self, function () {
 // Regardless on the current state, go to state "Death" if the zombie
 // is dead.
 animationStateMachine.OnPreUpdate = method(self, function () {
-	x += knockback.X;
-	y += knockback.Y;
-	z += knockback.Z;
-	knockback = knockback.Scale(0.9);
+	var _gameSpeed = game_get_speed(gamespeed_microseconds);
+	var _deltaTime = DELTA_TIME / _gameSpeed;
+	x += knockback.X * _deltaTime;
+	y += knockback.Y * _deltaTime;
+	z += knockback.Z * _deltaTime;
+	knockback = knockback.Scale(1.0 - (0.1 * _deltaTime));
 
 	if (animationStateMachine.State != stateAttack)
 	{
