@@ -1,5 +1,11 @@
 event_inherited();
 
+// Kill the character if it falls out of the map
+if (z < -200)
+{
+	hp = 0;
+}
+
 animationStateMachine.update(DELTA_TIME);
 
 // Slow turn body towards direction

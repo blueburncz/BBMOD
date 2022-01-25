@@ -37,9 +37,13 @@ if (camera.Position.Z < 0.0)
 // Player controls
 if (global.gameSpeed > 0.0)
 {
-	speedCurrent *= 0.9;
+	var _gameSpeed = game_get_speed(gamespeed_microseconds);
+	var _deltaTime = DELTA_TIME / _gameSpeed;
+	speedCurrent *= 1.0 - (0.1 * _deltaTime);
 
-	if (animationPlayer.Animation != animInteractGround)
+	if (x >= 0 && x <= room_width
+		&& y >= 0 && y <= room_height
+		&& animationPlayer.Animation != animInteractGround)
 	{
 		if (z == 0)
 		{

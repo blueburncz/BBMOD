@@ -114,8 +114,9 @@ animationStateMachine.OnEnter = method(self, function () {
 animationStateMachine.OnPreUpdate = method(self, function () {
 	var _stateCurrent = animationStateMachine.State;
 
-	// Go to state "Jump" if the player is above the ground.
-	if (z > 0
+	// Go to state "Jump" if the player is above the ground of they're falling
+	// out of the map.
+	if ((z > 0 || z < -1)
 		&& _stateCurrent != stateJump)
 	{
 		animationStateMachine.change_state(stateJump);
@@ -195,7 +196,7 @@ animationStateMachine.add_state(stateRun);
 stateJump = new BBMOD_AnimationState("Jump", animJump, true);
 stateJump.OnUpdate = method(self, function () {
 	// Go to the "Idle" state when player falls on the ground.
-	if (z <= 0)
+	if (z == 0)
 	{
 		animationStateMachine.change_state(stateIdle);
 		return;

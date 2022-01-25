@@ -155,7 +155,12 @@ stateWalk.OnUpdate = method(self, function () {
 		animationStateMachine.change_state(stateIdle);
 		return;
 	}
-	mp_potential_step_object(OPlayer.x, OPlayer.y, speedWalk * global.gameSpeed, OZombie);
+
+	if (x >= 0 && x <= room_width
+		&& y >= 0 && y <= room_height)
+	{
+		mp_potential_step_object(OPlayer.x, OPlayer.y, speedWalk * global.gameSpeed, OZombie);
+	}
 });
 animationStateMachine.add_state(stateWalk);
 
