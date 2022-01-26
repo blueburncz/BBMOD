@@ -1,6 +1,6 @@
 {
   "conversionMode": 0,
-  "compression": 3,
+  "compression": 1,
   "volume": 1.0,
   "preload": false,
   "bitRate": 128,
@@ -12,7 +12,7 @@
     "path": "audiogroups/audiogroup_default",
   },
   "soundFile": "SndShell4.ogg",
-  "duration": 0.804263,
+  "duration": 0.855261,
   "parent": {
     "name": "Shell",
     "path": "folders/Demo/Sounds/Shell.yy",

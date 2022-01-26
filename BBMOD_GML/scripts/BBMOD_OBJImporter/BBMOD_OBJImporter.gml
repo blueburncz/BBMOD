@@ -54,6 +54,7 @@ function BBMOD_OBJImporter()
 		var _vformat = new BBMOD_VertexFormat(true, true, true, false, true);
 
 		var _model = new BBMOD_Model();
+		_model.IsLoaded = true;
 		_model.VertexFormat = _vformat;
 		_model.Meshes = [];
 		_model.NodeCount = 1;

@@ -1,7 +1,7 @@
 matrix_set(matrix_world, matrixBody);
-animationPlayer.render();
+animationPlayer.render([matPlayer]);
 
-if (hasGun)
+if (ammo > 0)
 {
 	matrix_set(matrix_world, matrixGun);
 	OMain.modGun.render();

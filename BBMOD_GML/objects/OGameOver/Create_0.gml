@@ -1,0 +1,1 @@
+time = current_time;

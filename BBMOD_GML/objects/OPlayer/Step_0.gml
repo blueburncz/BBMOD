@@ -8,20 +8,21 @@ camera.MouseSensitivity = aiming ? 0.25 : 1.0;
 if (!camera.MouseLook && mouse_check_button(mb_any))
 {
 	camera.set_mouselook(true);
-	window_set_cursor(cr_none);
-
 	// Consume the mouse press when just activating the mouselook.
 	_mouseLeftPressed = false;
 }
 else if (keyboard_check_pressed(vk_escape))
 {
 	camera.set_mouselook(false);
-	window_set_cursor(cr_arrow);
 }
 
-camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.2, delta_time);
+window_set_cursor(camera.MouseLook ? cr_none : cr_default);
 
-camera.update(delta_time);
+global.gameSpeed = camera.MouseLook ? 1.0 : 0.0;
+
+camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.2, DELTA_TIME);
+
+camera.update(DELTA_TIME);
 
 var _cameraHeight = OMain.terrain.get_height_xy(camera.Position.X, camera.Position.Y) + 1.0;
 if (camera.Position.Z < _cameraHeight)
@@ -34,115 +35,184 @@ if (camera.Position.Z < _cameraHeight)
 }
 
 // Increase camera exposure during nighttime
-camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 0.025, delta_time);
+camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 0.05, delta_time);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Player controls
-speed = 0;
-
-if (!GetCutscene()
-	&& !dead
-	&& animationPlayer.Animation != OMain.animInteractGround)
+if (global.gameSpeed > 0.0)
 {
-	if (animationStateMachine.State != stateJump)
+	var _gameSpeed = game_get_speed(gamespeed_microseconds);
+	var _deltaTime = DELTA_TIME / _gameSpeed;
+	speedCurrent *= 1.0 - (0.1 * _deltaTime);
+
+	if (x >= 0 && x <= room_width
+		&& y >= 0 && y <= room_height
+		&& animationPlayer.Animation != animInteractGround)
 	{
-		// Shooting
-		if (hasGun
-			&& camera.MouseLook
-			&& mouse_check_button_pressed(mb_right))
-		{
-			aiming = !aiming;
-		}
+		var _terrainZ = OMain.terrain.get_height_xy(x, y);
 
-		if (aiming)
+		if (z >= _terrainZ && z < _terrainZ + 5.0)
 		{
-			direction = camera.Direction;
-
-			if (_mouseLeftPressed
-				&& animationStateMachine.State == stateAim)
+			// Shooting
+			if (ammo > 0
+				&& camera.MouseLook
+				&& mouse_check_button_pressed(mb_right))
 			{
-				animationStateMachine.change_state(stateShoot);
+				aiming = !aiming;
+			}
 
-				// Compute the position where a gun shell will be spawned
-				var _shellPos = matrix_transform_vertex(matrixGun, -0.1, 0, 0.2);
+			if (aiming)
+			{
+				direction = camera.Direction;
 
-				// Create a shell
-				var _shell = instance_create_depth(_shellPos[0], _shellPos[1], 0, OShell);
-				_shell.z = _shellPos[2];
-				_shell.direction = direction - 90;
-				_shell.image_angle = direction;
-				_shell.speed = random_range(0.2, 0.5);
-				_shell.zspeed = random_range(0.5, 1.0);
-
-				// Play a rundom gunshot sound
-				var _sound = choose(
-					SndGunshot0,
-					SndGunshot1,
-					SndGunshot2,
-					SndGunshot3,
-					SndGunshot4,
-				);
-
-				audio_play_sound_at(_sound, _shellPos[0], _shellPos[1], _shellPos[2], 150, 1000, 1, false, 1);
-
-				var _light = instance_create_depth(_shellPos[0], _shellPos[1], 0, OGunshotLight);
-				_light.z = _shellPos[2];
-
-				// Determine which enemy was shot using a raycast against an AABB at its position.
-				var _origin = camera.Position;
-				var _direction = camera.get_forward();
-				var _hitId = noone;
-				var _hitDist = infinity;
-
-				with (OZombie)
+				if (_mouseLeftPressed
+					/*&& animationStateMachine.State == stateAim*/)
 				{
-					if (!active || dead)
+					animationStateMachine.change_state(stateShoot);
+
+					// Compute the position where a gun shell will be spawned
+					var _shellPos = matrix_transform_vertex(matrixGun, -0.1, 0, 0.2);
+
+					// Create a shell
+					var _shell = instance_create_depth(_shellPos[0], _shellPos[1], 0, OShell);
+					_shell.z = _shellPos[2];
+					_shell.direction = direction - 90;
+					_shell.image_angle = direction;
+					_shell.speedCurrent = random_range(0.2, 0.5);
+					_shell.zspeed = random_range(0.5, 1.0);
+
+					// Play a rundom gunshot sound
+					var _sound = choose(
+						SndGunshot0,
+						SndGunshot1,
+						SndGunshot2,
+						SndGunshot3,
+						SndGunshot4,
+					);
+
+					audio_play_sound_at(_sound, _shellPos[0], _shellPos[1], _shellPos[2], 150, 1000, 1, false, 1);
+
+					var _light = instance_create_depth(_shellPos[0], _shellPos[1], 0, OGunshotLight);
+					_light.z = _shellPos[2];
+
+					// Determine which enemy was shot using a raycast against an AABB at its position.
+					var _origin = camera.Position;
+					var _direction = camera.get_forward();
+
+					with (OZombie)
 					{
-						continue;
+						if (hp <= 0)
+						{
+							continue;
+						}
+						var _min = new BBMOD_Vec3(x - 5, y - 5, z);
+						var _max = new BBMOD_Vec3(x + 5, y + 5, z + 36);
+						if (RaycastAABB(_origin, _direction, _min, _max) != -1)
+						{
+							ReceiveDamage(irandom_range(45, 55));
+
+							knockback = new BBMOD_Vec3(
+								lengthdir_x(5, other.camera.Direction),
+								lengthdir_y(5, other.camera.Direction),
+								0);
+
+							var _index = audio_play_sound_at(
+								choose(SndZombie0, SndZombie1),
+								x,
+								y,
+								z + 30,
+								10, 1000, 1, false, 1);
+							audio_sound_pitch(_index, random_range(1.0, 1.5));
+						}
 					}
-					var _min = new BBMOD_Vec3(x - 5, y - 5, z);
-					var _max = new BBMOD_Vec3(x + 5, y + 5, z + 36);
-					var _dist = raycast_aabb(_origin, _direction, _min, _max);
-					if (_dist != -1 && _dist < _hitDist)
+
+					if (--ammo == 0)
 					{
-						_hitId = id;
-						_hitDist = _dist;
+						aiming = false;
+					}
+				}
+			}
+			else if (_mouseLeftPressed)
+			{
+				// Punch
+				animationStateMachine.change_state(punchRight ? statePunchRight : statePunchLeft);
+				punchRight = !punchRight;
+				speedCurrent = 2;
+
+				var _hit = false;
+				var _zombie = instance_nearest(x, y, OZombie);
+				if (_zombie != noone)
+				{
+					var _dist = point_distance(x, y, _zombie.x, _zombie.y);
+					if (_dist < 30)
+					{
+						if (_dist > 10)
+						{
+							direction = point_direction(x, y, _zombie.x, _zombie.y);
+						}
+
+						_zombie.ReceiveDamage(irandom_range(20, 25));
+
+						_zombie.knockback = new BBMOD_Vec3(
+							lengthdir_x(4, direction),
+							lengthdir_y(4, direction),
+							0);
+
+						var _index = audio_play_sound_at(
+							SndPunch,
+							x + lengthdir_x(30, direction),
+							y + lengthdir_y(30, direction),
+							z + 30,
+							10, 200, 1, false, 1);
+						audio_sound_pitch(_index, random_range(0.75, 1));
+
+						_hit = true;
 					}
 				}
 
-				if (_hitId != noone)
+				if (!_hit)
 				{
-					_hitId.dead = true;
+					var _index = audio_play_sound_at(
+						SndWhoosh,
+						x + lengthdir_x(30, direction),
+						y + lengthdir_y(30, direction),
+						z + 30,
+						10, 200, 1, false, 1);
+					audio_sound_pitch(_index, random_range(0.75, 1));
+				}
+			}
+
+			if (keyboard_check_pressed(vk_space))
+			{
+				// Jump
+				zspeed += 2;
+				aiming = false;
+			}
+			else if (keyboard_check_pressed(ord("E"))
+				&& instance_exists(OItem))
+			{
+				// Pick up an item
+				var _item = instance_nearest(x, y, OItem);
+				if (point_distance(x, y, _item.x, _item.y) < _item.pickupRange)
+				{
+					pickupTarget = _item;
 				}
 			}
 		}
 
-		if (keyboard_check_pressed(vk_space))
-		{
-			// Jump
-			zspeed += 2;
-		}
-		else if (!hasGun
-			&& keyboard_check_pressed(ord("E"))
-			&& instance_exists(OGun))
-		{
-			// Pick up a gun
-			var _gun = instance_nearest(x, y, OGun);
-			if (point_distance(x, y, _gun.x, _gun.y) < 20)
-			{
-				pickupTarget = _gun;
-			}
-		}
-	}
+		var _moveX = keyboard_check(ord("W")) - keyboard_check(ord("S"));
+		var _moveY = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 
-	var _moveX = keyboard_check(ord("W")) - keyboard_check(ord("S"));
-	var _moveY = keyboard_check(ord("D")) - keyboard_check(ord("A"));
-
-	if (_moveX != 0 || _moveY != 0)
-	{
-		aiming = false;
-		direction = point_direction(0, 0, _moveX, _moveY) + camera.Direction;
-		speed = keyboard_check(vk_shift) ? speedWalk : speedRun;
+		if (_moveX != 0 || _moveY != 0)
+		{
+			aiming = false;
+			direction = point_direction(0, 0, _moveX, _moveY) + camera.Direction;
+			speedCurrent = (keyboard_check(vk_shift)
+				|| animationPlayer.Animation == animPunchLeft
+				|| animationPlayer.Animation == animPunchRight)
+				? speedWalk
+				: speedRun;
+		}
 	}
 }
 
@@ -177,4 +247,11 @@ else
 	animationPlayer.set_node_rotation(_chestIndex, undefined);
 	animationPlayer.set_node_rotation(_neckIndex, undefined);
 	animationPlayer.set_node_rotation(_rightArmIndex, undefined);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Game over
+if (hp <= 0.0)
+{
+	room_goto(RmGameOver);
 }

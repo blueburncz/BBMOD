@@ -1,2 +1,2 @@
 matrix_set(matrix_world, matrixBody);
-animationPlayer.render(materials);
+animationPlayer.render([material]);

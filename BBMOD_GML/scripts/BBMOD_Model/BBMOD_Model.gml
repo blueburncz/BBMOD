@@ -1,10 +1,15 @@
-/// @func BBMOD_Model(_file[, _sha1])
-/// @extends BBMOD_Class
+/// @func BBMOD_Model([_file[, _sha1]])
+///
+/// @extends BBMOD_Resource
+///
 /// @implements {BBMOD_IRenderable}
+///
 /// @desc A model.
-/// @param {string} _file The "*.bbmod" model file to load.
+///
+/// @param {string} [_file] The "*.bbmod" model file to load.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
+///
 /// @example
 /// ```gml
 /// try
@@ -16,15 +21,16 @@
 ///     // The model failed to load!
 /// }
 /// ```
+///
 /// @throws {BBMOD_Exception} When the model fails to load.
-function BBMOD_Model(_file, _sha1)
-	: BBMOD_Class() constructor
+function BBMOD_Model(_file=undefined, _sha1=undefined)
+	: BBMOD_Resource() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
 	implement(BBMOD_IRenderable);
 
-	static Super_Class = {
+	static Super_Resource = {
 		destroy: destroy,
 	};
 
@@ -83,9 +89,20 @@ function BBMOD_Model(_file, _sha1)
 	/// @desc Loads model data from a buffer.
 	/// @param {buffer} _buffer The buffer to load the data from.
 	/// @return {BBMOD_Model} Returns `self`.
-	/// @private
+	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
-		var i;
+		var _type = buffer_read(_buffer, buffer_string);
+		if (_type != "bbmod")
+		{
+			throw new BBMOD_Exception("Buffer does not contain a BBMOD!");
+		}
+
+		Version = buffer_read(_buffer, buffer_u8);
+		if (Version != BBMOD_VERSION)
+		{
+			throw new BBMOD_Exception(
+				"Invalid BBMOD version " + string(Version) + "!");
+		}
 
 		// Vertex format
 		VertexFormat = bbmod_vertex_format_load(_buffer);
@@ -94,7 +111,7 @@ function BBMOD_Model(_file, _sha1)
 		var _meshCount = buffer_read(_buffer, buffer_u32);
 		Meshes = array_create(_meshCount, undefined);
 
-		i = 0;
+		var i = 0;
 		repeat (_meshCount)
 		{
 			Meshes[@ i++] = new BBMOD_Mesh(VertexFormat).from_buffer(_buffer);
@@ -136,7 +153,7 @@ function BBMOD_Model(_file, _sha1)
 			Materials = array_create(MaterialCount, _materialDefault);
 			var _materialNames = array_create(MaterialCount, undefined);
 
-			i  = 0;
+			i = 0;
 			repeat (MaterialCount)
 			{
 				_materialNames[@ i++] = buffer_read(_buffer, buffer_string);
@@ -145,50 +162,8 @@ function BBMOD_Model(_file, _sha1)
 			MaterialNames = _materialNames;
 		}
 
-		return self;
-	};
+		IsLoaded = true;
 
-	/// @func from_file(_file[, _sha1])
-	/// @desc Loads model data from a file.
-	/// @param {string} _file The path to the file.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the model will not be loaded.
-	/// @return {BBMOD_Model} Returns `self`.
-	/// @throws {BBMOD_Exception} If loading fails.
-	/// @private
-	static from_file = function (_file, _sha1) {
-		if (!file_exists(_file))
-		{
-			throw new BBMOD_Exception("File " + _file + " does not exist!");
-		}
-
-		if (_sha1 != undefined)
-		{
-			if (sha1_file(_file) != _sha1)
-			{
-				throw new BBMOD_Exception("SHA1 does not match!");
-			}
-		}
-
-		var _buffer = buffer_load(_file);
-		buffer_seek(_buffer, buffer_seek_start, 0);
-
-		var _type = buffer_read(_buffer, buffer_string);
-		if (_type != "bbmod")
-		{
-			buffer_delete(_buffer);
-			throw new BBMOD_Exception("Not a BBMOD file!");
-		}
-
-		Version = buffer_read(_buffer, buffer_u8);
-		if (Version != BBMOD_VERSION)
-		{
-			buffer_delete(_buffer);
-			throw new BBMOD_Exception("Invalid version " + string(Version) + "!");
-		}
-
-		from_buffer(_buffer);
-		buffer_delete(_buffer);
 		return self;
 	};
 
@@ -354,38 +329,48 @@ function BBMOD_Model(_file, _sha1)
 	/// @note Only parts of the model that use materials compatible with the
 	/// current render pass are submitted!
 	///
+	/// This method does not do anything if the model has not been loaded yet.
+	///
+	/// @see BBMOD_Resource.IsLoaded
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	/// @see BBMOD_ERenderPass
 	static submit = function (_materials, _transform) {
 		gml_pragma("forceinline");
-		if (_materials == undefined)
+		if (RootNode != undefined)
 		{
-			_materials = Materials;
+			_materials ??= Materials;
+			RootNode.submit(_materials, _transform);
 		}
-		RootNode.submit(_materials, _transform);
 		return self;
 	};
 
 	/// @func render([_materials[, _transform]])
+	///
 	/// @desc Enqueues the model for rendering.
+	///
 	/// @param {BBMOD_BaseMaterial[]/undefined} [_materials] An array of materials,
 	/// one for each material slot of the model. If not specified, then
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {real[]/undefined} [_transform] An array of transformation matrices
 	/// (for animated models) or `undefined`.
+	///
 	/// @return {BBMOD_Model} Returns `self`.
+	///
+	/// @note This method does not do anything if the model has not been loaded yet.
+	///
+	/// @see BBMOD_Resource.IsLoaded
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	static render = function (_materials, _transform) {
 		gml_pragma("forceinline");
-		if (_materials == undefined)
+		if (RootNode != undefined)
 		{
-			_materials = Materials;
+			_materials ??= Materials;
+			RootNode.render(_materials, _transform, matrix_get(matrix_world));
 		}
-		RootNode.render(_materials, _transform, matrix_get(matrix_world));
 		return self;
 	};
 
@@ -420,7 +405,7 @@ function BBMOD_Model(_file, _sha1)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		method(self, Super_Resource.destroy)();
 		var i = 0;
 		repeat (array_length(Meshes))
 		{

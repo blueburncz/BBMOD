@@ -15,7 +15,7 @@
 ///
 /// new MyEventListener().trigger_event("test"); // Prints "It is working!"
 /// ```
-function BBMOD_IEventListener() constructor
+function BBMOD_IEventListener()
 {
 	/// @var {ds_map<string, func[]>/undefined} Map of event listeners.
 	/// @private

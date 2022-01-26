@@ -1,12 +1,12 @@
 {
   "spriteId": null,
   "solid": false,
-  "visible": false,
+  "visible": true,
   "spriteMaskId": null,
   "persistent": false,
   "parentObjectId": {
-    "name": "OObject3D",
-    "path": "objects/OObject3D/OObject3D.yy",
+    "name": "OItem",
+    "path": "objects/OItem/OItem.yy",
   },
   "physicsObject": false,
   "physicsSensor": false,
@@ -22,12 +22,13 @@
   "physicsShapePoints": [],
   "eventList": [
     {"isDnD":false,"eventNum":0,"eventType":8,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
+    {"isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
   ],
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Objects",
-    "path": "folders/Demo/Objects.yy",
+    "name": "Items",
+    "path": "folders/Demo/Objects/Items.yy",
   },
   "resourceVersion": "1.0",
   "name": "OGun",

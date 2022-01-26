@@ -3,11 +3,16 @@
 #macro BBMOD_BONE_SPACE_BONE (1 << 2)
 
 /// @func BBMOD_Animation([_file[, _sha1]])
+///
+/// @extends BBMOD_Resource
+///
 /// @desc An animation which can be played using {@link BBMOD_AnimationPlayer}.
+///
 /// @param {string} [_file] A "*.bbanim" animation file to load. If not
 /// specified, then an empty animation is created.
 /// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
+///
 /// @example
 /// Following code loads an animation from a file `Walk.bbanim`:
 ///
@@ -36,9 +41,17 @@
 /// }
 /// buffer_delete(_buffer);
 /// ```
+///
 /// @throws {BBMOD_Exception} When the animation fails to load.
-function BBMOD_Animation(_file, _sha1) constructor
+function BBMOD_Animation(_file=undefined, _sha1=undefined)
+	: BBMOD_Resource() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
+	/// @var {bool} If `false` then the animation has not been loaded yet.
+	/// @readonly
+	IsLoaded = false;
+
 	/// @var {real} The version of the animation file.
 	/// @readonly
 	Version = BBMOD_VERSION;
@@ -148,7 +161,7 @@ function BBMOD_Animation(_file, _sha1) constructor
 		var _type = buffer_read(_buffer, buffer_string);
 		if (_type != "bbanim")
 		{
-			throw new BBMOD_Exception("Not a BBANIM!");
+			throw new BBMOD_Exception("Buffer does not contain a BBANIM!");
 		}
 
 		Version = buffer_read(_buffer, buffer_u8);
@@ -192,50 +205,7 @@ function BBMOD_Animation(_file, _sha1) constructor
 			}
 		}
 
-		return self;
-	};
-
-	/// @func from_file(_file[, _sha1])
-	/// @desc Loads animation data from a file.
-	/// @param {string} _file The path to the file.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the animation will not be loaded.
-	/// @return {BBMOD_Animation} Returns `self`.
-	/// @throws {BBMOD_Exception} If loading fails.
-	static from_file = function (_file, _sha1) {
-		if (!file_exists(_file))
-		{
-			throw new BBMOD_Exception("File " + _file + " does not exist!");
-		}
-
-		if (_sha1 != undefined)
-		{
-			if (sha1_file(_file) != _sha1)
-			{
-				throw new BBMOD_Exception("SHA1 does not match!");
-			}
-		}
-
-		var _error = undefined;
-		var _buffer = buffer_load(_file);
-
-		buffer_seek(_buffer, buffer_seek_start, 0);
-
-		try
-		{
-			from_buffer(_buffer);
-		}
-		catch (_e)
-		{
-			_error = _e;
-		}
-
-		buffer_delete(_buffer);
-
-		if (_error)
-		{
-			throw _error;
-		}
+		IsLoaded = true;
 
 		return self;
 	};
@@ -262,6 +232,7 @@ function BBMOD_Animation(_file, _sha1) constructor
 		}
 
 		var _transition = new BBMOD_Animation();
+		_transition.IsLoaded = true;
 		_transition.Version = Version;
 		_transition.Spaces = (Spaces & BBMOD_BONE_SPACE_PARENT)
 			? BBMOD_BONE_SPACE_PARENT

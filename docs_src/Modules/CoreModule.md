@@ -10,6 +10,9 @@ quaternions etc.
 * [BBMOD_ERenderPass](./BBMOD_ERenderPass.html)
 
 ### Functions
+* [bbmod_async_image_loaded_update](./bbmod_async_image_loaded_update.html)
+* [bbmod_async_save_load_update](./bbmod_async_save_load_update.html)
+* [bbmod_buffer_load_async](./bbmod_buffer_load_async.html)
 * [bbmod_camera_get_exposure](./bbmod_camera_get_exposure.html)
 * [bbmod_camera_get_position](./bbmod_camera_get_position.html)
 * [bbmod_camera_get_zfar](./bbmod_camera_get_zfar.html)
@@ -18,6 +21,7 @@ quaternions etc.
 * [bbmod_camera_set_position](./bbmod_set_camera_position.html)
 * [bbmod_camera_set_zfar](./bbmod_camera_set_zfar.html)
 * [bbmod_class_get_name](./bbmod_class_get_name.html)
+* [bbmod_empty_callback](./bbmod_empty_callback.html)
 * [bbmod_fog_get_color](./bbmod_fog_get_color.html)
 * [bbmod_fog_get_end](./bbmod_fog_get_end.html)
 * [bbmod_fog_get_intensity](./bbmod_fog_get_intensity.html)
@@ -49,6 +53,7 @@ quaternions etc.
 * [bbmod_material_reset](./bbmod_material_reset.html)
 * [bbmod_render_pass_get](./bbmod_render_pass_get.html)
 * [bbmod_render_pass_set](./bbmod_render_pass_set.html)
+* [bbmod_sprite_add_async](./bbmod_sprite_add_async.html)
 * [bbmod_surface_check](./bbmod_surface_check.html)
 
 ### Macros
@@ -124,7 +129,9 @@ quaternions etc.
 * [BBMOD_PointLight](./BBMOD_PointLight.html)
 * [BBMOD_Quaternion](./BBMOD_Quaternion.html)
 * [BBMOD_RenderCommand](./BBMOD_RenderCommand.html)
+* [BBMOD_Resource](./BBMOD_Resource.html)
 * [BBMOD_Shader](./BBMOD_Shader.html)
+* [BBMOD_Sprite](./BBMOD_Sprite.html)
 * [BBMOD_StaticBatch](./BBMOD_StaticBatch.html)
 * [BBMOD_Vec2](./BBMOD_Vec2.html)
 * [BBMOD_Vec3](./BBMOD_Vec3.html)

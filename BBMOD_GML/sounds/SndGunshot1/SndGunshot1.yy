@@ -1,6 +1,6 @@
 {
   "conversionMode": 0,
-  "compression": 3,
+  "compression": 1,
   "volume": 1.0,
   "preload": false,
   "bitRate": 128,
@@ -12,7 +12,7 @@
     "path": "audiogroups/audiogroup_default",
   },
   "soundFile": "SndGunshot1.ogg",
-  "duration": 2.237208,
+  "duration": 2.724333,
   "parent": {
     "name": "Gunshot",
     "path": "folders/Demo/Sounds/Gunshot.yy",

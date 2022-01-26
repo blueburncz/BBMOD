@@ -1,9 +1,4 @@
-var _cutscene = GetCutscene();
-if (_cutscene)
-{
-	_cutscene.Update(delta_time);
-}
-
+// Show/hide debug overlay
 if (keyboard_check_pressed(vk_f1))
 {
 	debugOverlay = !debugOverlay;
@@ -11,20 +6,37 @@ if (keyboard_check_pressed(vk_f1))
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Grayscale effect when zombies are near the player
-var _playerX = OPlayer.x;
-var _playerY = OPlayer.y;
-
-var _grayscale = 0.0;
-with (OZombie)
+// Spawn waves of zombies
+waveTimeout -= DELTA_TIME * 0.000001;
+if (!instance_exists(OZombie)
+	|| waveTimeout <= 0)
 {
-	if (active
-		&& !dead
-		&& point_distance(x, y, _playerX, _playerY) < 100)
+	global.scoreBonus += max(ceil(waveTimeout), 0);
+
+	repeat (++wave)
 	{
-		_grayscale = 0.75;
+		instance_create_layer(
+			random(room_width),
+			random(room_height),
+			"Instances",
+			OZombie);
+	}
+
+	// Give one zombie a gun
+	with (OZombie)
+	{
+		dropGun = true;
 		break;
 	}
+
+	waveTimeout = wave * 5;
 }
 
-renderer.Grayscale = bbmod_lerp_delta_time(renderer.Grayscale, _grayscale, 0.01, delta_time);
+////////////////////////////////////////////////////////////////////////////////
+// Screen effects based on players health etc.
+var _grayscale = (OPlayer.hp <= ceil(OPlayer.hpMax / 3.0)) ? 0.75 : 0.0;
+renderer.Grayscale = bbmod_lerp_delta_time(renderer.Grayscale, _grayscale, 0.1, DELTA_TIME);
+
+var _hurt = OPlayer.hurt;
+renderer.Vignette = lerp(0.8, 1.5, _hurt);
+renderer.VignetteColor = merge_color(c_black, c_red, _hurt);

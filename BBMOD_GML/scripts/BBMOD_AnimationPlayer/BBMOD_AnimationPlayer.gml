@@ -94,14 +94,16 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @private
 	AnimationInstanceLast = undefined;
 
+	// FIXME: Fix animation player for models that were not loaded yet!!!
+
 	/// @var {array<BBMOD_Vec3/undefined>} Array of node position overrides.
 	/// @private
-	NodePositionOverride = array_create(Model.NodeCount, undefined);
+	NodePositionOverride = array_create(64/*Model.NodeCount*/, undefined);
 
 	/// @var {array<BBMOD_Quaternion/undefined>} Array of node rotation
 	/// overrides.
 	/// @private
-	NodeRotationOverride = array_create(Model.NodeCount, undefined);
+	NodeRotationOverride = array_create(64/*Model.NodeCount*/, undefined);
 
 	/// @var {bool} If `true`, then the animation playback is paused.
 	Paused = (_paused != undefined) ? _paused : false;
@@ -133,13 +135,13 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// Useful for attachments.
 	/// @see BBMOD_AnimationPlayer.get_node_transform
 	/// @private
-	NodeTransform = array_create(Model.NodeCount * 8, 0.0);
+	NodeTransform = array_create(64/*Model.NodeCount*/ * 8, 0.0);
 
 	/// @var {real[]} An array containing transforms of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @private
-	TransformArray = array_create(Model.BoneCount * 8, 0.0);
+	TransformArray = array_create(64/*Model.BoneCount*/ * 8, 0.0);
 
 	static animate = function (_animationInstance, _animationTime) {
 		var _model = Model;
@@ -238,6 +240,11 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// (in microseconds).
 	/// @return {BBMOD_AnimationPlayer} Returns `self`.
 	static update = function (_deltaTime) {
+		if (!Model.IsLoaded)
+		{
+			return self;
+		}
+
 		if (Paused)
 		{
 			return self;
@@ -249,24 +256,31 @@ function BBMOD_AnimationPlayer(_model, _paused)
 		{
 			var _animInst = Animations[| 0];
 			var _animation = _animInst.Animation;
+
+			if (!_animation.IsLoaded)
+			{
+				break;
+			}
+
 			var _animationTime = _animation.get_animation_time(Time);
 
 			if (_animationTime >= _animation.Duration)
 			{
+				Time %= (_animation.Duration / _animation.TicsPerSecond);
+
 				if (_animInst.Loop)
 				{
 					_animationTime %= _animation.Duration;
 					_animInst.EventExecuted = -1;
-					Time %= (_animation.Duration / _animation.TicsPerSecond);
 					trigger_event(BBMOD_EV_ANIMATION_LOOP, _animation);
 				}
 				else
 				{
-					trigger_event(BBMOD_EV_ANIMATION_END, _animation);
 					ds_list_delete(Animations, 0);
 					if (!_animation.IsTransition)
 					{
 						Animation = BBMOD_NONE;
+						trigger_event(BBMOD_EV_ANIMATION_END, _animation);
 					}
 					continue;
 				}
@@ -411,7 +425,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @see BBMOD_AnimationPlayer.Animation
 	static change = function (_animation, _loop) {
 		gml_pragma("forceinline");
-		if (AnimationLast != _animation)
+		if (Animation != _animation)
 		{
 			play(_animation, _loop);
 		}

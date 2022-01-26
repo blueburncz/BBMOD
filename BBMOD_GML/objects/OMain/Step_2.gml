@@ -1,1 +1,1 @@
-renderer.update(delta_time);
+renderer.update(DELTA_TIME);

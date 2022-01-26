@@ -121,11 +121,15 @@ function BBMOD_Renderer()
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	Grayscale = 0.0;
 
-	/// @var {real} The strength of the vignette effect. Defaults to 0. The higher
-	/// the value the darker the screen closer to edges gets.
+	/// @var {real} The strength of the vignette effect. Defaults to 0.
 	/// @note Post-processing must be enabled for this to have any effect!
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	Vignette = 0.0;
+
+	/// @var {uint} The color of the vignette effect. Defaults to `c_black`.
+	/// @note Post-processing must be enabled for this to have any effect!
+	/// @see BBMOD_Renderer.EnablePostProcessing
+	VignetteColor = c_black;
 
 	/// @var {BBMOD_EAntialiasing} Antialiasing technique to use. Defaults to
 	/// {@link BBMOD_EAntialiasing.None}.
@@ -180,8 +184,9 @@ function BBMOD_Renderer()
 			var _surfaceWidth = floor(max(_windowWidth * RenderScale, 1.0));
 			var _surfaceHeight = floor(max(_windowHeight * RenderScale, 1.0));
 
-			if (surface_get_width(application_surface) != _surfaceWidth
-				|| surface_get_height(application_surface) != _surfaceHeight)
+			if (surface_exists(application_surface)
+				&& (surface_get_width(application_surface) != _surfaceWidth
+				|| surface_get_height(application_surface) != _surfaceHeight))
 			{
 				surface_resize(application_surface, _surfaceWidth, _surfaceHeight);
 			}
@@ -361,11 +366,19 @@ function BBMOD_Renderer()
 				}
 				var _shader = BBMOD_ShPostProcess;
 				shader_set(_shader);
-				texture_set_stage(shader_get_sampler_index(_shader, "u_texLut"), ColorGradingLUT);
+				var _uLut = shader_get_sampler_index(_shader, "u_texLut");
+				texture_set_stage(_uLut, ColorGradingLUT);
+				gpu_set_tex_filter_ext(_uLut, true);
+				gpu_set_tex_mip_enable_ext(_uLut, mip_off);
+				gpu_set_tex_repeat_ext(_uLut, false);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fDistortion"), ChromaticAberration);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fGrayscale"), Grayscale);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fVignette"), Vignette);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_vVignetteColor"),
+					color_get_red(VignetteColor) / 255,
+					color_get_green(VignetteColor) / 255,
+					color_get_blue(VignetteColor) / 255);
 				draw_surface_stretched(application_surface, 0, 0, _windowWidth, _windowHeight);
 				shader_reset();
 				if (Antialiasing != BBMOD_EAntialiasing.None)
@@ -403,6 +416,11 @@ function BBMOD_Renderer()
 		if (surface_exists(SurPostProcess))
 		{
 			surface_free(SurPostProcess);
+		}
+		if (UseAppSurface)
+		{
+			application_surface_enable(false);
+			application_surface_draw_enable(true);
 		}
 	};
 }

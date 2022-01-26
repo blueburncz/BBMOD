@@ -113,6 +113,10 @@ function BBMOD_Camera() constructor
 	static set_mouselook = function (_enable) {
 		if (_enable)
 		{
+			if (os_browser != browser_not_a_browser)
+			{
+				bbmod_html5_pointer_lock();
+			}
 			if (MouseLockAt == undefined)
 			{
 				MouseLockAt = new BBMOD_Vec2(
@@ -160,7 +164,9 @@ function BBMOD_Camera() constructor
 		if (AudioListener)
 		{
 			audio_listener_position(Position.X, Position.Y, Position.Z);
-			audio_listener_orientation(Target.X, Target.Y, Target.Z, Up.X, Up.Y, Up.Z);
+			audio_listener_orientation(
+				Target.X - Position.X, Target.Y - Position.Y, Target.Z - Position.Z,
+				Up.X, Up.Y, Up.Z);
 		}
 		return self;
 	}
@@ -173,15 +179,29 @@ function BBMOD_Camera() constructor
 	/// position (@{link BBMOD_Vec3}) and returns a new position. This could be
 	/// used for example for camera collisions in a third-person game.
 	/// @return {BBMOD_Camera} Returns `self`.
-	static update = function (_deltaTime, _positionHandler) {
+	static update = function (_deltaTime, _positionHandler=undefined) {
+		if (os_browser != browser_not_a_browser)
+		{
+			set_mouselook(bbmod_html5_pointer_is_locked());
+		}
+
 		if (MouseLook)
 		{
-			var _mouseX = window_mouse_get_x();
-			var _mouseY = window_mouse_get_y();
-			Direction += (MouseLockAt.X - _mouseX) * MouseSensitivity;
-			DirectionUp += (MouseLockAt.Y - _mouseY) * MouseSensitivity;
+			if (os_browser != browser_not_a_browser)
+			{
+				Direction -= bbmod_html5_pointer_get_movement_x() * MouseSensitivity;
+				DirectionUp -= bbmod_html5_pointer_get_movement_y() * MouseSensitivity;
+			}
+			else
+			{
+				var _mouseX = window_mouse_get_x();
+				var _mouseY = window_mouse_get_y();
+				Direction += (MouseLockAt.X - _mouseX) * MouseSensitivity;
+				DirectionUp += (MouseLockAt.Y - _mouseY) * MouseSensitivity;
+				window_mouse_set(MouseLockAt.X, MouseLockAt.Y);
+			}
+
 			DirectionUp = clamp(DirectionUp, -89.0, 89.0);
-			window_mouse_set(MouseLockAt.X, MouseLockAt.Y);
 		}
 
 		var _offsetX = lengthdir_x(Offset.X, Direction - 90.0)
@@ -260,7 +280,41 @@ function BBMOD_Camera() constructor
 	/// @return {real[16]} The view matrix.
 	static get_view_mat = function () {
 		gml_pragma("forceinline");
-		return camera_get_view_mat(Raw);
+
+		if (os_browser == browser_not_a_browser)
+		{
+			// This returns a struct in HTML5 for some reason...
+			return camera_get_view_mat(Raw);
+		}
+
+		var _view = matrix_get(matrix_view);
+		var _proj = matrix_get(matrix_projection);
+		camera_apply(Raw);
+		var _retval = matrix_get(matrix_view);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _proj);
+		return _retval;
+	};
+
+	/// @func get_proj_mat()
+	/// @desc Retrieves camera's projection matrix.
+	/// @return {real[16]} The projection matrix.
+	static get_proj_mat = function () {
+		gml_pragma("forceinline");
+
+		if (os_browser == browser_not_a_browser)
+		{
+			// This returns a struct in HTML5 for some reason...
+			return camera_get_proj_mat(Raw);
+		}
+
+		var _view = matrix_get(matrix_view);
+		var _proj = matrix_get(matrix_projection);
+		camera_apply(Raw);
+		var _retval = matrix_get(matrix_projection);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _proj);
+		return _retval;
 	};
 
 	/// @func get_right()
@@ -302,14 +356,6 @@ function BBMOD_Camera() constructor
 			_view[6],
 			_view[10],
 		);
-	};
-
-	/// @func get_proj_mat()
-	/// @desc Retrieves camera's projection matrix.
-	/// @return {real[16]} The projection matrix.
-	static get_proj_mat = function () {
-		gml_pragma("forceinline");
-		return camera_get_proj_mat(Raw);
 	};
 
 	/// @func apply()

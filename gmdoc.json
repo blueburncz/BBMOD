@@ -5,7 +5,7 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": "bbmod",
-  "version": "3.1.6",
+  "version": "3.1.9",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
@@ -15,6 +15,9 @@
     "Changelog": {
       "file": "Changelog/Changelog_.md",
       "pages": {
+        "3.1.9": "Changelog/Changelog3.1.9.md",
+        "3.1.8": "Changelog/Changelog3.1.8.md",
+        "3.1.7": "Changelog/Changelog3.1.7.md",
         "3.1.6": "Changelog/Changelog3.1.6.md",
         "3.1.5": "Changelog/Changelog3.1.5.md",
         "3.1.4": "Changelog/Changelog3.1.4.md",
@@ -66,6 +69,7 @@
             "Renderer submodule": "Modules/Rendering/RendererSubmodule.md"
           }
         },
+        "Resource manager module": "Modules/ResourceManagerModule.md",
         "State machine module": "Modules/StateMachineModule.md",
         "ColMesh module": "Modules/ColMeshModule.md"
       }
