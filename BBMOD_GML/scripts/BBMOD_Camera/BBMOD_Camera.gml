@@ -296,6 +296,27 @@ function BBMOD_Camera() constructor
 		return _retval;
 	};
 
+	/// @func get_proj_mat()
+	/// @desc Retrieves camera's projection matrix.
+	/// @return {real[16]} The projection matrix.
+	static get_proj_mat = function () {
+		gml_pragma("forceinline");
+
+		if (os_browser == browser_not_a_browser)
+		{
+			// This returns a struct in HTML5 for some reason...
+			return camera_get_proj_mat(Raw);
+		}
+
+		var _view = matrix_get(matrix_view);
+		var _proj = matrix_get(matrix_projection);
+		camera_apply(Raw);
+		var _retval = matrix_get(matrix_projection);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _proj);
+		return _retval;
+	};
+
 	/// @func get_right()
 	/// @desc Retrieves a vector pointing right relative to the camera's
 	/// direction.
@@ -335,14 +356,6 @@ function BBMOD_Camera() constructor
 			_view[6],
 			_view[10],
 		);
-	};
-
-	/// @func get_proj_mat()
-	/// @desc Retrieves camera's projection matrix.
-	/// @return {real[16]} The projection matrix.
-	static get_proj_mat = function () {
-		gml_pragma("forceinline");
-		return camera_get_proj_mat(Raw);
 	};
 
 	/// @func apply()
