@@ -1,7 +1,7 @@
 {
   "option_amazonfire_sync_android": false,
   "option_amazonfire_display_name": "BBMOD Demo",
-  "option_amazonfire_version": "3.1.7",
+  "option_amazonfire_version": "3.1.8",
   "option_amazonfire_tools_from_version": false,
   "option_amazonfire_build_tools": "",
   "option_amazonfire_support_lib": "",
