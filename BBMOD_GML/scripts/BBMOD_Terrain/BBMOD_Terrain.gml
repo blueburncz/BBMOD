@@ -298,9 +298,8 @@ function BBMOD_Terrain() constructor
 			var _mat = Layer[i];
 			if (_mat != undefined && _mat.apply())
 			{
-				var _shader = BBMOD_SHADER_CURRENT.Raw;
-				var _uSplatmap = shader_get_sampler_index(_shader, "bbmod_Splatmap");
-				var _uSplatmapIndex = shader_get_uniform(_shader, "bbmod_SplatmapIndex");
+				var _uSplatmap = BBMOD_SHADER_CURRENT.get_sampler_index("bbmod_Splatmap");
+				var _uSplatmapIndex = BBMOD_SHADER_CURRENT.get_uniform("bbmod_SplatmapIndex");
 				shader_set(_shader);
 				texture_set_stage(_uSplatmap, Splatmap);
 				shader_set_uniform_i(_uSplatmapIndex, i - 1);

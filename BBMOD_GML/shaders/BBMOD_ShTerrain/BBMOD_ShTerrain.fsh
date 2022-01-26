@@ -261,7 +261,11 @@ void main()
 	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
 	if (bbmod_SplatmapIndex >= 0)
 	{
-		gl_FragColor.a *= splatmap[bbmod_SplatmapIndex];
+		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
+		gl_FragColor.a *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
+			: splatmap.a)));
 	}
 	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);

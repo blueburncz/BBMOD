@@ -19,6 +19,7 @@ sunLight = new BBMOD_DirectionalLight();
 sunLight.CastShadows = true;
 bbmod_light_directional_set(sunLight);
 
+// TODO: Fix memory leak
 bbmod_sprite_add_async(
 	day ? "Data/BBMOD/Skies/Sky+60.png" : "Data/BBMOD/Skies/Sky-15.png",
 	method(self, function (_err, _sprite) {

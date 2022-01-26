@@ -135,7 +135,6 @@
     {"id":{"name":"OGun","path":"objects/OGun/OGun.yy",},"order":0,},
     {"id":{"name":"SndShell1","path":"sounds/SndShell1/SndShell1.yy",},"order":1,},
     {"id":{"name":"BBMOD_SprCheckerboard","path":"sprites/BBMOD_SprCheckerboard/BBMOD_SprCheckerboard.yy",},"order":1,},
-    {"id":{"name":"SprSign","path":"sprites/SprSign/SprSign.yy",},"order":3,},
     {"id":{"name":"BBMOD_Shader","path":"scripts/BBMOD_Shader/BBMOD_Shader.yy",},"order":5,},
     {"id":{"name":"OMain","path":"objects/OMain/OMain.yy",},"order":1,},
     {"id":{"name":"BBMOD_Exception","path":"scripts/BBMOD_Exception/BBMOD_Exception.yy",},"order":0,},

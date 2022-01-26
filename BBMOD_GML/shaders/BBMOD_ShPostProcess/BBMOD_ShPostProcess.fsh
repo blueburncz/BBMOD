@@ -71,7 +71,8 @@ void main()
 	}
 
 	// Color grading
-	color = ColorGrade(color, u_texLut);
+	// TODO: Fix color grading in HTML5
+	//color = ColorGrade(color, u_texLut);
 
 	// Grayscale
 	if (u_fGrayscale != 0.0)
