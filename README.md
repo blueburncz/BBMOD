@@ -23,12 +23,13 @@ standard software.
 An online documentation for the latest release of BBMOD can be found at https://blueburn.cz/bbmod/docs/3/. The documentation source is available in the `docs_src` folder and it can be built into an HTML format using [GMDoc](https://marketplace.yoyogames.com/assets/10014/gmdoc-2). If you need any additional help, feel free to contact us on the [GMC forums](https://forum.yoyogames.com/index.php?threads/60628), or you can join our [Discord server](https://discord.gg/ep2BGPm).
 
 # Demo project
-![Day](screenshots/day.png)
-![Night](screenshots/night.png)
+![Day](screenshots/Day.png)
+![Night](screenshots/Night.png)
+![Vignette and grayscale](screenshots/VignetteAndGrayscale.png)
 This repo includes a demo project (screenshots above). You can also download a binary under [releases](https://github.com/blueburn-cz/BBMOD/releases).
 
 # BBMOD GUI
-![BBMOD GUI](screenshots/gui.png)
+![BBMOD GUI](screenshots/GUI.png)
 
 Become our Patron and get to the next level of 3D game development in GameMaker with BBMOD GUI - a graphical user interface using which you can
 
