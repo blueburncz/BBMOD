@@ -1,3 +1,4 @@
+// Show/hide debug overlay
 if (keyboard_check_pressed(vk_f1))
 {
 	debugOverlay = !debugOverlay;
@@ -11,6 +12,7 @@ if (!instance_exists(OZombie)
 	|| waveTimeout <= 0)
 {
 	global.scoreBonus += max(ceil(waveTimeout), 0);
+
 	repeat (++wave)
 	{
 		instance_create_layer(
@@ -19,11 +21,14 @@ if (!instance_exists(OZombie)
 			"Instances",
 			OZombie);
 	}
+
+	// Give one zombie a gun
 	with (OZombie)
 	{
 		dropGun = true;
 		break;
 	}
+
 	waveTimeout = wave * 5;
 }
 

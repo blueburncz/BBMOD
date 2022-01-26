@@ -43,6 +43,7 @@
     {"id":{"name":"SndFootstep7","path":"sounds/SndFootstep7/SndFootstep7.yy",},"order":7,},
     {"id":{"name":"BBMOD_Light","path":"scripts/BBMOD_Light/BBMOD_Light.yy",},"order":0,},
     {"id":{"name":"BBMOD_DefaultMaterial","path":"scripts/BBMOD_DefaultMaterial/BBMOD_DefaultMaterial.yy",},"order":6,},
+    {"id":{"name":"OItem","path":"objects/OItem/OItem.yy",},"order":1,},
     {"id":{"name":"SndWhoosh","path":"sounds/SndWhoosh/SndWhoosh.yy",},"order":5,},
     {"id":{"name":"bbmod_surface_check","path":"scripts/bbmod_surface_check/bbmod_surface_check.yy",},"order":2,},
     {"id":{"name":"OPointLight","path":"objects/OPointLight/OPointLight.yy",},"order":1,},

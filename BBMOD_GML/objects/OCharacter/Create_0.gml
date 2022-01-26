@@ -16,10 +16,17 @@ hpMax = 100;
 // Current number of hitpoints. Character dies if reaches 0.
 hp = hpMax;
 
+// A function that processes incoming damage. By default it simply subtracts
+// the damage from the character's `hp` and sets `hurt` to 1.
+ReceiveDamage = function (_damage) {
+	hp -= _damage;
+	hurt = 1.0;
+};
+
 // Controls the screen flash effect for the player and model flash for zombies.
 hurt = 0.0;
 
-// The character's speed when they're walking.
+// The character's speed when they are walking.
 speedWalk = 0.4;
 
 // The direction of the character's body. This is used to slowly turn it towards

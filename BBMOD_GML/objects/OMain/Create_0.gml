@@ -1,5 +1,6 @@
 #macro DELTA_TIME (delta_time * global.gameSpeed)
 
+// Used to pause the game (with 0.0).
 global.gameSpeed = 1.0;
 
 randomize();
@@ -10,11 +11,19 @@ audio_falloff_set_model(audio_falloff_linear_distance);
 // If true then debug overlay is enabled.
 debugOverlay = false;
 
+// Score recieved by killing zombies.
 score = 0;
-global.scoreBonus = 0;
-wave = 1;
-waveTimeout = 10;
 
+// Score recieved when all zombies in a wave are killed before the timeout.
+global.scoreBonus = 0;
+
+// Current wave of zombies.
+wave = 1;
+
+// Timeout till the next wave of zombies (in seconds).
+waveTimeout = 10.0;
+
+// Used to easily load, retrieve and free resources from memory.
 resourceManager = new BBMOD_ResourceManager();
 
 ////////////////////////////////////////////////////////////////////////////////

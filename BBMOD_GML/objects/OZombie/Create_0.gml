@@ -1,5 +1,16 @@
 event_inherited();
 
+ReceiveDamage = function (_damage) {
+	hp -= _damage;
+	hurt = 1.0;
+	var _floatingText = instance_create_layer(x, y, layer, OFloatingText);
+	_floatingText.z = z + 42;
+	_floatingText.text = "-" + string(_damage);
+	var _index = audio_play_sound_at(choose(SndZombie0, SndZombie1),
+		x, y, z + 30, 10, 200, 1, false, 1);
+	audio_sound_pitch(_index, random_range(1.0, 1.5));
+};
+
 // Knockback vector.
 knockback = new BBMOD_Vec3();
 
@@ -173,8 +184,8 @@ stateAttack.on_event("Attack", method(self, function () {
 
 		if (playerInRange())
 		{
-			OPlayer.hp -= OPlayer.hpMax / 3.0;
-			OPlayer.hurt = 1.0;
+			// Player is killed in 3 hits
+			OPlayer.ReceiveDamage(OPlayer.hpMax / 3.0);
 
 			_index = audio_play_sound_at(
 				SndPunch,

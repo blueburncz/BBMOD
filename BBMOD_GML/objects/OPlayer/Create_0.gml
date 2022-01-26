@@ -250,10 +250,7 @@ stateInteractGround.on_event("PickUp", method(self, function () {
 	// Pick up an item.
 	if (instance_exists(pickupTarget))
 	{
-		if (pickupTarget.object_index == OGun)
-		{
-			ammo += pickupTarget.ammo;
-		}
+		pickupTarget.OnPickUp(self);
 		instance_destroy(pickupTarget);
 	}
 	pickupTarget = undefined;

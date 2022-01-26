@@ -23,12 +23,12 @@ DrawTextShadow(_x, _y, "Zombie kills: " + string(score));
 _y += _lineHeight;
 
 DrawTextShadow(_x, _y, "Time bonus: " + string(global.scoreBonus));
-_y += _lineHeight * 2.0;
+_y += _lineHeight * 3.0;
 
 draw_set_font(Fnt24);
 _lineHeight = string_height("Q");
-DrawTextShadow(_x, _y, "Press LMB to try again");
-_y += _lineHeight * 2.0;
+DrawTextShadow(_x, _y, "Press LMB to try again",
+	c_white, c_black, dsin(current_time * 0.5) * 0.5 + 0.5);
 
 draw_set_font(_font);
 draw_set_halign(fa_left);

@@ -33,6 +33,9 @@ if (camera.Position.Z < 0.0)
 	camera.update_matrices();
 }
 
+// Increase camera exposure during nighttime
+camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 0.05, delta_time);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Player controls
 if (global.gameSpeed > 0.0)
@@ -103,17 +106,13 @@ if (global.gameSpeed > 0.0)
 						var _max = new BBMOD_Vec3(x + 5, y + 5, z + 36);
 						if (RaycastAABB(_origin, _direction, _min, _max) != -1)
 						{
-							// TODO: Make RecieveDamage method
-							var _damage = irandom_range(45, 55);
-							hp -= _damage;
+							ReceiveDamage(irandom_range(45, 55));
+
 							knockback = new BBMOD_Vec3(
-								lengthdir_x(4, other.camera.Direction),
-								lengthdir_y(4, other.camera.Direction),
+								lengthdir_x(5, other.camera.Direction),
+								lengthdir_y(5, other.camera.Direction),
 								0);
-							hurt = 1.0;
-							var _floatingText = instance_create_layer(x, y, layer, OFloatingText);
-							_floatingText.z = z + 42;
-							_floatingText.text = "-" + string(_damage);
+
 							var _index = audio_play_sound_at(
 								choose(SndZombie0, SndZombie1),
 								x,
@@ -148,17 +147,14 @@ if (global.gameSpeed > 0.0)
 						{
 							direction = point_direction(x, y, _zombie.x, _zombie.y);
 						}
-						// TODO: Make RecieveDamage method
-						var _damage = irandom_range(10, 20);
-						_zombie.hp -= _damage;
+
+						_zombie.ReceiveDamage(irandom_range(20, 25));
+						
 						_zombie.knockback = new BBMOD_Vec3(
 							lengthdir_x(4, direction),
 							lengthdir_y(4, direction),
 							0);
-						_zombie.hurt = 1.0;
-						var _floatingText = instance_create_layer(_zombie.x, _zombie.y, layer, OFloatingText);
-						_floatingText.z = _zombie.z + 42;
-						_floatingText.text = "-" + string(_damage);
+
 						var _index = audio_play_sound_at(
 							SndPunch,
 							x + lengthdir_x(30, direction),
@@ -166,13 +162,7 @@ if (global.gameSpeed > 0.0)
 							z + 30,
 							10, 200, 1, false, 1);
 						audio_sound_pitch(_index, random_range(0.75, 1));
-						var _index = audio_play_sound_at(
-							choose(SndZombie0, SndZombie1),
-							_zombie.x,
-							_zombie.y,
-							_zombie.z + 30,
-							10, 200, 1, false, 1);
-						audio_sound_pitch(_index, random_range(1.0, 1.5));
+
 						_hit = true;
 					}
 				}
@@ -196,13 +186,13 @@ if (global.gameSpeed > 0.0)
 				aiming = false;
 			}
 			else if (keyboard_check_pressed(ord("E"))
-				&& instance_exists(OGun))
+				&& instance_exists(OItem))
 			{
-				// Pick up a gun
-				var _gun = instance_nearest(x, y, OGun);
-				if (point_distance(x, y, _gun.x, _gun.y) < _gun.pickupRange)
+				// Pick up an item
+				var _item = instance_nearest(x, y, OItem);
+				if (point_distance(x, y, _item.x, _item.y) < _item.pickupRange)
 				{
-					pickupTarget = _gun;
+					pickupTarget = _item;
 				}
 			}
 		}

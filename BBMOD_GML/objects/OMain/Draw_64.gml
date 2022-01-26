@@ -5,6 +5,7 @@ var _font = draw_get_font();
 var _cam = OPlayer.camera;
 var _viewProjMat = matrix_multiply(_cam.get_view_mat(), _cam.get_proj_mat());
 
+////////////////////////////////////////////////////////////////////////////////
 // Draw zombies' healthbar
 with (OZombie)
 {
@@ -31,6 +32,7 @@ with (OZombie)
 
 draw_set_font(Fnt16);
 
+////////////////////////////////////////////////////////////////////////////////
 // Draw floating text
 with (OFloatingText)
 {
@@ -44,8 +46,9 @@ with (OFloatingText)
 	DrawTextShadow(_screenPos.X, _screenPos.Y, text);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Draw item pickup text
-with (OGun)
+with (OItem)
 {
 	if (OPlayer.pickupTarget == id)
 	{
@@ -67,6 +70,7 @@ with (OGun)
 
 draw_set_font(_font);
 
+////////////////////////////////////////////////////////////////////////////////
 // Draw crosshair
 if (OPlayer.aiming)
 {
@@ -75,6 +79,7 @@ if (OPlayer.aiming)
 		round(_windowHeight / 2));
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Draw score
 draw_set_font(Fnt24);
 draw_set_halign(fa_center);
@@ -85,11 +90,13 @@ if (global.scoreBonus > 0)
 }
 DrawTextShadow(floor(_windowWidth * 0.5), 16, _text);
 
+////////////////////////////////////////////////////////////////////////////////
 // Draw time remaining till the next wave is spawned
 draw_set_font(Fnt16);
 draw_set_halign(fa_right);
 DrawTextShadow(_windowWidth - 16, 16, string(ceil(waveTimeout)) + "s", (waveTimeout > 5.0) ? c_white : c_red);
 
+////////////////////////////////////////////////////////////////////////////////
 // Draw ammo
 if (OPlayer.ammo > 0)
 {
@@ -98,13 +105,15 @@ if (OPlayer.ammo > 0)
 	draw_set_valign(fa_top);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // Draw pause text
 if (global.gameSpeed == 0)
 {
 	draw_set_font(Fnt48);
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_bottom);
-	DrawTextShadow(round(_windowWidth * 0.5), _windowHeight - 16, "PAUSE");
+	DrawTextShadow(round(_windowWidth * 0.5), _windowHeight - 16, "PAUSE",
+		c_white, c_black, dsin(current_time * 0.5) * 0.5 + 0.5);
 	draw_set_valign(fa_top);
 }
 
