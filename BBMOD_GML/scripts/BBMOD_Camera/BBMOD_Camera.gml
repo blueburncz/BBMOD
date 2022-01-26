@@ -179,7 +179,7 @@ function BBMOD_Camera() constructor
 	/// position (@{link BBMOD_Vec3}) and returns a new position. This could be
 	/// used for example for camera collisions in a third-person game.
 	/// @return {BBMOD_Camera} Returns `self`.
-	static update = function (_deltaTime, _positionHandler) {
+	static update = function (_deltaTime, _positionHandler=undefined) {
 		if (os_browser != browser_not_a_browser)
 		{
 			set_mouselook(bbmod_html5_pointer_is_locked());
