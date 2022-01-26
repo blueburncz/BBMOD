@@ -28,7 +28,6 @@ resourceManager = new BBMOD_ResourceManager();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Import OBJ models
-// TODO: Convert these to BBMOD
 
 var _objImporter = new BBMOD_OBJImporter();
 _objImporter.FlipUVVertically = true;
