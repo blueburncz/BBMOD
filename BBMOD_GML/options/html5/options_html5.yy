@@ -13,7 +13,7 @@
   "option_html5_jsprepend": "",
   "option_html5_icon": "${base_options_dir}/html5/fav.ico",
   "option_html5_allow_fullscreen": true,
-  "option_html5_interpolate_pixels": true,
+  "option_html5_interpolate_pixels": false,
   "option_html5_centregame": true,
   "option_html5_usebuiltinparticles": true,
   "option_html5_usebuiltinfont": true,
