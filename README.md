@@ -26,7 +26,7 @@ An online documentation for the latest release of BBMOD can be found at https://
 ![Day](screenshots/Day.png)
 ![Night](screenshots/Night.png)
 ![Vignette and grayscale](screenshots/VignetteAndGrayscale.png)
-This repo includes a demo project (screenshots above). You can also download a binary under [releases](https://github.com/blueburn-cz/BBMOD/releases).
+This repo includes a demo project (screenshots above). You can also download a binary under [releases](https://github.com/blueburn-cz/BBMOD/releases) or play it in a browser at https://blueburn.cz/bbmod/demo/.
 
 # BBMOD GUI
 ![BBMOD GUI](screenshots/GUI.png)
@@ -47,6 +47,7 @@ All with a live preview, wrapped in a familiar interface that will make you feel
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628)
 * [Official website](https://blueburn.cz/index.php?menu=bbmod)
 * [Patreon](https://www.patreon.com/blueburn)
+* [Play demo](https://blueburn.cz/bbmod/demo/)
 * [Trello board](https://trello.com/b/XKnnTduD/bbmod)
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
