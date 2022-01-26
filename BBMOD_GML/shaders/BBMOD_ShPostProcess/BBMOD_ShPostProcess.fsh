@@ -19,7 +19,7 @@ vec3 ColorGrade(vec3 color, sampler2D lut)
 	color = clamp(color, vec3(0.03), vec3(0.97));
 
 	// Fixes selecting wrong mips on HTML5.
-	const float bias = -8.0;
+	const float bias = -5.0;
 
 	float z = color.b * 15.0;
 	vec2 uv1 = vec2((color.r + floor(z)) / 16.0, color.g);
