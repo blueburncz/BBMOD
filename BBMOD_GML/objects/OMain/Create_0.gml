@@ -23,9 +23,6 @@ wave = 1;
 // Timeout till the next wave of zombies (in seconds).
 waveTimeout = 10.0;
 
-// Used to easily load, retrieve and free resources from memory.
-resourceManager = new BBMOD_ResourceManager();
-
 ////////////////////////////////////////////////////////////////////////////////
 // Import OBJ models
 

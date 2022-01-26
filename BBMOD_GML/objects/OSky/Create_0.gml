@@ -2,7 +2,7 @@ event_inherited();
 
 day = choose(true, false);
 
-modSky = OMain.resourceManager.load(
+modSky = global.resourceManager.load(
 	"Data/BBMOD/Models/Sphere.bbmod",
 	undefined,
 	function (_err, _model) {

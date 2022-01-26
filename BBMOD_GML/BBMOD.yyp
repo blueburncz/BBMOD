@@ -40,6 +40,7 @@
     {"id":{"name":"bbmod_defines","path":"scripts/bbmod_defines/bbmod_defines.yy",},"order":5,},
     {"id":{"name":"BBMOD_Vec2","path":"scripts/BBMOD_Vec2/BBMOD_Vec2.yy",},"order":2,},
     {"id":{"name":"SndGunshot0","path":"sounds/SndGunshot0/SndGunshot0.yy",},"order":0,},
+    {"id":{"name":"OInit","path":"objects/OInit/OInit.yy",},"order":8,},
     {"id":{"name":"SndFootstep7","path":"sounds/SndFootstep7/SndFootstep7.yy",},"order":7,},
     {"id":{"name":"BBMOD_Light","path":"scripts/BBMOD_Light/BBMOD_Light.yy",},"order":0,},
     {"id":{"name":"BBMOD_DefaultMaterial","path":"scripts/BBMOD_DefaultMaterial/BBMOD_DefaultMaterial.yy",},"order":6,},
@@ -68,6 +69,7 @@
     {"id":{"name":"bbmod_lerp_delta_time","path":"scripts/bbmod_lerp_delta_time/bbmod_lerp_delta_time.yy",},"order":5,},
     {"id":{"name":"BBMOD_OBJImporter","path":"scripts/BBMOD_OBJImporter/BBMOD_OBJImporter.yy",},"order":2,},
     {"id":{"name":"SndZombie1","path":"sounds/SndZombie1/SndZombie1.yy",},"order":2,},
+    {"id":{"name":"RmInit","path":"rooms/RmInit/RmInit.yy",},"order":2,},
     {"id":{"name":"BBMOD_ShPBR","path":"shaders/BBMOD_ShPBR/BBMOD_ShPBR.yy",},"order":6,},
     {"id":{"name":"SndShell6","path":"sounds/SndShell6/SndShell6.yy",},"order":6,},
     {"id":{"name":"BBMOD_ShSky","path":"shaders/BBMOD_ShSky/BBMOD_ShSky.yy",},"order":4,},
@@ -158,6 +160,7 @@
     "children": [],
   },
   "RoomOrderNodes": [
+    {"roomId":{"name":"RmInit","path":"rooms/RmInit/RmInit.yy",},},
     {"roomId":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},},
     {"roomId":{"name":"RmGameOver","path":"rooms/RmGameOver/RmGameOver.yy",},},
   ],

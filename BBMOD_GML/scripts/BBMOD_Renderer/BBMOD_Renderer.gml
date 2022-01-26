@@ -184,8 +184,9 @@ function BBMOD_Renderer()
 			var _surfaceWidth = floor(max(_windowWidth * RenderScale, 1.0));
 			var _surfaceHeight = floor(max(_windowHeight * RenderScale, 1.0));
 
-			if (surface_get_width(application_surface) != _surfaceWidth
-				|| surface_get_height(application_surface) != _surfaceHeight)
+			if (surface_exists(application_surface)
+				&& (surface_get_width(application_surface) != _surfaceWidth
+				|| surface_get_height(application_surface) != _surfaceHeight))
 			{
 				surface_resize(application_surface, _surfaceWidth, _surfaceHeight);
 			}

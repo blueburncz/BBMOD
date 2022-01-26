@@ -35,18 +35,18 @@ camera.MouseSensitivity = 0.75;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Load resources
-matPlayer = OMain.resourceManager.get_or_add("matPlayer", function () {
+matPlayer = global.resourceManager.get_or_add("matPlayer", function () {
 	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
 		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 	_material.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
 	return _material;
 });
 
-animAim = OMain.resourceManager.load("Data/Assets/Character/Character_Aim.bbanim");
+animAim = global.resourceManager.load("Data/Assets/Character/Character_Aim.bbanim");
 
-animShoot = OMain.resourceManager.load("Data/Assets/Character/Character_Shoot.bbanim");
+animShoot = global.resourceManager.load("Data/Assets/Character/Character_Shoot.bbanim");
 
-animPunchLeft = OMain.resourceManager.load(
+animPunchLeft = global.resourceManager.load(
 	"Data/Assets/Character/Character_PunchLeft.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -56,7 +56,7 @@ animPunchLeft = OMain.resourceManager.load(
 		}
 	});
 
-animPunchRight = OMain.resourceManager.load(
+animPunchRight = global.resourceManager.load(
 	"Data/Assets/Character/Character_PunchRight.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -66,9 +66,9 @@ animPunchRight = OMain.resourceManager.load(
 		}
 	});
 
-animIdle = OMain.resourceManager.load("Data/Assets/Character/Character_Idle.bbanim");
+animIdle = global.resourceManager.load("Data/Assets/Character/Character_Idle.bbanim");
 
-animInteractGround = OMain.resourceManager.load(
+animInteractGround = global.resourceManager.load(
 	"Data/Assets/Character/Character_Interact_ground.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -78,9 +78,9 @@ animInteractGround = OMain.resourceManager.load(
 		}
 	});
 
-animJump = OMain.resourceManager.load("Data/Assets/Character/Character_Jump.bbanim");
+animJump = global.resourceManager.load("Data/Assets/Character/Character_Jump.bbanim");
 
-animRun = OMain.resourceManager.load(
+animRun = global.resourceManager.load(
 	"Data/Assets/Character/Character_Run.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -91,7 +91,7 @@ animRun = OMain.resourceManager.load(
 		}
 	});
 
-animWalk = OMain.resourceManager.load(
+animWalk = global.resourceManager.load(
 	"Data/Assets/Character/Character_Walk.bbanim",
 	undefined,
 	function (_err, _animation) {

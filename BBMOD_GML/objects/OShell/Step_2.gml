@@ -14,7 +14,13 @@ if (z <= 0 && !onGround)
 	);
 	audio_play_sound_at(_sound, x, y, z, 1, 100, 1, false, 1);
 
-	friction = 0.01;
 	onGround = true;
 	alarm[0] = 600;
+}
+
+if (onGround)
+{
+	var _gameSpeed = game_get_speed(gamespeed_microseconds);
+	var _deltaTime = DELTA_TIME / _gameSpeed;
+	speedCurrent *= 1.0 - (0.05 * _deltaTime);
 }

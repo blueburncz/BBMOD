@@ -62,9 +62,9 @@ material.OnApply = method(self, function (_material) {
 ////////////////////////////////////////////////////////////////////////////////
 // Load resources
 
-animIdle = OMain.resourceManager.load("Data/Assets/Character/Zombie_Idle.bbanim");
+animIdle = global.resourceManager.load("Data/Assets/Character/Zombie_Idle.bbanim");
 
-animWalk = OMain.resourceManager.load(
+animWalk = global.resourceManager.load(
 	"Data/Assets/Character/Zombie_Walk.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -75,7 +75,7 @@ animWalk = OMain.resourceManager.load(
 		}
 	});
 
-animAttack = OMain.resourceManager.load(
+animAttack = global.resourceManager.load(
 	"Data/Assets/Character/Zombie_Attack.bbanim",
 	undefined,
 	function (_err, _animation) {
@@ -85,7 +85,7 @@ animAttack = OMain.resourceManager.load(
 		}
 	});
 
-animDeath = OMain.resourceManager.load("Data/Assets/Character/Zombie_Death.bbanim");
+animDeath = global.resourceManager.load("Data/Assets/Character/Zombie_Death.bbanim");
 
 ////////////////////////////////////////////////////////////////////////////////
 // Animation state machine
