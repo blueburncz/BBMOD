@@ -142,10 +142,10 @@ function BBMOD_DynamicBatch(_model, _size)
 		return 8;
 	};
 
-	static _draw_object = function (_method, _object, _material, _fn) {
+	static _draw_object = function (_method, _object, _material, _fn=undefined) {
 		gml_pragma("forceinline");
 
-		_fn = (_fn != undefined) ? _fn : default_fn;
+		_fn ??= default_fn;
 
 		var _dataSize = Size * 8;
 		var _data = array_create(_dataSize, 0);
@@ -169,14 +169,19 @@ function BBMOD_DynamicBatch(_model, _size)
 	};
 
 	/// @func submit_object(_object, _material[, _fn])
+	///
 	/// @desc Immediately submits all instances of an object for rendering in
 	/// batches of {@link BBMOD_DynamicBatch.size}.
+	///
 	/// @param {real} _object An object to submit.
 	/// @param {BBMOD_BaseMaterial} _material A material to use.
-	/// @param {func} [_fn] A function that writes instance data to an array
-	/// which is then passed to the material's shader. Must return number of
-	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}.
+	/// @param {func/undefined} [_fn] A function that writes instance data to
+	/// an array which is then passed to the material's shader. Must return
+	/// number of slots it has written to. Defaults to
+	/// {@link BBMOD_DynamicBatch.default_fn}.
+	///
 	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// carBatch.submit_object(OCar, mat_car, function (_data, _index) {
@@ -197,24 +202,30 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// The function defined in this example is actually the implementation of
 	/// {@link BBMOD_DynamicBatch.default_fn}. You can use this to create you own
 	/// variation of it.
+	///
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_DynamicBatch.default_fn
-	static submit_object = function (_object, _material, _fn) {
+	static submit_object = function (_object, _material, _fn=undefined) {
 		_draw_object(method(self, submit), _object, _material, _fn);
 		return self;
 	};
 
 	/// @func render_object(_object, _material[, _fn])
+	///
 	/// @desc Enqueues all instances of an object for rendering in batches of
 	/// {@link BBMOD_DynamicBatch.size}.
+	///
 	/// @param {real} _object An object to render.
 	/// @param {BBMOD_BaseMaterial} _material A material to use.
-	/// @param {func} [_fn] A function that writes instance data to an array
-	/// which is then passed to the material's shader. Must return number of
-	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}.
+	/// @param {func/undefined} [_fn] A function that writes instance data to
+	/// an array which is then passed to the material's shader. Must return
+	/// number of slots it has written to. Defaults to
+	/// {@link BBMOD_DynamicBatch.default_fn}.
+	///
 	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// carBatch.render_object(OCar, mat_car, function (_data, _index) {
@@ -233,13 +244,14 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// });
 	/// ```
 	/// The function defined in this example is actually the implementation of
-	/// {@link BBMOD_DynamicBatch.default_fn}. You can use this to create you own
-	/// variation of it.
+	/// {@link BBMOD_DynamicBatch.default_fn}. You can use this to create your
+	/// own variation of it.
+	///
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.default_fn
-	static render_object = function (_object, _material, _fn) {
+	static render_object = function (_object, _material, _fn=undefined) {
 		_draw_object(method(self, render), _object, _material, _fn);
 		return self;
 	};

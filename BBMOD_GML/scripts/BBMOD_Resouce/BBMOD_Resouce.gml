@@ -41,8 +41,8 @@ function BBMOD_Resource()
 
 	/// @func check_file(_file[, _sha1[, _callback]])
 	/// @param {string} _file
-	/// @param {string} [_sha1]
-	/// @param {function} [_callback]
+	/// @param {string/undefined} [_sha1]
+	/// @param {func/undefined} [_callback]
 	/// @return {bool}
 	/// @throws {BBMOD_Exception}
 	/// @private
@@ -80,11 +80,11 @@ function BBMOD_Resource()
 	/// @func from_file(_file[, _sha1])
 	/// @desc Loads the resource from a file.
 	/// @param {string} _file The path to the file.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the resource will not be loaded.
+	/// @param {string/undefined} [_sha1] Expected SHA1 of the file. If the
+	/// actual one does not match with this, then the resource will not be loaded.
 	/// @return {BBMOD_Resource} Returns `self`.
 	/// @throws {BBMOD_Exception} If loading fails.
-	static from_file = function (_file, _sha1) {
+	static from_file = function (_file, _sha1=undefined) {
 		Path = _file;
 
 		check_file(_file, _sha1);
@@ -111,12 +111,12 @@ function BBMOD_Resource()
 	/// @desc Asynchronnously loads the resource from a file.
 	///
 	/// @param {string} _file The path to the file.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the resource will not be loaded.
-	/// @param {function} [_callback] The function to execute when the resource is
-	/// loaded or if an error occurs. It must take the error as the first argument
-	/// and the resource as the second argument. If no error occurs, then `undefined`
-	/// is passed.
+	/// @param {string/undefined} [_sha1] Expected SHA1 of the file. If the
+	/// actual one does not match with this, then the resource will not be loaded.
+	/// @param {func/undefined} [_callback] The function to execute when the
+	/// resource is loaded or if an error occurs. It must take the error as the
+	/// first argument and the resource as the second argument. If no error occurs,
+	/// then `undefined` is passed.
 	///
 	/// @return {BBMOD_Resource} Returns `self`.
 	///

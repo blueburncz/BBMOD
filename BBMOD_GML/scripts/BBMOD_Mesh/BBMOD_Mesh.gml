@@ -63,7 +63,7 @@ function BBMOD_Mesh(_vertexFormat)
 	/// @func {real[]/undefined} [_transform]
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private
-	static submit = function (_material, _transform) {
+	static submit = function (_material, _transform=undefined) {
 		if (!_material.apply())
 		{
 			return self;
@@ -76,9 +76,10 @@ function BBMOD_Mesh(_vertexFormat)
 		return self;
 	};
 
-	/// @func render(_material[, _transform])
+	/// @func render(_material, _transform, _matrix)
 	/// @func {BBMOD_BaseMaterial} _material
-	/// @func {real[]/undefined} [_transform]
+	/// @func {real[]/undefined} _transform
+	/// @func {real[]} _matrix
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private
 	static render = function (_material, _transform, _matrix) {

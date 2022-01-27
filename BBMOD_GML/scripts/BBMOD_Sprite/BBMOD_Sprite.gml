@@ -4,9 +4,9 @@
 ///
 /// @desc A sprite.
 ///
-/// @param {string} [_file] The file to load the sprite ffrom.
-/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
-/// not match with this, then the model will not be loaded.
+/// @param {string/undefined} [_file] The file to load the sprite from.
+/// @param {string/undefined} [_sha1] Expected SHA1 of the file. If the actual
+/// one does not match with this, then the model will not be loaded.
 ///
 /// @throws {BBMOD_Exception} When the sprite fails to load.
 function BBMOD_Sprite(_file=undefined, _sha1=undefined)

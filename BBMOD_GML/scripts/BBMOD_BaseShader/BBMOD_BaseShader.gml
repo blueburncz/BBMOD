@@ -71,8 +71,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_cam_pos([_pos])
 	/// @desc Sets a fragment shader uniform `bbmod_CamPos` to the given position.
-	/// @param {BBMOD_Vec3} [_pos] The camera position. Defaults to the value
-	/// defined using {@link bbmod_camera_set_position}.
+	/// @param {BBMOD_Vec3/undefined} [_pos] The camera position. If `undefined`,
+	/// then the value set by {@link bbmod_camera_set_position} is used.
 	/// @return {BBMOD_Shader} Returns `self`.
 	static set_cam_pos = function (_pos=undefined) {
 		gml_pragma("forceinline");
@@ -82,8 +82,9 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_zfar([_value])
 	/// @desc Sets a fragment shader uniform `bbmod_ClipFar` to the given value.
-	/// @param {BBMOD_Vec3} [_value] The distance to the far clipping plane. Defaults
-	/// to the value defined using {@link bbmod_camera_set_zfar}.
+	/// @param {BBMOD_Vec3/undefined} [_value] The distance to the far clipping
+	/// plane. If `undefined`, then the value set by {@link bbmod_camera_set_zfar}
+	/// is used.
 	/// @return {BBMOD_Shader} Returns `self`.
 	static set_zfar = function (_value=undefined) {
 		gml_pragma("forceinline");
@@ -93,8 +94,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_exposure([_value])
 	/// @desc Sets the `bbmod_Exposure` uniform.
-	/// @param {real} [_value] The camera exposure. Defaults to the value
-	/// defined using {@link bbmod_camera_set_exposure}.
+	/// @param {real/undefined} [_value] The camera exposure. If `undefined`,
+	/// then the value set by {@link bbmod_camera_set_exposure} is used.
 	/// @return {BBMOD_PBRShader} Returns `self`.
 	static set_exposure = function (_value=undefined) {
 		gml_pragma("forceinline");

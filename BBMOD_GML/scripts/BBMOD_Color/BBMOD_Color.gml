@@ -247,15 +247,14 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func ToRGBM([_array[, _index]])
 	/// @desc Encodes the color into RGBM format, ignoring the alpha channel.
-	/// @param {real[]} [_array] The array to output the values to. A new one
-	/// is created if not defined.
-	/// @param {uint} [_index] The index to start writing the values to. Defaults
-	/// to 0.
+	/// @param {real[]/undefined} [_array] The array to output the values to.
+	/// If `undefined`, then a new one is created.
+	/// @param {uint} [_index] The index to start writing the values to.
+	/// Defaults to 0.
 	/// @return {real[]} Returns the array with RGBM values.
-	static ToRGBM = function (_array, _index) {
+	static ToRGBM = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
-		_array = (_array != undefined) ? _array : array_create(4, 0);
-		_index = (_index != undefined) ? _index : 0;
+		_array ??= array_create(4, 0);
 		var _red = min(Red / BBMOD_RGBM_VALUE_MAX, 1.0);
 		var _green = min(Green / BBMOD_RGBM_VALUE_MAX, 1.0);
 		var _blue = min(Blue / BBMOD_RGBM_VALUE_MAX, 1.0);

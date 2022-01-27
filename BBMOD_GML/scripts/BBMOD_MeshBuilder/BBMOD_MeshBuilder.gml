@@ -195,18 +195,23 @@ function BBMOD_MeshBuilder()
 	};
 
 	/// @func build([_vertexFormat])
+	///
 	/// @desc Builds a mesh from the added vertices and faces.
-	/// @param {BBMOD_VertexFormat} [_vertexFormat] The vertex format of the mesh.
-	/// This must be compatible with the format of the added vertices. Defaults to
-	/// the format of the added vertices.
+	///
+	/// @param {BBMOD_VertexFormat/undefined [_vertexFormat] The vertex format
+	/// of the mesh. This must be compatible with the format of the added
+	/// vertices. If `undefined`, then the format of the first added vertex is
+	/// used.
+	///
 	/// @return {BBMOD_Mesh} The created mesh.
-	/// @throws {BBMOD_Exception} If an error occurs during the mesh building process.
+	///
+	/// @throws {BBMOD_Exception} If an error occurs during the mesh building
+	/// process.
+	///
 	/// @see BBMOD_Mesh
 	/// @see BBMOD_VertexFormat
-	static build = function (_vertexFormat) {
-		_vertexFormat = (_vertexFormat == undefined)
-			? Vertices[| 0].VertexFormat
-			: _vertexFormat;
+	static build = function (_vertexFormat=undefined) {
+		_vertexFormat ??= Vertices[| 0].VertexFormat;
 
 		var _vbuffer = vertex_create_buffer();
 		var _faceCount = ds_list_size(Faces);

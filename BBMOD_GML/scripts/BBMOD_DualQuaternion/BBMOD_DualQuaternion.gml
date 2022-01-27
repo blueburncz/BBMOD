@@ -1,34 +1,30 @@
 /// @func BBMOD_DualQuaternion([_x, _y, _z, _w, _dx, _dy, _dz, _dw])
 /// @desc A dual quaternion.
 /// @param {real} [_x] The first component of the real part of the dual quaternion.
+/// Defaults to 0.
 /// @param {real} [_y] The second component of the real part of the dual quaternion.
+/// Defaults to 0.
 /// @param {real} [_z] The third component of the real part of the dual quaternion.
+/// Defaults to 0.
 /// @param {real} [_w] The fourth component of the real part of the dual quaternion.
+/// Defaults to 1.
 /// @param {real} [_dx] The first component of the dual part of the dual quaternion.
+/// Defaults to 0.
 /// @param {real} [_dy] The second component of the dual part of the dual quaternion.
+/// Defaults to 0.
 /// @param {real} [_dz] The third component of the dual part of the dual quaternion.
+/// Defaults to 0.
 /// @param {real} [_dw] The fourth component of the dual part of the dual quaternion.
-/// @note If the arguments are not specified, then an identity dual quaternion is
-/// created.
-function BBMOD_DualQuaternion(_x, _y, _z, _w, _dx, _dy, _dz, _dw) constructor
+/// Defaults to 0.
+/// @note If you leave all the arguments to their default values, an identity
+/// dual quaternion is created.
+function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, _dz=0.0, _dw=0.0) constructor
 {
-	var _makeIdentity = (_x == undefined);
-
 	/// @var {BBMOD_Quaternion} The real part of the dual quaternion.
-	Real = new BBMOD_Quaternion(
-		_makeIdentity ? 0.0 : _x,
-		_makeIdentity ? 0.0 : _y,
-		_makeIdentity ? 0.0 : _z,
-		_makeIdentity ? 1.0 : _w,
-	);
+	Real = new BBMOD_Quaternion(_x, _y, _z, _w);
 
 	/// @var {BBMOD_Quaternion} The dual part of the dual quaternion.
-	Dual = new BBMOD_Quaternion(
-		_makeIdentity ? 0.0 : _dx,
-		_makeIdentity ? 0.0 : _dy,
-		_makeIdentity ? 0.0 : _dz,
-		_makeIdentity ? 0.0 : _dw,
-	);
+	Dual = new BBMOD_Quaternion(_dx, _dy, _dz, _dw);
 
 	/// @func Add(_dq)
 	/// @desc Adds dual quaternions and returns the result as a new dual quaternion.
@@ -98,28 +94,27 @@ function BBMOD_DualQuaternion(_x, _y, _z, _w, _dx, _dy, _dz, _dw) constructor
 				_real.Mul(Dual));
 	};
 
-	/// @func FromArray()
+	/// @func FromArray(_array[, _index])
 	/// @desc Loads dual quaternion components `[rX, rY, rZ, rW, dX, dY, dZ, dW]`
 	/// from an array.
 	/// @param {real[]} _array The array to read the dual quaternion components
 	/// from.
-	/// @param {uint} [_index] The index to start reading the dual quaternion
-	/// components from. Defaults to 0.
+	/// @param {uint/undefined} [_index] The index to start reading the dual
+	/// quaternion components from. Defaults to 0.
 	/// @return {BBMOD_DualQuaternion} Returns `self`.
-	static FromArray = function (_array, _index) {
+	static FromArray = function (_array, _index=0) {
 		gml_pragma("forceinline");
-		_index = (_index != undefined) ? _index : 0;
 		Real = Real.FromArray(_array, _index);
 		Dual = Dual.FromArray(_array, _index + 4);
 		return self;
 	};
 
-	/// @func FromBuffer()
+	/// @func FromBuffer(_buffer, _type)
 	/// @desc Loads dual quaternion components `[rX, rY, rZ, rW, dX, dY, dZ, dW]`
 	/// from a buffer.
 	/// @param {buffer} _buffer The buffer to read the dual quaternion components
 	/// from.
-	/// @param {int} [_type] The type of each component. Use one of the `buffer_`
+	/// @param {int} _type The type of each component. Use one of the `buffer_`
 	/// constants, e.g. `buffer_f32`.
 	/// @return {BBMOD_DualQuaternion} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
@@ -328,14 +323,13 @@ function BBMOD_DualQuaternion(_x, _y, _z, _w, _dx, _dy, _dz, _dw) constructor
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes components `[rX, rY, rZ, rW, dX, dY, dZ, dW]` of the dual
 	/// quaternion into an array.
-	/// @param {real[]} [_array] The destination array. If not defined, a new one
-	/// is created.
+	/// @param {real[]/undefined} [_array] The destination array. If not defined,
+	/// a new one is created.
 	/// @param {uint} [_index] The index to start writing to. Defaults to 0.
 	/// @return {real[]} Returns the destination array.
-	static ToArray = function (_array, _index) {
+	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
-		_array = (_array != undefined) ? _array : array_create(8, 0.0);
-		_index = (_index != undefined) ? _index : 0;
+		_array ??= array_create(8, 0.0);
 		Real.ToArray(_array, _index);
 		Dual.ToArray(_array, _index + 4);
 		return _array;
@@ -357,16 +351,15 @@ function BBMOD_DualQuaternion(_x, _y, _z, _w, _dx, _dy, _dz, _dw) constructor
 
 	/// @func ToMatrix([_dest[, _index]])
 	/// @desc Converts dual quaternion into a matrix.
-	/// @param {real[]} [_dest] The destination array. If not specified, a new one is
-	/// created.
-	/// @param {uint} [_index] The starting index in the destination array. Defaults
-	/// to 0.
+	/// @param {real[]/undefined} [_dest] The destination array. If `undefined`,
+	/// a new one is created.
+	/// @param {uint} [_index] The starting index in the destination array.
+	/// Defaults to 0.
 	/// @return {real[]} Returns the destination array.
-	static ToMatrix = function (_dest, _index) {
+	static ToMatrix = function (_dest=undefined, _index=0) {
 		gml_pragma("forceinline");
 
-		_dest = (_dest != undefined) ? _dest : array_create(16, 0.0);
-		_index = (_index != undefined) ? _index : 0;
+		_dest ??= array_create(16, 0.0);
 
 		// Rotation
 		Real.ToMatrix(_dest, _index);

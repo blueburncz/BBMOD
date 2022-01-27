@@ -65,12 +65,12 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	/// @func to_vertex_buffer(_vbuffer[, _vformat])
 	/// @desc Adds the vertex to the vertex buffer.
 	/// @param {vertex_buffer} _vbuffer The vertex buffer to add the vertex to.
-	/// @param {BBMOD_VertexFormat} [_vformat] The vertex format of the vertex
-	/// buffer. Defaults to the format of the vertex.
+	/// @param {BBMOD_VertexFormat/undefined} [_vformat] The vertex format of
+	/// the vertex buffer. Defaults to the format of the vertex.
 	/// @return {BBMOD_Vertex} Returns `self`.
 	/// @throws {BBMOD_Exception} If the format of the vertex and the format of
 	/// the buffer are not compatible.
-	static to_vertex_buffer = function (_vbuffer, _vformat) {
+	static to_vertex_buffer = function (_vbuffer, _vformat=undefined) {
 		var _checkFormat = (_vformat == undefined);
 
 		_vformat = _checkFormat ? VertexFormat : _vformat;

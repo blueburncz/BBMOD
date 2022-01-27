@@ -14,36 +14,36 @@
 /// indices. Defaults to `false`.
 /// @param {bool} [_ids] If `true` then the vertex format must have ids for dynamic batching.
 /// Defaults to `false`.
-function BBMOD_VertexFormat(_vertices, _normals, _uvs, _colors, _tangentw, _bones, _ids) constructor
+function BBMOD_VertexFormat(_vertices=true, _normals=false, _uvs=false, _colors=false, _tangentw=false, _bones=false, _ids=false) constructor
 {
-	/// @var {bool} If `true` then the vertex foramt has vertices.
+	/// @var {bool} If `true` then the vertex format has vertices.
 	/// @readonly
-	Vertices = (_vertices != undefined) ? _vertices : true;
+	Vertices = _vertices;
 
-	/// @var {bool} If `true` then the vertex foramt has normal vectors.
+	/// @var {bool} If `true` then the vertex format has normal vectors.
 	/// @readonly
-	Normals = (_normals != undefined) ? _normals : false;
+	Normals = _normals;
 
-	/// @var {bool} If `true` then the vertex foramt has texture coordinates.
+	/// @var {bool} If `true` then the vertex format has texture coordinates.
 	/// @readonly
-	TextureCoords = (_uvs != undefined) ? _uvs : false;
+	TextureCoords = _uvs;
 
-	/// @var {bool} If `true` then the vertex foramt has vertex colors.
+	/// @var {bool} If `true` then the vertex format has vertex colors.
 	/// @readonly
-	Colors = (_colors != undefined) ? _colors : false;
+	Colors = _colors;
 
-	/// @var {bool} If `true` then the vertex foramt has tangent vectors and
+	/// @var {bool} If `true` then the vertex format has tangent vectors and
 	/// bitangent sign.
 	/// @readonly
-	TangentW = (_tangentw != undefined) ? _tangentw : false;
+	TangentW = _tangentw;
 
-	/// @var {bool} If `true` then the vertex foramt has vertex weights and bone
+	/// @var {bool} If `true` then the vertex format has vertex weights and bone
 	/// indices.
-	Bones = (_bones != undefined) ? _bones : false;
+	Bones = _bones;
 
-	/// @var {bool} If `true` then the vertex foramt has ids for dynamic batching.
+	/// @var {bool} If `true` then the vertex format has ids for dynamic batching.
 	/// @readonly
-	Ids = (_ids != undefined) ? _ids : false;
+	Ids = _ids;
 
 	/// @var {vertex_format} The raw vertex format.
 	/// @readonly

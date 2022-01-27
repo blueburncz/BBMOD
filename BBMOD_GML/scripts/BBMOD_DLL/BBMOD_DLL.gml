@@ -36,7 +36,7 @@
 /// _dll.destroy();
 /// modHouse = new BBMOD_Model("House.bbmod");
 /// ```
-function BBMOD_DLL(_path)
+function BBMOD_DLL(_path="Data/BBMOD/BBMOD.dll")
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -47,7 +47,7 @@ function BBMOD_DLL(_path)
 
 	/// @var {string} Path to the DLL file.
 	/// @readonly
-	Path = (_path != undefined) ? _path : "Data/BBMOD/BBMOD.dll";
+	Path = _path;
 
 	if (!file_exists(Path))
 	{

@@ -445,7 +445,7 @@ function bbmod_material_reset()
 /// @desc Retrieves an array of all existing materials, sorted by their priority.
 /// Materials with smaller priority come first in the array.
 /// @param {BBMOD_ERenderPass/undefined} [_pass] If defined, then only materials
-/// used in specified render pass will be returned.
+/// used in specified render pass will be returned. Defaults to `undefined`.
 /// @return {BBMOD_BaseMaterial[]} A read-only array of materials.
 /// @see BBMOD_BaseMaterial.Priority
 /// @see BBMOD_ERenderPass

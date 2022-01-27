@@ -175,9 +175,10 @@ function BBMOD_Camera() constructor
 	/// @desc Handles mouselook, updates camera's position, matrices etc.
 	/// @param {real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
-	/// @param {func} [_positionHandler] A function which takes the camera's
-	/// position (@{link BBMOD_Vec3}) and returns a new position. This could be
-	/// used for example for camera collisions in a third-person game.
+	/// @param {func/undefined} [_positionHandler] A function which takes
+	/// the camera's position (@{link BBMOD_Vec3}) and returns a new position.
+	/// This could be used for example for camera collisions in a third-person
+	/// game. Defaults to `undefined`.
 	/// @return {BBMOD_Camera} Returns `self`.
 	static update = function (_deltaTime, _positionHandler=undefined) {
 		if (os_browser != browser_not_a_browser)

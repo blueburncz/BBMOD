@@ -21,7 +21,7 @@ function BBMOD_IEventListener()
 	/// @private
 	Listeners = undefined;
 
-	static _onEvent = function (_event, _listener) {
+	static _onEvent = function (_event, _listener=undefined) {
 		gml_pragma("forceinline");
 		if (is_method(_event))
 		{
@@ -41,17 +41,41 @@ function BBMOD_IEventListener()
 	};
 
 	/// @func on_event([_event, ]_listener)
+	///
 	/// @desc Adds a listener for a specific event.
-	/// @param {string} [_event] The event name. If not specified, then the
-	/// listener is executed on every event.
+	///
+	/// @param {string/undefined} [_event] The event name. If not specified,
+	/// then the listener is executed on every event.
 	/// @param {func} _listener A function executed when the event occurs.
 	/// Should take the event data as the first argument and the event name
 	/// as the second argument.
+	///
 	/// @return {BBMOD_EventListener} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// function Button() : CE_Class() constructor
+	/// {
+	///     implement(BBMOD_IEventListener);
+	/// }
+	///
+	/// var _button = new Button();
+	///
+	/// // This will be always executed, no matter the event type.
+	/// _button.on_event(function (_data, _eventName) {
+	///     show_debug_message("Got event " + string(_eventName) + "!");
+	/// });
+	///
+	/// // This will be executed only on event "click".
+	/// _button.on_event("click", function () {
+	///     show_debug_message("The button was clicked!");
+	/// });
+	/// ```
+	///
 	/// @see BBMOD_IEventListener.off_event
 	on_event = _onEvent;
 
-	static _offEvent = function (_event) {
+	static _offEvent = function (_event=undefined) {
 		gml_pragma("forceinline");
 		if (Listeners == undefined)
 		{
@@ -70,9 +94,9 @@ function BBMOD_IEventListener()
 
 	/// @func off_event([_event])
 	/// @desc Removes event listeners.
-	/// @param {string} [_event] The name of the event for which should be the
-	/// listener removed. If not specified, then listeners for all events are
-	/// removed.
+	/// @param {string/undefined} [_event] The name of the event for which
+	/// should be the listener removed. If `undefined`, then listeners for all
+	/// events are removed.
 	/// @return {BBMOD_IEventListener} Returns `self`.
 	/// @see BBMOD_IEventListener.on_event
 	off_event = _offEvent;

@@ -2,10 +2,11 @@
 /// @desc Adds a {@link BBMOD_Mesh} into a colmesh.
 /// @param {BBMOD_Mesh} _mesh The mesh to add.
 /// @param {colmesh} _colmesh The colmesh to add the mesh to.
-/// @param {real[16]} [_transform] A matrix to transform the mesh with before
-/// it is added to the colmesh. Defaults to the identity matrix.
+/// @param {real[16]/undefined} [_transform] A matrix to transform the mesh with
+/// before it is added to the colmesh. Leave `undefined` if you do not wish to
+/// transform the mesh.
 /// @see https://marketplace.yoyogames.com/assets/8130/colmesh
-function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform)
+function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform=undefined)
 {
 	var _buffer = buffer_create_from_vertex_buffer(_mesh.VertexBuffer, buffer_fixed, 1);
 	var _bufferSize = buffer_get_size(_buffer);

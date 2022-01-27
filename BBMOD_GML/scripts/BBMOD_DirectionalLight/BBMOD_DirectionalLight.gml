@@ -1,8 +1,10 @@
 /// @func BBMOD_DirectionalLight([_color[, _direction]])
 /// @extends BBMOD_Light
 /// @desc A directional light.
-/// @param {BBMOD_Color} [_color] The light's color.
-/// @param {BBMOD_Vec3} [_direction] The light's direction.
+/// @param {BBMOD_Color/undefined} [_color] The light's color. Defaults to
+/// {@link BBMOD_C_WHITE} if `undefined`.
+/// @param {BBMOD_Vec3/undefined} [_direction] The light's direction. Defaults
+/// to `[-1, 0, -1]` if `undefined`.
 function BBMOD_DirectionalLight(_color=undefined, _direction=undefined)
 	: BBMOD_Light() constructor
 {
