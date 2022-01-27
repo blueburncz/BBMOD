@@ -17,16 +17,17 @@ vec3 ColorGrade(vec3 color, sampler2D lut)
 {
 	// This clamp fixes color grading on HTML5. May be precision issues?
 	color = clamp(color, vec3(0.03), vec3(0.97));
-	// TODO: Clean up color grading shader
-	const vec3 texel = vec3(16.0 / 256.0, 1.0 / 16.0, 0.0);
-	vec2 uv = vec2(color.x * texel.x, color.y);
-	float z15 = color.z * 15.0;
-	vec2 uv1 = uv + (floor(z15) * texel.xz);
-	vec2 uv2 = uv1 + texel.xz;
+
+	// Fixes selecting wrong mips on HTML5.
+	const float bias = -5.0;
+
+	float z = color.b * 15.0;
+	vec2 uv1 = vec2((color.r + floor(z)) / 16.0, color.g);
+	vec2 uv2 = vec2((color.r + ceil(z)) / 16.0, color.g);
 	return mix(
-		texture2D(lut, uv1).rgb,
-		texture2D(lut, uv2).rgb,
-		fract(z15));
+		texture2D(lut, uv1, bias).rgb,
+		texture2D(lut, uv2, bias).rgb,
+		fract(z));
 }
 
 float Luminance(vec3 color)

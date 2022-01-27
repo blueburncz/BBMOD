@@ -34,7 +34,7 @@
   "option_ios_launchscreen_fill": 0,
   "option_ios_interpolate_pixels": false,
   "option_ios_half_ipad1_textures": false,
-  "option_ios_scale": 0,
+  "option_ios_scale": 1,
   "option_ios_texture_page": "2048x2048",
   "option_ios_use_facebook": false,
   "option_ios_facebook_id": "",

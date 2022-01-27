@@ -355,6 +355,7 @@ function BBMOD_Renderer()
 			var _texelHeight = 1.0 / _windowHeight;
 			gpu_push_state();
 			gpu_set_tex_filter(true);
+			gpu_set_tex_repeat(false);
 			////////////////////////////////////////////////////////////////////
 			// Post-processing
 			if (EnablePostProcessing)
@@ -368,9 +369,6 @@ function BBMOD_Renderer()
 				shader_set(_shader);
 				var _uLut = shader_get_sampler_index(_shader, "u_texLut");
 				texture_set_stage(_uLut, ColorGradingLUT);
-				gpu_set_tex_filter_ext(_uLut, true);
-				gpu_set_tex_mip_enable_ext(_uLut, mip_off);
-				gpu_set_tex_repeat_ext(_uLut, false);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fDistortion"), ChromaticAberration);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_fGrayscale"), Grayscale);
