@@ -175,7 +175,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 	if (model->BoneCount > 64)
 	{
 		PRINT_WARNING(
-			"This model has %d bones, but the default upper limit defined in shader BBMOD_ShDefaultAnimated is 64!"
+			"This model has %zd bones, but the default upper limit defined in shader BBMOD_ShDefaultAnimated is 64!"
 			" You will need to increase this limit in order to render this model, though be aware that the maximum"
 			" number of vertex shader uniforms is determined by the target platform! Setting it higher than 64 can"
 			" make your game incompatible with some devices!"
