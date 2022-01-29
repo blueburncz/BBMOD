@@ -3,6 +3,7 @@ This release mainly updates Assimp (used in BBMOD CLI and DLL) to 5.2.0, which i
 
 ## CLI:
 * Updated Assimp to 5.2.0.
+* `BBMOD.exe` is now x64 only!
 
 ## GML API:
 ### Core module:
