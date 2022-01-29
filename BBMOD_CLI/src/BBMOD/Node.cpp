@@ -11,15 +11,15 @@ bool SNode::Save(std::ofstream& file)
 	FILE_WRITE_DATA(file, IsBone);
 	FILE_WRITE_DUAL_QUAT(file, Transform);
 
-	size_t meshCount = Meshes.size();
+	uint32_t meshCount = (uint32_t)Meshes.size();
 	FILE_WRITE_DATA(file, meshCount);
 
-	for (size_t meshIndex : Meshes)
+	for (uint32_t meshIndex : Meshes)
 	{
 		FILE_WRITE_DATA(file, meshIndex);
 	}
 
-	size_t childCount = Children.size();
+	uint32_t childCount = (uint32_t)Children.size();
 	FILE_WRITE_DATA(file, childCount);
 	
 	for (SNode* child : Children)
@@ -45,20 +45,20 @@ SNode* SNode::Load(std::ifstream& file)
 	FILE_READ_DATA(file, node->IsBone);
 	FILE_READ_DUAL_QUAT(file, node->Transform);
 
-	size_t meshCount;
+	uint32_t meshCount;
 	FILE_READ_DATA(file, meshCount);
 
-	for (size_t i = 0; i < meshCount; ++i)
+	for (uint32_t i = 0; i < meshCount; ++i)
 	{
-		size_t meshIndex;
+		uint32_t meshIndex;
 		FILE_READ_DATA(file, meshIndex);
 		node->Meshes.push_back(meshIndex);
 	}
 
-	size_t childCount;
+	uint32_t childCount;
 	FILE_READ_DATA(file, childCount);
 
-	for (size_t i = 0; i < childCount; ++i)
+	for (uint32_t i = 0; i < childCount; ++i)
 	{
 		SNode* child = SNode::Load(file);
 		node->Children.push_back(child);

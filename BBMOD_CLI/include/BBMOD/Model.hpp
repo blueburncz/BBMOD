@@ -30,11 +30,11 @@ struct SModel
 	
 	std::vector<SMesh*> Meshes;
 
-	size_t NodeCount = 0;
+	uint32_t NodeCount = 0;
 
 	SNode* RootNode = nullptr;
 
-	size_t BoneCount = 0;
+	uint32_t BoneCount = 0;
 
 	std::vector<SBone*> Skeleton;
 

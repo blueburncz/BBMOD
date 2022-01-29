@@ -251,12 +251,12 @@ bool SVertex::Save(std::ofstream& file)
 
 	if (vertexFormat->Bones)
 	{
-		for (size_t i = 0; i < 4; ++i)
+		for (uint32_t i = 0; i < 4; ++i)
 		{
 			FILE_WRITE_DATA(file, Bones[i]);
 		}
 
-		for (size_t i = 0; i < 4; ++i)
+		for (uint32_t i = 0; i < 4; ++i)
 		{
 			FILE_WRITE_DATA(file, Weights[i]);
 		}
@@ -303,12 +303,12 @@ SVertex* SVertex::Load(std::ifstream& file, SVertexFormat* vertexFormat)
 
 	if (vertexFormat->Bones)
 	{
-		for (size_t i = 0; i < 4; ++i)
+		for (uint32_t i = 0; i < 4; ++i)
 		{
 			FILE_READ_DATA(file, vertex->Bones[i]);
 		}
 
-		for (size_t i = 0; i < 4; ++i)
+		for (uint32_t i = 0; i < 4; ++i)
 		{
 			FILE_READ_DATA(file, vertex->Weights[i]);
 		}
@@ -326,7 +326,7 @@ bool SMesh::Save(std::ofstream& file)
 {
 	FILE_WRITE_DATA(file, MaterialIndex);
 
-	size_t vertexCount = Data.size();
+	uint32_t vertexCount = (uint32_t)Data.size();
 	FILE_WRITE_DATA(file, vertexCount);
 
 	for (SVertex* vertex : Data)
@@ -347,10 +347,10 @@ SMesh* SMesh::Load(std::ifstream& file, SVertexFormat* vertexFormat)
 
 	FILE_READ_DATA(file, mesh->MaterialIndex);
 
-	size_t vertexCount;
+	uint32_t vertexCount;
 	FILE_READ_DATA(file, vertexCount);
 
-	for (size_t i = 0; i < vertexCount; ++i)
+	for (uint32_t i = 0; i < vertexCount; ++i)
 	{
 		SVertex* vertex = SVertex::Load(file, vertexFormat);
 		mesh->Data.push_back(vertex);

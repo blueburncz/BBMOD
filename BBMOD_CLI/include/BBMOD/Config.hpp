@@ -75,7 +75,7 @@ struct SConfig
 	 * @see BBMOD_NORMALS_FLAT
 	 * @see BBMOD_NORMALS_SMOOTH
 	 */
-	size_t GenNormals = BBMOD_NORMALS_SMOOTH;
+	uint32_t GenNormals = BBMOD_NORMALS_SMOOTH;
 
 	/** Rate (FPS) at which are the animations sampled. */
 	double SamplingRate = 60.0;
@@ -89,5 +89,5 @@ struct SConfig
 	 * 1 | Yes         | Yes         | No
 	 * 2 | No          | No          | No
 	 */
-	size_t AnimationOptimization = 0;
+	uint32_t AnimationOptimization = 0;
 };

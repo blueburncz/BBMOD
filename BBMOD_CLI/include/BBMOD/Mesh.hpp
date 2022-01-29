@@ -47,7 +47,7 @@ struct SMesh
 
 	SVertexFormat* VertexFormat = nullptr;
 
-	size_t MaterialIndex = 0;
+	uint32_t MaterialIndex = 0;
 
 	std::vector<SVertex*> Data;
 };

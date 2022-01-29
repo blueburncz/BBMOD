@@ -93,5 +93,5 @@ struct SAnimation
 
 	SModel* Model = nullptr;
 
-	size_t ModelNodeCount = 0;
+	uint32_t ModelNodeCount = 0;
 };

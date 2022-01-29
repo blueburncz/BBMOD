@@ -77,7 +77,7 @@ bool SAnimationNode::Save(std::ofstream& file)
 {
 	FILE_WRITE_DATA(file, Index);
 
-	size_t keyCount = DualQuatKeys.size();
+	uint32_t keyCount = (uint32_t)DualQuatKeys.size();
 	FILE_WRITE_DATA(file, keyCount);
 
 	for (SDualQuatKey* key : DualQuatKeys)
@@ -96,10 +96,10 @@ SAnimationNode* SAnimationNode::Load(std::ifstream& file)
 	SAnimationNode* animationNode = new SAnimationNode();
 	FILE_READ_DATA(file, animationNode->Index);
 
-	size_t keyCount;
+	uint32_t keyCount;
 	FILE_READ_DATA(file, keyCount);
 
-	for (size_t i = 0; i < keyCount; ++i)
+	for (uint32_t i = 0; i < keyCount; ++i)
 	{
 		SDualQuatKey* key = SDualQuatKey::Load(file);
 		animationNode->DualQuatKeys.push_back(key);
@@ -123,7 +123,7 @@ SAnimation* SAnimation::FromAssimp(aiAnimation* aiAnimation, SModel* model, cons
 	}
 	animation->TicsPerSecond = config.SamplingRate;
 
-	for (size_t i = 0; i < aiAnimation->mNumChannels; ++i)
+	for (uint32_t i = 0; i < aiAnimation->mNumChannels; ++i)
 	{
 		aiNodeAnim* channel = aiAnimation->mChannels[i];
 
@@ -139,7 +139,7 @@ SAnimation* SAnimation::FromAssimp(aiAnimation* aiAnimation, SModel* model, cons
 		std::vector<SRotationKey*> rotationKeys;
 
 		// Position keys
-		for (size_t j = 0; j < channel->mNumPositionKeys; ++j)
+		for (uint32_t j = 0; j < channel->mNumPositionKeys; ++j)
 		{
 			aiVectorKey& key = channel->mPositionKeys[j];
 			SPositionKey* positionKey = new SPositionKey();
@@ -151,7 +151,7 @@ SAnimation* SAnimation::FromAssimp(aiAnimation* aiAnimation, SModel* model, cons
 		}
 
 		// Rotation keys
-		for (size_t j = 0; j < channel->mNumRotationKeys; ++j)
+		for (uint32_t j = 0; j < channel->mNumRotationKeys; ++j)
 		{
 			aiQuatKey& key = channel->mRotationKeys[j];
 			SRotationKey* rotationKey = new SRotationKey();
@@ -173,7 +173,7 @@ SAnimation* SAnimation::FromAssimp(aiAnimation* aiAnimation, SModel* model, cons
 
 			// Interpolate position
 			bool added = false;
-			for (size_t i = 0; i < positionKeys.size() - 1; ++i)
+			for (uint32_t i = 0; i < positionKeys.size() - 1; ++i)
 			{
 				if (animationTime < positionKeys[i + 1]->Time)
 				{
@@ -195,7 +195,7 @@ SAnimation* SAnimation::FromAssimp(aiAnimation* aiAnimation, SModel* model, cons
 
 			// Interpolate rotation
 			added = false;
-			for (size_t i = 0; i < rotationKeys.size() - 1; ++i)
+			for (uint32_t i = 0; i < rotationKeys.size() - 1; ++i)
 			{
 				if (animationTime < rotationKeys[i + 1]->Time)
 				{
@@ -249,14 +249,14 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 	FILE_WRITE_DATA(file, Duration);
 	FILE_WRITE_DATA(file, TicsPerSecond);
 
-	size_t modelNodeCount = Model->NodeCount;
+	uint32_t modelNodeCount = Model->NodeCount;
 	FILE_WRITE_DATA(file, modelNodeCount);
 
-	size_t modelBoneCount = Model->BoneCount;
+	uint32_t modelBoneCount = Model->BoneCount;
 	FILE_WRITE_DATA(file, modelBoneCount);
 
-	size_t nodeSize = modelNodeCount * 8;
-	size_t boneSize = modelBoneCount * 8;
+	uint32_t nodeSize = modelNodeCount * 8;
+	uint32_t boneSize = modelBoneCount * 8;
 	float* frameParent = new float[nodeSize];
 	float* frameWorld = new float[nodeSize];
 	float* frameBone = new float[boneSize];
@@ -299,7 +299,7 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 
 			if (nodeData != nullptr)
 			{
-				SDualQuatKey* key = nodeData->DualQuatKeys.at((size_t)frame);
+				SDualQuatKey* key = nodeData->DualQuatKeys.at((uint32_t)frame);
 				dual_quaternion_copy(key->DualQuat, transform);
 			}
 			else
@@ -308,21 +308,21 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 			}
 
 			// Parent space
-			memcpy(&frameParent[(size_t)nodeIndex * 8], transform, sizeof(float) * 8);
+			memcpy(&frameParent[(uint32_t)nodeIndex * 8], transform, sizeof(float) * 8);
 
 			// World space
 			dual_quat_t dqNew;
 			dual_quaternion_multiply(transform, dq, dqNew, 0);
 
-			memcpy(&frameWorld[(size_t)nodeIndex * 8], dqNew, sizeof(float) * 8);
+			memcpy(&frameWorld[(uint32_t)nodeIndex * 8], dqNew, sizeof(float) * 8);
 
 			// Bone space
 			if (node->IsBone)
 			{
 				dual_quat_t finalTransform;
-				dual_quat_t& offset = Model->Skeleton[(size_t)nodeIndex]->Offset;
+				dual_quat_t& offset = Model->Skeleton[(uint32_t)nodeIndex]->Offset;
 				dual_quaternion_multiply(offset, dqNew, finalTransform, 0);
-				memcpy(&frameBone[(size_t)nodeIndex * 8], finalTransform, sizeof(float) * 8);
+				memcpy(&frameBone[(uint32_t)nodeIndex * 8], finalTransform, sizeof(float) * 8);
 			}
 
 			for (SNode* child : node->Children)
@@ -336,7 +336,7 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 
 		if (spaces & BBMOD_BONE_SPACE_PARENT)
 		{
-			for (size_t f = 0; f < nodeSize; ++f)
+			for (uint32_t f = 0; f < nodeSize; ++f)
 			{
 				float v = frameParent[f];
 				FILE_WRITE_DATA(file, v);
@@ -345,7 +345,7 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 
 		if (spaces & BBMOD_BONE_SPACE_WORLD)
 		{
-			for (size_t f = 0; f < nodeSize; ++f)
+			for (uint32_t f = 0; f < nodeSize; ++f)
 			{
 				float v = frameWorld[f];
 				FILE_WRITE_DATA(file, v);
@@ -354,7 +354,7 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 
 		if (spaces & BBMOD_BONE_SPACE_BONE)
 		{
-			for (size_t f = 0; f < boneSize; ++f)
+			for (uint32_t f = 0; f < boneSize; ++f)
 			{
 				float v = frameBone[f];
 				FILE_WRITE_DATA(file, v);
@@ -404,23 +404,23 @@ SAnimation* SAnimation::Load(std::string path)
 	FILE_READ_DATA(file, animation->Duration);
 	FILE_READ_DATA(file, animation->TicsPerSecond);
 
-	size_t modelNodeCount;
+	uint32_t modelNodeCount;
 	FILE_READ_DATA(file, modelNodeCount);
 
 	animation->ModelNodeCount = modelNodeCount;
 
-	for (size_t i = 0; i < modelNodeCount; ++i)
+	for (uint32_t i = 0; i < modelNodeCount; ++i)
 	{
 		animation->AnimationNodes.push_back(nullptr);
 	}
 
-	size_t affectedNodeCount;
+	uint32_t affectedNodeCount;
 	FILE_READ_DATA(file, affectedNodeCount);
 
-	for (size_t i = 0; i < affectedNodeCount; ++i)
+	for (uint32_t i = 0; i < affectedNodeCount; ++i)
 	{
 		SAnimationNode* animationNode = SAnimationNode::Load(file);
-		animation->AnimationNodes[(size_t)animationNode->Index] = animationNode;
+		animation->AnimationNodes[(uint32_t)animationNode->Index] = animationNode;
 	}
 
 	file.close();

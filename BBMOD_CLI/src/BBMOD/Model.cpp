@@ -52,12 +52,12 @@ static SNode* CollectNodes(SModel* model, aiNode* nodeCurrent, const SConfig& co
 
 	dual_quaternion_from_translation_rotation(node->Transform, pos, rot);
 
-	for (size_t i = 0; i < nodeCurrent->mNumMeshes; ++i)
+	for (uint32_t i = 0; i < nodeCurrent->mNumMeshes; ++i)
 	{
 		node->Meshes.push_back(nodeCurrent->mMeshes[i]);
 	}
 
-	for (size_t i = 0; i < nodeCurrent->mNumChildren; ++i)
+	for (uint32_t i = 0; i < nodeCurrent->mNumChildren; ++i)
 	{
 		node->Children.push_back(CollectNodes(model, nodeCurrent->mChildren[i], config));
 	}
@@ -83,7 +83,7 @@ SModel* SModel::FromAssimp(const aiScene* scene, const SConfig& config)
 
 	if (!config.DisableBones)
 	{
-		for (size_t i = 0; i < scene->mNumMeshes; ++i)
+		for (uint32_t i = 0; i < scene->mNumMeshes; ++i)
 		{
 			aiMesh* meshCurrent = scene->mMeshes[i];
 
@@ -93,7 +93,7 @@ SModel* SModel::FromAssimp(const aiScene* scene, const SConfig& config)
 				vertexFormat->Bones = true;
 
 				// Collect all bones
-				for (size_t j = 0; j < meshCurrent->mNumBones; ++j)
+				for (uint32_t j = 0; j < meshCurrent->mNumBones; ++j)
 				{
 					aiBone* boneCurrent = meshCurrent->mBones[j];
 					std::string boneName = boneCurrent->mName.C_Str();
@@ -126,7 +126,7 @@ SModel* SModel::FromAssimp(const aiScene* scene, const SConfig& config)
 	model->VertexFormat = vertexFormat;
 	
 	// Meshes
-	for (size_t i = 0; i < scene->mNumMeshes; ++i)
+	for (uint32_t i = 0; i < scene->mNumMeshes; ++i)
 	{
 		aiMesh* meshCurrent = scene->mMeshes[i];
 		model->Meshes.push_back(SMesh::FromAssimp(meshCurrent, model, config));
@@ -136,7 +136,7 @@ SModel* SModel::FromAssimp(const aiScene* scene, const SConfig& config)
 	model->RootNode = CollectNodes(model, scene->mRootNode, config);
 
 	// Materials
-	for (size_t i = 0; i < scene->mNumMaterials; ++i)
+	for (uint32_t i = 0; i < scene->mNumMaterials; ++i)
 	{
 		aiMaterial* materialCurrent = scene->mMaterials[i];
 		model->MaterialNames.push_back(materialCurrent->GetName().C_Str());
@@ -202,7 +202,7 @@ bool SModel::Save(std::string path)
 		return false;
 	}
 
-	size_t meshCount = Meshes.size();
+	uint32_t meshCount = (uint32_t)Meshes.size();
 	FILE_WRITE_DATA(file, meshCount);
 
 	for (SMesh* mesh : Meshes)
@@ -230,7 +230,7 @@ bool SModel::Save(std::string path)
 		}
 	}
 
-	size_t materialCount = MaterialNames.size();
+	uint32_t materialCount = (uint32_t)MaterialNames.size();
 	FILE_WRITE_DATA(file, materialCount);
 
 	for (std::string& materialName : MaterialNames)
@@ -278,10 +278,10 @@ SModel* SModel::Load(std::string path)
 	SVertexFormat* vertexFormat = SVertexFormat::Load(file);
 	model->VertexFormat = vertexFormat;
 
-	size_t meshCount;
+	uint32_t meshCount;
 	FILE_READ_DATA(file, meshCount);
 
-	for (size_t i = 0; i < meshCount; ++i)
+	for (uint32_t i = 0; i < meshCount; ++i)
 	{
 		SMesh* mesh = SMesh::Load(file, vertexFormat);
 		model->Meshes.push_back(mesh);
@@ -293,16 +293,16 @@ SModel* SModel::Load(std::string path)
 
 	FILE_READ_DATA(file, model->BoneCount);
 
-	for (size_t i = 0; i < model->BoneCount; ++i)
+	for (uint32_t i = 0; i < model->BoneCount; ++i)
 	{
 		SBone* bone = SBone::Load(file);
 		model->Skeleton.push_back(bone);
 	}
 
-	size_t materialCount;
+	uint32_t materialCount;
 	FILE_READ_DATA(file, materialCount);
 
-	for (size_t i = 0; i < materialCount; ++i)
+	for (uint32_t i = 0; i < materialCount; ++i)
 	{
 		std::string materialName;
 		std::getline(file, materialName, '\0');
