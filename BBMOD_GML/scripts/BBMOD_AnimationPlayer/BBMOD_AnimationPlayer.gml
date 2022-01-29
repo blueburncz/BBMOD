@@ -266,16 +266,16 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 			if (_animationTime >= _animation.Duration)
 			{
-				Time %= (_animation.Duration / _animation.TicsPerSecond);
-
 				if (_animInst.Loop)
 				{
+					Time %= (_animation.Duration / _animation.TicsPerSecond);
 					_animationTime %= _animation.Duration;
 					_animInst.EventExecuted = -1;
 					trigger_event(BBMOD_EV_ANIMATION_LOOP, _animation);
 				}
 				else
 				{
+					Time = 0.0;
 					ds_list_delete(Animations, 0);
 					if (!_animation.IsTransition)
 					{
