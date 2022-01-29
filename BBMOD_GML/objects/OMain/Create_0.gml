@@ -110,20 +110,20 @@ _m.Mipmapping = mip_on;
 _m.Repeat = true;
 
 var _rock = _m.clone();
-_rock.BaseOpacity = sprite_get_texture(SprT1, 0);
-_rock.NormalSmoothness = sprite_get_texture(SprT1, 1);
+_rock.set_base_opacity(BBMOD_C_GRAY);
+_rock.NormalSmoothness = sprite_get_texture(SprFloor, 0);
 
 var _dirt = _m.clone();
-_dirt.BaseOpacity = sprite_get_texture(SprT2, 0);
-_dirt.NormalSmoothness = sprite_get_texture(SprT2, 1);
+_dirt.set_base_opacity(BBMOD_C_ORANGE);
+_dirt.NormalSmoothness = sprite_get_texture(SprFloor, 0);
 
 var _grass = _m.clone();
-_grass.BaseOpacity = sprite_get_texture(SprT3, 0);
-_grass.NormalSmoothness = sprite_get_texture(SprT3, 1);
+_grass.set_base_opacity(BBMOD_C_LIME);
+_grass.NormalSmoothness = sprite_get_texture(SprFloor, 0);
 
 var _sand = _m.clone();
-_sand.BaseOpacity = sprite_get_texture(SprT4, 0);
-_sand.NormalSmoothness = sprite_get_texture(SprT4, 1);
+_sand.set_base_opacity(BBMOD_C_YELLOW);
+_sand.NormalSmoothness = sprite_get_texture(SprFloor, 0);
 
 splatmap = -1;
 

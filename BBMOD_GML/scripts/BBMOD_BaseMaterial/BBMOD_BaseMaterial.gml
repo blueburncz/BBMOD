@@ -49,10 +49,11 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// @see BBMOD_BaseMaterial.set_priority
 	Priority = 0;
 
-	/// @var {ds_list<BBMOD_RenderCommand>} A list of render commands using this
-	/// material.
+	/// @var {BBMOD_RenderQueue} A render queue for render commands using this material.
 	/// @readonly
-	RenderCommands = ds_list_create();
+	/// @see BBMOD_RenderQueue
+	/// @see BBMOD_RenderCommand
+	RenderQueue = new BBMOD_RenderQueue();
 
 	/// @var {func/undefined} A function that is executed when the shader is
 	/// applied. Must take the material as the first argument. Use `undefined`
@@ -317,77 +318,10 @@ function BBMOD_BaseMaterial(_shader=undefined)
 		return self;
 	};
 
-	/// @func has_commands()
-	/// @desc Checks whether the material has any render commands waiting for
-	/// submission.
-	/// @return {bool} Returns true if the material's render queue is not empty.
-	static has_commands = function () {
-		gml_pragma("forceinline");
-		return !ds_list_empty(RenderCommands);
-	};
-
-	/// @func submit_queue()
-	/// @desc Submits all render commands without clearing the render queue.
-	/// @return {BBMOD_BaseMaterial} Returns `self`.
-	/// @see BBMOD_BaseMaterial.clear_queue
-	/// @see BBMOD_BaseMaterial.RenderCommands
-	/// @see BBMOD_RenderCommand
-	static submit_queue = function () {
-		var _matWorld = matrix_get(matrix_world);
-		var i = 0;
-
-		var _shaderCurrent = BBMOD_SHADER_CURRENT;
-		var _setBones = method(_shaderCurrent, _shaderCurrent.set_bones);
-		var _setData = method(_shaderCurrent, _shaderCurrent.set_batch_data);
-		var _renderCommands = RenderCommands;
-
-		repeat (ds_list_size(_renderCommands))
-		{
-			var _command = _renderCommands[| i++];
-
-			var _matrix = _command.Matrix;
-			if (_matrix != undefined
-				&& !array_equals(_matWorld, _matrix))
-			{
-				matrix_set(matrix_world, _matrix);
-				_matWorld = _matrix;
-			}
-
-			var _transform = _command.BoneTransform;
-			if (_transform != undefined)
-			{
-				_setBones(_transform);
-			}
-
-			var _data = _command.BatchData;
-			if (_data != undefined)
-			{
-				_setData(_data);
-			}
-
-			var _vbuffer = _command.VertexBuffer;
-			if (_vbuffer != undefined)
-			{
-				vertex_submit(_vbuffer, pr_trianglelist, _command.Texture);
-			}
-		}
-
-		return self;
-	};
-
-	/// @func clear_queue()
-	/// @desc Clears the queue of render commands.
-	/// @return {BBMOD_BaseMaterial} Returns `self`.
-	static clear_queue = function () {
-		gml_pragma("forceinline");
-		ds_list_clear(RenderCommands);
-		return self;
-	};
-
 	static destroy = function () {
 		method(self, Super_Resource.destroy)();
 
-		ds_list_destroy(RenderCommands);
+		RenderQueue.destroy();
 
 		if (BaseOpacitySprite != undefined)
 		{

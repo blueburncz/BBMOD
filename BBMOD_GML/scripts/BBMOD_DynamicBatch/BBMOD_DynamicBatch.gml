@@ -112,7 +112,7 @@ function BBMOD_DynamicBatch(_model, _size)
 		_renderCommand.Texture = _material.BaseOpacity;
 		_renderCommand.BatchData = _data;
 		_renderCommand.Matrix = matrix_get(matrix_world);
-		ds_list_add(_material.RenderCommands, _renderCommand);
+		_material.RenderQueue.add(_renderCommand);
 		return self;
 	};
 

@@ -1,10 +1,10 @@
 /// @func BBMOD_RenderCommand()
 /// @desc A render command struct. Each {@link BBMOD_Material} has its own
-/// render queue. When you call {@link BBMOD_Model.render}, new render commands
-/// are added to appropriate queues based on which material the model uses. These
-/// commands can then be submitted using {@link BBMOD_Material.submit_queue}.
-/// This effectively implements sorting draw calls by material, which decreases
-/// texture swaps and shader uniform changes to minimum.
+/// {@link BBMOD_RenderQueue}. When you call {@link BBMOD_Model.render}, new
+/// render commands are added to appropriate queues based on which material
+/// the model uses. These commands can then be submitted using
+/// {@link BBMOD_RenderQueue.submit}. This effectively implements sorting draw
+/// calls by material, which decreases texture swaps and shader uniform changes to minimum.
 function BBMOD_RenderCommand() constructor
 {
 	/// @var {vertex_buffer/undefined} The vertex buffer to submit.

@@ -69,8 +69,8 @@
   ],
   "nineSlice": null,
   "parent": {
-    "name": "Terrain",
-    "path": "folders/BBMOD/Terrain.yy",
+    "name": "Sprites",
+    "path": "folders/Demo/Sprites.yy",
   },
   "resourceVersion": "1.0",
   "name": "SprHeightmap",

@@ -140,7 +140,7 @@ function BBMOD_StaticBatch(_vformat)
 		_renderCommand.VertexBuffer = VertexBuffer;
 		_renderCommand.Texture = _material.BaseOpacity;
 		_renderCommand.Matrix = matrix_get(matrix_world);
-		ds_list_add(_material.RenderCommands, _renderCommand);
+		_material.RenderQueue.add(_renderCommand);
 		return self;
 	};
 

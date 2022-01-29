@@ -320,7 +320,7 @@ function BBMOD_Terrain() constructor
 				_renderCommand.VertexBuffer = VertexBuffer;
 				_renderCommand.Texture = _mat.BaseOpacity;
 				_renderCommand.Matrix = _matrix;
-				ds_list_add(_mat.RenderCommands, _renderCommand);
+				_mat.RenderQueue.add(_renderCommand);
 			}
 		}
 		return self;

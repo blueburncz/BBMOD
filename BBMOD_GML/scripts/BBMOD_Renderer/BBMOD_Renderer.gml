@@ -257,13 +257,14 @@ function BBMOD_Renderer()
 			repeat (array_length(_materials))
 			{
 				var _material = _materials[m++];
-				if (!_material.has_commands()
+				var _materialRenderQueue = _material.RenderQueue;
+				if (_materialRenderQueue.is_empty()
 					|| !_material.apply())
 				{
 					continue;
 				}
 				BBMOD_SHADER_CURRENT.set_zfar(_shadowmapArea);
-				_material.submit_queue();
+				_materialRenderQueue.submit();
 			}
 			surface_reset_target();
 		}
@@ -318,7 +319,8 @@ function BBMOD_Renderer()
 		repeat (array_length(_materials))
 		{
 			var _material = _materials[i++];
-			if (!_material.has_commands()
+			var _materialRenderQueue = _material.RenderQueue;
+			if (_materialRenderQueue.is_empty()
 				|| !_material.apply())
 			{
 				continue;
@@ -331,7 +333,7 @@ function BBMOD_Renderer()
 					_shadowmapArea,
 					_shadowmapNormalOffset);
 			}
-			_material.submit_queue().clear_queue();
+			_materialRenderQueue.submit().clear();
 		}
 
 		bbmod_material_reset();

@@ -88,7 +88,7 @@ function BBMOD_Mesh(_vertexFormat)
 		_renderCommand.Texture = _material.BaseOpacity;
 		_renderCommand.BoneTransform = _transform;
 		_renderCommand.Matrix = _matrix;
-		ds_list_add(_material.RenderCommands, _renderCommand);
+		_material.RenderQueue.add(_renderCommand);
 		return self;
 	};
 
