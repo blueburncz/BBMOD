@@ -4,4 +4,5 @@
 function BBMOD_NotImplementedException()
 	: BBMOD_Exception("Method not implemented!") constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
 }

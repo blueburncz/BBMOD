@@ -81,6 +81,21 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 		);
 	};
 
+	/// @func Clamp(_min, _max)
+	/// @desc Clamps each component of the vector between corresponding
+	/// components of `_min` and `_max` and returns the result as a new vector.
+	/// @param {BBMOD_Vec3} _min A vector with minimum components.
+	/// @param {BBMOD_Vec3} _max A vector with maximum components.
+	/// @return {BBMOD_Vec3} The resulting vector.
+	static Clamp = function (_min, _max) {
+		gml_pragma("forceinline");
+		return new BBMOD_Vec3(
+			clamp(X, _min.X, _max.X),
+			clamp(Y, _min.Y, _max.Y),
+			clamp(Z, _min.Z, _max.Z),
+		);
+	};
+
 	/// @func ClampLength(_min, _max)
 	/// @desc Clamps the length of the vector between `_min` and `_max` and
 	/// returns the result as a new vector.
@@ -477,6 +492,27 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 			Y * _s,
 			Z * _s,
 		);
+	};
+
+	/// @func Get(_index)
+	/// @desc Retrieves vector component at given index (0 is X, 1 is Y, etc.).
+	/// @param {uint} _index The index of the component.
+	/// @return {real} The value of the vector component at given index.
+	/// @throws {BBMOD_OutOfRangeException} If an invalid index is passed.
+	static Get = function (_index) {
+		gml_pragma("forceinline");
+		switch (_index)
+		{
+		case 0:
+			return X;
+
+		case 1:
+			return Y;
+
+		case 2:
+			return Z;
+		}
+		throw new BBMOD_OutOfRangeException();
 	};
 
 	/// @func Set([_x[, _y, _z]])
