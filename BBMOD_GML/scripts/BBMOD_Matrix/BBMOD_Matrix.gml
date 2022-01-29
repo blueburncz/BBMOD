@@ -143,7 +143,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	};
 
 	/// @func FromWorld()
-	/// @desc Initializes the matrix using the current world matrix`.
+	/// @desc Initializes the matrix using the current world matrix.
 	/// @return {BBMOD_Matrix} Returns `self`.
 	static FromWorld = function () {
 		gml_pragma("forceinline");
@@ -161,7 +161,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	};
 
 	/// @func FromProjection()
-	/// @desc Initializes the matrix using the current view matrix.
+	/// @desc Initializes the matrix using the current projection matrix.
 	/// @return {BBMOD_Matrix} Returns `self`.
 	static FromProjection = function () {
 		gml_pragma("forceinline");
