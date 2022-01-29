@@ -20,7 +20,7 @@ shaders using which you can render models textured in professional, industry
 standard software.
 
 # Documentation and help
-An online documentation for the latest release of BBMOD can be found at https://blueburn.cz/bbmod/docs/3/. The documentation source is available in the `docs_src` folder and it can be built into an HTML format using [GMDoc](https://marketplace.yoyogames.com/assets/10014/gmdoc-2). If you need any additional help, feel free to contact us on the [GMC forums](https://forum.yoyogames.com/index.php?threads/60628), or you can join our [Discord server](https://discord.gg/ep2BGPm).
+An online documentation for the latest release of BBMOD can be found at https://blueburn.cz/bbmod/docs/3/. If you need any additional help, feel free to contact us on the [GMC forums](https://forum.yoyogames.com/index.php?threads/60628), or you can join our [Discord server](https://discord.gg/ep2BGPm).
 
 # Demo project
 ![Day](screenshots/Day.png)
