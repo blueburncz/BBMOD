@@ -1,7 +1,8 @@
 # Changelog 3.1.10
+This release mainly updates Assimp (used in BBMOD CLI and DLL) to 5.2.0, which is at this moment the latest stable release. This should fix many issues with model conversion, e.g. vertex colors not converting properly for `glTF`, support for `.blend` files etc.
 
 ## CLI:
-* Updated Assimp to 5.2.0, which is at this moment the latest stable release.
+* Updated Assimp to 5.2.0.
 
 ## GML API:
 ### Core module:
