@@ -1,9 +1,7 @@
 var _windowWidth = window_get_width();
 var _windowHeight = window_get_height();
 var _font = draw_get_font();
-
-var _cam = OPlayer.camera;
-var _viewProjMat = matrix_multiply(_cam.get_view_mat(), _cam.get_proj_mat());
+var _camera = OPlayer.camera;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Draw zombies' healthbar
@@ -14,8 +12,7 @@ with (OZombie)
 		// Do not draw healthbar when dead or HP is full.
 		continue;
 	}
-	var _screenPos = WorldToScreen(
-		new BBMOD_Vec3(x, y, z + 42), _viewProjMat, _windowWidth, _windowHeight);
+	var _screenPos = _camera.world_to_screen(new BBMOD_Vec3(x, y, z + 42));
 	if (!_screenPos)
 	{
 		// Zombie is outside of the screen.
@@ -36,8 +33,7 @@ draw_set_font(Fnt16);
 // Draw floating text
 with (OFloatingText)
 {
-	var _screenPos = WorldToScreen(
-		new BBMOD_Vec3(x, y, z), _viewProjMat, _windowWidth, _windowHeight);
+	var _screenPos = _camera.world_to_screen(new BBMOD_Vec3(x, y, z));
 	if (!_screenPos)
 	{
 		// Floating text is outside of the screen.
@@ -58,8 +54,7 @@ with (OItem)
 	{
 		continue;
 	}
-	var _screenPos = WorldToScreen(
-		new BBMOD_Vec3(x, y, z), _viewProjMat, _windowWidth, _windowHeight);
+	var _screenPos = _camera.world_to_screen(new BBMOD_Vec3(x, y, z));
 	if (!_screenPos)
 	{
 		// Text is outside of the screen.

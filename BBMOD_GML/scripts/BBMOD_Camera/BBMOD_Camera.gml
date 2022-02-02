@@ -118,6 +118,12 @@ function BBMOD_Camera() constructor
 	/// method. Defaults to `true`.
 	AudioListener = true;
 
+	/// @var {real[16]} The `view * projection` matrix.
+	/// @note This is updated each time {@link BBMOD_Camera.update_matrices}
+	/// is called.
+	/// @readonly
+	ViewProjectionMatrix = matrix_build_identity();
+
 	/// @func set_mouselook(_enable)
 	/// @desc Enable/disable mouselook. This locks the mouse cursor at its
 	/// current position when enabled.
@@ -166,16 +172,24 @@ function BBMOD_Camera() constructor
 	/// ```
 	static update_matrices = function () {
 		gml_pragma("forceinline");
+
 		var _view = matrix_build_lookat(
 			Position.X, Position.Y, Position.Z,
 			Target.X, Target.Y, Target.Z,
 			Up.X, Up.Y, Up.Z);
 		camera_set_view_mat(Raw, _view);
+
 		var _proj = Orthographic
 			? matrix_build_projection_ortho(Width, -Width / AspectRatio, ZNear, ZFar)
 			: matrix_build_projection_perspective_fov(
 				-Fov, -AspectRatio, ZNear, ZFar);
 		camera_set_proj_mat(Raw, _proj);
+
+		// Note: Using _view and _proj mat straight away leads into a weird result...
+		ViewProjectionMatrix = matrix_multiply(
+			get_view_mat(),
+			get_proj_mat());
+
 		if (AudioListener)
 		{
 			audio_listener_position(Position.X, Position.Y, Position.Z);
@@ -183,6 +197,7 @@ function BBMOD_Camera() constructor
 				Target.X - Position.X, Target.Y - Position.Y, Target.Z - Position.Z,
 				Up.X, Up.Y, Up.Z);
 		}
+
 		return self;
 	}
 
@@ -372,6 +387,34 @@ function BBMOD_Camera() constructor
 			_view[6],
 			_view[10],
 		);
+	};
+
+	/// @func world_to_screen(_position[, _screenWidth[, _screenHeight]])
+	/// @desc Computes screen-space position of a point in world-space.
+	/// @param {BBMOD_Vec3} _position The world-space position.
+	/// @param {real/undefined} [_screenWidth] The width of the screen. If
+	/// `undefined`, it is retrieved using `window_get_width`.
+	/// @param {real/undefined} [_screenHeight] The height of the screen. If
+	/// `undefined`, it is retrieved using `window_get_height`.
+	/// @return {BBMOD_Vec4/undefined} The screen-space position or `undefined`
+	/// if the point is outside of the screen.
+	/// @note This requires {@link BBMOD_Camera.ViewProjectionMatrix}, so you
+	/// should use this *after* {@link BBMOD_Camera.update_matrices} (or
+	/// {@link BBMOD_Camera.update}) is called!
+	static world_to_screen = function (_position, _screenWidth=undefined, _screenHeight=undefined) {
+		gml_pragma("forceinline");
+		_screenWidth ??= window_get_width();
+		_screenHeight ??= window_get_height();
+		var _screenPos = new BBMOD_Vec4(_position.X, _position.Y, _position.Z, 1.0)
+			.Transform(ViewProjectionMatrix);
+		if (_screenPos.Z < 0.0)
+		{
+			return undefined;
+		}
+		_screenPos = _screenPos.Scale(1.0 / _screenPos.W);
+		_screenPos.X = (_screenPos.X * 0.5 + 0.5) * _screenWidth;
+		_screenPos.Y = (1.0 - (_screenPos.Y * 0.5 + 0.5)) * _screenHeight;
+		return _screenPos;
 	};
 
 	/// @func apply()

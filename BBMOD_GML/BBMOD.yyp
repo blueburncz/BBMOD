@@ -123,7 +123,6 @@
     {"id":{"name":"SndFootstep3","path":"sounds/SndFootstep3/SndFootstep3.yy",},"order":3,},
     {"id":{"name":"BBMOD_PBRShader","path":"scripts/BBMOD_PBRShader/BBMOD_PBRShader.yy",},"order":1,},
     {"id":{"name":"SndShell7","path":"sounds/SndShell7/SndShell7.yy",},"order":7,},
-    {"id":{"name":"WorldToScreen","path":"scripts/WorldToScreen/WorldToScreen.yy",},"order":1,},
     {"id":{"name":"BBMOD_ShFXAA","path":"shaders/BBMOD_ShFXAA/BBMOD_ShFXAA.yy",},"order":0,},
     {"id":{"name":"BBMOD_DynamicBatch","path":"scripts/BBMOD_DynamicBatch/BBMOD_DynamicBatch.yy",},"order":0,},
     {"id":{"name":"OSky","path":"objects/OSky/OSky.yy",},"order":2,},

@@ -8,3 +8,4 @@ This tiny release mainly adds support for orthographic camera projection, as req
 ### Camera module:
 * Added new property `BBMOD_Camera.Orthographic`, using which you can enable orthographic projection.
 * Added new property `BBMOD_Camera.Width`, using which you can configure the width of orthographic projection. Height is computed from `BBMOD_Camera.AspectRation`.
+* Added new method `BBMOD_Camera.world_to_screen`, using which you can get screen-space position of a point in world-space.
