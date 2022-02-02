@@ -17,12 +17,12 @@
 /// ```
 function BBMOD_Camera() constructor
 {
-	/// @var {camera} An underlying GM camera.
+	/// @var {camera} An underlying GameMaker camera.
 	/// @readonly
 	Raw = camera_create();
 
 	/// @var {real} The camera's exposure value. Defaults to `1`.
-	Exposure = 1;
+	Exposure = 1.0;
 
 	/// @var {BBMOD_Vec3} The camera's positon. Defaults to `[0, 0, 0]`.
 	Position = new BBMOD_Vec3(0.0);
@@ -36,6 +36,8 @@ function BBMOD_Camera() constructor
 	Up = new BBMOD_Vec3(0.0, 0.0, 1.0);
 
 	/// @var {real} The camera's field of view. Defaults to `60`.
+	/// @note This does not have any effect when {@link BBMOD_Camera.Orthographic}
+	/// is enabled.
 	Fov = 60.0;
 
 	/// @var {real} The camera's aspect ratio. Defaults to `16 / 9`.
@@ -43,11 +45,22 @@ function BBMOD_Camera() constructor
 
 	/// @var {real} Distance to the near clipping plane. Anything closer to the
 	/// camera than this will not be visible. Defaults to `0.1`.
+	/// @note This can be a negative value if {@link BBMOD_Camera.Orthographic}
+	/// is enabled.
 	ZNear = 0.1;
 
 	/// @var {real} Distance to the far clipping plane. Anything farther from
 	/// the camera than this will not be visible. Defaults to `32768`.
 	ZFar = 32768.0;
+
+	/// @var {bool} Use `true` to enable orthographic projection. Defaults to
+	/// `false` (perspective projection).
+	Orthographic = false;
+
+	/// @var {real} The width of the orthographic projection. Height is computed
+	/// using {@link BBMOD_Camera.AspectRatio}. Defaults to the window's width.
+	/// @see BBMOD_Camera.Orthographic
+	Width = window_get_width();
 
 	/// @var {uint/undefined} An id of an instance to follow or `undefined`. The
 	/// object must have a `z` variable (position on the z axis) defined!
@@ -158,8 +171,10 @@ function BBMOD_Camera() constructor
 			Target.X, Target.Y, Target.Z,
 			Up.X, Up.Y, Up.Z);
 		camera_set_view_mat(Raw, _view);
-		var _proj = matrix_build_projection_perspective_fov(
-			-Fov, -AspectRatio, ZNear, ZFar);
+		var _proj = Orthographic
+			? matrix_build_projection_ortho(Width, -Width / AspectRatio, ZNear, ZFar)
+			: matrix_build_projection_perspective_fov(
+				-Fov, -AspectRatio, ZNear, ZFar);
 		camera_set_proj_mat(Raw, _proj);
 		if (AudioListener)
 		{

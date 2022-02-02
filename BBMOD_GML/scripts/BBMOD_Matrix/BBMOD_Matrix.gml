@@ -180,6 +180,33 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return self;
 	};
 
+	/// @func ApplyWorld()
+	/// @desc Changes the current world matrix to this one.
+	/// @return {BBMOD_Matrix} Returns `self`.
+	static ApplyWorld = function () {
+		gml_pragma("forceinline");
+		matrix_set(matrix_world, Raw);
+		return self;
+	};
+
+	/// @func ApplyView()
+	/// @desc Changes the view world matrix to this one.
+	/// @return {BBMOD_Matrix} Returns `self`.
+	static ApplyWorld = function () {
+		gml_pragma("forceinline");
+		matrix_set(matrix_view, Raw);
+		return self;
+	};
+
+	/// @func ApplyProjection()
+	/// @desc Changes the current projeciton matrix to this one.
+	/// @return {BBMOD_Matrix} Returns `self`.
+	static ApplyWorld = function () {
+		gml_pragma("forceinline");
+		matrix_set(matrix_projection, Raw);
+		return self;
+	};
+
 	/// @func ToEuler([_array[, _index]])
 	/// @desc Retrieves euler angles from the matrix.
 	/// @param {real[]/undefined} [_array] An array to write the X,Y,Z angles to.
