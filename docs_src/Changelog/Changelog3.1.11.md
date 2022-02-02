@@ -4,6 +4,7 @@ This tiny release mainly adds support for orthographic camera projection, as req
 ## GML API:
 ### Core module:
 * Added new methods `ApplyWorld`, `ApplyView` and `ApplyProjection` to `BBMOD_Matrix`, using which you can set it as the current world/view/projection matrix respectively.
+* Added new method `BBMOD_Matrix.Transform`, using which you can transform a `BBMOD_Vec4` with the matrix.
 
 ### Camera module:
 * Added new property `BBMOD_Camera.Orthographic`, using which you can enable orthographic projection.

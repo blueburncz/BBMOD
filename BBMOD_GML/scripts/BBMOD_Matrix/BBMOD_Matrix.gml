@@ -192,7 +192,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @func ApplyView()
 	/// @desc Changes the view world matrix to this one.
 	/// @return {BBMOD_Matrix} Returns `self`.
-	static ApplyWorld = function () {
+	static ApplyView = function () {
 		gml_pragma("forceinline");
 		matrix_set(matrix_view, Raw);
 		return self;
@@ -201,7 +201,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @func ApplyProjection()
 	/// @desc Changes the current projeciton matrix to this one.
 	/// @return {BBMOD_Matrix} Returns `self`.
-	static ApplyWorld = function () {
+	static ApplyProjection = function () {
 		gml_pragma("forceinline");
 		matrix_set(matrix_projection, Raw);
 		return self;
@@ -423,6 +423,16 @@ function BBMOD_Matrix(_raw=undefined) constructor
 			++_index;
 		}
 		return _res;
+	};
+
+	/// @func Transform(_vector)
+	/// @desc Transforms a vector by the matrix and returns the result as a new
+	/// vector.
+	/// @param {BBMOD_Vec4} _vector The vector to transform.
+	/// @return {BBMOD_Vec4} The tranformed vector.
+	static Transform = function (_vector) {
+		gml_pragma("forceinline");
+		return _vector.Transform(Raw);
 	};
 
 	/// @func Transpose()

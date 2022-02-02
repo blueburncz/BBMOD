@@ -412,8 +412,8 @@ function BBMOD_Camera() constructor
 			return undefined;
 		}
 		_screenPos = _screenPos.Scale(1.0 / _screenPos.W);
-		_screenPos.X = (_screenPos.X * 0.5 + 0.5) * _screenWidth;
-		_screenPos.Y = (1.0 - (_screenPos.Y * 0.5 + 0.5)) * _screenHeight;
+		_screenPos.X = ((_screenPos.X * 0.5) + 0.5) * _screenWidth;
+		_screenPos.Y = (1.0 - ((_screenPos.Y * 0.5) + 0.5)) * _screenHeight;
 		return _screenPos;
 	};
 
