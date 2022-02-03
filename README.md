@@ -1,7 +1,7 @@
 # BBMOD
 > 3D rendering solution for GameMaker Studio 2
 
-[![License](https://img.shields.io/github/license/blueburn-cz/BBMOD)](LICENSE)
+[![License](https://img.shields.io/github/license/blueburncz/BBMOD)](LICENSE)
 [![Discord](https://img.shields.io/discord/298884075585011713?label=Discord)](https://discord.gg/ep2BGPm)
 
 # Table of Contents
@@ -26,7 +26,7 @@ An online documentation for the latest release of BBMOD can be found at https://
 ![Day](screenshots/Day.png)
 ![Night](screenshots/Night.png)
 ![Vignette and grayscale](screenshots/VignetteAndGrayscale.png)
-This repo includes a demo project (screenshots above). You can also download a binary under [releases](https://github.com/blueburn-cz/BBMOD/releases) or play it in a browser at https://blueburn.cz/bbmod/demo/.
+This repo includes a demo project (screenshots above). You can also download a binary under [releases](https://github.com/blueburncz/BBMOD/releases) or play it in a browser at https://blueburn.cz/bbmod/demo/.
 
 # BBMOD GUI
 ![BBMOD GUI](screenshots/GUI.png)

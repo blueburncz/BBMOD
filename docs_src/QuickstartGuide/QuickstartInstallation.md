@@ -5,7 +5,7 @@ you can add it to your project by navigating to `Marketplace` > `My Library`,
 selecting BBMOD and then clicking the import button.
 
 If you have downloaded BBMOD from
-[GitHub](https://github.com/blueburn-cz/BBMOD/releases), you have to navigate to
+[GitHub](https://github.com/blueburncz/BBMOD/releases), you have to navigate to
 `Tools` > `Import Local Package` and then select the package from your computer.
 
 When importing the package, you can see that BBMOD consists of multiple
