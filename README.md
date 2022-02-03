@@ -15,7 +15,7 @@
 # About
 BBMOD is an advanced 3D rendering solution for GameMaker Studio 2. It consists
 of a custom model and animation file formats (`*.bbmod`, `*.bbanim`), a model
-convertor (BBMOD CLI), a powerful and easy to use GML library, as well as PBR
+converter (BBMOD CLI), a powerful and easy to use GML library, as well as PBR
 shaders using which you can render models textured in professional, industry
 standard software.
 

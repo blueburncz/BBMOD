@@ -1,5 +1,6 @@
 # Links
 * [Assimp](https://github.com/assimp/assimp) - Used in BBMOD CLI for loading of 3rd-party model file formats.
+* [BBMOD GUI](https://blueburn.cz/index.php?menu=bbmod_gui) - BBMOD model convertor with graphical user interface, live preview, material editor and more.
 * [Discord](https://discord.gg/ep2BGPm) - Official BlueBurn Discord server with dedicated channels for BBMOD.
 * [GameMaker Community](https://forum.yoyogames.com/index.php?threads/60628) - Forum thread.
 * [GitHub](https://github.com/blueburncz/BBMOD) - BBMOD's GitHub repository.
