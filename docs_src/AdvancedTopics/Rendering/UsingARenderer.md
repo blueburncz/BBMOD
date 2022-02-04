@@ -74,7 +74,7 @@ Now, when you have got your game running using a renderer, you can configure the
 renderer further to for example change the resolution scale (render the game at
 a smaller resolution than the window to increase FPS), enable rendering of
 dynamic shadows or enable various post-processing effects. There should be a
-dedicated section for each on of these, but to give you an example:
+dedicated section for each one of these, but to give you an example:
 
 ```gml
 /// @desc Create event
