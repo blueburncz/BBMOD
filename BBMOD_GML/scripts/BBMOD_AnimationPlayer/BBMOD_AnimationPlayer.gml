@@ -495,9 +495,9 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 	/// @func submit([_materials])
 	/// @desc Immediately submits the animated model for rendering.
-	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
-	/// one for each material slot of the model. If not specified, then
-	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @param {BBMOD_BaseMaterial[]/undefined} [_materials] An array of
+	/// materials, one for each material slot of the model. If not specified,
+	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @return {BBMOD_AnimationPlayer} Returns `self`.
 	static submit = function (_materials=undefined) {
 		gml_pragma("forceinline");
@@ -507,9 +507,9 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 	/// @func render([_materials])
 	/// @desc Enqueues the animated model for rendering.
-	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
-	/// one for each material slot of the model. If not specified, then
-	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @param {BBMOD_BaseMaterial[]/undefined} [_materials] An array of
+	/// materials, one for each material slot of the model. If not specified,
+	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @return {BBMOD_AnimationPlayer} Returns `self`.
 	static render = function (_materials=undefined) {
 		gml_pragma("forceinline");

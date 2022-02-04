@@ -24,16 +24,16 @@
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_SHADER_DEFAULT_BATCHED __bbmod_shader_default_batched()
 
-/// @macro {BBMOD_Material} The default material.
-/// @see BBMOD_Material
+/// @macro {BBMOD_DefaultMaterial} The default material.
+/// @see BBMOD_DefaultMaterial
 #macro BBMOD_MATERIAL_DEFAULT __bbmod_material_default()
 
-/// @macro {BBMOD_Material} The default material for animated models.
-/// @see BBMOD_Material
+/// @macro {BBMOD_DefaultMaterial} The default material for animated models.
+/// @see BBMOD_DefaultMaterial
 #macro BBMOD_MATERIAL_DEFAULT_ANIMATED __bbmod_material_default_animated()
 
-/// @macro {BBMOD_Material} The default material for dynamically batched models.
-/// @see BBMOD_Material
+/// @macro {BBMOD_DefaultMaterial} The default material for dynamically batched models.
+/// @see BBMOD_DefaultMaterial
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_MATERIAL_DEFAULT_BATCHED __bbmod_material_default_batched()
 

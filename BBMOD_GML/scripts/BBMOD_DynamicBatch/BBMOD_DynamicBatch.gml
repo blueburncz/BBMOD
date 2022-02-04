@@ -20,7 +20,8 @@
 /// ```gml
 /// /// @desc Create event
 /// modCar = new BBMOD_Model("Car.bbmod");
-/// matCar = new BBMOD_Material(BBMOD_ShDefaultBatched, sprite_get_texture(SprCar, 0));
+/// matCar = new BBMOD_BaseMaterial(BBMOD_ShDefaultBatched,
+///     sprite_get_texture(SprCar, 0));
 /// carBatch = new BBMOD_DynamicBatch(modCar, 64);
 ///
 /// /// @desc Draw event

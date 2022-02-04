@@ -153,8 +153,8 @@ function BBMOD_Node(_model) constructor
 
 	/// @func submit(_materials, _transform)
 	/// @desc Immediately submits the node for rendering.
-	/// @param {BBMOD_Material[]} _materials An array of materials, one for each
-	/// material slot of the model.
+	/// @param {BBMOD_BaseMaterial[]} _materials An array of materials, one for
+	/// each material slot of the model.
 	/// @param {real[]/undefined} _transform An array of transformation matrices
 	/// (for animated models) or `undefined`.
 	/// @private
@@ -197,8 +197,8 @@ function BBMOD_Node(_model) constructor
 
 	/// @func render(_materials, _transform)
 	/// @desc Enqueues the node for rendering.
-	/// @param {BBMOD_Material[]} _materials An array of materials, one for each
-	/// material slot of the model.
+	/// @param {BBMOD_BaseMaterial[]} _materials An array of materials, one for
+	/// each material slot of the model.
 	/// @param {real[]/undefined} _transform An array of transformation matrices
 	/// (for animated models) or `undefined`.
 	/// @private

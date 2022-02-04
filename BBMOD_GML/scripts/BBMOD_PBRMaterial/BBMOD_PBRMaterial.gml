@@ -29,7 +29,7 @@
 /// @desc A PBR material using the metallic-rougness workflow.
 /// @param {BBMOD_Shader/undefined} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
-/// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
+/// like to use {@link BBMOD_BaseMaterial.set_shader} to specify shaders used in
 /// specific render passes.
 function BBMOD_PBRMaterial(_shader=undefined)
 	: BBMOD_BaseMaterial(_shader) constructor
