@@ -4,3 +4,4 @@ BBMOD's advanced rendering capabilities.
 
 ## Contents
 * [Using a renderer](./UsingARenderer.html)
+* [Render passes](./RenderPasses.html)
