@@ -64,7 +64,7 @@ renderer.destroy();
 ```
 
 Please note that the controller object should execute its draw event *after* all
-render commands are created! To ensure this, you can for example place int into
+render commands are created! To ensure this, you can for example place it into
 a special layer with the lowest `depth`.
 
 At this point, your game should look exactly the same as when you used `submit`.
