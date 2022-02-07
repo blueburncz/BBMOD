@@ -53,6 +53,7 @@
           "file": "AdvancedTopics/Rendering/Rendering.md",
           "pages": {
             "Transforming models": "AdvancedTopics/Rendering/TransformingModels.md",
+            "Using a camera": "AdvancedTopics/Rendering/UsingACamera.md",
             "Using a renderer": "AdvancedTopics/Rendering/UsingARenderer.md",
             "Render passes": "AdvancedTopics/Rendering/RenderPasses.md"
           }
