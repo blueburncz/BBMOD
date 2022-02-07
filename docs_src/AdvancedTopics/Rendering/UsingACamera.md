@@ -1,6 +1,6 @@
 # Using a camera
 In [Transforming models](./TransformingModels.html) you have learnt that each
-vertex of a models is first multiplied with the `world * view * projection` matrix
+vertex of a model is first multiplied with the `world * view * projection` matrix
 before it is drawn on the screen, that the world matrix controls model position,
 scale and orientation in space and that the view and projection matrices are
 related to *cameras*.
