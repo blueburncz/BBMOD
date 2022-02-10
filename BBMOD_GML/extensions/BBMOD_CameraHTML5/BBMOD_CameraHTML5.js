@@ -5,6 +5,8 @@ var movementY = 0;
 
 function bbmod_html5_init() {
   canvas = document.getElementById('canvas');
+  canvas.requestPointerLock = canvas.requestPointerLock
+    || canvas.mozRequestPointerLock;
   document.addEventListener('pointerlockchange', onChange, false);
   document.addEventListener('mozpointerlockchange', onChange, false);
 }
@@ -26,7 +28,10 @@ function updatePosition(e) {
 }
 
 function bbmod_html5_pointer_lock() {
-  canvas.requestPointerLock().catch(function () {});
+  var res = canvas.requestPointerLock();
+  if (res && res.then) {
+    res.catch(function () {});
+  }
 }
 
 function bbmod_html5_pointer_is_locked() {
