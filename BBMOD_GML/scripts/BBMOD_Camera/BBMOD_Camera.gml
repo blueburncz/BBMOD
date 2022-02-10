@@ -1,11 +1,16 @@
 /// @func BBMOD_Camera()
-/// @desc A first-person and third-person camera with mouselook.
+///
+/// @desc A camera with support for both orthographic and perspective projection.
+/// While using perspective projection, you can easily switch between first-person
+/// and third-person view. Comes with a mouselook implementation that also works
+/// in HTML5.
+///
 /// @example
 /// ```gml
 /// // Create event
 /// camera = new BBMOD_Camera();
 /// camera.FollowObject = OPlayer;
-/// camera.Zoom = 0; // Use 0 for FPS, > 0 for TPS
+/// camera.Zoom = 0.0; // Use 0.0 for FPS, > 0.0 for TPS
 ///
 /// // End-Step event
 /// camera.set_mouselook(true);
