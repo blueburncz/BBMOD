@@ -293,27 +293,29 @@ function BBMOD_Terrain() constructor
 
 	static submit = function () {
 		matrix_set(matrix_world, matrix_build_identity());
-		for (var i = 0; i < 5; ++i)
+		var i = 0;
+		repeat (5)
 		{
 			var _mat = Layer[i];
 			if (_mat != undefined && _mat.apply())
 			{
 				var _uSplatmap = BBMOD_SHADER_CURRENT.get_sampler_index("bbmod_Splatmap");
 				var _uSplatmapIndex = BBMOD_SHADER_CURRENT.get_uniform("bbmod_SplatmapIndex");
-				shader_set(_shader);
 				texture_set_stage(_uSplatmap, Splatmap);
 				shader_set_uniform_i(_uSplatmapIndex, i - 1);
 				vertex_submit(VertexBuffer, pr_trianglelist, _mat.BaseOpacity);
 			}
+			++i;
 		}
 		return self;
 	};
 
 	static render = function () {
 		var _matrix = matrix_build_identity();
-		for (var i = 0; i < 5; ++i)
+		var i = 0;
+		repeat (5)
 		{
-			var _mat = Layer[i];
+			var _mat = Layer[i++];
 			if (_mat != undefined)
 			{
 				var _renderCommand = new BBMOD_RenderCommand();

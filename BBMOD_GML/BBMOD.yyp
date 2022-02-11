@@ -275,7 +275,7 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character","resourceVersion":"1.0","name":"Character_Run.bbanim","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.1.0.609",
+    "IDEVersion": "2022.1.1.610",
   },
   "resourceVersion": "1.4",
   "name": "BBMOD",
