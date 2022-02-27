@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"BBMOD_SprColorGradingLUT","path":"sprites/BBMOD_SprColorGradingLUT/BBMOD_SprColorGradingLUT.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "BBMOD_SprColorGradingLUT",
     "tags": [],
     "resourceType": "GMSequence",

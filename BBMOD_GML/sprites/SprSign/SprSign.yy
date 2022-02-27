@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"SprSign","path":"sprites/SprSign/SprSign.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "SprSign",
     "tags": [],
     "resourceType": "GMSequence",

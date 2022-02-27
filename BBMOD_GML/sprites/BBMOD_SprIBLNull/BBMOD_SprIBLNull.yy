@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"BBMOD_SprIBLNull","path":"sprites/BBMOD_SprIBLNull/BBMOD_SprIBLNull.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "BBMOD_SprIBLNull",
     "tags": [],
     "resourceType": "GMSequence",
