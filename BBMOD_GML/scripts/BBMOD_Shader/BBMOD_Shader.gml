@@ -243,6 +243,15 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 		return self;
 	};
 
+	/// @func set_material(_material)
+	/// @desc Sets shader uniforms using values from the material.
+	/// @param {BBMOD_BaseMaterial} _material The material to take the values from.
+	/// @return {BBMOD_Shader} Returns `self`.
+	/// @see BBMOD_BaseMaterial
+	static set_material = function (_material) {
+		return self;
+	};
+
 	/// @func is_current()
 	/// @desc Checks if the shader is currently in use.
 	/// @return {bool} Returns `true` if the shader is currently in use.

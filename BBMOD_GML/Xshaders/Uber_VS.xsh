@@ -3,32 +3,42 @@ precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Defines
-#if ANIMATED
+#if defined(X_ANIMATED)
 #define MAX_BONES 64
 #endif
 
-#if BATCHED
+#if defined(X_BATCHED)
 #define MAX_BATCH_DATA_SIZE 128
 #endif
 
-#if !PBR
+#if !defined(X_PBR) && !defined(X_2D)
 #define MAX_POINT_LIGHTS 8
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Attributes
 attribute vec4 in_Position;
-attribute vec3 in_Normal;
-attribute vec2 in_TextureCoord0;
-//attribute vec4 in_Color;
-attribute vec4 in_TangentW;
 
-#if ANIMATED
+#if !defined(X_2D)
+attribute vec3 in_Normal;
+#endif
+
+attribute vec2 in_TextureCoord0;
+
+#if defined(X_2D)
+attribute vec4 in_Color;
+#endif
+
+#if !defined(X_2D)
+attribute vec4 in_TangentW;
+#endif
+
+#if defined(X_ANIMATED)
 attribute vec4 in_BoneIndex;
 attribute vec4 in_BoneWeight;
 #endif
 
-#if BATCHED
+#if defined(X_BATCHED)
 attribute float in_Id;
 #endif
 
@@ -37,20 +47,20 @@ attribute float in_Id;
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
-#if ANIMATED
+#if defined(X_ANIMATED)
 uniform vec4 bbmod_Bones[2 * MAX_BONES];
 #endif
 
-#if BATCHED
+#if defined(X_BATCHED)
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 #endif
 
-#if !PBR
+#if !defined(X_PBR) && !defined(X_2D)
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 #endif
 
-#if !OUTPUT_DEPTH && !PBR
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 uniform float bbmod_ShadowmapEnableVS;     // 1.0 to enable shadows
 uniform mat4 bbmod_ShadowmapMatrix;        // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
 uniform float bbmod_ShadowmapArea;         // The area that the shadowmap captures
@@ -60,32 +70,38 @@ uniform float bbmod_ShadowmapNormalOffset; // Offsets vertex position by its nor
 ////////////////////////////////////////////////////////////////////////////////
 // Varyings
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
+#if defined(X_2D)
+varying vec4 v_vColor;
+#endif
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-#if !OUTPUT_DEPTH && !PBR
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
 varying vec3 v_vLight;
+#if !defined(X_2D)
 varying vec3 v_vPosShadowmap;
+#endif
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Includes
-#if !OUTPUT_DEPTH && !PBR
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 #pragma include("Color.xsh", "glsl")
 
 #pragma include("RGBM.xsh", "glsl")
 #endif
 
-#if ANIMATED || BATCHED
+#if defined(X_ANIMATED) || defined(X_BATCHED)
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
 #endif
 
-#if ANIMATED
+#if defined(X_ANIMATED)
 vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 {
 	return (QuaternionRotate(real, v)
@@ -99,9 +115,13 @@ vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 void Transform(out vec4 vertex, out vec4 normal)
 {
 	vertex = in_Position;
+#if defined(X_2D)
+	normal = vec4(0.0, 0.0, 1.0, 0.0);
+#else
 	normal = vec4(in_Normal, 0.0);
+#endif
 
-#if ANIMATED
+#if defined(X_ANIMATED)
 	// Source:
 	// https://www.cs.utah.edu/~ladislav/kavan07skinning/kavan07skinning.pdf
 	// https://www.cs.utah.edu/~ladislav/dq/dqs.cg
@@ -142,7 +162,7 @@ void Transform(out vec4 vertex, out vec4 normal)
 	normal = vec4(QuaternionRotate(blendReal, normal.xyz), 0.0);
 #endif
 
-#if BATCHED
+#if defined(X_BATCHED)
 	int idx = int(in_Id) * 2;
 	vec4 posScale = bbmod_BatchData[idx];
 	vec4 rot = bbmod_BatchData[idx + 1];
@@ -162,17 +182,24 @@ void main()
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
 	v_fDepth = (gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position).z;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
-	//v_vColor = in_Color;
+	#if defined(X_2D)
+	v_vColor = in_Color;
+	#endif
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
+	#if defined(X_2D)
+	vec4 tangent = vec4(1.0, 0.0, 0.0, 0.0);
+	vec4 bitangent = vec4(0.0, 1.0, 0.0, 0.0);
+	#else
 	vec4 tangent = vec4(in_TangentW.xyz, 0.0);
 	vec4 bitangent = vec4(cross(in_Normal, in_TangentW.xyz) * in_TangentW.w, 0.0);
+	#endif
 	vec3 N = (gm_Matrices[MATRIX_WORLD] * normal).xyz;
 	vec3 T = (gm_Matrices[MATRIX_WORLD] * tangent).xyz;
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
 	v_mTBN = mat3(T, B, N);
 
-#if !OUTPUT_DEPTH && !PBR
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 	////////////////////////////////////////////////////////////////////////////
 	// Point lights
 	N = normalize(N);

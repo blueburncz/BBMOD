@@ -1,0 +1,1 @@
+pointLight.Position = new BBMOD_Vec3(mouse_x, mouse_y, 64.0);

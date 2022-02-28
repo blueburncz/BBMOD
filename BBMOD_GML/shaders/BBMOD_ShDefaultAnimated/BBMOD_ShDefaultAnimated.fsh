@@ -4,12 +4,14 @@ precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Defines
+
 #define SHADOWMAP_SAMPLE_COUNT 16
 
 ////////////////////////////////////////////////////////////////////////////////
 // Varyings
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
@@ -44,6 +46,7 @@ uniform vec4 bbmod_LightAmbientDown; // RGBM encoded ambient light color on the 
 // Directional light
 uniform vec3 bbmod_LightDirectionalDir;   // Direction of the directional light
 uniform vec4 bbmod_LightDirectionalColor; // RGBM encoded color of the directional light
+
 
 // Shadow mapping
 uniform float bbmod_ShadowmapEnablePS; // 1.0 to enable shadows

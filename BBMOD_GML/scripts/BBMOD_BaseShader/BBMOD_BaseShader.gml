@@ -116,11 +116,6 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_exposure();
 	};
 
-	/// @func set_material(_material)
-	/// @desc Sets shader uniforms using values from the material.
-	/// @param {BBMOD_BaseMaterial} _material The material to take the values from.
-	/// @return {BBMOD_BaseShader} Returns `self`.
-	/// @see BBMOD_BaseMaterial
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
 		set_alpha_test(_material.AlphaTest);
