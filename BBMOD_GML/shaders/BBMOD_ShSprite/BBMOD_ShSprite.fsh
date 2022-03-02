@@ -220,7 +220,7 @@ void main()
 		fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
 		float dist = length(L);
 		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
-		float NdotL = max(dot(N, normalize(L)), 0.0);
+		NdotL = max(dot(N, normalize(L)), 0.0);
 		lightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
 		lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 		lightDiffuse += lightColor; // * (1.0 - fresnel);
