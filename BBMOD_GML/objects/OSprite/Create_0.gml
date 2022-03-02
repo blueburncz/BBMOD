@@ -7,7 +7,5 @@ pointLight = new BBMOD_PointLight(BBMOD_C_AQUA);
 pointLight.Range = 256.0;
 bbmod_light_point_add(pointLight);
 
-vertexFormat = new BBMOD_VertexFormat(true, false, true, true);
-shader = new BBMOD_DefaultShader(BBMOD_ShSprite, vertexFormat);
-material = new BBMOD_DefaultMaterial(shader);
+material = BBMOD_MATERIAL_SPRITE.clone();
 material.NormalSmoothness = sprite_get_texture(SprNormal, 0);

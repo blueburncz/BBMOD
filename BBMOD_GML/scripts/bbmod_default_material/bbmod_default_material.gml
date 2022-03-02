@@ -11,16 +11,16 @@
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_VFORMAT_DEFAULT_BATCHED __bbmod_vformat_default_batched()
 
-/// @macro {BBMOD_Shader} The default shader.
-/// @see BBMOD_Shader
+/// @macro {BBMOD_DefaultShader} The default shader.
+/// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT __bbmod_shader_default()
 
-/// @macro {BBMOD_Shader} The default shader for animated models.
-/// @see BBMOD_Shader
+/// @macro {BBMOD_DefaultShader} The default shader for animated models.
+/// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT_ANIMATED __bbmod_shader_default_animated()
 
-/// @macro {BBMOD_Shader} The default shader for dynamically batched models.
-/// @see BBMOD_Shader
+/// @macro {BBMOD_DefaultShader} The default shader for dynamically batched models.
+/// @see BBMOD_DefaultShader
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_SHADER_DEFAULT_BATCHED __bbmod_shader_default_batched()
 
