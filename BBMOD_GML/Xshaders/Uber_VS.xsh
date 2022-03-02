@@ -2,21 +2,29 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
+
 #if defined(X_ANIMATED)
+// Maximum number of bones of animated models
 #define MAX_BONES 64
 #endif
 
 #if defined(X_BATCHED)
+// Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
 #endif
 
 #if !defined(X_PBR) && !defined(X_2D)
+// Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Attributes
+//
 attribute vec4 in_Position;
 
 #if !defined(X_2D)
@@ -43,7 +51,9 @@ attribute float in_Id;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
@@ -61,14 +71,20 @@ uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 #endif
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
-uniform float bbmod_ShadowmapEnableVS;     // 1.0 to enable shadows
-uniform mat4 bbmod_ShadowmapMatrix;        // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
-uniform float bbmod_ShadowmapArea;         // The area that the shadowmap captures
-uniform float bbmod_ShadowmapNormalOffset; // Offsets vertex position by its normal scaled by this value
+// 1.0 to enable shadows
+uniform float bbmod_ShadowmapEnableVS;
+// WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
+uniform mat4 bbmod_ShadowmapMatrix;
+// The area that the shadowmap captures
+uniform float bbmod_ShadowmapArea;
+// Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapNormalOffset;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
 
 #if defined(X_2D)
@@ -87,7 +103,9 @@ varying vec3 v_vPosShadowmap;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
+//
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 #pragma include("Color.xsh", "glsl")
 
@@ -173,7 +191,9 @@ void Transform(out vec4 vertex, out vec4 normal)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 	vec4 position, normal;
@@ -182,18 +202,18 @@ void main()
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
 	v_fDepth = (gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position).z;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
-	#if defined(X_2D)
+#if defined(X_2D)
 	v_vColor = in_Color;
-	#endif
+#endif
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
-	#if defined(X_2D)
+#if defined(X_2D)
 	vec4 tangent = vec4(1.0, 0.0, 0.0, 0.0);
 	vec4 bitangent = vec4(0.0, 1.0, 0.0, 0.0);
-	#else
+#else
 	vec4 tangent = vec4(in_TangentW.xyz, 0.0);
 	vec4 bitangent = vec4(cross(in_Normal, in_TangentW.xyz) * in_TangentW.w, 0.0);
-	#endif
+#endif
 	vec3 N = (gm_Matrices[MATRIX_WORLD] * normal).xyz;
 	vec3 T = (gm_Matrices[MATRIX_WORLD] * tangent).xyz;
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;

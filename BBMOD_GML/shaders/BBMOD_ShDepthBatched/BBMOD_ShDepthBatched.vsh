@@ -3,14 +3,21 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
 
+
+// Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
 
+// Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Attributes
+//
 attribute vec4 in_Position;
 
 attribute vec3 in_Normal;
@@ -24,7 +31,9 @@ attribute vec4 in_TangentW;
 attribute float in_Id;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
@@ -36,7 +45,9 @@ uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
 
 
@@ -46,7 +57,9 @@ varying float v_fDepth;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
+//
 
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
@@ -72,7 +85,9 @@ void Transform(out vec4 vertex, out vec4 normal)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 	vec4 position, normal;

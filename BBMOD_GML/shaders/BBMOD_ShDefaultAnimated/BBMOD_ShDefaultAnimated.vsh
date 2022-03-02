@@ -3,14 +3,21 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
+
+// Maximum number of bones of animated models
 #define MAX_BONES 64
 
 
+// Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Attributes
+//
 attribute vec4 in_Position;
 
 attribute vec3 in_Normal;
@@ -25,7 +32,9 @@ attribute vec4 in_BoneWeight;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
@@ -35,13 +44,19 @@ uniform vec4 bbmod_Bones[2 * MAX_BONES];
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
-uniform float bbmod_ShadowmapEnableVS;     // 1.0 to enable shadows
-uniform mat4 bbmod_ShadowmapMatrix;        // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
-uniform float bbmod_ShadowmapArea;         // The area that the shadowmap captures
-uniform float bbmod_ShadowmapNormalOffset; // Offsets vertex position by its normal scaled by this value
+// 1.0 to enable shadows
+uniform float bbmod_ShadowmapEnableVS;
+// WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
+uniform mat4 bbmod_ShadowmapMatrix;
+// The area that the shadowmap captures
+uniform float bbmod_ShadowmapArea;
+// Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapNormalOffset;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
 
 
@@ -53,7 +68,9 @@ varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
+//
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -153,7 +170,9 @@ void Transform(out vec4 vertex, out vec4 normal)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 	vec4 position, normal;
