@@ -17,6 +17,7 @@ latest version of BBMOD.
 ## Contents
 * [Changelog](./Changelog_.html)
 * [Migrating from 2.5.0](./MigratingFrom2.5.0.html)
+* [Supported file formats](./SupportedFileFormats.html)
 * [Quickstart guide](./QuickstartGuide.html)
 * [Advanced topics](./AdvancedTopics.html)
 * [Modules](./Modules.html)
