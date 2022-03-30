@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"SprColorGrading","path":"sprites/SprColorGrading/SprColorGrading.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "SprColorGrading",
     "tags": [],
     "resourceType": "GMSequence",

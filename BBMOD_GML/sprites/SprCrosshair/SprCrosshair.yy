@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"SprCrosshair","path":"sprites/SprCrosshair/SprCrosshair.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "SprCrosshair",
     "tags": [],
     "resourceType": "GMSequence",

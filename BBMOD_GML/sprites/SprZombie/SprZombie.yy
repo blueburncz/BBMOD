@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"SprZombie","path":"sprites/SprZombie/SprZombie.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "SprZombie",
     "tags": [],
     "resourceType": "GMSequence",

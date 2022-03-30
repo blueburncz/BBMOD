@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"SprFloor","path":"sprites/SprFloor/SprFloor.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "SprFloor",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"SprCharacterCollisionMask","path":"sprites/SprCharacterCollisionMask/SprCharacterCollisionMask.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "SprCharacterCollisionMask",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"SprHeightmap","path":"sprites/SprHeightmap/SprHeightmap.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "SprHeightmap",
     "tags": [],
     "resourceType": "GMSequence",
