@@ -9,14 +9,14 @@ function BBMOD_RenderQueue()
 		destroy: destroy,
 	};
 
-	/// @var {ds_list<BBMOD_RenderCommand>} Commands to submit.
+	/// @var {Id.DsList.BBMOD_RenderCommand} Commands to submit.
 	/// @readonly
 	RenderCommands = ds_list_create();
 
 	/// @func add(_renderCommand)
 	/// @desc Adds a render command to the queue.
-	/// @param {BBMOD_RenderCommand} _renderCommand The render command to add.
-	/// @return {BBMOD_RenderQueue} Returns `self`.
+	/// @param {Struct.BBMOD_RenderCommand} _renderCommand The render command to add.
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	/// @see BBMOD_RenderCommand
 	static add = function (_renderCommand) {
 		gml_pragma("forceinline");
@@ -26,7 +26,7 @@ function BBMOD_RenderQueue()
 
 	/// @func is_empty()
 	/// @desc Checks whether there are any commands in the queue.
-	/// @return {bool} Returns `true` if there are no commands in the queue.
+	/// @return {Bool} Returns `true` if there are no commands in the queue.
 	static is_empty = function () {
 		gml_pragma("forceinline");
 		return ds_list_empty(RenderCommands);
@@ -34,7 +34,7 @@ function BBMOD_RenderQueue()
 
 	/// @func submit()
 	/// @desc Submits all commands without clearing the queue.
-	/// @return {BBMOD_RenderQueue} Returns `self`.
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	/// @see BBMOD_RenderQueue.clear
 	static submit = function () {
 		var _matWorld = matrix_get(matrix_world);
@@ -81,7 +81,7 @@ function BBMOD_RenderQueue()
 
 	/// @func clear()
 	/// @desc Clears the queue.
-	/// @return {BBMOD_RenderQueue} Returns `self`.
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static clear = function () {
 		gml_pragma("forceinline");
 		ds_list_clear(RenderCommands);

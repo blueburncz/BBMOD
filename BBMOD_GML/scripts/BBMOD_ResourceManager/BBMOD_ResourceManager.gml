@@ -46,20 +46,20 @@ function BBMOD_ResourceManager()
 		destroy: destroy,
 	};
 
-	/// @var {ds_map<string, BBMOD_Resource>}
+	/// @var {Id.DsMap} Mapping of `String`s to {@link BBMOD_Resource}s.
 	/// @private
 	Resources = ds_map_create();
 
-	/// @var {uint} Number of resources that are currently loading.
+	/// @var {Real} Number of resources that are currently loading.
 	/// @readonly
 	Loading = 0;
 
 	/// @func add(_uniqueName, _resource)
 	/// @desc Adds a resource to the resource manager.
-	/// @param {string} _uniqueName The name of the resource. Must be unique!
-	/// @param {BBMOD_Resource} _resource The resource to add.
-	/// @return {BBMOD_ResourceManager} Returns `self`.
-	/// @throws {BBMOD_Exception} If the resource is already added to a manager.
+	/// @param {String} _uniqueName The name of the resource. Must be unique!
+	/// @param {Struct.BBMOD_Resource} _resource The resource to add.
+	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
+	/// @throws {Struct.BBMOD_Exception} If the resource is already added to a manager.
 	static add = function (_uniqueName, _resource) {
 		gml_pragma("forceinline");
 		if (_resource.Manager != undefined)
@@ -73,9 +73,9 @@ function BBMOD_ResourceManager()
 
 	/// @func has(_pathOrUniqueName)
 	/// @desc Checks if the resource manager has a resource.
-	/// @param {string} _pathOrUniqueName The path to the resource file or
+	/// @param {String} _pathOrUniqueName The path to the resource file or
 	/// unique name of the resource.
-	/// @return {bool} Returns `true` if the resource manager has the resource.
+	/// @return {Bool} Returns `true` if the resource manager has the resource.
 	static has = function (_pathOrUniqueName) {
 		gml_pragma("forceinline");
 		return ds_map_exists(Resources, _pathOrUniqueName);
@@ -83,11 +83,11 @@ function BBMOD_ResourceManager()
 
 	/// @func get(_pathOrUniqueName)
 	/// @desc Retrieves a reference to a resource.
-	/// @param {string} _pathOrUniqueName The path to the resource file or
+	/// @param {String} _pathOrUniqueName The path to the resource file or
 	/// unique name of the resource.
-	/// @return {BBMOD_Resource} The resource.
+	/// @return {Struct.BBMOD_Resource} The resource.
 	/// @see BBMOD_ResourceManager.has
-	/// @throws {BBMOD_Exception} If the resource manager does not have such
+	/// @throws {Struct.BBMOD_Exception} If the resource manager does not have such
 	/// resource.
 	static get = function (_pathOrUniqueName) {
 		gml_pragma("forceinline");
@@ -103,8 +103,8 @@ function BBMOD_ResourceManager()
 	/// @desc Retrieves a reference to a resource. If the resource does not
 	/// exist yet, then it is added.
 	///
-	/// @param {string} _uniqueName The name of the resource. Must be unique!
-	/// @param {function} _onAdd A function which creates the resource if it
+	/// @param {String} _uniqueName The name of the resource. Must be unique!
+	/// @param {Function} _onAdd A function which creates the resource if it
 	/// does not exist yet. Must take no arguments and must return the created
 	/// resource.
 	///
@@ -139,16 +139,16 @@ function BBMOD_ResourceManager()
 	/// @desc Asynchronnously loads a resource from a file or retrieves
 	/// a reference to it, if it is already loaded.
 	///
-	/// @param {string} _path The path to the resource.
-	/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one
+	/// @param {String} _path The path to the resource.
+	/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one
 	/// does not match with this, then the resource will not be loaded.
-	/// @param {function} [_onLoad] A function to execute when the resource is
+	/// @param {Function} [_onLoad] A function to execute when the resource is
 	/// loaded or if an error occurs while loading it. It must take the error as
 	/// the first argument and the resource as the second argument. If no error
 	/// occurs, then `undefined` is passed. If the resource was already loaded
 	/// when calling this function, then this callback is not executed.
 	///
-	/// @return {BBMOD_Resource/undefined} The resource.
+	/// @return {Struct.BBMOD_Resource/Undefined} The resource.
 	///
 	/// @note Currently supported files formats are `*.bbmod` for {@link BBMOD_Model},
 	/// `*.bbanim` for {@link BBMOD_Animation} and `*.png`, `*.gif`, `*.jpg/jpeg`
@@ -208,8 +208,8 @@ function BBMOD_ResourceManager()
 	/// @func free(_resourceOrPath)
 	/// @desc Frees a reference to the resource. When there are no other no other
 	/// references, the resource is destroyed.
-	/// @param {BBMOD_Resource/string} _resourceOrPath
-	/// @return {BBMOD_ResourceManager} Returns `self`.
+	/// @param {Struct.BBMOD_Resource/string} _resourceOrPath
+	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	static free = function (_resourceOrPath) {
 		// Note: Resource removes itself from the map
 		var _resources = Resources;
@@ -226,8 +226,8 @@ function BBMOD_ResourceManager()
 
 	/// @func async_image_loaded_update(_asyncLoad)
 	/// @desc Must be executed in the "Async - Image Loaded" event!
-	/// @param {ds_map} _asyncLoad The `async_load` map.
-	/// @return {BBMOD_ResourceManager} Returns `self`.
+	/// @param {Id.DsMap} _asyncLoad The `async_load` map.
+	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	/// @note This calls {@link bbmod_async_image_loaded_update}, so you do not
 	/// need to call it again!
 	/// @see bbmod_async_image_loaded_update
@@ -239,8 +239,8 @@ function BBMOD_ResourceManager()
 
 	/// @func async_save_load_update(_asyncLoad)
 	/// @desc Must be executed in the "Async - Save/Load" event!
-	/// @param {ds_map} _asyncLoad The `async_load` map.
-	/// @return {BBMOD_ResourceManager} Returns `self`.
+	/// @param {Id.DsMap} _asyncLoad The `async_load` map.
+	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	/// @note This calls {@link bbmod_async_image_loaded_update}, so you do not
 	/// need to call it again!
 	/// @see bbmod_async_image_loaded_update

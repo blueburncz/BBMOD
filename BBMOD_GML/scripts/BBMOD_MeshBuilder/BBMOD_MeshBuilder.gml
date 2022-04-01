@@ -34,11 +34,11 @@ function BBMOD_MeshBuilder()
 		destroy: destroy,
 	};
 
-	/// @var {ds_list<BBMOD_Vertex>} List of mesh vertices.
+	/// @var {Id.DsList.BBMOD_Vertex} List of mesh vertices.
 	/// @readonly
 	Vertices = ds_list_create();
 
-	/// @var {ds_list<uint>} List of vertex indices that make up a face. First
+	/// @var {Id.DsList.Real} List of vertex indices that make up a face. First
 	/// three indices are the first face, next three indices are the second face
 	/// etc.
 	/// @readonly
@@ -46,8 +46,8 @@ function BBMOD_MeshBuilder()
 
 	/// @func add_vertex(_vertex)
 	/// @desc Adds a vertex to the mesh.
-	/// @param {BBMOD_Vertex} _vertex The vertex to add.
-	/// @return {uint} Returns the index of the vertex.
+	/// @param {Struct.BBMOD_Vertex} _vertex The vertex to add.
+	/// @return {Real} Returns the index of the vertex.
 	//// @see BBMOD_Vertex
 	static add_vertex = function (_vertex) {
 		var _ind = ds_list_size(Vertices);
@@ -57,10 +57,10 @@ function BBMOD_MeshBuilder()
 
 	/// @func add_face(_ind1, _ind2, _ind3)
 	/// @desc Adds a face to the mesh.
-	/// @param {uint} _ind1 The index of the first vertex of the face.
-	/// @param {uint} _ind2 The index of the second vertex of the face.
-	/// @param {uint} _ind3 The index of the third vertex of the face.
-	/// @return {uint} Returns the index of the face, which is always a multiple
+	/// @param {Real} _ind1 The index of the first vertex of the face.
+	/// @param {Real} _ind2 The index of the second vertex of the face.
+	/// @param {Real} _ind3 The index of the third vertex of the face.
+	/// @return {Real} Returns the index of the face, which is always a multiple
 	/// of 3.
 	static add_face = function (_ind1, _ind2, _ind3) {
 		var _ind = ds_list_size(Faces);
@@ -70,8 +70,8 @@ function BBMOD_MeshBuilder()
 
 	/// @func make_tangents()
 	/// @desc Makes tangent and bitangent vectors for added vertices.
-	/// @return {BBMOD_MeshBuilder} Returns `self`.
-	/// @throws {BBMOD_Exception} If an error occurs during the process.
+	/// @return {Struct.BBMOD_MeshBuilder} Returns `self`.
+	/// @throws {Struct.BBMOD_Exception} If an error occurs during the process.
 	/// @source https://gamedev.stackexchange.com/a/68617
 	static make_tangents = function () {
 		var _faceCount = ds_list_size(Faces);
@@ -196,11 +196,11 @@ function BBMOD_MeshBuilder()
 
 	/// @func build([_vertexFormat])
 	/// @desc Builds a mesh from the added vertices and faces.
-	/// @param {BBMOD_VertexFormat} [_vertexFormat] The vertex format of the mesh.
+	/// @param {Struct.BBMOD_VertexFormat} [_vertexFormat] The vertex format of the mesh.
 	/// This must be compatible with the format of the added vertices. Defaults to
 	/// the format of the added vertices.
-	/// @return {BBMOD_Mesh} The created mesh.
-	/// @throws {BBMOD_Exception} If an error occurs during the mesh building process.
+	/// @return {Struct.BBMOD_Mesh} The created mesh.
+	/// @throws {Struct.BBMOD_Exception} If an error occurs during the mesh building process.
 	/// @see BBMOD_Mesh
 	/// @see BBMOD_VertexFormat
 	static build = function (_vertexFormat) {

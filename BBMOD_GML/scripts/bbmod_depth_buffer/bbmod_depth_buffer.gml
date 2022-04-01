@@ -1,4 +1,4 @@
-/// @macro {BBMOD_BaseShader} Depth shader for static models.
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for static models.
 ///
 /// @example
 /// Following code enables casting shadows for a custom material
@@ -14,7 +14,7 @@
 /// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_DEPTH __bbmod_shader_depth()
 
-/// @macro {BBMOD_BaseShader} Depth shader for animated models with bones.
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for animated models with bones.
 ///
 /// @example
 /// Following code enables casting shadows for a custom material
@@ -30,7 +30,7 @@
 /// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_DEPTH_ANIMATED __bbmod_shader_depth_animated()
 
-/// @macro {BBMOD_BaseShader} Depth shader for dynamically batched models.
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for dynamically batched models.
 ///
 /// @example
 /// Following code enables casting shadows for a custom material

@@ -7,19 +7,19 @@
 /// calls by material, which decreases texture swaps and shader uniform changes to minimum.
 function BBMOD_RenderCommand() constructor
 {
-	/// @var {vertex_buffer/undefined} The vertex buffer to submit.
+	/// @var {Id.VertexBuffer/Undefined} The vertex buffer to submit.
 	VertexBuffer = undefined;
 
-	/// @var {ptr} The `gm_BaseTexture` used for the vertex buffer. Defaults to
-	/// `pointer_null`.
+	/// @var {Pointer.Texture} The `gm_BaseTexture` used for the vertex buffer.
+	/// Defaults to `pointer_null`.
 	Texture = pointer_null;
 
-	/// @var {real[]/undefined} An array of bone transforms (dual quaternions).
+	/// @var {Aarray.Real/Undefined} An array of bone transforms (dual quaternions).
 	BoneTransform = undefined;
 
-	/// @var {array/undefined} Dynamic batch data.
+	/// @var {Array.Real/Undefined} Dynamic batch data.
 	BatchData = undefined;
 
-	/// @var {real[16]/undefined} A transformation matrix.
+	/// @var {Array.Real/Undefined} A transformation matrix.
 	Matrix = undefined;
 }

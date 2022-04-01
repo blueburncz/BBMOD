@@ -1,6 +1,6 @@
 /// @func bbmod_get_calling_function_name()
 /// @desc Retrieves name of the calling function.
-/// @return {string} The name of the calling function.
+/// @return {String} The name of the calling function.
 function bbmod_get_calling_function_name()
 {
 	gml_pragma("forceinline");

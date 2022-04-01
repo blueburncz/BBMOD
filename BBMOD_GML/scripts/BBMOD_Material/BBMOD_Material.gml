@@ -1,6 +1,6 @@
-/// @var {BBMOD_Material/BBMOD_NONE} The currently applied material.
+/// @var {Struct.BBMOD_Material/Undefined} The currently applied material.
 /// @private
-global.__bbmodMaterialCurrent = BBMOD_NONE;
+global.__bbmodMaterialCurrent = undefined;
 
 // Array of all existing materials.
 global.__bbmodMaterialsAll = [];
@@ -16,7 +16,7 @@ global.__bbmodMaterials = _materials;
 /// @func BBMOD_Material([_shader])
 /// @extends BBMOD_Resource
 /// @desc Base class for materials.
-/// @param {BBMOD_Shader/undefined} [_shader] A shader that the material uses in
+/// @param {Struct.BBMOD_Shader/Undefined} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
@@ -30,77 +30,77 @@ function BBMOD_Material(_shader=undefined)
 		destroy: destroy,
 	};
 
-	/// @var {uint} Render passes in which is the material rendered. Defaults
+	/// @var {Real} Render passes in which is the material rendered. Defaults
 	/// to 0 (no passes).
 	/// @readonly
 	/// @see BBMOD_ERenderPass
 	RenderPass = 0;
 
-	/// @var {BBMOD_Shader[]} Shaders used in specific render passes.
+	/// @var {Array.Struct.BBMOD_Shader} Shaders used in specific render passes.
 	/// @private
 	/// @see BBMOD_Material.set_shader
 	/// @see BBMOD_Material.get_shader
 	Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
 
-	/// @var {real} The priority of the material. Determines order of materials in
+	/// @var {Real} The priority of the material. Determines order of materials in
 	/// the array retrieved by {@link bbmod_get_materials} (materials with smaller
 	/// priority come first in the array). Defaults to `0`.
 	/// @readonly
 	/// @see BBMOD_Material.set_priority
 	Priority = 0;
 
-	/// @var {BBMOD_RenderQueue} A render queue for render commands using this material.
+	/// @var {Struct.BBMOD_RenderQueue} A render queue for render commands using this material.
 	/// @readonly
 	/// @see BBMOD_RenderQueue
 	/// @see BBMOD_RenderCommand
 	RenderQueue = new BBMOD_RenderQueue();
 
-	/// @var {func/undefined} A function that is executed when the shader is
+	/// @var {Function/Undefined} A function that is executed when the shader is
 	/// applied. Must take the material as the first argument. Use `undefined`
 	/// if you do not want to execute any function. Defaults to `undefined`.
 	OnApply = undefined;
 
-	/// @var {real} A blend mode. Use one of the `bm_` constants. Default value
+	/// @var {Real} A blend mode. Use one of the `bm_` constants. Default value
 	/// is `bm_normal`.
 	BlendMode = bm_normal;
 
-	/// @var {real} A culling mode. Use one of the `cull_` constants. Default
+	/// @var {Real} A culling mode. Use one of the `cull_` constants. Default
 	/// value is `cull_counterclockwise`.
 	Culling = cull_counterclockwise;
 
-	/// @var {bool} If `true` then models using this material should write to
+	/// @var {Bool} If `true` then models using this material should write to
 	/// the depth buffer. Default value is `true`.
 	ZWrite = true;
 
-	/// @var {bool} If `true` then models using this material should be tested
+	/// @var {Bool} If `true` then models using this material should be tested
 	/// against the depth buffer. Defaults value is `true`.
 	ZTest = true;
 
-	/// @var {real} The function used for depth testing when
+	/// @var {Real} The function used for depth testing when
 	/// {@link BBMOD_Material.ZTest} is enabled. Use one of the `cmpfunc_`
 	/// constants. Default value is `cmpfunc_lessequal`.
 	ZFunc = cmpfunc_lessequal;
 
-	/// @var {real} Discard pixels with alpha less than this value. Use values
+	/// @var {Real} Discard pixels with alpha less than this value. Use values
 	/// in range 0..1.
 	AlphaTest = 1.0;
 
-	/// @var {bool} Use `false` to disable mimapping for this material. Default
+	/// @var {Bool} Use `false` to disable mimapping for this material. Default
 	/// value is `true`.
 	Mipmapping = true;
 
-	/// @var {bool} Use `false` to disable linear texture filtering for this
+	/// @var {Bool} Use `false` to disable linear texture filtering for this
 	/// material. Default value is `true`.
 	Filtering = true;
 
-	/// @var {bool} Use `true` to enable texture repeat for this material.
+	/// @var {Bool} Use `true` to enable texture repeat for this material.
 	/// Default value is `false`.
 	Repeat = false;
 
 	/// @func copy(_dest)
 	/// @desc Copies properties of this material into another material.
-	/// @param {BBMOD_Material} _dest The destination material.
-	/// @return {BBMOD_Material} Returns `self`.
+	/// @param {Struct.BBMOD_Material} _dest The destination material.
+	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static copy = function (_dest) {
 		_dest.RenderPass = RenderPass;
 		_dest.Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
@@ -121,7 +121,7 @@ function BBMOD_Material(_shader=undefined)
 
 	/// @func clone()
 	/// @desc Creates a clone of the material.
-	/// @return {BBMOD_Material} The created clone.
+	/// @return {Struct.BBMOD_Material} The created clone.
 	static clone = function () {
 		var _clone = new BBMOD_Material();
 		copy(_clone);
@@ -130,7 +130,7 @@ function BBMOD_Material(_shader=undefined)
 
 	/// @func apply()
 	/// @desc Makes this material the current one.
-	/// @return {bool} Returns `true` if the material was applied.
+	/// @return {Bool} Returns `true` if the material was applied.
 	/// @see BBMOD_Material.reset
 	static apply = function () {
 		if ((RenderPass & (1 << bbmod_render_pass_get())) == 0)
@@ -155,7 +155,7 @@ function BBMOD_Material(_shader=undefined)
 		var _shader = Shaders[bbmod_render_pass_get()];
 		if (BBMOD_SHADER_CURRENT != _shader)
 		{
-			if (BBMOD_SHADER_CURRENT != BBMOD_NONE)
+			if (BBMOD_SHADER_CURRENT != undefined)
 			{
 				BBMOD_SHADER_CURRENT.reset();
 			}
@@ -180,7 +180,7 @@ function BBMOD_Material(_shader=undefined)
 	/// @desc Changes the material priority. This affects its position within
 	/// an array returned by {@link bbmod_get_materials}. Materials with lower
 	/// priority come first in the array.
-	/// @param {real} _p The new material priority.
+	/// @param {Real} _p The new material priority.
 	/// @see BBMOD_Material.Priority
 	static set_priority = function (_p) {
 		gml_pragma("forceinline");
@@ -192,8 +192,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @func set_shader(_pass, _shader)
 	/// @desc Defines a shader used in a specific render pass.
 	/// @param {BBMOD_ERenderPass} _pass The render pass.
-	/// @param {BBMOD_Shader} _shader The shader used in the render pass.
-	/// @return {BBMOD_Material} Returns `self`.
+	/// @param {Struct.BBMOD_Shader} _shader The shader used in the render pass.
+	/// @return {Struct.BBMOD_Material} Returns `self`.
 	/// @see BBMOD_Material.get_shader
 	/// @see bbmod_render_pass_set
 	/// @see BBMOD_ERenderPass
@@ -208,7 +208,7 @@ function BBMOD_Material(_shader=undefined)
 	/// @func has_shader(_pass)
 	/// @desc Checks whether the material has a shader for the render pass.
 	/// @param {BBMOD_ERenderPass} _pass The render pass.
-	/// @return {bool} Returns `true` if the material has a shader for the
+	/// @return {Bool} Returns `true` if the material has a shader for the
 	/// render pass.
 	/// @see BBMOD_ERenderPass
 	static has_shader = function (_pass) {
@@ -219,7 +219,7 @@ function BBMOD_Material(_shader=undefined)
 	/// @func get_shader(_pass)
 	/// @desc Retrieves a shader used in a specific render pass.
 	/// @param {BBMOD_ERenderPass} _pass The render pass.
-	/// @return {BBMOD_Shader/undefined} The shader.
+	/// @return {Struct.BBMOD_Shader/Undefined} The shader.
 	/// @see BBMOD_Material.set_shader
 	/// @see BBMOD_ERenderPass
 	static get_shader = function (_pass) {
@@ -229,8 +229,8 @@ function BBMOD_Material(_shader=undefined)
 
 	/// @func remove_shader(_pass)
 	/// @desc Removes a shader used in a specific render pass.
-	/// @param {uint} _pass The render pass.
-	/// @return {BBMOD_Material} Returns `self`.
+	/// @param {Real} _pass The render pass.
+	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static remove_shader = function (_pass) {
 		gml_pragma("forceinline");
 		RenderPass &= ~(1 << _pass);
@@ -240,8 +240,8 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func reset()
-	/// @desc Resets the current material to {@link BBMOD_NONE}.
-	/// @return {BBMOD_Material} Returns `self`.
+	/// @desc Resets the current material to `undefined`.
+	/// @return {Struct.BBMOD_Material} Returns `self`.
 	/// @see BBMOD_Material.apply
 	/// @see bbmod_material_reset
 	static reset = function () {
@@ -265,7 +265,7 @@ function BBMOD_Material(_shader=undefined)
 }
 
 /// @func bbmod_material_reset()
-/// @desc Resets the current material to {@link BBMOD_NONE}. Every block of code
+/// @desc Resets the current material to `undefined`. Every block of code
 /// rendering models must start and end with this function!
 /// @example
 /// ```gml
@@ -289,12 +289,12 @@ function BBMOD_Material(_shader=undefined)
 function bbmod_material_reset()
 {
 	gml_pragma("forceinline");
-	if (global.__bbmodMaterialCurrent != BBMOD_NONE)
+	if (global.__bbmodMaterialCurrent != undefined)
 	{
 		gpu_pop_state();
-		global.__bbmodMaterialCurrent = BBMOD_NONE;
+		global.__bbmodMaterialCurrent = undefined;
 	}
-	if (BBMOD_SHADER_CURRENT != BBMOD_NONE)
+	if (BBMOD_SHADER_CURRENT != undefined)
 	{
 		BBMOD_SHADER_CURRENT.reset();
 	}
@@ -303,9 +303,9 @@ function bbmod_material_reset()
 /// @func bbmod_get_materials([_pass])
 /// @desc Retrieves an array of all existing materials, sorted by their priority.
 /// Materials with smaller priority come first in the array.
-/// @param {BBMOD_ERenderPass/undefined} [_pass] If defined, then only materials
+/// @param {BBMOD_ERenderPass/Undefined} [_pass] If defined, then only materials
 /// used in specified render pass will be returned.
-/// @return {BBMOD_Material[]} A read-only array of materials.
+/// @return {Array.Struct.BBMOD_Material} A read-only array of materials.
 /// @see BBMOD_Material.Priority
 /// @see BBMOD_ERenderPass
 function bbmod_get_materials(_pass=undefined)

@@ -1,31 +1,31 @@
 /// @func BBMOD_Quaternion([_x, _y, _z, _w])
 /// @desc A quaternion.
-/// @param {real} [_x] The first component of the quaternion.
-/// @param {real} [_y] The second component of the quaternion.
-/// @param {real} [_z] The third component of the quaternion.
-/// @param {real} [_w] The fourth component of the quaternion.
+/// @param {Real} [_x] The first component of the quaternion.
+/// @param {Real} [_y] The second component of the quaternion.
+/// @param {Real} [_z] The third component of the quaternion.
+/// @param {Real} [_w] The fourth component of the quaternion.
 /// @note If the arguments are not specified, then an identity quaternion
 /// is created.
 function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 {
 	var _makeIdentity = (_x == undefined);
 
-	/// @var {real} The first component of the quaternion.
+	/// @var {Real} The first component of the quaternion.
 	X = _makeIdentity ? 0.0 : _x;
 
-	/// @var {real} The second component of the quaternion.
+	/// @var {Real} The second component of the quaternion.
 	Y = _makeIdentity ? 0.0 : _y;
 
-	/// @var {real} The third component of the quaternion.
+	/// @var {Real} The third component of the quaternion.
 	Z = _makeIdentity ? 0.0 : _z;
 
-	/// @var {real} The fourth component of the quaternion.
+	/// @var {Real} The fourth component of the quaternion.
 	W = _makeIdentity ? 1.0 : _w;
 
 	/// @func Add(_q)
 	/// @desc Adds quaternions and returns the result as a new quaternion.
-	/// @param {BBMOD_Quaternion} _dq The other quaternion.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @param {Struct.BBMOD_Quaternion} _dq The other quaternion.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Add = function (_q) {
 		gml_pragma("forceinline");
 		return new BBMOD_Quaternion(
@@ -38,7 +38,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func Clone()
 	/// @desc Creates a clone of the quaternion.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Clone = function () {
 		gml_pragma("forceinline");
 		return new BBMOD_Quaternion(X, Y, Z, W);
@@ -46,7 +46,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func Conjugate()
 	/// @desc Conjugates the quaternion and returns the result as a quaternion.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Conjugate = function () {
 		gml_pragma("forceinline");
 		return new BBMOD_Quaternion(-X, -Y, -Z, W);
@@ -54,8 +54,8 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func Copy(_dest)
 	/// @desc Copies components of the quaternion into other quaternion.
-	/// @param {BBMOD_Quaternion} _dq The destination quaternion.
-	/// @return {BBMOD_Quaternion} Returns `self`.
+	/// @param {Struct.BBMOD_Quaternion} _dq The destination quaternion.
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static Copy = function (_dest) {
 		gml_pragma("forceinline");
 		_dest.X = X;
@@ -67,8 +67,8 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func Dot(_q)
 	/// @desc Computes a dot product of two dual quaternions.
-	/// @para {BBMOD_Quaternion} _q The other quaternion.
-	/// @return {real} The dot product of the quaternions.
+	/// @para {Struct.BBMOD_Quaternion} _q The other quaternion.
+	/// @return {Real} The dot product of the quaternions.
 	static Dot = function (_q) {
 		gml_pragma("forceinline");
 		return (
@@ -82,7 +82,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Exp()
 	/// @desc Computes an exponential map of the quaternion and returns
 	/// the result as a new quaternion.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Exp = function () {
 		gml_pragma("forceinline");
 		var _length = Length();
@@ -101,11 +101,11 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func FromArray()
 	/// @desc Loads quaternion components `[x, y, z, w]` from an array.
-	/// @param {real[]} _array The array to read the quaternion components
+	/// @param {Array.Real} _array The array to read the quaternion components
 	/// from.
-	/// @param {uint} [_index] The index to start reading the quaternion
+	/// @param {Real} [_index] The index to start reading the quaternion
 	/// components from. Defaults to 0.
-	/// @return {BBMOD_Quaternion} Returns `self`.
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromArray = function (_array, _index) {
 		gml_pragma("forceinline");
 		_index = (_index != undefined) ? _index : 0;
@@ -118,9 +118,9 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func FromAxisAngle(_axis, _angle)
 	/// @desc Initializes the quaternion using an axis and an angle.
-	/// @param {BBMOD_Vec3} _axis The axis of rotaiton.
-	/// @param {real} _angle The rotation angle.
-	/// @return {BBMOD_Quaternion} Returns `self`.
+	/// @param {Struct.BBMOD_Vec3} _axis The axis of rotaiton.
+	/// @param {Real} _angle The rotation angle.
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromAxisAngle = function (_axis, _angle) {
 		gml_pragma("forceinline");
 		_angle = -_angle;
@@ -134,11 +134,10 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func FromBuffer()
 	/// @desc Loads quaternion components `[x, y, z, w]` from a buffer.
-	/// @param {buffer} _buffer The buffer to read the quaternion components
+	/// @param {Id.Buffer} _buffer The buffer to read the quaternion components
 	/// from.
-	/// @param {int} [_type] The type of each component. Use one of the `buffer_`
-	/// constants, e.g. `buffer_f32`.
-	/// @return {BBMOD_Quaternion} Returns `self`.
+	/// @param {Constant.BufferDataType} [_type] The type of each component.
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
 		gml_pragma("forceinline");
 		X = buffer_read(_buffer, _type);
@@ -150,10 +149,10 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func FromEuler(_x, _y, _z)
 	/// @desc Initializes the quaternion using euler angles.
-	/// @param {real} _x The rotation around the X axis (in degrees).
-	/// @param {real} _y The rotation around the Y axis (in degrees).
-	/// @param {real} _z The rotation around the Z axis (in degrees).
-	/// @return {BBMOD_Quaternion} Returns `self`.
+	/// @param {Real} _x The rotation around the X axis (in degrees).
+	/// @param {Real} _y The rotation around the Y axis (in degrees).
+	/// @param {Real} _z The rotation around the Z axis (in degrees).
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	/// @note The order of rotations is YXZ, same as in the `matrix_build`
 	/// function.
 	static FromEuler = function (_x, _y, _z) {
@@ -194,9 +193,9 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @desc Initializes the quaternion using a forward and an up vector. These
 	/// vectors must not be parallel! If they are, the quaternion will be set to an
 	/// identity.
-	/// @param {BBMOD_Vec3} _forward The vector facing forward.
-	/// @param {BBMOD_Vec3} _up The vector facing up.
-	/// @return {BBMOD_Quaternion} Returns `self`.
+	/// @param {Struct.BBMOD_Vec3} _forward The vector facing forward.
+	/// @param {Struct.BBMOD_Vec3} _up The vector facing up.
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromLookRotation = function (_forward, _up) {
 		gml_pragma("forceinline");
 
@@ -225,7 +224,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func GetAngle()
 	/// @desc Retrieves the rotation angle of the quaternion.
-	/// @return {real} The rotation angle.
+	/// @return {Real} The rotation angle.
 	static GetAngle = function () {
 		gml_pragma("forceinline");
 		return radtodeg(arccos(W) * 2.0);
@@ -233,7 +232,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func GetAxis()
 	/// @desc Retrieves the axis of rotation of the quaternion.
-	/// @return {BBMOD_Vec3} The axis of rotation.
+	/// @return {Struct.BBMOD_Vec3} The axis of rotation.
 	static GetAxis = function () {
 		gml_pragma("forceinline");
 		var _sinThetaInv = 1.0 / sin(arccos(W));
@@ -247,7 +246,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Inverse()
 	/// @desc Computes an inverse of the quaternion and returns the result
 	/// as a new quaternion.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Inverse = function () {
 		gml_pragma("forceinline");
 		return Conjugate().Scale(1.0 / Length());
@@ -255,7 +254,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func Length()
 	/// @desc Computes the length of the quaternion.
-	/// @return {real} The length of the quaternion.
+	/// @return {Real} The length of the quaternion.
 	static Length = function () {
 		gml_pragma("forceinline");
 		return sqrt(
@@ -268,7 +267,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func LengthSqr()
 	/// @desc Computes a squared length of the quaternion.
-	/// @return {real} The squared length of the quaternion.
+	/// @return {Real} The squared length of the quaternion.
 	static LengthSqr = function () {
 		gml_pragma("forceinline");
 		return (
@@ -282,9 +281,9 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Lerp(_q, _s)
 	/// @desc Computes a linear interpolation of two quaternions
 	/// and returns the result as a new quaternion.
-	/// @param {BBMOD_Quaternion} _q The other quaternion.
-	/// @param {real} _s The interpolation factor.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @param {Struct.BBMOD_Quaternion} _q The other quaternion.
+	/// @param {Real} _s The interpolation factor.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Lerp = function (_q, _s) {
 		gml_pragma("forceinline");
 		return new BBMOD_Quaternion(
@@ -298,7 +297,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Log()
 	/// @desc Computes the logarithm map of the quaternion and returns the
 	/// result as a new quaternion.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Log = function () {
 		gml_pragma("forceinline");
 		var _length = Length();
@@ -320,8 +319,8 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Mul(_q)
 	/// @desc Multiplies two quaternions and returns the result as a new
 	/// quaternion.
-	/// @param {BBMOD_Quaternion} _q The other quaternion.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @param {Struct.BBMOD_Quaternion} _q The other quaternion.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Mul = function (_q) {
 		gml_pragma("forceinline");
 		return new BBMOD_Quaternion(
@@ -335,7 +334,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Normalize()
 	/// @desc Normalizes the quaternion and returns the result as a new
 	/// quaternion.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Normalize = function () {
 		gml_pragma("forceinline");
 		var _lengthSqr = LengthSqr();
@@ -349,8 +348,8 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Rotate(_v)
 	/// @desc Rotates a vector using the quaternion and returns the result
 	/// as a new vector.
-	/// @param {BBMOD_Vec3} _v The vector to rotate.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Struct.BBMOD_Vec3} _v The vector to rotate.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Rotate = function (_v) {
 		gml_pragma("forceinline");
 		var _q = Normalize();
@@ -362,8 +361,8 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Scale(_s)
 	/// @desc Scales each component of the quaternion by a real value and
 	/// returns the result as a new quaternion.
-	/// @param {real} _s The value to scale the quaternion by.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @param {Real} _s The value to scale the quaternion by.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Scale = function (_s) {
 		gml_pragma("forceinline");
 		return new BBMOD_Quaternion(
@@ -382,9 +381,9 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @func Slerp(_q, _s)
 	/// @desc Computes a spherical linear interpolation of two quaternions
 	/// and returns the result as a new quaternion.
-	/// @param {BBMOD_Quaternion} _dq The other quaternion.
-	/// @param {real} _s The interpolation factor.
-	/// @return {BBMOD_Quaternion} The created quaternion.
+	/// @param {Struct.BBMOD_Quaternion} _dq The other quaternion.
+	/// @param {Real} _s The interpolation factor.
+	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Slerp = function (_q, _s) {
 		gml_pragma("forceinline");
 
@@ -461,10 +460,10 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes components `[x, y, z, w]` of the quaternion into an array.
-	/// @param {real[]} [_array] The destination array. If not defined, a new one
+	/// @param {Array.Real} [_array] The destination array. If not defined, a new one
 	/// is created.
-	/// @param {uint} [_index] The index to start writing to. Defaults to 0.
-	/// @return {real[]} Returns the destination array.
+	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
+	/// @return {Array.Real} Returns the destination array.
 	static ToArray = function (_array, _index) {
 		gml_pragma("forceinline");
 		_array = (_array != undefined) ? _array : array_create(4, 0.0);
@@ -478,11 +477,11 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 
 	/// @func ToMatrix([_dest[, _index]])
 	/// @desc Converts quaternion into a matrix.
-	/// @param {real[]} [_dest] The destination array. If not specified, a new one is
+	/// @param {Array.Real} [_dest] The destination array. If not specified, a new one is
 	/// created.
-	/// @param {uint} [_index] The starting index in the destination array. Defaults
+	/// @param {Real} [_index] The starting index in the destination array. Defaults
 	/// to 0.
-	/// @return {real[]} Returns the destination array.
+	/// @return {Array.Real} Returns the destination array.
 	static ToMatrix = function (_dest, _index) {
 		gml_pragma("forceinline");
 

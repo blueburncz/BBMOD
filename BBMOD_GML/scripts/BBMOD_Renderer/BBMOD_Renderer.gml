@@ -52,7 +52,8 @@ function BBMOD_Renderer()
 		destroy: destroy,
 	};
 
-	/// @var {BBMOD_IRenderable[]} An array of renderable objects and structs.
+	/// @var {Array.Struct.BBMOD_IRenderable} An array of renderable objects and
+	/// structs.
 	/// These are automatically rendered in {@link BBMOD_Renderer.render}.
 	/// @readonly
 	/// @see BBMOD_Renderer.add
@@ -60,73 +61,73 @@ function BBMOD_Renderer()
 	/// @see BBMOD_IRenderable
 	Renderables = [];
 
-	/// @var {bool} Set to `true` to enable the `application_surface`.
+	/// @var {Bool} Set to `true` to enable the `application_surface`.
 	/// Use method {@link BBMOD_Renderer.present} to draw the
 	/// `application_surface` to the screen. Defaults to `false`.
 	UseAppSurface = false;
 
-	/// @var {real} Resolution multiplier for the `application_surface`.
+	/// @var {Real} Resolution multiplier for the `application_surface`.
 	/// {@link BBMOD_Renderer.UseAppSurface} must be enabled for this to
 	/// have any effect. Defaults to 1. Use lower values to improve framerate.
 	RenderScale = 1.0;
 
-	/// @var {bool} Enables rendering into a shadowmap in the shadows render pass.
+	/// @var {Bool} Enables rendering into a shadowmap in the shadows render pass.
 	/// Defauls to `false`.
 	/// @see BBMOD_Renderer.ShadowmapArea
 	/// @see BBMOD_Renderer.ShadowmapResolution
 	EnableShadows = false;
 
-	/// @var {surface} The surface used for rendering the scene's depth from the
+	/// @var {Id.Surface} The surface used for rendering the scene's depth from the
 	/// directional light's view.
 	/// @private
 	SurShadowmap = noone;
 
-	/// @var {real} The area captured by the shadowmap. Defaults to 1024.
+	/// @var {Real} The area captured by the shadowmap. Defaults to 1024.
 	ShadowmapArea = 1024;
 
-	/// @var {uint} The resolution of the shadowmap surface. Must be power of 2.
+	/// @var {Real} The resolution of the shadowmap surface. Must be power of 2.
 	/// Defaults to 4096.
 	ShadowmapResolution = 4096;
 
-	/// @var {real} When rendering shadows, offsets vertex position by its normal
+	/// @var {Real} When rendering shadows, offsets vertex position by its normal
 	/// scaled by this value. Defaults to 1. Increasing the value can remove some
 	/// artifacts but using too high value could make the objects appear flying
 	/// above the ground.
 	ShadowmapNormalOffset = 1;
 
-	/// @var {bool} Enables post-processing effects. Defaults to `false`. Enabling
+	/// @var {Bool} Enables post-processing effects. Defaults to `false`. Enabling
 	/// this requires the [Post-processing submodule](./PostProcessingSubmodule.html)!
 	/// @note {@link BBMOD_Renderer.UseAppSurface} must be enabled for this to
 	/// have any effect!
 	EnablePostProcessing = false;
 
-	/// @var {surface}
+	/// @var {Id.Surface}
 	/// @private
 	SurPostProcess = noone;
 
-	/// @var {ptr} The lookup table texture used for color grading.
+	/// @var {Pointer.Texture} The lookup table texture used for color grading.
 	/// @note Post-processing must be enabled for this to have any effect!
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	ColorGradingLUT = sprite_get_texture(BBMOD_SprColorGradingLUT, 0);
 
-	/// @var {real} The strength of the chromatic aberration effect. Use 0 to
+	/// @var {Real} The strength of the chromatic aberration effect. Use 0 to
 	/// disable the effect. Defaults to 0.
 	/// @note Post-processing must be enabled for this to have any effect!
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	ChromaticAberration = 0.0;
 
-	/// @var {real} The strength of the grayscale effect. Use values in range 0..1,
+	/// @var {Real} The strength of the grayscale effect. Use values in range 0..1,
 	/// where 0 means the original color and 1 means grayscale. Defaults to 0.
 	/// @note Post-processing must be enabled for this to have any effect!
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	Grayscale = 0.0;
 
-	/// @var {real} The strength of the vignette effect. Defaults to 0.
+	/// @var {Real} The strength of the vignette effect. Defaults to 0.
 	/// @note Post-processing must be enabled for this to have any effect!
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	Vignette = 0.0;
 
-	/// @var {uint} The color of the vignette effect. Defaults to `c_black`.
+	/// @var {Real} The color of the vignette effect. Defaults to `c_black`.
 	/// @note Post-processing must be enabled for this to have any effect!
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	VignetteColor = c_black;
@@ -138,9 +139,9 @@ function BBMOD_Renderer()
 
 	/// @func add(_renderable)
 	/// @desc Adds a renderable object or struct to the renderer.
-	/// @param {BBMOD_IRenderable} _renderable The renderable object or struct
+	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable object or struct
 	/// to add.
-	/// @return {BBMOD_Renderer} Returns `self`.
+	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	/// @see BBMOD_Renderer.remove
 	/// @see BBMOD_IRenderable
 	static add = function (_renderable) {
@@ -151,9 +152,9 @@ function BBMOD_Renderer()
 
 	/// @func remove(_renderable)
 	/// @desc Removes a renderable object or a struct from the renderer.
-	/// @param {BBMOD_IRenderable} _renderable The renderable object or struct
+	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable object or struct
 	/// to remove.
-	/// @return {BBMOD_Renderer} Returns `self`.
+	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	/// @see BBMOD_Renderer.add
 	/// @see BBMOD_IRenderable
 	static remove = function (_renderable) {
@@ -170,9 +171,9 @@ function BBMOD_Renderer()
 
 	/// @func update(_deltaTime)
 	/// @desc Updates the renderer. This should be called in the Step event.
-	/// @param {real} _deltaTime How much time has passed since the last frame
+	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
-	/// @return {BBMOD_Renderer} Returns `self`.
+	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static update = function (_deltaTime) {
 		if (UseAppSurface)
 		{
@@ -277,7 +278,7 @@ function BBMOD_Renderer()
 	/// @func render()
 	/// @desc Renders all added [renderables](./BBMOD_Renderer.Renderables.html)
 	/// to the current render target.
-	/// @return {BBMOD_Renderer} Returns `self`.
+	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static render = function () {
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
@@ -346,7 +347,7 @@ function BBMOD_Renderer()
 	/// @desc Renders the `application_surface` to the screen.
 	/// {@link BBMOD_Renderer.UseAppSurface} must be enabled for this to
 	/// have any effect.
-	/// @return {BBMOD_Renderer} Returns `self`.
+	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static present = function () {
 		if (UseAppSurface)
 		{

@@ -20,9 +20,9 @@ enum BBMOD_ECubeSide
 
 /// @func BBMOD_Cubemap(_resolution)
 /// @extends BBMOD_Class
-/// @implements {BBMOD_IRenderTarget}
+/// @implements {Struct.BBMOD_IRenderTarget}
 /// @desc A cubemap.
-/// @param {uint} _resolution A resolution of single cubemap side. Must be power
+/// @param {Real} _resolution A resolution of single cubemap side. Must be power
 /// of 2!
 function BBMOD_Cubemap(_resolution)
 	: BBMOD_Class() constructor
@@ -35,30 +35,30 @@ function BBMOD_Cubemap(_resolution)
 		destroy: destroy,
 	};
 
-	/// @var {array} The position of the cubemap in the world space.
+	/// @var {Array} The position of the cubemap in the world space.
 	/// @see BBMOD_Cubemap.get_view_matrix
 	Position = new BBMOD_Vec3();
 
-	/// @var {real} Distance to the near clipping plane used in the cubemap's
+	/// @var {Real} Distance to the near clipping plane used in the cubemap's
 	/// projection matrix. Defaults to `0.1`.
 	/// @see BBMOD_Cubemap.get_projection_matrix
 	ZNear = 0.1;
 
-	/// @var {real} Distance to the far clipping plane used in the cubemap's
+	/// @var {Real} Distance to the far clipping plane used in the cubemap's
 	/// projection matrix. Defaults to `8192`.
 	/// @see BBMOD_Cubemap.get_projection_matrix
 	ZFar = 8192.0;
 
-	/// @var {array<surface>} An array of surfaces.
+	/// @var {Array.Id.Surface} An array of surfaces.
 	/// @readonly
 	Sides = array_create(BBMOD_ECubeSide.SIZE, noone);
 
-	/// @var {surface} A single surface containing all cubemap sides.
+	/// @var {Id.Surface} A single surface containing all cubemap sides.
 	/// This can be passed as uniform to a shader for cubemapping.
 	/// @readonly
 	Surface = noone;
 
-	/// @var {uint} A resolution of single cubemap side. Must be power of two.
+	/// @var {Real} A resolution of single cubemap side. Must be power of two.
 	/// @readonly
 	Resolution = _resolution;
 
@@ -71,7 +71,7 @@ function BBMOD_Cubemap(_resolution)
 	/// @desc Gets a surface for given cubemap side. If the surface is corrupted,
 	/// then a new one is created.
 	/// @param {BBMOD_ECubeSide} _side The cubemap side.
-	/// @return {real} The surface.
+	/// @return {Id.Surface} The surface.
 	static get_surface = function (_side) {
 		var _surOld = Sides[_side];
 		var _sur = bbmod_surface_check(_surOld, Resolution, Resolution);
@@ -82,11 +82,11 @@ function BBMOD_Cubemap(_resolution)
 		return _sur;
 	};
 
-	/// @func to_single_surface(_surface, _clearColor, _clearAlpha)
+	/// @func to_single_surface(_clearColor, _clearAlpha)
 	/// @desc Puts all faces of the cubemap into a single surface.
-	/// @param {uint} _clearColor The color to clear the target surface with
+	/// @param {Real} _clearColor The color to clear the target surface with
 	/// before the cubemap is rendered into it.
-	/// @param {real} _clearAlpha The alpha to clear the targe surface with
+	/// @param {Real} _clearAlpha The alpha to clear the targe surface with
 	/// before the cubemap is rendered into it.
 	/// @see BBMOD_Cubemap.Surface
 	static to_single_surface = function (_clearColor, _clearAlpha) {
@@ -106,7 +106,7 @@ function BBMOD_Cubemap(_resolution)
 	/// @func get_view_matrix(_side)
 	/// @desc Creates a view matrix for given cubemap side.
 	/// @param {BBMOD_ECubeSide} side The cubemap side.
-	/// @return {real[16]} The created view matrix.
+	/// @return {Array.Real} The created view matrix.
 	static get_view_matrix = function (_side) {
 		var _negEye = Position.Scale(-1.0);
 		var _x, _y, _z;
@@ -160,7 +160,7 @@ function BBMOD_Cubemap(_resolution)
 
 	/// @func get_projection_matrix()
 	/// @desc Creates a projection matrix for the cubemap.
-	/// @return {real[16]} The created projection matrix.
+	/// @return {Array.Real} The created projection matrix.
 	static get_projection_matrix = function () {
 		gml_pragma("forceinline");
 		return matrix_build_projection_perspective_fov(90.0, 1.0, ZNear, ZFar);
@@ -171,7 +171,7 @@ function BBMOD_Cubemap(_resolution)
 	/// @desc Sets next cubemap side surface as the render target and sets
 	/// the current view and projection matrices appropriately.
 	///
-	/// @return {bool} Returns `true` if the render target was set or `false`
+	/// @return {Bool} Returns `true` if the render target was set or `false`
 	/// if all cubemap sides were iterated through.
 	///
 	/// @example

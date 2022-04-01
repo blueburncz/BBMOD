@@ -157,7 +157,7 @@
     {"name":"HTML5","path":"options/html5/options_html5.yy",},
     {"name":"Windows UWP","path":"options/windowsuap/options_windowsuap.yy",},
   ],
-  "isDnDProject": false,
+  "defaultScriptType": 1,
   "isEcma": false,
   "configs": {
     "name": "Default",
@@ -218,7 +218,7 @@
     {"targets":-1,"resourceVersion":"1.3","name":"audiogroup_default","resourceType":"GMAudioGroup",},
   ],
   "TextureGroups": [
-    {"isScaled":true,"autocrop":true,"border":8,"mipsToGenerate":0,"groupParent":null,"targets":-1,"resourceVersion":"1.3","name":"Default","resourceType":"GMTextureGroup",},
+    {"isScaled":true,"compressFormat":"bz2","autocrop":true,"border":8,"mipsToGenerate":0,"groupParent":null,"targets":-1,"resourceVersion":"1.3","name":"Default","resourceType":"GMTextureGroup",},
   ],
   "IncludedFiles": [
     {"CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character","resourceVersion":"1.0","name":"Character.bbmod","resourceType":"GMIncludedFile",},
@@ -277,7 +277,7 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character","resourceVersion":"1.0","name":"Character_Run.bbanim","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.2.1.618",
+    "IDEVersion": "2022.3.0.624",
   },
   "resourceVersion": "1.5",
   "name": "BBMOD",

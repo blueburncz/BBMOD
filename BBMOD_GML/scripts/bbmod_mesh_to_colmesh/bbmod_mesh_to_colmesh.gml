@@ -1,8 +1,8 @@
 /// @func bbmod_mesh_to_colmesh(_mesh, _colmesh[, _transform])
 /// @desc Adds a {@link BBMOD_Mesh} into a colmesh.
-/// @param {BBMOD_Mesh} _mesh The mesh to add.
-/// @param {colmesh} _colmesh The colmesh to add the mesh to.
-/// @param {real[16]} [_transform] A matrix to transform the mesh with before
+/// @param {Struct.BBMOD_Mesh} _mesh The mesh to add.
+/// @param {Struct} _colmesh The colmesh to add the mesh to.
+/// @param {Array.Real} [_transform] A matrix to transform the mesh with before
 /// it is added to the colmesh. Defaults to the identity matrix.
 /// @see https://marketplace.yoyogames.com/assets/8130/colmesh
 function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform)

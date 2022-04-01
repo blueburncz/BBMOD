@@ -8,9 +8,9 @@
 ///
 /// @desc An animation which can be played using {@link BBMOD_AnimationPlayer}.
 ///
-/// @param {string} [_file] A "*.bbanim" animation file to load. If not
+/// @param {String} [_file] A "*.bbanim" animation file to load. If not
 /// specified, then an empty animation is created.
-/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
+/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
 ///
 /// @example
@@ -42,65 +42,65 @@
 /// buffer_delete(_buffer);
 /// ```
 ///
-/// @throws {BBMOD_Exception} When the animation fails to load.
+/// @throws {Struct.BBMOD_Exception} When the animation fails to load.
 function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {bool} If `false` then the animation has not been loaded yet.
+	/// @var {Bool} If `false` then the animation has not been loaded yet.
 	/// @readonly
 	IsLoaded = false;
 
-	/// @var {real} The version of the animation file.
+	/// @var {Real} The version of the animation file.
 	/// @readonly
 	Version = BBMOD_VERSION;
 
-	/// @var {uint} The transformation spaces included in the animation file.
+	/// @var {Real} The transformation spaces included in the animation file.
 	/// @private
 	Spaces = 0;
 
-	/// @var {real} The duration of the animation (in tics).
+	/// @var {Real} The duration of the animation (in tics).
 	/// @readonly
 	Duration = 0;
 
-	/// @var {real} Number of animation tics per second.
+	/// @var {Real} Number of animation tics per second.
 	/// @readonly
 	TicsPerSecond = 0;
 
-	/// @var {array<real[]>/undefined}
+	/// @var {Array.Array.Real/Undefined}
 	/// @private
 	FramesParent = [];
 
-	/// @var {array<real[]>/undefined}
+	/// @var {Array.Array.Real/Undefined}
 	/// @private
 	FramesWorld = [];
 
-	/// @var {array<real[]>/undefined}
+	/// @var {Array.Array.Real/Undefined}
 	/// @private
 	FramesBone = [];
 
-	/// @var {bool}
+	/// @var {Bool}
 	/// @private
 	IsTransition = false;
 
-	/// @var {real} Duration of transition into this animation (in seconds).
+	/// @var {Real} Duration of transition into this animation (in seconds).
 	/// Must be a value greater or equal to 0!
 	TransitionIn = 0.1;
 
-	/// @var {real} Duration of transition out of this animation (in seconds).
+	/// @var {Real} Duration of transition out of this animation (in seconds).
 	/// Must be a value greater or equal to 0!
 	TransitionOut = 0;
 
-	/// @var {array} Custom animation events in form of `[frame, name, ...]`.
+	/// @var {Array} Custom animation events in form of `[frame, name, ...]`.
 	/// @private
 	Events = [];
 
 	/// @func add_event(_frame, _name)
 	/// @desc Adds a custom animation event.
-	/// @param {uint} _frame The frame at which should be the event triggered.
-	/// @param {string} _name The name of the event.
-	/// @return {BBMOD_Animation} Returns `self`.
+	/// @param {Real} _frame The frame at which should be the event triggered.
+	/// @param {String} _name The name of the event.
+	/// @return {Struct.BBMOD_Animation} Returns `self`.
 	/// @example
 	/// ```gml
 	/// animWalk = new BBMOD_Animation("Data/Character_Walk.bbanim");
@@ -118,7 +118,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @func supports_attachments()
 	/// @desc Checks whether the animation supports bone attachments.
-	/// @return {bool} Returns true if the animation supports bone attachments.
+	/// @return {Bool} Returns true if the animation supports bone attachments.
 	static supports_attachments = function () {
 		gml_pragma("forceinline");
 		return ((Spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) != 0);
@@ -127,7 +127,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @func supports_bone_transform()
 	/// @desc Checks whether the animation supports bone transformation through
 	/// code.
-	/// @return {bool} Returns true if the animation supports bone
+	/// @return {Bool} Returns true if the animation supports bone
 	/// transformation through code.
 	static supports_bone_transform = function () {
 		gml_pragma("forceinline");
@@ -136,7 +136,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @func supports_transitions()
 	/// @desc Checks whether the animation supports transitions.
-	/// @return {bool} Returns true if the animation supports transitions.
+	/// @return {Bool} Returns true if the animation supports transitions.
 	static supports_transitions = function () {
 		gml_pragma("forceinline");
 		return ((Spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) != 0);
@@ -144,8 +144,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @func get_animation_time(_timeInSeconds)
 	/// @desc Calculates animation time from current time in seconds.
-	/// @param {real} _timeInSeconds The current time in seconds.
-	/// @return {real} The animation time.
+	/// @param {Real} _timeInSeconds The current time in seconds.
+	/// @return {Real} The animation time.
 	/// @private
 	static get_animation_time = function (_timeInSeconds) {
 		gml_pragma("forceinline");
@@ -154,9 +154,9 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @func from_buffer(_buffer)
 	/// @desc Loads animation data from a buffer.
-	/// @param {buffer} _buffer The buffer to load the data from.
-	/// @return {BBMOD_Animation} Returns `self`.
-	/// @throws {BBMOD_Exception} If loading fails.
+	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	/// @return {Struct.BBMOD_Animation} Returns `self`.
+	/// @throws {Struct.BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
 		var _type = buffer_read(_buffer, buffer_string);
 		if (_type != "bbanim")
@@ -217,13 +217,13 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @func create_transition(_timeFrom, _animTo, _timeTo)
 	/// @desc Creates a new animation transition.
-	/// @param {real} _timeFrom Animation time of this animation that we are
+	/// @param {Real} _timeFrom Animation time of this animation that we are
 	/// transitioning from.
-	/// @param {BBMOD_Animation} _animTo The animation to transition to.
-	/// @param {real} _timeTo Animation time of the target animation.
-	/// @return {BBMOD_Animation/undefined} The created transition or `undefined`
-	/// if the animations have different optimization levels or if they do not
-	/// support transitions
+	/// @param {Struct.BBMOD_Animation} _animTo The animation to transition to.
+	/// @param {Real} _timeTo Animation time of the target animation.
+	/// @return {Struct.BBMOD_Animation/Undefined} The created transition or
+	/// `undefined` if the animations have different optimization levels or if
+	/// they do not support transitions.
 	static create_transition = function (_timeFrom, _animTo, _timeTo) {
 		if ((Spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) == 0
 			|| Spaces != _animTo.Spaces)

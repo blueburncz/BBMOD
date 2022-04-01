@@ -1,16 +1,16 @@
-/// @macro {string} An event triggered when an animation player changes to a
+/// @macro {String} An event triggered when an animation player changes to a
 /// different animation. The event data will contain the previous animation.
 /// You can retrieve the new animation using
 /// {@link BBMOD_AnimationPlayer.Animation}.
 /// @see BBMOD_AnimationPlayer.on_event
 #macro BBMOD_EV_ANIMATION_CHANGE "bbmod_ev_animation_change"
 
-/// @macro {string} An event triggered when an animation finishes playing. The
+/// @macro {String} An event triggered when an animation finishes playing. The
 /// event data will contain the animation that ended.
 /// @see BBMOD_AnimationPlayer.on_event
 #macro BBMOD_EV_ANIMATION_END "bbmod_ev_animation_end"
 
-/// @macro {string} An event triggered when an animation loops and continues
+/// @macro {String} An event triggered when an animation loops and continues
 /// playing from the start. The event data will contain the animation that
 /// looped.
 /// @see BBMOD_AnimationPlayer.on_event
@@ -22,14 +22,14 @@
 ///
 /// @extends BBMOD_Class
 ///
-/// @implements {BBMOD_IEventListener}
-/// @implements {BBMOD_IRenderable}
+/// @implements {Struct.BBMOD_IEventListener}
+/// @implements {Struct.BBMOD_IRenderable}
 ///
 /// @desc An animation player. Each instance of an animated model should have
 /// its own animation player.
 ///
-/// @param {BBMOD_Model} _model A model that the animation player animates.
-/// @param {bool} [_paused] If `true` then the animation player is created
+/// @param {Struct.BBMOD_Model} _model A model that the animation player animates.
+/// @param {Bool} [_paused] If `true` then the animation player is created
 /// as paused. Defaults to `false`.
 ///
 /// @example
@@ -69,54 +69,53 @@ function BBMOD_AnimationPlayer(_model, _paused)
 		destroy: destroy,
 	};
 
-	/// @var {BBMOD_Model} A model that the animation player animates.
+	/// @var {Struct.BBMOD_Model} A model that the animation player animates.
 	/// @readonly
 	Model = _model;
 
-	/// @var {ds_list<BBMOD_Animation>} List of animations to play.
-	/// @see BBMOD_Animation
+	/// @var {Id.DsList.BBMOD_Animation} List of animations to play.
 	/// @private
 	Animations = ds_list_create();
 
-	/// @var {BBMOD_Animation/BBMOD_NONE} The currently playing animation.
+	/// @var {Struct.BBMOD_Animation/Undefined} The currently playing animation.
 	/// @readonly
-	Animation = BBMOD_NONE;
+	Animation = undefined;
 
-	/// @var {bool} If true then {@link BBMOD_AnimationPlayer.Animation} loops.
+	/// @var {Bool} If true then {@link BBMOD_AnimationPlayer.Animation} loops.
 	/// @readonly
 	AnimationLoops = false;
 
-	/// @var {BBMOD_Animation/BBMOD_NONE}
+	/// @var {Struct.BBMOD_Animation/Undefined}
 	/// @private
-	AnimationLast = BBMOD_NONE;
+	AnimationLast = undefined;
 
-	/// @var {BBMOD_AnimationInstance}
+	/// @var {Struct.BBMOD_AnimationInstance/Undefined}
 	/// @private
 	AnimationInstanceLast = undefined;
 
 	// FIXME: Fix animation player for models that were not loaded yet!!!
 
-	/// @var {array<BBMOD_Vec3/undefined>} Array of node position overrides.
+	/// @var {Array.(Struct.BBMOD_Vec3/Undefined)} Array of node position overrides.
 	/// @private
 	NodePositionOverride = array_create(64/*Model.NodeCount*/, undefined);
 
-	/// @var {array<BBMOD_Quaternion/undefined>} Array of node rotation
+	/// @var {Array.(Struct.BBMOD_Quaternion/Undefined)} Array of node rotation
 	/// overrides.
 	/// @private
 	NodeRotationOverride = array_create(64/*Model.NodeCount*/, undefined);
 
-	/// @var {bool} If `true`, then the animation playback is paused.
+	/// @var {Bool} If `true`, then the animation playback is paused.
 	Paused = (_paused != undefined) ? _paused : false;
 
-	/// @var {real} The current animation playback time.
+	/// @var {Real} The current animation playback time.
 	/// @readonly
 	Time = 0;
 
-	/// @var {real[]/undefined}
+	/// @var {Array.Real/Undefined}
 	/// @private
 	Frame = undefined;
 
-	/// @var {int} Number of frames (calls to {@link BBMOD_AnimationPlayer.update})
+	/// @var {Real} Number of frames (calls to {@link BBMOD_AnimationPlayer.update})
 	/// to skip. Defaults to 0 (frame skipping is disabled). Increasing the value
 	/// increases performance. Use `infinity` to disable computing animation frames
 	/// entirely.
@@ -124,20 +123,20 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// even if the frame is skipped.
 	Frameskip = 0;
 
-	/// @var {uint}
+	/// @var {Real}
 	/// @private
 	FrameskipCurrent = 0;
 
-	/// @var {real} Controls animation playback speed. Must be a positive number!
+	/// @var {Real} Controls animation playback speed. Must be a positive number!
 	PlaybackSpeed = 1;
 
-	/// @var {real[]} An array of node transforms in world space.
+	/// @var {Array.Real} An array of node transforms in world space.
 	/// Useful for attachments.
 	/// @see BBMOD_AnimationPlayer.get_node_transform
 	/// @private
 	NodeTransform = array_create(64/*Model.NodeCount*/ * 8, 0.0);
 
-	/// @var {real[]} An array containing transforms of all bones.
+	/// @var {Array.Real} An array containing transforms of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @private
@@ -236,9 +235,9 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @func update(_deltaTime)
 	/// @desc Updates the animation player. This should be called every frame in
 	/// the step event.
-	/// @param {real} _deltaTime How much time has passed since the last frame
+	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static update = function (_deltaTime) {
 		if (!Model.IsLoaded)
 		{
@@ -279,7 +278,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 					ds_list_delete(Animations, 0);
 					if (!_animation.IsTransition)
 					{
-						Animation = BBMOD_NONE;
+						Animation = undefined;
 						trigger_event(BBMOD_EV_ANIMATION_END, _animation);
 					}
 					continue;
@@ -373,10 +372,10 @@ function BBMOD_AnimationPlayer(_model, _paused)
 
 	/// @func play(_animation[, _loop])
 	/// @desc Starts playing an animation from its start.
-	/// @param {BBMOD_Animation} _animation An animation to play.
-	/// @param {bool} [_loop] If `true` then the animation will be looped.
+	/// @param {Struct.BBMOD_Animation} _animation An animation to play.
+	/// @param {Bool} [_loop] If `true` then the animation will be looped.
 	/// Defaults to `false`.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static play = function (_animation, _loop) {
 		Animation = _animation;
 		AnimationLoops = (_loop != undefined) ? _loop : false;
@@ -418,10 +417,10 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @func change(_animation[, _loop])
 	/// @desc Starts playing an animation from its start, only if it is a
 	/// different one that the last played animation.
-	/// @param {BBMOD_Animation} _animation The animation to change to,
-	/// @param {bool} [_loop] If `true` then the animation will be looped.
+	/// @param {Struct.BBMOD_Animation} _animation The animation to change to,
+	/// @param {Bool} [_loop] If `true` then the animation will be looped.
 	/// Defaults to `false`.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	/// @see BBMOD_AnimationPlayer.Animation
 	static change = function (_animation, _loop) {
 		gml_pragma("forceinline");
@@ -435,7 +434,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @func get_transform()
 	/// @desc Returns an array of current transformations of all bones. This
 	/// should be passed to a vertex shader.
-	/// @return {real[]} The transformation array.
+	/// @return {Array.Real} The transformation array.
 	static get_transform = function () {
 		gml_pragma("forceinline");
 		return TransformArray;
@@ -444,8 +443,8 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @func get_node_transform(_nodeIndex)
 	/// @desc Returns a transformation (dual quaternion) of a node, which can be
 	/// used for example for attachments.
-	/// @param {uint} _nodeIndex An index of a node.
-	/// @return {BBMOD_DualQuaternion} The transformation.
+	/// @param {Real} _nodeIndex An index of a node.
+	/// @return {Struct.BBMOD_DualQuaternion} The transformation.
 	/// @see BBMOD_Model.find_node_id
 	static get_node_transform = function (_nodeIndex) {
 		gml_pragma("forceinline");
@@ -456,8 +455,8 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @desc Returns a transformation (dual quaternion) of a node from the last
 	/// animation frame. This is useful if you want to add additional
 	/// transformations onto an animated bone, instead of competely replacing it.
-	/// @param {uint} _nodeIndex An index of a node.
-	/// @return {BBMOD_DualQuaternion} The transformation.
+	/// @param {Real} _nodeIndex An index of a node.
+	/// @return {Struct.BBMOD_DualQuaternion} The transformation.
 	/// @see BBMOD_Model.find_node_id
 	/// @see BBMOD_AnimationPlayer.get_node_transform
 	static get_node_transform_from_frame = function (_nodeIndex) {
@@ -471,10 +470,10 @@ function BBMOD_AnimationPlayer(_model, _paused)
 
 	/// @func set_node_position(_nodeIndex, _position)
 	/// @desc Overrides a position of a node.
-	/// @param {uint} _nodeIndex An index of a node.
-	/// @param {BBMOD_Vec3/undefined} _position A new position of a node. Use
+	/// @param {Real} _nodeIndex An index of a node.
+	/// @param {Struct.BBMOD_Vec3/Undefined} _position A new position of a node. Use
 	/// `undefined` to unset the position override.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static set_node_position = function (_nodeIndex, _position) {
 		gml_pragma("forceinline");
 		NodePositionOverride[@ _nodeIndex] = _position;
@@ -483,10 +482,10 @@ function BBMOD_AnimationPlayer(_model, _paused)
 
 	/// @func set_node_rotation(_nodeIndex, _rotation)
 	/// @desc Overrides a rotation of a node.
-	/// @param {uint} _nodeIndex An index of a node.
-	/// @param {BBMOD_Quaternion/undefined} _rotation A new rotation of a node.
+	/// @param {Real} _nodeIndex An index of a node.
+	/// @param {Struct.BBMOD_Quaternion/Undefined} _rotation A new rotation of a node.
 	/// Use `undefined` to unset the rotation override.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static set_node_rotation = function (_nodeIndex, _rotation) {
 		gml_pragma("forceinline");
 		NodeRotationOverride[@ _nodeIndex] = _rotation;
@@ -495,10 +494,10 @@ function BBMOD_AnimationPlayer(_model, _paused)
 
 	/// @func submit([_materials])
 	/// @desc Immediately submits the animated model for rendering.
-	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
-	/// one for each material slot of the model. If not specified, then
-	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	/// @param {Array.Struct.BBMOD_Material/Undefined} [_materials] An array of
+	/// materials, one for each material slot of the model. If not specified,
+	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static submit = function (_materials) {
 		gml_pragma("forceinline");
 		Model.submit(_materials, get_transform());
@@ -507,10 +506,10 @@ function BBMOD_AnimationPlayer(_model, _paused)
 
 	/// @func render([_materials])
 	/// @desc Enqueues the animated model for rendering.
-	/// @param {BBMOD_Material[]/undefined} [_materials] An array of materials,
-	/// one for each material slot of the model. If not specified, then
-	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	/// @param {Array.Struct.BBMOD_Material/Undefined} [_materials] An array of
+	/// materials, one for each material slot of the model. If not specified,
+	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static render = function (_materials) {
 		gml_pragma("forceinline");
 		Model.render(_materials, get_transform());

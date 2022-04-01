@@ -1,7 +1,7 @@
 /// @func BBMOD_DefaultMaterial([_shader])
 /// @extends BBMOD_BaseMaterial
 /// @desc A material that can be used when rendering models.
-/// @param {BBMOD_DefaultShader/undefined} [_shader] A shader that the material uses in
+/// @param {Struct.BBMOD_DefaultShader/Undefined} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
@@ -16,8 +16,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		destroy: destroy,
 	};
 
-	/// @var {ptr} A texture with tangent-space normals in the RGB channels and
-	/// smoothness in the alpha channel.
+	/// @var {Pointer.Texture} A texture with tangent-space normals in the RGB
+	/// channels and smoothness in the alpha channel.
 	NormalSmoothness = pointer_null;
 
 	NormalSmoothnessSprite = undefined;
@@ -31,7 +31,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	}
 	NormalSmoothness = sprite_get_texture(_normalRoughnessDefault, 0);
 
-	/// @var {ptr} A texture specular color in the RGB channels.
+	/// @var {Pointer.Texture} A texture specular color in the RGB channels.
 	SpecularColor = pointer_null;
 
 	SpecularColorSprite = undefined;
@@ -48,10 +48,10 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @func set_normal_smoothness(_normal, _smoothness)
 	/// @desc Changes the normal vector and smoothness to a uniform value for the
 	/// entire material.
-	/// @param {BBMOD_Vec3} _normal The new normal vector. If you are not sure
+	/// @param {Struct.BBMOD_Vec3} _normal The new normal vector. If you are not sure
 	/// what this value should be, use {@link BBMOD_VEC3_UP}.
-	/// @param {real} _smoothness The new smoothness. Use values in range 0..1.
-	/// @return {BBMOD_Material} Returns `self`.
+	/// @param {Real} _smoothness The new smoothness. Use values in range 0..1.
+	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static set_normal_smoothness = function (_normal, _smoothness) {
 		if (NormalSmoothnessSprite != undefined)
 		{
@@ -70,8 +70,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 	/// @func set_specular_color(_color)
 	/// @desc Changes the specular color to a uniform value for the entire material.
-	/// @param {BBMOD_Color} _color The new specular color.
-	/// @return {BBMOD_Material} Returns `self`.
+	/// @param {Struct.BBMOD_Color} _color The new specular color.
+	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static set_specular_color = function (_color) {
 		if (SpecularColorSprite != undefined)
 		{

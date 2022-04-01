@@ -1,14 +1,14 @@
 /// @func BBMOD_AnimationState(_name, _animation[, _loop])
 ///
 /// @extends BBMOD_State
-/// @implements {BBMOD_IEventListener}
+/// @implements {Struct.BBMOD_IEventListener}
 ///
 /// @desc A state of an animation state machine.
 ///
-/// @param {string} _name The name of the state.
-/// @param {BBMOD_Animation} _animation The animation played while the
+/// @param {String} _name The name of the state.
+/// @param {Struct.BBMOD_Animation} _animation The animation played while the
 /// is active.
-/// @param {bool} [_loop] If `true` then the animation will be looped.
+/// @param {Bool} [_loop] If `true` then the animation will be looped.
 /// Defaults to `false`.
 ///
 /// @example
@@ -70,11 +70,11 @@ function BBMOD_AnimationState(_name, _animation, _loop=false)
 
 	implement(BBMOD_IEventListener);
 
-	/// @var {BBMOD_Animation} The animation played while the state is active.
+	/// @var {Struct.BBMOD_Animation} The animation played while the state is active.
 	/// @readonly
 	Animation = _animation;
 
-	/// @var {bool} If `true` then the animation is played in loops.
+	/// @var {Bool} If `true` then the animation is played in loops.
 	/// @readonly
 	Loop = _loop;
 }

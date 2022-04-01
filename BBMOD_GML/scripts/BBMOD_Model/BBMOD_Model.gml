@@ -2,12 +2,12 @@
 ///
 /// @extends BBMOD_Resource
 ///
-/// @implements {BBMOD_IRenderable}
+/// @implements {Struct.BBMOD_IRenderable}
 ///
 /// @desc A model.
 ///
-/// @param {string} [_file] The "*.bbmod" model file to load.
-/// @param {string} [_sha1] Expected SHA1 of the file. If the actual one does
+/// @param {String} [_file] The "*.bbmod" model file to load.
+/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
 ///
 /// @example
@@ -22,7 +22,7 @@
 /// }
 /// ```
 ///
-/// @throws {BBMOD_Exception} When the model fails to load.
+/// @throws {Struct.BBMOD_Exception} When the model fails to load.
 function BBMOD_Model(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {
@@ -34,51 +34,51 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		destroy: destroy,
 	};
 
-	/// @var {real} The version of the model file.
+	/// @var {Real} The version of the model file.
 	/// @readonly
 	Version = BBMOD_VERSION;
 
-	/// @var {BBMOD_VertexFormat} The vertex format of the model.
+	/// @var {Struct.BBMOD_VertexFormat} The vertex format of the model.
 	/// @see BBMOD_VertexFormat
 	/// @readonly
 	VertexFormat = undefined;
 
-	/// @var {BBMOD_Mesh[]} Array of meshes.
+	/// @var {Array.Struct.BBMOD_Mesh} Array of meshes.
 	/// @readonly
 	Meshes = [];
 
-	/// @var {int} Number of nodes.
+	/// @var {Real} Number of nodes.
 	/// @readonly
 	NodeCount = 0;
 
-	/// @var {BBMOD_Node} The root node.
+	/// @var {Struct.BBMOD_Node} The root node.
 	/// @see BBMOD_Node
 	/// @readonly
 	RootNode = undefined;
 
-	/// @var {real} Number of bones.
+	/// @var {Real} Number of bones.
 	/// @readonly
 	BoneCount = 0;
 
-	/// @var {real[]} An array of bone offset dual quaternions.
+	/// @var {Array.Real} An array of bone offset dual quaternions.
 	/// @private
 	OffsetArray = [];
 
-	/// @var {real} Number of materials that the model uses.
+	/// @var {Real} Number of materials that the model uses.
 	/// @see BBMOD_BaseMaterial
 	/// @readonly
 	MaterialCount = 0;
 
-	/// @var {string[]} An array of material names.
+	/// @var {Array.String} An array of material names.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
 	/// @readonly
 	MaterialNames = [];
 
-	/// @var {BBMOD_BaseMaterial[]} An array of materials. Each entry defaults to
-	/// {@link BBMOD_MATERIAL_DEFAULT} or {@link BBMOD_MATERIAL_DEFAULT_ANIMATED}
-	/// for animated models.
+	/// @var {Array.Struct.BBMOD_BaseMaterial} An array of materials. Each entry
+	/// defaults to {@link BBMOD_MATERIAL_DEFAULT} or
+	/// {@link BBMOD_MATERIAL_DEFAULT_ANIMATED} for animated models.
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
@@ -87,9 +87,9 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func from_buffer(_buffer)
 	/// @desc Loads model data from a buffer.
-	/// @param {buffer} _buffer The buffer to load the data from.
-	/// @return {BBMOD_Model} Returns `self`.
-	/// @throws {BBMOD_Exception} If loading fails.
+	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	/// @throws {Struct.BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
 		var _type = buffer_read(_buffer, buffer_string);
 		if (_type != "bbmod")
@@ -170,7 +170,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @func freeze()
 	/// @desc Freezes all vertex buffers used by the model. This should make its
 	/// rendering faster, but it disables creating new batches of the model.
-	/// @return {BBMOD_Model} Returns `self`.
+	/// @return {Struct.BBMOD_Model} Returns `self`.
 	static freeze = function () {
 		gml_pragma("forceinline");
 		var i = 0;
@@ -182,10 +182,9 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func find_node(_idOrName)
-	/// @desc Finds a legacy node struct by its name or id.
-	/// @param {real/string} _idOrName The id or the name of the node.
-	/// @return {BBMOD_Node/BBMOD_NONE} Returns the found legacy node struct or
-	/// `BBMOD_NONE`.
+	/// @desc Finds a node by its name or id.
+	/// @param {Real/String} _idOrName The id or the name of the node.
+	/// @return {Struct.BBMOD_Node/Undefined} Returns the found node `undefined`.
 	static find_node = function (_idOrName) {
 		var _isName = is_string(_idOrName);
 		var _node = (argument_count > 1) ? argument[1] : RootNode;
@@ -202,19 +201,19 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		repeat (array_length(_children))
 		{
 			var _found = find_node(_idOrName, _children[i++]);
-			if (_found != BBMOD_NONE)
+			if (_found != undefined)
 			{
 				return _found;
 			}
 		}
-		return BBMOD_NONE;
+		return undefined;
 	};
 
 	/// @func find_node_id(_nodeName)
 	/// @desc Finds id of the model's node by its name.
-	/// @param {string} _nodeName The name of the node.
-	/// @return {uint/BBMOD_NONE} The id of the node or {@link BBMOD_NONE} when
-	/// it is not found.
+	/// @param {String} _nodeName The name of the node.
+	/// @return {Real/Undefined} The id of the node or `undefined` when it is
+	/// not found.
 	/// @note It is not recommended to use this method in release builds, because
 	/// having many of these lookups can slow down your game! You should instead
 	/// use the ids available from the `_log.txt` files, which are created during
@@ -222,18 +221,18 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	static find_node_id = function (_nodeName) {
 		gml_pragma("forceinline");
 		var _node = find_node(_nodeName);
-		if (_node != BBMOD_NONE)
+		if (_node != undefined)
 		{
 			return _node.Index;
 		}
-		return BBMOD_NONE;
+		return undefined;
 	};
 
 	/// @func get_material(_name)
 	/// @desc Retrieves a material by its name.
-	/// @param {string} _name The name of the material.
-	/// @return {BBMOD_BaseMaterial} The material.
-	/// @throws {BBMOD_Exception} If the model does not have a material with
+	/// @param {String} _name The name of the material.
+	/// @return {Struct.BBMOD_BaseMaterial} The material.
+	/// @throws {Struct.BBMOD_Exception} If the model does not have a material with
 	/// given name.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
@@ -254,10 +253,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func set_material(_name, _material)
 	/// @desc Sets a material.
-	/// @param {string} _name The name of the material slot.
-	/// @param {BBMOD_BaseMaterial} _material The material.
-	/// @return {BBMOD_Model} Returns `self`.
-	/// @throws {BBMOD_Exception} If the model does not have a material with
+	/// @param {String} _name The name of the material slot.
+	/// @param {Struct.BBMOD_BaseMaterial} _material The material.
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	/// @throws {Struct.BBMOD_Exception} If the model does not have a material with
 	/// given name.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
@@ -280,12 +279,12 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @func get_vertex_format([_bones[, _ids]])
 	/// @desc Retrieves or creates a vertex format compatible with the model.
 	/// This can be used when creating a {@link BBMOD_StaticBatch}.
-	/// @param {bool} [_bones] `true` to include bone data in the vertex format.
+	/// @param {Bool} [_bones] `true` to include bone data in the vertex format.
 	/// Defaults to `true`.
-	/// @param {bool} [_ids] `true` to include model instance ids in the vertex
+	/// @param {Bool} [_ids] `true` to include model instance ids in the vertex
 	/// format.
 	/// Defaults to `false`.
-	/// @return {BBMOD_VertexFormat} The vertex format.
+	/// @return {Struct.BBMOD_VertexFormat} The vertex format.
 	/// @example
 	/// ```gml
 	/// staticBatch = new BBMOD_StaticBatch(mod_tree.get_vertex_format());
@@ -308,13 +307,13 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @desc Immediately submits the model for rendering.
 	///
-	/// @param {BBMOD_BaseMaterial[]/undefined} [_materials] An array of materials,
-	/// one for each material slot of the model. If not specified, then
-	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
-	/// @param {real[]/undefined} [_transform] An array of transformation matrices
-	/// (for animated models) or `undefined`.
+	/// @param {Array.Struct.BBMOD_BaseMaterial/Undefined} [_materials] An array
+	/// of materials, one for each material slot of the model. If not specified,
+	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @param {Array.Real/Undefined} [_transform] An array of transformation
+	/// matrices (for animated models) or `undefined`.
 	///
-	/// @return {BBMOD_Model} Returns `self`.
+	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
 	/// @example
 	/// ```gml
@@ -350,15 +349,16 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @desc Enqueues the model for rendering.
 	///
-	/// @param {BBMOD_BaseMaterial[]/undefined} [_materials] An array of materials,
-	/// one for each material slot of the model. If not specified, then
-	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
-	/// @param {real[]/undefined} [_transform] An array of transformation matrices
-	/// (for animated models) or `undefined`.
+	/// @param {Array.Struct.BBMOD_BaseMaterial/Undefined} [_materials] An array
+	/// of materials, one for each material slot of the model. If not specified,
+	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @param {Array.Real/Undefined} [_transform] An array of transformation
+	/// matrices (for animated models) or `undefined`.
 	///
-	/// @return {BBMOD_Model} Returns `self`.
+	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
-	/// @note This method does not do anything if the model has not been loaded yet.
+	/// @note This method does not do anything if the model has not been loaded
+	/// yet.
 	///
 	/// @see BBMOD_Resource.IsLoaded
 	/// @see BBMOD_BaseMaterial
@@ -375,8 +375,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func to_dynamic_batch(_dynamicBatch)
-	/// @param {BBMOD_DynamicBatch} _dynamicBatch
-	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	/// @param {Struct.BBMOD_DynamicBatch} _dynamicBatch
+	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	/// @private
 	static to_dynamic_batch = function (_dynamicBatch) {
 		gml_pragma("forceinline");
@@ -389,10 +389,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func to_static_batch(_model, _staticBatch, _transform)
-	/// @param {BBMOD_Model} _model
-	/// @param {BBMOD_StaticBatch} _staticBatch
-	/// @param {matrix} _transform
-	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	/// @param {Struct.BBMOD_Model} _model
+	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
+	/// @param {Array.Real} _transform
+	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	/// @private
 	static to_static_batch = function (_staticBatch, _transform) {
 		gml_pragma("forceinline");

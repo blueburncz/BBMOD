@@ -1,7 +1,7 @@
 /// @func BBMOD_Mesh(_vertexFormat)
 /// @extends BBMOD_Class
 /// @desc A mesh struct.
-/// @param {BBMOD_VertexFormat} _vertexFormat The vertex format of the mesh.
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format of the mesh.
 /// @see BBMOD_Node
 function BBMOD_Mesh(_vertexFormat)
 	: BBMOD_Class() constructor
@@ -12,24 +12,24 @@ function BBMOD_Mesh(_vertexFormat)
 		destroy: destroy,
 	};
 
-	/// @var {real} An index of a material that the mesh uses.
+	/// @var {Real} An index of a material that the mesh uses.
 	/// @see BBMOD_Model.MaterialCount
 	/// @see BBMOD_Model.MaterialNames
 	/// @readonly
 	MaterialIndex = 0;
 
-	/// @var {vertex_buffer} A vertex buffer.
+	/// @var {Id.VertexBuffer} A vertex buffer.
 	/// @readonly
 	VertexBuffer = undefined;
 
-	/// @var {BBMOD_VertexFormat} The vertex format of the mesh.
+	/// @var {Struct.BBMOD_VertexFormat} The vertex format of the mesh.
 	/// @readonly
 	VertexFormat = _vertexFormat;
 
 	/// @func from_buffer(_buffer)
 	/// @desc Loads mesh data from a bufffer.
-	/// @param {buffer} _buffer The buffer to load the data from.
-	/// @return {BBMOD_Mesh} Returns `self`.
+	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static from_buffer = function (_buffer) {
 		MaterialIndex = buffer_read(_buffer, buffer_u32);
@@ -50,7 +50,7 @@ function BBMOD_Mesh(_vertexFormat)
 	};
 
 	/// @func freeze()
-	/// @return {BBMOD_Mesh} Returns `self`.
+	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static freeze = function (_material, _transform) {
 		gml_pragma("forceinline");
@@ -59,9 +59,9 @@ function BBMOD_Mesh(_vertexFormat)
 	};
 
 	/// @func submit(_material[, _transform])
-	/// @func {BBMOD_BaseMaterial} _material
-	/// @func {real[]/undefined} [_transform]
-	/// @return {BBMOD_Mesh} Returns `self`.
+	/// @func {Struct.BBMOD_BaseMaterial} _material
+	/// @func {Array.Real/Undefined} [_transform]
+	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static submit = function (_material, _transform) {
 		if (!_material.apply())
@@ -77,9 +77,9 @@ function BBMOD_Mesh(_vertexFormat)
 	};
 
 	/// @func render(_material[, _transform])
-	/// @func {BBMOD_BaseMaterial} _material
-	/// @func {real[]/undefined} [_transform]
-	/// @return {BBMOD_Mesh} Returns `self`.
+	/// @func {Struct.BBMOD_BaseMaterial} _material
+	/// @func {Array.Real/Undefined} [_transform]
+	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static render = function (_material, _transform, _matrix) {
 		gml_pragma("forceinline");
@@ -93,8 +93,8 @@ function BBMOD_Mesh(_vertexFormat)
 	};
 
 	/// @func to_dynamic_batch(_dynamicBatch)
-	/// @param {BBMOD_DynamicBatch} _dynamicBatch
-	/// @return {BBMOD_Mesh} Returns `self`.
+	/// @param {Struct.BBMOD_DynamicBatch} _dynamicBatch
+	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static to_dynamic_batch = function (_dynamicBatch) {
 		var _vertexBuffer = _dynamicBatch.VertexBuffer;
@@ -189,10 +189,10 @@ function BBMOD_Mesh(_vertexFormat)
 	};
 
 	/// @func to_static_batch(_model, _staticBatch, _transform)
-	/// @param {BBMOD_Model} _model
-	/// @param {BBMOD_StaticBatch} _staticBatch
-	/// @param {matrix} _transform
-	/// @return {BBMOD_Mesh} Returns `self`.
+	/// @param {Struct.BBMOD_Model} _model
+	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
+	/// @param {Array.Real} _transform
+	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static to_static_batch = function (_model, _staticBatch, _transform) {
 		var _vertexBuffer = _staticBatch.VertexBuffer;

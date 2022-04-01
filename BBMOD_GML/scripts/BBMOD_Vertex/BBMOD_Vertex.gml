@@ -1,5 +1,5 @@
 /// @func BBMOD_Vertex(_vertexFormat)
-/// @param {BBMOD_VertexFormat} _vertexFormat The format of the vertex. This
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex. This
 /// drives which properties of the vertex should be defined.
 /// @example
 /// Following code shows how the constructor fills in the vertex properties to
@@ -16,47 +16,47 @@
 /// @see BBMOD_VertexFormat
 function BBMOD_Vertex(_vertexFormat) constructor
 {
-	/// @var {BBMOD_VertexFormat} The vertex format. This drives which properties
+	/// @var {Struct.BBMOD_VertexFormat} The vertex format. This drives which properties
 	/// of the vertex should be defined.
 	VertexFormat = _vertexFormat;
 
-	/// @var {BBMOD_Vec3/undefined} The 3D position of the vertex or `undefined`
+	/// @var {Struct.BBMOD_Vec3/Undefined} The 3D position of the vertex or `undefined`
 	/// if the vertex format does not have positions.
 	/// @see BBMOD_VertexFormat.Vertices
 	Position = VertexFormat.Vertices ? new BBMOD_Vec3() : undefined;
 
-	/// @var {BBMOD_Vec3/undefined} The normal vector of the vertex or
+	/// @var {Struct.BBMOD_Vec3/Undefined} The normal vector of the vertex or
 	/// `undefined` if the vertex format does not have normals.
 	/// @see BBMOD_VertexFormat.Normals
 	Normal = VertexFormat.Normals ? new BBMOD_Vec3() : undefined;
 
-	/// @var {BBMOD_Vec2/undefined} The texture coordinates of the vertex or
+	/// @var {Struct.BBMOD_Vec2/Undefined} The texture coordinates of the vertex or
 	/// `undefined` if the vertex format does not have texture coordinates.
 	/// @see BBMOD_VertexFormat.TextureCoords
 	TextureCoord = VertexFormat.TextureCoords ? new BBMOD_Vec2() : undefined;
 
-	/// @var {uint/undefined} The ARGB color of the vertex or `undefined` if the
+	/// @var {Real/Undefined} The ARGB color of the vertex or `undefined` if the
 	/// vertex format does not have colors.
 	/// @see BBMOD_VertexFormat.Colors
 	Color = VertexFormat.Colors ? 0 : undefined;
 
-	/// @var {BBMOD_Vec4/undefined} The tangent vector & bitangent sign of the
+	/// @var {Struct.BBMOD_Vec4/Undefined} The tangent vector & bitangent sign of the
 	/// vertex or `undefined` if the vertex format does not have tangents &
 	/// bitangents.
 	/// @see BBMOD_VertexFormat.TangentW
 	TangentW = VertexFormat.TangentW ? new BBMOD_Vec4() : undefined;
 
-	/// @var {BBMOD_Vec4/undefined} The bone ids of the vertex or `undefined` if
+	/// @var {Struct.BBMOD_Vec4/Undefined} The bone ids of the vertex or `undefined` if
 	/// the vertex format does not have bones.
 	/// @see BBMOD_VertexFormat.Bones
 	Bones = VertexFormat.Bones ? new BBMOD_Vec4() : undefined;
 
-	/// @var {BBMOD_Vec4/undefined} The bone weights of the vertex or
+	/// @var {Struct.BBMOD_Vec4/Undefined} The bone weights of the vertex or
 	/// `undefined` if the vertex format does not have bones.
 	/// @see BBMOD_VertexFormat.Bones
 	Weights = VertexFormat.Bones ? new BBMOD_Vec4() : undefined;
 
-	/// @var {uint/undefined} The id of the model in a dynamic batch or
+	/// @var {Real/Undefined} The id of the model in a dynamic batch or
 	/// `undefined` if the vertex format does not have ids.
 	/// @see BBMOD_VertexFormat.Ids
 	/// @see BBMOD_DynamicBatch
@@ -64,11 +64,11 @@ function BBMOD_Vertex(_vertexFormat) constructor
 
 	/// @func to_vertex_buffer(_vbuffer[, _vformat])
 	/// @desc Adds the vertex to the vertex buffer.
-	/// @param {vertex_buffer} _vbuffer The vertex buffer to add the vertex to.
-	/// @param {BBMOD_VertexFormat} [_vformat] The vertex format of the vertex
+	/// @param {Id.VertexBuffer} _vbuffer The vertex buffer to add the vertex to.
+	/// @param {Struct.BBMOD_VertexFormat} [_vformat] The vertex format of the vertex
 	/// buffer. Defaults to the format of the vertex.
-	/// @return {BBMOD_Vertex} Returns `self`.
-	/// @throws {BBMOD_Exception} If the format of the vertex and the format of
+	/// @return {Struct.BBMOD_Vertex} Returns `self`.
+	/// @throws {Struct.BBMOD_Exception} If the format of the vertex and the format of
 	/// the buffer are not compatible.
 	static to_vertex_buffer = function (_vbuffer, _vformat) {
 		var _checkFormat = (_vformat == undefined);

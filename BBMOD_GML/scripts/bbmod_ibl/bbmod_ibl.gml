@@ -1,11 +1,11 @@
-/// @macro {BBMOD_PBRMaterial} A material for rendering RGBM encoded skies.
+/// @macro {Struct.BBMOD_PBRMaterial} A material for rendering RGBM encoded skies.
 /// @see BBMOD_PBRMaterial
 #macro BBMOD_MATERIAL_SKY __bbmod_material_sky()
 
 /// @func bbmod_set_ibl_sprite(_sprite, _subimage)
 /// @desc Changes a texture used for image based lighting using a sprite.
-/// @param {real} _sprite The sprite index.
-/// @param {real} _subimage The sprite subimage to use.
+/// @param {Resource.GMSprite} _sprite The sprite index.
+/// @param {Real} _subimage The sprite subimage to use.
 /// @note This texture must be a stripe of eight prefiltered octahedrons, the
 /// first seven being used for specular lighting and the last one for diffuse
 /// lighting.
@@ -19,8 +19,8 @@ function bbmod_set_ibl_sprite(_sprite, _subimage)
 
 /// @func bbmod_set_ibl_texture(_texture, _texel)
 /// @desc Changes a texture used for image based lighting.
-/// @param {ptr} _texture The texture.
-/// @param {real} _texel The size of a texel.
+/// @param {Pointer.Texture} _texture The texture.
+/// @param {Real} _texel The size of a texel.
 /// @note This texture must be a stripe of eight prefiltered octahedrons, the
 /// first seven being used for specular lighting and the last one for diffuse
 /// lighting.
