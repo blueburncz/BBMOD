@@ -81,7 +81,6 @@
     {"id":{"name":"BBMOD_Node","path":"scripts/BBMOD_Node/BBMOD_Node.yy",},"order":3,},
     {"id":{"name":"BBMOD_SprIBLNull","path":"sprites/BBMOD_SprIBLNull/BBMOD_SprIBLNull.yy",},"order":5,},
     {"id":{"name":"ShZombie","path":"shaders/ShZombie/ShZombie.yy",},"order":0,},
-    {"id":{"name":"BBMOD_TerrainMaterial","path":"scripts/BBMOD_TerrainMaterial/BBMOD_TerrainMaterial.yy",},"order":3,},
     {"id":{"name":"BBMOD_Vec4","path":"scripts/BBMOD_Vec4/BBMOD_Vec4.yy",},"order":4,},
     {"id":{"name":"bbmod_model_to_colmesh","path":"scripts/bbmod_model_to_colmesh/bbmod_model_to_colmesh.yy",},"order":1,},
     {"id":{"name":"SndFootstep1","path":"sounds/SndFootstep1/SndFootstep1.yy",},"order":1,},

@@ -14,5 +14,3 @@
 ### Terrain module:
 * Added new module - Terrain.
 * Added new struct `BBMOD_Terrain`.
-* Added new struct `BBMOD_TerrainMaterial`.
-* Added new struct `BBMOD_TerrainMaterialLayer`.
