@@ -283,21 +283,7 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 /// @private
 function __bbmod_shader_get_globals()
 {
-	static _globals = {
-		F: [],
-		F2: [],
-		F3: [],
-		F4: [],
-		FArray: [],
-		I: [],
-		I2: [],
-		I3: [],
-		I4: [],
-		IArray: [],
-		Matrix: [],
-		MatrixArray: [],
-		Sampler: [],
-	};
+	static _globals = [];
 	return _globals;
 }
 
@@ -308,337 +294,245 @@ function __bbmod_shader_get_globals()
 function __bbmod_shader_set_globals(_shader)
 {
 	static _globals = __bbmod_shader_get_globals();
-	var _array, i;
-
-	_array = _globals.F;
-	i = 0;
-	repeat (array_length(_array) / 2)
+	var i = 0;
+	repeat (array_length(_globals) / 3)
 	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
+		var _value = _globals[i + 2];
+		if (_value != undefined)
 		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_f(_u, _val);
-		}
-		i += 2;
-	}
+			switch (_globals[i + 1])
+			{
+			case BBMOD_EPropertyType.Float:
+				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value);
+				break;
 
-	_array = _globals.F2;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_f(_u, _val[0], _val[1]);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.Float2:
+				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1]);
+				break;
 
-	_array = _globals.F3;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_f(_u, _val[0], _val[1], _val[2]);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.Float3:
+				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2]);
+				break;
 
-	_array = _globals.F4;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_f(_u, _val[0], _val[1], _val[2], _val[3]);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.Float4:
+				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2], _value[3]);
+				break;
 
-	_array = _globals.FArray;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_f_array(_u, _val);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.FloatArray:
+				shader_set_uniform_f_array(shader_get_uniform(_shader, _globals[i]), _value);
+				break;
 
-	_array = _globals.I;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_i(_u, _val);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.Int:
+				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value);
+				break;
 
-	_array = _globals.I2;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_i(_u, _val[0], _val[1]);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.Int2:
+				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1]);
+				break;
 
-	_array = _globals.I3;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_i(_u, _val[0], _val[1], _val[2]);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.Int3:
+				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2]);
+				break;
 
-	_array = _globals.I4;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_i(_u, _val[0], _val[1], _val[2], _val[3]);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.Int4:
+				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2], _value[3]);
+				break;
 
-	_array = _globals.IArray;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_i_array(_u, _val);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.IntArray:
+				shader_set_uniform_i_array(shader_get_uniform(_shader, _globals[i]), _value);
+				break;
 
-	_array = _globals.Matrix;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_matrix(_u);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.Matrix:
+				shader_set_uniform_matrix(shader_get_uniform(_shader, _globals[i]));
+				break;
 
-	_array = _globals.MatrixArray;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_uniform(_shader, _array[i]);
-			shader_set_uniform_matrix_array(_u, _val);
-		}
-		i += 2;
-	}
+			case BBMOD_EPropertyType.MatrixArray:
+				shader_set_uniform_matrix_array(shader_get_uniform(_shader, _globals[i]), _value);
+				break;
 
-	_array = _globals.Sampler;
-	i = 0;
-	repeat (array_length(_array) / 2)
-	{
-		var _val = _array[i + 1];
-		if (_val != undefined)
-		{
-			var _u = shader_get_sampler_index(_shader, _array[i]);
-			texture_set_stage(_u, _val);
+			case BBMOD_EPropertyType.Sampler:
+				texture_set_stage(shader_get_sampler_index(_shader, _globals[i]), _value);
+				break;
+			}
 		}
-		i += 2;
+
+		i += 3;
 	}
 }
 
-/// @func __bbmod_shader_get_global_impl(_array, _name)
+/// @func __bbmod_shader_get_global_impl(_name, _type)
 /// @desc
-/// @param {Array} _array
 /// @param {String} _name
+/// @param {BBMOD_EPropertyType} _name
 /// @return {Real/Pointer.Texture/Undefined}
 /// @private
-function __bbmod_shader_get_global_impl(_array, _name)
+function __bbmod_shader_get_global_impl(_name, _type)
 {
 	gml_pragma("forceinline");
-	var _index = bbmod_array_find_index(_array, _name);
-	return (_index != -1) ? _array[_index + 1] : undefined;
+	static _globals = __bbmod_shader_get_globals();
+	var i = 0;
+	repeat (array_length(_globals) / 3)
+	{
+		if (_globals[i] == _name && _globals[i + 1] == _type)
+		{
+			return _globals[i + 2];
+		}
+		i += 3;
+	}
+	return undefined;
 }
 
-/// @func __bbmod_shader_set_global_impl(_array, _name, _value)
+/// @func __bbmod_shader_set_global_impl(_name, _type, _value)
 /// @desc
-/// @param {Array} _array
 /// @param {String} _name
+/// @param {BBMOD_EPropertyType} _type
 /// @param {Real/Pointer.Texture/Undefined} _value
 /// @private
-function __bbmod_shader_set_global_impl(_array, _name, _value)
+function __bbmod_shader_set_global_impl(_name, _type, _value)
 {
 	gml_pragma("forceinline");
-	var _index = bbmod_array_find_index(_array, _name);
-	if (_index != -1)
+	static _globals = __bbmod_shader_get_globals();
+	var i = 0;
+	repeat (array_length(_globals) / 3)
 	{
-		_array[@ _index + 1] = _value;
-		return;
+		if (_globals[i] == _name && _globals[i + 1] == _type)
+		{
+			_globals[@ i + 2] = _value;
+			return;
+		}
+		i += 3;
 	}
-	array_push(_array, _name, _value);
+	array_push(_globals, _name, _type, _value);
 }
 
 function bbmod_shader_get_global_f(_name)
 {
-	static _array = __bbmod_shader_get_globals().F;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Float);
 }
 
 function bbmod_shader_set_global_f(_name, _value)
 {
-	static _array = __bbmod_shader_get_globals().F;
-	__bbmod_shader_set_global_impl(_array, _name, _value);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Float, _value);
 }
 
 function bbmod_shader_get_global_f2(_name)
 {
-	static _array = __bbmod_shader_get_globals().F2;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Float2);
 }
 
 function bbmod_shader_set_global_f2(_name, _v1, _v2)
 {
-	static _array = __bbmod_shader_get_globals().F2;
-	__bbmod_shader_set_global_impl(_array, _name, [_v1, _v2]);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Float2, [_v1, _v2]);
 }
 
 function bbmod_shader_get_global_f3(_name)
 {
-	static _array = __bbmod_shader_get_globals().F3;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Float3);
 }
 
 function bbmod_shader_set_global_f3(_name, _v1, _v2, _v3)
 {
-	static _array = __bbmod_shader_get_globals().F3;
-	__bbmod_shader_set_global_impl(_array, _name, [_v1, _v2, _v3]);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Float3, [_v1, _v2, _v3]);
 }
 
 function bbmod_shader_get_global_f_array(_name)
 {
-	static _array = __bbmod_shader_get_globals().FArray;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.FloatArray);
 }
 
 function bbmod_shader_set_global_f_array(_name, _fArray)
 {
-	static _array = __bbmod_shader_get_globals().FArray;
-	__bbmod_shader_set_global_impl(_array, _name, _fArray);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.FloatArray, _fArray);
 }
 
 function bbmod_shader_get_global_i(_name)
 {
-	static _array = __bbmod_shader_get_globals().I;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Int);
 }
 
 function bbmod_shader_set_global_i(_name, _value)
 {
-	static _array = __bbmod_shader_get_globals().I;
-	__bbmod_shader_set_global_impl(_array, _name, _value);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Int, _value);
 }
 
 function bbmod_shader_get_global_i2(_name)
 {
-	static _array = __bbmod_shader_get_globals().I2;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Int2);
 }
 
 function bbmod_shader_set_global_i2(_name, _v1, _v2)
 {
-	static _array = __bbmod_shader_get_globals().I2;
-	__bbmod_shader_set_global_impl(_array, _name, [_v1, _v2]);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Int2, [_v1, _v2]);
 }
 
 function bbmod_shader_get_global_i3(_name)
 {
-	static _array = __bbmod_shader_get_globals().I3;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Int3);
 }
 
 function bbmod_shader_set_global_i3(_name, _v1, _v2, _v3)
 {
-	static _array = __bbmod_shader_get_globals().I3;
-	__bbmod_shader_set_global_impl(_array, _name, [_v1, _v2, _v3]);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Int3, [_v1, _v2, _v3]);
 }
 
 function bbmod_shader_get_global_i_array(_name)
 {
-	static _array = __bbmod_shader_get_globals().IArray;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.IntArray);
 }
 
 function bbmod_shader_set_global_i_array(_name, _iArray)
 {
-	static _array = __bbmod_shader_get_globals().IArray;
-	__bbmod_shader_set_global_impl(_array, _name, _iArray);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.IntArray, _iArray);
 }
 
 function bbmod_shader_get_global_matrix(_name)
 {
-	static _array = __bbmod_shader_get_globals().Matrix;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Matrix);
 }
 
 function bbmod_shader_set_global_matrix(_name)
 {
-	static _array = __bbmod_shader_get_globals().Matrix;
-	__bbmod_shader_set_global_impl(_array, _name, true);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, true);
 }
 
 function bbmod_shader_get_global_matrix_array(_name)
 {
-	static _array = __bbmod_shader_get_globals().MatrixArray;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.MatrixArray);
 }
 
 function bbmod_shader_set_global_matrix_array(_name, _matrixArray)
 {
-	static _array = __bbmod_shader_get_globals().MatrixArray;
-	__bbmod_shader_set_global_impl(_array, _name, _matrixArray);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.MatrixArray, _matrixArray);
 }
 
 function bbmod_shader_get_global_sampler(_name)
 {
-	static _array = __bbmod_shader_get_globals().Sampler;
-	return __bbmod_shader_get_global_impl(_array, _name);
+	gml_pragma("forceinline");
+	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Sampler);
 }
 
 function bbmod_shader_set_global_sampler(_name, _texture)
 {
-	static _array = __bbmod_shader_get_globals().Sampler;
-	__bbmod_shader_set_global_impl(_array, _name, _texture);
+	gml_pragma("forceinline");
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Sampler, _texture);
 }
