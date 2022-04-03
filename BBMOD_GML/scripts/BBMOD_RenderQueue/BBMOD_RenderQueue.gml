@@ -47,10 +47,10 @@ function BBMOD_RenderQueue(_name=undefined)
 	};
 
 	/// @func draw_mesh(_vertexBuffer, _matrix, _material)
-	/// @desc
-	/// @param {Id.VertexBuffer} _vertexBuffer
-	/// @param {Array.Real} _matrix
-	/// @param {Struct.BBMOD_Material} _material
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the queue.
+	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
+	/// @param {Array.Real} _matrix The world matrix.
+	/// @param {Struct.BBMOD_Material} _material The material to use.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh = function (_vertexBuffer, _matrix, _material) {
 		gml_pragma("forceinline");
@@ -64,11 +64,11 @@ function BBMOD_RenderQueue(_name=undefined)
 	};
 
 	/// @func draw_mesh_animated(_vertexBuffer, _matrix, _material, _boneTransform)
-	/// @desc
-	/// @param {Id.VertexBuffer} _vertexBuffer
-	/// @param {Array.Real} _matrix
-	/// @param {Struct.BBMOD_Material} _material
-	/// @param {Array.Real} _boneTransform
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshAnimated} command into the queue.
+	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
+	/// @param {Array.Real} _matrix The world matrix.
+	/// @param {Struct.BBMOD_Material} _material The material to use.
+	/// @param {Array.Real} _boneTransform An array with bone transformation data.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh_animated = function (_vertexBuffer, _matrix, _material, _boneTransform) {
 		gml_pragma("forceinline");
@@ -83,11 +83,11 @@ function BBMOD_RenderQueue(_name=undefined)
 	};
 
 	/// @func draw_mesh_batched(_vertexBuffer, _matrix, _material, _batchData)
-	/// @desc
-	/// @param {Id.VertexBuffer} _vertexBuffer
-	/// @param {Array.Real} _matrix
-	/// @param {Struct.BBMOD_Material} _material
-	/// @param {Array.Real} _batchData
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshBatched} command into the queue.
+	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
+	/// @param {Array.Real} _matrix The world matrix.
+	/// @param {Struct.BBMOD_Material} _material The material to use.
+	/// @param {Array.Real} _batchData An array with batch data.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh_batched = function (_vertexBuffer, _matrix, _material, _batchData) {
 		gml_pragma("forceinline");
