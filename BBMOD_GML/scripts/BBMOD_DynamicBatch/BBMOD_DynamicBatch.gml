@@ -107,12 +107,13 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_BaseMaterial
 	static render = function (_material, _data) {
 		gml_pragma("forceinline");
-		var _renderCommand = new BBMOD_RenderCommand();
-		_renderCommand.VertexBuffer = VertexBuffer;
-		_renderCommand.Material = _material;
-		_renderCommand.BatchData = _data;
-		_renderCommand.Matrix = matrix_get(matrix_world);
-		_material.RenderQueue.add(_renderCommand);
+		//var _renderCommand = new BBMOD_RenderCommand();
+		//_renderCommand.VertexBuffer = VertexBuffer;
+		//_renderCommand.Material = _material;
+		//_renderCommand.BatchData = _data;
+		//_renderCommand.Matrix = matrix_get(matrix_world);
+		//_material.RenderQueue.add(_renderCommand);
+		_material.RenderQueue.draw_mesh_batched(VertexBuffer, matrix_get(matrix_world), _material, _data);
 		return self;
 	};
 

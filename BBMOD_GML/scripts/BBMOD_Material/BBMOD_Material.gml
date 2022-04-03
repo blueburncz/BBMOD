@@ -83,6 +83,12 @@ function BBMOD_Material(_shader=undefined)
 	/// Default value is `false`.
 	Repeat = false;
 
+	/// @var {Pointer.Texture} A texture with a base color in the RGB channels
+	/// and opacity in the alpha channel.
+	BaseOpacity = pointer_null;
+
+	BaseOpacitySprite = undefined;
+
 	/// @func set_priority(_p)
 	/// @desc Changes the material priority.
 	/// @param {Real} _p The new material priority.
@@ -112,6 +118,23 @@ function BBMOD_Material(_shader=undefined)
 		_dest.Mipmapping = Mipmapping;
 		_dest.Filtering = Filtering;
 		_dest.Repeat = Repeat;
+
+		if (_dest.BaseOpacitySprite != undefined)
+		{
+			sprite_delete(_dest.BaseOpacitySprite);
+			_dest.BaseOpacitySprite = undefined;
+		}
+
+		if (BaseOpacitySprite != undefined)
+		{
+			_dest.BaseOpacitySprite = sprite_duplicate(BaseOpacitySprite);
+			_dest.BaseOpacity = sprite_get_texture(_dest.BaseOpacitySprite, 0);
+		}
+		else
+		{
+			_dest.BaseOpacity = BaseOpacity;
+		}
+
 		return self;
 	};
 
@@ -122,6 +145,40 @@ function BBMOD_Material(_shader=undefined)
 		var _clone = new BBMOD_Material();
 		copy(_clone);
 		return _clone;
+	};
+
+	static _make_sprite = function (_r, _g, _b, _a) {
+		gml_pragma("forceinline");
+		static _sur = noone;
+		if (!surface_exists(_sur))
+		{
+			_sur = surface_create(1, 1);
+		}
+		surface_set_target(_sur);
+		draw_clear_alpha(make_color_rgb(_r, _g, _b), _a);
+		surface_reset_target();
+		return sprite_create_from_surface(_sur, 0, 0, 1, 1, false, false, 0, 0);
+	};
+
+	/// @func set_base_opacity(_color)
+	/// @desc Changes the base color and opacity to a uniform value for the
+	/// entire material.
+	/// @param {Struct.BBMOD_Color} _color The new base color and opacity.
+	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
+	static set_base_opacity = function (_color) {
+		if (BaseOpacitySprite != undefined)
+		{
+			sprite_delete(BaseOpacitySprite);
+		}
+		var _isReal = is_real(_color);
+		BaseOpacitySprite = _make_sprite(
+			_isReal ? color_get_red(_color) : _color.Red,
+			_isReal ? color_get_green(_color) : _color.Green,
+			_isReal ? color_get_blue(_color) : _color.Blue,
+			_isReal ? argument[1] : _color.Alpha,
+		);
+		BaseOpacity = sprite_get_texture(BaseOpacitySprite, 0);
+		return self;
 	};
 
 	/// @func apply()
@@ -234,6 +291,10 @@ function BBMOD_Material(_shader=undefined)
 
 	static destroy = function () {
 		method(self, Super_Resource.destroy)();
+		if (BaseOpacitySprite != undefined)
+		{
+			sprite_delete(BaseOpacitySprite);
+		}
 	};
 
 	if (_shader != undefined)

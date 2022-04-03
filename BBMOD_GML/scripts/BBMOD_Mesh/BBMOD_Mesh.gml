@@ -76,19 +76,29 @@ function BBMOD_Mesh(_vertexFormat)
 		return self;
 	};
 
-	/// @func render(_material[, _transform])
+	/// @func render(_material, _transform, _matrix)
+	/// @desc
 	/// @func {Struct.BBMOD_BaseMaterial} _material
-	/// @func {Array.Real/Undefined} [_transform]
+	/// @func {Array.Real/Undefined} _transform
+	/// @func {Array.Real} _matrix
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static render = function (_material, _transform, _matrix) {
 		gml_pragma("forceinline");
-		var _renderCommand = new BBMOD_RenderCommand();
-		_renderCommand.VertexBuffer = VertexBuffer;
-		_renderCommand.Material = _material;
-		_renderCommand.BoneTransform = _transform;
-		_renderCommand.Matrix = _matrix;
-		_material.RenderQueue.add(_renderCommand);
+		//var _renderCommand = new BBMOD_RenderCommand();
+		//_renderCommand.VertexBuffer = VertexBuffer;
+		//_renderCommand.Material = _material;
+		//_renderCommand.BoneTransform = _transform;
+		//_renderCommand.Matrix = _matrix;
+		//_material.RenderQueue.add(_renderCommand);
+		if (_transform != undefined)
+		{
+			_material.RenderQueue.draw_mesh_animated(VertexBuffer, _matrix, _material, _transform);
+		}
+		else
+		{
+			_material.RenderQueue.draw_mesh(VertexBuffer, _matrix, _material);
+		}
 		return self;
 	};
 

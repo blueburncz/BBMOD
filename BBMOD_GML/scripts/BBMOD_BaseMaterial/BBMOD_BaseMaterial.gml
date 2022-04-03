@@ -16,12 +16,6 @@ function BBMOD_BaseMaterial(_shader=undefined)
 		destroy: destroy,
 	};
 
-	/// @var {Pointer.Texture} A texture with a base color in the RGB channels
-	/// and opacity in the alpha channel.
-	BaseOpacity = pointer_null;
-
-	BaseOpacitySprite = undefined;
-
 	/// @var {Struct.BBMOD_Vec2} An offset of texture UV coordinates. Defaults to `[0, 0]`.
 	/// Using this you can control texture's position within texture page.
 	TextureOffset = new BBMOD_Vec2(0.0);
@@ -30,32 +24,20 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// Using this you can control texture's size within texture page.
 	TextureScale = new BBMOD_Vec2(1.0);
 
+	/// @var {Id.DsList.Struct.BBMOD_RenderCommand} A list of render commands using this
+	/// material.
+	/// @readonly
+	/// @obsolete This has been replaced with {@link BBMOD_Material.RenderQueue}.
+	RenderCommands = ds_list_create();
+
 	/// @func copy(_dest)
 	/// @desc Copies properties of this material into another material.
 	/// @param {Struct.BBMOD_BaseMaterial} _dest The destination material.
 	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
 	static copy = function (_dest) {
 		method(self, Super_Material.copy)(_dest);
-
-		if (_dest.BaseOpacitySprite != undefined)
-		{
-			sprite_delete(_dest.BaseOpacitySprite);
-			_dest.BaseOpacitySprite = undefined;
-		}
-
-		if (BaseOpacitySprite != undefined)
-		{
-			_dest.BaseOpacitySprite = sprite_duplicate(BaseOpacitySprite);
-			_dest.BaseOpacity = sprite_get_texture(_dest.BaseOpacitySprite, 0);
-		}
-		else
-		{
-			_dest.BaseOpacity = BaseOpacity;
-		}
-
 		_dest.TextureOffset = TextureOffset.Clone();
 		_dest.TextureScale = TextureScale.Clone();
-
 		return self;
 	};
 
@@ -68,73 +50,81 @@ function BBMOD_BaseMaterial(_shader=undefined)
 		return _clone;
 	};
 
-	static _make_sprite = function (_r, _g, _b, _a) {
-		gml_pragma("forceinline");
-		static _sur = noone;
-		if (!surface_exists(_sur))
-		{
-			_sur = surface_create(1, 1);
-		}
-		surface_set_target(_sur);
-		draw_clear_alpha(make_color_rgb(_r, _g, _b), _a);
-		surface_reset_target();
-		return sprite_create_from_surface(_sur, 0, 0, 1, 1, false, false, 0, 0);
-	};
-
-	/// @func set_base_opacity(_color)
-	/// @desc Changes the base color and opacity to a uniform value for the
-	/// entire material.
-	/// @param {Struct.BBMOD_Color} _color The new base color and opacity.
-	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
-	static set_base_opacity = function (_color) {
-		if (BaseOpacitySprite != undefined)
-		{
-			sprite_delete(BaseOpacitySprite);
-		}
-		var _isReal = is_real(_color);
-		BaseOpacitySprite = _make_sprite(
-			_isReal ? color_get_red(_color) : _color.Red,
-			_isReal ? color_get_green(_color) : _color.Green,
-			_isReal ? color_get_blue(_color) : _color.Blue,
-			_isReal ? argument[1] : _color.Alpha,
-		);
-		BaseOpacity = sprite_get_texture(BaseOpacitySprite, 0);
-		return self;
-	};
-
 	/// @func has_commands()
 	/// @desc Checks whether the material has any render commands waiting for
 	/// submission.
-	/// @return {Bool} Always returns `false`.
-	/// @obsolete Render commands are now stored in {@link BBMOD_RenderQueue}s.
+	/// @return {Bool} Returns true if the material's render queue is not empty.
+	/// @obsolete Render commands are now stored in {@link BBMOD_Material.RenderQueue}.
 	/// Please use {@link BBMOD_RenderQueue.is_empty} instead.
 	static has_commands = function () {
-		return false;
+		gml_pragma("forceinline");
+		return !ds_list_empty(RenderCommands);
 	};
 
 	/// @func submit_queue()
 	/// @desc Submits all render commands without clearing the render queue.
-	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
-	/// @obsolete Render commands are now stored in {@link BBMOD_RenderQueue}s.
+	/// @return {BBMOD_BaseMaterial} Returns `self`.
+	/// @see BBMOD_BaseMaterial.clear_queue
+	/// @see BBMOD_BaseMaterial.RenderCommands
+	/// @see BBMOD_RenderCommand
+	/// @obsolete Render commands are now stored in {@link BBMOD_Material.RenderQueue}.
 	/// Please use {@link BBMOD_RenderQueue.submit} instead.
 	static submit_queue = function () {
+		var _matWorld = matrix_get(matrix_world);
+		var i = 0;
+
+		var _shaderCurrent = BBMOD_SHADER_CURRENT;
+		var _setBones = method(_shaderCurrent, _shaderCurrent.set_bones);
+		var _setData = method(_shaderCurrent, _shaderCurrent.set_batch_data);
+		var _renderCommands = RenderCommands;
+
+		repeat (ds_list_size(_renderCommands))
+		{
+			var _command = _renderCommands[| i++];
+
+			var _matrix = _command.Matrix;
+			if (_matrix != undefined
+				&& !array_equals(_matWorld, _matrix))
+			{
+				matrix_set(matrix_world, _matrix);
+				_matWorld = _matrix;
+			}
+
+			var _transform = _command.BoneTransform;
+			if (_transform != undefined)
+			{
+				_setBones(_transform);
+			}
+
+			var _data = _command.BatchData;
+			if (_data != undefined)
+			{
+				_setData(_data);
+			}
+
+			var _vbuffer = _command.VertexBuffer;
+			if (_vbuffer != undefined)
+			{
+				vertex_submit(_vbuffer, pr_trianglelist, _command.Texture);
+			}
+		}
+
 		return self;
 	};
 
 	/// @func clear_queue()
 	/// @desc Clears the queue of render commands.
-	/// @obsolete Render commands are now stored in {@link BBMOD_RenderQueue}s.
-	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
+	/// @return {BBMOD_BaseMaterial} Returns `self`.
+	/// @obsolete Render commands are now stored in {@link BBMOD_Material.RenderQueue}.
 	/// Please use {@link BBMOD_RenderQueue.clear} instead.
 	static clear_queue = function () {
+		gml_pragma("forceinline");
+		ds_list_clear(RenderCommands);
 		return self;
 	};
 
 	static destroy = function () {
 		method(self, Super_Material.destroy)();
-		if (BaseOpacitySprite != undefined)
-		{
-			sprite_delete(BaseOpacitySprite);
-		}
+		ds_list_destroy(RenderCommands);
 	};
 }

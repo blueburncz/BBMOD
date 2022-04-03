@@ -4,6 +4,12 @@
 global.bbmod_render_queues = [];
 
 /// @func BBMOD_RenderQueue([_name])
+/// @extends BBMOD_Class
+/// @desc A cointainer of render commands.
+/// @param {String/Undefined} [_name] The name of the render queue. Defaults to
+/// "RenderQueue" + number of created render queues - 1, e.g. "RenderQueue0",
+/// "RenderQueue1" etc.
+/// @see BBMOD_ERenderCommand
 function BBMOD_RenderQueue(_name=undefined)
 	: BBMOD_Class() constructor
 {
@@ -15,6 +21,8 @@ function BBMOD_RenderQueue(_name=undefined)
 
 	static IdNext = 0;
 
+	/// @var {String} The name of the render queue. This can be useful for
+	/// debugging purposes.
 	Name = _name ?? ("RenderQueue" + string(IdNext++));
 
 	/// @var {Id.DsList.Struct.BBMOD_RenderCommand}
@@ -38,14 +46,58 @@ function BBMOD_RenderQueue(_name=undefined)
 		return self;
 	};
 
-	/// @func add(_renderCommand)
-	/// @desc Adds a command into the render queue.
-	/// @param {Struct.BBMOD_RenderCommand} _renderCommand The render command to add.
+	/// @func draw_mesh(_vertexBuffer, _matrix, _material)
+	/// @desc
+	/// @param {Id.VertexBuffer} _vertexBuffer
+	/// @param {Array.Real} _matrix
+	/// @param {Struct.BBMOD_Material} _material
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	/// @see BBMOD_RenderCommand
-	static add = function (_renderCommand) {
+	static draw_mesh = function (_vertexBuffer, _matrix, _material) {
 		gml_pragma("forceinline");
-		ds_list_add(RenderCommands, _renderCommand);
+		ds_list_add(
+			RenderCommands,
+			BBMOD_ERenderCommand.DrawMesh,
+			_material,
+			_matrix,
+			_vertexBuffer);
+		return self;
+	};
+
+	/// @func draw_mesh_animated(_vertexBuffer, _matrix, _material, _boneTransform)
+	/// @desc
+	/// @param {Id.VertexBuffer} _vertexBuffer
+	/// @param {Array.Real} _matrix
+	/// @param {Struct.BBMOD_Material} _material
+	/// @param {Array.Real} _boneTransform
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static draw_mesh_animated = function (_vertexBuffer, _matrix, _material, _boneTransform) {
+		gml_pragma("forceinline");
+		ds_list_add(
+			RenderCommands,
+			BBMOD_ERenderCommand.DrawMeshAnimated,
+			_material,
+			_matrix,
+			_boneTransform,
+			_vertexBuffer);
+		return self;
+	};
+
+	/// @func draw_mesh_batched(_vertexBuffer, _matrix, _material, _batchData)
+	/// @desc
+	/// @param {Id.VertexBuffer} _vertexBuffer
+	/// @param {Array.Real} _matrix
+	/// @param {Struct.BBMOD_Material} _material
+	/// @param {Array.Real} _batchData
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static draw_mesh_batched = function (_vertexBuffer, _matrix, _material, _batchData) {
+		gml_pragma("forceinline");
+		ds_list_add(
+			RenderCommands,
+			BBMOD_ERenderCommand.DrawMeshBatched,
+			_material,
+			_matrix,
+			_batchData,
+			_vertexBuffer);
 		return self;
 	};
 
@@ -62,48 +114,49 @@ function BBMOD_RenderQueue(_name=undefined)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	/// @see BBMOD_RenderQueue.clear
 	static submit = function () {
-		var _matWorld = matrix_get(matrix_world);
 		var i = 0;
 		var _renderCommands = RenderCommands;
-
-		repeat (ds_list_size(_renderCommands))
+		var _renderCommandsCount = ds_list_size(_renderCommands);
+		while (i < _renderCommandsCount)
 		{
-			var _command = _renderCommands[| i++];
-			var _commandMaterial = _command.Material;
-
-			if (!_commandMaterial.apply())
+			switch (_renderCommands[| i++])
 			{
-				continue;
-			}
+			case BBMOD_ERenderCommand.DrawMesh:
+				var _material = _renderCommands[| i++];
+				if (!_material.apply())
+				{
+					i += 2;
+					continue;
+				}
+				matrix_set(matrix_world, _renderCommands[| i++]);
+				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
+				break;
 
-			var _matrix = _command.Matrix;
-			if (_matrix != undefined
-				&& !array_equals(_matWorld, _matrix))
-			{
-				matrix_set(matrix_world, _matrix);
-				_matWorld = _matrix;
-			}
+			case BBMOD_ERenderCommand.DrawMeshAnimated:
+				var _material = _renderCommands[| i++];
+				if (!_material.apply())
+				{
+					i += 3;
+					continue;
+				}
+				matrix_set(matrix_world, _renderCommands[| i++]);
+				BBMOD_SHADER_CURRENT.set_bones(_renderCommands[| i++]);
+				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
+				break;
 
-			var _transform = _command.BoneTransform;
-			if (_transform != undefined)
-			{
-				BBMOD_SHADER_CURRENT.set_bones(_transform);
-			}
-
-			var _data = _command.BatchData;
-			if (_data != undefined)
-			{
-				BBMOD_SHADER_CURRENT.set_batch_data(_data);
-			}
-
-			var _vbuffer = _command.VertexBuffer;
-			if (_vbuffer != undefined)
-			{
-				vertex_submit(_vbuffer, pr_trianglelist,
-					_commandMaterial ? _commandMaterial.BaseOpacity : pointer_null);
+			case BBMOD_ERenderCommand.DrawMeshBatched:
+				var _material = _renderCommands[| i++];
+				if (!_material.apply())
+				{
+					i += 3;
+					continue;
+				}
+				matrix_set(matrix_world, _renderCommands[| i++]);
+				BBMOD_SHADER_CURRENT.set_batch_data(_renderCommands[| i++]);
+				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
+				break;
 			}
 		}
-
 		return self;
 	};
 
