@@ -318,11 +318,6 @@ function BBMOD_Terrain() constructor
 			var _mat = Layer[i++];
 			if (_mat != undefined)
 			{
-				//var _renderCommand = new BBMOD_RenderCommand();
-				//_renderCommand.VertexBuffer = VertexBuffer;
-				//_renderCommand.Material = _mat;
-				//_renderCommand.Matrix = _matrix;
-				//_mat.RenderQueue.add(_renderCommand);
 				_mat.RenderQueue.draw_mesh(VertexBuffer, _matrix, _mat);
 			}
 		}

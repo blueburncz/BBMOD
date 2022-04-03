@@ -85,6 +85,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Struct.BBMOD_Vec3} [_value] The distance to the far clipping plane. Defaults
 	/// to the value defined using {@link bbmod_camera_set_zfar}.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
+	/// @obsolete
 	static set_zfar = function (_value=undefined) {
 		gml_pragma("forceinline");
 		_value ??= global.__bbmodZFar;
@@ -100,13 +101,6 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gml_pragma("forceinline");
 		_value ??= global.bbmod_camera_exposure;
 		return set_uniform_f(UExposure, _value);
-	};
-
-	// FIXME: This was added here only to temporarily resolve
-	// `try { BBMOD_SHADER_CURRENT.set_shadowmap(...); } catch (...) {}`
-	// on Opera GX!
-	static set_shadowmap = function () {
-		return self;
 	};
 
 	static on_set = function () {

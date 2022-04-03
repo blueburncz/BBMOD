@@ -254,13 +254,13 @@ function BBMOD_Renderer()
 			var _shadowmapArea = ShadowmapArea;
 			bbmod_render_pass_set(BBMOD_ERenderPass.Shadows);
 
+			bbmod_shader_set_global_f("bbmod_ZFar", _shadowmapArea);
+
 			var _renderQueues = global.bbmod_render_queues;
 			var _rqi = 0;
 			repeat (array_length(_renderQueues))
 			{
 				_renderQueues[_rqi++].submit();
-				// TODO:
-				//BBMOD_SHADER_CURRENT.set_zfar(_shadowmapArea);
 			}
 
 			surface_reset_target();
@@ -300,14 +300,26 @@ function BBMOD_Renderer()
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
 
-		var _passShadowmap = surface_exists(SurShadowmap);
-		var _shadowmapTexture, _shadowmapMatrix, _shadowmapArea, _shadowmapNormalOffset;
-		if (_passShadowmap)
+		if (surface_exists(SurShadowmap))
 		{
-			_shadowmapTexture = surface_get_texture(SurShadowmap);
-			_shadowmapMatrix = get_shadowmap_matrix();
-			_shadowmapArea = ShadowmapArea;
-			_shadowmapNormalOffset = ShadowmapNormalOffset;
+			var _shadowmapTexture = surface_get_texture(SurShadowmap);
+			bbmod_shader_set_global_f("bbmod_ShadowmapEnableVS", 1.0);
+			bbmod_shader_set_global_f("bbmod_ShadowmapEnablePS", 1.0);
+			bbmod_shader_set_global_sampler("bbmod_Shadowmap", _shadowmapTexture);
+			//gpu_set_tex_mip_enable_ext(UShadowmap, true);
+			//gpu_set_tex_filter_ext(UShadowmap, true);
+			//gpu_set_tex_repeat_ext(UShadowmap, false);
+			bbmod_shader_set_global_f2("bbmod_ShadowmapTexel",
+				texture_get_texel_width(_shadowmapTexture),
+				texture_get_texel_height(_shadowmapTexture));
+			bbmod_shader_set_global_f("bbmod_ShadowmapArea", ShadowmapArea);
+			bbmod_shader_set_global_f("bbmod_ShadowmapNormalOffset", ShadowmapNormalOffset);
+			bbmod_shader_set_global_matrix_array("bbmod_ShadowmapMatrix", get_shadowmap_matrix());
+		}
+		else
+		{
+			bbmod_shader_set_global_f("bbmod_ShadowmapEnableVS", 0.0);
+			bbmod_shader_set_global_f("bbmod_ShadowmapEnablePS", 0.0);
 		}
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
@@ -317,15 +329,6 @@ function BBMOD_Renderer()
 		repeat (array_length(_renderQueues))
 		{
 			_renderQueues[_rqi++].submit().clear();
-			// TODO:
-			//if (_passShadowmap)
-			//{
-			//	BBMOD_SHADER_CURRENT.set_shadowmap(
-			//		_shadowmapTexture,
-			//		_shadowmapMatrix,
-			//		_shadowmapArea,
-			//		_shadowmapNormalOffset);
-			//}
 		}
 
 		bbmod_material_reset();

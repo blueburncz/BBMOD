@@ -6,7 +6,7 @@
     "path": "folders/BBMOD/Core/Utils.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_array_from_buffer",
+  "name": "bbmod_array_",
   "tags": [],
   "resourceType": "GMScript",
 }

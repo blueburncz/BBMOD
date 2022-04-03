@@ -184,6 +184,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @param {Real} _area The area that the shadowmap captures.
 	/// @param {Real} _normalOffset The area that the shadowmap captures.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
+	/// @obsolete
 	static set_shadowmap = function (_texture, _matrix, _area, _normalOffset) {
 		gml_pragma("forceinline");
 		set_uniform_f(UShadowmapEnableVS, 1.0);
@@ -208,8 +209,6 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 		set_directional_light();
 		set_point_lights();
 		set_fog();
-		set_uniform_f(UShadowmapEnableVS, 0.0);
-		set_uniform_f(UShadowmapEnablePS, 0.0);
 	};
 
 	static set_material = function (_material) {

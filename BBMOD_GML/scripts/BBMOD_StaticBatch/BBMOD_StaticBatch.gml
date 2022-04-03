@@ -136,11 +136,6 @@ function BBMOD_StaticBatch(_vformat)
 	/// @see BBMOD_BaseMaterial
 	static render = function (_material) {
 		gml_pragma("forceinline");
-		//var _renderCommand = new BBMOD_RenderCommand();
-		//_renderCommand.VertexBuffer = VertexBuffer;
-		//_renderCommand.Material = _material;
-		//_renderCommand.Matrix = matrix_get(matrix_world);
-		//_material.RenderQueue.add(_renderCommand);
 		_material.RenderQueue.draw_mesh(VertexBuffer, matrix_get(matrix_world), _material);
 		return self;
 	};

@@ -27,7 +27,7 @@
     {"id":{"name":"SndFootstep4","path":"sounds/SndFootstep4/SndFootstep4.yy",},"order":4,},
     {"id":{"name":"RmGameOver","path":"rooms/RmGameOver/RmGameOver.yy",},"order":1,},
     {"id":{"name":"BBMOD_ShPBRBatched","path":"shaders/BBMOD_ShPBRBatched/BBMOD_ShPBRBatched.yy",},"order":8,},
-    {"id":{"name":"bbmod_array_from_buffer","path":"scripts/bbmod_array_from_buffer/bbmod_array_from_buffer.yy",},"order":0,},
+    {"id":{"name":"bbmod_array_","path":"scripts/bbmod_array_/bbmod_array_.yy",},"order":0,},
     {"id":{"name":"BBMOD_VertexFormat","path":"scripts/BBMOD_VertexFormat/BBMOD_VertexFormat.yy",},"order":5,},
     {"id":{"name":"BBMOD_RenderCommand","path":"scripts/BBMOD_RenderCommand/BBMOD_RenderCommand.yy",},"order":1,},
     {"id":{"name":"BBMOD_IRenderable","path":"scripts/BBMOD_IRenderable/BBMOD_IRenderable.yy",},"order":1,},
