@@ -2,17 +2,6 @@
 /// @private
 global.__bbmodMaterialCurrent = undefined;
 
-// Array of all existing materials.
-global.__bbmodMaterialsAll = [];
-
-// Array of arrays of materials. Each index corresponds to a render pass.
-var _materials = array_create(BBMOD_ERenderPass.SIZE);
-for (var i = 0; i < BBMOD_ERenderPass.SIZE; ++i)
-{
-	_materials[i] = [];
-}
-global.__bbmodMaterials = _materials;
-
 /// @func BBMOD_Material([_shader])
 /// @extends BBMOD_Resource
 /// @desc Base class for materials.
@@ -42,18 +31,12 @@ function BBMOD_Material(_shader=undefined)
 	/// @see BBMOD_Material.get_shader
 	Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
 
-	/// @var {Real} The priority of the material. Determines order of materials in
-	/// the array retrieved by {@link bbmod_get_materials} (materials with smaller
-	/// priority come first in the array). Defaults to `0`.
-	/// @readonly
-	/// @see BBMOD_Material.set_priority
-	Priority = 0;
-
-	/// @var {Struct.BBMOD_RenderQueue} A render queue for render commands using this material.
+	/// @var {Struct.BBMOD_RenderQueue} The render queue used by this material.
+	/// Defaults to the default BBMOD render queue.
 	/// @readonly
 	/// @see BBMOD_RenderQueue
-	/// @see BBMOD_RenderCommand
-	RenderQueue = new BBMOD_RenderQueue();
+	/// @see bbmod_get_default_render_queue
+	RenderQueue = bbmod_get_default_render_queue();
 
 	/// @var {Function/Undefined} A function that is executed when the shader is
 	/// applied. Must take the material as the first argument. Use `undefined`
@@ -85,6 +68,9 @@ function BBMOD_Material(_shader=undefined)
 	/// in range 0..1.
 	AlphaTest = 1.0;
 
+	/// @var {Bool}
+	AlphaBlend = false;
+
 	/// @var {Bool} Use `false` to disable mimapping for this material. Default
 	/// value is `true`.
 	Mipmapping = true;
@@ -97,6 +83,15 @@ function BBMOD_Material(_shader=undefined)
 	/// Default value is `false`.
 	Repeat = false;
 
+	/// @func set_priority(_p)
+	/// @desc Changes the material priority.
+	/// @param {Real} _p The new material priority.
+	/// @obsolete Priority has been moved from materials to render queues.
+	/// Please use {@link BBMOD_RenderQueue.set_priority} instead.
+	static set_priority = function (_p) {
+		return self;
+	};
+
 	/// @func copy(_dest)
 	/// @desc Copies properties of this material into another material.
 	/// @param {Struct.BBMOD_Material} _dest The destination material.
@@ -105,6 +100,7 @@ function BBMOD_Material(_shader=undefined)
 		_dest.RenderPass = RenderPass;
 		_dest.Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
 		array_copy(_dest.Shaders, 0, Shaders, 0, BBMOD_ERenderPass.SIZE);
+		_dest.RenderQueue = RenderQueue;
 		_dest.OnApply = OnApply;
 		_dest.BlendMode = BlendMode;
 		_dest.Culling = Culling;
@@ -112,10 +108,10 @@ function BBMOD_Material(_shader=undefined)
 		_dest.ZTest = ZTest;
 		_dest.ZFunc = ZFunc;
 		_dest.AlphaTest = AlphaTest;
+		_dest.AlphaBlend = AlphaBlend;
 		_dest.Mipmapping = Mipmapping;
 		_dest.Filtering = Filtering;
 		_dest.Repeat = Repeat;
-		_dest.set_priority(Priority);
 		return self;
 	};
 
@@ -143,6 +139,7 @@ function BBMOD_Material(_shader=undefined)
 			reset();
 			gpu_push_state();
 			gpu_set_blendmode(BlendMode);
+			gpu_set_blendenable(AlphaBlend);
 			gpu_set_cullmode(Culling);
 			gpu_set_zwriteenable(ZWrite);
 			gpu_set_ztestenable(ZTest);
@@ -176,19 +173,6 @@ function BBMOD_Material(_shader=undefined)
 		return true;
 	};
 
-	/// @func set_priority(_p)
-	/// @desc Changes the material priority. This affects its position within
-	/// an array returned by {@link bbmod_get_materials}. Materials with lower
-	/// priority come first in the array.
-	/// @param {Real} _p The new material priority.
-	/// @see BBMOD_Material.Priority
-	static set_priority = function (_p) {
-		gml_pragma("forceinline");
-		Priority = _p;
-		__bbmod_sort_materials();
-		return self;
-	};
-
 	/// @func set_shader(_pass, _shader)
 	/// @desc Defines a shader used in a specific render pass.
 	/// @param {BBMOD_ERenderPass} _pass The render pass.
@@ -201,7 +185,6 @@ function BBMOD_Material(_shader=undefined)
 		gml_pragma("forceinline");
 		RenderPass |= (1 << _pass);
 		Shaders[_pass] = _shader;
-		__bbmod_reindex_materials();
 		return self;
 	};
 
@@ -235,7 +218,6 @@ function BBMOD_Material(_shader=undefined)
 		gml_pragma("forceinline");
 		RenderPass &= ~(1 << _pass);
 		Shaders[_pass] = undefined;
-		__bbmod_reindex_materials();
 		return self;
 	};
 
@@ -252,16 +234,12 @@ function BBMOD_Material(_shader=undefined)
 
 	static destroy = function () {
 		method(self, Super_Resource.destroy)();
-		RenderQueue.destroy();
-		__bbmod_remove_material(self);
 	};
 
 	if (_shader != undefined)
 	{
 		set_shader(BBMOD_ERenderPass.Forward, _shader);
 	}
-
-	__bbmod_add_material(self);
 }
 
 /// @func bbmod_material_reset()
@@ -298,78 +276,4 @@ function bbmod_material_reset()
 	{
 		BBMOD_SHADER_CURRENT.reset();
 	}
-}
-
-/// @func bbmod_get_materials([_pass])
-/// @desc Retrieves an array of all existing materials, sorted by their priority.
-/// Materials with smaller priority come first in the array.
-/// @param {BBMOD_ERenderPass/Undefined} [_pass] If defined, then only materials
-/// used in specified render pass will be returned.
-/// @return {Array.Struct.BBMOD_Material} A read-only array of materials.
-/// @see BBMOD_Material.Priority
-/// @see BBMOD_ERenderPass
-function bbmod_get_materials(_pass=undefined)
-{
-	gml_pragma("forceinline");
-	if (_pass == undefined)
-	{
-		return global.__bbmodMaterialsAll;
-	}
-	return global.__bbmodMaterials[_pass];
-}
-
-function __bbmod_add_material(_material)
-{
-	gml_pragma("forceinline");
-	array_push(global.__bbmodMaterialsAll, _material);
-	__bbmod_reindex_materials();
-}
-
-function __bbmod_remove_material(_material)
-{
-	gml_pragma("forceinline");
-	for (var i = 0; i < array_length(global.__bbmodMaterialsAll); ++i)
-	{
-		if (global.__bbmodMaterialsAll[i] == _material)
-		{
-			array_delete(global.__bbmodMaterialsAll, i, 1);
-			break;
-		}
-	}
-	__bbmod_reindex_materials();
-}
-
-function __bbmod_sort_materials()
-{
-	gml_pragma("forceinline");
-	__bbmod_reindex_materials();
-}
-
-function __bbmod_reindex_materials()
-{
-	static _sortFn = function (_m1, _m2) {
-		if (_m2.Priority > _m1.Priority) return -1;
-		if (_m2.Priority < _m1.Priority) return +1;
-		return 0;
-	};
-
-	array_sort(global.__bbmodMaterialsAll, _sortFn);
-
-	var _materials = array_create(BBMOD_ERenderPass.SIZE);
-	var _materialCount = array_length(global.__bbmodMaterialsAll);
-
-	for (var _pass = 0; _pass < BBMOD_ERenderPass.SIZE; ++_pass)
-	{
-		_materials[_pass] = [];
-		for (var i = 0; i < _materialCount; ++i)
-		{
-			var _mat = global.__bbmodMaterialsAll[i];
-			if (_mat.has_shader(_pass))
-			{
-				array_push(_materials[_pass], _mat);
-			}
-		}
-	}
-
-	global.__bbmodMaterials = _materials;
 }

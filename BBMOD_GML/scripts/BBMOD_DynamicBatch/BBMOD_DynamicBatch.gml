@@ -109,7 +109,7 @@ function BBMOD_DynamicBatch(_model, _size)
 		gml_pragma("forceinline");
 		var _renderCommand = new BBMOD_RenderCommand();
 		_renderCommand.VertexBuffer = VertexBuffer;
-		_renderCommand.Texture = _material.BaseOpacity;
+		_renderCommand.Material = _material;
 		_renderCommand.BatchData = _data;
 		_renderCommand.Matrix = matrix_get(matrix_world);
 		_material.RenderQueue.add(_renderCommand);

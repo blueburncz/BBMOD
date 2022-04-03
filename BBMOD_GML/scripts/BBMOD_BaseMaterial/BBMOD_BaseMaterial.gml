@@ -53,8 +53,8 @@ function BBMOD_BaseMaterial(_shader=undefined)
 			_dest.BaseOpacity = BaseOpacity;
 		}
 
-		_dest.TextureOffset = TextureOffset;
-		_dest.TextureScale = TextureScale;
+		_dest.TextureOffset = TextureOffset.Clone();
+		_dest.TextureScale = TextureScale.Clone();
 
 		return self;
 	};
@@ -99,6 +99,34 @@ function BBMOD_BaseMaterial(_shader=undefined)
 			_isReal ? argument[1] : _color.Alpha,
 		);
 		BaseOpacity = sprite_get_texture(BaseOpacitySprite, 0);
+		return self;
+	};
+
+	/// @func has_commands()
+	/// @desc Checks whether the material has any render commands waiting for
+	/// submission.
+	/// @return {Bool} Always returns `false`.
+	/// @obsolete Render commands are now stored in {@link BBMOD_RenderQueue}s.
+	/// Please use {@link BBMOD_RenderQueue.is_empty} instead.
+	static has_commands = function () {
+		return false;
+	};
+
+	/// @func submit_queue()
+	/// @desc Submits all render commands without clearing the render queue.
+	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
+	/// @obsolete Render commands are now stored in {@link BBMOD_RenderQueue}s.
+	/// Please use {@link BBMOD_RenderQueue.submit} instead.
+	static submit_queue = function () {
+		return self;
+	};
+
+	/// @func clear_queue()
+	/// @desc Clears the queue of render commands.
+	/// @obsolete Render commands are now stored in {@link BBMOD_RenderQueue}s.
+	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
+	/// Please use {@link BBMOD_RenderQueue.clear} instead.
+	static clear_queue = function () {
 		return self;
 	};
 

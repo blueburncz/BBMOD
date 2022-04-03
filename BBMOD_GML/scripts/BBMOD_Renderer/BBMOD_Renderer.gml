@@ -253,20 +253,16 @@ function BBMOD_Renderer()
 			matrix_set(matrix_projection, get_shadowmap_projection());
 			var _shadowmapArea = ShadowmapArea;
 			bbmod_render_pass_set(BBMOD_ERenderPass.Shadows);
-			var _materials = bbmod_get_materials(BBMOD_ERenderPass.Shadows);
-			var m = 0;
-			repeat (array_length(_materials))
+
+			var _renderQueues = global.bbmod_render_queues;
+			var _rqi = 0;
+			repeat (array_length(_renderQueues))
 			{
-				var _material = _materials[m++];
-				var _materialRenderQueue = _material.RenderQueue;
-				if (_materialRenderQueue.is_empty()
-					|| !_material.apply())
-				{
-					continue;
-				}
-				BBMOD_SHADER_CURRENT.set_zfar(_shadowmapArea);
-				_materialRenderQueue.submit();
+				_renderQueues[_rqi++].submit();
+				// TODO:
+				//BBMOD_SHADER_CURRENT.set_zfar(_shadowmapArea);
 			}
+
 			surface_reset_target();
 		}
 		else if (surface_exists(SurShadowmap))
@@ -315,26 +311,21 @@ function BBMOD_Renderer()
 		}
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
-		var _materials = bbmod_get_materials(BBMOD_ERenderPass.Forward);
-		var i = 0;
-		repeat (array_length(_materials))
+
+		var _renderQueues = global.bbmod_render_queues;
+		var _rqi = 0;
+		repeat (array_length(_renderQueues))
 		{
-			var _material = _materials[i++];
-			var _materialRenderQueue = _material.RenderQueue;
-			if (_materialRenderQueue.is_empty()
-				|| !_material.apply())
-			{
-				continue;
-			}
-			if (_passShadowmap)
-			{
-				BBMOD_SHADER_CURRENT.set_shadowmap(
-					_shadowmapTexture,
-					_shadowmapMatrix,
-					_shadowmapArea,
-					_shadowmapNormalOffset);
-			}
-			_materialRenderQueue.submit().clear();
+			_renderQueues[_rqi++].submit().clear();
+			// TODO:
+			//if (_passShadowmap)
+			//{
+			//	BBMOD_SHADER_CURRENT.set_shadowmap(
+			//		_shadowmapTexture,
+			//		_shadowmapMatrix,
+			//		_shadowmapArea,
+			//		_shadowmapNormalOffset);
+			//}
 		}
 
 		bbmod_material_reset();

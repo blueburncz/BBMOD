@@ -12,7 +12,7 @@ function BBMOD_RenderCommand() constructor
 
 	/// @var {Pointer.Texture} The `gm_BaseTexture` used for the vertex buffer.
 	/// Defaults to `pointer_null`.
-	Texture = pointer_null;
+	Material = undefined;
 
 	/// @var {Aarray.Real/Undefined} An array of bone transforms (dual quaternions).
 	BoneTransform = undefined;

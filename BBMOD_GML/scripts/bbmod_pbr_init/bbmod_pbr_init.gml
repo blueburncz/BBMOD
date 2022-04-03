@@ -37,6 +37,7 @@ function __bbmod_material_pbr_batched()
 function __bbmod_material_sky()
 {
 	static _material = undefined;
+	static _skyRenderQueue = undefined;
 	if (_material == undefined)
 	{
 		var _skSky = new BBMOD_BaseShader(BBMOD_ShSky, new BBMOD_VertexFormat(true));
@@ -46,7 +47,10 @@ function __bbmod_material_sky()
 		_material.ZWrite = false;
 		_material.ZTest = false;
 		_material.Filtering = true;
-		_material.set_priority(-$FFFFFFFF);
+
+		_skyRenderQueue = new BBMOD_RenderQueue("Sky");
+		_skyRenderQueue.set_priority(-$FFFFFFFF);
+		_material.RenderQueue = _skyRenderQueue;
 	}
 	return _material;
 }

@@ -73,7 +73,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @readonly
 	Model = _model;
 
-	/// @var {Id.DsList.BBMOD_Animation} List of animations to play.
+	/// @var {Id.DsList.Struct.BBMOD_Animation} List of animations to play.
 	/// @private
 	Animations = ds_list_create();
 

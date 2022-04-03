@@ -85,7 +85,7 @@ function BBMOD_Mesh(_vertexFormat)
 		gml_pragma("forceinline");
 		var _renderCommand = new BBMOD_RenderCommand();
 		_renderCommand.VertexBuffer = VertexBuffer;
-		_renderCommand.Texture = _material.BaseOpacity;
+		_renderCommand.Material = _material;
 		_renderCommand.BoneTransform = _transform;
 		_renderCommand.Matrix = _matrix;
 		_material.RenderQueue.add(_renderCommand);

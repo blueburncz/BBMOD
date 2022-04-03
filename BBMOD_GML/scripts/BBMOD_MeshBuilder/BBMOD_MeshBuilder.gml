@@ -34,7 +34,7 @@ function BBMOD_MeshBuilder()
 		destroy: destroy,
 	};
 
-	/// @var {Id.DsList.BBMOD_Vertex} List of mesh vertices.
+	/// @var {Id.DsList.Struct.BBMOD_Vertex} List of mesh vertices.
 	/// @readonly
 	Vertices = ds_list_create();
 
