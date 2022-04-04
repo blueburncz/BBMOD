@@ -15,7 +15,6 @@
 * Moved basic properties and methods from `BBMOD_BaseMaterial` to `BBMOD_Material`.
 * Struct `BBMOD_BaseMaterial` now inherits from `BBMOD_Material`.
 * Added new property `BBMOD_Material.AlphaBlend`, using which you can enable/disable alpha blending. This is by default **disabled**.
-* Added new utility function `bbmod_array_find_index`, which finds an index of a value within an array.
 
 ### Terrain module:
 * Added new module - Terrain.

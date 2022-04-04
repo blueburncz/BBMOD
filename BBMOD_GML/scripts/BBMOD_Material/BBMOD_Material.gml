@@ -48,12 +48,11 @@ function BBMOD_Material(_shader=undefined)
 	/// if you do not want to execute any function. Defaults to `undefined`.
 	OnApply = undefined;
 
-	/// @var {Real} A blend mode. Use one of the `bm_` constants. Default value
-	/// is `bm_normal`.
+	/// @var {Constant.BlendMode} A blend mode. Default value is `bm_normal`.
 	BlendMode = bm_normal;
 
-	/// @var {Real} A culling mode. Use one of the `cull_` constants. Default
-	/// value is `cull_counterclockwise`.
+	/// @var {Constant.CullMode} A culling mode. Default value is
+	/// `cull_counterclockwise`.
 	Culling = cull_counterclockwise;
 
 	/// @var {Bool} If `true` then models using this material should write to
@@ -64,9 +63,9 @@ function BBMOD_Material(_shader=undefined)
 	/// against the depth buffer. Defaults value is `true`.
 	ZTest = true;
 
-	/// @var {Real} The function used for depth testing when
-	/// {@link BBMOD_Material.ZTest} is enabled. Use one of the `cmpfunc_`
-	/// constants. Default value is `cmpfunc_lessequal`.
+	/// @var {Constant.CmpFunc} The function used for depth testing when
+	/// {@link BBMOD_Material.ZTest} is enabled. Default value is
+	/// `cmpfunc_lessequal`.
 	ZFunc = cmpfunc_lessequal;
 
 	/// @var {Real} Discard pixels with alpha less than this value. Use values
