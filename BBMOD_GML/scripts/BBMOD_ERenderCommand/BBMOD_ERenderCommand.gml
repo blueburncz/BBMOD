@@ -58,29 +58,29 @@ enum BBMOD_ERenderCommand
 	SetGpuTexFilter,
 	/// @member Enables/disables texture filtering for a specific sampler.
 	SetGpuTexFilterExt,
-	/// @member
+	/// @member Sets maximum anisotropy.
 	SetGpuTexMaxAniso,
-	/// @member
+	/// @member Sets maximum anisotropy for a specific sampler.
 	SetGpuTexMaxAnisoExt,
-	/// @member
+	/// @member Sets maximum mipmap level.
 	SetGpuTexMaxMip,
-	/// @member
+	/// @member Sets maximum mipmap level for a specific sampler.
 	SetGpuTexMaxMipExt,
-	/// @member
+	/// @member Sets miminum mipmap level.
 	SetGpuTexMinMip,
-	/// @member
+	/// @member Sets miminum mipmap level for a specific sampler.
 	SetGpuTexMinMipExt,
-	/// @member
+	/// @member Sets mipmapping bias.
 	SetGpuTexMipBias,
-	/// @member
+	/// @member Sets mipmapping bias for a specific sampler.
 	SetGpuTexMipBiasExt,
-	/// @member
+	/// @member Enables/disables mipmapping.
 	SetGpuTexMipEnable,
-	/// @member
+	/// @member Enables/disables mipmapping for a specific sampler.
 	SetGpuTexMipEnableExt,
-	/// @member
+	/// @member Sets mipmap filter function.
 	SetGpuTexMipFilter,
-	/// @member
+	/// @member Sets mipmap filter function for a specific sampler.
 	SetGpuTexMipFilterExt,
 	/// @member Enables/disables texture repeat.
 	SetGpuTexRepeat,
@@ -92,7 +92,7 @@ enum BBMOD_ERenderCommand
 	SetGpuZTestEnable,
 	/// @member Enables/disables writing to the depth buffer.
 	SetGpuZWriteEnable,
-	/// @member
+	/// @member Sets the projection matrix.
 	SetProjectionMatrix,
 	/// @member Sets a shader texture sampler.
 	SetSampler,
@@ -122,8 +122,8 @@ enum BBMOD_ERenderCommand
 	SetUniformMatrix,
 	/// @member Sets a matrix array shader uniform.
 	SetUniformMatrixArray,
-	/// @member
+	/// @member Sets the view matrix.
 	SetViewMatrix,
-	/// @member
+	/// @member Sets the world matrix.
 	SetWorldMatrix,
 };
