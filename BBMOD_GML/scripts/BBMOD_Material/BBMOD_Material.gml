@@ -19,6 +19,11 @@ function BBMOD_Material(_shader=undefined)
 		destroy: destroy,
 	};
 
+	/// @var {Real} The priority of the material. Used to control rendering order.
+	/// @obsolete Priority has been moved from materials to render queues.
+	/// Please use {@link BBMOD_RenderQueue.set_priority} instead.
+	Priority = 0;
+
 	/// @var {Real} Render passes in which is the material rendered. Defaults
 	/// to 0 (no passes).
 	/// @readonly
@@ -68,7 +73,9 @@ function BBMOD_Material(_shader=undefined)
 	/// in range 0..1.
 	AlphaTest = 1.0;
 
-	/// @var {Bool}
+	/// @var {Bool} Use `true` to enable alpha blending. This can have negative
+	/// effect on performance, therefore it should be used only when necessary.
+	/// Default value is `false`.
 	AlphaBlend = false;
 
 	/// @var {Bool} Use `false` to disable mimapping for this material. Default
