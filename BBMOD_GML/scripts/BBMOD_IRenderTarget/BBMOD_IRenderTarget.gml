@@ -5,7 +5,7 @@ function BBMOD_IRenderTarget()
 	/// @func set_target()
 	/// @desc Sets the render target.
 	/// @return {Bool} Returns `true` if the render target was set.
-	/// @throws {Struct.BBMOD_NotImplementedException} If the method is not implemented.
+	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	/// @see BBMOD_IRenderTarget.reset_target
 	static set_target = function () {
 		throw new BBMOD_NotImplementedException();
@@ -15,7 +15,7 @@ function BBMOD_IRenderTarget()
 	/// @func reset_target()
 	/// @desc Resets the render target.
 	/// @return {Struct.BBMOD_IRenderTarget} Returns `self`.
-	/// @throws {Struct.BBMOD_NotImplementedException} If the method is not implemented.
+	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	/// @see BBMOD_IRenderTarget.set_target
 	static reset_target = function () {
 		throw new BBMOD_NotImplementedException();

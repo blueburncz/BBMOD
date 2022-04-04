@@ -55,6 +55,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.ApplyMaterial,
+			1,
 			_material);
 		return self;
 	};
@@ -66,7 +67,8 @@ function BBMOD_RenderQueue(_name=undefined)
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
-			BBMOD_ERenderCommand.BeginConditionalBlock);
+			BBMOD_ERenderCommand.BeginConditionalBlock,
+			0);
 		return self;
 	};
 
@@ -81,6 +83,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMesh,
+			3,
 			_material,
 			_matrix,
 			_vertexBuffer);
@@ -99,6 +102,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMeshAnimated,
+			4,
 			_material,
 			_matrix,
 			_boneTransform,
@@ -118,6 +122,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMeshBatched,
+			4,
 			_material,
 			_matrix,
 			_batchData,
@@ -132,7 +137,8 @@ function BBMOD_RenderQueue(_name=undefined)
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
-			BBMOD_ERenderCommand.EndConditionalBlock);
+			BBMOD_ERenderCommand.EndConditionalBlock,
+			0);
 		return self;
 	};
 
@@ -143,7 +149,8 @@ function BBMOD_RenderQueue(_name=undefined)
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
-			BBMOD_ERenderCommand.PopGpuState);
+			BBMOD_ERenderCommand.PopGpuState,
+			0);
 		return self;
 	};
 
@@ -154,7 +161,8 @@ function BBMOD_RenderQueue(_name=undefined)
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
-			BBMOD_ERenderCommand.PushGpuState);
+			BBMOD_ERenderCommand.PushGpuState,
+			0);
 		return self;
 	};
 
@@ -165,7 +173,8 @@ function BBMOD_RenderQueue(_name=undefined)
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
-			BBMOD_ERenderCommand.ResetMaterial);
+			BBMOD_ERenderCommand.ResetMaterial,
+			0);
 		return self;
 	};
 
@@ -176,7 +185,8 @@ function BBMOD_RenderQueue(_name=undefined)
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
-			BBMOD_ERenderCommand.ResetShader);
+			BBMOD_ERenderCommand.ResetShader,
+			0);
 		return self;
 	};
 
@@ -189,6 +199,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuAlphaTestEnable,
+			1,
 			_enable);
 		return self;
 	};
@@ -202,6 +213,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuAlphaTestRef,
+			1,
 			_value);
 		return self;
 	};
@@ -215,6 +227,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuBlendEnable,
+			1,
 			_enable);
 		return self;
 	};
@@ -223,11 +236,12 @@ function BBMOD_RenderQueue(_name=undefined)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuBlendMode} command into the queue.
 	/// @param {Constant.BlendMode} _blendmode The new blend mode.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_gpu_blendmode = function () {
+	static set_gpu_blendmode = function (_blendmode) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuBlendMode,
+			1,
 			_blendmode);
 		return self;
 	};
@@ -242,6 +256,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuBlendModeExt,
+			2,
 			_src,
 			_dest);
 		return self;
@@ -259,6 +274,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha,
+			4,
 			_src,
 			_dest,
 			_srcalpha,
@@ -278,6 +294,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuColorWriteEnable,
+			4,
 			_red,
 			_green,
 			_blue,
@@ -294,6 +311,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuCullMode,
+			1,
 			_cullmode);
 		return self;
 	};
@@ -312,6 +330,7 @@ function BBMOD_RenderQueue(_name=undefined)
 			ds_list_add(
 				RenderCommands,
 				BBMOD_ERenderCommand.SetGpuFog,
+				4,
 				true,
 				_color,
 				_start,
@@ -322,6 +341,7 @@ function BBMOD_RenderQueue(_name=undefined)
 			ds_list_add(
 				RenderCommands,
 				BBMOD_ERenderCommand.SetGpuFog,
+				1,
 				false);
 		}
 		return self;
@@ -336,6 +356,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexFilter,
+			1,
 			_linear);
 		return self;
 	};
@@ -350,6 +371,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexFilterExt,
+			2,
 			_name,
 			_linear);
 		return self;
@@ -364,6 +386,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMaxAniso,
+			1,
 			_value);
 		return self;
 	};
@@ -378,6 +401,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt,
+			2,
 			_name,
 			_value);
 		return self;
@@ -392,6 +416,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMaxMip,
+			1,
 			_value);
 		return self;
 	};
@@ -406,6 +431,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMaxMipExt,
+			2,
 			_name,
 			_value);
 		return self;
@@ -420,6 +446,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMinMip,
+			1,
 			_value);
 		return self;
 	};
@@ -434,6 +461,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMinMipExt,
+			2,
 			_name,
 			_value);
 		return self;
@@ -448,6 +476,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipBias,
+			1,
 			_value);
 		return self;
 	};
@@ -462,6 +491,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipBiasExt,
+			2,
 			_name,
 			_value);
 		return self;
@@ -476,6 +506,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipEnable,
+			1,
 			_enable);
 		return self;
 	};
@@ -490,6 +521,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipEnableExt,
+			2,
 			_name,
 			_enable);
 		return self;
@@ -504,6 +536,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipFilter,
+			1,
 			_filter);
 		return self;
 	};
@@ -518,6 +551,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipFilterExt,
+			2,
 			_name,
 			_filter);
 		return self;
@@ -532,6 +566,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexRepeat,
+			1,
 			_enable);
 		return self;
 	};
@@ -546,6 +581,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuTexRepeatExt,
+			2,
 			_name,
 			_enable);
 		return self;
@@ -560,6 +596,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuZFunc,
+			1,
 			_func);
 		return self;
 	};
@@ -573,6 +610,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuZTestEnable,
+			1,
 			_enable);
 		return self;
 	};
@@ -586,6 +624,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetGpuZWriteEnable,
+			1,
 			_enable);
 		return self;
 	};
@@ -599,6 +638,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetProjectionMatrix,
+			1,
 			_matrix);
 		return self;
 	};
@@ -613,6 +653,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetSampler,
+			2,
 			_name,
 			_texture);
 		return self;
@@ -627,54 +668,58 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetShader,
+			1,
 			_shader);
 		return self;
 	};
 
-	/// @func set_uniform_float(_name, _value)
+	/// @func set_uniform_f(_name, _value)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloat} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Real} _value The new uniform value.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_float = function (_name, _value) {
+	static set_uniform_f = function (_name, _value) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformFloat,
+			2,
 			_name,
 			_value);
 		return self;
 	};
 
-	/// @func set_uniform_float2(_name, _v1, _v2)
+	/// @func set_uniform_f2(_name, _v1, _v2)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloat2} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Real} _v1 The value of the first component.
 	/// @param {Real} _v2 The value of the second component.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_float2 = function (_name, _v1, _v2) {
+	static set_uniform_f2 = function (_name, _v1, _v2) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformFloat2,
+			3,
 			_name,
 			_v1,
 			_v2);
 		return self;
 	};
 
-	/// @func set_uniform_float3(_name, _v1, _v2, _v3)
+	/// @func set_uniform_f3(_name, _v1, _v2, _v3)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloat3} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Real} _v1 The value of the first component.
 	/// @param {Real} _v2 The value of the second component.
 	/// @param {Real} _v3 The value of the third component.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_float3 = function (_name, _v1, _v2, _v3) {
+	static set_uniform_f3 = function (_name, _v1, _v2, _v3) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformFloat3,
+			4,
 			_name,
 			_v1,
 			_v2,
@@ -682,7 +727,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		return self;
 	};
 
-	/// @func set_uniform_float4(_name, _v1, _v2, _v3, _v4)
+	/// @func set_uniform_f4(_name, _v1, _v2, _v3, _v4)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloat4} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Real} _v1 The value of the first component.
@@ -690,12 +735,13 @@ function BBMOD_RenderQueue(_name=undefined)
 	/// @param {Real} _v3 The value of the third component.
 	/// @param {Real} _v4 The value of the fourth component.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_float4 = function (_name, _v1, _v2, _v3, _v4) {
+	static set_uniform_f4 = function (_name, _v1, _v2, _v3, _v4) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformFloat4,
-			_name, 
+			5,
+			_name,
 			_v1,
 			_v2,
 			_v3,
@@ -703,73 +749,77 @@ function BBMOD_RenderQueue(_name=undefined)
 		return self;
 	};
 
-	/// @func set_uniform_float_array(_name, _array)
+	/// @func set_uniform_f_array(_name, _array)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloatArray} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Array.Real} _array The array of values.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_float_array = function (_name, _array) {
+	static set_uniform_f_array = function (_name, _array) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformFloatArray,
-			_name, 
+			2,
+			_name,
 			_array);
 		return self;
 	};
 
-	/// @func set_uniform_int(_name, _value)
+	/// @func set_uniform_i(_name, _value)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformInt} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Real} _value The new uniform value.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_int = function (_name, _value) {
+	static set_uniform_i = function (_name, _value) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformInt,
-			_name, 
+			2,
+			_name,
 			_value);
 		return self;
 	};
 
-	/// @func set_uniform_int2(_name, _v1, _v2)
+	/// @func set_uniform_i2(_name, _v1, _v2)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformInt2} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Real} _v1 The value of the first component.
 	/// @param {Real} _v2 The value of the second component.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_int2 = function (_name, _v1, _v2) {
+	static set_uniform_i2 = function (_name, _v1, _v2) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformInt2,
-			_name, 
+			3,
+			_name,
 			_v1,
 			_v2);
 		return self;
 	};
 
-	/// @func set_uniform_int3(_name, _v1, _v2, _v3)
+	/// @func set_uniform_i3(_name, _v1, _v2, _v3)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformInt3} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Real} _v1 The value of the first component.
 	/// @param {Real} _v2 The value of the second component.
 	/// @param {Real} _v3 The value of the third component.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_int3 = function (_name, _v1, _v2, _v3) {
+	static set_uniform_i3 = function (_name, _v1, _v2, _v3) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformInt3,
-			_name, 
+			4,
+			_name,
 			_v1,
 			_v2,
 			_v3);
 		return self;
 	};
 
-	/// @func set_uniform_int4(_name, _v1, _v2, _v3, _v4)
+	/// @func set_uniform_i4(_name, _v1, _v2, _v3, _v4)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformInt4} command into the queue.
 	/// @param {String} _name The name of the uniform.
 	/// @param {Real} _v1 The value of the first component.
@@ -777,12 +827,13 @@ function BBMOD_RenderQueue(_name=undefined)
 	/// @param {Real} _v3 The value of the third component.
 	/// @param {Real} _v4 The value of the fourth component.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_int4 = function (_name, _v1, _v2, _v3, _v4) {
+	static set_uniform_i4 = function (_name, _v1, _v2, _v3, _v4) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformInt4,
-			_name, 
+			5,
+			_name,
 			_v1,
 			_v2,
 			_v3,
@@ -790,15 +841,16 @@ function BBMOD_RenderQueue(_name=undefined)
 		return self;
 	};
 
-	/// @func set_uniform_int_array(_name, _array)
+	/// @func set_uniform_i_array(_name, _array)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformIntArray} command into the queue.
 	/// @param {Array.Real} _array The array of values.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_uniform_int_array = function (_name, _array) {
+	static set_uniform_i_array = function (_name, _array) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformIntArray,
+			2,
 			_name,
 			_array);
 		return self;
@@ -813,6 +865,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformMatrix,
+			1,
 			_name);
 		return self;
 	};
@@ -827,6 +880,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetUniformMatrixArray,
+			2,
 			_name,
 			_array);
 		return self;
@@ -841,6 +895,7 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetViewMatrix,
+			1,
 			_matrix);
 		return self;
 	};
@@ -854,7 +909,26 @@ function BBMOD_RenderQueue(_name=undefined)
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetWorldMatrix,
+			1,
 			_matrix);
+		return self;
+	};
+
+	/// @func submit_vertex_buffer(_vertexBuffer, _prim, _texture)
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SubmitVertexBuffer} command into the queue.
+	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to submit.
+	/// @param {Constant.PrimitiveType} _prim Primitive type of the vertex buffer.
+	/// @param {Pointer.Texture} _texture The texture to use.
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static submit_vertex_buffer = function (_vertexBuffer, _prim, _texture) {
+		gml_pragma("forceinline");
+		ds_list_add(
+			RenderCommands,
+			BBMOD_ERenderCommand.SubmitVertexBuffer,
+			3,
+			_vertexBuffer,
+			_prim,
+			_texture);
 		return self;
 	};
 
@@ -878,7 +952,10 @@ function BBMOD_RenderQueue(_name=undefined)
 
 		while (i < _renderCommandsCount)
 		{
-			switch (_renderCommands[| i++])
+			var _command = _renderCommands[| i++];
+			var _size = _renderCommands[| i++];
+
+			switch (_command)
 			{
 			case BBMOD_ERenderCommand.ApplyMaterial:
 				if (!_renderCommands[| i++].apply())
@@ -894,7 +971,10 @@ function BBMOD_RenderQueue(_name=undefined)
 					var _counter = 1;
 					while (_counter > 0)
 					{
-						switch (_renderCommands[| i++])
+						var _commandInner = _renderCommands[| i++];
+						var _sizeInner = _renderCommands[| i++];
+						show_debug_message([_commandInner, _sizeInner]);
+						switch (_commandInner)
 						{
 						case BBMOD_ERenderCommand.BeginConditionalBlock:
 							++_counter;
@@ -904,6 +984,7 @@ function BBMOD_RenderQueue(_name=undefined)
 							--_counter;
 							break;
 						}
+						i += _sizeInner;
 					}
 				}
 				break;
@@ -947,7 +1028,7 @@ function BBMOD_RenderQueue(_name=undefined)
 				break;
 
 			case BBMOD_ERenderCommand.EndConditionalBlock:
-				show_error("Found unmatching end of conditional block in render queue " + Name + "!", true);
+				// TODO: show_error("Found unmatching end of conditional block in render queue " + Name + "!", true);
 				break;
 
 			case BBMOD_ERenderCommand.PopGpuState:
@@ -1202,6 +1283,13 @@ function BBMOD_RenderQueue(_name=undefined)
 
 			case BBMOD_ERenderCommand.SetWorldMatrix:
 				matrix_set(matrix_world, _renderCommands[| i++]);
+				break;
+
+			case BBMOD_ERenderCommand.SubmitVertexBuffer:
+				var _vertexBuffer = _renderCommands[| i++];
+				var _prim = _renderCommands[| i++];
+				var _texture = _renderCommands[| i++];
+				vertex_submit(_vertexBuffer, _prim, _texture);
 				break;
 			}
 

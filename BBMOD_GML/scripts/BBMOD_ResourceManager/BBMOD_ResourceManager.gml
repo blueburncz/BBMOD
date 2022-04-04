@@ -59,7 +59,7 @@ function BBMOD_ResourceManager()
 	/// @param {String} _uniqueName The name of the resource. Must be unique!
 	/// @param {Struct.BBMOD_Resource} _resource The resource to add.
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the resource is already added to a manager.
+	/// @throws {BBMOD_Exception} If the resource is already added to a manager.
 	static add = function (_uniqueName, _resource) {
 		gml_pragma("forceinline");
 		if (_resource.Manager != undefined)
@@ -87,7 +87,7 @@ function BBMOD_ResourceManager()
 	/// unique name of the resource.
 	/// @return {Struct.BBMOD_Resource} The resource.
 	/// @see BBMOD_ResourceManager.has
-	/// @throws {Struct.BBMOD_Exception} If the resource manager does not have such
+	/// @throws {BBMOD_Exception} If the resource manager does not have such
 	/// resource.
 	static get = function (_pathOrUniqueName) {
 		gml_pragma("forceinline");

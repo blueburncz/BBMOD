@@ -27,7 +27,7 @@
 /// @desc Loads a DLL which allows you to convert models into BBMOD.
 /// @param {String} [_path] The path to the DLL file. Defaults to
 /// "Data/BBMOD/BBMOD.dll".
-/// @throws {Struct.BBMOD_Exception} If the DLL file does not exist.
+/// @throws {BBMOD_Exception} If the DLL file does not exist.
 /// @example
 /// ```gml
 /// var _dll = new BBMOD_DLL();
@@ -59,7 +59,7 @@ function BBMOD_DLL(_path)
 	/// @param {String} _fin Path to the original model.
 	/// @param {String} _fout Path to the converted model.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the model conversion fails.
+	/// @throws {BBMOD_Exception} If the model conversion fails.
 	static convert = function (_fin, _fout) {
 		gml_pragma("forceinline");
 		static _fn = external_define(Path, "bbmod_dll_convert", dll_cdecl, ty_real, 2, ty_string, ty_string);
@@ -86,7 +86,7 @@ function BBMOD_DLL(_path)
 	/// **enabled**.
 	/// @param {Bool} _disable `true` to disable.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_disable_bone
 	static set_disable_bone = function (_disable) {
 		gml_pragma("forceinline");
@@ -115,7 +115,7 @@ function BBMOD_DLL(_path)
 	/// default shaders!
 	/// @param {Bool} _disable `true` to disable.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_disable_color
 	static set_disable_color = function (_disable) {
 		gml_pragma("forceinline");
@@ -144,7 +144,7 @@ function BBMOD_DLL(_path)
 	/// shaders!
 	/// @param {Bool} _disable `true` to disable.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_disable_normal
 	static set_disable_normal = function (_disable) {
 		gml_pragma("forceinline");
@@ -172,7 +172,7 @@ function BBMOD_DLL(_path)
 	/// **disabled**.
 	/// @param {Bool} _flip `true` to enable.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_flip_normal
 	static set_flip_normal = function (_flip) {
 		gml_pragma("forceinline");
@@ -204,7 +204,7 @@ function BBMOD_DLL(_path)
 	/// by the default shaders!
 	/// @param {Real} _normals Use one of the `BBMOD_NORMALS_*` macros.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_gen_normal
 	/// @see BBMOD_NORMALS_NONE
 	/// @see BBMOD_NORMALS_FLAT
@@ -236,7 +236,7 @@ function BBMOD_DLL(_path)
 	/// the default shaders!
 	/// @param {Bool} _disable `true` to disable tangent and bitangent vectors.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_disable_tangent
 	static set_disable_tangent = function (_disable) {
 		gml_pragma("forceinline");
@@ -265,7 +265,7 @@ function BBMOD_DLL(_path)
 	/// with the default shaders!
 	/// @param {Bool} _disable `true` to disable texture coordinates.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_disable_uv
 	static set_disable_uv = function (_disable) {
 		gml_pragma("forceinline");
@@ -294,7 +294,7 @@ function BBMOD_DLL(_path)
 	/// is by default **disabled**.
 	/// @param {Bool} _flip `true` to enable.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_flip_uv_horizontally
 	static set_flip_uv_horizontally = function (_flip) {
 		gml_pragma("forceinline");
@@ -322,7 +322,7 @@ function BBMOD_DLL(_path)
 	/// by default **enabled**.
 	/// @param {Bool} _flip `true` to enable.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_flip_uv_vertically
 	static set_flip_uv_vertically = function (_flip) {
 		gml_pragma("forceinline");
@@ -350,7 +350,7 @@ function BBMOD_DLL(_path)
 	/// **disabled**.
 	/// @param {Bool} _invert `true` to invert winding.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_invert_winding
 	static set_invert_winding = function (_invert) {
 		gml_pragma("forceinline");
@@ -381,7 +381,7 @@ function BBMOD_DLL(_path)
 	/// @param {Bool} _leftHanded `true` to enable conversion to left-handed
 	/// coordinate system.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_left_handed
 	static set_left_handed = function (_leftHanded) {
 		gml_pragma("forceinline");
@@ -410,7 +410,7 @@ function BBMOD_DLL(_path)
 	/// This is by default **enabled**.
 	/// @param {Bool} _optimize `true` to enable node optimization.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_optimize_nodes
 	static set_optimize_nodes = function (_optimize) {
 		gml_pragma("forceinline");
@@ -439,7 +439,7 @@ function BBMOD_DLL(_path)
 	/// by default **enabled**.
 	/// @param {Bool} _optimize `true` to enable mesh optimization.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_optimize_meshes
 	static set_optimize_meshes = function (_optimize) {
 		gml_pragma("forceinline");
@@ -468,7 +468,7 @@ function BBMOD_DLL(_path)
 	/// This is by default **enabled**.
 	/// @param {Bool} _optimize `true` to enable material optimization.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_optimize_materials
 	static set_optimize_materials = function (_optimize) {
 		gml_pragma("forceinline");
@@ -500,7 +500,7 @@ function BBMOD_DLL(_path)
 	/// [Animation optimization levels](./AnimationOptimizationLevels.html) for
 	/// more info.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_optimize_animations
 	static set_optimize_animations = function (_level) {
 		gml_pragma("forceinline");
@@ -528,7 +528,7 @@ function BBMOD_DLL(_path)
 	/// This is by default set to **60**.
 	/// @param {Real} _fps The new animation sampling rate.
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the operation fails.
+	/// @throws {BBMOD_Exception} If the operation fails.
 	/// @see BBMOD_DLL.get_sampling_rate
 	static set_sampling_rate = function (_fps) {
 		gml_pragma("forceinline");

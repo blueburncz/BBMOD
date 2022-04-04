@@ -68,7 +68,7 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	/// @param {Struct.BBMOD_VertexFormat} [_vformat] The vertex format of the vertex
 	/// buffer. Defaults to the format of the vertex.
 	/// @return {Struct.BBMOD_Vertex} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the format of the vertex and the format of
+	/// @throws {BBMOD_Exception} If the format of the vertex and the format of
 	/// the buffer are not compatible.
 	static to_vertex_buffer = function (_vbuffer, _vformat) {
 		var _checkFormat = (_vformat == undefined);

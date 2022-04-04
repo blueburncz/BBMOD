@@ -480,7 +480,7 @@ function BBMOD_Vec4(_x, _y, _z, _w) constructor
 	/// @param {Real} _index The index of the component, starting at 0.
 	/// @param {Real} _value The new value of the component.
 	/// @return {Struct.BBMOD_Vec4} Returns `self`.
-	/// @throws {Struct.BBMOD_OutOfRangeException} If the given index is out of range
+	/// @throws {BBMOD_OutOfRangeException} If the given index is out of range
 	/// of possible values.
 	static SetIndex = function (_index, _value) {
 		gml_pragma("forceinline");

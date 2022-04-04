@@ -228,7 +228,7 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @func set()
 	/// @desc Sets the shader as the current shader.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If there is another shader already in use.
+	/// @throws {BBMOD_Exception} If there is another shader already in use.
 	static set = function () {
 		gml_pragma("forceinline");
 		if (BBMOD_SHADER_CURRENT != undefined)
@@ -263,7 +263,7 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @func reset()
 	/// @desc Unsets the shaders.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the shader is not currently in use.
+	/// @throws {BBMOD_Exception} If the shader is not currently in use.
 	static reset = function () {
 		gml_pragma("forceinline");
 		if (!is_current())

@@ -62,7 +62,7 @@ function BBMOD_Class() constructor
 	/// @func implement(_interface)
 	/// @desc Implements an interface into the struct.
 	/// @return {Struct.BBMOD_Class} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the struct already implements the interface.
+	/// @throws {BBMOD_Exception} If the struct already implements the interface.
 	static implement = function (_interface) {
 		gml_pragma("forceinline");
 		if (implements(_interface))

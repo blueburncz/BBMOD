@@ -8,7 +8,7 @@
 /// @param {String} [_sha1] Expected SHA1 of the file. If the actual one does
 /// not match with this, then the model will not be loaded.
 ///
-/// @throws {Struct.BBMOD_Exception} When the sprite fails to load.
+/// @throws {BBMOD_Exception} When the sprite fails to load.
 function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {

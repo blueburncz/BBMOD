@@ -315,11 +315,22 @@ function BBMOD_Terrain() constructor
 		var i = 0;
 		repeat (5)
 		{
-			var _mat = Layer[i++];
+			var _mat = Layer[i];
 			if (_mat != undefined)
 			{
-				_mat.RenderQueue.draw_mesh(VertexBuffer, _matrix, _mat);
+				_mat.RenderQueue
+					.apply_material(_mat) // TODO: Enable shadows only from the first layer!
+					.begin_conditional_block()
+					.set_gpu_zwriteenable(i == 0)
+					.set_gpu_zfunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
+					.set_sampler("bbmod_Splatmap", Splatmap)
+					.set_uniform_i("bbmod_SplatmapIndex", i - 1)
+					.set_world_matrix(_matrix)
+					.submit_vertex_buffer(VertexBuffer, pr_trianglelist, _mat.BaseOpacity)
+					.reset_material()
+					.end_conditional_block();
 			}
+			++i;
 		}
 		return self;
 	};

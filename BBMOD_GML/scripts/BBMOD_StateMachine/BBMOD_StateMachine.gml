@@ -96,7 +96,7 @@ function BBMOD_StateMachine()
 	/// {@link BBMOD_StateMachine.OnStateChange}.
 	/// @param {Real} _state The new state.
 	/// @return {Struct.BBMOD_StateMachine} Returns itself.
-	/// @throws {Struct.BBMOD_Exception} If an invalid state is passed.
+	/// @throws {BBMOD_Exception} If an invalid state is passed.
 	static change_state = function (_state) {
 		gml_pragma("forceinline");
 

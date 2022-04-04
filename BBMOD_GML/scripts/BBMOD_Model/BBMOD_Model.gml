@@ -22,7 +22,7 @@
 /// }
 /// ```
 ///
-/// @throws {Struct.BBMOD_Exception} When the model fails to load.
+/// @throws {BBMOD_Exception} When the model fails to load.
 function BBMOD_Model(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {
@@ -89,7 +89,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @desc Loads model data from a buffer.
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
 	/// @return {Struct.BBMOD_Model} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If loading fails.
+	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
 		var _type = buffer_read(_buffer, buffer_string);
 		if (_type != "bbmod")
@@ -232,7 +232,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @desc Retrieves a material by its name.
 	/// @param {String} _name The name of the material.
 	/// @return {Struct.BBMOD_BaseMaterial} The material.
-	/// @throws {Struct.BBMOD_Exception} If the model does not have a material with
+	/// @throws {BBMOD_Exception} If the model does not have a material with
 	/// given name.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
@@ -256,7 +256,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @param {String} _name The name of the material slot.
 	/// @param {Struct.BBMOD_BaseMaterial} _material The material.
 	/// @return {Struct.BBMOD_Model} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If the model does not have a material with
+	/// @throws {BBMOD_Exception} If the model does not have a material with
 	/// given name.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames

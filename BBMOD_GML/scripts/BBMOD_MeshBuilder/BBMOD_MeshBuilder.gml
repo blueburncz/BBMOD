@@ -71,7 +71,7 @@ function BBMOD_MeshBuilder()
 	/// @func make_tangents()
 	/// @desc Makes tangent and bitangent vectors for added vertices.
 	/// @return {Struct.BBMOD_MeshBuilder} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If an error occurs during the process.
+	/// @throws {BBMOD_Exception} If an error occurs during the process.
 	/// @source https://gamedev.stackexchange.com/a/68617
 	static make_tangents = function () {
 		var _faceCount = ds_list_size(Faces);
@@ -200,7 +200,7 @@ function BBMOD_MeshBuilder()
 	/// This must be compatible with the format of the added vertices. Defaults to
 	/// the format of the added vertices.
 	/// @return {Struct.BBMOD_Mesh} The created mesh.
-	/// @throws {Struct.BBMOD_Exception} If an error occurs during the mesh building process.
+	/// @throws {BBMOD_Exception} If an error occurs during the mesh building process.
 	/// @see BBMOD_Mesh
 	/// @see BBMOD_VertexFormat
 	static build = function (_vertexFormat) {

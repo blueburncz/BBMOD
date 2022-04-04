@@ -32,7 +32,7 @@ function BBMOD_Resource()
 	/// @func from_buffer(_buffer)
 	/// @desc Loads the resource from a buffer.
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
-	/// @throws {Struct.BBMOD_NotImplementedException} If the method is not implemented.
+	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	static from_buffer = function () {
 		throw new BBMOD_NotImplementedException();
 		// When implementing this method, do not forget to set IsLoaded to true!
@@ -44,7 +44,7 @@ function BBMOD_Resource()
 	/// @param {String} [_sha1]
 	/// @param {Function} [_callback]
 	/// @return {Bool}
-	/// @throws {Struct.BBMOD_Exception}
+	/// @throws {BBMOD_Exception}
 	/// @private
 	static check_file = function (_file, _sha1=undefined, _callback=undefined) {
 		var _err = undefined;
@@ -83,7 +83,7 @@ function BBMOD_Resource()
 	/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one
 	/// does not match with this, then the resource will not be loaded.
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If loading fails.
+	/// @throws {BBMOD_Exception} If loading fails.
 	static from_file = function (_file, _sha1) {
 		Path = _file;
 

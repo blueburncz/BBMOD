@@ -42,7 +42,7 @@
 /// buffer_delete(_buffer);
 /// ```
 ///
-/// @throws {Struct.BBMOD_Exception} When the animation fails to load.
+/// @throws {BBMOD_Exception} When the animation fails to load.
 function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {
@@ -156,7 +156,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @desc Loads animation data from a buffer.
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
 	/// @return {Struct.BBMOD_Animation} Returns `self`.
-	/// @throws {Struct.BBMOD_Exception} If loading fails.
+	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
 		var _type = buffer_read(_buffer, buffer_string);
 		if (_type != "bbanim")

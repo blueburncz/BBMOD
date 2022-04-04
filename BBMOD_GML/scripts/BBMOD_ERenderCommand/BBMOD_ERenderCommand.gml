@@ -126,4 +126,6 @@ enum BBMOD_ERenderCommand
 	SetViewMatrix,
 	/// @member Sets the world matrix.
 	SetWorldMatrix,
+	/// @member Submits a vertex buffer.
+	SubmitVertexBuffer,
 };
