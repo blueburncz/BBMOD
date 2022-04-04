@@ -58,7 +58,7 @@
 /// @see BBMOD_Animation
 /// @see BBMOD_EventListener
 /// @see BBMOD_Model
-function BBMOD_AnimationPlayer(_model, _paused)
+function BBMOD_AnimationPlayer(_model, _paused=false)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -105,7 +105,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	NodeRotationOverride = array_create(64/*Model.NodeCount*/, undefined);
 
 	/// @var {Bool} If `true`, then the animation playback is paused.
-	Paused = (_paused != undefined) ? _paused : false;
+	Paused = _paused;
 
 	/// @var {Real} The current animation playback time.
 	/// @readonly
@@ -265,16 +265,16 @@ function BBMOD_AnimationPlayer(_model, _paused)
 
 			if (_animationTime >= _animation.Duration)
 			{
-				Time %= (_animation.Duration / _animation.TicsPerSecond);
-
 				if (_animInst.Loop)
 				{
+					Time %= (_animation.Duration / _animation.TicsPerSecond);
 					_animationTime %= _animation.Duration;
 					_animInst.EventExecuted = -1;
 					trigger_event(BBMOD_EV_ANIMATION_LOOP, _animation);
 				}
 				else
 				{
+					Time = 0.0;
 					ds_list_delete(Animations, 0);
 					if (!_animation.IsTransition)
 					{
@@ -375,10 +375,10 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// @param {Struct.BBMOD_Animation} _animation An animation to play.
 	/// @param {Bool} [_loop] If `true` then the animation will be looped.
 	/// Defaults to `false`.
-	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static play = function (_animation, _loop) {
+	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	static play = function (_animation, _loop=false) {
 		Animation = _animation;
-		AnimationLoops = (_loop != undefined) ? _loop : false;
+		AnimationLoops = _loop;
 
 		if (AnimationLast != _animation)
 		{
@@ -422,7 +422,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// Defaults to `false`.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	/// @see BBMOD_AnimationPlayer.Animation
-	static change = function (_animation, _loop) {
+	static change = function (_animation, _loop=false) {
 		gml_pragma("forceinline");
 		if (Animation != _animation)
 		{
@@ -498,7 +498,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static submit = function (_materials) {
+	static submit = function (_materials=undefined) {
 		gml_pragma("forceinline");
 		Model.submit(_materials, get_transform());
 		return self;
@@ -510,7 +510,7 @@ function BBMOD_AnimationPlayer(_model, _paused)
 	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static render = function (_materials) {
+	static render = function (_materials=undefined) {
 		gml_pragma("forceinline");
 		Model.render(_materials, get_transform());
 		return self;

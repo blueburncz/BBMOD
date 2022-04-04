@@ -17,7 +17,7 @@ typedef float matrix_t[16];
 
 static inline void matrix_print(const matrix_t m)
 {
-	for (size_t i = 0; i < 16; ++i)
+	for (uint32_t i = 0; i < 16; ++i)
 	{
 		std::cout << m[i] << ", ";
 	}

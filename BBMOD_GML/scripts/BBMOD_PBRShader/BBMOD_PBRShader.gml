@@ -66,9 +66,9 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 	/// @desc Sets a fragment shader uniform `bbmod_IBLTexel` and samplers
 	/// `bbmod_IBL` and `bbmod_BRDF`. These are required for image based
 	/// lighting.
-	/// @param {Struct.BBMOD_ImageBasedLight} [_ibl] The image based light. Defaults to
-	/// the one defined using {@link bbmod_ibl_set}. If the light is not enabled
-	/// then it is not passed.
+	/// @param {Struct.BBMOD_ImageBasedLight/Undefined} [_ibl] The image based light.
+	/// If `undefined`, then the value set by {@link bbmod_ibl_set} is used. If
+	/// the light is not enabled, then it is not passed.
 	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");

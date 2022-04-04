@@ -96,9 +96,9 @@ int main(int argc, const char* argv[])
 			}
 			else if (std::regex_match(argv[i], match, options_regex))
 			{
-				auto o = match[1];
+				auto& o = match[1];
 				bool bValue = (match[2] == "true");
-				size_t iValue = (size_t)strtol(match[2].str().c_str(), (char**)NULL, 10);
+				uint32_t iValue = (uint32_t)strtol(match[2].str().c_str(), (char**)NULL, 10);
 
 				if (o == "-lh" || o == "--left-handed")
 				{

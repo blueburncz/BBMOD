@@ -74,12 +74,12 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_ambient_light([_up[, _down]])
 	/// @desc Sets the `bbmod_LightAmbientUp`, `bbmod_LightAmbientDown` uniforms.
-	/// @param {Struct.BBMOD_Color} [_up] RGBM encoded ambient light color on
-	/// the upper hemisphere. Defaults to the color defined using
-	/// {@link bbmod_light_ambient_set_up}.
-	/// @param {Struct.BBMOD_Color} [_down] RGBM encoded ambient light color on
-	/// the lower hemisphere. Defaults to the color defined using
-	/// {@link bbmod_light_ambient_set_down}.
+	/// @param {Struct.BBMOD_Color/Undefined} [_up] RGBM encoded ambient light
+	/// color on the upper hemisphere. If `undefined`, then the value set by
+	/// {@link bbmod_light_ambient_set_up} is used.
+	/// @param {Struct.BBMOD_Color/Undefined} [_down] RGBM encoded ambient light
+	/// color on the lower hemisphere. If `undefined`, then the value set by
+	/// {@link bbmod_light_ambient_set_down} is used.
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_ambient_light = function (_up=undefined, _down=undefined) {
 		gml_pragma("forceinline");
@@ -93,9 +93,9 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @func set_directional_light([_light])
 	/// @desc Sets uniforms `bbmod_LightDirectionalDir` and
 	/// `bbmod_LightDirectionalColor`.
-	/// @param {Struct.BBMOD_DirectionalLight} [_light] The directional light. Defaults
-	/// to the light set using {@link bbmod_light_directional_set}. If the light
-	/// is not enabled then it is not passed.
+	/// @param {Struct.BBMOD_DirectionalLight/Undefined} [_light] The directional
+	/// light. If `undefined`, then the value set by {@link bbmod_light_directional_set}
+	/// is used. If the light is not enabled then it is not passed.
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	/// @see BBMOD_DirectionalLight
 	static set_directional_light = function (_light=undefined) {
@@ -117,9 +117,9 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_point_lights([_lights])
 	/// @desc Sets uniform `bbmod_LightPointData`.
-	/// @param {Array.Struct.BBMOD_PointLight} [_lights] An array of point
-	/// lights. Defaults to the lights defined using
-	/// {@link bbmod_light_point_add}. Only enabled lights will be used.
+	/// @param {Array.Struct.BBMOD_PointLight/Undefined} [_lights] An array of
+	/// point lights. If `undefined`, then the lights defined using
+	/// {@link bbmod_light_point_add} are passed. Only enabled lights will be used!
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_point_lights = function (_lights=undefined) {
 		gml_pragma("forceinline");
@@ -151,15 +151,18 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @func set_fog([_color[, _intensity[, _start[, _end]]]])
 	/// @desc Sets uniforms `bbmod_FogColor`, `bbmod_FogIntensity`,
 	/// `bbmod_FogStart` and `bbmod_FogRcpRange`.
-	/// @param {Struct.BBMOD_Color} [_color] The color of the fog. Defaults to the
-	/// color defined using {@link bbmod_fog_set_color}.
-	/// @param {Real} [_intensity] The fog intensity. Defaults to the value
-	/// defined using {@link bbmod_fog_set_intensity}.
-	/// @param {Real} [_start] The distance at which the fog starts. Defaults
-	/// to the value defined using {@link bbmod_fog_set_start}.
-	/// @param {Real} [_end] The distance at which the fog has maximum intensity.
-	/// Defaults to the value defined using {@link bbmod_fog_set_end}.
-	/// @return {Struct.BBMOD_Shader] Returns `self`.
+	/// @param {Struct.BBMOD_Color/Undefined} [_color] The color of the fog.
+	/// If `undefined`, then the value set by {@link bbmod_fog_set_color} is
+	/// used.
+	/// @param {Real/Undefined} [_intensity] The fog intensity. If `undefined`,
+	/// then the value set by {@link bbmod_fog_set_intensity} is used.
+	/// @param {Real/Undefined} [_start] The distance at which the fog starts.
+	/// If `undefined`, then the value set by {@link bbmod_fog_set_start} is
+	/// used.
+	/// @param {Real/Undefined} [_end] The distance at which the fog has maximum
+	/// intensity. If `undefined`, then the value set by {@link bbmod_fog_set_end}
+	/// is used.
+	/// @return {Struct.BBMOD_DefaultShader] Returns `self`.
 	static set_fog = function (_color=undefined, _intensity=undefined, _start=undefined, _end=undefined) {
 		gml_pragma("forceinline");
 		_color ??= global.__bbmodFogColor;

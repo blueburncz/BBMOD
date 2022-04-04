@@ -214,7 +214,7 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 	};
 
 	/// @func ToConstant()
-	/// @desc Encodes the color into a single value, compatible with the GM
+	/// @desc Encodes the color into a single value, compatible with GameMaker's
 	/// color constants. Ignores the alpha channel.
 	/// @return {Real} The color as a single value.
 	/// @example
@@ -247,15 +247,14 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func ToRGBM([_array[, _index]])
 	/// @desc Encodes the color into RGBM format, ignoring the alpha channel.
-	/// @param {Array.Real} [_array] The array to output the values to. A new one
-	/// is created if not defined.
-	/// @param {Real} [_index] The index to start writing the values to. Defaults
-	/// to 0.
+	/// @param {Array.Real/Undefined} [_array] The array to output the values to.
+	/// If `undefined`, then a new one is created.
+	/// @param {Real} [_index] The index to start writing the values to.
+	/// Defaults to 0.
 	/// @return {Array.Real} Returns the array with RGBM values.
-	static ToRGBM = function (_array, _index) {
+	static ToRGBM = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
-		_array = (_array != undefined) ? _array : array_create(4, 0);
-		_index = (_index != undefined) ? _index : 0;
+		_array ??= array_create(4, 0);
 		var _red = min(Red / BBMOD_RGBM_VALUE_MAX, 1.0);
 		var _green = min(Green / BBMOD_RGBM_VALUE_MAX, 1.0);
 		var _blue = min(Blue / BBMOD_RGBM_VALUE_MAX, 1.0);

@@ -140,13 +140,13 @@ function BBMOD_ResourceManager()
 	/// a reference to it, if it is already loaded.
 	///
 	/// @param {String} _path The path to the resource.
-	/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the resource will not be loaded.
-	/// @param {Function} [_onLoad] A function to execute when the resource is
-	/// loaded or if an error occurs while loading it. It must take the error as
-	/// the first argument and the resource as the second argument. If no error
-	/// occurs, then `undefined` is passed. If the resource was already loaded
-	/// when calling this function, then this callback is not executed.
+	/// @param {String/Undefined [_sha1] Expected SHA1 of the file. If the actual
+	/// one does not match with this, then the resource will not be loaded.
+	/// @param {Function/Undefined} [_onLoad] A function to execute when the
+	/// resource is loaded or if an error occurs while loading it. It must take
+	/// the error as the first argument and the resource as the second argument.
+	/// If no error occurs, then `undefined` is passed. If the resource was already
+	/// loaded when calling this function, then this callback is not executed.
 	///
 	/// @return {Struct.BBMOD_Resource/Undefined} The resource.
 	///

@@ -1,26 +1,24 @@
 /// @func BBMOD_Quaternion([_x, _y, _z, _w])
 /// @desc A quaternion.
-/// @param {Real} [_x] The first component of the quaternion.
-/// @param {Real} [_y] The second component of the quaternion.
-/// @param {Real} [_z] The third component of the quaternion.
-/// @param {Real} [_w] The fourth component of the quaternion.
-/// @note If the arguments are not specified, then an identity quaternion
-/// is created.
-function BBMOD_Quaternion(_x, _y, _z, _w) constructor
+/// @param {Real} [_x] The first component of the quaternion. Defaults to 0.
+/// @param {Real} [_y] The second component of the quaternion. Defaults to 0.
+/// @param {Real} [_z] The third component of the quaternion. Defaults to 0.
+/// @param {Real} [_w] The fourth component of the quaternion. Defaults to 1.
+/// @note If you leave the arguments to their default values, then an identity
+/// quaternion is created.
+function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 {
-	var _makeIdentity = (_x == undefined);
-
 	/// @var {Real} The first component of the quaternion.
-	X = _makeIdentity ? 0.0 : _x;
+	X = _x;
 
 	/// @var {Real} The second component of the quaternion.
-	Y = _makeIdentity ? 0.0 : _y;
+	Y = _y;
 
 	/// @var {Real} The third component of the quaternion.
-	Z = _makeIdentity ? 0.0 : _z;
+	Z = _z;
 
 	/// @var {Real} The fourth component of the quaternion.
-	W = _makeIdentity ? 1.0 : _w;
+	W = _w;
 
 	/// @func Add(_q)
 	/// @desc Adds quaternions and returns the result as a new quaternion.
@@ -99,16 +97,15 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 		return new BBMOD_Quaternion(0.0, 0.0, 0.0, exp(W));
 	};
 
-	/// @func FromArray()
+	/// @func FromArray(_array[, _index])
 	/// @desc Loads quaternion components `[x, y, z, w]` from an array.
 	/// @param {Array.Real} _array The array to read the quaternion components
 	/// from.
 	/// @param {Real} [_index] The index to start reading the quaternion
 	/// components from. Defaults to 0.
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
-	static FromArray = function (_array, _index) {
+	static FromArray = function (_array, _index=0) {
 		gml_pragma("forceinline");
-		_index = (_index != undefined) ? _index : 0;
 		X = _array[_index];
 		Y = _array[_index + 1];
 		Z = _array[_index + 2];
@@ -132,7 +129,7 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 		return self;
 	};
 
-	/// @func FromBuffer()
+	/// @func FromBuffer(_buffer, _type)
 	/// @desc Loads quaternion components `[x, y, z, w]` from a buffer.
 	/// @param {Id.Buffer} _buffer The buffer to read the quaternion components
 	/// from.
@@ -464,10 +461,9 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// is created.
 	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
 	/// @return {Array.Real} Returns the destination array.
-	static ToArray = function (_array, _index) {
+	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
-		_array = (_array != undefined) ? _array : array_create(4, 0.0);
-		_index = (_index != undefined) ? _index : 0;
+		_array ??= array_create(4, 0.0);
 		_array[@ _index]     = X;
 		_array[@ _index + 1] = Y;
 		_array[@ _index + 2] = Z;
@@ -482,11 +478,10 @@ function BBMOD_Quaternion(_x, _y, _z, _w) constructor
 	/// @param {Real} [_index] The starting index in the destination array. Defaults
 	/// to 0.
 	/// @return {Array.Real} Returns the destination array.
-	static ToMatrix = function (_dest, _index) {
+	static ToMatrix = function (_dest=undefined, _index=0) {
 		gml_pragma("forceinline");
 
-		_dest = (_dest != undefined) ? _dest : matrix_build_identity();
-		_index = (_index != undefined) ? _index : 0;
+		_dest ??= matrix_build_identity();
 
 		var _temp0, _temp1, _temp2;
 		var _q0 = X;

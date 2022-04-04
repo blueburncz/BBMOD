@@ -6,9 +6,9 @@
 ///
 /// @desc A model.
 ///
-/// @param {String} [_file] The "*.bbmod" model file to load.
-/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one does
-/// not match with this, then the model will not be loaded.
+/// @param {String/Undefined} [_file] The "*.bbmod" model file to load.
+/// @param {String/Undefined} [_sha1] Expected SHA1 of the file. If the actual
+/// one does not match with this, then the model will not be loaded.
 ///
 /// @example
 /// ```gml
@@ -279,20 +279,17 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @func get_vertex_format([_bones[, _ids]])
 	/// @desc Retrieves or creates a vertex format compatible with the model.
 	/// This can be used when creating a {@link BBMOD_StaticBatch}.
-	/// @param {Bool} [_bones] `true` to include bone data in the vertex format.
-	/// Defaults to `true`.
-	/// @param {Bool} [_ids] `true` to include model instance ids in the vertex
-	/// format.
-	/// Defaults to `false`.
+	/// @param {Bool} [_bones] Use `true` to include bone data in the vertex
+	/// format. Defaults to `true`.
+	/// @param {Bool} [_ids] Use `true` to include model instance ids in the
+	/// vertex format. Defaults to `false`.
 	/// @return {Struct.BBMOD_VertexFormat} The vertex format.
 	/// @example
 	/// ```gml
 	/// staticBatch = new BBMOD_StaticBatch(mod_tree.get_vertex_format());
 	/// ```
-	static get_vertex_format = function (_bones, _ids) {
+	static get_vertex_format = function (_bones=true, _ids=false) {
 		gml_pragma("forceinline");
-		_bones = (_bones != undefined) ? _bones : true;
-		_ids = (_ids != undefined) ? _ids : false;
 		return new BBMOD_VertexFormat(
 			VertexFormat.Vertices,
 			VertexFormat.Normals,
@@ -335,7 +332,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	/// @see BBMOD_ERenderPass
-	static submit = function (_materials, _transform) {
+	static submit = function (_materials=undefined, _transform=undefined) {
 		gml_pragma("forceinline");
 		if (RootNode != undefined)
 		{
@@ -364,7 +361,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
-	static render = function (_materials, _transform) {
+	static render = function (_materials=undefined, _transform=undefined) {
 		gml_pragma("forceinline");
 		if (RootNode != undefined)
 		{

@@ -42,7 +42,7 @@ function BBMOD_Resource()
 	/// @func check_file(_file[, _sha1[, _callback]])
 	/// @param {String} _file
 	/// @param {String} [_sha1]
-	/// @param {Function} [_callback]
+	/// @param {Function/Undefined} [_callback]
 	/// @return {Bool}
 	/// @throws {BBMOD_Exception}
 	/// @private
@@ -80,11 +80,11 @@ function BBMOD_Resource()
 	/// @func from_file(_file[, _sha1])
 	/// @desc Loads the resource from a file.
 	/// @param {String} _file The path to the file.
-	/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one
+	/// @param {String/Undefined} [_sha1] Expected SHA1 of the file. If the actual one
 	/// does not match with this, then the resource will not be loaded.
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	/// @throws {BBMOD_Exception} If loading fails.
-	static from_file = function (_file, _sha1) {
+	static from_file = function (_file, _sha1=undefined) {
 		Path = _file;
 
 		check_file(_file, _sha1);
@@ -111,12 +111,12 @@ function BBMOD_Resource()
 	/// @desc Asynchronnously loads the resource from a file.
 	///
 	/// @param {String} _file The path to the file.
-	/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one
-	/// does not match with this, then the resource will not be loaded.
-	/// @param {Function} [_callback] The function to execute when the resource is
-	/// loaded or if an error occurs. It must take the error as the first argument
-	/// and the resource as the second argument. If no error occurs, then `undefined`
-	/// is passed.
+	/// @param {String/Undefined} [_sha1] Expected SHA1 of the file. If the actual
+	/// one does not match with this, then the resource will not be loaded.
+	/// @param {Function/Undefined} [_callback] The function to execute when the
+	/// resource is loaded or if an error occurs. It must take the error as the
+	/// first argument and the resource as the second argument. If no error occurs,
+	/// then `undefined` is passed.
 	///
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	///

@@ -69,7 +69,7 @@ GM_EXPORT gmreal_t bbmod_dll_get_gen_normal()
 
 GM_EXPORT gmreal_t bbmod_dll_set_gen_normal(gmreal_t generate)
 {
-	gConfig.GenNormals = (size_t)generate;
+	gConfig.GenNormals = (uint32_t)generate;
 	return BBMOD_SUCCESS;
 }
 
@@ -179,7 +179,7 @@ GM_EXPORT gmreal_t bbmod_dll_get_optimize_animations()
 
 GM_EXPORT gmreal_t bbmod_dll_set_optimize_animations(gmreal_t level)
 {
-	gConfig.AnimationOptimization = (size_t)level;
+	gConfig.AnimationOptimization = (uint32_t)level;
 	return BBMOD_SUCCESS;
 }
 

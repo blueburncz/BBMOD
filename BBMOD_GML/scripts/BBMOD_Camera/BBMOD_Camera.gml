@@ -1,11 +1,16 @@
 /// @func BBMOD_Camera()
-/// @desc A first-person and third-person camera with mouselook.
+///
+/// @desc A camera with support for both orthographic and perspective projection.
+/// While using perspective projection, you can easily switch between first-person
+/// and third-person view. Comes with a mouselook implementation that also works
+/// in HTML5.
+///
 /// @example
 /// ```gml
 /// // Create event
 /// camera = new BBMOD_Camera();
 /// camera.FollowObject = OPlayer;
-/// camera.Zoom = 0; // Use 0 for FPS, > 0 for TPS
+/// camera.Zoom = 0.0; // Use 0.0 for FPS, > 0.0 for TPS
 ///
 /// // End-Step event
 /// camera.set_mouselook(true);
@@ -17,12 +22,12 @@
 /// ```
 function BBMOD_Camera() constructor
 {
-	/// @var {camera} An underlying GM camera.
+	/// @var {camera} An underlying GameMaker camera.
 	/// @readonly
 	Raw = camera_create();
 
 	/// @var {Real} The camera's exposure value. Defaults to `1`.
-	Exposure = 1;
+	Exposure = 1.0;
 
 	/// @var {Struct.BBMOD_Vec3} The camera's positon. Defaults to `[0, 0, 0]`.
 	Position = new BBMOD_Vec3(0.0);
@@ -36,6 +41,8 @@ function BBMOD_Camera() constructor
 	Up = new BBMOD_Vec3(0.0, 0.0, 1.0);
 
 	/// @var {Real} The camera's field of view. Defaults to `60`.
+	/// @note This does not have any effect when {@link BBMOD_Camera.Orthographic}
+	/// is enabled.
 	Fov = 60.0;
 
 	/// @var {Real} The camera's aspect ratio. Defaults to `16 / 9`.
@@ -43,11 +50,22 @@ function BBMOD_Camera() constructor
 
 	/// @var {Real} Distance to the near clipping plane. Anything closer to the
 	/// camera than this will not be visible. Defaults to `0.1`.
+	/// @note This can be a negative value if {@link BBMOD_Camera.Orthographic}
+	/// is enabled.
 	ZNear = 0.1;
 
 	/// @var {Real} Distance to the far clipping plane. Anything farther from
 	/// the camera than this will not be visible. Defaults to `32768`.
 	ZFar = 32768.0;
+
+	/// @var {bool} Use `true` to enable orthographic projection. Defaults to
+	/// `false` (perspective projection).
+	Orthographic = false;
+
+	/// @var {real} The width of the orthographic projection. Height is computed
+	/// using {@link BBMOD_Camera.AspectRatio}. Defaults to the window's width.
+	/// @see BBMOD_Camera.Orthographic
+	Width = window_get_width();
 
 	/// @var {Id.Instance/Undefined} An id of an instance to follow or
 	/// `undefined`. The object must have a `z` variable (position on the z
@@ -105,6 +123,12 @@ function BBMOD_Camera() constructor
 	/// method. Defaults to `true`.
 	AudioListener = true;
 
+	/// @var {real[16]} The `view * projection` matrix.
+	/// @note This is updated each time {@link BBMOD_Camera.update_matrices}
+	/// is called.
+	/// @readonly
+	ViewProjectionMatrix = matrix_build_identity();
+
 	/// @func set_mouselook(_enable)
 	/// @desc Enable/disable mouselook. This locks the mouse cursor at its
 	/// current position when enabled.
@@ -153,14 +177,24 @@ function BBMOD_Camera() constructor
 	/// ```
 	static update_matrices = function () {
 		gml_pragma("forceinline");
+
 		var _view = matrix_build_lookat(
 			Position.X, Position.Y, Position.Z,
 			Target.X, Target.Y, Target.Z,
 			Up.X, Up.Y, Up.Z);
 		camera_set_view_mat(Raw, _view);
-		var _proj = matrix_build_projection_perspective_fov(
-			-Fov, -AspectRatio, ZNear, ZFar);
+
+		var _proj = Orthographic
+			? matrix_build_projection_ortho(Width, -Width / AspectRatio, ZNear, ZFar)
+			: matrix_build_projection_perspective_fov(
+				-Fov, -AspectRatio, ZNear, ZFar);
 		camera_set_proj_mat(Raw, _proj);
+
+		// Note: Using _view and _proj mat straight away leads into a weird result...
+		ViewProjectionMatrix = matrix_multiply(
+			get_view_mat(),
+			get_proj_mat());
+
 		if (AudioListener)
 		{
 			audio_listener_position(Position.X, Position.Y, Position.Z);
@@ -168,6 +202,7 @@ function BBMOD_Camera() constructor
 				Target.X - Position.X, Target.Y - Position.Y, Target.Z - Position.Z,
 				Up.X, Up.Y, Up.Z);
 		}
+
 		return self;
 	}
 
@@ -175,10 +210,11 @@ function BBMOD_Camera() constructor
 	/// @desc Handles mouselook, updates camera's position, matrices etc.
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
-	/// @param {Function} [_positionHandler] A function which takes the camera's
-	/// position (@{link BBMOD_Vec3}) and returns a new position. This could be
-	/// used for example for camera collisions in a third-person game.
-	/// @return {Struct.BBMOD_Camera} Returns `self`.
+	/// @param {Function/Undefined} [_positionHandler] A function which takes
+	/// the camera's position (@{link BBMOD_Vec3}) and returns a new position.
+	/// This could be used for example for camera collisions in a third-person
+	/// game. Defaults to `undefined`.
+	/// @return {BBMOD_Camera} Returns `self`.
 	static update = function (_deltaTime, _positionHandler=undefined) {
 		if (os_browser != browser_not_a_browser)
 		{
@@ -356,6 +392,34 @@ function BBMOD_Camera() constructor
 			_view[6],
 			_view[10],
 		);
+	};
+
+	/// @func world_to_screen(_position[, _screenWidth[, _screenHeight]])
+	/// @desc Computes screen-space position of a point in world-space.
+	/// @param {BBMOD_Vec3} _position The world-space position.
+	/// @param {real/undefined} [_screenWidth] The width of the screen. If
+	/// `undefined`, it is retrieved using `window_get_width`.
+	/// @param {real/undefined} [_screenHeight] The height of the screen. If
+	/// `undefined`, it is retrieved using `window_get_height`.
+	/// @return {BBMOD_Vec4/undefined} The screen-space position or `undefined`
+	/// if the point is outside of the screen.
+	/// @note This requires {@link BBMOD_Camera.ViewProjectionMatrix}, so you
+	/// should use this *after* {@link BBMOD_Camera.update_matrices} (or
+	/// {@link BBMOD_Camera.update}) is called!
+	static world_to_screen = function (_position, _screenWidth=undefined, _screenHeight=undefined) {
+		gml_pragma("forceinline");
+		_screenWidth ??= window_get_width();
+		_screenHeight ??= window_get_height();
+		var _screenPos = new BBMOD_Vec4(_position.X, _position.Y, _position.Z, 1.0)
+			.Transform(ViewProjectionMatrix);
+		if (_screenPos.Z < 0.0)
+		{
+			return undefined;
+		}
+		_screenPos = _screenPos.Scale(1.0 / _screenPos.W);
+		_screenPos.X = ((_screenPos.X * 0.5) + 0.5) * _screenWidth;
+		_screenPos.Y = (1.0 - ((_screenPos.Y * 0.5) + 0.5)) * _screenHeight;
+		return _screenPos;
 	};
 
 	/// @func apply()

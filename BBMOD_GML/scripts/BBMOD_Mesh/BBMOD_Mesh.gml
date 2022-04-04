@@ -63,7 +63,7 @@ function BBMOD_Mesh(_vertexFormat)
 	/// @func {Array.Real/Undefined} [_transform]
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
-	static submit = function (_material, _transform) {
+	static submit = function (_material, _transform=undefined) {
 		if (!_material.apply())
 		{
 			return self;
@@ -77,11 +77,10 @@ function BBMOD_Mesh(_vertexFormat)
 	};
 
 	/// @func render(_material, _transform, _matrix)
-	/// @desc
 	/// @func {Struct.BBMOD_BaseMaterial} _material
-	/// @func {Array.Real/Undefined} _transform
+	/// @func {Array.Real/undefined} _transform
 	/// @func {Array.Real} _matrix
-	/// @return {Struct.BBMOD_Mesh} Returns `self`.
+	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private
 	static render = function (_material, _transform, _matrix) {
 		gml_pragma("forceinline");

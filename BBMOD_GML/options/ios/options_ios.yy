@@ -1,7 +1,7 @@
 {
   "option_ios_display_name": "BBMOD Demo",
   "option_ios_bundle_name": "com.company.game",
-  "option_ios_version": "3.1.9",
+  "option_ios_version": "3.1.12",
   "option_ios_output_dir": "~/gamemakerstudio2",
   "option_ios_team_id": "",
   "option_ios_orientation_portrait": true,
@@ -34,7 +34,7 @@
   "option_ios_launchscreen_fill": 0,
   "option_ios_interpolate_pixels": false,
   "option_ios_half_ipad1_textures": false,
-  "option_ios_scale": 0,
+  "option_ios_scale": 1,
   "option_ios_texture_page": "2048x2048",
   "option_ios_use_facebook": false,
   "option_ios_facebook_id": "",

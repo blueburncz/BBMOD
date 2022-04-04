@@ -1,24 +1,24 @@
 /// @func BBMOD_Vec4([_x[, _y, _z, _w]])
 /// @desc A 3D vector.
 /// @param {Real} [_x] The first component of the vector. Defaults to 0.
-/// @param {Real} [_y] The second component of the vector. Defaults to `_x`.
-/// @param {Real} [_z] The third component of the vector. Defaults to `_x`.
-/// @param {Real} [_w] The fourth component of the vector. Defaults to `_x`.
+/// @param {Real/Undefined} [_y] The second component of the vector. Defaults to `_x`.
+/// @param {Real/Undefined} [_z] The third component of the vector. Defaults to `_x`.
+/// @param {Real/Undefined} [_w] The fourth component of the vector. Defaults to `_x`.
 /// @see BBMOD_Vec2
 /// @see BBMOD_Vec3
-function BBMOD_Vec4(_x, _y, _z, _w) constructor
+function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructor
 {
 	/// @var {Real} The first component of the vector.
-	X = (_x != undefined) ? _x : 0.0;
+	X = _x;
 
 	/// @var {Real} The second component of the vector.
-	Y = (_y != undefined) ? _y : X;
+	Y = _y ?? X;
 
 	/// @var {Real} The third component of the vector.
-	Z = (_z != undefined) ? _z : X;
+	Z = _z ?? X;
 
 	/// @var {Real} The fourth component of the vector.
-	W = (_w != undefined) ? _w : X;
+	W = _w ?? X;
 
 	/// @func Abs()
 	/// @desc Creates a new vector where each component is equal to the absolute
@@ -67,6 +67,22 @@ function BBMOD_Vec4(_x, _y, _z, _w) constructor
 			ceil(Y),
 			ceil(Z),
 			ceil(W),
+		);
+	};
+
+	/// @func Clamp(_min, _max)
+	/// @desc Clamps each component of the vector between corresponding
+	/// components of `_min` and `_max` and returns the result as a new vector.
+	/// @param {BBMOD_Vec4} _min A vector with minimum components.
+	/// @param {BBMOD_Vec4} _max A vector with maximum components.
+	/// @return {BBMOD_Vec4} The resulting vector.
+	static Clamp = function (_min, _max) {
+		gml_pragma("forceinline");
+		return new BBMOD_Vec4(
+			clamp(X, _min.X, _max.X),
+			clamp(Y, _min.Y, _max.Y),
+			clamp(Z, _min.Z, _max.Z),
+			clamp(W, _min.W, _max.W),
 		);
 	};
 
@@ -203,9 +219,8 @@ function BBMOD_Vec4(_x, _y, _z, _w) constructor
 	/// @param {Real} [_index] The index to start reading the vector components
 	/// from. Defaults to 0.
 	/// @return {Struct.BBMOD_Vec4} Returns `self`.
-	static FromArray = function (_array, _index) {
+	static FromArray = function (_array, _index=0) {
 		gml_pragma("forceinline");
-		_index = (_index != undefined) ? _index : 0;
 		X = _array[_index];
 		Y = _array[_index + 1];
 		Z = _array[_index + 2];
@@ -459,19 +474,43 @@ function BBMOD_Vec4(_x, _y, _z, _w) constructor
 		);
 	};
 
+	/// @func Get(_index)
+	/// @desc Retrieves vector component at given index (0 is X, 1 is Y, etc.).
+	/// @param {uint} _index The index of the component.
+	/// @return {real} The value of the vector component at given index.
+	/// @throws {BBMOD_OutOfRangeException} If an invalid index is passed.
+	static Get = function (_index) {
+		gml_pragma("forceinline");
+		switch (_index)
+		{
+		case 0:
+			return X;
+
+		case 1:
+			return Y;
+
+		case 2:
+			return Z;
+
+		case 3:
+			return W;
+		}
+		throw new BBMOD_OutOfRangeException();
+	};
+
 	/// @func Set([_x[, _y, _z, _w]])
 	/// @desc Sets vector components in-place.
 	/// @param {Real} [_x] The new value of the first component. Defaults to 0.
-	/// @param {Real} [_y] The new value of the second component. Defaults to `_x`.
-	/// @param {Real} [_z] The new value of the third component. Defaults to `_x`.
-	/// @param {Real} [_w] The new value of the fourth component. Defaults to `_x`.
-	/// @return {Struct.BBMOD_Vec3} Returns `self`.
-	static Set = function (_x, _y, _z, _w) {
+	/// @param {Real/Undefined} [_y] The new value of the second component. Defaults to `_x`.
+	/// @param {Real/Undefined} [_z] The new value of the third component. Defaults to `_x`.
+	/// @param {Real/Undefined} [_w] The new value of the fourth component. Defaults to `_x`.
+	/// @return {BBMOD_Vec4} Returns `self`.
+	static Set = function (_x=0.0, _y=undefined, _z=undefined, _w=undefined) {
 		gml_pragma("forceinline");
-		X = (_x != undefined) ? _x : 0.0;
-		Y = (_y != undefined) ? _y : X;
-		Z = (_z != undefined) ? _z : X;
-		W = (_w != undefined) ? _w : X;
+		X = _x;
+		Y = _y ?? X;
+		Z = _z ?? X;
+		W = _w ?? X;
 		return self;
 	};
 
@@ -532,15 +571,14 @@ function BBMOD_Vec4(_x, _y, _z, _w) constructor
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes the components of the vector into the target array.
-	/// @param {Array.Real} [_array] The array to write to. If not specified
-	/// a new one of required size is created.
+	/// @param {Array.Real/Undefined} [_array] The array to write to. If not
+	/// specified a new one of required size is created.
 	/// @param {Real} [_index] The starting index within the target array.
 	/// Defaults to 0.
 	/// @return {Array.Real} The target array.
-	static ToArray = function (_array, _index) {
+	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
-		_array = (_array != undefined) ? _array : array_create(4, 0.0);
-		_index = (_index != undefined) ? _index : 0;
+		_array ??= array_create(4, 0.0);
 		_array[@ _index]     = X;
 		_array[@ _index + 1] = Y;
 		_array[@ _index + 2] = Z;

@@ -153,10 +153,10 @@ function BBMOD_Node(_model) constructor
 
 	/// @func submit(_materials, _transform)
 	/// @desc Immediately submits the node for rendering.
-	/// @param {Array.Struct.BBMOD_Material} _materials An array of materials,
+	/// @param {Array.Struct.BBMOD_BaseMaterial} _materials An array of materials,
 	/// one for each material slot of the model.
-	/// @param {Array.Real/Undefined} _transform An array of transformation
-	/// matrices (for animated models) or `undefined`.
+	/// @param {Array.Real/Undefined} _transform An array of transformation matrices
+	/// (for animated models) or `undefined`.
 	/// @private
 	static submit = function (_materials, _transform) {
 		var _meshes = Model.Meshes;
@@ -197,7 +197,7 @@ function BBMOD_Node(_model) constructor
 
 	/// @func render(_materials, _transform)
 	/// @desc Enqueues the node for rendering.
-	/// @param {Array.Struct.BBMOD_Material} _materials An array of materials,
+	/// @param {Array.Struct.BBMOD_BaseMaterial} _materials An array of materials,
 	/// one for each material slot of the model.
 	/// @param {Array.Real/Undefined} _transform An array of transformation
 	/// matrices (for animated models) or `undefined`.

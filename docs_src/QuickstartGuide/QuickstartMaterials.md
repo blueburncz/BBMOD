@@ -27,7 +27,7 @@ modSword.set_material("Hilt", matSwordHilt)
 Make sure to always use a shader that is compatible with your model (i.e. you
 cannot use `BBMOD_MATERIAL_DEFAULT_ANIMATED` for a model that does not have
 bones). For more info on materials, see the documentation of
-[BBMOD_Material](./BBMOD_Material.html).
+[BBMOD_BaseMaterial](./BBMOD_BaseMaterial.html).
 
 **Note:** If you are interested in using PBR materials, see the
 [PBR module](./PBRModule.html) section for more info on PBR materials in BBMOD.

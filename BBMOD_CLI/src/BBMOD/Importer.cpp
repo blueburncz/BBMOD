@@ -50,9 +50,9 @@ static std::string GetAnimationFilename(SAnimation* animation, int index, const 
 	return GetFilename(out, animationName.c_str(), ".bbanim");
 }
 
-static void LogNode(std::ofstream& log, SNode* node, size_t indent)
+static void LogNode(std::ofstream& log, SNode* node, uint32_t indent)
 {
-	for (size_t i = 0; i < indent * 4; ++i)
+	for (uint32_t i = 0; i < indent * 4; ++i)
 	{
 		log << " ";
 	}
@@ -191,7 +191,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 
 	log << "Materials:" << std::endl;
 	log << "==========" << std::endl;
-	for (size_t i = 0; i < model->MaterialNames.size(); ++i)
+	for (uint32_t i = 0; i < model->MaterialNames.size(); ++i)
 	{
 		log << i << ": " << model->MaterialNames[i] << std::endl;
 	}

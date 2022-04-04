@@ -20,7 +20,8 @@
 /// ```gml
 /// /// @desc Create event
 /// modCar = new BBMOD_Model("Car.bbmod");
-/// matCar = new BBMOD_Material(BBMOD_ShDefaultBatched, sprite_get_texture(SprCar, 0));
+/// matCar = new BBMOD_DefaultMaterial(BBMOD_ShDefaultBatched,
+///     sprite_get_texture(SprCar, 0));
 /// carBatch = new BBMOD_DynamicBatch(modCar, 64);
 ///
 /// /// @desc Draw event
@@ -70,7 +71,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	///
 	/// @desc Immediately submits the dynamic batch for rendering.
 	///
-	/// @param {Struct.BBMOD_BaseMaterial} _material A material. Must use a shader that
+	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {Array.Real} _data An array containing data for each rendered instance.
 	///
@@ -82,7 +83,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
-	/// @see BBMOD_BaseMaterial
+	/// @see BBMOD_Material
 	/// @see BBMOD_ERenderPass
 	static submit = function (_material, _data) {
 		gml_pragma("forceinline");
@@ -97,14 +98,14 @@ function BBMOD_DynamicBatch(_model, _size)
 
 	/// @func render(_material, _data)
 	/// @desc Enqueues the dynamic batch for rendering.
-	/// @param {Struct.BBMOD_BaseMaterial} _material A material. Must use a shader that
+	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
 	/// @param {Array.Real} _data An array containing data for each rendered instance.
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
-	/// @see BBMOD_BaseMaterial
+	/// @see BBMOD_Material
 	static render = function (_material, _data) {
 		gml_pragma("forceinline");
 		_material.RenderQueue.draw_mesh_batched(VertexBuffer, matrix_get(matrix_world), _material, _data);
@@ -137,10 +138,10 @@ function BBMOD_DynamicBatch(_model, _size)
 		return 8;
 	};
 
-	static _draw_object = function (_method, _object, _material, _fn) {
+	static _draw_object = function (_method, _object, _material, _fn=undefined) {
 		gml_pragma("forceinline");
 
-		_fn = (_fn != undefined) ? _fn : default_fn;
+		_fn ??= default_fn;
 
 		var _dataSize = Size * 8;
 		var _data = array_create(_dataSize, 0);
@@ -164,14 +165,19 @@ function BBMOD_DynamicBatch(_model, _size)
 	};
 
 	/// @func submit_object(_object, _material[, _fn])
+	///
 	/// @desc Immediately submits all instances of an object for rendering in
 	/// batches of {@link BBMOD_DynamicBatch.size}.
-	/// @param {Resource.GMObject} _object An object to submit.
-	/// @param {Struct.BBMOD_BaseMaterial} _material A material to use.
-	/// @param {Function} [_fn] A function that writes instance data to an array
-	/// which is then passed to the material's shader. Must return number of
-	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}.
-	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	///
+	/// @param {Real} _object An object to submit.
+	/// @param {Struct.BBMOD_Material} _material A material to use.
+	/// @param {Function/Undefined} [_fn] A function that writes instance data
+	/// to an array which is then passed to the material's shader. Must return
+	/// number of slots it has written to. Defaults to
+	/// {@link BBMOD_DynamicBatch.default_fn}.
+	///
+	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// carBatch.submit_object(OCar, mat_car, function (_data, _index) {
@@ -192,24 +198,30 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// The function defined in this example is actually the implementation of
 	/// {@link BBMOD_DynamicBatch.default_fn}. You can use this to create you own
 	/// variation of it.
+	///
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_DynamicBatch.default_fn
-	static submit_object = function (_object, _material, _fn) {
+	static submit_object = function (_object, _material, _fn=undefined) {
 		_draw_object(method(self, submit), _object, _material, _fn);
 		return self;
 	};
 
 	/// @func render_object(_object, _material[, _fn])
+	///
 	/// @desc Enqueues all instances of an object for rendering in batches of
 	/// {@link BBMOD_DynamicBatch.size}.
-	/// @param {Resource.GMObject} _object An object to render.
-	/// @param {Struct.BBMOD_BaseMaterial} _material A material to use.
-	/// @param {Function} [_fn] A function that writes instance data to an array
-	/// which is then passed to the material's shader. Must return number of
-	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}.
-	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	///
+	/// @param {Real} _object An object to render.
+	/// @param {Struct.BBMOD_Material} _material A material to use.
+	/// @param {Function/Undefined} [_fn] A function that writes instance data
+	/// to an array which is then passed to the material's shader. Must return
+	/// number of slots it has written to. Defaults to
+	/// {@link BBMOD_DynamicBatch.default_fn}.
+	///
+	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// carBatch.render_object(OCar, mat_car, function (_data, _index) {
@@ -228,13 +240,14 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// });
 	/// ```
 	/// The function defined in this example is actually the implementation of
-	/// {@link BBMOD_DynamicBatch.default_fn}. You can use this to create you own
-	/// variation of it.
+	/// {@link BBMOD_DynamicBatch.default_fn}. You can use this to create your
+	/// own variation of it.
+	///
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.default_fn
-	static render_object = function (_object, _material, _fn) {
+	static render_object = function (_object, _material, _fn=undefined) {
 		_draw_object(method(self, render), _object, _material, _fn);
 		return self;
 	};
