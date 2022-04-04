@@ -46,6 +46,30 @@ function BBMOD_RenderQueue(_name=undefined)
 		return self;
 	};
 
+	/// @func apply_material(_material)
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterial} command into the queue.
+	/// @param {Struct.BBMOD_Material} _material
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static apply_material = function (_material) {
+		gml_pragma("forceinline");
+		ds_list_add(
+			RenderCommands,
+			BBMOD_ERenderCommand.ApplyMaterial,
+			_material);
+		return self;
+	};
+
+	/// @func begin_conditional_block()
+	/// @desc Adds a {@link BBMOD_ERenderCommand.BeginConditionalBlock} command into the queue.
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static begin_conditional_block = function () {
+		gml_pragma("forceinline");
+		ds_list_add(
+			RenderCommands,
+			BBMOD_ERenderCommand.BeginConditionalBlock);
+		return self;
+	};
+
 	/// @func draw_mesh(_vertexBuffer, _matrix, _material)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the queue.
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
@@ -101,6 +125,17 @@ function BBMOD_RenderQueue(_name=undefined)
 		return self;
 	};
 
+	/// @func end_conditional_block()
+	/// @desc Adds a {@link BBMOD_ERenderCommand.EndConditionalBlock} command into the queue.
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static end_conditional_block = function () {
+		gml_pragma("forceinline");
+		ds_list_add(
+			RenderCommands,
+			BBMOD_ERenderCommand.EndConditionalBlock);
+		return self;
+	};
+
 	/// @func is_empty()
 	/// @desc Checks whether the render queue is empty.
 	/// @return {Bool} Returns `true` if there are no commands in the render queue.
@@ -117,15 +152,46 @@ function BBMOD_RenderQueue(_name=undefined)
 		var i = 0;
 		var _renderCommands = RenderCommands;
 		var _renderCommandsCount = ds_list_size(_renderCommands);
+		var _condition = false;
+
 		while (i < _renderCommandsCount)
 		{
 			switch (_renderCommands[| i++])
 			{
+			case BBMOD_ERenderCommand.ApplyMaterial:
+				if (!_renderCommands[| i++].apply())
+				{
+					_condition = false;
+					continue;
+				}
+				break;
+
+			case BBMOD_ERenderCommand.BeginConditionalBlock:
+				if (!_condition)
+				{
+					var _counter = 1;
+					while (_counter > 0)
+					{
+						switch (_renderCommands[| i++])
+						{
+						case BBMOD_ERenderCommand.BeginConditionalBlock:
+							++_counter;
+							break;
+
+						case BBMOD_ERenderCommand.EndConditionalBlock:
+							--_counter;
+							break;
+						}
+					}
+				}
+				break;
+
 			case BBMOD_ERenderCommand.DrawMesh:
 				var _material = _renderCommands[| i++];
 				if (!_material.apply())
 				{
 					i += 2;
+					_condition = false;
 					continue;
 				}
 				matrix_set(matrix_world, _renderCommands[| i++]);
@@ -137,6 +203,7 @@ function BBMOD_RenderQueue(_name=undefined)
 				if (!_material.apply())
 				{
 					i += 3;
+					_condition = false;
 					continue;
 				}
 				matrix_set(matrix_world, _renderCommands[| i++]);
@@ -149,14 +216,22 @@ function BBMOD_RenderQueue(_name=undefined)
 				if (!_material.apply())
 				{
 					i += 3;
+					_condition = false;
 					continue;
 				}
 				matrix_set(matrix_world, _renderCommands[| i++]);
 				BBMOD_SHADER_CURRENT.set_batch_data(_renderCommands[| i++]);
 				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
 				break;
+
+			case BBMOD_ERenderCommand.EndConditionalBlock:
+				show_error("Found unmatching end of conditional block in render queue " + Name + "!", true);
+				break;
 			}
+
+			_condition = true;
 		}
+
 		return self;
 	};
 
