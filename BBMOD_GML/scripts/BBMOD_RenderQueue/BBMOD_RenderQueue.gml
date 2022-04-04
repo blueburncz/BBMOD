@@ -1423,6 +1423,9 @@ function __bbmod_reindex_render_queues()
 	array_sort(global.bbmod_render_queues, _sortFn);
 }
 
+/// @func bbmod_get_default_render_queue()
+/// @desc Retrieves the default render queue.
+/// @return {Struct.BBMOD_RenderQueue} The default render queue.
 function bbmod_get_default_render_queue()
 {
 	static _renderQueue = new BBMOD_RenderQueue("Default");

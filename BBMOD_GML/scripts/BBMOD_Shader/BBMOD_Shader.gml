@@ -2,14 +2,16 @@
 /// @private
 global.__bbmodShaderCurrent = undefined;
 
-/// @macro {Struct.BBMOD_Shader/Undefined} The current shader in use or `undefined`.
+/// @macro {Struct.BBMOD_Shader/Undefined} The current shader in use or
+/// `undefined`.
 /// @readonly
 #macro BBMOD_SHADER_CURRENT global.__bbmodShaderCurrent
 
 /// @func BBMOD_Shader(_shader, _vertexFormat)
 /// @desc Base class for wrappers of raw GameMaker shader resources.
 /// @param {Resource.GMShader} _shader The shader resource.
-/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
+/// by the shader.
 /// @see BBMOD_VertexFormat
 function BBMOD_Shader(_shader, _vertexFormat) constructor
 {
@@ -17,7 +19,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @readonly
 	Raw = _shader;
 
-	/// @var {Struct.BBMOD_VertexFormat} The vertex format required by the shader.
+	/// @var {Struct.BBMOD_VertexFormat} The vertex format required by the
+	/// shader.
 	/// @readonly
 	VertexFormat = _vertexFormat;
 
@@ -405,6 +408,8 @@ function __bbmod_shader_set_global_impl(_name, _type, _value)
 	array_push(_globals, _name, _type, _value);
 }
 
+// TODO: Add docs
+
 function bbmod_shader_get_global_f(_name)
 {
 	gml_pragma("forceinline");
@@ -510,7 +515,7 @@ function bbmod_shader_get_global_matrix(_name)
 function bbmod_shader_set_global_matrix(_name)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, true);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Matrix, true);
 }
 
 function bbmod_shader_get_global_matrix_array(_name)
