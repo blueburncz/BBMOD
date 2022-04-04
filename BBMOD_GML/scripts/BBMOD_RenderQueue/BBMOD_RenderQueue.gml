@@ -3,14 +3,15 @@
 /// @readonly
 global.bbmod_render_queues = [];
 
-/// @func BBMOD_RenderQueue([_name])
+/// @func BBMOD_RenderQueue([_name[, _priority]])
 /// @extends BBMOD_Class
 /// @desc A cointainer of render commands.
 /// @param {String/Undefined} [_name] The name of the render queue. Defaults to
 /// "RenderQueue" + number of created render queues - 1, e.g. "RenderQueue0",
 /// "RenderQueue1" etc.
+/// @param {Real} [_priority] The priority of the render queue. Defaults to 0.
 /// @see BBMOD_ERenderCommand
-function BBMOD_RenderQueue(_name=undefined)
+function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -25,14 +26,15 @@ function BBMOD_RenderQueue(_name=undefined)
 	/// debugging purposes.
 	Name = _name ?? ("RenderQueue" + string(IdNext++));
 
+	/// @var {Real} The priority of the render queue. Render queues with lower
+	/// priority come first in the {@link global.bbmod_render_queues} array.
+	/// @readonly
+	Priority = _priority;
+
 	/// @var {Id.DsList.Struct.BBMOD_RenderCommand}
 	/// @private
 	/// @see BBMOD_RenderCommand
 	RenderCommands = ds_list_create();
-
-	/// @var {Real}
-	/// @readonly
-	Priority = 0;
 
 	/// @func set_priority(_p)
 	/// @desc Changes the priority of the render queue. Render queues with lower

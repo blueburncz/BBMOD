@@ -1,5 +1,7 @@
 function BBMOD_Terrain() constructor
 {
+	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
+
 	Layer = array_create(5, undefined);
 
 	Splatmap = pointer_null;
@@ -318,7 +320,7 @@ function BBMOD_Terrain() constructor
 			var _mat = Layer[i];
 			if (_mat != undefined)
 			{
-				_mat.RenderQueue
+				RenderQueue
 					.apply_material(_mat) // TODO: Enable shadows only from the first layer!
 					.begin_conditional_block()
 					.set_gpu_zwriteenable(i == 0)
