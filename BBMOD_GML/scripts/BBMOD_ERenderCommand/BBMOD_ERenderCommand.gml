@@ -27,4 +27,103 @@ enum BBMOD_ERenderCommand
 	/// @member Marks the end of a conditional block.
 	/// @see BBMOD_ERenderCommand.BeginConditionalBlock
 	EndConditionalBlock,
+	/// @member Pops the GPU state.
+	PopGpuState,
+	/// @member Pushes the GPU state.
+	PushGpuState,
+	/// @member Resets material.
+	ResetMaterial,
+	/// @member Resets shader.
+	ResetShader,
+	/// @member Enables/disables alpha testing.
+	SetGpuAlphaTestEnable,
+	/// @member Configures the alpha testing threshold value.
+	SetGpuAlphaTestRef,
+	/// @member Enables/disables alpha blending.
+	SetGpuBlendEnable,
+	/// @member Sets a blend mode.
+	SetGpuBlendMode,
+	/// @member Sets source and destination blend modes.
+	SetGpuBlendModeExt,
+	/// @member Sets source and destination blend modes with separate blend modes
+	/// for the alpha channel.
+	SetGpuBlendModeExtSepAlpha,
+	/// @member Enables/disables writing into individual color channels.
+	SetGpuColorWriteEnable,
+	/// @member Sets the culling mode.
+	SetGpuCullMode,
+	/// @member Configures fog.
+	SetGpuFog,
+	/// @member Enables/disables texture filtering.
+	SetGpuTexFilter,
+	/// @member Enables/disables texture filtering for a specific sampler.
+	SetGpuTexFilterExt,
+	/// @member
+	SetGpuTexMaxAniso,
+	/// @member
+	SetGpuTexMaxAnisoExt,
+	/// @member
+	SetGpuTexMaxMip,
+	/// @member
+	SetGpuTexMaxMipExt,
+	/// @member
+	SetGpuTexMinMip,
+	/// @member
+	SetGpuTexMinMipExt,
+	/// @member
+	SetGpuTexMipBias,
+	/// @member
+	SetGpuTexMipBiasExt,
+	/// @member
+	SetGpuTexMipEnable,
+	/// @member
+	SetGpuTexMipEnableExt,
+	/// @member
+	SetGpuTexMipFilter,
+	/// @member
+	SetGpuTexMipFilterExt,
+	/// @member Enables/disables texture repeat.
+	SetGpuTexRepeat,
+	/// @member Enables/disables texture repeat for a specific sampler.
+	SetGpuTexRepeatExt,
+	/// @member Sets the depth buffer test function.
+	SetGpuZFunc,
+	/// @member Enables/disables testing against the depth buffer.
+	SetGpuZTestEnable,
+	/// @member Enables/disables writing to the depth buffer.
+	SetGpuZWriteEnable,
+	/// @member
+	SetProjectionMatrix,
+	/// @member Sets a shader texture sampler.
+	SetSampler,
+	/// @member Sets a shader.
+	SetShader,
+	/// @member Sets a float shader uniform.
+	SetUniformFloat,
+	/// @member Sets a float2 shader uniform.
+	SetUniformFloat2,
+	/// @member Sets a float3 shader uniform.
+	SetUniformFloat3,
+	/// @member Sets a float4 shader uniform.
+	SetUniformFloat4,
+	/// @member Sets a float array shader uniform.
+	SetUniformFloatArray,
+	/// @member Sets an int shader uniform.
+	SetUniformInt,
+	/// @member Sets an int2 shader uniform.
+	SetUniformInt2,
+	/// @member Sets an int3 shader uniform.
+	SetUniformInt3,
+	/// @member Sets an int4 shader uniform.
+	SetUniformInt4,
+	/// @member Sets an int array shader uniform.
+	SetUniformIntArray,
+	/// @member Sets a matrix shader uniform.
+	SetUniformMatrix,
+	/// @member Sets a matrix array shader uniform.
+	SetUniformMatrixArray,
+	/// @member
+	SetViewMatrix,
+	/// @member
+	SetWorldMatrix,
 };
