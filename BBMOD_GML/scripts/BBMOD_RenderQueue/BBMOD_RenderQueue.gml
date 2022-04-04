@@ -48,17 +48,22 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
-	/// @func apply_material(_material)
-	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterial} command into the queue.
-	/// @param {Struct.BBMOD_Material} _material
+	/// @func apply_material(_material[, _enabledPasses])
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterial} command into
+	/// the queue.
+	/// @param {Struct.BBMOD_Material} _material The material to apply.
+	/// @param {Real} [_enabledPasses] Mask of enabled rendering passes. The
+	/// material will not be applied if the current rendering pass is not one
+	/// of them.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static apply_material = function (_material) {
+	static apply_material = function (_material, _enabledPasses=~0) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.ApplyMaterial,
-			1,
-			_material);
+			2,
+			_material,
+			_enabledPasses);
 		return self;
 	};
 
@@ -960,7 +965,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			switch (_command)
 			{
 			case BBMOD_ERenderCommand.ApplyMaterial:
-				if (!_renderCommands[| i++].apply())
+				var _material = _renderCommands[| i++];
+				var _enabledPasses = _renderCommands[| i++];
+				if (((1 << bbmod_render_pass_get()) & _enabledPasses) == 0
+					|| !_material.apply())
 				{
 					_condition = false;
 					continue;
@@ -975,7 +983,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 					{
 						var _commandInner = _renderCommands[| i++];
 						var _sizeInner = _renderCommands[| i++];
-						show_debug_message([_commandInner, _sizeInner]);
 						switch (_commandInner)
 						{
 						case BBMOD_ERenderCommand.BeginConditionalBlock:

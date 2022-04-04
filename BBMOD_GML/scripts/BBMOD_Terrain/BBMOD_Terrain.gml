@@ -321,7 +321,7 @@ function BBMOD_Terrain() constructor
 			if (_mat != undefined)
 			{
 				RenderQueue
-					.apply_material(_mat) // TODO: Enable shadows only from the first layer!
+					.apply_material(_mat, ~(1 << BBMOD_ERenderPass.Shadows))
 					.begin_conditional_block()
 					.set_gpu_zwriteenable(i == 0)
 					.set_gpu_zfunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
