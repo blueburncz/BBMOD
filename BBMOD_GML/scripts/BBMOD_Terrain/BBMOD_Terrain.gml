@@ -216,11 +216,48 @@ function BBMOD_Terrain(_heightmap=undefined)
 		var _h4 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
 		var _offsetX = frac(_xScaled);
 		var _offsetY = frac(_yScaled);
+		// TODO: Optimize retrieving terrain height
 		if (_offsetX <= _offsetY)
 		{
 			return Position.Z + (_h4 + (_h1-_h4)*(1.0-_offsetY) + (_h3-_h4)*(_offsetX)) * Scale.Z;
 		}
 		return Position.Z + (_h2 + (_h1-_h2)*(1.0-_offsetX) + (_h3-_h2)*(_offsetY)) * Scale.Z;
+	};
+
+
+	/// @func get_normal(_x, _y)
+	/// @desc Retrieves terrain's normal at given coordinate.
+	/// @param {Real} _x The x position to get the normal at.
+	/// @param {Real} _y The y position to get the normal at.
+	/// @return {Struct.BBMOD_Vec3/Undefined} The terrain's normal at given coordinate or
+	/// `undefined` if the coordinate is outside of the terrain.
+	static get_normal = function (_x, _y) {
+		gml_pragma("forceinline");
+		var _xScaled = (_x - Position.X) / Scale.X;
+		var _yScaled = (_y - Position.Y) / Scale.Y;
+		if (_xScaled < 0.0 || _xScaled > Size.X
+			|| _yScaled < 0.0 || _yScaled > Size.Y)
+		{
+			return undefined;
+		}
+		var _imax = ds_grid_width(Height) - 1;
+		var _jmax = ds_grid_height(Height) - 1;
+		var _i1 = floor(_xScaled);
+		var _j1 = floor(_yScaled);
+		var _h1 = Height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
+		var _h2 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
+		var _h3 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		var _h4 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		// TODO: Optimize retrieving terrain normal
+		if (frac(_xScaled) <= frac(_yScaled))
+		{
+			return new BBMOD_Vec3(0.0, -Scale.Y, (_h1 - _h4) * Scale.Z)
+				.Cross(new BBMOD_Vec3(Scale.X, 0.0, (_h3 - _h4) * Scale.Z))
+				.Normalize();
+		}
+		return new BBMOD_Vec3(0.0, Scale.Y, (_h3 - _h2) * Scale.Z)
+			.Cross(new BBMOD_Vec3(-Scale.X, 0.0, (_h1 - _h2) * Scale.Z))
+			.Normalize();
 	};
 
 	/// @func build_normals()
