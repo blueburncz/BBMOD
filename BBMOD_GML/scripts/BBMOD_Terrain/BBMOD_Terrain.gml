@@ -1,6 +1,7 @@
 /// @func BBMOD_Terrain([_heightmap])
 /// @extends BBMOD_Class
-/// @desc A terrain with five material layers controled through a splatmap.
+/// @desc A heightmap based terrain with five material layers controlled through
+/// a splatmap.
 /// @param {Resource.GMSprite/Undefined} [_heightmap] The heightmap to make the
 /// terrain from. If `undefined`, then you will need to build the terrain mesh
 /// yourself later using the terrain's methods.

@@ -84,6 +84,7 @@
         },
         "Resource manager module": "Modules/ResourceManagerModule.md",
         "State machine module": "Modules/StateMachineModule.md",
+        "Terrain module": "Modules/TerrainModule.md",
         "ColMesh module": "Modules/ColMeshModule.md"
       }
     },
