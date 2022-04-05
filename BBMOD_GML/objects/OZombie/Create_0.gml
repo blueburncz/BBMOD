@@ -169,7 +169,7 @@ stateWalk.OnUpdate = method(self, function () {
 		return;
 	}
 
-	if (OMain.terrain.is_inside(x, y))
+	if (OMain.terrain.in_bounds(x, y))
 	{
 		mp_potential_step_object(OPlayer.x, OPlayer.y, speedWalk * global.gameSpeed, OZombie);
 	}

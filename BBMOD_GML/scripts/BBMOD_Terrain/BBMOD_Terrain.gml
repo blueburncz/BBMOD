@@ -84,12 +84,13 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 	/// @see BBMOD_Terrain.build_mesh
 	VertexBuffer = undefined;
 
-	/// @func is_inside(_x, _y)
-	/// @desc 
-	/// @param {Real} _x
-	/// @param {Real} _y
-	/// @return {Bool}
-	static is_inside = function (_x, _y) {
+	/// @func in_bounds(_x, _y)
+	/// @desc Checks whether the coordinate is within the terrain's bounds.
+	/// @param {Real} _x The x coordinate to check.
+	/// @param {Real} _y The y coordinate to check.
+	/// @return {Bool} Returns `true` if the coordinate is within the terrain's
+	/// bounds.
+	static in_bounds = function (_x, _y) {
 		gml_pragma("forceinline");
 		return (_x >= Position.X && _x <= Position.X + Size.X
 			&& _y >= Position.Y && _y <= Position.Y + Size.Y);

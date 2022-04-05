@@ -45,7 +45,7 @@ if (global.gameSpeed > 0.0)
 	var _deltaTime = DELTA_TIME / _gameSpeed;
 	speedCurrent *= 1.0 - (0.1 * _deltaTime);
 
-	if (OMain.terrain.is_inside(x, y)
+	if (OMain.terrain.in_bounds(x, y)
 		&& animationPlayer.Animation != animInteractGround)
 	{
 		var _terrainHeight = OMain.terrain.get_height(x, y);
