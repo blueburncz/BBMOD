@@ -104,7 +104,7 @@ function BBMOD_Vertex(_vertexFormat) constructor
 
 		if (_vformat.Colors)
 		{
-			vertex_color(_vbuffer, ce_color_from_argb(Color), ce_color_argb_to_alpha(Color));
+			vertex_color(_vbuffer, Color & $FFFFFF, ((Color & $FF000000) >> 24) / 255.0);
 		}
 
 		if (_vformat.TangentW)

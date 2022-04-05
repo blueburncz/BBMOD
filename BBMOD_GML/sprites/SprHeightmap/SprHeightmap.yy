@@ -69,8 +69,8 @@
   ],
   "nineSlice": null,
   "parent": {
-    "name": "Sprites",
-    "path": "folders/Demo/Sprites.yy",
+    "name": "Terrain",
+    "path": "folders/Demo/Sprites/Terrain.yy",
   },
   "resourceVersion": "1.0",
   "name": "SprHeightmap",

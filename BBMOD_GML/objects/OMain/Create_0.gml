@@ -63,16 +63,6 @@ matShell.Culling = cull_noculling;
 batchShell = new BBMOD_DynamicBatch(modShell, 32);
 batchShell.freeze();
 
-modPlane = _objImporter.import("Data/Assets/Plane.obj");
-modPlane.freeze();
-matFloor = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(BBMOD_C_WHITE, 1.0)
-	.set_specular_color(BBMOD_C_GRAY);
-matFloor.NormalSmoothness = sprite_get_texture(SprFloor, 0);
-matFloor.Repeat = true;
-matFloor.TextureScale = matFloor.TextureScale.Scale(20.0);
-modPlane.Materials[0] = matFloor;
-
 _objImporter.destroy();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,31 +88,31 @@ renderer.add({
 var _sh = new BBMOD_DefaultShader(BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
 var _m = new BBMOD_DefaultMaterial(_sh);
 _m.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH);
-_m.TextureScale = new BBMOD_Vec2(64.0, 64.0);
+_m.TextureScale = new BBMOD_Vec2(32.0, 32.0);
 _m.Mipmapping = mip_on;
 _m.Repeat = true;
 _m.AlphaBlend = true;
 
 var _rock = _m.clone();
-_rock.set_base_opacity(BBMOD_C_GRAY);
-_rock.NormalSmoothness = sprite_get_texture(SprFloor, 0);
+_rock.BaseOpacity = sprite_get_texture(SprRocks, 0);
+_rock.NormalSmoothness = sprite_get_texture(SprRocks, 1);
 
 var _dirt = _m.clone();
-_dirt.set_base_opacity(BBMOD_C_ORANGE);
-_dirt.NormalSmoothness = sprite_get_texture(SprFloor, 0);
+_dirt.BaseOpacity = sprite_get_texture(SprDirt, 0);
+_dirt.NormalSmoothness = sprite_get_texture(SprDirt, 1);
 
 var _grass = _m.clone();
-_grass.set_base_opacity(BBMOD_C_LIME);
-_grass.NormalSmoothness = sprite_get_texture(SprFloor, 0);
+_grass.BaseOpacity = sprite_get_texture(SprGrass, 0);
+_grass.NormalSmoothness = sprite_get_texture(SprGrass, 1);
 
 var _sand = _m.clone();
-_sand.set_base_opacity(BBMOD_C_YELLOW);
-_sand.NormalSmoothness = sprite_get_texture(SprFloor, 0);
+_sand.BaseOpacity = sprite_get_texture(SprSand, 0);
+_sand.NormalSmoothness = sprite_get_texture(SprSand, 1);
 
 splatmap = -1;
 
 // TODO: Fix memory leak
-bbmod_sprite_add_async("splatmap.png", method(self, function (_err, _sprite) {
+bbmod_sprite_add_async("Data/Assets/Splatmap.png", method(self, function (_err, _sprite) {
 	if (!_err)
 	{
 		splatmap = sprite_get_texture(_sprite, 0);
@@ -130,7 +120,7 @@ bbmod_sprite_add_async("splatmap.png", method(self, function (_err, _sprite) {
 }));
 
 terrain = new BBMOD_Terrain(SprHeightmap);
-terrain.Scale = terrain.Scale.Scale(100.0);
+terrain.Scale = new BBMOD_Vec3(2.0);
 
 terrain.Layer[0] = _grass;
 terrain.Layer[1] = _dirt;
