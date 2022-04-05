@@ -1,10 +1,8 @@
-/// @func BBMOD_Terrain([_heightmap[, _scale[, _zmin[, _zmax]]])/// @extends BBMOD_Class
+/// @func BBMOD_Terrain([_heightmap])
+/// @extends BBMOD_Class
 /// @desc
 /// @param {Resource.GMSprite/Undefined} [_heightmap]
-/// @param {Real} [_scale]
-/// @param {Real} [_zmin]
-/// @param {Real} [_zmax]
-function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
+function BBMOD_Terrain(_heightmap=undefined)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -35,9 +33,8 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 	/// @readonly
 	Size = new BBMOD_Vec2();
 
-	/// @var {Real} Pixel to world units scale.
-	/// @private
-	Scale = 1.0;
+	/// @var {Struct.BBMOD_Vec3} The scale of the terrain.
+	Scale = new BBMOD_Vec3(1.0, 1.0, 1.0);
 
 	/// @var {Id.DsGrid} Height of individual vertices (on the z axis).
 	/// @private
@@ -92,25 +89,20 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 	/// bounds.
 	static in_bounds = function (_x, _y) {
 		gml_pragma("forceinline");
-		return (_x >= Position.X && _x <= Position.X + Size.X
-			&& _y >= Position.Y && _y <= Position.Y + Size.Y);
+		return (_x >= Position.X && _x <= Position.X + (Size.X * Scale.X)
+			&& _y >= Position.Y && _y <= Position.Y + (Size.Y * Scale.Y));
 	};
 
-	/// @func from_heightmap(_sprite, _scale, _zmin, _zmax)
+	/// @func from_heightmap(_sprite)
 	/// @desc Initializes terrain height from a sprite.
 	/// @param {Resource.GMSprite} _sprite The heightmap sprite.
-	/// @param {Real} _scale
-	/// @param {Real} _zmin The minimum terrain height (i.e. height that
-	/// corresponds to black color on the heightmap).
-	/// @param {Real} _zmax The maximum terrain height (i.e. height that
-	/// corresponds to white color on the heightmap).
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static from_heightmap = function (_sprite, _scale, _zmin, _zmax) {
+	static from_heightmap = function (_sprite) {
 		var _spriteWidth = sprite_get_width(_sprite);
 		var _spriteHeight = sprite_get_height(_sprite);
 
-		Scale = _scale;
-		Size.Set(_spriteWidth * Scale, _spriteHeight * Scale);
+		Size.X = _spriteWidth;
+		Size.Y = _spriteHeight;
 
 		ds_grid_resize(Height, _spriteWidth, _spriteHeight);
 		ds_grid_clear(Height, 0);
@@ -149,7 +141,7 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 			var _i = 0;
 			repeat (_spriteWidth)
 			{
-				Height[# _i++, _j] = lerp(_zmin, _zmax, buffer_read(_buffer, buffer_u8) / 255.0);
+				Height[# _i++, _j] = buffer_read(_buffer, buffer_u8);
 				buffer_seek(_buffer, buffer_seek_relative, 3);
 			}
 			++_j;
@@ -206,25 +198,25 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 	/// `undefined` if the coordinate is outside of the terrain.
 	static get_height = function (_x, _y) {
 		gml_pragma("forceinline");
-		if (_x < Position.X || _x > Position.X + Size.X
-			|| _y < Position.Y || _y > Position.Y + Size.Y)
+		var _xScaled = (_x - Position.X) / Scale.X;
+		var _yScaled = (_y - Position.Y) / Scale.Y;
+		if (_xScaled < 0.0 || _xScaled > Size.X
+			|| _yScaled < 0.0 || _yScaled > Size.Y)
 		{
 			return undefined;
 		}
 		var _imax = ds_grid_width(Height) - 1;
 		var _jmax = ds_grid_height(Height) - 1;
-		var _x4 = (_x - Position.X) / Scale;
-		var _y4 = (_y - Position.Y) / Scale;
-		var _i1 = floor(_x4);
-		var _j1 = floor(_y4);
+		var _i1 = floor(_xScaled);
+		var _j1 = floor(_yScaled);
 		var _h1 = Height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
 		var _h2 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
 		var _h3 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
 		var _h4 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
-		return (lerp(
-			lerp(_h1, _h2, frac(_x4)),
-			lerp(_h3, _h4, frac(_x4)),
-			frac(_y4)) + Position.Z);
+		return (Position.Z + lerp(
+			lerp(_h1, _h2, frac(_xScaled)),
+			lerp(_h3, _h4, frac(_xScaled)),
+			frac(_yScaled)) * Scale.Z);
 	};
 
 	/// @func build_normals()
@@ -239,7 +231,7 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 			{
 				var _nx = get_height_index(_i - 1, _j) - get_height_index(_i + 1, _j);
 				var _ny = get_height_index(_i, _j - 1) - get_height_index(_i, _j + 1);
-				var _nz = Scale * 2;
+				var _nz = 2.0;
 				var _r = sqrt((_nx * _nx) + (_ny * _ny) + (_nz * _nz));
 				_nx /= _r;
 				_ny /= _r;
@@ -294,7 +286,6 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 		var _vbuffer = vertex_create_buffer();
 		vertex_begin(_vbuffer, VertexFormat.Raw);
 		var _i = 0;
-		var _scale = Scale;
 		repeat (_rows - 1)
 		{
 			var _j = 0;
@@ -305,14 +296,14 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 				var _z3 = _height[# _i + 1, _j + 1];
 				var _z4 = _height[# _i, _j + 1];
 
-				var _x1 = _i * _scale;
-				var _y1 = _j * _scale;
-				var _x2 = (_i + 1) * _scale;
-				var _y2 = _j * _scale;
-				var _x3 = (_i + 1) * _scale;
-				var _y3 = (_j + 1) * _scale;
-				var _x4 = _i * _scale;
-				var _y4 = (_j + 1) * _scale;
+				var _x1 = _i;
+				var _y1 = _j;
+				var _x2 = _i + 1;
+				var _y2 = _j;
+				var _x3 = _i + 1;
+				var _y3 = _j + 1;
+				var _x4 = _i;
+				var _y4 = _j + 1;
 
 				var _u1 = _i / _rows;
 				var _v1 = _j / _cols;
@@ -399,7 +390,7 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 	/// @desc Immediately submits the terrain mesh for rendering.
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static submit = function () {
-		matrix_set(matrix_world, matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, 1, 1, 1));
+		matrix_set(matrix_world, matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z));
 		var i = 0;
 		repeat (5)
 		{
@@ -421,7 +412,7 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 	/// @desc Enqueues the terrain mesh for rendering.
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static render = function () {
-		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, 1, 1, 1);
+		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
 		var i = 0;
 		repeat (5)
 		{
@@ -458,7 +449,7 @@ function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
 
 	if (_heightmap != undefined)
 	{
-		from_heightmap(_heightmap, _scale, _zmin, _zmax);
+		from_heightmap(_heightmap);
 		build_normals();
 		build_smooth_normals();
 		build_mesh();

@@ -130,6 +130,7 @@ bbmod_sprite_add_async("splatmap.png", method(self, function (_err, _sprite) {
 }));
 
 terrain = new BBMOD_Terrain(SprHeightmap);
+terrain.Scale = terrain.Scale.Scale(100.0);
 
 terrain.Layer[0] = _grass;
 terrain.Layer[1] = _dirt;
