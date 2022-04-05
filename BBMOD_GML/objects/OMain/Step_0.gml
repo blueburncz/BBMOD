@@ -16,8 +16,8 @@ if (!instance_exists(OZombie)
 	repeat (++wave)
 	{
 		instance_create_layer(
-			random(room_width),
-			random(room_height),
+			terrain.Position.X + random(terrain.Size.X),
+			terrain.Position.Y + random(terrain.Size.Y),
 			"Instances",
 			OZombie);
 	}

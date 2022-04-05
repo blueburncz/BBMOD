@@ -4,11 +4,10 @@ z += zspeed * global.gameSpeed;
 
 zspeed -= 0.1 * global.gameSpeed;
 
-var _terrainHeight = OMain.terrain.get_height_xy(x, y);
+var _terrainHeight = OMain.terrain.get_height(x, y);
 
-if (z < _terrainHeight
-	&& x >= 0 && x < room_width
-	&& y >= 0 && y < room_height)
+if (_terrainHeight != undefined
+	&& z < _terrainHeight)
 {
 	z = _terrainHeight;
 	zspeed = 0;

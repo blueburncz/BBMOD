@@ -1,6 +1,10 @@
 event_inherited();
 
-if (z <= OMain.terrain.get_height_xy(x, y) && !onGround)
+var _terrainHeight = OMain.terrain.get_height(x, y);
+
+if (_terrainHeight != undefined
+	&& z <= _terrainHeight
+	&& !onGround)
 {
 	var _sound = choose(
 		SndShell0,

@@ -1,6 +1,6 @@
 event_inherited();
 
-z = OMain.terrain.get_height_xy(x, y);
+z = OMain.terrain.get_height(x, y) ?? 0.0;
 
 ReceiveDamage = function (_damage) {
 	hp -= _damage;
@@ -169,8 +169,7 @@ stateWalk.OnUpdate = method(self, function () {
 		return;
 	}
 
-	if (x >= 0 && x <= room_width
-		&& y >= 0 && y <= room_height)
+	if (OMain.terrain.is_inside(x, y))
 	{
 		mp_potential_step_object(OPlayer.x, OPlayer.y, speedWalk * global.gameSpeed, OZombie);
 	}

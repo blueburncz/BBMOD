@@ -1,42 +1,115 @@
-function BBMOD_Terrain() constructor
+/// @func BBMOD_Terrain([_heightmap[, _scale[, _zmin[, _zmax]]])/// @extends BBMOD_Class
+/// @desc
+/// @param {Resource.GMSprite/Undefined} [_heightmap]
+/// @param {Real} [_scale]
+/// @param {Real} [_zmin]
+/// @param {Real} [_zmax]
+function BBMOD_Terrain(_heightmap=undefined, _scale=1.0, _zmin=0.0, _zmax=255.0)
+	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
+	static Super_Class = {
+		destroy: destroy,
+	};
+
+	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
+	/// @readonly
 	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
 
+	/// @var {Array.(Struct.BBMOD_Material/Undefined)} Array of 5 material
+	/// layers. Use `undefined` instead of a material to disable certain layer.
 	Layer = array_create(5, undefined);
 
+	/// @var {Pointer.Texture} A texture that controls visibility of individual
+	/// layers. The first layer is always visible (if the material is not
+	/// `undefined`), the red channel of the splatmap controls visibility of the
+	/// second layer, the green channel controls the third layer etc.
 	Splatmap = pointer_null;
 
+	/// @var {Struct.BBMOD_Vec3} The position of the terrain in the world.
 	Position = new BBMOD_Vec3();
 
+	/// @var {Struct.BBMOD_Vec2} The width and height of the terrain in world
+	/// units.
+	/// @readonly
 	Size = new BBMOD_Vec2();
 
+	/// @var {Real} Pixel to world units scale.
+	/// @private
+	Scale = 1.0;
+
+	/// @var {Id.DsGrid} Height of individual vertices (on the z axis).
+	/// @private
 	Height = ds_grid_create(1, 1);
 
+	/// @var {Id.DsGrid} Normal vector's X component of vertices.
+	/// @private
 	NormalX = ds_grid_create(1, 1);
 	ds_grid_clear(NormalX, 0);
 
+	/// @var {Id.DsGrid} Normal vector's Y component of vertices.
+	/// @private
 	NormalY = ds_grid_create(1, 1);
 	ds_grid_clear(NormalY, 0);
 
+	/// @var {Id.DsGrid} Normal vector's Z component of vertices.
+	/// @private
 	NormalZ = ds_grid_create(1, 1);
 	ds_grid_clear(NormalZ, 1);
 
+	/// @var {Id.DsGrid} Smooth normal vector's X component of vertices.
+	/// @private
 	NormalSmoothX = ds_grid_create(1, 1);
 	ds_grid_clear(NormalSmoothX, 0);
 
+	/// @var {Id.DsGrid} Smooth normal vector's Y component of vertices.
+	/// @private
 	NormalSmoothY = ds_grid_create(1, 1);
 	ds_grid_clear(NormalSmoothY, 0);
 
+	/// @var {Id.DsGrid} Smooth normal vector's Z component of vertices.
+	/// @private
 	NormalSmoothZ = ds_grid_create(1, 1);
 	ds_grid_clear(NormalSmoothZ, 1);
 
+	/// @var {Struct.BBMOD_VertexFormat} The vertex format used by the terrain
+	/// mesh.
+	/// @readonly
 	VertexFormat = BBMOD_VFORMAT_DEFAULT;
 
+	/// @var {Id.VertexBuffer/Undefined} The vertex buffer or `undefined` if
+	/// the terrain was not built yet.
+	/// @readonly
+	/// @see BBMOD_Terrain.build_mesh
 	VertexBuffer = undefined;
 
-	static from_heightmap = function (_sprite, _zmin, _zmax) {
+	/// @func is_inside(_x, _y)
+	/// @desc 
+	/// @param {Real} _x
+	/// @param {Real} _y
+	/// @return {Bool}
+	static is_inside = function (_x, _y) {
+		gml_pragma("forceinline");
+		return (_x >= Position.X && _x <= Position.X + Size.X
+			&& _y >= Position.Y && _y <= Position.Y + Size.Y);
+	};
+
+	/// @func from_heightmap(_sprite, _scale, _zmin, _zmax)
+	/// @desc Initializes terrain height from a sprite.
+	/// @param {Resource.GMSprite} _sprite The heightmap sprite.
+	/// @param {Real} _scale
+	/// @param {Real} _zmin The minimum terrain height (i.e. height that
+	/// corresponds to black color on the heightmap).
+	/// @param {Real} _zmax The maximum terrain height (i.e. height that
+	/// corresponds to white color on the heightmap).
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
+	static from_heightmap = function (_sprite, _scale, _zmin, _zmax) {
 		var _spriteWidth = sprite_get_width(_sprite);
 		var _spriteHeight = sprite_get_height(_sprite);
+
+		Scale = _scale;
+		Size.Set(_spriteWidth * Scale, _spriteHeight * Scale);
 
 		ds_grid_resize(Height, _spriteWidth, _spriteHeight);
 		ds_grid_clear(Height, 0);
@@ -88,6 +161,9 @@ function BBMOD_Terrain() constructor
 		return self;
 	};
 
+	/// @func smooth_height()
+	/// @desc Smoothens out the terrain's height.
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static smooth_height = function () {
 		var _width = ds_grid_width(Height);
 		var _height = ds_grid_height(Height);
@@ -107,7 +183,13 @@ function BBMOD_Terrain() constructor
 		return self;
 	};
 
-	static get_height = function (_i, _j) {
+	/// @func get_height_index(_i, _j)
+	/// @desc Retrieves terrain's height at given index.
+	/// @param {Real} _i The X coordinate in the terrain's height grid.
+	/// @param {Real} _j The Y coordinate in the terrain's height grid.
+	/// @return {Real} The terrain's height at given index.
+	/// @see BBMOD_Terrain.Height
+	static get_height_index = function (_i, _j) {
 		gml_pragma("forceinline");
 		return Height[#
 			clamp(_i, 0, ds_grid_width(Height) - 1),
@@ -115,34 +197,48 @@ function BBMOD_Terrain() constructor
 		];
 	};
 
-	static get_height_xy = function (_x, _y) {
+	/// @func get_height(_x, _y)
+	/// @desc Retrieves terrain's height at given coordinate.
+	/// @param {Real} _x The x position to get the height at.
+	/// @param {Real} _y The y position to get the height at.
+	/// @return {Real/Undefined} The terrain's height at given coordinate or
+	/// `undefined` if the coordinate is outside of the terrain.
+	static get_height = function (_x, _y) {
 		gml_pragma("forceinline");
+		if (_x < Position.X || _x > Position.X + Size.X
+			|| _y < Position.Y || _y > Position.Y + Size.Y)
+		{
+			return undefined;
+		}
 		var _imax = ds_grid_width(Height) - 1;
 		var _jmax = ds_grid_height(Height) - 1;
-		var _x4 = _x / 4;
-		var _y4 = _y / 4;
+		var _x4 = (_x - Position.X) / Scale;
+		var _y4 = (_y - Position.Y) / Scale;
 		var _i1 = floor(_x4);
 		var _j1 = floor(_y4);
 		var _h1 = Height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
 		var _h2 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
 		var _h3 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
 		var _h4 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
-		return lerp(
+		return (lerp(
 			lerp(_h1, _h2, frac(_x4)),
 			lerp(_h3, _h4, frac(_x4)),
-			frac(_y4));
+			frac(_y4)) + Position.Z);
 	};
 
-	static build_normals = function (_scale) {
+	/// @func build_normals()
+	/// @desc Rebuilds normal vectors.
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
+	static build_normals = function () {
 		var _i = 0;
 		repeat (ds_grid_width(Height))
 		{
 			var _j = 0;
 			repeat (ds_grid_height(Height))
 			{
-				var _nx = get_height(_i - 1, _j) - get_height(_i + 1, _j);
-				var _ny = get_height(_i, _j - 1) - get_height(_i, _j + 1);
-				var _nz = _scale * 2;
+				var _nx = get_height_index(_i - 1, _j) - get_height_index(_i + 1, _j);
+				var _ny = get_height_index(_i, _j - 1) - get_height_index(_i, _j + 1);
+				var _nz = Scale * 2;
 				var _r = sqrt((_nx * _nx) + (_ny * _ny) + (_nz * _nz));
 				_nx /= _r;
 				_ny /= _r;
@@ -157,6 +253,10 @@ function BBMOD_Terrain() constructor
 		return self;
 	};
 
+	/// @func build_smooth_normals()
+	/// @desc Rebuilds smooth normals.
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
+	/// @note {@link BBMOD_Terrain.build_normals} should be called first!
 	static build_smooth_normals = function () {
 		var _width = ds_grid_width(Height);
 		var _height = ds_grid_height(Height);
@@ -179,6 +279,9 @@ function BBMOD_Terrain() constructor
 		return self;
 	};
 
+	/// @func build_mesh()
+	/// @desc Rebuilds the terrain's mesh.
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static build_mesh = function () {
 		if (VertexBuffer != undefined)
 		{
@@ -190,9 +293,7 @@ function BBMOD_Terrain() constructor
 		var _vbuffer = vertex_create_buffer();
 		vertex_begin(_vbuffer, VertexFormat.Raw);
 		var _i = 0;
-		var _scale = 4.0;
-		build_normals(_scale);
-		build_smooth_normals();
+		var _scale = Scale;
 		repeat (_rows - 1)
 		{
 			var _j = 0;
@@ -293,8 +394,11 @@ function BBMOD_Terrain() constructor
 		return self;
 	};
 
+	/// @func submit()
+	/// @desc Immediately submits the terrain mesh for rendering.
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static submit = function () {
-		matrix_set(matrix_world, matrix_build_identity());
+		matrix_set(matrix_world, matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, 1, 1, 1));
 		var i = 0;
 		repeat (5)
 		{
@@ -312,8 +416,11 @@ function BBMOD_Terrain() constructor
 		return self;
 	};
 
+	/// @func render()
+	/// @desc Enqueues the terrain mesh for rendering.
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static render = function () {
-		var _matrix = matrix_build_identity();
+		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, 1, 1, 1);
 		var i = 0;
 		repeat (5)
 		{
@@ -338,6 +445,21 @@ function BBMOD_Terrain() constructor
 	};
 
 	static destroy = function () {
+		method(self, Super_Class.destroy)();
 		ds_grid_destroy(Height);
+		ds_grid_destroy(NormalX);
+		ds_grid_destroy(NormalY);
+		ds_grid_destroy(NormalZ);
+		ds_grid_destroy(NormalSmoothX);
+		ds_grid_destroy(NormalSmoothY);
+		ds_grid_destroy(NormalSmoothZ);
 	};
+
+	if (_heightmap != undefined)
+	{
+		from_heightmap(_heightmap, _scale, _zmin, _zmax);
+		build_normals();
+		build_smooth_normals();
+		build_mesh();
+	}
 }

@@ -95,14 +95,6 @@ renderer.add({
 	})
 });
 
-//renderer.add({
-//	render: method(self, function () {
-//		var _scale = max(room_width, room_height);
-//		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, _scale, _scale, _scale));
-//		modPlane.render();
-//	})
-//});
-
 var _sh = new BBMOD_DefaultShader(BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
 var _m = new BBMOD_DefaultMaterial(_sh);
 _m.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH);
@@ -137,21 +129,11 @@ bbmod_sprite_add_async("splatmap.png", method(self, function (_err, _sprite) {
 	}
 }));
 
-terrain = new BBMOD_Terrain().from_heightmap(SprHeightmap, 0, 128 * 4 * 2);
+terrain = new BBMOD_Terrain(SprHeightmap);
 
 terrain.Layer[0] = _grass;
-
 terrain.Layer[1] = _dirt;
-//terrain.Layer[1].remove_shader(BBMOD_ERenderPass.Shadows);
-
 //terrain.Layer[2] = ;
-//terrain.Layer[2].remove_shader(BBMOD_ERenderPass.Shadows);
-
 terrain.Layer[3] = _rock;
-//terrain.Layer[3].remove_shader(BBMOD_ERenderPass.Shadows);
-
 terrain.Layer[4] = _sand;
-//terrain.Layer[4].remove_shader(BBMOD_ERenderPass.Shadows);
-
 terrain.Splatmap = splatmap;
-terrain.build_mesh();

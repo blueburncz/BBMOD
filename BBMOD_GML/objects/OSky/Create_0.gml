@@ -1,6 +1,6 @@
 event_inherited();
 
-day = true; //choose(true, false);
+day = choose(true, false);
 
 modSky = global.resourceManager.load(
 	"Data/BBMOD/Models/Sphere.bbmod",
