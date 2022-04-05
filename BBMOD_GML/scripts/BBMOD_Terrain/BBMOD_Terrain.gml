@@ -1,7 +1,9 @@
 /// @func BBMOD_Terrain([_heightmap])
 /// @extends BBMOD_Class
-/// @desc
-/// @param {Resource.GMSprite/Undefined} [_heightmap]
+/// @desc A terrain with five material layers controled through a splatmap.
+/// @param {Resource.GMSprite/Undefined} [_heightmap] The heightmap to make the
+/// terrain from. If `undefined`, then you will need to build the terrain mesh
+/// yourself later using the terrain's methods.
 function BBMOD_Terrain(_heightmap=undefined)
 	: BBMOD_Class() constructor
 {
@@ -15,7 +17,7 @@ function BBMOD_Terrain(_heightmap=undefined)
 	/// @readonly
 	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
 
-	/// @var {Array.(Struct.BBMOD_Material/Undefined)} Array of 5 material
+	/// @var {Array.(Struct.BBMOD_Material/Undefined)} Array of five material
 	/// layers. Use `undefined` instead of a material to disable certain layer.
 	Layer = array_create(5, undefined);
 
@@ -148,8 +150,6 @@ function BBMOD_Terrain(_heightmap=undefined)
 		}
 
 		buffer_delete(_buffer);
-
-		smooth_height();
 
 		return self;
 	};
@@ -450,6 +450,7 @@ function BBMOD_Terrain(_heightmap=undefined)
 	if (_heightmap != undefined)
 	{
 		from_heightmap(_heightmap);
+		smooth_height();
 		build_normals();
 		build_smooth_normals();
 		build_mesh();
