@@ -354,7 +354,56 @@ function __bbmod_shader_set_globals(_shader)
 				break;
 
 			case BBMOD_EPropertyType.Sampler:
-				texture_set_stage(shader_get_sampler_index(_shader, _globals[i]), _value);
+				var _index = shader_get_sampler_index(_shader, _globals[i]);
+				texture_set_stage(_index, _value.Texture);
+
+				var _temp = _value.Filter;
+				if (_temp != undefined)
+				{
+					gpu_set_tex_filter_ext(_index, _temp);
+				}
+
+				_temp = _value.MaxAniso;
+				if (_temp != undefined)
+				{
+					gpu_set_tex_max_aniso_ext(_index, _temp);
+				}
+
+				_temp = _value.MaxMip;
+				if (_temp != undefined)
+				{
+					gpu_set_tex_max_mip_ext(_index, _temp);
+				}
+
+				_temp = _value.MinMip;
+				if (_temp != undefined)
+				{
+					gpu_set_tex_min_mip_ext(_index, _temp);
+				}
+
+				_temp = _value.MipBias;
+				if (_temp != undefined)
+				{
+					gpu_set_tex_mip_bias_ext(_index, _temp);
+				}
+
+				_temp = _value.MipEnable;
+				if (_temp != undefined)
+				{
+					gpu_set_tex_mip_enable_ext(_index, _temp);
+				}
+
+				_temp = _value.MipFilter;
+				if (_temp != undefined)
+				{
+					gpu_set_tex_mip_filter_ext(_index, _temp);
+				}
+
+				_temp = _value.Repeat;
+				if (_temp != undefined)
+				{
+					gpu_set_tex_repeat_ext(_index, _temp);
+				}
 				break;
 			}
 		}
@@ -366,7 +415,7 @@ function __bbmod_shader_set_globals(_shader)
 /// @func bbmod_shader_get_global(_name)
 /// @desc Retrieves the value of a global shader uniform.
 /// @param {String} _name The name of the uniform.
-/// @return {Real/Array.Real/Pointer.Texture/Undefined} The value of the uniform or `undefined` if it is not set.
+/// @return {Mixed} The value of the uniform or `undefined` if it is not set.
 /// The type of the returned value changes based on the type of the uniform.
 function bbmod_shader_get_global(_name)
 {
@@ -546,7 +595,121 @@ function bbmod_shader_set_global_matrix_array(_name, _matrixArray)
 function bbmod_shader_set_global_sampler(_name, _texture)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Sampler, _texture);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Sampler,
+		{
+			Texture: _texture,
+			Filter: undefined,
+			MaxAniso: undefined,
+			MaxMip: undefined,
+			MinMip: undefined,
+			MipBias: undefined,
+			MipEnable: undefined,
+			MipFilter: undefined,
+			Repeat: undefined,
+		});
+}
+
+/// @func bbmod_shader_set_global_sampler_filter(_name, _filter)
+/// @desc Enables/disables linear filtering of a global texture sampler.
+/// @param {String} _name The name of the sampler.
+/// @param {Bool/Undefined} _filter Use `true`/`false` to enable/disable linear
+/// texture filtering or `undefined` to unset.
+/// @note The sampler must be first set using
+/// {@link bbmod_shader_set_global_sampler}!
+function bbmod_shader_set_global_sampler_filter(_name, _filter)
+{
+	gml_pragma("forceinline");
+	bbmod_shader_get_global(_name).Filter = _filter;
+}
+
+/// @func bbmod_shader_set_global_sampler_max_aniso(_name, _value)
+/// @desc Sets maximum anisotropy level of a global texture sampler.
+/// @param {String} _name The name of the sampler.
+/// @param {Real/Undefined} _value The new maximum anisotropy. Use `undefined`
+/// to unset.
+/// @note The sampler must be first set using
+/// {@link bbmod_shader_set_global_sampler}!
+function bbmod_shader_set_global_sampler_max_aniso(_name, _value)
+{
+	gml_pragma("forceinline");
+	bbmod_shader_get_global(_name).MaxAniso = _value;
+}
+
+/// @func bbmod_shader_set_global_sampler_max_mip(_name, _value)
+/// @desc Sets maximum mipmap level of a global texture sampler.
+/// @param {String} _name The name of the sampler.
+/// @param {Real/Undefined} _value The new maxmimum mipmap level or `undefined`
+/// to unset.
+/// @note The sampler must be first set using
+/// {@link bbmod_shader_set_global_sampler}!
+function bbmod_shader_set_global_sampler_max_mip(_name, _value)
+{
+	gml_pragma("forceinline");
+	bbmod_shader_get_global(_name).MaxMip = _value;
+}
+
+/// @func bbmod_shader_set_global_sampler_min_mip(_name, _value)
+/// @desc Sets minimum mipmap level of a global texture sampler.
+/// @param {String} _name The name of the sampler.
+/// @param {Real/Undefined} _value The new minimum mipmap level or `undefined`
+/// to unset.
+/// @note The sampler must be first set using
+/// {@link bbmod_shader_set_global_sampler}!
+function bbmod_shader_set_global_sampler_min_mip(_name, _value)
+{
+	gml_pragma("forceinline");
+	bbmod_shader_get_global(_name).MinMip = _value;
+}
+
+/// @func bbmod_shader_set_global_sampler_mip_bias(_name, _value)
+/// @desc Sets mipmap bias of a global texture sampler.
+/// @param {String} _name The name of the sampler.
+/// @param {Real/Undefined} _value The new bias or `undefined` to unset.
+/// @note The sampler must be first set using
+/// {@link bbmod_shader_set_global_sampler}!
+function bbmod_shader_set_global_sampler_mip_bias(_name, _value)
+{
+	gml_pragma("forceinline");
+	bbmod_shader_get_global(_name).MipBias = _value;
+}
+
+/// @func bbmod_shader_set_global_sampler_mip_enable(_name, _enable)
+/// @desc Enable/disable mipmapping of a global texture sampler.
+/// @param {String} _name The name of the sampler.
+/// @param {Bool/Undefined} _enable Use `true`/`false` to enable/disable
+/// mipmapping or `undefined` to unset.
+/// @note The sampler must be first set using
+/// {@link bbmod_shader_set_global_sampler}!
+function bbmod_shader_set_global_sampler_mip_enable(_name, _enable)
+{
+	gml_pragma("forceinline");
+	bbmod_shader_get_global(_name).MipEnable = _enable;
+}
+
+/// @func bbmod_shader_set_global_sampler_mip_filter(_name, _filter)
+/// @desc Sets mipmap filter function of a global texture sampler.
+/// @param {String} _name The name of the sampler.
+/// @param {Constant.MipFilter/Undefined} _filter The new mipmap filter or
+/// `undefined` to unset.
+/// @note The sampler must be first set using
+/// {@link bbmod_shader_set_global_sampler}!
+function bbmod_shader_set_global_sampler_mip_filter(_name, _filter)
+{
+	gml_pragma("forceinline");
+	bbmod_shader_get_global(_name).MipFilter = _filter;
+}
+
+/// @func bbmod_shader_set_global_sampler_repeat(_name, _enable)
+/// @desc Enable/disable repeat of a global texture sampler.
+/// @param {String} _name The name of the sampler.
+/// @param {Bool/Undefined} _enable Use `true`/`false` to enable/disable texture
+/// repeat or `undefined` to unset.
+/// @note The sampler must be first set using
+/// {@link bbmod_shader_set_global_sampler}!
+function bbmod_shader_set_global_sampler_repeat(_name, _enable)
+{
+	gml_pragma("forceinline");
+	bbmod_shader_get_global(_name).Repeat = _enable;
 }
 
 /// @func bbmod_shader_unset_global(_name)

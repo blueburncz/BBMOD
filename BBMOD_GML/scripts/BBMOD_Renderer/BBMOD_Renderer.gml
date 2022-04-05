@@ -306,10 +306,9 @@ function BBMOD_Renderer()
 			bbmod_shader_set_global_f("bbmod_ShadowmapEnableVS", 1.0);
 			bbmod_shader_set_global_f("bbmod_ShadowmapEnablePS", 1.0);
 			bbmod_shader_set_global_sampler("bbmod_Shadowmap", _shadowmapTexture);
-			// TODO:
-			//gpu_set_tex_mip_enable_ext(UShadowmap, true);
-			//gpu_set_tex_filter_ext(UShadowmap, true);
-			//gpu_set_tex_repeat_ext(UShadowmap, false);
+			bbmod_shader_set_global_sampler_mip_enable("bbmod_Shadowmap", true);
+			bbmod_shader_set_global_sampler_filter("bbmod_Shadowmap", true);
+			bbmod_shader_set_global_sampler_repeat("bbmod_Shadowmap", false);
 			bbmod_shader_set_global_f2("bbmod_ShadowmapTexel",
 				texture_get_texel_width(_shadowmapTexture),
 				texture_get_texel_height(_shadowmapTexture));
