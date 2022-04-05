@@ -212,12 +212,15 @@ function BBMOD_Terrain(_heightmap=undefined)
 		var _j1 = floor(_yScaled);
 		var _h1 = Height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
 		var _h2 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
-		var _h3 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
-		var _h4 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
-		return (Position.Z + lerp(
-			lerp(_h1, _h2, frac(_xScaled)),
-			lerp(_h3, _h4, frac(_xScaled)),
-			frac(_yScaled)) * Scale.Z);
+		var _h3 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		var _h4 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		var _offsetX = frac(_xScaled);
+		var _offsetY = frac(_yScaled);
+		if (_offsetX <= _offsetY)
+		{
+			return Position.Z + (_h4 + (_h1-_h4)*(1.0-_offsetY) + (_h3-_h4)*(_offsetX)) * Scale.Z;
+		}
+		return Position.Z + (_h2 + (_h1-_h2)*(1.0-_offsetX) + (_h3-_h2)*(_offsetY)) * Scale.Z;
 	};
 
 	/// @func build_normals()
