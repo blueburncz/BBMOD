@@ -86,7 +86,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// plane. If `undefined`, then the value set by {@link bbmod_camera_set_zfar}
 	/// is used.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	/// @obsolete
+	/// @obsolete This has been replaced with global shader uniforms.
 	static set_zfar = function (_value=undefined) {
 		gml_pragma("forceinline");
 		_value ??= global.__bbmodZFar;

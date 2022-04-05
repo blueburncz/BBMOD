@@ -187,7 +187,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @param {Real} _area The area that the shadowmap captures.
 	/// @param {Real} _normalOffset The area that the shadowmap captures.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	/// @obsolete
+	/// @obsolete This has been replaced with global shader uniforms.
 	static set_shadowmap = function (_texture, _matrix, _area, _normalOffset) {
 		gml_pragma("forceinline");
 		set_uniform_f(UShadowmapEnableVS, 1.0);
