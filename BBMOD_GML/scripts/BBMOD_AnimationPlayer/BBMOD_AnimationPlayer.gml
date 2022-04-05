@@ -93,8 +93,6 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @private
 	AnimationInstanceLast = undefined;
 
-	// FIXME: Fix animation player for models that were not loaded yet!!!
-
 	/// @var {Array.(Struct.BBMOD_Vec3/Undefined)} Array of node position overrides.
 	/// @private
 	NodePositionOverride = array_create(64/*Model.NodeCount*/, undefined);

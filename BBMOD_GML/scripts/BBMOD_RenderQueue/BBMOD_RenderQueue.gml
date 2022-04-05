@@ -1,4 +1,5 @@
-/// @var {Array.Struct.BBMOD_RenderQueue} Array of all existing render queues.
+/// @var {Array.Struct.BBMOD_RenderQueue} Array of all existing render queues,
+/// sorted by their priority in an asceding order.
 /// @see BBMOD_RenderQueue
 /// @readonly
 global.bbmod_render_queues = [];

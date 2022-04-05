@@ -363,20 +363,19 @@ function __bbmod_shader_set_globals(_shader)
 	}
 }
 
-/// @func __bbmod_shader_get_global_impl(_name, _type)
-/// @desc
-/// @param {String} _name
-/// @param {BBMOD_EPropertyType} _name
-/// @return {Mixed}
-/// @private
-function __bbmod_shader_get_global_impl(_name, _type)
+/// @func bbmod_shader_get_global(_name)
+/// @desc Retrieves the value of a global shader uniform.
+/// @param {String} _name The name of the uniform.
+/// @return {Real/Array.Real/Pointer.Texture/Undefined} The value of the uniform or `undefined` if it is not set.
+/// The type of the returned value changes based on the type of the uniform.
+function bbmod_shader_get_global(_name)
 {
 	gml_pragma("forceinline");
 	static _globals = __bbmod_shader_get_globals();
 	var i = 0;
 	repeat (array_length(_globals) / 3)
 	{
-		if (_globals[i] == _name && _globals[i + 1] == _type)
+		if (_globals[i] == _name)
 		{
 			return _globals[i + 2];
 		}
@@ -398,8 +397,9 @@ function __bbmod_shader_set_global_impl(_name, _type, _value)
 	var i = 0;
 	repeat (array_length(_globals) / 3)
 	{
-		if (_globals[i] == _name && _globals[i + 1] == _type)
+		if (_globals[i] == _name)
 		{
+			_globals[@ i + 1] = _type;
 			_globals[@ i + 2] = _value;
 			return;
 		}
@@ -408,210 +408,162 @@ function __bbmod_shader_set_global_impl(_name, _type, _value)
 	array_push(_globals, _name, _type, _value);
 }
 
-/// @func bbmod_shader_get_global_f(_name)
-/// @desc Retrieves a value of a global shader uniform of type float.
+/// @func bbmod_shader_set_global_f(_name, _value)
+/// @desc Sets a value of a global shader uniform of type float.
 /// @param {String} _name The name of the uniform.
-/// @return {Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_f(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Float);
-}
-
+/// @param {Real} _value The new value of the uniform.
 function bbmod_shader_set_global_f(_name, _value)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Float, _value);
 }
 
-/// @func bbmod_shader_get_global_f2(_name)
-/// @desc Retrieves a value of a global shader uniform of type float2.
+/// @func bbmod_shader_set_global_f2(_name, _v1, _v2)
+/// @desc Sets a value of a global shader uniform of type float2.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_f2(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Float2);
-}
-
+/// @param {Real} _v1 The first component of the new value.
+/// @param {Real} _v2 The second component of the new value.
 function bbmod_shader_set_global_f2(_name, _v1, _v2)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Float2, [_v1, _v2]);
 }
 
-/// @func bbmod_shader_get_global_f3(_name)
-/// @desc Retrieves a value of a global shader uniform of type float3.
+/// @func bbmod_shader_set_global_f3(_name, _v1, _v2, _v3)
+/// @desc Sets a value of a global shader uniform of type float3.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_f3(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Float3);
-}
-
+/// @param {Real} _v1 The first component of the new value.
+/// @param {Real} _v2 The second component of the new value.
+/// @param {Real} _v3 The third component of the new value.
 function bbmod_shader_set_global_f3(_name, _v1, _v2, _v3)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Float3, [_v1, _v2, _v3]);
 }
 
-/// @func bbmod_shader_get_global_f4(_name)
-/// @desc Retrieves a value of a global shader uniform of type float4.
+/// @func bbmod_shader_set_global_f4(_name, _v1, _v2, _v3)
+/// @desc Sets a value of a global shader uniform of type float4.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_f4(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Float4);
-}
-
+/// @param {Real} _v1 The first component of the new value.
+/// @param {Real} _v2 The second component of the new value.
+/// @param {Real} _v3 The third component of the new value.
+/// @param {Real} _v4 The fourth component of the new value.
 function bbmod_shader_set_global_f4(_name, _v1, _v2, _v3, _v4)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Float4, [_v1, _v2, _v3, _v4]);
 }
 
-/// @func bbmod_shader_get_global_f_array(_name)
-/// @desc Retrieves a value of a global shader uniform of type float array.
+/// @func bbmod_shader_set_global_f_array(_name, _fArray)
+/// @desc Sets a value of a global shader uniform of type float array.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_f_array(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.FloatArray);
-}
-
+/// @param {Array.Real} _fArray The new array of values.
 function bbmod_shader_set_global_f_array(_name, _fArray)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.FloatArray, _fArray);
 }
 
-/// @func bbmod_shader_get_global_i(_name)
-/// @desc Retrieves a value of a global shader uniform of type int.
+/// @func bbmod_shader_set_global_i(_name, _value)
+/// @desc Sets a value of a global shader uniform of type int.
 /// @param {String} _name The name of the uniform.
-/// @return {Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_i(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Int);
-}
-
+/// @param {Real} _value The new value of the uniform.
 function bbmod_shader_set_global_i(_name, _value)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Int, _value);
 }
 
-/// @func bbmod_shader_get_global_i2(_name)
-/// @desc Retrieves a value of a global shader uniform of type int2.
+/// @func bbmod_shader_set_global_i2(_name, _v1, _v2)
+/// @desc Sets a value of a global shader uniform of type int2.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_i2(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Int2);
-}
-
+/// @param {Real} _v1 The first component of the new value.
+/// @param {Real} _v2 The second component of the new value.
 function bbmod_shader_set_global_i2(_name, _v1, _v2)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Int2, [_v1, _v2]);
 }
 
-/// @func bbmod_shader_get_global_i3(_name)
-/// @desc Retrieves a value of a global shader uniform of type int3.
+/// @func bbmod_shader_set_global_i3(_name, _v1, _v2, _v3)
+/// @desc Sets a value of a global shader uniform of type int3.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_i3(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Int3);
-}
-
+/// @param {Real} _v1 The first component of the new value.
+/// @param {Real} _v2 The second component of the new value.
+/// @param {Real} _v3 The third component of the new value.
 function bbmod_shader_set_global_i3(_name, _v1, _v2, _v3)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Int3, [_v1, _v2, _v3]);
 }
 
-/// @func bbmod_shader_get_global_i4(_name)
-/// @desc Retrieves a value of a global shader uniform of type int4.
+/// @func bbmod_shader_set_global_i4(_name, _v1, _v2, _v3)
+/// @desc Sets a value of a global shader uniform of type int4.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_i4(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Int4);
-}
-
+/// @param {Real} _v1 The first component of the new value.
+/// @param {Real} _v2 The second component of the new value.
+/// @param {Real} _v3 The third component of the new value.
+/// @param {Real} _v4 The fourth component of the new value.
 function bbmod_shader_set_global_i4(_name, _v1, _v2, _v3, _v4)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Int4, [_v1, _v2, _v3, _v4]);
 }
 
-/// @func bbmod_shader_get_global_i_array(_name)
-/// @desc Retrieves a value of a global shader uniform of type int array.
+/// @func bbmod_shader_set_global_i_array(_name, _iArray)
+/// @desc Sets a value of a global shader uniform of type int array.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_i_array(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.IntArray);
-}
-
+/// @param {Array.Real} _iArray The new array of values.
 function bbmod_shader_set_global_i_array(_name, _iArray)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.IntArray, _iArray);
 }
 
-/// @func bbmod_shader_get_global_matrix(_name)
-/// @desc Checks whether the current transform matrix is passed to a global shader uniform.
+/// @func bbmod_shader_set_global_matrix(_name)
+/// @desc Enables passing of the current transform matrix to a global shader uniform.
 /// @param {String} _name The name of the uniform.
-/// @return {Bool} Returns `true` if the current transform matrix is passed to the uniform.
-function bbmod_shader_get_global_matrix(_name)
-{
-	gml_pragma("forceinline");
-	return (__bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Matrix) ?? false);
-}
-
 function bbmod_shader_set_global_matrix(_name)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Matrix, true);
 }
 
-/// @func bbmod_shader_get_global_matrix_array(_name)
-/// @desc Retrieves a value of a global shader uniform of type matrix array.
+/// @func bbmod_shader_set_global_matrix_array(_name, _matrixArray)
+/// @desc Sets a value of a global shader uniform of type matrix array.
 /// @param {String} _name The name of the uniform.
-/// @return {Array.Real/Undefined} The value of the uniform or `undefined` if it is not set.
-function bbmod_shader_get_global_matrix_array(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.MatrixArray);
-}
-
+/// @param {Array.Real} _matrixArray The new array of values.
 function bbmod_shader_set_global_matrix_array(_name, _matrixArray)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.MatrixArray, _matrixArray);
 }
 
-/// @func bbmod_shader_get_global_sampler(_name)
-/// @desc Retrieves a global shader texture.
+/// @func bbmod_shader_set_global_sampler(_name, _texture)
+/// @desc Sets a global shader texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @return {Pointer.Texture/Undefined} The texture or `undefined` if it is not set.
-function bbmod_shader_get_global_sampler(_name)
-{
-	gml_pragma("forceinline");
-	return __bbmod_shader_get_global_impl(_name, BBMOD_EPropertyType.Sampler);
-}
-
+/// @param {Pointer.Texture} _texture The new texture.
 function bbmod_shader_set_global_sampler(_name, _texture)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EPropertyType.Sampler, _texture);
+}
+
+/// @func bbmod_shader_unset_global(_name)
+/// @desc Unsets a value of a global shader uniform.
+/// @param {String} _name The name of the uniform.
+function bbmod_shader_unset_global(_name)
+{
+	gml_pragma("forceinline");
+	static _globals = __bbmod_shader_get_globals();
+	var i = 0;
+	repeat (array_length(_globals) / 3)
+	{
+		if (_globals[i] == _name)
+		{
+			array_delete(_globals, i, 3);
+			return;
+		}
+		i += 3;
+	}
 }
