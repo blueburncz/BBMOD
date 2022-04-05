@@ -109,22 +109,10 @@ var _sand = _m.clone();
 _sand.BaseOpacity = sprite_get_texture(SprSand, 0);
 _sand.NormalSmoothness = sprite_get_texture(SprSand, 1);
 
-splatmap = -1;
-
-// TODO: Fix memory leak
-bbmod_sprite_add_async("Data/Assets/Splatmap.png", method(self, function (_err, _sprite) {
-	if (!_err)
-	{
-		splatmap = sprite_get_texture(_sprite, 0);
-	}
-}));
-
 terrain = new BBMOD_Terrain(SprHeightmap);
 terrain.Scale = new BBMOD_Vec3(2.0);
-
 terrain.Layer[0] = _grass;
 terrain.Layer[1] = _dirt;
-//terrain.Layer[2] = ;
-terrain.Layer[3] = _rock;
-terrain.Layer[4] = _sand;
-terrain.Splatmap = splatmap;
+terrain.Layer[2] = _rock;
+terrain.Layer[3] = _sand;
+terrain.Splatmap = sprite_get_texture(SprSplatmap, 0);

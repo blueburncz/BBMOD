@@ -51,6 +51,7 @@
     {"id":{"name":"BBMOD_ERenderCommand","path":"scripts/BBMOD_ERenderCommand/BBMOD_ERenderCommand.yy",},"order":9,},
     {"id":{"name":"OItem","path":"objects/OItem/OItem.yy",},"order":1,},
     {"id":{"name":"SndWhoosh","path":"sounds/SndWhoosh/SndWhoosh.yy",},"order":5,},
+    {"id":{"name":"SprSplatmap","path":"sprites/SprSplatmap/SprSplatmap.yy",},"order":5,},
     {"id":{"name":"bbmod_surface_check","path":"scripts/bbmod_surface_check/bbmod_surface_check.yy",},"order":2,},
     {"id":{"name":"OPointLight","path":"objects/OPointLight/OPointLight.yy",},"order":1,},
     {"id":{"name":"BBMOD_DirectionalLight","path":"scripts/BBMOD_DirectionalLight/BBMOD_DirectionalLight.yy",},"order":2,},
@@ -279,7 +280,6 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character","resourceVersion":"1.0","name":"Character_PunchRight.bbanim","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character","resourceVersion":"1.0","name":"Character_Run.bbanim","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","resourceVersion":"1.0","name":"assimp-vc142-mt.dll","resourceType":"GMIncludedFile",},
-    {"CopyToMask":-1,"filePath":"datafiles/Data/Assets","resourceVersion":"1.0","name":"Splatmap.png","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2022.3.0.624",
