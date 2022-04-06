@@ -24,7 +24,7 @@ camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.
 
 camera.update(DELTA_TIME);
 
-var _cameraHeight = (OMain.terrain.get_height(camera.Position.X, camera.Position.Y) ?? 0.0) + 1.0;
+var _cameraHeight = (global.terrain.get_height(camera.Position.X, camera.Position.Y) ?? 0.0) + 1.0;
 if (camera.Position.Z < _cameraHeight)
 {
 	camera.Position.Z = _cameraHeight;
@@ -45,10 +45,10 @@ if (global.gameSpeed > 0.0)
 	var _deltaTime = DELTA_TIME / _gameSpeed;
 	speedCurrent *= 1.0 - (0.1 * _deltaTime);
 
-	if (OMain.terrain.in_bounds(x, y)
+	if (global.terrain.in_bounds(x, y)
 		&& animationPlayer.Animation != animInteractGround)
 	{
-		var _terrainHeight = OMain.terrain.get_height(x, y);
+		var _terrainHeight = global.terrain.get_height(x, y);
 
 		if (_terrainHeight != undefined
 			&& z >= _terrainHeight

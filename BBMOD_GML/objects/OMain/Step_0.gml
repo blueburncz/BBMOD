@@ -15,7 +15,7 @@ if (!instance_exists(OZombie)
 
 	repeat (++wave)
 	{
-		var _randomPosition = terrain.get_random_position();
+		var _randomPosition = global.terrain.get_random_position();
 		instance_create_layer(
 			_randomPosition.X,
 			_randomPosition.Y,

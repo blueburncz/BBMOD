@@ -78,37 +78,11 @@ renderer.ColorGradingLUT = sprite_get_texture(SprColorGrading, 0);
 renderer.Antialiasing = BBMOD_EAntialiasing.FXAA;
 
 // Any object/struct that has a render method can be added to the renderer:
-renderer.add({
-	render: method(self, function () {
-		matrix_set(matrix_world, matrix_build_identity());
-		batchShell.render_object(OShell, matShell);
+renderer.add(
+	{
+		render: method(self, function () {
+			matrix_set(matrix_world, matrix_build_identity());
+			batchShell.render_object(OShell, matShell);
+		})
 	})
-});
-
-////////////////////////////////////////////////////////////////////////////////
-// Create terrain
-var _rock = BBMOD_MATERIAL_TERRAIN.clone();
-_rock.BaseOpacity = sprite_get_texture(SprRocks, 0);
-_rock.NormalSmoothness = sprite_get_texture(SprRocks, 1);
-
-var _dirt = BBMOD_MATERIAL_TERRAIN.clone();
-_dirt.BaseOpacity = sprite_get_texture(SprDirt, 0);
-_dirt.NormalSmoothness = sprite_get_texture(SprDirt, 1);
-
-var _grass = BBMOD_MATERIAL_TERRAIN.clone();
-_grass.BaseOpacity = sprite_get_texture(SprGrass, 0);
-_grass.NormalSmoothness = sprite_get_texture(SprGrass, 1);
-
-var _sand = BBMOD_MATERIAL_TERRAIN.clone();
-_sand.BaseOpacity = sprite_get_texture(SprSand, 0);
-_sand.NormalSmoothness = sprite_get_texture(SprSand, 1);
-
-terrain = new BBMOD_Terrain(SprHeightmap);
-terrain.Scale = new BBMOD_Vec3(4.0);
-terrain.TextureRepeat = new BBMOD_Vec2(64.0);
-terrain.Layer[0] = _grass;
-terrain.Layer[1] = _dirt;
-terrain.Layer[2] = _rock;
-terrain.Layer[3] = _sand;
-terrain.Splatmap = sprite_get_texture(SprSplatmap, 0);
-terrain.build_layer_index();
+	.add(global.terrain);

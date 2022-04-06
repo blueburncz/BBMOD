@@ -4,7 +4,7 @@ z += zspeed * global.gameSpeed;
 
 zspeed -= 0.1 * global.gameSpeed;
 
-var _terrainHeight = OMain.terrain.get_height(x, y);
+var _terrainHeight = global.terrain.get_height(x, y);
 
 if (_terrainHeight != undefined
 	&& z < _terrainHeight)

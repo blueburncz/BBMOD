@@ -1,6 +1,6 @@
 event_inherited();
 
-var _terrainHeight = OMain.terrain.get_height(x, y);
+var _terrainHeight = global.terrain.get_height(x, y);
 
 if (_terrainHeight != undefined
 	&& z <= _terrainHeight
