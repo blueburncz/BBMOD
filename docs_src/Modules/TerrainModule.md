@@ -4,7 +4,7 @@ controlled through a splatmap.
 
 ## Scripting API
 ### Macros
-* [BBMOD_MACRO_TERRAIN](./BBMOD_MACRO_TERRAIN.html)
+* [BBMOD_MATERIAL_TERRAIN](./BBMOD_MATERIAL_TERRAIN.html)
 * [BBMOD_SHADER_TERRAIN](./BBMOD_SHADER_TERRAIN.html)
 
 ### Structs

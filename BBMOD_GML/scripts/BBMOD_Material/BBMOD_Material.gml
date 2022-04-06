@@ -40,8 +40,8 @@ function BBMOD_Material(_shader=undefined)
 	/// Defaults to the default BBMOD render queue.
 	/// @readonly
 	/// @see BBMOD_RenderQueue
-	/// @see bbmod_get_default_render_queue
-	RenderQueue = bbmod_get_default_render_queue();
+	/// @see bbmod_render_queue_get_default
+	RenderQueue = bbmod_render_queue_get_default();
 
 	/// @var {Function/Undefined} A function that is executed when the shader is
 	/// applied. Must take the material as the first argument. Use `undefined`
