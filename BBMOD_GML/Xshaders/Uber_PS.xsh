@@ -190,6 +190,19 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
+#if defined(X_TERRAIN)
+	// Splatmap
+	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
+	if (bbmod_SplatmapIndex >= 0)
+	{
+		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
+		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
+			: splatmap.a)));
+	}
+#endif
+
 	if (material.Opacity < bbmod_AlphaTest)
 	{
 		discard;
@@ -238,14 +251,6 @@ void main()
 		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-#if defined(X_TERRAIN)
-	// Splatmap
-	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
-	if (bbmod_SplatmapIndex >= 0)
-	{
-		gl_FragColor.a *= splatmap[bbmod_SplatmapIndex];
-	}
-#endif
 #endif
 	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);

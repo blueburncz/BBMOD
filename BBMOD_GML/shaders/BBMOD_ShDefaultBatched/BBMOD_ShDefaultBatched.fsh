@@ -206,6 +206,7 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
+
 	if (material.Opacity < bbmod_AlphaTest)
 	{
 		discard;

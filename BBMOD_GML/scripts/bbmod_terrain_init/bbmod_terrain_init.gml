@@ -19,6 +19,7 @@ function __bbmod_material_terrain()
 		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH);
 		_material.Mipmapping = mip_on;
 		_material.Repeat = true;
+		_material.AlphaTest = 0.01;
 		_material.AlphaBlend = true;
 	}
 	return _material;

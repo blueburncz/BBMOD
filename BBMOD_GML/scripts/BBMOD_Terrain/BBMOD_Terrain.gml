@@ -397,11 +397,10 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		gpu_set_state(bbmod_gpu_get_default_state());
 		gpu_set_blendenable(false);
 
-		shader_set(BBMOD_ShExtractSplatmapLayer);
-		texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, "bbmod_Splatmap"), Splatmap);
-
 		for (var i = 0; i < 4; ++i)
 		{
+			shader_set(BBMOD_ShExtractSplatmapLayer);
+			texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, "bbmod_Splatmap"), Splatmap);
 			shader_set_uniform_i(shader_get_uniform(BBMOD_ShExtractSplatmapLayer, "bbmod_SplatmapIndex"), i);
 
 			surface_set_target(_surface);
@@ -410,13 +409,14 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			draw_sprite_stretched(BBMOD_SprCheckerboard, 0, 0, 0, _width, _height);
 			surface_reset_target();
 
+			shader_reset();
+
 			_buffer[i] = buffer_create(_width * _height * 4, buffer_fast, 1);
 			buffer_get_surface(_buffer[i], _surface, 0);
 			// Offset to the second byte, just in case the format was ARGB for example.
 			buffer_seek(_buffer[i], buffer_seek_start, 1);
 		}
 
-		shader_reset();
 		gpu_pop_state();
 		surface_free(_surface);
 

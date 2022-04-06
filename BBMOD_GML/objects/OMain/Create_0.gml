@@ -7,6 +7,7 @@ randomize();
 os_powersave_enable(false);
 display_set_gui_maximize(1, 1);
 audio_falloff_set_model(audio_falloff_linear_distance);
+gpu_set_tex_max_aniso(2);
 
 // If true then debug overlay is enabled.
 debugOverlay = false;
@@ -25,7 +26,6 @@ waveTimeout = 10.0;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Import OBJ models
-
 
 var _objImporter = new BBMOD_OBJImporter();
 _objImporter.FlipUVVertically = true;
