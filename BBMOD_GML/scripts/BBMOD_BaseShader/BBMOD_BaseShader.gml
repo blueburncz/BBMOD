@@ -76,7 +76,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_cam_pos = function (_pos=undefined) {
 		gml_pragma("forceinline");
-		_pos ??= global.bbmod_camera_position;
+		_pos ??= global.__bbmodCameraPosition;
 		return set_uniform_f3(UCamPos, _pos.X, _pos.Y, _pos.Z);
 	};
 
@@ -100,7 +100,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
 	static set_exposure = function (_value=undefined) {
 		gml_pragma("forceinline");
-		_value ??= global.bbmod_camera_exposure;
+		_value ??= global.__bbmodCameraExposure;
 		return set_uniform_f(UExposure, _value);
 	};
 
@@ -129,35 +129,17 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 // Camera
 //
 
-/// @var {Struct.BBMOD_Vec3} The current position of the camera. This should be
-/// updated every frame before rendering models.
-/// @deprecated Please use {@link bbmod_camera_get_position} and
-/// {@link bbmod_camera_set_position} instead.
-global.bbmod_camera_position = new BBMOD_Vec3();
+/// @var {Struct.BBMOD_Vec3}
+/// @private
+global.__bbmodCameraPosition = new BBMOD_Vec3();
 
 /// @var {Real} Distance to the far clipping plane.
 /// @private
 global.__bbmodZFar = 1.0;
 
-/// @var {Real} The current camera exposure.
-/// @deprecated Please use {@link bbmod_camera_get_exposure} and
-/// {@link bbmod_camera_set_exposure} instead.
-global.bbmod_camera_exposure = 1.0;
-
-/// @func bbmod_set_camera_position(_x, _y, _z)
-/// @desc Changes camera position to given coordinates.
-/// @param {Real} _x The x position of the camera.
-/// @param {Real} _y The y position of the camera.
-/// @param {Real} _z The z position of the camera.
-/// @deprecated Please use {@link bbmod_camera_set_position} instead.
-function bbmod_set_camera_position(_x, _y, _z)
-{
-	gml_pragma("forceinline");
-	var _position = global.bbmod_camera_position;
-	_position.X = _x;
-	_position.Y = _y;
-	_position.Z = _z;
-}
+/// @var {Real}
+/// @private
+global.__bbmodCameraExposure = 1.0;
 
 /// @func bbmod_camera_get_position()
 /// @desc Retrieves the position of the camera that is passed to shaders.
@@ -166,7 +148,7 @@ function bbmod_set_camera_position(_x, _y, _z)
 function bbmod_camera_get_position()
 {
 	gml_pragma("forceinline");
-	return global.bbmod_camera_position;
+	return global.__bbmodCameraPosition;
 }
 
 /// @func bbmod_camera_set_position(_position)
@@ -176,7 +158,7 @@ function bbmod_camera_get_position()
 function bbmod_camera_set_position(_position)
 {
 	gml_pragma("forceinline");
-	global.bbmod_camera_position = _position;
+	global.__bbmodCameraPosition = _position;
 }
 
 /// @func bbmod_camera_get_zfar()
@@ -206,7 +188,7 @@ function bbmod_camera_set_zfar(_value)
 function bbmod_camera_get_exposure()
 {
 	gml_pragma("forceinline");
-	return global.bbmod_camera_exposure;
+	return global.__bbmodCameraExposure;
 }
 
 /// @func bbmod_camera_set_exposure(_exposure)
@@ -216,5 +198,5 @@ function bbmod_camera_get_exposure()
 function bbmod_camera_set_exposure(_exposure)
 {
 	gml_pragma("forceinline");
-	global.bbmod_camera_exposure = _exposure;
+	global.__bbmodCameraExposure = _exposure;
 }

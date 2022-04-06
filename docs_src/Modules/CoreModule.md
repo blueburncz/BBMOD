@@ -19,7 +19,6 @@ quaternions etc.
 * [bbmod_camera_get_zfar](./bbmod_camera_get_zfar.html)
 * [bbmod_camera_set_exposure](./bbmod_camera_set_exposure.html)
 * [bbmod_camera_set_position](./bbmod_camera_set_position.html)
-* [bbmod_camera_set_position](./bbmod_set_camera_position.html)
 * [bbmod_camera_set_zfar](./bbmod_camera_set_zfar.html)
 * [bbmod_class_get_name](./bbmod_class_get_name.html)
 * [bbmod_empty_callback](./bbmod_empty_callback.html)
@@ -113,9 +112,6 @@ quaternions etc.
 * [BBMOD_NORMALS_FLAT](./BBMOD_NORMALS_FLAT.html)
 * [BBMOD_NORMALS_NONE](./BBMOD_NORMALS_NONE.html)
 * [BBMOD_NORMALS_SMOOTH](./BBMOD_NORMALS_SMOOTH.html)
-* [BBMOD_RENDER_DEFERRED](./BBMOD_RENDER_DEFERRED.html)
-* [BBMOD_RENDER_FORWARD](./BBMOD_RENDER_FORWARD.html)
-* [BBMOD_RENDER_SHADOWS](./BBMOD_RENDER_SHADOWS.html)
 * [BBMOD_RGBM_VALUE_MAX](./BBMOD_RGBM_VALUE_MAX.html)
 * [BBMOD_SHADER_CURRENT](./BBMOD_SHADER_CURRENT.html)
 * [BBMOD_SHADER_DEFAULT_ANIMATED](./BBMOD_SHADER_DEFAULT_ANIMATED.html)
@@ -170,7 +166,4 @@ quaternions etc.
 * [BBMOD_VertexFormat](./BBMOD_VertexFormat.html)
 
 ### Variables
-* [global.bbmod_camera_exposure](./global.bbmod_camera_exposure.html)
-* [global.bbmod_camera_position](./global.bbmod_camera_position.html)
-* [global.bbmod_render_pass](./global.bbmod_render_pass.html)
 * [global.bbmod_render_queues](./global.bbmod_render_queues.html)

@@ -1,10 +1,15 @@
-# Changelog
+# Changelog 3.2.0
+This release brings a massive overhaul to render queues & render commands system,
+as well as a new Terrain module, using which you can create heightmap based
+terrains with five layers of materials controlled using a splatmap.
 
 ## GML API:
 ### General:
 * Updated documented types to GameMaker 2022.3 style.
+* **Removed all API that was previously marked as deprecated or obsolete!** Please make sure you are not using any of it before upgrading your project to this version.
 
-### Code module:
+### Core module:
+* Fog in the default shaders is now affected by the color of ambient and directional lights.
 * Added new enum `BBMOD_ERenderCommand`, which contains all possible render commands.
 * Added new struct `BBMOD_RenderQueue`, which is a container for render commands.
 * Struct `BBMOD_RenderCommand` is now obsolete. Please use methods of `BBMOD_RenderQueue` to create render commands.
@@ -20,8 +25,11 @@
 * Properties `BBMOD_BaseShader.set_zfar` and `BBMOD_DefaultShader.set_shadowmap` are now obsolete. They were replaced by global shader uniforms.
 * Fixed method `BBMOD_Vertex.to_vertex_buffer` when using vertex colors.
 
+### Camera module:
+* Fixed mouselook in Firefox.
+
 ### Terrain module:
 * Added new module - Terrain.
 * Added new struct `BBMOD_Terrain`.
 * Added new macro `BBMOD_SHADER_TERRAIN`, which is a shader for terrain materials.
-* Added new macro `BBMOD_MATERIAL_TERRAIN`, which is a base terrain materil.
+* Added new macro `BBMOD_MATERIAL_TERRAIN`, which is a base terrain material.

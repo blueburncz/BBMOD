@@ -1,21 +1,3 @@
-/// @macro {BBMOD_ERenderPass} Render pass where shadow-casting objects are
-/// rendered into shadow maps.
-/// @deprecated Please use {@link BBMOD_ERenderPass.Shadows} instead.
-/// @see BBMOD_ERenderPass
-#macro BBMOD_RENDER_SHADOWS BBMOD_ERenderPass.Shadows
-
-/// @macro {BBMOD_ERenderPass} Render pass where opaque objects are rendered
-/// into a g-buffer.
-/// @deprecated Please use {@link BBMOD_ERenderPass.Deferred} instead.
-/// @see BBMOD_ERenderPass
-#macro BBMOD_RENDER_DEFERRED BBMOD_ERenderPass.Deferred
-
-/// @macro {BBMOD_ERenderPass} Render pass where opaque objects are rendered
-/// into the frame buffer.
-/// @deprecated Please use {@link BBMOD_ERenderPass.Forward} instead.
-/// @see BBMOD_ERenderPass
-#macro BBMOD_RENDER_FORWARD BBMOD_ERenderPass.Forward
-
 /// @enum Enumeration of render passes.
 enum BBMOD_ERenderPass
 {
@@ -36,11 +18,9 @@ enum BBMOD_ERenderPass
 	SIZE
 };
 
-/// @var {BBMOD_ERenderPass} The current render pass.
-/// @deprecated Please use {@link bbmod_render_pass_get} and
-/// {@link bbmod_render_pass_set} instead.
-/// @see BBMOD_ERenderPass
-global.bbmod_render_pass = BBMOD_ERenderPass.Forward;
+/// @var {BBMOD_ERenderPass}
+/// @private
+global.__bbmodRenderPass = BBMOD_ERenderPass.Forward;
 
 /// @func bbmod_render_pass_get()
 /// @desc Retrieves the current render pass.
@@ -50,7 +30,7 @@ global.bbmod_render_pass = BBMOD_ERenderPass.Forward;
 function bbmod_render_pass_get()
 {
 	gml_pragma("forceinline");
-	return global.bbmod_render_pass;
+	return global.__bbmodRenderPass;
 }
 
 /// @func bbmod_render_pass_set(_pass)
@@ -64,5 +44,5 @@ function bbmod_render_pass_get()
 function bbmod_render_pass_set(_pass)
 {
 	gml_pragma("forceinline");
-	global.bbmod_render_pass = _pass;
+	global.__bbmodRenderPass = _pass;
 }

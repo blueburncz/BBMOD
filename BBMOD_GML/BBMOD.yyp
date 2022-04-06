@@ -35,7 +35,6 @@
     {"id":{"name":"BBMOD_IRenderable","path":"scripts/BBMOD_IRenderable/BBMOD_IRenderable.yy",},"order":1,},
     {"id":{"name":"BBMOD_Animation","path":"scripts/BBMOD_Animation/BBMOD_Animation.yy",},"order":0,},
     {"id":{"name":"BBMOD_ShPBRAnimated","path":"shaders/BBMOD_ShPBRAnimated/BBMOD_ShPBRAnimated.yy",},"order":7,},
-    {"id":{"name":"bbmod_ibl","path":"scripts/bbmod_ibl/bbmod_ibl.yy",},"order":0,},
     {"id":{"name":"BBMOD_RenderQueue","path":"scripts/BBMOD_RenderQueue/BBMOD_RenderQueue.yy",},"order":7,},
     {"id":{"name":"BBMOD_Renderer","path":"scripts/BBMOD_Renderer/BBMOD_Renderer.yy",},"order":2,},
     {"id":{"name":"BBMOD_Color","path":"scripts/BBMOD_Color/BBMOD_Color.yy",},"order":4,},

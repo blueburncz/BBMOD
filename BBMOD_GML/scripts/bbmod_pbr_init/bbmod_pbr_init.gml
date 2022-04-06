@@ -1,3 +1,7 @@
+/// @macro {Struct.BBMOD_PBRMaterial} A material for rendering RGBM encoded skies.
+/// @see BBMOD_PBRMaterial
+#macro BBMOD_MATERIAL_SKY __bbmod_material_sky()
+
 function __bbmod_shader_pbr()
 {
 	static _shader = new BBMOD_PBRShader(BBMOD_ShPBR, BBMOD_VFORMAT_DEFAULT);
