@@ -30,6 +30,11 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// second layer, the green channel controls the third layer etc.
 	Splatmap = pointer_null;
 
+	/// @var {Id.DsGrid}
+	/// @private
+	SplatmapGrid = ds_grid_create(1, 1);
+	ds_grid_clear(SplatmapGrid, 0);
+
 	/// @var {Struct.BBMOD_Vec2} Controls material texture repeat over the
 	/// terrain mesh.
 	TextureRepeat = new BBMOD_Vec3();
@@ -149,7 +154,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		var _buffer = buffer_create(_spriteWidth * _spriteHeight * 4, buffer_fast, 1);
 		buffer_get_surface(_buffer, _surface, 0);
 		surface_free(_surface);
-		buffer_seek(_buffer, buffer_seek_start, 0);
+		// Offset to the second byte, just in case the format was ARGB for example.
+		buffer_seek(_buffer, buffer_seek_start, 1);
 
 		var _j = 0;
 		repeat (_spriteHeight)
@@ -237,7 +243,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		return Position.Z + (_h2 + (_h1-_h2)*(1.0-_offsetX) + (_h3-_h2)*(_offsetY)) * Scale.Z;
 	};
 
-
 	/// @func get_normal(_x, _y)
 	/// @desc Retrieves terrain's normal at given coordinate.
 	/// @param {Real} _x The x position to get the normal at.
@@ -271,6 +276,48 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		return new BBMOD_Vec3(0.0, Scale.Y, (_h3 - _h2) * Scale.Z)
 			.Cross(new BBMOD_Vec3(-Scale.X, 0.0, (_h1 - _h2) * Scale.Z))
 			.Normalize();
+	};
+
+	/// @func get_layer(_x, _y[, _threshold])
+	/// @desc Retrieves the topmost splatmap layer at given coordinate.
+	/// @param {Real} _x The x coordinate to retrieve the layer at.
+	/// @param {Real} _y The y coordinate to retrieve the layer at.
+	/// @param {Real} [_threshold] The minimum required opacity. Defaults to 0.5.
+	/// @return {Real/Undefined} The topmost splatmap layer at given coordinate.
+	/// Returns `undefined` if the coordinate is outside of the terrain or if no
+	/// layer was found.
+	/// @note Method {@link BBMOD_Terrain.build_layer_index} needs to be called
+	/// first!
+	static get_layer = function (_x, _y, _threshold=0.5) {
+		gml_pragma("forceinline");
+		var _xScaled = (_x - Position.X) / Scale.X;
+		var _yScaled = (_y - Position.Y) / Scale.Y;
+		if (_xScaled < 0.0 || _xScaled > Size.X
+			|| _yScaled < 0.0 || _yScaled > Size.Y)
+		{
+			return undefined;
+		}
+		var _i = floor((_xScaled / Size.X) * ds_grid_width(SplatmapGrid));
+		var _j = floor((_yScaled / Size.Y) * ds_grid_height(SplatmapGrid));
+		var _rgba = SplatmapGrid[# _i, _j];
+		// TODO: Could be a loop
+		if (Layer[4] != undefined && (((_rgba & $FF) >> 0) / 255.0) >= _threshold)
+		{
+			return 4;
+		}
+		if (Layer[3] != undefined && (((_rgba & $FF00) >> 8) / 255.0) >= _threshold)
+		{
+			return 3;
+		}
+		if (Layer[2] != undefined && (((_rgba & $FF0000) >> 16) / 255.0) >= _threshold)
+		{
+			return 2;
+		}
+		if (Layer[1] != undefined && (((_rgba & $FF000000) >> 24) / 255.0) >= _threshold)
+		{
+			return 1;
+		}
+		return ((Layer[0] != undefined) ? 0 : undefined);
 	};
 
 	/// @func build_normals()
@@ -323,6 +370,73 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 				NormalSmoothZ[# x1, y1] = _nz;
 			}
 		}
+		return self;
+	};
+
+	/// @func build_layer_index()
+	/// @desc Builds an index of layers using the current splatmap.
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
+	static build_layer_index = function () {
+		var _width = 1.0 / texture_get_texel_width(Splatmap);
+		var _height = 1.0 / texture_get_texel_height(Splatmap);
+		var _buffer = array_create(4);
+		var _surface = surface_create(_width, _height);
+
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_blendenable(false);
+
+		shader_set(BBMOD_ShExtractSplatmapLayer);
+		texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, "bbmod_Splatmap"), Splatmap);
+
+		for (var i = 0; i < 4; ++i)
+		{
+			shader_set_uniform_i(shader_get_uniform(BBMOD_ShExtractSplatmapLayer, "bbmod_SplatmapIndex"), i);
+
+			surface_set_target(_surface);
+			draw_clear_alpha(0, 0);
+			// We just need something that has UVs 0..1
+			draw_sprite_stretched(BBMOD_SprCheckerboard, 0, 0, 0, _width, _height);
+			surface_reset_target();
+
+			_buffer[i] = buffer_create(_width * _height * 4, buffer_fast, 1);
+			buffer_get_surface(_buffer[i], _surface, 0);
+			// Offset to the second byte, just in case the format was ARGB for example.
+			buffer_seek(_buffer[i], buffer_seek_start, 1);
+		}
+
+		shader_reset();
+		gpu_pop_state();
+		surface_free(_surface);
+
+		ds_grid_resize(SplatmapGrid, _width, _height);
+		ds_grid_clear(SplatmapGrid, 0);
+
+		var _j = 0;
+		repeat (_height)
+		{
+			var _i = 0;
+			repeat (_width)
+			{
+				SplatmapGrid[# _i, _j] = (0
+					| (buffer_read(_buffer[0], buffer_u8) << 24)
+					| (buffer_read(_buffer[1], buffer_u8) << 16)
+					| (buffer_read(_buffer[2], buffer_u8) << 8)
+					| buffer_read(_buffer[3], buffer_u8));
+				buffer_seek(_buffer[0], buffer_seek_relative, 3);
+				buffer_seek(_buffer[1], buffer_seek_relative, 3);
+				buffer_seek(_buffer[2], buffer_seek_relative, 3);
+				buffer_seek(_buffer[3], buffer_seek_relative, 3);
+				++_i;
+			}
+			++_j;
+		}
+
+		buffer_delete(_buffer[0]);
+		buffer_delete(_buffer[1]);
+		buffer_delete(_buffer[2]);
+		buffer_delete(_buffer[3]);
+
 		return self;
 	};
 
@@ -493,6 +607,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
+		ds_grid_destroy(SplatmapGrid);
 		ds_grid_destroy(Height);
 		ds_grid_destroy(NormalX);
 		ds_grid_destroy(NormalY);

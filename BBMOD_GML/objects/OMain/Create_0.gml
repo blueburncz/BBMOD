@@ -111,3 +111,4 @@ terrain.Layer[1] = _dirt;
 terrain.Layer[2] = _rock;
 terrain.Layer[3] = _sand;
 terrain.Splatmap = sprite_get_texture(SprSplatmap, 0);
+terrain.build_layer_index();

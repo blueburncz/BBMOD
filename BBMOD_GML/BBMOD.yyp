@@ -7,6 +7,7 @@
     {"id":{"name":"BBMOD_PointLight","path":"scripts/BBMOD_PointLight/BBMOD_PointLight.yy",},"order":1,},
     {"id":{"name":"BBMOD_ShDefaultAnimated","path":"shaders/BBMOD_ShDefaultAnimated/BBMOD_ShDefaultAnimated.yy",},"order":4,},
     {"id":{"name":"BBMOD_Vec3","path":"scripts/BBMOD_Vec3/BBMOD_Vec3.yy",},"order":3,},
+    {"id":{"name":"BBMOD_ShExtractSplatmapLayer","path":"shaders/BBMOD_ShExtractSplatmapLayer/BBMOD_ShExtractSplatmapLayer.yy",},"order":4,},
     {"id":{"name":"SprColorGrading","path":"sprites/SprColorGrading/SprColorGrading.yy",},"order":4,},
     {"id":{"name":"SndGunshot1","path":"sounds/SndGunshot1/SndGunshot1.yy",},"order":1,},
     {"id":{"name":"SndShell0","path":"sounds/SndShell0/SndShell0.yy",},"order":0,},
