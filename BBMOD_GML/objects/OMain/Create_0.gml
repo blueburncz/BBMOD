@@ -85,32 +85,27 @@ renderer.add({
 	})
 });
 
-var _sh = new BBMOD_DefaultShader(BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
-var _m = new BBMOD_DefaultMaterial(_sh);
-_m.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH);
-_m.TextureScale = new BBMOD_Vec2(32.0, 32.0);
-_m.Mipmapping = mip_on;
-_m.Repeat = true;
-_m.AlphaBlend = true;
-
-var _rock = _m.clone();
+////////////////////////////////////////////////////////////////////////////////
+// Create terrain
+var _rock = BBMOD_MATERIAL_TERRAIN.clone();
 _rock.BaseOpacity = sprite_get_texture(SprRocks, 0);
 _rock.NormalSmoothness = sprite_get_texture(SprRocks, 1);
 
-var _dirt = _m.clone();
+var _dirt = BBMOD_MATERIAL_TERRAIN.clone();
 _dirt.BaseOpacity = sprite_get_texture(SprDirt, 0);
 _dirt.NormalSmoothness = sprite_get_texture(SprDirt, 1);
 
-var _grass = _m.clone();
+var _grass = BBMOD_MATERIAL_TERRAIN.clone();
 _grass.BaseOpacity = sprite_get_texture(SprGrass, 0);
 _grass.NormalSmoothness = sprite_get_texture(SprGrass, 1);
 
-var _sand = _m.clone();
+var _sand = BBMOD_MATERIAL_TERRAIN.clone();
 _sand.BaseOpacity = sprite_get_texture(SprSand, 0);
 _sand.NormalSmoothness = sprite_get_texture(SprSand, 1);
 
 terrain = new BBMOD_Terrain(SprHeightmap);
 terrain.Scale = new BBMOD_Vec3(2.0);
+terrain.TextureRepeat = new BBMOD_Vec2(32.0, 32.0);
 terrain.Layer[0] = _grass;
 terrain.Layer[1] = _dirt;
 terrain.Layer[2] = _rock;

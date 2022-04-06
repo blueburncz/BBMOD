@@ -1,1 +1,2 @@
 renderer.destroy();
+terrain.destroy();

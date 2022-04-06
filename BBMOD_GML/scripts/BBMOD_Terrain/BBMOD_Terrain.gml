@@ -28,6 +28,10 @@ function BBMOD_Terrain(_heightmap=undefined)
 	/// second layer, the green channel controls the third layer etc.
 	Splatmap = pointer_null;
 
+	/// @var {Struct.BBMOD_Vec2} Controls material texture repeat over the
+	/// terrain mesh.
+	TextureRepeat = new BBMOD_Vec3();
+
 	/// @var {Struct.BBMOD_Vec3} The position of the terrain in the world.
 	Position = new BBMOD_Vec3();
 
@@ -472,6 +476,7 @@ function BBMOD_Terrain(_heightmap=undefined)
 					.set_gpu_zfunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
 					.set_sampler("bbmod_Splatmap", Splatmap)
 					.set_uniform_i("bbmod_SplatmapIndex", i - 1)
+					.set_uniform_f2("bbmod_TextureScale", TextureRepeat.X, TextureRepeat.Y)
 					.set_world_matrix(_matrix)
 					.submit_vertex_buffer(VertexBuffer, pr_trianglelist, _mat.BaseOpacity)
 					.reset_material()
