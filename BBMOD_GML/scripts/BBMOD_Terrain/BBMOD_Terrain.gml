@@ -107,6 +107,17 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			&& _y >= Position.Y && _y <= Position.Y + (Size.Y * Scale.Y));
 	};
 
+	/// @func get_random_position()
+	/// @desc Retrieves a random position on the terrain.
+	/// @return {Struct.BBMOD_Vec3} A random position on the terrain.
+	static get_random_position = function () {
+		gml_pragma("forceinline");
+		var _x = Position.X + (random(Size.X) * Scale.X);
+		var _y = Position.Y + (random(Size.Y) * Scale.Y);
+		var _z = get_height(_x, _y);
+		return new BBMOD_Vec3(_x, _y, _z);
+	};
+
 	/// @func from_heightmap(_sprite[, _subimage])
 	/// @desc Initializes terrain height from a sprite.
 	/// @param {Resource.GMSprite} _sprite The heightmap sprite.

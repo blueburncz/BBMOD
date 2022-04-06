@@ -15,9 +15,10 @@ if (!instance_exists(OZombie)
 
 	repeat (++wave)
 	{
+		var _randomPosition = terrain.get_random_position();
 		instance_create_layer(
-			terrain.Position.X + random(terrain.Size.X),
-			terrain.Position.Y + random(terrain.Size.Y),
+			_randomPosition.X,
+			_randomPosition.Y,
 			"Instances",
 			OZombie);
 	}
@@ -29,7 +30,7 @@ if (!instance_exists(OZombie)
 		break;
 	}
 
-	waveTimeout = wave * 5;
+	waveTimeout = wave * 10;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

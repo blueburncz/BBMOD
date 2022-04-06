@@ -104,8 +104,8 @@ _sand.BaseOpacity = sprite_get_texture(SprSand, 0);
 _sand.NormalSmoothness = sprite_get_texture(SprSand, 1);
 
 terrain = new BBMOD_Terrain(SprHeightmap);
-terrain.Scale = new BBMOD_Vec3(2.0);
-terrain.TextureRepeat = new BBMOD_Vec2(32.0);
+terrain.Scale = new BBMOD_Vec3(4.0);
+terrain.TextureRepeat = new BBMOD_Vec2(64.0);
 terrain.Layer[0] = _grass;
 terrain.Layer[1] = _dirt;
 terrain.Layer[2] = _rock;
