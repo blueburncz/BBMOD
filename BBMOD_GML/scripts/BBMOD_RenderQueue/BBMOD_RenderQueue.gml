@@ -11,6 +11,7 @@ global.bbmod_render_queues = [];
 /// "RenderQueue" + number of created render queues - 1, e.g. "RenderQueue0",
 /// "RenderQueue1" etc.
 /// @param {Real} [_priority] The priority of the render queue. Defaults to 0.
+/// @see bbmod_render_queue_get_default
 /// @see BBMOD_ERenderCommand
 function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	: BBMOD_Class() constructor
@@ -1450,6 +1451,7 @@ function __bbmod_reindex_render_queues()
 /// @func bbmod_render_queue_get_default()
 /// @desc Retrieves the default render queue.
 /// @return {Struct.BBMOD_RenderQueue} The default render queue.
+/// @see BBMOD_RenderQueue
 function bbmod_render_queue_get_default()
 {
 	static _renderQueue = new BBMOD_RenderQueue("Default");
