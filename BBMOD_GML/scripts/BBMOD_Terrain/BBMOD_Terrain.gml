@@ -1,11 +1,13 @@
-/// @func BBMOD_Terrain([_heightmap])
+/// @func BBMOD_Terrain([_heightmap[, _subimage]])
 /// @extends BBMOD_Class
 /// @desc A heightmap based terrain with five material layers controlled through
 /// a splatmap.
 /// @param {Resource.GMSprite/Undefined} [_heightmap] The heightmap to make the
 /// terrain from. If `undefined`, then you will need to build the terrain mesh
 /// yourself later using the terrain's methods.
-function BBMOD_Terrain(_heightmap=undefined)
+/// @param {Real} [_subimage] The sprite subimage to use for the heightmap.
+/// Defaults to 0.
+function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -100,11 +102,13 @@ function BBMOD_Terrain(_heightmap=undefined)
 			&& _y >= Position.Y && _y <= Position.Y + (Size.Y * Scale.Y));
 	};
 
-	/// @func from_heightmap(_sprite)
+	/// @func from_heightmap(_sprite[, _subimage])
 	/// @desc Initializes terrain height from a sprite.
 	/// @param {Resource.GMSprite} _sprite The heightmap sprite.
+	/// @param {Real} [_subimage] The subimage to use for the heightmap.
+	/// Defaults to 0.
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static from_heightmap = function (_sprite) {
+	static from_heightmap = function (_sprite, _subimage=0) {
 		var _spriteWidth = sprite_get_width(_sprite);
 		var _spriteHeight = sprite_get_height(_sprite);
 
@@ -137,7 +141,7 @@ function BBMOD_Terrain(_heightmap=undefined)
 
 		var _surface = surface_create(_spriteWidth, _spriteHeight);
 		surface_set_target(_surface);
-		draw_sprite(_sprite, 0, 0, 0);
+		draw_sprite(_sprite, _subimage, 0, 0);
 		surface_reset_target();
 
 		gpu_pop_state();
@@ -504,7 +508,7 @@ function BBMOD_Terrain(_heightmap=undefined)
 
 	if (_heightmap != undefined)
 	{
-		from_heightmap(_heightmap);
+		from_heightmap(_heightmap, _subimage);
 		smooth_height();
 		build_normals();
 		build_smooth_normals();
