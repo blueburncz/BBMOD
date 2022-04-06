@@ -15,6 +15,8 @@ enum BBMOD_ERenderCommand
 	/// ```
 	/// @see BBMOD_ERenderCommand.EndConditionalBlock
 	BeginConditionalBlock,
+	/// @member Checks if the current render pass is one of specified passes.
+	CheckRenderPass,
 	/// @member Draws a mesh if its material can be used in the current render
 	/// pass.
 	DrawMesh,

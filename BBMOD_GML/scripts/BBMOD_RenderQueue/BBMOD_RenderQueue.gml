@@ -81,6 +81,21 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
+	/// @func check_render_pass(_passes)
+	/// @desc Adds a {@link BBMOD_ERenderCommand.CheckRenderPass} command into
+	/// the queue.
+	/// @param {Real} [_passes] Mask of allowed rendering passes.
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static check_render_pass = function (_passes) {
+		gml_pragma("forceinline");
+		ds_list_add(
+			RenderCommands,
+			BBMOD_ERenderCommand.CheckRenderPass,
+			1,
+			_passes);
+		return self;
+	};
+
 	/// @func draw_mesh(_vertexBuffer, _matrix, _material)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the
 	/// queue.
@@ -1062,6 +1077,14 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 						}
 						i += _sizeInner;
 					}
+				}
+				break;
+
+			case BBMOD_ERenderCommand.CheckRenderPass:
+				if (((1 << bbmod_render_pass_get()) & _renderCommands[| i++]) == 0)
+				{
+					_condition = false;
+					continue;
 				}
 				break;
 
