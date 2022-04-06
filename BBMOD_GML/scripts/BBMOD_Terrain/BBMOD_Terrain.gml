@@ -491,6 +491,10 @@ function BBMOD_Terrain(_heightmap=undefined)
 		ds_grid_destroy(NormalSmoothX);
 		ds_grid_destroy(NormalSmoothY);
 		ds_grid_destroy(NormalSmoothZ);
+		if (VertexBuffer != undefined)
+		{
+			vertex_delete_buffer(VertexBuffer);
+		}
 	};
 
 	if (_heightmap != undefined)
