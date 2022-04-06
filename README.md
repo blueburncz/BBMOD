@@ -86,7 +86,7 @@ Tutorials for BBMOD can be found on its homepage at https://blueburn.cz/bbmod/tu
 
 To help you get started, BBMOD comes with a little demo project for you to explore, modify and maybe turn into your first complete 3D game! You can play it right now in your browser at https://blueburn.cz/bbmod/demo.
 
-*Assets used in the demo project are created by [Kenney.nl](https://www.kenney.nl/).*
+*Assets used in the demo project are created by [Kenney.nl](https://www.kenney.nl/) and [Poly Haven](https://polyhaven.com/).*
 
 # Support the development
 Support us in developing BBMOD, get priority assistance and more of our amazing tools as a reward! [Become our Patron](https://www.patreon.com/blueburn).
