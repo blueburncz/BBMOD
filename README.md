@@ -109,6 +109,6 @@ Support us in developing BBMOD, get priority assistance and more of our amazing 
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
 # Special thanks
-* To [ambientCG.com](https://ambientcg.com/) for CC0 textures used in the demo project!
 * To [Assimp](https://github.com/assimp/assimp) for making BBMOD CLI possible!
 * To [Kenney.nl](https://www.kenney.nl/) for CC0 assets used in the demo project!
+* To [Poly Haven](https://polyhaven.com/) for CC0 textures used in the demo project!
