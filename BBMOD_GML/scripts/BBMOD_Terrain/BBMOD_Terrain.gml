@@ -37,7 +37,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 
 	/// @var {Struct.BBMOD_Vec2} Controls material texture repeat over the
 	/// terrain mesh.
-	TextureRepeat = new BBMOD_Vec3();
+	TextureRepeat = new BBMOD_Vec2(1.0);
 
 	/// @var {Struct.BBMOD_Vec3} The position of the terrain in the world.
 	Position = new BBMOD_Vec3();
