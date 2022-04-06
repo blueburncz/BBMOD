@@ -55,6 +55,7 @@ quaternions etc.
 * [bbmod_render_pass_get](./bbmod_render_pass_get.html)
 * [bbmod_render_pass_set](./bbmod_render_pass_set.html)
 * [bbmod_render_queue_get_default](./bbmod_render_queue_get_default.html)
+* [bbmod_shader_clear_globals](./bbmod_shader_clear_globals.html)
 * [bbmod_shader_get_global](./bbmod_shader_get_global.html)
 * [bbmod_shader_set_global_f](./bbmod_shader_set_global_f.html)
 * [bbmod_shader_set_global_f_array](./bbmod_shader_set_global_f_array.html)

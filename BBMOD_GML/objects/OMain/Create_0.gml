@@ -8,6 +8,7 @@ os_powersave_enable(false);
 display_set_gui_maximize(1, 1);
 audio_falloff_set_model(audio_falloff_linear_distance);
 gpu_set_tex_max_aniso(2);
+bbmod_shader_clear_globals();
 
 // If true then debug overlay is enabled.
 debugOverlay = false;

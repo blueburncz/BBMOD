@@ -412,6 +412,15 @@ function __bbmod_shader_set_globals(_shader)
 	}
 }
 
+/// @func bbmod_shader_clear_globals()
+/// @desc Clears all global uniforms.
+function bbmod_shader_clear_globals()
+{
+	gml_pragma("forceinline");
+	static _globals = __bbmod_shader_get_globals();
+	array_delete(_globals, 0, array_length(_globals));
+}
+
 /// @func bbmod_shader_get_global(_name)
 /// @desc Retrieves the value of a global shader uniform.
 /// @param {String} _name The name of the uniform.
