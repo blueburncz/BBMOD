@@ -128,10 +128,15 @@ function BBMOD_Terrain(_heightmap=undefined)
 		ds_grid_resize(NormalSmoothZ, _spriteWidth, _spriteHeight);
 		ds_grid_clear(NormalSmoothZ, 1);
 
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+
 		var _surface = surface_create(_spriteWidth, _spriteHeight);
 		surface_set_target(_surface);
 		draw_sprite(_sprite, 0, 0, 0);
 		surface_reset_target();
+
+		gpu_pop_state();
 
 		var _buffer = buffer_create(_spriteWidth * _spriteHeight * 4, buffer_fast, 1);
 		buffer_get_surface(_buffer, _surface, 0);

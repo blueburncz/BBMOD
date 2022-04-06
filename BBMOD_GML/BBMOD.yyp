@@ -131,6 +131,7 @@
     {"id":{"name":"BBMOD_StaticBatch","path":"scripts/BBMOD_StaticBatch/BBMOD_StaticBatch.yy",},"order":1,},
     {"id":{"name":"OObject3D","path":"objects/OObject3D/OObject3D.yy",},"order":0,},
     {"id":{"name":"SprZombie","path":"sprites/SprZombie/SprZombie.yy",},"order":1,},
+    {"id":{"name":"bbmod_gpu_get_default_state","path":"scripts/bbmod_gpu_get_default_state/bbmod_gpu_get_default_state.yy",},"order":11,},
     {"id":{"name":"SndFootstep3","path":"sounds/SndFootstep3/SndFootstep3.yy",},"order":3,},
     {"id":{"name":"BBMOD_PBRShader","path":"scripts/BBMOD_PBRShader/BBMOD_PBRShader.yy",},"order":1,},
     {"id":{"name":"SndShell7","path":"sounds/SndShell7/SndShell7.yy",},"order":7,},

@@ -15,6 +15,7 @@
 * Moved basic properties and methods from `BBMOD_BaseMaterial` to `BBMOD_Material`.
 * Struct `BBMOD_BaseMaterial` now inherits from `BBMOD_Material`.
 * Added new property `BBMOD_Material.AlphaBlend`, using which you can enable/disable alpha blending. This is by default **disabled**.
+* Added new function `bbmod_gpu_get_default_state`, using which you can retrieve the default GPU state.
 * Fixed method `BBMOD_Vertex.to_vertex_buffer` when using vertex colors.
 
 ### Terrain module:
