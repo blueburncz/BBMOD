@@ -331,6 +331,9 @@ function BBMOD_Renderer()
 			_renderQueues[_rqi++].submit().clear();
 		}
 
+		// Unset in case it gets destroyed when the room changes etc.
+		bbmod_shader_unset_global("bbmod_Shadowmap");
+
 		bbmod_material_reset();
 
 		matrix_set(matrix_world, _world);

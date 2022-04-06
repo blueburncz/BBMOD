@@ -8,7 +8,6 @@ os_powersave_enable(false);
 display_set_gui_maximize(1, 1);
 audio_falloff_set_model(audio_falloff_linear_distance);
 gpu_set_tex_max_aniso(2);
-bbmod_shader_clear_globals();
 
 // If true then debug overlay is enabled.
 debugOverlay = false;
@@ -71,12 +70,15 @@ _objImporter.destroy();
 renderer = new BBMOD_Renderer();
 
 renderer.UseAppSurface = true;
-renderer.RenderScale = 1.0;
+renderer.RenderScale = (os_browser == browser_not_a_browser) ? 1.0 : 0.8;
 renderer.EnableShadows = true;
 renderer.EnablePostProcessing = true;
 renderer.ChromaticAberration = 3.0;
 renderer.ColorGradingLUT = sprite_get_texture(SprColorGrading, 0);
-renderer.Antialiasing = BBMOD_EAntialiasing.FXAA;
+if (os_browser == browser_not_a_browser)
+{
+	renderer.Antialiasing = BBMOD_EAntialiasing.FXAA;
+}
 
 // Any object/struct that has a render method can be added to the renderer:
 renderer.add(
