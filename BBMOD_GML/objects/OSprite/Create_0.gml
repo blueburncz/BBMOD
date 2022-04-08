@@ -8,4 +8,5 @@ pointLight.Range = 256.0;
 bbmod_light_point_add(pointLight);
 
 material = BBMOD_MATERIAL_SPRITE.clone();
+material.BaseOpacity = sprite_get_texture(sprite_index, 0);
 material.NormalSmoothness = sprite_get_texture(SprNormal, 0);

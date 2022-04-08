@@ -57,12 +57,20 @@ uniform sampler2D bbmod_MetallicAO;
 uniform sampler2D bbmod_Subsurface;
 // RGBA: RGBM encoded emissive color
 uniform sampler2D bbmod_Emissive;
-#else
+#else // X_PBR
+#if defined(X_2D)
+// UVs of the BaseOpacity texture
+uniform vec4 bbmod_BaseOpacityUV;
+// UVs of the NormalSmoothness texture
+uniform vec4 bbmod_NormalSmoothnessUV;
+// UVs of the SpecularColor texture
+uniform vec4 bbmod_SpecularColorUV;
+#endif // X_2D
 // RGB: Tangent space normal, A: Smoothness
 uniform sampler2D bbmod_NormalSmoothness;
 // RGB: Specular color
 uniform sampler2D bbmod_SpecularColor;
-#endif
+#endif // !X_PBR
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
 

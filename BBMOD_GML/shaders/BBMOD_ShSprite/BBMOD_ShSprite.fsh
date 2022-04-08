@@ -34,6 +34,12 @@ varying float v_fDepth;
 
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
+// UVs of the BaseOpacity texture
+uniform vec4 bbmod_BaseOpacityUV;
+// UVs of the NormalSmoothness texture
+uniform vec4 bbmod_NormalSmoothnessUV;
+// UVs of the SpecularColor texture
+uniform vec4 bbmod_SpecularColorUV;
 // RGB: Tangent space normal, A: Smoothness
 uniform sampler2D bbmod_NormalSmoothness;
 // RGB: Specular color
@@ -193,17 +199,22 @@ Material UnpackMaterial(
 	Material m;
 
 	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	vec4 baseOpacity = texture2D(texBaseOpacity,
+		mix(bbmod_BaseOpacityUV.xy, bbmod_BaseOpacityUV.zw, uv));
 	m.Base = xGammaToLinear(baseOpacity.rgb);
 	m.Opacity = baseOpacity.a;
 
+	uv = (uv - bbmod_BaseOpacityUV.xy) / (bbmod_BaseOpacityUV.zw - bbmod_BaseOpacityUV.xy);
+
 	// Normal vector and smoothness
-	vec4 normalSmoothness = texture2D(texNormalSmoothness, uv);
+	vec4 normalSmoothness = texture2D(texNormalSmoothness,
+		mix(bbmod_NormalSmoothnessUV.xy, bbmod_NormalSmoothnessUV.zw, uv));
 	m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
 	m.Smoothness = normalSmoothness.a;
 
 	// Specular color
-	vec4 specularColor = texture2D(texSpecularColor, uv);
+	vec4 specularColor = texture2D(texSpecularColor,
+		mix(bbmod_SpecularColorUV.xy, bbmod_SpecularColorUV.zw, uv));
 	m.Specular = xGammaToLinear(specularColor.rgb);
 
 	return m;

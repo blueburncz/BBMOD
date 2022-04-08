@@ -6,7 +6,7 @@
     "path": "folders/BBMOD/2D.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_sprite_material",
+  "name": "BBMOD_SpriteDefaultShader",
   "tags": [],
   "resourceType": "GMScript",
 }

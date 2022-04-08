@@ -1,12 +1,12 @@
-/// @macro {BBMOD_VertexFormat} Vertex format of 2D sprites.
+/// @macro {Struct.BBMOD_VertexFormat} Vertex format of 2D sprites.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_SPRITE __bbmod_vformat_sprite()
 
-/// @macro {BBMOD_DefaultShader} Shader for 2D sprites.
-/// @see BBMOD_DefaultShader
+/// @macro {Struct.BBMOD_SpriteDefaultShader} Shader for 2D sprites.
+/// @see BBMOD_SpriteDefaultShader
 #macro BBMOD_SHADER_SPRITE __bbmod_shader_sprite()
 
-/// @macro {BBMOD_DefaultMaterial} Material for 2D sprites.
+/// @macro {Struct.BBMOD_DefaultMaterial} Material for 2D sprites.
 /// @see BBMOD_DefaultMaterial
 #macro BBMOD_MATERIAL_SPRITE __bbmod_material_sprite()
 
@@ -18,7 +18,7 @@ function __bbmod_vformat_sprite()
 
 function __bbmod_shader_sprite()
 {
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShSprite, BBMOD_VFORMAT_SPRITE)
+	static _shader = new BBMOD_SpriteDefaultShader(BBMOD_ShSprite, BBMOD_VFORMAT_SPRITE)
 	return _shader;
 }
 
