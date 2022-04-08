@@ -10,28 +10,28 @@ function BBMOD_Resource()
 		destroy: destroy,
 	};
 
-	/// @var {bool} If `false` then the resource has not been loaded yet.
+	/// @var {Bool} If `false` then the resource has not been loaded yet.
 	/// @readonly
 	IsLoaded = false;
 
-	/// @var {string/undefined} The path to the file from which was the resource
+	/// @var {String/Undefined} The path to the file from which was the resource
 	/// loaded, or `undefined` if the resource does not come from a file.
 	/// @readonly
 	Path = undefined;
 
-	/// @var {BBMOD_ResourceManager/undefined} The resource manager that loaded
+	/// @var {Struct.BBMOD_ResourceManager/Undefined} The resource manager that loaded
 	/// the resource.
 	/// @private
 	Manager = undefined;
 
-	/// @var {uint} Number of resource "lives". If it reaches 0, the resource is
+	/// @var {Real} Number of resource "lives". If it reaches 0, the resource is
 	/// destroyed.
 	/// @private
 	Counter = 1;
 
 	/// @func from_buffer(_buffer)
 	/// @desc Loads the resource from a buffer.
-	/// @return {BBMOD_Resource} Returns `self`.
+	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	static from_buffer = function () {
 		throw new BBMOD_NotImplementedException();
@@ -40,10 +40,10 @@ function BBMOD_Resource()
 	};
 
 	/// @func check_file(_file[, _sha1[, _callback]])
-	/// @param {string} _file
-	/// @param {string/undefined} [_sha1]
-	/// @param {func/undefined} [_callback]
-	/// @return {bool}
+	/// @param {String} _file
+	/// @param {String} [_sha1]
+	/// @param {Function/Undefined} [_callback]
+	/// @return {Bool}
 	/// @throws {BBMOD_Exception}
 	/// @private
 	static check_file = function (_file, _sha1=undefined, _callback=undefined) {
@@ -79,10 +79,10 @@ function BBMOD_Resource()
 
 	/// @func from_file(_file[, _sha1])
 	/// @desc Loads the resource from a file.
-	/// @param {string} _file The path to the file.
-	/// @param {string/undefined} [_sha1] Expected SHA1 of the file. If the
-	/// actual one does not match with this, then the resource will not be loaded.
-	/// @return {BBMOD_Resource} Returns `self`.
+	/// @param {String} _file The path to the file.
+	/// @param {String/Undefined} [_sha1] Expected SHA1 of the file. If the actual one
+	/// does not match with this, then the resource will not be loaded.
+	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	/// @throws {BBMOD_Exception} If loading fails.
 	static from_file = function (_file, _sha1=undefined) {
 		Path = _file;
@@ -110,15 +110,15 @@ function BBMOD_Resource()
 	///
 	/// @desc Asynchronnously loads the resource from a file.
 	///
-	/// @param {string} _file The path to the file.
-	/// @param {string/undefined} [_sha1] Expected SHA1 of the file. If the
-	/// actual one does not match with this, then the resource will not be loaded.
-	/// @param {func/undefined} [_callback] The function to execute when the
+	/// @param {String} _file The path to the file.
+	/// @param {String/Undefined} [_sha1] Expected SHA1 of the file. If the actual
+	/// one does not match with this, then the resource will not be loaded.
+	/// @param {Function/Undefined} [_callback] The function to execute when the
 	/// resource is loaded or if an error occurs. It must take the error as the
 	/// first argument and the resource as the second argument. If no error occurs,
 	/// then `undefined` is passed.
 	///
-	/// @return {BBMOD_Resource} Returns `self`.
+	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	///
 	/// @note Do not forget to call {@link bbmod_async_save_load_update} and
 	/// {@link bbmod_async_image_loaded_update} in appropriate events when using
@@ -173,7 +173,7 @@ function BBMOD_Resource()
 
 	/// @func ref()
 	/// @desc Retrieves a reference to the resource.
-	/// @return {BBMOD_Resource} Returns `self`.
+	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	static ref = function () {
 		gml_pragma("forceinline");
 		++Counter;
@@ -182,7 +182,7 @@ function BBMOD_Resource()
 
 	/// @func free()
 	/// @desc Releases a reference to the resource.
-	/// @return {bool} Returns `true` if there are no other references to the
+	/// @return {Bool} Returns `true` if there are no other references to the
 	/// resource and the resource is destroyed.
 	static free = function () {
 		gml_pragma("forceinline");

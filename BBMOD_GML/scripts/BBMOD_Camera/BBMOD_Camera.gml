@@ -26,35 +26,35 @@ function BBMOD_Camera() constructor
 	/// @readonly
 	Raw = camera_create();
 
-	/// @var {real} The camera's exposure value. Defaults to `1`.
+	/// @var {Real} The camera's exposure value. Defaults to `1`.
 	Exposure = 1.0;
 
-	/// @var {BBMOD_Vec3} The camera's positon. Defaults to `[0, 0, 0]`.
+	/// @var {Struct.BBMOD_Vec3} The camera's positon. Defaults to `[0, 0, 0]`.
 	Position = new BBMOD_Vec3(0.0);
 
-	/// @var {BBMOD_Vec3} A position where the camera is looking at.
+	/// @var {Struct.BBMOD_Vec3} A position where the camera is looking at.
 	/// In FPS mode ({@link BBMOD_Camera.Zoom} equals to 0) this is the camera's
 	/// direction. Defaults to `[1, 0, 0]`.
 	Target = new BBMOD_Vec3(1.0, 0.0, 0.0);
 
-	/// @var {BBMOD_Vec3} The camera's up vector. Defaults to `[0, 0, 1]`.
+	/// @var {Struct.BBMOD_Vec3} The camera's up vector. Defaults to `[0, 0, 1]`.
 	Up = new BBMOD_Vec3(0.0, 0.0, 1.0);
 
-	/// @var {real} The camera's field of view. Defaults to `60`.
+	/// @var {Real} The camera's field of view. Defaults to `60`.
 	/// @note This does not have any effect when {@link BBMOD_Camera.Orthographic}
 	/// is enabled.
 	Fov = 60.0;
 
-	/// @var {real} The camera's aspect ratio. Defaults to `16 / 9`.
+	/// @var {Real} The camera's aspect ratio. Defaults to `16 / 9`.
 	AspectRatio = 16.0 / 9.0;
 
-	/// @var {real} Distance to the near clipping plane. Anything closer to the
+	/// @var {Real} Distance to the near clipping plane. Anything closer to the
 	/// camera than this will not be visible. Defaults to `0.1`.
 	/// @note This can be a negative value if {@link BBMOD_Camera.Orthographic}
 	/// is enabled.
 	ZNear = 0.1;
 
-	/// @var {real} Distance to the far clipping plane. Anything farther from
+	/// @var {Real} Distance to the far clipping plane. Anything farther from
 	/// the camera than this will not be visible. Defaults to `32768`.
 	ZFar = 32768.0;
 
@@ -67,58 +67,58 @@ function BBMOD_Camera() constructor
 	/// @see BBMOD_Camera.Orthographic
 	Width = window_get_width();
 
-	/// @var {uint/undefined} An id of an instance to follow or `undefined`. The
-	/// object must have a `z` variable (position on the z axis) defined!
-	/// Defaults to `undefined`.
+	/// @var {Id.Instance/Undefined} An id of an instance to follow or
+	/// `undefined`. The object must have a `z` variable (position on the z
+	/// axis) defined! Defaults to `undefined`.
 	FollowObject = undefined;
 
-	/// @var {bool} Used to determine change of the object to follow.
+	/// @var {Bool} Used to determine change of the object to follow.
 	/// @private
 	FollowObjectLast = undefined;
 
-	/// @var {func/undefined} A function which remaps value in range `0..1` to a
-	/// different `0..1` value. This is used to control the follow curve. If
-	/// not defined then `lerp` is used. Defaults to `undefined`.
+	/// @var {Function/Undefined} A function which remaps value in range `0..1`
+	/// to a different `0..1` value. This is used to control the follow curve.
+	/// If not defined then `lerp` is used. Defaults to `undefined`.
 	FollowCurve = undefined;
 
-	/// @var {real} Controls lerp factor between the previous camera position
+	/// @var {Real} Controls lerp factor between the previous camera position
 	/// and the object it follows. Defaults to `1`, which means the camera is
 	/// immediately moved to its target position.
 	/// {@link BBMOD_Camera.FollowObject} must not be `undefined` for this to
 	/// have any effect.
 	FollowFactor = 1.0;
 
-	/// @var {BBMOD_Vec3} The camera's offset from its target. Defaults to
+	/// @var {Struct.BBMOD_Vec3} The camera's offset from its target. Defaults to
 	/// `[0, 0, 0]`.
 	Offset = new BBMOD_Vec3(0.0);
 
-	/// @var {bool} If `true` then mouselook is enabled. Defaults to `false`.
+	/// @var {Bool} If `true` then mouselook is enabled. Defaults to `false`.
 	/// @readonly
 	/// @see BBMOD_Camera.set_mouselook
 	MouseLook = false;
 
-	/// @var {real} Controls the mouselook sensitivity. Defaults to `1`.
+	/// @var {Real} Controls the mouselook sensitivity. Defaults to `1`.
 	MouseSensitivity = 1.0;
 
-	/// @var {BBMOD_Vec2/undefined} The position on the screen where the cursor
+	/// @var {Struct.BBMOD_Vec2/Undefined} The position on the screen where the cursor
 	/// is locked when {@link BBMOD_Camera.MouseLook} is `true`.
 	/// @private
 	MouseLockAt = undefined;
 
-	/// @var {real} The camera's horizontal direction. Defaults to `0`.
+	/// @var {Real} The camera's horizontal direction. Defaults to `0`.
 	/// @readonly
 	Direction = 0.0;
 
-	/// @var {real} The camera's vertical direction. Automatically clamped
+	/// @var {Real} The camera's vertical direction. Automatically clamped
 	/// between `-89` and `89`. Defaults to `0`.
 	/// @readonly
 	DirectionUp = 0.0;
 
-	/// @var {real} The camera's distance from its target. Use `0` for a
+	/// @var {Real} The camera's distance from its target. Use `0` for a
 	/// first-person camera. Defaults to `0`.
 	Zoom = 0.0;
 
-	/// @var {bool} If `true` then the camera updates position and orientation
+	/// @var {Bool} If `true` then the camera updates position and orientation
 	/// of the 3D audio listener in the {@link BBMOD_Camera.update_matrices}
 	/// method. Defaults to `true`.
 	AudioListener = true;
@@ -132,8 +132,8 @@ function BBMOD_Camera() constructor
 	/// @func set_mouselook(_enable)
 	/// @desc Enable/disable mouselook. This locks the mouse cursor at its
 	/// current position when enabled.
-	/// @param {bool} _enable USe `true` to enable mouselook.
-	/// @return {BBMOD_Camera} Returns `self`.
+	/// @param {Bool} _enable USe `true` to enable mouselook.
+	/// @return {Struct.BBMOD_Camera} Returns `self`.
 	static set_mouselook = function (_enable) {
 		if (_enable)
 		{
@@ -159,7 +159,7 @@ function BBMOD_Camera() constructor
 
 	/// @func update_matrices()
 	/// @desc Recomputes camera's view and projection matrices.
-	/// @return {BBMOD_Camera} Returns `self`.
+	/// @return {Struct.BBMOD_Camera} Returns `self`.
 	/// @note This is called automatically in the {@link BBMOD_Camera.update}
 	/// method, so you do not need to call this unless you modify
 	/// {@link BBMOD_Camera.Position} or {@link BBMOD_Camera.Target} after the
@@ -208,9 +208,9 @@ function BBMOD_Camera() constructor
 
 	/// @func update(_deltaTime[, _positionHandler])
 	/// @desc Handles mouselook, updates camera's position, matrices etc.
-	/// @param {real} _deltaTime How much time has passed since the last frame
+	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
-	/// @param {func/undefined} [_positionHandler] A function which takes
+	/// @param {Function/Undefined} [_positionHandler] A function which takes
 	/// the camera's position (@{link BBMOD_Vec3}) and returns a new position.
 	/// This could be used for example for camera collisions in a third-person
 	/// game. Defaults to `undefined`.
@@ -313,7 +313,7 @@ function BBMOD_Camera() constructor
 
 	/// @func get_view_mat()
 	/// @desc Retrieves camera's view matrix.
-	/// @return {real[16]} The view matrix.
+	/// @return {Array.Real} The view matrix.
 	static get_view_mat = function () {
 		gml_pragma("forceinline");
 
@@ -334,7 +334,7 @@ function BBMOD_Camera() constructor
 
 	/// @func get_proj_mat()
 	/// @desc Retrieves camera's projection matrix.
-	/// @return {real[16]} The projection matrix.
+	/// @return {Array.Real} The projection matrix.
 	static get_proj_mat = function () {
 		gml_pragma("forceinline");
 
@@ -356,7 +356,7 @@ function BBMOD_Camera() constructor
 	/// @func get_right()
 	/// @desc Retrieves a vector pointing right relative to the camera's
 	/// direction.
-	/// @return {BBMOD_Vec3} The right vector.
+	/// @return {Struct.BBMOD_Vec3} The right vector.
 	static get_right = function () {
 		gml_pragma("forceinline");
 		var _view = get_view_mat();
@@ -370,7 +370,7 @@ function BBMOD_Camera() constructor
 	/// @func get_up()
 	/// @desc Retrieves a vector pointing up relative to the camera's
 	/// direction.
-	/// @return {BBMOD_Vec3} The up vector.
+	/// @return {Struct.BBMOD_Vec3} The up vector.
 	static get_up = function () {
 		gml_pragma("forceinline");
 		var _view = get_view_mat();
@@ -383,7 +383,7 @@ function BBMOD_Camera() constructor
 
 	/// @func get_forward()
 	/// @desc Retrieves a vector pointing forward in the camera's direction.
-	/// @return {BBMOD_Vec3} The forward vector.
+	/// @return {Struct.BBMOD_Vec3} The forward vector.
 	static get_forward = function () {
 		gml_pragma("forceinline");
 		var _view = get_view_mat();
@@ -424,7 +424,7 @@ function BBMOD_Camera() constructor
 
 	/// @func apply()
 	/// @desc Applies the camera.
-	/// @return {BBMOD_Camera} Returns `self`.
+	/// @return {Struct.BBMOD_Camera} Returns `self`.
 	/// @example
 	/// Following code renders a model from the camera's view.
 	/// ```gml

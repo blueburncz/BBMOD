@@ -1,7 +1,7 @@
 event_inherited();
 
 // The player speed when they're running.
-speedRun = 2.0;
+speedRun = 1.75;
 
 // The id of the item that the player is picking up (or undefined).
 pickupTarget = undefined;
@@ -116,7 +116,9 @@ animationStateMachine.OnPreUpdate = method(self, function () {
 
 	// Go to state "Jump" if the player is above the ground of they're falling
 	// out of the map.
-	if ((z > 0 || z < -1)
+	var _terrainHeight = global.terrain.get_height(x, y);
+
+	if ((_terrainHeight == undefined || z > _terrainHeight + 5 || z < -1)
 		&& _stateCurrent != stateJump)
 	{
 		animationStateMachine.change_state(stateJump);
@@ -196,7 +198,9 @@ animationStateMachine.add_state(stateRun);
 stateJump = new BBMOD_AnimationState("Jump", animJump, true);
 stateJump.OnUpdate = method(self, function () {
 	// Go to the "Idle" state when player falls on the ground.
-	if (z == 0)
+	var _terrainHeight = global.terrain.get_height(x, y);
+
+	if (z == _terrainHeight)
 	{
 		animationStateMachine.change_state(stateIdle);
 		return;

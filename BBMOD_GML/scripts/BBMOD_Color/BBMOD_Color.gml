@@ -1,96 +1,96 @@
-/// @macro {real}
+/// @macro {Real}
 /// @private
 #macro BBMOD_RGBM_RANGE 6.0
 
-/// @macro {real} The maximum value of a single channel when using RGBM encoded
+/// @macro {Real} The maximum value of a single channel when using RGBM encoded
 /// colors. This is always at least 255.
 #macro BBMOD_RGBM_VALUE_MAX (255.0 * BBMOD_RGBM_RANGE)
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_aqua)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_aqua)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_AQUA (new BBMOD_Color().FromConstant(c_aqua))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_black)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_black)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_BLACK (new BBMOD_Color().FromConstant(c_black))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_blue)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_blue)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_BLUE (new BBMOD_Color().FromConstant(c_blue))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_dkgray)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_dkgray)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_DKGRAY (new BBMOD_Color().FromConstant(c_dkgray))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_fuchsia)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_fuchsia)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_FUCHSIA (new BBMOD_Color().FromConstant(c_fuchsia))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_gray)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_gray)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_GRAY (new BBMOD_Color().FromConstant(c_gray))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_green)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_green)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_GREEN (new BBMOD_Color().FromConstant(c_green))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_lime)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_lime)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_LIME (new BBMOD_Color().FromConstant(c_lime))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_ltgray)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_ltgray)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_LTGRAY (new BBMOD_Color().FromConstant(c_ltgray))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_maroon)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_maroon)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_MAROON (new BBMOD_Color().FromConstant(c_maroon))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_navy)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_navy)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_NAVY (new BBMOD_Color().FromConstant(c_navy))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_olive)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_olive)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_OLIVE (new BBMOD_Color().FromConstant(c_olive))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_orange)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_orange)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_ORANGE (new BBMOD_Color().FromConstant(c_orange))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_purple)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_purple)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_PURPLE (new BBMOD_Color().FromConstant(c_purple))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_red)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_red)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_RED (new BBMOD_Color().FromConstant(c_red))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_silver)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_silver)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_SILVER (new BBMOD_Color().FromConstant(c_silver))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_teal)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_teal)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_TEAL (new BBMOD_Color().FromConstant(c_teal))
 
-/// @macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_white)`.
+/// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_white)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_WHITE (new BBMOD_Color().FromConstant(c_white))
 
-///@macro {BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_yellow)`.
+///@macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_yellow)`.
 /// @see BBMOD_Color
 #macro BBMOD_C_YELLOW (new BBMOD_Color().FromConstant(c_yellow))
 
 /// @func BBMOD_Color([_red, _green, _blue])
 /// @desc A color with support for high dynamic range.
-/// @param {real} [_red] The value of the red channel. Use values in range
+/// @param {Real} [_red] The value of the red channel. Use values in range
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
-/// @param {real} [_green] The value of the green channel. Use values in range
+/// @param {Real} [_green] The value of the green channel. Use values in range
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
-/// @param {real} [_blue] The value of the blue channel. Use values in range
+/// @param {Real} [_blue] The value of the blue channel. Use values in range
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
-/// @param {real} [_alpha] The value of the alpha channel. Use values in range 0..1.
+/// @param {Real} [_alpha] The value of the alpha channel. Use values in range 0..1.
 /// Defaults to 1.
 /// @see BBMOD_C_AQUA
 /// @see BBMOD_C_BLACK
@@ -114,22 +114,22 @@
 /// @see BBMOD_RGBM_VALUE_MAX
 function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) constructor
 {
-	/// @var {real} The value of the red color channel.
+	/// @var {Real} The value of the red color channel.
 	Red = _red;
 
-	/// @var {real} The value of the green color channel.
+	/// @var {Real} The value of the green color channel.
 	Green = _green;
 
-	/// @var {real} The value of the blue color channel.
+	/// @var {Real} The value of the blue color channel.
 	Blue = _blue;
 
-	/// @var {real} The value of the alpha channel.
+	/// @var {Real} The value of the alpha channel.
 	Alpha = _alpha;
 
 	/// @func FromConstant(_color)
 	/// @desc Initializes the color using a color constant.
-	/// @param {uint} _color The color constant.
-	/// @return {BBMOD_Color} Returns `self`.
+	/// @param {Real} _color The color constant.
+	/// @return {Struct.BBMOD_Color} Returns `self`.
 	/// @example
 	/// ```gml
 	/// var _red = new BBMOD_Color().FromConstant(c_red);
@@ -144,14 +144,14 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func FromRGBA(_red, _green, _blue[, _alpha])
 	/// @desc Initializes the color using RGBA.
-	/// @param {real} _red The value of the red channel. Use values in range
+	/// @param {Real} _red The value of the red channel. Use values in range
 	/// 0..`BBMOD_RGBM_VALUE_MAX`.
-	/// @param {real} _green The value of the green channel. Use values in range
+	/// @param {Real} _green The value of the green channel. Use values in range
 	/// 0..`BBMOD_RGBM_VALUE_MAX`.
-	/// @param {real} _blue The value of the blue channel. Use values in range
+	/// @param {Real} _blue The value of the blue channel. Use values in range
 	/// 0..`BBMOD_RGBM_VALUE_MAX`.
-	/// @param {real} [_alpha] The value of the alpha channel. Defaults to 1.
-	/// @return {BBMOD_Color} Returns `self`.
+	/// @param {Real} [_alpha] The value of the alpha channel. Defaults to 1.
+	/// @return {Struct.BBMOD_Color} Returns `self`.
 	static FromRGBA = function (_red, _green, _blue, _alpha=1.0) {
 		gml_pragma("forceinline");
 		Red = _red;
@@ -164,8 +164,8 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 	/// @func FromHex(_hex)
 	/// @desc Initializes the color using `RRGGBB` hexadecimal format. Alpha
 	/// channel is set to 1.
-	/// @param {uint} _hex The hexadecimal color.
-	/// @return {BBMOD_Color} Returns `self`.
+	/// @param {Real} _hex The hexadecimal color.
+	/// @return {Struct.BBMOD_Color} Returns `self`.
 	/// @example
 	/// ```gml
 	/// new BBMOD_Color().FromHex($FF0000); // Same as FromConstant(c_red)
@@ -183,10 +183,10 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func FromHSV(_hue, _saturation, _value)
 	/// @desc Initializes the color using HSV. Alpha channel is set to 1.
-	/// @param {real} _hue Color hue. Use values in range 0..255.
-	/// @param {real} _saturation Color saturation. Use values in range 0..255.
-	/// @param {real} _value Color value. Use values in range 0..255.
-	/// @return {BBMOD_Color} Returns `self`.
+	/// @param {Real} _hue Color hue. Use values in range 0..255.
+	/// @param {Real} _saturation Color saturation. Use values in range 0..255.
+	/// @param {Real} _value Color value. Use values in range 0..255.
+	/// @return {Struct.BBMOD_Color} Returns `self`.
 	static FromHSV = function (_hue, _saturation, _value) {
 		gml_pragma("forceinline");
 		var _hsv = make_color_hsv(_hue, _saturation, _value);
@@ -199,11 +199,11 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func Mix(_color, _factor)
 	/// @desc Mixes two colors.
-	/// @param {BBMOD_Color} _color The other color to mix this one with.
-	/// @param {real} _factor The mixing factor. Use values in range 0..1,
+	/// @param {Struct.BBMOD_Color} _color The other color to mix this one with.
+	/// @param {Real} _factor The mixing factor. Use values in range 0..1,
 	/// where 0 would result into this color, 1 would be the other color and
 	/// 0.5 would return a merge of both colors equally.
-	/// @return {BBMOD_Color} The new color.
+	/// @return {Struct.BBMOD_Color} The new color.
 	static Mix = function (_color, _factor) {
 		gml_pragma("forceinline");
 		return new BBMOD_Color(
@@ -216,7 +216,7 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 	/// @func ToConstant()
 	/// @desc Encodes the color into a single value, compatible with GameMaker's
 	/// color constants. Ignores the alpha channel.
-	/// @return {uint} The color as a single value.
+	/// @return {Real} The color as a single value.
 	/// @example
 	/// ```gml
 	/// var _red = new BBMOD_Color(255, 0, 0);
@@ -229,11 +229,11 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func ToHSV([_array[, _index]])
 	/// @desc Encodes the color into HSV format, ignoring the alpha channel.
-	/// @param {real[]} [_array] The array to output the values to. A new one
+	/// @param {Array.Real} [_array] The array to output the values to. A new one
 	/// is created if not defined.
-	/// @param {uint} [_index] The index to start writing the values to. Defaults
+	/// @param {Real} [_index] The index to start writing the values to. Defaults
 	/// to 0.
-	/// @return {real[]} Returns the array with HSV values.
+	/// @return {Array.Real} Returns the array with HSV values.
 	static ToHSV = function (_array, _index) {
 		gml_pragma("forceinline");
 		_array = (_array != undefined) ? _array : array_create(3, 0);
@@ -247,11 +247,11 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func ToRGBM([_array[, _index]])
 	/// @desc Encodes the color into RGBM format, ignoring the alpha channel.
-	/// @param {real[]/undefined} [_array] The array to output the values to.
+	/// @param {Array.Real/Undefined} [_array] The array to output the values to.
 	/// If `undefined`, then a new one is created.
-	/// @param {uint} [_index] The index to start writing the values to.
+	/// @param {Real} [_index] The index to start writing the values to.
 	/// Defaults to 0.
-	/// @return {real[]} Returns the array with RGBM values.
+	/// @return {Array.Real} Returns the array with RGBM values.
 	static ToRGBM = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
 		_array ??= array_create(4, 0);

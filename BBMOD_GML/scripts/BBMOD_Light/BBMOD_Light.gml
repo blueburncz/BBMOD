@@ -9,14 +9,14 @@ function BBMOD_Light()
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {bool} Use `false` to disable the light. Defaults to `true` (the
+	/// @var {Bool} Use `false` to disable the light. Defaults to `true` (the
 	/// light is enabled).
 	Enabled = true;
 
-	/// @var {BBMOD_Vec3} The position of the light.
+	/// @var {Struct.BBMOD_Vec3} The position of the light.
 	Position = new BBMOD_Vec3();
 
-	/// @var {bool} If `true` then the light should casts shadows.
+	/// @var {Bool} If `true` then the light should casts shadows.
 	/// Defaults to `false`.
 	CastShadows = false;
 }

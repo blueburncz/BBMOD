@@ -7,7 +7,7 @@
 /// reduces draw calls and increases performance, but requires more memory.
 /// Current limitation is that the added models must use the same single material.
 ///
-/// @param {BBMOD_VertexFormat} _vformat The vertex format of the static batch.
+/// @param {Struct.BBMOD_VertexFormat} _vformat The vertex format of the static batch.
 /// All models added to the same static batch must have the same vertex format.
 /// This vertex format must not contain bone data!
 ///
@@ -37,11 +37,11 @@ function BBMOD_StaticBatch(_vformat)
 		destroy: destroy,
 	};
 
-	/// @var {vertex_buffer} A vertex buffer.
+	/// @var {Id.VertexBuffer} A vertex buffer.
 	/// @private
 	VertexBuffer = vertex_create_buffer();
 
-	/// @var {BBMOD_VertexFormat} The format of the vertex buffer.
+	/// @var {Struct.BBMOD_VertexFormat} The format of the vertex buffer.
 	/// @private
 	VertexFormat = _vformat;
 
@@ -49,7 +49,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @desc Begins adding models into the static batch.
 	/// @see BBMOD_StaticBatch.add
 	/// @see BBMOD_StaticBatch.finish
-	/// @return {BBMOD_StaticBatch} Returns `self`.
+	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	static start = function () {
 		gml_pragma("forceinline");
 		vertex_begin(VertexBuffer, VertexFormat.Raw);
@@ -58,9 +58,9 @@ function BBMOD_StaticBatch(_vformat)
 
 	/// @func add(_model, _transform)
 	/// @desc Adds a model to the static batch.
-	/// @param {BBMOD_Model} _model The model.
-	/// @param {real[]} _transform A transformation matrix of the model.
-	/// @return {BBMOD_StaticBatch} Returns `self`.
+	/// @param {Struct.BBMOD_Model} _model The model.
+	/// @param {Array.Real} _transform A transformation matrix of the model.
+	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	/// @example
 	/// ```gml
 	/// modTree = new BBMOD_Model("Tree.bbmod");
@@ -86,7 +86,7 @@ function BBMOD_StaticBatch(_vformat)
 
 	/// @func finish()
 	/// @desc Ends adding models into the static batch.
-	/// @return {BBMOD_StaticBatch} Returns `self`.
+	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	/// @see BBMOD_StaticBatch.start
 	static finish = function () {
 		gml_pragma("forceinline");
@@ -97,7 +97,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @func freeze()
 	/// @desc Freezes the static batch. This makes it render faster, but disables
 	/// adding more models.
-	/// @return {BBMOD_StaticBatch} Returns `self`.
+	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	static freeze = function () {
 		gml_pragma("forceinline");
 		vertex_freeze(VertexBuffer);
@@ -108,9 +108,9 @@ function BBMOD_StaticBatch(_vformat)
 	///
 	/// @desc Immediately submits the static batch for rendering.
 	///
-	/// @param {BBMOD_BaseMaterial} _material A material.
+	/// @param {Struct.BBMOD_BaseMaterial} _material A material.
 	///
-	/// @return {BBMOD_StaticBatch} Returns `self`.
+	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	///
 	/// @note The static batch is *not* submitted if the material used is not
 	/// compatible with the current render pass!
@@ -130,17 +130,13 @@ function BBMOD_StaticBatch(_vformat)
 
 	/// @func render(_material)
 	/// @desc Enqueues the static batch for rendering.
-	/// @param {BBMOD_BaseMaterial} _material A material.
-	/// @return {BBMOD_StaticBatch} Returns `self`.
+	/// @param {Struct.BBMOD_BaseMaterial} _material A material.
+	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	/// @see BBMOD_StaticBatch.submit
 	/// @see BBMOD_BaseMaterial
 	static render = function (_material) {
 		gml_pragma("forceinline");
-		var _renderCommand = new BBMOD_RenderCommand();
-		_renderCommand.VertexBuffer = VertexBuffer;
-		_renderCommand.Texture = _material.BaseOpacity;
-		_renderCommand.Matrix = matrix_get(matrix_world);
-		ds_list_add(_material.RenderCommands, _renderCommand);
+		_material.RenderQueue.draw_mesh(VertexBuffer, matrix_get(matrix_world), _material);
 		return self;
 	};
 

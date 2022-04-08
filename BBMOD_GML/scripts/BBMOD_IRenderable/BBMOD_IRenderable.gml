@@ -35,7 +35,7 @@ function BBMOD_IRenderable()
 {
 	/// @func render()
 	/// @desc Enqueues the object for rendering.
-	/// @return {BBMOD_IRenderable} Returns `self`.
+	/// @return {Struct.BBMOD_IRenderable} Returns `self`.
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	static render = function () {
 		throw new BBMOD_NotImplementedException();

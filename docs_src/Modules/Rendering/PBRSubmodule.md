@@ -5,10 +5,6 @@ models textured in professional, industry standard software like
 [Substance Painter](https://www.substance3d.com/).
 
 ## Scripting API
-### Functions
-* [bbmod_set_ibl_sprite](./bbmod_set_ibl_sprite.html)
-* [bbmod_set_ibl_texture](./bbmod_set_ibl_texture.html)
-
 ### Macros
 * [BBMOD_MATERIAL_PBR_ANIMATED](./BBMOD_MATERIAL_PBR_ANIMATED.html)
 * [BBMOD_MATERIAL_PBR_BATCHED](./BBMOD_MATERIAL_PBR_BATCHED.html)

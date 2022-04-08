@@ -1,10 +1,10 @@
 /// @func bbmod_mesh_to_colmesh(_mesh, _colmesh[, _transform])
 /// @desc Adds a {@link BBMOD_Mesh} into a colmesh.
-/// @param {BBMOD_Mesh} _mesh The mesh to add.
-/// @param {colmesh} _colmesh The colmesh to add the mesh to.
-/// @param {real[16]/undefined} [_transform] A matrix to transform the mesh with
-/// before it is added to the colmesh. Leave `undefined` if you do not wish to
-/// transform the mesh.
+/// @param {Struct.BBMOD_Mesh} _mesh The mesh to add.
+/// @param {Struct.colmesh} _colmesh The colmesh to add the mesh to.
+/// @param {Array.Real/Undefined} [_transform] A matrix to transform the mesh
+/// with before it is added to the colmesh. Leave `undefined` if you do not wish
+/// to transform the mesh.
 /// @see https://marketplace.yoyogames.com/assets/8130/colmesh
 function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform=undefined)
 {

@@ -24,9 +24,10 @@ camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.
 
 camera.update(DELTA_TIME);
 
-if (camera.Position.Z < 0.0)
+var _cameraHeight = (global.terrain.get_height(camera.Position.X, camera.Position.Y) ?? 0.0) + 1.0;
+if (camera.Position.Z < _cameraHeight)
 {
-	camera.Position.Z = 0.0;
+	camera.Position.Z = _cameraHeight;
 
 	// We have to update the camera's matrices if we change its position or
 	// target after we call its update method.
@@ -44,11 +45,14 @@ if (global.gameSpeed > 0.0)
 	var _deltaTime = DELTA_TIME / _gameSpeed;
 	speedCurrent *= 1.0 - (0.1 * _deltaTime);
 
-	if (x >= 0 && x <= room_width
-		&& y >= 0 && y <= room_height
+	if (global.terrain.in_bounds(x, y)
 		&& animationPlayer.Animation != animInteractGround)
 	{
-		if (z == 0)
+		var _terrainHeight = global.terrain.get_height(x, y);
+
+		if (_terrainHeight != undefined
+			&& z >= _terrainHeight
+			&& z < _terrainHeight + 5.0)
 		{
 			// Shooting
 			if (ammo > 0
@@ -149,7 +153,7 @@ if (global.gameSpeed > 0.0)
 						}
 
 						_zombie.ReceiveDamage(irandom_range(20, 25));
-						
+
 						_zombie.knockback = new BBMOD_Vec3(
 							lengthdir_x(4, direction),
 							lengthdir_y(4, direction),

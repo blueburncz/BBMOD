@@ -13,7 +13,7 @@ precision highp float;
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 // Number of samples used when computing shadows
-#define SHADOWMAP_SAMPLE_COUNT 16
+#define SHADOWMAP_SAMPLE_COUNT 12
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,9 @@ varying float v_fDepth;
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
+#if defined(X_TERRAIN)
+varying vec2 v_vSplatmapCoord;
+#endif
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,6 +123,15 @@ uniform vec4 bbmod_LightDirectionalColor;
 
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+// Terrain
+#if defined(X_TERRAIN)
+// Splatmap texture
+uniform sampler2D bbmod_Splatmap;
+// Splatmap channel to read. Use -1 for none.
+uniform int bbmod_SplatmapIndex;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,6 +263,19 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
+#if defined(X_TERRAIN)
+	// Splatmap
+	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
+	if (bbmod_SplatmapIndex >= 0)
+	{
+		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
+		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
+			: splatmap.a)));
+	}
+#endif
+
 	if (material.Opacity < bbmod_AlphaTest)
 	{
 		discard;
@@ -266,8 +291,8 @@ void main()
 	vec3 lightSpecular = vec3(0.0);
 
 	// Ambient light
-	Vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	Vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
@@ -296,7 +321,8 @@ void main()
 	float blinnPhong = exp2(A * NdotH - A);
 	float blinnNormalization = (specularPower + 8.0) / 8.0;
 	float normalDistribution = blinnPhong * blinnNormalization;
-	vec3 lightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL * (1.0 - shadow);
+	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+	vec3 lightColor = directionalLightColor * NdotL * (1.0 - shadow);
 	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 	lightDiffuse += lightColor; // * (1.0 - fresnel);
 #if defined(X_2D)
@@ -322,7 +348,8 @@ void main()
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Fog
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
+	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
+		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 #endif // !X_PBR

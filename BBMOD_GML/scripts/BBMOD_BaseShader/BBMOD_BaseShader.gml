@@ -1,8 +1,8 @@
 /// @func BBMOD_BaseShader(_shader, _vertexFormat)
 /// @extends BBMOD_Shader
 /// @desc Base class for BBMOD shaders.
-/// @param {shader} _shader The shader resource.
-/// @param {BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
+/// @param {Resource.GMShader} _shader The shader resource.
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
 /// @see BBMOD_VertexFormat
 function BBMOD_BaseShader(_shader, _vertexFormat)
 	: BBMOD_Shader(_shader, _vertexFormat) constructor
@@ -25,8 +25,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_texture_offset(_offset)
 	/// @desc Sets the `bbmod_TextureOffset` uniform to the given offset.
-	/// @param {BBMOD_Vec2} _offset The texture offset.
-	/// @return {BBMOD_Shader} Returns `self`.
+	/// @param {Struct.BBMOD_Vec2} _offset The texture offset.
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_texture_offset = function (_offset) {
 		gml_pragma("forceinline");
 		return set_uniform_f2(UTextureOffset, _offset.X, _offset.Y);
@@ -34,8 +34,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_texture_scale(_scale)
 	/// @desc Sets the `bbmod_TextureScale` uniform to the given scale.
-	/// @param {BBMOD_Vec2} _scale The texture scale.
-	/// @return {BBMOD_Shader} Returns `self`.
+	/// @param {Struct.BBMOD_Vec2} _scale The texture scale.
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_texture_scale = function (_scale) {
 		gml_pragma("forceinline");
 		return set_uniform_f2(UTextureScale, _scale.X, _scale.Y);
@@ -43,8 +43,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_bones(_bones)
 	/// @desc Sets the `bbmod_Bones` uniform.
-	/// @param {real[]} _bones The array of bone transforms.
-	/// @return {BBMOD_Shader} Returns `self`.
+	/// @param {Array.Real} _bones The array of bone transforms.
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	/// @see BBMOD_AnimationPlayer.get_transform
 	static set_bones = function (_bones) {
 		gml_pragma("forceinline");
@@ -53,8 +53,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_batch_data(_data)
 	/// @desc Sets the `bbmod_BatchData` uniform.
-	/// @param {real[]} _data The dynamic batch data.
-	/// @return {BBMOD_Shader} Returns `self`.
+	/// @param {Array.Real} _data The dynamic batch data.
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_batch_data = function (_data) {
 		gml_pragma("forceinline");
 		return set_uniform_f_array(UBatchData, _data);
@@ -62,8 +62,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_alpha_test(_value)
 	/// @desc Sets the `bbmod_AlphaTest` uniform.
-	/// @param {real} _value The alpha test value.
-	/// @return {BBMOD_Shader} Returns `self`.
+	/// @param {Real} _value The alpha test value.
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_alpha_test = function (_value) {
 		gml_pragma("forceinline");
 		return set_uniform_f(UAlphaTest, _value);
@@ -71,21 +71,22 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_cam_pos([_pos])
 	/// @desc Sets a fragment shader uniform `bbmod_CamPos` to the given position.
-	/// @param {BBMOD_Vec3/undefined} [_pos] The camera position. If `undefined`,
+	/// @param {Struct.BBMOD_Vec3} [_pos] The camera position. If `undefined`,
 	/// then the value set by {@link bbmod_camera_set_position} is used.
-	/// @return {BBMOD_Shader} Returns `self`.
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_cam_pos = function (_pos=undefined) {
 		gml_pragma("forceinline");
-		_pos ??= global.bbmod_camera_position;
+		_pos ??= global.__bbmodCameraPosition;
 		return set_uniform_f3(UCamPos, _pos.X, _pos.Y, _pos.Z);
 	};
 
 	/// @func set_zfar([_value])
 	/// @desc Sets a fragment shader uniform `bbmod_ClipFar` to the given value.
-	/// @param {BBMOD_Vec3/undefined} [_value] The distance to the far clipping
+	/// @param {Struct.BBMOD_Vec3} [_value] The distance to the far clipping
 	/// plane. If `undefined`, then the value set by {@link bbmod_camera_set_zfar}
 	/// is used.
-	/// @return {BBMOD_Shader} Returns `self`.
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
+	/// @obsolete This has been replaced with global shader uniforms.
 	static set_zfar = function (_value=undefined) {
 		gml_pragma("forceinline");
 		_value ??= global.__bbmodZFar;
@@ -94,20 +95,13 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_exposure([_value])
 	/// @desc Sets the `bbmod_Exposure` uniform.
-	/// @param {real/undefined} [_value] The camera exposure. If `undefined`,
+	/// @param {Real} [_value] The camera exposure. If `undefined`,
 	/// then the value set by {@link bbmod_camera_set_exposure} is used.
-	/// @return {BBMOD_PBRShader} Returns `self`.
+	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
 	static set_exposure = function (_value=undefined) {
 		gml_pragma("forceinline");
-		_value ??= global.bbmod_camera_exposure;
+		_value ??= global.__bbmodCameraExposure;
 		return set_uniform_f(UExposure, _value);
-	};
-
-	// FIXME: This was added here only to temporarily resolve
-	// `try { BBMOD_SHADER_CURRENT.set_shadowmap(...); } catch (...) {}`
-	// on Opera GX!
-	static set_shadowmap = function () {
-		return self;
 	};
 
 	static on_set = function () {
@@ -116,6 +110,11 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_exposure();
 	};
 
+	/// @func set_material(_material)
+	/// @desc Sets shader uniforms using values from the material.
+	/// @param {Struct.BBMOD_BaseMaterial} _material The material to take the values from.
+	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
+	/// @see BBMOD_BaseMaterial
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
 		set_alpha_test(_material.AlphaTest);
@@ -130,59 +129,41 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 // Camera
 //
 
-/// @var {BBMOD_Vec3} The current position of the camera. This should be
-/// updated every frame before rendering models.
-/// @deprecated Please use {@link bbmod_camera_get_position} and
-/// {@link bbmod_camera_set_position} instead.
-global.bbmod_camera_position = new BBMOD_Vec3();
+/// @var {Struct.BBMOD_Vec3}
+/// @private
+global.__bbmodCameraPosition = new BBMOD_Vec3();
 
-/// @var {real} Distance to the far clipping plane.
+/// @var {Real} Distance to the far clipping plane.
 /// @private
 global.__bbmodZFar = 1.0;
 
-/// @var {real} The current camera exposure.
-/// @deprecated Please use {@link bbmod_camera_get_exposure} and
-/// {@link bbmod_camera_set_exposure} instead.
-global.bbmod_camera_exposure = 1.0;
-
-/// @func bbmod_set_camera_position(_x, _y, _z)
-/// @desc Changes camera position to given coordinates.
-/// @param {real} _x The x position of the camera.
-/// @param {real} _y The y position of the camera.
-/// @param {real} _z The z position of the camera.
-/// @deprecated Please use {@link bbmod_camera_set_position} instead.
-function bbmod_set_camera_position(_x, _y, _z)
-{
-	gml_pragma("forceinline");
-	var _position = global.bbmod_camera_position;
-	_position.X = _x;
-	_position.Y = _y;
-	_position.Z = _z;
-}
+/// @var {Real}
+/// @private
+global.__bbmodCameraExposure = 1.0;
 
 /// @func bbmod_camera_get_position()
 /// @desc Retrieves the position of the camera that is passed to shaders.
-/// @return {BBMOD_Vec3} The camera position.
+/// @return {Struct.BBMOD_Vec3} The camera position.
 /// @see bbmod_camera_set_position
 function bbmod_camera_get_position()
 {
 	gml_pragma("forceinline");
-	return global.bbmod_camera_position;
+	return global.__bbmodCameraPosition;
 }
 
 /// @func bbmod_camera_set_position(_position)
 /// @desc Defines position of the camera passed to shaders.
-/// @param {BBMOD_Vec3} _position The new camera position.
+/// @param {Struct.BBMOD_Vec3} _position The new camera position.
 /// @see bbmod_camera_get_position
 function bbmod_camera_set_position(_position)
 {
 	gml_pragma("forceinline");
-	global.bbmod_camera_position = _position;
+	global.__bbmodCameraPosition = _position;
 }
 
 /// @func bbmod_camera_get_zfar()
 /// @desc Retrieves distance to the far clipping plane passed to shaders.
-/// @return {real} The distance to the far clipping plane.
+/// @return {Real} The distance to the far clipping plane.
 /// @see bbmod_camera_set_zfar
 function bbmod_camera_get_zfar()
 {
@@ -192,7 +173,7 @@ function bbmod_camera_get_zfar()
 
 /// @func bbmod_camera_set_zfar(_value)
 /// @desc Defines distance to the far clipping plane passed to shaders.
-/// @param {real} _value The new distance to the far clipping plane.
+/// @param {Real} _value The new distance to the far clipping plane.
 /// @see bbmod_camera_get_zfar
 function bbmod_camera_set_zfar(_value)
 {
@@ -202,20 +183,20 @@ function bbmod_camera_set_zfar(_value)
 
 /// @func bbmod_camera_get_exposure()
 /// @desc Retrieves camera exposure value passed to shaders.
-/// @return {real} The camera exposure value.
+/// @return {Real} The camera exposure value.
 /// @see bbmod_camera_set_exposure
 function bbmod_camera_get_exposure()
 {
 	gml_pragma("forceinline");
-	return global.bbmod_camera_exposure;
+	return global.__bbmodCameraExposure;
 }
 
 /// @func bbmod_camera_set_exposure(_exposure)
 /// @desc Defines camera exposure value passed to shaders.
-/// @param {real} _exposure The new camera exposure value.
+/// @param {Real} _exposure The new camera exposure value.
 /// @see bbmod_camera_get_exposure
 function bbmod_camera_set_exposure(_exposure)
 {
 	gml_pragma("forceinline");
-	global.bbmod_camera_exposure = _exposure;
+	global.__bbmodCameraExposure = _exposure;
 }

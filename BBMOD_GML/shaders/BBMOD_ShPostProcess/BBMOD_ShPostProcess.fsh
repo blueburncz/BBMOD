@@ -15,8 +15,8 @@ uniform vec3 u_vVignetteColor; // The color of the vignette effect
 /// Needs to have interpolation enabled!
 vec3 ColorGrade(vec3 color, sampler2D lut)
 {
-	// This clamp fixes color grading on HTML5. May be precision issues?
-	color = clamp(color, vec3(0.03), vec3(0.97));
+	// This fixes color grading on HTML5. May be precision issues?
+	color = max(color, vec3(0.06));
 
 	// Fixes selecting wrong mips on HTML5.
 	const float bias = -5.0;

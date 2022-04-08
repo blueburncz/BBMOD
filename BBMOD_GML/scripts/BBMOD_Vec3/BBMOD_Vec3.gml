@@ -1,16 +1,16 @@
-/// @macro {BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(1, 0, 0)`.
+/// @macro {Struct.BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(1, 0, 0)`.
 /// @see BBMOD_VEC3_RIGHT
 /// @see BBMOD_VEC3_UP
 /// @see BBMOD_Vec3
 #macro BBMOD_VEC3_FORWARD new BBMOD_Vec3(1.0, 0.0, 0.0)
 
-/// @macro {BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(0, 1, 0)`.
+/// @macro {Struct.BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(0, 1, 0)`.
 /// @see BBMOD_VEC3_FORWARD
 /// @see BBMOD_VEC3_UP
 /// @see BBMOD_Vec3
 #macro BBMOD_VEC3_RIGHT new BBMOD_Vec3(0.0, 1.0, 0.0)
 
-/// @macro {BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(0, 0, 1)`.
+/// @macro {Struct.BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(0, 0, 1)`.
 /// @see BBMOD_VEC3_RIGHT
 /// @see BBMOD_VEC3_FORWARD
 /// @see BBMOD_Vec3
@@ -18,26 +18,26 @@
 
 /// @func BBMOD_Vec3([_x[, _y, _z]])
 /// @desc A 3D vector.
-/// @param {real} [_x] The first component of the vector. Defaults to 0.
-/// @param {real/undefined} [_y] The second component of the vector. Defaults to `_x`.
-/// @param {real/undefined} [_z] The third component of the vector. Defaults to `_x`.
+/// @param {Real} [_x] The first component of the vector. Defaults to 0.
+/// @param {Real/Undefined} [_y] The second component of the vector. Defaults to `_x`.
+/// @param {Real/Undefined} [_z] The third component of the vector. Defaults to `_x`.
 /// @see BBMOD_Vec2
 /// @see BBMOD_Vec4
 function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 {
-	/// @var {real} The first component of the vector.
+	/// @var {Real} The first component of the vector.
 	X = _x;
 
-	/// @var {real} The second component of the vector.
+	/// @var {Real} The second component of the vector.
 	Y = _y ?? X;
 
-	/// @var {real} The third component of the vector.
+	/// @var {Real} The third component of the vector.
 	Z = _z ?? X;
 
 	/// @func Abs()
 	/// @desc Creates a new vector where each component is equal to the absolute
 	/// value of the original component.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// new BBMOD_Vec3(-1.0, 2.0, -3.0).Abs() // => BBMOD_Vec3(1.0, 2.0, 3.0)
@@ -53,8 +53,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Add(_v)
 	/// @desc Adds vectors and returns the result as a new vector.
-	/// @param {BBMOD_Vec3} _v The other vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Add = function (_v) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
@@ -67,7 +67,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Ceil()
 	/// @desc Applies function `ceil` to each component of the vector and returns
 	/// the result as a new vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// new BBMOD_Vec3(0.2, 1.6, 2.4).Ceil() // => BBMOD_Vec3(1.0, 2.0, 3.0)
@@ -99,9 +99,9 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func ClampLength(_min, _max)
 	/// @desc Clamps the length of the vector between `_min` and `_max` and
 	/// returns the result as a new vector.
-	/// @param {real} _min The minimum length of the vector.
-	/// @param {real} _max The maximum length of the vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Real} _min The minimum length of the vector.
+	/// @param {Real} _max The maximum length of the vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLength(1.0, 5.0) // => BBMOD_Vec3(3.0, 0.0, 0.0)
@@ -125,7 +125,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Clone()
 	/// @desc Creates a clone of the vector.
-	/// @return {BBMOD_Vec3} The creted vector.
+	/// @return {Struct.BBMOD_Vec3} The creted vector.
 	static Clone = function () {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
@@ -137,8 +137,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Copy(_dest)
 	/// @desc Copies components of the vector to the `_dest` vector.
-	/// @param {BBMOD_Vec3} _dest The destination vector.
-	/// @return {BBMOD_Vec3} Returns `self`.
+	/// @param {Struct.BBMOD_Vec3} _dest The destination vector.
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
 	/// @example
 	/// ```gml
 	/// var _v1 = new BBMOD_Vec3(1.0, 2.0, 3.0);
@@ -158,8 +158,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Cross(_v)
 	/// @desc Computes a cross product of this vector and vector `_v` and returns
 	/// the result as a new vector.
-	/// @param {BBMOD_Vec3} The other vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Struct.BBMOD_Vec3} The other vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Cross = function (_v) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
@@ -171,8 +171,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Dot(_v)
 	/// @desc Computes the dot product of this vector and vector `_v`.
-	/// @param {BBMOD_Vec3} _v The other vector.
-	/// @return {real} The dot product of this vector and vector `_v`.
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	/// @return {Real} The dot product of this vector and vector `_v`.
 	static Dot = function (_v) {
 		gml_pragma("forceinline");
 		return (
@@ -184,8 +184,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Equals(_v)
 	/// @desc Checks whether this vectors equals to vector `_v`.
-	/// @param {BBMOD_Vec3} _v The vector to compare to.
-	/// @return {bool} Returns `true` if the two vectors are equal.
+	/// @param {Struct.BBMOD_Vec3} _v The vector to compare to.
+	/// @return {Bool} Returns `true` if the two vectors are equal.
 	static Equals = function (_v) {
 		gml_pragma("forceinline");
 		return (
@@ -198,7 +198,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Floor()
 	/// @desc Applies function `floor` to each component of the vector and returns
 	/// the result as a new vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// new BBMOD_Vec3(0.2, 1.6, 2.4).Floor() // => BBMOD_Vec3(0.0, 1.0, 2.0)
@@ -215,7 +215,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Frac()
 	/// @desc Applies function `frac` to each component of the vector and returns
 	/// the result as a new vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// new BBMOD_Vec3(0.2, 1.6, 2.4).Frac() // => BBMOD_Vec3(0.2, 0.6, 0.4)
@@ -231,10 +231,10 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func FromArray(_array[, _index])
 	/// @desc Loads vector components from an array.
-	/// @param {real[]} _array The array to read the components from.
-	/// @param {uint} [_index] The index to start reading the vector components
+	/// @param {Array.Real} _array The array to read the components from.
+	/// @param {Real} [_index] The index to start reading the vector components
 	/// from. Defaults to 0.
-	/// @return {BBMOD_Vec3} Returns `self`.
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
 	static FromArray = function (_array, _index=0) {
 		gml_pragma("forceinline");
 		X = _array[_index];
@@ -246,12 +246,12 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func FromBarycentric(_v1, _v2, _v3, _f, _g)
 	/// @desc Computes the vector components using a formula
 	/// `_v1 + _f * (_v2 - _v1) + _g * (_v3 - _v1)`.
-	/// @param {BBMOD_Vec3} _v1 The first point of a triangle.
-	/// @param {BBMOD_Vec3} _v2 The second point of a triangle.
-	/// @param {BBMOD_Vec3} _v3 The third point of a triangle.
-	/// @param {real} _f The weighting factor between `_v1` and `_v2`.
-	/// @param {real} _g The weighting factor between `_v1` and `_v3`.
-	/// @return {BBMOD_Vec3} Returns `self`.
+	/// @param {Struct.BBMOD_Vec3} _v1 The first point of a triangle.
+	/// @param {Struct.BBMOD_Vec3} _v2 The second point of a triangle.
+	/// @param {Struct.BBMOD_Vec3} _v3 The third point of a triangle.
+	/// @param {Real} _f The weighting factor between `_v1` and `_v2`.
+	/// @param {Real} _g The weighting factor between `_v1` and `_v3`.
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
 	static FromBarycentric = function (_v1, _v2, _v3, _f, _g) {
 		gml_pragma("forceinline");
 		var _v1X = _v1.X;
@@ -265,10 +265,9 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func FromBuffer(_buffer, _type)
 	/// @desc Loads vector components from a buffer.
-	/// @param {buffer} _buffer The buffer to read the components from.
-	/// @param {int} _type The type of each component. Use one of the `buffer_`
-	/// constants, e.g. `buffer_f32`.
-	/// @return {BBMOD_Vec3} Returns `self`.
+	/// @param {Id.Buffer} _buffer The buffer to read the components from.
+	/// @param {Constant.BufferDataType} _type The type of each component.
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
 		gml_pragma("forceinline");
 		X = buffer_read(_buffer, _type);
@@ -279,7 +278,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Length()
 	/// @desc Computes the length of the vector.
-	/// @return {real} The length of the vector.
+	/// @return {Real} The length of the vector.
 	static Length = function () {
 		gml_pragma("forceinline");
 		return sqrt(
@@ -291,7 +290,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func LengthSqr()
 	/// @desc Computes a squared length of the vector.
-	/// @return {real} The squared length of the vector.
+	/// @return {Real} The squared length of the vector.
 	static LengthSqr = function () {
 		gml_pragma("forceinline");
 		return (
@@ -303,8 +302,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Lerp(_v, _amount)
 	/// @desc Linearly interpolates between vector `_v` by the given amount.
-	/// @param {BBMOD_Vec3} _v The vector to interpolate with.
-	/// @param {real} _amount The interpolation factor.
+	/// @param {Struct.BBMOD_Vec3} _v The vector to interpolate with.
+	/// @param {Real} _amount The interpolation factor.
 	static Lerp = function (_v, _amount) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
@@ -316,7 +315,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func MaxComponent()
 	/// @desc Computes the greatest component of the vector.
-	/// @return {real} The greates component of the vector.
+	/// @return {Real} The greates component of the vector.
 	static MaxComponent = function () {
 		gml_pragma("forceinline");
 		return max(
@@ -329,8 +328,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Maximize(_v)
 	/// @desc Creates a new vector where each component is the maximum component
 	/// from this vector and vector `_v`.
-	/// @param {BBMOD_Vec3} _v The other vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// var _v1 = new BBMOD_Vec3(1.0, 4.0, 5.0);
@@ -348,7 +347,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func MinComponent()
 	/// @desc Computes the smallest component of the vector.
-	/// @return {real} The smallest component of the vector.
+	/// @return {Real} The smallest component of the vector.
 	static MinComponent = function () {
 		gml_pragma("forceinline");
 		return min(
@@ -361,8 +360,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Minimize(_v)
 	/// @desc Creates a new vector where each component is the minimum component
 	/// from this vector and vector `_v`.
-	/// @param {BBMOD_Vec3} _v The other vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// var _v1 = new BBMOD_Vec3(1.0, 4.0, 5.0);
@@ -381,8 +380,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Mul(_v)
 	/// @desc Multiplies the vector with vector `_v` and returns the result
 	/// as a new vector.
-	/// @param {BBMOD_Vec3} _v The other vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Mul = function (_v) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
@@ -394,7 +393,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Normalize()
 	/// @desc Normalizes the vector and returns the result as a new vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Normalize = function () {
 		gml_pragma("forceinline");
 		var _lengthSqr = (
@@ -420,8 +419,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Orthonormalize(_v)
 	/// @desc Orthonormalizes the vectors in-place using the Gram–Schmidt process.
-	/// @param {BBMOD_Vec3} _v The other vector.
-	/// @return {bool} Returns `true` if the vectors were orthonormalized.
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	/// @return {Bool} Returns `true` if the vectors were orthonormalized.
 	static Orthonormalize = function (_v) {
 		gml_pragma("forceinline");
 
@@ -443,8 +442,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Reflect(_v)
 	/// @desc Reflects the vector from vector `_v` and returns the result
 	/// as a new vector.
-	/// @param {BBMOD_Vec3} _v The vector to reflect from.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Struct.BBMOD_Vec3} _v The vector to reflect from.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Reflect = function (_v) {
 		gml_pragma("forceinline");
 		var _dot2 = (
@@ -462,7 +461,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Round()
 	/// @desc Applies function `round` to each component of the vector and returns
 	/// the result as a new vector.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// new BBMOD_Vec3(0.2, 1.6, 2.4).Round() // => BBMOD_Vec3(0.0, 2.0, 2.0)
@@ -479,8 +478,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Scale(_s)
 	/// @desc Scales each component of the vector by `_s` and returns the result
 	/// as a new vector.
-	/// @param {real} _s The value to scale the components by.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Real} _s The value to scale the components by.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// new BBMOD_Vec3(1.0, 2.0, 3.0).Scale(2.0) // => BBMOD_Vec3(2.0, 4.0, 6.0)
@@ -517,9 +516,9 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Set([_x[, _y, _z]])
 	/// @desc Sets vector components in-place.
-	/// @param {real} [_x] The new value of the first component. Defaults to 0.
-	/// @param {real/undefined} [_y] The new value of the second component. Defaults to `_x`.
-	/// @param {real/undefined} [_z] The new value of the third component. Defaults to `_x`.
+	/// @param {Real} [_x] The new value of the first component. Defaults to 0.
+	/// @param {Real/undefined} [_y] The new value of the second component. Defaults to `_x`.
+	/// @param {Real/Undefined} [_z] The new value of the third component. Defaults to `_x`.
 	/// @return {BBMOD_Vec3} Returns `self`.
 	static Set = function (_x=0.0, _y=undefined, _z=undefined) {
 		gml_pragma("forceinline");
@@ -531,9 +530,9 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func SetIndex(_index, _value)
 	/// @desc Sets vector component in-place.
-	/// @param {uint} _index The index of the component, starting at 0.
-	/// @param {real} _value The new value of the component.
-	/// @return {BBMOD_Vec3} Returns `self`.
+	/// @param {Real} _index The index of the component, starting at 0.
+	/// @param {Real} _value The new value of the component.
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
 	/// @throws {BBMOD_OutOfRangeException} If the given index is out of range
 	/// of possible values.
 	static SetIndex = function (_index, _value) {
@@ -562,8 +561,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Sub(_v)
 	/// @desc Subtracts vector `_v` from this vector and returns the result
 	/// as a new vector.
-	/// @param {BBMOD_Vec3} _v The vector to subtract from this one.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Struct.BBMOD_Vec3} _v The vector to subtract from this one.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
 	/// var _v1 = new BBMOD_Vec3(1.0, 2.0, 3.0);
@@ -581,11 +580,11 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes the components of the vector into the target array.
-	/// @param {real[]/undefined} [_array] The array to write to. If `undefined`,
-	/// a new one of required size is created.
-	/// @param {uint} [_index] The starting index within the target array.
+	/// @param {Array.Real/Undefined} [_array] The array to write to. If not
+	/// specified a new one of required size is created.
+	/// @param {Real} [_index] The starting index within the target array.
 	/// Defaults to 0.
-	/// @return {real[]} The target array.
+	/// @return {Array.Real} The target array.
 	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
 		_array ??= array_create(3, 0.0);
@@ -597,10 +596,9 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func ToBuffer(_buffer, _type)
 	/// @desc Writes the components of the vector into the buffer.
-	/// @param {buffer} _buffer The buffer to write to.
-	/// @param {int} _type The type of the components. Use one of the `buffer_`
-	/// constants, e.g. `buffer_f32`.
-	/// @return {BBMOD_Vec3} Returns `self`.
+	/// @param {Id.Buffer} _buffer The buffer to write to.
+	/// @param {Constant.BufferDataType} _type The type of the components.
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
 	static ToBuffer = function (_buffer, _type) {
 		gml_pragma("forceinline");
 		buffer_write(_buffer, _type, X);
@@ -612,8 +610,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Transform(_matrix)
 	/// @desc Transforms vector `[X, Y, Z, 1.0]` by a matrix and returns the result
 	/// as a new vector.
-	/// @param {real[16]} _matrix The matrix to transform the vector by.
-	/// @return {BBMOD_Vec3} The created vector.
+	/// @param {Array.Real} _matrix The matrix to transform the vector by.
+	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Transform = function (_matrix) {
 		gml_pragma("forceinline")
 		var _res = matrix_transform_vertex(_matrix, X, Y, Z);

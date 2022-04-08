@@ -1,6 +1,6 @@
 event_inherited();
 
-day = choose(true, false);
+day = (random(1.0) > 0.25);
 
 modSky = global.resourceManager.load(
 	"Data/BBMOD/Models/Sphere.bbmod",
@@ -19,6 +19,7 @@ sunLight = new BBMOD_DirectionalLight();
 sunLight.CastShadows = true;
 bbmod_light_directional_set(sunLight);
 
+// TODO: Fix memory leak
 bbmod_sprite_add_async(
 	day ? "Data/BBMOD/Skies/Sky+60.png" : "Data/BBMOD/Skies/Sky-15.png",
 	method(self, function (_err, _sprite) {
@@ -42,3 +43,5 @@ else
 	sunLight.Color = new BBMOD_Color().FromHex($2a2a32);
 	sunLight.Direction.Set(1, 0, -1);
 }
+
+bbmod_fog_set(BBMOD_C_SILVER, 0.8, 200.0, 1500.0);

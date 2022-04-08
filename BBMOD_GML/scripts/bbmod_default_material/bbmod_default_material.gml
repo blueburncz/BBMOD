@@ -1,39 +1,39 @@
-/// @macro {BBMOD_VertexFormat} The default vertex format for static models.
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static models.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_DEFAULT __bbmod_vformat_default()
 
-/// @macro {BBMOD_VertexFormat} The default vertex format for animated models.
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for animated models.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_DEFAULT_ANIMATED __bbmod_vformat_default_animated()
 
-/// @macro {BBMOD_VertexFormat} The default vertex format for dynamically batched models.
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for dynamically batched models.
 /// @see BBMOD_VertexFormat
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_VFORMAT_DEFAULT_BATCHED __bbmod_vformat_default_batched()
 
-/// @macro {BBMOD_DefaultShader} The default shader.
+/// @macro {Struct.BBMOD_DefaultShader} The default shader.
 /// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT __bbmod_shader_default()
 
-/// @macro {BBMOD_DefaultShader} The default shader for animated models.
+/// @macro {Struct.BBMOD_DefaultShader} The default shader for animated models.
 /// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT_ANIMATED __bbmod_shader_default_animated()
 
-/// @macro {BBMOD_DefaultShader} The default shader for dynamically batched models.
+/// @macro {Struct.BBMOD_DefaultShader} The default shader for dynamically batched models.
 /// @see BBMOD_DefaultShader
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_SHADER_DEFAULT_BATCHED __bbmod_shader_default_batched()
 
-/// @macro {BBMOD_DefaultMaterial} The default material.
-/// @see BBMOD_DefaultMaterial
+/// @macro {Struct.BBMOD_DefaultMaterial} The default material.
+/// @see BBMOD_Material
 #macro BBMOD_MATERIAL_DEFAULT __bbmod_material_default()
 
-/// @macro {BBMOD_DefaultMaterial} The default material for animated models.
-/// @see BBMOD_DefaultMaterial
+/// @macro {Struct.BBMOD_DefaultMaterial} The default material for animated models.
+/// @see BBMOD_Material
 #macro BBMOD_MATERIAL_DEFAULT_ANIMATED __bbmod_material_default_animated()
 
-/// @macro {BBMOD_DefaultMaterial} The default material for dynamically batched models.
-/// @see BBMOD_DefaultMaterial
+/// @macro {Struct.BBMOD_DefaultMaterial} The default material for dynamically batched models.
+/// @see BBMOD_Material
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_MATERIAL_DEFAULT_BATCHED __bbmod_material_default_batched()
 

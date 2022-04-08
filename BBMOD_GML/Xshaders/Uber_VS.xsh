@@ -99,6 +99,9 @@ varying float v_fDepth;
 varying vec3 v_vLight;
 #if !defined(X_2D)
 varying vec3 v_vPosShadowmap;
+#if defined(X_TERRAIN)
+varying vec2 v_vSplatmapCoord;
+#endif
 #endif
 #endif
 
@@ -220,6 +223,11 @@ void main()
 	v_mTBN = mat3(T, B, N);
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
+	// Splatmap coords
+	#if defined(X_TERRAIN)
+	v_vSplatmapCoord = in_TextureCoord0;
+	#endif
+
 	////////////////////////////////////////////////////////////////////////////
 	// Point lights
 	N = normalize(N);

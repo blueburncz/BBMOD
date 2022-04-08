@@ -1,10 +1,10 @@
 /// @func bbmod_surface_check(_surface, _width, _height)
 /// @desc Checks whether the surface exists and if it has correct size. Broken
 /// surfaces are recreated. Surfaces of wrong size are resized.
-/// @param {surface} _surface The surface to check.
-/// @param {real} _width The desired width of the surface.
-/// @param {real} _height The desired height of the surface.
-/// @return {surface} The surface.
+/// @param {Id.Surface} _surface The surface to check.
+/// @param {Real} _width The desired width of the surface.
+/// @param {Real} _height The desired height of the surface.
+/// @return {Id.Surface} The surface.
 function bbmod_surface_check(_surface, _width, _height)
 {
 	_width = max(round(_width), 1);

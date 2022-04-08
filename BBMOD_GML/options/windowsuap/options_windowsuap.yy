@@ -4,7 +4,7 @@
   "option_windowsuap_publisher_display_name": "YourPublisherName",
   "option_windowsuap_package_display_name": "YourPackageDisplayName",
   "option_windowsuap_description": "Your Description",
-  "option_windowsuap_version": "3.1.12.0",
+  "option_windowsuap_version": "3.2.0.0",
   "option_windowsuap_orient_portrait": true,
   "option_windowsuap_orient_portrait_flipped": true,
   "option_windowsuap_orient_landscape": true,

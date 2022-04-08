@@ -17,7 +17,8 @@
 /// ```
 function BBMOD_IEventListener()
 {
-	/// @var {ds_map<string, func[]>/undefined} Map of event listeners.
+	/// @var {Id.DsMap} Map of event listeners (`String`s to array of
+	/// `Function`s).
 	/// @private
 	Listeners = undefined;
 
@@ -44,13 +45,13 @@ function BBMOD_IEventListener()
 	///
 	/// @desc Adds a listener for a specific event.
 	///
-	/// @param {string/undefined} [_event] The event name. If not specified,
+	/// @param {String/Undefined} [_event] The event name. If not specified,
 	/// then the listener is executed on every event.
-	/// @param {func} _listener A function executed when the event occurs.
+	/// @param {Function} _listener A function executed when the event occurs.
 	/// Should take the event data as the first argument and the event name
 	/// as the second argument.
 	///
-	/// @return {BBMOD_EventListener} Returns `self`.
+	/// @return {Struct.BBMOD_EventListener} Returns `self`.
 	///
 	/// @example
 	/// ```gml
@@ -94,10 +95,10 @@ function BBMOD_IEventListener()
 
 	/// @func off_event([_event])
 	/// @desc Removes event listeners.
-	/// @param {string/undefined} [_event] The name of the event for which
+	/// @param {String/Undefined} [_event] The name of the event for which
 	/// should be the listener removed. If `undefined`, then listeners for all
 	/// events are removed.
-	/// @return {BBMOD_IEventListener} Returns `self`.
+	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
 	/// @see BBMOD_IEventListener.on_event
 	off_event = _offEvent;
 
@@ -135,9 +136,9 @@ function BBMOD_IEventListener()
 
 	/// @func trigger_event(_event, _data)
 	/// @desc Triggers an event in the event listener.
-	/// @param {string} _event The event name.
-	/// @param {any} _data The event data.
-	/// @return {BBMOD_IEventListener} Returns `self`.
+	/// @param {String} _event The event name.
+	/// @param {Mixed} _data The event data.
+	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
 	trigger_event = _triggerEvent;
 
 	array_push(__DestroyActions, function () {

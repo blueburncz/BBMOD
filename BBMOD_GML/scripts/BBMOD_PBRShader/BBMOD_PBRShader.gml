@@ -1,8 +1,8 @@
 /// @func BBMOD_PBRShader(_shader, _vertexFormat)
 /// @extends BBMOD_BaseShader
 /// @desc A wrapper for a raw GameMaker shader resource using PBR.
-/// @param {shader} _shader The shader resource.
-/// @param {BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
+/// @param {Resource.GMShader} _shader The shader resource.
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
 function BBMOD_PBRShader(_shader, _vertexFormat)
 	: BBMOD_BaseShader(_shader, _vertexFormat) constructor
 {
@@ -25,9 +25,9 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 
 	/// @func set_normal_roughness(_texture)
 	/// @desc Sets the `bbmod_NormalRoughness` uniform.
-	/// @param {real} _texture The new texture with normal vector in the RGB
-	/// channels and roughness in the A channel.
-	/// @return {BBMOD_PBRShader} Returns `self`.
+	/// @param {Pointer.Texture} _texture The new texture with normal vector in
+	/// the RGB channels and roughness in the A channel.
+	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
 	static set_normal_roughness = function (_texture) {
 		gml_pragma("forceinline");
 		return set_sampler(UNormalRoughness, _texture);
@@ -35,9 +35,9 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 
 	/// @func set_metallic_ao(_texture)
 	/// @desc Sets the `bbmod_MetallicAO` uniform.
-	/// @param {real} _texture The new texture with metalness in the R channel
-	/// and ambient occlusion in the G channel.
-	/// @return {BBMOD_PBRShader} Returns `self`.
+	/// @param {Pointer.Texture} _texture The new texture with metalness in the
+	/// R channel and ambient occlusion in the G channel.
+	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
 	static set_metallic_ao = function (_texture) {
 		gml_pragma("forceinline");
 		return set_sampler(UMetallicAO, _texture);
@@ -45,9 +45,9 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 
 	/// @func set_subsurface(_texture)
 	/// @desc Sets the `bbmod_Subsurface` uniform.
-	/// @param {real} _texture The new texture with subsurface color in the
-	/// RGB channels and its intensity in the A channel.
-	/// @return {BBMOD_PBRShader} Returns `self`.
+	/// @param {Pointer.Texture} _texture The new texture with subsurface color
+	/// in the RGB channels and its intensity in the A channel.
+	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
 	static set_subsurface = function (_texture) {
 		gml_pragma("forceinline");
 		return set_sampler(USubsurface, _texture);
@@ -55,8 +55,8 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 
 	/// @func set_emissive(_texture)
 	/// @desc Sets the `bbmod_Emissive` uniform.
-	/// @param {real} _texture The new RGBM encoded emissive color.
-	/// @return {BBMOD_PBRShader} Returns `self`.
+	/// @param {Pointer.Texture} _texture The new RGBM encoded emissive color.
+	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
 	static set_emissive = function (_texture) {
 		gml_pragma("forceinline");
 		return set_sampler(UEmissive, _texture);
@@ -66,10 +66,10 @@ function BBMOD_PBRShader(_shader, _vertexFormat)
 	/// @desc Sets a fragment shader uniform `bbmod_IBLTexel` and samplers
 	/// `bbmod_IBL` and `bbmod_BRDF`. These are required for image based
 	/// lighting.
-	/// @param {BBMOD_ImageBasedLight/undefined} [_ibl] The image based light.
+	/// @param {Struct.BBMOD_ImageBasedLight/Undefined} [_ibl] The image based light.
 	/// If `undefined`, then the value set by {@link bbmod_ibl_set} is used. If
 	/// the light is not enabled, then it is not passed.
-	/// @return {BBMOD_PBRShader} Returns `self`.
+	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");
 

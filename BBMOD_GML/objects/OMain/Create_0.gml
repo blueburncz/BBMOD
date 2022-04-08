@@ -7,6 +7,7 @@ randomize();
 os_powersave_enable(false);
 display_set_gui_maximize(1, 1);
 audio_falloff_set_model(audio_falloff_linear_distance);
+gpu_set_tex_max_aniso(2);
 
 // If true then debug overlay is enabled.
 debugOverlay = false;
@@ -25,7 +26,6 @@ waveTimeout = 10.0;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Import OBJ models
-
 
 var _objImporter = new BBMOD_OBJImporter();
 _objImporter.FlipUVVertically = true;
@@ -63,16 +63,6 @@ matShell.Culling = cull_noculling;
 batchShell = new BBMOD_DynamicBatch(modShell, 32);
 batchShell.freeze();
 
-modPlane = _objImporter.import("Data/Assets/Plane.obj");
-modPlane.freeze();
-matFloor = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_base_opacity(BBMOD_C_WHITE, 1.0)
-	.set_specular_color(BBMOD_C_GRAY);
-matFloor.NormalSmoothness = sprite_get_texture(SprFloor, 0);
-matFloor.Repeat = true;
-matFloor.TextureScale = matFloor.TextureScale.Scale(20.0);
-modPlane.Materials[0] = matFloor;
-
 _objImporter.destroy();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,25 +70,22 @@ _objImporter.destroy();
 renderer = new BBMOD_Renderer();
 
 renderer.UseAppSurface = true;
-renderer.RenderScale = 1.0;
+renderer.RenderScale = (os_browser == browser_not_a_browser) ? 1.0 : 0.8;
 renderer.EnableShadows = true;
 renderer.EnablePostProcessing = true;
 renderer.ChromaticAberration = 3.0;
 renderer.ColorGradingLUT = sprite_get_texture(SprColorGrading, 0);
-renderer.Antialiasing = BBMOD_EAntialiasing.FXAA;
+if (os_browser == browser_not_a_browser)
+{
+	renderer.Antialiasing = BBMOD_EAntialiasing.FXAA;
+}
 
 // Any object/struct that has a render method can be added to the renderer:
-renderer.add({
-	render: method(self, function () {
-		matrix_set(matrix_world, matrix_build_identity());
-		batchShell.render_object(OShell, matShell);
+renderer.add(
+	{
+		render: method(self, function () {
+			matrix_set(matrix_world, matrix_build_identity());
+			batchShell.render_object(OShell, matShell);
+		})
 	})
-});
-
-renderer.add({
-	render: method(self, function () {
-		var _scale = max(room_width, room_height);
-		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, _scale, _scale, _scale));
-		modPlane.render();
-	})
-});
+	.add(global.terrain);

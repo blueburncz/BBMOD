@@ -1,15 +1,15 @@
-/// @var {ds_map<real, function>}
+/// @var {Id.DsMap} Mapping from `Real`s to `Function`s.
 /// @private
 global.__bbmodAsyncCallback = ds_map_create();
 
-/// @var {ds_map<real, function>}
+/// @var {Id.DsMap} Mapping from `Real`s to `Function`s.
 /// @private
 global.__bbmodSpriteCallback = ds_map_create();
 
 /// @func bbmod_empty_callback(_err[, _res])
 /// @desc An empty callback function. Does nothing.
-/// @param {BBMOD_Exception/undefined} _err An error or `undefined`.
-/// @param {any} [_res] A return value. Should be `undefined` if there is an
+/// @param {Struct.BBMOD_Exception/Undefined} _err An error or `undefined`.
+/// @param {Mixed} [_res] A return value. Should be `undefined` if there is an
 /// error.
 function bbmod_empty_callback(_err, _res=undefined)
 {
@@ -19,8 +19,8 @@ function bbmod_empty_callback(_err, _res=undefined)
 ///
 /// @desc Asynchronnously loads a buffer from a file.
 ///
-/// @param {string} _file The path to the file to load the buffer from.
-/// @param {func} _callback The function to execute when the buffer is
+/// @param {String} _file The path to the file to load the buffer from.
+/// @param {Function} _callback The function to execute when the buffer is
 /// loaded or if an error occurs. It must take the error as the first argument
 /// and the buffer as the second argument. If no error occurs, then `undefined`
 /// is passed. If an error does occur, then buffer is `undefined`.
@@ -54,7 +54,7 @@ function bbmod_buffer_load_async(_file, _callback)
 /// @desc This function must be called in the "Async - Save/Load" event if
 /// you use {@link bbmod_buffer_load_async} to asynchronnously load a buffer!
 ///
-/// @param {ds_map} _asyncLoad The `async_load` map.
+/// @param {Id.DsMap} _asyncLoad The `async_load` map.
 ///
 /// @example
 /// ```gml
@@ -95,9 +95,9 @@ function bbmod_async_save_load_update(_asyncLoad)
 /// @func bbmod_sprite_add_async(_file, _callback)
 ///
 /// @desc Asynchronnously loads a sprite from a file.
-///
-/// @param {string} _file The path to the file to load the sprite from.
-/// @param {func} _callback The function to execute when the sprite is
+/// 
+/// @param {String} _file The path to the file to load the sprite from.
+/// @param {Function} _callback The function to execute when the sprite is
 /// loaded or if an error occurs. It must take the error as the first argument
 /// and the sprite as the second argument. If no error occurs, then `undefined`
 /// is passed. If an error does occur, then sprite is `undefined`.
@@ -137,7 +137,7 @@ function bbmod_sprite_add_async(_file, _callback)
 /// @desc This function must be called in the "Async - Image Loaded" event if
 /// you use {@link bbmod_sprite_add_async} to asynchronnously load a sprite!
 ///
-/// @param {ds_map} _asyncLoad The `async_load` map.
+/// @param {Id.DsMap} _asyncLoad The `async_load` map.
 ///
 /// @example
 /// ```gml

@@ -4,7 +4,7 @@
 ///
 /// @desc A state machine that controls animation playback.
 ///
-/// @param {BBMOD_AnimationPlayer} _animationPlayer The animation player to control.
+/// @param {Struct.BBMOD_AnimationPlayer} _animationPlayer The animation player to control.
 ///
 /// @example
 /// Following code shows an animation state machine which goes to the "Idle" state
@@ -65,7 +65,7 @@ function BBMOD_AnimationStateMachine(_animationPlayer)
 		update: update,
 	};
 
-	/// @var {BBMOD_AnimationPlayer} The state machine's animation player.
+	/// @var {Struct.BBMOD_AnimationPlayer} The state machine's animation player.
 	/// @readonly
 	AnimationPlayer = _animationPlayer;
 

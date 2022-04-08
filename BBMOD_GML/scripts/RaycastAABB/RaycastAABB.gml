@@ -1,10 +1,10 @@
 /// @func RaycastAABB(_origin, _direction, _min, _max)
 /// @desc Checks whether a ray intersects an AABB.
-/// @param {BBMOD_Vec3} _origin The origin of the ray.
-/// @param {BBMOD_Vec3} _direction The ray's direction.
-/// @param {BBMOD_Vec3} _min The minimum coordinate of the AABB.
-/// @param {BBMOD_Vec3} _max The maxmimum coordinate of the AABB.
-/// @return {real} Returns the distance (from the origin) at which the
+/// @param {Struct.BBMOD_Vec3} _origin The origin of the ray.
+/// @param {Struct.BBMOD_Vec3} _direction The ray's direction.
+/// @param {Struct.BBMOD_Vec3} _min The minimum coordinate of the AABB.
+/// @param {Struct.BBMOD_Vec3} _max The maxmimum coordinate of the AABB.
+/// @return {Real} Returns the distance (from the origin) at which the
 /// ray intersects the AABB. If -1 is returned, then they do not in
 /// intersect.
 /// @source https://gamephysicscookbook.com/

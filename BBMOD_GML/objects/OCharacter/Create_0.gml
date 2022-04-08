@@ -27,7 +27,7 @@ ReceiveDamage = function (_damage) {
 hurt = 0.0;
 
 // The character's speed when they are walking.
-speedWalk = 0.4;
+speedWalk = 0.225;
 
 // The direction of the character's body. This is used to slowly turn it towards
 // the look direction.

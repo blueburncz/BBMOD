@@ -15,4 +15,5 @@ individual modules.
 * [Rendering module](./RenderingModule.html)
 * [Resource manager module](./ResourceManagerModule.html)
 * [State machine module](./StateMachineModule.html)
+* [Terrain module](./TerrainModule.html)
 * [ColMesh module](./ColMeshModule.html)

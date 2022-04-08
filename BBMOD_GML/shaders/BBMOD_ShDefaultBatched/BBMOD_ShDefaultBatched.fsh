@@ -9,7 +9,7 @@ precision highp float;
 
 
 // Number of samples used when computing shadows
-#define SHADOWMAP_SAMPLE_COUNT 16
+#define SHADOWMAP_SAMPLE_COUNT 12
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -81,6 +81,9 @@ uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Terrain
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
@@ -250,6 +253,7 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
+
 	if (material.Opacity < bbmod_AlphaTest)
 	{
 		discard;
@@ -285,7 +289,8 @@ void main()
 	float blinnPhong = exp2(A * NdotH - A);
 	float blinnNormalization = (specularPower + 8.0) / 8.0;
 	float normalDistribution = blinnPhong * blinnNormalization;
-	vec3 lightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor)) * NdotL * (1.0 - shadow);
+	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+	vec3 lightColor = directionalLightColor * NdotL * (1.0 - shadow);
 	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 	lightDiffuse += lightColor; // * (1.0 - fresnel);
 	// Diffuse
@@ -293,7 +298,8 @@ void main()
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Fog
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor));
+	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
+		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 	// Exposure

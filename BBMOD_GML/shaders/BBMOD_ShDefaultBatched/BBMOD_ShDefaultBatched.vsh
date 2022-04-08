@@ -152,6 +152,8 @@ void main()
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
 	v_mTBN = mat3(T, B, N);
 
+	// Splatmap coords
+
 	////////////////////////////////////////////////////////////////////////////
 	// Point lights
 	N = normalize(N);
