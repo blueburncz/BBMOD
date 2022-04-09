@@ -14,7 +14,7 @@
 * [Special thanks](#special-thanks)
 
 # About
-BBMOD is the most powerful 3D rendering solution for GameMaker. We at BlueBurn believe that making 3D games in GameMaker should be for everyone and BBMOD fully reflects this idea with its simple workflow and powerful, yet easy to use GML Code library. Using our model conversion tool BBMOD CLI, you first convert your model from a common format like `FBX`, `COLLADA`, `OBJ` or `glTF` (the full list can be found [here](https://blueburn.cz/bbmod/docs/3/SupportedFileFormats.html)) into a custom binary format specially crafted for fast loading in GMS2. Then, using the GML library, you can easily load the converted model (and its animations) and render it in just a few lines of code:
+BBMOD is the most powerful 3D rendering solution for GameMaker. We at BlueBurn believe that making 3D games in GameMaker should be for everyone and BBMOD fully reflects this idea with its simple workflow and powerful, yet easy to use GML Code library. Using our model conversion tool BBMOD CLI, you first convert your model from a common format like `FBX`, `COLLADA`, `OBJ` or `glTF` (the full list can be found [here](https://blueburn.cz/bbmod/docs/3/SupportedFileFormats.html)) into a custom binary format specially crafted for fast loading in GameMaker. Then, using the GML library, you can easily load the converted model (and its animations) and render it in just a few lines of code:
 
 ```gml
 // Load model
