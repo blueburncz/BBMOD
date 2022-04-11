@@ -12,6 +12,7 @@ individual modules.
 * [Mesh builder module](./MeshBuilderModule.html)
 * [Importer module](./ImporterModule.html)
 * [Camera module](./CameraModule.html)
+* [Raycasting module](./RaycastingModule.html)
 * [Rendering module](./RenderingModule.html)
 * [Resource manager module](./ResourceManagerModule.html)
 * [State machine module](./StateMachineModule.html)
