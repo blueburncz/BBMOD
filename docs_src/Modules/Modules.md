@@ -8,6 +8,7 @@ individual modules.
 
 ## Contents
 * [Core module](./CoreModule.html)
+* [2D module](./2DModule.html)
 * [DLL module](./DLLModule.html)
 * [Mesh builder module](./MeshBuilderModule.html)
 * [Importer module](./ImporterModule.html)

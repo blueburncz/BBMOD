@@ -2,20 +2,35 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
+//
+
+#if defined(X_2D)
+// Maximum number of point lights
+#define MAX_POINT_LIGHTS 8
+#endif
+
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
+// Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
+#if defined(X_2D)
+varying vec4 v_vColor;
+#endif
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
 #if defined(X_TERRAIN)
@@ -24,60 +39,124 @@ varying vec2 v_vSplatmapCoord;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
+
+////////////////////////////////////////////////////////////////////////////////
 // Material
-#define bbmod_BaseOpacity gm_BaseTexture  // RGB: Base color, A: Opacity
-#if defined(X_PBR)
-uniform sampler2D bbmod_NormalRoughness;  // RGB: Tangent space normal, A: Roughness
-uniform sampler2D bbmod_MetallicAO;       // R: Metallic, G: Ambient occlusion
-uniform sampler2D bbmod_Subsurface;       // RGB: Subsurface color, A: Intensity
-uniform sampler2D bbmod_Emissive;         // RGBA: RGBM encoded emissive color
-#else
-uniform sampler2D bbmod_NormalSmoothness; // RGB: Tangent space normal, A: Smoothness
-uniform sampler2D bbmod_SpecularColor;    // RGB: Specular color
-#endif
-uniform float bbmod_AlphaTest;            // Pixels with alpha less than this value will be discarded
 
+// RGB: Base color, A: Opacity
+#define bbmod_BaseOpacity gm_BaseTexture
+#if defined(X_PBR)
+// RGB: Tangent space normal, A: Roughness
+uniform sampler2D bbmod_NormalRoughness;
+// R: Metallic, G: Ambient occlusion
+uniform sampler2D bbmod_MetallicAO;
+// RGB: Subsurface color, A: Intensity
+uniform sampler2D bbmod_Subsurface;
+// RGBA: RGBM encoded emissive color
+uniform sampler2D bbmod_Emissive;
+#else // X_PBR
+#if defined(X_2D)
+// UVs of the BaseOpacity texture
+uniform vec4 bbmod_BaseOpacityUV;
+// UVs of the NormalSmoothness texture
+uniform vec4 bbmod_NormalSmoothnessUV;
+// UVs of the SpecularColor texture
+uniform vec4 bbmod_SpecularColorUV;
+#endif // X_2D
+// RGB: Tangent space normal, A: Smoothness
+uniform sampler2D bbmod_NormalSmoothness;
+// RGB: Specular color
+uniform sampler2D bbmod_SpecularColor;
+#endif // !X_PBR
+// Pixels with alpha less than this value will be discarded
+uniform float bbmod_AlphaTest;
+
+////////////////////////////////////////////////////////////////////////////////
 // Camera
-uniform vec3 bbmod_CamPos;    // Camera's position in world space
-uniform float bbmod_ZFar;     // Distance to the far clipping plane
-uniform float bbmod_Exposure; // Camera's exposure value
+
+#if !defined(X_2D)
+// Camera's position in world space
+uniform vec3 bbmod_CamPos;
+#endif
+// Distance to the far clipping plane
+uniform float bbmod_ZFar;
+// Camera's exposure value
+uniform float bbmod_Exposure;
 
 #if defined(X_PBR)
+////////////////////////////////////////////////////////////////////////////////
 // Image based lighting
-uniform sampler2D bbmod_IBL; // Prefiltered octahedron env. map
-uniform vec2 bbmod_IBLTexel; // Texel size of one octahedron
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
 #endif
 
 #if !defined(X_PBR) && !defined(X_OUTPUT_DEPTH)
+////////////////////////////////////////////////////////////////////////////////
 // Fog
-uniform vec4 bbmod_FogColor;      // The color of the fog
-uniform float bbmod_FogIntensity; // Maximum fog intensity
-uniform float bbmod_FogStart;     // Distance at which the fog starts
-uniform float bbmod_FogRcpRange;  // 1.0 / (fogEnd - fogStart)
 
+// The color of the fog
+uniform vec4 bbmod_FogColor;
+// Maximum fog intensity
+uniform float bbmod_FogIntensity;
+// Distance at which the fog starts
+uniform float bbmod_FogStart;
+// 1.0 / (fogEnd - fogStart)
+uniform float bbmod_FogRcpRange;
+
+////////////////////////////////////////////////////////////////////////////////
 // Ambient light
-uniform vec4 bbmod_LightAmbientUp;   // RGBM encoded ambient light color on the upper hemisphere.
-uniform vec4 bbmod_LightAmbientDown; // RGBM encoded ambient light color on the lower hemisphere.
 
+// RGBM encoded ambient light color on the upper hemisphere.
+uniform vec4 bbmod_LightAmbientUp;
+// RGBM encoded ambient light color on the lower hemisphere.
+uniform vec4 bbmod_LightAmbientDown;
+
+////////////////////////////////////////////////////////////////////////////////
 // Directional light
-uniform vec3 bbmod_LightDirectionalDir;   // Direction of the directional light
-uniform vec4 bbmod_LightDirectionalColor; // RGBM encoded color of the directional light
 
-// Shadow mapping
-uniform float bbmod_ShadowmapEnablePS; // 1.0 to enable shadows
-uniform sampler2D bbmod_Shadowmap;     // Shadowmap texture
-uniform vec2 bbmod_ShadowmapTexel;     // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
+// Direction of the directional light
+uniform vec3 bbmod_LightDirectionalDir;
+// RGBM encoded color of the directional light
+uniform vec4 bbmod_LightDirectionalColor;
 
-// Terrain
-#if defined(X_TERRAIN)
-uniform sampler2D bbmod_Splatmap; // Splatmap texture
-uniform int bbmod_SplatmapIndex;  // Splatmap channel to read. Use -1 for none.
-#endif
+#if defined(X_2D)
+////////////////////////////////////////////////////////////////////////////////
+// Point lights
+
+// [(x, y, z, range), (r, g, b, m), ...]
+uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+// Terrain
+#if defined(X_TERRAIN)
+// Splatmap texture
+uniform sampler2D bbmod_Splatmap;
+// Splatmap channel to read. Use -1 for none.
+uniform int bbmod_SplatmapIndex;
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+// Shadow mapping
+
+// 1.0 to enable shadows
+uniform float bbmod_ShadowmapEnablePS;
+// Shadowmap texture
+uniform sampler2D bbmod_Shadowmap;
+// (1.0/shadowmapWidth, 1.0/shadowmapHeight)
+uniform vec2 bbmod_ShadowmapTexel;
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
+//
 #if !defined(X_OUTPUT_DEPTH)
 #pragma include("Color.xsh", "glsl")
 
@@ -104,7 +183,7 @@ uniform int bbmod_SplatmapIndex;  // Splatmap channel to read. Use -1 for none.
 #pragma include("SpecularColorSmoothnessMaterial.xsh", "glsl")
 #endif
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 // Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
 float InterleavedGradientNoise(vec2 positionScreen)
 {
@@ -140,7 +219,9 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 #if defined(X_OUTPUT_DEPTH)
@@ -151,7 +232,7 @@ void main()
 	}
 	gl_FragColor.rgb = xEncodeDepth(v_fDepth / bbmod_ZFar);
 	gl_FragColor.a = 1.0;
-#else
+#else // X_OUTPUT_DEPTH
 #if defined(X_PBR)
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
@@ -182,7 +263,7 @@ void main()
 	gl_FragColor.rgb += material.Emissive;
 	// Subsurface scattering
 	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
-#else
+#else // X_PBR
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
 		bbmod_NormalSmoothness,
@@ -210,7 +291,11 @@ void main()
 	gl_FragColor.a = material.Opacity;
 
 	vec3 N = material.Normal;
+#if defined(X_2D)
+	vec3 lightDiffuse = vec3(0.0);
+#else
 	vec3 lightDiffuse = v_vLight;
+#endif
 	vec3 lightSpecular = vec3(0.0);
 
 	// Ambient light
@@ -219,15 +304,21 @@ void main()
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
+#if !defined(X_2D)
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
 		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
 	}
+#endif
 	// Directional light
 	vec3 L = normalize(-bbmod_LightDirectionalDir);
 	float NdotL = max(dot(N, L), 0.0);
 	float specularPower = exp2(1.0 + (material.Smoothness * 10.0));
+#if defined(X_2D)
+	vec3 V = vec3(0.0, 0.0, 1.0);
+#else
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);
+#endif
 	vec3 f0 = material.Specular;
 	vec3 H = normalize(L + V);
 	float NdotH = max(dot(N, H), 0.0);
@@ -242,6 +333,24 @@ void main()
 	vec3 lightColor = directionalLightColor * NdotL * (1.0 - shadow);
 	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 	lightDiffuse += lightColor; // * (1.0 - fresnel);
+#if defined(X_2D)
+	// Point lights
+	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	{
+		Vec4 positionRange = bbmod_LightPointData[i * 2];
+		L = positionRange.xyz - v_vVertex;
+		H = normalize(L + V);
+		NdotH = max(dot(N, H), 0.0);
+		VdotH = max(dot(V, H), 0.0);
+		fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
+		float dist = length(L);
+		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
+		NdotL = max(dot(N, normalize(L)), 0.0);
+		lightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
+		lightSpecular += lightColor * fresnel * visibility * normalDistribution;
+		lightDiffuse += lightColor; // * (1.0 - fresnel);
+	}
+#endif // X_2D
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
@@ -251,10 +360,10 @@ void main()
 		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
 	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-#endif
+#endif // !X_PBR
 	// Exposure
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-#endif
+#endif // !X_OUTPUT_DEPTH
 }

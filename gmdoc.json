@@ -68,6 +68,7 @@
       "file": "Modules/Modules.md",
       "pages": {
         "Core module": "Modules/CoreModule.md",
+        "2D module": "Modules/2DModule.md",
         "DLL module": "Modules/DLLModule.md",
         "Mesh builder module": "Modules/MeshBuilderModule.md",
         "Importer module": "Modules/ImporterModule.md",

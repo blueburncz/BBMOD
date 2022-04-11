@@ -3,34 +3,57 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
-// Material
-#define bbmod_BaseOpacity gm_BaseTexture  // RGB: Base color, A: Opacity
-uniform sampler2D bbmod_NormalSmoothness; // RGB: Tangent space normal, A: Smoothness
-uniform sampler2D bbmod_SpecularColor;    // RGB: Specular color
-uniform float bbmod_AlphaTest;            // Pixels with alpha less than this value will be discarded
+//
 
+////////////////////////////////////////////////////////////////////////////////
+// Material
+
+// RGB: Base color, A: Opacity
+#define bbmod_BaseOpacity gm_BaseTexture
+// RGB: Tangent space normal, A: Smoothness
+uniform sampler2D bbmod_NormalSmoothness;
+// RGB: Specular color
+uniform sampler2D bbmod_SpecularColor;
+// Pixels with alpha less than this value will be discarded
+uniform float bbmod_AlphaTest;
+
+////////////////////////////////////////////////////////////////////////////////
 // Camera
-uniform vec3 bbmod_CamPos;    // Camera's position in world space
-uniform float bbmod_ZFar;     // Distance to the far clipping plane
-uniform float bbmod_Exposure; // Camera's exposure value
+
+// Camera's position in world space
+uniform vec3 bbmod_CamPos;
+// Distance to the far clipping plane
+uniform float bbmod_ZFar;
+// Camera's exposure value
+uniform float bbmod_Exposure;
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
+//
 
 /// @param d Linearized depth to encode.
 /// @return Encoded depth.
@@ -63,7 +86,9 @@ float xDecodeDepth(vec3 c)
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 	vec4 baseOpacity = texture2D(bbmod_BaseOpacity, v_vTexCoord);

@@ -3,13 +3,21 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
+
+
+// Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
@@ -18,42 +26,79 @@ varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
+
+////////////////////////////////////////////////////////////////////////////////
 // Material
-#define bbmod_BaseOpacity gm_BaseTexture  // RGB: Base color, A: Opacity
-uniform sampler2D bbmod_NormalSmoothness; // RGB: Tangent space normal, A: Smoothness
-uniform sampler2D bbmod_SpecularColor;    // RGB: Specular color
-uniform float bbmod_AlphaTest;            // Pixels with alpha less than this value will be discarded
 
+// RGB: Base color, A: Opacity
+#define bbmod_BaseOpacity gm_BaseTexture
+// RGB: Tangent space normal, A: Smoothness
+uniform sampler2D bbmod_NormalSmoothness;
+// RGB: Specular color
+uniform sampler2D bbmod_SpecularColor;
+// Pixels with alpha less than this value will be discarded
+uniform float bbmod_AlphaTest;
+
+////////////////////////////////////////////////////////////////////////////////
 // Camera
-uniform vec3 bbmod_CamPos;    // Camera's position in world space
-uniform float bbmod_ZFar;     // Distance to the far clipping plane
-uniform float bbmod_Exposure; // Camera's exposure value
+
+// Camera's position in world space
+uniform vec3 bbmod_CamPos;
+// Distance to the far clipping plane
+uniform float bbmod_ZFar;
+// Camera's exposure value
+uniform float bbmod_Exposure;
 
 
+////////////////////////////////////////////////////////////////////////////////
 // Fog
-uniform vec4 bbmod_FogColor;      // The color of the fog
-uniform float bbmod_FogIntensity; // Maximum fog intensity
-uniform float bbmod_FogStart;     // Distance at which the fog starts
-uniform float bbmod_FogRcpRange;  // 1.0 / (fogEnd - fogStart)
 
+// The color of the fog
+uniform vec4 bbmod_FogColor;
+// Maximum fog intensity
+uniform float bbmod_FogIntensity;
+// Distance at which the fog starts
+uniform float bbmod_FogStart;
+// 1.0 / (fogEnd - fogStart)
+uniform float bbmod_FogRcpRange;
+
+////////////////////////////////////////////////////////////////////////////////
 // Ambient light
-uniform vec4 bbmod_LightAmbientUp;   // RGBM encoded ambient light color on the upper hemisphere.
-uniform vec4 bbmod_LightAmbientDown; // RGBM encoded ambient light color on the lower hemisphere.
 
+// RGBM encoded ambient light color on the upper hemisphere.
+uniform vec4 bbmod_LightAmbientUp;
+// RGBM encoded ambient light color on the lower hemisphere.
+uniform vec4 bbmod_LightAmbientDown;
+
+////////////////////////////////////////////////////////////////////////////////
 // Directional light
-uniform vec3 bbmod_LightDirectionalDir;   // Direction of the directional light
-uniform vec4 bbmod_LightDirectionalColor; // RGBM encoded color of the directional light
 
-// Shadow mapping
-uniform float bbmod_ShadowmapEnablePS; // 1.0 to enable shadows
-uniform sampler2D bbmod_Shadowmap;     // Shadowmap texture
-uniform vec2 bbmod_ShadowmapTexel;     // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
+// Direction of the directional light
+uniform vec3 bbmod_LightDirectionalDir;
+// RGBM encoded color of the directional light
+uniform vec4 bbmod_LightDirectionalColor;
 
+
+////////////////////////////////////////////////////////////////////////////////
 // Terrain
 
 ////////////////////////////////////////////////////////////////////////////////
+// Shadow mapping
+
+// 1.0 to enable shadows
+uniform float bbmod_ShadowmapEnablePS;
+// Shadowmap texture
+uniform sampler2D bbmod_Shadowmap;
+// (1.0/shadowmapWidth, 1.0/shadowmapHeight)
+uniform vec2 bbmod_ShadowmapTexel;
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
+//
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -196,7 +241,9 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 	Material material = UnpackMaterial(

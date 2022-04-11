@@ -3,18 +3,28 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
+
+// Maximum number of bones of animated models
 #define MAX_BONES 64
 
 
+// Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Attributes
+//
 attribute vec4 in_Position;
+
 attribute vec3 in_Normal;
+
 attribute vec2 in_TextureCoord0;
-//attribute vec4 in_Color;
+
+
 attribute vec4 in_TangentW;
 
 attribute vec4 in_BoneIndex;
@@ -22,7 +32,9 @@ attribute vec4 in_BoneWeight;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
@@ -34,16 +46,21 @@ uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
+//
 
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
@@ -106,7 +123,9 @@ void Transform(out vec4 vertex, out vec4 normal)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 	vec4 position, normal;
@@ -115,7 +134,6 @@ void main()
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
 	v_fDepth = (gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position).z;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
-	//v_vColor = in_Color;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 	vec4 tangent = vec4(in_TangentW.xyz, 0.0);

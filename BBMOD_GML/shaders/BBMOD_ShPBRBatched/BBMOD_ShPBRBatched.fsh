@@ -3,39 +3,68 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
+
+////////////////////////////////////////////////////////////////////////////////
 // Material
-#define bbmod_BaseOpacity gm_BaseTexture  // RGB: Base color, A: Opacity
-uniform sampler2D bbmod_NormalRoughness;  // RGB: Tangent space normal, A: Roughness
-uniform sampler2D bbmod_MetallicAO;       // R: Metallic, G: Ambient occlusion
-uniform sampler2D bbmod_Subsurface;       // RGB: Subsurface color, A: Intensity
-uniform sampler2D bbmod_Emissive;         // RGBA: RGBM encoded emissive color
-uniform float bbmod_AlphaTest;            // Pixels with alpha less than this value will be discarded
 
+// RGB: Base color, A: Opacity
+#define bbmod_BaseOpacity gm_BaseTexture
+// RGB: Tangent space normal, A: Roughness
+uniform sampler2D bbmod_NormalRoughness;
+// R: Metallic, G: Ambient occlusion
+uniform sampler2D bbmod_MetallicAO;
+// RGB: Subsurface color, A: Intensity
+uniform sampler2D bbmod_Subsurface;
+// RGBA: RGBM encoded emissive color
+uniform sampler2D bbmod_Emissive;
+// Pixels with alpha less than this value will be discarded
+uniform float bbmod_AlphaTest;
+
+////////////////////////////////////////////////////////////////////////////////
 // Camera
-uniform vec3 bbmod_CamPos;    // Camera's position in world space
-uniform float bbmod_ZFar;     // Distance to the far clipping plane
-uniform float bbmod_Exposure; // Camera's exposure value
 
+// Camera's position in world space
+uniform vec3 bbmod_CamPos;
+// Distance to the far clipping plane
+uniform float bbmod_ZFar;
+// Camera's exposure value
+uniform float bbmod_Exposure;
+
+////////////////////////////////////////////////////////////////////////////////
 // Image based lighting
-uniform sampler2D bbmod_IBL; // Prefiltered octahedron env. map
-uniform vec2 bbmod_IBLTexel; // Texel size of one octahedron
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
+//
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -342,7 +371,9 @@ Material UnpackMaterial(
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 	Material material = UnpackMaterial(

@@ -7,9 +7,9 @@ precision highp float;
 // Defines
 //
 
+// Maximum number of point lights
+#define MAX_POINT_LIGHTS 8
 
-// Number of samples used when computing shadows
-#define SHADOWMAP_SAMPLE_COUNT 12
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -17,14 +17,12 @@ precision highp float;
 //
 varying vec3 v_vVertex;
 
+varying vec4 v_vColor;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-varying vec3 v_vLight;
-varying vec3 v_vPosShadowmap;
-varying vec2 v_vSplatmapCoord;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -36,6 +34,12 @@ varying vec2 v_vSplatmapCoord;
 
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
+// UVs of the BaseOpacity texture
+uniform vec4 bbmod_BaseOpacityUV;
+// UVs of the NormalSmoothness texture
+uniform vec4 bbmod_NormalSmoothnessUV;
+// UVs of the SpecularColor texture
+uniform vec4 bbmod_SpecularColorUV;
 // RGB: Tangent space normal, A: Smoothness
 uniform sampler2D bbmod_NormalSmoothness;
 // RGB: Specular color
@@ -46,8 +50,6 @@ uniform float bbmod_AlphaTest;
 ////////////////////////////////////////////////////////////////////////////////
 // Camera
 
-// Camera's position in world space
-uniform vec3 bbmod_CamPos;
 // Distance to the far clipping plane
 uniform float bbmod_ZFar;
 // Camera's exposure value
@@ -82,13 +84,14 @@ uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
+////////////////////////////////////////////////////////////////////////////////
+// Point lights
+
+// [(x, y, z, range), (r, g, b, m), ...]
+uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
-// Splatmap texture
-uniform sampler2D bbmod_Splatmap;
-// Splatmap channel to read. Use -1 for none.
-uniform int bbmod_SplatmapIndex;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
@@ -196,54 +199,27 @@ Material UnpackMaterial(
 	Material m;
 
 	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	vec4 baseOpacity = texture2D(texBaseOpacity,
+		mix(bbmod_BaseOpacityUV.xy, bbmod_BaseOpacityUV.zw, uv));
 	m.Base = xGammaToLinear(baseOpacity.rgb);
 	m.Opacity = baseOpacity.a;
 
+	uv = (uv - bbmod_BaseOpacityUV.xy) / (bbmod_BaseOpacityUV.zw - bbmod_BaseOpacityUV.xy);
+
 	// Normal vector and smoothness
-	vec4 normalSmoothness = texture2D(texNormalSmoothness, uv);
+	vec4 normalSmoothness = texture2D(texNormalSmoothness,
+		mix(bbmod_NormalSmoothnessUV.xy, bbmod_NormalSmoothnessUV.zw, uv));
 	m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
 	m.Smoothness = normalSmoothness.a;
 
 	// Specular color
-	vec4 specularColor = texture2D(texSpecularColor, uv);
+	vec4 specularColor = texture2D(texSpecularColor,
+		mix(bbmod_SpecularColorUV.xy, bbmod_SpecularColorUV.zw, uv));
 	m.Specular = xGammaToLinear(specularColor.rgb);
 
 	return m;
 }
 
-// Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
-float InterleavedGradientNoise(vec2 positionScreen)
-{
-	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
-	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
-}
-
-vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
-{
-	float GoldenAngle = 2.4;
-	float r = sqrt(float(sampleIndex) + 0.5) / sqrt(float(samplesCount));
-	float theta = float(sampleIndex) * GoldenAngle + phi;
-	float sine = sin(theta);
-	float cosine = cos(theta);
-	return vec2(r * cosine, r * sine);
-}
-
-float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
-{
-	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
-	{
-		return 0.0;
-	}
-	float shadow = 0.0;
-	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
-	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
-	{
-		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
-		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
-	}
-	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -258,16 +234,6 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
-	// Splatmap
-	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
-	if (bbmod_SplatmapIndex >= 0)
-	{
-		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
-		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
-			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
-			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
-			: splatmap.a)));
-	}
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{
@@ -276,7 +242,7 @@ void main()
 	gl_FragColor.a = material.Opacity;
 
 	vec3 N = material.Normal;
-	vec3 lightDiffuse = v_vLight;
+	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
 
 	// Ambient light
@@ -285,15 +251,11 @@ void main()
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
-	if (bbmod_ShadowmapEnablePS == 1.0)
-	{
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
-	}
 	// Directional light
 	vec3 L = normalize(-bbmod_LightDirectionalDir);
 	float NdotL = max(dot(N, L), 0.0);
 	float specularPower = exp2(1.0 + (material.Smoothness * 10.0));
-	vec3 V = normalize(bbmod_CamPos - v_vVertex);
+	vec3 V = vec3(0.0, 0.0, 1.0);
 	vec3 f0 = material.Specular;
 	vec3 H = normalize(L + V);
 	float NdotH = max(dot(N, H), 0.0);
@@ -308,6 +270,22 @@ void main()
 	vec3 lightColor = directionalLightColor * NdotL * (1.0 - shadow);
 	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 	lightDiffuse += lightColor; // * (1.0 - fresnel);
+	// Point lights
+	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	{
+		vec4 positionRange = bbmod_LightPointData[i * 2];
+		L = positionRange.xyz - v_vVertex;
+		H = normalize(L + V);
+		NdotH = max(dot(N, H), 0.0);
+		VdotH = max(dot(V, H), 0.0);
+		fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
+		float dist = length(L);
+		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
+		NdotL = max(dot(N, normalize(L)), 0.0);
+		lightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
+		lightSpecular += lightColor * fresnel * visibility * normalDistribution;
+		lightDiffuse += lightColor; // * (1.0 - fresnel);
+	}
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular

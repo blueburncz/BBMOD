@@ -18,3 +18,6 @@ Xpanda .\shaders\BBMOD_ShDepthBatched --x .\Xshaders\ X_BATCHED=1 X_OUTPUT_DEPTH
 
 # Terrain shaders
 Xpanda .\shaders\BBMOD_ShTerrain --x .\Xshaders\ X_TERRAIN=1
+
+# 2D shaders
+Xpanda .\shaders\BBMOD_ShSprite --x .\Xshaders\ X_2D=1

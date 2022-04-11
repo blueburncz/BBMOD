@@ -2,26 +2,44 @@
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
+
 #if defined(X_ANIMATED)
+// Maximum number of bones of animated models
 #define MAX_BONES 64
 #endif
 
 #if defined(X_BATCHED)
+// Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
 #endif
 
-#if !defined(X_PBR)
+#if !defined(X_PBR) && !defined(X_2D)
+// Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Attributes
+//
 attribute vec4 in_Position;
+
+#if !defined(X_2D)
 attribute vec3 in_Normal;
+#endif
+
 attribute vec2 in_TextureCoord0;
-//attribute vec4 in_Color;
+
+#if defined(X_2D)
+attribute vec4 in_Color;
+#endif
+
+#if !defined(X_2D)
 attribute vec4 in_TangentW;
+#endif
 
 #if defined(X_ANIMATED)
 attribute vec4 in_BoneIndex;
@@ -33,7 +51,9 @@ attribute float in_Id;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
@@ -45,37 +65,51 @@ uniform vec4 bbmod_Bones[2 * MAX_BONES];
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 #endif
 
-#if !defined(X_PBR)
+#if !defined(X_PBR) && !defined(X_2D)
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 #endif
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
-uniform float bbmod_ShadowmapEnableVS;     // 1.0 to enable shadows
-uniform mat4 bbmod_ShadowmapMatrix;        // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
-uniform float bbmod_ShadowmapArea;         // The area that the shadowmap captures
-uniform float bbmod_ShadowmapNormalOffset; // Offsets vertex position by its normal scaled by this value
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
+// 1.0 to enable shadows
+uniform float bbmod_ShadowmapEnableVS;
+// WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
+uniform mat4 bbmod_ShadowmapMatrix;
+// The area that the shadowmap captures
+uniform float bbmod_ShadowmapArea;
+// Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapNormalOffset;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
+#if defined(X_2D)
+varying vec4 v_vColor;
+#endif
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
 varying vec3 v_vLight;
+#if !defined(X_2D)
 varying vec3 v_vPosShadowmap;
 #if defined(X_TERRAIN)
 varying vec2 v_vSplatmapCoord;
 #endif
 #endif
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
+//
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 #pragma include("Color.xsh", "glsl")
 
 #pragma include("RGBM.xsh", "glsl")
@@ -102,7 +136,11 @@ vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 void Transform(out vec4 vertex, out vec4 normal)
 {
 	vertex = in_Position;
+#if defined(X_2D)
+	normal = vec4(0.0, 0.0, 1.0, 0.0);
+#else
 	normal = vec4(in_Normal, 0.0);
+#endif
 
 #if defined(X_ANIMATED)
 	// Source:
@@ -156,7 +194,9 @@ void Transform(out vec4 vertex, out vec4 normal)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
 	vec4 position, normal;
@@ -165,17 +205,24 @@ void main()
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
 	v_fDepth = (gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position).z;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
-	//v_vColor = in_Color;
+#if defined(X_2D)
+	v_vColor = in_Color;
+#endif
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
+#if defined(X_2D)
+	vec4 tangent = vec4(1.0, 0.0, 0.0, 0.0);
+	vec4 bitangent = vec4(0.0, 1.0, 0.0, 0.0);
+#else
 	vec4 tangent = vec4(in_TangentW.xyz, 0.0);
 	vec4 bitangent = vec4(cross(in_Normal, in_TangentW.xyz) * in_TangentW.w, 0.0);
+#endif
 	vec3 N = (gm_Matrices[MATRIX_WORLD] * normal).xyz;
 	vec3 T = (gm_Matrices[MATRIX_WORLD] * tangent).xyz;
 	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
 	v_mTBN = mat3(T, B, N);
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 	// Splatmap coords
 	#if defined(X_TERRAIN)
 	v_vSplatmapCoord = in_TextureCoord0;
