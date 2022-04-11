@@ -97,8 +97,8 @@ if (global.gameSpeed > 0.0)
 					_light.z = _shellPos[2];
 
 					// Determine which enemy was shot using a raycast against an AABB at its position.
-					var _origin = camera.Position;
-					var _direction = camera.get_forward();
+					var _ray = new BBMOD_Ray(camera.Position, camera.get_forward());
+					var _aabb = new BBMOD_AABBCollider(undefined, new BBMOD_Vec3(5, 5, 18));
 
 					with (OZombie)
 					{
@@ -106,9 +106,10 @@ if (global.gameSpeed > 0.0)
 						{
 							continue;
 						}
-						var _min = new BBMOD_Vec3(x - 5, y - 5, z);
-						var _max = new BBMOD_Vec3(x + 5, y + 5, z + 36);
-						if (RaycastAABB(_origin, _direction, _min, _max) != -1)
+
+						_aabb.Position.Set(x, y, z + 18);
+
+						if (_aabb.Raycast(_ray))
 						{
 							ReceiveDamage(irandom_range(45, 55));
 
