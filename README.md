@@ -107,7 +107,6 @@ Support us in developing BBMOD, get priority assistance and more of our amazing 
 * [Patreon](https://www.patreon.com/blueburn)
 * [Play demo](https://blueburn.cz/bbmod/demo)
 * [PushEd 2](https://blueburn.cz/index.php?menu=pushed2)
-* [Trello board](https://trello.com/b/XKnnTduD/bbmod)
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
 # Special thanks
