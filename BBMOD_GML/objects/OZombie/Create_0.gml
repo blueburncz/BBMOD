@@ -2,6 +2,11 @@ event_inherited();
 
 z = global.terrain.get_height(x, y) ?? 0.0;
 
+// Used to raycast shots from the player's gun.
+collider = new BBMOD_AABBCollider(
+	new BBMOD_Vec3(x, y, z),
+	new BBMOD_Vec3(5, 5, 18));
+
 ReceiveDamage = function (_damage) {
 	hp -= _damage;
 	hurt = 1.0;
