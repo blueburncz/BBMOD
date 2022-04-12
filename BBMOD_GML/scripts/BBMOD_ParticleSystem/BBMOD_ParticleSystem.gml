@@ -45,11 +45,13 @@ function BBMOD_ParticleSystem(_model, _size)
 	OnUpdate = undefined;
 
 	static update = function (_deltaTime) {
+		static _doSort = 0;
+
 		if (OnUpdate != undefined)
 		{
 			var i = 0;
 
-			if (Sort)
+			if ((_doSort == 0) && Sort)
 			{
 				repeat (Size)
 				{
@@ -58,9 +60,23 @@ function BBMOD_ParticleSystem(_model, _size)
 
 				array_sort(Particles, method(self, function (_p1, _p2) {
 					// TODO: Should be sorted in view-space, not by distance from the camera!
-					var _camPos = bbmod_camera_get_position();
-					var _d1 = Position.Add(_p1.Position).Sub(_camPos).Length();
-					var _d2 = Position.Add(_p2.Position).Sub(_camPos).Length();
+					var _camPos = global.__bbmodCameraPosition;
+					var _d1 = point_distance_3d(
+						Position.X + _p1.Position.X,
+						Position.Y + _p1.Position.Y,
+						Position.Z + _p1.Position.Z,
+						_camPos.X,
+						_camPos.Y,
+						_camPos.Z);
+					var _d2 = point_distance_3d(
+						Position.X + _p2.Position.X,
+						Position.Y + _p2.Position.Y,
+						Position.Z + _p2.Position.Z,
+						_camPos.X,
+						_camPos.Y,
+						_camPos.Z);
+					//var _d1 = Position.Add(_p1.Position).Sub(_camPos).Length();
+					//var _d2 = Position.Add(_p2.Position).Sub(_camPos).Length();
 					if (_d2 > _d1) return +1;
 					if (_d2 < _d1) return -1;
 					return 0;
@@ -88,6 +104,8 @@ function BBMOD_ParticleSystem(_model, _size)
 					++i;
 				}
 			}
+
+			if (++_doSort >= 4) _doSort = 0;
 		}
 	};
 
