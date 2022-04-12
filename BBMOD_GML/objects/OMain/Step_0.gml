@@ -1,3 +1,5 @@
+particles.update(DELTA_TIME);
+
 // Show/hide debug overlay
 if (keyboard_check_pressed(vk_f1))
 {
