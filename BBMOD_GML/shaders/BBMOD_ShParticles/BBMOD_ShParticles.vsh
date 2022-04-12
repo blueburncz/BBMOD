@@ -50,7 +50,6 @@ varying mat3 v_mTBN;
 varying float v_fDepth;
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
-varying mat4 v_mView;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -106,40 +105,34 @@ void main()
 	vec3 batchColor = xDecodeRGBM(bbmod_BatchData[int(in_Id) * 3 + 2]);
 
 	vec4 position = in_Position;
-	position.x *= length(gm_Matrices[MATRIX_WORLD][0].xyz);
-	position.y *= length(gm_Matrices[MATRIX_WORLD][1].xyz);
-	position.z *= length(gm_Matrices[MATRIX_WORLD][2].xyz);
+	//position.x *= length(gm_Matrices[MATRIX_WORLD][0].xyz);
+	//position.y *= length(gm_Matrices[MATRIX_WORLD][1].xyz);
+	//position.z *= length(gm_Matrices[MATRIX_WORLD][2].xyz);
 	position.xyz *= batchScale;
 
-	v_mView = gm_Matrices[MATRIX_VIEW];
+	mat4 W = gm_Matrices[MATRIX_WORLD];
+	W[3].xyz += batchPosition;
+	mat4 V = gm_Matrices[MATRIX_VIEW];
+	mat4 P = gm_Matrices[MATRIX_PROJECTION];
 
-	mat4 matrixWorld = gm_Matrices[MATRIX_WORLD];
-	matrixWorld[3].xyz += batchPosition;
+	W[0][0] = V[0][0]; W[1][0] = V[0][1]; W[2][0] = V[0][2];
+	W[0][1] = V[1][0]; W[1][1] = V[1][1]; W[2][1] = V[1][2];
+	W[0][2] = V[2][0]; W[1][2] = V[2][1]; W[2][2] = V[2][2];
 
-	mat4 matrixWorldView = gm_Matrices[MATRIX_VIEW] * matrixWorld;
+	mat4 WV = V * W;
 
-	//if (u_fBillboard != BILLBOARD_NONE)
-	//{
-		matrixWorldView[0].xyz = vec3(1.0, 0.0, 0.0);
-		//if (u_fBillboard == BILLBOARD_CYLINDRICAL)
-		//{
-		//	matrixWorldView[1].xyz = -matrixWorldView[2].xyz;
-		//}
-		//else
-		//{
-			matrixWorldView[1].xyz = vec3(0.0, -1.0, 0.0);
-		//}
-		matrixWorldView[2].xyz = vec3(0.0, 0.0, 1.0);
-	//}
+	vec4 positionW = (W * position);
+	vec4 positionWV = (WV * position);
+	vec4 positionWVP = (P * (WV * position));
 
-	gl_Position = gm_Matrices[MATRIX_PROJECTION] * (matrixWorldView * position);
-	v_fDepth = (gm_Matrices[MATRIX_PROJECTION] * (matrixWorldView * position)).z;
-	v_vVertex = (matrixWorldView * position).xyz;
+	gl_Position = positionWVP;
+	v_fDepth    = positionWVP.z;
+	v_vVertex   = positionW.xyz;
 	v_vTexCoord = in_TextureCoord0;
 
-	vec3 N = (matrixWorldView * vec4(0.0, 0.0, -1.0, 0.0)).xyz;
-	vec3 T = (matrixWorldView * vec4(1.0, 0.0, 0.0, 0.0)).xyz;
-	vec3 B = (matrixWorldView * vec4(0.0, 1.0, 0.0, 0.0)).xyz;
+	vec3 N = (W * vec4(0.0, 0.0, -1.0, 0.0)).xyz;
+	vec3 T = (W * vec4(1.0, 0.0, 0.0, 0.0)).xyz;
+	vec3 B = (W * vec4(0.0, 1.0, 0.0, 0.0)).xyz;
 	v_mTBN = mat3(T, B, N);
 
 	// Splatmap coords
@@ -152,7 +145,7 @@ void main()
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
 	{
 		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec3 L = (v_mView * vec4(positionRange.xyz, 1.0)).xyz - v_vVertex;
+		vec3 L = positionRange.xyz - v_vVertex;
 		float dist = length(L);
 		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
 		float NdotL = max(dot(N, normalize(L)), 0.0);

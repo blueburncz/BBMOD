@@ -1,4 +1,4 @@
-//#pragma include("Uber_PS.xsh", "glsl")
+#pragma include("Uber_PS.xsh", "glsl")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -16,12 +16,14 @@ precision highp float;
 // Varyings
 //
 varying vec3 v_vVertex;
+
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
+
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
-varying mat4 v_mView;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -265,7 +267,7 @@ void main()
 	// Ambient light
 	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
 	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	lightDiffuse += mix(ambientDown, ambientUp, dot(N, (v_mView * vec4(0.0, 0.0, -1.0, 0.0)).xyz) * 0.5 + 0.5);
+	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
@@ -273,23 +275,23 @@ void main()
 		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
 	}
 	// Directional light
-	vec3 L = normalize((v_mView * vec4(-bbmod_LightDirectionalDir.xyz, 0.0)).xyz);
+	vec3 L = normalize(-bbmod_LightDirectionalDir);
 	float NdotL = max(dot(N, L), 0.0);
-	//float specularPower = exp2(1.0 + (material.Smoothness * 10.0));
-	//vec3 V = normalize((v_mView * vec4(bbmod_CamPos.xyz, 1.0)).xyz - v_vVertex);
-	//vec3 f0 = material.Specular;
-	//vec3 H = normalize(L + V);
-	//float NdotH = max(dot(N, H), 0.0);
-	//float VdotH = max(dot(V, H), 0.0);
-	//vec3 fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
-	//float visibility = 0.25;
-	//float A = specularPower / log(2.0);
-	//float blinnPhong = exp2(A * NdotH - A);
-	//float blinnNormalization = (specularPower + 8.0) / 8.0;
-	//float normalDistribution = blinnPhong * blinnNormalization;
+	float specularPower = exp2(1.0 + (material.Smoothness * 10.0));
+	vec3 V = normalize(bbmod_CamPos - v_vVertex);
+	vec3 f0 = material.Specular;
+	vec3 H = normalize(L + V);
+	float NdotH = max(dot(N, H), 0.0);
+	float VdotH = max(dot(V, H), 0.0);
+	vec3 fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
+	float visibility = 0.25;
+	float A = specularPower / log(2.0);
+	float blinnPhong = exp2(A * NdotH - A);
+	float blinnNormalization = (specularPower + 8.0) / 8.0;
+	float normalDistribution = blinnPhong * blinnNormalization;
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
 	vec3 lightColor = directionalLightColor * NdotL * (1.0 - shadow);
-	//lightSpecular += lightColor * fresnel * visibility * normalDistribution;
+	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 	lightDiffuse += lightColor; // * (1.0 - fresnel);
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;
@@ -304,6 +306,5 @@ void main()
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-	//gl_FragColor.rgb = N * 0.5 + 0.5;
 }
 // include("Uber_PS.xsh")

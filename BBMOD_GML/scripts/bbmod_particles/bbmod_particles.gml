@@ -38,6 +38,7 @@ function __bbmod_material_particle()
 		_material.AlphaTest = 0.01;
 		_material.AlphaBlend = true;
 		_material.ZWrite = false;
+		_material.Culling = cull_noculling;
 	}
 	return _material;
 }
