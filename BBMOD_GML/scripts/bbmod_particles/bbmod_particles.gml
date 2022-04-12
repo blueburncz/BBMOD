@@ -4,6 +4,8 @@
 
 #macro BBMOD_SHADER_PARTICLE __bbmod_shader_particle()
 
+#macro BBMOD_SHADER_PARTICLE_DEPTH __bbmod_shader_particle_depth()
+
 #macro BBMOD_MATERIAL_PARTICLE __bbmod_material_particle()
 
 /// @var {Struct.BBMOD_Model} A particle model.
@@ -27,12 +29,19 @@ function __bbmod_shader_particle()
 	return _shader;
 }
 
+function __bbmod_shader_particle_depth()
+{
+	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticlesDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	return _shader;
+}
+
 function __bbmod_material_particle()
 {
 	static _material = undefined;
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE)
+		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
 		_material.BaseOpacity = sprite_get_texture(SprParticle, 0);
 		_material.NormalSmoothness = sprite_get_texture(SprParticle, 1);
 		_material.AlphaTest = 0.01;

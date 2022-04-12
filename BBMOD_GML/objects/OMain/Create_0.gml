@@ -92,7 +92,7 @@ renderer.add(
 
 particles = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, 64);
 particles.Sort = true;
-particles.Position.Set(room_width * 0.5, room_height * 0.5, 50);
+particles.Position.Set(room_width * 0.5 - 200, room_height * 0.5 - 200, 50);
 particles.OnUpdate = function (_particle, _deltaTime) {
 	with (_particle)
 	{

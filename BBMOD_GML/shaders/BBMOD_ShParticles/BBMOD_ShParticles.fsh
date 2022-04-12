@@ -272,7 +272,8 @@ void main()
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
+		// TODO: Add per-material shadowmap bias!
+		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z - 0.00002);
 	}
 	// Directional light
 	vec3 L = normalize(-bbmod_LightDirectionalDir);
