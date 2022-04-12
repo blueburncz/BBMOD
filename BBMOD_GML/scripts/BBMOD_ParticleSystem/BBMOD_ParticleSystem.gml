@@ -105,6 +105,7 @@ function BBMOD_ParticleSystem(_model, _size)
 				}
 			}
 
+			// TODO: Configure particle sorting frequency
 			if (++_doSort >= 4) _doSort = 0;
 		}
 	};
