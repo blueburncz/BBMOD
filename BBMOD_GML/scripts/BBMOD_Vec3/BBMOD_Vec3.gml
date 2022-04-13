@@ -231,7 +231,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func FromArray(_array[, _index])
 	/// @desc Loads vector components from an array.
-	/// @param {Array.Real} _array The array to read the components from.
+	/// @param {Array<Real>} _array The array to read the components from.
 	/// @param {Real} [_index] The index to start reading the vector components
 	/// from. Defaults to 0.
 	/// @return {Struct.BBMOD_Vec3} Returns `self`.
@@ -580,11 +580,11 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes the components of the vector into the target array.
-	/// @param {Array.Real/Undefined} [_array] The array to write to. If not
+	/// @param {Array<Real>/Undefined} [_array] The array to write to. If not
 	/// specified a new one of required size is created.
 	/// @param {Real} [_index] The starting index within the target array.
 	/// Defaults to 0.
-	/// @return {Array.Real} The target array.
+	/// @return {Array<Real>} The target array.
 	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
 		_array ??= array_create(3, 0.0);
@@ -610,7 +610,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Transform(_matrix)
 	/// @desc Transforms vector `[X, Y, Z, 1.0]` by a matrix and returns the result
 	/// as a new vector.
-	/// @param {Array.Real} _matrix The matrix to transform the vector by.
+	/// @param {Array<Real>} _matrix The matrix to transform the vector by.
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Transform = function (_matrix) {
 		gml_pragma("forceinline")

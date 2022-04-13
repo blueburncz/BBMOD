@@ -52,7 +52,7 @@ function BBMOD_Renderer()
 		destroy: destroy,
 	};
 
-	/// @var {Array.Struct.BBMOD_IRenderable} An array of renderable objects and
+	/// @var <Struct.BBMOD_IRenderable>} An array of renderable objects and
 	/// structs.
 	/// These are automatically rendered in {@link BBMOD_Renderer.render}.
 	/// @readonly

@@ -117,7 +117,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_point_lights([_lights])
 	/// @desc Sets uniform `bbmod_LightPointData`.
-	/// @param {Array.Struct.BBMOD_PointLight/Undefined} [_lights] An array of
+	/// @param {Array<Struct.BBMOD_PointLight>/Undefined} [_lights] An array of
 	/// point lights. If `undefined`, then the lights defined using
 	/// {@link bbmod_light_point_add} are passed. Only enabled lights will be used!
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
@@ -182,7 +182,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// `bbmod_ShadowmapMatrix`, `bbmod_ShadowmapArea` and `bbmod_ShadowmapNormalOffset`, required for
 	/// shadow mapping.
 	/// @param {Pointer.Texture} _texture The shadowmap texture.
-	/// @param {Array.Real} _matrix The world-view-projection matrix used when
+	/// @param {Array<Real>} _matrix The world-view-projection matrix used when
 	/// rendering the shadowmap.
 	/// @param {Real} _area The area that the shadowmap captures.
 	/// @param {Real} _normalOffset The area that the shadowmap captures.
@@ -381,7 +381,7 @@ function bbmod_light_directional_set(_light)
 // Point lights
 //
 
-/// @var {Array.Struct.BBMOD_PointLight}
+/// @var {Array<Struct.BBMOD_PointLight>}
 /// @private
 global.__bbmodPointLights = [];
 

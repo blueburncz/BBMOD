@@ -26,18 +26,18 @@
 /// @desc Base for BBMOD structs that require more OOP functionality.
 function BBMOD_Class() constructor
 {
-	/// @var {Array.String} An array of names of inherited classes.
+	/// @var {Array<String>} An array of names of inherited classes.
 	/// @private
 	__Inheritance = [];
 
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {Array.Function} An array of implemented interfaces.
+	/// @var {Array<Function>} An array of implemented interfaces.
 	/// @private
 	__Interfaces = [];
 
-	/// @var {Array.Function} An array of functions executed when the destroy method
-	/// is called.
+	/// @var {Array<Function>} An array of functions executed when the destroy
+	/// method is called.
 	/// @private
 	__DestroyActions = [];
 

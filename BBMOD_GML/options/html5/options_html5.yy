@@ -1,6 +1,6 @@
 {
   "option_html5_browser_title": "BBMOD Demo",
-  "option_html5_version": "3.3.0.0",
+  "option_html5_version": "3.4.0.0",
   "option_html5_foldername": "html5game",
   "option_html5_outputname": "index.html",
   "option_html5_splash_png": "${base_options_dir}/html5/splash.png",

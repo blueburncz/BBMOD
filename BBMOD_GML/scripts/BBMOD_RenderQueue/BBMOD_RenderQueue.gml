@@ -1,4 +1,4 @@
-/// @var {Array.Struct.BBMOD_RenderQueue} Array of all existing render queues,
+/// @var {Array<Struct.BBMOD_RenderQueue>} Array of all existing render queues,
 /// sorted by their priority in an asceding order.
 /// @see BBMOD_RenderQueue
 /// @readonly
@@ -33,7 +33,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @readonly
 	Priority = _priority;
 
-	/// @var {Id.DsList.Struct.BBMOD_RenderCommand}
+	/// @var {Id.DsList<Struct.BBMOD_RenderCommand>}
 	/// @private
 	/// @see BBMOD_RenderCommand
 	RenderCommands = ds_list_create();
@@ -101,7 +101,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the
 	/// queue.
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
-	/// @param {Array.Real} _matrix The world matrix.
+	/// @param {Array<Real>} _matrix The world matrix.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh = function (_vertexBuffer, _matrix, _material) {
@@ -120,9 +120,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshAnimated} command into
 	/// the queue.
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
-	/// @param {Array.Real} _matrix The world matrix.
+	/// @param {Array<Real>} _matrix The world matrix.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
-	/// @param {Array.Real} _boneTransform An array with bone transformation
+	/// @param {Array<Real>} _boneTransform An array with bone transformation
 	/// data.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh_animated = function (_vertexBuffer, _matrix, _material, _boneTransform) {
@@ -142,9 +142,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshBatched} command into
 	/// the queue.
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
-	/// @param {Array.Real} _matrix The world matrix.
+	/// @param {Array<Real>} _matrix The world matrix.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
-	/// @param {Array.Real} _batchData An array with batch data.
+	/// @param {Array<Real>} _batchData An array with batch data.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh_batched = function (_vertexBuffer, _matrix, _material, _batchData) {
 		gml_pragma("forceinline");
@@ -702,7 +702,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @func set_projection_matrix(_matrix)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetProjectionMatrix} command
 	/// into the queue.
-	/// @param {Array.Real} _matrix The new projection matrix.
+	/// @param {Array<Real>} _matrix The new projection matrix.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_projection_matrix = function (_matrix) {
 		gml_pragma("forceinline");
@@ -830,7 +830,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloatArray} command
 	/// into the queue.
 	/// @param {String} _name The name of the uniform.
-	/// @param {Array.Real} _array The array of values.
+	/// @param {Array<Real>} _array The array of values.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_f_array = function (_name, _array) {
 		gml_pragma("forceinline");
@@ -926,7 +926,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @func set_uniform_i_array(_name, _array)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformIntArray} command
 	/// into the queue.
-	/// @param {Array.Real} _array The array of values.
+	/// @param {Array<Real>} _array The array of values.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_i_array = function (_name, _array) {
 		gml_pragma("forceinline");
@@ -958,7 +958,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformMatrixArray} command
 	/// into the queue.
 	/// @param {String} _name The name of the uniform.
-	/// @param {Array.Real} _array The array of values.
+	/// @param {Array<Real>} _array The array of values.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_matrix_array = function (_name, _array) {
 		gml_pragma("forceinline");
@@ -974,7 +974,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @func set_view_matrix(_matrix)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetViewMatrix} command into the
 	/// queue.
-	/// @param {Array.Real} _matrix The new view matrix.
+	/// @param {Array<Real>} _matrix The new view matrix.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_view_matrix = function (_matrix) {
 		gml_pragma("forceinline");
@@ -989,7 +989,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @func set_world_matrix(_matrix)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetWorldMatrix} command into
 	/// the queue.
-	/// @param {Array.Real} _matrix The new world matrix.
+	/// @param {Array<Real>} _matrix The new world matrix.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_world_matrix = function (_matrix) {
 		gml_pragma("forceinline");

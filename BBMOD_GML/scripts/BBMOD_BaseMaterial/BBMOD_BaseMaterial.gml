@@ -24,7 +24,7 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// Using this you can control texture's size within texture page.
 	TextureScale = new BBMOD_Vec2(1.0);
 
-	/// @var {Id.DsList.Struct.BBMOD_RenderCommand} A list of render commands using this
+	/// @var {Id.DsList<Struct.BBMOD_RenderCommand>} A list of render commands using this
 	/// material.
 	/// @readonly
 	/// @obsolete This has been replaced with {@link BBMOD_Material.RenderQueue}.

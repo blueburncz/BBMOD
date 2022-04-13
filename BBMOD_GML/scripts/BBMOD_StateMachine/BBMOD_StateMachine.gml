@@ -11,7 +11,7 @@ function BBMOD_StateMachine()
 		destroy: destroy,
 	};
 
-	/// @var {Array.Struct.BBMOD_State} An array of sates.
+	/// @var {Array<Struct.BBMOD_State>} An array of sates.
 	/// @private
 	StateArray = [];
 

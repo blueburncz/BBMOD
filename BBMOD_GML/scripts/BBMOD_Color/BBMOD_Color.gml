@@ -229,11 +229,11 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func ToHSV([_array[, _index]])
 	/// @desc Encodes the color into HSV format, ignoring the alpha channel.
-	/// @param {Array.Real} [_array] The array to output the values to. A new one
-	/// is created if not defined.
+	/// @param {Array<Real>} [_array] The array to output the values to. A new
+	/// one is created if not defined.
 	/// @param {Real} [_index] The index to start writing the values to. Defaults
 	/// to 0.
-	/// @return {Array.Real} Returns the array with HSV values.
+	/// @return {Array<Real>} Returns the array with HSV values.
 	static ToHSV = function (_array, _index) {
 		gml_pragma("forceinline");
 		_array = (_array != undefined) ? _array : array_create(3, 0);
@@ -247,11 +247,11 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func ToRGBM([_array[, _index]])
 	/// @desc Encodes the color into RGBM format, ignoring the alpha channel.
-	/// @param {Array.Real/Undefined} [_array] The array to output the values to.
+	/// @param {Array<Real>/Undefined} [_array] The array to output the values to.
 	/// If `undefined`, then a new one is created.
 	/// @param {Real} [_index] The index to start writing the values to.
 	/// Defaults to 0.
-	/// @return {Array.Real} Returns the array with RGBM values.
+	/// @return {Array<Real>} Returns the array with RGBM values.
 	static ToRGBM = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
 		_array ??= array_create(4, 0);

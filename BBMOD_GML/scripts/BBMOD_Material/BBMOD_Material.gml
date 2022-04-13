@@ -30,7 +30,7 @@ function BBMOD_Material(_shader=undefined)
 	/// @see BBMOD_ERenderPass
 	RenderPass = 0;
 
-	/// @var {Array.Struct.BBMOD_Shader} Shaders used in specific render passes.
+	/// @var {Array<Struct.BBMOD_Shader>} Shaders used in specific render passes.
 	/// @private
 	/// @see BBMOD_Material.set_shader
 	/// @see BBMOD_Material.get_shader

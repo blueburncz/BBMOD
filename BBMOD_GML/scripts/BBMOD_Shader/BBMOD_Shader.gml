@@ -106,7 +106,7 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @func set_uniform_f_array(_handle, _array)
 	/// @desc Sets a `float[]` uniform.
 	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Array.Real} _array The array of new values.
+	/// @param {Array<Real>} _array The array of new values.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	/// @see BBMOD_Shader.get_uniform
 	static set_uniform_f_array = function (_handle, _array) {
@@ -172,7 +172,7 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @func set_uniform_i_array(_handle, _array)
 	/// @desc Sets an `int[]` uniform.
 	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Array.Real} _array The array of new values.
+	/// @param {Array<Real>} _array The array of new values.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	/// @see BBMOD_Shader.get_uniform
 	static set_uniform_i_array = function (_handle, _array) {
@@ -194,7 +194,7 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 
 	/// @func set_uniform_matrix_array(_hande, _array)
 	/// @desc Sets a shader uniform to hold an array of matrix values.
-	/// @param {Array.Real} _array An array of real values.
+	/// @param {Array<Real>} _array An array of real values.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	/// @see BBMOD_Shader.get_uniform
 	static set_uniform_matrix_array = function (_handle, _array) {
@@ -524,7 +524,7 @@ function bbmod_shader_set_global_f4(_name, _v1, _v2, _v3, _v4)
 /// @func bbmod_shader_set_global_f_array(_name, _fArray)
 /// @desc Sets a value of a global shader uniform of type float array.
 /// @param {String} _name The name of the uniform.
-/// @param {Array.Real} _fArray The new array of values.
+/// @param {Array<Real>} _fArray The new array of values.
 function bbmod_shader_set_global_f_array(_name, _fArray)
 {
 	gml_pragma("forceinline");
@@ -580,7 +580,7 @@ function bbmod_shader_set_global_i4(_name, _v1, _v2, _v3, _v4)
 /// @func bbmod_shader_set_global_i_array(_name, _iArray)
 /// @desc Sets a value of a global shader uniform of type int array.
 /// @param {String} _name The name of the uniform.
-/// @param {Array.Real} _iArray The new array of values.
+/// @param {Array<Real>} _iArray The new array of values.
 function bbmod_shader_set_global_i_array(_name, _iArray)
 {
 	gml_pragma("forceinline");
@@ -599,7 +599,7 @@ function bbmod_shader_set_global_matrix(_name)
 /// @func bbmod_shader_set_global_matrix_array(_name, _matrixArray)
 /// @desc Sets a value of a global shader uniform of type matrix array.
 /// @param {String} _name The name of the uniform.
-/// @param {Array.Real} _matrixArray The new array of values.
+/// @param {Array<Real>} _matrixArray The new array of values.
 function bbmod_shader_set_global_matrix_array(_name, _matrixArray)
 {
 	gml_pragma("forceinline");

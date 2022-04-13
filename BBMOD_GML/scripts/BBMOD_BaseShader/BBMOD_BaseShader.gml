@@ -43,7 +43,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_bones(_bones)
 	/// @desc Sets the `bbmod_Bones` uniform.
-	/// @param {Array.Real} _bones The array of bone transforms.
+	/// @param {Array<Real>} _bones The array of bone transforms.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	/// @see BBMOD_AnimationPlayer.get_transform
 	static set_bones = function (_bones) {
@@ -53,7 +53,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_batch_data(_data)
 	/// @desc Sets the `bbmod_BatchData` uniform.
-	/// @param {Array.Real} _data The dynamic batch data.
+	/// @param {Array<Real>} _data The dynamic batch data.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_batch_data = function (_data) {
 		gml_pragma("forceinline");

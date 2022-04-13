@@ -59,7 +59,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @func add(_model, _transform)
 	/// @desc Adds a model to the static batch.
 	/// @param {Struct.BBMOD_Model} _model The model.
-	/// @param {Array.Real} _transform A transformation matrix of the model.
+	/// @param {Array<Real>} _transform A transformation matrix of the model.
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	/// @example
 	/// ```gml

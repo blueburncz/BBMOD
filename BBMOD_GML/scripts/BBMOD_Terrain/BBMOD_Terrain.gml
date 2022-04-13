@@ -20,7 +20,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @readonly
 	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
 
-	/// @var {Array.(Struct.BBMOD_Material/Undefined)} Array of five material
+	/// @var {Array<Struct.BBMOD_Material/Undefined>} Array of five material
 	/// layers. Use `undefined` instead of a material to disable certain layer.
 	Layer = array_create(5, undefined);
 

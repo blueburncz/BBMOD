@@ -313,7 +313,7 @@ function BBMOD_Camera() constructor
 
 	/// @func get_view_mat()
 	/// @desc Retrieves camera's view matrix.
-	/// @return {Array.Real} The view matrix.
+	/// @return {Array<Real>} The view matrix.
 	static get_view_mat = function () {
 		gml_pragma("forceinline");
 
@@ -334,7 +334,7 @@ function BBMOD_Camera() constructor
 
 	/// @func get_proj_mat()
 	/// @desc Retrieves camera's projection matrix.
-	/// @return {Array.Real} The projection matrix.
+	/// @return {Array<Real>} The projection matrix.
 	static get_proj_mat = function () {
 		gml_pragma("forceinline");
 

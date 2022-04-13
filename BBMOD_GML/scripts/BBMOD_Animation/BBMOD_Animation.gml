@@ -68,15 +68,15 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @readonly
 	TicsPerSecond = 0;
 
-	/// @var {Array.Array.Real/Undefined}
+	/// @var {Array<Array<Real>>/Undefined}
 	/// @private
 	FramesParent = [];
 
-	/// @var {Array.Array.Real/Undefined}
+	/// @var {Array<Array<Real>>/Undefined}
 	/// @private
 	FramesWorld = [];
 
-	/// @var {Array.Array.Real/Undefined}
+	/// @var {Array<Array<Real>>/Undefined}
 	/// @private
 	FramesBone = [];
 

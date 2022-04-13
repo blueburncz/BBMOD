@@ -1,7 +1,7 @@
 /// @func WorldToScreen(_pos, _viewProjMat, _screenWidth, _screenHeight)
 /// @desc Computes screen-space position of a point in world-space.
 /// @param {Struct.BBMOD_Vec2} _pos The world-space position.
-/// @param {Array.Real} _viewProjMat A `view * projection` matrix.
+/// @param {Array<Real>} _viewProjMat A `view * projection` matrix.
 /// @param {Real} _screenWidth The width of the screen.
 /// @param {Real} _screenHeight The height of the screen.
 /// @return {Struct.BBMOD_Vec4/Undefined} The screen-space position or `undefined` if

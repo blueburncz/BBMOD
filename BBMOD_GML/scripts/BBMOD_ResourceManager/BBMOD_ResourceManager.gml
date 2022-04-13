@@ -46,7 +46,7 @@ function BBMOD_ResourceManager()
 		destroy: destroy,
 	};
 
-	/// @var {Id.DsMap} Mapping of `String`s to {@link BBMOD_Resource}s.
+	/// @var {Id.DsMap<String, Struct.BBMOD_Resource>}
 	/// @private
 	Resources = ds_map_create();
 
