@@ -90,21 +90,26 @@ renderer.add(
 	})
 	.add(global.terrain);
 
-particles = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, 64);
-particles.Sort = true;
-particles.Position.Set(room_width * 0.5 - 200, room_height * 0.5 - 200, 50);
-particles.OnUpdate = function (_particle, _deltaTime) {
+particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, 64);
+particleSystem.Sort = true;
+particleSystem.OnUpdate = function (_particle, _deltaTime) {
 	with (_particle)
 	{
 		if (!IsAlive)
 		{
 			IsAlive = true;
-			Position = new BBMOD_Vec3(
-				random_range(-1, 1),
-				random_range(-1, 1),
-				random_range(-1, 1)).Scale(30.0);
+			Position = Position.Add(
+				new BBMOD_Vec3(
+					random_range(-1, 1),
+					random_range(-1, 1),
+					random_range(-1, 1)).Scale(30.0));
 			Scale = new BBMOD_Vec3(random_range(1, 2)).Scale(30.0);
 		}
 	}
 };
-renderer.add(particles);
+
+particleEmitter = new BBMOD_ParticleEmitter(
+	new BBMOD_Vec3(room_width * 0.5 - 200, room_height * 0.5 - 200, 50),
+	particleSystem);
+
+renderer.add(particleEmitter);

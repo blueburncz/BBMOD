@@ -24,6 +24,7 @@
     {"id":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},"order":0,},
     {"id":{"name":"SndShell5","path":"sounds/SndShell5/SndShell5.yy",},"order":5,},
     {"id":{"name":"BBMOD_CameraHTML5","path":"extensions/BBMOD_CameraHTML5/BBMOD_CameraHTML5.yy",},"order":1,},
+    {"id":{"name":"BBMOD_ParticleEmitter","path":"scripts/BBMOD_ParticleEmitter/BBMOD_ParticleEmitter.yy",},"order":6,},
     {"id":{"name":"BBMOD_AnimationState","path":"scripts/BBMOD_AnimationState/BBMOD_AnimationState.yy",},"order":3,},
     {"id":{"name":"OPlayer","path":"objects/OPlayer/OPlayer.yy",},"order":1,},
     {"id":{"name":"SndFootstep4","path":"sounds/SndFootstep4/SndFootstep4.yy",},"order":4,},

@@ -1,2 +1,2 @@
 renderer.destroy();
-particles.destroy();
+particleSystem.destroy();
