@@ -92,21 +92,31 @@ renderer.add(
 
 particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, 64);
 particleSystem.Sort = true;
-particleSystem.OnUpdate = function (_particle, _deltaTime) {
-	with (_particle)
-	{
-		if (!IsAlive)
+
+function MyParticleModule()
+	: BBMOD_ParticleModule() constructor
+{
+	static update = function (_emitter, _deltaTime) {
+		for (var i = array_length(_emitter.Particles) - 1; i >= 0; --i)
 		{
-			IsAlive = true;
-			Position = Position.Add(
-				new BBMOD_Vec3(
-					random_range(-1, 1),
-					random_range(-1, 1),
-					random_range(-1, 1)).Scale(30.0));
-			Scale = new BBMOD_Vec3(random_range(1, 2)).Scale(30.0);
+			with (_emitter.Particles[i])
+			{
+				if (!IsAlive)
+				{
+					IsAlive = true;
+					Position = _emitter.Position.Add(
+						new BBMOD_Vec3(
+							random_range(-1, 1),
+							random_range(-1, 1),
+							random_range(-1, 1)).Scale(30.0));
+					Scale = new BBMOD_Vec3(random_range(1, 2)).Scale(30.0);
+				}
+			}
 		}
-	}
-};
+	};
+}
+
+particleSystem.add_module(new MyParticleModule());
 
 particleEmitter = new BBMOD_ParticleEmitter(
 	new BBMOD_Vec3(room_width * 0.5 - 200, room_height * 0.5 - 200, 50),

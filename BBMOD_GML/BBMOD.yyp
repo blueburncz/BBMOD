@@ -49,6 +49,7 @@
     {"id":{"name":"BBMOD_Vec2","path":"scripts/BBMOD_Vec2/BBMOD_Vec2.yy",},"order":2,},
     {"id":{"name":"SndGunshot0","path":"sounds/SndGunshot0/SndGunshot0.yy",},"order":0,},
     {"id":{"name":"OInit","path":"objects/OInit/OInit.yy",},"order":8,},
+    {"id":{"name":"BBMOD_ParticleModule","path":"scripts/BBMOD_ParticleModule/BBMOD_ParticleModule.yy",},"order":7,},
     {"id":{"name":"SndFootstep7","path":"sounds/SndFootstep7/SndFootstep7.yy",},"order":7,},
     {"id":{"name":"BBMOD_Light","path":"scripts/BBMOD_Light/BBMOD_Light.yy",},"order":0,},
     {"id":{"name":"BBMOD_DefaultMaterial","path":"scripts/BBMOD_DefaultMaterial/BBMOD_DefaultMaterial.yy",},"order":6,},
