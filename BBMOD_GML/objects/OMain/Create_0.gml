@@ -93,33 +93,153 @@ renderer.add(
 particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, 64);
 particleSystem.Sort = true;
 
-function MyParticleModule()
+/// @func BBMOD_EmissionModule([_interval])
+/// @extends BBMOD_ParticleModule
+/// @desc
+/// @param {Real} [_interval]
+function BBMOD_EmissionModule(_interval=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	static update = function (_emitter, _deltaTime) {
-		for (var i = array_length(_emitter.Particles) - 1; i >= 0; --i)
+	/// @var {Real}
+	Interval = _interval;
+
+	/// @var {Real]
+	/// @private
+	Timer = 0.0;
+
+	static on_update = function (_emitter, _deltaTime) {
+		Timer += _deltaTime * 0.000001;
+		if (Timer >= Interval)
 		{
-			with (_emitter.Particles[i])
-			{
-				if (!IsAlive)
-				{
-					IsAlive = true;
-					Position = _emitter.Position.Add(
-						new BBMOD_Vec3(
-							random_range(-1, 1),
-							random_range(-1, 1),
-							random_range(-1, 1)).Scale(30.0));
-					Scale = new BBMOD_Vec3(random_range(1, 2)).Scale(30.0);
-				}
-			}
+			_emitter.spawn_particle();
+			Timer = 0.0;
 		}
 	};
 }
 
-particleSystem.add_module(new MyParticleModule());
+/// @func BBMOD_RandomScaleModule([_min[, _max]])
+/// @extends BBMOD_ParticleModule
+/// @desc
+/// @param {Struct.BBMOD_Vec3/Undefined} [_min]
+/// @param {Struct.BBMOD_Vec3/Undefined} [_max]
+function BBMOD_RandomScaleModule(_min=undefined, _max=undefined)
+	: BBMOD_ParticleModule() constructor
+{
+	/// @var {Struct.BBMOD_Vec3}
+	Min = _min ?? new BBMOD_Vec3(1.0);
+
+	/// @var {Struct.BBMOD_Vec3}
+	Max = _max ?? Min;
+
+	static on_start_particle = function (_particle) {
+		_particle.Scale = Min.Lerp(Max, random(1.0));
+	};
+}
+
+function BBMOD_HealthOverTimeModule(_change=-1.0, _period=1.0)
+	: BBMOD_ParticleModule() constructor
+{
+	/// @var {Real}
+	Change = _change;
+
+	/// @var {Real}
+	Period = _period;
+
+	static on_update_particle = function (_particle, _deltaTime) {
+		_particle.HealthLeft += Change * ((_deltaTime * 0.000001) / Period);
+	};
+}
+
+/// @func BBMOD_ScaleByHealthModule([_from[, _to]])
+/// @extends BBMOD_ParticleModule
+/// @param {Struct.BBMOD_Vec3/Undefined} [_from]
+/// @param {Struct.BBMOD_Vec3/Undefined} [_to]
+function BBMOD_ScaleByHealthModule(_from=undefined, _to=undefined)
+	: BBMOD_ParticleModule() constructor
+{
+	/// @var {Struct.BBMOD_Vec3}
+	From = _from ?? new BBMOD_Vec3(1.0);
+
+	/// @var {Struct.BBMOD_Vec3}
+	To = _to ?? new BBMOD_Vec3();
+
+	static on_update_particle = function (_particle, _deltaTime) {
+		with (_particle)
+		{
+			Scale = other.To.Lerp(other.From, clamp(HealthLeft / Health, 0.0, 1.0));
+		}
+	};
+}
+
+/// @func BBMOD_RandomVelocityModule([_min[, _max]])
+/// @extends BBMOD_ParticleModule
+/// @desc
+/// @param {Struct.BBMOD_Vec3/Undefined} [_min]
+/// @param {Struct.BBMOD_Vec3/Undefined} [_max]
+function BBMOD_RandomVelocityModule(_min=undefined, _max=undefined)
+	: BBMOD_ParticleModule() constructor
+{
+	/// @var {Struct.BBMOD_Vec3}
+	Min = _min ?? BBMOD_VEC3_UP;
+
+	/// @var {Struct.BBMOD_Vec3}
+	Max = _max ?? Min;
+
+	static on_start_particle = function (_particle) {
+		_particle.Velocity = new BBMOD_Vec3(
+			lerp(Min.X, Max.X, random(1)),
+			lerp(Min.Y, Max.Y, random(1)),
+			lerp(Min.Z, Max.Z, random(1)));
+	};
+}
+
+/// @func BBMOD_RandomColorModule([_color1[, _color2]])
+/// @extends BBMOD_ParticleModule
+/// @desc
+/// @param {Struct.BBMOD_Color/Undefined} [_color1]
+/// @param {Struct.BBMOD_Color/Undefined} [_color2]
+function BBMOD_RandomColorModule(_color1=undefined, _color2=undefined)
+	: BBMOD_ParticleModule() constructor
+{
+	/// @var {Struct.BBMOD_Color}
+	Color1 = _color1 ?? BBMOD_C_WHITE;
+
+	/// @var {Struct.BBMOD_Color}
+	Color2 = _color2 ?? Color1;
+
+	static on_start_particle = function (_particle) {
+		_particle.Color = Color1.Mix(Color2, random(1.0));
+	};
+}
+
+/// @func BBMOD_PhysicsModule()
+/// @extends BBMOD_ParticleModule
+/// @desc
+function BBMOD_PhysicsModule()
+	: BBMOD_ParticleModule() constructor
+{
+	/// @func {Struct.BBMOD_Vec3}
+	Gravity = BBMOD_VEC3_UP.Scale(-9800);
+
+	static on_update_particle = function (_particle, _deltaTime) {
+		_deltaTime *= 0.000001;
+		with (_particle)
+		{
+			Velocity = Velocity.Add(other.Gravity.Scale(_deltaTime * _deltaTime));
+			Position = Position.Add(Velocity.Scale(_deltaTime));
+		}
+	};
+}
+
+particleSystem.add_module(new BBMOD_EmissionModule(1 / 64));
+particleSystem.add_module(new BBMOD_RandomVelocityModule(new BBMOD_Vec3(-10, -10, 50), new BBMOD_Vec3(10, 10, 150)));
+particleSystem.add_module(new BBMOD_RandomColorModule(BBMOD_C_FUCHSIA, BBMOD_C_AQUA));
+particleSystem.add_module(new BBMOD_HealthOverTimeModule(-1, 1));
+particleSystem.add_module(new BBMOD_ScaleByHealthModule(new BBMOD_Vec3(5)));
+particleSystem.add_module(new BBMOD_PhysicsModule());
 
 particleEmitter = new BBMOD_ParticleEmitter(
-	new BBMOD_Vec3(room_width * 0.5 - 200, room_height * 0.5 - 200, 50),
+	new BBMOD_Vec3(room_width * 0.5 - 200, room_height * 0.5 - 200, 10),
 	particleSystem);
 
 renderer.add(particleEmitter);

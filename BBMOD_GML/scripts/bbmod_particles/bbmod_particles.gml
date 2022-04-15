@@ -41,13 +41,20 @@ function __bbmod_material_particle()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE)
-		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
+		_material.Culling = cull_noculling;
+
+		//_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
+		//_material.BaseOpacity = sprite_get_texture(SprParticle, 0);
+		//_material.NormalSmoothness = sprite_get_texture(SprParticle, 1);
+		//_material.AlphaTest = 0.01;
+		//_material.AlphaBlend = true;
+		//_material.ZWrite = false;
+
 		_material.BaseOpacity = sprite_get_texture(SprParticle, 0);
-		_material.NormalSmoothness = sprite_get_texture(SprParticle, 1);
+		_material.BlendMode = bm_add;
 		_material.AlphaTest = 0.01;
 		_material.AlphaBlend = true;
 		_material.ZWrite = false;
-		_material.Culling = cull_noculling;
 	}
 	return _material;
 }

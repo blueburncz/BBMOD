@@ -16,14 +16,12 @@ precision highp float;
 // Varyings
 //
 varying vec3 v_vVertex;
-
-
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
-
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
+varying vec3 v_vColor;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -295,7 +293,7 @@ void main()
 	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 	lightDiffuse += lightColor; // * (1.0 - fresnel);
 	// Diffuse
-	gl_FragColor.rgb = material.Base * lightDiffuse;
+	gl_FragColor.rgb = v_vColor * material.Base;// * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Fog

@@ -7,16 +7,16 @@ function BBMOD_Particle(_id) constructor
 	/// @readonly
 	Id = _id;
 
+	/// @var {Bool} If `true` then the particle is alive. Default value
+	/// is `false`.
+	IsAlive = false;
+
 	/// @var {Real} The initial health of the particle. Default value is 1.
 	Health = 1.0;
 
 	/// @var {Real} The current health of the particle. The particle should
 	/// die when this reaches 0.
 	HealthLeft = Health;
-
-	/// @var {Bool} If `true` then the particle is alive. Default value
-	/// is `false`.
-	IsAlive = false;
 
 	/// @var {Struct.BBMOD_Vec3} The world-space position of the particle.
 	/// Default value is `0, 0, 0`.
@@ -36,6 +36,22 @@ function BBMOD_Particle(_id) constructor
 	/// @var {Struct.BBMOD_Color} The color of the particle. Default value is
 	/// {@link BBMOD_C_WHITE}.
 	Color = BBMOD_C_WHITE;
+
+	/// @func reset()
+	/// @desc
+	/// @return {Struct.BBMOD_Particle} Returns `self`.
+	static reset = function () {
+		gml_pragma("forceinline");
+		IsAlive = false;
+		Health = 1.0;
+		HealthLeft = Health;
+		Position = new BBMOD_Vec3();
+		Velocity = new BBMOD_Vec3();
+		Rotation = new BBMOD_Quaternion();
+		Scale = new BBMOD_Vec3(1.0);
+		Color = BBMOD_C_WHITE;
+		return self;
+	};
 
 	/// @func write_data(_array, _index)
 	/// @desc

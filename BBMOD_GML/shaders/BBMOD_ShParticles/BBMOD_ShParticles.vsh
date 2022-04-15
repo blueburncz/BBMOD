@@ -50,6 +50,7 @@ varying mat3 v_mTBN;
 varying float v_fDepth;
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
+varying vec3 v_vColor;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -102,7 +103,7 @@ void main()
 {
 	vec3 batchPosition = bbmod_BatchData[int(in_Id) * 3 + 0].xyz;
 	vec3 batchScale = bbmod_BatchData[int(in_Id) * 3 + 1].xyz;
-	vec3 batchColor = xDecodeRGBM(bbmod_BatchData[int(in_Id) * 3 + 2]);
+	v_vColor = xDecodeRGBM(bbmod_BatchData[int(in_Id) * 3 + 2]);
 
 	vec4 position = in_Position;
 	//position.x *= length(gm_Matrices[MATRIX_WORLD][0].xyz);
