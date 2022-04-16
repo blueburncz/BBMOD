@@ -1,11 +1,13 @@
-/// @func BBMOD_ParticleSystem(_model, _size)
+/// @func BBMOD_ParticleSystem(_model, _particleCount[, _batchSize])
+/// @extends BBMOD_Class
 /// @desc
 /// @param {Struct.BBMOD_Model} _model The particle model.
-/// @param {Real} _size Maximum number of particles alive in the system.
+/// @param {Real} _particleCount Maximum number of particles alive in the system.
+/// @param {Real} [_batchSize] Number of particles rendered in a single draw call.
 /// @see BBMOD_ParticleModule
 /// @see BBMOD_ParticleEmitter
 /// @see BBMOD_MODEL_PARTICLE
-function BBMOD_ParticleSystem(_model, _size)
+function BBMOD_ParticleSystem(_model, _particleCount, _batchSize=64)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -16,7 +18,7 @@ function BBMOD_ParticleSystem(_model, _size)
 
 	/// @var {Real} Maximum number of particles alive in the system.
 	/// @readonly
-	Size = _size;
+	ParticleCount = _particleCount;
 
 	/// @var {Bool} Use `true` to sort particles back to front. This should be
 	/// enabled if you would like to use alpha blending. Default value is `false`.
@@ -32,7 +34,7 @@ function BBMOD_ParticleSystem(_model, _size)
 
 	/// @var {Struct.BBMOD_DynamicBatch}
 	/// @private
-	DynamicBatch = new BBMOD_DynamicBatch(_model, _size);
+	DynamicBatch = new BBMOD_DynamicBatch(_model, _batchSize);
 
 	/// @var {Array<Struct.BBMOD_ParticleModule>} An array of modules
 	/// affecting individual particles in this system.

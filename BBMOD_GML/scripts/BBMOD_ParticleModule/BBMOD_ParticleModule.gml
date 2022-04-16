@@ -39,9 +39,9 @@ function BBMOD_ParticleModule() constructor
 	static on_particle_update = function (_particle, _deltaTime) {
 	};
 
-	/// @func on_particle_fiinish(_particle)
+	/// @func on_particle_finish(_particle)
 	/// @desc
 	/// @param {Struct.BBMOD_Particle} _particle
-	static on_particle_fiinish = function (_particle) {
+	static on_particle_finish = function (_particle) {
 	};
 }

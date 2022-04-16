@@ -17,7 +17,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	/// @var {Array<Struct.BBMOD_Particle>} An array of all particles within the
 	/// system.
 	/// @readonly
-	Particles = array_create(System.Size, undefined);
+	Particles = array_create(System.ParticleCount, undefined);
 
 	/// @var {Array<Struct.BBMOD_Particle>} Particles to be spawned.
 	/// @private
@@ -29,19 +29,15 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 	/// @var {Array<Struct.BBMOD_Particle>} Dead particles that can be spawned.
 	/// @private
-	ParticlesDead = array_create(System.Size, undefined);
+	ParticlesDead = array_create(System.ParticleCount, undefined);
 
-	for (var i = 0; i < System.Size; ++i)
+	for (var i = 0; i < System.ParticleCount; ++i)
 	{
 		var _particle = new BBMOD_Particle(i);
 		Position.Copy(_particle.Position);
 		Particles[i] = _particle;
 		ParticlesDead[i] = _particle;
 	}
-
-	/// @var {Array<Real>} Data for dynamic batching.
-	/// @private
-	Data = array_create(3 * 4 * System.Size, 0);
 
 	/// @var {Real}
 	/// @private
@@ -72,10 +68,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			return self;
 		}
 
-		static _doSort = 0;
-
 		var _modules = System.Modules;
-		var _particles = Particles;
 		var _particlesToSpawn = ParticlesToSpawn;
 		var _particlesAlive = ParticlesAlive;
 		var _particlesToKill = [];
@@ -165,16 +158,17 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 				var _module = _modules[m++];
 				if (_module.Enabled)
 				{
-					_module.on_particle_fiinish(_particle);
+					_module.on_particle_finish(_particle);
 				}
 			}
 		}
 
-		// Sort particles
+		// Sort particles alive back-to-front by their dostance from the camera
+		static _doSort = 0;
+
 		if (System.Sort && (_doSort == 0))
 		{
-			// Sort particles back-to-front by their dostance from the camera
-			array_sort(_particles, method(self, function (_p1, _p2) {
+			array_sort(_particlesAlive, method(self, function (_p1, _p2) {
 				var _camPos = global.__bbmodCameraPosition;
 				var _d1 = point_distance_3d(
 					_p1.Position.X,
@@ -200,14 +194,6 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		// TODO: Configure particle sorting frequency
 		if (++_doSort >= 4) _doSort = 0;
-
-		// Write particle data
-		var p = 0;
-		repeat (array_length(_particles))
-		{
-			_particles[p].write_data(Data, p * 12);
-			++p;
-		}
 
 		return self;
 	};
@@ -242,9 +228,29 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static submit = function (_material=undefined) {
 		gml_pragma("forceinline");
-		matrix_set(matrix_world, matrix_build_identity());
+
 		var _dynamicBatch = System.DynamicBatch;
-		_dynamicBatch.submit(_material ?? _dynamicBatch.Model.Materials[0], Data);
+		var _batchSize = _dynamicBatch.Size;
+		_material ??= _dynamicBatch.Model.Materials[0];
+
+		matrix_set(matrix_world, matrix_build_identity());
+
+		var _particlesAlive = ParticlesAlive;
+		var _particleCount = array_length(_particlesAlive);
+		var p = 0;
+		repeat (ceil(_particleCount / _batchSize))
+		{
+			var _data = array_create(3 * 4 * _batchSize, 0);
+			var d = 0;
+			repeat (min(_particleCount, _batchSize))
+			{
+				_particlesAlive[p++].write_data(_data, d * 12);
+				++d;
+			}
+			_particleCount -= _batchSize;
+			_dynamicBatch.submit(_material, _data);
+		}
+
 		return self;
 	};
 
@@ -254,9 +260,29 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static render = function (_material=undefined) {
 		gml_pragma("forceinline");
-		matrix_set(matrix_world, matrix_build_identity());
+
 		var _dynamicBatch = System.DynamicBatch;
-		_dynamicBatch.render(_material ?? _dynamicBatch.Model.Materials[0], Data);
+		var _batchSize = _dynamicBatch.Size;
+		_material ??= _dynamicBatch.Model.Materials[0];
+
+		matrix_set(matrix_world, matrix_build_identity());
+
+		var _particlesAlive = ParticlesAlive;
+		var _particleCount = array_length(_particlesAlive);
+		var p = 0;
+		repeat (ceil(_particleCount / _batchSize))
+		{
+			var _data = array_create(3 * 4 * _batchSize, 0);
+			var d = 0;
+			repeat (min(_particleCount, _batchSize))
+			{
+				_particlesAlive[p++].write_data(_data, d * 12);
+				++d;
+			}
+			_particleCount -= _batchSize;
+			_dynamicBatch.render(_material, _data);
+		}
+
 		return self;
 	};
 }

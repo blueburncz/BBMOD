@@ -1,12 +1,16 @@
-/// @func BBMOD_EmissionModule([_interval])
+/// @func BBMOD_EmissionModule([_interval[, _count]])
 /// @extends BBMOD_ParticleModule
 /// @desc
 /// @param {Real} [_interval]
-function BBMOD_EmissionModule(_interval=1.0)
+/// @param {Real} [_count]
+function BBMOD_EmissionModule(_interval=1.0, _count=1)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Real}
 	Interval = _interval;
+
+	/// @var {Real}
+	Count = _count;
 
 	/// @var {Real]
 	/// @private
@@ -16,7 +20,10 @@ function BBMOD_EmissionModule(_interval=1.0)
 		Timer += _deltaTime * 0.000001;
 		if (Timer >= Interval)
 		{
-			_emitter.spawn_particle();
+			repeat (Count)
+			{
+				_emitter.spawn_particle();
+			}
 			Timer = 0.0;
 		}
 	};
