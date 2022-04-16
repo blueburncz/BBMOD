@@ -5,7 +5,7 @@
     "path": "folders/BBMOD/Particles.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_ShParticlesDepth",
+  "name": "BBMOD_ShParticleLit",
   "tags": [],
   "resourceType": "GMShader",
 }

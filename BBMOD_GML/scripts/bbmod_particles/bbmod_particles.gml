@@ -2,11 +2,11 @@
 
 #macro BBMOD_VFORMAT_PARTICLE_BATCHED __bbmod_vformat_particle_batched()
 
-#macro BBMOD_SHADER_PARTICLE __bbmod_shader_particle()
+#macro BBMOD_SHADER_PARTICLE_LIT __bbmod_shader_particle_lit()
 
 #macro BBMOD_SHADER_PARTICLE_DEPTH __bbmod_shader_particle_depth()
 
-#macro BBMOD_MATERIAL_PARTICLE __bbmod_material_particle()
+#macro BBMOD_MATERIAL_PARTICLE_LIT __bbmod_material_particle_lit()
 
 /// @var {Struct.BBMOD_Model} A particle model.
 #macro BBMOD_MODEL_PARTICLE __bbmod_model_particle()
@@ -23,24 +23,24 @@ function __bbmod_vformat_particle_batched()
 	return _vformat;
 }
 
-function __bbmod_shader_particle()
+function __bbmod_shader_particle_lit()
 {
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticles, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
 function __bbmod_shader_particle_depth()
 {
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticlesDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticleDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
-function __bbmod_material_particle()
+function __bbmod_material_particle_lit()
 {
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE)
+		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE_LIT)
 		_material.Culling = cull_noculling;
 
 		//_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
@@ -95,7 +95,7 @@ function __bbmod_model_particle()
 		_model.RootNode = _node;
 		_model.MaterialCount = 1;
 		_model.MaterialNames = ["Material"];
-		_model.Materials = [BBMOD_MATERIAL_PARTICLE];
+		_model.Materials = [BBMOD_MATERIAL_PARTICLE_LIT];
 	}
 	return _model;
 }

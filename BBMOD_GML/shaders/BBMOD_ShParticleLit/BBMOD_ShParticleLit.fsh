@@ -21,7 +21,7 @@ varying mat3 v_mTBN;
 varying float v_fDepth;
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
-varying mat4 v_mView;
+varying vec3 v_vColor;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -265,18 +265,19 @@ void main()
 	// Ambient light
 	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
 	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	lightDiffuse += mix(ambientDown, ambientUp, dot(N, (v_mView * vec4(0.0, 0.0, -1.0, 0.0)).xyz) * 0.5 + 0.5);
+	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
+		// TODO: Add per-material shadowmap bias!
+		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z - 0.00002);
 	}
 	// Directional light
-	vec3 L = normalize((v_mView * vec4(-bbmod_LightDirectionalDir.xyz, 0.0)).xyz);
+	vec3 L = normalize(-bbmod_LightDirectionalDir);
 	float NdotL = max(dot(N, L), 0.0);
 	float specularPower = exp2(1.0 + (material.Smoothness * 10.0));
-	vec3 V = normalize((v_mView * vec4(bbmod_CamPos.xyz, 1.0)).xyz - v_vVertex);
+	vec3 V = normalize(bbmod_CamPos - v_vVertex);
 	vec3 f0 = material.Specular;
 	vec3 H = normalize(L + V);
 	float NdotH = max(dot(N, H), 0.0);
@@ -292,7 +293,7 @@ void main()
 	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
 	lightDiffuse += lightColor; // * (1.0 - fresnel);
 	// Diffuse
-	gl_FragColor.rgb = material.Base * lightDiffuse;
+	gl_FragColor.rgb = v_vColor * material.Base;// * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Fog
@@ -304,6 +305,5 @@ void main()
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 	// Gamma correction
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-	//gl_FragColor.rgb = N * 0.5 + 0.5;
 }
 // include("Uber_PS.xsh")
