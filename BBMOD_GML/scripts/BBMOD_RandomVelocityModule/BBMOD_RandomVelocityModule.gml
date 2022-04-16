@@ -12,7 +12,7 @@ function BBMOD_RandomVelocityModule(_min=undefined, _max=undefined)
 	/// @var {Struct.BBMOD_Vec3}
 	Max = _max ?? Min;
 
-	static on_start_particle = function (_particle) {
+	static on_particle_start = function (_particle) {
 		_particle.Velocity = new BBMOD_Vec3(
 			lerp(Min.X, Max.X, random(1)),
 			lerp(Min.Y, Max.Y, random(1)),

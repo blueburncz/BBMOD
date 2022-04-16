@@ -12,7 +12,7 @@ function BBMOD_RandomColorModule(_color1=undefined, _color2=undefined)
 	/// @var {Struct.BBMOD_Color}
 	Color2 = _color2 ?? Color1;
 
-	static on_start_particle = function (_particle) {
+	static on_particle_start = function (_particle) {
 		_particle.Color = Color1.Mix(Color2, random(1.0));
 	};
 }

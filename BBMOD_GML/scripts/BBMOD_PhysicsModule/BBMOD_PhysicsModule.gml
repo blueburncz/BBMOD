@@ -8,7 +8,7 @@ function BBMOD_PhysicsModule(_gravity=undefined)
 	/// @var {Struct.BBMOD_Vec3}
 	Gravity = _gravity ?? new BBMOD_Vec3(0.0);
 
-	static on_update_particle = function (_particle, _deltaTime) {
+	static on_particle_update = function (_particle, _deltaTime) {
 		_deltaTime *= 0.000001;
 		with (_particle)
 		{

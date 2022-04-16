@@ -12,7 +12,7 @@ function BBMOD_ScaleByHealthModule(_from=undefined, _to=undefined)
 	/// @var {Struct.BBMOD_Vec3}
 	To = _to ?? new BBMOD_Vec3();
 
-	static on_update_particle = function (_particle, _deltaTime) {
+	static on_particle_update = function (_particle, _deltaTime) {
 		with (_particle)
 		{
 			Scale = other.To.Lerp(other.From, clamp(HealthLeft / Health, 0.0, 1.0));

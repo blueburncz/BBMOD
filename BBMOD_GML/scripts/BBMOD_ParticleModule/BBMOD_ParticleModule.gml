@@ -13,24 +13,11 @@ function BBMOD_ParticleModule() constructor
 	static on_start = function (_emitter) {
 	};
 
-	/// @func on_start_particle(_particle)
-	/// @desc
-	/// @param {Struct.BBMOD_Particle} _particle
-	static on_start_particle = function (_particle) {
-	};
-
 	/// @func on_update(_emitter, _deltaTime)
 	/// @desc
 	/// @param {Struct.BBMOD_ParticleEmitter} _emitter
 	/// @param {Real} _deltaTime
 	static on_update = function (_emitter, _deltaTime) {
-	};
-
-	/// @func on_update_particle(_particle, _deltaTime)
-	/// @desc
-	/// @param {Struct.BBMOD_Particle} _particle
-	/// @param {Real} _deltaTime
-	static on_update_particle = function (_particle, _deltaTime) {
 	};
 
 	/// @func on_finish(_emitter)
@@ -39,9 +26,22 @@ function BBMOD_ParticleModule() constructor
 	static on_finish = function (_emitter) {
 	};
 
-	/// @func on_finish_particle(_particle)
+	/// @func on_particle_start(_particle)
 	/// @desc
 	/// @param {Struct.BBMOD_Particle} _particle
-	static on_finish_particle = function (_particle) {
+	static on_particle_start = function (_particle) {
+	};
+
+	/// @func on_particle_update(_particle, _deltaTime)
+	/// @desc
+	/// @param {Struct.BBMOD_Particle} _particle
+	/// @param {Real} _deltaTime
+	static on_particle_update = function (_particle, _deltaTime) {
+	};
+
+	/// @func on_particle_fiinish(_particle)
+	/// @desc
+	/// @param {Struct.BBMOD_Particle} _particle
+	static on_particle_fiinish = function (_particle) {
 	};
 }

@@ -12,7 +12,7 @@ function BBMOD_RandomScaleModule(_min=undefined, _max=undefined)
 	/// @var {Struct.BBMOD_Vec3}
 	Max = _max ?? Min;
 
-	static on_start_particle = function (_particle) {
+	static on_particle_start = function (_particle) {
 		_particle.Scale = Min.Lerp(Max, random(1.0));
 	};
 }

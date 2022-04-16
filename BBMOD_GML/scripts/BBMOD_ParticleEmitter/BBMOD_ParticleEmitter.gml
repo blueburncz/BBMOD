@@ -105,7 +105,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 				var _module = _modules[m++];
 				if (_module.Enabled)
 				{
-					_module.on_start_particle(_particle);
+					_module.on_particle_start(_particle);
 				}
 			}
 		}
@@ -139,7 +139,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 					}
 					else
 					{
-						_module.on_update_particle(_particle, _deltaTime);
+						_module.on_particle_update(_particle, _deltaTime);
 					}
 					++p;
 				}
@@ -165,7 +165,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 				var _module = _modules[m++];
 				if (_module.Enabled)
 				{
-					_module.on_finish_particle(_particle);
+					_module.on_particle_fiinish(_particle);
 				}
 			}
 		}
