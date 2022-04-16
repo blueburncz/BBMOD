@@ -103,7 +103,7 @@ void main()
 {
 	vec3 batchPosition = bbmod_BatchData[int(in_Id) * 3 + 0].xyz;
 	vec3 batchScale = bbmod_BatchData[int(in_Id) * 3 + 1].xyz;
-	v_vColor = xDecodeRGBM(bbmod_BatchData[int(in_Id) * 3 + 2]);
+	v_vColor = xGammaToLinear(xDecodeRGBM(bbmod_BatchData[int(in_Id) * 3 + 2]));
 
 	vec4 position = in_Position;
 	//position.x *= length(gm_Matrices[MATRIX_WORLD][0].xyz);

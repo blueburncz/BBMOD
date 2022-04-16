@@ -133,13 +133,13 @@ vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
 /// @param normal Variable to hold the transformed normal.
-void Transform(out vec4 vertex, out vec4 normal)
+void Transform(out vec4 vertex, out vec3 normal)
 {
 	vertex = in_Position;
 #if defined(X_2D)
-	normal = vec4(0.0, 0.0, 1.0, 0.0);
+	normal = vec3(0.0, 0.0, 1.0);
 #else
-	normal = vec4(in_Normal, 0.0);
+	normal = vec3(in_Normal);
 #endif
 
 #if defined(X_ANIMATED)
@@ -180,7 +180,7 @@ void Transform(out vec4 vertex, out vec4 normal)
 	blendDual /= len;
 
 	vertex = vec4(DualQuaternionTransform(blendReal, blendDual, vertex.xyz), 1.0);
-	normal = vec4(QuaternionRotate(blendReal, normal.xyz), 0.0);
+	normal = QuaternionRotate(blendReal, normal);
 #endif
 
 #if defined(X_BATCHED)
@@ -189,9 +189,32 @@ void Transform(out vec4 vertex, out vec4 normal)
 	vec4 rot = bbmod_BatchData[idx + 1];
 
 	vertex = vec4(posScale.xyz + (QuaternionRotate(rot, vertex.xyz) * posScale.w), 1.0);
-	normal = vec4(QuaternionRotate(rot, normal.xyz), 0.0);
+	normal = QuaternionRotate(rot, normal);
 #endif
 }
+
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
+void DoPointLights(
+	vec4 lights[2 * MAX_POINT_LIGHTS],
+	vec3 vertex,
+	vec3 N,
+	out vec3 diffuse,
+	out vec3 specular)
+{
+	diffuse = vec3(0.0);
+	specular = vec3(0.0);
+
+	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	{
+		vec4 positionRange = lights[i * 2];
+		vec3 L = positionRange.xyz - vertex;
+		float dist = length(L);
+		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
+		float NdotL = max(dot(N, normalize(L)), 0.0);
+		diffuse += xGammaToLinear(xDecodeRGBM(lights[(i * 2) + 1])) * NdotL * att;
+	}
+}
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -199,11 +222,14 @@ void Transform(out vec4 vertex, out vec4 normal)
 //
 void main()
 {
-	vec4 position, normal;
+	vec4 position;
+	vec3 normal;
 	Transform(position, normal);
 
-	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
-	v_fDepth = (gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position).z;
+	vec4 positionWVP = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
+
+	gl_Position = positionWVP;
+	v_fDepth = positionWVP.z;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 #if defined(X_2D)
 	v_vColor = in_Color;
@@ -211,43 +237,32 @@ void main()
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 #if defined(X_2D)
-	vec4 tangent = vec4(1.0, 0.0, 0.0, 0.0);
-	vec4 bitangent = vec4(0.0, 1.0, 0.0, 0.0);
+	vec3 tangent = vec3(1.0, 0.0, 0.0);
+	vec3 bitangent = vec3(0.0, 1.0, 0.0);
 #else
-	vec4 tangent = vec4(in_TangentW.xyz, 0.0);
-	vec4 bitangent = vec4(cross(in_Normal, in_TangentW.xyz) * in_TangentW.w, 0.0);
+	vec3 tangent = in_TangentW.xyz;
+	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
 #endif
-	vec3 N = (gm_Matrices[MATRIX_WORLD] * normal).xyz;
-	vec3 T = (gm_Matrices[MATRIX_WORLD] * tangent).xyz;
-	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
-	v_mTBN = mat3(T, B, N);
+	v_mTBN = mat3(gm_Matrices[MATRIX_WORLD]) * mat3(tangent, bitangent, normal);
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
-	// Splatmap coords
 	#if defined(X_TERRAIN)
 	v_vSplatmapCoord = in_TextureCoord0;
 	#endif
 
 	////////////////////////////////////////////////////////////////////////////
 	// Point lights
-	N = normalize(N);
-	v_vLight = vec3(0.0);
+	vec3 N = normalize(v_mTBN * vec3(0.0, 0.0, 1.0));
+	vec3 specular;
 
-	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
-	{
-		Vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec3 L = positionRange.xyz - v_vVertex;
-		float dist = length(L);
-		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
-		float NdotL = max(dot(N, normalize(L)), 0.0);
-		v_vLight += xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
-	}
+	DoPointLights(bbmod_LightPointData, v_vVertex, N, v_vLight, specular);
 
 	////////////////////////////////////////////////////////////////////////////
 	// Vertex position in shadowmap
 	if (bbmod_ShadowmapEnableVS == 1.0)
 	{
-		v_vPosShadowmap = (bbmod_ShadowmapMatrix * vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
+		v_vPosShadowmap = (bbmod_ShadowmapMatrix
+			* vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
 		v_vPosShadowmap.xy = v_vPosShadowmap.xy * 0.5 + 0.5;
 	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
 		v_vPosShadowmap.y = 1.0 - v_vPosShadowmap.y;

@@ -1,9 +1,10 @@
 /// @func BBMOD_ParticleSystem(_model, _particleCount[, _batchSize])
 /// @extends BBMOD_Class
-/// @desc
+/// @desc 
 /// @param {Struct.BBMOD_Model} _model The particle model.
 /// @param {Real} _particleCount Maximum number of particles alive in the system.
 /// @param {Real} [_batchSize] Number of particles rendered in a single draw call.
+/// Default value is 64.
 /// @see BBMOD_ParticleModule
 /// @see BBMOD_ParticleEmitter
 /// @see BBMOD_MODEL_PARTICLE
@@ -34,7 +35,7 @@ function BBMOD_ParticleSystem(_model, _particleCount, _batchSize=64)
 
 	/// @var {Struct.BBMOD_DynamicBatch}
 	/// @private
-	DynamicBatch = new BBMOD_DynamicBatch(_model, _batchSize);
+	DynamicBatch = new BBMOD_DynamicBatch(_model, _batchSize).freeze();
 
 	/// @var {Array<Struct.BBMOD_ParticleModule>} An array of modules
 	/// affecting individual particles in this system.
@@ -42,8 +43,8 @@ function BBMOD_ParticleSystem(_model, _particleCount, _batchSize=64)
 	Modules = [];
 
 	/// @func add_module(_module)
-	/// @desc
-	/// @param {Struct.BBMOD_ParticleModule} _module
+	/// @desc Adds a module to the particle system.
+	/// @param {Struct.BBMOD_ParticleModule} _module The module to add.
 	/// @return {Struct.BBMOD_ParticleSystem} Returns `self`.
 	/// @see BBMOD_ParticleModule
 	static add_module = function (_module) {
