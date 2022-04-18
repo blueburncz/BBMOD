@@ -196,40 +196,26 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 #pragma include("SpecularMaterial.xsh", "glsl")
 #endif
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Main
-//
-void main()
-{
 #if defined(X_OUTPUT_DEPTH)
-	vec4 baseOpacity = texture2D(bbmod_BaseOpacity, v_vTexCoord);
-#if defined(X_2D) || defined(X_PARTICLES)
-	baseOpacity.a *= v_vColor.a;
-#endif
-	if (baseOpacity.a < bbmod_AlphaTest)
-	{
-		discard;
-	}
-	gl_FragColor.rgb = xEncodeDepth(v_fDepth / bbmod_ZFar);
+void DepthShader(float depth)
+{
+	gl_FragColor.rgb = xEncodeDepth(depth / bbmod_ZFar);
 	gl_FragColor.a = 1.0;
-#else // X_OUTPUT_DEPTH
+}
+#else // X_OUTPUT_PDETH
+void Exposure()
+{
+	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+}
+
+void GammaCorrect()
+{
+	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+}
+
 #if defined(X_PBR)
-	Material material = UnpackMaterial(
-		bbmod_BaseOpacity,
-		bbmod_NormalRoughness,
-		bbmod_MetallicAO,
-		bbmod_Subsurface,
-		bbmod_Emissive,
-		v_mTBN,
-		v_vTexCoord);
-
-	if (material.Opacity < bbmod_AlphaTest)
-	{
-		discard;
-	}
-	gl_FragColor.a = material.Opacity;
-
+void PBRShader(Material material)
+{
 	vec3 N = material.Normal;
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);
 	vec3 lightColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
@@ -244,39 +230,35 @@ void main()
 	gl_FragColor.rgb += material.Emissive;
 	// Subsurface scattering
 	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
-#else // X_PBR
-	Material material = UnpackMaterial(
-		bbmod_BaseOpacity,
-		bbmod_NormalSmoothness,
-		bbmod_SpecularColor,
-		v_mTBN,
-		v_vTexCoord);
-
-#if defined(X_2D) || defined(X_PARTICLES)
-	material.Base *= v_vColor.rgb;
-	material.Opacity *= v_vColor.a;
-#endif
-
-#if defined(X_TERRAIN)
-	// Splatmap
-	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
-	if (bbmod_SplatmapIndex >= 0)
-	{
-		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
-		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
-			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
-			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
-			: splatmap.a)));
-	}
-#endif
-
-	if (material.Opacity < bbmod_AlphaTest)
-	{
-		discard;
-	}
+	// Opacity
 	gl_FragColor.a = material.Opacity;
 
-#if !defined(X_UNLIT)
+	Exposure();
+	GammaCorrect();
+}
+#else // X_PBR
+void Fog(float depth)
+{
+	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
+		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
+	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
+}
+
+void UnlitShader(Material material, float depth)
+{
+	gl_FragColor.rgb = material.Base;
+	gl_FragColor.a = material.Opacity;
+	Fog(depth);
+	Exposure();
+	GammaCorrect();
+}
+
+void DefaultShader(Material material, float depth)
+{
 	vec3 N = material.Normal;
 #if defined(X_2D)
 	vec3 lightDiffuse = vec3(0.0);
@@ -323,23 +305,75 @@ void main()
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
-#else // !X_UNLIT
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
-
-	// Diffuse
-	gl_FragColor.rgb = material.Base;
-#endif // X_UNLIT
+	// Opacity
+	gl_FragColor.a = material.Opacity;
 	// Fog
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
-		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
-	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
+	Fog(depth);
+
+	Exposure();
+	GammaCorrect();
+}
 #endif // !X_PBR
-	// Exposure
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
-	// Gamma correction
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+#endif // !X_OUTPUT_DEPTH
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Main
+//
+void main()
+{
+#if defined(X_PBR)
+	Material material = UnpackMaterial(
+		bbmod_BaseOpacity,
+		bbmod_NormalRoughness,
+		bbmod_MetallicAO,
+		bbmod_Subsurface,
+		bbmod_Emissive,
+		v_mTBN,
+		v_vTexCoord);
+#else
+	Material material = UnpackMaterial(
+		bbmod_BaseOpacity,
+		bbmod_NormalSmoothness,
+		bbmod_SpecularColor,
+		v_mTBN,
+		v_vTexCoord);
+#endif
+
+#if defined(X_2D) || defined(X_PARTICLES)
+	material.Base *= v_vColor.rgb;
+	material.Opacity *= v_vColor.a;
+#endif
+
+#if defined(X_TERRAIN)
+	// Splatmap
+	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
+	if (bbmod_SplatmapIndex >= 0)
+	{
+		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
+		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
+			: splatmap.a)));
+	}
+#endif
+
+	if (material.Opacity < bbmod_AlphaTest)
+	{
+		discard;
+	}
+
+#if defined(X_OUTPUT_DEPTH)
+	DepthShader(v_fDepth);
+#else // X_OUTPUT_DEPTH
+#if defined(X_PBR)
+	PBRShader(material);
+#else // X_PBR
+#if defined(X_UNLIT)
+	UnlitShader(material, v_fDepth);
+#else // X_UNLIT
+	DefaultShader(material, v_fDepth);
+#endif // !X_UNLIT
+#endif // !X_PBR
 #endif // !X_OUTPUT_DEPTH
 }

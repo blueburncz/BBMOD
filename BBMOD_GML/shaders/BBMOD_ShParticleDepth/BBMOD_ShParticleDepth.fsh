@@ -267,19 +267,34 @@ Material UnpackMaterial(
 	return m;
 }
 
+void DepthShader(float depth)
+{
+	gl_FragColor.rgb = xEncodeDepth(depth / bbmod_ZFar);
+	gl_FragColor.a = 1.0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
 //
 void main()
 {
-	vec4 baseOpacity = texture2D(bbmod_BaseOpacity, v_vTexCoord);
-	baseOpacity.a *= v_vColor.a;
-	if (baseOpacity.a < bbmod_AlphaTest)
+	Material material = UnpackMaterial(
+		bbmod_BaseOpacity,
+		bbmod_NormalSmoothness,
+		bbmod_SpecularColor,
+		v_mTBN,
+		v_vTexCoord);
+
+	material.Base *= v_vColor.rgb;
+	material.Opacity *= v_vColor.a;
+
+
+	if (material.Opacity < bbmod_AlphaTest)
 	{
 		discard;
 	}
-	gl_FragColor.rgb = xEncodeDepth(v_fDepth / bbmod_ZFar);
-	gl_FragColor.a = 1.0;
+
+	DepthShader(v_fDepth);
 }
 // include("Uber_PS.xsh")

@@ -310,29 +310,38 @@ Material UnpackMaterial(
 	return m;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Main
-//
-void main()
+void Exposure()
 {
-	Material material = UnpackMaterial(
-		bbmod_BaseOpacity,
-		bbmod_NormalSmoothness,
-		bbmod_SpecularColor,
-		v_mTBN,
-		v_vTexCoord);
+	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+}
 
-	material.Base *= v_vColor.rgb;
-	material.Opacity *= v_vColor.a;
+void GammaCorrect()
+{
+	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+}
 
+void Fog(float depth)
+{
+	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
+		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
+	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
+}
 
-	if (material.Opacity < bbmod_AlphaTest)
-	{
-		discard;
-	}
+void UnlitShader(Material material, float depth)
+{
+	gl_FragColor.rgb = material.Base;
 	gl_FragColor.a = material.Opacity;
+	Fog(depth);
+	Exposure();
+	GammaCorrect();
+}
 
+void DefaultShader(Material material, float depth)
+{
 	vec3 N = material.Normal;
 	vec3 lightDiffuse = v_vLight;
 	vec3 lightSpecular = vec3(0.0);
@@ -359,14 +368,37 @@ void main()
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
+	// Opacity
+	gl_FragColor.a = material.Opacity;
 	// Fog
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
-		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
-	float fogStrength = clamp((v_fDepth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-	// Exposure
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
-	// Gamma correction
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	Fog(depth);
+
+	Exposure();
+	GammaCorrect();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Main
+//
+void main()
+{
+	Material material = UnpackMaterial(
+		bbmod_BaseOpacity,
+		bbmod_NormalSmoothness,
+		bbmod_SpecularColor,
+		v_mTBN,
+		v_vTexCoord);
+
+	material.Base *= v_vColor.rgb;
+	material.Opacity *= v_vColor.a;
+
+
+	if (material.Opacity < bbmod_AlphaTest)
+	{
+		discard;
+	}
+
+	DefaultShader(material, v_fDepth);
 }
 // include("Uber_PS.xsh")

@@ -493,6 +493,39 @@ Material UnpackMaterial(
 	return m;
 }
 
+void Exposure()
+{
+	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+}
+
+void GammaCorrect()
+{
+	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+}
+
+void PBRShader(Material material)
+{
+	vec3 N = material.Normal;
+	vec3 V = normalize(bbmod_CamPos - v_vVertex);
+	vec3 lightColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
+
+	// Diffuse
+	gl_FragColor.rgb = material.Base * lightColor;
+	// Specular
+	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
+	// Ambient occlusion
+	gl_FragColor.rgb *= material.AO;
+	// Emissive
+	gl_FragColor.rgb += material.Emissive;
+	// Subsurface scattering
+	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
+	// Opacity
+	gl_FragColor.a = material.Opacity;
+
+	Exposure();
+	GammaCorrect();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
@@ -508,29 +541,13 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
+
+
 	if (material.Opacity < bbmod_AlphaTest)
 	{
 		discard;
 	}
-	gl_FragColor.a = material.Opacity;
 
-	vec3 N = material.Normal;
-	vec3 V = normalize(bbmod_CamPos - v_vVertex);
-	vec3 lightColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
-
-	// Diffuse
-	gl_FragColor.rgb = material.Base * lightColor;
-	// Specular
-	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
-	// Ambient occlusion
-	gl_FragColor.rgb *= material.AO;
-	// Emissive
-	gl_FragColor.rgb += material.Emissive;
-	// Subsurface scattering
-	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
-	// Exposure
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
-	// Gamma correction
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	PBRShader(material);
 }
 // include("Uber_PS.xsh")
