@@ -1,14 +1,15 @@
-/// @func BBMOD_ParticleSystem(_model, _particleCount[, _batchSize])
+/// @func BBMOD_ParticleSystem(_model, _material, _particleCount[, _batchSize])
 /// @extends BBMOD_Class
 /// @desc 
 /// @param {Struct.BBMOD_Model} _model The particle model.
+/// @param {Struct.BBMOD_Material} _material The material used by the particle system.
 /// @param {Real} _particleCount Maximum number of particles alive in the system.
 /// @param {Real} [_batchSize] Number of particles rendered in a single draw call.
 /// Default value is 64.
 /// @see BBMOD_ParticleModule
 /// @see BBMOD_ParticleEmitter
 /// @see BBMOD_MODEL_PARTICLE
-function BBMOD_ParticleSystem(_model, _particleCount, _batchSize=64)
+function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=64)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -16,6 +17,9 @@ function BBMOD_ParticleSystem(_model, _particleCount, _batchSize=64)
 	static Super_Class = {
 		destroy: destroy,
 	};
+
+	/// @var {Struct.BBMOD_Material} _material The material used by the particle system.
+	Material = _material;
 
 	/// @var {Real} Maximum number of particles alive in the system.
 	/// @readonly

@@ -24,4 +24,5 @@ Xpanda .\shaders\BBMOD_ShSprite --x .\Xshaders\ X_2D=1
 
 # Particle shaders
 Xpanda .\shaders\BBMOD_ShParticleLit --x .\Xshaders\ X_PARTICLES=1
+Xpanda .\shaders\BBMOD_ShParticleUnlit --x .\Xshaders\ X_PARTICLES=1 X_UNLIT=1
 Xpanda .\shaders\BBMOD_ShParticleDepth --x .\Xshaders\ X_PARTICLES=1 X_OUTPUT_DEPTH=1

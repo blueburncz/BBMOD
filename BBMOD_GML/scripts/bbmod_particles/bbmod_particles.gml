@@ -4,9 +4,13 @@
 
 #macro BBMOD_SHADER_PARTICLE_LIT __bbmod_shader_particle_lit()
 
+#macro BBMOD_SHADER_PARTICLE_UNLIT __bbmod_shader_particle_unlit()
+
 #macro BBMOD_SHADER_PARTICLE_DEPTH __bbmod_shader_particle_depth()
 
 #macro BBMOD_MATERIAL_PARTICLE_LIT __bbmod_material_particle_lit()
+
+#macro BBMOD_MATERIAL_PARTICLE_UNLIT __bbmod_material_particle_unlit()
 
 /// @var {Struct.BBMOD_Model} A particle model.
 #macro BBMOD_MODEL_PARTICLE __bbmod_model_particle()
@@ -26,6 +30,12 @@ function __bbmod_vformat_particle_batched()
 function __bbmod_shader_particle_lit()
 {
 	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	return _shader;
+}
+
+function __bbmod_shader_particle_unlit()
+{
+	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
@@ -55,6 +65,17 @@ function __bbmod_material_particle_lit()
 		_material.AlphaTest = 0.01;
 		_material.AlphaBlend = true;
 		_material.ZWrite = false;
+	}
+	return _material;
+}
+
+function __bbmod_material_particle_unlit()
+{
+	static _material = undefined;
+	if (_material == undefined)
+	{
+		_material = BBMOD_MATERIAL_PARTICLE_LIT.clone();
+		_material.set_shader(BBMOD_ERenderPass.Forward, BBMOD_SHADER_PARTICLE_UNLIT);
 	}
 	return _material;
 }

@@ -100,6 +100,7 @@
     {"id":{"name":"BBMOD_Vec4","path":"scripts/BBMOD_Vec4/BBMOD_Vec4.yy",},"order":4,},
     {"id":{"name":"bbmod_model_to_colmesh","path":"scripts/bbmod_model_to_colmesh/bbmod_model_to_colmesh.yy",},"order":1,},
     {"id":{"name":"SndFootstep1","path":"sounds/SndFootstep1/SndFootstep1.yy",},"order":1,},
+    {"id":{"name":"BBMOD_ShParticleUnlit","path":"shaders/BBMOD_ShParticleUnlit/BBMOD_ShParticleUnlit.yy",},"order":10,},
     {"id":{"name":"BBMOD_StateMachine","path":"scripts/BBMOD_StateMachine/BBMOD_StateMachine.yy",},"order":0,},
     {"id":{"name":"BBMOD_ShParticleLit","path":"shaders/BBMOD_ShParticleLit/BBMOD_ShParticleLit.yy",},"order":4,},
     {"id":{"name":"SprHeightmap","path":"sprites/SprHeightmap/SprHeightmap.yy",},"order":4,},

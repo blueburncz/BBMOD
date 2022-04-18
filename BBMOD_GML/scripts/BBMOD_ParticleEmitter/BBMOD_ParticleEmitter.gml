@@ -231,7 +231,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		var _dynamicBatch = System.DynamicBatch;
 		var _batchSize = _dynamicBatch.Size;
-		_material ??= _dynamicBatch.Model.Materials[0];
+		_material ??= System.Material;
 
 		matrix_set(matrix_world, matrix_build_identity());
 
@@ -263,7 +263,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		var _dynamicBatch = System.DynamicBatch;
 		var _batchSize = _dynamicBatch.Size;
-		_material ??= _dynamicBatch.Model.Materials[0];
+		_material ??= System.Material;
 
 		matrix_set(matrix_world, matrix_build_identity());
 

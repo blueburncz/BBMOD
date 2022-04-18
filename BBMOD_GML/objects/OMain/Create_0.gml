@@ -90,7 +90,7 @@ renderer.add(
 	})
 	.add(global.terrain);
 
-particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, 100)
+particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, BBMOD_MATERIAL_PARTICLE_UNLIT, 100)
 	.add_module(new BBMOD_EmissionModule(1 / 60))
 	.add_module(new BBMOD_RandomVelocityModule(new BBMOD_Vec3(-10, -10, 50), new BBMOD_Vec3(10, 10, 150)))
 	.add_module(new BBMOD_RandomColorModule(BBMOD_C_RED, BBMOD_C_YELLOW))

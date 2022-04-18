@@ -276,6 +276,7 @@ void main()
 	}
 	gl_FragColor.a = material.Opacity;
 
+#if !defined(X_UNLIT)
 	vec3 N = material.Normal;
 #if defined(X_2D)
 	vec3 lightDiffuse = vec3(0.0);
@@ -322,6 +323,14 @@ void main()
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
+#else // !X_UNLIT
+	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+
+	// Diffuse
+	gl_FragColor.rgb = material.Base;
+#endif // X_UNLIT
 	// Fog
 	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
 		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
