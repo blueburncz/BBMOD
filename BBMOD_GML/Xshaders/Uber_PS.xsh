@@ -6,15 +6,10 @@ precision highp float;
 // Defines
 //
 
-#if defined(X_2D)
 // Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
-#endif
-
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -157,33 +152,16 @@ uniform vec2 bbmod_ShadowmapTexel;
 //
 // Includes
 //
-#if !defined(X_OUTPUT_DEPTH)
+#pragma include("Material.xsh", "glsl")
+
 #pragma include("Color.xsh", "glsl")
 
 #pragma include("RGBM.xsh", "glsl")
-#endif
 
-#if !defined(X_PBR)
 #pragma include("DepthEncoding.xsh")
-#endif
 
-#if defined(X_PBR)
-#pragma include("BRDF.xsh", "glsl")
+#pragma include("DoDirectionalLightPS.xsh", "glsl")
 
-#pragma include("OctahedronMapping.xsh", "glsl")
-
-#pragma include("IBL.xsh")
-
-#pragma include("CheapSubsurface.xsh", "glsl")
-
-#pragma include("MetallicRoughnessMaterial.xsh", "glsl")
-#endif
-
-#if !defined(X_PBR) && !defined(X_OUTPUT_DEPTH)
-#pragma include("SpecularColorSmoothnessMaterial.xsh", "glsl")
-#endif
-
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 // Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
 float InterleavedGradientNoise(vec2 positionScreen)
 {
@@ -216,6 +194,21 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	}
 	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }
+
+#pragma include("DoPointLightPS.xsh", "glsl")
+
+#if defined(X_PBR)
+#pragma include("BRDF.xsh", "glsl")
+
+#pragma include("OctahedronMapping.xsh", "glsl")
+
+#pragma include("IBL.xsh")
+
+#pragma include("CheapSubsurface.xsh", "glsl")
+
+#pragma include("MetallicMaterial.xsh", "glsl")
+#else
+#pragma include("SpecularMaterial.xsh", "glsl")
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +218,7 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 void main()
 {
 #if defined(X_OUTPUT_DEPTH)
-	Vec4 baseOpacity = texture2D(bbmod_BaseOpacity, v_vTexCoord);
+	vec4 baseOpacity = texture2D(bbmod_BaseOpacity, v_vTexCoord);
 	if (baseOpacity.a < bbmod_AlphaTest)
 	{
 		discard;
@@ -310,45 +303,26 @@ void main()
 		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
 	}
 #endif
-	// Directional light
-	vec3 L = normalize(-bbmod_LightDirectionalDir);
-	float NdotL = max(dot(N, L), 0.0);
-	float specularPower = exp2(1.0 + (material.Smoothness * 10.0));
+
 #if defined(X_2D)
 	vec3 V = vec3(0.0, 0.0, 1.0);
 #else
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);
 #endif
-	vec3 f0 = material.Specular;
-	vec3 H = normalize(L + V);
-	float NdotH = max(dot(N, H), 0.0);
-	float VdotH = max(dot(V, H), 0.0);
-	vec3 fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
-	float visibility = 0.25;
-	float A = specularPower / log(2.0);
-	float blinnPhong = exp2(A * NdotH - A);
-	float blinnNormalization = (specularPower + 8.0) / 8.0;
-	float normalDistribution = blinnPhong * blinnNormalization;
+	// Directional light
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
-	vec3 lightColor = directionalLightColor * NdotL * (1.0 - shadow);
-	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
-	lightDiffuse += lightColor; // * (1.0 - fresnel);
+	DoDirectionalLightPS(
+		bbmod_LightDirectionalDir,
+		directionalLightColor * (1.0 - shadow),
+		v_vVertex, N, V, material, lightDiffuse, lightSpecular);
 #if defined(X_2D)
 	// Point lights
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
 	{
-		Vec4 positionRange = bbmod_LightPointData[i * 2];
-		L = positionRange.xyz - v_vVertex;
-		H = normalize(L + V);
-		NdotH = max(dot(N, H), 0.0);
-		VdotH = max(dot(V, H), 0.0);
-		fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
-		float dist = length(L);
-		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
-		NdotL = max(dot(N, normalize(L)), 0.0);
-		lightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1])) * NdotL * att;
-		lightSpecular += lightColor * fresnel * visibility * normalDistribution;
-		lightDiffuse += lightColor; // * (1.0 - fresnel);
+		vec4 positionRange = bbmod_LightPointData[i * 2];
+		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
+		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
+			material, lightDiffuse, lightSpecular);
 	}
 #endif // X_2D
 	// Diffuse

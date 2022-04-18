@@ -7,7 +7,10 @@ precision highp float;
 // Defines
 //
 
-
+// Maximum number of point lights
+#define MAX_POINT_LIGHTS 8
+// Number of samples used when computing shadows
+#define SHADOWMAP_SAMPLE_COUNT 12
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -65,6 +68,22 @@ uniform vec2 bbmod_IBLTexel;
 //
 // Includes
 //
+
+struct Material
+{
+	vec3 Base;
+	float Opacity;
+	vec3 Normal;
+	float Metallic;
+	float Roughness;
+	vec3 Specular;
+	float Smoothness;
+	float SpecularPower;
+	float AO;
+	vec3 Emissive;
+	vec4 Subsurface;
+};
+
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -103,6 +122,121 @@ vec3 xDecodeRGBM(vec4 rgbm)
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
 
+/// @param d Linearized depth to encode.
+/// @return Encoded depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+vec3 xEncodeDepth(float d)
+{
+	const float inv255 = 1.0 / 255.0;
+	vec3 enc;
+	enc.x = d;
+	enc.y = d * 255.0;
+	enc.z = enc.y * 255.0;
+	enc = fract(enc);
+	float temp = enc.z * inv255;
+	enc.x -= enc.y * inv255;
+	enc.y -= temp;
+	enc.z -= temp;
+	return enc;
+}
+
+/// @param c Encoded depth.
+/// @return Docoded linear depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+float xDecodeDepth(vec3 c)
+{
+	const float inv255 = 1.0 / 255.0;
+	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
+}
+
+
+
+vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
+{
+	vec3 H = normalize(L + V);
+	float NdotH = max(dot(N, H), 0.0);
+	float VdotH = max(dot(V, H), 0.0);
+	vec3 fresnel = m.Specular + (1.0 - m.Specular) * pow(1.0 - VdotH, 5.0);
+	float visibility = 0.25;
+	float A = m.SpecularPower / log(2.0);
+	float blinnPhong = exp2(A * NdotH - A);
+	float blinnNormalization = (m.SpecularPower + 8.0) / 8.0;
+	float normalDistribution = blinnPhong * blinnNormalization;
+	return fresnel * visibility * normalDistribution;
+}
+
+void DoDirectionalLightPS(
+	vec3 direction,
+	vec3 color,
+	vec3 vertex,
+	vec3 N,
+	vec3 V,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular)
+{
+	vec3 L = normalize(-direction);
+	float NdotL = max(dot(N, L), 0.0);
+	color *= NdotL;
+	diffuse += color;
+	specular += color * SpecularBlinnPhong(m, N, V, L);
+}
+
+// Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
+float InterleavedGradientNoise(vec2 positionScreen)
+{
+	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
+}
+
+vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
+{
+	float GoldenAngle = 2.4;
+	float r = sqrt(float(sampleIndex) + 0.5) / sqrt(float(samplesCount));
+	float theta = float(sampleIndex) * GoldenAngle + phi;
+	float sine = sin(theta);
+	float cosine = cos(theta);
+	return vec2(r * cosine, r * sine);
+}
+
+float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
+{
+	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
+	{
+		return 0.0;
+	}
+	float shadow = 0.0;
+	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
+	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
+	{
+		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
+		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
+	}
+	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
+}
+
+
+
+void DoPointLightPS(
+	vec3 position,
+	float range,
+	vec3 color,
+	vec3 vertex,
+	vec3 N,
+	vec3 V,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular)
+{
+	vec3 L = position - vertex;
+	float dist = length(L);
+	L = normalize(L);
+	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
+	float NdotL = max(dot(N, L), 0.0);
+	color *= NdotL * att;
+	diffuse += color;
+	specular += color * SpecularBlinnPhong(m, N, V, L);
+}
 
 #define X_PI   3.14159265359
 #define X_2_PI 6.28318530718
@@ -305,20 +439,10 @@ vec3 xCheapSubsurface(vec4 subsurface, vec3 eye, vec3 normal, vec3 light, vec3 l
 	return subsurface.rgb * lightColor * fLT;
 }
 
+
 #define F0_DEFAULT vec3(0.04)
 
-struct Material
-{
-	vec3 Base;
-	float Opacity;
-	vec3 Normal;
-	float Roughness;
-	float Metallic;
-	float AO;
-	vec3 Specular;
-	vec4 Subsurface;
-	vec3 Emissive;
-};
+
 
 /// @desc Unpacks material from textures.
 /// @param texBaseOpacity     RGB: base color, A: opacity
@@ -367,8 +491,6 @@ Material UnpackMaterial(
 
 	return m;
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //

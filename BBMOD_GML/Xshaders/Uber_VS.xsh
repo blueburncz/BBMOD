@@ -6,20 +6,12 @@ precision highp float;
 // Defines
 //
 
-#if defined(X_ANIMATED)
 // Maximum number of bones of animated models
 #define MAX_BONES 64
-#endif
-
-#if defined(X_BATCHED)
 // Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
-#endif
-
-#if !defined(X_PBR) && !defined(X_2D)
 // Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -109,26 +101,20 @@ varying vec2 v_vSplatmapCoord;
 //
 // Includes
 //
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 #pragma include("Color.xsh", "glsl")
 
 #pragma include("RGBM.xsh", "glsl")
-#endif
 
-#if defined(X_ANIMATED) || defined(X_BATCHED)
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
-#endif
 
-#if defined(X_ANIMATED)
 vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 {
 	return (QuaternionRotate(real, v)
 		+ 2.0 * (real.w * dual.xyz - dual.w * real.xyz + cross(real.xyz, dual.xyz)));
 }
-#endif
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
@@ -193,28 +179,20 @@ void Transform(out vec4 vertex, out vec3 normal)
 #endif
 }
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
-void DoPointLights(
-	vec4 lights[2 * MAX_POINT_LIGHTS],
+void DoPointLightVS(
+	vec3 position,
+	float range,
+	vec3 color,
 	vec3 vertex,
 	vec3 N,
-	out vec3 diffuse,
-	out vec3 specular)
+	inout vec3 diffuse)
 {
-	diffuse = vec3(0.0);
-	specular = vec3(0.0);
-
-	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
-	{
-		vec4 positionRange = lights[i * 2];
-		vec3 L = positionRange.xyz - vertex;
-		float dist = length(L);
-		float att = clamp(1.0 - (dist / positionRange.w), 0.0, 1.0);
-		float NdotL = max(dot(N, normalize(L)), 0.0);
-		diffuse += xGammaToLinear(xDecodeRGBM(lights[(i * 2) + 1])) * NdotL * att;
-	}
+	vec3 L = position - vertex;
+	float dist = length(L);
+	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
+	float NdotL = max(dot(N, normalize(L)), 0.0);
+	diffuse += color * NdotL * att;
 }
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -253,9 +231,13 @@ void main()
 	////////////////////////////////////////////////////////////////////////////
 	// Point lights
 	vec3 N = normalize(v_mTBN * vec3(0.0, 0.0, 1.0));
-	vec3 specular;
 
-	DoPointLights(bbmod_LightPointData, v_vVertex, N, v_vLight, specular);
+	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	{
+		vec4 positionRange = bbmod_LightPointData[i * 2];
+		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
+		DoPointLightVS(positionRange.xyz, positionRange.w, color, v_vVertex, N, v_vLight);
+	}
 
 	////////////////////////////////////////////////////////////////////////////
 	// Vertex position in shadowmap

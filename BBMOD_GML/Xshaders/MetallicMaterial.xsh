@@ -1,19 +1,10 @@
-#pragma include("BRDFConstants.xsh", "glsl")
-#pragma include("Color.xsh", "glsl")
-#pragma include("RGBM.xsh", "glsl")
+#pragma include("Material.xsh", "glsl")
 
-struct Material
-{
-	vec3 Base;
-	float Opacity;
-	vec3 Normal;
-	float Roughness;
-	float Metallic;
-	float AO;
-	vec3 Specular;
-	vec4 Subsurface;
-	vec3 Emissive;
-};
+#pragma include("BRDFConstants.xsh", "glsl")
+
+#pragma include("Color.xsh", "glsl")
+
+#pragma include("RGBM.xsh", "glsl")
 
 /// @desc Unpacks material from textures.
 /// @param texBaseOpacity     RGB: base color, A: opacity
