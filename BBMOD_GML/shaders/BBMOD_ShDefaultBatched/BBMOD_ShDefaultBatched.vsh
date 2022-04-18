@@ -56,6 +56,7 @@ uniform float bbmod_ShadowmapNormalOffset;
 //
 // Varyings
 //
+
 varying vec3 v_vVertex;
 
 
@@ -125,7 +126,7 @@ vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 void Transform(out vec4 vertex, out vec3 normal)
 {
 	vertex = in_Position;
-	normal = vec3(in_Normal);
+	normal = in_Normal;
 
 
 	int idx = int(in_Id) * 2;
@@ -162,10 +163,10 @@ void main()
 	Transform(position, normal);
 
 	vec4 positionWVP = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
+	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 
 	gl_Position = positionWVP;
 	v_fDepth = positionWVP.z;
-	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 	vec3 tangent = in_TangentW.xyz;

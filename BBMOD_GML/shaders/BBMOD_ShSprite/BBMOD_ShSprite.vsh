@@ -43,6 +43,7 @@ uniform vec2 bbmod_TextureScale;
 //
 // Varyings
 //
+
 varying vec3 v_vVertex;
 
 varying vec4 v_vColor;
@@ -143,10 +144,10 @@ void main()
 	Transform(position, normal);
 
 	vec4 positionWVP = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
+	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 
 	gl_Position = positionWVP;
 	v_fDepth = positionWVP.z;
-	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 	v_vColor = in_Color;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 

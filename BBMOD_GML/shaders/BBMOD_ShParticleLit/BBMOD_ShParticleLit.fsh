@@ -1,4 +1,4 @@
-//#pragma include("Uber_PS.xsh", "glsl")
+#pragma include("Uber_PS.xsh", "glsl")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -7,7 +7,8 @@ precision highp float;
 // Defines
 //
 
-
+// Maximum number of point lights
+#define MAX_POINT_LIGHTS 8
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 
@@ -15,13 +16,17 @@ precision highp float;
 //
 // Varyings
 //
+
 varying vec3 v_vVertex;
+
+varying vec4 v_vColor;
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
+
 varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
-varying vec3 v_vColor;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -97,6 +102,22 @@ uniform vec2 bbmod_ShadowmapTexel;
 //
 // Includes
 //
+
+struct Material
+{
+	vec3 Base;
+	float Opacity;
+	vec3 Normal;
+	float Metallic;
+	float Roughness;
+	vec3 Specular;
+	float Smoothness;
+	float SpecularPower;
+	float AO;
+	vec3 Emissive;
+	vec4 Subsurface;
+};
+
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -164,45 +185,35 @@ float xDecodeDepth(vec3 c)
 
 
 
-struct Material
+vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
 {
-	vec3 Base;
-	float Opacity;
-	vec3 Normal;
-	float Smoothness;
-	vec3 Specular;
-};
+	vec3 H = normalize(L + V);
+	float NdotH = max(dot(N, H), 0.0);
+	float VdotH = max(dot(V, H), 0.0);
+	vec3 fresnel = m.Specular + (1.0 - m.Specular) * pow(1.0 - VdotH, 5.0);
+	float visibility = 0.25;
+	float A = m.SpecularPower / log(2.0);
+	float blinnPhong = exp2(A * NdotH - A);
+	float blinnNormalization = (m.SpecularPower + 8.0) / 8.0;
+	float normalDistribution = blinnPhong * blinnNormalization;
+	return fresnel * visibility * normalDistribution;
+}
 
-/// @desc Unpacks material from textures.
-/// @param texBaseOpacity      RGB: base color, A: opacity
-/// @param texNormalSmoothness RGB: tangent-space normal vector, A: smoothness
-/// @param texSpecularColor    RGB: specular color
-/// @param TBN                 Tangent-bitangent-normal matrix
-/// @param uv                  Texture coordinates
-Material UnpackMaterial(
-	sampler2D texBaseOpacity,
-	sampler2D texNormalSmoothness,
-	sampler2D texSpecularColor,
-	mat3 TBN,
-	vec2 uv)
+void DoDirectionalLightPS(
+	vec3 direction,
+	vec3 color,
+	vec3 vertex,
+	vec3 N,
+	vec3 V,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular)
 {
-	Material m;
-
-	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
-	m.Base = xGammaToLinear(baseOpacity.rgb);
-	m.Opacity = baseOpacity.a;
-
-	// Normal vector and smoothness
-	vec4 normalSmoothness = texture2D(texNormalSmoothness, uv);
-	m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
-	m.Smoothness = normalSmoothness.a;
-
-	// Specular color
-	vec4 specularColor = texture2D(texSpecularColor, uv);
-	m.Specular = xGammaToLinear(specularColor.rgb);
-
-	return m;
+	vec3 L = normalize(-direction);
+	float NdotL = max(dot(N, L), 0.0);
+	color *= NdotL;
+	diffuse += color;
+	specular += color * SpecularBlinnPhong(m, N, V, L);
 }
 
 // Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
@@ -238,6 +249,67 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }
 
+
+
+void DoPointLightPS(
+	vec3 position,
+	float range,
+	vec3 color,
+	vec3 vertex,
+	vec3 N,
+	vec3 V,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular)
+{
+	vec3 L = position - vertex;
+	float dist = length(L);
+	L = normalize(L);
+	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
+	float NdotL = max(dot(N, L), 0.0);
+	color *= NdotL * att;
+	diffuse += color;
+	specular += color * SpecularBlinnPhong(m, N, V, L);
+}
+
+
+
+
+/// @desc Unpacks material from textures.
+/// @param texBaseOpacity      RGB: base color, A: opacity
+/// @param texNormalSmoothness RGB: tangent-space normal vector, A: smoothness
+/// @param texSpecularColor    RGB: specular color
+/// @param TBN                 Tangent-bitangent-normal matrix
+/// @param uv                  Texture coordinates
+Material UnpackMaterial(
+	sampler2D texBaseOpacity,
+	sampler2D texNormalSmoothness,
+	sampler2D texSpecularColor,
+	mat3 TBN,
+	vec2 uv)
+{
+	Material m;
+
+	// Base color and opacity
+	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	m.Base = xGammaToLinear(baseOpacity.rgb);
+	m.Opacity = baseOpacity.a;
+
+	// Normal vector and smoothness
+	vec4 normalSmoothness = texture2D(texNormalSmoothness, uv);
+	m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
+	m.Smoothness = normalSmoothness.a;
+
+	// Specular color
+	vec4 specularColor = texture2D(texSpecularColor, uv);
+	m.Specular = xGammaToLinear(specularColor.rgb);
+
+	// Specular power
+	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
+
+	return m;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
@@ -250,6 +322,9 @@ void main()
 		bbmod_SpecularColor,
 		v_mTBN,
 		v_vTexCoord);
+
+	material.Base *= v_vColor.rgb;
+	material.Opacity *= v_vColor.a;
 
 
 	if (material.Opacity < bbmod_AlphaTest)
@@ -270,30 +345,18 @@ void main()
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		// TODO: Add per-material shadowmap bias!
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z - 0.00002);
+		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
 	}
-	// Directional light
-	vec3 L = normalize(-bbmod_LightDirectionalDir);
-	float NdotL = max(dot(N, L), 0.0);
-	float specularPower = exp2(1.0 + (material.Smoothness * 10.0));
+
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);
-	vec3 f0 = material.Specular;
-	vec3 H = normalize(L + V);
-	float NdotH = max(dot(N, H), 0.0);
-	float VdotH = max(dot(V, H), 0.0);
-	vec3 fresnel = f0 + (1.0 - f0) * pow(1.0 - VdotH, 5.0);
-	float visibility = 0.25;
-	float A = specularPower / log(2.0);
-	float blinnPhong = exp2(A * NdotH - A);
-	float blinnNormalization = (specularPower + 8.0) / 8.0;
-	float normalDistribution = blinnPhong * blinnNormalization;
+	// Directional light
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
-	vec3 lightColor = directionalLightColor * NdotL * (1.0 - shadow);
-	lightSpecular += lightColor * fresnel * visibility * normalDistribution;
-	lightDiffuse += lightColor; // * (1.0 - fresnel);
+	DoDirectionalLightPS(
+		bbmod_LightDirectionalDir,
+		directionalLightColor * (1.0 - shadow),
+		v_vVertex, N, V, material, lightDiffuse, lightSpecular);
 	// Diffuse
-	gl_FragColor.rgb = v_vColor * material.Base;// * lightDiffuse;
+	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Fog

@@ -16,6 +16,7 @@ precision highp float;
 //
 // Varyings
 //
+
 varying vec3 v_vVertex;
 
 
@@ -320,6 +321,7 @@ void main()
 		bbmod_SpecularColor,
 		v_mTBN,
 		v_vTexCoord);
+
 
 
 	if (material.Opacity < bbmod_AlphaTest)

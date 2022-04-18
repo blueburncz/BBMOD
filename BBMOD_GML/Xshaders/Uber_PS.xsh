@@ -15,23 +15,8 @@ precision highp float;
 //
 // Varyings
 //
-varying vec3 v_vVertex;
 
-#if defined(X_2D)
-varying vec4 v_vColor;
-#endif
-
-varying vec2 v_vTexCoord;
-varying mat3 v_mTBN;
-varying float v_fDepth;
-
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
-varying vec3 v_vLight;
-varying vec3 v_vPosShadowmap;
-#if defined(X_TERRAIN)
-varying vec2 v_vSplatmapCoord;
-#endif
-#endif
+#pragma include("Varyings.xsh", "glsl")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -219,6 +204,9 @@ void main()
 {
 #if defined(X_OUTPUT_DEPTH)
 	vec4 baseOpacity = texture2D(bbmod_BaseOpacity, v_vTexCoord);
+#if defined(X_2D) || defined(X_PARTICLES)
+	baseOpacity.a *= v_vColor.a;
+#endif
 	if (baseOpacity.a < bbmod_AlphaTest)
 	{
 		discard;
@@ -263,6 +251,11 @@ void main()
 		bbmod_SpecularColor,
 		v_mTBN,
 		v_vTexCoord);
+
+#if defined(X_2D) || defined(X_PARTICLES)
+	material.Base *= v_vColor.rgb;
+	material.Opacity *= v_vColor.a;
+#endif
 
 #if defined(X_TERRAIN)
 	// Splatmap

@@ -16,6 +16,7 @@ precision highp float;
 //
 // Varyings
 //
+
 varying vec3 v_vVertex;
 
 
@@ -325,6 +326,7 @@ void main()
 		bbmod_SpecularColor,
 		v_mTBN,
 		v_vTexCoord);
+
 
 	// Splatmap
 	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);

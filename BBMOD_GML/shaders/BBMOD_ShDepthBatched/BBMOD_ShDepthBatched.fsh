@@ -16,6 +16,7 @@ precision highp float;
 //
 // Varyings
 //
+
 varying vec3 v_vVertex;
 
 
