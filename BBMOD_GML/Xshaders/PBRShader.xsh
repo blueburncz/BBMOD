@@ -1,8 +1,6 @@
-#pragma include("BRDF.xsh")
-#pragma include("OctahedronMapping.xsh")
+#pragma include("MetallicMaterial.xsh")
 #pragma include("IBL.xsh")
 #pragma include("CheapSubsurface.xsh")
-#pragma include("MetallicMaterial.xsh")
 #pragma include("Exposure.xsh")
 #pragma include("GammaCorrect.xsh")
 

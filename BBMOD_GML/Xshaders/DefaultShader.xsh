@@ -1,12 +1,12 @@
+#pragma include("SpecularMaterial.xsh")
 #pragma include("Color.xsh")
 #pragma include("RGBM.xsh")
+#pragma include("ShadowMap.xsh")
 #pragma include("DoDirectionalLightPS.xsh")
 #pragma include("DoPointLightPS.xsh")
-#pragma include("SpecularMaterial.xsh")
 #pragma include("Fog.xsh")
 #pragma include("Exposure.xsh")
 #pragma include("GammaCorrect.xsh")
-#pragma include("ShadowMap.xsh")
 
 void DefaultShader(Material material, float depth)
 {

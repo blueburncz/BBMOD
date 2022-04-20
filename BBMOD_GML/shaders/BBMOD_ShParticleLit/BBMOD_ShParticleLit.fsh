@@ -199,6 +199,71 @@ Material UnpackMaterial(
 // include("SpecularMaterial.xsh")
 
 #           pragma include("DefaultShader.xsh")
+#pragma include("ShadowMap.xsh")
+#pragma include("DepthEncoding.xsh")
+/// @param d Linearized depth to encode.
+/// @return Encoded depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+vec3 xEncodeDepth(float d)
+{
+	const float inv255 = 1.0 / 255.0;
+	vec3 enc;
+	enc.x = d;
+	enc.y = d * 255.0;
+	enc.z = enc.y * 255.0;
+	enc = fract(enc);
+	float temp = enc.z * inv255;
+	enc.x -= enc.y * inv255;
+	enc.y -= temp;
+	enc.z -= temp;
+	return enc;
+}
+
+/// @param c Encoded depth.
+/// @return Docoded linear depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+float xDecodeDepth(vec3 c)
+{
+	const float inv255 = 1.0 / 255.0;
+	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
+}
+// include("DepthEncoding.xsh")
+#pragma include("InterleavedGradientNoise.xsh")
+// Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
+float InterleavedGradientNoise(vec2 positionScreen)
+{
+	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
+}
+// include("InterleavedGradientNoise.xsh")
+#pragma include("VogelDiskSample.xsh")
+vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
+{
+	float GoldenAngle = 2.4;
+	float r = sqrt(float(sampleIndex) + 0.5) / sqrt(float(samplesCount));
+	float theta = float(sampleIndex) * GoldenAngle + phi;
+	float sine = sin(theta);
+	float cosine = cos(theta);
+	return vec2(r * cosine, r * sine);
+}
+// include("VogelDiskSample.xsh")
+
+float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
+{
+	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
+	{
+		return 0.0;
+	}
+	float shadow = 0.0;
+	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
+	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
+	{
+		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
+		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
+	}
+	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
+}
+// include("ShadowMap.xsh")
 #pragma include("DoDirectionalLightPS.xsh")
 #pragma include("SpecularBlinnPhong.xsh")
 
@@ -281,71 +346,6 @@ void GammaCorrect()
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 }
 // include("GammaCorrect.xsh")
-#pragma include("ShadowMap.xsh")
-#pragma include("DepthEncoding.xsh")
-/// @param d Linearized depth to encode.
-/// @return Encoded depth.
-/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
-vec3 xEncodeDepth(float d)
-{
-	const float inv255 = 1.0 / 255.0;
-	vec3 enc;
-	enc.x = d;
-	enc.y = d * 255.0;
-	enc.z = enc.y * 255.0;
-	enc = fract(enc);
-	float temp = enc.z * inv255;
-	enc.x -= enc.y * inv255;
-	enc.y -= temp;
-	enc.z -= temp;
-	return enc;
-}
-
-/// @param c Encoded depth.
-/// @return Docoded linear depth.
-/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
-float xDecodeDepth(vec3 c)
-{
-	const float inv255 = 1.0 / 255.0;
-	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
-}
-// include("DepthEncoding.xsh")
-#pragma include("InterleavedGradientNoise.xsh")
-// Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
-float InterleavedGradientNoise(vec2 positionScreen)
-{
-	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
-	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
-}
-// include("InterleavedGradientNoise.xsh")
-#pragma include("VogelDiskSample.xsh")
-vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
-{
-	float GoldenAngle = 2.4;
-	float r = sqrt(float(sampleIndex) + 0.5) / sqrt(float(samplesCount));
-	float theta = float(sampleIndex) * GoldenAngle + phi;
-	float sine = sin(theta);
-	float cosine = cos(theta);
-	return vec2(r * cosine, r * sine);
-}
-// include("VogelDiskSample.xsh")
-
-float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
-{
-	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
-	{
-		return 0.0;
-	}
-	float shadow = 0.0;
-	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
-	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
-	{
-		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
-		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
-	}
-	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
-}
-// include("ShadowMap.xsh")
 
 void DefaultShader(Material material, float depth)
 {
