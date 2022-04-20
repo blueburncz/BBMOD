@@ -73,6 +73,7 @@ varying vec3 v_vPosShadowmap;
 //
 // Includes
 //
+
 #pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
@@ -114,18 +115,7 @@ vec3 xDecodeRGBM(vec4 rgbm)
 }
 // include("RGBM.xsh")
 
-vec3 QuaternionRotate(vec4 q, vec3 v)
-{
-	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
-}
-
-vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
-{
-	return (QuaternionRotate(real, v)
-		+ 2.0 * (real.w * dual.xyz - dual.w * real.xyz + cross(real.xyz, dual.xyz)));
-}
-
-
+#pragma include("DoPointLightVS.xsh")
 void DoPointLightVS(
 	vec3 position,
 	float range,
@@ -140,6 +130,7 @@ void DoPointLightVS(
 	float NdotL = max(dot(N, normalize(L)), 0.0);
 	diffuse += color * NdotL * att;
 }
+// include("DoPointLightVS.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //

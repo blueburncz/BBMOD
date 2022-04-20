@@ -71,6 +71,22 @@ varying vec2 v_vSplatmapCoord;
 //
 // Includes
 //
+#pragma include("Transform.xsh")
+
+
+/// @desc Transforms vertex and normal by animation and/or batch data.
+/// @param vertex Variable to hold the transformed vertex.
+/// @param normal Variable to hold the transformed normal.
+void Transform(out vec4 vertex, out vec3 normal)
+{
+	vertex = in_Position;
+	normal = in_Normal;
+
+
+}
+// include("Transform.xsh")
+
+
 #pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
@@ -111,29 +127,7 @@ vec3 xDecodeRGBM(vec4 rgbm)
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
 // include("RGBM.xsh")
-
-vec3 QuaternionRotate(vec4 q, vec3 v)
-{
-	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
-}
-
-vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
-{
-	return (QuaternionRotate(real, v)
-		+ 2.0 * (real.w * dual.xyz - dual.w * real.xyz + cross(real.xyz, dual.xyz)));
-}
-
-/// @desc Transforms vertex and normal by animation and/or batch data.
-/// @param vertex Variable to hold the transformed vertex.
-/// @param normal Variable to hold the transformed normal.
-void Transform(out vec4 vertex, out vec3 normal)
-{
-	vertex = in_Position;
-	normal = in_Normal;
-
-
-}
-
+#pragma include("DoPointLightVS.xsh")
 void DoPointLightVS(
 	vec3 position,
 	float range,
@@ -148,6 +142,7 @@ void DoPointLightVS(
 	float NdotL = max(dot(N, normalize(L)), 0.0);
 	diffuse += color * NdotL * att;
 }
+// include("DoPointLightVS.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
