@@ -64,6 +64,7 @@ uniform vec4 bbmod_Bones[2 * MAX_BONES];
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 #endif
 
+#if !defined(X_UNLIT)
 #if !defined(X_PBR) && !defined(X_2D)
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
@@ -79,6 +80,7 @@ uniform float bbmod_ShadowmapArea;
 // Offsets vertex position by its normal scaled by this value
 uniform float bbmod_ShadowmapNormalOffset;
 #endif
+#endif // !X_UNLIT
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -100,9 +102,11 @@ uniform float bbmod_ShadowmapNormalOffset;
 #endif
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
+#if !defined(X_UNLIT)
 #pragma include("Color.xsh")
 #pragma include("RGBM.xsh")
 #pragma include("DoPointLightVS.xsh")
+#endif //!X_UNLIT
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,6 +171,7 @@ void main()
 	v_vSplatmapCoord = in_TextureCoord0;
 #endif
 
+#if !defined(X_UNLIT)
 	////////////////////////////////////////////////////////////////////////////
 	// Point lights
 	vec3 N = normalize(v_mTBN * vec3(0.0, 0.0, 1.0));
@@ -190,5 +195,6 @@ void main()
 	#endif
 		v_vPosShadowmap.z /= bbmod_ShadowmapArea;
 	}
+#endif // !X_UNLIT
 #endif
 }
