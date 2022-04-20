@@ -84,16 +84,14 @@ uniform float bbmod_ShadowmapNormalOffset;
 //
 // Varyings
 //
-
-#pragma include("Varyings.xsh", "glsl")
+#pragma include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
-#pragma include("Color.xsh", "glsl")
-
-#pragma include("RGBM.xsh", "glsl")
+#pragma include("Color.xsh")
+#pragma include("RGBM.xsh")
 
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {

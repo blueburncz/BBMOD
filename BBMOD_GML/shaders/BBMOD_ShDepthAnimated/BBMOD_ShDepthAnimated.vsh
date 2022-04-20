@@ -1,4 +1,4 @@
-#pragma include("Uber_VS.xsh", "glsl")
+#pragma include("Uber_VS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -49,7 +49,7 @@ uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 //
 // Varyings
 //
-
+#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
 
@@ -57,11 +57,13 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
+// include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
+#pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -81,7 +83,8 @@ float xLuminance(vec3 rgb)
 {
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
-
+// include("Color.xsh")
+#pragma include("RGBM.xsh")
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -99,6 +102,7 @@ vec3 xDecodeRGBM(vec4 rgbm)
 {
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
+// include("RGBM.xsh")
 
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {

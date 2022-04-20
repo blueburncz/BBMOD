@@ -16,7 +16,7 @@ precision highp float;
 // Varyings
 //
 
-#pragma include("Varyings.xsh", "glsl")
+#pragma include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -137,183 +137,24 @@ uniform vec2 bbmod_ShadowmapTexel;
 //
 // Includes
 //
-#pragma include("Material.xsh", "glsl")
-
-#pragma include("Color.xsh", "glsl")
-
-#pragma include("RGBM.xsh", "glsl")
-
-#pragma include("DepthEncoding.xsh")
-
-#pragma include("DoDirectionalLightPS.xsh", "glsl")
-
-// Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
-float InterleavedGradientNoise(vec2 positionScreen)
-{
-	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
-	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
-}
-
-vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
-{
-	float GoldenAngle = 2.4;
-	float r = sqrt(float(sampleIndex) + 0.5) / sqrt(float(samplesCount));
-	float theta = float(sampleIndex) * GoldenAngle + phi;
-	float sine = sin(theta);
-	float cosine = cos(theta);
-	return vec2(r * cosine, r * sine);
-}
-
-float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
-{
-	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
-	{
-		return 0.0;
-	}
-	float shadow = 0.0;
-	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
-	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
-	{
-		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
-		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
-	}
-	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
-}
-
-#pragma include("DoPointLightPS.xsh", "glsl")
-
 #if defined(X_PBR)
-#pragma include("BRDF.xsh", "glsl")
-
-#pragma include("OctahedronMapping.xsh", "glsl")
-
-#pragma include("IBL.xsh")
-
-#pragma include("CheapSubsurface.xsh", "glsl")
-
-#pragma include("MetallicMaterial.xsh", "glsl")
+#   pragma include("MetallicMaterial.xsh")
 #else
-#pragma include("SpecularMaterial.xsh", "glsl")
+#   pragma include("SpecularMaterial.xsh")
 #endif
 
 #if defined(X_OUTPUT_DEPTH)
-void DepthShader(float depth)
-{
-	gl_FragColor.rgb = xEncodeDepth(depth / bbmod_ZFar);
-	gl_FragColor.a = 1.0;
-}
-#else // X_OUTPUT_PDETH
-void Exposure()
-{
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
-}
-
-void GammaCorrect()
-{
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-}
-
-#if defined(X_PBR)
-void PBRShader(Material material)
-{
-	vec3 N = material.Normal;
-	vec3 V = normalize(bbmod_CamPos - v_vVertex);
-	vec3 lightColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
-
-	// Diffuse
-	gl_FragColor.rgb = material.Base * lightColor;
-	// Specular
-	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
-	// Ambient occlusion
-	gl_FragColor.rgb *= material.AO;
-	// Emissive
-	gl_FragColor.rgb += material.Emissive;
-	// Subsurface scattering
-	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
-	// Opacity
-	gl_FragColor.a = material.Opacity;
-
-	Exposure();
-	GammaCorrect();
-}
-#else // X_PBR
-void Fog(float depth)
-{
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
-		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
-	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-}
-
-void UnlitShader(Material material, float depth)
-{
-	gl_FragColor.rgb = material.Base;
-	gl_FragColor.a = material.Opacity;
-	Fog(depth);
-	Exposure();
-	GammaCorrect();
-}
-
-void DefaultShader(Material material, float depth)
-{
-	vec3 N = material.Normal;
-#if defined(X_2D)
-	vec3 lightDiffuse = vec3(0.0);
+#   pragma include("DepthShader.xsh")
 #else
-	vec3 lightDiffuse = v_vLight;
-#endif
-	vec3 lightSpecular = vec3(0.0);
-
-	// Ambient light
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
-	// Shadow mapping
-	float shadow = 0.0;
-#if !defined(X_2D)
-	if (bbmod_ShadowmapEnablePS == 1.0)
-	{
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
-	}
-#endif
-
-#if defined(X_2D)
-	vec3 V = vec3(0.0, 0.0, 1.0);
-#else
-	vec3 V = normalize(bbmod_CamPos - v_vVertex);
-#endif
-	// Directional light
-	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
-	DoDirectionalLightPS(
-		bbmod_LightDirectionalDir,
-		directionalLightColor * (1.0 - shadow),
-		v_vVertex, N, V, material, lightDiffuse, lightSpecular);
-#if defined(X_2D)
-	// Point lights
-	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
-	{
-		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
-		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
-			material, lightDiffuse, lightSpecular);
-	}
-#endif // X_2D
-	// Diffuse
-	gl_FragColor.rgb = material.Base * lightDiffuse;
-	// Specular
-	gl_FragColor.rgb += lightSpecular;
-	// Opacity
-	gl_FragColor.a = material.Opacity;
-	// Fog
-	Fog(depth);
-
-	Exposure();
-	GammaCorrect();
-}
-#endif // !X_PBR
+#    if defined(X_PBR)
+#       pragma include("PBRShader.xsh")
+#    else
+#       if defined(X_UNLIT)
+#           pragma include("UnlitShader.xsh")
+#       else
+#           pragma include("DefaultShader.xsh")
+#       endif
+#    endif
 #endif // !X_OUTPUT_DEPTH
 
 ////////////////////////////////////////////////////////////////////////////////

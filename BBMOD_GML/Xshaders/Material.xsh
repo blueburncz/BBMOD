@@ -1,4 +1,3 @@
-
 struct Material
 {
 	vec3 Base;

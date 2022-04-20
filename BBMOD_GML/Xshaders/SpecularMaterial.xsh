@@ -1,8 +1,6 @@
-#pragma include("Material.xsh", "glsl")
-
-#pragma include("Color.xsh", "glsl")
-
-#pragma include("RGBM.xsh", "glsl")
+#pragma include("Material.xsh")
+#pragma include("Color.xsh")
+#pragma include("RGBM.xsh")
 
 /// @desc Unpacks material from textures.
 /// @param texBaseOpacity      RGB: base color, A: opacity

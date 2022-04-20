@@ -1,4 +1,4 @@
-#pragma include("Uber_PS.xsh", "glsl")
+#pragma include("Uber_PS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -17,6 +17,7 @@ precision highp float;
 // Varyings
 //
 
+#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
 
@@ -24,6 +25,7 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
+// include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -69,7 +71,8 @@ uniform vec2 bbmod_IBLTexel;
 //
 // Includes
 //
-
+#   pragma include("MetallicMaterial.xsh")
+#pragma include("Material.xsh")
 struct Material
 {
 	vec3 Base;
@@ -84,7 +87,11 @@ struct Material
 	vec3 Emissive;
 	vec4 Subsurface;
 };
-
+// include("Material.xsh")
+#pragma include("BRDFConstants.xsh")
+#define F0_DEFAULT vec3(0.04)
+// include("BRDFConstants.xsh")
+#pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -104,7 +111,8 @@ float xLuminance(vec3 rgb)
 {
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
-
+// include("Color.xsh")
+#pragma include("RGBM.xsh")
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -122,123 +130,60 @@ vec3 xDecodeRGBM(vec4 rgbm)
 {
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
+// include("RGBM.xsh")
 
-/// @param d Linearized depth to encode.
-/// @return Encoded depth.
-/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
-vec3 xEncodeDepth(float d)
+/// @desc Unpacks material from textures.
+/// @param texBaseOpacity     RGB: base color, A: opacity
+/// @param texNormalRoughness RGB: tangent-space normal vector, A: roughness
+/// @param texMetallicAO      R: metallic, G: ambient occlusion
+/// @param texSubsurface      RGB: subsurface color, A: intensity
+/// @param texEmissive        RGBA: RGBM encoded emissive color
+/// @param TBN                Tangent-bitangent-normal matrix
+/// @param uv                 Texture coordinates
+Material UnpackMaterial(
+	sampler2D texBaseOpacity,
+	sampler2D texNormalRoughness,
+	sampler2D texMetallicAO,
+	sampler2D texSubsurface,
+	sampler2D texEmissive,
+	mat3 TBN,
+	vec2 uv)
 {
-	const float inv255 = 1.0 / 255.0;
-	vec3 enc;
-	enc.x = d;
-	enc.y = d * 255.0;
-	enc.z = enc.y * 255.0;
-	enc = fract(enc);
-	float temp = enc.z * inv255;
-	enc.x -= enc.y * inv255;
-	enc.y -= temp;
-	enc.z -= temp;
-	return enc;
+	Material m;
+
+	// Base color and opacity
+	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	m.Base = xGammaToLinear(baseOpacity.rgb);
+	m.Opacity = baseOpacity.a;
+
+	// Normal vector and roughness
+	vec4 normalRoughness = texture2D(texNormalRoughness, uv);
+	m.Normal = normalize(TBN * (normalRoughness.rgb * 2.0 - 1.0));
+	m.Roughness = mix(0.1, 0.9, normalRoughness.a);
+
+	// Metallic and ambient occlusion
+	vec4 metallicAO = texture2D(texMetallicAO, uv);
+	m.Metallic = metallicAO.r;
+	m.AO = metallicAO.g;
+
+	// Specular color
+	m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
+	m.Base *= (1.0 - m.Metallic);
+
+	// Subsurface (color and intensity)
+	vec4 subsurface = texture2D(texSubsurface, uv);
+	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
+
+	// Emissive color
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+
+	return m;
 }
+// include("MetallicMaterial.xsh")
 
-/// @param c Encoded depth.
-/// @return Docoded linear depth.
-/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
-float xDecodeDepth(vec3 c)
-{
-	const float inv255 = 1.0 / 255.0;
-	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
-}
-
-
-
-vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
-{
-	vec3 H = normalize(L + V);
-	float NdotH = max(dot(N, H), 0.0);
-	float VdotH = max(dot(V, H), 0.0);
-	vec3 fresnel = m.Specular + (1.0 - m.Specular) * pow(1.0 - VdotH, 5.0);
-	float visibility = 0.25;
-	float A = m.SpecularPower / log(2.0);
-	float blinnPhong = exp2(A * NdotH - A);
-	float blinnNormalization = (m.SpecularPower + 8.0) / 8.0;
-	float normalDistribution = blinnPhong * blinnNormalization;
-	return fresnel * visibility * normalDistribution;
-}
-
-void DoDirectionalLightPS(
-	vec3 direction,
-	vec3 color,
-	vec3 vertex,
-	vec3 N,
-	vec3 V,
-	Material m,
-	inout vec3 diffuse,
-	inout vec3 specular)
-{
-	vec3 L = normalize(-direction);
-	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL;
-	diffuse += color;
-	specular += color * SpecularBlinnPhong(m, N, V, L);
-}
-
-// Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
-float InterleavedGradientNoise(vec2 positionScreen)
-{
-	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
-	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
-}
-
-vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
-{
-	float GoldenAngle = 2.4;
-	float r = sqrt(float(sampleIndex) + 0.5) / sqrt(float(samplesCount));
-	float theta = float(sampleIndex) * GoldenAngle + phi;
-	float sine = sin(theta);
-	float cosine = cos(theta);
-	return vec2(r * cosine, r * sine);
-}
-
-float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
-{
-	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
-	{
-		return 0.0;
-	}
-	float shadow = 0.0;
-	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
-	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
-	{
-		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
-		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
-	}
-	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
-}
-
-
-
-void DoPointLightPS(
-	vec3 position,
-	float range,
-	vec3 color,
-	vec3 vertex,
-	vec3 N,
-	vec3 V,
-	Material m,
-	inout vec3 diffuse,
-	inout vec3 specular)
-{
-	vec3 L = position - vertex;
-	float dist = length(L);
-	L = normalize(L);
-	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
-	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL * att;
-	diffuse += color;
-	specular += color * SpecularBlinnPhong(m, N, V, L);
-}
-
+#       pragma include("PBRShader.xsh")
+#pragma include("BRDF.xsh")
+#pragma include("Math.xsh")
 #define X_PI   3.14159265359
 #define X_2_PI 6.28318530718
 
@@ -263,6 +208,7 @@ float xPointDirection(vec2 from, vec2 to)
 	float x = xAtan2(from.x - to.x, from.y - to.y);
 	return ((x > 0.0) ? x : (2.0 * X_PI + x)) * 180.0 / X_PI;
 }
+// include("Math.xsh")
 
 /// @desc Default specular color for dielectrics
 /// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
@@ -331,7 +277,8 @@ vec3 xBRDF(vec3 f0, float roughness, float NdotL, float NdotV, float NdotH, floa
 		* xSpecularG_Schlick(xK_Analytic(roughness), NdotL, NdotH);
 	return specular / max(4.0 * NdotL * NdotV, 0.001);
 }
-
+// include("BRDF.xsh")
+#pragma include("OctahedronMapping.xsh")
 // Source: https://gamedev.stackexchange.com/questions/169508/octahedral-impostors-octahedral-mapping
 
 /// @param dir Sampling dir vector in world-space.
@@ -361,7 +308,8 @@ vec3 xOctahedronUvToVec3Normalized(vec2 uv)
 	}
 	return position;
 }
-
+// include("OctahedronMapping.xsh")
+#pragma include("IBL.xsh")
 
 vec3 xDiffuseIBL(sampler2D ibl, vec2 texel, vec3 N)
 {
@@ -427,7 +375,8 @@ vec3 xSpecularIBL(sampler2D ibl, vec2 texel/*, sampler2D brdf*/, vec3 f0, float 
 
 	return mix(col0, col1, rDiff);
 }
-
+// include("IBL.xsh")
+#pragma include("CheapSubsurface.xsh")
 /// @param subsurface Color in RGB and thickness/intensity in A.
 /// @source https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
 vec3 xCheapSubsurface(vec4 subsurface, vec3 eye, vec3 normal, vec3 light, vec3 lightColor)
@@ -439,69 +388,19 @@ vec3 xCheapSubsurface(vec4 subsurface, vec3 eye, vec3 normal, vec3 light, vec3 l
 	float fLT = fLTDot * subsurface.a;
 	return subsurface.rgb * lightColor * fLT;
 }
-
-
-#define F0_DEFAULT vec3(0.04)
-
-
-
-/// @desc Unpacks material from textures.
-/// @param texBaseOpacity     RGB: base color, A: opacity
-/// @param texNormalRoughness RGB: tangent-space normal vector, A: roughness
-/// @param texMetallicAO      R: metallic, G: ambient occlusion
-/// @param texSubsurface      RGB: subsurface color, A: intensity
-/// @param texEmissive        RGBA: RGBM encoded emissive color
-/// @param TBN                Tangent-bitangent-normal matrix
-/// @param uv                 Texture coordinates
-Material UnpackMaterial(
-	sampler2D texBaseOpacity,
-	sampler2D texNormalRoughness,
-	sampler2D texMetallicAO,
-	sampler2D texSubsurface,
-	sampler2D texEmissive,
-	mat3 TBN,
-	vec2 uv)
-{
-	Material m;
-
-	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
-	m.Base = xGammaToLinear(baseOpacity.rgb);
-	m.Opacity = baseOpacity.a;
-
-	// Normal vector and roughness
-	vec4 normalRoughness = texture2D(texNormalRoughness, uv);
-	m.Normal = normalize(TBN * (normalRoughness.rgb * 2.0 - 1.0));
-	m.Roughness = mix(0.1, 0.9, normalRoughness.a);
-
-	// Metallic and ambient occlusion
-	vec4 metallicAO = texture2D(texMetallicAO, uv);
-	m.Metallic = metallicAO.r;
-	m.AO = metallicAO.g;
-
-	// Specular color
-	m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
-	m.Base *= (1.0 - m.Metallic);
-
-	// Subsurface (color and intensity)
-	vec4 subsurface = texture2D(texSubsurface, uv);
-	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
-
-	// Emissive color
-	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
-
-	return m;
-}
-
+// include("CheapSubsurface.xsh")
+#pragma include("Exposure.xsh")
 void Exposure()
 {
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 }
-
+// include("Exposure.xsh")
+#pragma include("GammaCorrect.xsh")
 void GammaCorrect()
 {
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 }
+// include("GammaCorrect.xsh")
 
 void PBRShader(Material material)
 {
@@ -525,6 +424,7 @@ void PBRShader(Material material)
 	Exposure();
 	GammaCorrect();
 }
+// include("PBRShader.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //

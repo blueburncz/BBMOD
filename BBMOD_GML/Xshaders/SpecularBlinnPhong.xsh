@@ -1,4 +1,4 @@
-#pragma include("Material.xsh", "glsl")
+#pragma include("Material.xsh")
 
 vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
 {

@@ -1,6 +1,5 @@
-#pragma include("Material.xsh", "glsl")
-
-#pragma include("SpecularBlinnPhong.xsh", "glsl")
+#pragma include("Material.xsh")
+#pragma include("SpecularBlinnPhong.xsh")
 
 void DoPointLightPS(
 	vec3 position,
