@@ -112,7 +112,7 @@ uniform vec2 bbmod_ShadowmapTexel;
 //
 // Includes
 //
-#   pragma include("SpecularMaterial.xsh")
+#pragma include("SpecularMaterial.xsh")
 #pragma include("Material.xsh")
 struct Material
 {
@@ -211,7 +211,7 @@ Material UnpackMaterial(
 }
 // include("SpecularMaterial.xsh")
 
-#           pragma include("DefaultShader.xsh")
+#pragma include("DefaultShader.xsh")
 #pragma include("ShadowMap.xsh")
 #pragma include("DepthEncoding.xsh")
 /// @param d Linearized depth to encode.

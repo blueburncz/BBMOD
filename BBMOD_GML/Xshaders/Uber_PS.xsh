@@ -138,23 +138,23 @@ uniform vec2 bbmod_ShadowmapTexel;
 // Includes
 //
 #if defined(X_PBR)
-#   pragma include("MetallicMaterial.xsh")
+#pragma include("MetallicMaterial.xsh")
 #else
-#   pragma include("SpecularMaterial.xsh")
+#pragma include("SpecularMaterial.xsh")
 #endif
 
 #if defined(X_OUTPUT_DEPTH)
-#   pragma include("DepthShader.xsh")
-#else
-#    if defined(X_PBR)
-#       pragma include("PBRShader.xsh")
-#    else
-#       if defined(X_UNLIT)
-#           pragma include("UnlitShader.xsh")
-#       else
-#           pragma include("DefaultShader.xsh")
-#       endif
-#    endif
+#pragma include("DepthShader.xsh")
+#else // X_OUTPUT_DEPTH
+#if defined(X_PBR)
+#pragma include("PBRShader.xsh")
+#else // X_PBR
+#if defined(X_UNLIT)
+#pragma include("UnlitShader.xsh")
+#else // X_UNLIT
+#pragma include("DefaultShader.xsh")
+#endif // !X_UNLIT
+#endif // !X_PBR
 #endif // !X_OUTPUT_DEPTH
 
 ////////////////////////////////////////////////////////////////////////////////

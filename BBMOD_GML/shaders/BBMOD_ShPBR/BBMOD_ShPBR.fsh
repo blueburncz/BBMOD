@@ -71,7 +71,7 @@ uniform vec2 bbmod_IBLTexel;
 //
 // Includes
 //
-#   pragma include("MetallicMaterial.xsh")
+#pragma include("MetallicMaterial.xsh")
 #pragma include("Material.xsh")
 struct Material
 {
@@ -181,7 +181,7 @@ Material UnpackMaterial(
 }
 // include("MetallicMaterial.xsh")
 
-#       pragma include("PBRShader.xsh")
+#pragma include("PBRShader.xsh")
 #pragma include("IBL.xsh")
 #pragma include("OctahedronMapping.xsh")
 // Source: https://gamedev.stackexchange.com/questions/169508/octahedral-impostors-octahedral-mapping

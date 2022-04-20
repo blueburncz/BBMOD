@@ -104,7 +104,7 @@ uniform vec2 bbmod_ShadowmapTexel;
 //
 // Includes
 //
-#   pragma include("SpecularMaterial.xsh")
+#pragma include("SpecularMaterial.xsh")
 #pragma include("Material.xsh")
 struct Material
 {
@@ -198,7 +198,7 @@ Material UnpackMaterial(
 }
 // include("SpecularMaterial.xsh")
 
-#           pragma include("UnlitShader.xsh")
+#pragma include("UnlitShader.xsh")
 #pragma include("Fog.xsh")
 void Fog(float depth)
 {

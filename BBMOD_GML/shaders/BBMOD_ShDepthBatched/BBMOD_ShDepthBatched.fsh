@@ -60,7 +60,7 @@ uniform float bbmod_Exposure;
 //
 // Includes
 //
-#   pragma include("SpecularMaterial.xsh")
+#pragma include("SpecularMaterial.xsh")
 #pragma include("Material.xsh")
 struct Material
 {
@@ -154,7 +154,7 @@ Material UnpackMaterial(
 }
 // include("SpecularMaterial.xsh")
 
-#   pragma include("DepthShader.xsh")
+#pragma include("DepthShader.xsh")
 #pragma include("DepthEncoding.xsh")
 /// @param d Linearized depth to encode.
 /// @return Encoded depth.

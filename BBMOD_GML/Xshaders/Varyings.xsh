@@ -12,8 +12,8 @@ varying float v_fDepth;
 varying vec3 v_vLight;
 #if !defined(X_2D)
 varying vec3 v_vPosShadowmap;
+#endif // !X_2D
 #if defined(X_TERRAIN)
 varying vec2 v_vSplatmapCoord;
-#endif
-#endif
+#endif // !X_TERRAIN
 #endif
