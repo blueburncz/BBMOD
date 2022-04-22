@@ -240,11 +240,11 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		var p = 0;
 		repeat (ceil(_particleCount / _batchSize))
 		{
-			var _data = array_create(3 * 4 * _batchSize, 0);
+			var _data = array_create(4 * 4 * _batchSize, 0);
 			var d = 0;
 			repeat (min(_particleCount, _batchSize))
 			{
-				_particlesAlive[p++].write_data(_data, d * 12);
+				_particlesAlive[p++].write_data(_data, d * 16);
 				++d;
 			}
 			_particleCount -= _batchSize;
@@ -272,11 +272,11 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		var p = 0;
 		repeat (ceil(_particleCount / _batchSize))
 		{
-			var _data = array_create(3 * 4 * _batchSize, 0);
+			var _data = array_create(4 * 4 * _batchSize, 0);
 			var d = 0;
 			repeat (min(_particleCount, _batchSize))
 			{
-				_particlesAlive[p++].write_data(_data, d * 12);
+				_particlesAlive[p++].write_data(_data, d * 16);
 				++d;
 			}
 			_particleCount -= _batchSize;

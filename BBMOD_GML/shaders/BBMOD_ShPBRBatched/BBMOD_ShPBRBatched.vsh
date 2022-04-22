@@ -55,10 +55,12 @@ varying float v_fDepth;
 // Includes
 //
 #pragma include("Transform.xsh")
+#pragma include("QuaternionRotate.xsh")
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
+// include("QuaternionRotate.xsh")
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.

@@ -9,10 +9,8 @@ precision highp float;
 
 // Maximum number of bones of animated models
 #define MAX_BONES 64
-// Maximum number of particles
-#define MAX_PARTICLES 64
 // Maximum number of vec4 uniforms for dynamic batch data
-#define MAX_BATCH_DATA_SIZE (3 * MAX_PARTICLES)
+#define MAX_BATCH_DATA_SIZE 128
 // Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
 
@@ -68,6 +66,12 @@ varying vec3 v_vPosShadowmap;
 //
 // Includes
 //
+#pragma include("QuaternionRotate.xsh")
+vec3 QuaternionRotate(vec4 q, vec3 v)
+{
+	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
+}
+// include("QuaternionRotate.xsh")
 
 #pragma include("Color.xsh")
 #define X_GAMMA 2.2
@@ -133,11 +137,10 @@ void DoPointLightVS(
 //
 void main()
 {
-	vec3 normal = vec3(0.0, 0.0, -1.0);
-
-	vec3 batchPosition = bbmod_BatchData[int(in_Id) * 3 + 0].xyz;
-	vec3 batchScale = bbmod_BatchData[int(in_Id) * 3 + 1].xyz;
-	v_vColor.rgb = xGammaToLinear(xDecodeRGBM(bbmod_BatchData[int(in_Id) * 3 + 2]));
+	vec3 batchPosition = bbmod_BatchData[int(in_Id) * 4 + 0].xyz;
+	vec4 batchRot = bbmod_BatchData[int(in_Id) * 4 + 1];
+	vec3 batchScale = bbmod_BatchData[int(in_Id) * 4 + 2].xyz;
+	v_vColor.rgb = xGammaToLinear(xDecodeRGBM(bbmod_BatchData[int(in_Id) * 4 + 3]));
 	v_vColor.a = 1.0;
 
 	vec4 position = in_Position;
@@ -145,6 +148,8 @@ void main()
 	position.y *= length(gm_Matrices[MATRIX_WORLD][1].xyz);
 	position.z *= length(gm_Matrices[MATRIX_WORLD][2].xyz);
 	position.xyz *= batchScale;
+	position.xyz = QuaternionRotate(batchRot, position.xyz);
+	vec3 normal = QuaternionRotate(batchRot, vec3(0.0, 0.0, -1.0));
 
 	mat4 W = gm_Matrices[MATRIX_WORLD];
 	W[3].xyz += batchPosition;

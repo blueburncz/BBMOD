@@ -63,10 +63,10 @@ function BBMOD_Particle(_id) constructor
 		if (IsAlive)
 		{
 			Position.ToArray(_array, _index);
-			// TODO: Pass particle rotation to shaders
-			Color.ToRGBM(_array, _index + 8);
+			Rotation.ToArray(_array, _index + 4);
+			Color.ToRGBM(_array, _index + 12);
 		}
-		Scale.Scale(IsAlive ? 1.0 : 0.0).ToArray(_array, _index + 4);
+		Scale.Scale(IsAlive ? 1.0 : 0.0).ToArray(_array, _index + 8);
 		return self;
 	};
 }

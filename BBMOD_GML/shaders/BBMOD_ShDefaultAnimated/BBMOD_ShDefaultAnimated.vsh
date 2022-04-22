@@ -70,10 +70,12 @@ varying vec3 v_vPosShadowmap;
 // Includes
 //
 #pragma include("Transform.xsh")
+#pragma include("QuaternionRotate.xsh")
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
+// include("QuaternionRotate.xsh")
 
 vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 {

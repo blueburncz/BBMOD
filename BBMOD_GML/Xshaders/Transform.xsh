@@ -1,8 +1,5 @@
 #if defined(X_ANIMATED) || defined(X_BATCHED)
-vec3 QuaternionRotate(vec4 q, vec3 v)
-{
-	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
-}
+#pragma include("QuaternionRotate.xsh")
 #endif
 
 #if defined(X_ANIMATED)
