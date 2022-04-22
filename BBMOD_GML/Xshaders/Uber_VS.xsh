@@ -153,16 +153,18 @@ void main()
 #endif
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
-#if defined(X_2D) || defined(X_PARTICLES)
+#if defined(X_PARTICLES)
+	vec3 tangent = QuaternionRotate(batchRot, vec3(1.0, 0.0, 0.0));
+	vec3 bitangent = QuaternionRotate(batchRot, vec3(0.0, 1.0, 0.0));
+	v_mTBN = mat3(W) * mat3(tangent, bitangent, normal);
+#else
+#if defined(X_2D)
 	vec3 tangent = vec3(1.0, 0.0, 0.0);
 	vec3 bitangent = vec3(0.0, 1.0, 0.0);
 #else
 	vec3 tangent = in_TangentW.xyz;
 	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
 #endif
-#if defined(X_PARTICLES)
-	v_mTBN = mat3(W) * mat3(tangent, bitangent, normal);
-#else
 	v_mTBN = mat3(gm_Matrices[MATRIX_WORLD]) * mat3(tangent, bitangent, normal);
 #endif
 

@@ -168,8 +168,8 @@ void main()
 	v_fDepth = positionWVP.z;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
-	vec3 tangent = vec3(1.0, 0.0, 0.0);
-	vec3 bitangent = vec3(0.0, 1.0, 0.0);
+	vec3 tangent = QuaternionRotate(batchRot, vec3(1.0, 0.0, 0.0));
+	vec3 bitangent = QuaternionRotate(batchRot, vec3(0.0, 1.0, 0.0));
 	v_mTBN = mat3(W) * mat3(tangent, bitangent, normal);
 
 	////////////////////////////////////////////////////////////////////////////
