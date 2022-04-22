@@ -141,7 +141,7 @@ void main()
 
 	vec3 tangent = vec3(1.0, 0.0, 0.0);
 	vec3 bitangent = vec3(0.0, 1.0, 0.0);
-	v_mTBN = mat3(gm_Matrices[MATRIX_WORLD]) * mat3(tangent, bitangent, normal);
+	v_mTBN = mat3(W) * mat3(tangent, bitangent, normal);
 
 
 }

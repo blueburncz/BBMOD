@@ -164,7 +164,11 @@ void main()
 	vec3 tangent = in_TangentW.xyz;
 	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
 #endif
+#if defined(X_PARTICLES)
+	v_mTBN = mat3(W) * mat3(tangent, bitangent, normal);
+#else
 	v_mTBN = mat3(gm_Matrices[MATRIX_WORLD]) * mat3(tangent, bitangent, normal);
+#endif
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 #if defined(X_TERRAIN)
