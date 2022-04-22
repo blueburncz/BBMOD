@@ -60,7 +60,6 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Fog
 
@@ -417,7 +416,6 @@ void main()
 
 	material.Base *= v_vColor.rgb;
 	material.Opacity *= v_vColor.a;
-
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{

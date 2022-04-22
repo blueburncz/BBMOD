@@ -22,11 +22,7 @@ precision highp float;
 //
 attribute vec4 in_Position;
 
-
 attribute vec2 in_TextureCoord0;
-
-
-
 
 attribute float in_Id;
 
@@ -37,12 +33,10 @@ attribute float in_Id;
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
-
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -104,7 +98,6 @@ vec3 xDecodeRGBM(vec4 rgbm)
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
 // include("RGBM.xsh")
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //

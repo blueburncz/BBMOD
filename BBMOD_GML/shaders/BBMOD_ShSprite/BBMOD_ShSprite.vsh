@@ -20,13 +20,9 @@ precision highp float;
 //
 attribute vec4 in_Position;
 
-
 attribute vec2 in_TextureCoord0;
 
 attribute vec4 in_Color;
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -34,10 +30,6 @@ attribute vec4 in_Color;
 //
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -61,7 +53,6 @@ varying vec3 v_vLight;
 //
 #pragma include("Transform.xsh")
 
-
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
 /// @param normal Variable to hold the transformed normal.
@@ -69,7 +60,6 @@ void Transform(out vec4 vertex, out vec3 normal)
 {
 	vertex = in_Position;
 	normal = vec3(0.0, 0.0, 1.0);
-
 
 }
 // include("Transform.xsh")
@@ -114,7 +104,6 @@ vec3 xDecodeRGBM(vec4 rgbm)
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
 // include("RGBM.xsh")
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //

@@ -22,11 +22,7 @@ precision highp float;
 //
 attribute vec4 in_Position;
 
-
 attribute vec2 in_TextureCoord0;
-
-
-
 
 attribute float in_Id;
 
@@ -36,7 +32,6 @@ attribute float in_Id;
 //
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
-
 
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 
@@ -171,7 +166,6 @@ void main()
 	vec3 tangent = vec3(1.0, 0.0, 0.0);
 	vec3 bitangent = vec3(0.0, 1.0, 0.0);
 	v_mTBN = mat3(W) * mat3(tangent, bitangent, normal);
-
 
 	////////////////////////////////////////////////////////////////////////////
 	// Point lights

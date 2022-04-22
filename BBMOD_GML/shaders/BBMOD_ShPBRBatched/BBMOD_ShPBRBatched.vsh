@@ -24,9 +24,7 @@ attribute vec3 in_Normal;
 
 attribute vec2 in_TextureCoord0;
 
-
 attribute vec4 in_TangentW;
-
 
 attribute float in_Id;
 
@@ -37,10 +35,7 @@ attribute float in_Id;
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
-
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -48,7 +43,6 @@ uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 //
 #pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
-
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
@@ -66,7 +60,6 @@ vec3 QuaternionRotate(vec4 q, vec3 v)
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
 
-
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
 /// @param normal Variable to hold the transformed normal.
@@ -74,7 +67,6 @@ void Transform(out vec4 vertex, out vec3 normal)
 {
 	vertex = in_Position;
 	normal = in_Normal;
-
 
 	int idx = int(in_Id) * 2;
 	vec4 posScale = bbmod_BatchData[idx];
@@ -84,8 +76,6 @@ void Transform(out vec4 vertex, out vec3 normal)
 	normal = QuaternionRotate(rot, normal);
 }
 // include("Transform.xsh")
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //

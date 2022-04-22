@@ -20,7 +20,6 @@ precision highp float;
 #pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
-
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
@@ -65,7 +64,6 @@ uniform float bbmod_Exposure;
 uniform sampler2D bbmod_IBL;
 // Texel size of one octahedron
 uniform vec2 bbmod_IBLTexel;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -344,8 +342,6 @@ void main()
 		bbmod_Emissive,
 		v_mTBN,
 		v_vTexCoord);
-
-
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{

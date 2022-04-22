@@ -57,7 +57,6 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Fog
 
@@ -85,7 +84,6 @@ uniform vec4 bbmod_LightAmbientDown;
 uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -400,7 +398,6 @@ void main()
 
 	material.Base *= v_vColor.rgb;
 	material.Opacity *= v_vColor.a;
-
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{

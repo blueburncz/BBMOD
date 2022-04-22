@@ -20,7 +20,6 @@ precision highp float;
 #pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
-
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
@@ -56,7 +55,6 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Fog
 
@@ -84,7 +82,6 @@ uniform vec4 bbmod_LightAmbientDown;
 uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -396,8 +393,6 @@ void main()
 		bbmod_SpecularColor,
 		v_mTBN,
 		v_vTexCoord);
-
-
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{

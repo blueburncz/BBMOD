@@ -24,12 +24,10 @@ attribute vec3 in_Normal;
 
 attribute vec2 in_TextureCoord0;
 
-
 attribute vec4 in_TangentW;
 
 attribute vec4 in_BoneIndex;
 attribute vec4 in_BoneWeight;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -40,10 +38,8 @@ uniform vec2 bbmod_TextureScale;
 
 uniform vec4 bbmod_Bones[2 * MAX_BONES];
 
-
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -51,7 +47,6 @@ uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 //
 #pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
-
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
@@ -124,8 +119,6 @@ void Transform(out vec4 vertex, out vec3 normal)
 
 }
 // include("Transform.xsh")
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
