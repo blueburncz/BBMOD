@@ -56,6 +56,8 @@ void DefaultShader(Material material, float depth)
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
+	// Emissive
+	gl_FragColor.rgb += material.Emissive;
 	// Opacity
 	gl_FragColor.a = material.Opacity;
 	// Fog

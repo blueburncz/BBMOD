@@ -6,6 +6,7 @@
 void UnlitShader(Material material, float depth)
 {
 	gl_FragColor.rgb = material.Base;
+	gl_FragColor.rgb += material.Emissive;
 	gl_FragColor.a = material.Opacity;
 	Fog(depth);
 	Exposure();

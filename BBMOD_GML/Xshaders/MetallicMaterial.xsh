@@ -20,7 +20,7 @@ Material UnpackMaterial(
 	mat3 TBN,
 	vec2 uv)
 {
-	Material m;
+	Material m = CreateMaterial(TBN);
 
 	// Base color and opacity
 	vec4 baseOpacity = texture2D(texBaseOpacity, uv);

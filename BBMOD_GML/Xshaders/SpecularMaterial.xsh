@@ -15,7 +15,7 @@ Material UnpackMaterial(
 	mat3 TBN,
 	vec2 uv)
 {
-	Material m;
+	Material m = CreateMaterial(TBN);
 
 #if defined(X_2D)
 	// Base color and opacity
