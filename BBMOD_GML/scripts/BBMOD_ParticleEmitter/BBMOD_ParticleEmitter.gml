@@ -1,5 +1,5 @@
 /// @func BBMOD_ParticleEmitter(_position, _system)
-/// @desc
+/// @desc Emits a particle system at a specific position in the world.
 /// @param {Struct.BBMOD_Vec3} _position The emitter's position in world-space.
 /// @param {Struct.BBMOD_ParticleSystem} _system The system of particles that
 /// this emitter emits.
@@ -222,11 +222,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		return false;
 	};
 
-	/// @func submit([_material])
-	/// @desc
-	/// @param {Struct.BBMOD_Material/Undefined} [_material]
-	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
-	static submit = function (_material=undefined) {
+	static _draw = function (_method, _material=undefined) {
 		gml_pragma("forceinline");
 
 		var _dynamicBatch = System.DynamicBatch;
@@ -248,41 +244,29 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 				++d;
 			}
 			_particleCount -= _batchSize;
-			_dynamicBatch.submit(_material, _data);
+			_method(_material, _data);
 		}
+	};
 
+	/// @func submit([_material])
+	/// @desc Immediately submits particles for rendering.
+	/// @param {Struct.BBMOD_Material/Undefined} [_material] The material to use
+	/// instead of the one defined in the particle system.
+	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
+	static submit = function (_material=undefined) {
+		var _dynamicBatch = System.DynamicBatch;
+		_draw(method(_dynamicBatch, _dynamicBatch.submit), _material);
 		return self;
 	};
 
 	/// @func render([_material])
-	/// @desc
-	/// @param {Struct.BBMOD_Material/Undefined} [_material]
+	/// @desc Enqueus particles for rendering.
+	/// @param {Struct.BBMOD_Material/Undefined} [_material] The material to use
+	/// instead of the one defined in the particle system.
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static render = function (_material=undefined) {
-		gml_pragma("forceinline");
-
 		var _dynamicBatch = System.DynamicBatch;
-		var _batchSize = _dynamicBatch.Size;
-		_material ??= System.Material;
-
-		matrix_set(matrix_world, matrix_build_identity());
-
-		var _particlesAlive = ParticlesAlive;
-		var _particleCount = array_length(_particlesAlive);
-		var p = 0;
-		repeat (ceil(_particleCount / _batchSize))
-		{
-			var _data = array_create(4 * 4 * _batchSize, 0);
-			var d = 0;
-			repeat (min(_particleCount, _batchSize))
-			{
-				_particlesAlive[p++].write_data(_data, d * 16);
-				++d;
-			}
-			_particleCount -= _batchSize;
-			_dynamicBatch.render(_material, _data);
-		}
-
+		_draw(method(_dynamicBatch, _dynamicBatch.render), _material);
 		return self;
 	};
 }
