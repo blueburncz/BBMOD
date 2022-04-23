@@ -51,19 +51,12 @@ function __bbmod_material_particle_lit()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE_LIT)
-
-		//_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
-		//_material.BaseOpacity = sprite_get_texture(SprParticle, 0);
-		//_material.NormalSmoothness = sprite_get_texture(SprParticle, 1);
-		//_material.AlphaTest = 0.01;
-		//_material.AlphaBlend = true;
-		//_material.ZWrite = false;
-
-		_material.BaseOpacity = sprite_get_texture(SprParticle, 0);
-		_material.BlendMode = bm_add;
+		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprParticle, 0);
 		_material.AlphaTest = 0.01;
 		_material.AlphaBlend = true;
 		_material.ZWrite = false;
+		
 	}
 	return _material;
 }
@@ -75,6 +68,7 @@ function __bbmod_material_particle_unlit()
 	{
 		_material = BBMOD_MATERIAL_PARTICLE_LIT.clone();
 		_material.set_shader(BBMOD_ERenderPass.Forward, BBMOD_SHADER_PARTICLE_UNLIT);
+		_material.remove_shader(BBMOD_ERenderPass.Shadows);
 	}
 	return _material;
 }
@@ -92,22 +86,22 @@ function __bbmod_model_particle()
 		vertex_begin(_vbuffer, BBMOD_VFORMAT_PARTICLE.Raw);
 		// 1
 		// |\
-		// 2-3
+		// 3-2
 		vertex_position_3d(_vbuffer, -0.5, -0.5, 0.0);
 		vertex_texcoord(_vbuffer, 0.0, 0.0);
+		vertex_position_3d(_vbuffer, +0.5, +0.5, 0.0);
+		vertex_texcoord(_vbuffer, 1.0, 1.0);
 		vertex_position_3d(_vbuffer, -0.5, +0.5, 0.0);
 		vertex_texcoord(_vbuffer, 0.0, 1.0);
-		vertex_position_3d(_vbuffer, +0.5, +0.5, 0.0);
-		vertex_texcoord(_vbuffer, 1.0, 1.0);
-		// 1-3
+		// 1-2
 		//  \|
-		//   2
+		//   3
 		vertex_position_3d(_vbuffer, -0.5, -0.5, 0.0);
 		vertex_texcoord(_vbuffer, 0.0, 0.0);
-		vertex_position_3d(_vbuffer, +0.5, +0.5, 0.0);
-		vertex_texcoord(_vbuffer, 1.0, 1.0);
 		vertex_position_3d(_vbuffer, +0.5, -0.5, 0.0);
 		vertex_texcoord(_vbuffer, 1.0, 0.0);
+		vertex_position_3d(_vbuffer, +0.5, +0.5, 0.0);
+		vertex_texcoord(_vbuffer, 1.0, 1.0);
 		vertex_end(_vbuffer);
 		_mesh.VertexBuffer = _vbuffer;
 
