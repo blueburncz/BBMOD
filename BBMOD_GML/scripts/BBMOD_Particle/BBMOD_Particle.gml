@@ -64,6 +64,7 @@ function BBMOD_Particle(_id) constructor
 		{
 			Position.ToArray(_array, _index);
 			Rotation.ToArray(_array, _index + 4);
+			_array[@ _index + 11] = Color.Alpha;
 			Color.ToRGBM(_array, _index + 12);
 		}
 		Scale.Scale(IsAlive ? 1.0 : 0.0).ToArray(_array, _index + 8);

@@ -113,9 +113,10 @@ void main()
 #if defined(X_PARTICLES)
 	vec3 batchPosition = bbmod_BatchData[int(in_Id) * 4 + 0].xyz;
 	vec4 batchRot = bbmod_BatchData[int(in_Id) * 4 + 1];
-	vec3 batchScale = bbmod_BatchData[int(in_Id) * 4 + 2].xyz;
+	vec4 batchScaleAlpha = bbmod_BatchData[int(in_Id) * 4 + 2];
+	vec3 batchScale = batchScaleAlpha.xyz;
+	v_vColor.a = batchScaleAlpha.w;
 	v_vColor.rgb = xGammaToLinear(xDecodeRGBM(bbmod_BatchData[int(in_Id) * 4 + 3]));
-	v_vColor.a = 1.0;
 
 	vec4 position = in_Position;
 	position.x *= length(gm_Matrices[MATRIX_WORLD][0].xyz);
