@@ -56,7 +56,7 @@ function __bbmod_material_particle_lit()
 		_material.AlphaTest = 0.01;
 		_material.AlphaBlend = true;
 		_material.ZWrite = false;
-		
+		_material.ShadowmapBias = 0.01;
 	}
 	return _material;
 }

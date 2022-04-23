@@ -90,16 +90,18 @@ renderer.add(
 	})
 	.add(global.terrain);
 
-//matSmoke = BBMOD_MATERIAL_PARTICLE_LIT.clone();
-//matSmoke.BaseOpacity = sprite_get_texture(SprSmoke, 0);
-//matSmoke.NormalSmoothness = sprite_get_texture(SprSmoke, 1);
+//matParticles = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
 
-particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, BBMOD_MATERIAL_PARTICLE_UNLIT, 100)
+matParticles = BBMOD_MATERIAL_PARTICLE_LIT.clone();
+matParticles.BaseOpacity = sprite_get_texture(SprSmoke, 0);
+matParticles.NormalSmoothness = sprite_get_texture(SprSmoke, 1);
+
+particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 100)
 	.add_module(new BBMOD_EmissionModule(1 / 60))
 	.add_module(new BBMOD_RandomVelocityModule(new BBMOD_Vec3(-10, -10, 50), new BBMOD_Vec3(10, 10, 150)))
-	.add_module(new BBMOD_RandomColorModule(BBMOD_C_RED, BBMOD_C_YELLOW))
+	//.add_module(new BBMOD_RandomColorModule(BBMOD_C_RED, BBMOD_C_YELLOW))
 	.add_module(new BBMOD_HealthOverTimeModule(-1, 1))
-	.add_module(new BBMOD_ScaleByHealthModule(new BBMOD_Vec3(5)))
+	.add_module(new BBMOD_ScaleByHealthModule(new BBMOD_Vec3(50)))
 	.add_module(new BBMOD_PhysicsModule(BBMOD_VEC3_UP.Scale(-9800)));
 particleSystem.Sort = true;
 particleSystem.Loop = true;

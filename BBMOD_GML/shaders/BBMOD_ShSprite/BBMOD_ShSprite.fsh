@@ -106,6 +106,10 @@ uniform float bbmod_ShadowmapEnablePS;
 uniform sampler2D bbmod_Shadowmap;
 // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
 uniform vec2 bbmod_ShadowmapTexel;
+// The area that the shadowmap captures
+uniform float bbmod_ShadowmapAreaPS;
+// TODO: Docs
+uniform float bbmod_ShadowmapBias;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -285,10 +289,19 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	}
 	float shadow = 0.0;
 	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
+	float bias = bbmod_ShadowmapBias / bbmod_ShadowmapAreaPS;
 	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
 	{
 		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
-		shadow += step(xDecodeDepth(texture2D(shadowMap, uv2).rgb), compareZ);
+		float depth = xDecodeDepth(texture2D(shadowMap, uv2).rgb);
+		if (bias != 0.0)
+		{
+			shadow += clamp((compareZ - depth) / bias, 0.0, 1.0);
+		}
+		else
+		{
+			shadow += step(depth, compareZ);
+		}
 	}
 	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }

@@ -164,9 +164,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		}
 
 		// Sort particles alive back-to-front by their dostance from the camera
-		static _doSort = 0;
-
-		if (System.Sort && (_doSort == 0))
+		if (System.Sort)
 		{
 			array_sort(_particlesAlive, method(self, function (_p1, _p2) {
 				var _camPos = global.__bbmodCameraPosition;
@@ -191,9 +189,6 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 				return 0;
 			}));
 		}
-
-		// TODO: Configure particle sorting frequency
-		if (++_doSort >= 4) _doSort = 0;
 
 		return self;
 	};

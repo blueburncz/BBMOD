@@ -312,7 +312,8 @@ function BBMOD_Renderer()
 			bbmod_shader_set_global_f2("bbmod_ShadowmapTexel",
 				texture_get_texel_width(_shadowmapTexture),
 				texture_get_texel_height(_shadowmapTexture));
-			bbmod_shader_set_global_f("bbmod_ShadowmapArea", ShadowmapArea);
+			bbmod_shader_set_global_f("bbmod_ShadowmapAreaVS", ShadowmapArea);
+			bbmod_shader_set_global_f("bbmod_ShadowmapAreaPS", ShadowmapArea);
 			bbmod_shader_set_global_f("bbmod_ShadowmapNormalOffset", ShadowmapNormalOffset);
 			bbmod_shader_set_global_matrix_array("bbmod_ShadowmapMatrix", get_shadowmap_matrix());
 		}

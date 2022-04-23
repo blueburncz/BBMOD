@@ -45,6 +45,12 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	}
 	SpecularColor = sprite_get_texture(_specularColorDefault, 0);
 
+	/// @var {Real} Controls range over which the mesh smoothly transitions into
+	/// shadow. This can be useful for example for billboarded particles, where
+	/// harsh transition does not look good. Default value is 0, which means no
+	/// smooth transition.
+	ShadowmapBias = 0.0;
+
 	/// @func set_normal_smoothness(_normal, _smoothness)
 	/// @desc Changes the normal vector and smoothness to a uniform value for the
 	/// entire material.
@@ -123,6 +129,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		{
 			_dest.SpecularColor = SpecularColor;
 		}
+
+		_dest.ShadowmapBias = ShadowmapBias;
 
 		return self;
 	};
