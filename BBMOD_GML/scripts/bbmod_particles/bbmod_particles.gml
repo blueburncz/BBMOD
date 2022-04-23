@@ -51,7 +51,6 @@ function __bbmod_material_particle_lit()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE_LIT)
-		_material.Culling = cull_noculling;
 
 		//_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
 		//_material.BaseOpacity = sprite_get_texture(SprParticle, 0);
@@ -91,18 +90,24 @@ function __bbmod_model_particle()
 
 		var _vbuffer = vertex_create_buffer();
 		vertex_begin(_vbuffer, BBMOD_VFORMAT_PARTICLE.Raw);
+		// 1
+		// |\
+		// 2-3
 		vertex_position_3d(_vbuffer, -0.5, -0.5, 0.0);
 		vertex_texcoord(_vbuffer, 0.0, 0.0);
-		vertex_position_3d(_vbuffer, +0.5, +0.5, 0.0);
-		vertex_texcoord(_vbuffer, 1.0, 1.0);
 		vertex_position_3d(_vbuffer, -0.5, +0.5, 0.0);
 		vertex_texcoord(_vbuffer, 0.0, 1.0);
-		vertex_position_3d(_vbuffer, -0.5, -0.5, 0.0);
-		vertex_texcoord(_vbuffer, 0.0, 0.0);
-		vertex_position_3d(_vbuffer, +0.5, -0.5, 0.0);
-		vertex_texcoord(_vbuffer, 1.0, 0.0);
 		vertex_position_3d(_vbuffer, +0.5, +0.5, 0.0);
 		vertex_texcoord(_vbuffer, 1.0, 1.0);
+		// 1-3
+		//  \|
+		//   2
+		vertex_position_3d(_vbuffer, -0.5, -0.5, 0.0);
+		vertex_texcoord(_vbuffer, 0.0, 0.0);
+		vertex_position_3d(_vbuffer, +0.5, +0.5, 0.0);
+		vertex_texcoord(_vbuffer, 1.0, 1.0);
+		vertex_position_3d(_vbuffer, +0.5, -0.5, 0.0);
+		vertex_texcoord(_vbuffer, 1.0, 0.0);
 		vertex_end(_vbuffer);
 		_mesh.VertexBuffer = _vbuffer;
 
