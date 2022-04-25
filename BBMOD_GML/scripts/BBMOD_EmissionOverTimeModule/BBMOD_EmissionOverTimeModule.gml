@@ -1,9 +1,9 @@
-/// @func BBMOD_EmissionModule([_interval[, _count]])
+/// @func BBMOD_EmissionOverTimeModule([_interval[, _count]])
 /// @extends BBMOD_ParticleModule
 /// @desc
 /// @param {Real} [_interval]
 /// @param {Real} [_count]
-function BBMOD_EmissionModule(_interval=1.0, _count=1)
+function BBMOD_EmissionOverTimeModule(_interval=1.0, _count=1)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Real}

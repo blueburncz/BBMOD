@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Health",
-    "path": "folders/BBMOD/Particles/Modules/Health.yy",
+    "name": "Color",
+    "path": "folders/BBMOD/Particles/Modules/Color.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_HealthOverTimeModule",
+  "name": "BBMOD_InitialColorModule",
   "tags": [],
   "resourceType": "GMScript",
 }

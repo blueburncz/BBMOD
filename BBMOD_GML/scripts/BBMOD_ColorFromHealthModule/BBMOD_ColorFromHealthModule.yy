@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Modules",
-    "path": "folders/BBMOD/Particles/Modules.yy",
+    "name": "Color",
+    "path": "folders/BBMOD/Particles/Modules/Color.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_RandomVelocityModule",
+  "name": "BBMOD_ColorFromHealthModule",
   "tags": [],
   "resourceType": "GMScript",
 }

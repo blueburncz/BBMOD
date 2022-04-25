@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Health",
-    "path": "folders/BBMOD/Particles/Modules/Health.yy",
+    "name": "Scale",
+    "path": "folders/BBMOD/Particles/Modules/Scale.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_HealthOverTimeModule",
+  "name": "BBMOD_MixInitialScaleModule",
   "tags": [],
   "resourceType": "GMScript",
 }

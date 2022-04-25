@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Health",
-    "path": "folders/BBMOD/Particles/Modules/Health.yy",
+    "name": "Emission",
+    "path": "folders/BBMOD/Particles/Modules/Emission.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_HealthOverTimeModule",
+  "name": "BBMOD_EmissionOverTimeModule",
   "tags": [],
   "resourceType": "GMScript",
 }

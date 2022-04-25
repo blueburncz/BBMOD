@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Modules",
-    "path": "folders/BBMOD/Particles/Modules.yy",
+    "name": "Scale",
+    "path": "folders/BBMOD/Particles/Modules/Scale.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_RandomScaleModule",
+  "name": "BBMOD_ScaleFromHealthModule",
   "tags": [],
   "resourceType": "GMScript",
 }

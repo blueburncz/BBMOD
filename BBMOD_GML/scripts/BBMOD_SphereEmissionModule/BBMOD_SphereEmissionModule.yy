@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Modules",
-    "path": "folders/BBMOD/Particles/Modules.yy",
+    "name": "Emission",
+    "path": "folders/BBMOD/Particles/Modules/Emission.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_RandomColorModule",
+  "name": "BBMOD_SphereEmissionModule",
   "tags": [],
   "resourceType": "GMScript",
 }

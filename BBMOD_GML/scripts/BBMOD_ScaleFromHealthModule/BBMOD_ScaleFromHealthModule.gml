@@ -1,9 +1,9 @@
-/// @func BBMOD_ScaleByHealthModule([_from[, _to]])
+/// @func BBMOD_ScaleFromHealthModule([_from[, _to]])
 /// @extends BBMOD_ParticleModule
 /// @desc
 /// @param {Struct.BBMOD_Vec3/Undefined} [_from]
 /// @param {Struct.BBMOD_Vec3/Undefined} [_to]
-function BBMOD_ScaleByHealthModule(_from=undefined, _to=undefined)
+function BBMOD_ScaleFromHealthModule(_from=undefined, _to=undefined)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Vec3}
