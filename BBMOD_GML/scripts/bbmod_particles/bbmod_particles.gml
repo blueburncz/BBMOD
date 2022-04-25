@@ -134,7 +134,7 @@ function __bbmod_model_particle()
 		_model.RootNode = _node;
 		_model.MaterialCount = 1;
 		_model.MaterialNames = ["Material"];
-		_model.Materials = [BBMOD_MATERIAL_PARTICLE_LIT];
+		_model.Materials = [BBMOD_MATERIAL_PARTICLE_UNLIT];
 	}
 	return _model;
 }
