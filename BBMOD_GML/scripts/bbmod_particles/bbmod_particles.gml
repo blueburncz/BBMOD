@@ -1,16 +1,36 @@
+/// @macro {Struct.BBMOD_VertexFormat} Vertex format of a single particle.
+/// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_PARTICLE __bbmod_vformat_particle()
 
+/// @macro {Struct.BBMOD_VertexFormat} Vertex format of dynamic batch of
+/// particles.
+/// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_PARTICLE_BATCHED __bbmod_vformat_particle_batched()
 
-#macro BBMOD_SHADER_PARTICLE_LIT __bbmod_shader_particle_lit()
-
+/// @macro {Struct.BBMOD_BaseShader} Shader for rendering dynamic batches
+/// of unlit particles.
+/// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_PARTICLE_UNLIT __bbmod_shader_particle_unlit()
 
+/// @macro {Struct.BBMOD_DefaultShader} Shader for rendering dynamic batches
+/// of lit particles.
+/// @see BBMOD_DefaultShader
+#macro BBMOD_SHADER_PARTICLE_LIT __bbmod_shader_particle_lit()
+
+/// @macro {Struct.BBMOD_DefaultShader} Shader for rendering dynamic batches
+/// of particles into depth buffers.
+/// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_PARTICLE_DEPTH __bbmod_shader_particle_depth()
 
-#macro BBMOD_MATERIAL_PARTICLE_LIT __bbmod_material_particle_lit()
-
+/// @macro {Struct.BBMOD_DefaultMaterial} Default material for rendering dynamic
+/// batches of unlit particles.
+/// @see BBMOD_DefaultMaterial
 #macro BBMOD_MATERIAL_PARTICLE_UNLIT __bbmod_material_particle_unlit()
+
+/// @macro {Struct.BBMOD_DefaultMaterial} Default material for rendering dynamic
+/// batches of lit particles.
+/// @see BBMOD_DefaultMaterial
+#macro BBMOD_MATERIAL_PARTICLE_LIT __bbmod_material_particle_lit()
 
 /// @var {Struct.BBMOD_Model} A particle model.
 #macro BBMOD_MODEL_PARTICLE __bbmod_model_particle()
@@ -27,38 +47,22 @@ function __bbmod_vformat_particle_batched()
 	return _vformat;
 }
 
+function __bbmod_shader_particle_unlit()
+{
+	static _shader = new BBMOD_BaseShader(BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	return _shader;
+}
+
 function __bbmod_shader_particle_lit()
 {
 	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
-function __bbmod_shader_particle_unlit()
-{
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
-	return _shader;
-}
-
 function __bbmod_shader_particle_depth()
 {
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticleDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_BaseShader(BBMOD_ShParticleDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
-}
-
-function __bbmod_material_particle_lit()
-{
-	static _material = undefined;
-	if (_material == undefined)
-	{
-		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE_LIT)
-		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
-		_material.BaseOpacity = sprite_get_texture(BBMOD_SprParticle, 0);
-		_material.AlphaTest = 0.01;
-		_material.AlphaBlend = true;
-		_material.ZWrite = false;
-		_material.ShadowmapBias = 0.01;
-	}
-	return _material;
 }
 
 function __bbmod_material_particle_unlit()
@@ -66,9 +70,24 @@ function __bbmod_material_particle_unlit()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		_material = BBMOD_MATERIAL_PARTICLE_LIT.clone();
-		_material.set_shader(BBMOD_ERenderPass.Forward, BBMOD_SHADER_PARTICLE_UNLIT);
-		_material.remove_shader(BBMOD_ERenderPass.Shadows);
+		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE_UNLIT)
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprParticle, 0);
+		_material.AlphaTest = 0.01;
+		_material.AlphaBlend = true;
+		_material.ZWrite = false;
+	}
+	return _material;
+}
+
+function __bbmod_material_particle_lit()
+{
+	static _material = undefined;
+	if (_material == undefined)
+	{
+		_material = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
+		_material.set_shader(BBMOD_ERenderPass.Forward, BBMOD_SHADER_PARTICLE_LIT);
+		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
+		_material.ShadowmapBias = 0.01;
 	}
 	return _material;
 }
