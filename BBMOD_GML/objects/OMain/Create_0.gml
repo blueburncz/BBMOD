@@ -95,6 +95,12 @@ renderer.add(
 matParticles = BBMOD_MATERIAL_PARTICLE_LIT.clone();
 matParticles.BaseOpacity = sprite_get_texture(SprSmoke, 0);
 matParticles.NormalSmoothness = sprite_get_texture(SprSmoke, 1);
+matParticles.OnApply = function (_material) {
+	if (bbmod_render_pass_get() == BBMOD_ERenderPass.Shadows)
+	{
+		BBMOD_SHADER_CURRENT.set_alpha_test(0.5);
+	}
+};
 
 particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 100)
 	.add_module(new BBMOD_EmissionModule(1 / 60))
@@ -107,7 +113,7 @@ particleSystem.Sort = true;
 particleSystem.Loop = true;
 
 particleEmitter = new BBMOD_ParticleEmitter(
-	new BBMOD_Vec3(OPlayer.x + 100, OPlayer.y + 100, 10),
+	new BBMOD_Vec3(OPlayer.x + 100, OPlayer.y + 100, 30),
 	particleSystem);
 
 renderer.add(particleEmitter);

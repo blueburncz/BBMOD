@@ -1,6 +1,7 @@
 /// @func BBMOD_Particle(_id)
-/// @desc
+/// @desc A single particle instance within a particle emitter.
 /// @param {Real} _id The ID of the particle.
+/// @see BBMOD_ParticleEmitter
 function BBMOD_Particle(_id) constructor
 {
 	/// @var {Real} The ID of the particle.
@@ -38,7 +39,7 @@ function BBMOD_Particle(_id) constructor
 	Color = BBMOD_C_WHITE;
 
 	/// @func reset()
-	/// @desc
+	/// @desc Resets particle's properites to the default values.
 	/// @return {Struct.BBMOD_Particle} Returns `self`.
 	static reset = function () {
 		gml_pragma("forceinline");
@@ -54,9 +55,9 @@ function BBMOD_Particle(_id) constructor
 	};
 
 	/// @func write_data(_array, _index)
-	/// @desc
-	/// @param {Array<Real>} _array
-	/// @param {Real} _index
+	/// @desc Writes particle's properties into an array.
+	/// @param {Array<Real>} _array The array to write the properties to.
+	/// @param {Real} _index The index to start writing at.
 	/// @return {Struct.BBMOD_Particle} Returns `self`.
 	static write_data = function (_array, _index) {
 		gml_pragma("forceinline");

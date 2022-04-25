@@ -1,5 +1,6 @@
 /// @func BBMOD_ParticleModule()
-/// @desc
+/// @desc Base struct for particle modules. These are composed into particle
+/// system to define behavior of their particles.
 /// @see BBMOD_ParticleSystem
 function BBMOD_ParticleModule() constructor
 {
@@ -8,40 +9,42 @@ function BBMOD_ParticleModule() constructor
 	Enabled = true;
 
 	/// @func on_start(_emitter)
-	/// @desc
-	/// @param {Struct.BBMOD_ParticleEmitter} _emitter
+	/// @desc Executed when an emitter starts emitting particles.
+	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The particle emitter.
 	static on_start = function (_emitter) {
 	};
 
 	/// @func on_update(_emitter, _deltaTime)
-	/// @desc
-	/// @param {Struct.BBMOD_ParticleEmitter} _emitter
-	/// @param {Real} _deltaTime
+	/// @desc Executed on every update of a particle emitter.
+	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The particle emitter.
+	/// @param {Real} _deltaTime How much time has passed since the last frame
+	/// (in microseconds).
 	static on_update = function (_emitter, _deltaTime) {
 	};
 
 	/// @func on_finish(_emitter)
-	/// @desc
-	/// @param {Struct.BBMOD_ParticleEmitter} _emitter
+	/// @desc Executed at the end of the emit cycle.
+	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The particle emitter.
 	static on_finish = function (_emitter) {
 	};
 
 	/// @func on_particle_start(_particle)
-	/// @desc
-	/// @param {Struct.BBMOD_Particle} _particle
+	/// @desc Executed when a new particle is spawned.
+	/// @param {Struct.BBMOD_Particle} _particle The spawned particle.
 	static on_particle_start = function (_particle) {
 	};
 
 	/// @func on_particle_update(_particle, _deltaTime)
-	/// @desc
-	/// @param {Struct.BBMOD_Particle} _particle
-	/// @param {Real} _deltaTime
+	/// @desc Executed on every update of a particle.
+	/// @param {Struct.BBMOD_Particle} _particle The updated particle.
+	/// @param {Real} _deltaTime How much time has passed since the last frame
+	/// (in microseconds).
 	static on_particle_update = function (_particle, _deltaTime) {
 	};
 
 	/// @func on_particle_finish(_particle)
-	/// @desc
-	/// @param {Struct.BBMOD_Particle} _particle
+	/// @desc Executed on particle's death.
+	/// @param {Struct.BBMOD_Particle} _particle The dead particle.
 	static on_particle_finish = function (_particle) {
 	};
 }

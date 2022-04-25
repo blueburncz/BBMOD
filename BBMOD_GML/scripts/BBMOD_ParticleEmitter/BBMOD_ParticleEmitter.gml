@@ -1,8 +1,10 @@
 /// @func BBMOD_ParticleEmitter(_position, _system)
-/// @desc Emits a particle system at a specific position in the world.
+/// @desc Emits particles at a specific position in the world. The behavior of
+/// the emitter particles is defined by a particle system.
 /// @param {Struct.BBMOD_Vec3} _position The emitter's position in world-space.
-/// @param {Struct.BBMOD_ParticleSystem} _system The system of particles that
-/// this emitter emits.
+/// @param {Struct.BBMOD_ParticleSystem} _system The particle system that defines
+/// behavior of emitted particles.
+/// @see BBMOD_Particle
 /// @see BBBMOD_ParticleSystem
 function BBMOD_ParticleEmitter(_position, _system) constructor
 {
@@ -44,7 +46,8 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	Time = 0.0;
 
 	/// @func spawn_particle()
-	/// @desc
+	/// @desc Spawns a particle if the maximum particle count defined in the
+	/// particle system has not been reached yet.
 	/// @return {Bool} Returns `true` if a particle was spawned.
 	static spawn_particle = function () {
 		gml_pragma("forceinline");
@@ -59,8 +62,9 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	};
 
 	/// @func update(_deltaTime)
-	/// @desc
-	/// @param {Real} _deltaTime
+	/// @desc Updates the emitter and all its particles.
+	/// @param {Real} _deltaTime How much time has passed since the last frame
+	/// (in microseconds).
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static update = function (_deltaTime) {
 		if (finished(true))

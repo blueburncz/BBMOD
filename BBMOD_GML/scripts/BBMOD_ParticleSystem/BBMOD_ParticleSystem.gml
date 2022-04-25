@@ -1,6 +1,6 @@
 /// @func BBMOD_ParticleSystem(_model, _material, _particleCount[, _batchSize])
 /// @extends BBMOD_Class
-/// @desc 
+/// @desc A collection of particle modules that together define behavior of particles.
 /// @param {Struct.BBMOD_Model} _model The particle model.
 /// @param {Struct.BBMOD_Material} _material The material used by the particle system.
 /// @param {Real} _particleCount Maximum number of particles alive in the system.
@@ -9,6 +9,8 @@
 /// @see BBMOD_ParticleModule
 /// @see BBMOD_ParticleEmitter
 /// @see BBMOD_MODEL_PARTICLE
+/// @see BBMOD_MATERIAL_PARTICLE_LIT
+/// @see BBMOD_MATERIAL_PARTICLE_UNLIT
 function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 	: BBMOD_Class() constructor
 {
