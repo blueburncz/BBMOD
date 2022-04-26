@@ -27,6 +27,12 @@ function BBMOD_Particle(_id) constructor
 	/// Default value is `0, 0, 0`.
 	Velocity = new BBMOD_Vec3();
 
+	/// @var {Struct.BBMOD_Vec3}
+	Acceleration = new BBMOD_Vec3();
+
+	/// @var {Struct.BBMOD_Vec3}
+	AccelerationReal = new BBMOD_Vec3();
+
 	/// @var {Struct.BBMOD_Quaternion} The particle's rotation.
 	Rotation = new BBMOD_Quaternion();
 

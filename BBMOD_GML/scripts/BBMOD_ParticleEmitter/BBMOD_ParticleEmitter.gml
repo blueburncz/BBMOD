@@ -72,6 +72,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			return self;
 		}
 
+		var _deltaTimeS = _deltaTime * 0.000001;
 		var _modules = System.Modules;
 		var _particlesToSpawn = ParticlesToSpawn;
 		var _particlesAlive = ParticlesAlive;
@@ -79,7 +80,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		var _particlesDead = ParticlesDead;
 
 		var _timeStart = (Time == 0.0);
-		Time += _deltaTime * 0.000001;
+		Time += _deltaTimeS;
 		var _timeOut = (Time >= System.Duration);
 		if (_timeOut && System.Loop)
 		{
@@ -100,13 +101,26 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			repeat (array_length(_modules))
 			{
 				var _module = _modules[m++];
-				if (_module.Enabled)
+				if (_module.Enabled && _module.on_particle_start)
 				{
 					_module.on_particle_start(_particle);
 				}
 			}
 		}
 		ParticlesToSpawn = [];
+
+		// Particle pre physics simulation
+		var p = 0;
+		repeat (array_length(_particlesAlive))
+		{
+			with (_particlesAlive[p++])
+			{
+				Position = Position
+					.Add(Velocity.Scale(_deltaTimeS))
+					.Add(AccelerationReal.Scale(_deltaTimeS * _deltaTimeS * 0.5));
+				Acceleration = new BBMOD_Vec3();
+			}
+		}
 
 		var m = 0;
 		repeat (array_length(_modules))
@@ -117,39 +131,53 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 				// Emitter start
 				if (_timeStart)
 				{
-					_module.on_start(self);
+					if (_module.on_start) _module.on_start(self);
 				}
 
 				// Emitter update
-				_module.on_update(self, _deltaTime);
+				if (_module.on_update) _module.on_update(self, _deltaTime);
 
 				// Particle update
-				var p = 0;
-				repeat (array_length(_particlesAlive))
+				if (_module.on_particle_update)
 				{
-					var _particle = _particlesAlive[p];
-					if (_particle.HealthLeft <= 0.0)
+					var p = 0;
+					repeat (array_length(_particlesAlive))
 					{
-						_particle.IsAlive = false;
-						array_delete(_particlesAlive, p--, 1);
-						array_push(_particlesToKill, _particle);
+						_module.on_particle_update(_particlesAlive[p++], _deltaTime);
 					}
-					else
-					{
-						_module.on_particle_update(_particle, _deltaTime);
-					}
-					++p;
 				}
 
 				// Emitter finish
 				if (_timeOut)
 				{
-					_module.on_finish(self);
+					if (_module.on_finish) _module.on_finish(self);
 				}
 			}
 		}
 
-		// Kill particles
+		var p = 0;
+		repeat (array_length(_particlesAlive))
+		{
+			with (_particlesAlive[p])
+			{
+				if (HealthLeft <= 0.0)
+				{
+					// Kill particle
+					IsAlive = false;
+					array_delete(_particlesAlive, p--, 1);
+					array_push(_particlesToKill, self);
+				}
+				else
+				{
+					// Particle simulate physics
+					Velocity = Velocity.Add(AccelerationReal.Add(Acceleration).Scale(_deltaTimeS * 0.5));
+					AccelerationReal = Acceleration.Clone();
+				}
+			}
+			++p;
+		}
+
+		// Particle death
 		var p = 0;
 		repeat (array_length(_particlesToKill))
 		{
@@ -160,7 +188,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			repeat (array_length(_modules))
 			{
 				var _module = _modules[m++];
-				if (_module.Enabled)
+				if (_module.Enabled && _module.on_particle_finish)
 				{
 					_module.on_particle_finish(_particle);
 				}
