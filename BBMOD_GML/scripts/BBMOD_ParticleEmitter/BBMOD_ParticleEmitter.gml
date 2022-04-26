@@ -76,7 +76,6 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		var _modules = System.Modules;
 		var _particlesToSpawn = ParticlesToSpawn;
 		var _particlesAlive = ParticlesAlive;
-		var _particlesToKill = [];
 		var _particlesDead = ParticlesDead;
 
 		var _timeStart = (Time == 0.0);
@@ -85,6 +84,29 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		if (_timeOut && System.Loop)
 		{
 			Time = 0.0;
+		}
+
+		var m = 0;
+		repeat (array_length(_modules))
+		{
+			var _module = _modules[m++];
+			if (_module.Enabled)
+			{
+				// Emitter start
+				if (_timeStart && _module.on_start)
+				{
+					_module.on_start(self);
+				}
+
+				// Emitter update
+				if (_module.on_update) _module.on_update(self, _deltaTime);
+
+				// Emitter finish
+				if (_timeOut && _module.on_finish)
+				{
+					_module.on_finish(self);
+				}
+			}
 		}
 
 		// Spawn particles
@@ -109,90 +131,59 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		}
 		ParticlesToSpawn = [];
 
-		// Particle pre physics simulation
 		var p = 0;
-		repeat (array_length(_particlesAlive))
-		{
-			with (_particlesAlive[p++])
-			{
-				Position = Position
-					.Add(Velocity.Scale(_deltaTimeS))
-					.Add(AccelerationReal.Scale(_deltaTimeS * _deltaTimeS * 0.5));
-				Acceleration = new BBMOD_Vec3();
-			}
-		}
-
-		var m = 0;
-		repeat (array_length(_modules))
-		{
-			var _module = _modules[m++];
-			if (_module.Enabled)
-			{
-				// Emitter start
-				if (_timeStart)
-				{
-					if (_module.on_start) _module.on_start(self);
-				}
-
-				// Emitter update
-				if (_module.on_update) _module.on_update(self, _deltaTime);
-
-				// Particle update
-				if (_module.on_particle_update)
-				{
-					var p = 0;
-					repeat (array_length(_particlesAlive))
-					{
-						_module.on_particle_update(_particlesAlive[p++], _deltaTime);
-					}
-				}
-
-				// Emitter finish
-				if (_timeOut)
-				{
-					if (_module.on_finish) _module.on_finish(self);
-				}
-			}
-		}
-
-		var p = 0;
+		var _temp1 = _deltaTimeS * 0.5;
+		var _temp2 = _deltaTimeS * _deltaTimeS * 0.5;
 		repeat (array_length(_particlesAlive))
 		{
 			with (_particlesAlive[p])
 			{
+				// Particle pre physics simulation
+				Position.Set(
+					Position.X + (Velocity.X * _deltaTimeS) + (AccelerationReal.X * _temp2),
+					Position.Y + (Velocity.Y * _deltaTimeS) + (AccelerationReal.Y * _temp2),
+					Position.Z + (Velocity.Z * _deltaTimeS) + (AccelerationReal.Z * _temp2));
+				Acceleration.Set(0.0, 0.0, 0.0);
+
+				// Particle update
+				var m = 0;
+				repeat (array_length(_modules))
+				{
+					var _module = _modules[m++];
+					if (_module.Enabled && _module.on_particle_update)
+					{
+						_module.on_particle_update(self, _deltaTime);
+					}
+				}
+
 				if (HealthLeft <= 0.0)
 				{
 					// Kill particle
 					IsAlive = false;
 					array_delete(_particlesAlive, p--, 1);
-					array_push(_particlesToKill, self);
+					array_push(_particlesDead, self);
+
+					var m = 0;
+					repeat (array_length(_modules))
+					{
+						var _module = _modules[m++];
+						if (_module.Enabled && _module.on_particle_finish)
+						{
+							_module.on_particle_finish(self);
+						}
+					}
 				}
 				else
 				{
 					// Particle simulate physics
-					Velocity = Velocity.Add(AccelerationReal.Add(Acceleration).Scale(_deltaTimeS * 0.5));
-					AccelerationReal = Acceleration.Clone();
+					Velocity.Set(
+						Velocity.X + ((AccelerationReal.X + Acceleration.X) * _temp1),
+						Velocity.Y + ((AccelerationReal.Y + Acceleration.Y) * _temp1),
+						Velocity.Z + ((AccelerationReal.Z + Acceleration.Z) * _temp1));
+					Acceleration.Copy(AccelerationReal);
 				}
 			}
 			++p;
-		}
-
-		// Particle death
-		var p = 0;
-		repeat (array_length(_particlesToKill))
-		{
-			var _particle = _particlesToKill[p++];
-			array_push(_particlesDead, _particle);
-
-			var m = 0;
-			repeat (array_length(_modules))
-			{
-				var _module = _modules[m++];
-				if (_module.Enabled && _module.on_particle_finish)
-				{
-					_module.on_particle_finish(_particle);
-				}
-			}
 		}
 
 		// Sort particles alive back-to-front by their dostance from the camera

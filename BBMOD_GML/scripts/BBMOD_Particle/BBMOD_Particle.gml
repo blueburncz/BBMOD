@@ -23,11 +23,11 @@ function BBMOD_Particle(_id) constructor
 	/// Default value is `0, 0, 0`.
 	Position = new BBMOD_Vec3();
 
-	/// @var {Struct.BBMOD_Vec3} Added to the particle's position on update.
+	/// @var {Struct.BBMOD_Vec3} The particle's velocity.
 	/// Default value is `0, 0, 0`.
 	Velocity = new BBMOD_Vec3();
 
-	/// @var {Struct.BBMOD_Vec3}
+	/// @var {Struct.BBMOD_Vec3} The particle's acceleration.
 	Acceleration = new BBMOD_Vec3();
 
 	/// @var {Struct.BBMOD_Vec3}
@@ -54,6 +54,8 @@ function BBMOD_Particle(_id) constructor
 		HealthLeft = Health;
 		Position = new BBMOD_Vec3();
 		Velocity = new BBMOD_Vec3();
+		Acceleration = new BBMOD_Vec3();
+		AccelerationReal = new BBMOD_Vec3();
 		Rotation = new BBMOD_Quaternion();
 		Scale = new BBMOD_Vec3(1.0);
 		Color = BBMOD_C_WHITE;
