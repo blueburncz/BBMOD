@@ -29,11 +29,29 @@ function BBMOD_AttractorModule(_position=undefined, _relative=true, _radius=1.0,
 	};
 
 	static on_particle_update = function (_particle, _deltaTime) {
-		var _vec = PositionReal.Sub(_particle.Position);
-		var _distance = _vec.Length();
-		if (_distance <= Radius)
+		gml_pragma("forceinline");
+		var _positionReal = PositionReal;
+		var _radius = Radius;
+		var _particlePosition = _particle.Position;
+		var _particleAcceleration = _particle.Acceleration;
+		var _vecX = _positionReal.X - _particlePosition.X;
+		var _vecY = _positionReal.Y - _particlePosition.Y;
+		var _vecZ = _positionReal.Z - _particlePosition.Z;
+		var _distance = sqrt((_vecX * _vecX) + (_vecY * _vecY) + (_vecZ * _vecZ));
+		if (_distance <= _radius)
 		{
-			_particle.Acceleration = _particle.Acceleration.Add(_vec.Normalize().Scale(Force * (1.0 - (_distance / Radius))));
+			var _scale = Force * (1.0 - (_distance / _radius));
+			_particleAcceleration.Set(
+				_particleAcceleration.X + ((_vecX / _distance) * _scale),
+				_particleAcceleration.Y + ((_vecY / _distance) * _scale),
+				_particleAcceleration.Z + ((_vecZ / _distance) * _scale));
 		}
+		// Same as:
+		//var _vec = PositionReal.Sub(_particle.Position);
+		//var _distance = _vec.Length();
+		//if (_distance <= Radius)
+		//{
+		//	_particle.Acceleration = _particle.Acceleration.Add(_vec.Normalize().Scale(Force * (1.0 - (_distance / Radius))));
+		//}
 	};
 }

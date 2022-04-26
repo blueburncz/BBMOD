@@ -99,7 +99,10 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 				}
 
 				// Emitter update
-				if (_module.on_update) _module.on_update(self, _deltaTime);
+				if (_module.on_update)
+				{
+					_module.on_update(self, _deltaTime);
+				}
 
 				// Emitter finish
 				if (_timeOut && _module.on_finish)
@@ -205,6 +208,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 					_camPos.X,
 					_camPos.Y,
 					_camPos.Z);
+				// Same as:
 				//var _d1 = _p1.Position.Sub(_camPos).Length();
 				//var _d2 = _p2.Position.Sub(_camPos).Length();
 				if (_d2 > _d1) return +1;
