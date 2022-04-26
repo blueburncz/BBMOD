@@ -122,7 +122,7 @@ particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 10
 	.add_module(new BBMOD_SphereEmissionModule(20.0, true))
 	.add_module(new BBMOD_MixInitialColorModule(BBMOD_C_AQUA, BBMOD_C_WHITE))
 	.add_module(new BBMOD_MixInitialVelocityModule(new BBMOD_Vec3(-1.0), new BBMOD_Vec3(1.0)))
-	.add_module(new BBMOD_MixInitialScaleModule(new BBMOD_Vec3(0.75), new BBMOD_Vec3(2.0)))
+	.add_module(new BBMOD_MixInitialScaleModule(new BBMOD_Vec3(0.25), new BBMOD_Vec3(0.75)))
 	//.add_module(new BBMOD_HealthOverTimeModule(-0.5, 1.0))
 	//.add_module(new BBMOD_ScaleFromHealthModule(new BBMOD_Vec3(2.0)))
 	.add_module(new BBMOD_AttractorModule(new BBMOD_Vec3(0.0), true, 500.0, 100.0))
