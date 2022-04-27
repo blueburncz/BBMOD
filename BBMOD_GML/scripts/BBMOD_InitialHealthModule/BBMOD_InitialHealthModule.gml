@@ -8,8 +8,10 @@ function BBMOD_InitialHealthModule(_health=1.0)
 	/// @var {Real}
 	Health = _health;
 
-	static on_particle_start = function (_particle) {
-		_particle.Health = Health;
-		_particle.HealthLeft = Health;
+	static on_particle_start = function (_emitter, _particleId) {
+		var _particles = _emitter.Particles;
+		var _health = Health;
+		_particles[# BBMOD_EParticle.Health, _particleId] = _health;
+		_particles[# BBMOD_EParticle.HealthLeft, _particleId] = _health;
 	};
 }

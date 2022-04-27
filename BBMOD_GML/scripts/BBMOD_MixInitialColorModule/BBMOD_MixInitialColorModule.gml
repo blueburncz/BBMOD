@@ -13,10 +13,13 @@ function BBMOD_MixInitialColorModule(_from=undefined, _to=undefined)
 	To = _to ?? From;
 
 	static on_particle_start = function (_emitter, _particleId) {
-		var _color = From.Mix(To, random(1.0));
-		_emitter.Particles[# BBMOD_EParticle.ColorR, _particleId] = _color.Red;
-		_emitter.Particles[# BBMOD_EParticle.ColorG, _particleId] = _color.Green;
-		_emitter.Particles[# BBMOD_EParticle.ColorB, _particleId] = _color.Blue;
-		_emitter.Particles[# BBMOD_EParticle.ColorA, _particleId] = _color.Alpha;
+		var _from = From;
+		var _to = To;
+		var _factor = random(1.0);
+		var _particles = _emitter.Particles;
+		_particles[# BBMOD_EParticle.ColorR, _particleId] = lerp(_from.Red, _to.Red, _factor);
+		_particles[# BBMOD_EParticle.ColorG, _particleId] = lerp(_from.Green, _to.Green, _factor);
+		_particles[# BBMOD_EParticle.ColorB, _particleId] = lerp(_from.Blue, _to.Blue, _factor);
+		_particles[# BBMOD_EParticle.ColorA, _particleId] = lerp(_from.Alpha, _to.Alpha, _factor);
 	};
 }

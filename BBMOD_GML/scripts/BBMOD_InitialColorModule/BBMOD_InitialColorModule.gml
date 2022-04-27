@@ -8,7 +8,12 @@ function BBMOD_InitialColorModule(_color)
 	/// @var {Struct.BBMOD_Color}
 	Color = _color ?? BBMOD_C_WHITE;
 
-	static on_particle_start = function (_particle) {
-		_particle.Color = Color.Clone();
+	static on_particle_start = function (_emitter, _particleId) {
+		var _color = Color;
+		var _particles = _emitter.Particles;
+		_particles[# BBMOD_EParticle.ColorR, _particleId] = _color.Red;
+		_particles[# BBMOD_EParticle.ColorG, _particleId] = _color.Green;
+		_particles[# BBMOD_EParticle.ColorB, _particleId] = _color.Blue;
+		_particles[# BBMOD_EParticle.ColorA, _particleId] = _color.Alpha;
 	};
 }

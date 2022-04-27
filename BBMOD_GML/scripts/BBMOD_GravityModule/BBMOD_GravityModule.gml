@@ -8,7 +8,27 @@ function BBMOD_GravityModule(_gravity=undefined)
 	/// @var {Struct.BBMOD_Vec3}
 	Gravity = _gravity ?? BBMOD_VEC3_UP.Scale(-1.0);
 
-	static on_particle_update = function (_particle, _deltaTime) {
-		_particle.Acceleration = _particle.Acceleration.Add(Gravity);
+	static on_update = function (_emitter, _deltaTime) {
+		var _particles = _emitter.Particles;
+		var _particleCount = _emitter.System.ParticleCount;
+		var _gravity = Gravity;
+
+		ds_grid_add_region(
+			_particles,
+			BBMOD_EParticle.AccelerationX, 0,
+			BBMOD_EParticle.AccelerationX, _particleCount - 1,
+			_gravity.X);
+
+		ds_grid_add_region(
+			_particles,
+			BBMOD_EParticle.AccelerationY, 0,
+			BBMOD_EParticle.AccelerationY, _particleCount - 1,
+			_gravity.Y);
+
+		ds_grid_add_region(
+			_particles,
+			BBMOD_EParticle.AccelerationZ, 0,
+			BBMOD_EParticle.AccelerationZ, _particleCount - 1,
+			_gravity.Z);
 	};
 }

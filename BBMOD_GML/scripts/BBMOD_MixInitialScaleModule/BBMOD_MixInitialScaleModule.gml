@@ -13,9 +13,12 @@ function BBMOD_MixInitialScaleModule(_from=undefined, _to=undefined)
 	To = _to ?? _from;
 
 	static on_particle_start = function (_emitter, _particleId) {
+		var _particles = _emitter.Particles;
+		var _from = From;
+		var _to = To;
 		var _factor = random(1.0);
-		_emitter.Particles[# BBMOD_EParticle.ScaleX, _particleId] = lerp(From.X, To.X, _factor);
-		_emitter.Particles[# BBMOD_EParticle.ScaleY, _particleId] = lerp(From.Y, To.Y, _factor);
-		_emitter.Particles[# BBMOD_EParticle.ScaleZ, _particleId] = lerp(From.Z, To.Z, _factor);
+		_particles[# BBMOD_EParticle.ScaleX, _particleId] = lerp(_from.X, _to.X, _factor);
+		_particles[# BBMOD_EParticle.ScaleY, _particleId] = lerp(_from.Y, _to.Y, _factor);
+		_particles[# BBMOD_EParticle.ScaleZ, _particleId] = lerp(_from.Z, _to.Z, _factor);
 	};
 }

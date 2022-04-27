@@ -1,3 +1,4 @@
+/// @enum Enumeration of particle properties.
 enum BBMOD_EParticle
 {
 	IsAlive,

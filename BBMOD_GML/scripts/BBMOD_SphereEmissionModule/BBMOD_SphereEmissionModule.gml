@@ -13,17 +13,15 @@ function BBMOD_SphereEmissionModule(_radius=0.5, _inside=false)
 	Inside = _inside;
 
 	static on_particle_start = function (_emitter, _particleId) {
-		var _offset = new BBMOD_Vec3(
-			random_range(-1.0, 1.0),
-			random_range(-1.0, 1.0),
-			random_range(-1.0, 1.0)
-		).Normalize().Scale(Radius);
-		if (Inside)
-		{
-			_offset = _offset.Scale(random(1.0));
-		}
-		_emitter.Particles[# BBMOD_EParticle.PositionX, _particleId] += _offset.X;
-		_emitter.Particles[# BBMOD_EParticle.PositionY, _particleId] += _offset.Y;
-		_emitter.Particles[# BBMOD_EParticle.PositionZ, _particleId] += _offset.Z;
+		var _offsetX = random_range(-1.0, 1.0);
+		var _offsetY = random_range(-1.0, 1.0);
+		var _offsetZ = random_range(-1.0, 1.0);
+		var _scale = (Inside ? random(Radius) : Radius)
+			/ point_distance_3d(0.0, 0.0, 0.0, _offsetX, _offsetY, _offsetZ);
+		var _particles = _emitter.Particles;
+
+		_particles[# BBMOD_EParticle.PositionX, _particleId] += _offsetX * _scale;
+		_particles[# BBMOD_EParticle.PositionY, _particleId] += _offsetY * _scale;
+		_particles[# BBMOD_EParticle.PositionZ, _particleId] += _offsetZ * _scale;
 	};
 }

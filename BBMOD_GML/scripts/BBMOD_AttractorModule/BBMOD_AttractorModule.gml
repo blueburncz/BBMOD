@@ -27,17 +27,25 @@ function BBMOD_AttractorModule(_position=undefined, _relative=true, _radius=1.0,
 	static on_update = function (_emitter, _deltaTime) {
 		PositionReal = Relative ? _emitter.Position.Add(Position) : Position;
 
+		var _particlesAlive = _emitter.ParticlesAlive;
 		var _particles = _emitter.Particles;
+		var _positionRealX = PositionReal.X;
+		var _positionRealY = PositionReal.Y;
+		var _positionRealZ = PositionReal.Z;
+		var _radius = Radius;
+		var _force = Force;
 
-		for (var _particleId = _emitter.System.ParticleCount - 1; _particleId >= 0; --_particleId)
+		var i = 0;
+		repeat (array_length(_particlesAlive))
 		{
-			var _vecX = PositionReal.X - _particles[# BBMOD_EParticle.PositionX, _particleId];
-			var _vecY = PositionReal.Y - _particles[# BBMOD_EParticle.PositionY, _particleId];
-			var _vecZ = PositionReal.Z - _particles[# BBMOD_EParticle.PositionZ, _particleId];
+			var _particleId = _particlesAlive[i++];
+			var _vecX = _positionRealX - _particles[# BBMOD_EParticle.PositionX, _particleId];
+			var _vecY = _positionRealY - _particles[# BBMOD_EParticle.PositionY, _particleId];
+			var _vecZ = _positionRealZ - _particles[# BBMOD_EParticle.PositionZ, _particleId];
 			var _distance = sqrt((_vecX * _vecX) + (_vecY * _vecY) + (_vecZ * _vecZ));
-			if (_distance <= Radius)
+			if (_distance <= _radius)
 			{
-				var _scale = Force * (1.0 - (_distance / Radius));
+				var _scale = _force * (1.0 - (_distance / _radius));
 				_particles[# BBMOD_EParticle.AccelerationX, _particleId] += (_vecX / _distance) * _scale;
 				_particles[# BBMOD_EParticle.AccelerationY, _particleId] += (_vecY / _distance) * _scale;
 				_particles[# BBMOD_EParticle.AccelerationZ, _particleId] += (_vecZ / _distance) * _scale;

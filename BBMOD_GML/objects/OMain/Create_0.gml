@@ -127,7 +127,6 @@ particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 10
 	//.add_module(new BBMOD_ScaleFromHealthModule(new BBMOD_Vec3(2.0)))
 	.add_module(new BBMOD_AttractorModule(new BBMOD_Vec3(0.0), true, 500.0, 100.0))
 	;
-particleSystem.Loop = true;
 
 particleEmitter = new BBMOD_ParticleEmitter(
 	new BBMOD_Vec3(OPlayer.x + 80, OPlayer.y + 80, 30),

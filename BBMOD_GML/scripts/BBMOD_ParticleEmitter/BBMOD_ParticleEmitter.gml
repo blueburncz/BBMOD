@@ -5,8 +5,15 @@
 /// @param {Struct.BBMOD_ParticleSystem} _system The particle system that defines
 /// behavior of emitted particles.
 /// @see BBBMOD_ParticleSystem
-function BBMOD_ParticleEmitter(_position, _system) constructor
+function BBMOD_ParticleEmitter(_position, _system)
+	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
+	static Super_Class = {
+		destroy: destroy,
+	};
+
 	/// @var {Struct.BBMOD_Vec3} The emitter's position in world-space.
 	Position = _position;
 
@@ -20,6 +27,9 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	Particles = ds_grid_create(BBMOD_EParticle.SIZE, System.ParticleCount);
 
 	ds_grid_clear(Particles, 0.0);
+
+	/// @private
+	GridCompute = ds_grid_create(3, System.ParticleCount);
 
 	/// @var {Array<Real>} Ids of particles to be spawned.
 	/// @private
@@ -58,8 +68,6 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		return false;
 	};
 
-	_gridTemp = ds_grid_create(3, System.ParticleCount);
-
 	/// @func update(_deltaTime)
 	/// @desc Updates the emitter and all its particles.
 	/// @param {Real} _deltaTime How much time has passed since the last frame
@@ -75,7 +83,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		var _modules = System.Modules;
 		var _particlesAlive = ParticlesAlive;
 
-		var _timeStart = (Time == 0.0);
+		var _timeStart = (Time == 0.0 && _deltaTime != 0.0);
 		Time += _deltaTimeS;
 		var _timeOut = (Time >= System.Duration);
 		if (_timeOut && System.Loop)
@@ -83,7 +91,6 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			Time = 0.0;
 		}
 
-		//var _gridTemp = ds_grid_create(3, System.ParticleCount);
 		var _temp1 = _deltaTimeS * 0.5;
 		var _temp2 = _deltaTimeS * _deltaTimeS * 0.5;
 
@@ -163,7 +170,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		// position += velocity * _deltaTimeS:
 		ds_grid_set_grid_region(
-			_gridTemp,
+			GridCompute,
 			Particles,
 			BBMOD_EParticle.VelocityX, 0,
 			BBMOD_EParticle.VelocityZ, System.ParticleCount - 1,
@@ -171,7 +178,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			);
 
 		ds_grid_multiply_region(
-			_gridTemp,
+			GridCompute,
 			0, 0,
 			2, System.ParticleCount - 1,
 			_deltaTimeS
@@ -179,7 +186,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		ds_grid_add_grid_region(
 			Particles,
-			_gridTemp,
+			GridCompute,
 			0, 0,
 			2, System.ParticleCount - 1,
 			BBMOD_EParticle.PositionX, 0
@@ -187,7 +194,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		// position += accelerationReal * _temp2:
 		ds_grid_set_grid_region(
-			_gridTemp,
+			GridCompute,
 			Particles,
 			BBMOD_EParticle.AccelerationRealX, 0,
 			BBMOD_EParticle.AccelerationRealZ, System.ParticleCount - 1,
@@ -195,7 +202,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			);
 
 		ds_grid_multiply_region(
-			_gridTemp,
+			GridCompute,
 			0, 0,
 			2, System.ParticleCount - 1,
 			_temp2
@@ -203,7 +210,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		ds_grid_add_grid_region(
 			Particles,
-			_gridTemp,
+			GridCompute,
 			0, 0,
 			2, System.ParticleCount - 1,
 			BBMOD_EParticle.PositionX, 0
@@ -250,7 +257,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		// velocity += (accelerationReal + acceleration) * _temp1
 		ds_grid_set_grid_region(
-			_gridTemp,
+			GridCompute,
 			Particles,
 			BBMOD_EParticle.AccelerationRealX, 0,
 			BBMOD_EParticle.AccelerationRealZ, System.ParticleCount - 1,
@@ -258,7 +265,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			);
 
 		ds_grid_add_grid_region(
-			_gridTemp,
+			GridCompute,
 			Particles,
 			BBMOD_EParticle.AccelerationX, 0,
 			BBMOD_EParticle.AccelerationZ, System.ParticleCount - 1,
@@ -266,7 +273,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			);
 
 		ds_grid_multiply_region(
-			_gridTemp,
+			GridCompute,
 			0, 0,
 			2, System.ParticleCount - 1,
 			_temp1
@@ -274,7 +281,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		ds_grid_add_grid_region(
 			Particles,
-			_gridTemp,
+			GridCompute,
 			0, 0,
 			2, System.ParticleCount - 1,
 			BBMOD_EParticle.VelocityX, 0
@@ -290,7 +297,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			);
 
 		////////////////////////////////////////////////////////////////////////
-		// Sort particles alive back-to-front by their dostance from the camera
+		// FIXME: Sort particles alive back-to-front by their dostance from the camera
 
 		//if (System.Sort)
 		//{
@@ -318,8 +325,6 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		//		return 0;
 		//	}));
 		//}
-
-		//ds_grid_destroy(_gridTemp);
 
 		return self;
 	};
@@ -358,41 +363,38 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		matrix_set(matrix_world, matrix_build_identity());
 
 		var _particles = Particles;
-		var _particleCount = System.ParticleCount;
-		var _particleId = 0;
-		while (_particleCount > 0)
+		var _particlesAlive = ParticlesAlive;
+		var _particleCount = array_length(_particlesAlive);
+		var _color = new BBMOD_Color();
+		var i = 0;
+		repeat (ceil(_particleCount / _batchSize))
 		{
 			var _data = array_create(_batchSize * 16, 0);
 			var d = 0;
 			repeat (min(_particleCount, _batchSize))
 			{
-				var _isAlive = _particles[# BBMOD_EParticle.IsAlive, _particleId];
+				var _particleId = _particlesAlive[i++];
 
-				if (_isAlive)
-				{
-					_data[d + 0] = _particles[# BBMOD_EParticle.PositionX, _particleId];
-					_data[d + 1] = _particles[# BBMOD_EParticle.PositionY, _particleId];
-					_data[d + 2] = _particles[# BBMOD_EParticle.PositionZ, _particleId];
+				_data[d + 0] = _particles[# BBMOD_EParticle.PositionX, _particleId];
+				_data[d + 1] = _particles[# BBMOD_EParticle.PositionY, _particleId];
+				_data[d + 2] = _particles[# BBMOD_EParticle.PositionZ, _particleId];
 
-					_data[d + 4] = _particles[# BBMOD_EParticle.RotationX, _particleId];
-					_data[d + 5] = _particles[# BBMOD_EParticle.RotationY, _particleId];
-					_data[d + 6] = _particles[# BBMOD_EParticle.RotationZ, _particleId];
-					_data[d + 7] = _particles[# BBMOD_EParticle.RotationW, _particleId];
+				_data[d + 4] = _particles[# BBMOD_EParticle.RotationX, _particleId];
+				_data[d + 5] = _particles[# BBMOD_EParticle.RotationY, _particleId];
+				_data[d + 6] = _particles[# BBMOD_EParticle.RotationZ, _particleId];
+				_data[d + 7] = _particles[# BBMOD_EParticle.RotationW, _particleId];
 
-					_data[d + 11] = _particles[# BBMOD_EParticle.ColorA, _particleId];
+				_data[d + 8]  = _particles[# BBMOD_EParticle.ScaleX, _particleId];
+				_data[d + 9]  = _particles[# BBMOD_EParticle.ScaleY, _particleId];
+				_data[d + 10] = _particles[# BBMOD_EParticle.ScaleZ, _particleId];
 
-					var _colorR = _particles[# BBMOD_EParticle.ColorR, _particleId];
-					var _colorG = _particles[# BBMOD_EParticle.ColorG, _particleId];
-					var _colorB = _particles[# BBMOD_EParticle.ColorB, _particleId];
+				_data[d + 11] = _particles[# BBMOD_EParticle.ColorA, _particleId];
 
-					new BBMOD_Color(_colorR, _colorG, _colorB).ToRGBM(_data, d + 12);
-				}
+				_color.Red = _particles[# BBMOD_EParticle.ColorR, _particleId];
+				_color.Green = _particles[# BBMOD_EParticle.ColorG, _particleId];
+				_color.Blue = _particles[# BBMOD_EParticle.ColorB, _particleId];
+				_color.ToRGBM(_data, d + 12);
 
-				_data[d + 8]  = _particles[# BBMOD_EParticle.ScaleX, _particleId] * _isAlive;
-				_data[d + 9]  = _particles[# BBMOD_EParticle.ScaleY, _particleId] * _isAlive;
-				_data[d + 10] = _particles[# BBMOD_EParticle.ScaleZ, _particleId] * _isAlive;
-
-				++_particleId;
 				d += 16;
 			}
 			_particleCount -= _batchSize;
@@ -420,5 +422,11 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		var _dynamicBatch = System.DynamicBatch;
 		_draw(method(_dynamicBatch, _dynamicBatch.render), _material);
 		return self;
+	};
+
+	static destroy = function () {
+		method(self, Super_Class.destroy)();
+		ds_grid_destroy(Particles);
+		ds_grid_destroy(GridCompute);
 	};
 }

@@ -13,8 +13,11 @@ function BBMOD_MixInitialVelocityModule(_from=undefined, _to=undefined)
 	To = _to ?? From;
 
 	static on_particle_start = function (_emitter, _particleId) {
-		_emitter.Particles[# BBMOD_EParticle.VelocityX, _particleId] = lerp(From.X, To.X, random(1.0));
-		_emitter.Particles[# BBMOD_EParticle.VelocityY, _particleId] = lerp(From.Y, To.Y, random(1.0));
-		_emitter.Particles[# BBMOD_EParticle.VelocityZ, _particleId] = lerp(From.Z, To.Z, random(1.0));
+		var _particles = _emitter.Particles;
+		var _from = From;
+		var _to = To;
+		_particles[# BBMOD_EParticle.VelocityX, _particleId] = lerp(_from.X, _to.X, random(1.0));
+		_particles[# BBMOD_EParticle.VelocityY, _particleId] = lerp(_from.Y, _to.Y, random(1.0));
+		_particles[# BBMOD_EParticle.VelocityZ, _particleId] = lerp(_from.Z, _to.Z, random(1.0));
 	};
 }
