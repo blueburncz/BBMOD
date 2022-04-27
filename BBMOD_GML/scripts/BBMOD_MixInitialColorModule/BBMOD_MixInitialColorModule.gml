@@ -12,7 +12,11 @@ function BBMOD_MixInitialColorModule(_from=undefined, _to=undefined)
 	/// @var {Struct.BBMOD_Color}
 	To = _to ?? From;
 
-	static on_particle_start = function (_particle) {
-		_particle.Color = From.Mix(To, random(1.0));
+	static on_particle_start = function (_emitter, _particleId) {
+		var _color = From.Mix(To, random(1.0));
+		_emitter.Particles[# BBMOD_EParticle.ColorR, _particleId] = _color.Red;
+		_emitter.Particles[# BBMOD_EParticle.ColorG, _particleId] = _color.Green;
+		_emitter.Particles[# BBMOD_EParticle.ColorB, _particleId] = _color.Blue;
+		_emitter.Particles[# BBMOD_EParticle.ColorA, _particleId] = _color.Alpha;
 	};
 }
