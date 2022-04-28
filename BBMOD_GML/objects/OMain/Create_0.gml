@@ -116,17 +116,17 @@ renderer.add(
 matParticles = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
 matParticles.BlendMode = bm_add;
 
-particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 100)
-	.add_module(new BBMOD_InitialEmissionModule(100))
-	//.add_module(new BBMOD_EmissionOverTimeModule(0.1))
+particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 200)
+	.add_module(new BBMOD_EmissionOverTimeModule(0.01))
 	.add_module(new BBMOD_SphereEmissionModule(20.0, true))
-	.add_module(new BBMOD_MixInitialColorModule(BBMOD_C_AQUA, BBMOD_C_WHITE))
+	.add_module(new BBMOD_MixInitialHealthModule(1.0, 2.0))
 	.add_module(new BBMOD_MixInitialVelocityModule(new BBMOD_Vec3(-1.0), new BBMOD_Vec3(1.0)))
-	.add_module(new BBMOD_MixInitialScaleModule(new BBMOD_Vec3(0.25), new BBMOD_Vec3(0.75)))
-	//.add_module(new BBMOD_HealthOverTimeModule(-0.5, 1.0))
-	//.add_module(new BBMOD_ScaleFromHealthModule(new BBMOD_Vec3(2.0)))
+	.add_module(new BBMOD_HealthOverTimeModule(-0.5, 1.0))
+	.add_module(new BBMOD_ScaleFromHealthModule(new BBMOD_Vec3(2.0)))
+	.add_module(new BBMOD_ColorFromHealthModule(BBMOD_C_RED, BBMOD_C_ORANGE))
 	.add_module(new BBMOD_AttractorModule(new BBMOD_Vec3(0.0), true, 500.0, 100.0))
 	;
+particleSystem.Loop = true;
 
 particleEmitter = new BBMOD_ParticleEmitter(
 	new BBMOD_Vec3(OPlayer.x + 80, OPlayer.y + 80, 30),

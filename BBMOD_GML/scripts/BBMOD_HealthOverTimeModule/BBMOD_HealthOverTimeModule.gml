@@ -16,7 +16,7 @@ function BBMOD_HealthOverTimeModule(_change=-1.0, _period=1.0)
 		ds_grid_add_region(
 			_emitter.Particles,
 			BBMOD_EParticle.HealthLeft, 0,
-			BBMOD_EParticle.HealthLeft, _emitter.System.ParticleCount - 1,
+			BBMOD_EParticle.HealthLeft, _emitter.ParticlesAlive - 1,
 			Change * ((_deltaTime * 0.000001) / Period));
 	};
 }

@@ -14,7 +14,6 @@ function BBMOD_ScaleFromHealthModule(_from=undefined, _to=undefined)
 
 	static on_update = function (_emitter, _deltaTime) {
 		var _particles = _emitter.Particles;
-		var _particlesAlive = _emitter.ParticlesAlive;
 		var _from = From;
 		var _fromX = _from.X;
 		var _fromY = _from.Y;
@@ -24,15 +23,15 @@ function BBMOD_ScaleFromHealthModule(_from=undefined, _to=undefined)
 		var _toY = _to.Y;
 		var _toZ = _to.Z;
 
-		var i = 0;
-		repeat (array_length(_particlesAlive))
+		var _particleIndex = 0;
+		repeat (_emitter.ParticlesAlive)
 		{
-			var _particleId = _particlesAlive[i++];
-			var _factor = clamp(_particles[# BBMOD_EParticle.HealthLeft, _particleId]
-				/ _particles[# BBMOD_EParticle.Health, _particleId], 0.0, 1.0);
-			_particles[# BBMOD_EParticle.ScaleX, _particleId] = lerp(_fromX, _toX, _factor);
-			_particles[# BBMOD_EParticle.ScaleY, _particleId] = lerp(_fromY, _toY, _factor);
-			_particles[# BBMOD_EParticle.ScaleZ, _particleId] = lerp(_fromZ, _toZ, _factor);
+			var _factor = clamp(_particles[# BBMOD_EParticle.HealthLeft, _particleIndex]
+				/ _particles[# BBMOD_EParticle.Health, _particleIndex], 0.0, 1.0);
+			_particles[# BBMOD_EParticle.ScaleX, _particleIndex] = lerp(_toX, _fromX, _factor);
+			_particles[# BBMOD_EParticle.ScaleY, _particleIndex] = lerp(_toY, _fromY, _factor);
+			_particles[# BBMOD_EParticle.ScaleZ, _particleIndex] = lerp(_toZ, _fromZ, _factor);
+			++_particleIndex;
 		}
 	};
 }

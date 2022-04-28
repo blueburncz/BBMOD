@@ -12,12 +12,12 @@ function BBMOD_MixInitialVelocityModule(_from=undefined, _to=undefined)
 	/// @var {Struct.BBMOD_Vec3}
 	To = _to ?? From;
 
-	static on_particle_start = function (_emitter, _particleId) {
+	static on_particle_start = function (_emitter, _particleIndex) {
 		var _particles = _emitter.Particles;
 		var _from = From;
 		var _to = To;
-		_particles[# BBMOD_EParticle.VelocityX, _particleId] = lerp(_from.X, _to.X, random(1.0));
-		_particles[# BBMOD_EParticle.VelocityY, _particleId] = lerp(_from.Y, _to.Y, random(1.0));
-		_particles[# BBMOD_EParticle.VelocityZ, _particleId] = lerp(_from.Z, _to.Z, random(1.0));
+		_particles[# BBMOD_EParticle.VelocityX, _particleIndex] = lerp(_from.X, _to.X, random(1.0));
+		_particles[# BBMOD_EParticle.VelocityY, _particleIndex] = lerp(_from.Y, _to.Y, random(1.0));
+		_particles[# BBMOD_EParticle.VelocityZ, _particleIndex] = lerp(_from.Z, _to.Z, random(1.0));
 	};
 }

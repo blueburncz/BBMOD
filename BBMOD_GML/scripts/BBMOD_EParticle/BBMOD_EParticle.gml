@@ -1,6 +1,7 @@
 /// @enum Enumeration of particle properties.
 enum BBMOD_EParticle
 {
+	Id,
 	IsAlive,
 	Health,
 	HealthLeft,

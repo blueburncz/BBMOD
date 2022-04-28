@@ -12,7 +12,7 @@ function BBMOD_SphereEmissionModule(_radius=0.5, _inside=false)
 	/// @var {Bool}
 	Inside = _inside;
 
-	static on_particle_start = function (_emitter, _particleId) {
+	static on_particle_start = function (_emitter, _particleIndex) {
 		var _offsetX = random_range(-1.0, 1.0);
 		var _offsetY = random_range(-1.0, 1.0);
 		var _offsetZ = random_range(-1.0, 1.0);
@@ -20,8 +20,8 @@ function BBMOD_SphereEmissionModule(_radius=0.5, _inside=false)
 			/ point_distance_3d(0.0, 0.0, 0.0, _offsetX, _offsetY, _offsetZ);
 		var _particles = _emitter.Particles;
 
-		_particles[# BBMOD_EParticle.PositionX, _particleId] += _offsetX * _scale;
-		_particles[# BBMOD_EParticle.PositionY, _particleId] += _offsetY * _scale;
-		_particles[# BBMOD_EParticle.PositionZ, _particleId] += _offsetZ * _scale;
+		_particles[# BBMOD_EParticle.PositionX, _particleIndex] += _offsetX * _scale;
+		_particles[# BBMOD_EParticle.PositionY, _particleIndex] += _offsetY * _scale;
+		_particles[# BBMOD_EParticle.PositionZ, _particleIndex] += _offsetZ * _scale;
 	};
 }

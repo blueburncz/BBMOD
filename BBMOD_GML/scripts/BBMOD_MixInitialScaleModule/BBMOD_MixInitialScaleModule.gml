@@ -12,13 +12,13 @@ function BBMOD_MixInitialScaleModule(_from=undefined, _to=undefined)
 	/// @var {Struct.BBMOD_Vec3}
 	To = _to ?? _from;
 
-	static on_particle_start = function (_emitter, _particleId) {
+	static on_particle_start = function (_emitter, _particleIndex) {
 		var _particles = _emitter.Particles;
 		var _from = From;
 		var _to = To;
 		var _factor = random(1.0);
-		_particles[# BBMOD_EParticle.ScaleX, _particleId] = lerp(_from.X, _to.X, _factor);
-		_particles[# BBMOD_EParticle.ScaleY, _particleId] = lerp(_from.Y, _to.Y, _factor);
-		_particles[# BBMOD_EParticle.ScaleZ, _particleId] = lerp(_from.Z, _to.Z, _factor);
+		_particles[# BBMOD_EParticle.ScaleX, _particleIndex] = lerp(_from.X, _to.X, _factor);
+		_particles[# BBMOD_EParticle.ScaleY, _particleIndex] = lerp(_from.Y, _to.Y, _factor);
+		_particles[# BBMOD_EParticle.ScaleZ, _particleIndex] = lerp(_from.Z, _to.Z, _factor);
 	};
 }

@@ -19,9 +19,9 @@ function BBMOD_ParticleModule() constructor
 	// Args: _emitter
 	static on_finish = undefined;
 
-	// Args: _emitter, _particleId
+	// Args: _emitter, _particleIndex
 	static on_particle_start = undefined;
 
-	// Args: _emitter, _particleId
+	// Args: _emitter, _particleIndex
 	static on_particle_finish = undefined;
 }
