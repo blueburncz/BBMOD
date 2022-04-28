@@ -179,55 +179,57 @@ function BBMOD_ParticleEmitter(_position, _system)
 
 		////////////////////////////////////////////////////////////////////////
 		// Particle pre physics simulation
+		if (ParticlesAlive > 0)
+		{
+			// position += velocity * _deltaTimeS:
+			ds_grid_set_grid_region(
+				GridCompute,
+				Particles,
+				BBMOD_EParticle.VelocityX, 0,
+				BBMOD_EParticle.VelocityZ, ParticlesAlive - 1,
+				0, 0);
 
-		// position += velocity * _deltaTimeS:
-		ds_grid_set_grid_region(
-			GridCompute,
-			Particles,
-			BBMOD_EParticle.VelocityX, 0,
-			BBMOD_EParticle.VelocityZ, ParticlesAlive - 1,
-			0, 0);
+			ds_grid_multiply_region(
+				GridCompute,
+				0, 0,
+				2, ParticlesAlive - 1,
+				_deltaTimeS);
 
-		ds_grid_multiply_region(
-			GridCompute,
-			0, 0,
-			2, ParticlesAlive - 1,
-			_deltaTimeS);
+			ds_grid_add_grid_region(
+				Particles,
+				GridCompute,
+				0, 0,
+				2, ParticlesAlive - 1,
+				BBMOD_EParticle.PositionX, 0);
 
-		ds_grid_add_grid_region(
-			Particles,
-			GridCompute,
-			0, 0,
-			2, ParticlesAlive - 1,
-			BBMOD_EParticle.PositionX, 0);
+			// position += accelerationReal * _temp2:
+			ds_grid_set_grid_region(
+				GridCompute,
+				Particles,
+				BBMOD_EParticle.AccelerationRealX, 0,
+				BBMOD_EParticle.AccelerationRealZ, ParticlesAlive - 1,
+				0, 0);
 
-		// position += accelerationReal * _temp2:
-		ds_grid_set_grid_region(
-			GridCompute,
-			Particles,
-			BBMOD_EParticle.AccelerationRealX, 0,
-			BBMOD_EParticle.AccelerationRealZ, ParticlesAlive - 1,
-			0, 0);
+			ds_grid_multiply_region(
+				GridCompute,
+				0, 0,
+				2, ParticlesAlive - 1,
+				_temp2);
 
-		ds_grid_multiply_region(
-			GridCompute,
-			0, 0,
-			2, ParticlesAlive - 1,
-			_temp2);
+			ds_grid_add_grid_region(
+				Particles,
+				GridCompute,
+				0, 0,
+				2, ParticlesAlive - 1,
+				BBMOD_EParticle.PositionX, 0);
 
-		ds_grid_add_grid_region(
-			Particles,
-			GridCompute,
-			0, 0,
-			2, ParticlesAlive - 1,
-			BBMOD_EParticle.PositionX, 0);
-
-		// acceleration = (0, 0, 0)
-		ds_grid_set_region(
-			Particles,
-			BBMOD_EParticle.AccelerationX, 0,
-			BBMOD_EParticle.AccelerationZ, ParticlesAlive - 1,
-			0.0);
+			// acceleration = (0, 0, 0)
+			ds_grid_set_region(
+				Particles,
+				BBMOD_EParticle.AccelerationX, 0,
+				BBMOD_EParticle.AccelerationZ, ParticlesAlive - 1,
+				0.0);
+		}
 
 		////////////////////////////////////////////////////////////////////////
 		// Execute modules
@@ -259,42 +261,44 @@ function BBMOD_ParticleEmitter(_position, _system)
 
 		////////////////////////////////////////////////////////////////////////
 		// Particle simulate physics
+		if (ParticlesAlive > 0)
+		{
+			// velocity += (accelerationReal + acceleration) * _temp1
+			ds_grid_set_grid_region(
+				GridCompute,
+				Particles,
+				BBMOD_EParticle.AccelerationRealX, 0,
+				BBMOD_EParticle.AccelerationRealZ, ParticlesAlive - 1,
+				0, 0);
 
-		// velocity += (accelerationReal + acceleration) * _temp1
-		ds_grid_set_grid_region(
-			GridCompute,
-			Particles,
-			BBMOD_EParticle.AccelerationRealX, 0,
-			BBMOD_EParticle.AccelerationRealZ, ParticlesAlive - 1,
-			0, 0);
+			ds_grid_add_grid_region(
+				GridCompute,
+				Particles,
+				BBMOD_EParticle.AccelerationX, 0,
+				BBMOD_EParticle.AccelerationZ, ParticlesAlive - 1,
+				0, 0);
 
-		ds_grid_add_grid_region(
-			GridCompute,
-			Particles,
-			BBMOD_EParticle.AccelerationX, 0,
-			BBMOD_EParticle.AccelerationZ, ParticlesAlive - 1,
-			0, 0);
+			ds_grid_multiply_region(
+				GridCompute,
+				0, 0,
+				2, ParticlesAlive - 1,
+				_temp1);
 
-		ds_grid_multiply_region(
-			GridCompute,
-			0, 0,
-			2, ParticlesAlive - 1,
-			_temp1);
+			ds_grid_add_grid_region(
+				Particles,
+				GridCompute,
+				0, 0,
+				2, ParticlesAlive - 1,
+				BBMOD_EParticle.VelocityX, 0);
 
-		ds_grid_add_grid_region(
-			Particles,
-			GridCompute,
-			0, 0,
-			2, ParticlesAlive - 1,
-			BBMOD_EParticle.VelocityX, 0);
-
-		// accelerationReal = acceleration
-		ds_grid_set_grid_region(
-			Particles,
-			Particles,
-			BBMOD_EParticle.AccelerationX, 0,
-			BBMOD_EParticle.AccelerationZ, ParticlesAlive - 1,
-			BBMOD_EParticle.AccelerationRealX, 0);
+			// accelerationReal = acceleration
+			ds_grid_set_grid_region(
+				Particles,
+				Particles,
+				BBMOD_EParticle.AccelerationX, 0,
+				BBMOD_EParticle.AccelerationZ, ParticlesAlive - 1,
+				BBMOD_EParticle.AccelerationRealX, 0);
+		}
 
 		////////////////////////////////////////////////////////////////////////
 		// FIXME: Sort particles alive back-to-front by their dostance from the camera

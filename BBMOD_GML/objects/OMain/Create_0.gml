@@ -128,8 +128,14 @@ particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 20
 	;
 particleSystem.Loop = true;
 
+var _emitterPosition = new BBMOD_Vec3(OPlayer.x + 80, OPlayer.y + 80, 30);
+
 particleEmitter = new BBMOD_ParticleEmitter(
-	new BBMOD_Vec3(OPlayer.x + 80, OPlayer.y + 80, 30),
+	_emitterPosition,
 	particleSystem);
+
+emitterLight = new BBMOD_PointLight(BBMOD_C_ORANGE, _emitterPosition, 30);
+
+bbmod_light_point_add(emitterLight);
 
 renderer.add(particleEmitter);

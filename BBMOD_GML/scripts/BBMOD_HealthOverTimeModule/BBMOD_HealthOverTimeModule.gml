@@ -13,10 +13,13 @@ function BBMOD_HealthOverTimeModule(_change=-1.0, _period=1.0)
 	Period = _period;
 
 	static on_update = function (_emitter, _deltaTime) {
-		ds_grid_add_region(
-			_emitter.Particles,
-			BBMOD_EParticle.HealthLeft, 0,
-			BBMOD_EParticle.HealthLeft, _emitter.ParticlesAlive - 1,
-			Change * ((_deltaTime * 0.000001) / Period));
+		if (_emitter.ParticlesAlive > 0)
+		{
+			ds_grid_add_region(
+				_emitter.Particles,
+				BBMOD_EParticle.HealthLeft, 0,
+				BBMOD_EParticle.HealthLeft, _emitter.ParticlesAlive - 1,
+				Change * ((_deltaTime * 0.000001) / Period));
+		}
 	};
 }
