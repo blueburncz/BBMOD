@@ -33,6 +33,11 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// @private
 	ParticlesAlive = 0;
 
+	/// @var {Real} The index of the particle that will be spawned next if all
+	/// particles are already alive.
+	/// @private
+	ParticleSpawnNext = 0;
+
 	/// @var {Real}
 	/// @private
 	Time = 0.0;
@@ -46,57 +51,72 @@ function BBMOD_ParticleEmitter(_position, _system)
 	}
 
 	/// @func spawn_particle()
-	/// @desc Spawns a particle if the maximum particle count defined in the
-	/// particle system has not been reached yet.
+	/// @desc If the particle system has not reached the end of the emit cycle
+	/// yet or if it is looping, then a new particle is spawned. If the maximum
+	/// number of particles has already been reached, then an existing particle
+	/// is used, without calling {@link BBMOD_ParticleModule.on_particle_finish}.
 	/// @return {Bool} Returns `true` if a particle was spawned.
 	static spawn_particle = function () {
 		gml_pragma("forceinline");
-		if (Time < System.Duration
-			&& System.ParticleCount - ParticlesAlive > 0)
+		if (Time >= System.Duration && !System.Loop)
 		{
-			var _particleIndex = ParticlesAlive++;
-
-			Particles[# BBMOD_EParticle.IsAlive, _particleIndex] = true;
-			Particles[# BBMOD_EParticle.Health, _particleIndex] = 1.0;
-			Particles[# BBMOD_EParticle.HealthLeft, _particleIndex] = 1.0;
-			Particles[# BBMOD_EParticle.PositionX, _particleIndex] = Position.X;
-			Particles[# BBMOD_EParticle.PositionY, _particleIndex] = Position.Y;
-			Particles[# BBMOD_EParticle.PositionZ, _particleIndex] = Position.Z;
-			Particles[# BBMOD_EParticle.VelocityX, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.VelocityY, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.VelocityZ, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.AccelerationX, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.AccelerationY, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.AccelerationZ, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.AccelerationRealX, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.AccelerationRealY, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.AccelerationRealZ, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.RotationX, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.RotationY, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.RotationZ, _particleIndex] = 0.0;
-			Particles[# BBMOD_EParticle.RotationW, _particleIndex] = 1.0;
-			Particles[# BBMOD_EParticle.ScaleX, _particleIndex] = 1.0;
-			Particles[# BBMOD_EParticle.ScaleY, _particleIndex] = 1.0;
-			Particles[# BBMOD_EParticle.ScaleZ, _particleIndex] = 1.0;
-			Particles[# BBMOD_EParticle.ColorR, _particleIndex] = 255.0;
-			Particles[# BBMOD_EParticle.ColorG, _particleIndex] = 255.0;
-			Particles[# BBMOD_EParticle.ColorB, _particleIndex] = 255.0;
-			Particles[# BBMOD_EParticle.ColorA, _particleIndex] = 1.0;
-
-			var _modules = System.Modules;
-			var m = 0;
-			repeat (array_length(_modules))
-			{
-				var _module = _modules[m++];
-				if (_module.Enabled && _module.on_particle_start)
-				{
-					_module.on_particle_start(self, _particleIndex);
-				}
-			}
-
-			return true;
+			return false;
 		}
-		return false;
+		
+		var _particleIndex;
+
+		if (System.ParticleCount - ParticlesAlive > 0)
+		{
+			_particleIndex = ParticlesAlive++;
+		}
+		else
+		{
+			_particleIndex = ParticleSpawnNext;
+			if (++ParticleSpawnNext >= System.ParticleCount)
+			{
+				ParticleSpawnNext = 0;
+			}
+		}
+
+		Particles[# BBMOD_EParticle.IsAlive, _particleIndex] = true;
+		Particles[# BBMOD_EParticle.Health, _particleIndex] = 1.0;
+		Particles[# BBMOD_EParticle.HealthLeft, _particleIndex] = 1.0;
+		Particles[# BBMOD_EParticle.PositionX, _particleIndex] = Position.X;
+		Particles[# BBMOD_EParticle.PositionY, _particleIndex] = Position.Y;
+		Particles[# BBMOD_EParticle.PositionZ, _particleIndex] = Position.Z;
+		Particles[# BBMOD_EParticle.VelocityX, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.VelocityY, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.VelocityZ, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.AccelerationX, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.AccelerationY, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.AccelerationZ, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.AccelerationRealX, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.AccelerationRealY, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.AccelerationRealZ, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.RotationX, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.RotationY, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.RotationZ, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.RotationW, _particleIndex] = 1.0;
+		Particles[# BBMOD_EParticle.ScaleX, _particleIndex] = 1.0;
+		Particles[# BBMOD_EParticle.ScaleY, _particleIndex] = 1.0;
+		Particles[# BBMOD_EParticle.ScaleZ, _particleIndex] = 1.0;
+		Particles[# BBMOD_EParticle.ColorR, _particleIndex] = 255.0;
+		Particles[# BBMOD_EParticle.ColorG, _particleIndex] = 255.0;
+		Particles[# BBMOD_EParticle.ColorB, _particleIndex] = 255.0;
+		Particles[# BBMOD_EParticle.ColorA, _particleIndex] = 1.0;
+
+		var _modules = System.Modules;
+		var m = 0;
+		repeat (array_length(_modules))
+		{
+			var _module = _modules[m++];
+			if (_module.Enabled && _module.on_particle_start)
+			{
+				_module.on_particle_start(self, _particleIndex);
+			}
+		}
+
+		return true;
 	};
 
 	/// @func update(_deltaTime)
