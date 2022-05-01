@@ -1,6 +1,8 @@
 # Changelog
 
 ## GML API:
+### General:
+* Removed all API previously marked as deprecated or obsolete!
+
 ### Core module:
-* Removed obsolete method `set_shadowmap` from `BBMOD_DefaultShader`.
 * Added new property `ShadowmapBias` to `BBMOD_DefaultMaterial`.
