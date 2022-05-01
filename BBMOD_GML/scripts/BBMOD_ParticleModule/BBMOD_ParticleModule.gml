@@ -8,20 +8,36 @@ function BBMOD_ParticleModule() constructor
 	/// is `true`.
 	Enabled = true;
 
-	// TODO: Add docs
-
-	// Args: _emitter
+	/// @func on_start(_emitter)
+	/// @desc Executed at the beginning of the emitter's emission cycle and
+	/// every time it loops.
+	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The emitter.
 	static on_start = undefined;
 
-	// Args: _emitter, _deltaTime
+	/// @func on_update(_emitter, _deltaTime)
+	/// @desc Executed every time the emitter is updated.
+	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The emitter.
+	/// @param {Real} _deltaTime How much time in microseconds has passed since
+	/// the last frame.
 	static on_update = undefined;
 
-	// Args: _emitter
+	/// @func on_finish(_emitter)
+	/// @desc Executed once at the end of the emitter's emission cycle. Never
+	/// executed if the emitted particle system is looping!
+	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The emitter.
 	static on_finish = undefined;
 
-	// Args: _emitter, _particleIndex
+	/// @func on_particle_start(_emitter, _particleIndex)
+	/// @desc Executed when a new particle is spawned.
+	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The emitter.
+	/// @param {Real} _particleIndex The row within
+	/// {@link BBMOD_ParticleEmitter.Particles} at which is the particle stored.
 	static on_particle_start = undefined;
 
-	// Args: _emitter, _particleIndex
+	/// @func (_emitter, _particleIndex)
+	/// @desc Executed when a particle dies.
+	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The emitter.
+	/// @param {Real} _particleIndex The row within
+	/// {@link BBMOD_ParticleEmitter.Particles} at which is the particle stored.
 	static on_particle_finish = undefined;
 }
