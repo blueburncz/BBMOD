@@ -19,8 +19,6 @@ function BBMOD_Material(_shader=undefined)
 		destroy: destroy,
 	};
 
-	/// @var {Real} The priority of the material. Used to control rendering order.
-
 	/// @var {Real} Render passes in which is the material rendered. Defaults
 	/// to 0 (no passes).
 	/// @readonly
