@@ -304,36 +304,6 @@ function BBMOD_ParticleEmitter(_position, _system)
 				BBMOD_EParticle.AccelerationRealX, 0);
 		}
 
-		////////////////////////////////////////////////////////////////////////
-		// FIXME: Sort particles alive back-to-front by their dostance from the camera
-
-		//if (System.Sort)
-		//{
-		//	array_sort(_particlesAlive, method(self, function (_p1, _p2) {
-		//		var _camPos = global.__bbmodCameraPosition;
-		//		var _d1 = point_distance_3d(
-		//			_p1.Position.X,
-		//			_p1.Position.Y,
-		//			_p1.Position.Z,
-		//			_camPos.X,
-		//			_camPos.Y,
-		//			_camPos.Z);
-		//		var _d2 = point_distance_3d(
-		//			_p2.Position.X,
-		//			_p2.Position.Y,
-		//			_p2.Position.Z,
-		//			_camPos.X,
-		//			_camPos.Y,
-		//			_camPos.Z);
-		//		// Same as:
-		//		//var _d1 = _p1.Position.Sub(_camPos).Length();
-		//		//var _d2 = _p2.Position.Sub(_camPos).Length();
-		//		if (_d2 > _d1) return +1;
-		//		if (_d2 < _d1) return -1;
-		//		return 0;
-		//	}));
-		//}
-
 		return self;
 	};
 
@@ -369,37 +339,76 @@ function BBMOD_ParticleEmitter(_position, _system)
 
 		matrix_set(matrix_world, matrix_build_identity());
 
-		var _particles = Particles;
 		var _particleCount = ParticlesAlive;
+		var _particlesSorted;
+
+		if (System.Sort)
+		{
+			_particlesSorted = array_create(_particleCount);
+			var i = 0;
+			repeat (_particleCount)
+			{
+				_particlesSorted[i] = i;
+				++i;
+			}
+
+			array_sort(_particlesSorted, method(self, function (_p1, _p2) {
+				var _camPos = global.__bbmodCameraPosition;
+				var _particles = Particles;
+				var _d1 = point_distance_3d(
+					_particles[# BBMOD_EParticle.PositionX, _p1],
+					_particles[# BBMOD_EParticle.PositionY, _p1],
+					_particles[# BBMOD_EParticle.PositionZ, _p1],
+					_camPos.X,
+					_camPos.Y,
+					_camPos.Z);
+				var _d2 = point_distance_3d(
+					_particles[# BBMOD_EParticle.PositionX, _p2],
+					_particles[# BBMOD_EParticle.PositionY, _p2],
+					_particles[# BBMOD_EParticle.PositionZ, _p2],
+					_camPos.X,
+					_camPos.Y,
+					_camPos.Z);
+				if (_d2 > _d1) return +1;
+				if (_d2 < _d1) return -1;
+				return 0;
+			}));
+		}
+
+		var _particles = Particles;
 		var _color = new BBMOD_Color();
 		var _particleIndex = 0;
+
 		repeat (ceil(_particleCount / _batchSize))
 		{
 			var _data = array_create(_batchSize * 16, 0);
 			var d = 0;
 			repeat (min(_particleCount, _batchSize))
 			{
-				_data[d + 0] = _particles[# BBMOD_EParticle.PositionX, _particleIndex];
-				_data[d + 1] = _particles[# BBMOD_EParticle.PositionY, _particleIndex];
-				_data[d + 2] = _particles[# BBMOD_EParticle.PositionZ, _particleIndex];
+				var i = System.Sort
+					? _particlesSorted[_particleIndex++]
+					: _particleIndex++;
 
-				_data[d + 4] = _particles[# BBMOD_EParticle.RotationX, _particleIndex];
-				_data[d + 5] = _particles[# BBMOD_EParticle.RotationY, _particleIndex];
-				_data[d + 6] = _particles[# BBMOD_EParticle.RotationZ, _particleIndex];
-				_data[d + 7] = _particles[# BBMOD_EParticle.RotationW, _particleIndex];
+				_data[d + 0] = _particles[# BBMOD_EParticle.PositionX, i];
+				_data[d + 1] = _particles[# BBMOD_EParticle.PositionY, i];
+				_data[d + 2] = _particles[# BBMOD_EParticle.PositionZ, i];
 
-				_data[d + 8]  = _particles[# BBMOD_EParticle.ScaleX, _particleIndex];
-				_data[d + 9]  = _particles[# BBMOD_EParticle.ScaleY, _particleIndex];
-				_data[d + 10] = _particles[# BBMOD_EParticle.ScaleZ, _particleIndex];
+				_data[d + 4] = _particles[# BBMOD_EParticle.RotationX, i];
+				_data[d + 5] = _particles[# BBMOD_EParticle.RotationY, i];
+				_data[d + 6] = _particles[# BBMOD_EParticle.RotationZ, i];
+				_data[d + 7] = _particles[# BBMOD_EParticle.RotationW, i];
 
-				_data[d + 11] = _particles[# BBMOD_EParticle.ColorA, _particleIndex];
+				_data[d + 8]  = _particles[# BBMOD_EParticle.ScaleX, i];
+				_data[d + 9]  = _particles[# BBMOD_EParticle.ScaleY, i];
+				_data[d + 10] = _particles[# BBMOD_EParticle.ScaleZ, i];
 
-				_color.Red = _particles[# BBMOD_EParticle.ColorR, _particleIndex];
-				_color.Green = _particles[# BBMOD_EParticle.ColorG, _particleIndex];
-				_color.Blue = _particles[# BBMOD_EParticle.ColorB, _particleIndex];
+				_data[d + 11] = _particles[# BBMOD_EParticle.ColorA, i];
+
+				_color.Red = _particles[# BBMOD_EParticle.ColorR, i];
+				_color.Green = _particles[# BBMOD_EParticle.ColorG, i];
+				_color.Blue = _particles[# BBMOD_EParticle.ColorB, i];
 				_color.ToRGBM(_data, d + 12);
 
-				++_particleIndex;
 				d += 16;
 			}
 			_particleCount -= _batchSize;

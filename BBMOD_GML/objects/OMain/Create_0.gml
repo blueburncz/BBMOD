@@ -91,15 +91,15 @@ renderer.add(
 	.add(global.terrain);
 
 
-//matParticles = BBMOD_MATERIAL_PARTICLE_LIT.clone();
-//matParticles.BaseOpacity = sprite_get_texture(SprSmoke, 0);
-//matParticles.NormalSmoothness = sprite_get_texture(SprSmoke, 1);
-//matParticles.OnApply = function (_material) {
-//	if (bbmod_render_pass_get() == BBMOD_ERenderPass.Shadows)
-//	{
-//		BBMOD_SHADER_CURRENT.set_alpha_test(0.5);
-//	}
-//};
+matParticles = BBMOD_MATERIAL_PARTICLE_LIT.clone();
+matParticles.BaseOpacity = sprite_get_texture(SprSmoke, 0);
+matParticles.NormalSmoothness = sprite_get_texture(SprSmoke, 1);
+matParticles.OnApply = function (_material) {
+	if (bbmod_render_pass_get() == BBMOD_ERenderPass.Shadows)
+	{
+		BBMOD_SHADER_CURRENT.set_alpha_test(0.5);
+	}
+};
 
 //particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 100)
 //	.add_module(new BBMOD_EmissionOverTimeModule(1 / 60))
@@ -108,7 +108,7 @@ renderer.add(
 //	//.add_module(new BBMOD_MixInitialColorModule(BBMOD_C_RED, BBMOD_C_YELLOW))
 //	.add_module(new BBMOD_HealthOverTimeModule(-1, 1))
 //	.add_module(new BBMOD_ScaleFromHealthModule(new BBMOD_Vec3(20)))
-//	.add_module(new BBMOD_GravityModule(BBMOD_VEC3_UP.Scale(-9800)))
+//	.add_module(new BBMOD_GravityModule(BBMOD_VEC3_UP.Scale(-980)))
 //	;
 //particleSystem.Sort = true;
 //particleSystem.Loop = true;
