@@ -1,4 +1,4 @@
-/// @func BBMOD_ColorFromHealthModule([_from[, _to[, _min[, _max]]])
+/// @func BBMOD_ColorFromSpeedModule([_from[, _to[, _min[, _max]]])
 /// @extends BBMOD_ParticleModule
 /// @desc
 /// @param {Struct.BBMOD_Color/Undefined} [_from]
@@ -43,10 +43,10 @@ function BBMOD_ColorFromSpeedModule(_from=undefined, _to=undefined, _min=0.0, _m
 			var _velZ = _particles[# BBMOD_EParticle.VelocityZ, _particleIndex];
 			var _speed = sqrt((_velX * _velX) + (_velY + _velY) + (_velZ * _velZ));
 			var _factor = clamp((_speed - _min) / _div, 0.0, 1.0);
-			_particles[# BBMOD_EParticle.ColorR, _particleIndex] = lerp(_toR, _fromR, _factor);
-			_particles[# BBMOD_EParticle.ColorG, _particleIndex] = lerp(_toG, _fromG, _factor);
-			_particles[# BBMOD_EParticle.ColorB, _particleIndex] = lerp(_toB, _fromB, _factor);
-			_particles[# BBMOD_EParticle.ColorA, _particleIndex] = lerp(_toA, _fromA, _factor);
+			_particles[# BBMOD_EParticle.ColorR, _particleIndex] = lerp(_fromR, _toR, _factor);
+			_particles[# BBMOD_EParticle.ColorG, _particleIndex] = lerp(_fromG, _toG, _factor);
+			_particles[# BBMOD_EParticle.ColorB, _particleIndex] = lerp(_fromB, _toB, _factor);
+			_particles[# BBMOD_EParticle.ColorA, _particleIndex] = lerp(_fromA, _toA, _factor);
 			++_particleIndex;
 		}
 	};
