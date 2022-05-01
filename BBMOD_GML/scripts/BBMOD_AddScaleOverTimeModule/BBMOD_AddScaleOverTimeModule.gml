@@ -3,7 +3,7 @@
 /// @desc
 /// @param {Struct.BBMOD_Vec3/Undefined} [_change]
 /// @param {Real} [_period]
-function BBMOD_AddHealthOverTimeModule(_change=undefined, _period=1.0)
+function BBMOD_AddScaleOverTimeModule(_change=undefined, _period=1.0)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Vec3}
