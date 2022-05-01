@@ -23,11 +23,12 @@ function BBMOD_ParticleEmitter(_position, _system)
 	System = _system;
 
 	/// @var {Id.DsGrid} Grid of particle data.
-	/// @readonly
 	Particles = ds_grid_create(BBMOD_EParticle.SIZE, System.ParticleCount);
 
-	/// @private
-	GridCompute = ds_grid_create(3, System.ParticleCount);
+	/// @var {Id.DsGrid} Grid used to do fast computations on all particles at
+	/// once. Its dimensions are 4 x NumberOfParticles, i.e. sufficient for
+	/// processing vec4s.
+	GridCompute = ds_grid_create(4, System.ParticleCount);
 
 	/// @var {Real} Number of particles that are alive.
 	/// @private
