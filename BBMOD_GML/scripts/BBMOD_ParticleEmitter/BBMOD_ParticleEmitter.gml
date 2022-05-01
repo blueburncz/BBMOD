@@ -185,9 +185,20 @@ function BBMOD_ParticleEmitter(_position, _system)
 		}
 
 		////////////////////////////////////////////////////////////////////////
-		// Particle pre physics simulation
+		// Particle pre-simulation
 		if (ParticlesAlive > 0)
 		{
+			////////////////////////////////////////////////////////////////////
+			// Time alive
+			ds_grid_add_region(
+				Particles,
+				BBMOD_EParticle.TimeAlive, 0,
+				BBMOD_EParticle.TimeAlive, ParticlesAlive - 1,
+				_deltaTimeS);
+
+			////////////////////////////////////////////////////////////////////
+			// Physics
+
 			// position += velocity * _deltaTimeS:
 			ds_grid_set_grid_region(
 				GridCompute,
