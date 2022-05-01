@@ -6,7 +6,7 @@
     "path": "folders/BBMOD/Particles/Modules/Health.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_HealthOverTimeModule",
+  "name": "BBMOD_AddHealthOverTimeModule",
   "tags": [],
   "resourceType": "GMScript",
 }

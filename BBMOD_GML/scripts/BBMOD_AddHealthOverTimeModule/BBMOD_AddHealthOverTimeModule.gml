@@ -1,9 +1,9 @@
-/// @func BBMOD_HealthOverTimeModule([_change[, _period]])
+/// @func BBMOD_AddHealthOverTimeModule([_change[, _period]])
 /// @extends BBMOD_ParticleModule
 /// @desc
 /// @param {Real} [_change]
 /// @param {Real} [_period]
-function BBMOD_HealthOverTimeModule(_change=-1.0, _period=1.0)
+function BBMOD_AddHealthOverTimeModule(_change=-1.0, _period=1.0)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Real}

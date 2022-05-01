@@ -78,7 +78,7 @@
     {"id":{"name":"SndFootstep8","path":"sounds/SndFootstep8/SndFootstep8.yy",},"order":8,},
     {"id":{"name":"BBMOD_MixInitialEmissionModule","path":"scripts/BBMOD_MixInitialEmissionModule/BBMOD_MixInitialEmissionModule.yy",},"order":2,},
     {"id":{"name":"SndFootstep9","path":"sounds/SndFootstep9/SndFootstep9.yy",},"order":9,},
-    {"id":{"name":"BBMOD_HealthOverTimeModule","path":"scripts/BBMOD_HealthOverTimeModule/BBMOD_HealthOverTimeModule.yy",},"order":0,},
+    {"id":{"name":"BBMOD_AddHealthOverTimeModule","path":"scripts/BBMOD_AddHealthOverTimeModule/BBMOD_AddHealthOverTimeModule.yy",},"order":0,},
     {"id":{"name":"SndFootstep5","path":"sounds/SndFootstep5/SndFootstep5.yy",},"order":5,},
     {"id":{"name":"BBMOD_Resouce","path":"scripts/BBMOD_Resouce/BBMOD_Resouce.yy",},"order":13,},
     {"id":{"name":"OZombie","path":"objects/OZombie/OZombie.yy",},"order":2,},
