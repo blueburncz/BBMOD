@@ -182,6 +182,7 @@
     {"id":{"name":"BBMOD_ShDepthBatched","path":"shaders/BBMOD_ShDepthBatched/BBMOD_ShDepthBatched.yy",},"order":3,},
     {"id":{"name":"Fnt16","path":"fonts/Fnt16/Fnt16.yy",},"order":0,},
     {"id":{"name":"BBMOD_MixInitialColorModule","path":"scripts/BBMOD_MixInitialColorModule/BBMOD_MixInitialColorModule.yy",},"order":1,},
+    {"id":{"name":"BBMOD_ColorFromSpeedModule","path":"scripts/BBMOD_ColorFromSpeedModule/BBMOD_ColorFromSpeedModule.yy",},"order":3,},
     {"id":{"name":"BBMOD_RaycastResult","path":"scripts/BBMOD_RaycastResult/BBMOD_RaycastResult.yy",},"order":5,},
     {"id":{"name":"bbmod_default_material","path":"scripts/bbmod_default_material/bbmod_default_material.yy",},"order":2,},
     {"id":{"name":"bbmod_pbr_init","path":"scripts/bbmod_pbr_init/bbmod_pbr_init.yy",},"order":3,},
