@@ -49,6 +49,7 @@
     {"id":{"name":"bbmod_mesh_to_colmesh","path":"scripts/bbmod_mesh_to_colmesh/bbmod_mesh_to_colmesh.yy",},"order":0,},
     {"id":{"name":"BBMOD_ShParticleDepth","path":"shaders/BBMOD_ShParticleDepth/BBMOD_ShParticleDepth.yy",},"order":5,},
     {"id":{"name":"Fnt24","path":"fonts/Fnt24/Fnt24.yy",},"order":1,},
+    {"id":{"name":"BBMOD_DragModule","path":"scripts/BBMOD_DragModule/BBMOD_DragModule.yy",},"order":2,},
     {"id":{"name":"bbmod_defines","path":"scripts/bbmod_defines/bbmod_defines.yy",},"order":5,},
     {"id":{"name":"BBMOD_Vec2","path":"scripts/BBMOD_Vec2/BBMOD_Vec2.yy",},"order":2,},
     {"id":{"name":"SndGunshot0","path":"sounds/SndGunshot0/SndGunshot0.yy",},"order":0,},

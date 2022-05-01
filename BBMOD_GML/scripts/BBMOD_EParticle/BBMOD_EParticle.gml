@@ -9,6 +9,9 @@ enum BBMOD_EParticle
 	/// can be nonsense. All particles within a particle system are dead at the
 	/// start.
 	IsAlive,
+	/// @member How long in seconds has the particle been alive for. This is set
+	/// to 0 on spawn and increases on every update.
+	TimeAlive,
 	/// @member The particle's initial health value. Default value is 1.
 	Health,
 	/// @member The particle's remaining health. The particle dies when this
@@ -35,6 +38,10 @@ enum BBMOD_EParticle
 	AccelerationY,
 	/// @member The particle's acceleration on the Z axis. Default value is 0.
 	AccelerationZ,
+	/// @member The mass of the particle. Default value is 1 unit.
+	Mass,
+	/// @member The particle's resistance to motion. Default value is 0.
+	Drag,
 	/// @member Internal use only!
 	AccelerationRealX,
 	/// @member Internal use only!

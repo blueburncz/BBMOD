@@ -83,6 +83,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 		}
 
 		Particles[# BBMOD_EParticle.IsAlive, _particleIndex] = true;
+		Particles[# BBMOD_EParticle.TimeAlive, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.Health, _particleIndex] = 1.0;
 		Particles[# BBMOD_EParticle.HealthLeft, _particleIndex] = 1.0;
 		Particles[# BBMOD_EParticle.PositionX, _particleIndex] = Position.X;
@@ -94,6 +95,8 @@ function BBMOD_ParticleEmitter(_position, _system)
 		Particles[# BBMOD_EParticle.AccelerationX, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationY, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationZ, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.Mass, _particleIndex] = 1.0;
+		Particles[# BBMOD_EParticle.Drag, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationRealX, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationRealY, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationRealZ, _particleIndex] = 0.0;
