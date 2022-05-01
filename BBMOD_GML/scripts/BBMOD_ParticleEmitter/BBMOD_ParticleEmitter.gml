@@ -22,16 +22,19 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// @readonly
 	System = _system;
 
-	/// @var {Id.DsGrid} Grid of particle data.
+	/// @var {Id.DsGrid} Grid of particle data. Particles are stored in rows and
+	/// particle data in columns. The order of particle data is defined in
+	/// {@link BBMOD_EParticle}. Particles alive are stored first, followed by
+	/// dead particles.
 	Particles = ds_grid_create(BBMOD_EParticle.SIZE, System.ParticleCount);
 
 	/// @var {Id.DsGrid} Grid used to do fast computations on all particles at
-	/// once. Its dimensions are 4 x NumberOfParticles, i.e. sufficient for
+	/// once. Its dimensions are 4 x `System.ParticleCount`, i.e. sufficient for
 	/// processing vec4s.
 	GridCompute = ds_grid_create(4, System.ParticleCount);
 
 	/// @var {Real} Number of particles that are alive.
-	/// @private
+	/// @readonly
 	ParticlesAlive = 0;
 
 	/// @var {Real} The index of the particle that will be spawned next if all
