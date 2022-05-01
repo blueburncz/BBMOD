@@ -37,7 +37,6 @@
     {"id":{"name":"bbmod_array_from_buffer","path":"scripts/bbmod_array_from_buffer/bbmod_array_from_buffer.yy",},"order":0,},
     {"id":{"name":"BBMOD_VertexFormat","path":"scripts/BBMOD_VertexFormat/BBMOD_VertexFormat.yy",},"order":5,},
     {"id":{"name":"BBMOD_GravityModule","path":"scripts/BBMOD_GravityModule/BBMOD_GravityModule.yy",},"order":1,},
-    {"id":{"name":"BBMOD_RenderCommand","path":"scripts/BBMOD_RenderCommand/BBMOD_RenderCommand.yy",},"order":1,},
     {"id":{"name":"SprSand","path":"sprites/SprSand/SprSand.yy",},"order":1,},
     {"id":{"name":"BBMOD_IRenderable","path":"scripts/BBMOD_IRenderable/BBMOD_IRenderable.yy",},"order":1,},
     {"id":{"name":"BBMOD_Animation","path":"scripts/BBMOD_Animation/BBMOD_Animation.yy",},"order":0,},

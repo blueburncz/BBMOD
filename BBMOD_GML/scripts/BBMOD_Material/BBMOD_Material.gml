@@ -20,9 +20,6 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @var {Real} The priority of the material. Used to control rendering order.
-	/// @obsolete Priority has been moved from materials to render queues.
-	/// Please use {@link BBMOD_RenderQueue.set_priority} instead.
-	Priority = 0;
 
 	/// @var {Real} Render passes in which is the material rendered. Defaults
 	/// to 0 (no passes).
@@ -98,11 +95,6 @@ function BBMOD_Material(_shader=undefined)
 	/// @func set_priority(_p)
 	/// @desc Changes the material priority.
 	/// @param {Real} _p The new material priority.
-	/// @obsolete Priority has been moved from materials to render queues.
-	/// Please use {@link BBMOD_RenderQueue.set_priority} instead.
-	static set_priority = function (_p) {
-		return self;
-	};
 
 	/// @func copy(_dest)
 	/// @desc Copies properties of this material into another material.
