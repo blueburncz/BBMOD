@@ -495,8 +495,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func Get(_index)
 	/// @desc Retrieves vector component at given index (0 is X, 1 is Y, etc.).
-	/// @param {uint} _index The index of the component.
-	/// @return {real} The value of the vector component at given index.
+	/// @param {Real} _index The index of the component.
+	/// @return {Real} The value of the vector component at given index.
 	/// @throws {BBMOD_OutOfRangeException} If an invalid index is passed.
 	static Get = function (_index) {
 		gml_pragma("forceinline");

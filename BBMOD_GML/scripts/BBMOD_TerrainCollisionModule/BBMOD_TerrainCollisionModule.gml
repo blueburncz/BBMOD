@@ -39,6 +39,7 @@ function BBMOD_TerrainCollisionModule(_terrain=undefined)
 					_particles[# BBMOD_EParticle.VelocityX, _particleIndex] = (_velocityX - (_dot2 * _normal.X)) * _bounce;
 					_particles[# BBMOD_EParticle.VelocityY, _particleIndex] = (_velocityY - (_dot2 * _normal.Y)) * _bounce;
 					_particles[# BBMOD_EParticle.VelocityZ, _particleIndex] = (_velocityZ - (_dot2 * _normal.Z)) * _bounce;
+					_particles[# BBMOD_EParticle.HasCollided, _particleIndex] = true;
 				}
 			}
 			++_particleIndex;

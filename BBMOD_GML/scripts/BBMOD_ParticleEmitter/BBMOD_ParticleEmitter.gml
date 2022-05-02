@@ -98,6 +98,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 		Particles[# BBMOD_EParticle.Mass, _particleIndex] = 1.0;
 		Particles[# BBMOD_EParticle.Drag, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.Bounce, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.HasCollided, _particleIndex] = false;
 		Particles[# BBMOD_EParticle.AccelerationRealX, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationRealY, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationRealZ, _particleIndex] = 0.0;
@@ -189,6 +190,14 @@ function BBMOD_ParticleEmitter(_position, _system)
 		// Particle pre-simulation
 		if (ParticlesAlive > 0)
 		{
+			////////////////////////////////////////////////////////////////////
+			// Clear HasCollided
+			ds_grid_set_region(
+				Particles,
+				BBMOD_EParticle.HasCollided, 0,
+				BBMOD_EParticle.HasCollided, ParticlesAlive - 1,
+				false);
+
 			////////////////////////////////////////////////////////////////////
 			// Time alive
 			ds_grid_add_region(

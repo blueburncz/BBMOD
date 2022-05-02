@@ -44,6 +44,9 @@ enum BBMOD_EParticle
 	Drag,
 	/// @member Modulates particle velocity on collision. Default value is 0.
 	Bounce,
+	/// @member If `true` then the particle has collided. This is set to
+	/// `false` at the beginning of every update.
+	HasCollided,
 	/// @member Internal use only!
 	AccelerationRealX,
 	/// @member Internal use only!

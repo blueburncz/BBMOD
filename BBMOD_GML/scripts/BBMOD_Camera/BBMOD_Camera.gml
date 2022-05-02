@@ -58,11 +58,11 @@ function BBMOD_Camera() constructor
 	/// the camera than this will not be visible. Defaults to `32768`.
 	ZFar = 32768.0;
 
-	/// @var {bool} Use `true` to enable orthographic projection. Defaults to
+	/// @var {Bool} Use `true` to enable orthographic projection. Defaults to
 	/// `false` (perspective projection).
 	Orthographic = false;
 
-	/// @var {real} The width of the orthographic projection. Height is computed
+	/// @var {Real} The width of the orthographic projection. Height is computed
 	/// using {@link BBMOD_Camera.AspectRatio}. Defaults to the window's width.
 	/// @see BBMOD_Camera.Orthographic
 	Width = window_get_width();
