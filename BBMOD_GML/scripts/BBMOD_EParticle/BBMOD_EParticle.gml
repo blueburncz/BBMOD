@@ -42,6 +42,8 @@ enum BBMOD_EParticle
 	Mass,
 	/// @member The particle's resistance to motion. Default value is 0.
 	Drag,
+	/// @member Modulates particle velocity on collision. Default value is 0.
+	Bounce,
 	/// @member Internal use only!
 	AccelerationRealX,
 	/// @member Internal use only!

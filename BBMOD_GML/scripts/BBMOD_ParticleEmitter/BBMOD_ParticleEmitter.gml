@@ -97,6 +97,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 		Particles[# BBMOD_EParticle.AccelerationZ, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.Mass, _particleIndex] = 1.0;
 		Particles[# BBMOD_EParticle.Drag, _particleIndex] = 0.0;
+		Particles[# BBMOD_EParticle.Bounce, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationRealX, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationRealY, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.AccelerationRealZ, _particleIndex] = 0.0;

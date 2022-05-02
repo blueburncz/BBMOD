@@ -118,13 +118,17 @@ matParticles.BlendMode = bm_add;
 
 particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 100)
 	.add_module(new BBMOD_EmissionOverTimeModule(0.02))
-	.add_module(new BBMOD_SphereEmissionModule(20.0, true))
-	.add_module(new BBMOD_MixInitialHealthModule(1.0, 2.0))
-	.add_module(new BBMOD_MixInitialVelocityModule(new BBMOD_Vec3(-1.0), new BBMOD_Vec3(1.0)))
+	.add_module(new BBMOD_SphereEmissionModule(1.0, true))
+	//.add_module(new BBMOD_MixInitialHealthModule(1.0, 2.0))
+	.add_module(new BBMOD_MixInitialVelocityModule(new BBMOD_Vec3(-1.0, -1.0, -100.0), new BBMOD_Vec3(1.0, 1.0, -50.0)))
+	.add_module(new BBMOD_InitialMassModule(0.1))
+	.add_module(new BBMOD_InitialBounceModule(0.8))
 	.add_module(new BBMOD_AddHealthOverTimeModule(-0.5, 1.0))
-	.add_module(new BBMOD_ScaleFromHealthModule(new BBMOD_Vec3(2.0)))
-	.add_module(new BBMOD_ColorFromHealthModule(BBMOD_C_RED, BBMOD_C_ORANGE))
-	.add_module(new BBMOD_AttractorModule(new BBMOD_Vec3(0.0), true, 500.0, 100.0))
+	.add_module(new BBMOD_ScaleFromHealthModule(new BBMOD_Vec3(1.0)))
+	.add_module(new BBMOD_ColorFromHealthModule(BBMOD_C_ORANGE, BBMOD_C_RED))
+	//.add_module(new BBMOD_AttractorModule(new BBMOD_Vec3(0.0), true, 500.0, 100.0))
+	.add_module(new BBMOD_GravityModule(BBMOD_VEC3_UP.Scale(-980.0)))
+	.add_module(new BBMOD_TerrainCollisionModule(global.terrain))
 	;
 particleSystem.Loop = true;
 
