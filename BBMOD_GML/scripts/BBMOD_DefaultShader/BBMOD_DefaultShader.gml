@@ -38,19 +38,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	UFogRcpRange = get_uniform("bbmod_FogRcpRange");
 
-	UShadowmapEnableVS = get_uniform("bbmod_ShadowmapEnableVS");
-
-	UShadowmapEnablePS = get_uniform("bbmod_ShadowmapEnablePS");
-
-	UShadowmap = get_sampler_index("bbmod_Shadowmap");
-
-	UShadowmapMatrix = get_uniform("bbmod_ShadowmapMatrix");
-
-	UShadowmapTexel = get_uniform("bbmod_ShadowmapTexel");
-
-	UShadowmapArea = get_uniform("bbmod_ShadowmapArea");
-
-	UShadowmapNormalOffset = get_uniform("bbmod_ShadowmapNormalOffset");
+	UShadowmapBias = get_uniform("bbmod_ShadowmapBias");
 
 	/// @func set_normal_smoothness(_texture)
 	/// @desc Sets the `bbmod_NormalSmoothness` uniform.
@@ -177,34 +165,6 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 		return self;
 	};
 
-	/// @func set_shadowmap(_texture, _matrix, _area, _normalOffset)
-	/// @desc Sets uniforms `bbmod_ShadowmapEnable`, `bbmod_Shadowmap`,
-	/// `bbmod_ShadowmapMatrix`, `bbmod_ShadowmapArea` and `bbmod_ShadowmapNormalOffset`, required for
-	/// shadow mapping.
-	/// @param {Pointer.Texture} _texture The shadowmap texture.
-	/// @param {Array<Real>} _matrix The world-view-projection matrix used when
-	/// rendering the shadowmap.
-	/// @param {Real} _area The area that the shadowmap captures.
-	/// @param {Real} _normalOffset The area that the shadowmap captures.
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	/// @obsolete This has been replaced with global shader uniforms.
-	static set_shadowmap = function (_texture, _matrix, _area, _normalOffset) {
-		gml_pragma("forceinline");
-		set_uniform_f(UShadowmapEnableVS, 1.0);
-		set_uniform_f(UShadowmapEnablePS, 1.0);
-		set_sampler(UShadowmap, _texture);
-		gpu_set_tex_mip_enable_ext(UShadowmap, true);
-		gpu_set_tex_filter_ext(UShadowmap, true);
-		gpu_set_tex_repeat_ext(UShadowmap, false);
-		set_uniform_f2(UShadowmapTexel,
-			texture_get_texel_width(_texture),
-			texture_get_texel_height(_texture));
-		set_uniform_f(UShadowmapArea, _area);
-		set_uniform_f(UShadowmapNormalOffset, _normalOffset);
-		set_uniform_matrix_array(UShadowmapMatrix, _matrix);
-		return self;
-	};
-
 	static on_set = function () {
 		gml_pragma("forceinline");
 		method(self, Super_BaseShader.on_set)();
@@ -219,6 +179,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 		method(self, Super_BaseShader.set_material)(_material);
 		set_normal_smoothness(_material.NormalSmoothness);
 		set_specular_color(_material.SpecularColor);
+		set_uniform_f(UShadowmapBias, _material.ShadowmapBias);
 		return self;
 	};
 }

@@ -1,14 +1,6 @@
-#pragma include("Color.xsh", "glsl")
-#pragma include("RGBM.xsh", "glsl")
-
-struct Material
-{
-	vec3 Base;
-	float Opacity;
-	vec3 Normal;
-	float Smoothness;
-	vec3 Specular;
-};
+#pragma include("Material.xsh")
+#pragma include("Color.xsh")
+#pragma include("RGBM.xsh")
 
 /// @desc Unpacks material from textures.
 /// @param texBaseOpacity      RGB: base color, A: opacity
@@ -23,7 +15,7 @@ Material UnpackMaterial(
 	mat3 TBN,
 	vec2 uv)
 {
-	Material m;
+	Material m = CreateMaterial(TBN);
 
 #if defined(X_2D)
 	// Base color and opacity
@@ -59,6 +51,9 @@ Material UnpackMaterial(
 	vec4 specularColor = texture2D(texSpecularColor, uv);
 	m.Specular = xGammaToLinear(specularColor.rgb);
 #endif
+
+	// Specular power
+	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 
 	return m;
 }

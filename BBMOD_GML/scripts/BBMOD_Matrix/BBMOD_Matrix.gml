@@ -28,8 +28,8 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func Set(_index, _value)
 	/// @desc Sets matrix value at specific index.
-	/// @param {uint} _index The index to change the value at.
-	/// @param {real} _value The new value.
+	/// @param {Real} _index The index to change the value at.
+	/// @param {Real} _value The new value.
 	/// @return {BBMOD_Matrix} Returns `self`.
 	static Set = function (_index, _value) {
 		gml_pragma("forceinline");
@@ -40,7 +40,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @func FromArray(_array[, _index])
 	/// @desc Initializes the matrix from an array.
 	/// @param {real[]} _array The array to read values from.
-	/// @param {uint} [_index] The index to start reading at. Defaults to 0.
+	/// @param {Real} [_index] The index to start reading at. Defaults to 0.
 	/// @return {BBMOD_Matrix} Returns `self`.
 	static FromArray = function (_array, _index=0) {
 		gml_pragma("forceinline");
@@ -52,7 +52,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @desc Writes the matrix into an array.
 	/// @param {real[]/undefined} [_array] The array to write the matrix to. If
 	/// `undefined`, then a new one is created.
-	/// @param {uint} [_index] The index to start writing at. Defaults to 0.
+	/// @param {Real} [_index] The index to start writing at. Defaults to 0.
 	/// @return {real[]} The destination array.
 	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
@@ -64,7 +64,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @func FromBuffer(_buffer, _type)
 	/// @desc Initializes the matrix from a buffer.
 	/// @param {buffer} _buffer The buffer to read values from.
-	/// @param {uint} _type The type of values. Use one of the `buffer_` constants.
+	/// @param {Real} _type The type of values. Use one of the `buffer_` constants.
 	/// @return {BBMOD_Matrix} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
 		gml_pragma("forceinline");
@@ -79,7 +79,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @func ToBuffer(_buffer, _type)
 	/// @desc Writes the matrix into a buffer.
 	/// @param {buffer} _buffer The buffer to write to.
-	/// @param {uint} _type The type of values. Use one of the `buffer_` constants.
+	/// @param {Real} _type The type of values. Use one of the `buffer_` constants.
 	/// @return {BBMOD_Matrix} Returns `self`.
 	static ToBuffer = function (_buffer, _type) {
 		gml_pragma("forceinline");
@@ -211,7 +211,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @desc Retrieves euler angles from the matrix.
 	/// @param {real[]/undefined} [_array] An array to write the X,Y,Z angles to.
 	/// If `undefined`, a new one is created.
-	/// @parma {uint} [_index] The index to start writing at.
+	/// @parma {Real} [_index] The index to start writing at.
 	/// @return {real[]} The destination array.
 	static ToEuler = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
@@ -253,7 +253,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func Determinant()
 	/// @desc Computes the determinant of the matrix.
-	/// @return {real} The determinant.
+	/// @return {Real} The determinant.
 	static Determinant = function () {
 		gml_pragma("forceinline");
 		var _m   = Raw;
@@ -472,7 +472,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func TranslateX(_x)
 	/// @desc Translates the matrix on the X axis.
-	/// @param {real} _x Translation on the X axis.
+	/// @param {Real} _x Translation on the X axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static TranslateX = function (_x) {
 		gml_pragma("forceinline");
@@ -484,7 +484,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func TranslateY(_y)
 	/// @desc Translates the matrix on the Y axis.
-	/// @param {real} _y Translation on the Y axis.
+	/// @param {Real} _y Translation on the Y axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static TranslateY = function (_y) {
 		gml_pragma("forceinline");
@@ -496,7 +496,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func TranslateZ(_z)
 	/// @desc Translates the matrix on the Z axis.
-	/// @param {real} _z Translation on the Z axis.
+	/// @param {Real} _z Translation on the Z axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static TranslateZ = function (_z) {
 		gml_pragma("forceinline");
@@ -539,7 +539,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func RotateX(_x)
 	/// @desc Rotates the matrix on the X axis.
-	/// @param {real} _x Rotation on the X axis.
+	/// @param {Real} _x Rotation on the X axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static RotateX = function (_x) {
 		gml_pragma("forceinline");
@@ -551,7 +551,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func RotateY(_y)
 	/// @desc Rotates the matrix on the Y axis.
-	/// @param {real} _y Rotation on the Y axis.
+	/// @param {Real} _y Rotation on the Y axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static RotateY = function (_y) {
 		gml_pragma("forceinline");
@@ -563,7 +563,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func RotateZ(_z)
 	/// @desc Rotates the matrix on the Z axis.
-	/// @param {real} _z Rotation on the Z axis.
+	/// @param {Real} _z Rotation on the Z axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static RotateZ = function (_z) {
 		gml_pragma("forceinline");
@@ -594,7 +594,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func ScaleComponentwise(_s)
 	/// @desc Scales each component of the matrix.
-	/// @param {real} _s The value to scale the components with.
+	/// @param {Real} _s The value to scale the components with.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static ScaleComponentwise = function (_s) {
 		gml_pragma("forceinline");
@@ -611,7 +611,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func ScaleX(_x)
 	/// @desc Scales the matrix on the X axis.
-	/// @param {real} _x Scale on the X axis.
+	/// @param {Real} _x Scale on the X axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static ScaleX = function (_x) {
 		gml_pragma("forceinline");
@@ -623,7 +623,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func ScaleY(_y)
 	/// @desc Scales the matrix on the Y axis.
-	/// @param {real} _y Scale on the Y axis.
+	/// @param {Real} _y Scale on the Y axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static ScaleY = function (_y) {
 		gml_pragma("forceinline");
@@ -635,7 +635,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func ScaleZ(_z)
 	/// @desc Scales the matrix on the Z axis.
-	/// @param {real} _z Scale on the Z axis.
+	/// @param {Real} _z Scale on the Z axis.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static ScaleZ = function (_z) {
 		gml_pragma("forceinline");

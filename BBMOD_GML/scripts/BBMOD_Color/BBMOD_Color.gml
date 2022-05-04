@@ -126,6 +126,28 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 	/// @var {Real} The value of the alpha channel.
 	Alpha = _alpha;
 
+	/// @func Copy(_dest)
+	/// @desc Copies properties to another color struct.
+	/// @return {Struct.BBMOD_Color} Returns `self`.
+	static Copy = function (_dest) {
+		gml_pragma("forceinline");
+		_dest.Red = Red;
+		_dest.Green = Green;
+		_dest.Blue = Blue;
+		_dest.Alpha = Alpha;
+		return self;
+	};
+
+	/// @func Clone()
+	/// @desc Creates a clone of the color struct.
+	/// @return {Struct.BBMOD_Color} The created clone.
+	static Clone = function () {
+		gml_pragma("forceinline");
+		var _clone = new BBMOD_Color();
+		Copy(_clone);
+		return _clone;
+	};
+
 	/// @func FromConstant(_color)
 	/// @desc Initializes the color using a color constant.
 	/// @param {Real} _color The color constant.

@@ -3,7 +3,7 @@ varying vec3 v_vNormal;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-#pragma include("EquirectangularMapping.xsh", "glsl")
+#pragma include("EquirectangularMapping.xsh")
 #define X_PI   3.14159265359
 #define X_2_PI 6.28318530718
 
@@ -28,7 +28,7 @@ vec2 xVec3ToEquirectangularUv(vec3 dir)
 }
 // include("EquirectangularMapping.xsh")
 
-#pragma include("RGBM.xsh", "glsl")
+#pragma include("RGBM.xsh")
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -48,7 +48,7 @@ vec3 xDecodeRGBM(vec4 rgbm)
 }
 // include("RGBM.xsh")
 
-#pragma include("Color.xsh", "glsl")
+#pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.

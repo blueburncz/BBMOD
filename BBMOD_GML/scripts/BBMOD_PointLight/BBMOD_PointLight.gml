@@ -5,7 +5,7 @@
 /// to {@link BBMOD_C_WHITE}.
 /// @param {Struct.BBMOD_Vec3/Undefined} [_position] The light's position.
 /// Defaults to `[0, 0, 0]`.
-/// @param {real} [_range] The light's range. Defaults to 1.
+/// @param {Real} [_range] The light's range. Defaults to 1.
 function BBMOD_PointLight(_color=undefined, _position=undefined, _range=1.0)
 	: BBMOD_Light() constructor
 {
