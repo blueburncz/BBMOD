@@ -178,6 +178,7 @@
     {"id":{"name":"BBMOD_PlaneCollider","path":"scripts/BBMOD_PlaneCollider/BBMOD_PlaneCollider.yy",},"order":3,},
     {"id":{"name":"BBMOD_PBRShader","path":"scripts/BBMOD_PBRShader/BBMOD_PBRShader.yy",},"order":1,},
     {"id":{"name":"BBMOD_MixInitialScaleModule","path":"scripts/BBMOD_MixInitialScaleModule/BBMOD_MixInitialScaleModule.yy",},"order":2,},
+    {"id":{"name":"BBMOD_InitialDragModule","path":"scripts/BBMOD_InitialDragModule/BBMOD_InitialDragModule.yy",},"order":0,},
     {"id":{"name":"SndShell7","path":"sounds/SndShell7/SndShell7.yy",},"order":7,},
     {"id":{"name":"BBMOD_ShFXAA","path":"shaders/BBMOD_ShFXAA/BBMOD_ShFXAA.yy",},"order":0,},
     {"id":{"name":"BBMOD_InitialHealthModule","path":"scripts/BBMOD_InitialHealthModule/BBMOD_InitialHealthModule.yy",},"order":1,},
@@ -293,6 +294,7 @@
     {"folderPath":"folders/BBMOD/Particles/Modules/Bounce.yy","order":11,"resourceVersion":"1.0","name":"Bounce","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/BBMOD/Particles/Modules/Mass.yy","order":12,"resourceVersion":"1.0","name":"Mass","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/BBMOD/Particles/Modules/Event.yy","order":13,"resourceVersion":"1.0","name":"Event","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/BBMOD/Particles/Modules/Drag.yy","order":14,"resourceVersion":"1.0","name":"Drag","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":-1,"resourceVersion":"1.3","name":"audiogroup_default","resourceType":"GMAudioGroup",},

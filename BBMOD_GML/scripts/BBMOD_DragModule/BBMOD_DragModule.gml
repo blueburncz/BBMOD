@@ -12,7 +12,7 @@ function BBMOD_DragModule()
 			var _mass = _particles[# BBMOD_EParticle.Mass, _particleIndex];
 			if (_mass != 0.0)
 			{
-				var _dragHalf = _particles[# BBMOD_EParticle.Drag, _particleIndex] - 0.5;
+				var _dragHalf = _particles[# BBMOD_EParticle.Drag, _particleIndex] * 0.5;
 				var _velocityX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 				var _velocityY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];
 				var _velocityZ = _particles[# BBMOD_EParticle.VelocityZ, _particleIndex];
