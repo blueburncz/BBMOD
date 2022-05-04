@@ -1,6 +1,6 @@
 /// @func BBMOD_ParticleEmitter(_position, _system)
 /// @desc Emits particles at a specific position in the world. The behavior of
-/// the emitter particles is defined by a particle system.
+/// the emitted particles is defined by a particle system.
 /// @param {Struct.BBMOD_Vec3} _position The emitter's position in world-space.
 /// @param {Struct.BBMOD_ParticleSystem} _system The particle system that defines
 /// behavior of emitted particles.

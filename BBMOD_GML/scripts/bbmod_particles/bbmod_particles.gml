@@ -1,38 +1,39 @@
-/// @macro {Struct.BBMOD_VertexFormat} Vertex format of a single particle.
+/// @macro {Struct.BBMOD_VertexFormat} Vertex format of a single billboard
+/// particle.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_PARTICLE __bbmod_vformat_particle()
 
 /// @macro {Struct.BBMOD_VertexFormat} Vertex format of dynamic batch of
-/// particles.
+/// billboard particles.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_PARTICLE_BATCHED __bbmod_vformat_particle_batched()
 
 /// @macro {Struct.BBMOD_BaseShader} Shader for rendering dynamic batches
-/// of unlit particles.
+/// of unlit billboard particles.
 /// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_PARTICLE_UNLIT __bbmod_shader_particle_unlit()
 
 /// @macro {Struct.BBMOD_DefaultShader} Shader for rendering dynamic batches
-/// of lit particles.
+/// of lit billboard particles.
 /// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_PARTICLE_LIT __bbmod_shader_particle_lit()
 
 /// @macro {Struct.BBMOD_DefaultShader} Shader for rendering dynamic batches
-/// of particles into depth buffers.
+/// of billboard particles into depth buffers.
 /// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_PARTICLE_DEPTH __bbmod_shader_particle_depth()
 
 /// @macro {Struct.BBMOD_DefaultMaterial} Default material for rendering dynamic
-/// batches of unlit particles.
+/// batches of unlit billboard particles.
 /// @see BBMOD_DefaultMaterial
 #macro BBMOD_MATERIAL_PARTICLE_UNLIT __bbmod_material_particle_unlit()
 
 /// @macro {Struct.BBMOD_DefaultMaterial} Default material for rendering dynamic
-/// batches of lit particles.
+/// batches of lit billboard particles.
 /// @see BBMOD_DefaultMaterial
 #macro BBMOD_MATERIAL_PARTICLE_LIT __bbmod_material_particle_lit()
 
-/// @var {Struct.BBMOD_Model} A particle model.
+/// @var {Struct.BBMOD_Model} A billboard particle model.
 #macro BBMOD_MODEL_PARTICLE __bbmod_model_particle()
 
 function __bbmod_vformat_particle()
