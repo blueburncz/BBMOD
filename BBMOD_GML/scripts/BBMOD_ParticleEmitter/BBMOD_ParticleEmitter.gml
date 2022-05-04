@@ -361,8 +361,6 @@ function BBMOD_ParticleEmitter(_position, _system)
 		var _batchSize = _dynamicBatch.Size;
 		_material ??= System.Material;
 
-		matrix_set(matrix_world, matrix_build_identity());
-
 		var _particleCount = ParticlesAlive;
 		var _particlesSorted;
 

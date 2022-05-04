@@ -145,14 +145,12 @@ void main()
 	v_vColor.rgb = xGammaToLinear(xDecodeRGBM(bbmod_BatchData[int(in_Id) * 4 + 3]));
 
 	vec4 position = in_Position;
-	position.x *= length(gm_Matrices[MATRIX_WORLD][0].xyz);
-	position.y *= length(gm_Matrices[MATRIX_WORLD][1].xyz);
-	position.z *= length(gm_Matrices[MATRIX_WORLD][2].xyz);
 	position.xyz *= batchScale;
 	position.xyz = QuaternionRotate(batchRot, position.xyz);
 	vec3 normal = QuaternionRotate(batchRot, vec3(0.0, 0.0, -1.0));
 
-	mat4 W = gm_Matrices[MATRIX_WORLD];
+	mat4 W;
+	W[3][3] = 1.0;
 	W[3].xyz += batchPosition;
 	mat4 V = gm_Matrices[MATRIX_VIEW];
 	mat4 P = gm_Matrices[MATRIX_PROJECTION];
