@@ -1,5 +1,6 @@
 /// @func BBMOD_InitialDragModule([_drag])
 /// @extends BBMOD_ParticleModule
+/// @desc
 /// @param {Real} [_drag]
 function BBMOD_InitialDragModule(_drag=0.0)
 	: BBMOD_ParticleModule() constructor

@@ -137,7 +137,6 @@
     {"id":{"name":"BBMOD_AnimationPlayer","path":"scripts/BBMOD_AnimationPlayer/BBMOD_AnimationPlayer.yy",},"order":4,},
     {"id":{"name":"OFloatingText","path":"objects/OFloatingText/OFloatingText.yy",},"order":1,},
     {"id":{"name":"BBMOD_AABBCollider","path":"scripts/BBMOD_AABBCollider/BBMOD_AABBCollider.yy",},"order":0,},
-    {"id":{"name":"BBMOD_AddVelocityOverTimeModule","path":"scripts/BBMOD_AddVelocityOverTimeModule/BBMOD_AddVelocityOverTimeModule.yy",},"order":2,},
     {"id":{"name":"BBMOD_AnimationStateMachine","path":"scripts/BBMOD_AnimationStateMachine/BBMOD_AnimationStateMachine.yy",},"order":2,},
     {"id":{"name":"BBMOD_AnimationInstance","path":"scripts/BBMOD_AnimationInstance/BBMOD_AnimationInstance.yy",},"order":1,},
     {"id":{"name":"bbmod_depth_buffer","path":"scripts/bbmod_depth_buffer/bbmod_depth_buffer.yy",},"order":0,},

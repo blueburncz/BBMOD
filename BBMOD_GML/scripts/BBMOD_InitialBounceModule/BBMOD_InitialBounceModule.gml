@@ -1,5 +1,6 @@
 /// @func BBMOD_InitialBounceModule([_bounce])
 /// @extends BBMOD_ParticleModule
+/// @desc
 /// @param {Real} [_bounce]
 function BBMOD_InitialBounceModule(_bounce=1.0)
 	: BBMOD_ParticleModule() constructor

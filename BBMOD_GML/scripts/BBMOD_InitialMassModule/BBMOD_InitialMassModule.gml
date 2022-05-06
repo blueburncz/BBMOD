@@ -1,5 +1,6 @@
 /// @func BBMOD_InitialMassModule([_mass])
 /// @extends BBMOD_ParticleModule
+/// @desc
 /// @param {Real} [_mass]
 function BBMOD_InitialMassModule(_mass=1.0)
 	: BBMOD_ParticleModule() constructor

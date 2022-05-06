@@ -1,5 +1,6 @@
 /// @func BBMOD_TerrainCollisionModule([_terrain])
 /// @extends BBMOD_ParticleModule
+/// @desc
 /// @param {Struct.BBMOD_Terrain/Undefined} [_terrain]
 function BBMOD_TerrainCollisionModule(_terrain=undefined)
 	: BBMOD_ParticleModule() constructor

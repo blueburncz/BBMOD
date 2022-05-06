@@ -1,4 +1,6 @@
 /// @func BBMOD_RotationFromSpeedModule([_from[, _to[, _min[, _max]]]])
+/// @extends BBMOD_ParticleModule
+/// @desc
 /// @param {Struct.BBMOD_Quaternion/Undefined} [_from]
 /// @param {Struct.BBMOD_Quaternion/Undefined} [_to]
 /// @param {Real} [_min]
