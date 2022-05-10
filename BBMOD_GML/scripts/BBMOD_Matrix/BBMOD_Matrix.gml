@@ -356,7 +356,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// {@link BBMOD_Matrix.FromWorldViewProjection}.
 	static Mul = function (_matrix) {
 		gml_pragma("forceinline");
-		var _res = BBMOD_Matrix();
+		var _res = new BBMOD_Matrix();
 		var _raw = matrix_multiply(Raw, _matrix.Raw);
 		var _index = 1;
 		repeat (argument_count - 1)
