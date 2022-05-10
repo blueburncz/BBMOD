@@ -15,7 +15,7 @@ enum BBMOD_ECubeSide
 	/// @member Bottom cube side.
 	NegZ,
 	/// @member Number of cube sides.
-	SIZE
+	SIZE,
 };
 
 /// @func BBMOD_Cubemap(_resolution)

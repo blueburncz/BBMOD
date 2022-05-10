@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "DefaultMaterial",
-    "path": "folders/BBMOD/Core/DefaultMaterial.yy",
+    "name": "PBR",
+    "path": "folders/BBMOD/Rendering/PBR.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_default_material",
+  "name": "__bbmod_pbr",
   "tags": [],
   "resourceType": "GMScript",
 }

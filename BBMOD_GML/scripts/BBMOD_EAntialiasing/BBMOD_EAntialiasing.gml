@@ -5,5 +5,5 @@ enum BBMOD_EAntialiasing
 	None,
 	/// @member Use fast approximate anti-aliasing.
 	/// Requires [FXAA submodule](./FXAASubmodule.html).
-	FXAA
+	FXAA,
 };

@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "DepthBuffer",
-    "path": "folders/BBMOD/Rendering/DepthBuffer.yy",
+    "name": "Particles",
+    "path": "folders/BBMOD/Particles.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_depth_buffer",
+  "name": "__bbmod_particles",
   "tags": [],
   "resourceType": "GMScript",
 }

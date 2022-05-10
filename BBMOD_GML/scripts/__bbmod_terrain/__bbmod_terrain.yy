@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "PBR",
-    "path": "folders/BBMOD/Rendering/PBR.yy",
+    "name": "Terrain",
+    "path": "folders/BBMOD/Terrain.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_pbr_init",
+  "name": "__bbmod_terrain",
   "tags": [],
   "resourceType": "GMScript",
 }

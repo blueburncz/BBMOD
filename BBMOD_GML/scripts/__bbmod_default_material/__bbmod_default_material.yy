@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "2D",
-    "path": "folders/BBMOD/2D.yy",
+    "name": "DefaultMaterial",
+    "path": "folders/BBMOD/Core/DefaultMaterial.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_2d",
+  "name": "__bbmod_default_material",
   "tags": [],
   "resourceType": "GMScript",
 }

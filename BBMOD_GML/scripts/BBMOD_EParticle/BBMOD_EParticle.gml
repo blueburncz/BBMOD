@@ -80,5 +80,5 @@ enum BBMOD_EParticle
 	/// @member The alpha value of the particle's color. Default value is 1.
 	ColorA,
 	/// @member Total number of members of this enum.
-	SIZE
+	SIZE,
 };

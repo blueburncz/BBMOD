@@ -15,7 +15,7 @@ enum BBMOD_ERenderPass
 	/// buffer.
 	Id,
 	/// @member Total number of members of this enum.
-	SIZE
+	SIZE,
 };
 
 /// @var {BBMOD_ERenderPass}
