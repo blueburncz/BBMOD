@@ -21,3 +21,8 @@ Xpanda .\shaders\BBMOD_ShTerrain --x .\Xshaders\ X_TERRAIN=1
 
 # 2D shaders
 Xpanda .\shaders\BBMOD_ShSprite --x .\Xshaders\ X_2D=1
+
+# ID shaders
+Xpanda .\shaders\BBMOD_ShID --x .\Xshaders\ X_ID=1
+Xpanda .\shaders\BBMOD_ShIDAnimated --x .\Xshaders\ X_ID=1 X_ANIMATED=1
+Xpanda .\shaders\BBMOD_ShIDBatched --x .\Xshaders\ X_ID=1 X_BATCHED=1
