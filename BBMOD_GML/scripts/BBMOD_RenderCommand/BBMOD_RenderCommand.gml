@@ -11,12 +11,12 @@ function BBMOD_RenderCommand() constructor
 	/// Defaults to `pointer_null`.
 	Texture = pointer_null;
 
-	/// @var {Aarray.Real/Undefined} An array of bone transforms (dual quaternions).
+	/// @var {Array<Real>/Undefined} An array of bone transforms (dual quaternions).
 	BoneTransform = undefined;
 
-	/// @var {Array.Real/Undefined} Dynamic batch data.
+	/// @var {Array<Real>/Undefined} Dynamic batch data.
 	BatchData = undefined;
 
-	/// @var {Array.Real/Undefined} A transformation matrix.
+	/// @var {Array<Real>/Undefined} A transformation matrix.
 	Matrix = undefined;
 }

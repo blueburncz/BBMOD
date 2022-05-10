@@ -1,3 +1,6 @@
+BBMOD_MATERIAL_DEFAULT.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_ID);
+BBMOD_MATERIAL_DEFAULT_ANIMATED.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_ID_ANIMATED);
+
 // Used to easily load, retrieve and free resources from memory.
 global.resourceManager = new BBMOD_ResourceManager();
 

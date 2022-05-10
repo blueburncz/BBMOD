@@ -42,7 +42,7 @@ function BBMOD_Node(_model) constructor
 	/// @readonly
 	Transform = new BBMOD_DualQuaternion();
 
-	/// @var {Array.Real} An array of meshes indices.
+	/// @var {Array<Real>} An array of meshes indices.
 	/// @readonly
 	Meshes = [];
 
@@ -50,7 +50,7 @@ function BBMOD_Node(_model) constructor
 	/// @readonly
 	IsRenderable = false;
 
-	/// @var {Array.Struct.BBMOD_Node} An array of child nodes.
+	/// @var {Array<Struct.BBMOD_Node>} An array of child nodes.
 	/// @see BBMOD_Node
 	/// @readonly
 	Children = [];
@@ -153,9 +153,9 @@ function BBMOD_Node(_model) constructor
 
 	/// @func submit(_materials, _transform)
 	/// @desc Immediately submits the node for rendering.
-	/// @param {Array.Struct.BBMOD_BaseMaterial} _materials An array of materials,
+	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
 	/// one for each material slot of the model.
-	/// @param {Array.Real/Undefined} _transform An array of transformation matrices
+	/// @param {Array<Real/Undefined>} _transform An array of transformation matrices
 	/// (for animated models) or `undefined`.
 	/// @private
 	static submit = function (_materials, _transform) {
@@ -197,9 +197,9 @@ function BBMOD_Node(_model) constructor
 
 	/// @func render(_materials, _transform)
 	/// @desc Enqueues the node for rendering.
-	/// @param {Array.Struct.BBMOD_BaseMaterial} _materials An array of materials,
+	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
 	/// one for each material slot of the model.
-	/// @param {Array.Real/Undefined} _transform An array of transformation
+	/// @param {Array<Real/Undefined>} _transform An array of transformation
 	/// matrices (for animated models) or `undefined`.
 	/// @private
 	static render = function (_materials, _transform, _matrix) {

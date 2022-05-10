@@ -97,7 +97,7 @@ function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, 
 	/// @func FromArray(_array[, _index])
 	/// @desc Loads dual quaternion components `[rX, rY, rZ, rW, dX, dY, dZ, dW]`
 	/// from an array.
-	/// @param {Array.Real} _array The array to read the dual quaternion components
+	/// @param {Array<Real>} _array The array to read the dual quaternion components
 	/// from.
 	/// @param {Real} [_index] The index to start reading the dual quaternion
 	/// components from. Defaults to 0.
@@ -322,10 +322,10 @@ function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes components `[rX, rY, rZ, rW, dX, dY, dZ, dW]` of the dual
 	/// quaternion into an array.
-	/// @param {Array.Real} [_array] The destination array. If not defined, a new one
+	/// @param {Array<Real>} [_array] The destination array. If not defined, a new one
 	/// is created.
 	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
-	/// @return {Array.Real} Returns the destination array.
+	/// @return {Array<Real>} Returns the destination array.
 	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
 		_array ??= array_create(8, 0.0);
@@ -349,11 +349,11 @@ function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, 
 
 	/// @func ToMatrix([_dest[, _index]])
 	/// @desc Converts dual quaternion into a matrix.
-	/// @param {Array.Real} [_dest] The destination array. If not specified,
+	/// @param {Array<Real>} [_dest] The destination array. If not specified,
 	/// a new one is created.
 	/// @param {Real} [_index] The starting index in the destination array.
 	/// Defaults to 0.
-	/// @return {Array.Real} Returns the destination array.
+	/// @return {Array<Real>} Returns the destination array.
 	static ToMatrix = function (_dest=undefined, _index=0) {
 		gml_pragma("forceinline");
 
@@ -389,11 +389,11 @@ function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, 
 /// @func bbmod_dual_quaternion_array_multiply(_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
 /// @desc Multiplies two dual quaternions stored in arrays and writes the result
 /// into the destination array.
-/// @param {Array.Real} _dq1 An array containing the first dual quaternion.
+/// @param {Array<Real>} _dq1 An array containing the first dual quaternion.
 /// @param {Real} _dq1Index The starting index of the first dual quaternion.
-/// @param {Array.Real} _dq2 An array containing the second dual quaternion.
+/// @param {Array<Real>} _dq2 An array containing the second dual quaternion.
 /// @param {Real} _dq2Index The starting index of the second dual quaternion.
-/// @param {Array.Real} _dest The destination array.
+/// @param {Array<Real>} _dest The destination array.
 /// @param {Real} _destIndex The index to start writing to within the destination
 /// array.
 /// @note The arguments can overlap, as the input values are stored into local

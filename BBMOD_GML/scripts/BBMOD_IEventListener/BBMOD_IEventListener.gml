@@ -17,8 +17,7 @@
 /// ```
 function BBMOD_IEventListener()
 {
-	/// @var {Id.DsMap} Map of event listeners (`String`s to array of
-	/// `Function`s).
+	/// @var {Id.DsMap<String, Function>}
 	/// @private
 	Listeners = undefined;
 

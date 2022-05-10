@@ -1,4 +1,4 @@
-#pragma include("Uber_PS.xsh", "glsl")
+#pragma include("Uber_PS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -7,19 +7,24 @@ precision highp float;
 // Defines
 //
 
-
+// Maximum number of point lights
+#define MAX_POINT_LIGHTS 8
+// Number of samples used when computing shadows
+#define SHADOWMAP_SAMPLE_COUNT 12
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings
 //
-varying vec3 v_vVertex;
 
+#pragma include("Varyings.xsh")
+varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
+// include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -60,11 +65,48 @@ uniform sampler2D bbmod_IBL;
 // Texel size of one octahedron
 uniform vec2 bbmod_IBLTexel;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
+#pragma include("MetallicMaterial.xsh")
+#pragma include("Material.xsh")
+struct Material
+{
+	vec3 Base;
+	float Opacity;
+	vec3 Normal;
+	float Metallic;
+	float Roughness;
+	vec3 Specular;
+	float Smoothness;
+	float SpecularPower;
+	float AO;
+	vec3 Emissive;
+	vec4 Subsurface;
+};
+
+Material CreateMaterial(mat3 TBN)
+{
+	Material m;
+	m.Base = vec3(1.0);
+	m.Opacity = 1.0;
+	m.Normal = normalize(TBN * vec3(0.0, 0.0, 1.0));
+	m.Metallic = 0.0;
+	m.Roughness = 1.0;
+	m.Specular = vec3(0.0);
+	m.Smoothness = 0.0;
+	m.SpecularPower = 1.0;
+	m.AO = 1.0;
+	m.Emissive = vec3(0.0);
+	m.Subsurface = vec4(0.0);
+	return m;
+}
+// include("Material.xsh")
+#pragma include("BRDFConstants.xsh")
+#define F0_DEFAULT vec3(0.04)
+// include("BRDFConstants.xsh")
+#pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -84,7 +126,8 @@ float xLuminance(vec3 rgb)
 {
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
-
+// include("Color.xsh")
+#pragma include("RGBM.xsh")
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -102,101 +145,60 @@ vec3 xDecodeRGBM(vec4 rgbm)
 {
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
+// include("RGBM.xsh")
 
-
-#define X_PI   3.14159265359
-#define X_2_PI 6.28318530718
-
-/// @return x^2
-#define xPow2(x) ((x) * (x))
-
-/// @return x^3
-#define xPow3(x) ((x) * (x) * (x))
-
-/// @return x^4
-#define xPow4(x) ((x) * (x) * (x) * (x))
-
-/// @return x^5
-#define xPow5(x) ((x) * (x) * (x) * (x) * (x))
-
-/// @return arctan2(x,y)
-#define xAtan2(x, y) atan(y, x)
-
-/// @return Direction from point `from` to point `to` in degrees (0-360 range).
-float xPointDirection(vec2 from, vec2 to)
+/// @desc Unpacks material from textures.
+/// @param texBaseOpacity     RGB: base color, A: opacity
+/// @param texNormalRoughness RGB: tangent-space normal vector, A: roughness
+/// @param texMetallicAO      R: metallic, G: ambient occlusion
+/// @param texSubsurface      RGB: subsurface color, A: intensity
+/// @param texEmissive        RGBA: RGBM encoded emissive color
+/// @param TBN                Tangent-bitangent-normal matrix
+/// @param uv                 Texture coordinates
+Material UnpackMaterial(
+	sampler2D texBaseOpacity,
+	sampler2D texNormalRoughness,
+	sampler2D texMetallicAO,
+	sampler2D texSubsurface,
+	sampler2D texEmissive,
+	mat3 TBN,
+	vec2 uv)
 {
-	float x = xAtan2(from.x - to.x, from.y - to.y);
-	return ((x > 0.0) ? x : (2.0 * X_PI + x)) * 180.0 / X_PI;
+	Material m = CreateMaterial(TBN);
+
+	// Base color and opacity
+	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	m.Base = xGammaToLinear(baseOpacity.rgb);
+	m.Opacity = baseOpacity.a;
+
+	// Normal vector and roughness
+	vec4 normalRoughness = texture2D(texNormalRoughness, uv);
+	m.Normal = normalize(TBN * (normalRoughness.rgb * 2.0 - 1.0));
+	m.Roughness = mix(0.1, 0.9, normalRoughness.a);
+
+	// Metallic and ambient occlusion
+	vec4 metallicAO = texture2D(texMetallicAO, uv);
+	m.Metallic = metallicAO.r;
+	m.AO = metallicAO.g;
+
+	// Specular color
+	m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
+	m.Base *= (1.0 - m.Metallic);
+
+	// Subsurface (color and intensity)
+	vec4 subsurface = texture2D(texSubsurface, uv);
+	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
+
+	// Emissive color
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+
+	return m;
 }
+// include("MetallicMaterial.xsh")
 
-/// @desc Default specular color for dielectrics
-/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-#define X_F0_DEFAULT vec3(0.04, 0.04, 0.04)
-
-/// @desc Normal distribution function
-/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-float xSpecularD_GGX(float roughness, float NdotH)
-{
-	float r = xPow4(roughness);
-	float a = NdotH * NdotH * (r - 1.0) + 1.0;
-	return r / (X_PI * a * a);
-}
-
-/// @source https://www.unrealengine.com/en-US/blog/physically-based-shading-on-mobile
-float xSpecularD_Approx(float roughness, float RdotL)
-{
-	float a = roughness * roughness;
-	float a2 = a * a;
-	float rcp_a2 = 1.0 / a2;
-	// 0.5 / ln(2), 0.275 / ln(2)
-	float c = (0.72134752 * rcp_a2) + 0.39674113;
-	return (rcp_a2 * exp2((c * RdotL) - c));
-}
-
-/// @desc Roughness remapping for analytic lights.
-/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-float xK_Analytic(float roughness)
-{
-	return xPow2(roughness + 1.0) * 0.125;
-}
-
-/// @desc Roughness remapping for IBL lights.
-/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-float xK_IBL(float roughness)
-{
-	return xPow2(roughness) * 0.5;
-}
-
-/// @desc Geometric attenuation
-/// @param k Use either xK_Analytic for analytic lights or xK_IBL for image based lighting.
-/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-float xSpecularG_Schlick(float k, float NdotL, float NdotV)
-{
-	return (NdotL / (NdotL * (1.0 - k) + k))
-		* (NdotV / (NdotV * (1.0 - k) + k));
-}
-
-/// @desc Fresnel
-/// @source https://en.wikipedia.org/wiki/Schlick%27s_approximation
-vec3 xSpecularF_Schlick(vec3 f0, float VdotH)
-{
-	return f0 + (1.0 - f0) * xPow5(1.0 - VdotH);
-}
-
-/// @desc Cook-Torrance microfacet specular shading
-/// @note N = normalize(vertexNormal)
-///       L = normalize(light - vertex)
-///       V = normalize(camera - vertex)
-///       H = normalize(L + V)
-/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-vec3 xBRDF(vec3 f0, float roughness, float NdotL, float NdotV, float NdotH, float VdotH)
-{
-	vec3 specular = xSpecularD_GGX(roughness, NdotH)
-		* xSpecularF_Schlick(f0, VdotH)
-		* xSpecularG_Schlick(xK_Analytic(roughness), NdotL, NdotH);
-	return specular / max(4.0 * NdotL * NdotV, 0.001);
-}
-
+#pragma include("PBRShader.xsh")
+#pragma include("IBL.xsh")
+#pragma include("OctahedronMapping.xsh")
 // Source: https://gamedev.stackexchange.com/questions/169508/octahedral-impostors-octahedral-mapping
 
 /// @param dir Sampling dir vector in world-space.
@@ -226,7 +228,7 @@ vec3 xOctahedronUvToVec3Normalized(vec2 uv)
 	}
 	return position;
 }
-
+// include("OctahedronMapping.xsh")
 
 vec3 xDiffuseIBL(sampler2D ibl, vec2 texel, vec3 N)
 {
@@ -292,7 +294,8 @@ vec3 xSpecularIBL(sampler2D ibl, vec2 texel/*, sampler2D brdf*/, vec3 f0, float 
 
 	return mix(col0, col1, rDiff);
 }
-
+// include("IBL.xsh")
+#pragma include("CheapSubsurface.xsh")
 /// @param subsurface Color in RGB and thickness/intensity in A.
 /// @source https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
 vec3 xCheapSubsurface(vec4 subsurface, vec3 eye, vec3 normal, vec3 light, vec3 lightColor)
@@ -304,71 +307,43 @@ vec3 xCheapSubsurface(vec4 subsurface, vec3 eye, vec3 normal, vec3 light, vec3 l
 	float fLT = fLTDot * subsurface.a;
 	return subsurface.rgb * lightColor * fLT;
 }
-
-#define F0_DEFAULT vec3(0.04)
-
-struct Material
+// include("CheapSubsurface.xsh")
+#pragma include("Exposure.xsh")
+void Exposure()
 {
-	vec3 Base;
-	float Opacity;
-	vec3 Normal;
-	float Roughness;
-	float Metallic;
-	float AO;
-	vec3 Specular;
-	vec4 Subsurface;
-	vec3 Emissive;
-};
-
-/// @desc Unpacks material from textures.
-/// @param texBaseOpacity     RGB: base color, A: opacity
-/// @param texNormalRoughness RGB: tangent-space normal vector, A: roughness
-/// @param texMetallicAO      R: metallic, G: ambient occlusion
-/// @param texSubsurface      RGB: subsurface color, A: intensity
-/// @param texEmissive        RGBA: RGBM encoded emissive color
-/// @param TBN                Tangent-bitangent-normal matrix
-/// @param uv                 Texture coordinates
-Material UnpackMaterial(
-	sampler2D texBaseOpacity,
-	sampler2D texNormalRoughness,
-	sampler2D texMetallicAO,
-	sampler2D texSubsurface,
-	sampler2D texEmissive,
-	mat3 TBN,
-	vec2 uv)
-{
-	Material m;
-
-	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
-	m.Base = xGammaToLinear(baseOpacity.rgb);
-	m.Opacity = baseOpacity.a;
-
-	// Normal vector and roughness
-	vec4 normalRoughness = texture2D(texNormalRoughness, uv);
-	m.Normal = normalize(TBN * (normalRoughness.rgb * 2.0 - 1.0));
-	m.Roughness = mix(0.1, 0.9, normalRoughness.a);
-
-	// Metallic and ambient occlusion
-	vec4 metallicAO = texture2D(texMetallicAO, uv);
-	m.Metallic = metallicAO.r;
-	m.AO = metallicAO.g;
-
-	// Specular color
-	m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
-	m.Base *= (1.0 - m.Metallic);
-
-	// Subsurface (color and intensity)
-	vec4 subsurface = texture2D(texSubsurface, uv);
-	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
-
-	// Emissive color
-	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
-
-	return m;
+	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 }
+// include("Exposure.xsh")
+#pragma include("GammaCorrect.xsh")
+void GammaCorrect()
+{
+	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+}
+// include("GammaCorrect.xsh")
 
+void PBRShader(Material material)
+{
+	vec3 N = material.Normal;
+	vec3 V = normalize(bbmod_CamPos - v_vVertex);
+	vec3 lightColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
 
+	// Diffuse
+	gl_FragColor.rgb = material.Base * lightColor;
+	// Specular
+	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
+	// Ambient occlusion
+	gl_FragColor.rgb *= material.AO;
+	// Emissive
+	gl_FragColor.rgb += material.Emissive;
+	// Subsurface scattering
+	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
+	// Opacity
+	gl_FragColor.a = material.Opacity;
+
+	Exposure();
+	GammaCorrect();
+}
+// include("PBRShader.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -389,25 +364,7 @@ void main()
 	{
 		discard;
 	}
-	gl_FragColor.a = material.Opacity;
 
-	vec3 N = material.Normal;
-	vec3 V = normalize(bbmod_CamPos - v_vVertex);
-	vec3 lightColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
-
-	// Diffuse
-	gl_FragColor.rgb = material.Base * lightColor;
-	// Specular
-	gl_FragColor.rgb += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
-	// Ambient occlusion
-	gl_FragColor.rgb *= material.AO;
-	// Emissive
-	gl_FragColor.rgb += material.Emissive;
-	// Subsurface scattering
-	gl_FragColor.rgb += xCheapSubsurface(material.Subsurface, -V, N, N, lightColor);
-	// Exposure
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
-	// Gamma correction
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	PBRShader(material);
 }
 // include("Uber_PS.xsh")

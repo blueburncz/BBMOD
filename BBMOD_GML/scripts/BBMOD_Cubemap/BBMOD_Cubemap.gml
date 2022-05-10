@@ -49,7 +49,7 @@ function BBMOD_Cubemap(_resolution)
 	/// @see BBMOD_Cubemap.get_projection_matrix
 	ZFar = 8192.0;
 
-	/// @var {Array.Id.Surface} An array of surfaces.
+	/// @var {Array<Id.Surface>} An array of surfaces.
 	/// @readonly
 	Sides = array_create(BBMOD_ECubeSide.SIZE, noone);
 
@@ -106,7 +106,7 @@ function BBMOD_Cubemap(_resolution)
 	/// @func get_view_matrix(_side)
 	/// @desc Creates a view matrix for given cubemap side.
 	/// @param {BBMOD_ECubeSide} side The cubemap side.
-	/// @return {Array.Real} The created view matrix.
+	/// @return {Array<Real>} The created view matrix.
 	static get_view_matrix = function (_side) {
 		var _negEye = Position.Scale(-1.0);
 		var _x, _y, _z;
@@ -160,7 +160,7 @@ function BBMOD_Cubemap(_resolution)
 
 	/// @func get_projection_matrix()
 	/// @desc Creates a projection matrix for the cubemap.
-	/// @return {Array.Real} The created projection matrix.
+	/// @return {Array<Real>} The created projection matrix.
 	static get_projection_matrix = function () {
 		gml_pragma("forceinline");
 		return matrix_build_projection_perspective_fov(90.0, 1.0, ZNear, ZFar);

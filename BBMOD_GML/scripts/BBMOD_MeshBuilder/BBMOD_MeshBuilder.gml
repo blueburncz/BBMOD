@@ -34,11 +34,11 @@ function BBMOD_MeshBuilder()
 		destroy: destroy,
 	};
 
-	/// @var {Id.DsList.Struct.BBMOD_Vertex} List of mesh vertices.
+	/// @var {Id.DsList<Struct.BBMOD_Vertex>} List of mesh vertices.
 	/// @readonly
 	Vertices = ds_list_create();
 
-	/// @var {Id.DsList.Real} List of vertex indices that make up a face. First
+	/// @var {Id.DsList<Real>} List of vertex indices that make up a face. First
 	/// three indices are the first face, next three indices are the second face
 	/// etc.
 	/// @readonly

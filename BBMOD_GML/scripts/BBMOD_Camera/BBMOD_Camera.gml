@@ -58,11 +58,11 @@ function BBMOD_Camera() constructor
 	/// the camera than this will not be visible. Defaults to `32768`.
 	ZFar = 32768.0;
 
-	/// @var {bool} Use `true` to enable orthographic projection. Defaults to
+	/// @var {Bool} Use `true` to enable orthographic projection. Defaults to
 	/// `false` (perspective projection).
 	Orthographic = false;
 
-	/// @var {real} The width of the orthographic projection. Height is computed
+	/// @var {Real} The width of the orthographic projection. Height is computed
 	/// using {@link BBMOD_Camera.AspectRatio}. Defaults to the window's width.
 	/// @see BBMOD_Camera.Orthographic
 	Width = window_get_width();
@@ -313,7 +313,7 @@ function BBMOD_Camera() constructor
 
 	/// @func get_view_mat()
 	/// @desc Retrieves camera's view matrix.
-	/// @return {Array.Real} The view matrix.
+	/// @return {Array<Real>} The view matrix.
 	static get_view_mat = function () {
 		gml_pragma("forceinline");
 
@@ -334,7 +334,7 @@ function BBMOD_Camera() constructor
 
 	/// @func get_proj_mat()
 	/// @desc Retrieves camera's projection matrix.
-	/// @return {Array.Real} The projection matrix.
+	/// @return {Array<Real>} The projection matrix.
 	static get_proj_mat = function () {
 		gml_pragma("forceinline");
 

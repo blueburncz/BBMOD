@@ -60,7 +60,7 @@ function BBMOD_Mesh(_vertexFormat)
 
 	/// @func submit(_material[, _transform])
 	/// @func {Struct.BBMOD_BaseMaterial} _material
-	/// @func {Array.Real/Undefined} [_transform]
+	/// @func {Array<Real>/Undefined} [_transform]
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static submit = function (_material, _transform=undefined) {
@@ -72,14 +72,15 @@ function BBMOD_Mesh(_vertexFormat)
 		{
 			BBMOD_SHADER_CURRENT.set_bones(_transform);
 		}
+		BBMOD_SHADER_CURRENT.set_instance_id();
 		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
 		return self;
 	};
 
 	/// @func render(_material, _transform, _matrix)
 	/// @func {Struct.BBMOD_BaseMaterial} _material
-	/// @func {Array.Real/undefined} _transform
-	/// @func {Array.Real} _matrix
+	/// @func {Array<Real>/undefined} _transform
+	/// @func {Array<Real>} _matrix
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private
 	static render = function (_material, _transform, _matrix) {
@@ -194,7 +195,7 @@ function BBMOD_Mesh(_vertexFormat)
 	/// @func to_static_batch(_model, _staticBatch, _transform)
 	/// @param {Struct.BBMOD_Model} _model
 	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
-	/// @param {Array.Real} _transform
+	/// @param {Array<Real>} _transform
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	/// @private
 	static to_static_batch = function (_model, _staticBatch, _transform) {

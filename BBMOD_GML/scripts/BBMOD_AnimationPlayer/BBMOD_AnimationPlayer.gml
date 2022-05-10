@@ -73,7 +73,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @readonly
 	Model = _model;
 
-	/// @var {Id.DsList.Struct.BBMOD_Animation} List of animations to play.
+	/// @var {Id.DsList<Struct.BBMOD_Animation>} List of animations to play.
 	/// @private
 	Animations = ds_list_create();
 
@@ -93,11 +93,11 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @private
 	AnimationInstanceLast = undefined;
 
-	/// @var {Array.(Struct.BBMOD_Vec3/Undefined)} Array of node position overrides.
+	/// @var {Array<Struct.BBMOD_Vec3/Undefined>} Array of node position overrides.
 	/// @private
 	NodePositionOverride = array_create(64/*Model.NodeCount*/, undefined);
 
-	/// @var {Array.(Struct.BBMOD_Quaternion/Undefined)} Array of node rotation
+	/// @var {Array<Struct.BBMOD_Quaternion/Undefined>} Array of node rotation
 	/// overrides.
 	/// @private
 	NodeRotationOverride = array_create(64/*Model.NodeCount*/, undefined);
@@ -109,7 +109,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @readonly
 	Time = 0;
 
-	/// @var {Array.Real/Undefined}
+	/// @var {Array<Real>/Undefined}
 	/// @private
 	Frame = undefined;
 
@@ -128,13 +128,13 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @var {Real} Controls animation playback speed. Must be a positive number!
 	PlaybackSpeed = 1;
 
-	/// @var {Array.Real} An array of node transforms in world space.
+	/// @var {Array<Real>} An array of node transforms in world space.
 	/// Useful for attachments.
 	/// @see BBMOD_AnimationPlayer.get_node_transform
 	/// @private
 	NodeTransform = array_create(64/*Model.NodeCount*/ * 8, 0.0);
 
-	/// @var {Array.Real} An array containing transforms of all bones.
+	/// @var {Array<Real>} An array containing transforms of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @private
@@ -432,7 +432,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @func get_transform()
 	/// @desc Returns an array of current transformations of all bones. This
 	/// should be passed to a vertex shader.
-	/// @return {Array.Real} The transformation array.
+	/// @return {Array<Real>} The transformation array.
 	static get_transform = function () {
 		gml_pragma("forceinline");
 		return TransformArray;
@@ -492,7 +492,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 	/// @func submit([_materials])
 	/// @desc Immediately submits the animated model for rendering.
-	/// @param {Array.Struct.BBMOD_Material/Undefined} [_materials] An array of
+	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] An array of
 	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
@@ -504,7 +504,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 	/// @func render([_materials])
 	/// @desc Enqueues the animated model for rendering.
-	/// @param {Array.Struct.BBMOD_Material/Undefined} [_materials] An array of
+	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] An array of
 	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.

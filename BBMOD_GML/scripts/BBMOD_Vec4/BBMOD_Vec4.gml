@@ -215,7 +215,7 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 
 	/// @func FromArray(_array[, _index])
 	/// @desc Loads vector components from an array.
-	/// @param {Array.Real} _array The array to read the components from.
+	/// @param {Array<Real>} _array The array to read the components from.
 	/// @param {Real} [_index] The index to start reading the vector components
 	/// from. Defaults to 0.
 	/// @return {Struct.BBMOD_Vec4} Returns `self`.
@@ -476,8 +476,8 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 
 	/// @func Get(_index)
 	/// @desc Retrieves vector component at given index (0 is X, 1 is Y, etc.).
-	/// @param {uint} _index The index of the component.
-	/// @return {real} The value of the vector component at given index.
+	/// @param {Real} _index The index of the component.
+	/// @return {Real} The value of the vector component at given index.
 	/// @throws {BBMOD_OutOfRangeException} If an invalid index is passed.
 	static Get = function (_index) {
 		gml_pragma("forceinline");
@@ -571,11 +571,11 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes the components of the vector into the target array.
-	/// @param {Array.Real/Undefined} [_array] The array to write to. If not
+	/// @param {Array<Real>/Undefined} [_array] The array to write to. If not
 	/// specified a new one of required size is created.
 	/// @param {Real} [_index] The starting index within the target array.
 	/// Defaults to 0.
-	/// @return {Array.Real} The target array.
+	/// @return {Array<Real>} The target array.
 	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
 		_array ??= array_create(4, 0.0);
@@ -603,7 +603,7 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @func Transform(_m)
 	/// @desc Transforms the vector by a matrix and returns the result
 	/// as a new vector.
-	/// @param {Array.Real} _m The matrix to transform the vector by.
+	/// @param {Array<Real>} _m The matrix to transform the vector by.
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	static Transform = function (_m) {
 		gml_pragma("forceinline")

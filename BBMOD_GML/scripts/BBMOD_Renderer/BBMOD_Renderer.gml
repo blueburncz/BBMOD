@@ -52,7 +52,13 @@ function BBMOD_Renderer()
 		destroy: destroy,
 	};
 
-	/// @var {Array.Struct.BBMOD_IRenderable} An array of renderable objects and
+	/// @var {Bool}
+	RenderInstanceIDs = false;
+
+	/// @var {Id.Surface}
+	SurInstanceIDs = noone;
+
+	/// @var <Struct.BBMOD_IRenderable>} An array of renderable objects and
 	/// structs.
 	/// These are automatically rendered in {@link BBMOD_Renderer.render}.
 	/// @readonly
@@ -136,6 +142,20 @@ function BBMOD_Renderer()
 	/// {@link BBMOD_EAntialiasing.None}.
 	/// @see BBMOD_EAntialiasing
 	Antialiasing = BBMOD_EAntialiasing.None;
+
+	/// @func get_instance_id(_screenX, _screenY)
+	/// @desc
+	/// @param {Real} _screenX
+	/// @param {Real} _screenY
+	/// @return {Id.Instance}
+	static get_instance_id = function (_screenX, _screenY) {
+		gml_pragma("forceinline");
+		if (!RenderInstanceIDs || !surface_exists(SurInstanceIDs))
+		{
+			return 0;
+		}
+		return surface_getpixel_ext(SurInstanceIDs, _screenX * RenderScale, _screenY * RenderScale);
+	};
 
 	/// @func add(_renderable)
 	/// @desc Adds a renderable object or struct to the renderer.
@@ -292,6 +312,31 @@ function BBMOD_Renderer()
 		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
+		// Instance IDs
+		if (RenderInstanceIDs)
+		{
+			SurInstanceIDs = bbmod_surface_check(SurInstanceIDs,
+				window_get_width() * RenderScale,
+				window_get_height() * RenderScale);
+
+			surface_set_target(SurInstanceIDs);
+			draw_clear_alpha(0, 0);
+			matrix_set(matrix_view, _view);
+			matrix_set(matrix_projection, _projection);
+	
+			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
+
+			var _renderQueues = global.bbmod_render_queues;
+			var _rqi = 0;
+			repeat (array_length(_renderQueues))
+			{
+				_renderQueues[_rqi++].submit();
+			}
+
+			surface_reset_target();
+		}
+
+		////////////////////////////////////////////////////////////////////////
 		// Shadow map
 		render_shadowmap();
 
@@ -312,7 +357,8 @@ function BBMOD_Renderer()
 			bbmod_shader_set_global_f2("bbmod_ShadowmapTexel",
 				texture_get_texel_width(_shadowmapTexture),
 				texture_get_texel_height(_shadowmapTexture));
-			bbmod_shader_set_global_f("bbmod_ShadowmapArea", ShadowmapArea);
+			bbmod_shader_set_global_f("bbmod_ShadowmapAreaVS", ShadowmapArea);
+			bbmod_shader_set_global_f("bbmod_ShadowmapAreaPS", ShadowmapArea);
 			bbmod_shader_set_global_f("bbmod_ShadowmapNormalOffset", ShadowmapNormalOffset);
 			bbmod_shader_set_global_matrix_array("bbmod_ShadowmapMatrix", get_shadowmap_matrix());
 		}
@@ -407,6 +453,10 @@ function BBMOD_Renderer()
 
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
+		if (surface_exists(SurInstanceIDs))
+		{
+			surface_free(SurInstanceIDs);
+		}
 		if (surface_exists(SurShadowmap))
 		{
 			surface_free(SurShadowmap);

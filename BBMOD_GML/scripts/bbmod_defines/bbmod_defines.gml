@@ -1,10 +1,6 @@
 /// @macro {Real} The supported version of BBMOD and BBANIM files.
 #macro BBMOD_VERSION 3
 
-/// @macro {Undefined} An empty value.
-/// @deprecated This macro is deprecated. Please use `undefined` instead.
-#macro BBMOD_NONE undefined
-
 /// @macro {Real} A value used to tell that no normals should be generated
 /// if the model does not have any.
 /// @see BBMOD_NORMALS_FLAT

@@ -1,8 +1,8 @@
-/// @var {Id.DsMap} Mapping from `Real`s to `Function`s.
+/// @var {Id.DsMap<Real, Function>}
 /// @private
 global.__bbmodAsyncCallback = ds_map_create();
 
-/// @var {Id.DsMap} Mapping from `Real`s to `Function`s.
+/// @var {Id.DsMap<Real, Function>}
 /// @private
 global.__bbmodSpriteCallback = ds_map_create();
 

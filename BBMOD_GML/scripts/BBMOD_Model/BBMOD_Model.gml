@@ -43,7 +43,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @readonly
 	VertexFormat = undefined;
 
-	/// @var {Array.Struct.BBMOD_Mesh} Array of meshes.
+	/// @var {Array<Struct.BBMOD_Mesh>} Array of meshes.
 	/// @readonly
 	Meshes = [];
 
@@ -60,7 +60,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @readonly
 	BoneCount = 0;
 
-	/// @var {Array.Real} An array of bone offset dual quaternions.
+	/// @var {Array<Real>} An array of bone offset dual quaternions.
 	/// @private
 	OffsetArray = [];
 
@@ -69,14 +69,14 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @readonly
 	MaterialCount = 0;
 
-	/// @var {Array.String} An array of material names.
+	/// @var {Array<String>} An array of material names.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
 	/// @readonly
 	MaterialNames = [];
 
-	/// @var {Array.Struct.BBMOD_BaseMaterial} An array of materials. Each entry
+	/// @var {Array<Struct.BBMOD_BaseMaterial>} An array of materials. Each entry
 	/// defaults to {@link BBMOD_MATERIAL_DEFAULT} or
 	/// {@link BBMOD_MATERIAL_DEFAULT_ANIMATED} for animated models.
 	/// @see BBMOD_Model.MaterialNames
@@ -304,10 +304,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @desc Immediately submits the model for rendering.
 	///
-	/// @param {Array.Struct.BBMOD_BaseMaterial/Undefined} [_materials] An array
+	/// @param {Array<Struct.BBMOD_BaseMaterial>/Undefined} [_materials] An array
 	/// of materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
-	/// @param {Array.Real/Undefined} [_transform] An array of transformation
+	/// @param {Array<Real>/Undefined} [_transform] An array of transformation
 	/// matrices (for animated models) or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
@@ -346,10 +346,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @desc Enqueues the model for rendering.
 	///
-	/// @param {Array.Struct.BBMOD_BaseMaterial/Undefined} [_materials] An array
+	/// @param {Array<Struct.BBMOD_BaseMaterial>/Undefined} [_materials] An array
 	/// of materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
-	/// @param {Array.Real/Undefined} [_transform] An array of transformation
+	/// @param {Array<Real>/Undefined} [_transform] An array of transformation
 	/// matrices (for animated models) or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
@@ -388,7 +388,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @func to_static_batch(_model, _staticBatch, _transform)
 	/// @param {Struct.BBMOD_Model} _model
 	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
-	/// @param {Array.Real} _transform
+	/// @param {Array<Real>} _transform
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	/// @private
 	static to_static_batch = function (_staticBatch, _transform) {

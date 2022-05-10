@@ -73,7 +73,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	///
 	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
-	/// @param {Array.Real} _data An array containing data for each rendered instance.
+	/// @param {Array<Real>} _data An array containing data for each rendered instance.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
@@ -100,7 +100,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @desc Enqueues the dynamic batch for rendering.
 	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader that
 	/// expects ids in the vertex format.
-	/// @param {Array.Real} _data An array containing data for each rendered instance.
+	/// @param {Array<Real>} _data An array containing data for each rendered instance.
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.submit_object
@@ -116,7 +116,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @desc The default function used in {@link BBMOD_DynamicBatch.render_object}.
 	/// Uses instance's variables `x`, `y`, `z` for position, `image_xscale` for
 	/// uniform scale and `image_angle` for rotation around the `z` axis.
-	/// @param {Array.Real} _data An array to which the function will write instance
+	/// @param {Array<Real>} _data An array to which the function will write instance
 	/// data. The data layout is compatible with shader `BBMOD_ShDefaultBatched`
 	/// and hence with material {@link BBMOD_MATERIAL_DEFAULT_BATCHED}.
 	/// @param {Real} _index An index at which the first variable will be written.

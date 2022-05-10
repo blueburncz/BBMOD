@@ -23,6 +23,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	UExposure = get_uniform("bbmod_Exposure");
 
+	UInstanceID = get_uniform("bbmod_InstanceID");
+
 	/// @func set_texture_offset(_offset)
 	/// @desc Sets the `bbmod_TextureOffset` uniform to the given offset.
 	/// @param {Struct.BBMOD_Vec2} _offset The texture offset.
@@ -43,7 +45,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_bones(_bones)
 	/// @desc Sets the `bbmod_Bones` uniform.
-	/// @param {Array.Real} _bones The array of bone transforms.
+	/// @param {Array<Real>} _bones The array of bone transforms.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	/// @see BBMOD_AnimationPlayer.get_transform
 	static set_bones = function (_bones) {
@@ -53,7 +55,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_batch_data(_data)
 	/// @desc Sets the `bbmod_BatchData` uniform.
-	/// @param {Array.Real} _data The dynamic batch data.
+	/// @param {Array<Real>} _data The dynamic batch data.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_batch_data = function (_data) {
 		gml_pragma("forceinline");
@@ -86,22 +88,32 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// plane. If `undefined`, then the value set by {@link bbmod_camera_set_zfar}
 	/// is used.
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	/// @obsolete This has been replaced with global shader uniforms.
-	static set_zfar = function (_value=undefined) {
-		gml_pragma("forceinline");
-		_value ??= global.__bbmodZFar;
-		return set_uniform_f(UZFar, _value);
-	};
 
 	/// @func set_exposure([_value])
 	/// @desc Sets the `bbmod_Exposure` uniform.
 	/// @param {Real} [_value] The camera exposure. If `undefined`,
 	/// then the value set by {@link bbmod_camera_set_exposure} is used.
-	/// @return {Struct.BBMOD_PBRShader} Returns `self`.
+	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	static set_exposure = function (_value=undefined) {
 		gml_pragma("forceinline");
 		_value ??= global.__bbmodCameraExposure;
 		return set_uniform_f(UExposure, _value);
+	};
+
+	/// @func set_instance_id([_id])
+	/// @desc Sets the `bbmod_InstanceID` uniform.
+	/// @param {Id.Instance} [_id] The instance ID. If `undefined`,
+	/// then the value set by {@link bbmod_set_instance_id} is used.
+	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
+	static set_instance_id = function (_id=undefined) {
+		gml_pragma("forceinline");
+		_id ??= global.__bbmodInstanceID;
+		return set_uniform_f4(
+			UInstanceID,
+			((_id & $000000FF) >> 0) / 255,
+			((_id & $0000FF00) >> 8) / 255,
+			((_id & $00FF0000) >> 16) / 255,
+			((_id & $FF000000) >> 24) / 255);
 	};
 
 	static on_set = function () {
