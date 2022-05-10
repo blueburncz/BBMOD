@@ -62,5 +62,6 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		DynamicBatch.destroy();
+		return undefined;
 	};
 }

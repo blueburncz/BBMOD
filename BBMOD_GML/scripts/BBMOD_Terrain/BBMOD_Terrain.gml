@@ -630,6 +630,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		{
 			vertex_delete_buffer(VertexBuffer);
 		}
+		return undefined;
 	};
 
 	if (_heightmap != undefined)

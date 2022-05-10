@@ -179,5 +179,6 @@ function BBMOD_StateMachine()
 		{
 			StateArray[i].destroy();
 		}
+		return undefined;
 	};
 }

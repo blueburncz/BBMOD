@@ -15,6 +15,7 @@
 ///     static destroy = function () {
 ///         method(self, Super_Class.destroy)();
 ///         surface_free(Surface);
+///         return undefined;
 ///     };
 /// }
 /// ```
@@ -94,12 +95,14 @@ function BBMOD_Class() constructor
 
 	/// @func destroy()
 	/// @desc Frees resources used by the struct from memory.
+	/// @return {Undefined} Returns `undefined`.
 	static destroy = function () {
 		var i = 0;
 		repeat (array_length(__DestroyActions))
 		{
 			method(self, __DestroyActions[i++])();
 		}
+		return undefined;
 	};
 }
 

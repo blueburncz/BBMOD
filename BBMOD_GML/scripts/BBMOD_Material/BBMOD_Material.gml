@@ -231,7 +231,7 @@ function BBMOD_Material(_shader=undefined)
 
 	/// @func set_shader(_pass, _shader)
 	/// @desc Defines a shader used in a specific render pass.
-	/// @param {BBMOD_ERenderPass} _pass The render pass.
+	/// @param {Enum.BBMOD_ERenderPass} _pass The render pass.
 	/// @param {Struct.BBMOD_Shader} _shader The shader used in the render pass.
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	/// @see BBMOD_Material.get_shader
@@ -246,7 +246,7 @@ function BBMOD_Material(_shader=undefined)
 
 	/// @func has_shader(_pass)
 	/// @desc Checks whether the material has a shader for the render pass.
-	/// @param {BBMOD_ERenderPass} _pass The render pass.
+	/// @param {Enum.BBMOD_ERenderPass} _pass The render pass.
 	/// @return {Bool} Returns `true` if the material has a shader for the
 	/// render pass.
 	/// @see BBMOD_ERenderPass
@@ -294,6 +294,7 @@ function BBMOD_Material(_shader=undefined)
 		{
 			sprite_delete(BaseOpacitySprite);
 		}
+		return undefined;
 	};
 
 	if (_shader != undefined)

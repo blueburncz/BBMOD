@@ -5,7 +5,7 @@
     "path": "folders/BBMOD/Gizmo.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_ShIDAnimated",
+  "name": "BBMOD_ShInstanceID",
   "tags": [],
   "resourceType": "GMShader",
 }

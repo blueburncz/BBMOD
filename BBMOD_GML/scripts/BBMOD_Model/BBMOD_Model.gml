@@ -408,6 +408,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		{
 			Meshes[i++].destroy();
 		}
+		return undefined;
 	};
 
 	if (_file != undefined)

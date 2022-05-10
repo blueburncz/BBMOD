@@ -89,6 +89,7 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 		{
 			sprite_delete(Raw);
 		}
+		return undefined;
 	};
 
 	if (_file != undefined)

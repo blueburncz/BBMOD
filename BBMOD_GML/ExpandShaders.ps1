@@ -27,6 +27,6 @@ Xpanda .\shaders\BBMOD_ShParticleLit --x .\Xshaders\ X_PARTICLES=1
 Xpanda .\shaders\BBMOD_ShParticleUnlit --x .\Xshaders\ X_PARTICLES=1 X_UNLIT=1
 Xpanda .\shaders\BBMOD_ShParticleDepth --x .\Xshaders\ X_PARTICLES=1 X_OUTPUT_DEPTH=1
 
-# ID shaders
-Xpanda .\shaders\BBMOD_ShID --x .\Xshaders\ X_ID=1
-Xpanda .\shaders\BBMOD_ShIDAnimated --x .\Xshaders\ X_ID=1 X_ANIMATED=1
+# Instance ID shaders
+Xpanda .\shaders\BBMOD_ShInstanceID --x .\Xshaders\ X_ID=1
+Xpanda .\shaders\BBMOD_ShInstanceIDAnimated --x .\Xshaders\ X_ID=1 X_ANIMATED=1

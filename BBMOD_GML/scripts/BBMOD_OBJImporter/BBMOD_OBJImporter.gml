@@ -273,5 +273,6 @@ function BBMOD_OBJImporter()
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Normals);
 		ds_list_destroy(TextureCoords);
+		return undefined;
 	};
 }

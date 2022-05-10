@@ -18,7 +18,7 @@ enum BBMOD_ERenderPass
 	SIZE,
 };
 
-/// @var {BBMOD_ERenderPass}
+/// @var {Enum.BBMOD_ERenderPass}
 /// @private
 global.__bbmodRenderPass = BBMOD_ERenderPass.Forward;
 

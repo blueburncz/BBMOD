@@ -242,5 +242,6 @@ function BBMOD_MeshBuilder()
 		method(self, Super_Class.destroy)();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Faces);
+		return undefined;
 	};
 }

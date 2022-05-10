@@ -285,5 +285,6 @@ function BBMOD_Mesh(_vertexFormat)
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		vertex_delete_buffer(VertexBuffer);
+		return undefined;
 	};
 }

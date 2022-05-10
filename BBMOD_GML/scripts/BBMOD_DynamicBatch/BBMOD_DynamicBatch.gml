@@ -255,5 +255,6 @@ function BBMOD_DynamicBatch(_model, _size)
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		vertex_delete_buffer(VertexBuffer);
+		return undefined;
 	};
 }

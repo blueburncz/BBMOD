@@ -138,8 +138,8 @@ function BBMOD_Renderer()
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	VignetteColor = c_black;
 
-	/// @var {BBMOD_EAntialiasing} Antialiasing technique to use. Defaults to
-	/// {@link BBMOD_EAntialiasing.None}.
+	/// @var {Enum.BBMOD_EAntialiasing} Antialiasing technique to use. Defaults
+	/// to {@link BBMOD_EAntialiasing.None}.
 	/// @see BBMOD_EAntialiasing
 	Antialiasing = BBMOD_EAntialiasing.None;
 
@@ -470,5 +470,6 @@ function BBMOD_Renderer()
 			application_surface_enable(false);
 			application_surface_draw_enable(true);
 		}
+		return undefined;
 	};
 }

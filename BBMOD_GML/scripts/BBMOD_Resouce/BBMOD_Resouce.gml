@@ -201,5 +201,6 @@ function BBMOD_Resource()
 			ds_map_delete(Manager.Resources, Path);
 			Manager = undefined;
 		}
+		return undefined;
 	};
 }

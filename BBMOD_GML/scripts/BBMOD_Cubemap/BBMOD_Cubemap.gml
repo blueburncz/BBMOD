@@ -62,7 +62,8 @@ function BBMOD_Cubemap(_resolution)
 	/// @readonly
 	Resolution = _resolution;
 
-	/// @var {BBMOD_ECubeSide} An index of a side that we are currently rendering to.
+	/// @var {Enum.BBMOD_ECubeSide} An index of a side that we are currently
+	/// rendering to.
 	/// @see BBMOD_Cubemap.set_target
 	/// @private
 	RenderTo = 0;
@@ -219,5 +220,6 @@ function BBMOD_Cubemap(_resolution)
 		{
 			surface_free(Surface);
 		}
+		return undefined;
 	};
 }

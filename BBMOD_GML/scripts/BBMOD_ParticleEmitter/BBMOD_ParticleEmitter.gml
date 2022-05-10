@@ -464,5 +464,6 @@ function BBMOD_ParticleEmitter(_position, _system)
 		method(self, Super_Class.destroy)();
 		ds_grid_destroy(Particles);
 		ds_grid_destroy(GridCompute);
+		return undefined;
 	};
 }

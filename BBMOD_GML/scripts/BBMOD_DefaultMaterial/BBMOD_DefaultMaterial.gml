@@ -151,5 +151,6 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		{
 			sprite_delete(SpecularColorSprite);
 		}
+		return undefined;
 	};
 }

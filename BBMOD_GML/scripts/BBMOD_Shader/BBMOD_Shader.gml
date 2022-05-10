@@ -454,7 +454,7 @@ function bbmod_shader_get_global(_name)
 /// @func __bbmod_shader_set_global_impl(_name, _type, _value)
 /// @desc
 /// @param {String} _name
-/// @param {BBMOD_EPropertyType} _type
+/// @param {Enum.BBMOD_EPropertyType} _type
 /// @param {Mixed} _value
 /// @private
 function __bbmod_shader_set_global_impl(_name, _type, _value)

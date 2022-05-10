@@ -166,5 +166,6 @@ function BBMOD_Gizmo()
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		ds_list_destroy(Selected);
+		return undefined;
 	};
 }

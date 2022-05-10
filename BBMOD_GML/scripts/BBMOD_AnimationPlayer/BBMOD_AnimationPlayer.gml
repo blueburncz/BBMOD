@@ -517,5 +517,6 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		ds_list_destroy(Animations);
+		return undefined;
 	};
 }

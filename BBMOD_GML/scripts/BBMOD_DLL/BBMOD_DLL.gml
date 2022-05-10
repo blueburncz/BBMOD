@@ -544,5 +544,6 @@ function BBMOD_DLL(_path="Data/BBMOD/BBMOD.dll")
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		external_free(Path);
+		return undefined;
 	};
 }

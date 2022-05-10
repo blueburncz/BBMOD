@@ -294,5 +294,6 @@ function BBMOD_PBRMaterial(_shader=undefined)
 		{
 			sprite_delete(EmissiveSprite);
 		}
+		return undefined;
 	};
 }

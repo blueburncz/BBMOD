@@ -263,5 +263,6 @@ function BBMOD_ResourceManager()
 			_key = ds_map_find_next(_resources, _key);
 		}
 		ds_map_destroy(_resources);
+		return undefined;
 	};
 }
