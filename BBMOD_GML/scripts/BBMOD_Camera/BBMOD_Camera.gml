@@ -106,13 +106,24 @@ function BBMOD_Camera() constructor
 	MouseLockAt = undefined;
 
 	/// @var {Real} The camera's horizontal direction. Defaults to `0`.
-	/// @readonly
 	Direction = 0.0;
 
 	/// @var {Real} The camera's vertical direction. Automatically clamped
-	/// between `-89` and `89`. Defaults to `0`.
-	/// @readonly
+	/// between {@link BBMOD_Camera.DirectionUpMin} and
+	/// {@link BBMOD_Camera.DirectionUpMax}. Defaults to `0`.
 	DirectionUp = 0.0;
+
+	/// @var {Real/Undefined} Minimum angle that {@link BBMOD_Camrea.DirectionUp}
+	/// can be. Use `undefined` to remove the limit. Default value is `-89`.
+	DirectionUpMin = -89.0;
+
+	/// @var {Real/Undefined} Maximum angle that {@link BBMOD_Camrea.DirectionUp}
+	/// can be. Use `undefined` to remove the limit. Default value is `89`.
+	DirectionUpMax = 89.0;
+
+	/// @var {Real} The angle of camera's rotation from side to side. Default
+	/// value is `0`.
+	Roll = 0.0;
 
 	/// @var {Real} The camera's distance from its target. Use `0` for a
 	/// first-person camera. Defaults to `0`.
@@ -178,10 +189,31 @@ function BBMOD_Camera() constructor
 	static update_matrices = function () {
 		gml_pragma("forceinline");
 
+		var _forward = BBMOD_VEC3_FORWARD;
+		var _right = BBMOD_VEC3_RIGHT;
+		var _up = BBMOD_VEC3_UP;
+
+		var _quatZ = new BBMOD_Quaternion().FromAxisAngle(_up, Direction);
+		_forward = _quatZ.Rotate(_forward);
+		_right = _quatZ.Rotate(_right);
+		_up = _quatZ.Rotate(_up);
+
+		var _quatY = new BBMOD_Quaternion().FromAxisAngle(_right, DirectionUp);
+		_forward = _quatY.Rotate(_forward);
+		_right = _quatY.Rotate(_right);
+		_up = _quatY.Rotate(_up);
+
+		var _quatX = new BBMOD_Quaternion().FromAxisAngle(_forward, Roll);
+		_forward = _quatX.Rotate(_forward);
+		_right = _quatX.Rotate(_right);
+		_up = _quatX.Rotate(_up);
+
+		var _target = Position.Add(_forward);
+
 		var _view = matrix_build_lookat(
 			Position.X, Position.Y, Position.Z,
-			Target.X, Target.Y, Target.Z,
-			Up.X, Up.Y, Up.Z);
+			_target.X, _target.Y, _target.Z,
+			_up.X, _up.Y, _up.Z);
 		camera_set_view_mat(Raw, _view);
 
 		var _proj = Orthographic
@@ -199,8 +231,8 @@ function BBMOD_Camera() constructor
 		{
 			audio_listener_position(Position.X, Position.Y, Position.Z);
 			audio_listener_orientation(
-				Target.X - Position.X, Target.Y - Position.Y, Target.Z - Position.Z,
-				Up.X, Up.Y, Up.Z);
+				_forward.X, _forward.Y, _forward.Z,
+				_up.X, _up.Y, _up.Z);
 		}
 
 		return self;
@@ -236,8 +268,15 @@ function BBMOD_Camera() constructor
 				DirectionUp += (MouseLockAt.Y - _mouseY) * MouseSensitivity;
 				window_mouse_set(MouseLockAt.X, MouseLockAt.Y);
 			}
+		}
 
-			DirectionUp = clamp(DirectionUp, -89.0, 89.0);
+		if (DirectionUpMin != undefined)
+		{
+			DirectionUp = max(DirectionUp, DirectionUpMin);
+		}
+		if (DirectionUpMax != undefined)
+		{
+			DirectionUp = min(DirectionUp, DirectionUpMax);
 		}
 
 		var _offsetX = lengthdir_x(Offset.X, Direction - 90.0)
