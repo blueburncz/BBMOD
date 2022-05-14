@@ -58,6 +58,12 @@ function BBMOD_Renderer()
 	/// @var {Id.Surface}
 	SurInstanceIDs = noone;
 
+	/// @var {Struct.BBMOD_Gizmo}
+	Gizmo = undefined;
+
+	/// @var {Id.Surface}
+	SurGizmo = noone;
+
 	/// @var <Struct.BBMOD_IRenderable>} An array of renderable objects and
 	/// structs.
 	/// These are automatically rendered in {@link BBMOD_Renderer.render}.
@@ -380,6 +386,21 @@ function BBMOD_Renderer()
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global("bbmod_Shadowmap");
 
+		////////////////////////////////////////////////////////////////////////
+		// Gizmo
+		if (Gizmo)
+		{
+			SurGizmo = bbmod_surface_check(SurGizmo,
+				window_get_width() * RenderScale,
+				window_get_height() * RenderScale);
+			surface_set_target(SurGizmo);
+			draw_clear_alpha(0, 0);
+			matrix_set(matrix_view, _view);
+			matrix_set(matrix_projection, _projection);
+			Gizmo.submit();
+			surface_reset_target();
+		}
+
 		bbmod_material_reset();
 
 		matrix_set(matrix_world, _world);
@@ -394,7 +415,6 @@ function BBMOD_Renderer()
 	static present = function () {
 		if (UseAppSurface)
 		{
-			var _surFinal = application_surface;
 			var _windowWidth = window_get_width();
 			var _windowHeight = window_get_height();
 			var _texelWidth = 1.0 / _windowWidth;
@@ -402,6 +422,12 @@ function BBMOD_Renderer()
 			gpu_push_state();
 			gpu_set_tex_filter(true);
 			gpu_set_tex_repeat(false);
+			var _surFinal = application_surface;
+			////////////////////////////////////////////////////////////////////
+			// Gizmo
+			surface_set_target(_surFinal);
+			draw_surface(SurGizmo, 0, 0);
+			surface_reset_target();
 			////////////////////////////////////////////////////////////////////
 			// Post-processing
 			if (EnablePostProcessing)

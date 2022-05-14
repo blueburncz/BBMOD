@@ -23,9 +23,54 @@ enum BBMOD_EEditType
 function BBMOD_Gizmo()
 	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static Super_Class = {
 		destroy: destroy,
 	};
+
+	/// @var {Struct.BBMOD_Model}
+	/// @readonly
+	static Model = undefined;
+
+	if (!Model)
+	{
+		var _matBase = BBMOD_MATERIAL_DEFAULT.clone();
+		_matBase.set_normal_smoothness(BBMOD_VEC3_UP, 0.5);
+		_matBase.set_specular_color(BBMOD_C_DKGRAY);
+		_matBase.BaseOpacity = pointer_null;
+		_matBase.Culling = cull_noculling;
+
+		var _matAll = _matBase.clone();
+
+		var _matX = _matBase.clone();
+		_matX.BaseOpacityMultiplier = BBMOD_C_RED;
+
+		var _matY = _matBase.clone();
+		_matY.BaseOpacityMultiplier = BBMOD_C_LIME;
+
+		var _matZ = _matBase.clone();
+		_matZ.BaseOpacityMultiplier = BBMOD_C_BLUE;
+
+		Model = new BBMOD_Model("Data/BBMOD/Models/Gizmo.bbmod")
+		Model.Materials = [
+			BBMOD_MATERIAL_DEFAULT,
+			// All
+			_matAll,
+			// Move
+			_matX,
+			_matY,
+			_matZ,
+			// Rotate
+			_matX,
+			_matY,
+			_matZ,
+			// Scale
+			_matX,
+			_matY,
+			_matZ,
+		];
+	}
 
 	/// @var {Enum.BBMOD_EEditType}
 	EditType = BBMOD_EEditType.Position;
@@ -39,7 +84,7 @@ function BBMOD_Gizmo()
 	IsEditing = false;
 
 	/// @var {Real}
-	Size = 10.0;
+	Size = 25.0;
 
 	/// @var {Struct.BBMOD_Vec3}
 	/// @readonly
@@ -102,64 +147,25 @@ function BBMOD_Gizmo()
 		return self;
 	};
 
-	/// @func draw([_camera])
+	/// @func submit([_materials])
 	/// @desc
-	/// @param {Struct.BBMOD_Camera/Undefined} [_camera]
+	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials]
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static draw = function (_camera=undefined) {
-		var _x0, _y0;
-		var _x1, _y1;
-		var _x2, _y2;
-		var _x3, _y3;
+	static submit = function (_materials=undefined) {
+		gml_pragma("forceinline");
+		new BBMOD_Matrix().Scale(new BBMOD_Vec3(Size)).Translate(Position).ApplyWorld();
+		Model.submit(_materials);
+		return self;
+	};
 
-		if (_camera)
-		{
-			var _screenPosition;
-
-			_screenPosition = _camera.world_to_screen(Position);
-			if (!_screenPosition) return self;
-			_x0 = _screenPosition.X;
-			_y0 = _screenPosition.Y;
-
-			_screenPosition = _camera.world_to_screen(Position.Add(new BBMOD_Vec3(Size, 0.0, 0.0)));
-			if (!_screenPosition) return self;
-			_x1 = _screenPosition.X;
-			_y1 = _screenPosition.Y;
-
-			_screenPosition = _camera.world_to_screen(Position.Add(new BBMOD_Vec3(0.0, Size, 0.0)));
-			if (!_screenPosition) return self;
-			_x2 = _screenPosition.X;
-			_y2 = _screenPosition.Y;
-
-			_screenPosition = _camera.world_to_screen(Position.Add(new BBMOD_Vec3(0.0, 0.0, Size)));
-			if (!_screenPosition) return self;
-			_x3 = _screenPosition.X;
-			_y3 = _screenPosition.Y;
-		}
-		else
-		{
-			_x0 = Position.X;
-			_y0 = Position.Y;
-
-			_x1 = _x0 + Size;
-			_y1 = _y0;
-
-			_x2 = _x0;
-			_y2 = _y0 + Size;
-
-			_x3 = _x0;
-			_y3 = _y0;
-		}
-
-		var _color = draw_get_color();
-		draw_set_color(c_red);
-		draw_arrow(_x0, _y0, _x1, _y1, 16);
-		draw_set_color(c_lime);
-		draw_arrow(_x0, _y0, _x2, _y2, 16);
-		draw_set_color(c_blue);
-		draw_arrow(_x0, _y0, _x3, _y3, 16);
-		draw_set_color(_color);
-
+	/// @func render([_materials])
+	/// @desc
+	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials]
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static render = function (_materials=undefined) {
+		gml_pragma("forceinline");
+		new BBMOD_Matrix().Scale(new BBMOD_Vec3(Size)).Translate(Position).ApplyWorld();
+		Model.render(_materials);
 		return self;
 	};
 

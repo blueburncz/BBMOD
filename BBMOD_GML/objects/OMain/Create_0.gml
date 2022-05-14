@@ -148,3 +148,4 @@ renderer.add(particleEmitter);
 
 gizmo = new BBMOD_Gizmo();
 gizmo.Position.Set(OPlayer.x, OPlayer.y, 30);
+renderer.Gizmo = gizmo;

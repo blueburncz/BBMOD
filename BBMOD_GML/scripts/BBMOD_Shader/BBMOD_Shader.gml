@@ -244,8 +244,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 		}
 		shader_set(Raw);
 		BBMOD_SHADER_CURRENT = self;
-		__bbmod_shader_set_globals(Raw);
 		on_set();
+		__bbmod_shader_set_globals(Raw);
 		return self;
 	};
 
