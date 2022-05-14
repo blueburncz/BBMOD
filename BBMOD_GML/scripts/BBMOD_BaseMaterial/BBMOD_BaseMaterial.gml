@@ -15,6 +15,10 @@ function BBMOD_BaseMaterial(_shader=undefined)
 		copy: copy,
 	};
 
+	/// @var {Struct.BBMOD_Color} Multiplier for {@link BBMOD_Material.BaseOpacity}.
+	/// Default value is {@link BBMOD_C_WHITE}.
+	BaseOpacityMultiplier = BBMOD_C_WHITE;
+
 	/// @var {Struct.BBMOD_Vec2} An offset of texture UV coordinates. Defaults to `[0, 0]`.
 	/// Using this you can control texture's position within texture page.
 	TextureOffset = new BBMOD_Vec2(0.0);
@@ -29,6 +33,7 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
 	static copy = function (_dest) {
 		method(self, Super_Material.copy)(_dest);
+		BaseOpacityMultiplier.Copy(_dest.BaseOpacityMultiplier);
 		_dest.TextureOffset = TextureOffset.Clone();
 		_dest.TextureScale = TextureScale.Clone();
 		return self;

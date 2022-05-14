@@ -36,6 +36,8 @@ varying float v_fDepth;
 
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
+// RGBA
+uniform vec4 bbmod_BaseOpacityMultiplier;
 // RGB: Tangent space normal, A: Roughness
 uniform sampler2D bbmod_NormalRoughness;
 // R: Metallic, G: Ambient occlusion
@@ -359,6 +361,9 @@ void main()
 		bbmod_Emissive,
 		v_mTBN,
 		v_vTexCoord);
+
+	material.Base *= bbmod_BaseOpacityMultiplier.rgb;
+	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{

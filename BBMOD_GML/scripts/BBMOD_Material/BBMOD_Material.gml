@@ -90,10 +90,6 @@ function BBMOD_Material(_shader=undefined)
 
 	BaseOpacitySprite = undefined;
 
-	/// @func set_priority(_p)
-	/// @desc Changes the material priority.
-	/// @param {Real} _p The new material priority.
-
 	/// @func copy(_dest)
 	/// @desc Copies properties of this material into another material.
 	/// @param {Struct.BBMOD_Material} _dest The destination material.

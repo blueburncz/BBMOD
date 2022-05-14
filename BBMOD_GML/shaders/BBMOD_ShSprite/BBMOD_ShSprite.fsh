@@ -39,6 +39,8 @@ varying vec3 v_vLight;
 
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
+// RGBA
+uniform vec4 bbmod_BaseOpacityMultiplier;
 // UVs of the BaseOpacity texture
 uniform vec4 bbmod_BaseOpacityUV;
 // UVs of the NormalSmoothness texture
@@ -448,6 +450,9 @@ void main()
 
 	material.Base *= v_vColor.rgb;
 	material.Opacity *= v_vColor.a;
+
+	material.Base *= bbmod_BaseOpacityMultiplier.rgb;
+	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{

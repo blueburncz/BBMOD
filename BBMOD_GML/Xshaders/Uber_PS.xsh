@@ -34,6 +34,10 @@ uniform vec4 bbmod_InstanceID;
 
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
+// RGBA
+uniform vec4 bbmod_BaseOpacityMultiplier;
+#endif
 #if defined(X_PBR)
 // RGB: Tangent space normal, A: Roughness
 uniform sampler2D bbmod_NormalRoughness;
@@ -209,6 +213,11 @@ void main()
 			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
 			: splatmap.a)));
 	}
+#endif
+
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
+	material.Base *= bbmod_BaseOpacityMultiplier.rgb;
+	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 #endif
 
 	if (material.Opacity < bbmod_AlphaTest)

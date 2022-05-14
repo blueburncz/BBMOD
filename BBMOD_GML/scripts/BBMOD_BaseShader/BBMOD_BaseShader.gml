@@ -7,6 +7,8 @@
 function BBMOD_BaseShader(_shader, _vertexFormat)
 	: BBMOD_Shader(_shader, _vertexFormat) constructor
 {
+	UBaseOpacityMultiplier = get_uniform("bbmod_BaseOpacityMultiplier");
+
 	UTextureOffset = get_uniform("bbmod_TextureOffset");
 
 	UTextureScale = get_uniform("bbmod_TextureScale");
@@ -129,6 +131,12 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @see BBMOD_BaseMaterial
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
+		set_uniform_f4(
+			UBaseOpacityMultiplier,
+			_material.BaseOpacityMultiplier.Red / 255.0,
+			_material.BaseOpacityMultiplier.Green / 255.0,
+			_material.BaseOpacityMultiplier.Blue / 255.0,
+			_material.BaseOpacityMultiplier.Alpha);
 		set_alpha_test(_material.AlphaTest);
 		set_texture_offset(_material.TextureOffset);
 		set_texture_scale(_material.TextureScale);

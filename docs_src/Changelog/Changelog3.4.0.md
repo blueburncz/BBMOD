@@ -11,6 +11,7 @@
 
 ### Core module:
 * Added new property `ShadowmapBias` to `BBMOD_DefaultMaterial`.
+* Added new property `BaseOpacityMultiplier` to `BBMOD_BaseMaterial`, which is a multiplier of `BaseOpacity`.
 * Fixed method `Mul` of `BBMOD_Matrix`.
 
 ### Particles module:
