@@ -33,43 +33,24 @@ function BBMOD_Gizmo()
 	/// @readonly
 	static Model = undefined;
 
+	/// @var {Array<Struct.BBMOD_Material>}
+	static MaterialsSelect = undefined;
+
 	if (!Model)
 	{
-		var _matBase = BBMOD_MATERIAL_DEFAULT.clone();
-		_matBase.set_normal_smoothness(BBMOD_VEC3_UP, 0.5);
-		_matBase.set_specular_color(BBMOD_C_DKGRAY);
-		_matBase.BaseOpacity = pointer_null;
-		_matBase.Culling = cull_noculling;
+		var _shaderSelect = new BBMOD_BaseShader(BBMOD_ShGizmoSelect, BBMOD_VFORMAT_DEFAULT);
+		var _materialSelect = new BBMOD_BaseMaterial(_shaderSelect);
+		_materialSelect.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 1);
+		MaterialsSelect = [_materialSelect];
 
-		var _matAll = _matBase.clone();
-
-		var _matX = _matBase.clone();
-		_matX.BaseOpacityMultiplier = BBMOD_C_RED;
-
-		var _matY = _matBase.clone();
-		_matY.BaseOpacityMultiplier = BBMOD_C_LIME;
-
-		var _matZ = _matBase.clone();
-		_matZ.BaseOpacityMultiplier = BBMOD_C_BLUE;
+		var _material = BBMOD_MATERIAL_DEFAULT.clone();
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 0);
+		_material.set_normal_smoothness(BBMOD_VEC3_UP, 0.5);
+		_material.set_specular_color(BBMOD_C_DKGRAY);
+		_material.Culling = cull_noculling;
 
 		Model = new BBMOD_Model("Data/BBMOD/Models/Gizmo.bbmod")
-		Model.Materials = [
-			BBMOD_MATERIAL_DEFAULT,
-			// All
-			_matAll,
-			// Move
-			_matX,
-			_matY,
-			_matZ,
-			// Rotate
-			_matX,
-			_matY,
-			_matZ,
-			// Scale
-			_matX,
-			_matY,
-			_matZ,
-		];
+		Model.Materials[0] = _material;
 	}
 
 	/// @var {Enum.BBMOD_EEditType}
