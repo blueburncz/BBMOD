@@ -21,8 +21,6 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	UCamPos = get_uniform("bbmod_CamPos");
 
-	UZFar = get_uniform("bbmod_ZFar");
-
 	UExposure = get_uniform("bbmod_Exposure");
 
 	UInstanceID = get_uniform("bbmod_InstanceID");
@@ -83,13 +81,6 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		_pos ??= global.__bbmodCameraPosition;
 		return set_uniform_f3(UCamPos, _pos.X, _pos.Y, _pos.Z);
 	};
-
-	/// @func set_zfar([_value])
-	/// @desc Sets a fragment shader uniform `bbmod_ClipFar` to the given value.
-	/// @param {Struct.BBMOD_Vec3} [_value] The distance to the far clipping
-	/// plane. If `undefined`, then the value set by {@link bbmod_camera_set_zfar}
-	/// is used.
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
 
 	/// @func set_exposure([_value])
 	/// @desc Sets the `bbmod_Exposure` uniform.
