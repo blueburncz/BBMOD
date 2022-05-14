@@ -56,13 +56,19 @@ function BBMOD_Renderer()
 	RenderInstanceIDs = false;
 
 	/// @var {Id.Surface}
+	/// @private
 	SurInstanceIDs = noone;
 
 	/// @var {Struct.BBMOD_Gizmo}
 	Gizmo = undefined;
 
 	/// @var {Id.Surface}
+	/// @private
 	SurGizmo = noone;
+
+	/// @var {Id.Surface}
+	/// @private
+	SurGizmoSelect = noone;
 
 	/// @var <Struct.BBMOD_IRenderable>} An array of renderable objects and
 	/// structs.
@@ -148,6 +154,47 @@ function BBMOD_Renderer()
 	/// to {@link BBMOD_EAntialiasing.None}.
 	/// @see BBMOD_EAntialiasing
 	Antialiasing = BBMOD_EAntialiasing.None;
+
+	/// @func select_gizmo(_screenX, _screenY)
+	/// @desc
+	/// @param {Real} _screenX
+	/// @param {Real} _screenY
+	/// @return {Bool}
+	static select_gizmo = function (_screenX, _screenY) {
+		if (!Gizmo || !surface_exists(SurGizmoSelect))
+		{
+			return false;
+		}
+
+		var _pixel = surface_getpixel_ext(SurGizmoSelect, _screenX * RenderScale, _screenY * RenderScale);
+
+		if (_pixel & $FF000000 == 0)
+		{
+			return false;
+		}
+
+		if (_pixel & $FFFFFF == $FFFFFF)
+		{
+			Gizmo.EditAxis = BBMOD_EEditAxis.All;
+			Gizmo.EditType = BBMOD_EEditType.Scale;
+			return true;
+		}
+
+		var _blue = (_pixel >> 16) & 255;
+		var _green = (_pixel >> 8) & 255;
+		var _red = _pixel & 255;
+		var _value = max(_red, _green, _blue);
+
+		Gizmo.EditAxis = ((_value == _red) ? BBMOD_EEditAxis.X
+			: ((_value == _green) ? BBMOD_EEditAxis.Y
+			: BBMOD_EEditAxis.Z));
+
+		Gizmo.EditType = ((_value == 255) ? BBMOD_EEditType.Position
+			: ((_value == 128) ? BBMOD_EEditType.Rotation
+			: BBMOD_EEditType.Scale));
+
+		return true;
+	};
 
 	/// @func get_instance_id(_screenX, _screenY)
 	/// @desc
@@ -399,6 +446,16 @@ function BBMOD_Renderer()
 			matrix_set(matrix_projection, _projection);
 			Gizmo.submit();
 			surface_reset_target();
+
+			SurGizmoSelect = bbmod_surface_check(SurGizmoSelect,
+				window_get_width() * RenderScale,
+				window_get_height() * RenderScale);
+			surface_set_target(SurGizmoSelect);
+			draw_clear_alpha(0, 0);
+			matrix_set(matrix_view, _view);
+			matrix_set(matrix_projection, _projection);
+			Gizmo.submit(Gizmo.MaterialsSelect);
+			surface_reset_target();
 		}
 
 		bbmod_material_reset();
@@ -482,6 +539,14 @@ function BBMOD_Renderer()
 		if (surface_exists(SurInstanceIDs))
 		{
 			surface_free(SurInstanceIDs);
+		}
+		if (surface_exists(SurGizmo))
+		{
+			surface_free(SurGizmo);
+		}
+		if (surface_exists(SurGizmoSelect))
+		{
+			surface_free(SurGizmoSelect);
 		}
 		if (surface_exists(SurShadowmap))
 		{

@@ -13,6 +13,11 @@
 * Added new property `ShadowmapBias` to `BBMOD_DefaultMaterial`.
 * Added new property `BaseOpacityMultiplier` to `BBMOD_BaseMaterial`, which is a multiplier of `BaseOpacity`.
 * Fixed method `Mul` of `BBMOD_Matrix`.
+* Added new function `bbmod_set_instance_id`.
+
+### Gizmo module:
+* Added new module - Gizmo.
+* Added new struct `BBMOD_Gizmo`.
 
 ### Particles module:
 * Added new module - Particles.
@@ -75,3 +80,10 @@
 
 * Added new struct `BBMOD_InitialVelocityModule`.
 * Added new struct `BBMOD_MixInitialVelocityModule`.
+
+### Rendering module:
+#### Renderer submodule:
+* Added new property `RenderInstanceIDs` to `BBMOD_Renderer`.
+* Added new property `Gizmo` to `BBMOD_Renderer`.
+* Added new method `get_instance_id` to `BBMOD_Renderer`.
+* Added new method `select_gizmo` to `BBMOD_Renderer`.
