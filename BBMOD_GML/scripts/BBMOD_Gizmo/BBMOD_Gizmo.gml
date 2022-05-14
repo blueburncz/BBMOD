@@ -65,7 +65,7 @@ function BBMOD_Gizmo()
 	IsEditing = false;
 
 	/// @var {Real}
-	Size = 25.0;
+	Size = 20.0;
 
 	/// @var {Struct.BBMOD_Vec3}
 	/// @readonly

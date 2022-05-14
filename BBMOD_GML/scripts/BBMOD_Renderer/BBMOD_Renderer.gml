@@ -166,8 +166,9 @@ function BBMOD_Renderer()
 			return false;
 		}
 
-		var _pixel = surface_getpixel_ext(SurGizmoSelect, _screenX * RenderScale, _screenY * RenderScale);
+		Gizmo.EditAxis = BBMOD_EEditAxis.None;
 
+		var _pixel = surface_getpixel_ext(SurGizmoSelect, _screenX * RenderScale, _screenY * RenderScale);
 		if (_pixel & $FF000000 == 0)
 		{
 			return false;
@@ -437,6 +438,10 @@ function BBMOD_Renderer()
 		// Gizmo
 		if (Gizmo)
 		{
+			var _size = Gizmo.Size;
+			Gizmo.Size *= Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+			bbmod_shader_set_global_f("bbmod_FogIntensity", 0.0);
+
 			SurGizmo = bbmod_surface_check(SurGizmo,
 				window_get_width() * RenderScale,
 				window_get_height() * RenderScale);
@@ -456,6 +461,9 @@ function BBMOD_Renderer()
 			matrix_set(matrix_projection, _projection);
 			Gizmo.submit(Gizmo.MaterialsSelect);
 			surface_reset_target();
+
+			bbmod_shader_unset_global("bbmod_FogIntensity");
+			Gizmo.Size = _size;
 		}
 
 		bbmod_material_reset();
