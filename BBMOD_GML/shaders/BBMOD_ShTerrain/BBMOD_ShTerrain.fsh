@@ -374,6 +374,7 @@ void Exposure()
 }
 // include("Exposure.xsh")
 #pragma include("GammaCorrect.xsh")
+
 void GammaCorrect()
 {
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);

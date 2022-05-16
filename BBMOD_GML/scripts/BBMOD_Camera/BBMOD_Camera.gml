@@ -135,7 +135,7 @@ function BBMOD_Camera() constructor
 	/// method. Defaults to `true`.
 	AudioListener = true;
 
-	/// @var {real[16]} The `view * projection` matrix.
+	/// @var {Array<Real>} The `view * projection` matrix.
 	/// @note This is updated each time {@link BBMOD_Camera.update_matrices}
 	/// is called.
 	/// @readonly
@@ -437,11 +437,11 @@ function BBMOD_Camera() constructor
 	/// @func world_to_screen(_position[, _screenWidth[, _screenHeight]])
 	/// @desc Computes screen-space position of a point in world-space.
 	/// @param {BBMOD_Vec3} _position The world-space position.
-	/// @param {real/undefined} [_screenWidth] The width of the screen. If
+	/// @param {Real/Undefined} [_screenWidth] The width of the screen. If
 	/// `undefined`, it is retrieved using `window_get_width`.
-	/// @param {real/undefined} [_screenHeight] The height of the screen. If
+	/// @param {Real/Undefined} [_screenHeight] The height of the screen. If
 	/// `undefined`, it is retrieved using `window_get_height`.
-	/// @return {BBMOD_Vec4/undefined} The screen-space position or `undefined`
+	/// @return {BBMOD_Vec4/Undefined} The screen-space position or `undefined`
 	/// if the point is outside of the screen.
 	/// @note This requires {@link BBMOD_Camera.ViewProjectionMatrix}, so you
 	/// should use this *after* {@link BBMOD_Camera.update_matrices} (or

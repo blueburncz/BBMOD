@@ -517,7 +517,7 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Set([_x[, _y, _z]])
 	/// @desc Sets vector components in-place.
 	/// @param {Real} [_x] The new value of the first component. Defaults to 0.
-	/// @param {Real/undefined} [_y] The new value of the second component. Defaults to `_x`.
+	/// @param {Real/Undefined} [_y] The new value of the second component. Defaults to `_x`.
 	/// @param {Real/Undefined} [_z] The new value of the third component. Defaults to `_x`.
 	/// @return {BBMOD_Vec3} Returns `self`.
 	static Set = function (_x=0.0, _y=undefined, _z=undefined) {

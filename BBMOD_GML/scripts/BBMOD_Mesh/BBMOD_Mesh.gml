@@ -99,7 +99,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 
 	/// @func render(_material, _transform, _matrix)
 	/// @func {Struct.BBMOD_BaseMaterial} _material
-	/// @func {Array<Real>/undefined} _transform
+	/// @func {Array<Real>/Undefined} _transform
 	/// @func {Array<Real>} _matrix
 	/// @return {BBMOD_Mesh} Returns `self`.
 	/// @private

@@ -41,13 +41,3 @@ renderer.Grayscale = bbmod_lerp_delta_time(renderer.Grayscale, _grayscale, 0.1, 
 var _hurt = OPlayer.hurt;
 renderer.Vignette = lerp(0.8, 1.5, _hurt);
 renderer.VignetteColor = merge_color(c_black, c_red, _hurt);
-
-////////////////////////////////////////////////////////////////////////////////
-// Particles
-particleEmitter.update(DELTA_TIME);
-if (DELTA_TIME > 0.0)
-{
-	var _factor = random(1.0);
-	emitterLight.Color = BBMOD_C_BLACK.Mix(BBMOD_C_ORANGE, lerp(0.5, 0.6, _factor));
-	emitterLight.Range = lerp(29.0, 31.0, _factor);
-}

@@ -1,10 +1,10 @@
 /// @func BBMOD_Matrix([_raw])
 /// @desc A matrix.
-/// @param {real[16]/undefined} [_raw] A raw GameMaker matrix. If `undefined`,
+/// @param {Array<Real>/Undefined} [_raw] A raw GameMaker matrix. If `undefined`,
 /// an identity matrix is created.
 function BBMOD_Matrix(_raw=undefined) constructor
 {
-	/// @var {real[16]} A raw GameMaker matrix.
+	/// @var {Array<Real>} A raw GameMaker matrix.
 	Raw = _raw ?? matrix_build_identity();
 
 	/// @func Copy(_dest)
@@ -39,7 +39,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func FromArray(_array[, _index])
 	/// @desc Initializes the matrix from an array.
-	/// @param {real[]} _array The array to read values from.
+	/// @param {Array<Real>} _array The array to read values from.
 	/// @param {Real} [_index] The index to start reading at. Defaults to 0.
 	/// @return {BBMOD_Matrix} Returns `self`.
 	static FromArray = function (_array, _index=0) {
@@ -50,10 +50,10 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes the matrix into an array.
-	/// @param {real[]/undefined} [_array] The array to write the matrix to. If
+	/// @param {Array<Real>/Undefined} [_array] The array to write the matrix to. If
 	/// `undefined`, then a new one is created.
 	/// @param {Real} [_index] The index to start writing at. Defaults to 0.
-	/// @return {real[]} The destination array.
+	/// @return {Array<Real>} The destination array.
 	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
 		_array ??= array_create(16, 0.0);
@@ -209,10 +209,10 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func ToEuler([_array[, _index]])
 	/// @desc Retrieves euler angles from the matrix.
-	/// @param {real[]/undefined} [_array] An array to write the X,Y,Z angles to.
+	/// @param {Array<Real>/Undefined} [_array] An array to write the X,Y,Z angles to.
 	/// If `undefined`, a new one is created.
 	/// @parma {Real} [_index] The index to start writing at.
-	/// @return {real[]} The destination array.
+	/// @return {Array<Real>} The destination array.
 	static ToEuler = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
 
@@ -453,11 +453,11 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func Translate(_x[, _y, _z])
 	/// @desc Translates the matrix.
-	/// @param {real/BBMOD_Vec3} _x Translation on the X axis or a vector with
+	/// @param {Real/BBMOD_Vec3} _x Translation on the X axis or a vector with
 	/// translations on all axes.
-	/// @param {real/undefined} [_y] Translation on the Y axis. Use `undefined`
+	/// @param {Real/Undefined} [_y] Translation on the Y axis. Use `undefined`
 	/// if `_x` is a vector. Defaults to `undefined`.
-	/// @param {real/undefined} [_z] Translation on the Z axis. Use `undefined`
+	/// @param {Real/Undefined} [_z] Translation on the Z axis. Use `undefined`
 	/// if `_x` is a vector. Defaults to `undefined`.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static Translate = function (_x, _y=undefined, _z=undefined) {
@@ -508,11 +508,11 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func RotateEuler(_x[, _y, _z])
 	/// @desc Rotates the matrix using euler angles.
-	/// @param {real/BBMOD_Vec3} _x Rotation on the X axis or a vector with
+	/// @param {Real/BBMOD_Vec3} _x Rotation on the X axis or a vector with
 	/// rotations on all axes.
-	/// @param {real/undefined} [_y] Rotation on the Y axis. Use `undefined`
+	/// @param {Real/Undefined} [_y] Rotation on the Y axis. Use `undefined`
 	/// if `_x` is a vector. Defaults to `undefined`.
-	/// @param {real/undefined} [_z] Rotation on the Z axis. Use `undefined`
+	/// @param {Real/Undefined} [_z] Rotation on the Z axis. Use `undefined`
 	/// if `_x` is a vector. Defaults to `undefined`.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	/// @note The order of rotations is YXZ, same as in `matrix_build`.
@@ -575,11 +575,11 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func Scale(_x[, _y, _z])
 	/// @desc Scales the matrix.
-	/// @param {real/BBMOD_Vec3} _x Scale on the X axis or a vector with scale
+	/// @param {Real/BBMOD_Vec3} _x Scale on the X axis or a vector with scale
 	/// on all axes.
-	/// @param {real/undefined} [_y] Scale on the Y axis. Use `undefined` if
+	/// @param {Real/Undefined} [_y] Scale on the Y axis. Use `undefined` if
 	/// `_x` is a vector. Defaults to `undefined`.
-	/// @param {real/undefined} [_z] Scale on the Z axis. Use `undefined` if
+	/// @param {Real/Undefined} [_z] Scale on the Z axis. Use `undefined` if
 	/// `_x` is a vector. Defaults to `undefined`.
 	/// @return {BBMOD_Matrix} The resulting matrix.
 	static Scale = function (_x, _y=undefined, _z=undefined) {
