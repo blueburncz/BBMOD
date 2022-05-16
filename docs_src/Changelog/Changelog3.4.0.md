@@ -107,3 +107,4 @@ Models and animation files now have major and minor version. This allows us to i
 * Added new method `get_instance_id` to `BBMOD_Renderer`.
 * Added new method `select_gizmo` to `BBMOD_Renderer`.
 * Added an optional argument `_clearQueues` to `BBMOD_Renderer.render`, using which you can disable clearing render queues at the end of the method.
+* Added new property `InstanceHighlightColor`, which is the outline color of selected instances.
