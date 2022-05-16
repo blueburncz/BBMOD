@@ -4,7 +4,7 @@
   "project_name": "BBMOD",
   "title": "BBMOD Docs",
   "author": "BlueBurn",
-  "prefix": "bbmod",
+  "prefix": ["bbmod", "__bbmod"],
   "version": "3.4.0",
   "analytics": "",
   "api": {
@@ -70,10 +70,11 @@
       "pages": {
         "Core module": "Modules/CoreModule.md",
         "2D module": "Modules/2DModule.md",
-        "DLL module": "Modules/DLLModule.md",
-        "Mesh builder module": "Modules/MeshBuilderModule.md",
-        "Importer module": "Modules/ImporterModule.md",
         "Camera module": "Modules/CameraModule.md",
+        "DLL module": "Modules/DLLModule.md",
+        "Gizmo module": "Modules/GizmoModule.md",
+        "Importer module": "Modules/ImporterModule.md",
+        "Mesh builder module": "Modules/MeshBuilderModule.md",
         "Raycasting module": "Modules/RaycastingModule.md",
         "Rendering module": {
           "file": "Modules/Rendering/RenderingModule.md",

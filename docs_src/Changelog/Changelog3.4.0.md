@@ -21,6 +21,7 @@ This release of BBMOD mainly brings features useful for level editors. There is 
 * Added new property `ShadowmapBias` to `BBMOD_DefaultMaterial`, using which you can control a range over which a material smoothly transitions into a full shadow. This is useful for example for volumetric objects.
 * Added new property `BaseOpacityMultiplier` to `BBMOD_BaseMaterial`, which is a color multiplier of `BaseOpacity`.
 * Fixed method `Mul` of `BBMOD_Matrix`.
+* Method `destroy` of `BBMOD_Class` now returns `undefined`.
 
 ### Camera module:
 * Added new property `Roll` to `BBMOD_Camera`, using which you can control camera's rotation from side to side.
