@@ -419,8 +419,7 @@ function BBMOD_Renderer()
 		var _selectedInstances = Gizmo.Selected;
 
 		if (Gizmo
-			&& Gizmo.Visible
-			&& !ds_list_empty(_selectedInstances))
+			&& Gizmo.Visible)
 		{
 			SurInstanceHighlight = bbmod_surface_check(SurInstanceHighlight,
 				window_get_width() * RenderScale,
@@ -428,16 +427,20 @@ function BBMOD_Renderer()
 
 			surface_set_target(SurInstanceHighlight);
 			draw_clear_alpha(0, 0.0);
-			matrix_set(matrix_view, _view);
-			matrix_set(matrix_projection, _projection);
-	
-			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
-			var _renderQueues = global.bbmod_render_queues;
-			var _rqi = 0;
-			repeat (array_length(_renderQueues))
+			if (!ds_list_empty(_selectedInstances))
 			{
-				_renderQueues[_rqi++].submit(_selectedInstances);
+				matrix_set(matrix_view, _view);
+				matrix_set(matrix_projection, _projection);
+	
+				bbmod_render_pass_set(BBMOD_ERenderPass.Id);
+
+				var _renderQueues = global.bbmod_render_queues;
+				var _rqi = 0;
+				repeat (array_length(_renderQueues))
+				{
+					_renderQueues[_rqi++].submit(_selectedInstances);
+				}
 			}
 
 			surface_reset_target();
