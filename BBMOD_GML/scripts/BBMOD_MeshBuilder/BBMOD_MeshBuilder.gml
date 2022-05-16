@@ -1,6 +1,9 @@
 /// @func BBMOD_MeshBuilder()
+///
 /// @extends BBMOD_Class
+///
 /// @desc Allows you to build meshes through code.
+///
 /// @example
 /// Following code shows how you can create a plane mesh using the mesh builder.
 /// ```gml
@@ -22,6 +25,7 @@
 /// _meshBuilder.add_face(_v2, _v3, _v4);
 /// var _mesh = _meshBuilder.build();
 /// ```
+///
 /// @see BBMOD_Mesh
 /// @see BBMOD_Vertex
 /// @see BBMOD_VertexFormat

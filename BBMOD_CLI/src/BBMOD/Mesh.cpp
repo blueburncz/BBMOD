@@ -65,7 +65,7 @@ static inline void AssimpToVec3(aiVector3D& from, vec3_t to)
 SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 {
 	SMesh* mesh = new SMesh();
-
+	mesh->Model = model;
 	mesh->VertexFormat = model->VertexFormat;
 	mesh->MaterialIndex = aiMesh->mMaterialIndex;
 
@@ -340,9 +340,10 @@ bool SMesh::Save(std::ofstream& file)
 	return true;
 }
 
-SMesh* SMesh::Load(std::ifstream& file, SVertexFormat* vertexFormat)
+SMesh* SMesh::Load(std::ifstream& file, SVertexFormat* vertexFormat, SModel* model)
 {
 	SMesh* mesh = new SMesh();
+	mesh->Model = model;
 	mesh->VertexFormat = vertexFormat;
 
 	FILE_READ_DATA(file, mesh->MaterialIndex);

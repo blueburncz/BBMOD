@@ -20,6 +20,9 @@
 * Added new properties `VersionMajor` and `VersionMinor` to structs `BBMOD_Model` and `BBMOD_Animation`.
 * Property `Version` of structs `BBMOD_Model` and `BBMOD_Animation` is now obsolete.
 
+* Added new property `Model` to `BBMOD_Mesh`.
+* Added new optional `_model` parameter to `BBMOD_Mesh`'s constructor.
+
 ### Gizmo module:
 * Added new module - Gizmo.
 * Added new struct `BBMOD_Gizmo`.

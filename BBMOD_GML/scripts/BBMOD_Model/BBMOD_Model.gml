@@ -145,7 +145,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		var i = 0;
 		repeat (_meshCount)
 		{
-			Meshes[@ i++] = new BBMOD_Mesh(VertexFormat).from_buffer(_buffer);
+			Meshes[@ i++] = new BBMOD_Mesh(VertexFormat, self).from_buffer(_buffer);
 		}
 
 		// Node count and root node

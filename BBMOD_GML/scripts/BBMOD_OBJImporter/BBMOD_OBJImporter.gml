@@ -84,6 +84,7 @@ function BBMOD_OBJImporter()
 			{
 				_meshBuilder.make_tangents();
 				var _mesh = _meshBuilder.build();
+				_mesh.Model = _model;
 
 				var _meshIndex = array_length(_model.Meshes);
 				array_push(_model.Meshes, _mesh);
@@ -246,6 +247,7 @@ function BBMOD_OBJImporter()
 		{
 			_meshBuilder.make_tangents();
 			var _mesh = _meshBuilder.build();
+			_mesh.Model = _model;
 
 			var _meshIndex = array_length(_model.Meshes);
 			array_push(_model.Meshes, _mesh);

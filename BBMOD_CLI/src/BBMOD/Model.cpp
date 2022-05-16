@@ -294,6 +294,8 @@ SModel* SModel::Load(std::string path)
 	}
 
 	SModel* model = new SModel();
+	model->VersionMajor = versionMajor;
+	model->VersionMinor = versionMinor;
 
 	SVertexFormat* vertexFormat = SVertexFormat::Load(file);
 	model->VertexFormat = vertexFormat;
@@ -303,7 +305,7 @@ SModel* SModel::Load(std::string path)
 
 	for (uint32_t i = 0; i < meshCount; ++i)
 	{
-		SMesh* mesh = SMesh::Load(file, vertexFormat);
+		SMesh* mesh = SMesh::Load(file, vertexFormat, model);
 		model->Meshes.push_back(mesh);
 	}
 

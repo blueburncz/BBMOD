@@ -98,9 +98,9 @@ function __bbmod_model_particle()
 	static _model = undefined;
 	if (_model == undefined)
 	{
-		var _mesh = new BBMOD_Mesh(BBMOD_VFORMAT_PARTICLE);
 		var _model = new BBMOD_Model();
 		var _node = new BBMOD_Node(_model);
+		var _mesh = new BBMOD_Mesh(BBMOD_VFORMAT_PARTICLE, _model);
 
 		var _vbuffer = vertex_create_buffer();
 		vertex_begin(_vbuffer, BBMOD_VFORMAT_PARTICLE.Raw);

@@ -1,9 +1,11 @@
-/// @func BBMOD_Mesh(_vertexFormat)
+/// @func BBMOD_Mesh(_vertexFormat[, _model])
 /// @extends BBMOD_Class
 /// @desc A mesh struct.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format of the mesh.
-/// @see BBMOD_Node
-function BBMOD_Mesh(_vertexFormat)
+/// @param {Struct.BBMOD_Model/Undefined} [_model] The model to which the mesh belongs.
+/// @see BBMOD_Model
+/// @see BBMOD_VertexFormat
+function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -11,6 +13,10 @@ function BBMOD_Mesh(_vertexFormat)
 	static Super_Class = {
 		destroy: destroy,
 	};
+
+	/// @var {Struct.BBMOD_Model/Undefined} The model to which the mesh belongs.
+	/// @readonly
+	Model = _model;
 
 	/// @var {Real} An index of a material that the mesh uses.
 	/// @see BBMOD_Model.MaterialCount

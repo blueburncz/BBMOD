@@ -43,7 +43,9 @@ struct SMesh
 
 	bool Save(std::ofstream& file);
 
-	static SMesh* Load(std::ifstream& file, SVertexFormat* vertexFormat);
+	static SMesh* Load(std::ifstream& file, SVertexFormat* vertexFormat, struct SModel* model);
+
+	struct SModel* Model = nullptr;
 
 	SVertexFormat* VertexFormat = nullptr;
 

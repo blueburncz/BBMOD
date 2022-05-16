@@ -421,6 +421,8 @@ SAnimation* SAnimation::Load(std::string path)
 	}
 
 	SAnimation* animation = new SAnimation();
+	animation->VersionMajor = versionMajor;
+	animation->VersionMinor = versionMinor;
 	FILE_READ_DATA(file, animation->Duration);
 	FILE_READ_DATA(file, animation->TicsPerSecond);
 
