@@ -1,9 +1,13 @@
 # Changelog
+Added new "Particles" module.
 
-- Removed deprecated and obsolete API!
-- New "Particles" module.
-- Cleaned up shaders.
-- Models and animation files now have major and minor version.
+Added new "Gizmo" module.
+
+Shader code was cleaned up, utilizing the latest features of [Xpanda](https://github.com/GameMakerDiscord/Xpanda).
+
+Models and animation files now have major and minor version. This allows us to include additional data into the files, without requiring you to reconvert all your assets.
+
+**All API that was previously marked as deprecated or obsolete was removed, so make sure to read through the change log before upgrading your project!**
 
 ## GML API:
 ### General:
