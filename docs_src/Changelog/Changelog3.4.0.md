@@ -26,6 +26,9 @@
 ### Gizmo module:
 * Added new module - Gizmo.
 * Added new struct `BBMOD_Gizmo`.
+* Added new macros `BBMOD_SHADER_INSTANCE_ID` and `BBMOD_SHADER_INSTANCE_ID_ANIMATED`, which are shaders used when rendering instance IDs.
+* Added new enum `BBMOD_EEditAxis`.
+* Added new enum `BBMOD_EEditType`.
 
 ### Particles module:
 * Added new module - Particles.

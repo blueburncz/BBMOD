@@ -1,7 +1,9 @@
-/// @macro {Struct.BBMOD_BaseShader}
+/// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs.
+/// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_INSTANCE_ID __bbmod_shader_id()
 
-/// @macro {Struct.BBMOD_BaseShader}
+/// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs.
+/// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_INSTANCE_ID_ANIMATED __bbmod_shader_id_animated()
 
 function __bbmod_shader_id()
