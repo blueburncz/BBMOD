@@ -1,12 +1,10 @@
 # Changelog
 This release of BBMOD mainly brings features useful for level editors. There is a new Gizmo module and the renderer now supports mouse-picking of instances and gizmos, as well as highlight of selected instances. Models and animation files now also have a minor version - this allows us to include additional data into the files, without requiring you to reconvert all your assets. Additionally, the camera now supports 360° vertical rotation and roll from side to side. All shader code was cleaned up utilizing the latest features of [Xpanda](https://github.com/GameMakerDiscord/Xpanda).
 
-**All API that was previously marked as deprecated or obsolete was removed, so make sure to read through the change log before upgrading your project!**
-
 ## GML API:
 ### General:
 * Further fixes of variable and argument types in docs.
-* Removed all API previously marked as deprecated or obsolete!
+* **Removed all API previously marked as deprecated or obsolete!**
 
 ### Core module:
 * Added new macros `BBMOD_VERSION_MAJOR` and `BBMOD_VERSION_MINOR`.
