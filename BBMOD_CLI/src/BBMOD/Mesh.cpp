@@ -68,6 +68,8 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 	mesh->Model = model;
 	mesh->VertexFormat = model->VertexFormat;
 	mesh->MaterialIndex = aiMesh->mMaterialIndex;
+	AssimpToVec3(aiMesh->mAABB.mMin, mesh->BboxMin);
+	AssimpToVec3(aiMesh->mAABB.mMax, mesh->BboxMax);
 
 	uint32_t faceCount = aiMesh->mNumFaces;
 	aiColor4D cWhite(1.0f, 1.0f, 1.0f, 1.0f);
@@ -326,6 +328,12 @@ bool SMesh::Save(std::ofstream& file)
 {
 	FILE_WRITE_DATA(file, MaterialIndex);
 
+	if (Model->VersionMinor >= 1)
+	{
+		FILE_WRITE_VEC3(file, BboxMin);
+		FILE_WRITE_VEC3(file, BboxMax);
+	}
+
 	uint32_t vertexCount = (uint32_t)Data.size();
 	FILE_WRITE_DATA(file, vertexCount);
 
@@ -347,6 +355,12 @@ SMesh* SMesh::Load(std::ifstream& file, SVertexFormat* vertexFormat, SModel* mod
 	mesh->VertexFormat = vertexFormat;
 
 	FILE_READ_DATA(file, mesh->MaterialIndex);
+
+	if (model->VersionMinor >= 1)
+	{
+		FILE_READ_VEC3(file, mesh->BboxMin);
+		FILE_READ_VEC3(file, mesh->BboxMax);
+	}
 
 	uint32_t vertexCount;
 	FILE_READ_DATA(file, vertexCount);

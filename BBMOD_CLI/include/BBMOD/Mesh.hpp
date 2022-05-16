@@ -52,4 +52,8 @@ struct SMesh
 	uint32_t MaterialIndex = 0;
 
 	std::vector<SVertex*> Data;
+
+	vec3_t BboxMin;
+
+	vec3_t BboxMax;
 };

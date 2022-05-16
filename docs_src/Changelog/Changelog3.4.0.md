@@ -3,6 +3,7 @@
 - Removed deprecated and obsolete API!
 - New "Particles" module.
 - Cleaned up shaders.
+- Models and animation files now have major and minor version.
 
 ## GML API:
 ### General:
@@ -22,6 +23,7 @@
 
 * Added new property `Model` to `BBMOD_Mesh`.
 * Added new optional `_model` parameter to `BBMOD_Mesh`'s constructor.
+* Added new properties `BboxMin` and `BboxMax` to `BBMOD_Mesh`, which are the minimum and maximum coordinates of the mesh's bounding box. This is supported ony for model version 3.1!
 
 ### Gizmo module:
 * Added new module - Gizmo.

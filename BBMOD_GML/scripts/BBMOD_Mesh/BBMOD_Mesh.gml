@@ -24,6 +24,14 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @readonly
 	MaterialIndex = 0;
 
+	/// @var {Struct.BBMOD_Vec3/Undefined} The minimum coordinate of the mesh's
+	/// bounding box. Available since model version 3.1.
+	BboxMin = undefined;
+
+	/// @var {Struct.BBMOD_Vec3/Undefined} The maximum coordinate of the mesh's
+	/// bounding box. Available since model version 3.1.
+	BboxMax = undefined;
+
 	/// @var {Id.VertexBuffer} A vertex buffer.
 	/// @readonly
 	VertexBuffer = undefined;
@@ -39,6 +47,12 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @private
 	static from_buffer = function (_buffer) {
 		MaterialIndex = buffer_read(_buffer, buffer_u32);
+
+		if (Model.VersionMinor >= 1)
+		{
+			BboxMin = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f32);
+			BboxMax = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f32);
+		}
 
 		var _vertexCount = buffer_read(_buffer, buffer_u32);
 		if (_vertexCount > 0)
