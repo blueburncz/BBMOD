@@ -167,6 +167,7 @@
     {"id":{"name":"SprPlayer","path":"sprites/SprPlayer/SprPlayer.yy",},"order":0,},
     {"id":{"name":"bbmod_render_pass_","path":"scripts/bbmod_render_pass_/bbmod_render_pass_.yy",},"order":2,},
     {"id":{"name":"MatZombie","path":"scripts/MatZombie/MatZombie.yy",},"order":1,},
+    {"id":{"name":"BBMOD_ShInstanceHighlight","path":"shaders/BBMOD_ShInstanceHighlight/BBMOD_ShInstanceHighlight.yy",},"order":6,},
     {"id":{"name":"bbmod_cmp","path":"scripts/bbmod_cmp/bbmod_cmp.yy",},"order":1,},
     {"id":{"name":"Fnt48","path":"fonts/Fnt48/Fnt48.yy",},"order":2,},
     {"id":{"name":"SndFootstep0","path":"sounds/SndFootstep0/SndFootstep0.yy",},"order":0,},

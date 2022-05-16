@@ -62,6 +62,15 @@ function BBMOD_Renderer()
 	/// @private
 	SurInstanceIDs = noone;
 
+	/// @var {Id.Surface} Surface for rendering highlight of selected instances.
+	/// @private
+	SurInstanceHighlight = noone;
+
+	/// @var {Struct.BBMOD_Color} Outline color of instances selected by gizmo.
+	/// Default value is {@link BBMOD_C_ORANGE}.
+	/// @see BBMOD_Renderer.Gizmo
+	InstanceHighlightColor = BBMOD_C_ORANGE;
+
 	/// @var {Struct.BBMOD_Gizmo/Undefined} A gizmo that is automatically rendered
 	/// and can be mouse-picked using method {@link BBMOD_Renderer.select_gizmo}.
 	/// Default value is `undefined`.
@@ -389,7 +398,7 @@ function BBMOD_Renderer()
 				window_get_height() * RenderScale);
 
 			surface_set_target(SurInstanceIDs);
-			draw_clear_alpha(0, 0);
+			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 	
@@ -400,6 +409,35 @@ function BBMOD_Renderer()
 			repeat (array_length(_renderQueues))
 			{
 				_renderQueues[_rqi++].submit();
+			}
+
+			surface_reset_target();
+		}
+
+		////////////////////////////////////////////////////////////////////////
+		// Instance highlight
+		var _selectedInstances = Gizmo.Selected;
+
+		if (Gizmo
+			&& Gizmo.Visible
+			&& !ds_list_empty(_selectedInstances))
+		{
+			SurInstanceHighlight = bbmod_surface_check(SurInstanceHighlight,
+				window_get_width() * RenderScale,
+				window_get_height() * RenderScale);
+
+			surface_set_target(SurInstanceHighlight);
+			draw_clear_alpha(0, 0.0);
+			matrix_set(matrix_view, _view);
+			matrix_set(matrix_projection, _projection);
+	
+			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
+
+			var _renderQueues = global.bbmod_render_queues;
+			var _rqi = 0;
+			repeat (array_length(_renderQueues))
+			{
+				_renderQueues[_rqi++].submit(_selectedInstances);
 			}
 
 			surface_reset_target();
@@ -465,7 +503,7 @@ function BBMOD_Renderer()
 				window_get_width() * RenderScale,
 				window_get_height() * RenderScale);
 			surface_set_target(SurGizmo);
-			draw_clear_alpha(0, 0);
+			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			Gizmo.submit();
@@ -475,7 +513,7 @@ function BBMOD_Renderer()
 				window_get_width() * RenderScale,
 				window_get_height() * RenderScale);
 			surface_set_target(SurGizmoSelect);
-			draw_clear_alpha(0, 0);
+			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			Gizmo.submit(Gizmo.MaterialsSelect);
@@ -507,14 +545,35 @@ function BBMOD_Renderer()
 
 		if (UseAppSurface)
 		{
-			
 			var _surFinal = application_surface;
-			////////////////////////////////////////////////////////////////////
-			// Gizmo
-			if (Gizmo && Gizmo.Visible && surface_exists(SurGizmo))
+			if (Gizmo
+				&& Gizmo.Visible)
 			{
 				surface_set_target(_surFinal);
-				draw_surface(SurGizmo, 0, 0);
+
+				////////////////////////////////////////////////////////////////
+				// Highlighted instances
+				if (!ds_list_empty(Gizmo.Selected)
+					&& surface_exists(SurInstanceHighlight))
+				{
+					var _shader = BBMOD_ShInstanceHighlight;
+					shader_set(_shader);
+					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
+					shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
+						InstanceHighlightColor.Red / 255.0,
+						InstanceHighlightColor.Green / 255.0,
+						InstanceHighlightColor.Blue / 255.0,
+						InstanceHighlightColor.Alpha);
+					draw_surface_stretched(SurInstanceHighlight, 0, 0, _windowWidth, _windowHeight)
+					shader_reset();
+				}
+
+				////////////////////////////////////////////////////////////////
+				// Gizmo
+				if (surface_exists(SurGizmo))
+				{
+					draw_surface(SurGizmo, 0, 0);
+				}
 				surface_reset_target();
 			}
 			////////////////////////////////////////////////////////////////////
@@ -564,13 +623,32 @@ function BBMOD_Renderer()
 		}
 		else
 		{
-			////////////////////////////////////////////////////////////////////
-			// Gizmo
-			if (Gizmo && Gizmo.Visible && surface_exists(SurGizmo))
+			if (Gizmo
+				&& Gizmo.Visible)
 			{
-				surface_set_target(_surFinal);
-				draw_surface_stretched(SurGizmo, 0, 0, _windowWidth, _windowHeight);
-				surface_reset_target();
+				////////////////////////////////////////////////////////////////
+				// Highlighted instances
+				if (!ds_list_empty(Gizmo.Selected)
+					&& surface_exists(SurInstanceHighlight))
+				{
+					var _shader = BBMOD_ShInstanceHighlight;
+					shader_set(_shader);
+					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
+					shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
+						InstanceHighlightColor.Red / 255.0,
+						InstanceHighlightColor.Green / 255.0,
+						InstanceHighlightColor.Blue / 255.0,
+						InstanceHighlightColor.Alpha);
+					draw_surface_stretched(SurInstanceHighlight, 0, 0, _windowWidth, _windowHeight)
+					shader_reset();
+				}
+			
+				////////////////////////////////////////////////////////////////
+				// Gizmo
+				if (surface_exists(SurGizmo))
+				{
+					draw_surface_stretched(SurGizmo, 0, 0, _windowWidth, _windowHeight);
+				}
 			}
 		}
 
@@ -584,6 +662,10 @@ function BBMOD_Renderer()
 		if (surface_exists(SurInstanceIDs))
 		{
 			surface_free(SurInstanceIDs);
+		}
+		if (surface_exists(SurInstanceHighlight))
+		{
+			surface_free(SurInstanceHighlight);
 		}
 		if (surface_exists(SurGizmo))
 		{
