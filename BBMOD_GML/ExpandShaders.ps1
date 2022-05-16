@@ -30,3 +30,6 @@ Xpanda .\shaders\BBMOD_ShParticleDepth --x .\Xshaders\ X_PARTICLES=1 X_OUTPUT_DE
 # Instance ID shaders
 Xpanda .\shaders\BBMOD_ShInstanceID --x .\Xshaders\ X_ID=1
 Xpanda .\shaders\BBMOD_ShInstanceIDAnimated --x .\Xshaders\ X_ID=1 X_ANIMATED=1
+
+# Gizmo shaders
+Xpanda .\shaders\BBMOD_ShGizmo --x .\Xshaders\

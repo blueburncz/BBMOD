@@ -29,14 +29,6 @@ if (global.editMode && mouse_check_button_pressed(mb_left))
 		{
 			gizmo.toggle_select(_instance);
 		}
-
-		var _text = "Selected instances: ";
-		var i = 0;
-		repeat (ds_list_size(gizmo.Selected))
-		{
-			_text += string(gizmo.Selected[| i++]) + ", ";
-		}
-		show_debug_message(_text);
 	}
 }
 else
