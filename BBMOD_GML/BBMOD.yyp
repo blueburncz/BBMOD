@@ -54,7 +54,6 @@
     {"id":{"name":"BBMOD_DefaultMaterial","path":"scripts/BBMOD_DefaultMaterial/BBMOD_DefaultMaterial.yy",},"order":6,},
     {"id":{"name":"BBMOD_ERenderCommand","path":"scripts/BBMOD_ERenderCommand/BBMOD_ERenderCommand.yy",},"order":9,},
     {"id":{"name":"BBMOD_ShInstanceID","path":"shaders/BBMOD_ShInstanceID/BBMOD_ShInstanceID.yy",},"order":0,},
-    {"id":{"name":"SprSmoke","path":"sprites/SprSmoke/SprSmoke.yy",},"order":8,},
     {"id":{"name":"OItem","path":"objects/OItem/OItem.yy",},"order":1,},
     {"id":{"name":"SndWhoosh","path":"sounds/SndWhoosh/SndWhoosh.yy",},"order":5,},
     {"id":{"name":"SprSplatmap","path":"sprites/SprSplatmap/SprSplatmap.yy",},"order":5,},
