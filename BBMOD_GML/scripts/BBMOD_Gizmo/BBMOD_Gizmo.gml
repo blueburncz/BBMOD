@@ -28,7 +28,7 @@ enum BBMOD_EEditType
 
 /// @func BBMOD_Gizmo()
 /// @extends BBMOD_Class
-/// @desc
+/// @desc A gizmo for editing instances.
 function BBMOD_Gizmo()
 	: BBMOD_Class() constructor
 {
@@ -172,8 +172,6 @@ function BBMOD_Gizmo()
 	/// @var {Function} A function that takes an instance ID and returns its
 	/// rotation on the Z axis. Defaults to a function that always returns 1.
 	GetInstanceScaleZ = _getInstancePropertyOne;
-
-	//////////////////////
 
 	static _setInstancePositionX = function (_instance, _x) {
 		gml_pragma("forceinline");
@@ -383,6 +381,23 @@ function BBMOD_Gizmo()
 		return self;
 	};
 
+	/// @func toggle_select(_instance)
+	/// @desc Unselects an instance if it's selected, or selects if it isn't.
+	/// @param {Id.Instance} _instance The instance to toggle selection of.
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static toggle_select = function (_instance) {
+		gml_pragma("forceinline");
+		if (is_selected(_instance))
+		{
+			unselect(_instance);
+		}
+		else
+		{
+			select(_instance);
+		}
+		return self;
+	};
+
 	/// @func clear_selection()
 	/// @desc Removes all instances from selection.
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
@@ -393,7 +408,7 @@ function BBMOD_Gizmo()
 	};
 
 	/// @func update(_deltaTime)
-	/// @desc Updates the gizmo.
+	/// @desc Handles instance editing. Should be called every frame.
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.

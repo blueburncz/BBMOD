@@ -107,7 +107,9 @@ if (global.gameSpeed == 0)
 	draw_set_font(Fnt48);
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_bottom);
-	DrawTextShadow(round(_windowWidth * 0.5), _windowHeight - 16, "PAUSE",
+	DrawTextShadow(
+		round(_windowWidth * 0.5), _windowHeight - 16,
+		global.editMode ? "EDIT" : "PAUSE",
 		c_white, c_black, dsin(current_time * 0.5) * 0.5 + 0.5);
 	draw_set_valign(fa_top);
 }

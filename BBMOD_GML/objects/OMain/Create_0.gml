@@ -3,6 +3,9 @@
 // Used to pause the game (with 0.0).
 global.gameSpeed = 1.0;
 
+// Used to enable/disable edit mode.
+global.editMode = false;
+
 randomize();
 os_powersave_enable(false);
 display_set_gui_maximize(1, 1);

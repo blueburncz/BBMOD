@@ -172,7 +172,7 @@ function BBMOD_Renderer()
 	/// @return {Bool} Returns `true` if the gizmo was selected.
 	/// @note {@link BBMOD_Renderer.Gizmo} must be defined.
 	static select_gizmo = function (_screenX, _screenY) {
-		if (!Gizmo || !surface_exists(SurGizmoSelect))
+		if (!Gizmo || !Gizmo.Visible || !surface_exists(SurGizmoSelect))
 		{
 			return false;
 		}
@@ -217,7 +217,7 @@ function BBMOD_Renderer()
 	/// @note {@link BBMOD_Renderer.RenderInstanceIDs} must be enabled.
 	static get_instance_id = function (_screenX, _screenY) {
 		gml_pragma("forceinline");
-		if (!RenderInstanceIDs || !surface_exists(SurInstanceIDs))
+		if (!surface_exists(SurInstanceIDs))
 		{
 			return 0;
 		}
