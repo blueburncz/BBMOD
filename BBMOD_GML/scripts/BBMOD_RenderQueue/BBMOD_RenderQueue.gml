@@ -110,8 +110,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMesh,
 			4,
-			_material,
 			global.__bbmodInstanceID,
+			_material,
 			_matrix,
 			_vertexBuffer);
 		return self;
@@ -132,8 +132,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMeshAnimated,
 			5,
-			_material,
 			global.__bbmodInstanceID,
+			_material,
 			_matrix,
 			_boneTransform,
 			_vertexBuffer);
@@ -154,8 +154,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMeshBatched,
 			5,
-			_material,
 			global.__bbmodInstanceID,
+			_material,
 			_matrix,
 			_batchData,
 			_vertexBuffer);
@@ -1033,11 +1033,14 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return ds_list_empty(RenderCommands);
 	};
 
-	/// @func submit()
-	/// @desc Submits all commands.
+	/// @func submit([_instances])
+	/// @desc Submits render commands.
+	/// @param {Id.DsList<Id.Instance>/Undefined} [_instances] If specified then
+	/// only meshes with an instance ID from the list are submitted. Defaults to
+	/// `undefined`.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	/// @see BBMOD_RenderQueue.clear
-	static submit = function () {
+	static submit = function (_instances=undefined) {
 		var i = 0;
 		var _renderCommands = RenderCommands;
 		var _renderCommandsCount = ds_list_size(_renderCommands);
@@ -1093,41 +1096,47 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.DrawMesh:
+				var _id = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
-				if (!_material.apply())
+				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
+					|| !_material.apply())
 				{
-					i += 3;
+					i += 2;
 					_condition = false;
 					continue;
 				}
-				BBMOD_SHADER_CURRENT.set_instance_id(_renderCommands[| i++]);
+				BBMOD_SHADER_CURRENT.set_instance_id(_id);
 				matrix_set(matrix_world, _renderCommands[| i++]);
 				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshAnimated:
+				var _id = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
-				if (!_material.apply())
+				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
+					|| !_material.apply())
 				{
-					i += 4;
+					i += 3;
 					_condition = false;
 					continue;
 				}
-				BBMOD_SHADER_CURRENT.set_instance_id(_renderCommands[| i++]);
+				BBMOD_SHADER_CURRENT.set_instance_id(_id);
 				matrix_set(matrix_world, _renderCommands[| i++]);
 				BBMOD_SHADER_CURRENT.set_bones(_renderCommands[| i++]);
 				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshBatched:
+				var _id = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
-				if (!_material.apply())
+				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
+					|| !_material.apply())
 				{
-					i += 4;
+					i += 3;
 					_condition = false;
 					continue;
 				}
-				BBMOD_SHADER_CURRENT.set_instance_id(_renderCommands[| i++]);
+				BBMOD_SHADER_CURRENT.set_instance_id(_id);
 				matrix_set(matrix_world, _renderCommands[| i++]);
 				BBMOD_SHADER_CURRENT.set_batch_data(_renderCommands[| i++]);
 				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);

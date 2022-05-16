@@ -29,6 +29,8 @@ Models and animation files now have major and minor version. This allows us to i
 * Added new optional `_model` parameter to `BBMOD_Mesh`'s constructor.
 * Added new properties `BboxMin` and `BboxMax` to `BBMOD_Mesh`, which are the minimum and maximum coordinates of the mesh's bounding box. This is supported ony for model version 3.1!
 
+* Added optional argument `_instances` to method `submit` of `BBMOD_RenderQueue`, using which you can submit only meshes with given instance IDs.
+
 ### Gizmo module:
 * Added new module - Gizmo.
 * Added new struct `BBMOD_Gizmo`.
