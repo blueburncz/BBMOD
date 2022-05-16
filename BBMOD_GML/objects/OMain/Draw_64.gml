@@ -109,7 +109,7 @@ if (global.gameSpeed == 0)
 	draw_set_valign(fa_bottom);
 	DrawTextShadow(
 		round(_windowWidth * 0.5), _windowHeight - 16,
-		global.editMode ? "EDIT" : "PAUSE",
+		"PAUSE",
 		c_white, c_black, dsin(current_time * 0.5) * 0.5 + 0.5);
 	draw_set_valign(fa_top);
 }

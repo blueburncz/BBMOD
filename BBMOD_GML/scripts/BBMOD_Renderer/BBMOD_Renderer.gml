@@ -416,11 +416,11 @@ function BBMOD_Renderer()
 
 		////////////////////////////////////////////////////////////////////////
 		// Instance highlight
-		var _selectedInstances = Gizmo.Selected;
-
 		if (Gizmo
 			&& Gizmo.Visible)
 		{
+			var _selectedInstances = Gizmo.Selected;
+
 			SurInstanceHighlight = bbmod_surface_check(SurInstanceHighlight,
 				window_get_width() * RenderScale,
 				window_get_height() * RenderScale);

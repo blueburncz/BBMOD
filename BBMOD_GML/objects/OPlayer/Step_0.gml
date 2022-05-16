@@ -5,20 +5,20 @@ var _mouseLeftPressed = mouse_check_button_pressed(mb_left);
 camera.AspectRatio = window_get_width() / window_get_height();
 camera.MouseSensitivity = aiming ? 0.25 : 1.0;
 
-if (!global.editMode && !camera.MouseLook && mouse_check_button(mb_any))
+if (!camera.MouseLook && mouse_check_button(mb_any))
 {
 	camera.set_mouselook(true);
 	// Consume the mouse press when just activating the mouselook.
 	_mouseLeftPressed = false;
 }
-else if (global.editMode || keyboard_check_pressed(vk_escape))
+else if (keyboard_check_pressed(vk_escape))
 {
 	camera.set_mouselook(false);
 }
 
 window_set_cursor(camera.MouseLook ? cr_none : cr_default);
 
-global.gameSpeed = (!global.editMode && camera.MouseLook) ? 1.0 : 0.0;
+global.gameSpeed = camera.MouseLook ? 1.0 : 0.0;
 
 camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.2, DELTA_TIME);
 

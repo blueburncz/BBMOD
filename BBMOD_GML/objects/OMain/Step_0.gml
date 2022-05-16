@@ -5,14 +5,6 @@ if (keyboard_check_pressed(vk_f1))
 	show_debug_overlay(debugOverlay);
 }
 
-// Enable/disable edit mode
-if (keyboard_check_pressed(vk_f2))
-{
-	global.editMode = !global.editMode;
-}
-
-gizmo.Visible = global.editMode;
-
 ////////////////////////////////////////////////////////////////////////////////
 // Spawn waves of zombies
 waveTimeout -= DELTA_TIME * 0.000001;
