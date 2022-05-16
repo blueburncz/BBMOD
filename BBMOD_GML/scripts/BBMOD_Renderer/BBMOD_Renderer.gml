@@ -52,21 +52,28 @@ function BBMOD_Renderer()
 		destroy: destroy,
 	};
 
-	/// @var {Bool}
+	/// @var {Bool} If `true` then rendering of instance IDs into an off-screen
+	/// surface is enabled. This must be enabled if you would like to use method
+	/// {@link BBMOD_Renderer.get_instance_id} for mouse-picking instances.
+	/// Default value is `false`.
 	RenderInstanceIDs = false;
 
-	/// @var {Id.Surface}
+	/// @var {Id.Surface} Surface for rendering instance IDs.
 	/// @private
 	SurInstanceIDs = noone;
 
-	/// @var {Struct.BBMOD_Gizmo}
+	/// @var {Struct.BBMOD_Gizmo/Undefined} A gizmo that is automatically rendered
+	/// and can be mouse-picked using method {@link BBMOD_Renderer.select_gizmo}.
+	/// Default value is `undefined`.
+	/// @see BBMOD_Gizmo
 	Gizmo = undefined;
 
-	/// @var {Id.Surface}
+	/// @var {Id.Surface} A surface containing the gizmo. Used to enable
+	/// z-testing against itself, but ingoring the scene geometry.
 	/// @private
 	SurGizmo = noone;
 
-	/// @var {Id.Surface}
+	/// @var {Id.Surface} Surface for mouse-picking the gizmo.
 	/// @private
 	SurGizmoSelect = noone;
 
@@ -156,10 +163,14 @@ function BBMOD_Renderer()
 	Antialiasing = BBMOD_EAntialiasing.None;
 
 	/// @func select_gizmo(_screenX, _screenY)
-	/// @desc
-	/// @param {Real} _screenX
-	/// @param {Real} _screenY
-	/// @return {Bool}
+	/// @desc Tries to select a gizmo at given screen coordinates and
+	/// automatically changes its {@link BBMOD_Gizmo.EditAxis} and
+	/// {@link BBMOD_Gizmo.EditType} based on which part of the gizmo
+	/// was selected.
+	/// @param {Real} _screenX The X position on the screen.
+	/// @param {Real} _screenY The Y position on the screen.
+	/// @return {Bool} Returns `true` if the gizmo was selected.
+	/// @note {@link BBMOD_Renderer.Gizmo} must be defined.
 	static select_gizmo = function (_screenX, _screenY) {
 		if (!Gizmo || !surface_exists(SurGizmoSelect))
 		{
@@ -198,10 +209,12 @@ function BBMOD_Renderer()
 	};
 
 	/// @func get_instance_id(_screenX, _screenY)
-	/// @desc
-	/// @param {Real} _screenX
-	/// @param {Real} _screenY
-	/// @return {Id.Instance}
+	/// @desc Retrieves an ID of an instance at given position on the screen.
+	/// @param {Real} _screenX The X position on the screen.
+	/// @param {Real} _screenY The Y position on the screen.
+	/// @return {Id.Instance} The ID of the instance or 0 if no instance was
+	/// found at the given position.
+	/// @note {@link BBMOD_Renderer.RenderInstanceIDs} must be enabled.
 	static get_instance_id = function (_screenX, _screenY) {
 		gml_pragma("forceinline");
 		if (!RenderInstanceIDs || !surface_exists(SurInstanceIDs))
@@ -345,11 +358,13 @@ function BBMOD_Renderer()
 		}
 	};
 
-	/// @func render()
+	/// @func render(_clearQueues=true)
 	/// @desc Renders all added [renderables](./BBMOD_Renderer.Renderables.html)
 	/// to the current render target.
+	/// @param {Bool} [_clearQueues] If true then all render queues are cleared
+	/// at the end of this method. Default value is `true`.
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
-	static render = function () {
+	static render = function (_clearQueues=true) {
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
@@ -428,7 +443,11 @@ function BBMOD_Renderer()
 		var _rqi = 0;
 		repeat (array_length(_renderQueues))
 		{
-			_renderQueues[_rqi++].submit().clear();
+			var _queue = _renderQueues[_rqi++].submit();
+			if (_clearQueues)
+			{
+				_queue.clear();
+			}
 		}
 
 		// Unset in case it gets destroyed when the room changes etc.
@@ -436,7 +455,7 @@ function BBMOD_Renderer()
 
 		////////////////////////////////////////////////////////////////////////
 		// Gizmo
-		if (Gizmo)
+		if (Gizmo && Gizmo.Visible)
 		{
 			var _size = Gizmo.Size;
 			Gizmo.Size *= Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
@@ -473,26 +492,31 @@ function BBMOD_Renderer()
 	};
 
 	/// @func present()
-	/// @desc Renders the `application_surface` to the screen.
-	/// {@link BBMOD_Renderer.UseAppSurface} must be enabled for this to
-	/// have any effect.
+	/// @desc Presents the rendered graphics on the screen.
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
+	/// @note If {@link BBMOD_Renderer.UseAppSurface} is `false`, then this only
+	/// draws {@link BBMOD_Renderer.Gizmo} (if defined).
 	static present = function () {
+		var _windowWidth = window_get_width();
+		var _windowHeight = window_get_height();
+		var _texelWidth = 1.0 / _windowWidth;
+		var _texelHeight = 1.0 / _windowHeight;
+		gpu_push_state();
+		gpu_set_tex_filter(true);
+		gpu_set_tex_repeat(false);
+
 		if (UseAppSurface)
 		{
-			var _windowWidth = window_get_width();
-			var _windowHeight = window_get_height();
-			var _texelWidth = 1.0 / _windowWidth;
-			var _texelHeight = 1.0 / _windowHeight;
-			gpu_push_state();
-			gpu_set_tex_filter(true);
-			gpu_set_tex_repeat(false);
+			
 			var _surFinal = application_surface;
 			////////////////////////////////////////////////////////////////////
 			// Gizmo
-			surface_set_target(_surFinal);
-			draw_surface(SurGizmo, 0, 0);
-			surface_reset_target();
+			if (Gizmo && Gizmo.Visible && surface_exists(SurGizmo))
+			{
+				surface_set_target(_surFinal);
+				draw_surface(SurGizmo, 0, 0);
+				surface_reset_target();
+			}
 			////////////////////////////////////////////////////////////////////
 			// Post-processing
 			if (EnablePostProcessing)
@@ -537,8 +561,21 @@ function BBMOD_Renderer()
 			{
 				draw_surface_stretched(application_surface, 0, 0, _windowWidth, _windowHeight);
 			}
-			gpu_pop_state();
 		}
+		else
+		{
+			////////////////////////////////////////////////////////////////////
+			// Gizmo
+			if (Gizmo && Gizmo.Visible && surface_exists(SurGizmo))
+			{
+				surface_set_target(_surFinal);
+				draw_surface_stretched(SurGizmo, 0, 0, _windowWidth, _windowHeight);
+				surface_reset_target();
+			}
+		}
+
+		gpu_pop_state();
+
 		return self;
 	};
 

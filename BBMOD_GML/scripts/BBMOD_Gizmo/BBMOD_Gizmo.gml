@@ -63,6 +63,10 @@ function BBMOD_Gizmo()
 		Model.Materials[0] = _material;
 	}
 
+	/// @var {Bool} Used to show/hide the gizmo. Default value is `true`, which
+	/// it visible.
+	Visible = true;
+
 	/// @var {Bool} If `true` then the gizmo is editing selected instances.
 	IsEditing = false;
 
@@ -145,11 +149,15 @@ function BBMOD_Gizmo()
 	/// @desc Immediately submits the gizmo for rendering.
 	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] Materials to use.
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	/// @note This changes the world matrix based on the gizmo's position and size!
+	/// @note If {@link BBMOD_Gizmo.Visible} is `false` then the gizmo is not submitted.
+	/// This also changes the world matrix based on the gizmo's position and size!
 	static submit = function (_materials=undefined) {
 		gml_pragma("forceinline");
-		new BBMOD_Matrix().Scale(new BBMOD_Vec3(Size)).Translate(Position).ApplyWorld();
-		Model.submit(_materials);
+		if (Visible)
+		{
+			new BBMOD_Matrix().Scale(new BBMOD_Vec3(Size)).Translate(Position).ApplyWorld();
+			Model.submit(_materials);
+		}
 		return self;
 	};
 
@@ -157,11 +165,15 @@ function BBMOD_Gizmo()
 	/// @desc Enqueues the gizmo for rendering.
 	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] Materials to use.
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	/// @note This changes the world matrix based on the gizmo's position and size!
+	/// @note If {@link BBMOD_Gizmo.Visible} is `false` then the gizmo is not submitted.
+	/// This also changes the world matrix based on the gizmo's position and size!
 	static render = function (_materials=undefined) {
 		gml_pragma("forceinline");
-		new BBMOD_Matrix().Scale(new BBMOD_Vec3(Size)).Translate(Position).ApplyWorld();
-		Model.render(_materials);
+		if (Visible)
+		{
+			new BBMOD_Matrix().Scale(new BBMOD_Vec3(Size)).Translate(Position).ApplyWorld();
+			Model.render(_materials);
+		}
 		return self;
 	};
 
