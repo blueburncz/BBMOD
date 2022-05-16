@@ -240,7 +240,8 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 	}
 
 	file.write("bbanim", sizeof(char) * 7);
-	FILE_WRITE_DATA(file, Version);
+	FILE_WRITE_DATA(file, VersionMajor);
+	FILE_WRITE_DATA(file, VersionMinor);
 	unsigned char spaces = 0;
 	if (config.AnimationOptimization == 0) { spaces = spaces | BBMOD_BONE_SPACE_PARENT; }
 	if (config.AnimationOptimization == 1) { spaces = spaces | BBMOD_BONE_SPACE_WORLD; }
@@ -383,21 +384,40 @@ SAnimation* SAnimation::Load(std::string path)
 
 	char header[7];
 	file.read(header, 7);
-	const char* headerExpected = "bbanim";
 
-	if (std::strcmp(header, headerExpected) != 0)
+	bool hasMinorVersion = false;
+
+	if (std::strcmp(header, "bbanim") == 0)
+	{
+	}
+	else if (std::strcmp(header, "BBANIM") == 0)
+	{
+		hasMinorVersion = true;
+	}
+	else
 	{
 		file.close();
 		return nullptr;
 	}
 
-	uint8_t version;
-	FILE_READ_DATA(file, version);
+	uint8_t versionMajor;
+	FILE_READ_DATA(file, versionMajor);
 
-	if (version != BBMOD_VERSION)
+	if (versionMajor != BBMOD_VERSION_MAJOR)
 	{
 		file.close();
 		return nullptr;
+	}
+
+	uint8_t versionMinor = 0;
+	if (hasMinorVersion)
+	{
+		FILE_READ_DATA(file, versionMinor);
+		if (versionMinor != BBMOD_VERSION_MINOR)
+		{
+			file.close();
+			return nullptr;
+		}
 	}
 
 	SAnimation* animation = new SAnimation();

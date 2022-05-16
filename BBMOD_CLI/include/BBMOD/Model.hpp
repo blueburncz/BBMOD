@@ -24,7 +24,9 @@ struct SModel
 
 	static SModel* Load(std::string path);
 
-	unsigned char Version = BBMOD_VERSION;
+	uint8_t VersionMajor = BBMOD_VERSION_MAJOR;
+
+	uint8_t VersionMinor = BBMOD_VERSION_MINOR;
 
 	SVertexFormat* VertexFormat = nullptr;
 	

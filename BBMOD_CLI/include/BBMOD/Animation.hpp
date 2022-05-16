@@ -81,7 +81,9 @@ struct SAnimation
 
 	static SAnimation* Load(std::string path);
 
-	uint8_t Version = BBMOD_VERSION;
+	uint8_t VersionMajor = BBMOD_VERSION_MAJOR;
+
+	uint8_t VersionMinor = BBMOD_VERSION_MINOR;
 
 	std::string Name;
 

@@ -15,6 +15,11 @@
 * Fixed method `Mul` of `BBMOD_Matrix`.
 * Added new function `bbmod_set_instance_id`.
 
+* Added new macros `BBMOD_VERSION_MAJOR` and `BBMOD_VERSION_MINOR`.
+* Macro `BBMOD_VERSION` is now obsolete.
+* Added new properties `VersionMajor` and `VersionMinor` to structs `BBMOD_Model` and `BBMOD_Animation`.
+* Property `Version` of structs `BBMOD_Model` and `BBMOD_Animation` is now obsolete.
+
 ### Gizmo module:
 * Added new module - Gizmo.
 * Added new struct `BBMOD_Gizmo`.

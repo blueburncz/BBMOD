@@ -35,8 +35,16 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @var {Real} The version of the model file.
-	/// @readonly
-	Version = BBMOD_VERSION;
+	/// @obsolete This property is now obsolete. Please use
+	/// {@link BBMOD_Model.VersionMajor} and {@link BBMOD_Model.VersionMinor}
+	/// instead.
+	Version = BBMOD_VERSION_MAJOR;
+
+	/// @var {Real} The major version of the model file.
+	VersionMajor = BBMOD_VERSION_MAJOR;
+
+	/// @var {Real} The minor version of the model file.
+	VersionMinor = BBMOD_VERSION_MINOR;
 
 	/// @var {Struct.BBMOD_VertexFormat} The vertex format of the model.
 	/// @see BBMOD_VertexFormat
@@ -91,19 +99,42 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
+		var _hasMinorVersion = false;
+
 		var _type = buffer_read(_buffer, buffer_string);
-		if (_type != "bbmod")
+		if (_type == "bbmod")
+		{
+		}
+		else if (_type == "BBMOD")
+		{
+			_hasMinorVersion = true;
+		}
+		else
 		{
 			throw new BBMOD_Exception("Buffer does not contain a BBMOD!");
 		}
 
-		Version = buffer_read(_buffer, buffer_u8);
-		if (Version != BBMOD_VERSION)
+		VersionMajor = buffer_read(_buffer, buffer_u8);
+		if (VersionMajor != BBMOD_VERSION_MAJOR)
 		{
 			throw new BBMOD_Exception(
-				"Invalid BBMOD version " + string(Version) + "!");
+				"Invalid BBMOD major version " + string(VersionMajor) + "!");
 		}
 
+		if (_hasMinorVersion)
+		{
+			VersionMinor = buffer_read(_buffer, buffer_u8);
+			if (VersionMinor != BBMOD_VERSION_MINOR)
+			{
+				throw new BBMOD_Exception(
+					"Invalid BBMOD minor version " + string(VersionMinor) + "!");
+			}
+		}
+		else
+		{
+			VersionMinor = 0;
+		}
+	
 		// Vertex format
 		VertexFormat = bbmod_vertex_format_load(_buffer);
 

@@ -53,8 +53,16 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	IsLoaded = false;
 
 	/// @var {Real} The version of the animation file.
-	/// @readonly
-	Version = BBMOD_VERSION;
+	/// @obsolete This property is now obsolete. Please use
+	/// {@link BBMOD_Model.VersionMajor} and {@link BBMOD_Model.VersionMinor}
+	/// instead.
+	Version = BBMOD_VERSION_MAJOR;
+
+	/// @var {Real} The major version of the animation file.
+	VersionMajor = BBMOD_VERSION_MAJOR;
+
+	/// @var {Real} The minor version of the animation file.
+	VersionMinor = BBMOD_VERSION_MINOR;
 
 	/// @var {Real} The transformation spaces included in the animation file.
 	/// @private
@@ -158,17 +166,40 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Animation} Returns `self`.
 	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
+		var _hasMinorVersion = false;
+
 		var _type = buffer_read(_buffer, buffer_string);
-		if (_type != "bbanim")
+		if (_type == "bbanim")
+		{
+		}
+		else if (_type == "BBANIM")
+		{
+			_hasMinorVersion = true;
+		}
+		else
 		{
 			throw new BBMOD_Exception("Buffer does not contain a BBANIM!");
 		}
 
-		Version = buffer_read(_buffer, buffer_u8);
-		if (Version != BBMOD_VERSION)
+		VersionMajor = buffer_read(_buffer, buffer_u8);
+		if (VersionMajor != BBMOD_VERSION_MAJOR)
 		{
 			throw new BBMOD_Exception(
-				"Invalid BBANIM version " + string(Version) + "!");
+				"Invalid BBANIM major version " + string(VersionMajor) + "!");
+		}
+
+		if (_hasMinorVersion)
+		{
+			VersionMinor = buffer_read(_buffer, buffer_u8);
+			if (VersionMinor != BBMOD_VERSION_MINOR)
+			{
+				throw new BBMOD_Exception(
+					"Invalid BBANIM minor version " + string(VersionMinor) + "!");
+			}
+		}
+		else
+		{
+			VersionMinor = 0;
 		}
 
 		Spaces = buffer_read(_buffer, buffer_u8);

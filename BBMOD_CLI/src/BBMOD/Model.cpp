@@ -194,9 +194,10 @@ bool SModel::Save(std::string path)
 		return false;
 	}
 
-	file.write("bbmod", sizeof(char) * 6);
-	FILE_WRITE_DATA(file, Version);
-	
+	file.write("BBMOD", sizeof(char) * 6);
+	FILE_WRITE_DATA(file, VersionMajor);
+	FILE_WRITE_DATA(file, VersionMinor);
+
 	if (!VertexFormat->Save(file))
 	{
 		return false;
@@ -256,21 +257,40 @@ SModel* SModel::Load(std::string path)
 
 	char header[6];
 	file.read(header, 6);
-	const char* headerExpected = "bbmod";
 
-	if (std::strcmp(header, headerExpected) != 0)
+	bool hasMinorVersion = false;
+
+	if (std::strcmp(header, "bbmod") == 0)
+	{
+	}
+	else if (std::strcmp(header, "BBMOD") == 0)
+	{
+		hasMinorVersion = true;
+	}
+	else
 	{
 		file.close();
 		return nullptr;
 	}
 
-	uint8_t version;
-	FILE_READ_DATA(file, version);
+	uint8_t versionMajor;
+	FILE_READ_DATA(file, versionMajor);
 
-	if (version != BBMOD_VERSION)
+	if (versionMajor != BBMOD_VERSION_MAJOR)
 	{
 		file.close();
 		return nullptr;
+	}
+
+	uint8_t versionMinor = 0;
+	if (hasMinorVersion)
+	{
+		FILE_READ_DATA(file, versionMinor);
+		if (versionMinor != BBMOD_VERSION_MINOR)
+		{
+			file.close();
+			return nullptr;
+		}
 	}
 
 	SModel* model = new SModel();

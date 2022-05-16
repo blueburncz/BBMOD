@@ -1,5 +1,13 @@
 /// @macro {Real} The supported version of BBMOD and BBANIM files.
+/// @obsolete This macro is now obsolete. Please use {@link BBMOD_VERSION_MAJOR}
+/// and {@link BBMOD_VERSION_MINOR}.
 #macro BBMOD_VERSION 3
+
+/// @macro {Real} The supported major version of BBMOD and BBANIM files.
+#macro BBMOD_VERSION_MAJOR 3
+
+/// @macro {Real} The current minor version of BBMOD and BBANIM files.
+#macro BBMOD_VERSION_MINOR 1
 
 /// @macro {Real} A value used to tell that no normals should be generated
 /// if the model does not have any.
