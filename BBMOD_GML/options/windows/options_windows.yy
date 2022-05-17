@@ -1,7 +1,7 @@
 {
   "option_windows_display_name": "BBMOD Demo",
   "option_windows_executable_name": "${project_name}.exe",
-  "option_windows_version": "3.4.0.0",
+  "option_windows_version": "3.4.1.0",
   "option_windows_company_info": "BlueBurn",
   "option_windows_product_info": "BBMOD",
   "option_windows_copyright_info": "",
