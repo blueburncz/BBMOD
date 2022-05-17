@@ -239,7 +239,7 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 		return false;
 	}
 
-	file.write("bbanim", sizeof(char) * 7);
+	file.write("BBANIM", sizeof(char) * 7);
 	FILE_WRITE_DATA(file, VersionMajor);
 	FILE_WRITE_DATA(file, VersionMinor);
 	unsigned char spaces = 0;

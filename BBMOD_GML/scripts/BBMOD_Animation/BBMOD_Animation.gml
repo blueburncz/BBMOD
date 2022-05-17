@@ -54,7 +54,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @var {Real} The version of the animation file.
 	/// @obsolete This property is now obsolete. Please use
-	/// {@link BBMOD_Model.VersionMajor} and {@link BBMOD_Model.VersionMinor}
+	/// {@link BBMOD_Animation.VersionMajor} and {@link BBMOD_Animation.VersionMinor}
 	/// instead.
 	Version = BBMOD_VERSION_MAJOR;
 
@@ -264,7 +264,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 		var _transition = new BBMOD_Animation();
 		_transition.IsLoaded = true;
-		_transition.Version = Version;
+		_transition.VersionMajor = VersionMajor;
+		_transition.VersionMinor = VersionMinor;
 		_transition.Spaces = (Spaces & BBMOD_BONE_SPACE_PARENT)
 			? BBMOD_BONE_SPACE_PARENT
 			: BBMOD_BONE_SPACE_WORLD;
