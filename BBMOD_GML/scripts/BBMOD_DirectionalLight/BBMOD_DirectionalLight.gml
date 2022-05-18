@@ -4,7 +4,7 @@
 /// @param {Struct.BBMOD_Color/Undefined} [_color] The light's color. Defaults
 /// to {@link BBMOD_C_WHITE} if `undefined`.
 /// @param {Struct.BBMOD_Vec3/Undefined} [_direction] The light's direction.
-/// Defaults to `[-1, 0, -1]` if `undefined`.
+/// Defaults to `(-1, 0, -1)` if `undefined`.
 function BBMOD_DirectionalLight(_color=undefined, _direction=undefined)
 	: BBMOD_Light() constructor
 {

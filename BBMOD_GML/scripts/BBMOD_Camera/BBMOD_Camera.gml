@@ -29,15 +29,15 @@ function BBMOD_Camera() constructor
 	/// @var {Real} The camera's exposure value. Defaults to `1`.
 	Exposure = 1.0;
 
-	/// @var {Struct.BBMOD_Vec3} The camera's positon. Defaults to `[0, 0, 0]`.
+	/// @var {Struct.BBMOD_Vec3} The camera's positon. Defaults to `(0, 0, 0)`.
 	Position = new BBMOD_Vec3(0.0);
 
 	/// @var {Struct.BBMOD_Vec3} A position where the camera is looking at.
 	/// In FPS mode ({@link BBMOD_Camera.Zoom} equals to 0) this is the camera's
-	/// direction. Defaults to `[1, 0, 0]`.
+	/// direction. Defaults to `(1, 0, 0)`.
 	Target = new BBMOD_Vec3(1.0, 0.0, 0.0);
 
-	/// @var {Struct.BBMOD_Vec3} The camera's up vector. Defaults to `[0, 0, 1]`.
+	/// @var {Struct.BBMOD_Vec3} The camera's up vector. Defaults to `(0, 0, 1)`.
 	/// @obsolete
 	Up = new BBMOD_Vec3(0.0, 0.0, 1.0);
 
@@ -90,7 +90,7 @@ function BBMOD_Camera() constructor
 	FollowFactor = 1.0;
 
 	/// @var {Struct.BBMOD_Vec3} The camera's offset from its target. Defaults to
-	/// `[0, 0, 0]`.
+	/// `(0, 0, 0)`.
 	Offset = new BBMOD_Vec3(0.0);
 
 	/// @var {Bool} If `true` then mouselook is enabled. Defaults to `false`.

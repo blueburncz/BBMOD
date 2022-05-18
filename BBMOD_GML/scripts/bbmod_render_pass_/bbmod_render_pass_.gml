@@ -44,5 +44,6 @@ function bbmod_render_pass_get()
 function bbmod_render_pass_set(_pass)
 {
 	gml_pragma("forceinline");
+	bbmod_material_reset();
 	global.__bbmodRenderPass = _pass;
 }

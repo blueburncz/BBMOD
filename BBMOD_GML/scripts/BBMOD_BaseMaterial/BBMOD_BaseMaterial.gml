@@ -19,11 +19,11 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// Default value is {@link BBMOD_C_WHITE}.
 	BaseOpacityMultiplier = BBMOD_C_WHITE;
 
-	/// @var {Struct.BBMOD_Vec2} An offset of texture UV coordinates. Defaults to `[0, 0]`.
+	/// @var {Struct.BBMOD_Vec2} An offset of texture UV coordinates. Defaults to `(0, 0)`.
 	/// Using this you can control texture's position within texture page.
 	TextureOffset = new BBMOD_Vec2(0.0);
 
-	/// @var {Struct.BBMOD_Vec2} A scale of texture UV coordinates. Defaults to `[1, 1]`.
+	/// @var {Struct.BBMOD_Vec2} A scale of texture UV coordinates. Defaults to `(1, 1)`.
 	/// Using this you can control texture's size within texture page.
 	TextureScale = new BBMOD_Vec2(1.0);
 

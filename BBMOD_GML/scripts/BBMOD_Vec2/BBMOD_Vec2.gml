@@ -507,7 +507,7 @@ function BBMOD_Vec2(_x=0.0, _y=undefined) constructor
 	};
 
 	/// @func Transform(_matrix)
-	/// @desc Transforms vector `[X, Y, 0.0, 1.0]` by a matrix and returns the result
+	/// @desc Transforms vector `(X, Y, 0.0, 1.0)` by a matrix and returns the result
 	/// as a new vector.
 	/// @param {Array<Real>} _matrix The matrix to transform the vector by.
 	/// @return {Struct.BBMOD_Vec2} The created vector.

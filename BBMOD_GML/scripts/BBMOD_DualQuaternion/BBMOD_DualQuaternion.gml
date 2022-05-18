@@ -95,7 +95,7 @@ function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, 
 	};
 
 	/// @func FromArray(_array[, _index])
-	/// @desc Loads dual quaternion components `[rX, rY, rZ, rW, dX, dY, dZ, dW]`
+	/// @desc Loads dual quaternion components `(rX, rY, rZ, rW, dX, dY, dZ, dW)`
 	/// from an array.
 	/// @param {Array<Real>} _array The array to read the dual quaternion components
 	/// from.
@@ -110,7 +110,7 @@ function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, 
 	};
 
 	/// @func FromBuffer(_buffer, _type)
-	/// @desc Loads dual quaternion components `[rX, rY, rZ, rW, dX, dY, dZ, dW]`
+	/// @desc Loads dual quaternion components `(rX, rY, rZ, rW, dX, dY, dZ, dW)`
 	/// from a buffer.
 	/// @param {Id.Buffer} _buffer The buffer to read the dual quaternion components
 	/// from.
@@ -320,7 +320,7 @@ function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, 
 	};
 
 	/// @func ToArray([_array[, _index]])
-	/// @desc Writes components `[rX, rY, rZ, rW, dX, dY, dZ, dW]` of the dual
+	/// @desc Writes components `(rX, rY, rZ, rW, dX, dY, dZ, dW)` of the dual
 	/// quaternion into an array.
 	/// @param {Array<Real>} [_array] The destination array. If not defined, a new one
 	/// is created.
@@ -335,7 +335,7 @@ function BBMOD_DualQuaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0, _dx=0.0, _dy=0.0, 
 	};
 
 	/// @func ToBuffer(_buffer, _type)
-	/// @desc Writes components `[rX, rY, rZ, rW, dX, dY, dZ, dW]` of the dual
+	/// @desc Writes components `(rX, rY, rZ, rW, dX, dY, dZ, dW)` of the dual
 	/// quaternion into a buffer.
 	/// @param {Id.Buffer} _buffer The destination buffer.
 	/// @param {Constant.BufferDataType} _type The type of each component.

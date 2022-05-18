@@ -68,7 +68,6 @@ _objImporter.destroy();
 ////////////////////////////////////////////////////////////////////////////////
 // Create a renderer
 renderer = new BBMOD_Renderer();
-
 renderer.UseAppSurface = true;
 renderer.RenderScale = (os_browser == browser_not_a_browser) ? 1.0 : 0.8;
 renderer.EnableShadows = true;

@@ -3,7 +3,7 @@
   "options": [],
   "exportToGame": true,
   "supportedTargets": -1,
-  "extensionVersion": "3.4.1",
+  "extensionVersion": "3.4.2",
   "packageId": "",
   "productId": "",
   "author": "",

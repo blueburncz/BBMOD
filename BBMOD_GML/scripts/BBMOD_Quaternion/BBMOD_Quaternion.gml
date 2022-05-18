@@ -98,7 +98,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	};
 
 	/// @func FromArray(_array[, _index])
-	/// @desc Loads quaternion components `[x, y, z, w]` from an array.
+	/// @desc Loads quaternion components `(x, y, z, w)` from an array.
 	/// @param {Array<Real>} _array The array to read the quaternion components
 	/// from.
 	/// @param {Real} [_index] The index to start reading the quaternion
@@ -130,7 +130,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	};
 
 	/// @func FromBuffer(_buffer, _type)
-	/// @desc Loads quaternion components `[x, y, z, w]` from a buffer.
+	/// @desc Loads quaternion components `(x, y, z, w)` from a buffer.
 	/// @param {Id.Buffer} _buffer The buffer to read the quaternion components
 	/// from.
 	/// @param {Constant.BufferDataType} [_type] The type of each component.
@@ -456,7 +456,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	};
 
 	/// @func ToArray([_array[, _index]])
-	/// @desc Writes components `[x, y, z, w]` of the quaternion into an array.
+	/// @desc Writes components `(x, y, z, w)` of the quaternion into an array.
 	/// @param {Array<Real>} [_array] The destination array. If not defined, a new one
 	/// is created.
 	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
