@@ -194,6 +194,12 @@ Material UnpackMaterial(
 	// Emissive color
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
 
+	// Smoothness
+	m.Smoothness = 1.0 - m.Roughness;
+
+	// Specular power
+	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
+
 	return m;
 }
 // include("MetallicMaterial.xsh")

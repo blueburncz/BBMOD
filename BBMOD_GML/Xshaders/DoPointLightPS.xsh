@@ -1,5 +1,5 @@
 #pragma include("Material.xsh")
-#pragma include("SpecularBlinnPhong.xsh")
+#pragma include("SpecularGGX.xsh")
 
 void DoPointLightPS(
 	vec3 position,
@@ -19,5 +19,5 @@ void DoPointLightPS(
 	float NdotL = max(dot(N, L), 0.0);
 	color *= NdotL * att;
 	diffuse += color;
-	specular += color * SpecularBlinnPhong(m, N, V, L);
+	specular += color * SpecularGGX(m, N, V, L);
 }

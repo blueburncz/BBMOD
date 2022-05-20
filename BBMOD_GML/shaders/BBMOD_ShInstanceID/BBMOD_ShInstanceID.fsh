@@ -212,6 +212,9 @@ Material UnpackMaterial(
 	vec4 specularColor = texture2D(texSpecularColor, uv);
 	m.Specular = xGammaToLinear(specularColor.rgb);
 
+	// Roughness
+	m.Roughness = 1.0 - m.Smoothness;
+
 	// Specular power
 	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 

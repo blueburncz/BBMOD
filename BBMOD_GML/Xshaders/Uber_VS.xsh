@@ -164,7 +164,10 @@ void main()
 	vec3 tangent = in_TangentW.xyz;
 	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
 #endif
-	v_mTBN = mat3(gm_Matrices[MATRIX_WORLD]) * mat3(tangent, bitangent, normal);
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
+	v_mTBN = mat3(tangent, bitangent, normal);
 #endif
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)

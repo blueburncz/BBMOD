@@ -3,7 +3,9 @@
 #pragma include("RGBM.xsh")
 #pragma include("ShadowMap.xsh")
 #pragma include("DoDirectionalLightPS.xsh")
+#if defined(X_2D)
 #pragma include("DoPointLightPS.xsh")
+#endif
 #pragma include("Fog.xsh")
 #pragma include("Exposure.xsh")
 #pragma include("GammaCorrect.xsh")
