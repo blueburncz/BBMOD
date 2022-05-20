@@ -33,9 +33,6 @@ attribute vec4 in_TangentW;
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
-// [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings

@@ -37,9 +37,6 @@ uniform vec2 bbmod_TextureScale;
 
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 
-// [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings

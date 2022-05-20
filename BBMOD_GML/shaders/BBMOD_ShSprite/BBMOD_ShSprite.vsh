@@ -44,7 +44,6 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-varying vec3 v_vLight;
 // include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////

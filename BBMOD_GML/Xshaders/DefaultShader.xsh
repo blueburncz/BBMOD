@@ -3,9 +3,7 @@
 #pragma include("RGBM.xsh")
 #pragma include("ShadowMap.xsh")
 #pragma include("DoDirectionalLightPS.xsh")
-#if defined(X_2D)
 #pragma include("DoPointLightPS.xsh")
-#endif
 #pragma include("Fog.xsh")
 #pragma include("Exposure.xsh")
 #pragma include("GammaCorrect.xsh")
@@ -13,11 +11,7 @@
 void DefaultShader(Material material, float depth)
 {
 	vec3 N = material.Normal;
-#if defined(X_2D)
 	vec3 lightDiffuse = vec3(0.0);
-#else
-	vec3 lightDiffuse = v_vLight;
-#endif
 	vec3 lightSpecular = vec3(0.0);
 
 	// Ambient light
@@ -44,7 +38,6 @@ void DefaultShader(Material material, float depth)
 		bbmod_LightDirectionalDir,
 		directionalLightColor * (1.0 - shadow),
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular);
-#if defined(X_2D)
 	// Point lights
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
 	{
@@ -53,7 +46,6 @@ void DefaultShader(Material material, float depth)
 		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
 			material, lightDiffuse, lightSpecular);
 	}
-#endif // X_2D
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular

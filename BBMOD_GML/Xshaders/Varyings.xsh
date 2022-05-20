@@ -10,7 +10,6 @@ varying float v_fDepth;
 
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR)
 #if !defined(X_UNLIT)
-varying vec3 v_vLight;
 #if !defined(X_2D)
 varying vec3 v_vPosShadowmap;
 #endif // !X_2D

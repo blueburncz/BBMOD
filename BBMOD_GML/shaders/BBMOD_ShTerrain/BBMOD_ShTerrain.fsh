@@ -24,7 +24,6 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
 varying vec2 v_vSplatmapCoord;
 // include("Varyings.xsh")
@@ -85,6 +84,12 @@ uniform vec4 bbmod_LightAmbientDown;
 uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
+
+////////////////////////////////////////////////////////////////////////////////
+// Point lights
+
+// [(x, y, z, range), (r, g, b, m), ...]
+uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -427,6 +432,29 @@ void DoDirectionalLightPS(
 	specular += color * SpecularGGX(m, N, V, L);
 }
 // include("DoDirectionalLightPS.xsh")
+#pragma include("DoPointLightPS.xsh")
+
+void DoPointLightPS(
+	vec3 position,
+	float range,
+	vec3 color,
+	vec3 vertex,
+	vec3 N,
+	vec3 V,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular)
+{
+	vec3 L = position - vertex;
+	float dist = length(L);
+	L = normalize(L);
+	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
+	float NdotL = max(dot(N, L), 0.0);
+	color *= NdotL * att;
+	diffuse += color;
+	specular += color * SpecularGGX(m, N, V, L);
+}
+// include("DoPointLightPS.xsh")
 #pragma include("Fog.xsh")
 void Fog(float depth)
 {
@@ -456,7 +484,7 @@ void GammaCorrect()
 void DefaultShader(Material material, float depth)
 {
 	vec3 N = material.Normal;
-	vec3 lightDiffuse = v_vLight;
+	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
 
 	// Ambient light
@@ -477,6 +505,14 @@ void DefaultShader(Material material, float depth)
 		bbmod_LightDirectionalDir,
 		directionalLightColor * (1.0 - shadow),
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular);
+	// Point lights
+	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	{
+		vec4 positionRange = bbmod_LightPointData[i * 2];
+		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
+		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
+			material, lightDiffuse, lightSpecular);
+	}
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular

@@ -115,13 +115,11 @@ uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
-#if defined(X_2D)
 ////////////////////////////////////////////////////////////////////////////////
 // Point lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
