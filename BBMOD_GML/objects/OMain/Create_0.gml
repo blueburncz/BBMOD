@@ -88,3 +88,6 @@ renderer.add(
 		})
 	})
 	.add(global.terrain);
+
+renderer.Gizmo = new BBMOD_Gizmo();
+renderer.EditMode = true;

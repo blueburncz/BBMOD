@@ -5,7 +5,7 @@ var _mouseLeftPressed = mouse_check_button_pressed(mb_left);
 camera.AspectRatio = window_get_width() / window_get_height();
 camera.MouseSensitivity = aiming ? 0.25 : 1.0;
 
-if (!camera.MouseLook && mouse_check_button(mb_any))
+if (!camera.MouseLook && mouse_check_button(mb_left))
 {
 	camera.set_mouselook(true);
 	// Consume the mouse press when just activating the mouselook.

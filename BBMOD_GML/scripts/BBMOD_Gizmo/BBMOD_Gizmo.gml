@@ -71,6 +71,7 @@ function BBMOD_Gizmo()
 
 	/// @var {Bool} Used to show/hide the gizmo. Default value is `true`, which
 	/// makes it visible.
+	/// @obsolete
 	Visible = true;
 
 	/// @var {Bool} If `true` then the gizmo is editing selected instances.
@@ -156,6 +157,10 @@ function BBMOD_Gizmo()
 	static clear_selection = function () {
 		gml_pragma("forceinline");
 		ds_list_clear(Selected);
+		return self;
+	};
+
+	static update = function (_deltaTime) {
 		return self;
 	};
 
