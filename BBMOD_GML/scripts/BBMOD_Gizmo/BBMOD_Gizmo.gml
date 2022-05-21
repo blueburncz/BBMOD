@@ -26,13 +26,11 @@ enum BBMOD_EEditType
 	SIZE,
 };
 
-/// @func BBMOD_Gizmo()
+/// @func BBMOD_Gizmo([_size])
 /// @extends BBMOD_Class
-/// @desc A gizmo.
-/// @note Please note that this together with {@link BBMOD_Renderer} implements
-/// *only* rendering of the gizmo and highlight of selected instances.
-/// You will need to handle the actual editing of selected instances yourself!
-function BBMOD_Gizmo()
+/// @desc A gizmo for transforming instances.
+/// @param {Real} [_size] The size of the gizmo. Default value is 10 units.
+function BBMOD_Gizmo(_size=10.0)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -88,15 +86,110 @@ function BBMOD_Gizmo()
 	EditAxis = BBMOD_EEditAxis.None;
 
 	/// @var {Real} The size of the gizmo. Default value is 10.
-	Size = 10.0;
+	Size = _size;
 
 	/// @var {Struct.BBMOD_Vec3} The gizmo's position in world-space.
 	/// @readonly
 	Position = new BBMOD_Vec3();
 
+	/// @var {Struct.BBMOD_Vec3} The gizmo's rotation in euler angles.
+	Rotation = new BBMOD_Vec3();
+
 	/// @var {Id.DsList<Id.Instance>} A list of selected instances.
 	/// @readonly
 	Selected = ds_list_create();
+
+	InstanceExists = function (_instance) {
+		gml_pragma("forceinline");
+		return instance_exists(_instance);
+	};
+
+	GetInstancePosX = function (_instance) {
+		gml_pragma("forceinline");
+		return _instance.x;
+	};
+
+	SetInstancePosX = function (_instance, _x) {
+		gml_pragma("forceinline");
+		_instance.x = _x;
+	};
+
+	GetInstancePosY = function (_instance) {
+		gml_pragma("forceinline");
+		return _instance.y;
+	};
+
+	SetInstancePosY = function (_instance, _y) {
+		gml_pragma("forceinline");
+		_instance.y = _y;
+	};
+
+	GetInstancePosZ = function (_instance) {
+		gml_pragma("forceinline");
+		return _instance.z;
+	};
+
+	SetInstancePosZ = function (_instance, _z) {
+		gml_pragma("forceinline");
+		_instance.z = _z;
+	};
+
+	GetInstanceRotX = function (_instance) {
+		gml_pragma("forceinline");
+		return 0.0;
+	};
+
+	SetInstanceRotX = function (_instance, _x) {
+		gml_pragma("forceinline");
+	};
+
+	GetInstanceRotY = function (_instance) {
+		gml_pragma("forceinline");
+		return 0.0;
+	};
+
+	SetInstanceRotY = function (_instance, _y) {
+		gml_pragma("forceinline");
+	};
+
+	GetInstanceRotZ = function (_instance) {
+		gml_pragma("forceinline");
+		return _instance.image_angle;
+	};
+
+	SetInstanceRotZ = function (_instance, _z) {
+		gml_pragma("forceinline");
+		_instance.image_angle = _z;
+	};
+
+	GetInstanceScaleX = function (_instance) {
+		gml_pragma("forceinline");
+		return _instance.image_xscale;
+	};
+
+	SetInstanceScaleX = function (_instance, _x) {
+		gml_pragma("forceinline");
+		_instance.image_xscale = _x;
+	};
+
+	GetInstanceScaleY = function (_instance) {
+		gml_pragma("forceinline");
+		return _instance.image_yscale;
+	};
+
+	SetInstanceScaleY = function (_instance, _y) {
+		gml_pragma("forceinline");
+		_instance.image_yscale = _y;
+	};
+
+	GetInstanceScaleZ = function (_instance) {
+		gml_pragma("forceinline");
+		return 1.0;
+	};
+
+	SetInstanceScaleZ = function (_instance, _z) {
+		gml_pragma("forceinline");
+	};
 
 	/// @func select(_instance)
 	/// @desc Adds an instance to selection.
@@ -160,7 +253,50 @@ function BBMOD_Gizmo()
 		return self;
 	};
 
+	/// @func update(_deltaTime)
+	/// @desc Updates the gizmo. Should be called every frame.
+	/// @param {Real} _deltaTime How much time has passed since the last frame
+	/// (in microseconds).
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static update = function (_deltaTime) {
+		var _size = ds_list_size(Selected);
+		var _posX = 0.0;
+		var _posY = 0.0;
+		var _posZ = 0.0;
+
+		for (var i = _size - 1; i >= 0; --i)
+		{
+			var _instance = Selected[| i];
+
+			if (!InstanceExists(_instance))
+			{
+				ds_list_delete(Selected, i);
+				--_size;
+				continue;
+			}
+
+			_posX += GetInstancePosX(_instance);
+			_posY += GetInstancePosY(_instance);
+			_posZ += GetInstancePosZ(_instance);
+		}
+
+		if (_size > 0)
+		{
+			_posX /= _size;
+			_posY /= _size;
+			_posZ /= _size;
+
+			Position.Set(_posX, _posY, _posZ);
+
+			// TODO: Do this only in local transform space!
+			var _lastSelected = Selected[| _size - 1];
+
+			Rotation.Set(
+				GetInstanceRotX(_lastSelected),
+				GetInstanceRotY(_lastSelected),
+				GetInstanceRotZ(_lastSelected));
+		}
+
 		return self;
 	};
 
@@ -168,15 +304,15 @@ function BBMOD_Gizmo()
 	/// @desc Immediately submits the gizmo for rendering.
 	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] Materials to use.
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	/// @note If {@link BBMOD_Gizmo.Visible} is `false` then the gizmo is not submitted.
-	/// This also changes the world matrix based on the gizmo's position and size!
+	/// @note This changes the world matrix based on the gizmo's position and size!
 	static submit = function (_materials=undefined) {
 		gml_pragma("forceinline");
-		if (Visible)
-		{
-			new BBMOD_Matrix().Scale(new BBMOD_Vec3(Size)).Translate(Position).ApplyWorld();
-			Model.submit(_materials);
-		}
+		new BBMOD_Matrix()
+			.Scale(new BBMOD_Vec3(Size))
+			.RotateEuler(Rotation)
+			.Translate(Position)
+			.ApplyWorld();
+		Model.submit(_materials);
 		return self;
 	};
 
@@ -184,15 +320,15 @@ function BBMOD_Gizmo()
 	/// @desc Enqueues the gizmo for rendering.
 	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] Materials to use.
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	/// @note If {@link BBMOD_Gizmo.Visible} is `false` then the gizmo is not submitted.
-	/// This also changes the world matrix based on the gizmo's position and size!
+	/// @note This changes the world matrix based on the gizmo's position and size!
 	static render = function (_materials=undefined) {
 		gml_pragma("forceinline");
-		if (Visible)
-		{
-			new BBMOD_Matrix().Scale(new BBMOD_Vec3(Size)).Translate(Position).ApplyWorld();
-			Model.render(_materials);
-		}
+		new BBMOD_Matrix()
+			.Scale(new BBMOD_Vec3(Size))
+			.RotateEuler(Rotation)
+			.Translate(Position)
+			.ApplyWorld();
+		Model.render(_materials);
 		return self;
 	};
 

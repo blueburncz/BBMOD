@@ -88,7 +88,7 @@ function BBMOD_Renderer()
 	/// @var {Bool} If `true` then edit mode is enabled. Default value is `false`.
 	EditMode = false;
 
-	/// @var {Struct.BBMOD_Gizmo/Undefined} A gizmo for editing instances when
+	/// @var {Struct.BBMOD_Gizmo/Undefined} A gizmo for transforming instances when
 	/// {@link BBMOD_Renderer.EditMode} is enabled. This is by default `undefined`.
 	/// @see BBMOD_Gizmo
 	Gizmo = undefined;
