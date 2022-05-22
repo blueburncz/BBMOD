@@ -6,7 +6,6 @@
 
 # Table of Contents
 * [About](#about)
-* [Features](#features)
 * [Tutorials, documentation and help](#tutorials-documentation-and-help)
 * [Demo project](#demo-project)
 * [Support the development](#support-the-development)
@@ -14,27 +13,7 @@
 * [Special thanks](#special-thanks)
 
 # About
-BBMOD is the most powerful 3D rendering solution for GameMaker. We at BlueBurn believe that making 3D games in GameMaker should be for everyone and BBMOD fully reflects this idea with its simple workflow and powerful, yet easy to use GML Code library. Using our model conversion tool BBMOD CLI, you first convert your model from a common format like `FBX`, `COLLADA`, `OBJ` or `glTF` (the full list can be found [here](https://blueburn.cz/bbmod/docs/3/SupportedFileFormats.html)) into a custom binary format specially crafted for fast loading in GameMaker. Then, using the GML library, you can easily load the converted model (and its animations) and render it in just a few lines of code:
-
-```gml
-// Load model
-model = new BBMOD_Model("Data/Model.bbmod");
-
-// Create and assign material
-material = BBMOD_MATERIAL_DEFAULT.clone();
-material.BaseOpacity = sprite_get_texture(SprTexture, 0);
-model.set_material("Material", material);
-
-// Render model
-bbmod_material_reset();
-model.submit();
-bbmod_material_reset();
-```
-
-Thanks to the BBMOD's powerful material system and physically based shaders, you can even use assets created in professional, industry standard software!
-
-# Features
-For the full feature list, please see https://blueburn.cz/bbmod/features.
+BBMOD is the most powerful 3D rendering solution for GameMaker! For more info, please see its official website https://blueburn.cz/bbmod/.
 
 # Tutorials, documentation and help
 Tutorials for BBMOD can be found on its homepage at https://blueburn.cz/bbmod/tutorials. An online documentation for the latest release of BBMOD is always available at https://blueburn.cz/bbmod/docs/3. If you need any additional help, you can join our [Discord server](https://discord.gg/ep2BGPm) or contact us on [GMC forums](https://forum.yoyogames.com/index.php?threads/60628).
