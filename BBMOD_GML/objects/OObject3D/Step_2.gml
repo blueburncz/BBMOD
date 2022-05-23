@@ -1,3 +1,8 @@
+if (global.gameSpeed == 0.0)
+{
+	exit;
+}
+
 x += lengthdir_x(speedCurrent * global.gameSpeed, direction);
 y += lengthdir_y(speedCurrent * global.gameSpeed, direction);
 z += zspeed * global.gameSpeed;

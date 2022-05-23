@@ -613,9 +613,7 @@ function BBMOD_Gizmo(_size=10.0)
 				continue;
 			}
 
-			var _positionNew = GetInstancePositionVec3(_instance);
-			_positionNew = _positionNew.Add(_move);
-			SetInstancePositionVec3(_instance, _positionNew);
+			var _positionOffset = GetInstancePositionVec3(_instance).Sub(Position);
 
 			var _quaternionLocal = new BBMOD_Quaternion().FromEuler(
 				GetInstanceRotationX(_instance),
@@ -628,15 +626,21 @@ function BBMOD_Gizmo(_size=10.0)
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(GetInstanceRotationVec3(_instance));
 			if (_rotate.X != 0.0)
 			{
-				_rotMatrix = _rotMatrix.RotateQuat(new BBMOD_Quaternion().FromAxisAngle(_forward, _rotate.X));
+				var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forward, _rotate.X);
+				_positionOffset = _quaternionX.Rotate(_positionOffset);
+				_rotMatrix = _rotMatrix.RotateQuat(_quaternionX);
 			}
 			if (_rotate.Y != 0.0)
 			{
-				_rotMatrix = _rotMatrix.RotateQuat(new BBMOD_Quaternion().FromAxisAngle(_right, _rotate.Y));
+				var _quaternionY = new BBMOD_Quaternion().FromAxisAngle(_right, _rotate.Y);
+				_positionOffset = _quaternionY.Rotate(_positionOffset);
+				_rotMatrix = _rotMatrix.RotateQuat(_quaternionY);
 			}
 			if (_rotate.Z != 0.0)
 			{
-				_rotMatrix = _rotMatrix.RotateQuat(new BBMOD_Quaternion().FromAxisAngle(_up, _rotate.Z));
+				var _quaternionZ = new BBMOD_Quaternion().FromAxisAngle(_up, _rotate.Z);
+				_positionOffset = _quaternionZ.Rotate(_positionOffset);
+				_rotMatrix = _rotMatrix.RotateQuat(_quaternionZ);
 			}
 			var _rotArray = _rotMatrix.ToEuler();
 			SetInstanceRotationX(_instance, _rotArray[0]);
@@ -644,22 +648,29 @@ function BBMOD_Gizmo(_size=10.0)
 			SetInstanceRotationZ(_instance, _rotArray[2]);
 
 			var _scaleNew = GetInstanceScaleVec3(_instance)
+
 			// Scale on X
 			_scaleNew.X += _scale.X * abs(_forward.Dot(_forwardLocal));
 			_scaleNew.Y += _scale.X * abs(_forward.Dot(_rightLocal));
 			_scaleNew.Z += _scale.X * abs(_forward.Dot(_upLocal));
+
 			// Scale on Y
 			_scaleNew.X += _scale.Y * abs(_right.Dot(_forwardLocal));
 			_scaleNew.Y += _scale.Y * abs(_right.Dot(_rightLocal));
 			_scaleNew.Z += _scale.Y * abs(_right.Dot(_upLocal));
+
 			// Scale on Z
 			_scaleNew.X += _scale.Z * abs(_up.Dot(_forwardLocal));
 			_scaleNew.Y += _scale.Z * abs(_up.Dot(_rightLocal));
 			_scaleNew.Z += _scale.Z * abs(_up.Dot(_upLocal));
+
 			SetInstanceScaleVec3(_instance, _scaleNew);
+
+			SetInstancePositionVec3(_instance, Position.Add(_positionOffset).Add(_move));
 		}
 
 		Position = Position.Add(_move);
+
 		return self;
 	};
 
