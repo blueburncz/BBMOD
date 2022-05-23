@@ -600,6 +600,14 @@ function BBMOD_Gizmo(_size=10.0)
 			break;
 		}
 
+		var _r = new BBMOD_Matrix([
+			_forward.X, _forward.Y, _forward.Z, 0.0,
+			_right.X,   _right.Y,   _right.Z,   0.0,
+			_up.X,      _up.Y,      _up.Z,      0.0,
+			0.0,        0.0,        0.0,        1.0,
+		]);
+		var _rT = _r.Inverse();
+
 		var _size = ds_list_size(Selected);
 
 		for (var i = _size - 1; i >= 0; --i)
@@ -647,7 +655,8 @@ function BBMOD_Gizmo(_size=10.0)
 			SetInstanceRotationY(_instance, _rotArray[1]);
 			SetInstanceRotationZ(_instance, _rotArray[2]);
 
-			var _scaleNew = GetInstanceScaleVec3(_instance)
+			var _scaleNew = GetInstanceScaleVec3(_instance);
+			var _scaleOld = _scaleNew.Clone();
 
 			// Scale on X
 			_scaleNew.X += _scale.X * abs(_forward.Dot(_forwardLocal));
@@ -663,6 +672,12 @@ function BBMOD_Gizmo(_size=10.0)
 			_scaleNew.X += _scale.Z * abs(_up.Dot(_forwardLocal));
 			_scaleNew.Y += _scale.Z * abs(_up.Dot(_rightLocal));
 			_scaleNew.Z += _scale.Z * abs(_up.Dot(_upLocal));
+
+			_positionOffset = _r.Transform(new BBMOD_Matrix()
+				.ScaleX((1.0 / _scaleOld.X) * (_scaleOld.X + _scale.X))
+				.ScaleY((1.0 / _scaleOld.Y) * (_scaleOld.Y + _scale.Y))
+				.ScaleZ((1.0 / _scaleOld.Z) * (_scaleOld.Z + _scale.Z))
+				.Transform(_rT.Transform(_positionOffset)));
 
 			SetInstanceScaleVec3(_instance, _scaleNew);
 
