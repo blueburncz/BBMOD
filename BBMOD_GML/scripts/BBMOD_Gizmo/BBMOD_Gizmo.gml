@@ -146,6 +146,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @readonly
 	Selected = ds_list_create();
 
+	Data = ds_list_create();
+
 	InstanceExists = function (_instance) {
 		gml_pragma("forceinline");
 		return instance_exists(_instance);
@@ -295,6 +297,11 @@ function BBMOD_Gizmo(_size=10.0)
 		if (!is_selected(_instance))
 		{
 			ds_list_add(Selected, _instance);
+			ds_list_add(Data, {
+				Offset: new BBMOD_Vec3(),
+				Rotation: new BBMOD_Vec3(),
+				Scale: new BBMOD_Vec3(),
+			});
 		}
 		return self;
 	};
@@ -318,6 +325,7 @@ function BBMOD_Gizmo(_size=10.0)
 		if (_index != -1)
 		{
 			ds_list_delete(Selected, _index);
+			ds_list_delete(Data, _index);
 		}
 		return self;
 	};
@@ -345,6 +353,7 @@ function BBMOD_Gizmo(_size=10.0)
 	static clear_selection = function () {
 		gml_pragma("forceinline");
 		ds_list_clear(Selected);
+		ds_list_clear(Data);
 		return self;
 	};
 
@@ -381,6 +390,9 @@ function BBMOD_Gizmo(_size=10.0)
 		var _t = -(_origin.Sub(_plane).Dot(_normal) / _direction.Dot(_normal));
 		return _origin.Add(_direction.Scale(_t));
 	};
+
+	ScaleBy = new BBMOD_Vec3(0.0);
+	RotateBy = new BBMOD_Vec3(0.0);
 
 	/// @func update(_deltaTime)
 	/// @desc Updates the gizmo. Should be called every frame.
@@ -441,6 +453,15 @@ function BBMOD_Gizmo(_size=10.0)
 				}
 			}
 
+			// Store offsets
+			for (var i = _size - 1; i >= 0; --i)
+			{
+				var _instance = Selected[| i];
+				Data[| i].Offset = GetInstancePositionVec3(_instance).Sub(Position);
+				Data[| i].Rotation = GetInstanceRotationVec3(_instance);
+				Data[| i].Scale = GetInstanceScaleVec3(_instance);
+			}
+
 			IsEditing = false;
 			MouseOffset = undefined;
 			MouseLockAt = undefined;
@@ -450,6 +471,8 @@ function BBMOD_Gizmo(_size=10.0)
 				window_set_cursor(CursorBackup);
 				CursorBackup = undefined;
 			}
+			ScaleBy = new BBMOD_Vec3(0.0);
+			RotateBy = new BBMOD_Vec3(0.0);
 
 			return self;
 		}
@@ -468,8 +491,6 @@ function BBMOD_Gizmo(_size=10.0)
 		var _right = _quaternion.Rotate(BBMOD_VEC3_RIGHT);
 		var _up = _quaternion.Rotate(BBMOD_VEC3_UP);
 		var _move = new BBMOD_Vec3();
-		var _rotate = new BBMOD_Vec3();
-		var _scale = new BBMOD_Vec3();
 
 		switch (EditType)
 		{
@@ -533,15 +554,15 @@ function BBMOD_Gizmo(_size=10.0)
 			switch (EditAxis)
 			{
 			case BBMOD_EEditAxis.X:
-				_rotate.X += (abs(_diff.Y) > abs(_diff.Z)) ? _diff.Y : -_diff.Z;
+				RotateBy.X += (abs(_diff.Y) > abs(_diff.Z)) ? _diff.Y : -_diff.Z;
 				break;
 
 			case BBMOD_EEditAxis.Y:
-				_rotate.Y += (abs(_diff.X) > abs(_diff.Z)) ? -_diff.X : -_diff.Z;
+				RotateBy.Y += (abs(_diff.X) > abs(_diff.Z)) ? -_diff.X : -_diff.Z;
 				break;
 
 			case BBMOD_EEditAxis.Z:
-				_rotate.Z += (abs(_diff.X) > abs(_diff.Y)) ? -_diff.X : _diff.Y;
+				RotateBy.Z += (abs(_diff.X) > abs(_diff.Y)) ? -_diff.X : _diff.Y;
 				break;
 			}
 
@@ -573,25 +594,25 @@ function BBMOD_Gizmo(_size=10.0)
 				var _diffX = _diff.Mul(_forward.Abs()).Dot(_forward);
 				var _diffY = _diff.Mul(_right.Abs()).Dot(_right);
 				var _scaleBy = (abs(_diffX) > abs(_diffY)) ? _diffX : _diffY;
-				_scale.X += _scaleBy;
-				_scale.Y += _scaleBy;
-				_scale.Z += _scaleBy;
+				ScaleBy.X += _scaleBy;
+				ScaleBy.Y += _scaleBy;
+				ScaleBy.Z += _scaleBy;
 			}
 			else
 			{
 				if (EditAxis & BBMOD_EEditAxis.X)
 				{
-					_scale.X += _diff.Mul(_forward.Abs()).Dot(_forward);
+					ScaleBy.X += _diff.Mul(_forward.Abs()).Dot(_forward);
 				}
 
 				if (EditAxis & BBMOD_EEditAxis.Y)
 				{
-					_scale.Y += _diff.Mul(_right.Abs()).Dot(_right);
+					ScaleBy.Y += _diff.Mul(_right.Abs()).Dot(_right);
 				}
 
 				if (EditAxis & BBMOD_EEditAxis.Z)
 				{
-					_scale.Z += _diff.Mul(_up.Abs()).Dot(_up);
+					ScaleBy.Z += _diff.Mul(_up.Abs()).Dot(_up);
 				}
 			}
 
@@ -621,7 +642,9 @@ function BBMOD_Gizmo(_size=10.0)
 				continue;
 			}
 
-			var _positionOffset = GetInstancePositionVec3(_instance).Sub(Position);
+			var _positionOffset = Data[| i].Offset;
+			var _rotationStored = Data[| i].Rotation;
+			var _scaleStored = Data[| i].Scale;
 
 			var _quaternionLocal = new BBMOD_Quaternion().FromEuler(
 				GetInstanceRotationX(_instance),
@@ -631,22 +654,22 @@ function BBMOD_Gizmo(_size=10.0)
 			var _rightLocal = _quaternionLocal.Rotate(BBMOD_VEC3_RIGHT);
 			var _upLocal = _quaternionLocal.Rotate(BBMOD_VEC3_UP);
 
-			var _rotMatrix = new BBMOD_Matrix().RotateEuler(GetInstanceRotationVec3(_instance));
-			if (_rotate.X != 0.0)
+			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
+			if (RotateBy.X != 0.0)
 			{
-				var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forward, _rotate.X);
+				var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forward, RotateBy.X);
 				_positionOffset = _quaternionX.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionX);
 			}
-			if (_rotate.Y != 0.0)
+			if (RotateBy.Y != 0.0)
 			{
-				var _quaternionY = new BBMOD_Quaternion().FromAxisAngle(_right, _rotate.Y);
+				var _quaternionY = new BBMOD_Quaternion().FromAxisAngle(_right, RotateBy.Y);
 				_positionOffset = _quaternionY.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionY);
 			}
-			if (_rotate.Z != 0.0)
+			if (RotateBy.Z != 0.0)
 			{
-				var _quaternionZ = new BBMOD_Quaternion().FromAxisAngle(_up, _rotate.Z);
+				var _quaternionZ = new BBMOD_Quaternion().FromAxisAngle(_up, RotateBy.Z);
 				_positionOffset = _quaternionZ.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionZ);
 			}
@@ -655,28 +678,28 @@ function BBMOD_Gizmo(_size=10.0)
 			SetInstanceRotationY(_instance, _rotArray[1]);
 			SetInstanceRotationZ(_instance, _rotArray[2]);
 
-			var _scaleNew = GetInstanceScaleVec3(_instance);
+			var _scaleNew = _scaleStored.Clone();
 			var _scaleOld = _scaleNew.Clone();
 
 			// Scale on X
-			_scaleNew.X += _scale.X * abs(_forward.Dot(_forwardLocal));
-			_scaleNew.Y += _scale.X * abs(_forward.Dot(_rightLocal));
-			_scaleNew.Z += _scale.X * abs(_forward.Dot(_upLocal));
+			_scaleNew.X += ScaleBy.X * abs(_forward.Dot(_forwardLocal));
+			_scaleNew.Y += ScaleBy.X * abs(_forward.Dot(_rightLocal));
+			_scaleNew.Z += ScaleBy.X * abs(_forward.Dot(_upLocal));
 
 			// Scale on Y
-			_scaleNew.X += _scale.Y * abs(_right.Dot(_forwardLocal));
-			_scaleNew.Y += _scale.Y * abs(_right.Dot(_rightLocal));
-			_scaleNew.Z += _scale.Y * abs(_right.Dot(_upLocal));
+			_scaleNew.X += ScaleBy.Y * abs(_right.Dot(_forwardLocal));
+			_scaleNew.Y += ScaleBy.Y * abs(_right.Dot(_rightLocal));
+			_scaleNew.Z += ScaleBy.Y * abs(_right.Dot(_upLocal));
 
 			// Scale on Z
-			_scaleNew.X += _scale.Z * abs(_up.Dot(_forwardLocal));
-			_scaleNew.Y += _scale.Z * abs(_up.Dot(_rightLocal));
-			_scaleNew.Z += _scale.Z * abs(_up.Dot(_upLocal));
+			_scaleNew.X += ScaleBy.Z * abs(_up.Dot(_forwardLocal));
+			_scaleNew.Y += ScaleBy.Z * abs(_up.Dot(_rightLocal));
+			_scaleNew.Z += ScaleBy.Z * abs(_up.Dot(_upLocal));
 
 			_positionOffset = _r.Transform(new BBMOD_Matrix()
-				.ScaleX((1.0 / _scaleOld.X) * (_scaleOld.X + _scale.X))
-				.ScaleY((1.0 / _scaleOld.Y) * (_scaleOld.Y + _scale.Y))
-				.ScaleZ((1.0 / _scaleOld.Z) * (_scaleOld.Z + _scale.Z))
+				.ScaleX((1.0 / _scaleOld.X) * (_scaleOld.X + ScaleBy.X))
+				.ScaleY((1.0 / _scaleOld.Y) * (_scaleOld.Y + ScaleBy.Y))
+				.ScaleZ((1.0 / _scaleOld.Z) * (_scaleOld.Z + ScaleBy.Z))
 				.Transform(_rT.Transform(_positionOffset)));
 
 			SetInstanceScaleVec3(_instance, _scaleNew);
