@@ -1,16 +1,12 @@
-/// @enum Enumeration of edit axes.
-enum BBMOD_EEditAxis
+/// @enum Enumeration of edit spaces.
+enum BBMOD_EEditSpace
 {
-	/// @member No edit.
-	None = 0,
-	/// @member Edit on X axis.
-	X = $1,
-	/// @member Edit on Y axis.
-	Y = $10,
-	/// @member Edit on Z axis.
-	Z = $100,
-	/// @member Edit on all axes.
-	All = $111,
+	/// @member Edit instances in world-space.
+	World,
+	/// @member Edit instance relatively to its transformation.
+	Local,
+	/// @member Total number of members of this enum.
+	SIZE,
 };
 
 /// @enum Enumeration of edit types.
@@ -24,6 +20,21 @@ enum BBMOD_EEditType
 	Scale,
 	/// @member Total number of members of this enum.
 	SIZE,
+};
+
+/// @enum Enumeration of edit axes.
+enum BBMOD_EEditAxis
+{
+	/// @member No edit.
+	None = 0,
+	/// @member Edit on X axis.
+	X = $1,
+	/// @member Edit on Y axis.
+	Y = $10,
+	/// @member Edit on Z axis.
+	Z = $100,
+	/// @member Edit on all axes.
+	All = $111,
 };
 
 /// @func BBMOD_Gizmo([_size])
@@ -75,8 +86,13 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Bool} If `true` then the gizmo is editing selected instances.
 	IsEditing = false;
 
+	/// @var {Enum.BBMOD_EEditSpace} Determines the space in which are the
+	/// selected instances transformed.
+	/// @see BBMOD_EEditSpace
+	EditSpace = BBMOD_EEditSpace.World;
+
 	/// @var {Enum.BBMOD_EEditType} Determines how are the selected instances
-	/// edited (translated/rotated/scaled).
+	/// transformed (translated/rotated/scaled).
 	/// @see BBMOD_EEditType
 	EditType = BBMOD_EEditType.Position;
 
