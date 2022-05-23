@@ -88,6 +88,16 @@ function BBMOD_Renderer()
 	/// @var {Bool} If `true` then edit mode is enabled. Default value is `false`.
 	EditMode = false;
 
+	/// @var {Constant.MouseButton} The mouse button used to select instances when
+	/// edit mode is enabled. Default value is `mb_left`.
+	/// @see BBMOD_Renderer.EditMode
+	ButtonSelect = mb_left;
+
+	/// @var {Constant.VirtualKey} The keyboard key used to add/remove instances
+	/// from multiple selection when edit mode is enabled. Default value is `vk_shift`.
+	/// @see BBMOD_Renderer.EditMode
+	KeyMultiSelect = vk_shift;
+
 	/// @var {Struct.BBMOD_Gizmo/Undefined} A gizmo for transforming instances when
 	/// {@link BBMOD_Renderer.EditMode} is enabled. This is by default `undefined`.
 	/// @see BBMOD_Gizmo
@@ -365,6 +375,8 @@ function BBMOD_Renderer()
 	/// (in microseconds).
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static update = function (_deltaTime) {
+		global.__bbmodRendererCurrent = self;
+
 		if (UseAppSurface)
 		{
 			application_surface_enable(true);
@@ -472,6 +484,8 @@ function BBMOD_Renderer()
 	/// at the end of this method. Default value is `true`.
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static render = function (_clearQueues=true) {
+		global.__bbmodRendererCurrent = self;
+
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
@@ -496,7 +510,7 @@ function BBMOD_Renderer()
 		var _editMode = (EditMode && Gizmo);
 		var _mouseX = window_mouse_get_x();
 		var _mouseY = window_mouse_get_y();
-		var _mousePick = (_editMode && mouse_check_button_pressed(mb_right));
+		var _continueMousePick = true;
 		var _gizmoSize;
 
 		if (_editMode)
@@ -507,7 +521,7 @@ function BBMOD_Renderer()
 
 		////////////////////////////////////////////////////////////////////////
 		// Gizmo select
-		if (_mousePick)
+		if (_editMode && mouse_check_button_pressed(Gizmo.ButtonDrag))
 		{
 			SurSelect = bbmod_surface_check(SurSelect, _renderWidth, _renderHeight);
 			surface_set_target(SurSelect);
@@ -520,17 +534,15 @@ function BBMOD_Renderer()
 			if (select_gizmo(_mouseX, _mouseY))
 			{
 				Gizmo.IsEditing = true;
-				_mousePick = false;
-			}
-			else if (!keyboard_check(vk_shift))
-			{
-				Gizmo.clear_selection();
+				_continueMousePick = false;
 			}
 		}
 
 		////////////////////////////////////////////////////////////////////////
 		// Instance IDs
-		if (_mousePick || RenderInstanceIDs)
+		var _mousePickInstance = (_continueMousePick && mouse_check_button_pressed(ButtonSelect));
+
+		if (_mousePickInstance || RenderInstanceIDs)
 		{
 			SurSelect = bbmod_surface_check(SurSelect, _renderWidth, _renderHeight);
 
@@ -551,8 +563,13 @@ function BBMOD_Renderer()
 			surface_reset_target();
 
 			// Select instance
-			if (_mousePick)
+			if (_mousePickInstance)
 			{
+				if (!keyboard_check(KeyMultiSelect))
+				{
+					Gizmo.clear_selection();
+				}
+
 				var _id = get_instance_id(_mouseX, _mouseY);
 				if (_id != 0)
 				{
@@ -667,6 +684,8 @@ function BBMOD_Renderer()
 	/// @note If {@link BBMOD_Renderer.UseAppSurface} is `false`, then this only
 	/// draws {@link BBMOD_Renderer.Gizmo} (if defined).
 	static present = function () {
+		global.__bbmodRendererCurrent = self;
+
 		var _world = matrix_get(matrix_world);
 		var _width = get_width();
 		var _height = get_height();
@@ -800,6 +819,10 @@ function BBMOD_Renderer()
 
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
+		if (global.__bbmodRendererCurrent == self)
+		{
+			global.__bbmodRendererCurrent = undefined;
+		}
 		if (surface_exists(SurSelect))
 		{
 			surface_free(SurSelect);

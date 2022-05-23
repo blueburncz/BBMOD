@@ -1,0 +1,2 @@
+model.destroy();
+material.destroy();

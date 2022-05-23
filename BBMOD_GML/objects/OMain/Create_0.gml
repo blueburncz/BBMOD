@@ -89,5 +89,31 @@ renderer.add(
 	})
 	.add(global.terrain);
 
-renderer.Gizmo = new BBMOD_Gizmo(15.0);
+var _gizmo = new BBMOD_Gizmo(15.0);
+_gizmo.ButtonDrag = mb_right;
+_gizmo.GetInstanceRotationX = function (_instance)       { return _instance.rotation.X; };
+_gizmo.GetInstanceRotationY = function (_instance)       { return _instance.rotation.Y; };
+_gizmo.GetInstanceRotationZ = function (_instance)       { return _instance.rotation.Z; };
+_gizmo.GetInstanceScaleX    = function (_instance)       { return _instance.scale.X; };
+_gizmo.GetInstanceScaleY    = function (_instance)       { return _instance.scale.Y; };
+_gizmo.GetInstanceScaleZ    = function (_instance)       { return _instance.scale.Z; };
+_gizmo.SetInstanceRotationX = function (_instance, _val) { _instance.rotation.X = _val; };
+_gizmo.SetInstanceRotationY = function (_instance, _val) { _instance.rotation.Y = _val; };
+_gizmo.SetInstanceRotationZ = function (_instance, _val) { _instance.rotation.Z = _val; };
+_gizmo.SetInstanceScaleX    = function (_instance, _val) { _instance.scale.X = _val; };
+_gizmo.SetInstanceScaleY    = function (_instance, _val) { _instance.scale.Y = _val; };
+_gizmo.SetInstanceScaleZ    = function (_instance, _val) { _instance.scale.Z = _val; };
+
+renderer.Gizmo = _gizmo;
 renderer.EditMode = true;
+renderer.ButtonSelect = mb_right;
+
+repeat (100)
+{
+	var _randomPosition = global.terrain.get_random_position();
+	instance_create_layer(
+		_randomPosition.X,
+		_randomPosition.Y,
+		"Instances",
+		OEditable);
+}
