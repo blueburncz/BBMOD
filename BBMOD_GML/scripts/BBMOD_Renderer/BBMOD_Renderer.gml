@@ -534,7 +534,7 @@ function BBMOD_Renderer()
 
 		////////////////////////////////////////////////////////////////////////
 		// Instance IDs
-		var _mousePickInstance = (_continueMousePick && mouse_check_button_pressed(ButtonSelect));
+		var _mousePickInstance = (_editMode && _continueMousePick && mouse_check_button_pressed(ButtonSelect));
 
 		if (_mousePickInstance || RenderInstanceIDs)
 		{
