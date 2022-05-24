@@ -727,7 +727,9 @@ function BBMOD_Gizmo(_size=10.0)
 				PositionBackup = Position.Clone();
 			}
 
-			var _planeNormal = (EditAxis == BBMOD_EEditAxis.Z) ? _forward : _up;
+			var _planeNormal = ((EditAxis == BBMOD_EEditAxis.Z) ? _forward
+				: ((EditAxis == BBMOD_EEditAxis.All) ? BBMOD_VEC3_UP
+				: _up));
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
 				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent),
@@ -743,17 +745,17 @@ function BBMOD_Gizmo(_size=10.0)
 
 			if (EditAxis & BBMOD_EEditAxis.X)
 			{
-				Position = Position.Add(_diff.Mul(_forward.Abs()));
+				Position = Position.Add(_forward.Scale(_diff.Dot(_forward)));
 			}
 
 			if (EditAxis & BBMOD_EEditAxis.Y)
 			{
-				Position = Position.Add(_diff.Mul(_right.Abs()));
+				Position = Position.Add(_right.Scale(_diff.Dot(_right)));
 			}
 
 			if (EditAxis & BBMOD_EEditAxis.Z)
 			{
-				Position = Position.Add(_diff.Mul(_up.Abs()));
+				Position = Position.Add(_up.Scale(_diff.Dot(_up)));
 			}
 			break;
 
