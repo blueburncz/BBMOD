@@ -2,7 +2,7 @@
 enum BBMOD_EEditSpace
 {
 	/// @member Edit instances in world-space.
-	World,
+	Global,
 	/// @member Edit instance relatively to its transformation.
 	Local,
 	/// @member Total number of members of this enum.
@@ -129,10 +129,10 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Enum.BBMOD_EEditSpace} Determines the space in which are the
 	/// selected instances transformed.
 	/// @see BBMOD_EEditSpace
-	EditSpace = BBMOD_EEditSpace.World;
+	EditSpace = BBMOD_EEditSpace.Global;
 
 	/// @var {Enum.BBMOD_EEditType} Determines how are the selected instances
-	/// transformed (translated/rotated/scaled).
+	/// transformed (translated/rotated/scaled.
 	/// @see BBMOD_EEditType
 	EditType = BBMOD_EEditType.Position;
 
