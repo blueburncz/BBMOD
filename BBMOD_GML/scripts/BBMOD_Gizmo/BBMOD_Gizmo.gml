@@ -775,21 +775,22 @@ function BBMOD_Gizmo(_size=10.0)
 			var _mul = (keyboard_check(KeyEditFaster) ? 2.0
 				: (keyboard_check(KeyEditSlower) ? 0.1
 				: 1.0));
-
-			var _diff = _mouseWorld.Sub(MouseOffset).Scale(_mul);
+			var _v1 = MouseOffset.Sub(Position);
+			var _v2 = _mouseWorld.Sub(Position);
+			var _angle = darctan2(_v2.Cross(_v1).Dot(_planeNormal), _v1.Dot(_v2)) * _mul;
 
 			switch (EditAxis)
 			{
 			case BBMOD_EEditAxis.X:
-				RotateBy.X += (abs(_diff.Y) > abs(_diff.Z)) ? _diff.Y : -_diff.Z;
+				RotateBy.X += _angle;
 				break;
 
 			case BBMOD_EEditAxis.Y:
-				RotateBy.Y += (abs(_diff.X) > abs(_diff.Z)) ? -_diff.X : -_diff.Z;
+				RotateBy.Y += _angle;
 				break;
 
 			case BBMOD_EEditAxis.Z:
-				RotateBy.Z += (abs(_diff.X) > abs(_diff.Y)) ? -_diff.X : _diff.Y;
+				RotateBy.Z += _angle;
 				break;
 			}
 
