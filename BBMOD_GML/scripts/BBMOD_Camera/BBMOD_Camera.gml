@@ -478,6 +478,7 @@ function BBMOD_Camera() constructor
 	/// {@link bbmod_camera_set_exposure} respectively!
 	static apply = function () {
 		gml_pragma("forceinline");
+		global.__bbmodCameraCurrent = self;
 		camera_apply(Raw);
 		bbmod_camera_set_position(Position.Clone());
 		bbmod_camera_set_zfar(ZFar);

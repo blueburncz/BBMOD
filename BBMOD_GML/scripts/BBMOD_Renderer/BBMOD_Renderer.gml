@@ -70,87 +70,11 @@ function BBMOD_Renderer()
 	/// `undefined`.
 	Height = undefined;
 
-	/// @func get_width()
-	/// @desc Retrieves the width of the renderer on the screen.
-	/// @return {Real} The width of the renderer on the screen.
-	static get_width = function () {
-		gml_pragma("forceinline");
-		return ((Width == undefined) ? window_get_width() : max(Width, 1));
-	};
-
-	/// @func get_height()
-	/// @desc Retrieves the height of the renderer on the screen.
-	/// @return {Real} The height of the renderer on the screen.
-	static get_height = function () {
-		gml_pragma("forceinline");
-		return ((Height == undefined) ? window_get_height() : max(Height, 1));
-	};
-
-	/// @func get_render_width()
-	/// @desc Retrieves the width of the renderer with
-	/// {@link BBMOD_Renderer.RenderScale} applied.
-	/// @return {Real} The width of the renderer after `RenderScale` is applied.
-	static get_render_width = function () {
-		gml_pragma("forceinline");
-		return (get_width() * RenderScale);
-	};
-
-	/// @func get_render_height()
-	/// @desc Retrieves the height of the renderer with
-	/// {@link BBMOD_Renderer.RenderScale} applied.
-	/// @return {Real} The height of the renderer after `RenderScale` is applied.
-	static get_render_height = function () {
-		gml_pragma("forceinline");
-		return (get_height() * RenderScale);
-	};
-
-	/// @func set_position(_x, _y)
-	/// @desc Changes the renderer's position on the screen.
-	/// @param {Real} _x The new X position on the screen.
-	/// @param {Real} _y The new Y position on the screen.
-	/// @return {Struct.BBMOD_Renderer} Returns `self`.
-	static set_position = function (_x, _y) {
-		gml_pragma("forceinline");
-		X = _x;
-		Y = _y;
-		return self;
-	};
-
-	/// @func set_size(_width, _height)
-	/// @desc Changes the renderer's size on the screen.
-	/// @param {Real} _width The new width on the screen.
-	/// @param {Real} _height The new height on the screen.
-	/// @return {Struct.BBMOD_Renderer} Returns `self`.
-	static set_size = function (_width, _height) {
-		gml_pragma("forceinline");
-		Width = _width;
-		Height = _height;
-		return self;
-	};
-
-	/// @func set_rectangle(_x, _y, _width, _height)
-	/// @desc Changes the renderer's position and size on the screen.
-	/// @param {Real} _x The new X position on the screen.
-	/// @param {Real} _y The new Y position on the screen.
-	/// @param {Real} _width The new width on the screen.
-	/// @param {Real} _height The new height on the screen.
-	/// @return {Struct.BBMOD_Renderer} Returns `self`.
-	static set_rectangle = function (_x, _y, _width, _height) {
-		gml_pragma("forceinline");
-		set_position(_x, _y);
-		set_size(_width, _height);
-		return self;
-	};
-
 	/// @var {Bool} If `true` then rendering of instance IDs into an off-screen
 	/// surface is enabled. This must be enabled if you would like to use method
 	/// {@link BBMOD_Renderer.get_instance_id} for mouse-picking instances.
 	/// Default value is `false`.
 	RenderInstanceIDs = false;
-
-	/// @var {Id.Surface} Surface for rendering instance IDs.
-	/// @private
-	SurInstanceIDs = noone;
 
 	/// @var {Id.Surface} Surface for rendering highlight of selected instances.
 	/// @private
@@ -161,9 +85,21 @@ function BBMOD_Renderer()
 	/// @see BBMOD_Renderer.Gizmo
 	InstanceHighlightColor = BBMOD_C_ORANGE;
 
-	/// @var {Struct.BBMOD_Gizmo/Undefined} A gizmo that is automatically rendered
-	/// and can be mouse-picked using method {@link BBMOD_Renderer.select_gizmo}.
-	/// Default value is `undefined`.
+	/// @var {Bool} If `true` then edit mode is enabled. Default value is `false`.
+	EditMode = false;
+
+	/// @var {Constant.MouseButton} The mouse button used to select instances when
+	/// edit mode is enabled. Default value is `mb_left`.
+	/// @see BBMOD_Renderer.EditMode
+	ButtonSelect = mb_left;
+
+	/// @var {Constant.VirtualKey} The keyboard key used to add/remove instances
+	/// from multiple selection when edit mode is enabled. Default value is `vk_shift`.
+	/// @see BBMOD_Renderer.EditMode
+	KeyMultiSelect = vk_shift;
+
+	/// @var {Struct.BBMOD_Gizmo/Undefined} A gizmo for transforming instances when
+	/// {@link BBMOD_Renderer.EditMode} is enabled. This is by default `undefined`.
 	/// @see BBMOD_Gizmo
 	Gizmo = undefined;
 
@@ -174,7 +110,7 @@ function BBMOD_Renderer()
 
 	/// @var {Id.Surface} Surface for mouse-picking the gizmo.
 	/// @private
-	SurGizmoSelect = noone;
+	SurSelect = noone;
 
 	/// @var <Struct.BBMOD_IRenderable>} An array of renderable objects and
 	/// structs.
@@ -261,6 +197,78 @@ function BBMOD_Renderer()
 	/// @see BBMOD_EAntialiasing
 	Antialiasing = BBMOD_EAntialiasing.None;
 
+	/// @func get_width()
+	/// @desc Retrieves the width of the renderer on the screen.
+	/// @return {Real} The width of the renderer on the screen.
+	static get_width = function () {
+		gml_pragma("forceinline");
+		return max((Width == undefined) ? window_get_width() : Width, 1);
+	};
+
+	/// @func get_height()
+	/// @desc Retrieves the height of the renderer on the screen.
+	/// @return {Real} The height of the renderer on the screen.
+	static get_height = function () {
+		gml_pragma("forceinline");
+		return max((Height == undefined) ? window_get_height() : Height, 1);
+	};
+
+	/// @func get_render_width()
+	/// @desc Retrieves the width of the renderer with
+	/// {@link BBMOD_Renderer.RenderScale} applied.
+	/// @return {Real} The width of the renderer after `RenderScale` is applied.
+	static get_render_width = function () {
+		gml_pragma("forceinline");
+		return max(get_width() * RenderScale, 1);
+	};
+
+	/// @func get_render_height()
+	/// @desc Retrieves the height of the renderer with
+	/// {@link BBMOD_Renderer.RenderScale} applied.
+	/// @return {Real} The height of the renderer after `RenderScale` is applied.
+	static get_render_height = function () {
+		gml_pragma("forceinline");
+		return max(get_height() * RenderScale, 1);
+	};
+
+	/// @func set_position(_x, _y)
+	/// @desc Changes the renderer's position on the screen.
+	/// @param {Real} _x The new X position on the screen.
+	/// @param {Real} _y The new Y position on the screen.
+	/// @return {Struct.BBMOD_Renderer} Returns `self`.
+	static set_position = function (_x, _y) {
+		gml_pragma("forceinline");
+		X = _x;
+		Y = _y;
+		return self;
+	};
+
+	/// @func set_size(_width, _height)
+	/// @desc Changes the renderer's size on the screen.
+	/// @param {Real} _width The new width on the screen.
+	/// @param {Real} _height The new height on the screen.
+	/// @return {Struct.BBMOD_Renderer} Returns `self`.
+	static set_size = function (_width, _height) {
+		gml_pragma("forceinline");
+		Width = _width;
+		Height = _height;
+		return self;
+	};
+
+	/// @func set_rectangle(_x, _y, _width, _height)
+	/// @desc Changes the renderer's position and size on the screen.
+	/// @param {Real} _x The new X position on the screen.
+	/// @param {Real} _y The new Y position on the screen.
+	/// @param {Real} _width The new width on the screen.
+	/// @param {Real} _height The new height on the screen.
+	/// @return {Struct.BBMOD_Renderer} Returns `self`.
+	static set_rectangle = function (_x, _y, _width, _height) {
+		gml_pragma("forceinline");
+		set_position(_x, _y);
+		set_size(_width, _height);
+		return self;
+	};
+
 	/// @func select_gizmo(_screenX, _screenY)
 	/// @desc Tries to select a gizmo at given screen coordinates and
 	/// automatically changes its {@link BBMOD_Gizmo.EditAxis} and
@@ -270,8 +278,9 @@ function BBMOD_Renderer()
 	/// @param {Real} _screenY The Y position on the screen.
 	/// @return {Bool} Returns `true` if the gizmo was selected.
 	/// @note {@link BBMOD_Renderer.Gizmo} must be defined.
+	/// @obsolete
 	static select_gizmo = function (_screenX, _screenY) {
-		if (!Gizmo || !Gizmo.Visible || !surface_exists(SurGizmoSelect))
+		if (!Gizmo || !Gizmo.Visible || !surface_exists(SurSelect))
 		{
 			return false;
 		}
@@ -281,17 +290,10 @@ function BBMOD_Renderer()
 
 		Gizmo.EditAxis = BBMOD_EEditAxis.None;
 
-		var _pixel = surface_getpixel_ext(SurGizmoSelect, _screenX, _screenY);
+		var _pixel = surface_getpixel_ext(SurSelect, _screenX, _screenY);
 		if (_pixel & $FF000000 == 0)
 		{
 			return false;
-		}
-
-		if (_pixel & $FFFFFF == $FFFFFF)
-		{
-			Gizmo.EditAxis = BBMOD_EEditAxis.All;
-			Gizmo.EditType = BBMOD_EEditType.Scale;
-			return true;
 		}
 
 		var _blue = (_pixel >> 16) & 255;
@@ -299,9 +301,10 @@ function BBMOD_Renderer()
 		var _red = _pixel & 255;
 		var _value = max(_red, _green, _blue);
 
-		Gizmo.EditAxis = ((_value == _red) ? BBMOD_EEditAxis.X
-			: ((_value == _green) ? BBMOD_EEditAxis.Y
-			: BBMOD_EEditAxis.Z));
+		Gizmo.EditAxis = 0
+			| (BBMOD_EEditAxis.X * (_red > 0))
+			| (BBMOD_EEditAxis.Y * (_green > 0))
+			| (BBMOD_EEditAxis.Z * (_blue > 0));
 
 		Gizmo.EditType = ((_value == 255) ? BBMOD_EEditType.Position
 			: ((_value == 128) ? BBMOD_EEditType.Rotation
@@ -319,13 +322,13 @@ function BBMOD_Renderer()
 	/// @note {@link BBMOD_Renderer.RenderInstanceIDs} must be enabled.
 	static get_instance_id = function (_screenX, _screenY) {
 		gml_pragma("forceinline");
-		if (!surface_exists(SurInstanceIDs))
+		if (!surface_exists(SurSelect))
 		{
 			return 0;
 		}
 		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
 		_screenY = clamp(_screenY - Y, 0, get_height()) * RenderScale;
-		return surface_getpixel_ext(SurInstanceIDs, _screenX, _screenY);
+		return surface_getpixel_ext(SurSelect, _screenX, _screenY);
 	};
 
 	/// @func add(_renderable)
@@ -366,6 +369,8 @@ function BBMOD_Renderer()
 	/// (in microseconds).
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static update = function (_deltaTime) {
+		global.__bbmodRendererCurrent = self;
+
 		if (UseAppSurface)
 		{
 			application_surface_enable(true);
@@ -381,6 +386,12 @@ function BBMOD_Renderer()
 				surface_resize(application_surface, _surfaceWidth, _surfaceHeight);
 			}
 		}
+
+		if (Gizmo && EditMode)
+		{
+			Gizmo.update(delta_time);
+		}
+
 		return self;
 	};
 
@@ -467,6 +478,8 @@ function BBMOD_Renderer()
 	/// at the end of this method. Default value is `true`.
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static render = function (_clearQueues=true) {
+		global.__bbmodRendererCurrent = self;
+
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
@@ -485,12 +498,49 @@ function BBMOD_Renderer()
 		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
-		// Instance IDs
-		if (RenderInstanceIDs)
-		{
-			SurInstanceIDs = bbmod_surface_check(SurInstanceIDs, _renderWidth, _renderHeight);
+		//
+		// Edit mode
+		//
+		var _editMode = (EditMode && Gizmo);
+		var _mouseX = window_mouse_get_x();
+		var _mouseY = window_mouse_get_y();
+		var _continueMousePick = true;
+		var _gizmoSize;
 
-			surface_set_target(SurInstanceIDs);
+		if (_editMode)
+		{
+			_gizmoSize = Gizmo.Size;
+			Gizmo.Size = _gizmoSize * Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+		}
+
+		////////////////////////////////////////////////////////////////////////
+		// Gizmo select
+		if (_editMode && mouse_check_button_pressed(Gizmo.ButtonDrag))
+		{
+			SurSelect = bbmod_surface_check(SurSelect, _renderWidth, _renderHeight);
+			surface_set_target(SurSelect);
+			draw_clear_alpha(0, 0.0);
+			matrix_set(matrix_view, _view);
+			matrix_set(matrix_projection, _projection);
+			Gizmo.submit(Gizmo.MaterialsSelect);
+			surface_reset_target();
+
+			if (select_gizmo(_mouseX, _mouseY))
+			{
+				Gizmo.IsEditing = true;
+				_continueMousePick = false;
+			}
+		}
+
+		////////////////////////////////////////////////////////////////////////
+		// Instance IDs
+		var _mousePickInstance = (_editMode && _continueMousePick && mouse_check_button_pressed(ButtonSelect));
+
+		if (_mousePickInstance || RenderInstanceIDs)
+		{
+			SurSelect = bbmod_surface_check(SurSelect, _renderWidth, _renderHeight);
+
+			surface_set_target(SurSelect);
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
@@ -505,44 +555,76 @@ function BBMOD_Renderer()
 			}
 
 			surface_reset_target();
+
+			// Select instance
+			if (_mousePickInstance)
+			{
+				if (!keyboard_check(KeyMultiSelect))
+				{
+					Gizmo.clear_selection();
+				}
+
+				var _id = get_instance_id(_mouseX, _mouseY);
+				if (_id != 0)
+				{
+					Gizmo.toggle_select(_id).update_position();
+					Gizmo.Size = _gizmoSize * Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+				}
+			}
 		}
 
-		////////////////////////////////////////////////////////////////////////
-		// Instance highlight
-		if (Gizmo
-			&& Gizmo.Visible)
+		if (_editMode && !ds_list_empty(Gizmo.Selected))
 		{
-			var _selectedInstances = Gizmo.Selected;
-
+			////////////////////////////////////////////////////////////////////
+			// Instance highlight
 			SurInstanceHighlight = bbmod_surface_check(SurInstanceHighlight, _renderWidth, _renderHeight);
 
 			surface_set_target(SurInstanceHighlight);
 			draw_clear_alpha(0, 0.0);
 
-			if (!ds_list_empty(_selectedInstances))
-			{
-				matrix_set(matrix_view, _view);
-				matrix_set(matrix_projection, _projection);
+			matrix_set(matrix_view, _view);
+			matrix_set(matrix_projection, _projection);
 	
-				bbmod_render_pass_set(BBMOD_ERenderPass.Id);
+			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
-				var _renderQueues = global.bbmod_render_queues;
-				var _rqi = 0;
-				repeat (array_length(_renderQueues))
-				{
-					_renderQueues[_rqi++].submit(_selectedInstances);
-				}
+			var _selectedInstances = Gizmo.Selected;
+			var _renderQueues = global.bbmod_render_queues;
+			var _rqi = 0;
+			repeat (array_length(_renderQueues))
+			{
+				_renderQueues[_rqi++].submit(_selectedInstances);
 			}
 
 			surface_reset_target();
+
+			////////////////////////////////////////////////////////////////////
+			// Gizmo
+			bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
+
+			SurGizmo = bbmod_surface_check(SurGizmo, _renderWidth, _renderHeight);
+			surface_set_target(SurGizmo);
+			draw_clear_alpha(0, 0.0);
+			matrix_set(matrix_view, _view);
+			matrix_set(matrix_projection, _projection);
+			Gizmo.submit();
+			surface_reset_target();
+		}
+
+		if (_editMode)
+		{
+			Gizmo.Size = _gizmoSize;
 		}
 
 		////////////////////////////////////////////////////////////////////////
+		//
 		// Shadow map
+		//
 		render_shadowmap();
 
 		////////////////////////////////////////////////////////////////////////
+		//
 		// Forward pass
+		//
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
 
@@ -585,32 +667,6 @@ function BBMOD_Renderer()
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global("bbmod_Shadowmap");
 
-		////////////////////////////////////////////////////////////////////////
-		// Gizmo
-		if (Gizmo && Gizmo.Visible)
-		{
-			var _size = Gizmo.Size;
-			Gizmo.Size *= Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
-
-			SurGizmo = bbmod_surface_check(SurGizmo, _renderWidth, _renderHeight);
-			surface_set_target(SurGizmo);
-			draw_clear_alpha(0, 0.0);
-			matrix_set(matrix_view, _view);
-			matrix_set(matrix_projection, _projection);
-			Gizmo.submit();
-			surface_reset_target();
-
-			SurGizmoSelect = bbmod_surface_check(SurGizmoSelect, _renderWidth, _renderHeight);
-			surface_set_target(SurGizmoSelect);
-			draw_clear_alpha(0, 0.0);
-			matrix_set(matrix_view, _view);
-			matrix_set(matrix_projection, _projection);
-			Gizmo.submit(Gizmo.MaterialsSelect);
-			surface_reset_target();
-
-			Gizmo.Size = _size;
-		}
-
 		bbmod_material_reset();
 
 		matrix_set(matrix_world, _world);
@@ -623,6 +679,8 @@ function BBMOD_Renderer()
 	/// @note If {@link BBMOD_Renderer.UseAppSurface} is `false`, then this only
 	/// draws {@link BBMOD_Renderer.Gizmo} (if defined).
 	static present = function () {
+		global.__bbmodRendererCurrent = self;
+
 		var _world = matrix_get(matrix_world);
 		var _width = get_width();
 		var _height = get_height();
@@ -637,16 +695,14 @@ function BBMOD_Renderer()
 		if (UseAppSurface)
 		{
 			var _surFinal = application_surface;
-			if (Gizmo
-				&& Gizmo.Visible)
+			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))
 			{
 				surface_set_target(_surFinal);
 				matrix_set(matrix_world, matrix_build_identity());
 
 				////////////////////////////////////////////////////////////////
 				// Highlighted instances
-				if (!ds_list_empty(Gizmo.Selected)
-					&& surface_exists(SurInstanceHighlight))
+				if (surface_exists(SurInstanceHighlight))
 				{
 					var _shader = BBMOD_ShInstanceHighlight;
 					shader_set(_shader);
@@ -723,8 +779,7 @@ function BBMOD_Renderer()
 		}
 		else
 		{
-			if (Gizmo
-				&& Gizmo.Visible)
+			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))
 			{
 				////////////////////////////////////////////////////////////////
 				// Highlighted instances
@@ -759,9 +814,13 @@ function BBMOD_Renderer()
 
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
-		if (surface_exists(SurInstanceIDs))
+		if (global.__bbmodRendererCurrent == self)
 		{
-			surface_free(SurInstanceIDs);
+			global.__bbmodRendererCurrent = undefined;
+		}
+		if (surface_exists(SurSelect))
+		{
+			surface_free(SurSelect);
 		}
 		if (surface_exists(SurInstanceHighlight))
 		{
@@ -770,10 +829,6 @@ function BBMOD_Renderer()
 		if (surface_exists(SurGizmo))
 		{
 			surface_free(SurGizmo);
-		}
-		if (surface_exists(SurGizmoSelect))
-		{
-			surface_free(SurGizmoSelect);
 		}
 		if (surface_exists(SurShadowmap))
 		{

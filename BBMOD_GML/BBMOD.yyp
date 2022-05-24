@@ -42,6 +42,7 @@
     {"id":{"name":"BBMOD_ShPBRAnimated","path":"shaders/BBMOD_ShPBRAnimated/BBMOD_ShPBRAnimated.yy",},"order":7,},
     {"id":{"name":"BBMOD_RenderQueue","path":"scripts/BBMOD_RenderQueue/BBMOD_RenderQueue.yy",},"order":7,},
     {"id":{"name":"BBMOD_Renderer","path":"scripts/BBMOD_Renderer/BBMOD_Renderer.yy",},"order":2,},
+    {"id":{"name":"__bbmod_init","path":"scripts/__bbmod_init/__bbmod_init.yy",},"order":14,},
     {"id":{"name":"BBMOD_Color","path":"scripts/BBMOD_Color/BBMOD_Color.yy",},"order":4,},
     {"id":{"name":"bbmod_mesh_to_colmesh","path":"scripts/bbmod_mesh_to_colmesh/bbmod_mesh_to_colmesh.yy",},"order":0,},
     {"id":{"name":"Fnt24","path":"fonts/Fnt24/Fnt24.yy",},"order":1,},
@@ -305,7 +306,9 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character","resourceVersion":"1.0","name":"Character_PunchRight.bbanim","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character","resourceVersion":"1.0","name":"Character_Run.bbanim","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","resourceVersion":"1.0","name":"assimp-vc142-mt.dll","resourceType":"GMIncludedFile",},
-    {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","resourceVersion":"1.0","name":"Gizmo.bbmod","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","resourceVersion":"1.0","name":"GizmoMove.bbmod","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","resourceVersion":"1.0","name":"GizmoScale.bbmod","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","resourceVersion":"1.0","name":"GizmoRotate.bbmod","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2022.3.0.625",
