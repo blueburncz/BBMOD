@@ -165,7 +165,7 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Id.DsList<Struct>} A list of additional data required for editing
 	/// instances, e.g. their original offset from the gizmo, rotation and scale.
 	/// @private
-	Data = ds_list_create();
+	InstanceData = ds_list_create();
 
 	/// @var {Struct.BBMOD_Vec3} The current scaling factor of selected instances.
 	/// @private
@@ -428,7 +428,7 @@ function BBMOD_Gizmo(_size=10.0)
 		if (!is_selected(_instance))
 		{
 			ds_list_add(Selected, _instance);
-			ds_list_add(Data, {
+			ds_list_add(InstanceData, {
 				Offset: new BBMOD_Vec3(),
 				Rotation: new BBMOD_Vec3(),
 				Scale: new BBMOD_Vec3(),
@@ -456,7 +456,7 @@ function BBMOD_Gizmo(_size=10.0)
 		if (_index != -1)
 		{
 			ds_list_delete(Selected, _index);
-			ds_list_delete(Data, _index);
+			ds_list_delete(InstanceData, _index);
 		}
 		return self;
 	};
@@ -484,7 +484,7 @@ function BBMOD_Gizmo(_size=10.0)
 	static clear_selection = function () {
 		gml_pragma("forceinline");
 		ds_list_clear(Selected);
-		ds_list_clear(Data);
+		ds_list_clear(InstanceData);
 		return self;
 	};
 
@@ -538,7 +538,7 @@ function BBMOD_Gizmo(_size=10.0)
 			if (!InstanceExists(_instance))
 			{
 				ds_list_delete(Selected, i);
-				ds_list_delete(Data, i);
+				ds_list_delete(InstanceData, i);
 				--_size;
 				continue;
 			}
@@ -622,7 +622,7 @@ function BBMOD_Gizmo(_size=10.0)
 				if (!InstanceExists(_instance))
 				{
 					ds_list_delete(Selected, i);
-					ds_list_delete(Data, i);
+					ds_list_delete(InstanceData, i);
 					--_size;
 					continue;
 				}
@@ -658,7 +658,7 @@ function BBMOD_Gizmo(_size=10.0)
 			for (var i = _size - 1; i >= 0; --i)
 			{
 				var _instance = Selected[| i];
-				var _data = Data[| i];
+				var _data = InstanceData[| i];
 				_data.Offset = get_instance_position_vec3(_instance).Sub(Position);
 				_data.Rotation = get_instance_rotation_vec3(_instance);
 				_data.Scale = get_instance_scale_vec3(_instance);
@@ -854,12 +854,12 @@ function BBMOD_Gizmo(_size=10.0)
 			if (!InstanceExists(_instance))
 			{
 				ds_list_delete(Selected, i);
-				ds_list_delete(Data, i);
+				ds_list_delete(InstanceData, i);
 				--_size;
 				continue;
 			}
 
-			var _data = Data[| i];
+			var _data = InstanceData[| i];
 			var _positionOffset = _data.Offset;
 			var _rotationStored = _data.Rotation;
 			var _scaleStored = _data.Scale;
@@ -973,6 +973,7 @@ function BBMOD_Gizmo(_size=10.0)
 	static destroy = function () {
 		method(self, Super_Class.destroy)();
 		ds_list_destroy(Selected);
+		ds_list_destroy(InstanceData);
 		return undefined;
 	};
 }
