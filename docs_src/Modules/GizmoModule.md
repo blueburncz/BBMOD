@@ -4,6 +4,7 @@ Contains a gizmo structs and shaders for rendering instance IDs. Useful for leve
 ## Scripting API
 ### Enums
 * [BBMOD_EEditAxis](./BBMOD_EEditAxis.html)
+* [BBMOD_EEditSpace](./BBMOD_EEditSpace.html)
 * [BBMOD_EEditType](./BBMOD_EEditType.html)
 
 ### Macros

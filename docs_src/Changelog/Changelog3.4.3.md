@@ -1,4 +1,5 @@
-# Changelog
+# Changelog 3.4.3
+This release further improves the Gizmo module by adding a default implementation of instance editing. There are now also three separate gizmo models for moving, rotating and scaling objects. All of these operations can be done in both global and local space (space relative to the last selected instance). This should allow for much easier development of custom level editors for projects using BBMOD.
 
 ## GML API:
 ### Gizmo module:

@@ -508,10 +508,11 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func unproject_vec2(_vector, _camera[, _renderer])
-	/// @param {Struct.BBMOD_Vector2} _vector
-	/// @param {Struct.BBMOD_Camera} _camera
-	/// @param {Struct.BBMOD_Renderer/Undefined} [_renderer]
-	/// @return {Struct.BBMOD_Vec3}
+	/// @desc Unprojects a position on the screen into a direction in world-space.
+	/// @param {Struct.BBMOD_Vector2} _vector The position on the screen.
+	/// @param {Struct.BBMOD_Camera} _camera A camera.
+	/// @param {Struct.BBMOD_Renderer/Undefined} [_renderer] A renderer.
+	/// @return {Struct.BBMOD_Vec3} The world-space direction.
 	/// @private
 	static unproject_vec2 = function (_vector, _camera, _renderer=undefined) {
 		var _forward = _camera.get_forward();
@@ -530,11 +531,12 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func intersect_ray_plane(_origin, _direction, _plane, _normal)
-	/// @param {Struct.BBMOD_Vec3} _origin
-	/// @param {Struct.BBMOD_Vec3} _direction
-	/// @param {Struct.BBMOD_Vec3} _plane
-	/// @param {Struct.BBMOD_Vec3} _normal
-	/// @return {Struct.BBMOD_Vec3}
+	/// @desc Intersects a ray with a plane.
+	/// @param {Struct.BBMOD_Vec3} _origin The ray origin.
+	/// @param {Struct.BBMOD_Vec3} _direction The ray direction.
+	/// @param {Struct.BBMOD_Vec3} _plane The plane origin.
+	/// @param {Struct.BBMOD_Vec3} _normal The plane normal.
+	/// @return {Struct.BBMOD_Vec3} The point of intersection.
 	/// @private
 	static intersect_ray_plane = function (_origin, _direction, _plane, _normal) {
 		var _t = -(_origin.Sub(_plane).Dot(_normal) / _direction.Dot(_normal));
