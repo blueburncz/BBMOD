@@ -38,9 +38,16 @@ enum BBMOD_EEditAxis
 };
 
 /// @func BBMOD_Gizmo([_size])
+///
 /// @extends BBMOD_Class
+///
 /// @desc A gizmo for transforming instances.
+///
 /// @param {Real} [_size] The size of the gizmo. Default value is 10 units.
+///
+/// @note This requries synchronnous loading of models, therefore it cannot
+/// be used on platforms like HTML5, which require asynchronnous loading.
+/// You also **must** use {@link BBMOD_Camera} for the gizmo to work properly!
 function BBMOD_Gizmo(_size=10.0)
 	: BBMOD_Class() constructor
 {
@@ -80,21 +87,23 @@ function BBMOD_Gizmo(_size=10.0)
 
 	/// @var {Bool} Used to show/hide the gizmo. Default value is `true`, which
 	/// makes it visible.
-	/// @obsolete
+	/// @obsolete This has been replaced with {@link BBMOD_Renderer.EditMode}.
 	Visible = true;
 
 	/// @var {Bool} If `true` then the gizmo is editing selected instances.
 	IsEditing = false;
 
-	/// @var {Struct.BBMOD_Vec2/Undefined}
+	/// @var {Struct.BBMOD_Vec2/Undefined} Screen-space coordinates to lock the
+	/// mouse cursor at.
 	/// @private
 	MouseLockAt = undefined;
 
-	/// @var {Struct.BBMOD_Vec3/Undefined}
+	/// @var {Struct.BBMOD_Vec3/Undefined} World-space offset from the mouse to
+	/// the gizmo.
 	/// @private
 	MouseOffset = undefined;
 
-	/// @var {Constant.Cursor}
+	/// @var {Constant.Cursor} The cursor used before editing started.
 	/// @private
 	CursorBackup = undefined;
 
@@ -113,19 +122,25 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @see BBMOD_EEditAxis
 	EditAxis = BBMOD_EEditAxis.None;
 
-	/// @var {Constant.MouseButton}
+	/// @var {Constant.MouseButton} The mouse button used for dragging the gizmo.
 	ButtonDrag = mb_left;
 
-	///// @var {Constant.VirtualKey}
-	//KeyNextEditType = vk_tab;
+	/// @var {Constant.VirtualKey} The virtual key used to switch to the next
+	/// edit type.
+	/// @see BBMOD_Gizmo.EditType
+	KeyNextEditType = vk_tab;
 
-	/// @var {Constant.VirtualKey}
+	/// @var {Constant.VirtualKey} The virtual key used to switch to the next
+	/// edit space.
+	/// @see BBMOD_Gizmo.EditSpace
 	KeyNextEditSpace = vk_space;
 
-	/// @var {Constant.VirtualKey}
+	/// @var {Constant.VirtualKey} The virtual key used to increase
+	/// speed of editing (e.g. rotate objects by a larger angle).
 	KeyEditFaster = vk_shift;
 
-	/// @var {Constant.VirtualKey}
+	/// @var {Constant.VirtualKey} The virtual key used to decrease
+	/// speed of editing (e.g. rotate objects by a smaller angle).
 	KeyEditSlower = vk_control;
 
 	/// @var {Real} The size of the gizmo. Default value is 10.
@@ -135,7 +150,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @readonly
 	Position = new BBMOD_Vec3();
 
-	/// @var {Struct.BBMOD_Vec3/Undefined}
+	/// @var {Struct.BBMOD_Vec3/Undefined} The gizmo's position in world-space
+	/// before editing started.
 	/// @private
 	PositionBackup = undefined;
 
@@ -146,101 +162,192 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @readonly
 	Selected = ds_list_create();
 
+	/// @var {Id.DsList<Struct>} A list of additional data required for editing
+	/// instances, e.g. their original offset from the gizmo, rotation and scale.
+	/// @private
 	Data = ds_list_create();
 
+	/// @var {Struct.BBMOD_Vec3} The current scaling factor of selected instances.
+	/// @private
+	ScaleBy = new BBMOD_Vec3(0.0);
+
+	/// @var {Struct.BBMOD_Vec3} The current euler angles we are rotating selected
+	/// instances by.
+	/// @private
+	RotateBy = new BBMOD_Vec3(0.0);
+
+	/// @var {Function} A function that the gizmo uses to check whether an instance
+	/// exists. Must take the instance as the first argument and return a bool.
+	/// Defaults a function that returns the result of `instance_exists`.
 	InstanceExists = function (_instance) {
 		gml_pragma("forceinline");
 		return instance_exists(_instance);
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// position on the X axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that returns the instance's `x`
+	/// variable.
 	GetInstancePositionX = function (_instance) {
 		gml_pragma("forceinline");
 		return _instance.x;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// position on the X axis. Must take the instance as the first argument and
+	/// its new position on the X axis as the second argument. Defaults to a
+	/// function that assings the new position to the instance's `x` variable.
 	SetInstancePositionX = function (_instance, _x) {
 		gml_pragma("forceinline");
 		_instance.x = _x;
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// position on the Y axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that returns the instance's `y`
+	/// variable.
 	GetInstancePositionY = function (_instance) {
 		gml_pragma("forceinline");
 		return _instance.y;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// position on the Y axis. Must take the instance as the first argument and
+	/// its new position on the Y axis as the second argument. Defaults to a
+	/// function that assings the new position to the instance's `y` variable.
 	SetInstancePositionY = function (_instance, _y) {
 		gml_pragma("forceinline");
 		_instance.y = _y;
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// position on the Z axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that returns the instance's `z`
+	/// variable.
 	GetInstancePositionZ = function (_instance) {
 		gml_pragma("forceinline");
 		return _instance.z;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// position on the Z axis. Must take the instance as the first argument and
+	/// its new position on the Z axis as the second argument. Defaults to a
+	/// function that assings the new position to the instance's `Z` variable.
 	SetInstancePositionZ = function (_instance, _z) {
 		gml_pragma("forceinline");
 		_instance.z = _z;
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// rotation on the X axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that always returns 0.
 	GetInstanceRotationX = function (_instance) {
 		gml_pragma("forceinline");
 		return 0.0;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// rotation on the X axis. Must take the instance as the first argument and
+	/// its new rotation on the X axis as the second argument. Defaults to a
+	/// function that does not do anything.
 	SetInstanceRotationX = function (_instance, _x) {
 		gml_pragma("forceinline");
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// rotation on the Y axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that always returns 0.
 	GetInstanceRotationY = function (_instance) {
 		gml_pragma("forceinline");
 		return 0.0;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// rotation on the Y axis. Must take the instance as the first argument and
+	/// its new rotation on the Y axis as the second argument. Defaults to a
+	/// function that does not do anything.
 	SetInstanceRotationY = function (_instance, _y) {
 		gml_pragma("forceinline");
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// rotation on the Z axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that returns the instance's
+	/// `image_angle` variable.
 	GetInstanceRotationZ = function (_instance) {
 		gml_pragma("forceinline");
 		return _instance.image_angle;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// rotation on the Z axis. Must take the instance as the first argument and
+	/// its new rotation on the Z axis as the second argument. Defaults to a
+	/// function that assings the new rotation to the instance's `image_angle`
+	/// variable.
 	SetInstanceRotationZ = function (_instance, _z) {
 		gml_pragma("forceinline");
 		_instance.image_angle = _z;
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// scale on the X axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that returns the instance's
+	/// `image_xscale` variable.
 	GetInstanceScaleX = function (_instance) {
 		gml_pragma("forceinline");
 		return _instance.image_xscale;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// scale on the X axis. Must take the instance as the first argument and
+	/// its new scale on the X axis as the second argument. Defaults to a
+	/// function that assings the new scale to the instance's `image_xscale`
+	/// variable.
 	SetInstanceScaleX = function (_instance, _x) {
 		gml_pragma("forceinline");
 		_instance.image_xscale = _x;
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// scale on the Y axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that returns the instance's
+	/// `image_yscale` variable.
 	GetInstanceScaleY = function (_instance) {
 		gml_pragma("forceinline");
 		return _instance.image_yscale;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// scale on the Y axis. Must take the instance as the first argument and
+	/// its new scale on the Y axis as the second argument. Defaults to a
+	/// function that assings the new scale to the instance's `image_yscale`
+	/// variable.
 	SetInstanceScaleY = function (_instance, _y) {
 		gml_pragma("forceinline");
 		_instance.image_yscale = _y;
 	};
 
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// scale on the Z axis. Must take the instance as the first argument and
+	/// return a real. Defaults to a function that always returns 1.
 	GetInstanceScaleZ = function (_instance) {
 		gml_pragma("forceinline");
 		return 1.0;
 	};
 
+	/// @var {Function} A function that the gizmo uses to change an instance's
+	/// scale on the Z axis. Must take the instance as the first argument and
+	/// its new scale on the Z axis as the second argument. Defaults to a
+	/// function that does not do anything.
 	SetInstanceScaleZ = function (_instance, _z) {
 		gml_pragma("forceinline");
 	};
 
-	static GetInstancePositionVec3 = function (_instance) {
+	/// @func get_instance_position_vec3(_instance)
+	/// @desc Retrieves an instance's position as {@link BBMOD_Vec3}.
+	/// @param {Id.Instance} _instance The ID of the instance.
+	/// @return {Struct.BBMOD_Vec3} The instance's position.
+	static get_instance_position_vec3 = function (_instance) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
 			GetInstancePositionX(_instance),
@@ -248,7 +355,12 @@ function BBMOD_Gizmo(_size=10.0)
 			GetInstancePositionZ(_instance));
 	};
 
-	static SetInstancePositionVec3 = function (_instance, _position) {
+	/// @func set_instance_position_vec3(_instance, _position)
+	/// @desc Changes an instance's position using a {@link BBMOD_Vec3}.
+	/// @param {Id.Instance} _instance The ID of the instance.
+	/// @param {Struct.BBMOD_Vec3} _position The new position of the instance.
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static set_instance_position_vec3 = function (_instance, _position) {
 		gml_pragma("forceinline");
 		SetInstancePositionX(_instance, _position.X);
 		SetInstancePositionY(_instance, _position.Y);
@@ -256,7 +368,11 @@ function BBMOD_Gizmo(_size=10.0)
 		return self;
 	};
 
-	static GetInstanceRotationVec3 = function (_instance) {
+	/// @func get_instance_rotation_vec3(_instance)
+	/// @desc Retrieves an instance's rotation as {@link BBMOD_Vec3}.
+	/// @param {Id.Instance} _instance The ID of the instance.
+	/// @return {Struct.BBMOD_Vec3} The instance's rotation in euler angles.
+	static get_instance_rotation_vec3 = function (_instance) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
 			GetInstanceRotationX(_instance),
@@ -264,7 +380,13 @@ function BBMOD_Gizmo(_size=10.0)
 			GetInstanceRotationZ(_instance));
 	};
 
-	static SetInstanceRotationVec3 = function (_instance, _rotation) {
+	/// @func set_instance_rotation_vec3(_instance, _rotation)
+	/// @desc Changes an instance's rotation using a {@link BBMOD_Vec3}.
+	/// @param {Id.Instance} _instance The ID of the instance.
+	/// @param {Struct.BBMOD_Vec3} _rotation The new rotation of the instance
+	/// in euler angles.
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static set_instance_rotation_vec3 = function (_instance, _rotation) {
 		gml_pragma("forceinline");
 		SetInstanceRotationX(_instance, _rotation.X);
 		SetInstanceRotationY(_instance, _rotation.Y);
@@ -272,7 +394,11 @@ function BBMOD_Gizmo(_size=10.0)
 		return self;
 	};
 
-	static GetInstanceScaleVec3 = function (_instance) {
+	/// @func get_instance_scale_vec3(_instance)
+	/// @desc Retrieves an instance's scale as {@link BBMOD_Vec3}.
+	/// @param {Id.Instance} _instance The ID of the instance.
+	/// @return {Struct.BBMOD_Vec3} The instance's scale.
+	static get_instance_scale_vec3 = function (_instance) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
 			GetInstanceScaleX(_instance),
@@ -280,7 +406,12 @@ function BBMOD_Gizmo(_size=10.0)
 			GetInstanceScaleZ(_instance));
 	};
 
-	static SetInstanceScaleVec3 = function (_instance, _scale) {
+	/// @func set_instance_scale_vec3(_instance, _scale)
+	/// @desc Changes an instance's scale using a {@link BBMOD_Vec3}.
+	/// @param {Id.Instance} _instance The ID of the instance.
+	/// @param {Struct.BBMOD_Vec3} _rotation The new scale of the instance.
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static set_instance_scale_vec3 = function (_instance, _scale) {
 		gml_pragma("forceinline");
 		SetInstanceScaleX(_instance, _scale.X);
 		SetInstanceScaleY(_instance, _scale.Y);
@@ -391,17 +522,34 @@ function BBMOD_Gizmo(_size=10.0)
 		return _origin.Add(_direction.Scale(_t));
 	};
 
-	ScaleBy = new BBMOD_Vec3(0.0);
-	RotateBy = new BBMOD_Vec3(0.0);
-
 	/// @func update(_deltaTime)
 	/// @desc Updates the gizmo. Should be called every frame.
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	/// @note This requires you to use a {@link BBMOD_Camera} and it will not
+	/// do anything if its [apply](./BBMOD_Camera.apply.html) method has not been
+	/// called yet!
 	static update = function (_deltaTime) {
+		if (!global.__bbmodCameraCurrent)
+		{
+			return self;
+		}
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Not editing or finished editing
+		//
 		if (!IsEditing || !mouse_check_button(ButtonDrag))
 		{
+			if (keyboard_check_pressed(KeyNextEditType))
+			{
+				if (++EditType >= BBMOD_EEditType.SIZE)
+				{
+					EditType = 0;
+				}
+			}
+
 			if (keyboard_check_pressed(KeyNextEditSpace))
 			{
 				if (++EditSpace >= BBMOD_EEditSpace.SIZE)
@@ -410,6 +558,7 @@ function BBMOD_Gizmo(_size=10.0)
 				}
 			}
 
+			// Compute gizmo's new position
 			var _size = ds_list_size(Selected);
 			var _posX = 0.0;
 			var _posY = 0.0;
@@ -422,6 +571,7 @@ function BBMOD_Gizmo(_size=10.0)
 				if (!InstanceExists(_instance))
 				{
 					ds_list_delete(Selected, i);
+					ds_list_delete(Data, i);
 					--_size;
 					continue;
 				}
@@ -453,15 +603,17 @@ function BBMOD_Gizmo(_size=10.0)
 				}
 			}
 
-			// Store offsets
+			// Store instance data
 			for (var i = _size - 1; i >= 0; --i)
 			{
 				var _instance = Selected[| i];
-				Data[| i].Offset = GetInstancePositionVec3(_instance).Sub(Position);
-				Data[| i].Rotation = GetInstanceRotationVec3(_instance);
-				Data[| i].Scale = GetInstanceScaleVec3(_instance);
+				var _data = Data[| i];
+				_data.Offset = get_instance_position_vec3(_instance).Sub(Position);
+				_data.Rotation = get_instance_rotation_vec3(_instance);
+				_data.Scale = get_instance_scale_vec3(_instance);
 			}
 
+			// Clear properties used when editing
 			IsEditing = false;
 			MouseOffset = undefined;
 			MouseLockAt = undefined;
@@ -477,6 +629,10 @@ function BBMOD_Gizmo(_size=10.0)
 			return self;
 		}
 
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Editing
+		//
 		var _mouseX = window_mouse_get_x();
 		var _mouseY = window_mouse_get_y();
 
@@ -490,8 +646,9 @@ function BBMOD_Gizmo(_size=10.0)
 		var _forward = _quaternion.Rotate(BBMOD_VEC3_FORWARD);
 		var _right = _quaternion.Rotate(BBMOD_VEC3_RIGHT);
 		var _up = _quaternion.Rotate(BBMOD_VEC3_UP);
-		var _move = new BBMOD_Vec3();
 
+		////////////////////////////////////////////////////////////////////////
+		// Handle editing
 		switch (EditType)
 		{
 		case BBMOD_EEditType.Position:
@@ -516,17 +673,17 @@ function BBMOD_Gizmo(_size=10.0)
 
 			if (EditAxis & BBMOD_EEditAxis.X)
 			{
-				_move = _move.Add(_diff.Mul(_forward.Abs()));
+				Position = Position.Add(_diff.Mul(_forward.Abs()));
 			}
 
 			if (EditAxis & BBMOD_EEditAxis.Y)
 			{
-				_move = _move.Add(_diff.Mul(_right.Abs()));
+				Position = Position.Add(_diff.Mul(_right.Abs()));
 			}
 
 			if (EditAxis & BBMOD_EEditAxis.Z)
 			{
-				_move = _move.Add(_diff.Mul(_up.Abs()));
+				Position = Position.Add(_diff.Mul(_up.Abs()));
 			}
 			break;
 
@@ -621,13 +778,21 @@ function BBMOD_Gizmo(_size=10.0)
 			break;
 		}
 
-		var _r = new BBMOD_Matrix([
+		////////////////////////////////////////////////////////////////////////
+		// Apply to selected instances
+		var _matRot = [
 			_forward.X, _forward.Y, _forward.Z, 0.0,
 			_right.X,   _right.Y,   _right.Z,   0.0,
 			_up.X,      _up.Y,      _up.Z,      0.0,
 			0.0,        0.0,        0.0,        1.0,
-		]);
-		var _rT = _r.Inverse();
+		];
+
+		var _matRotInverse = [
+			_forward.X, _right.X, _up.X, 0.0,
+			_forward.Y, _right.Y, _up.Y, 0.0,
+			_forward.Z, _right.Z, _up.Z, 0.0,
+			0.0,        0.0,      0.0,   1.0,
+		];
 
 		var _size = ds_list_size(Selected);
 
@@ -638,14 +803,17 @@ function BBMOD_Gizmo(_size=10.0)
 			if (!InstanceExists(_instance))
 			{
 				ds_list_delete(Selected, i);
+				ds_list_delete(Data, i);
 				--_size;
 				continue;
 			}
 
-			var _positionOffset = Data[| i].Offset;
-			var _rotationStored = Data[| i].Rotation;
-			var _scaleStored = Data[| i].Scale;
+			var _data = Data[| i];
+			var _positionOffset = _data.Offset;
+			var _rotationStored = _data.Rotation;
+			var _scaleStored = _data.Scale;
 
+			// Get local basis
 			var _quaternionLocal = new BBMOD_Quaternion().FromEuler(
 				GetInstanceRotationX(_instance),
 				GetInstanceRotationY(_instance),
@@ -654,6 +822,7 @@ function BBMOD_Gizmo(_size=10.0)
 			var _rightLocal = _quaternionLocal.Rotate(BBMOD_VEC3_RIGHT);
 			var _upLocal = _quaternionLocal.Rotate(BBMOD_VEC3_UP);
 
+			// Apply rotation
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
 			if (RotateBy.X != 0.0)
 			{
@@ -678,6 +847,7 @@ function BBMOD_Gizmo(_size=10.0)
 			SetInstanceRotationY(_instance, _rotArray[1]);
 			SetInstanceRotationZ(_instance, _rotArray[2]);
 
+			// Apply scale
 			var _scaleNew = _scaleStored.Clone();
 			var _scaleOld = _scaleNew.Clone();
 
@@ -696,18 +866,23 @@ function BBMOD_Gizmo(_size=10.0)
 			_scaleNew.Y += ScaleBy.Z * abs(_up.Dot(_rightLocal));
 			_scaleNew.Z += ScaleBy.Z * abs(_up.Dot(_upLocal));
 
-			_positionOffset = _r.Transform(new BBMOD_Matrix()
-				.ScaleX((1.0 / _scaleOld.X) * (_scaleOld.X + ScaleBy.X))
-				.ScaleY((1.0 / _scaleOld.Y) * (_scaleOld.Y + ScaleBy.Y))
-				.ScaleZ((1.0 / _scaleOld.Z) * (_scaleOld.Z + ScaleBy.Z))
-				.Transform(_rT.Transform(_positionOffset)));
+			// Scale offset
+			var _vI = matrix_transform_vertex(_matRotInverse, _positionOffset.X, _positionOffset.Y, _positionOffset.Z);
+			var _vIRot = matrix_transform_vertex(
+				matrix_build(
+					0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+					(1.0 / max(_scaleOld.X, 0.0001)) * (_scaleOld.X + ScaleBy.X),
+					(1.0 / max(_scaleOld.Y, 0.0001)) * (_scaleOld.Y + ScaleBy.Y),
+					(1.0 / max(_scaleOld.Z, 0.0001)) * (_scaleOld.Z + ScaleBy.Z)),
+				_vI[0], _vI[1], _vI[2]);
+			var _v = matrix_transform_vertex(_matRot, _vIRot[0], _vIRot[1], _vIRot[2]);
 
-			SetInstanceScaleVec3(_instance, _scaleNew);
-
-			SetInstancePositionVec3(_instance, Position.Add(_positionOffset).Add(_move));
+			// Apply scale and position
+			set_instance_scale_vec3(_instance, _scaleNew);
+			SetInstancePositionX(_instance, Position.X + _v[0]);
+			SetInstancePositionY(_instance, Position.Y + _v[1]);
+			SetInstancePositionZ(_instance, Position.Z + _v[2]);
 		}
-
-		Position = Position.Add(_move);
 
 		return self;
 	};
