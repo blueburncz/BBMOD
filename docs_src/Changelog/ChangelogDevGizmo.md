@@ -11,6 +11,7 @@
 * Added new property `Rotation` to `BBMOD_Gizmo`.
 * Added new properties `InstanceExists`, `SetInstancePositionX`, `GetInstancePositionX`, `SetInstancePositionY`, `GetInstancePositionY`, `SetInstancePositionZ`, `GetInstancePositionZ`, `SetInstanceRotationX`, `GetInstanceRotationX`, `SetInstanceRotationY`, `GetInstanceRotationY`, `SetInstanceRotationZ`, `GetInstanceRotationZ`, `SetInstanceScaleX`, `GetInstanceScaleX`, `SetInstanceScaleY`, `GetInstanceScaleY`, `SetInstanceScaleZ` and `GetInstanceScaleZ` to `BBMOD_Gizmo`.
 * Added new methods `get_instance_position_vec3`, `set_instance_position_vec3`, `get_instance_rotation_vec3`, `set_instance_rotation_vec3`, `get_instance_scale_vec3` and `set_instance_scale_vec3` to `BBMOD_Gizmo`.
+* Added new method `update_position` to `BBMOD_Gizmo`.
 * Added new method `update` to `BBMOD_Gizmo`.
 * Added new property `ButtonDrag` to `BBMOD_Gizmo`.
 * Added new property `KeyNextEditType` to `BBMOD_Gizmo`.

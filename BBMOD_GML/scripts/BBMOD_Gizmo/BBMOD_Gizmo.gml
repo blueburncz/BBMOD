@@ -522,6 +522,57 @@ function BBMOD_Gizmo(_size=10.0)
 		return _origin.Add(_direction.Scale(_t));
 	};
 
+	/// @func update_position()
+	/// @desc Updates the gizmo's position, based on its selected instances.
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static update_position = function () {
+		var _size = ds_list_size(Selected);
+		var _posX = 0.0;
+		var _posY = 0.0;
+		var _posZ = 0.0;
+
+		for (var i = _size - 1; i >= 0; --i)
+		{
+			var _instance = Selected[| i];
+
+			if (!InstanceExists(_instance))
+			{
+				ds_list_delete(Selected, i);
+				ds_list_delete(Data, i);
+				--_size;
+				continue;
+			}
+
+			_posX += GetInstancePositionX(_instance);
+			_posY += GetInstancePositionY(_instance);
+			_posZ += GetInstancePositionZ(_instance);
+		}
+
+		if (_size > 0)
+		{
+			_posX /= _size;
+			_posY /= _size;
+			_posZ /= _size;
+
+			Position.Set(_posX, _posY, _posZ);
+
+			if (EditSpace == BBMOD_EEditSpace.Local)
+			{
+				var _lastSelected = Selected[| _size - 1];
+				Rotation.Set(
+					GetInstanceRotationX(_lastSelected),
+					GetInstanceRotationY(_lastSelected),
+					GetInstanceRotationZ(_lastSelected));
+			}
+			else
+			{
+				Rotation.Set(0.0, 0.0, 0.0);
+			}
+		}
+
+		return self;
+	};
+
 	/// @func update(_deltaTime)
 	/// @desc Updates the gizmo. Should be called every frame.
 	/// @param {Real} _deltaTime How much time has passed since the last frame

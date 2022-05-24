@@ -516,7 +516,7 @@ function BBMOD_Renderer()
 		if (_editMode)
 		{
 			_gizmoSize = Gizmo.Size;
-			Gizmo.Size *= Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+			Gizmo.Size = _gizmoSize * Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -573,7 +573,8 @@ function BBMOD_Renderer()
 				var _id = get_instance_id(_mouseX, _mouseY);
 				if (_id != 0)
 				{
-					Gizmo.toggle_select(_id);
+					Gizmo.toggle_select(_id).update_position();
+					Gizmo.Size = _gizmoSize * Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
 				}
 			}
 		}
