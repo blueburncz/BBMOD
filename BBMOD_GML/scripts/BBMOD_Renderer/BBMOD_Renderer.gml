@@ -202,7 +202,7 @@ function BBMOD_Renderer()
 	/// @return {Real} The width of the renderer on the screen.
 	static get_width = function () {
 		gml_pragma("forceinline");
-		return ((Width == undefined) ? window_get_width() : max(Width, 1));
+		return max((Width == undefined) ? window_get_width() : Width, 1);
 	};
 
 	/// @func get_height()
@@ -210,7 +210,7 @@ function BBMOD_Renderer()
 	/// @return {Real} The height of the renderer on the screen.
 	static get_height = function () {
 		gml_pragma("forceinline");
-		return ((Height == undefined) ? window_get_height() : max(Height, 1));
+		return max((Height == undefined) ? window_get_height() : Height, 1);
 	};
 
 	/// @func get_render_width()
@@ -219,7 +219,7 @@ function BBMOD_Renderer()
 	/// @return {Real} The width of the renderer after `RenderScale` is applied.
 	static get_render_width = function () {
 		gml_pragma("forceinline");
-		return (get_width() * RenderScale);
+		return max(get_width() * RenderScale, 1);
 	};
 
 	/// @func get_render_height()
@@ -228,7 +228,7 @@ function BBMOD_Renderer()
 	/// @return {Real} The height of the renderer after `RenderScale` is applied.
 	static get_render_height = function () {
 		gml_pragma("forceinline");
-		return (get_height() * RenderScale);
+		return max(get_height() * RenderScale, 1);
 	};
 
 	/// @func set_position(_x, _y)
@@ -296,21 +296,15 @@ function BBMOD_Renderer()
 			return false;
 		}
 
-		if (_pixel & $FFFFFF == $FFFFFF)
-		{
-			Gizmo.EditAxis = BBMOD_EEditAxis.All;
-			Gizmo.EditType = BBMOD_EEditType.Scale;
-			return true;
-		}
-
 		var _blue = (_pixel >> 16) & 255;
 		var _green = (_pixel >> 8) & 255;
 		var _red = _pixel & 255;
 		var _value = max(_red, _green, _blue);
 
-		Gizmo.EditAxis = ((_value == _red) ? BBMOD_EEditAxis.X
-			: ((_value == _green) ? BBMOD_EEditAxis.Y
-			: BBMOD_EEditAxis.Z));
+		Gizmo.EditAxis = 0
+			| (BBMOD_EEditAxis.X * (_red > 0))
+			| (BBMOD_EEditAxis.Y * (_green > 0))
+			| (BBMOD_EEditAxis.Z * (_blue > 0));
 
 		Gizmo.EditType = ((_value == 255) ? BBMOD_EEditType.Position
 			: ((_value == 128) ? BBMOD_EEditType.Rotation

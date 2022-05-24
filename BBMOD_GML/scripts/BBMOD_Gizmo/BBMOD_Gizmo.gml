@@ -57,32 +57,51 @@ function BBMOD_Gizmo(_size=10.0)
 		destroy: destroy,
 	};
 
-	/// @var {Struct.BBMOD_Model} The gizmo model.
+	/// @var {Array<Struct.BBMOD_Model>} The gizmo model.
 	/// @note Please note that this model is not loaded asynchronnously,
 	/// therefore it cannot be used on platforms that require asynchronnous
 	/// loading, like HTML5!
 	/// @readonly
+	/// @obsolete This has been replaced with {@link BBMOD_Gizmo.Models}.
 	static Model = undefined;
+
+	/// @var {Array<Struct.BBMOD_Model>} Gizmo models for individual edit modes.
+	/// @note Please note that these are not loaded asynchronnously, therefore
+	/// the gizmo cannot be used on platforms that require asynchronnous loading,
+	/// like HTML5!
+	/// @see BBMOD_EEditType
+	/// @readonly
+	static Models = undefined;
 
 	/// @var {Array<Struct.BBMOD_Material>} Materials used when mouse-picking
 	/// the gizmo.
 	static MaterialsSelect = undefined;
 
-	if (!Model)
+	if (Models == undefined)
 	{
 		var _shaderSelect = new BBMOD_BaseShader(BBMOD_ShGizmoSelect, BBMOD_VFORMAT_DEFAULT);
 		var _materialSelect = new BBMOD_BaseMaterial(_shaderSelect);
 		_materialSelect.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 1);
-		_materialSelect.Culling = cull_noculling;
 		MaterialsSelect = [_materialSelect];
 
 		var _shader = new BBMOD_BaseShader(BBMOD_ShGizmo, BBMOD_VFORMAT_DEFAULT);
 		var _material = new BBMOD_BaseMaterial(_shader);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 0);
-		_material.Culling = cull_noculling;
 
-		Model = new BBMOD_Model("Data/BBMOD/Models/Gizmo.bbmod")
-		Model.Materials[0] = _material;
+		var _modelMove = new BBMOD_Model("Data/BBMOD/Models/GizmoMove.bbmod")
+		_modelMove.Materials[0] = _material;
+
+		var _modelScale = new BBMOD_Model("Data/BBMOD/Models/GizmoScale.bbmod")
+		_modelScale.Materials[0] = _material;
+
+		var _modelRotate = new BBMOD_Model("Data/BBMOD/Models/GizmoRotate.bbmod")
+		_modelRotate.Materials[0] = _material;
+
+		Models = [
+			_modelMove,
+			_modelRotate,
+			_modelScale,
+		];
 	}
 
 	/// @var {Bool} Used to show/hide the gizmo. Default value is `true`, which
@@ -950,7 +969,7 @@ function BBMOD_Gizmo(_size=10.0)
 			.RotateEuler(Rotation)
 			.Translate(Position)
 			.ApplyWorld();
-		Model.submit(_materials);
+		Models[EditType].submit(_materials);
 		return self;
 	};
 
@@ -966,7 +985,7 @@ function BBMOD_Gizmo(_size=10.0)
 			.RotateEuler(Rotation)
 			.Translate(Position)
 			.ApplyWorld();
-		Model.render(_materials);
+		Models[EditType].render(_materials);
 		return self;
 	};
 

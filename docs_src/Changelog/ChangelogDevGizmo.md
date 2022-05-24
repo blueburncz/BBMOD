@@ -3,6 +3,8 @@
 ## GML API:
 ### Gizmo module:
 * Added new optional argument `_size` to `BBMOD_Gizmo`'s constructor.
+* Added new property `Models` to `BBMOD_Gizmo`.
+* Property `Model` of `BBMOD_Gizmo` is now obsolete.
 * Added new enum `BBMOD_EEditType`.
 * Added new property `EditType` to `BBMOD_Gizmo`.
 * Added new enum `BBMOD_EEditSpace`.
