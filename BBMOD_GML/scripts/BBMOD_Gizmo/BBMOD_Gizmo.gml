@@ -734,7 +734,7 @@ function BBMOD_Gizmo(_size=10.0)
 				: _up));
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent),
+				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent, global.__bbmodRendererCurrent),
 				PositionBackup,
 				_planeNormal);
 
@@ -767,7 +767,7 @@ function BBMOD_Gizmo(_size=10.0)
 				: _up));
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent),
+				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent, global.__bbmodRendererCurrent),
 				Position,
 				_planeNormal);
 
@@ -806,7 +806,7 @@ function BBMOD_Gizmo(_size=10.0)
 			var _planeNormal = (EditAxis == BBMOD_EEditAxis.Z) ? _forward : _up;
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent),
+				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent, global.__bbmodRendererCurrent),
 				Position,
 				_planeNormal);
 
