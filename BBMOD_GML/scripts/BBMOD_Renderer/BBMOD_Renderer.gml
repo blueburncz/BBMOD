@@ -504,6 +504,8 @@ function BBMOD_Renderer()
 		var _editMode = (EditMode && Gizmo);
 		var _mouseX = window_mouse_get_x();
 		var _mouseY = window_mouse_get_y();
+		var _mouseOver = (_mouseX >= X && _mouseX < X + get_width()
+			&& _mouseY >= Y && _mouseY < Y + get_height());
 		var _continueMousePick = true;
 		var _gizmoSize;
 
@@ -515,7 +517,7 @@ function BBMOD_Renderer()
 
 		////////////////////////////////////////////////////////////////////////
 		// Gizmo select
-		if (_editMode && mouse_check_button_pressed(Gizmo.ButtonDrag))
+		if (_editMode && _mouseOver && mouse_check_button_pressed(Gizmo.ButtonDrag))
 		{
 			SurSelect = bbmod_surface_check(SurSelect, _renderWidth, _renderHeight);
 			surface_set_target(SurSelect);
@@ -534,7 +536,8 @@ function BBMOD_Renderer()
 
 		////////////////////////////////////////////////////////////////////////
 		// Instance IDs
-		var _mousePickInstance = (_editMode && _continueMousePick && mouse_check_button_pressed(ButtonSelect));
+		var _mousePickInstance = (_editMode && _continueMousePick
+			&& _mouseOver && mouse_check_button_pressed(ButtonSelect));
 
 		if (_mousePickInstance || RenderInstanceIDs)
 		{
