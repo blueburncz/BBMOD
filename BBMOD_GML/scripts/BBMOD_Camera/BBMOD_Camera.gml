@@ -462,6 +462,27 @@ function BBMOD_Camera() constructor
 		return _screenPos;
 	};
 
+	/// @func screen_point_to_vec3(_vector[, _renderer])
+	/// @desc Unprojects a position on the screen into a direction in world-space.
+	/// @param {Struct.BBMOD_Vector2} _vector The position on the screen.
+	/// @param {Struct.BBMOD_Renderer/Undefined} [_renderer] A renderer.
+	/// @return {Struct.BBMOD_Vec3} The world-space direction.
+	static screen_point_to_vec3 = function (_vector, _renderer=undefined) {
+		var _forward = get_forward();
+		var _up = get_up();
+		var _right = get_right();
+		var _tFov = dtan(Fov * 0.5);
+		_up = _up.Scale(_tFov);
+		_right = _right.Scale(_tFov * AspectRatio);
+		var _screenWidth = _renderer ? _renderer.get_width() : window_get_width();
+		var _screenHeight = _renderer ? _renderer.get_height() : window_get_height();
+		var _screenX = _vector.X - (_renderer ? _renderer.X : 0);
+		var _screenY = _vector.Y - (_renderer ? _renderer.Y : 0);
+		var _ray = _forward.Add(_up.Scale(1.0 - 2.0 * (_screenY / _screenHeight))
+			.Add(_right.Scale(2.0 * (_screenX / _screenWidth) - 1.0)));
+		return _ray.Normalize();
+	};
+
 	/// @func apply()
 	/// @desc Applies the camera.
 	/// @return {Struct.BBMOD_Camera} Returns `self`.

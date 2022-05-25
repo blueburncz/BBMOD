@@ -507,29 +507,6 @@ function BBMOD_Gizmo(_size=10.0)
 		return self;
 	};
 
-	/// @func unproject_vec2(_vector, _camera[, _renderer])
-	/// @desc Unprojects a position on the screen into a direction in world-space.
-	/// @param {Struct.BBMOD_Vector2} _vector The position on the screen.
-	/// @param {Struct.BBMOD_Camera} _camera A camera.
-	/// @param {Struct.BBMOD_Renderer/Undefined} [_renderer] A renderer.
-	/// @return {Struct.BBMOD_Vec3} The world-space direction.
-	/// @private
-	static unproject_vec2 = function (_vector, _camera, _renderer=undefined) {
-		var _forward = _camera.get_forward();
-		var _up = _camera.get_up();
-		var _right = _camera.get_right();
-		var _tFov = dtan(_camera.Fov * 0.5);
-		_up = _up.Scale(_tFov);
-		_right = _right.Scale(_tFov * _camera.AspectRatio);
-		var _screenWidth = _renderer ? _renderer.get_width() : window_get_width();
-		var _screenHeight = _renderer ? _renderer.get_height() : window_get_height();
-		var _screenX = _vector.X - (_renderer ? _renderer.X : 0);
-		var _screenY = _vector.Y - (_renderer ? _renderer.Y : 0);
-		var _ray = _forward.Add(_up.Scale(1.0 - 2.0 * (_screenY / _screenHeight))
-			.Add(_right.Scale(2.0 * (_screenX / _screenWidth) - 1.0)));
-		return _ray.Normalize();
-	};
-
 	/// @func intersect_ray_plane(_origin, _direction, _plane, _normal)
 	/// @desc Intersects a ray with a plane.
 	/// @param {Struct.BBMOD_Vec3} _origin The ray origin.
@@ -734,7 +711,7 @@ function BBMOD_Gizmo(_size=10.0)
 				: _up));
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent, global.__bbmodRendererCurrent),
+				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 				PositionBackup,
 				_planeNormal);
 
@@ -767,7 +744,7 @@ function BBMOD_Gizmo(_size=10.0)
 				: _up));
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent, global.__bbmodRendererCurrent),
+				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 				Position,
 				_planeNormal);
 
@@ -806,7 +783,7 @@ function BBMOD_Gizmo(_size=10.0)
 			var _planeNormal = (EditAxis == BBMOD_EEditAxis.Z) ? _forward : _up;
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				unproject_vec2(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodCameraCurrent, global.__bbmodRendererCurrent),
+				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 				Position,
 				_planeNormal);
 
@@ -898,22 +875,27 @@ function BBMOD_Gizmo(_size=10.0)
 			var _upLocal = _quaternionLocal.Rotate(BBMOD_VEC3_UP);
 
 			// Apply rotation
+			// TODO: Add configurable angle increments
+			var _rotateByX = RotateBy.X; //floor(RotateBy.X / 45.0) * 45.0;
+			var _rotateByY = RotateBy.Y; //floor(RotateBy.Y / 45.0) * 45.0;
+			var _rotateByZ = RotateBy.Z; //floor(RotateBy.Z / 45.0) * 45.0;
+
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
-			if (RotateBy.X != 0.0)
+			if (_rotateByX != 0.0)
 			{
-				var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forward, RotateBy.X);
+				var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forward, _rotateByX);
 				_positionOffset = _quaternionX.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionX);
 			}
-			if (RotateBy.Y != 0.0)
+			if (_rotateByY != 0.0)
 			{
-				var _quaternionY = new BBMOD_Quaternion().FromAxisAngle(_right, RotateBy.Y);
+				var _quaternionY = new BBMOD_Quaternion().FromAxisAngle(_right, _rotateByY);
 				_positionOffset = _quaternionY.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionY);
 			}
-			if (RotateBy.Z != 0.0)
+			if (_rotateByZ != 0.0)
 			{
-				var _quaternionZ = new BBMOD_Quaternion().FromAxisAngle(_up, RotateBy.Z);
+				var _quaternionZ = new BBMOD_Quaternion().FromAxisAngle(_up, _rotateByZ);
 				_positionOffset = _quaternionZ.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionZ);
 			}
