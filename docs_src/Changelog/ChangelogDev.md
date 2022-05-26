@@ -1,0 +1,12 @@
+# Changelog
+
+## GML API:
+### Camera module:
+* Added `screen_point_to_vec3` to `BBMOD_Camera`, using which you can convert a position on the screen into a world-space direction.
+
+### Gizmo module:
+* Fixed dragging gizmo when renderer isn't the same size as the window.
+
+### Rendering module:
+#### Renderer submodule:
+* Fixed unselecting instances when clicking outside of the renderer.
