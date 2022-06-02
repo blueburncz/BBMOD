@@ -7,6 +7,10 @@
 ### Gizmo module:
 * Fixed dragging gizmo when renderer isn't the same size as the window.
 
+### Importer module:
+* Added new property `ConvertYToZUp` to `BBMOD_OBJImporter`, using which you can switch Y and Z axes of imported models.
+* Added new property `InvertWinding` to `BBMOD_OBJImporter`, using which you can invert vertex winding order of imported models.
+
 ### Rendering module:
 #### Renderer submodule:
 * Fixed unselecting instances when clicking outside of the renderer.
