@@ -578,8 +578,10 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			{
 				var _uSplatmap = BBMOD_SHADER_CURRENT.get_sampler_index("bbmod_Splatmap");
 				var _uSplatmapIndex = BBMOD_SHADER_CURRENT.get_uniform("bbmod_SplatmapIndex");
+				var _uTextureScale = BBMOD_SHADER_CURRENT.get_uniform("bbmod_TextureScale");
 				texture_set_stage(_uSplatmap, Splatmap);
 				shader_set_uniform_i(_uSplatmapIndex, i - 1);
+				shader_set_uniform_f(_uTextureScale, TextureRepeat.X, TextureRepeat.Y);
 				vertex_submit(VertexBuffer, pr_trianglelist, _mat.BaseOpacity);
 			}
 			++i;

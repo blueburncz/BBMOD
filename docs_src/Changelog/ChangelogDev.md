@@ -10,3 +10,6 @@
 ### Rendering module:
 #### Renderer submodule:
 * Fixed unselecting instances when clicking outside of the renderer.
+
+### Terrain module:
+* Fixed passing property `TextureRepeat` to shaders when using `BBMOD_Terrain.submit`.
