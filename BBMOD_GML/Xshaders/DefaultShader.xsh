@@ -42,7 +42,8 @@ void DefaultShader(Material material, float depth)
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
-		directionalLightColor * (1.0 - shadow),
+		directionalLightColor,
+		shadow,
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
 
 	// Point lights

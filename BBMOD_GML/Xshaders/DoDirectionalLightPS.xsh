@@ -9,6 +9,7 @@
 void DoDirectionalLightPS(
 	vec3 direction,
 	vec3 color,
+	float shadow,
 	vec3 vertex,
 	vec3 N,
 	vec3 V,
@@ -19,11 +20,13 @@ void DoDirectionalLightPS(
 {
 	vec3 L = normalize(-direction);
 	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL;
+#if defined(X_PBR)
+	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
+#endif
+	color *= (1.0 - shadow) * NdotL;
 	diffuse += color;
 #if defined(X_PBR)
 	specular += color * SpecularGGX(m, N, V, L);
-	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 #else
 	specular += color * SpecularBlinnPhong(m, N, V, L);
 #endif

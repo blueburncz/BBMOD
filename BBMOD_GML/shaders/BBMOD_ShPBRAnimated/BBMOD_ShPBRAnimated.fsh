@@ -384,6 +384,7 @@ vec3 SpecularGGX(Material m, vec3 N, vec3 V, vec3 L)
 void DoDirectionalLightPS(
 	vec3 direction,
 	vec3 color,
+	float shadow,
 	vec3 vertex,
 	vec3 N,
 	vec3 V,
@@ -394,10 +395,10 @@ void DoDirectionalLightPS(
 {
 	vec3 L = normalize(-direction);
 	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL;
+	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
+	color *= (1.0 - shadow) * NdotL;
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
-	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 }
 // include("DoDirectionalLightPS.xsh")
 #pragma include("DoPointLightPS.xsh")
@@ -419,10 +420,10 @@ void DoPointLightPS(
 	L = normalize(L);
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
 	float NdotL = max(dot(N, L), 0.0);
+	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 	color *= NdotL * att;
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
-	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 }
 // include("DoPointLightPS.xsh")
 #pragma include("Exposure.xsh")
@@ -643,16 +644,16 @@ void PBRShader(Material material, float depth)
 
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);
 	// IBL
-	vec3 iblColor = xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
-	lightDiffuse += iblColor;
+	lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
 	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
-	lightSubsurface += xCheapSubsurface(material.Subsurface, V, N, -reflect(V, N), iblColor);
+	// TODO: Subsurface scattering for IBL
 
 	// Directional light
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
-		directionalLightColor * (1.0 - shadow),
+		directionalLightColor,
+		shadow,
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
 
 	// Point lights

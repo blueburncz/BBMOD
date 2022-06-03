@@ -23,11 +23,13 @@ void DoPointLightPS(
 	L = normalize(L);
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
 	float NdotL = max(dot(N, L), 0.0);
+#if defined(X_PBR)
+	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
+#endif
 	color *= NdotL * att;
 	diffuse += color;
 #if defined(X_PBR)
 	specular += color * SpecularGGX(m, N, V, L);
-	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 #else
 	specular += color * SpecularBlinnPhong(m, N, V, L);
 #endif

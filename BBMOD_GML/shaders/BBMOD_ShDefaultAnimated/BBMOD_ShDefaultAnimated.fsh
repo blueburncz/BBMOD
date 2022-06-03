@@ -256,6 +256,7 @@ vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
 void DoDirectionalLightPS(
 	vec3 direction,
 	vec3 color,
+	float shadow,
 	vec3 vertex,
 	vec3 N,
 	vec3 V,
@@ -266,7 +267,7 @@ void DoDirectionalLightPS(
 {
 	vec3 L = normalize(-direction);
 	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL;
+	color *= (1.0 - shadow) * NdotL;
 	diffuse += color;
 	specular += color * SpecularBlinnPhong(m, N, V, L);
 }
@@ -520,7 +521,8 @@ void DefaultShader(Material material, float depth)
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
-		directionalLightColor * (1.0 - shadow),
+		directionalLightColor,
+		shadow,
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
 
 	// Point lights
