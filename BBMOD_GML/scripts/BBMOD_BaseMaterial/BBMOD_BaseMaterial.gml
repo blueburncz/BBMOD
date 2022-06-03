@@ -27,6 +27,12 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// Using this you can control texture's size within texture page.
 	TextureScale = new BBMOD_Vec2(1.0);
 
+	/// @var {Real} Controls range over which the mesh smoothly transitions into
+	/// shadow. This can be useful for example for billboarded particles, where
+	/// harsh transition does not look good. Default value is 0, which means no
+	/// smooth transition.
+	ShadowmapBias = 0.0;
+
 	/// @func copy(_dest)
 	/// @desc Copies properties of this material into another material.
 	/// @param {Struct.BBMOD_BaseMaterial} _dest The destination material.
@@ -36,6 +42,7 @@ function BBMOD_BaseMaterial(_shader=undefined)
 		BaseOpacityMultiplier.Copy(_dest.BaseOpacityMultiplier);
 		_dest.TextureOffset = TextureOffset.Clone();
 		_dest.TextureScale = TextureScale.Clone();
+		_dest.ShadowmapBias = ShadowmapBias;
 		return self;
 	};
 

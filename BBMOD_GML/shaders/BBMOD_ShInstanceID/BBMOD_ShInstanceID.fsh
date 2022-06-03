@@ -25,6 +25,7 @@ varying mat3 v_mTBN;
 varying float v_fDepth;
 
 varying vec3 v_vPosShadowmap;
+
 // include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +58,14 @@ uniform vec3 bbmod_CamPos;
 uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
+
+////////////////////////////////////////////////////////////////////////////////
+// Image based lighting
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Fog

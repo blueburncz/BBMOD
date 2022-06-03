@@ -7,7 +7,7 @@ speedRun = 1.75;
 pickupTarget = undefined;
 
 // Number of ammo that the player has.
-ammo = 100;
+ammo = 0;
 
 // If true then the player is aiming.
 aiming = false;
