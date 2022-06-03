@@ -52,12 +52,6 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @readonly
 	IsLoaded = false;
 
-	/// @var {Real} The version of the animation file.
-	/// @obsolete This property is now obsolete. Please use
-	/// {@link BBMOD_Animation.VersionMajor} and {@link BBMOD_Animation.VersionMinor}
-	/// instead.
-	Version = BBMOD_VERSION_MAJOR;
-
 	/// @var {Real} The major version of the animation file.
 	VersionMajor = BBMOD_VERSION_MAJOR;
 

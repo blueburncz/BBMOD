@@ -34,12 +34,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		destroy: destroy,
 	};
 
-	/// @var {Real} The version of the model file.
-	/// @obsolete This property is now obsolete. Please use
-	/// {@link BBMOD_Model.VersionMajor} and {@link BBMOD_Model.VersionMinor}
-	/// instead.
-	Version = BBMOD_VERSION_MAJOR;
-
 	/// @var {Real} The major version of the model file.
 	VersionMajor = BBMOD_VERSION_MAJOR;
 

@@ -1,6 +1,10 @@
-# Changelog
+# Changelog 3.5.0
+This release mainly adds support for image-based lights to the default shaders and support for ambient, directional light and shadows, point lights and fog to PBR shaders.
 
 ## GML API:
+### General:
+* **Removed all API previously marked as deprecated or obsolete!** Please make sure you are not using any of it before upgrading your project to this version.
+
 ### Core module:
 * Moved method `set_ibl` from `BBMOD_PBRShader` to `BBMOD_BaseShader`.
 * Moved property `MaxPointLights` and methods `set_ambient_light`, `set_directional_light`, `set_point_lights` and `set_fog` from `BBMOD_DefaultShader` to `BBMOD_BaseShader`.

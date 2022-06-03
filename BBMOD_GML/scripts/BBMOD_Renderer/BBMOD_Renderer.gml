@@ -278,7 +278,7 @@ function BBMOD_Renderer()
 	/// @param {Real} _screenY The Y position on the screen.
 	/// @return {Bool} Returns `true` if the gizmo was selected.
 	/// @note {@link BBMOD_Renderer.Gizmo} must be defined.
-	/// @obsolete
+	/// @private
 	static select_gizmo = function (_screenX, _screenY) {
 		if (!Gizmo || !Gizmo.Visible || !surface_exists(SurSelect))
 		{
