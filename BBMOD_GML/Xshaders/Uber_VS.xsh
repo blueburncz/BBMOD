@@ -57,13 +57,7 @@ uniform vec4 bbmod_Bones[2 * MAX_BONES];
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 #endif
 
-#if !defined(X_UNLIT)
-#if !defined(X_PBR) && !defined(X_2D)
-// [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-#endif
-
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
+#if !defined(X_UNLIT) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
 // 1.0 to enable shadows
 uniform float bbmod_ShadowmapEnableVS;
 // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
@@ -73,7 +67,6 @@ uniform float bbmod_ShadowmapAreaVS;
 // Offsets vertex position by its normal scaled by this value
 uniform float bbmod_ShadowmapNormalOffset;
 #endif
-#endif // !X_UNLIT
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -94,14 +87,6 @@ uniform float bbmod_ShadowmapNormalOffset;
 #if defined(X_2D) || defined(X_PARTICLES)
 #pragma include("Color.xsh")
 #pragma include("RGBM.xsh")
-#endif
-
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
-#if !defined(X_UNLIT)
-#pragma include("Color.xsh")
-#pragma include("RGBM.xsh")
-#pragma include("DoPointLightVS.xsh")
-#endif //!X_UNLIT
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -164,32 +149,23 @@ void main()
 	vec3 tangent = in_TangentW.xyz;
 	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
 #endif
-	v_mTBN = mat3(gm_Matrices[MATRIX_WORLD]) * mat3(tangent, bitangent, normal);
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
+	v_mTBN = mat3(tangent, bitangent, normal);
 #endif
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_PBR) && !defined(X_2D)
 #if defined(X_TERRAIN)
 	v_vSplatmapCoord = in_TextureCoord0;
 #endif
 
-#if !defined(X_UNLIT)
-	////////////////////////////////////////////////////////////////////////////
-	// Point lights
-	vec3 N = normalize(v_mTBN * vec3(0.0, 0.0, 1.0));
-
-	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
-	{
-		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
-		DoPointLightVS(positionRange.xyz, positionRange.w, color, v_vVertex, N, v_vLight);
-	}
-
+#if !defined(X_UNLIT) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
 	////////////////////////////////////////////////////////////////////////////
 	// Vertex position in shadowmap
 	if (bbmod_ShadowmapEnableVS == 1.0)
 	{
 		v_vPosShadowmap = (bbmod_ShadowmapMatrix
-			* vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
+			* vec4(v_vVertex + normal * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
 		v_vPosShadowmap.xy = v_vPosShadowmap.xy * 0.5 + 0.5;
 	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
 		v_vPosShadowmap.y = 1.0 - v_vPosShadowmap.y;
@@ -197,5 +173,4 @@ void main()
 		v_vPosShadowmap.z /= bbmod_ShadowmapAreaVS;
 	}
 #endif // !X_UNLIT
-#endif
 }

@@ -76,7 +76,6 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-#if defined(X_PBR)
 ////////////////////////////////////////////////////////////////////////////////
 // Image based lighting
 
@@ -84,9 +83,8 @@ uniform float bbmod_Exposure;
 uniform sampler2D bbmod_IBL;
 // Texel size of one octahedron
 uniform vec2 bbmod_IBLTexel;
-#endif
 
-#if !defined(X_PBR) && !defined(X_OUTPUT_DEPTH)
+#if !defined(X_OUTPUT_DEPTH)
 ////////////////////////////////////////////////////////////////////////////////
 // Fog
 
@@ -115,13 +113,11 @@ uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
-#if defined(X_2D)
 ////////////////////////////////////////////////////////////////////////////////
 // Point lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -231,7 +227,7 @@ void main()
 	DepthShader(v_fDepth);
 #else // X_OUTPUT_DEPTH
 #if defined(X_PBR)
-	PBRShader(material);
+	PBRShader(material, v_fDepth);
 #else // X_PBR
 #if defined(X_UNLIT)
 	UnlitShader(material, v_fDepth);

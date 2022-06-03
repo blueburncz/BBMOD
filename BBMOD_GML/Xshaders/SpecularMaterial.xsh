@@ -52,6 +52,9 @@ Material UnpackMaterial(
 	m.Specular = xGammaToLinear(specularColor.rgb);
 #endif
 
+	// Roughness
+	m.Roughness = 1.0 - m.Smoothness;
+
 	// Specular power
 	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 

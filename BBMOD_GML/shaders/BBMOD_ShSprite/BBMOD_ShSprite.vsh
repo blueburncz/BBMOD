@@ -44,7 +44,6 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-varying vec3 v_vLight;
 // include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +124,10 @@ void main()
 
 	vec3 tangent = vec3(1.0, 0.0, 0.0);
 	vec3 bitangent = vec3(0.0, 1.0, 0.0);
-	v_mTBN = mat3(gm_Matrices[MATRIX_WORLD]) * mat3(tangent, bitangent, normal);
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
+	v_mTBN = mat3(tangent, bitangent, normal);
 
 }
 // include("Uber_VS.xsh")

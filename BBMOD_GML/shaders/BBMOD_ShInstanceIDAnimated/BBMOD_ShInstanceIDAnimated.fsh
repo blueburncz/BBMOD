@@ -24,8 +24,8 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying float v_fDepth;
 
-varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
+
 // include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +60,14 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Image based lighting
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
+
+////////////////////////////////////////////////////////////////////////////////
 // Fog
 
 // The color of the fog
@@ -86,6 +94,12 @@ uniform vec4 bbmod_LightAmbientDown;
 uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
+
+////////////////////////////////////////////////////////////////////////////////
+// Point lights
+
+// [(x, y, z, range), (r, g, b, m), ...]
+uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -211,6 +225,9 @@ Material UnpackMaterial(
 	// Specular color
 	vec4 specularColor = texture2D(texSpecularColor, uv);
 	m.Specular = xGammaToLinear(specularColor.rgb);
+
+	// Roughness
+	m.Roughness = 1.0 - m.Smoothness;
 
 	// Specular power
 	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));

@@ -54,6 +54,14 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Image based lighting
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
+
+////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
@@ -160,6 +168,9 @@ Material UnpackMaterial(
 	// Specular color
 	vec4 specularColor = texture2D(texSpecularColor, uv);
 	m.Specular = xGammaToLinear(specularColor.rgb);
+
+	// Roughness
+	m.Roughness = 1.0 - m.Smoothness;
 
 	// Specular power
 	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
