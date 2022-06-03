@@ -1,6 +1,11 @@
 # Changelog
 
 ## GML API:
+### Core module:
+* Moved method `set_ibl` from `BBMOD_PBRShader` to `BBMOD_BaseShader`.
+* Moved property `MaxPointLights` and methods `set_ambient_light`, `set_directional_light`, `set_point_lights` and `set_fog` from `BBMOD_DefaultShader` to `BBMOD_BaseShader`.
+* Moved property `ShadowmapBias` from `BBMOD_DefaultMaterial` to `BBMOD_BaseMaterial`.
+
 ### Camera module:
 * Added `screen_point_to_vec3` to `BBMOD_Camera`, using which you can convert a position on the screen into a world-space direction.
 
