@@ -280,11 +280,6 @@ function BBMOD_Renderer()
 	/// @note {@link BBMOD_Renderer.Gizmo} must be defined.
 	/// @private
 	static select_gizmo = function (_screenX, _screenY) {
-		if (!Gizmo || !Gizmo.Visible || !surface_exists(SurSelect))
-		{
-			return false;
-		}
-
 		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
 		_screenY = clamp(_screenY - Y, 0, get_height()) * RenderScale;
 
