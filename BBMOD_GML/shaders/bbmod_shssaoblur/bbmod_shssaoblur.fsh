@@ -1,7 +1,10 @@
+// Size of the SSAO noise texture.
+#define BBMOD_SSAO_NOISE_TEXTURE_SIZE 4
+
 varying vec2 v_vTexCoord;
 
 uniform sampler2D u_texDepth;
-uniform vec2 u_vTexel; // (1/screenWidth,0) for horizontal blur, (0,1/screenHeight) for vertical
+uniform vec2 u_vTexel; // (1 / screenWidth, 0) for horizontal blur, (0 , 1 / screenHeight) for vertical
 uniform float u_fClipFar;
 
 #pragma include("DepthEncoding.xsh", "glsl")
@@ -35,33 +38,17 @@ float xDecodeDepth(vec3 c)
 
 void main()
 {
+	gl_FragColor = vec4(0.0);
 	float depth = xDecodeDepth(texture2D(u_texDepth, v_vTexCoord).rgb) * u_fClipFar;
-	float sampleDepth;
-	vec4 color = texture2D(gm_BaseTexture, v_vTexCoord) * 0.2270270270;
-	float weightSum = 0.2270270270;
-	float weight;
-	vec2 offset1 = u_vTexel * 1.3846153846;
-	vec2 offset2 = u_vTexel * 3.2307692308;
-
-	sampleDepth = xDecodeDepth(texture2D(u_texDepth, v_vTexCoord + offset1).rgb) * u_fClipFar;
-	weight = 0.3162162162 * step(depth, sampleDepth);
-	color += texture2D(gm_BaseTexture, v_vTexCoord + offset1) * weight;
-	weightSum += weight;
-
-	sampleDepth = xDecodeDepth(texture2D(u_texDepth, v_vTexCoord - offset1).rgb) * u_fClipFar;
-	weight = 0.3162162162 * step(depth, sampleDepth);
-	color += texture2D(gm_BaseTexture, v_vTexCoord - offset1) * weight;
-	weightSum += weight;
-
-	sampleDepth = xDecodeDepth(texture2D(u_texDepth, v_vTexCoord + offset2).rgb) * u_fClipFar;
-	weight = 0.0702702703 * step(depth, sampleDepth);
-	color += texture2D(gm_BaseTexture, v_vTexCoord + offset2) * weight;
-	weightSum += weight;
-
-	sampleDepth = xDecodeDepth(texture2D(u_texDepth, v_vTexCoord - offset2).rgb) * u_fClipFar;
-	weight = 0.0702702703 * step(depth, sampleDepth);
-	color += texture2D(gm_BaseTexture, v_vTexCoord - offset2) * weight;
-	weightSum += weight;
-
-	gl_FragColor = color / weightSum;
+	float weightSum = 0.001;
+	for (float i = 0.0; i < float(BBMOD_SSAO_NOISE_TEXTURE_SIZE); i += 1.0)
+	{
+		vec2 uv = v_vTexCoord + u_vTexel * i;
+		float sampleDepth = xDecodeDepth(texture2D(u_texDepth, uv).rgb) * u_fClipFar;
+		float weight = 1.0 - clamp(abs(depth - sampleDepth) / 2.0, 0.0, 1.0); // TODO: Configurable blur depth range?
+		gl_FragColor.rgb += texture2D(gm_BaseTexture, uv).rgb * weight;
+		weightSum += weight;
+	}
+	gl_FragColor.rgb /= weightSum;
+	gl_FragColor.a = 1.0;
 }

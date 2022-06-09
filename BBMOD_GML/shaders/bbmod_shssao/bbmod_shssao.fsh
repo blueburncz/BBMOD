@@ -1,7 +1,7 @@
 // Reference: https://de45xmedrsdbp.cloudfront.net/Resources/files/The_Technology_Behind_the_Elemental_Demo_16x9-1248544805.pdf
 // Reference: http://frederikaalund.com/wp-content/uploads/2013/05/A-Comparative-Study-of-Screen-Space-Ambient-Occlusion-Methods.pdf
 
-// Must be the same values as in the xSsaoInit script!
+// The size of the SSAO kernel.
 #define BBMOD_SSAO_KERNEL_SIZE 8
 
 varying vec2 v_vTexCoord;
@@ -121,64 +121,65 @@ float AcosApprox(float x)
 	return (-0.69813170079773212 * x * x - 0.87266462599716477) * x + 1.5707963267948966;
 }
 
-float GetSampleAngle(vec3 origin, vec2 uv, inout float pairWeight)
-{
-	float sampleDepth = xDecodeDepth(texture2D(gm_BaseTexture, uv).rgb) * u_fClipFar;
-	vec3 samplePos = xProject(u_vTanAspect, uv, sampleDepth);
-	vec3 s = normalize(samplePos - origin);
-	vec3 v = normalize(-origin);
-	float cosAngle = dot(v, s);
-	float depthDifference = (origin.z - samplePos.z);
-	if (depthDifference >= u_fDepthRange)
-	{
-		pairWeight -= 0.5;
-		cosAngle = max(dot(v, -s), 0.0);
-	}
-	else if (abs(depthDifference) <= 0.01)
-	{
-		cosAngle = 0.0;
-	}
-	return max(AcosApprox(cosAngle - u_fAngleBias), 0.0);
-}
-
 void main()
 {
 	// Origin
-	float depth = xDecodeDepth(texture2D(gm_BaseTexture, v_vTexCoord).rgb);
+	float depth = xDecodeDepth(texture2D(gm_BaseTexture, v_vTexCoord).rgb) * u_fClipFar;
 
-	if (depth == 0.0 || depth == 1.0)
+	if (depth == 0.0 || depth == u_fClipFar)
 	{
 		gl_FragColor = vec4(1.0);
 		return;
 	}
 
-	depth *= u_fClipFar;
 	vec3 origin = xProject(u_vTanAspect, v_vTexCoord, depth);
-
 	vec2 noise = texture2D(u_texNoise, v_vTexCoord * u_vNoiseScale).xy * 2.0 - 1.0;
-
 	mat2 rot = mat2(
 		noise.x, -noise.y,
 		noise.y, noise.x
 	);
 
 	// Occlusion
-	float weightSum = 0.0001;
 	float occlusion = 0.0;
 
 	for (int i = 0; i < BBMOD_SSAO_KERNEL_SIZE; ++i)
 	{
-		float pairWeight = 1.0;
 		vec2 dir = (rot * u_vSampleKernel[i].xy) * u_fRadius;
-		vec2 sampleLeftUV = v_vTexCoord + dir * u_vTexel;
-		vec2 sampleRightUV = v_vTexCoord - dir * u_vTexel;
-		float angle = GetSampleAngle(origin, sampleLeftUV, pairWeight)
-			+ GetSampleAngle(origin, sampleRightUV, pairWeight);
-		occlusion += angle * pairWeight;
-		weightSum += pairWeight;
+		vec2 uv1 = v_vTexCoord + dir * u_vTexel;
+		vec2 uv2 = v_vTexCoord - dir * u_vTexel;
+
+		float angle = 1.0;
+
+		if (uv1.x > 0.0 && uv1.x < 1.0
+			&& uv1.y > 0.0 && uv1.y < 1.0
+			&& uv2.x > 0.0 && uv2.x < 1.0
+			&& uv2.y > 0.0 && uv2.y < 1.0)
+		{
+			float depth1 = xDecodeDepth(texture2D(gm_BaseTexture, uv1).rgb) * u_fClipFar;
+			vec3 pos1 = xProject(u_vTanAspect, uv1, depth1);
+			vec3 diff1 = pos1 - origin;
+
+			float depth2 = xDecodeDepth(texture2D(gm_BaseTexture, uv2).rgb) * u_fClipFar;
+			vec3 pos2 = xProject(u_vTanAspect, uv2, depth2);
+			vec3 diff2 = pos2 - origin;
+
+			float cosAngle = dot(diff1, diff2) / (length(diff1) * length(diff2));
+			angle = max(AcosApprox(cosAngle - u_fAngleBias), 0.0) / X_PI;
+
+			if (-diff1.z - diff2.z < 0.01)
+			{
+				angle = 1.0;
+			}
+
+			float att = (abs(diff1.z) + abs(diff2.z)) / (u_fDepthRange * 2.0);
+			att = clamp(att * att, 0.0, 1.0);
+			angle = mix(angle, 1.0, att);
+		}
+
+		occlusion += angle;
 	}
 
-	occlusion /= weightSum * X_PI;
+	occlusion /= float(BBMOD_SSAO_KERNEL_SIZE);
 	occlusion = pow(occlusion, u_fPower);
 
 	// Output

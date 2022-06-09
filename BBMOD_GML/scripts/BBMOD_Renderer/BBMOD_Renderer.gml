@@ -145,7 +145,8 @@ function BBMOD_Renderer()
 	SurGBuffer = noone;
 
 	/// @var {Bool} Enables screen-space ambient occlusion. This requires
-	/// the G-buffer. Defaults to `false`.
+	/// the G-buffer. Defaults to `false`. Enabling this requires the
+	/// [SSAO submodule](./SSAOSubmodule.html)!
 	/// @see BBMOD_Renderer.EnableGBuffer
 	EnableSSAO = false;
 
@@ -167,8 +168,8 @@ function BBMOD_Renderer()
 	/// Default value is 1.
 	SSAOPower = 1.0;
 
-	/// @var {Real} SSAO angle bias in radians. Default value is 0.01.
-	SSAOAngleBias = 0.01;
+	/// @var {Real} SSAO angle bias in radians. Default value is 0.03.
+	SSAOAngleBias = 0.03;
 
 	/// @var {Real} Maximum depth difference of SSAO samples. Samples farther
 	/// away from the origin than this will not contribute to the effect.
