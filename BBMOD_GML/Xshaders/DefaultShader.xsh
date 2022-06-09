@@ -5,6 +5,7 @@
 #pragma include("Fog.xsh")
 #pragma include("GammaCorrect.xsh")
 #pragma include("IBL.xsh")
+#pragma include("Projecting.xsh")
 #pragma include("RGBM.xsh")
 #pragma include("ShadowMap.xsh")
 #pragma include("SpecularMaterial.xsh")
@@ -45,6 +46,11 @@ void DefaultShader(Material material, float depth)
 		directionalLightColor,
 		shadow,
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
+
+	// SSAO
+	float ssao = texture2D(bbmod_SSAO, xUnproject(v_vPosition)).r;
+	lightDiffuse *= ssao;
+	lightSpecular *= ssao;
 
 	// Point lights
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)

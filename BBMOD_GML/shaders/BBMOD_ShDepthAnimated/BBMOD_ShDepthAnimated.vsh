@@ -47,7 +47,7 @@ varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
 // include("Varyings.xsh")
 
@@ -133,7 +133,7 @@ void main()
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 
 	gl_Position = positionWVP;
-	v_fDepth = positionWVP.z;
+	v_vPosition = positionWVP;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 	vec3 tangent = in_TangentW.xyz;

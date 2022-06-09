@@ -22,7 +22,7 @@ varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
 varying vec3 v_vPosShadowmap;
 
@@ -78,6 +78,12 @@ uniform float bbmod_FogIntensity;
 uniform float bbmod_FogStart;
 // 1.0 / (fogEnd - fogStart)
 uniform float bbmod_FogRcpRange;
+
+////////////////////////////////////////////////////////////////////////////////
+// SSAO
+
+// SSAO texture
+uniform sampler2D bbmod_SSAO;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Ambient light

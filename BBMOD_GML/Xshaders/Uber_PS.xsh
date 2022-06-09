@@ -76,6 +76,7 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
+#if !defined(X_OUTPUT_DEPTH)
 ////////////////////////////////////////////////////////////////////////////////
 // Image based lighting
 
@@ -84,7 +85,6 @@ uniform sampler2D bbmod_IBL;
 // Texel size of one octahedron
 uniform vec2 bbmod_IBLTexel;
 
-#if !defined(X_OUTPUT_DEPTH)
 ////////////////////////////////////////////////////////////////////////////////
 // Fog
 
@@ -96,6 +96,12 @@ uniform float bbmod_FogIntensity;
 uniform float bbmod_FogStart;
 // 1.0 / (fogEnd - fogStart)
 uniform float bbmod_FogRcpRange;
+
+////////////////////////////////////////////////////////////////////////////////
+// SSAO
+
+// SSAO texture
+uniform sampler2D bbmod_SSAO;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Ambient light
@@ -224,15 +230,15 @@ void main()
 #if defined(X_ID)
 	gl_FragColor = bbmod_InstanceID;
 #elif defined(X_OUTPUT_DEPTH)
-	DepthShader(v_fDepth);
+	DepthShader(v_vPosition.z);
 #else // X_OUTPUT_DEPTH
 #if defined(X_PBR)
-	PBRShader(material, v_fDepth);
+	PBRShader(material, v_vPosition.z);
 #else // X_PBR
 #if defined(X_UNLIT)
-	UnlitShader(material, v_fDepth);
+	UnlitShader(material, v_vPosition.z);
 #else // X_UNLIT
-	DefaultShader(material, v_fDepth);
+	DefaultShader(material, v_vPosition.z);
 #endif // !X_UNLIT
 #endif // !X_PBR
 #endif // !X_OUTPUT_DEPTH

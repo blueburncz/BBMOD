@@ -131,7 +131,7 @@ void main()
 #endif // !X_PARTICLES
 
 	gl_Position = positionWVP;
-	v_fDepth = positionWVP.z;
+	v_vPosition = positionWVP;
 #if defined(X_2D)
 	v_vColor = in_Color;
 #endif

@@ -131,6 +131,50 @@ function BBMOD_Renderer()
 	/// have any effect. Defaults to 1. Use lower values to improve framerate.
 	RenderScale = 1.0;
 
+	/// @var {Bool} Enables rendering into a G-buffer in the deferred pass.
+	/// Defaults to `false`.
+	/// @see BBMOD_ERenderPass.Deferred
+	EnableGBuffer = false;
+
+	/// @var {Real} Resolution multiplier for the G-buffer surface. Defaults
+	/// to 1.
+	GBufferScale = 1.0;
+
+	/// @var {Id.Surface} The G-buffer surface.
+	/// @private
+	SurGBuffer = noone;
+
+	/// @var {Bool} Enables screen-space ambient occlusion. This requires
+	/// the G-buffer. Defaults to `false`.
+	/// @see BBMOD_Renderer.EnableGBuffer
+	EnableSSAO = false;
+
+	/// @var {Id.Surface} The SSAO surface.
+	/// @private
+	SurSSAO = noone;
+
+	/// @var {Id.Surface} Surface used for blurring SSAO.
+	/// @private
+	SurWork = noone;
+
+	/// @var {Real} Resolution multiplier for SSAO surface. Defaults to 1.
+	SSAOScale = 1.0;
+
+	/// @var {Real} Screen-space radius of SSAO. Default value is 16.
+	SSAORadius = 16.0;
+
+	/// @var {Real} Strength of the SSAO effect. Should be greater than 0.
+	/// Default value is 1.
+	SSAOPower = 1.0;
+
+	/// @var {Real} SSAO angle bias in radians. Default value is 0.01.
+	SSAOAngleBias = 0.01;
+
+	/// @var {Real} Maximum depth difference of SSAO samples. Samples farther
+	/// away from the origin than this will not contribute to the effect.
+	/// Default value is 10.
+	SSAODepthRange = 10.0;
+
 	/// @var {Bool} Enables rendering into a shadowmap in the shadows render pass.
 	/// Defauls to `false`.
 	/// @see BBMOD_Renderer.ShadowmapArea
@@ -619,6 +663,52 @@ function BBMOD_Renderer()
 		//
 		render_shadowmap();
 
+		bbmod_shader_set_global_f("bbmod_ZFar", bbmod_camera_get_zfar());
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// G-buffer pass
+		//
+		if (EnableGBuffer)
+		{
+			var _width = _renderWidth * GBufferScale;
+			var _height = _renderHeight * GBufferScale;
+			SurGBuffer = bbmod_surface_check(SurGBuffer, _width, _height);
+			surface_set_target(SurGBuffer);
+			draw_clear(c_white);
+			matrix_set(matrix_view, _view);
+			matrix_set(matrix_projection, _projection);
+			bbmod_render_pass_set(BBMOD_ERenderPass.Deferred);
+			var _renderQueues = global.bbmod_render_queues;
+			var _rqi = 0;
+			repeat (array_length(_renderQueues))
+			{
+				_renderQueues[_rqi++].submit();
+			}
+			surface_reset_target();
+		}
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Render SSAO
+		//
+		if (EnableGBuffer && EnableSSAO)
+		{
+			bbmod_material_reset();
+			var _width = _renderWidth * SSAOScale;
+			var _height = _renderHeight * SSAOScale;
+			SurSSAO = bbmod_surface_check(SurSSAO, _width, _height);
+			SurWork = bbmod_surface_check(SurWork, _width, _height);
+			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
+				SSAODepthRange, SurSSAO, SurWork, SurGBuffer, _projection, bbmod_camera_get_zfar());
+			bbmod_material_reset();
+			bbmod_shader_set_global_sampler("bbmod_SSAO", surface_get_texture(SurSSAO));
+		}
+		else
+		{
+			bbmod_shader_set_global_sampler("bbmod_SSAO", -1);
+		}
+
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Forward pass
@@ -664,6 +754,7 @@ function BBMOD_Renderer()
 
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global("bbmod_Shadowmap");
+		bbmod_shader_unset_global("bbmod_SSAO");
 
 		bbmod_material_reset();
 
@@ -815,6 +906,18 @@ function BBMOD_Renderer()
 		if (global.__bbmodRendererCurrent == self)
 		{
 			global.__bbmodRendererCurrent = undefined;
+		}
+		if (surface_exists(SurGBuffer))
+		{
+			surface_free(SurGBuffer);
+		}
+		if (surface_exists(SurSSAO))
+		{
+			surface_free(SurSSAO);
+		}
+		if (surface_exists(SurWork))
+		{
+			surface_free(SurWork);
 		}
 		if (surface_exists(SurSelect))
 		{

@@ -22,7 +22,7 @@ varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
 // include("Varyings.xsh")
 
@@ -52,14 +52,6 @@ uniform vec3 bbmod_CamPos;
 uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
-
-////////////////////////////////////////////////////////////////////////////////
-// Image based lighting
-
-// Prefiltered octahedron env. map
-uniform sampler2D bbmod_IBL;
-// Texel size of one octahedron
-uniform vec2 bbmod_IBLTexel;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -234,6 +226,6 @@ void main()
 		discard;
 	}
 
-	DepthShader(v_fDepth);
+	DepthShader(v_vPosition.z);
 }
 // include("Uber_PS.xsh")
