@@ -1,16 +1,19 @@
 /// @func BBMOD_MixInitialColorModule([_from[, _to]])
 /// @extends BBMOD_ParticleModule
-/// @desc
-/// @param {Struct.BBMOD_Color/Undefined} [_from]
-/// @param {Struct.BBMOD_Color/Undefined} [_to]
-function BBMOD_MixInitialColorModule(_from=undefined, _to=undefined)
+/// @desc A particle module that randomly blends initial color of particles.
+/// @param {Struct.BBMOD_Color} [_from] The color to blend from. Defaults to
+/// {@link BBMOD_C_WHITE}.
+/// @param {Struct.BBMOD_Color} [_to] The coolor to blend to. Defaults to `_from`.
+function BBMOD_MixInitialColorModule(_from=BBMOD_C_WHITE, _to=_from)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Color}
-	From = _from ?? BBMOD_C_WHITE;
+	/// @var {Struct.BBMOD_Color} The color to blend from. Default value is
+	/// {@link BBMOD_C_WHITE}.
+	From = _from;
 
-	/// @var {Struct.BBMOD_Color}
-	To = _to ?? From;
+	/// @var {Struct.BBMOD_Color} The color to blend to. Default value is the
+	/// same as {@link BBMOD_MixInitialColorModule.From}.
+	To = _to;
 
 	static on_particle_start = function (_emitter, _particleIndex) {
 		var _from = From;

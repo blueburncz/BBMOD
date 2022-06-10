@@ -1,11 +1,11 @@
 /// @func BBMOD_TerrainCollisionModule([_terrain])
 /// @extends BBMOD_ParticleModule
-/// @desc
-/// @param {Struct.BBMOD_Terrain/Undefined} [_terrain]
+/// @desc A particle module that enables collisions with a terrain.
+/// @param {Struct.BBMOD_Terrain/Undefined} [_terrain] The terrain to collide with.
 function BBMOD_TerrainCollisionModule(_terrain=undefined)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Terrain/Undefined}
+	/// @var {Struct.BBMOD_Terrain/Undefined} The terrain to collide with.
 	Terrain = _terrain;
 
 	static on_update = function (_emitter, _deltaTime) {

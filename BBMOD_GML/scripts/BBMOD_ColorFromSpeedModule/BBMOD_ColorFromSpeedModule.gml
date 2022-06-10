@@ -1,23 +1,39 @@
 /// @func BBMOD_ColorFromSpeedModule([_from[, _to[, _min[, _max]]])
 /// @extends BBMOD_ParticleModule
-/// @desc
-/// @param {Struct.BBMOD_Color/Undefined} [_from]
-/// @param {Struct.BBMOD_Color/Undefined} [_to]
-/// @param {Real} [_min]
-/// @param {Real} [_max]
-function BBMOD_ColorFromSpeedModule(_from=undefined, _to=undefined, _min=0.0, _max=1.0)
+/// @desc A particle module that controls particles' color based on their speed.
+/// @param {Struct.BBMOD_Color} [_from] The color to blend from. Defaults to
+/// {@link BBMOD_C_WHITE}.
+/// @param {Struct.BBMOD_Color} [_to] The color to blend to. Defaults to `_from`.
+/// @param {Real} [_min] If the particles' speed is less than this, then their
+/// color is equal to `_from`. Defaults to 0.0.
+/// @param {Real} [_max] If the particles' speed is greater than this, then their
+/// color is equal to `_to`. Defaults to 1.0.
+/// @see BBMOD_EParticle.ColorR
+/// @see BBMOD_EParticle.ColorG
+/// @see BBMOD_EParticle.ColorB
+/// @see BBMOD_EParticle.ColorA
+/// @see BBMOD_EParticle.VelocityX
+/// @see BBMOD_EParticle.VelocityY
+/// @see BBMOD_EParticle.VelocityZ
+function BBMOD_ColorFromSpeedModule(_from=BBMOD_C_WHITE, _to=_from, _min=0.0, _max=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Color}
-	From = _from ?? BBMOD_C_WHITE;
+	/// @var {Struct.BBMOD_Color} The color to blend from. Default value
+	/// is {@link BBMOD_C_WHITE}.
+	From = _from;
 
-	/// @var {Struct.BBMOD_Color}
-	To = _to ?? From;
+	/// @var {Struct.BBMOD_Color} The color to blend to. Default value
+	/// is the same as {@link BBMOD_ColorFromSpeedModule.From}.
+	To = _to;
 
-	/// @var {Real}
+	/// @var {Real} If the particles' speed is less than this, then their
+	/// color is equal to {@link BBMOD_ColorFromSpeedModule.From}. Default
+	/// value is 0.0.
 	Min = _min;
 
-	/// @var {Real}
+	/// @var {Real} If the particles' speed is greater than this, then their
+	/// color is equal to {@link BBMOD_ColorFromSpeedModule.To}. Default
+	/// value is 1.0.
 	Max = _max;
 
 	static on_update = function (_emitter, _deltaTime) {
