@@ -1,4 +1,4 @@
-/// @func BBMOD_InitialColorPropertyModule(_property, _value)
+/// @func BBMOD_InitialColorPropertyModule([_property[, _value]])
 ///
 /// @extends BBMOD_ParticleModule
 ///

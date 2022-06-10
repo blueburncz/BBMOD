@@ -1,8 +1,8 @@
-/// @func BBMOD_InitialPropertyModule(_property, _value)
+/// @func BBMOD_InitialPropertyModule([_property[, _value]])
 ///
 /// @extends BBMOD_ParticleModule
 ///
-/// @desc A universal particle module that sets initial value of a particles'
+/// @desc A universal particle module that sets initial value of particles'
 /// property.
 ///
 /// @param {Enum.BBMOD_EParticle/Undefined} [_property] The property to set

@@ -1,4 +1,4 @@
-/// @func BBMOD_InitialQuaternionPropertyModule(_property, _value)
+/// @func BBMOD_InitialQuaternionPropertyModule([_property[, _value]])
 ///
 /// @extends BBMOD_ParticleModule
 ///

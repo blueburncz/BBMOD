@@ -1,4 +1,4 @@
-/// @func BBMOD_InitialVec3PropertyModule(_property, _value)
+/// @func BBMOD_InitialVec3PropertyModule([_property[, _value]])
 ///
 /// @extends BBMOD_ParticleModule
 ///
