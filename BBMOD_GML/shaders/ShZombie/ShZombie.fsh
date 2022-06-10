@@ -52,7 +52,7 @@ varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
 varying vec3 v_vPosShadowmap;
 
@@ -106,6 +106,12 @@ uniform float bbmod_FogIntensity;
 uniform float bbmod_FogStart;
 // 1.0 / (fogEnd - fogStart)
 uniform float bbmod_FogRcpRange;
+
+////////////////////////////////////////////////////////////////////////////////
+// SSAO
+
+// SSAO texture
+uniform sampler2D bbmod_SSAO;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Ambient light
@@ -286,6 +292,7 @@ vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
 void DoDirectionalLightPS(
 	vec3 direction,
 	vec3 color,
+	float shadow,
 	vec3 vertex,
 	vec3 N,
 	vec3 V,
@@ -296,7 +303,7 @@ void DoDirectionalLightPS(
 {
 	vec3 L = normalize(-direction);
 	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL;
+	color *= (1.0 - shadow) * NdotL;
 	diffuse += color;
 	specular += color * SpecularBlinnPhong(m, N, V, L);
 }
@@ -448,6 +455,28 @@ vec3 xSpecularIBL(sampler2D ibl, vec2 texel/*, sampler2D brdf*/, vec3 f0, float 
 	return mix(col0, col1, rDiff);
 }
 // include("IBL.xsh")
+#pragma include("Projecting.xsh")
+/// @param tanAspect (tanFovY*(screenWidth/screenHeight),-tanFovY), where
+///                  tanFovY = dtan(fov*0.5)
+/// @param texCoord  Sceen-space UV.
+/// @param depth     Scene depth at texCoord.
+/// @return Point projected to view-space.
+vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
+{
+	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
+}
+
+/// @param p A point in clip space (transformed by projection matrix, but not
+///          normalized).
+/// @return P's UV coordinates on the screen.
+vec2 xUnproject(vec4 p)
+{
+	vec2 uv = p.xy / p.w;
+	uv = uv * 0.5 + 0.5;
+	uv.y = 1.0 - uv.y;
+	return uv;
+}
+// include("Projecting.xsh")
 #pragma include("ShadowMap.xsh")
 #pragma include("DepthEncoding.xsh")
 /// @param d Linearized depth to encode.
@@ -550,8 +579,14 @@ void DefaultShader(Material material, float depth)
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
-		directionalLightColor * (1.0 - shadow),
+		directionalLightColor,
+		shadow,
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
+
+	// SSAO
+	float ssao = texture2D(bbmod_SSAO, xUnproject(v_vPosition)).r;
+	lightDiffuse *= ssao;
+	lightSpecular *= ssao;
 
 	// Point lights
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
@@ -608,7 +643,7 @@ void main()
 		discard;
 	}
 
-	DefaultShader(material, v_fDepth);
+	DefaultShader(material, v_vPosition.z);
 
 	// Dissolve
 	gl_FragColor.rgb = mix(

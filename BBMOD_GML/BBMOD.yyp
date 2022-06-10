@@ -315,7 +315,7 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","resourceVersion":"1.0","name":"GizmoRotate.bbmod","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.5.1.14",
+    "IDEVersion": "2022.5.1.16",
   },
   "resourceVersion": "1.5",
   "name": "BBMOD",
