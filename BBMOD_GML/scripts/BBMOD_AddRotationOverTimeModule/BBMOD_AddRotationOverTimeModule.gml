@@ -1,9 +1,17 @@
 /// @func BBMOD_AddRotationOverTimeModule([_change[, _period]])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc
-/// @param {Struct.BBMOD_Quaternion/Undefined} [_change]
+///
+/// @desc A particle module that rotates particles over time.
+///
+/// @param {Struct.BBMOD_Quaternion} [_change]
 /// @param {Real} [_period]
-function BBMOD_AddRotationOverTimeModule(_change=undefined, _period=1.0)
+///
+/// @see BBMOD_EParticle.RotationX
+/// @see BBMOD_EParticle.RotationY
+/// @see BBMOD_EParticle.RotationZ
+/// @see BBMOD_EParticle.RotationW
+function BBMOD_AddRotationOverTimeModule(_change=new BBMOD_Quaternion(), _period=1.0)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Quaternion}

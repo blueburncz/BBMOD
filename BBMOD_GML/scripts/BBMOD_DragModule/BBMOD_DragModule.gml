@@ -1,6 +1,10 @@
 /// @func BBMOD_DragModule()
+///
 /// @extends BBMOD_ParticleModule
-/// @desc
+///
+/// @desc A particle module that applies drag force to particles.
+///
+/// @see BBMOD_EParticle.Drag
 function BBMOD_DragModule()
 	: BBMOD_ParticleModule() constructor
 {

@@ -1,17 +1,21 @@
 /// @func BBMOD_ColorFromHealthModule([_from[, _to]])
+///
 /// @extends BBMOD_ParticleModule
+///
 /// @desc A particle module that controls particles' color based on their
 /// remaining health.
+///
 /// @param {Struct.BBMOD_Color} [_from] The color of particles when they have full health.
 /// Defaults to {@link BBMOD_C_WHITE}.
 /// @param {Struct.BBMOD_Color} [_to] The color of particles when they have no health left.
 /// Defaults to `_from`.
+///
 /// @see BBMOD_EParticle.ColorR
 /// @see BBMOD_EParticle.ColorG
 /// @see BBMOD_EParticle.ColorB
 /// @see BBMOD_EParticle.ColorA
 /// @see BBMOD_EParticle.HealthLeft
-function BBMOD_ColorFromHealthModule(_from=BBMOD_C_WHITE, _to=_from)
+function BBMOD_ColorFromHealthModule(_from=BBMOD_C_WHITE, _to=_from.Clone())
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Color} The color of particles when they have full health.

@@ -1,6 +1,10 @@
 /// @func BBMOD_ColorFromSpeedModule([_from[, _to[, _min[, _max]]])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc A particle module that controls particles' color based on their speed.
+///
+/// @desc A particle module that controls particles' color based on magnitude
+/// of their velocity vector.
+///
 /// @param {Struct.BBMOD_Color} [_from] The color to blend from. Defaults to
 /// {@link BBMOD_C_WHITE}.
 /// @param {Struct.BBMOD_Color} [_to] The color to blend to. Defaults to `_from`.
@@ -8,6 +12,7 @@
 /// color is equal to `_from`. Defaults to 0.0.
 /// @param {Real} [_max] If the particles' speed is greater than this, then their
 /// color is equal to `_to`. Defaults to 1.0.
+///
 /// @see BBMOD_EParticle.ColorR
 /// @see BBMOD_EParticle.ColorG
 /// @see BBMOD_EParticle.ColorB
@@ -15,7 +20,7 @@
 /// @see BBMOD_EParticle.VelocityX
 /// @see BBMOD_EParticle.VelocityY
 /// @see BBMOD_EParticle.VelocityZ
-function BBMOD_ColorFromSpeedModule(_from=BBMOD_C_WHITE, _to=_from, _min=0.0, _max=1.0)
+function BBMOD_ColorFromSpeedModule(_from=BBMOD_C_WHITE, _to=_from.Clone(), _min=0.0, _max=1.0)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Color} The color to blend from. Default value

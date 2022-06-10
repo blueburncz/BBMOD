@@ -1,12 +1,17 @@
 /// @func BBMOD_GravityModule([_gravity])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc
-/// @param {Struct.BBMOD_Vec3/Undefined} [_gravity]
-function BBMOD_GravityModule(_gravity=undefined)
+///
+/// @desc A particle module that applies gravity force to particles.
+/// 
+/// @param {Struct.BBMOD_Vec3} [_gravity] The gravity vector. Defaults to
+/// `(0, 0, -9.8)`.
+function BBMOD_GravityModule(_gravity=BBMOD_VEC3_UP.Scale(-9.8))
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Vec3}
-	Gravity = _gravity ?? BBMOD_VEC3_UP.Scale(-9.8);
+	/// @var {Struct.BBMOD_Vec3} The gravity vector. Default value is
+	/// `(0, 0, -9.8)`.
+	Gravity = _gravity;
 
 	static on_update = function (_emitter, _deltaTime) {
 		var _y2 = _emitter.ParticlesAlive - 1;

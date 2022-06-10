@@ -1,27 +1,37 @@
 /// @func BBMOD_AttractorModule([_position[, _relative[, _radius[, _force]]]])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc
-/// @param {Struct.BBMOD_Vec3/Undefined} [_position]
-/// @param {Bool} [_relative]
-/// @param {Real} [_radius]
-/// @param {Real} [_force]
-function BBMOD_AttractorModule(_position=undefined, _relative=true, _radius=1.0, _force=1.0)
+///
+/// @desc A particle module that attracts/repels particles to/from a given
+/// position.
+///
+/// @param {Struct.BBMOD_Vec3} [_position] The position to attract/repel
+/// particles to/from. Defaults to `(0, 0, 0)`.
+/// @param {Bool} [_relative] If `true`, then the position is relative to the
+/// emitter. Defaults to `true`.
+/// @param {Real} [_radius] The radius of the influence. Defaults to 1.0.
+/// @param {Real} [_force] The strength of the force. Use negative to repel the
+/// particles. Defaults to 1.0.
+function BBMOD_AttractorModule(_position=new BBMOD_Vec3(), _relative=true, _radius=1.0, _force=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Vec3}
-	Position = _position ?? new BBMOD_Vec3();
+	/// @var {Struct.BBMOD_Vec3} The position to attract/repel particles to/from.
+	/// Default value is `(0, 0, 0)`.
+	Position = _position;
 
-	/// @var {Bool}
+	/// @var {Bool} If `true`, then {@link BBMOD_AttractorModule.Position} is
+	/// relative to the emitter. Default value is `true`.
 	Relative = _relative;
 
 	/// @var {Struct.BBMOD_Vec3}
 	/// @private
 	PositionReal = Position;
 
-	/// @var {Real}
+	/// @var {Real} The radius of the influence. Defaults to 1.0.
 	Radius = _radius;
 
-	/// @var {Real}
+	/// @var {Real} The strength of the force. Use negative to repel the
+	/// particles. Defaults value is 1.0.
 	Force = _force;
 
 	static on_update = function (_emitter, _deltaTime) {

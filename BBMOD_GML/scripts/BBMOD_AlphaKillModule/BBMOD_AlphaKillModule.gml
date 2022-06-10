@@ -1,19 +1,29 @@
 /// @func BBMOD_AlphaKillModule([_min[, _max]])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc Kills all particles that have alpha less than min or greater than max.
+///
+/// @desc A particle module that kills all particles that have alpha less than
+/// a minimum value or greater than a maximum value.
+///
 /// @param {Real/Undefined} [_min] The minimum alpha the particle needs to have
-/// or it is killed.
+/// or it is killed. Use `undefined` if you do not want to use a minimum value.
+/// Defaults to `undefined`.
 /// @param {Real/Undefined} [_max] The maximum alpha the particle needs to have
-/// or it is killed.
+/// or it is killed. Use `undefined` if you do not want to use a maximum value.
+/// Defaults to `undefined`.
+///
+/// @see BBMOD_EParticle.ColorA
 function BBMOD_AlphaKillModule(_min=undefined, _max=undefined)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Real/Undefined} The minimum alpha the particle needs to have
-	/// or it is killed.
+	/// or it is killed. Use `undefined` if you do not want to use a minimum
+	/// value. Default value is `undefined`.
 	Min = _min;
 
 	/// @var {Real/Undefined} The maximum alpha the particle needs to have
-	/// or it is killed.
+	/// or it is killed. Use `undefined` if you do not want to use a maximum
+	/// value. Default value is `undefined`.
 	Max = _max;
 
 	static on_update = function (_emitter, _deltaTime) {

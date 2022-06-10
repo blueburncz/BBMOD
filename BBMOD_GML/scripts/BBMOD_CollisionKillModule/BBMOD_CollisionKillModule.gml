@@ -1,8 +1,13 @@
 /// @func BBMOD_CollisionKillModule()
+///
 /// @extends BBMOD_ParticleModule
-/// @desc Kills all particles that had a collision.
+///
+/// @desc A particle module that kills all particles that had a collision.
+///
 /// @note Make sure to add this *after* a collision module, otherwise no
 /// collision will be detected!
+///
+/// @see BBMOD_EParticle.HasCollided
 function BBMOD_CollisionKillModule()
 	: BBMOD_ParticleModule() constructor
 {

@@ -1,19 +1,31 @@
 /// @func BBMOD_SpeedKillModule([_min[, _max]])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc Kills all particles with speed below min or above max.
+///
+/// @desc A particle module that kills all particles with magnitude of their
+/// velocity vector below a minimum value or above a maximum value.
+///
 /// @param {Real/Undefined} [_min] The minimum speed the particle needs to have
-/// or it is killed.
+/// or it is killed. Use `undefined` if you do not want to use a minimum value.
+/// Defauts to `undefined`.
 /// @param {Real/Undefined} [_max] The maximum speed the particle needs to have
-/// or it is killed.
+/// or it is killed. Use `undefined` if you do not want to use a maximum value.
+/// Defauts to `undefined`.
+///
+/// @see BBMOD_EParticle.VelocityX
+/// @see BBMOD_EParticle.VelocityY
+/// @see BBMOD_EParticle.VelocityZ
 function BBMOD_SpeedKillModule(_min=undefined, _max=undefined)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Real/Undefined} The minimum speed the particle needs to have
-	/// or it is killed.
+	/// @var {Real/Undefined} The minimum speed the particle needs to have or it
+	/// is killed. Use `undefined` if you do not want to use a minimum value.
+	/// Defaut value is `undefined`.
 	Min = _min;
 
-	/// @var {Real/Undefined} The maximum speed the particle needs to have
-	/// or it is killed.
+	/// @var {Real/Undefined} The maximum speed the particle needs to have or it
+	/// is killed. Use `undefined` if you do not want to use a maximum value.
+	/// Defaut value is `undefined`.
 	Max = _max;
 
 	static on_update = function (_emitter, _deltaTime) {

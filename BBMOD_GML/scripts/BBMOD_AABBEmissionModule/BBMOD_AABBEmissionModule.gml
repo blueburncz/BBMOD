@@ -1,6 +1,8 @@
 /// @func BBMOD_AABBEmissionModule()
+///
 /// @extends BBMOD_ParticleModule
-/// @desc
+///
+/// @desc A particle module that positions spawned particles into an AABB shape.
 function BBMOD_AABBEmissionModule()
 	: BBMOD_ParticleModule() constructor
 {

@@ -1,8 +1,12 @@
 /// @func BBMOD_InitialColorModule([_color])
+///
 /// @extends BBMOD_ParticleModule
+///
 /// @desc A particle module that sets an inital color of particles.
+///
 /// @param {Struct.BBMOD_Color} [_color] The initial color of particles. Defaults
 /// to {@link BBMOD_C_WHITE}.
+///
 /// @see BBMOD_EParticle.ColorR
 /// @see BBMOD_EParticle.ColorG
 /// @see BBMOD_EParticle.ColorB

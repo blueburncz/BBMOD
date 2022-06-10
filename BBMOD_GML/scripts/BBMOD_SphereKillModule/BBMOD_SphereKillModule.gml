@@ -1,6 +1,9 @@
 /// @func BBMOD_SphereKillModule()
+///
 /// @extends BBMOD_ParticleModule
-/// @desc
+///
+/// @desc A particle module that kills particles that are inside/outside of a
+/// sphere shape.
 function BBMOD_SphereKillModule()
 	: BBMOD_ParticleModule() constructor
 {

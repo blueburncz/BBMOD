@@ -1,10 +1,19 @@
 /// @func BBMOD_AddHealthOnCollisionModule([_change])
+///
 /// @extends BBMOD_ParticleModule
-/// @param {Real} [_change]
+///
+/// @desc A particle module that adds health to particles when they collide.
+///
+/// @param {Real} [_change] The value to add to particles' health. Defaults
+/// to -1.0.
+///
+/// @see BBMOD_EParticle.HealthLeft
+/// @see BBMOD_EParticle.HasCollided
 function BBMOD_AddHealthOnCollisionModule(_change=-1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Real}
+	/// @var {Real} The value to add to particles' health when they collide.
+	/// Default value is -1.0.
 	Change = _change;
 
 	static on_update = function (_emitter, _deltaTime) {

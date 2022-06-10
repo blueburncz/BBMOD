@@ -1,23 +1,44 @@
 /// @func BBMOD_ScaleFromSpeedModule([_from[, _to[, _min[, _max]]])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc
-/// @param {Struct.BBMOD_Vec3/Undefined} [_from]
-/// @param {Struct.BBMOD_Vec3/Undefined} [_to]
-/// @param {Real} [_min]
-/// @param {Real} [_max]
-function BBMOD_ScaleFromSpeedModule(_from=undefined, _to=undefined, _min=0.0, _max=1.0)
+///
+/// @desc A particle module that controls scale of particles based on
+/// magnitude of their velocity vector.
+///
+/// @param {Struct.BBMOD_Vec3} [_from] The scale to blend from. Defaults to
+/// `(1.0, 1.0, 1.0)`.
+/// @param {Struct.BBMOD_Vec3} [_to] The scale to blend to. Defaults to
+/// `(0.0, 0.0, 0.0)`.
+/// @param {Real} [_min] If a particle's speed is less than this, then its
+/// scale will be equal to `_from`. Defaults to 0.0.
+/// @param {Real} [_max] If a particle's speed is greater than this, then its
+/// scale will be equal to `_to`. Defaults to 1.0.
+///
+/// @see BBMOD_EParticle.ScaleX
+/// @see BBMOD_EParticle.ScaleY
+/// @see BBMOD_EParticle.ScaleZ
+/// @see BBMOD_EParticle.VelocityX
+/// @see BBMOD_EParticle.VelocityY
+/// @see BBMOD_EParticle.VelocityZ
+function BBMOD_ScaleFromSpeedModule(_from=new BBMOD_Vec3(1.0), _to=new BBMOD_Vec3(), _min=0.0, _max=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Vec3}
-	From = _from ?? new BBMOD_Vec3(1.0);
+	/// @var {Struct.BBMOD_Vec3} The scale to blend from. Default value is
+	/// `(1.0, 1.0, 1.0)`.
+	From = _from;
 
-	/// @var {Struct.BBMOD_Vec3}
-	To = _to ?? new BBMOD_Vec3();
+	/// @var {Struct.BBMOD_Vec3} The scale to blend to. Default value is
+	/// `(0.0, 0.0, 0.0)`.
+	To = _to;
 
-	/// @var {Real}
+	/// @var {Real} If a particle's speed is less than this, then its
+	/// scale will be equal to {BBMOD_ScaleFromSpeedModule.From}.
+	/// Default value is 0.0.
 	Min = _min;
 
-	/// @var {Real}
+	/// @var {Real} If a particle's speed is greater than this, then its
+	/// scale will be equal to {BBMOD_ScaleFromSpeedModule.To}.
+	/// Default value is 1.0.
 	Max = _max;
 
 	static on_update = function (_emitter, _deltaTime) {

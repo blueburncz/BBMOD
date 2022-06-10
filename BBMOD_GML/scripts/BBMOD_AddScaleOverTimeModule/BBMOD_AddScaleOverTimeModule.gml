@@ -1,15 +1,28 @@
 /// @func BBMOD_AddScaleOverTimeModule([_change[, _period]])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc
-/// @param {Struct.BBMOD_Vec3/Undefined} [_change]
-/// @param {Real} [_period]
-function BBMOD_AddScaleOverTimeModule(_change=undefined, _period=1.0)
+///
+/// @desc A particle module that scales particle over time.
+///
+/// @param {Struct.BBMOD_Vec3} [_change] The change of particle scale over
+/// specified period. Defaults to `(1.0, 1.0, 1.0)`.
+/// @param {Real} [_period] The period (in seconds) over which `_change` of scale
+/// is added to particles. Defaults to 1.0.
+///
+/// @see BBMOD_EParticle.ScaleX
+/// @see BBMOD_EParticle.ScaleY
+/// @see BBMOD_EParticle.ScaleZ
+function BBMOD_AddScaleOverTimeModule(_change=new BBMOD_Vec3(1.0), _period=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Vec3}
+	/// @var {Struct.BBMOD_Vec3} The change of particle scale over
+	/// {@link BBMOD_AddScaleOverTimeModule.Period}. Default value is
+	/// `(1.0, 1.0, 1.0)`.
 	Change = _change;
 
-	/// @var {Real}
+	/// @var {Real} The period (in seconds) over which
+	/// {@link BBMOD_AddScaleOverTimeModule.Change} of scale is added to
+	/// particles. Default value is 1.0.
 	Period = _period;
 
 	static on_update = function (_emitter, _deltaTime) {

@@ -1,19 +1,31 @@
 /// @func BBMOD_ScaleKillModule([_min[, _max]])
+///
 /// @extends BBMOD_ParticleModule
-/// @desc Kills all particles with scale below min or above max.
+///
+/// @desc A particle module that kills all particles with scale below a miminum
+/// value or above a maximum value.
+///
 /// @param {Struct.BBMOD_Vec3/Undefined} [_min] The minimum scale the particle
-/// needs to have or it will be killed.
+/// needs to have or it will be killed. Use `undefined` if you do not want to
+/// use a minimum value. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec3/Undefined} [_max] The maximum scale the particle
-/// needs to have or it will be killed.
+/// needs to have or it will be killed. Use `undefined` if you do not want to
+/// use a maximum value. Defaults to `undefined`.
+///
+/// @see BBMOD_EParticle.ScaleX
+/// @see BBMOD_EParticle.ScaleY
+/// @see BBMOD_EParticle.ScaleZ
 function BBMOD_ScaleKillModule(_min=undefined, _max=undefined)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Vec3/Undefined} The minimum scale the particle
-	/// needs to have or it will be killed.
+	/// @var {Struct.BBMOD_Vec3/Undefined} The minimum scale the particle needs
+	/// to have or it will be killed. Use `undefined` if you do not want to
+	/// use a minimum value. Default value is `undefined`.
 	Min = _min;
 
-	/// @var {Struct.BBMOD_Vec3/Undefined} The maximum scale the particle
-	/// needs to have or it will be killed.
+	/// @var {Struct.BBMOD_Vec3/Undefined} The maximum scale the particle needs
+	/// to have or it will be killed. Use `undefined` if you do not want to
+	/// use a maximum value. Default value is `undefined`.
 	Max = _max;
 
 	static on_update = function (_emitter, _deltaTime) {
