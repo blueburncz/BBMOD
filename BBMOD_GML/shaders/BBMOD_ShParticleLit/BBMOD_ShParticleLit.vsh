@@ -33,9 +33,6 @@ uniform vec2 bbmod_TextureScale;
 
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 
-// [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
 // 1.0 to enable shadows
 uniform float bbmod_ShadowmapEnableVS;
 // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
@@ -56,10 +53,10 @@ varying vec4 v_vColor;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
-varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
+
 // include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,23 +111,6 @@ vec3 xDecodeRGBM(vec4 rgbm)
 }
 // include("RGBM.xsh")
 
-#pragma include("DoPointLightVS.xsh")
-void DoPointLightVS(
-	vec3 position,
-	float range,
-	vec3 color,
-	vec3 vertex,
-	vec3 N,
-	inout vec3 diffuse)
-{
-	vec3 L = position - vertex;
-	float dist = length(L);
-	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
-	float NdotL = max(dot(N, normalize(L)), 0.0);
-	diffuse += color * NdotL * att;
-}
-// include("DoPointLightVS.xsh")
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
@@ -164,7 +144,7 @@ void main()
 	v_vVertex = (W * position).xyz;
 
 	gl_Position = positionWVP;
-	v_fDepth = positionWVP.z;
+	v_vPosition = positionWVP;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 	vec3 tangent = QuaternionRotate(batchRot, vec3(1.0, 0.0, 0.0));
@@ -172,22 +152,11 @@ void main()
 	v_mTBN = mat3(W) * mat3(tangent, bitangent, normal);
 
 	////////////////////////////////////////////////////////////////////////////
-	// Point lights
-	vec3 N = normalize(v_mTBN * vec3(0.0, 0.0, 1.0));
-
-	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
-	{
-		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
-		DoPointLightVS(positionRange.xyz, positionRange.w, color, v_vVertex, N, v_vLight);
-	}
-
-	////////////////////////////////////////////////////////////////////////////
 	// Vertex position in shadowmap
 	if (bbmod_ShadowmapEnableVS == 1.0)
 	{
 		v_vPosShadowmap = (bbmod_ShadowmapMatrix
-			* vec4(v_vVertex + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
+			* vec4(v_vVertex + normal * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
 		v_vPosShadowmap.xy = v_vPosShadowmap.xy * 0.5 + 0.5;
 	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
 		v_vPosShadowmap.y = 1.0 - v_vPosShadowmap.y;

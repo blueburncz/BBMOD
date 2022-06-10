@@ -37,10 +37,6 @@ function BBMOD_Camera() constructor
 	/// direction. Defaults to `(1, 0, 0)`.
 	Target = new BBMOD_Vec3(1.0, 0.0, 0.0);
 
-	/// @var {Struct.BBMOD_Vec3} The camera's up vector. Defaults to `(0, 0, 1)`.
-	/// @obsolete
-	Up = new BBMOD_Vec3(0.0, 0.0, 1.0);
-
 	/// @var {Real} The camera's field of view. Defaults to `60`.
 	/// @note This does not have any effect when {@link BBMOD_Camera.Orthographic}
 	/// is enabled.

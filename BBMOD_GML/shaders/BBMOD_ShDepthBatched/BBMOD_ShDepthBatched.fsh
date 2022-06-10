@@ -22,7 +22,7 @@ varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
 // include("Varyings.xsh")
 
@@ -161,6 +161,9 @@ Material UnpackMaterial(
 	vec4 specularColor = texture2D(texSpecularColor, uv);
 	m.Specular = xGammaToLinear(specularColor.rgb);
 
+	// Roughness
+	m.Roughness = 1.0 - m.Smoothness;
+
 	// Specular power
 	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 
@@ -223,6 +226,6 @@ void main()
 		discard;
 	}
 
-	DepthShader(v_fDepth);
+	DepthShader(v_vPosition.z);
 }
 // include("Uber_PS.xsh")

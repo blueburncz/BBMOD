@@ -5,7 +5,7 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
-  "version": "3.4.3",
+  "version": "3.6.0",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
@@ -15,6 +15,9 @@
     "Changelog": {
       "file": "Changelog/Changelog_.md",
       "pages": {
+        "3.6.0": "Changelog/Changelog3.6.0.md",
+        "3.5.1": "Changelog/Changelog3.5.1.md",
+        "3.5.0": "Changelog/Changelog3.5.0.md",
         "3.4.3": "Changelog/Changelog3.4.3.md",
         "3.4.2": "Changelog/Changelog3.4.2.md",
         "3.4.1": "Changelog/Changelog3.4.1.md",
@@ -87,7 +90,8 @@
             "FXAA submodule": "Modules/Rendering/FXAASubmodule.md",
             "PBR submodule": "Modules/Rendering/PBRSubmodule.md",
             "Post-processing submodule": "Modules/Rendering/PostProcessingSubmodule.md",
-            "Renderer submodule": "Modules/Rendering/RendererSubmodule.md"
+            "Renderer submodule": "Modules/Rendering/RendererSubmodule.md",
+            "SSAO submodule": "Modules/Rendering/SSAOSubmodule.md"
           }
         },
         "Resource manager module": "Modules/ResourceManagerModule.md",

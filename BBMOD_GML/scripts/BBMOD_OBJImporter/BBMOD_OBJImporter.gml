@@ -18,6 +18,14 @@ function BBMOD_OBJImporter()
 		destroy: destroy,
 	};
 
+	/// @var {Bool} If `true`, then Y and Z axes are switched in imported
+	/// models. Default value is `false.`
+	ConvertYToZUp = false;
+
+	/// @var {Bool} If `true`, then the winding order of vertices is inverted.
+	/// Default value is `false`.
+	InvertWinding = false;
+
 	Vertices = ds_list_create();
 
 	Normals = ds_list_create();
@@ -146,6 +154,13 @@ function BBMOD_OBJImporter()
 				_split_string(_split[1], " ", _split);
 				var _vz = real(_split[0]);
 
+				if (ConvertYToZUp)
+				{
+					var _temp = _vz;
+					_vz = _vy;
+					_vy = _temp;
+				}
+
 				ds_list_add(Vertices, _vx, _vy, _vz);
 				break;
 
@@ -159,6 +174,13 @@ function BBMOD_OBJImporter()
 
 				_split_string(_split[1], " ", _split);
 				var _nz = real(_split[0]);
+
+				if (ConvertYToZUp)
+				{
+					var _temp = _nz;
+					_nz = _ny;
+					_ny = _temp;
+				}
 
 				ds_list_add(Normals, _nx, _ny, _nz);
 				break;
@@ -227,7 +249,14 @@ function BBMOD_OBJImporter()
 					_vertexInd[@ i] = _meshBuilder.add_vertex(_vertex);
 				}
 
-				_meshBuilder.add_face(_vertexInd[0], _vertexInd[1], _vertexInd[2]);
+				if (InvertWinding)
+				{
+					_meshBuilder.add_face(_vertexInd[2], _vertexInd[1], _vertexInd[0]);
+				}
+				else
+				{
+					_meshBuilder.add_face(_vertexInd[0], _vertexInd[1], _vertexInd[2]);
+				}
 				break;
 			}
 

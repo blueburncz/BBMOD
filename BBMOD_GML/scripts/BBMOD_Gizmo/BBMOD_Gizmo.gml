@@ -57,14 +57,6 @@ function BBMOD_Gizmo(_size=10.0)
 		destroy: destroy,
 	};
 
-	/// @var {Array<Struct.BBMOD_Model>} The gizmo model.
-	/// @note Please note that this model is not loaded asynchronnously,
-	/// therefore it cannot be used on platforms that require asynchronnous
-	/// loading, like HTML5!
-	/// @readonly
-	/// @obsolete This has been replaced with {@link BBMOD_Gizmo.Models}.
-	static Model = undefined;
-
 	/// @var {Array<Struct.BBMOD_Model>} Gizmo models for individual edit modes.
 	/// @note Please note that these are not loaded asynchronnously, therefore
 	/// the gizmo cannot be used on platforms that require asynchronnous loading,
@@ -103,11 +95,6 @@ function BBMOD_Gizmo(_size=10.0)
 			_modelScale,
 		];
 	}
-
-	/// @var {Bool} Used to show/hide the gizmo. Default value is `true`, which
-	/// makes it visible.
-	/// @obsolete This has been replaced with {@link BBMOD_Renderer.EditMode}.
-	Visible = true;
 
 	/// @var {Bool} If `true` then the gizmo is editing selected instances.
 	IsEditing = false;

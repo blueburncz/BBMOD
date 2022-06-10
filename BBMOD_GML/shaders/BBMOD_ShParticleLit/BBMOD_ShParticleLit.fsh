@@ -24,10 +24,10 @@ varying vec4 v_vColor;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
-varying vec3 v_vLight;
 varying vec3 v_vPosShadowmap;
+
 // include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +60,14 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Image based lighting
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
+
+////////////////////////////////////////////////////////////////////////////////
 // Fog
 
 // The color of the fog
@@ -86,6 +94,12 @@ uniform vec4 bbmod_LightAmbientDown;
 uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
+
+////////////////////////////////////////////////////////////////////////////////
+// Point lights
+
+// [(x, y, z, range), (r, g, b, m), ...]
+uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -212,6 +226,9 @@ Material UnpackMaterial(
 	vec4 specularColor = texture2D(texSpecularColor, uv);
 	m.Specular = xGammaToLinear(specularColor.rgb);
 
+	// Roughness
+	m.Roughness = 1.0 - m.Smoothness;
+
 	// Specular power
 	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 
@@ -220,6 +237,190 @@ Material UnpackMaterial(
 // include("SpecularMaterial.xsh")
 
 #pragma include("DefaultShader.xsh")
+#pragma include("DoDirectionalLightPS.xsh")
+#pragma include("SpecularBlinnPhong.xsh")
+
+vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
+{
+	vec3 H = normalize(L + V);
+	float NdotH = max(dot(N, H), 0.0);
+	float VdotH = max(dot(V, H), 0.0);
+	vec3 fresnel = m.Specular + (1.0 - m.Specular) * pow(1.0 - VdotH, 5.0);
+	float visibility = 0.25;
+	float A = m.SpecularPower / log(2.0);
+	float blinnPhong = exp2(A * NdotH - A);
+	float blinnNormalization = (m.SpecularPower + 8.0) / 8.0;
+	float normalDistribution = blinnPhong * blinnNormalization;
+	return fresnel * visibility * normalDistribution;
+}
+// include("SpecularBlinnPhong.xsh")
+
+void DoDirectionalLightPS(
+	vec3 direction,
+	vec3 color,
+	float shadow,
+	vec3 vertex,
+	vec3 N,
+	vec3 V,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular,
+	inout vec3 subsurface)
+{
+	vec3 L = normalize(-direction);
+	float NdotL = max(dot(N, L), 0.0);
+	color *= (1.0 - shadow) * NdotL;
+	diffuse += color;
+	specular += color * SpecularBlinnPhong(m, N, V, L);
+}
+// include("DoDirectionalLightPS.xsh")
+#pragma include("DoPointLightPS.xsh")
+
+void DoPointLightPS(
+	vec3 position,
+	float range,
+	vec3 color,
+	vec3 vertex,
+	vec3 N,
+	vec3 V,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular,
+	inout vec3 subsurface)
+{
+	vec3 L = position - vertex;
+	float dist = length(L);
+	L = normalize(L);
+	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
+	float NdotL = max(dot(N, L), 0.0);
+	color *= NdotL * att;
+	diffuse += color;
+	specular += color * SpecularBlinnPhong(m, N, V, L);
+}
+// include("DoPointLightPS.xsh")
+#pragma include("Exposure.xsh")
+void Exposure()
+{
+	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+}
+// include("Exposure.xsh")
+#pragma include("Fog.xsh")
+void Fog(float depth)
+{
+	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
+	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
+		* (ambientUp + ambientDown + directionalLightColor);
+	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
+}
+// include("Fog.xsh")
+#pragma include("GammaCorrect.xsh")
+
+void GammaCorrect()
+{
+	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+}
+// include("GammaCorrect.xsh")
+#pragma include("IBL.xsh")
+#pragma include("OctahedronMapping.xsh")
+// Source: https://gamedev.stackexchange.com/questions/169508/octahedral-impostors-octahedral-mapping
+
+/// @param dir Sampling dir vector in world-space.
+/// @return UV coordinates on an octahedron map.
+vec2 xVec3ToOctahedronUv(vec3 dir)
+{
+	vec3 octant = sign(dir);
+	float sum = dot(dir, octant);
+	vec3 octahedron = dir / sum;
+	if (octahedron.z < 0.0)
+	{
+		vec3 absolute = abs(octahedron);
+		octahedron.xy = octant.xy * vec2(1.0 - absolute.y, 1.0 - absolute.x);
+	}
+	return octahedron.xy * 0.5 + 0.5;
+}
+
+/// @desc Converts octahedron UV into a world-space vector.
+vec3 xOctahedronUvToVec3Normalized(vec2 uv)
+{
+	vec3 position = vec3(2.0 * (uv - 0.5), 0);
+	vec2 absolute = abs(position.xy);
+	position.z = 1.0 - absolute.x - absolute.y;
+	if (position.z < 0.0)
+	{
+		position.xy = sign(position.xy) * vec2(1.0 - absolute.y, 1.0 - absolute.x);
+	}
+	return position;
+}
+// include("OctahedronMapping.xsh")
+
+vec3 xDiffuseIBL(sampler2D ibl, vec2 texel, vec3 N)
+{
+	const float s = 1.0 / 8.0;
+	const float r2 = 7.0;
+
+	vec2 uv0 = xVec3ToOctahedronUv(N);
+	uv0.x = (r2 + mix(texel.x, 1.0 - texel.x, uv0.x)) * s;
+	uv0.y = mix(texel.y, 1.0 - texel.y, uv0.y);
+
+	return xGammaToLinear(xDecodeRGBM(texture2D(ibl, uv0)));
+}
+
+/// @source https://www.unrealengine.com/en-US/blog/physically-based-shading-on-mobile
+vec2 xEnvBRDFApprox(float roughness, float NdotV)
+{
+	const vec4 c0 = vec4(-1.0, -0.0275, -0.572, 0.022);
+	const vec4 c1 = vec4(1.0, 0.0425, 1.04, -0.04);
+	vec4 r = (roughness * c0) + c1;
+	float a004 = (min(r.x * r.x, exp2(-9.28 * NdotV)) * r.x) + r.y;
+	return ((vec2(-1.04, 1.04) * a004) + r.zw);
+}
+
+/// @source https://www.unrealengine.com/en-US/blog/physically-based-shading-on-mobile
+float xEnvBRDFApproxNonmetal(float roughness, float NdotV)
+{
+	// Same as EnvBRDFApprox(0.04, Roughness, NdotV)
+	const vec2 c0 = vec2(-1.0, -0.0275);
+	const vec2 c1 = vec2(1.0, 0.0425);
+	vec2 r = (roughness * c0) + c1;
+	return (min(r.x * r.x, exp2(-9.28 * NdotV)) * r.x) + r.y;
+}
+
+// Fully rough optimization:
+// xEnvBRDFApprox(SpecularColor, 1, 1) == SpecularColor * 0.4524 - 0.0024
+// DiffuseColor += SpecularColor * 0.45;
+// SpecularColor = 0.0;
+
+/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+vec3 xSpecularIBL(sampler2D ibl, vec2 texel/*, sampler2D brdf*/, vec3 f0, float roughness, vec3 N, vec3 V)
+{
+	float NdotV = clamp(dot(N, V), 0.0, 1.0);
+	vec3 R = 2.0 * dot(V, N) * N - V;
+	// vec2 envBRDF = texture2D(brdf, vec2(roughness, NdotV)).xy;
+	vec2 envBRDF = xEnvBRDFApprox(roughness, NdotV);
+
+	const float s = 1.0 / 8.0;
+	float r = roughness * 7.0;
+	float r2 = floor(r);
+	float rDiff = r - r2;
+
+	vec2 uv0 = xVec3ToOctahedronUv(R);
+	uv0.x = (r2 + mix(texel.x, 1.0 - texel.x, uv0.x)) * s;
+	uv0.y = mix(texel.y, 1.0 - texel.y, uv0.y);
+
+	vec2 uv1 = uv0;
+	uv1.x = uv1.x + s;
+
+	vec3 specular = f0 * envBRDF.x + envBRDF.y;
+
+	vec3 col0 = xGammaToLinear(xDecodeRGBM(texture2D(ibl, uv0))) * specular;
+	vec3 col1 = xGammaToLinear(xDecodeRGBM(texture2D(ibl, uv1))) * specular;
+
+	return mix(col0, col1, rDiff);
+}
+// include("IBL.xsh")
 #pragma include("ShadowMap.xsh")
 #pragma include("DepthEncoding.xsh")
 /// @param d Linearized depth to encode.
@@ -294,94 +495,13 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }
 // include("ShadowMap.xsh")
-#pragma include("DoDirectionalLightPS.xsh")
-#pragma include("SpecularBlinnPhong.xsh")
-
-vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
-{
-	vec3 H = normalize(L + V);
-	float NdotH = max(dot(N, H), 0.0);
-	float VdotH = max(dot(V, H), 0.0);
-	vec3 fresnel = m.Specular + (1.0 - m.Specular) * pow(1.0 - VdotH, 5.0);
-	float visibility = 0.25;
-	float A = m.SpecularPower / log(2.0);
-	float blinnPhong = exp2(A * NdotH - A);
-	float blinnNormalization = (m.SpecularPower + 8.0) / 8.0;
-	float normalDistribution = blinnPhong * blinnNormalization;
-	return fresnel * visibility * normalDistribution;
-}
-// include("SpecularBlinnPhong.xsh")
-
-void DoDirectionalLightPS(
-	vec3 direction,
-	vec3 color,
-	vec3 vertex,
-	vec3 N,
-	vec3 V,
-	Material m,
-	inout vec3 diffuse,
-	inout vec3 specular)
-{
-	vec3 L = normalize(-direction);
-	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL;
-	diffuse += color;
-	specular += color * SpecularBlinnPhong(m, N, V, L);
-}
-// include("DoDirectionalLightPS.xsh")
-#pragma include("DoPointLightPS.xsh")
-
-void DoPointLightPS(
-	vec3 position,
-	float range,
-	vec3 color,
-	vec3 vertex,
-	vec3 N,
-	vec3 V,
-	Material m,
-	inout vec3 diffuse,
-	inout vec3 specular)
-{
-	vec3 L = position - vertex;
-	float dist = length(L);
-	L = normalize(L);
-	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
-	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL * att;
-	diffuse += color;
-	specular += color * SpecularBlinnPhong(m, N, V, L);
-}
-// include("DoPointLightPS.xsh")
-#pragma include("Fog.xsh")
-void Fog(float depth)
-{
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
-		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
-	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-}
-// include("Fog.xsh")
-#pragma include("Exposure.xsh")
-void Exposure()
-{
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
-}
-// include("Exposure.xsh")
-#pragma include("GammaCorrect.xsh")
-void GammaCorrect()
-{
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-}
-// include("GammaCorrect.xsh")
 
 void DefaultShader(Material material, float depth)
 {
 	vec3 N = material.Normal;
-	vec3 lightDiffuse = v_vLight;
+	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
+	vec3 lightSubsurface = vec3(0.0);
 
 	// Ambient light
 	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
@@ -395,18 +515,35 @@ void DefaultShader(Material material, float depth)
 	}
 
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);
+	// IBL
+	lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
+	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
+
 	// Directional light
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
-		directionalLightColor * (1.0 - shadow),
-		v_vVertex, N, V, material, lightDiffuse, lightSpecular);
+		directionalLightColor,
+		shadow,
+		v_vVertex, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
+
+	// Point lights
+	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	{
+		vec4 positionRange = bbmod_LightPointData[i * 2];
+		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
+		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
+			material, lightDiffuse, lightSpecular, lightSubsurface);
+	}
+	
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
 	// Emissive
 	gl_FragColor.rgb += material.Emissive;
+	// Subsurface scattering
+	gl_FragColor.rgb += lightSubsurface;
 	// Opacity
 	gl_FragColor.a = material.Opacity;
 	// Fog
@@ -441,6 +578,6 @@ void main()
 		discard;
 	}
 
-	DefaultShader(material, v_fDepth);
+	DefaultShader(material, v_vPosition.z);
 }
 // include("Uber_PS.xsh")

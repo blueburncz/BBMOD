@@ -44,7 +44,7 @@ varying vec4 v_vColor;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
 // include("Varyings.xsh")
 
@@ -133,7 +133,7 @@ void main()
 	v_vVertex = (W * position).xyz;
 
 	gl_Position = positionWVP;
-	v_fDepth = positionWVP.z;
+	v_vPosition = positionWVP;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 	vec3 tangent = QuaternionRotate(batchRot, vec3(1.0, 0.0, 0.0));

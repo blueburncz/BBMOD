@@ -24,7 +24,7 @@ varying vec4 v_vColor;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
 // include("Varyings.xsh")
 
@@ -58,6 +58,14 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Image based lighting
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
+
+////////////////////////////////////////////////////////////////////////////////
 // Fog
 
 // The color of the fog
@@ -84,6 +92,12 @@ uniform vec4 bbmod_LightAmbientDown;
 uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
+
+////////////////////////////////////////////////////////////////////////////////
+// Point lights
+
+// [(x, y, z, range), (r, g, b, m), ...]
+uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -210,6 +224,9 @@ Material UnpackMaterial(
 	vec4 specularColor = texture2D(texSpecularColor, uv);
 	m.Specular = xGammaToLinear(specularColor.rgb);
 
+	// Roughness
+	m.Roughness = 1.0 - m.Smoothness;
+
 	// Specular power
 	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 
@@ -225,7 +242,7 @@ void Fog(float depth)
 	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
 	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
 	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
-		* ((ambientUp + ambientDown + directionalLightColor) / 3.0);
+		* (ambientUp + ambientDown + directionalLightColor);
 	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 }
@@ -237,6 +254,7 @@ void Exposure()
 }
 // include("Exposure.xsh")
 #pragma include("GammaCorrect.xsh")
+
 void GammaCorrect()
 {
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
@@ -278,6 +296,6 @@ void main()
 		discard;
 	}
 
-	UnlitShader(material, v_fDepth);
+	UnlitShader(material, v_vPosition.z);
 }
 // include("Uber_PS.xsh")

@@ -1,8 +1,3 @@
-/// @macro {Real} The supported version of BBMOD and BBANIM files.
-/// @obsolete This macro is now obsolete. Please use {@link BBMOD_VERSION_MAJOR}
-/// and {@link BBMOD_VERSION_MINOR}.
-#macro BBMOD_VERSION 3
-
 /// @macro {Real} The supported major version of BBMOD and BBANIM files.
 #macro BBMOD_VERSION_MAJOR 3
 

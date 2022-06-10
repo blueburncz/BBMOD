@@ -38,9 +38,6 @@ uniform vec2 bbmod_TextureScale;
 
 uniform vec4 bbmod_Bones[2 * MAX_BONES];
 
-// [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings
@@ -50,7 +47,7 @@ varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
 // include("Varyings.xsh")
 
@@ -136,12 +133,15 @@ void main()
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
 
 	gl_Position = positionWVP;
-	v_fDepth = positionWVP.z;
+	v_vPosition = positionWVP;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 	vec3 tangent = in_TangentW.xyz;
 	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
-	v_mTBN = mat3(gm_Matrices[MATRIX_WORLD]) * mat3(tangent, bitangent, normal);
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
+	v_mTBN = mat3(tangent, bitangent, normal);
 
 }
 // include("Uber_VS.xsh")
