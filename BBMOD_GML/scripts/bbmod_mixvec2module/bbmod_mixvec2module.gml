@@ -21,7 +21,7 @@ function BBMOD_MixVec2Module(_property=undefined, _from=new BBMOD_Vec2(), _to=_f
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The first of the two consecutive
 	/// properties. Default value is `undefined`.
-	Property = undefined;
+	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec2} The initial value to mix from. Default value is
 	/// `(0.0, 0.0)`.

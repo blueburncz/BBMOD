@@ -16,8 +16,8 @@ function BBMOD_MixQuaternionModule(_property=undefined, _from=new BBMOD_Quaterni
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four consecutive
-	/// properties that together form a color. Default value is `undefined`.
-	Property = undefined;
+	/// properties that together form a quaternion. Default value is `undefined`.
+	Property = _property;
 
 	/// @var {Struct.BBMOD_Quaternion} The quaternion to mix from. Default value is
 	/// an identity quaternion.

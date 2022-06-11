@@ -16,7 +16,7 @@ function BBMOD_MixRealModule(_property=undefined, _from=0.0, _to=_from)
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The property to set initial value
 	/// of. Default value is `undefined`.
-	Property = undefined;
+	Property = _property;
 
 	/// @var {Real} The initial value to mix from. Default value is 0.0.
 	From = _from;

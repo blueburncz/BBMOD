@@ -17,7 +17,7 @@ function BBMOD_MixColorModule(_property=undefined, _from=BBMOD_C_WHITE, _to=_fro
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four consecutive
 	/// properties that together form a color. Default value is `undefined`.
-	Property = undefined;
+	Property = _property;
 
 	/// @var {Struct.BBMOD_Color} The color to mix from. Default value is
 	/// {@link BBMOD_C_WHITE}.

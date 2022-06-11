@@ -19,8 +19,8 @@ function BBMOD_MixQuaternionOverTimeModule(_property=undefined, _from=new BBMOD_
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four consecutive
-	/// properties that together form a color. Default value is `undefined`.
-	Property = undefined;
+	/// properties that together form a quaternion. Default value is `undefined`.
+	Property = _property;
 
 	/// @var {Struct.BBMOD_Quaternion} The quaternion when the particle has full
 	/// health. Default value is an identity quaternion.

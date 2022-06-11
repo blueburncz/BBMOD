@@ -20,7 +20,7 @@ function BBMOD_MixColorOverTimeModule(_property=undefined, _from=BBMOD_C_WHITE, 
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four consecutive
 	/// properties that together form a color. Default value is `undefined`.
-	Property = undefined;
+	Property = _property;
 
 	/// @var {Struct.BBMOD_Color} The color when the particle has full
 	/// health. Default value is {@link BBMOD_C_WHITE}.

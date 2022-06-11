@@ -16,7 +16,7 @@ function BBMOD_SetVec2Module(_property=undefined, _value=new BBMOD_Vec2())
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The first property. Default value
 	/// is `undefined`.
-	Property = undefined;
+	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec2} The initial value of the properties. Default
 	/// value is `(0.0, 0.0).

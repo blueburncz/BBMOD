@@ -23,7 +23,7 @@ function BBMOD_MixVec3FromSpeedModule(_property=undefined, _from=new BBMOD_Vec3(
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The first of the three consecutive
 	/// properties. Default value is `undefined`.
-	Property = undefined;
+	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec3} The value when the particle has full health. Default
 	/// value is `(0.0, 0.0, 0.0)`.

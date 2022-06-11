@@ -20,7 +20,7 @@ function BBMOD_MixVec2OverTimeModule(_property=undefined, _from=new BBMOD_Vec2()
 {
 	/// @var {Enum.BBMOD_EParticle/undefined} The first of the two consecutive
 	/// properties. Default value is `undefined`.
-	Property = undefined;
+	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec2} The value when the particle has full health.
 	/// Default value is `(0.0, 0.0)`.
