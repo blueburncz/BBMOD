@@ -1,4 +1,4 @@
-/// @func BBMOD_MixInitialSpeedModule([_from[, _to]])
+/// @func BBMOD_MixSpeedModule([_from[, _to]])
 ///
 /// @extends BBMOD_ParticleModule
 ///
@@ -11,14 +11,14 @@
 /// @see BBMOD_EParticle.VelocityX
 /// @see BBMOD_EParticle.VelocityY
 /// @see BBMOD_EParticle.VelocityZ
-function BBMOD_MixInitialSpeedModule(_from=1.0, _to=_from)
+function BBMOD_MixSpeedModule(_from=1.0, _to=_from)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The minimum velocity vector magnitude. Default value is 1.0.
 	From = _from;
 
 	/// @var {Real} The maximum velocity vector magnitude. Default value is the
-	/// same as {@link BBMOD_MixInitialSpeedModule.From}.
+	/// same as {@link BBMOD_MixSpeedModule.From}.
 	To = _to;
 
 	static on_particle_start = function (_emitter, _particleIndex) {
