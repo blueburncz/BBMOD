@@ -16,7 +16,7 @@
 function BBMOD_AddVec4OverTimeModule(_property=undefined, _change=new BBMOD_Vec4(1.0), _period=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four
 	/// consecutive properties. Default value is `undefined`.
 	Property = _property;
 

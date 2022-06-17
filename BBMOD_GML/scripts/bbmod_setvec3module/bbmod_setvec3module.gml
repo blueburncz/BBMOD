@@ -14,7 +14,7 @@
 function BBMOD_SetVec3Module(_property=undefined, _value=new BBMOD_Vec3())
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first property. Default value
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first property. Default value
 	/// is `undefined`.
 	Property = _property;
 

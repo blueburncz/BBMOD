@@ -14,7 +14,7 @@
 function BBMOD_SetQuaternionModule(_property=undefined, _value=new BBMOD_Quaternion())
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four properties
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four properties
 	/// that together form a quaternion. Defaults to `undefined`.
 	Property = _property;
 

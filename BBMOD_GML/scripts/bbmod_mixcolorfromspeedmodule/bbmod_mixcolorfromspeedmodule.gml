@@ -20,7 +20,7 @@
 function BBMOD_MixColorFromSpeedModule(_property=undefined, _from=BBMOD_C_WHITE, _to=_from.Clone(), _min=0.0, _max=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four consecutive
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four consecutive
 	/// properties that together form a color. Default value is `undefined`.
 	Property = _property;
 

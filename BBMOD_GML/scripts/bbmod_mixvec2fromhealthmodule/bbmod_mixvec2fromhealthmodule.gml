@@ -16,7 +16,7 @@
 function BBMOD_MixVec2FromHealthModule(_property=undefined, _from=new BBMOD_Vec2(), _to=_from.Clone())
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first of the two consecutive
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the two consecutive
 	/// properties. Default value is `undefined`.
 	Property = _property;
 

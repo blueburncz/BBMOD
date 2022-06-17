@@ -105,12 +105,13 @@ particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 10
 	.add_module(new BBMOD_MixVec3Module(BBMOD_EParticle.VelocityX, new BBMOD_Vec3(-1.0, -1.0, -100.0), new BBMOD_Vec3(1.0, 1.0, -50.0)))
 	.add_module(new BBMOD_SetRealModule(BBMOD_EParticle.Bounce, 0.8))
 	.add_module(new BBMOD_SetRealModule(BBMOD_EParticle.Drag, 0.01))
+	.add_module(new BBMOD_SetVec3Module(BBMOD_EParticle.ScaleX, new BBMOD_Vec3(10.0)))
 	.add_module(new BBMOD_MixVec3FromHealthModule(BBMOD_EParticle.ScaleX, new BBMOD_Vec3(1.0), new BBMOD_Vec3(0.0)))
 	.add_module(new BBMOD_MixColorFromHealthModule(BBMOD_EParticle.ColorR, BBMOD_C_ORANGE, BBMOD_C_RED))
 	.add_module(new BBMOD_GravityModule(BBMOD_VEC3_UP.Scale(-98.0)))
 	.add_module(new BBMOD_DragModule())
 	.add_module(new BBMOD_TerrainCollisionModule(global.terrain))
-	.add_module(new BBMOD_AddHealthOnCollisionModule(-1.0 / 3.0))
+	.add_module(new BBMOD_AddRealOnCollisionModule(BBMOD_EParticle.HealthLeft, -1.0 / 3.0))
 	;
 particleSystem.Loop = true;
 

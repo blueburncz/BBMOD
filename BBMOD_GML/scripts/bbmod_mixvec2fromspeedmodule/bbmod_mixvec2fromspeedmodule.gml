@@ -21,7 +21,7 @@
 function BBMOD_MixVec2FromSpeedModule(_property=undefined, _from=new BBMOD_Vec2(), _to=_from.Clone(), _min=0.0, _max=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first of the two consecutive
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the two consecutive
 	/// properties. Default value is `undefined`.
 	Property = _property;
 

@@ -16,7 +16,7 @@
 function BBMOD_MixQuaternionFromHealthModule(_property=undefined, _from=new BBMOD_Quaternion(), _to=_from.Clone())
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four consecutive
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four consecutive
 	/// properties that together form a quaternion. Default value is `undefined`.
 	Property = _property;
 

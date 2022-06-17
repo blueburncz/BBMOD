@@ -19,7 +19,7 @@
 function BBMOD_MixVec4Module(_property=undefined, _from=new BBMOD_Vec4(), _to=_from.Clone(), _separate=true)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four consecutive
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four consecutive
 	/// properties. Default value is `undefined`.
 	Property = _property;
 

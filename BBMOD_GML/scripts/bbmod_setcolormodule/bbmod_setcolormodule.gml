@@ -14,7 +14,7 @@
 function BBMOD_SetColorModule(_property=undefined, _value=BBMOD_C_WHITE)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The first of the four
+	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four
 	/// properties that together form a color. Default value is `undefined`.
 	Property = _property;
 

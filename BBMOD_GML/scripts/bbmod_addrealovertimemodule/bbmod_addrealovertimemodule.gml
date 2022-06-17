@@ -15,7 +15,7 @@
 function BBMOD_AddRealOverTimeModule(_property=undefined, _change=1.0, _period=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The property to add the value to.
+	/// @var {Enum.BBMOD_EParticle/Undefined} The property to add the value to.
 	/// Default value is `undefined`.
 	Property = _property;
 

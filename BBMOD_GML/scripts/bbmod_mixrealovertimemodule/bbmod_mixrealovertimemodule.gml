@@ -18,7 +18,7 @@
 function BBMOD_MixRealOverTimeModule(_property=undefined, _from=0.0, _to=_from, _duration=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/undefined} The property to set initial value
+	/// @var {Enum.BBMOD_EParticle/Undefined} The property to set initial value
 	/// of. Default value is `undefined`.
 	Property = _property;
 
