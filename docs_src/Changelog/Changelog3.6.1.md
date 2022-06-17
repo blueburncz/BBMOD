@@ -1,8 +1,11 @@
-# Changelog
+# Changelog 3.6.1
+This release mainly fixes rendering of models that are animated using scene graph nodes instead of skeletal animations. Additionally, each sub-mesh of a model can now have a different vertex format, which allows you to use both scene graph and skeletal animations in a single model. Pointlist and linelist primitive type of meshes are now also supported. Re-conversion of models using new BBMOD CLI is not required, but it is advised.
 
 ## CLI:
 * Updated Assimp to v5.2.4.
 * Added new option `-v`, which shows version info and exits.
+* Fixed export of bounding boxes for meshes.
+* Added support for pointlist and linelist meshes.
 * Using animation optimization level 2 now also includes world-space transforms of nodes, which allows you to use bone attachments.
 
 ## GML API:
