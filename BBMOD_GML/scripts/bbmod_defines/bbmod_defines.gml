@@ -2,7 +2,7 @@
 #macro BBMOD_VERSION_MAJOR 3
 
 /// @macro {Real} The current minor version of BBMOD and BBANIM files.
-#macro BBMOD_VERSION_MINOR 1
+#macro BBMOD_VERSION_MINOR 2
 
 /// @macro {Real} A value used to tell that no normals should be generated
 /// if the model does not have any.

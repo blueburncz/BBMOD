@@ -155,7 +155,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 
 	PRINT_SUCCESS("Model saved to \"%s\"!", fout);
 
-	log << "Vertex format:" << std::endl;
+	/*log << "Vertex format:" << std::endl;
 	log << "==============" << std::endl;
 	SVertexFormat* vformat = model->VertexFormat;
 	if (vformat->Vertices) { log << "Position 3D" << std::endl; }
@@ -165,7 +165,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 	if (vformat->TangentW) { log << "Tangent & bitangent sign" << std::endl; }
 	if (vformat->Bones) { log << "Bone indices and weights" << std::endl; }
 	if (vformat->Ids) { log << "Ids" << std::endl; }
-	log << std::endl;
+	log << std::endl;*/
 
 	log << "Nodes:" << std::endl;
 	log << "======" << std::endl;

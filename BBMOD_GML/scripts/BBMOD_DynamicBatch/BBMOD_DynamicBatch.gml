@@ -54,6 +54,10 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @private
 	VertexFormat = Model.get_vertex_format(false, true);
 
+	/// @var {Constant.PrimitiveType/Undefined} The primitive type of the batch.
+	/// @private
+	PrimitiveType = undefined;
+
 	vertex_begin(VertexBuffer, VertexFormat.Raw);
 	Model.to_dynamic_batch(self);
 	vertex_end(VertexBuffer);
@@ -92,7 +96,7 @@ function BBMOD_DynamicBatch(_model, _size)
 			return self;
 		}
 		BBMOD_SHADER_CURRENT.set_batch_data(_data);
-		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
+		vertex_submit(VertexBuffer, PrimitiveType, _material.BaseOpacity);
 		return self;
 	};
 
@@ -108,7 +112,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_Material
 	static render = function (_material, _data) {
 		gml_pragma("forceinline");
-		_material.RenderQueue.draw_mesh_batched(VertexBuffer, matrix_get(matrix_world), _material, _data);
+		_material.RenderQueue.draw_mesh_batched(VertexBuffer, matrix_get(matrix_world), _material, _data, PrimitiveType);
 		return self;
 	};
 

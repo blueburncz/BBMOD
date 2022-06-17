@@ -245,7 +245,7 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 	unsigned char spaces = 0;
 	if (config.AnimationOptimization == 0) { spaces = spaces | BBMOD_BONE_SPACE_PARENT; }
 	if (config.AnimationOptimization == 1) { spaces = spaces | BBMOD_BONE_SPACE_WORLD; }
-	if (config.AnimationOptimization == 2) { spaces = spaces | BBMOD_BONE_SPACE_BONE; }
+	if (config.AnimationOptimization == 2) { spaces = spaces | BBMOD_BONE_SPACE_WORLD | BBMOD_BONE_SPACE_BONE; }
 	FILE_WRITE_DATA(file, spaces);
 	FILE_WRITE_DATA(file, Duration);
 	FILE_WRITE_DATA(file, TicsPerSecond);

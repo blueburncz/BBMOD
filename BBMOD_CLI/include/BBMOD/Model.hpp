@@ -28,6 +28,7 @@ struct SModel
 
 	uint8_t VersionMinor = BBMOD_VERSION_MINOR;
 
+	// Unused since 3.2 - each mesh has its own vertex format instead!
 	SVertexFormat* VertexFormat = nullptr;
 	
 	std::vector<SMesh*> Meshes;

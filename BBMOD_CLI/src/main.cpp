@@ -10,7 +10,7 @@
 
 // TODO: Implement class for argument parsing
 
-const char* gUsage = "Usage: BBMOD.exe [-h] input_file [output_file] [args...]";
+const char* gUsage = "Usage: BBMOD.exe [-h|-v] input_file [output_file] [args...]";
 
 #define PRINT_BOOL(bValue) (bValue ? "true" : "false")
 
@@ -24,6 +24,7 @@ void PrintHelp()
 		<< "Arguments:" << std::endl
 		<< std::endl
 		<< "  -h                                   Show this help message and exit." << std::endl
+		<< "  -v                                   Show version info and exit." << std::endl
 		<< "  input_file                           Path to the model to convert." << std::endl
 		<< "  output_file                          Where to save the converted model. If not specified, " << std::endl
 		<< "                                       then the input file path is used. Extensions .bbmod" << std::endl
@@ -55,9 +56,9 @@ void PrintHelp()
 		<< "  -lh|--left-handed=true|false         Convert to left-handed coordinate system." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.LeftHanded) << "." << std::endl
 		<< "  -oa|--optimize-animations=0|1|2      Optimize animations." << std::endl
-		<< "                                         * 0 - No optimizations (node transform in world-space)." << std::endl
-		<< "                                         * 1 - Node transform in parent-space." << std::endl
-		<< "                                         * 2 - Node transform in bone-space." << std::endl
+		<< "                                         * 0 - No optimizations (node transform in parent-space)." << std::endl
+		<< "                                         * 1 - Node transform in world-space." << std::endl
+		<< "                                         * 2 - Node transform in world-space and bone-space." << std::endl
 		<< "                                       Default is " << config.AnimationOptimization << "." << std::endl
 		<< "  -on|--optimize-nodes=true|false      Join multiple nodes (without animations, bones, ...) into one." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.OptimizeNodes) << "." << std::endl
@@ -92,6 +93,12 @@ int main(int argc, const char* argv[])
 			if (strcmp(argv[i], "-h") == 0)
 			{
 				PrintHelp();
+				return EXIT_SUCCESS;
+			}
+			else if (strcmp(argv[i], "-v") == 0)
+			{
+				std::cout << "File format version: " << BBMOD_VERSION_MAJOR << "." << BBMOD_VERSION_MINOR << std::endl
+					<< "Assimp version: 5.2.4" << std::endl;
 				return EXIT_SUCCESS;
 			}
 			else if (std::regex_match(argv[i], match, options_regex))

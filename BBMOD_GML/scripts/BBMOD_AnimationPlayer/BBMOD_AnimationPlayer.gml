@@ -169,10 +169,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 			var _node = _animStack[--_stackNext];
 
-			if (!_node.IsSkeleton)
-			{
-				continue;
-			}
+			// TODO: Separate skeleton from the rest of the nodes to save on
+			// iterations here.
 
 			var _nodeIndex = _node.Index;
 			var _nodeOffset = _nodeIndex * 8;
@@ -317,9 +315,16 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 			if (FrameskipCurrent == 0)
 			{
-				if (_animation.Spaces & BBMOD_BONE_SPACE_PARENT)
+				if (_animation.Spaces & BBMOD_BONE_SPACE_BONE)
 				{
-					animate(_animInst, _animationTime);
+					if (_animation.Spaces & BBMOD_BONE_SPACE_WORLD)
+					{
+						var _frame = _animation.FramesWorld[_animationTime];
+						array_copy(NodeTransform, 0, _frame, 0, _nodeSize);
+					}
+
+					// TODO: Just use the animation's array right away?
+					array_copy(TransformArray, 0, _animation.FramesBone[_animationTime], 0, _boneSize);
 				}
 				else if (_animation.Spaces & BBMOD_BONE_SPACE_WORLD)
 				{
@@ -340,11 +345,12 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 						_index += 8;
 					}
 				}
-				else if (_animation.Spaces & BBMOD_BONE_SPACE_BONE)
+				else if (_animation.Spaces & BBMOD_BONE_SPACE_PARENT)
 				{
-					array_copy(TransformArray, 0, _animation.FramesBone[_animationTime], 0, _boneSize);
-					// TODO: Just use the animation's array right away?
+					animate(_animInst, _animationTime);
 				}
+
+				array_copy(TransformArray, _boneSize, NodeTransform, _boneSize, _nodeSize - _boneSize);
 			}
 
 			if (Frameskip == infinity)

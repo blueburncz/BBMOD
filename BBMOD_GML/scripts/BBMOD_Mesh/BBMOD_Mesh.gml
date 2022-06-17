@@ -1,7 +1,7 @@
 /// @func BBMOD_Mesh(_vertexFormat[, _model])
 /// @extends BBMOD_Class
 /// @desc A mesh struct.
-/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format of the mesh.
+/// @param {Struct.BBMOD_VertexFormat/Undefined} _vertexFormat The vertex format of the mesh.
 /// @param {Struct.BBMOD_Model/Undefined} [_model] The model to which the mesh belongs.
 /// @see BBMOD_Model
 /// @see BBMOD_VertexFormat
@@ -40,6 +40,10 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @readonly
 	VertexFormat = _vertexFormat;
 
+	/// @var {Constant.PrimitiveType} The primitive type of the mesh.
+	/// @readonly
+	PrimitiveType = pr_trianglelist;
+
 	/// @func from_buffer(_buffer)
 	/// @desc Loads mesh data from a bufffer.
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
@@ -52,6 +56,12 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		{
 			BboxMin = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f32);
 			BboxMax = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f32);
+		}
+
+		if (Model.VersionMinor >= 2)
+		{
+			VertexFormat = bbmod_vertex_format_load(_buffer);
+			PrimitiveType = buffer_read(_buffer, buffer_u32);
 		}
 
 		var _vertexCount = buffer_read(_buffer, buffer_u32);
@@ -93,7 +103,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 			BBMOD_SHADER_CURRENT.set_bones(_transform);
 		}
 		BBMOD_SHADER_CURRENT.set_instance_id();
-		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
+		vertex_submit(VertexBuffer, PrimitiveType, _material.BaseOpacity);
 		return self;
 	};
 
@@ -107,11 +117,11 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		gml_pragma("forceinline");
 		if (_transform != undefined)
 		{
-			_material.RenderQueue.draw_mesh_animated(VertexBuffer, _matrix, _material, _transform);
+			_material.RenderQueue.draw_mesh_animated(VertexBuffer, _matrix, _material, _transform, PrimitiveType);
 		}
 		else
 		{
-			_material.RenderQueue.draw_mesh(VertexBuffer, _matrix, _material);
+			_material.RenderQueue.draw_mesh(VertexBuffer, _matrix, _material, PrimitiveType);
 		}
 		return self;
 	};
@@ -119,8 +129,16 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @func to_dynamic_batch(_dynamicBatch)
 	/// @param {Struct.BBMOD_DynamicBatch} _dynamicBatch
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
+	/// @throws {Struct.BBMOD_Exception} When adding the mesh into a batch with
+	/// a different primitive type.
 	/// @private
 	static to_dynamic_batch = function (_dynamicBatch) {
+		if (_dynamicBatch.PrimitiveType != undefined
+			&& _dynamicBatch.PrimitiveType != PrimitiveType)
+		{
+			throw new BBMOD_Exception("Cannot add a mesh to a dynamic batch with a different primitive type!");
+		}
+		_dynamicBatch.PrimitiveType = PrimitiveType;
 		var _vertexBuffer = _dynamicBatch.VertexBuffer;
 		var _model = _dynamicBatch.Model;
 		var _vertexFormat = _model.VertexFormat;
@@ -217,8 +235,16 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
 	/// @param {Array<Real>} _transform
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
+	/// @throws {Struct.BBMOD_Exception} When adding the mesh into a batch with
+	/// a different primitive type.
 	/// @private
 	static to_static_batch = function (_model, _staticBatch, _transform) {
+		if (_staticBatch.PrimitiveType != undefined
+			&& _staticBatch.PrimitiveType != PrimitiveType)
+		{
+			throw new BBMOD_Exception("Cannot add a mesh to a static batch with a different primitive type!");
+		}
+		_staticBatch.PrimitiveType = PrimitiveType;
 		var _vertexBuffer = _staticBatch.VertexBuffer;
 		var _vertexFormat = _model.VertexFormat;
 		var _hasVertices = _vertexFormat.Vertices;

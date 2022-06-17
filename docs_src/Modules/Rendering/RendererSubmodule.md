@@ -8,8 +8,7 @@ rendering pipeline by:
 This way it is easier to manage draw calls, texture swaps and shader uniform
 changes, as well as to tackle alpha blending issues etc.
 
-In combination with material's [Priority](./BBMOD_BaseMaterial.Priority.html)
-property and [render queues](./BBMOD_RenderCommand.html), this module
+In combination with [render queues](./BBMOD_RenderQueue.html), this module
 provides a much more sophisticated way to create such rendering pipelines.
 
 ## Scripting API

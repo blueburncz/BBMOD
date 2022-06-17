@@ -69,30 +69,14 @@ SModel* SModel::FromAssimp(const aiScene* scene, const SConfig& config)
 {
 	SModel* model = new SModel();
 
-	// Resolve vertex format of the model
-	aiMesh* mesh = scene->mMeshes[0];
-
-	SVertexFormat* vertexFormat = new SVertexFormat();
-	vertexFormat->Vertices = true;
-	vertexFormat->Normals = mesh->HasNormals() && !config.DisableNormals;
-	vertexFormat->TextureCoords = mesh->HasTextureCoords(0) && !config.DisableTextureCoords;
-	vertexFormat->Colors = mesh->HasVertexColors(0) && !config.DisableVertexColors;
-	vertexFormat->TangentW = mesh->HasTangentsAndBitangents() && !(config.DisableNormals || config.DisableTangentW);
-	vertexFormat->Bones = false;
-	vertexFormat->Ids = false;
-
+	// Collect all bones
 	if (!config.DisableBones)
 	{
 		for (uint32_t i = 0; i < scene->mNumMeshes; ++i)
 		{
 			aiMesh* meshCurrent = scene->mMeshes[i];
-
 			if (meshCurrent->HasBones())
 			{
-				// The model has bones
-				vertexFormat->Bones = true;
-
-				// Collect all bones
 				for (uint32_t j = 0; j < meshCurrent->mNumBones; ++j)
 				{
 					aiBone* boneCurrent = meshCurrent->mBones[j];
@@ -121,10 +105,6 @@ SModel* SModel::FromAssimp(const aiScene* scene, const SConfig& config)
 		model->NodeCount = model->BoneCount;
 	}
 
-	vertexFormat->Ids = false;
-
-	model->VertexFormat = vertexFormat;
-	
 	// Meshes
 	for (uint32_t i = 0; i < scene->mNumMeshes; ++i)
 	{
@@ -198,10 +178,10 @@ bool SModel::Save(std::string path)
 	FILE_WRITE_DATA(file, VersionMajor);
 	FILE_WRITE_DATA(file, VersionMinor);
 
-	if (!VertexFormat->Save(file))
+	/*if (!VertexFormat->Save(file))
 	{
 		return false;
-	}
+	}*/
 
 	uint32_t meshCount = (uint32_t)Meshes.size();
 	FILE_WRITE_DATA(file, meshCount);
@@ -297,8 +277,12 @@ SModel* SModel::Load(std::string path)
 	model->VersionMajor = versionMajor;
 	model->VersionMinor = versionMinor;
 
-	SVertexFormat* vertexFormat = SVertexFormat::Load(file);
-	model->VertexFormat = vertexFormat;
+	SVertexFormat* vertexFormat = nullptr;
+	if (!hasMinorVersion || versionMinor < 2)
+	{
+		vertexFormat = SVertexFormat::Load(file);
+		model->VertexFormat = vertexFormat;
+	}
 
 	uint32_t meshCount;
 	FILE_READ_DATA(file, meshCount);

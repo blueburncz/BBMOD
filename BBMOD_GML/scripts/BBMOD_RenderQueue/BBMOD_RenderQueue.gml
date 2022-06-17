@@ -97,27 +97,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
-	/// @func draw_mesh(_vertexBuffer, _matrix, _material)
+	/// @func draw_mesh(_vertexBuffer, _matrix, _material[, _primitiveType])
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the
 	/// queue.
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
 	/// @param {Array<Real>} _matrix The world matrix.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
+	/// @param {Constant.PrimitiveType} [_primitiveType] The primitive type of
+	/// the mesh. Defaults to `pr_trianglelist`.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static draw_mesh = function (_vertexBuffer, _matrix, _material) {
+	static draw_mesh = function (_vertexBuffer, _matrix, _material, _primitiveType=pr_trianglelist) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMesh,
-			4,
+			5,
 			global.__bbmodInstanceID,
 			_material,
 			_matrix,
+			_primitiveType,
 			_vertexBuffer);
 		return self;
 	};
 
-	/// @func draw_mesh_animated(_vertexBuffer, _matrix, _material, _boneTransform)
+	/// @func draw_mesh_animated(_vertexBuffer, _matrix, _material, _boneTransform[, _primitiveType])
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshAnimated} command into
 	/// the queue.
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
@@ -125,39 +128,45 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Struct.BBMOD_Material} _material The material to use.
 	/// @param {Array<Real>} _boneTransform An array with bone transformation
 	/// data.
+	/// @param {Constant.PrimitiveType} [_primitiveType] The primitive type of
+	/// the mesh. Defaults to `pr_trianglelist`.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static draw_mesh_animated = function (_vertexBuffer, _matrix, _material, _boneTransform) {
+	static draw_mesh_animated = function (_vertexBuffer, _matrix, _material, _boneTransform, _primitiveType=pr_trianglelist) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMeshAnimated,
-			5,
+			6,
 			global.__bbmodInstanceID,
 			_material,
 			_matrix,
 			_boneTransform,
+			_primitiveType,
 			_vertexBuffer);
 		return self;
 	};
 
-	/// @func draw_mesh_batched(_vertexBuffer, _matrix, _material, _batchData)
+	/// @func draw_mesh_batched(_vertexBuffer, _matrix, _material, _batchData[, _primitiveType])
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshBatched} command into
 	/// the queue.
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
 	/// @param {Array<Real>} _matrix The world matrix.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
 	/// @param {Array<Real>} _batchData An array with batch data.
+	/// @param {Constant.PrimitiveType} [_primitiveType] The primitive type of
+	/// the mesh. Defaults to `pr_trianglelist`.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static draw_mesh_batched = function (_vertexBuffer, _matrix, _material, _batchData) {
+	static draw_mesh_batched = function (_vertexBuffer, _matrix, _material, _batchData, _primitiveType=pr_trianglelist) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMeshBatched,
-			5,
+			6,
 			global.__bbmodInstanceID,
 			_material,
 			_matrix,
 			_batchData,
+			_primitiveType,
 			_vertexBuffer);
 		return self;
 	};
@@ -1101,13 +1110,14 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
 					|| !_material.apply())
 				{
-					i += 2;
+					i += 3;
 					_condition = false;
 					continue;
 				}
 				BBMOD_SHADER_CURRENT.set_instance_id(_id);
 				matrix_set(matrix_world, _renderCommands[| i++]);
-				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
+				var _primitiveType = _renderCommands[| i++];
+				vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshAnimated:
@@ -1116,14 +1126,15 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
 					|| !_material.apply())
 				{
-					i += 3;
+					i += 4;
 					_condition = false;
 					continue;
 				}
 				BBMOD_SHADER_CURRENT.set_instance_id(_id);
 				matrix_set(matrix_world, _renderCommands[| i++]);
 				BBMOD_SHADER_CURRENT.set_bones(_renderCommands[| i++]);
-				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
+				var _primitiveType = _renderCommands[| i++];
+				vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshBatched:
@@ -1132,14 +1143,15 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
 					|| !_material.apply())
 				{
-					i += 3;
+					i += 4;
 					_condition = false;
 					continue;
 				}
 				BBMOD_SHADER_CURRENT.set_instance_id(_id);
 				matrix_set(matrix_world, _renderCommands[| i++]);
 				BBMOD_SHADER_CURRENT.set_batch_data(_renderCommands[| i++]);
-				vertex_submit(_renderCommands[| i++], pr_trianglelist, _material.BaseOpacity);
+				var _primitiveType = _renderCommands[| i++];
+				vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.EndConditionalBlock:

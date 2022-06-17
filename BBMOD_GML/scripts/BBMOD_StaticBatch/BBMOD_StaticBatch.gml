@@ -45,6 +45,10 @@ function BBMOD_StaticBatch(_vformat)
 	/// @private
 	VertexFormat = _vformat;
 
+	/// @var {Constant.PrimitiveType/Undefined} The primitive type of the batch.
+	/// @private
+	PrimitiveType = undefined;
+
 	/// @func start()
 	/// @desc Begins adding models into the static batch.
 	/// @see BBMOD_StaticBatch.add
@@ -124,7 +128,7 @@ function BBMOD_StaticBatch(_vformat)
 		{
 			return self;
 		}
-		vertex_submit(VertexBuffer, pr_trianglelist, _material.BaseOpacity);
+		vertex_submit(VertexBuffer, PrimitiveType, _material.BaseOpacity);
 		return self;
 	};
 
@@ -136,7 +140,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @see BBMOD_BaseMaterial
 	static render = function (_material) {
 		gml_pragma("forceinline");
-		_material.RenderQueue.draw_mesh(VertexBuffer, matrix_get(matrix_world), _material);
+		_material.RenderQueue.draw_mesh(VertexBuffer, matrix_get(matrix_world), _material, PrimitiveType);
 		return self;
 	};
 

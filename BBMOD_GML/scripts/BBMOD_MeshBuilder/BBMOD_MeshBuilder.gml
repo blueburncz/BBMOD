@@ -1,8 +1,11 @@
-/// @func BBMOD_MeshBuilder()
+/// @func BBMOD_MeshBuilder([_primitiveType])
 ///
 /// @extends BBMOD_Class
 ///
 /// @desc Allows you to build meshes through code.
+///
+/// @param {Constant.PrimitiveType} [_primitiveType] The primitive type of built
+/// meshes. Defaults to `pr_trianglelist`.
 ///
 /// @example
 /// Following code shows how you can create a plane mesh using the mesh builder.
@@ -29,7 +32,7 @@
 /// @see BBMOD_Mesh
 /// @see BBMOD_Vertex
 /// @see BBMOD_VertexFormat
-function BBMOD_MeshBuilder()
+function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -37,6 +40,10 @@ function BBMOD_MeshBuilder()
 	static Super_Class = {
 		destroy: destroy,
 	};
+
+	/// @var {Constant.PrimitiveType} The primitive type of built meshes.
+	/// @readonly
+	PrimitiveType = _primitiveType;
 
 	/// @var {Id.DsList<Struct.BBMOD_Vertex>} List of mesh vertices.
 	/// @readonly
@@ -54,21 +61,26 @@ function BBMOD_MeshBuilder()
 	/// @return {Real} Returns the index of the vertex.
 	//// @see BBMOD_Vertex
 	static add_vertex = function (_vertex) {
+		gml_pragma("forceinline");
 		var _ind = ds_list_size(Vertices);
 		ds_list_add(Vertices, _vertex);
 		return _ind;
 	};
 
-	/// @func add_face(_ind1, _ind2, _ind3)
+	/// @func add_face(_index...)
 	/// @desc Adds a face to the mesh.
-	/// @param {Real} _ind1 The index of the first vertex of the face.
-	/// @param {Real} _ind2 The index of the second vertex of the face.
-	/// @param {Real} _ind3 The index of the third vertex of the face.
-	/// @return {Real} Returns the index of the face, which is always a multiple
-	/// of 3.
-	static add_face = function (_ind1, _ind2, _ind3) {
+	/// @param {Real} _index The index of the first vertex of the face.
+	/// @return {Real} Returns the index within the list of faces where
+	/// the first vertex was stored.
+	/// @see BBMOD_MeshBuilder.Faces
+	static add_face = function (_index) {
+		gml_pragma("forceinline");
 		var _ind = ds_list_size(Faces);
-		ds_list_add(Faces, _ind1, _ind2, _ind3);
+		var i = 0;
+		repeat (argument_count)
+		{
+			ds_list_add(Faces, argument[i++]);
+		}
 		return _ind;
 	};
 
@@ -76,8 +88,15 @@ function BBMOD_MeshBuilder()
 	/// @desc Makes tangent and bitangent vectors for added vertices.
 	/// @return {Struct.BBMOD_MeshBuilder} Returns `self`.
 	/// @throws {BBMOD_Exception} If an error occurs during the process.
+	/// @note This works only for the `pr_trianglelist` primitive type!
 	/// @source https://gamedev.stackexchange.com/a/68617
 	static make_tangents = function () {
+		if (PrimitiveType != pr_trianglelist)
+		{
+			throw new BBMOD_Exception(
+				"Cannot build tangents and bitangents for meshes with primitive type other than pr_trianglelist!");
+		}
+
 		var _faceCount = ds_list_size(Faces);
 		var _vertexCount = ds_list_size(Vertices);
 		var _tan2 = array_create(_vertexCount);
@@ -239,6 +258,7 @@ function BBMOD_MeshBuilder()
 
 		var _mesh = new BBMOD_Mesh(_vertexFormat);
 		_mesh.VertexBuffer = _vbuffer;
+		_mesh.PrimitiveType = PrimitiveType;
 		return _mesh;
 	};
 

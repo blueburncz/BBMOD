@@ -32,6 +32,7 @@ function BBMOD_Node(_model) constructor
 
 	/// @var {Bool} If `true` then the node is part of a skeleton node chain.
 	/// @readonly
+	/// @obsolete
 	IsSkeleton = false;
 
 	/// @var {Bool} Set to `false` to disable rendering of the node and its
@@ -42,7 +43,7 @@ function BBMOD_Node(_model) constructor
 	/// @readonly
 	Transform = new BBMOD_DualQuaternion();
 
-	/// @var {Array<Real>} An array of meshes indices.
+	/// @var {Array<Real>} An array of mesh indices.
 	/// @readonly
 	Meshes = [];
 
@@ -88,15 +89,12 @@ function BBMOD_Node(_model) constructor
 	/// @desc Marks the node and nodes up the chain as nodes required for
 	/// animation playback.
 	/// @retrun {Struct.BBMOD_Node} Returns `self`.
+	/// @obsolete
 	static set_skeleton = function () {
 		gml_pragma("forceinline");
 		var _current = self;
 		while (_current)
 		{
-			//if (_current.IsSkeleton)
-			//{
-			//	return;
-			//}
 			_current.IsSkeleton = true;
 			_current = _current.Parent;
 		}
@@ -114,7 +112,6 @@ function BBMOD_Node(_model) constructor
 		Name = buffer_read(_buffer, buffer_string);
 		Index = buffer_read(_buffer, buffer_f32);
 		IsBone = buffer_read(_buffer, buffer_bool);
-		IsSkeleton = IsBone;
 		Visible = true;
 		Transform = Transform.FromBuffer(_buffer, buffer_f32);
 
@@ -142,10 +139,6 @@ function BBMOD_Node(_model) constructor
 			{
 				set_renderable();
 			}
-			if (_child.IsSkeleton)
-			{
-				set_skeleton();
-			}
 		}
 
 		return self;
@@ -163,6 +156,7 @@ function BBMOD_Node(_model) constructor
 		var _renderStack = global.__bbmodRenderStack;
 		var _node = self;
 
+		var _matrix = matrix_get(matrix_world);
 		ds_stack_push(_renderStack, _node);
 
 		while (!ds_stack_empty(_renderStack))
@@ -174,6 +168,9 @@ function BBMOD_Node(_model) constructor
 				continue;
 			}
 
+			var _nodeTransform = undefined;
+			var _nodeMatrix = undefined;
+
 			var _meshIndices = _node.Meshes;
 			var _children = _node.Children;
 			var i = 0;
@@ -184,6 +181,29 @@ function BBMOD_Node(_model) constructor
 				var _materialIndex = _mesh.MaterialIndex;
 				var _material = _materials[_materialIndex];
 
+				if (_mesh.VertexFormat.Bones)
+				{
+					matrix_set(matrix_world, _matrix);
+				}
+				else
+				{
+					if (!_nodeTransform)
+					{
+						if (_transform == undefined)
+						{
+							_nodeTransform = _node.Transform;
+						}
+						else
+						{
+							_nodeTransform = new BBMOD_DualQuaternion()
+								.FromArray(_transform, _node.Index * 8);
+						}
+						_nodeMatrix = matrix_multiply(_nodeTransform.ToMatrix(), _matrix);
+					}
+
+					matrix_set(matrix_world, _nodeMatrix);
+				}
+
 				_mesh.submit(_material, _transform);
 			}
 
@@ -193,6 +213,8 @@ function BBMOD_Node(_model) constructor
 				ds_stack_push(_renderStack, _children[i++]);
 			}
 		}
+
+		matrix_set(matrix_world, _matrix);
 	};
 
 	/// @func render(_materials, _transform)
@@ -218,6 +240,9 @@ function BBMOD_Node(_model) constructor
 				continue;
 			}
 
+			var _nodeTransform = undefined;
+			var _nodeMatrix = undefined;
+
 			var _meshIndices = _node.Meshes;
 			var _children = _node.Children;
 			var i = 0;
@@ -228,7 +253,32 @@ function BBMOD_Node(_model) constructor
 				var _materialIndex = _mesh.MaterialIndex;
 				var _material = _materials[_materialIndex];
 
-				_mesh.render(_material, _transform, _matrix);
+				var _meshMatrix;
+
+				if (_mesh.VertexFormat.Bones)
+				{
+					_meshMatrix = _matrix;
+				}
+				else
+				{
+					if (!_nodeTransform)
+					{
+						if (_transform == undefined)
+						{
+							_nodeTransform = _node.Transform;
+						}
+						else
+						{
+							_nodeTransform = new BBMOD_DualQuaternion()
+								.FromArray(_transform, _node.Index * 8);
+						}
+						_nodeMatrix = matrix_multiply(_nodeTransform.ToMatrix(), _matrix);
+					}
+
+					_meshMatrix = _nodeMatrix;
+				}
+
+				_mesh.render(_material, _transform, _meshMatrix);
 			}
 
 			i = 0;

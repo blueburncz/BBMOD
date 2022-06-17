@@ -28,7 +28,7 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	/// @var {Struct.BBMOD_Vec3/Undefined} The normal vector of the vertex or
 	/// `undefined` if the vertex format does not have normals.
 	/// @see BBMOD_VertexFormat.Normals
-	Normal = VertexFormat.Normals ? new BBMOD_Vec3() : undefined;
+	Normal = VertexFormat.Normals ? BBMOD_VEC3_UP : undefined;
 
 	/// @var {Struct.BBMOD_Vec2/Undefined} The texture coordinates of the vertex or
 	/// `undefined` if the vertex format does not have texture coordinates.
@@ -44,7 +44,7 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	/// vertex or `undefined` if the vertex format does not have tangents &
 	/// bitangents.
 	/// @see BBMOD_VertexFormat.TangentW
-	TangentW = VertexFormat.TangentW ? new BBMOD_Vec4() : undefined;
+	TangentW = VertexFormat.TangentW ? new BBMOD_Vec4(1.0, 0.0, 0.0, 1.0) : undefined;
 
 	/// @var {Struct.BBMOD_Vec4/Undefined} The bone ids of the vertex or `undefined` if
 	/// the vertex format does not have bones.

@@ -42,6 +42,9 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @var {Struct.BBMOD_VertexFormat} The vertex format of the model.
 	/// @see BBMOD_VertexFormat
+	/// @obsolete Since version 3.2 of the BBMOD file format each mesh has
+	/// its own vertex format!
+	/// @see BBMOD_Mesh.VertexFormat
 	/// @readonly
 	VertexFormat = undefined;
 
@@ -130,7 +133,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		}
 	
 		// Vertex format
-		VertexFormat = bbmod_vertex_format_load(_buffer);
+		if (VersionMinor < 2)
+		{
+			VertexFormat = bbmod_vertex_format_load(_buffer);
+		}
 
 		// Meshes
 		var _meshCount = buffer_read(_buffer, buffer_u32);
@@ -172,10 +178,19 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 		if (MaterialCount > 0)
 		{
-			var _materialDefault = (BoneCount > 0)
-				? BBMOD_MATERIAL_DEFAULT_ANIMATED
-				: BBMOD_MATERIAL_DEFAULT;
-			Materials = array_create(MaterialCount, _materialDefault);
+			Materials = array_create(MaterialCount, BBMOD_MATERIAL_DEFAULT);
+
+			i = 0;
+			repeat (_meshCount)
+			{
+				var _mesh = Meshes[i];
+				if (_mesh.VertexFormat.Bones)
+				{
+					Materials[_mesh.MaterialIndex] = BBMOD_MATERIAL_DEFAULT_ANIMATED;
+				}
+				++i;
+			}
+
 			var _materialNames = array_create(MaterialCount, undefined);
 
 			i = 0;

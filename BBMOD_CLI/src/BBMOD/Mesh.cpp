@@ -66,10 +66,39 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 {
 	SMesh* mesh = new SMesh();
 	mesh->Model = model;
-	mesh->VertexFormat = model->VertexFormat;
+
+	if (aiMesh->mPrimitiveTypes & aiPrimitiveType_POINT)
+	{
+		mesh->PrimitiveType = pr_pointlist;
+	}
+	else if (aiMesh->mPrimitiveTypes & aiPrimitiveType_LINE)
+	{
+		mesh->PrimitiveType = pr_linelist;
+	}
+	else if (aiMesh->mPrimitiveTypes & aiPrimitiveType_TRIANGLE)
+	{
+		mesh->PrimitiveType = pr_trianglelist;
+	}
+	else
+	{
+		PRINT_ERROR("Mesh \"%s\" has an unsupported primitive type! Only point, line and triangle lists are supported!", aiMesh->mName.C_Str());
+		exit(EXIT_FAILURE);
+	}
+	
+	SVertexFormat* vertexFormat = new SVertexFormat();
+	vertexFormat->Vertices = true;
+	vertexFormat->Normals = aiMesh->HasNormals() && !config.DisableNormals;
+	vertexFormat->TextureCoords = aiMesh->HasTextureCoords(0) && !config.DisableTextureCoords;
+	vertexFormat->Colors = aiMesh->HasVertexColors(0) && !config.DisableVertexColors;
+	vertexFormat->TangentW = aiMesh->HasTangentsAndBitangents() && !(config.DisableNormals || config.DisableTangentW);
+	vertexFormat->Bones = aiMesh->HasBones() && !config.DisableBones;
+	vertexFormat->Ids = false;
+	mesh->VertexFormat = vertexFormat;
+
 	mesh->MaterialIndex = aiMesh->mMaterialIndex;
-	AssimpToVec3(aiMesh->mAABB.mMin, mesh->BboxMin);
-	AssimpToVec3(aiMesh->mAABB.mMax, mesh->BboxMax);
+
+	/*AssimpToVec3(aiMesh->mAABB.mMin, mesh->BboxMin);
+	AssimpToVec3(aiMesh->mAABB.mMax, mesh->BboxMax);*/
 
 	uint32_t faceCount = aiMesh->mNumFaces;
 	aiColor4D cWhite(1.0f, 1.0f, 1.0f, 1.0f);
@@ -80,7 +109,7 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 	std::map<uint32_t, std::vector<float>> vertexBones;
 	std::map<uint32_t, std::vector<float>> vertexWeights;
 
-	if (model->VertexFormat->Bones)
+	if (vertexFormat->Bones)
 	{
 		uint32_t boneCount = aiMesh->mNumBones;
 
@@ -113,14 +142,38 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 	}
 	////////////////////////////////////////////////////////////////////////////
 
+	bool bboxFoundMin = false;
+	bool bboxFoundMax = false;
+
 	for (unsigned int i = 0; i < faceCount; ++i)
 	{
 		aiFace& face = aiMesh->mFaces[i];
 
-		if (face.mNumIndices != 3)
+		switch (mesh->PrimitiveType)
 		{
-			PRINT_ERROR("Mesh \"%s\" has a polygon with %d vertices, but only triangles are supported!", aiMesh->mName.C_Str(), face.mNumIndices);
-			exit(EXIT_FAILURE);
+		case pr_pointlist:
+			if (face.mNumIndices != 1)
+			{
+				PRINT_ERROR("Mesh \"%s\" has a pointlist primitive type, but it contains a face with %d vertices!", aiMesh->mName.C_Str(), face.mNumIndices);
+				exit(EXIT_FAILURE);
+			}
+			break;
+
+		case pr_linelist:
+			if (face.mNumIndices != 2)
+			{
+				PRINT_ERROR("Mesh \"%s\" has a linelist primitive type, but it contains a face with %d vertices!", aiMesh->mName.C_Str(), face.mNumIndices);
+				exit(EXIT_FAILURE);
+			}
+			break;
+
+		case pr_trianglelist:
+			if (face.mNumIndices != 3)
+			{
+				PRINT_ERROR("Mesh \"%s\" has a trianglelist primitive type, but it contains a face with %d vertices!", aiMesh->mName.C_Str(), face.mNumIndices);
+				exit(EXIT_FAILURE);
+			}
+			break;
 		}
 
 		for (unsigned int f = config.InvertWinding ? face.mNumIndices - 1 : 0; f >= 0 && f < face.mNumIndices; f += config.InvertWinding ? -1 : +1)
@@ -131,11 +184,36 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 			vertex->VertexFormat = mesh->VertexFormat;
 
 			// Vertex
-			AssimpToVec3(aiMesh->mVertices[idx], vertex->Position);
+			aiVector3D& position = aiMesh->mVertices[idx];
+			AssimpToVec3(position, vertex->Position);
+
+			if (!bboxFoundMin)
+			{
+				AssimpToVec3(position, mesh->BboxMin);
+				bboxFoundMin = true;
+			}
+			else
+			{
+				mesh->BboxMin[0] = fminf(mesh->BboxMin[0], position.x);
+				mesh->BboxMin[1] = fminf(mesh->BboxMin[1], position.y);
+				mesh->BboxMin[2] = fminf(mesh->BboxMin[2], position.z);
+			}
+
+			if (!bboxFoundMax)
+			{
+				AssimpToVec3(position, mesh->BboxMax);
+				bboxFoundMax = true;
+			}
+			else
+			{
+				mesh->BboxMax[0] = fmaxf(mesh->BboxMax[0], position.x);
+				mesh->BboxMax[1] = fmaxf(mesh->BboxMax[1], position.y);
+				mesh->BboxMax[2] = fmaxf(mesh->BboxMax[2], position.z);
+			}
 
 			// Normal
 			aiVector3D normal;
-			if (model->VertexFormat->Normals)
+			if (vertexFormat->Normals)
 			{
 				normal = aiMesh->HasNormals()
 					? aiVector3D(aiMesh->mNormals[idx])
@@ -148,7 +226,7 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 			}
 
 			// Texture
-			if (model->VertexFormat->TextureCoords)
+			if (vertexFormat->TextureCoords)
 			{
 				aiVector3D texture = aiMesh->HasTextureCoords(0)
 					? aiMesh->mTextureCoords[0][idx]
@@ -166,7 +244,7 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 			}
 
 			// Color
-			if (model->VertexFormat->Colors)
+			if (vertexFormat->Colors)
 			{
 				aiColor4D& color = (aiMesh->HasVertexColors(0))
 					? aiMesh->mColors[0][idx]
@@ -174,7 +252,7 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 				vertex->Color = EncodeColor(color);
 			}
 
-			if (model->VertexFormat->TangentW)
+			if (vertexFormat->TangentW)
 			{
 				if (aiMesh->HasTangentsAndBitangents())
 				{
@@ -191,7 +269,7 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 				}
 			}
 
-			if (model->VertexFormat->Bones)
+			if (vertexFormat->Bones)
 			{
 				// Bone indices
 				if (vertexBones.find(idx) != vertexBones.end())
@@ -334,6 +412,16 @@ bool SMesh::Save(std::ofstream& file)
 		FILE_WRITE_VEC3(file, BboxMax);
 	}
 
+	if (Model->VersionMinor >= 2)
+	{
+		if (!VertexFormat->Save(file))
+		{
+			return false;
+		}
+
+		FILE_WRITE_DATA(file, PrimitiveType);
+	}
+
 	uint32_t vertexCount = (uint32_t)Data.size();
 	FILE_WRITE_DATA(file, vertexCount);
 
@@ -360,6 +448,14 @@ SMesh* SMesh::Load(std::ifstream& file, SVertexFormat* vertexFormat, SModel* mod
 	{
 		FILE_READ_VEC3(file, mesh->BboxMin);
 		FILE_READ_VEC3(file, mesh->BboxMax);
+	}
+
+	if (model->VersionMinor >= 2)
+	{
+		vertexFormat = SVertexFormat::Load(file);
+		mesh->VertexFormat = vertexFormat;
+
+		FILE_READ_DATA(file, mesh->PrimitiveType);
 	}
 
 	uint32_t vertexCount;
