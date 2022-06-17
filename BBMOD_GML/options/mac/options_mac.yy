@@ -1,7 +1,7 @@
 {
   "option_mac_display_name": "BBMOD Demo",
   "option_mac_app_id": "com.company.game",
-  "option_mac_version": "3.6.0",
+  "option_mac_version": "3.6.2",
   "option_mac_output_dir": "~/gamemakerstudio2",
   "option_mac_team_id": "",
   "option_mac_signing_identity": "Developer ID Application:",

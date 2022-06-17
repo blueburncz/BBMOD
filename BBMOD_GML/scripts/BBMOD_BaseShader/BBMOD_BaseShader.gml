@@ -53,6 +53,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	UShadowmapBias = get_uniform("bbmod_ShadowmapBias");
 
+	USSAO = get_sampler_index("bbmod_SSAO");
+
 	/// @func set_texture_offset(_offset)
 	/// @desc Sets the `bbmod_TextureOffset` uniform to the given offset.
 	/// @param {Struct.BBMOD_Vec2} _offset The texture offset.
@@ -148,7 +150,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");
 
-		static _iblNull = sprite_get_texture(BBMOD_SprIBLNull, 0);
+		static _iblNull = sprite_get_texture(BBMOD_SprBlack, 0);
 		var _texture = _iblNull;
 		var _texel = 0.0;
 
@@ -282,6 +284,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_directional_light();
 		set_point_lights();
 		set_fog();
+		set_sampler(USSAO, sprite_get_texture(BBMOD_SprWhite, 0));
 	};
 
 	/// @func set_material(_material)

@@ -11,7 +11,7 @@ Level | Transformations are stored in | Transform bones in GML | Bone attachment
 ----- | ----- | ---------------------- | ---------------- | ---------------------
 `0` | Parent-space | Yes | Yes | Yes
 `1` | World-space | No | Yes | Yes
-`2` | Bone-space | No | No | No
+`2` | World-space and bone-space | No | Yes | No
 
 
 Use argument `--optimize-animations` (`-oa`) in BBMOD CLI to configure the

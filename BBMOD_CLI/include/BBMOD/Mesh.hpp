@@ -26,14 +26,23 @@ struct SVertex
 	static SVertex* Load(std::ifstream& file, SVertexFormat* vertexFormat);
 
 	SVertexFormat* VertexFormat = nullptr;
+
 	vec3_t Position;
+
 	vec3_t Normal;
+
 	vec2_t Texture;
+
 	uint32_t Color = 0;
+
 	vec3_t Tangent;
+
 	float BitangentSign = 1.0;
+
 	vec4_t Bones;
+
 	vec4_t Weights;
+
 	int Id = 0;
 };
 
@@ -46,6 +55,8 @@ struct SMesh
 	static SMesh* Load(std::ifstream& file, SVertexFormat* vertexFormat, struct SModel* model);
 
 	struct SModel* Model = nullptr;
+
+	uint32_t PrimitiveType = 0;
 
 	SVertexFormat* VertexFormat = nullptr;
 

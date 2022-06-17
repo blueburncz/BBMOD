@@ -185,7 +185,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		if (_hasMinorVersion)
 		{
 			VersionMinor = buffer_read(_buffer, buffer_u8);
-			if (VersionMinor != BBMOD_VERSION_MINOR)
+			if (VersionMinor > BBMOD_VERSION_MINOR)
 			{
 				throw new BBMOD_Exception(
 					"Invalid BBANIM minor version " + string(VersionMinor) + "!");
