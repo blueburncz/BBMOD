@@ -124,7 +124,7 @@ uniform sampler2D bbmod_Shadowmap;
 uniform vec2 bbmod_ShadowmapTexel;
 // The area that the shadowmap captures
 uniform float bbmod_ShadowmapAreaPS;
-// TODO: Docs
+// The range over which meshes smoothly transition into shadow.
 uniform float bbmod_ShadowmapBias;
 
 ////////////////////////////////////////////////////////////////////////////////
