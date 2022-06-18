@@ -100,19 +100,20 @@ matParticles = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
 matParticles.BlendMode = bm_add;
 
 particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, matParticles, 100)
-	.add_module(new BBMOD_EmissionOverTimeModule(0.02))
-	.add_module(new BBMOD_SphereEmissionModule(1.0, true))
-	.add_module(new BBMOD_MixVec3Module(BBMOD_EParticle.VelocityX, new BBMOD_Vec3(-1.0, -1.0, -100.0), new BBMOD_Vec3(1.0, 1.0, -50.0)))
-	.add_module(new BBMOD_SetRealModule(BBMOD_EParticle.Bounce, 0.8))
-	.add_module(new BBMOD_SetRealModule(BBMOD_EParticle.Drag, 0.01))
-	.add_module(new BBMOD_SetVec3Module(BBMOD_EParticle.ScaleX, new BBMOD_Vec3(10.0)))
-	.add_module(new BBMOD_MixVec3FromHealthModule(BBMOD_EParticle.ScaleX, new BBMOD_Vec3(1.0), new BBMOD_Vec3(0.0)))
-	.add_module(new BBMOD_MixColorFromHealthModule(BBMOD_EParticle.ColorR, BBMOD_C_ORANGE, BBMOD_C_RED))
-	.add_module(new BBMOD_GravityModule(BBMOD_VEC3_UP.Scale(-98.0)))
-	.add_module(new BBMOD_DragModule())
-	.add_module(new BBMOD_TerrainCollisionModule(global.terrain))
-	.add_module(new BBMOD_AddRealOnCollisionModule(BBMOD_EParticle.HealthLeft, -1.0 / 3.0))
-	;
+	.add_modules(
+		new BBMOD_EmissionOverTimeModule(1, 0.02),
+		new BBMOD_SphereEmissionModule(5),
+		new BBMOD_MixVec3Module(BBMOD_EParticle.VelocityX, new BBMOD_Vec3(-1.0, -1.0, -100.0), new BBMOD_Vec3(1.0, 1.0, -50.0)),
+		new BBMOD_SetRealModule(BBMOD_EParticle.Bounce, 0.8),
+		new BBMOD_SetRealModule(BBMOD_EParticle.Drag, 0.01),
+		new BBMOD_SetVec3Module(BBMOD_EParticle.ScaleX, new BBMOD_Vec3(10.0)),
+		new BBMOD_MixVec3FromHealthModule(BBMOD_EParticle.ScaleX, new BBMOD_Vec3(1.0), new BBMOD_Vec3(0.0)),
+		new BBMOD_MixColorFromHealthModule(BBMOD_EParticle.ColorR, BBMOD_C_ORANGE, BBMOD_C_RED),
+		new BBMOD_GravityModule(BBMOD_VEC3_UP.Scale(-98.0)),
+		new BBMOD_DragModule(),
+		new BBMOD_TerrainCollisionModule(global.terrain),
+		new BBMOD_AddRealOnCollisionModule(BBMOD_EParticle.HealthLeft, -1.0 / 3.0),
+	);
 particleSystem.Loop = true;
 
 var _emitterPosition = new BBMOD_Vec3(OPlayer.x + 80, OPlayer.y + 80, 30);

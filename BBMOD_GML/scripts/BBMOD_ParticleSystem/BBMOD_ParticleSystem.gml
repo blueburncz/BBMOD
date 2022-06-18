@@ -48,14 +48,18 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 	/// @readonly
 	Modules = [];
 
-	/// @func add_module(_module)
-	/// @desc Adds a module to the particle system.
+	/// @func add_modules(_module...)
+	/// @desc Adds modules to the particle system.
 	/// @param {Struct.BBMOD_ParticleModule} _module The module to add.
 	/// @return {Struct.BBMOD_ParticleSystem} Returns `self`.
 	/// @see BBMOD_ParticleModule
-	static add_module = function (_module) {
+	static add_modules = function (_module) {
 		gml_pragma("forceinline");
-		array_push(Modules, _module);
+		var i = 0;
+		repeat (argument_count)
+		{
+			array_push(Modules, argument[i++]);
+		}
 		return self;
 	};
 

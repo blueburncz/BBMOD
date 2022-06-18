@@ -1,4 +1,4 @@
-/// @func BBMOD_InitialEmissionModule([_count])
+/// @func BBMOD_EmissionModule([_count])
 ///
 /// @extends BBMOD_ParticleModule
 ///
@@ -6,7 +6,7 @@
 /// emitter's life.
 ///
 /// @param {Real} [_count] Number of particles to spawn. Defaults to 1.
-function BBMOD_InitialEmissionModule(_count=1)
+function BBMOD_EmissionModule(_count=1)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} Number of particles to spawn.

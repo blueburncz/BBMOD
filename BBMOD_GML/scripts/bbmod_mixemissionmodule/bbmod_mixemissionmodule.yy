@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Kill",
-    "path": "folders/BBMOD/Particles/Modules/Kill.yy",
+    "name": "Emission",
+    "path": "folders/BBMOD/Particles/Modules/Emission.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_AlphaKillModule",
+  "name": "BBMOD_MixEmissionModule",
   "tags": [],
   "resourceType": "GMScript",
 }

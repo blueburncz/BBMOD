@@ -6,7 +6,7 @@
     "path": "folders/BBMOD/Particles/Modules/Velocity.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_MixInitialSpeedModule",
+  "name": "BBMOD_MixSpeedModule",
   "tags": [],
   "resourceType": "GMScript",
 }

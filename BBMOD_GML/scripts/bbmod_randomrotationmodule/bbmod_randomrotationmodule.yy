@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Kill",
-    "path": "folders/BBMOD/Particles/Modules/Kill.yy",
+    "name": "Rotation",
+    "path": "folders/BBMOD/Particles/Modules/Rotation.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_HeightKillModule",
+  "name": "BBMOD_RandomRotationModule",
   "tags": [],
   "resourceType": "GMScript",
 }

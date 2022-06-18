@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Emission",
-    "path": "folders/BBMOD/Particles/Modules/Emission.yy",
+    "name": "Shape",
+    "path": "folders/BBMOD/Particles/Modules/Emission/Shape.yy",
   },
   "resourceVersion": "1.0",
   "name": "BBMOD_SphereEmissionModule",

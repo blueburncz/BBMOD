@@ -6,19 +6,19 @@
 ///
 /// @param {Real} [_radius] The radius of the sphere. Defaults to 0.5.
 /// @param {Bool} [_inside] Whether the particles can be spawned inside the sphere.
-/// Defaults to `false`.
+/// Defaults to `true`.
 ///
 /// @see BBMOD_EParticle.PositionX
 /// @see BBMOD_EParticle.PositionY
 /// @see BBMOD_EParticle.PositionZ
-function BBMOD_SphereEmissionModule(_radius=0.5, _inside=false)
+function BBMOD_SphereEmissionModule(_radius=0.5, _inside=true)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The radius of the sphere. Default value is 0.5.
 	Radius = _radius;
 
 	/// @var {Bool} If `true`, then the particles can be spawned inside the sphere.
-	/// Default value is `false`.
+	/// Default value is `true`.
 	Inside = _inside;
 
 	static on_particle_start = function (_emitter, _particleIndex) {

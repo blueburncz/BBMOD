@@ -1,4 +1,4 @@
-/// @func BBMOD_MixInitialEmissionModule([_from[, _to]])
+/// @func BBMOD_MixEmissionModule([_from[, _to]])
 ///
 /// @extends BBMOD_ParticleModule
 ///
@@ -7,14 +7,14 @@
 ///
 /// @param {Real} [_from] The minimum number of particles to spawn. Defaults to 1.
 /// @param {Real} [_to] The maxmimum particles to spawn. Defaults to `_from`.
-function BBMOD_MixInitialEmissionModule(_from=1, _to=_from)
+function BBMOD_MixEmissionModule(_from=1, _to=_from)
 	: BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The minimum number of particles to spawn. Default value is 1.
 	From = _from;
 
 	/// @var {Real} The maximum particles to spawn. Default value is the same as
-	/// {@link BBMOD_MixInitialEmissionModule.From}.
+	/// {@link BBMOD_MixEmissionModule.From}.
 	To = _to;
 
 	static on_start = function (_emitter) {
