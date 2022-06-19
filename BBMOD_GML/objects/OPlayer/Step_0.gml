@@ -35,7 +35,7 @@ if (camera.Position.Z < _cameraHeight)
 }
 
 // Increase camera exposure during nighttime
-camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, OSky.day ? 1.0 : 10.0, 0.05, delta_time);
+camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, global.day ? 1.0 : 10.0, 0.05, delta_time);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Player controls
@@ -75,7 +75,7 @@ if (global.gameSpeed > 0.0)
 					var _shellPos = matrix_transform_vertex(matrixGun, -0.1, 0, 0.2);
 
 					// Create a shell
-					var _shell = instance_create_depth(_shellPos[0], _shellPos[1], 0, OShell);
+					var _shell = instance_create_layer(_shellPos[0], _shellPos[1], layer, OShell);
 					_shell.z = _shellPos[2];
 					_shell.direction = direction - 90;
 					_shell.image_angle = direction;
@@ -83,6 +83,8 @@ if (global.gameSpeed > 0.0)
 					_shell.zspeed = random_range(0.5, 1.0);
 
 					// Play a rundom gunshot sound
+					var _gunfirePosition = matrix_transform_vertex(matrixGun, -0.5, 0, 0.2);
+
 					var _sound = choose(
 						SndGunshot0,
 						SndGunshot1,
@@ -90,11 +92,11 @@ if (global.gameSpeed > 0.0)
 						SndGunshot3,
 						SndGunshot4,
 					);
+					audio_play_sound_at(_sound, _gunfirePosition[0], _gunfirePosition[1], _gunfirePosition[2], 150, 1000, 1, false, 1);
 
-					audio_play_sound_at(_sound, _shellPos[0], _shellPos[1], _shellPos[2], 150, 1000, 1, false, 1);
-
-					var _light = instance_create_depth(_shellPos[0], _shellPos[1], 0, OGunshotLight);
-					_light.z = _shellPos[2];
+					// Spawn gunfire emitter
+					var _emitter = instance_create_layer(_gunfirePosition[0], _gunfirePosition[1], layer, OGunfireEmitter);
+					_emitter.z = _gunfirePosition[2];
 
 					// Determine which enemy was shot using a raycast against an AABB at its position.
 					var _ray = new BBMOD_Ray(camera.Position, camera.get_forward());

@@ -6,7 +6,7 @@
     "path": "folders/Demo/ParticleSystems.yy",
   },
   "resourceVersion": "1.0",
-  "name": "DissolveParticleSystem",
+  "name": "GunfireParticleSystem",
   "tags": [],
   "resourceType": "GMScript",
 }

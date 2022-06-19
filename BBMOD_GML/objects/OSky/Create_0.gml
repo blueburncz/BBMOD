@@ -1,6 +1,6 @@
 event_inherited();
 
-day = false; //(random(1.0) > 0.25);
+global.day = !global.day;
 
 modSky = global.resourceManager.load(
 	"Data/BBMOD/Models/Sphere.bbmod",
@@ -23,7 +23,7 @@ bbmod_light_directional_set(sunLight);
 
 // TODO: Fix memory leaks
 bbmod_sprite_add_async(
-	day ? "Data/BBMOD/Skies/Sky+60.png" : "Data/BBMOD/Skies/Sky-15.png",
+	global.day ? "Data/BBMOD/Skies/Sky+60.png" : "Data/BBMOD/Skies/Sky-15.png",
 	method(self, function (_err, _sprite) {
 		if (!_err)
 		{
@@ -32,7 +32,7 @@ bbmod_sprite_add_async(
 	}));
 
 bbmod_sprite_add_async(
-	day ? "Data/BBMOD/Skies/IBL+60.png" : "Data/BBMOD/Skies/IBL-15.png",
+	global.day ? "Data/BBMOD/Skies/IBL+60.png" : "Data/BBMOD/Skies/IBL-15.png",
 	method(self, function (_err, _sprite) {
 		if (!_err)
 		{
@@ -41,7 +41,7 @@ bbmod_sprite_add_async(
 		}
 	}));
 
-if (day)
+if (global.day)
 {
 	sunLight.Color = BBMOD_C_WHITE;
 	sunLight.Direction.Set(-1, 0, -1);

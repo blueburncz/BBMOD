@@ -25,7 +25,7 @@ function DirtParticleSystem()
 				new BBMOD_AddRealOverTimeModule(BBMOD_EParticle.HealthLeft, -1.0, 1.0),
 				// Increase scale over time
 				new BBMOD_AddVec3OverTimeModule(BBMOD_EParticle.ScaleX, new BBMOD_Vec3(2.0)),
-				// Decrease alpha over time
+				// Decrease alpha with health
 				new BBMOD_MixRealFromHealthModule(BBMOD_EParticle.ColorA, 1.0, 0.0),
 				// Apply gravity
 				new BBMOD_GravityModule(),

@@ -24,4 +24,6 @@ global.terrain.Layer[1] = _dirt;
 global.terrain.Splatmap = sprite_get_texture(SprSplatmap, 0);
 global.terrain.build_layer_index();
 
+global.day = choose(true, false);
+
 room_goto(RmDemo);

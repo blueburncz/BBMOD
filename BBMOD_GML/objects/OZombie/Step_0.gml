@@ -1,6 +1,6 @@
 if (hp <= 0)
 {
-	emitter ??= instance_create_layer(x, y, layer, ODissolveEmitter, { z: z });
+	emitter ??= instance_create_layer(x, y, layer, ODissolveEmitter);
 
 	dissolve += DELTA_TIME * 0.000001;
 	if (dissolve >= 1.0)
