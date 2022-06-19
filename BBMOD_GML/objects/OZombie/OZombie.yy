@@ -2,6 +2,7 @@
   "spriteId": null,
   "solid": false,
   "visible": true,
+  "managed": true,
   "spriteMaskId": {
     "name": "SprCharacterCollisionMask",
     "path": "sprites/SprCharacterCollisionMask/SprCharacterCollisionMask.yy",

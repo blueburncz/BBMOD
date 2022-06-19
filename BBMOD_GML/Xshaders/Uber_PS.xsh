@@ -8,8 +8,10 @@ uniform float u_fDissolveThreshold;
 uniform float u_fDissolveRange;
 uniform vec2 u_vDissolveScale;
 
+#if !defined(X_OUTPUT_DEPTH)
 // Silhouette effect
 uniform vec4 u_vSilhouette;
+#endif
 
 float Random(in vec2 st)
 {
@@ -310,7 +312,9 @@ void main()
 		gl_FragColor.rgb,
 		u_vDissolveColor,
 		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
+#if !defined(X_OUTPUT_DEPTH)
 	// Silhouette
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
+#endif // !X_OUTPUT_DEPTH
 #endif // X_ZOBMIE
 }
