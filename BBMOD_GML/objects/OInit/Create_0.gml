@@ -1,5 +1,5 @@
 randomize();
-global.day = false;//choose(true, false);
+global.day = choose(true, false);
 
 BBMOD_MATERIAL_TERRAIN.set_shader(BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH);
 BBMOD_MATERIAL_DEFAULT.set_shader(BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH);
