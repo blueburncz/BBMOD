@@ -1,0 +1,4 @@
+if (emitter)
+{
+	emitter.render();
+}

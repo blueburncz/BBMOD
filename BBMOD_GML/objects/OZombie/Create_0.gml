@@ -46,6 +46,8 @@ playerInRange = function () {
 // Strength of the dissolve shader effect.
 dissolve = 0;
 
+emitter = undefined;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Create a custom material. Each zombie has its own since each instance needs
 // to pass its own values for the dissolve effect.

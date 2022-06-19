@@ -8,9 +8,6 @@ uniform float u_fDissolveThreshold;
 uniform float u_fDissolveRange;
 uniform vec2 u_vDissolveScale;
 
-// Silhouette effect
-uniform vec4 u_vSilhouette;
-
 float Random(in vec2 st)
 {
 	return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453);
