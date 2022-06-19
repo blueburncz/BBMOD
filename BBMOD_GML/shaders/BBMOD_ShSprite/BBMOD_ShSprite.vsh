@@ -84,25 +84,6 @@ float xLuminance(vec3 rgb)
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
 // include("Color.xsh")
-#pragma include("RGBM.xsh")
-/// @note Input color should be in gamma space.
-/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
-vec4 xEncodeRGBM(vec3 color)
-{
-	vec4 rgbm;
-	color *= 1.0 / 6.0;
-	rgbm.a = clamp(max(max(color.r, color.g), max(color.b, 0.000001)), 0.0, 1.0);
-	rgbm.a = ceil(rgbm.a * 255.0) / 255.0;
-	rgbm.rgb = color / rgbm.a;
-	return rgbm;
-}
-
-/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
-vec3 xDecodeRGBM(vec4 rgbm)
-{
-	return 6.0 * rgbm.rgb * rgbm.a;
-}
-// include("RGBM.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //

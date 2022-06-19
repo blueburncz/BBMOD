@@ -1,53 +1,67 @@
+#pragma include("Uber_VS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Defines
+//
+
+// Maximum number of bones of animated models
 #define MAX_BONES 64
-
-
+// Maximum number of vec4 uniforms for dynamic batch data
+#define MAX_BATCH_DATA_SIZE 128
+// Maximum number of point lights
 #define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Attributes
+//
 attribute vec4 in_Position;
+
 attribute vec3 in_Normal;
+
 attribute vec2 in_TextureCoord0;
-//attribute vec4 in_Color;
+
 attribute vec4 in_TangentW;
 
 attribute vec4 in_BoneIndex;
 attribute vec4 in_BoneWeight;
 
-
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Uniforms
+//
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
 uniform vec4 bbmod_Bones[2 * MAX_BONES];
 
-
-// [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
-
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Varyings
+//
+#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
-//varying vec4 v_vColor;
+
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
-varying float v_fDepth;
+varying vec4 v_vPosition;
 
+// include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Includes
-
+//
+#pragma include("Transform.xsh")
+#pragma include("QuaternionRotate.xsh")
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
+// include("QuaternionRotate.xsh")
 
 vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 {
@@ -58,10 +72,10 @@ vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
 /// @param normal Variable to hold the transformed normal.
-void Transform(out vec4 vertex, out vec4 normal)
+void Transform(out vec4 vertex, out vec3 normal)
 {
 	vertex = in_Position;
-	normal = vec4(in_Normal, 0.0);
+	normal = in_Normal;
 
 	// Source:
 	// https://www.cs.utah.edu/~ladislav/kavan07skinning/kavan07skinning.pdf
@@ -100,28 +114,34 @@ void Transform(out vec4 vertex, out vec4 normal)
 	blendDual /= len;
 
 	vertex = vec4(DualQuaternionTransform(blendReal, blendDual, vertex.xyz), 1.0);
-	normal = vec4(QuaternionRotate(blendReal, normal.xyz), 0.0);
+	normal = QuaternionRotate(blendReal, normal);
 
 }
+// include("Transform.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
+//
 // Main
+//
 void main()
 {
-	vec4 position, normal;
+	vec4 position;
+	vec3 normal;
 	Transform(position, normal);
 
-	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
-	v_fDepth = (gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position).z;
+	vec4 positionWVP = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
 	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
-	//v_vColor = in_Color;
+
+	gl_Position = positionWVP;
+	v_vPosition = positionWVP;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
-	vec4 tangent = vec4(in_TangentW.xyz, 0.0);
-	vec4 bitangent = vec4(cross(in_Normal, in_TangentW.xyz) * in_TangentW.w, 0.0);
-	vec3 N = (gm_Matrices[MATRIX_WORLD] * normal).xyz;
-	vec3 T = (gm_Matrices[MATRIX_WORLD] * tangent).xyz;
-	vec3 B = (gm_Matrices[MATRIX_WORLD] * bitangent).xyz;
-	v_mTBN = mat3(T, B, N);
+	vec3 tangent = in_TangentW.xyz;
+	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
+	v_mTBN = mat3(tangent, bitangent, normal);
 
 }
+// include("Uber_VS.xsh")

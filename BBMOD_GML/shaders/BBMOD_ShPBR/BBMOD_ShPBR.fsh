@@ -438,12 +438,11 @@ void Exposure()
 #pragma include("Fog.xsh")
 void Fog(float depth)
 {
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
-		* (ambientUp + ambientDown + directionalLightColor);
-	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
+	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
+	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
+	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
+	vec3 fogColor = xGammaToLinear(bbmod_FogColor.rgb) * (ambientUp + ambientDown + directionalLightColor);
+	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0) * bbmod_FogColor.a;
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 }
 // include("Fog.xsh")
@@ -657,8 +656,8 @@ void PBRShader(Material material, float depth)
 	vec3 lightSubsurface = vec3(0.0);
 
 	// Ambient light
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
+	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
@@ -674,7 +673,7 @@ void PBRShader(Material material, float depth)
 	// TODO: Subsurface scattering for IBL
 
 	// Directional light
-	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
 		directionalLightColor,
@@ -690,7 +689,8 @@ void PBRShader(Material material, float depth)
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
 	{
 		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
+		vec4 colorAlpha = bbmod_LightPointData[(i * 2) + 1];
+		vec3 color = xGammaToLinear(colorAlpha.rgb) * colorAlpha.a;
 		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
 			material, lightDiffuse, lightSpecular, lightSubsurface);
 	}
@@ -739,5 +739,6 @@ void main()
 	}
 
 	PBRShader(material, v_vPosition.z);
+
 }
 // include("Uber_PS.xsh")

@@ -20,8 +20,8 @@ void DefaultShader(Material material, float depth)
 	vec3 lightSubsurface = vec3(0.0);
 
 	// Ambient light
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
+	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
+	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
 	// Shadow mapping
 	float shadow = 0.0;
@@ -42,7 +42,7 @@ void DefaultShader(Material material, float depth)
 	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
 
 	// Directional light
-	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
+	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
 		directionalLightColor,
@@ -60,7 +60,8 @@ void DefaultShader(Material material, float depth)
 	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
 	{
 		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec3 color = xGammaToLinear(xDecodeRGBM(bbmod_LightPointData[(i * 2) + 1]));
+		vec4 colorAlpha = bbmod_LightPointData[(i * 2) + 1];
+		vec3 color = xGammaToLinear(colorAlpha.rgb) * colorAlpha.a;
 		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
 			material, lightDiffuse, lightSpecular, lightSubsurface);
 	}

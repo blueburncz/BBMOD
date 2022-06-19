@@ -1,3 +1,4 @@
+#pragma include("Uber_VS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -166,3 +167,4 @@ void main()
 		v_vPosShadowmap.z /= bbmod_ShadowmapAreaVS;
 	}
 }
+// include("Uber_VS.xsh")

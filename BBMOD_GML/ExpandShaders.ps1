@@ -33,3 +33,7 @@ Xpanda .\shaders\BBMOD_ShGizmo --x .\Xshaders\
 Xpanda .\shaders\BBMOD_ShParticleDepth\ --x .\Xshaders\ X_PARTICLES=1 X_OUTPUT_DEPTH=1
 Xpanda .\shaders\BBMOD_ShParticleLit\ --x .\Xshaders\ X_PARTICLES=1
 Xpanda .\shaders\BBMOD_ShParticleUnlit\ --x .\Xshaders\ X_PARTICLES=1 X_UNLIT=1
+
+# Zombie shaders
+Xpanda .\shaders\ShZombie\ --x .\Xshaders\ X_ZOMBIE=1 X_ANIMATED=1
+Xpanda .\shaders\ShZombieDepth\ --x .\Xshaders\ X_ZOMBIE=1 X_ANIMATED=1 X_OUTPUT_DEPTH=1

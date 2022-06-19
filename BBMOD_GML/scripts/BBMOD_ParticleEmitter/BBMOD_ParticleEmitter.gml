@@ -424,12 +424,10 @@ function BBMOD_ParticleEmitter(_position, _system)
 				_data[d + 9]  = _particles[# BBMOD_EParticle.ScaleY, i];
 				_data[d + 10] = _particles[# BBMOD_EParticle.ScaleZ, i];
 
-				_data[d + 11] = _particles[# BBMOD_EParticle.ColorA, i];
-
-				_color.Red = _particles[# BBMOD_EParticle.ColorR, i];
-				_color.Green = _particles[# BBMOD_EParticle.ColorG, i];
-				_color.Blue = _particles[# BBMOD_EParticle.ColorB, i];
-				_color.ToRGBM(_data, d + 12);
+				_data[d + 12] = _particles[# BBMOD_EParticle.ColorR, i] / 255.0;
+				_data[d + 13] = _particles[# BBMOD_EParticle.ColorG, i] / 255.0;
+				_data[d + 14] = _particles[# BBMOD_EParticle.ColorB, i] / 255.0;
+				_data[d + 15] = _particles[# BBMOD_EParticle.ColorA, i];
 
 				d += 16;
 			}

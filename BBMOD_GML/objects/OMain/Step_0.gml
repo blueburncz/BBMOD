@@ -47,7 +47,6 @@ renderer.VignetteColor = merge_color(c_black, c_red, _hurt);
 particleEmitter.update(DELTA_TIME);
 if (DELTA_TIME > 0.0)
 {
-	var _factor = random(1.0);
-	emitterLight.Color = BBMOD_C_BLACK.Mix(BBMOD_C_ORANGE, lerp(0.5, 0.6, _factor));
-	emitterLight.Range = lerp(29.0, 31.0, _factor);
+	emitterLight.Color.Alpha = lerp(0.05, 0.2, random(1.0));
+	emitterLight.Range = lerp(29.0, 31.0, random(1.0));
 }

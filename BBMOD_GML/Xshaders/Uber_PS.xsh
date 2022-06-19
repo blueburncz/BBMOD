@@ -1,6 +1,39 @@
 // FIXME: Temporary fix!
 precision highp float;
 
+#if defined(X_ZOMBIE)
+// Dissolve effect
+uniform vec3 u_vDissolveColor;
+uniform float u_fDissolveThreshold;
+uniform float u_fDissolveRange;
+uniform vec2 u_vDissolveScale;
+
+// Silhouette effect
+uniform vec4 u_vSilhouette;
+
+float Random(in vec2 st)
+{
+	return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+// Based on Morgan McGuire @morgan3d
+// https://www.shadertoy.com/view/4dS3Wd
+float Noise(in vec2 st)
+{
+	vec2 i = floor(st);
+	vec2 f = fract(st);
+	float a = Random(i);
+	float b = Random(i + vec2(1.0, 0.0));
+	float c = Random(i + vec2(0.0, 1.0));
+	float d = Random(i + vec2(1.0, 1.0));
+	vec2 u = smoothstep(0.0, 1.0, f);
+	return mix(
+		mix(a, b, u.x),
+		mix(c, d, u.x),
+		u.y);
+}
+#endif // X_ZOMBIE
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Defines
@@ -25,7 +58,9 @@ precision highp float;
 
 #if defined(X_ID)
 ////////////////////////////////////////////////////////////////////////////////
-//
+// Instance IDs
+
+// The id of the instance that draws the mesh.
 uniform vec4 bbmod_InstanceID;
 #endif
 
@@ -77,6 +112,18 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 #if !defined(X_OUTPUT_DEPTH)
+#if defined(X_PARTICLES)
+////////////////////////////////////////////////////////////////////////////////
+// Soft particles
+
+// G-buffer surface.
+uniform sampler2D bbmod_GBuffer;
+
+// Distance over which the particle smoothly dissappears when getting closer to
+// geometry rendered in the depth buffer.
+uniform float bbmod_SoftDistance;
+#endif // X_PARTICLES
+
 ////////////////////////////////////////////////////////////////////////////////
 // Fog
 
@@ -227,6 +274,15 @@ void main()
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 #endif
 
+#if defined(X_ZOMBIE)
+	// Dissolve
+	float noise = Noise(v_vTexCoord * u_vDissolveScale);
+	if (noise < u_fDissolveThreshold)
+	{
+		discard;
+	}
+#endif // X_ZOMBIE
+
 	if (material.Opacity < bbmod_AlphaTest)
 	{
 		discard;
@@ -247,4 +303,14 @@ void main()
 #endif // !X_UNLIT
 #endif // !X_PBR
 #endif // !X_OUTPUT_DEPTH
+
+#if defined(X_ZOMBIE)
+	// Dissolve
+	gl_FragColor.rgb = mix(
+		gl_FragColor.rgb,
+		u_vDissolveColor,
+		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
+	// Silhouette
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
+#endif // X_ZOBMIE
 }

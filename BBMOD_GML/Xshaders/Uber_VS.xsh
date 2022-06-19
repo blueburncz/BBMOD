@@ -86,7 +86,6 @@ uniform float bbmod_ShadowmapNormalOffset;
 
 #if defined(X_2D) || defined(X_PARTICLES)
 #pragma include("Color.xsh")
-#pragma include("RGBM.xsh")
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,10 +97,10 @@ void main()
 #if defined(X_PARTICLES)
 	vec3 batchPosition = bbmod_BatchData[int(in_Id) * 4 + 0].xyz;
 	vec4 batchRot = bbmod_BatchData[int(in_Id) * 4 + 1];
-	vec4 batchScaleAlpha = bbmod_BatchData[int(in_Id) * 4 + 2];
-	vec3 batchScale = batchScaleAlpha.xyz;
-	v_vColor.a = batchScaleAlpha.w;
-	v_vColor.rgb = xGammaToLinear(xDecodeRGBM(bbmod_BatchData[int(in_Id) * 4 + 3]));
+	vec3 batchScale = bbmod_BatchData[int(in_Id) * 4 + 2].xyz;
+	vec4 batchColorAlpha = bbmod_BatchData[int(in_Id) * 4 + 3];
+	v_vColor.rgb = xGammaToLinear(batchColorAlpha.rgb);
+	v_vColor.a = batchColorAlpha.a;
 
 	vec4 position = in_Position;
 	position.xyz *= batchScale;

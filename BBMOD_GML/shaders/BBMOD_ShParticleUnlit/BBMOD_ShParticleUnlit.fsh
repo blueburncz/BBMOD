@@ -58,6 +58,16 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Soft particles
+
+// G-buffer surface.
+uniform sampler2D bbmod_GBuffer;
+
+// Distance over which the particle smoothly dissappears when getting closer to
+// geometry rendered in the depth buffer.
+uniform float bbmod_SoftDistance;
+
+////////////////////////////////////////////////////////////////////////////////
 // Fog
 
 // The color of the fog
@@ -207,12 +217,11 @@ Material UnpackMaterial(
 #pragma include("Fog.xsh")
 void Fog(float depth)
 {
-	vec3 ambientUp = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientUp));
-	vec3 ambientDown = xGammaToLinear(xDecodeRGBM(bbmod_LightAmbientDown));
-	vec3 directionalLightColor = xGammaToLinear(xDecodeRGBM(bbmod_LightDirectionalColor));
-	vec3 fogColor = xGammaToLinear(xDecodeRGBM(bbmod_FogColor))
-		* (ambientUp + ambientDown + directionalLightColor);
-	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0);
+	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
+	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
+	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
+	vec3 fogColor = xGammaToLinear(bbmod_FogColor.rgb) * (ambientUp + ambientDown + directionalLightColor);
+	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0) * bbmod_FogColor.a;
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 }
 // include("Fog.xsh")
@@ -266,5 +275,6 @@ void main()
 	}
 
 	UnlitShader(material, v_vPosition.z);
+
 }
 // include("Uber_PS.xsh")

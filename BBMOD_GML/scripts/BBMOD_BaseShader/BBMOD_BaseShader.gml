@@ -183,8 +183,10 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gml_pragma("forceinline");
 		_up ??= global.__bbmodAmbientLightUp;
 		_down ??= global.__bbmodAmbientLightDown;
-		set_uniform_f_array(ULightAmbientUp, _up.ToRGBM());
-		set_uniform_f_array(ULightAmbientDown, _down.ToRGBM());
+		set_uniform_f4(ULightAmbientUp,
+			_up.Red / 255.0, _up.Green / 255.0, _up.Blue / 255.0, _up.Alpha);
+		set_uniform_f4(ULightAmbientDown,
+			_down.Red / 255.0, _down.Green / 255.0, _down.Blue / 255.0, _down.Alpha);
 		return self;
 	};
 
@@ -202,8 +204,11 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		if (_light != undefined	&& _light.Enabled)
 		{
 			var _direction = _light.Direction;
-			set_uniform_f3(ULightDirectionalDir, _direction.X, _direction.Y, _direction.Z);
-			set_uniform_f_array(ULightDirectionalColor, _light.Color.ToRGBM());
+			set_uniform_f3(ULightDirectionalDir,
+				_direction.X, _direction.Y, _direction.Z);
+			var _color = _light.Color;
+			set_uniform_f4(ULightDirectionalColor,
+				_color.Red / 255.0, _color.Green / 255.0, _color.Blue / 255.0, _color.Alpha);
 		}
 		else
 		{
@@ -234,7 +239,11 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 			{
 				_light.Position.ToArray(_data, _index);
 				_data[@ _index + 3] = _light.Range;
-				_light.Color.ToRGBM(_data, _index + 4);
+				var _color = _light.Color;
+				_data[@ _index + 4] = _color.Red / 255.0;
+				_data[@ _index + 5] = _color.Green / 255.0;
+				_data[@ _index + 6] = _color.Blue / 255.0;
+				_data[@ _index + 7] = _color.Alpha;
 				_index += 8;
 				if (_index >= _indexMax)
 				{
@@ -268,7 +277,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		_start ??= global.__bbmodFogStart;
 		_end ??= global.__bbmodFogEnd;
 		var _rcpFogRange = 1.0 / (_end - _start);
-		set_uniform_f_array(UFogColor, _color.ToRGBM());
+		set_uniform_f4(UFogColor, _color.Red / 255.0, _color.Green / 255.0, _color.Blue / 255.0, _color.Alpha);
 		set_uniform_f(UFogIntensity, _intensity);
 		set_uniform_f(UFogStart, _start);
 		set_uniform_f(UFogRcpRange, _rcpFogRange);

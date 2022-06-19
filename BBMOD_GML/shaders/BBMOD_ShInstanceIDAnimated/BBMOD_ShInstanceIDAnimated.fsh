@@ -34,7 +34,9 @@ varying vec3 v_vPosShadowmap;
 //
 
 ////////////////////////////////////////////////////////////////////////////////
-//
+// Instance IDs
+
+// The id of the instance that draws the mesh.
 uniform vec4 bbmod_InstanceID;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -258,6 +260,7 @@ void main()
 	}
 
 	gl_FragColor = bbmod_InstanceID;
+
 }
 // include("Uber_PS.xsh")
 
