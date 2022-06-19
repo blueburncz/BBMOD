@@ -1,4 +1,8 @@
 # Changelog
+Added new Particles module, using which you can create CPU particle effects.
+
+Changed how light colors are passed to shaders, which enabled using their alpha
+channels for the light intensity.
 
 ## GML API:
 ### Particles module:
