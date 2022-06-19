@@ -14,6 +14,7 @@ individual modules.
 * [Gizmo module](./GizmoModule.html)
 * [Importer module](./ImporterModule.html)
 * [Mesh builder module](./MeshBuilderModule.html)
+* [Particles module](./ParticlesModule.html)
 * [Raycasting module](./RaycastingModule.html)
 * [Rendering module](./RenderingModule.html)
 * [Resource manager module](./ResourceManagerModule.html)
