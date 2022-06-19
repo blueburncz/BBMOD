@@ -59,14 +59,6 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Image based lighting
-
-// Prefiltered octahedron env. map
-uniform sampler2D bbmod_IBL;
-// Texel size of one octahedron
-uniform vec2 bbmod_IBLTexel;
-
-////////////////////////////////////////////////////////////////////////////////
 // Fog
 
 // The color of the fog
@@ -77,12 +69,6 @@ uniform float bbmod_FogIntensity;
 uniform float bbmod_FogStart;
 // 1.0 / (fogEnd - fogStart)
 uniform float bbmod_FogRcpRange;
-
-////////////////////////////////////////////////////////////////////////////////
-// SSAO
-
-// SSAO texture
-uniform sampler2D bbmod_SSAO;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Ambient light
@@ -101,6 +87,20 @@ uniform vec3 bbmod_LightDirectionalDir;
 uniform vec4 bbmod_LightDirectionalColor;
 
 ////////////////////////////////////////////////////////////////////////////////
+// SSAO
+
+// SSAO texture
+uniform sampler2D bbmod_SSAO;
+
+////////////////////////////////////////////////////////////////////////////////
+// Image based lighting
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
+
+////////////////////////////////////////////////////////////////////////////////
 // Point lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
@@ -108,6 +108,7 @@ uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
+
 // Splatmap texture
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.

@@ -1,7 +1,7 @@
 # Changelog
 
 ## GML API:
-### Particles module
+### Particles module:
 * Added new module - Particles.
 
 * Added new macro `BBMOD_VFORMAT_PARTICLE`.

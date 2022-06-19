@@ -58,14 +58,6 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Image based lighting
-
-// Prefiltered octahedron env. map
-uniform sampler2D bbmod_IBL;
-// Texel size of one octahedron
-uniform vec2 bbmod_IBLTexel;
-
-////////////////////////////////////////////////////////////////////////////////
 // Fog
 
 // The color of the fog
@@ -92,29 +84,6 @@ uniform vec4 bbmod_LightAmbientDown;
 uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
-
-////////////////////////////////////////////////////////////////////////////////
-// Point lights
-
-// [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
-////////////////////////////////////////////////////////////////////////////////
-// Terrain
-
-////////////////////////////////////////////////////////////////////////////////
-// Shadow mapping
-
-// 1.0 to enable shadows
-uniform float bbmod_ShadowmapEnablePS;
-// Shadowmap texture
-uniform sampler2D bbmod_Shadowmap;
-// (1.0/shadowmapWidth, 1.0/shadowmapHeight)
-uniform vec2 bbmod_ShadowmapTexel;
-// The area that the shadowmap captures
-uniform float bbmod_ShadowmapAreaPS;
-// The range over which meshes smoothly transition into shadow.
-uniform float bbmod_ShadowmapBias;
 
 ////////////////////////////////////////////////////////////////////////////////
 //

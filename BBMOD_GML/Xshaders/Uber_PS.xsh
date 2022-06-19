@@ -78,14 +78,6 @@ uniform float bbmod_Exposure;
 
 #if !defined(X_OUTPUT_DEPTH)
 ////////////////////////////////////////////////////////////////////////////////
-// Image based lighting
-
-// Prefiltered octahedron env. map
-uniform sampler2D bbmod_IBL;
-// Texel size of one octahedron
-uniform vec2 bbmod_IBLTexel;
-
-////////////////////////////////////////////////////////////////////////////////
 // Fog
 
 // The color of the fog
@@ -96,14 +88,6 @@ uniform float bbmod_FogIntensity;
 uniform float bbmod_FogStart;
 // 1.0 / (fogEnd - fogStart)
 uniform float bbmod_FogRcpRange;
-
-#if !defined(X_PARTICLES)
-////////////////////////////////////////////////////////////////////////////////
-// SSAO
-
-// SSAO texture
-uniform sampler2D bbmod_SSAO;
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Ambient light
@@ -121,21 +105,39 @@ uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
+#if !defined(X_UNLIT)
+////////////////////////////////////////////////////////////////////////////////
+// SSAO
+
+// SSAO texture
+uniform sampler2D bbmod_SSAO;
+
+////////////////////////////////////////////////////////////////////////////////
+// Image based lighting
+
+// Prefiltered octahedron env. map
+uniform sampler2D bbmod_IBL;
+// Texel size of one octahedron
+uniform vec2 bbmod_IBLTexel;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Point lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
+#endif // !X_UNLIT
 
+#if defined(X_TERRAIN)
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
-#if defined(X_TERRAIN)
+
 // Splatmap texture
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex;
-#endif
+#endif // X_TERRAIN
 
+#if !defined(X_UNLIT)
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
 
@@ -149,7 +151,8 @@ uniform vec2 bbmod_ShadowmapTexel;
 uniform float bbmod_ShadowmapAreaPS;
 // The range over which meshes smoothly transition into shadow.
 uniform float bbmod_ShadowmapBias;
-#endif
+#endif // !X_UNLIT
+#endif // !X_OUTPUT_DEPTH
 
 ////////////////////////////////////////////////////////////////////////////////
 //
