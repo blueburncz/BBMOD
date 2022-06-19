@@ -6,8 +6,8 @@
   "spriteMaskId": null,
   "persistent": false,
   "parentObjectId": {
-    "name": "OObject3D",
-    "path": "objects/OObject3D/OObject3D.yy",
+    "name": "OParticleEmitter",
+    "path": "objects/OParticleEmitter/OParticleEmitter.yy",
   },
   "physicsObject": false,
   "physicsSensor": false,
@@ -23,19 +23,15 @@
   "physicsShapePoints": [],
   "eventList": [
     {"isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
-    {"isDnD":false,"eventNum":0,"eventType":8,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
-    {"isDnD":false,"eventNum":2,"eventType":3,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
-    {"isDnD":false,"eventNum":0,"eventType":12,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
-    {"isDnD":false,"eventNum":77,"eventType":8,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
   ],
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Characters",
-    "path": "folders/Demo/Objects/Characters.yy",
+    "name": "Particles",
+    "path": "folders/Demo/Objects/Particles.yy",
   },
   "resourceVersion": "1.0",
-  "name": "OCharacter",
+  "name": "ODirtEmitter",
   "tags": [],
   "resourceType": "GMObject",
 }

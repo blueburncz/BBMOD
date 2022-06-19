@@ -56,6 +56,9 @@ animationPlayer.on_event("Footstep", method(self, function () {
 		SndFootstep9,
 	);
 	audio_play_sound_at(_sound, x, y, z, 1, 200, 1, false, 1);
+	dirtEmitter.emitter.spawn_particle();
 }));
 
 animationStateMachine = new BBMOD_AnimationStateMachine(animationPlayer);
+
+dirtEmitter = instance_create_layer(x, y, layer, ODirtEmitter, { z: z });

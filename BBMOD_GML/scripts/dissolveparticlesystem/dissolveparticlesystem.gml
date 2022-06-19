@@ -7,6 +7,7 @@ function DissolveParticleSystem()
 	if (!_particleSystem)
 	{
 		var _material = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
+
 		_particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, _material, 100)
 			.add_modules(
 				// Emit 20 particles every 0.05 seconds

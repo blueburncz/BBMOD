@@ -87,7 +87,7 @@ function __bbmod_material_particle_lit()
 	{
 		_material = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
 		_material.set_shader(BBMOD_ERenderPass.Forward, BBMOD_SHADER_PARTICLE_LIT);
-		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
+		//_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
 		_material.ShadowmapBias = 0.01;
 	}
 	return _material;
