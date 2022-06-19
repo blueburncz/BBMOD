@@ -23,6 +23,9 @@ channels for the light intensity.
 * Added new struct `BBMOD_ParticleModule`.
 * Added new struct `BBMOD_ParticleSystem`.
 
+* Added new struct `BBMOD_ParticleShader`.
+* Added new struct `BBMOD_ParticleMaterial`.
+
 * Added new struct `BBMOD_TerrainCollisionModule`.
 
 * Added new struct `BBMOD_EmissionModule`.

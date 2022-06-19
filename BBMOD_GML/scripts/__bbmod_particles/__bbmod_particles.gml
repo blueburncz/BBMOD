@@ -50,13 +50,13 @@ function __bbmod_vformat_particle_batched()
 
 function __bbmod_shader_particle_unlit()
 {
-	static _shader = new BBMOD_BaseShader(BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_ParticleShader(BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
 function __bbmod_shader_particle_lit()
 {
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_ParticleShader(BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
@@ -71,7 +71,7 @@ function __bbmod_material_particle_unlit()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_PARTICLE_UNLIT)
+		_material = new BBMOD_ParticleMaterial(BBMOD_SHADER_PARTICLE_UNLIT)
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprParticle, 0);
 		_material.AlphaTest = 0.01;
 		_material.AlphaBlend = true;

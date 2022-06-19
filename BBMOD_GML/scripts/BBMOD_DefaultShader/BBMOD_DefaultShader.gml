@@ -8,7 +8,6 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	: BBMOD_BaseShader(_shader, _vertexFormat) constructor
 {
 	static Super_BaseShader = {
-		on_set: on_set,
 		set_material: set_material,
 	};
 
