@@ -15,12 +15,21 @@ if (!instance_exists(OZombie)
 
 	repeat (++wave)
 	{
-		var _randomPosition = global.terrain.get_random_position();
-		instance_create_layer(
-			_randomPosition.X,
-			_randomPosition.Y,
-			"Instances",
-			OZombie);
+		repeat (3)
+		{
+			var _randomX = OPlayer.x + random_range(-250, 250);
+			var _randomY = OPlayer.y + random_range(-250, 250);
+			if (global.terrain.in_bounds(_randomX, _randomY))
+			{
+				var _randomZ = global.terrain.get_height(_randomX, _randomY);
+				instance_create_layer(
+					_randomX,
+					_randomY,
+					"Instances",
+					OZombie, { z: _randomZ });
+				break;
+			}
+		}
 	}
 
 	// Give one zombie a gun
