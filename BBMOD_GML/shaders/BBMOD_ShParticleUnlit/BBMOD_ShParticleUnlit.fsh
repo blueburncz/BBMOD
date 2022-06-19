@@ -238,12 +238,69 @@ void GammaCorrect()
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 }
 // include("GammaCorrect.xsh")
+#pragma include("Projecting.xsh")
+/// @param tanAspect (tanFovY*(screenWidth/screenHeight),-tanFovY), where
+///                  tanFovY = dtan(fov*0.5)
+/// @param texCoord  Sceen-space UV.
+/// @param depth     Scene depth at texCoord.
+/// @return Point projected to view-space.
+vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
+{
+	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
+}
+
+/// @param p A point in clip space (transformed by projection matrix, but not
+///          normalized).
+/// @return P's UV coordinates on the screen.
+vec2 xUnproject(vec4 p)
+{
+	vec2 uv = p.xy / p.w;
+	uv = uv * 0.5 + 0.5;
+	uv.y = 1.0 - uv.y;
+	return uv;
+}
+// include("Projecting.xsh")
+#pragma include("DepthEncoding.xsh")
+/// @param d Linearized depth to encode.
+/// @return Encoded depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+vec3 xEncodeDepth(float d)
+{
+	const float inv255 = 1.0 / 255.0;
+	vec3 enc;
+	enc.x = d;
+	enc.y = d * 255.0;
+	enc.z = enc.y * 255.0;
+	enc = fract(enc);
+	float temp = enc.z * inv255;
+	enc.x -= enc.y * inv255;
+	enc.y -= temp;
+	enc.z -= temp;
+	return enc;
+}
+
+/// @param c Encoded depth.
+/// @return Docoded linear depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+float xDecodeDepth(vec3 c)
+{
+	const float inv255 = 1.0 / 255.0;
+	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
+}
+// include("DepthEncoding.xsh")
 
 void UnlitShader(Material material, float depth)
 {
 	gl_FragColor.rgb = material.Base;
 	gl_FragColor.rgb += material.Emissive;
 	gl_FragColor.a = material.Opacity;
+	// Soft particles
+	if (bbmod_SoftDistance > 0.0)
+	{
+		float sceneDepth = xDecodeDepth(texture2D(bbmod_GBuffer, xUnproject(v_vPosition)).rgb) * bbmod_ZFar;
+		float softness = clamp((sceneDepth - v_vPosition.z) / bbmod_SoftDistance, 0.0, 1.0);
+		gl_FragColor.a *= softness;
+	}
 	Fog(depth);
 	Exposure();
 	GammaCorrect();

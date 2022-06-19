@@ -13,7 +13,9 @@ function BBMOD_ParticleMaterial(_shader=undefined)
 		copy: copy,
 	};
 
-	/// @var {Real}
+	/// @var {Real} Distance over which the particle smoothly dissappears when
+	/// getting closer to geometry rendered in the depth buffer. Use values less
+	/// or equal to 0 to disable the effect. Default value is 0.
 	SoftDistance = 0.0;
 
 	static copy = function (_dest) {

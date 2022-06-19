@@ -583,6 +583,7 @@ void DefaultShader(Material material, float depth)
 	gl_FragColor.rgb += lightSubsurface;
 	// Opacity
 	gl_FragColor.a = material.Opacity;
+	// Soft particles
 	// Fog
 	Fog(depth);
 

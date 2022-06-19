@@ -707,13 +707,17 @@ function BBMOD_Renderer()
 		}
 		else
 		{
-			bbmod_shader_set_global_sampler("bbmod_SSAO", -1);
+			bbmod_shader_set_global_sampler("bbmod_SSAO", sprite_get_texture(BBMOD_SprWhite, 0));
 		}
 
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Forward pass
 		//
+		bbmod_shader_set_global_sampler("bbmod_GBuffer", EnableGBuffer
+			? surface_get_texture(SurGBuffer)
+			: sprite_get_texture(BBMOD_SprWhite, 0));
+
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
 
@@ -756,6 +760,7 @@ function BBMOD_Renderer()
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global("bbmod_Shadowmap");
 		bbmod_shader_unset_global("bbmod_SSAO");
+		bbmod_shader_unset_global("bbmod_GBuffer");
 
 		bbmod_material_reset();
 
