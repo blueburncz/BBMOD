@@ -80,13 +80,15 @@ function BBMOD_Gizmo(_size=10.0)
 		var _material = new BBMOD_BaseMaterial(_shader);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 0);
 
-		var _modelMove = new BBMOD_Model("Data/BBMOD/Models/GizmoMove.bbmod")
+		var _modelMove = new BBMOD_Model("Data/BBMOD/Models/GizmoMove.bbmod").freeze();
+		// TODO: Fix gizmo model
+		_modelMove.RootNode.Transform = new BBMOD_DualQuaternion();
 		_modelMove.Materials[0] = _material;
 
-		var _modelScale = new BBMOD_Model("Data/BBMOD/Models/GizmoScale.bbmod")
+		var _modelScale = new BBMOD_Model("Data/BBMOD/Models/GizmoScale.bbmod").freeze();
 		_modelScale.Materials[0] = _material;
 
-		var _modelRotate = new BBMOD_Model("Data/BBMOD/Models/GizmoRotate.bbmod")
+		var _modelRotate = new BBMOD_Model("Data/BBMOD/Models/GizmoRotate.bbmod").freeze();
 		_modelRotate.Materials[0] = _material;
 
 		Models = [
