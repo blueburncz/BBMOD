@@ -82,9 +82,9 @@
 /// @see BBMOD_Color
 #macro BBMOD_C_YELLOW (new BBMOD_Color().FromConstant(c_yellow))
 
-/// @func BBMOD_Color([_red, _green, _blue])
+/// @func BBMOD_Color([_red[, _green[, _blue[, _alpha]]]])
 ///
-/// @desc A color with support for high dynamic range.
+/// @desc A color struct with support for high dynamic range.
 ///
 /// @param {Real} [_red] The value of the red channel. Use values in range
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
@@ -93,8 +93,7 @@
 /// @param {Real} [_blue] The value of the blue channel. Use values in range
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
 /// @param {Real} [_alpha] The value of the alpha channel. Use values in range
-/// 0..1.
-/// Defaults to 1.
+/// 0..1. Defaults to 1.
 ///
 /// @see BBMOD_C_AQUA
 /// @see BBMOD_C_BLACK

@@ -25,7 +25,7 @@ function BBMOD_AddVec3OverTimeModule(
 
 	/// @var {Struct.BBMOD_Vec3} The value added over
 	/// {@link BBMOD_AddVec3OverTimeModule.Period}. Default value is
-	/// `(1.0, 1.0, 1.0).
+	/// `(1.0, 1.0, 1.0)`.
 	Change = _change;
 
 	/// @var {Real} How long in seconds it takes to add the value to the

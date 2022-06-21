@@ -8,7 +8,7 @@
 /// @param {Real} [_property] The first property. Use values from
 /// {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec4} [_value] The initial value of the properties.
-/// Defaults to `(0.0, 0.0, 0.0, 0.0).
+/// Defaults to `(0.0, 0.0, 0.0, 0.0)`.
 ///
 /// @see BBMOD_EParticle
 function BBMOD_SetVec4Module(_property=undefined, _value=new BBMOD_Vec4())
@@ -19,7 +19,7 @@ function BBMOD_SetVec4Module(_property=undefined, _value=new BBMOD_Vec4())
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec4} The initial value of the properties. Default
-	/// value is `(0.0, 0.0, 0.0, 0.0).
+	/// value is `(0.0, 0.0, 0.0, 0.0)`.
 	Value = _value;
 
 	static on_particle_start = function (_emitter, _particleIndex) {
