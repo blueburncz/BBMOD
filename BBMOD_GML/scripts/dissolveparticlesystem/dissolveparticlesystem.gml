@@ -1,5 +1,7 @@
 /// @func DissolveParticleSystem()
+///
 /// @desc
+///
 /// @return {Struct.BBMOD_ParticleSystem}
 function DissolveParticleSystem()
 {

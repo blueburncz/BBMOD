@@ -353,8 +353,11 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func get_instance_position_vec3(_instance)
+	///
 	/// @desc Retrieves an instance's position as {@link BBMOD_Vec3}.
+	///
 	/// @param {Id.Instance} _instance The ID of the instance.
+	///
 	/// @return {Struct.BBMOD_Vec3} The instance's position.
 	static get_instance_position_vec3 = function (_instance) {
 		gml_pragma("forceinline");
@@ -365,9 +368,12 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func set_instance_position_vec3(_instance, _position)
+	///
 	/// @desc Changes an instance's position using a {@link BBMOD_Vec3}.
+	///
 	/// @param {Id.Instance} _instance The ID of the instance.
 	/// @param {Struct.BBMOD_Vec3} _position The new position of the instance.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static set_instance_position_vec3 = function (_instance, _position) {
 		gml_pragma("forceinline");
@@ -378,8 +384,11 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func get_instance_rotation_vec3(_instance)
+	///
 	/// @desc Retrieves an instance's rotation as {@link BBMOD_Vec3}.
+	///
 	/// @param {Id.Instance} _instance The ID of the instance.
+	///
 	/// @return {Struct.BBMOD_Vec3} The instance's rotation in euler angles.
 	static get_instance_rotation_vec3 = function (_instance) {
 		gml_pragma("forceinline");
@@ -390,10 +399,13 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func set_instance_rotation_vec3(_instance, _rotation)
+	///
 	/// @desc Changes an instance's rotation using a {@link BBMOD_Vec3}.
+	///
 	/// @param {Id.Instance} _instance The ID of the instance.
 	/// @param {Struct.BBMOD_Vec3} _rotation The new rotation of the instance
 	/// in euler angles.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static set_instance_rotation_vec3 = function (_instance, _rotation) {
 		gml_pragma("forceinline");
@@ -404,8 +416,11 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func get_instance_scale_vec3(_instance)
+	///
 	/// @desc Retrieves an instance's scale as {@link BBMOD_Vec3}.
+	///
 	/// @param {Id.Instance} _instance The ID of the instance.
+	///
 	/// @return {Struct.BBMOD_Vec3} The instance's scale.
 	static get_instance_scale_vec3 = function (_instance) {
 		gml_pragma("forceinline");
@@ -416,9 +431,12 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func set_instance_scale_vec3(_instance, _scale)
+	///
 	/// @desc Changes an instance's scale using a {@link BBMOD_Vec3}.
+	///
 	/// @param {Id.Instance} _instance The ID of the instance.
 	/// @param {Struct.BBMOD_Vec3} _rotation The new scale of the instance.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static set_instance_scale_vec3 = function (_instance, _scale) {
 		gml_pragma("forceinline");
@@ -429,8 +447,11 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func select(_instance)
+	///
 	/// @desc Adds an instance to selection.
+	///
 	/// @param {Id.Instance} _instance The instance to select.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static select = function (_instance) {
 		gml_pragma("forceinline");
@@ -447,8 +468,11 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func is_selected(_instance)
+	///
 	/// @desc Checks whether an instance is selected.
+	///
 	/// @param {Id.Instance} _instance The instance to check.
+	///
 	/// @return {Bool} Returns `true` if the instance is selected.
 	static is_selected = function (_instance) {
 		gml_pragma("forceinline");
@@ -456,8 +480,11 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func unselect(_instance)
+	///
 	/// @desc Removes an instance from selection.
+	///
 	/// @param {Id.Instance} _instance The instance to unselect.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static unselect = function (_instance) {
 		gml_pragma("forceinline");
@@ -471,8 +498,11 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func toggle_select(_instance)
+	///
 	/// @desc Unselects an instance if it's selected, or selects if it isn't.
+	///
 	/// @param {Id.Instance} _instance The instance to toggle selection of.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static toggle_select = function (_instance) {
 		gml_pragma("forceinline");
@@ -488,7 +518,9 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func clear_selection()
+	///
 	/// @desc Removes all instances from selection.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static clear_selection = function () {
 		gml_pragma("forceinline");
@@ -498,12 +530,16 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func intersect_ray_plane(_origin, _direction, _plane, _normal)
+	///
 	/// @desc Intersects a ray with a plane.
+	///
 	/// @param {Struct.BBMOD_Vec3} _origin The ray origin.
 	/// @param {Struct.BBMOD_Vec3} _direction The ray direction.
 	/// @param {Struct.BBMOD_Vec3} _plane The plane origin.
 	/// @param {Struct.BBMOD_Vec3} _normal The plane normal.
+	///
 	/// @return {Struct.BBMOD_Vec3} The point of intersection.
+	///
 	/// @private
 	static intersect_ray_plane = function (_origin, _direction, _plane, _normal) {
 		var _t = -(_origin.Sub(_plane).Dot(_normal) / _direction.Dot(_normal));
@@ -511,7 +547,9 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func update_position()
+	///
 	/// @desc Updates the gizmo's position, based on its selected instances.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static update_position = function () {
 		var _size = ds_list_size(Selected);
@@ -562,10 +600,14 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func update(_deltaTime)
+	///
 	/// @desc Updates the gizmo. Should be called every frame.
+	///
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	///
 	/// @note This requires you to use a {@link BBMOD_Camera} and it will not
 	/// do anything if its [apply](./BBMOD_Camera.apply.html) method has not been
 	/// called yet!
@@ -943,10 +985,14 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func submit([_materials])
+	///
 	/// @desc Immediately submits the gizmo for rendering.
+	///
 	/// @param {Array<Struct.BBMOD_Material>} [_materials] Materials to use or
 	/// `undefined`.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	///
 	/// @note This changes the world matrix based on the gizmo's position and size!
 	static submit = function (_materials=undefined) {
 		gml_pragma("forceinline");
@@ -960,10 +1006,14 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	/// @func render([_materials])
+	///
 	/// @desc Enqueues the gizmo for rendering.
+	///
 	/// @param {Array<Struct.BBMOD_Material>} [_materials] Materials to use or
 	/// `undefined`.
+	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	///
 	/// @note This changes the world matrix based on the gizmo's position and size!
 	static render = function (_materials=undefined) {
 		gml_pragma("forceinline");

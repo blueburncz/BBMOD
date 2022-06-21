@@ -52,9 +52,12 @@ function BBMOD_StaticBatch(_vformat)
 	PrimitiveType = undefined;
 
 	/// @func start()
+	///
 	/// @desc Begins adding models into the static batch.
+	///
 	/// @see BBMOD_StaticBatch.add
 	/// @see BBMOD_StaticBatch.finish
+	///
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	static start = function () {
 		gml_pragma("forceinline");
@@ -63,10 +66,14 @@ function BBMOD_StaticBatch(_vformat)
 	};
 
 	/// @func add(_model, _transform)
+	///
 	/// @desc Adds a model to the static batch.
+	///
 	/// @param {Struct.BBMOD_Model} _model The model.
 	/// @param {Array<Real>} _transform A transformation matrix of the model.
+	///
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// modTree = new BBMOD_Model("Tree.bbmod");
@@ -81,8 +88,10 @@ function BBMOD_StaticBatch(_vformat)
 	/// batch.finish();
 	/// batch.freeze();
 	/// ```
+	///
 	/// @note You must first call {@link BBMOD_StaticBatch.begin} before using this
 	/// function!
+	///
 	/// @see BBMOD_StaticBatch.finish
 	static add = function (_model, _transform) {
 		gml_pragma("forceinline");
@@ -91,8 +100,11 @@ function BBMOD_StaticBatch(_vformat)
 	};
 
 	/// @func finish()
+	///
 	/// @desc Ends adding models into the static batch.
+	///
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
+	///
 	/// @see BBMOD_StaticBatch.start
 	static finish = function () {
 		gml_pragma("forceinline");
@@ -101,8 +113,10 @@ function BBMOD_StaticBatch(_vformat)
 	};
 
 	/// @func freeze()
+	///
 	/// @desc Freezes the static batch. This makes it render faster, but disables
 	/// adding more models.
+	///
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	static freeze = function () {
 		gml_pragma("forceinline");
@@ -135,9 +149,13 @@ function BBMOD_StaticBatch(_vformat)
 	};
 
 	/// @func render(_material)
+	///
 	/// @desc Enqueues the static batch for rendering.
+	///
 	/// @param {Struct.BBMOD_BaseMaterial} _material A material.
+	///
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
+	///
 	/// @see BBMOD_StaticBatch.submit
 	/// @see BBMOD_BaseMaterial
 	static render = function (_material) {

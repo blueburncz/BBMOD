@@ -94,9 +94,13 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	Materials = [];
 
 	/// @func from_buffer(_buffer)
+	///
 	/// @desc Loads model data from a buffer.
+	///
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
+	///
 	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
 		var _hasMinorVersion = false;
@@ -211,8 +215,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func freeze()
+	///
 	/// @desc Freezes all vertex buffers used by the model. This should make its
 	/// rendering faster, but it disables creating new batches of the model.
+	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	static freeze = function () {
 		gml_pragma("forceinline");
@@ -225,9 +231,12 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func find_node(_idOrName)
+	///
 	/// @desc Finds a node by its name or id.
+	///
 	/// @param {Real, String} _idOrName The id (real) or the name (string) of
 	/// the node.
+	///
 	/// @return {Struct.BBMOD_Node} Returns the found node `undefined`.
 	static find_node = function (_idOrName) {
 		var _isName = is_string(_idOrName);
@@ -254,9 +263,13 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func find_node_id(_nodeName)
+	///
 	/// @desc Finds id of the model's node by its name.
+	///
 	/// @param {String} _nodeName The name of the node.
+	///
 	/// @return {Real} The id of the node or `undefined` when it is not found.
+	///
 	/// @note It is not recommended to use this method in release builds, because
 	/// having many of these lookups can slow down your game! You should instead
 	/// use the ids available from the `_log.txt` files, which are created during
@@ -272,11 +285,16 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func get_material(_name)
+	///
 	/// @desc Retrieves a material by its name.
+	///
 	/// @param {String} _name The name of the material.
+	///
 	/// @return {Struct.BBMOD_BaseMaterial} The material.
+	///
 	/// @throws {BBMOD_Exception} If the model does not have a material with
 	/// given name.
+	///
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.set_material
@@ -295,12 +313,17 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func set_material(_name, _material)
+	///
 	/// @desc Sets a material.
+	///
 	/// @param {String} _name The name of the material slot.
 	/// @param {Struct.BBMOD_BaseMaterial} _material The material.
+	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
+	///
 	/// @throws {BBMOD_Exception} If the model does not have a material with
 	/// given name.
+	///
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
@@ -320,13 +343,17 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func get_vertex_format([_bones[, _ids]])
+	///
 	/// @desc Retrieves or creates a vertex format compatible with the model.
 	/// This can be used when creating a {@link BBMOD_StaticBatch}.
+	///
 	/// @param {Bool} [_bones] Use `true` to include bone data in the vertex
 	/// format. Defaults to `true`.
 	/// @param {Bool} [_ids] Use `true` to include model instance ids in the
 	/// vertex format. Defaults to `false`.
+	///
 	/// @return {Struct.BBMOD_VertexFormat} The vertex format.
+	///
 	/// @example
 	/// ```gml
 	/// staticBatch = new BBMOD_StaticBatch(mod_tree.get_vertex_format());
@@ -415,8 +442,11 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func to_dynamic_batch(_dynamicBatch)
+	///
 	/// @param {Struct.BBMOD_DynamicBatch} _dynamicBatch
+	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	///
 	/// @private
 	static to_dynamic_batch = function (_dynamicBatch) {
 		gml_pragma("forceinline");
@@ -429,10 +459,13 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func to_static_batch(_model, _staticBatch, _transform)
+	///
 	/// @param {Struct.BBMOD_Model} _model
 	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
 	/// @param {Array<Real>} _transform
+	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	///
 	/// @private
 	static to_static_batch = function (_staticBatch, _transform) {
 		gml_pragma("forceinline");

@@ -55,10 +55,14 @@ function BBMOD_ResourceManager()
 	Loading = 0;
 
 	/// @func add(_uniqueName, _resource)
+	///
 	/// @desc Adds a resource to the resource manager.
+	///
 	/// @param {String} _uniqueName The name of the resource. Must be unique!
 	/// @param {Struct.BBMOD_Resource} _resource The resource to add.
+	///
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
+	///
 	/// @throws {BBMOD_Exception} If the resource is already added to a manager.
 	static add = function (_uniqueName, _resource) {
 		gml_pragma("forceinline");
@@ -72,9 +76,12 @@ function BBMOD_ResourceManager()
 	};
 
 	/// @func has(_pathOrUniqueName)
+	///
 	/// @desc Checks if the resource manager has a resource.
+	///
 	/// @param {String} _pathOrUniqueName The path to the resource file or
 	/// unique name of the resource.
+	///
 	/// @return {Bool} Returns `true` if the resource manager has the resource.
 	static has = function (_pathOrUniqueName) {
 		gml_pragma("forceinline");
@@ -82,11 +89,16 @@ function BBMOD_ResourceManager()
 	};
 
 	/// @func get(_pathOrUniqueName)
+	///
 	/// @desc Retrieves a reference to a resource.
+	///
 	/// @param {String} _pathOrUniqueName The path to the resource file or
 	/// unique name of the resource.
+	///
 	/// @return {Struct.BBMOD_Resource} The resource.
+	///
 	/// @see BBMOD_ResourceManager.has
+	///
 	/// @throws {BBMOD_Exception} If the resource manager does not have such
 	/// resource.
 	static get = function (_pathOrUniqueName) {
@@ -207,10 +219,13 @@ function BBMOD_ResourceManager()
 	};
 
 	/// @func free(_resourceOrPath)
+	///
 	/// @desc Frees a reference to the resource. When there are no other no other
 	/// references, the resource is destroyed.
+	///
 	/// @param {Struct.BBMOD_Resource, String} _resourceOrPath Either a resource
 	/// or a path (string).
+	///
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	static free = function (_resourceOrPath) {
 		// Note: Resource removes itself from the map
@@ -227,11 +242,16 @@ function BBMOD_ResourceManager()
 	};
 
 	/// @func async_image_loaded_update(_asyncLoad)
+	///
 	/// @desc Must be executed in the "Async - Image Loaded" event!
+	///
 	/// @param {Id.DsMap} _asyncLoad The `async_load` map.
+	///
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
+	///
 	/// @note This calls {@link bbmod_async_image_loaded_update}, so you do not
 	/// need to call it again!
+	///
 	/// @see bbmod_async_image_loaded_update
 	static async_image_loaded_update = function (_asyncLoad) {
 		gml_pragma("forceinline");
@@ -240,11 +260,16 @@ function BBMOD_ResourceManager()
 	};
 
 	/// @func async_save_load_update(_asyncLoad)
+	///
 	/// @desc Must be executed in the "Async - Save/Load" event!
+	///
 	/// @param {Id.DsMap} _asyncLoad The `async_load` map.
+	///
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
+	///
 	/// @note This calls {@link bbmod_async_image_loaded_update}, so you do not
 	/// need to call it again!
+	///
 	/// @see bbmod_async_image_loaded_update
 	static async_save_load_update = function (_asyncLoad) {
 		gml_pragma("forceinline");

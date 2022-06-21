@@ -3,12 +3,16 @@
 global.__bbmodMaterialCurrent = undefined;
 
 /// @func BBMOD_Material([_shader])
+///
 /// @extends BBMOD_Resource
+///
 /// @desc Base class for materials.
+///
 /// @param {Struct.BBMOD_Shader} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
+///
 /// @see BBMOD_Shader
 function BBMOD_Material(_shader=undefined)
 	: BBMOD_Resource() constructor
@@ -91,8 +95,11 @@ function BBMOD_Material(_shader=undefined)
 	BaseOpacitySprite = undefined;
 
 	/// @func copy(_dest)
+	///
 	/// @desc Copies properties of this material into another material.
+	///
 	/// @param {Struct.BBMOD_Material} _dest The destination material.
+	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static copy = function (_dest) {
 		_dest.RenderPass = RenderPass;
@@ -131,7 +138,9 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func clone()
+	///
 	/// @desc Creates a clone of the material.
+	///
 	/// @return {Struct.BBMOD_Material} The created clone.
 	static clone = function () {
 		var _clone = new BBMOD_Material();
@@ -153,9 +162,12 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func set_base_opacity(_color)
+	///
 	/// @desc Changes the base color and opacity to a uniform value for the
 	/// entire material.
+	///
 	/// @param {Struct.BBMOD_Color} _color The new base color and opacity.
+	///
 	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
 	static set_base_opacity = function (_color) {
 		if (BaseOpacitySprite != undefined)
@@ -174,8 +186,11 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func apply()
+	///
 	/// @desc Makes this material the current one.
+	///
 	/// @return {Bool} Returns `true` if the material was applied.
+	///
 	/// @see BBMOD_Material.reset
 	static apply = function () {
 		if ((RenderPass & (1 << bbmod_render_pass_get())) == 0)
@@ -226,10 +241,14 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func set_shader(_pass, _shader)
+	///
 	/// @desc Defines a shader used in a specific render pass.
+	///
 	/// @param {Real} _pass The render pass. Use values from {@link BBMOD_ERenderPass}.
 	/// @param {Struct.BBMOD_Shader} _shader The shader used in the render pass.
+	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
+	///
 	/// @see BBMOD_Material.get_shader
 	/// @see bbmod_render_pass_set
 	static set_shader = function (_pass, _shader) {
@@ -240,8 +259,11 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func has_shader(_pass)
+	///
 	/// @desc Checks whether the material has a shader for the render pass.
+	///
 	/// @param {Real} _pass The render pass. Use values from {@link BBMOD_ERenderPass}.
+	///
 	/// @return {Bool} Returns `true` if the material has a shader for the
 	/// render pass.
 	static has_shader = function (_pass) {
@@ -250,10 +272,14 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func get_shader(_pass)
+	///
 	/// @desc Retrieves a shader used in a specific render pass.
+	///
 	/// @param {Real} _pass The render pass. Use values from
 	/// {@link BBMOD_ERenderPass}.
+	///
 	/// @return {Struct.BBMOD_Shader} The shader or `undefined`.
+	///
 	/// @see BBMOD_Material.set_shader
 	static get_shader = function (_pass) {
 		gml_pragma("forceinline");
@@ -261,8 +287,11 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func remove_shader(_pass)
+	///
 	/// @desc Removes a shader used in a specific render pass.
+	///
 	/// @param {Real} _pass The render pass.
+	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static remove_shader = function (_pass) {
 		gml_pragma("forceinline");
@@ -272,8 +301,11 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	/// @func reset()
+	///
 	/// @desc Resets the current material to `undefined`.
+	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
+	///
 	/// @see BBMOD_Material.apply
 	/// @see bbmod_material_reset
 	static reset = function () {
@@ -298,8 +330,10 @@ function BBMOD_Material(_shader=undefined)
 }
 
 /// @func bbmod_material_reset()
+///
 /// @desc Resets the current material to `undefined`. Every block of code
 /// rendering models must start and end with this function!
+///
 /// @example
 /// ```gml
 /// bbmod_material_reset();

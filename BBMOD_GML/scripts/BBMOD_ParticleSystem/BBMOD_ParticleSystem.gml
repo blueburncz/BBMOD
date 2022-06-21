@@ -1,15 +1,18 @@
 /// @func BBMOD_ParticleSystem(_model, _material, _particleCount[, _batchSize])
+///
 /// @extends BBMOD_Class
+///
 /// @desc A collection of particle modules that together define behavior of
 /// particles.
+///
 /// @param {Struct.BBMOD_Model} _model The particle model.
 /// @param {Struct.BBMOD_Material} _material The material used by the particle
 /// system.
 /// @param {Real} _particleCount Maximum number of particles alive in the
 /// system.
 /// @param {Real} [_batchSize] Number of particles rendered in a single draw
-/// call.
-/// Default value is 32.
+/// call. Default value is 32.
+///
 /// @see BBMOD_ParticleModule
 /// @see BBMOD_ParticleEmitter
 /// @see BBMOD_MODEL_PARTICLE
@@ -54,9 +57,13 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 	Modules = [];
 
 	/// @func add_modules(_module...)
+	///
 	/// @desc Adds modules to the particle system.
+	///
 	/// @param {Struct.BBMOD_ParticleModule} _module The module to add.
+	///
 	/// @return {Struct.BBMOD_ParticleSystem} Returns `self`.
+	///
 	/// @see BBMOD_ParticleModule
 	static add_modules = function (_module) {
 		gml_pragma("forceinline");

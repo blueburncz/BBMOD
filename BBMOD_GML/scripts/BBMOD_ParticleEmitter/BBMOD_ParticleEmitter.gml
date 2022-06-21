@@ -1,10 +1,13 @@
 /// @func BBMOD_ParticleEmitter(_position, _system)
+///
 /// @desc Emits particles at a specific position in the world. The behavior of
 /// the emitted particles is defined by a particle system.
+///
 /// @param {Struct.BBMOD_Vec3} _position The emitter's position in world-space.
 /// @param {Struct.BBMOD_ParticleSystem} _system The particle system that
 /// defines
 /// behavior of emitted particles.
+///
 /// @see BBBMOD_ParticleSystem
 function BBMOD_ParticleEmitter(_position, _system)
 	: BBMOD_Class() constructor
@@ -58,10 +61,12 @@ function BBMOD_ParticleEmitter(_position, _system)
 	}
 
 	/// @func spawn_particle()
+	///
 	/// @desc If the particle system has not reached the end of the emit cycle
 	/// yet or if it is looping, then a new particle is spawned. If the maximum
 	/// number of particles has already been reached, then an existing particle
 	/// is used, without calling {@link BBMOD_ParticleModule.on_particle_finish}.
+	///
 	/// @return {Bool} Returns `true` if a particle was spawned.
 	static spawn_particle = function () {
 		gml_pragma("forceinline");
@@ -132,9 +137,12 @@ function BBMOD_ParticleEmitter(_position, _system)
 	};
 
 	/// @func update(_deltaTime)
+	///
 	/// @desc Updates the emitter and all its particles.
+	///
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
+	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static update = function (_deltaTime) {
 		if (finished(true))
@@ -337,9 +345,12 @@ function BBMOD_ParticleEmitter(_position, _system)
 	};
 
 	/// @func finished([_particlesDead])
+	///
 	/// @desc Checks if the emitter cycle has finished.
+	///
 	/// @param {Bool} [_particlesDead] Also check if there are no particles
 	/// alive. Defaults to `false.`
+	///
 	/// @return {Bool} Returns `true` if the emitter cycle has finished
 	/// (and there are no particles alive). Aalways returns `false` if the
 	/// emitted particle system is looping.
@@ -442,9 +453,12 @@ function BBMOD_ParticleEmitter(_position, _system)
 	};
 
 	/// @func submit([_material])
+	///
 	/// @desc Immediately submits particles for rendering.
+	///
 	/// @param {Struct.BBMOD_Material} [_material] The material to use instead
 	/// of the one defined in the particle system or `undefined`.
+	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static submit = function (_material=undefined) {
 		var _dynamicBatch = System.DynamicBatch;
@@ -453,9 +467,12 @@ function BBMOD_ParticleEmitter(_position, _system)
 	};
 
 	/// @func render([_material])
+	///
 	/// @desc Enqueus particles for rendering.
+	///
 	/// @param {Struct.BBMOD_Material} [_material] The material to use instead
 	/// of the one defined in the particle system or `undefined`.
+	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static render = function (_material=undefined) {
 		var _dynamicBatch = System.DynamicBatch;

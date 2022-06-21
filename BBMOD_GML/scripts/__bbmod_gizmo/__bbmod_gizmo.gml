@@ -8,12 +8,14 @@
 
 function __bbmod_shader_id()
 {
-	static _shader = new BBMOD_BaseShader(BBMOD_ShInstanceID, BBMOD_VFORMAT_DEFAULT);
+	static _shader = new BBMOD_BaseShader(
+		BBMOD_ShInstanceID, BBMOD_VFORMAT_DEFAULT);
 	return _shader;
 }
 
 function __bbmod_shader_id_animated()
 {
-	static _shader = new BBMOD_BaseShader(BBMOD_ShInstanceIDAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED);
+	static _shader = new BBMOD_BaseShader(
+		BBMOD_ShInstanceIDAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED);
 	return _shader;
 }

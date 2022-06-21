@@ -1,11 +1,15 @@
 /// @func BBMOD_AABBCollider([_position[, _size]])
+///
 /// @extends BBMOD_Collider
+///
 /// @desc An axis-aligned bounding box (AABB) collider.
+///
 /// @param {Struct.BBMOD_Vec3} [_position] The position (center) of the AABB.
 /// Defaults to `(0, 0, 0)`.
 /// @param {Struct.BBMOD_Vec3} [_size] The size of the AABB on each
 /// axis in both directions (e.g. `new BBMOD_Vec3(2)` would make a 4x4x4 box).
 /// Defaults to `(0.5, 0.5, 0.5)`.
+///
 /// @see BBMOD_PlaneCollider
 /// @see BBMOD_SphereCollider
 function BBMOD_AABBCollider(
@@ -21,9 +25,12 @@ function BBMOD_AABBCollider(
 	Size = _size;
 
 	/// @func FromMinMax(_min, _max)
+	///
 	/// @desc Initializes the AABB using its minimum and maximum coordinates.
+	///
 	/// @param {Struct.BBMOD_Vec3} _min The minimum coordinate of the AABB.
 	/// @param {Struct.BBMOD_Vec3} _max The maximum coordinate of the AABB.
+	///
 	/// @return {Struct.BBMOD_AABBCollider} Returns `self`.
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L37
 	static FromMinMax = function (_min, _max) {
@@ -34,7 +41,9 @@ function BBMOD_AABBCollider(
 	};
 
 	/// @func GetMin()
+	///
 	/// @desc Retrieves the minimum coordinate of the AABB.
+	///
 	/// @return {Struct.BBMOD_Vec3} The minimum coordinate.
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L24
 	static GetMin = function () {
@@ -45,7 +54,9 @@ function BBMOD_AABBCollider(
 	};
 
 	/// @func GetMax()
+	///
 	/// @desc Retrieves the maximum coordinate of the AABB.
+	///
 	/// @return {Struct.BBMOD_Vec3} The maximum coordinate.
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L30
 	static GetMax = function () {

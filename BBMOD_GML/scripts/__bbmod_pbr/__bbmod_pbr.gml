@@ -1,4 +1,5 @@
-/// @macro {Struct.BBMOD_PBRMaterial} A material for rendering RGBM encoded skies.
+/// @macro {Struct.BBMOD_PBRMaterial} A material for rendering RGBM encoded
+/// skies.
 /// @see BBMOD_PBRMaterial
 #macro BBMOD_MATERIAL_SKY __bbmod_material_sky()
 
@@ -10,13 +11,15 @@ function __bbmod_shader_pbr()
 
 function __bbmod_shader_pbr_animated()
 {
-	static _shader = new BBMOD_PBRShader(BBMOD_ShPBRAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED);
+	static _shader = new BBMOD_PBRShader(
+		BBMOD_ShPBRAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED);
 	return _shader;
 }
 
 function __bbmod_shader_pbr_batched()
 {
-	static _shader = new BBMOD_PBRShader(BBMOD_ShPBRBatched, BBMOD_VFORMAT_DEFAULT_BATCHED);
+	static _shader = new BBMOD_PBRShader(
+		BBMOD_ShPBRBatched, BBMOD_VFORMAT_DEFAULT_BATCHED);
 	return _shader;
 }
 
@@ -44,7 +47,8 @@ function __bbmod_material_sky()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		var _skSky = new BBMOD_BaseShader(BBMOD_ShSky, new BBMOD_VertexFormat(true));
+		var _skSky = new BBMOD_BaseShader(
+			BBMOD_ShSky, new BBMOD_VertexFormat(true));
 		_material = new BBMOD_BaseMaterial(_skSky);
 		_material.Culling = cull_noculling;
 		_material.Mipmapping = false;

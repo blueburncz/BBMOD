@@ -93,11 +93,15 @@ function BBMOD_IEventListener()
 	};
 
 	/// @func off_event([_event])
+	///
 	/// @desc Removes event listeners.
+	///
 	/// @param {String} [_event] The name of the event for which should be the
 	/// listener removed. If `undefined`, then listeners for all events are
 	/// removed.
+	///
 	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
+	///
 	/// @see BBMOD_IEventListener.on_event
 	off_event = _offEvent;
 
@@ -134,9 +138,12 @@ function BBMOD_IEventListener()
 	};
 
 	/// @func trigger_event(_event, _data)
+	///
 	/// @desc Triggers an event in the event listener.
+	///
 	/// @param {String} _event The event name.
 	/// @param {Any} _data The event data.
+	///
 	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
 	trigger_event = _triggerEvent;
 

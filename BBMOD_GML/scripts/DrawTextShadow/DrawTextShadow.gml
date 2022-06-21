@@ -1,5 +1,7 @@
 /// @func DrawTextShadow(_x, _y, _text[, _color[, _colorShadow[, _alpha]]])
+///
 /// @desc Draws a text with a shadow.
+///
 /// @param {Real} _x The x position of the text.
 /// @param {Real} _y The y position of the text.
 /// @param {String} _text The text to draw.

@@ -1,7 +1,10 @@
 /// @func BBMOD_IRenderable()
+///
 /// @interface
+///
 /// @desc An interface describing renderable objects. Any struct or object that
 /// implements this interface can be rendered using a {@link BBMOD_Renderer}.
+///
 /// @example
 /// A renderable object:
 /// ```gml
@@ -34,8 +37,11 @@
 function BBMOD_IRenderable()
 {
 	/// @func render()
+	///
 	/// @desc Enqueues the object for rendering.
+	///
 	/// @return {Struct.BBMOD_IRenderable} Returns `self`.
+	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	static render = function () {
 		throw new BBMOD_NotImplementedException();

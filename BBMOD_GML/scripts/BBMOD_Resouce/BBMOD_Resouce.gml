@@ -1,5 +1,7 @@
 /// @func BBMOD_Resource()
+///
 /// @extends BBMOD_Class
+///
 /// @desc Base struct for all BBMOD resources.
 function BBMOD_Resource()
 	: BBMOD_Class() constructor
@@ -30,8 +32,11 @@ function BBMOD_Resource()
 	Counter = 1;
 
 	/// @func from_buffer(_buffer)
+	///
 	/// @desc Loads the resource from a buffer.
+	///
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
+	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	static from_buffer = function () {
 		throw new BBMOD_NotImplementedException();
@@ -40,11 +45,15 @@ function BBMOD_Resource()
 	};
 
 	/// @func check_file(_file[, _sha1[, _callback]])
+	///
 	/// @param {String} _file
 	/// @param {String} [_sha1]
 	/// @param {Function} [_callback]
+	///
 	/// @return {Bool}
+	///
 	/// @throws {BBMOD_Exception}
+	///
 	/// @private
 	static check_file = function (_file, _sha1=undefined, _callback=undefined) {
 		var _err = undefined;
@@ -78,12 +87,16 @@ function BBMOD_Resource()
 	};
 
 	/// @func from_file(_file[, _sha1])
+	///
 	/// @desc Loads the resource from a file.
+	///
 	/// @param {String} _file The path to the file.
 	/// @param {String} [_sha1] Expected SHA1 of the file. If the actual one
 	/// does not match with this, then the resource will not be loaded. Use
 	/// `undefined` if you do not want to check the SHA1 of the file.
+	///
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
+	///
 	/// @throws {BBMOD_Exception} If loading fails.
 	static from_file = function (_file, _sha1=undefined) {
 		Path = _file;
@@ -174,7 +187,9 @@ function BBMOD_Resource()
 	};
 
 	/// @func ref()
+	///
 	/// @desc Retrieves a reference to the resource.
+	///
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	static ref = function () {
 		gml_pragma("forceinline");
@@ -183,7 +198,9 @@ function BBMOD_Resource()
 	};
 
 	/// @func free()
+	///
 	/// @desc Releases a reference to the resource.
+	///
 	/// @return {Bool} Returns `true` if there are no other references to the
 	/// resource and the resource is destroyed.
 	static free = function () {

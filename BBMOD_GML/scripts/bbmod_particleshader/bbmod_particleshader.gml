@@ -1,8 +1,12 @@
 /// @func BBMOD_ParticleShader(_shader, _vertexFormat)
+///
 /// @extends BBMOD_DefaultShader
+///
 /// @desc Shader used by particle materials.
+///
 /// @param {Resource.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
+///
 /// @see BBMOD_ParticleMaterial
 function BBMOD_ParticleShader(_shader, _vertexFormat)
 	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor

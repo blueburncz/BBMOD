@@ -7,7 +7,8 @@
 ///
 /// @param {Real} [_property] The property to add the value to. Use values from
 /// {@link BBMOD_EParticle}. Defaults to `undefined`.
-/// @param {Real} [_change] The value added over specified period. Defaults to 1.0.
+/// @param {Real} [_change] The value added over specified period. Defaults to
+/// 1.0.
 /// @param {Real} [_period] How long in seconds it takes to add the value to the
 /// property. Defaults to 1.0.
 ///

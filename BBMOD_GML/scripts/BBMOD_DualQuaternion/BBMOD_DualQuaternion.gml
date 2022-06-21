@@ -1,5 +1,7 @@
 /// @func BBMOD_DualQuaternion([_x, _y, _z, _w, _dx, _dy, _dz, _dw])
+///
 /// @desc A dual quaternion.
+///
 /// @param {Real} [_x] The first component of the real part of the dual
 /// quaternion. Defaults to 0.
 /// @param {Real} [_y] The second component of the real part of the dual
@@ -16,6 +18,7 @@
 /// quaternion. Defaults to 0.
 /// @param {Real} [_dw] The fourth component of the dual part of the dual
 /// quaternion. Defaults to 0.
+///
 /// @note If you leave all the arguments to their default values, an identity
 /// dual quaternion is created.
 function BBMOD_DualQuaternion(
@@ -29,9 +32,12 @@ function BBMOD_DualQuaternion(
 	Dual = new BBMOD_Quaternion(_dx, _dy, _dz, _dw);
 
 	/// @func Add(_dq)
+	///
 	/// @desc Adds dual quaternions and returns the result as a new dual
 	/// quaternion.
+	///
 	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Add = function (_dq) {
 		gml_pragma("forceinline");
@@ -42,7 +48,9 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Clone()
+	///
 	/// @desc Creates a clone of the dual quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Clone = function () {
 		gml_pragma("forceinline");
@@ -53,8 +61,10 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Conjugate()
+	///
 	/// @desc Conjugates the dual quaternion and returns the result as a new
 	/// dual quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Conjugate = function () {
 		gml_pragma("forceinline");
@@ -65,10 +75,13 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Copy(_dq)
+	///
 	/// @desc Copies components of the dual quaternion into other dual
 	/// quaternion.
+	///
 	/// @param {Struct.BBMOD_DualQuaternion} _dest The destination dual
 	/// quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static Copy = function (_dest) {
 		gml_pragma("forceinline");
@@ -78,8 +91,11 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Dot(_dq)
+	///
 	/// @desc Computes a dot product of two dual quaternions.
-	/// @para {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
+	///
+	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
+	///
 	/// @return {Real} The dot product of the dual quaternions.
 	static Dot = function (_dq) {
 		gml_pragma("forceinline");
@@ -87,8 +103,10 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Exp()
+	///
 	/// @desc Computes an exponential map of the dual quaternion and returns
 	/// the result as a new dual quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Exp = function () {
 		gml_pragma("forceinline");
@@ -100,12 +118,15 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func FromArray(_array[, _index])
+	///
 	/// @desc Loads dual quaternion components `(rX, rY, rZ, rW, dX, dY, dZ, dW)`
 	/// from an array.
+	///
 	/// @param {Array<Real>} _array The array to read the dual quaternion
 	/// components from.
 	/// @param {Real} [_index] The index to start reading the dual quaternion
 	/// components from. Defaults to 0.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static FromArray = function (_array, _index=0) {
 		gml_pragma("forceinline");
@@ -115,11 +136,15 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func FromBuffer(_buffer, _type)
+	///
 	/// @desc Loads dual quaternion components `(rX, rY, rZ, rW, dX, dY, dZ, dW)`
 	/// from a buffer.
+	///
 	/// @param {Id.Buffer} _buffer The buffer to read the dual quaternion
 	/// components from.
+	///
 	/// @param {Constant.BufferDataType} [_type] The type of each component.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
 		gml_pragma("forceinline");
@@ -129,11 +154,14 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func FromRealDual(_real, _dual)
+	///
 	/// @desc Initializes the dual quaternion using real and dual part.
+	///
 	/// @param {Struct.BBMOD_Quaternion} _real The real part of the dual
 	/// quaternion.
 	/// @param {Struct.BBMOD_Quaternion} _dual The dual part of the dual
 	/// quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static FromRealDual = function (_real, _dual) {
 		gml_pragma("forceinline");
@@ -143,10 +171,14 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func FromTranslationRotation(_t, _r)
+	///
 	/// @desc Initializes the dual quaternion from translation and rotation
 	/// (quaternion).
+	///
 	/// @param {Struct.BBMOD_Vec3} _t The translation.
+	///
 	/// @param {Struct.BBMOD_Quaternion} _r The rotation.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static FromTranslationRotation = function (_t, _r) {
 		gml_pragma("forceinline");
@@ -177,7 +209,9 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func GetRotation()
+	///
 	/// @desc Extracts rotation (quaternion) from dual quaternion.
+	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static GetRotation = function () {
 		gml_pragma("forceinline");
@@ -185,7 +219,9 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func GetTranslation()
+	///
 	/// @desc Extracts translation (vec3) from dual quaternion.
+	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static GetTranslation = function () {
 		gml_pragma("forceinline");
@@ -211,8 +247,10 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Log()
+	///
 	/// @desc Computes the logarithm map of the dual quaternion and returns the
 	/// result as a new dual quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Log = function () {
 		gml_pragma("forceinline");
@@ -224,9 +262,12 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Mul(_dq)
+	///
 	/// @desc Multiplies two dual quaternions and returns the result as a new
 	/// dual quaternion.
+	///
 	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Mul = function (_dq) {
 		gml_pragma("forceinline");
@@ -268,8 +309,10 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Normalize()
+	///
 	/// @desc Normalizes the dual quaternion and returns the result as a new
 	/// dual quaternion.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Normalize = function () {
 		gml_pragma("forceinline");
@@ -284,9 +327,12 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Pow(_p)
+	///
 	/// @desc Computes the power of the dual quaternion raised to a real number
 	/// and returns the result as a new dual quaternion.
+	///
 	/// @param {Real} _p The power value.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Pow = function (_p) {
 		gml_pragma("forceinline");
@@ -294,9 +340,12 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Rotate(_v)
+	///
 	/// @desc Rotates a vector using the dual quaternion and returns the result
 	/// as a new vector.
+	///
 	/// @param {Struct.BBMOD_Vec3} _v The vector to rotate.
+	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Rotate = function (_v) {
 		gml_pragma("forceinline");
@@ -304,9 +353,12 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Scale(_s)
+	///
 	/// @desc Scales each component of the dual quaternion by a real value and
 	/// returns the result as a new dual quaternion.
+	///
 	/// @param {Real} _s The value to scale the dual quaternion by.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Scale = function (_s) {
 		gml_pragma("forceinline");
@@ -317,10 +369,13 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Sclerp(_dq, _s)
+	///
 	/// @desc Computes a screw linear interpolation of two dual quaternions
 	/// and returns the result as a new dual quaternion.
+	///
 	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
 	/// @param {Real} _s The interpolation factor.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
 	static Sclerp = function (_dq, _s) {
 		gml_pragma("forceinline");
@@ -328,11 +383,15 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func ToArray([_array[, _index]])
+	///
 	/// @desc Writes components `(rX, rY, rZ, rW, dX, dY, dZ, dW)` of the dual
 	/// quaternion into an array.
+	///
 	/// @param {Array<Real>} [_array] The destination array. If not defined, a
 	/// new one is created.
+	///
 	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
+	///
 	/// @return {Array<Real>} Returns the destination array.
 	static ToArray = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");
@@ -343,10 +402,13 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func ToBuffer(_buffer, _type)
+	///
 	/// @desc Writes components `(rX, rY, rZ, rW, dX, dY, dZ, dW)` of the dual
 	/// quaternion into a buffer.
+	///
 	/// @param {Id.Buffer} _buffer The destination buffer.
 	/// @param {Constant.BufferDataType} _type The type of each component.
+	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static ToBuffer = function (_buffer, _type) {
 		gml_pragma("forceinline");
@@ -356,11 +418,14 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func ToMatrix([_dest[, _index]])
+	///
 	/// @desc Converts dual quaternion into a matrix.
+	///
 	/// @param {Array<Real>} [_dest] The destination array. If not specified,
 	/// a new one is created.
 	/// @param {Real} [_index] The starting index in the destination array.
 	/// Defaults to 0.
+	///
 	/// @return {Array<Real>} Returns the destination array.
 	static ToMatrix = function (_dest=undefined, _index=0) {
 		gml_pragma("forceinline");
@@ -384,9 +449,12 @@ function BBMOD_DualQuaternion(
 	};
 
 	/// @func Transform(_v)
+	///
 	/// @desc Translates and rotates a vector using the dual quaternion
 	/// and returns the result as a new vector.
+	///
 	/// @param {Struct.BBMOD_Vec3} _v The vector to transform.
+	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Transform = function (_v) {
 		gml_pragma("forceinline");
@@ -395,8 +463,10 @@ function BBMOD_DualQuaternion(
 }
 
 /// @func bbmod_dual_quaternion_array_multiply(_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
+///
 /// @desc Multiplies two dual quaternions stored in arrays and writes the result
 /// into the destination array.
+///
 /// @param {Array<Real>} _dq1 An array containing the first dual quaternion.
 /// @param {Real} _dq1Index The starting index of the first dual quaternion.
 /// @param {Array<Real>} _dq2 An array containing the second dual quaternion.
@@ -404,8 +474,10 @@ function BBMOD_DualQuaternion(
 /// @param {Array<Real>} _dest The destination array.
 /// @param {Real} _destIndex The index to start writing to within the
 /// destination array.
+///
 /// @note The arguments can overlap, as the input values are stored into local
 /// variables before the multiplication.
+///
 /// @private
 function bbmod_dual_quaternion_array_multiply(
 	_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)

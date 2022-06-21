@@ -27,8 +27,11 @@
 #macro BBMOD_MATERIAL_PBR_BATCHED __bbmod_material_pbr_batched()
 
 /// @func BBMOD_PBRMaterial([_shader])
+///
 /// @extends BBMOD_BaseMaterial
+///
 /// @desc A PBR material using the metallic-rougness workflow.
+///
 /// @param {Struct.BBMOD_Shader} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
 /// like to use {@link BBMOD_BaseMaterial.set_shader} to specify shaders used in
@@ -107,11 +110,14 @@ function BBMOD_PBRMaterial(_shader=undefined)
 	Emissive = sprite_get_texture(_emissiveDefault, 0);
 
 	/// @func set_normal_roughness(_normal, _roughness)
+	///
 	/// @desc Changes the normal vector and roughness to a uniform value for the
 	/// entire material.
+	///
 	/// @param {Struct.BBMOD_Vec3} _normal The new normal vector. If you are not
 	/// sure what this value should be, use {@link BBMOD_VEC3_UP}.
 	/// @param {Real} _roughness The new roughness. Use values in range 0..1.
+	///
 	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
 	static set_normal_roughness = function (_normal, _roughness) {
 		if (NormalRoughnessSprite != undefined)
@@ -130,13 +136,16 @@ function BBMOD_PBRMaterial(_shader=undefined)
 	};
 
 	/// @func set_metallic_ao(_metallic, _ao)
+	///
 	/// @desc Changes the metalness and ambient occlusion to a uniform value for
 	/// the entire material.
+	///
 	/// @param {Real} _metallic The new metalness. You can use any value in range
 	/// 0..1, but in general this is usually either 0 for dielectric materials
 	/// and 1 for metals.
 	/// @param {Real} _ao The new ambient occlusion value. Use values in range
 	/// 0..1, where 0 means full occlusion and 1 means no occlusion.
+	///
 	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
 	static set_metallic_ao = function (_metallic, _ao) {
 		if (MetallicAOSprite != undefined)
@@ -154,11 +163,14 @@ function BBMOD_PBRMaterial(_shader=undefined)
 	};
 
 	/// @func set_subsurface(_color, _intensity)
+	///
 	/// @desc Changes the subsurface color to a uniform value for the entire
 	/// material.
+	///
 	/// @param {Real} _color The new subsurface color.
 	/// @param {Real} _intensity The subsurface color intensity. Use values in
 	/// range 0..1. The higher the value, the more visible the effect is.
+	///
 	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
 	static set_subsurface = function (_color, _intensity) {
 		if (SubsurfaceSprite != undefined)
@@ -176,9 +188,12 @@ function BBMOD_PBRMaterial(_shader=undefined)
 	};
 
 	/// @func set_emissive(_color)
+	///
 	/// @desc Changes the emissive color to a uniform value for the entire
 	/// material.
+	///
 	/// @param {Struct.BBMOD_Color} _color The new emissive color.
+	///
 	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
 	static set_emissive = function () {
 		var _color = (argument_count == 3)

@@ -241,7 +241,9 @@ function BBMOD_Renderer()
 	Antialiasing = BBMOD_EAntialiasing.None;
 
 	/// @func get_width()
+	///
 	/// @desc Retrieves the width of the renderer on the screen.
+	///
 	/// @return {Real} The width of the renderer on the screen.
 	static get_width = function () {
 		gml_pragma("forceinline");
@@ -249,7 +251,9 @@ function BBMOD_Renderer()
 	};
 
 	/// @func get_height()
+	///
 	/// @desc Retrieves the height of the renderer on the screen.
+	///
 	/// @return {Real} The height of the renderer on the screen.
 	static get_height = function () {
 		gml_pragma("forceinline");
@@ -257,8 +261,11 @@ function BBMOD_Renderer()
 	};
 
 	/// @func get_render_width()
+	///
 	/// @desc Retrieves the width of the renderer with
+	///
 	/// {@link BBMOD_Renderer.RenderScale} applied.
+	///
 	/// @return {Real} The width of the renderer after `RenderScale` is applied.
 	static get_render_width = function () {
 		gml_pragma("forceinline");
@@ -266,8 +273,10 @@ function BBMOD_Renderer()
 	};
 
 	/// @func get_render_height()
+	///
 	/// @desc Retrieves the height of the renderer with
 	/// {@link BBMOD_Renderer.RenderScale} applied.
+	///
 	/// @return {Real} The height of the renderer after `RenderScale` is applied.
 	static get_render_height = function () {
 		gml_pragma("forceinline");
@@ -275,9 +284,12 @@ function BBMOD_Renderer()
 	};
 
 	/// @func set_position(_x, _y)
+	///
 	/// @desc Changes the renderer's position on the screen.
+	///
 	/// @param {Real} _x The new X position on the screen.
 	/// @param {Real} _y The new Y position on the screen.
+	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static set_position = function (_x, _y) {
 		gml_pragma("forceinline");
@@ -287,9 +299,12 @@ function BBMOD_Renderer()
 	};
 
 	/// @func set_size(_width, _height)
+	///
 	/// @desc Changes the renderer's size on the screen.
+	///
 	/// @param {Real} _width The new width on the screen.
 	/// @param {Real} _height The new height on the screen.
+	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static set_size = function (_width, _height) {
 		gml_pragma("forceinline");
@@ -299,11 +314,14 @@ function BBMOD_Renderer()
 	};
 
 	/// @func set_rectangle(_x, _y, _width, _height)
+	///
 	/// @desc Changes the renderer's position and size on the screen.
+	///
 	/// @param {Real} _x The new X position on the screen.
 	/// @param {Real} _y The new Y position on the screen.
 	/// @param {Real} _width The new width on the screen.
 	/// @param {Real} _height The new height on the screen.
+	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static set_rectangle = function (_x, _y, _width, _height) {
 		gml_pragma("forceinline");
@@ -313,14 +331,19 @@ function BBMOD_Renderer()
 	};
 
 	/// @func select_gizmo(_screenX, _screenY)
+	///
 	/// @desc Tries to select a gizmo at given screen coordinates and
 	/// automatically changes its {@link BBMOD_Gizmo.EditAxis} and
 	/// {@link BBMOD_Gizmo.EditType} based on which part of the gizmo
 	/// was selected.
+	///
 	/// @param {Real} _screenX The X position on the screen.
 	/// @param {Real} _screenY The Y position on the screen.
+	///
 	/// @return {Bool} Returns `true` if the gizmo was selected.
+	///
 	/// @note {@link BBMOD_Renderer.Gizmo} must be defined.
+	///
 	/// @private
 	static select_gizmo = function (_screenX, _screenY) {
 		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
@@ -352,11 +375,15 @@ function BBMOD_Renderer()
 	};
 
 	/// @func get_instance_id(_screenX, _screenY)
+	///
 	/// @desc Retrieves an ID of an instance at given position on the screen.
+	///
 	/// @param {Real} _screenX The X position on the screen.
 	/// @param {Real} _screenY The Y position on the screen.
+	///
 	/// @return {Id.Instance} The ID of the instance or 0 if no instance was
 	/// found at the given position.
+	///
 	/// @note {@link BBMOD_Renderer.RenderInstanceIDs} must be enabled.
 	static get_instance_id = function (_screenX, _screenY) {
 		gml_pragma("forceinline");
@@ -370,10 +397,14 @@ function BBMOD_Renderer()
 	};
 
 	/// @func add(_renderable)
+	///
 	/// @desc Adds a renderable object or struct to the renderer.
+	///
 	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable object or
 	/// struct to add.
+	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
+	///
 	/// @see BBMOD_Renderer.remove
 	/// @see BBMOD_IRenderable
 	static add = function (_renderable) {
@@ -383,10 +414,14 @@ function BBMOD_Renderer()
 	};
 
 	/// @func remove(_renderable)
+	///
 	/// @desc Removes a renderable object or a struct from the renderer.
+	///
 	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable object or
 	/// struct to remove.
+	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
+	///
 	/// @see BBMOD_Renderer.add
 	/// @see BBMOD_IRenderable
 	static remove = function (_renderable) {
@@ -402,9 +437,12 @@ function BBMOD_Renderer()
 	};
 
 	/// @func update(_deltaTime)
+	///
 	/// @desc Updates the renderer. This should be called in the Step event.
+	///
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
+	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static update = function (_deltaTime) {
 		global.__bbmodRendererCurrent = self;
@@ -470,10 +508,13 @@ function BBMOD_Renderer()
 	};
 
 	/// @func render_shadowmap()
+	///
 	/// @desc Renders shadowmap.
+	///
 	/// @note This modifies render pass and view and projection matrices and
 	/// for optimization reasons it does not reset them back! Make sure to do
 	/// that yourself in the calling function if needed.
+	///
 	/// @private
 	static render_shadowmap = function () {
 		gml_pragma("forceinline");
@@ -511,10 +552,13 @@ function BBMOD_Renderer()
 	};
 
 	/// @func render(_clearQueues=true)
+	///
 	/// @desc Renders all added [renderables](./BBMOD_Renderer.Renderables.html)
 	/// to the current render target.
+	///
 	/// @param {Bool} [_clearQueues] If true then all render queues are cleared
 	/// at the end of this method. Default value is `true`.
+	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static render = function (_clearQueues=true) {
 		global.__bbmodRendererCurrent = self;
@@ -776,8 +820,11 @@ function BBMOD_Renderer()
 	};
 
 	/// @func present()
+	///
 	/// @desc Presents the rendered graphics on the screen.
+	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
+	///
 	/// @note If {@link BBMOD_Renderer.UseAppSurface} is `false`, then this only
 	/// draws {@link BBMOD_Renderer.Gizmo} (if defined).
 	static present = function () {

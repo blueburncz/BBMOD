@@ -3,9 +3,13 @@
 global.__bbmodRenderStack = ds_stack_create();
 
 /// @func BBMOD_Node(_model)
+///
 /// @implements {Struct.BBMOD_IRenderable}
+///
 /// @desc A node struct.
+///
 /// @param {Struct.BBMOD_Model} _model The model which contains this node.
+///
 /// @see BBMOD_Model.RootNode
 function BBMOD_Node(_model) constructor
 {
@@ -57,8 +61,11 @@ function BBMOD_Node(_model) constructor
 	Children = [];
 
 	/// @func add_child(_node)
+	///
 	/// @desc Adds a child node.
+	///
 	/// @param {Struct.BBMOD_Node} The child node to add.
+	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
 	static add_child = function (_node) {
 		gml_pragma("forceinline");
@@ -68,7 +75,9 @@ function BBMOD_Node(_model) constructor
 	};
 
 	/// @func set_renderable()
+	///
 	/// @desc Marks the node and nodes up the chain as renderable.
+	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
 	static set_renderable = function () {
 		gml_pragma("forceinline");
@@ -86,9 +95,12 @@ function BBMOD_Node(_model) constructor
 	};
 
 	/// @func set_skeleton()
+	///
 	/// @desc Marks the node and nodes up the chain as nodes required for
 	/// animation playback.
-	/// @retrun {Struct.BBMOD_Node} Returns `self`.
+	///
+	/// @return {Struct.BBMOD_Node} Returns `self`.
+	///
 	/// @obsolete
 	static set_skeleton = function () {
 		gml_pragma("forceinline");
@@ -102,9 +114,13 @@ function BBMOD_Node(_model) constructor
 	};
 
 	/// @func from_buffer(_buffer)
+	///
 	/// @desc Loads node data from a buffer.
+	///
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
+	///
 	/// @private
 	static from_buffer = function (_buffer) {
 		var i;
@@ -145,11 +161,15 @@ function BBMOD_Node(_model) constructor
 	};
 
 	/// @func submit(_materials, _transform)
+	///
 	/// @desc Immediately submits the node for rendering.
+	///
 	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
 	/// one for each material slot of the model.
+	///
 	/// @param {Array<Real>} _transform An array of dual quaternions for
 	/// transforming animated models or `undefined`.
+	///
 	/// @private
 	static submit = function (_materials, _transform) {
 		var _meshes = Model.Meshes;
@@ -218,11 +238,14 @@ function BBMOD_Node(_model) constructor
 	};
 
 	/// @func render(_materials, _transform)
+	///
 	/// @desc Enqueues the node for rendering.
+	///
 	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
 	/// one for each material slot of the model.
 	/// @param {Array<Real>} _transform An array of dual quaternions for
 	/// transforming animated models or `undefined`.
+	///
 	/// @private
 	static render = function (_materials, _transform, _matrix) {
 		var _meshes = Model.Meshes;

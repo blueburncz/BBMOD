@@ -1,6 +1,9 @@
 /// @func BBMOD_OBJImporter()
+///
 /// @extends BBMOD_Importer
+///
 /// @desc An `*.obj` model importer.
+///
 /// @example
 /// ```gml
 /// var _objImporter = new BBMOD_OBJImporter();

@@ -99,10 +99,14 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	Events = [];
 
 	/// @func add_event(_frame, _name)
+	///
 	/// @desc Adds a custom animation event.
+	///
 	/// @param {Real} _frame The frame at which should be the event triggered.
 	/// @param {String} _name The name of the event.
+	///
 	/// @return {Struct.BBMOD_Animation} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// animWalk = new BBMOD_Animation("Data/Character_Walk.bbanim");
@@ -119,7 +123,9 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func supports_attachments()
+	///
 	/// @desc Checks whether the animation supports bone attachments.
+	///
 	/// @return {Bool} Returns true if the animation supports bone attachments.
 	static supports_attachments = function () {
 		gml_pragma("forceinline");
@@ -127,8 +133,10 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func supports_bone_transform()
+	///
 	/// @desc Checks whether the animation supports bone transformation through
 	/// code.
+	///
 	/// @return {Bool} Returns true if the animation supports bone
 	/// transformation through code.
 	static supports_bone_transform = function () {
@@ -137,7 +145,9 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func supports_transitions()
+	///
 	/// @desc Checks whether the animation supports transitions.
+	///
 	/// @return {Bool} Returns true if the animation supports transitions.
 	static supports_transitions = function () {
 		gml_pragma("forceinline");
@@ -145,9 +155,13 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func get_animation_time(_timeInSeconds)
+	///
 	/// @desc Calculates animation time from current time in seconds.
+	///
 	/// @param {Real} _timeInSeconds The current time in seconds.
+	///
 	/// @return {Real} The animation time.
+	///
 	/// @private
 	static get_animation_time = function (_timeInSeconds) {
 		gml_pragma("forceinline");
@@ -155,9 +169,13 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func from_buffer(_buffer)
+	///
 	/// @desc Loads animation data from a buffer.
+	///
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	///
 	/// @return {Struct.BBMOD_Animation} Returns `self`.
+	///
 	/// @throws {BBMOD_Exception} If loading fails.
 	static from_buffer = function (_buffer) {
 		var _hasMinorVersion = false;
@@ -241,11 +259,14 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	}
 
 	/// @func create_transition(_timeFrom, _animTo, _timeTo)
+	///
 	/// @desc Creates a new animation transition.
+	///
 	/// @param {Real} _timeFrom Animation time of this animation that we are
 	/// transitioning from.
 	/// @param {Struct.BBMOD_Animation} _animTo The animation to transition to.
 	/// @param {Real} _timeTo Animation time of the target animation.
+	///
 	/// @return {Struct.BBMOD_Animation} The created transition or `undefined`
 	/// if the animations have different optimization levels or if they do not
 	/// support transitions.

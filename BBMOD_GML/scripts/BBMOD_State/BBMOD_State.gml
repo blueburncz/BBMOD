@@ -1,7 +1,11 @@
 /// @func BBMOD_State(_name)
+///
 /// @extends BBMOD_Class
+///
 /// @desc A state of a state machine.
+///
 /// @param {String} _name The name of the state.
+///
 /// @see BBMOD_StateMachine
 function BBMOD_State(_name)
 	: BBMOD_Class() constructor
@@ -40,7 +44,9 @@ function BBMOD_State(_name)
 	ActiveSince = 0;
 
 	/// @func get_duration()
+	///
 	/// @desc Retrieves how long (in milliseconds) has the state been active for.
+	///
 	/// @return {Real} Number of milliseconds for which has the state been active.
 	static get_duration = function () {
 		gml_pragma("forceinline");

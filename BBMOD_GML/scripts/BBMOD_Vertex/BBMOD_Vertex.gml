@@ -1,6 +1,8 @@
 /// @func BBMOD_Vertex(_vertexFormat)
+///
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex.
 /// This drives which properties of the vertex should be defined.
+///
 /// @example
 /// Following code shows how the constructor fills in the vertex properties to
 /// default values if they are enabled in the vertex format.
@@ -65,11 +67,15 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	Id = VertexFormat.Ids ? 0 : undefined;
 
 	/// @func to_vertex_buffer(_vbuffer[, _vformat])
+	///
 	/// @desc Adds the vertex to the vertex buffer.
+	///
 	/// @param {Id.VertexBuffer} _vbuffer The vertex buffer to add the vertex to.
 	/// @param {Struct.BBMOD_VertexFormat} [_vformat] The vertex format of the
 	/// vertex buffer. Defaults to the format of the vertex if `undefined`.
+	///
 	/// @return {Struct.BBMOD_Vertex} Returns `self`.
+	///
 	/// @throws {BBMOD_Exception} If the format of the vertex and the format of
 	/// the buffer are not compatible.
 	static to_vertex_buffer = function (_vbuffer, _vformat=undefined) {

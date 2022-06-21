@@ -1,6 +1,9 @@
 /// @func BBMOD_ImageBasedLight(_texture)
+///
 /// @extends BBMOD_Light
+///
 /// @desc An image based light.
+///
 /// @param {Pointer.Texture} _texture A texture containing 8 prefiltered
 /// RGBM-encoded octahedrons, where the first 7 are for specular reflections
 /// with increasing roughness and the last one is for diffuse lighting.

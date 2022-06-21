@@ -56,10 +56,14 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	Faces = ds_list_create();
 
 	/// @func add_vertex(_vertex)
+	///
 	/// @desc Adds a vertex to the mesh.
+	///
 	/// @param {Struct.BBMOD_Vertex} _vertex The vertex to add.
+	///
 	/// @return {Real} Returns the index of the vertex.
-	//// @see BBMOD_Vertex
+	///
+	/// @see BBMOD_Vertex
 	static add_vertex = function (_vertex) {
 		gml_pragma("forceinline");
 		var _ind = ds_list_size(Vertices);
@@ -68,10 +72,14 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	};
 
 	/// @func add_face(_index...)
+	///
 	/// @desc Adds a face to the mesh.
+	///
 	/// @param {Real} _index The index of the first vertex of the face.
+	///
 	/// @return {Real} Returns the index within the list of faces where
 	/// the first vertex was stored.
+	///
 	/// @see BBMOD_MeshBuilder.Faces
 	static add_face = function (_index) {
 		gml_pragma("forceinline");
@@ -85,10 +93,15 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	};
 
 	/// @func make_tangents()
+	///
 	/// @desc Makes tangent and bitangent vectors for added vertices.
+	///
 	/// @return {Struct.BBMOD_MeshBuilder} Returns `self`.
+	///
 	/// @throws {BBMOD_Exception} If an error occurs during the process.
+	///
 	/// @note This works only for the `pr_trianglelist` primitive type!
+	///
 	/// @source https://gamedev.stackexchange.com/a/68617
 	static make_tangents = function () {
 		if (PrimitiveType != pr_trianglelist)

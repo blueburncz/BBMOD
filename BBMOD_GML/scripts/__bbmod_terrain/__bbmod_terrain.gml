@@ -6,7 +6,8 @@
 
 function __bbmod_shader_terrain()
 {
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
+	static _shader = new BBMOD_DefaultShader(
+		BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
 	return _shader;
 }
 

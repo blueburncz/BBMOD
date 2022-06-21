@@ -19,9 +19,13 @@ enum BBMOD_ECubeSide
 };
 
 /// @func BBMOD_Cubemap(_resolution)
+///
 /// @extends BBMOD_Class
+///
 /// @implements {Struct.BBMOD_IRenderTarget}
+///
 /// @desc A cubemap.
+///
 /// @param {Real} _resolution A resolution of single cubemap side. Must be power
 /// of 2!
 function BBMOD_Cubemap(_resolution)
@@ -69,10 +73,14 @@ function BBMOD_Cubemap(_resolution)
 	RenderTo = 0;
 
 	/// @func get_surface(_side)
+	///
 	/// @desc Gets a surface for given cubemap side. If the surface is corrupted,
 	/// then a new one is created.
+	///
 	/// @param {Real} _side The cubemap side.
+	///
 	/// @return {Id.Surface} The surface.
+	///
 	/// @see BBMOD_ECubeSide
 	static get_surface = function (_side) {
 		var _surOld = Sides[_side];
@@ -85,11 +93,14 @@ function BBMOD_Cubemap(_resolution)
 	};
 
 	/// @func to_single_surface(_clearColor, _clearAlpha)
+	///
 	/// @desc Puts all faces of the cubemap into a single surface.
+	///
 	/// @param {Real} _clearColor The color to clear the target surface with
 	/// before the cubemap is rendered into it.
 	/// @param {Real} _clearAlpha The alpha to clear the targe surface with
 	/// before the cubemap is rendered into it.
+	///
 	/// @see BBMOD_Cubemap.Surface
 	static to_single_surface = function (_clearColor, _clearAlpha) {
 		Surface = bbmod_surface_check(Surface, Resolution * 8, Resolution);
@@ -106,9 +117,12 @@ function BBMOD_Cubemap(_resolution)
 	};
 
 	/// @func get_view_matrix(_side)
+	///
 	/// @desc Creates a view matrix for given cubemap side.
+	///
 	/// @param {Real} side The cubemap side. Use values from
 	/// {@link BBMOD_ECubeSide}.
+	///
 	/// @return {Array<Real>} The created view matrix.
 	static get_view_matrix = function (_side) {
 		var _negEye = Position.Scale(-1.0);
@@ -162,7 +176,9 @@ function BBMOD_Cubemap(_resolution)
 	}
 
 	/// @func get_projection_matrix()
+	///
 	/// @desc Creates a projection matrix for the cubemap.
+	///
 	/// @return {Array<Real>} The created projection matrix.
 	static get_projection_matrix = function () {
 		gml_pragma("forceinline");

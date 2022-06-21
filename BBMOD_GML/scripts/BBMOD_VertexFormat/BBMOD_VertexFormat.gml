@@ -1,5 +1,7 @@
 /// @func BBMOD_VertexFormat([_vertices[, _normals[, _uvs[, _colors[, _tangentw[, _bones[, _ids]]]]]]])
+///
 /// @desc A wrapper of a raw GameMaker vertex format.
+///
 /// @param {Bool} [_vertices] If `true` then the vertex format must have
 /// vertices. This should always be `true`! Defaults to `true`.
 /// @param {Bool} [_normals] If `true` then the vertex format must have normal
@@ -62,8 +64,10 @@ function BBMOD_VertexFormat(
 	static Formats = ds_map_create();
 
 	/// @func get_hash()
+	///
 	/// @desc Makes a hash based on the vertex format properties. Vertex buffers
 	/// with same propereties will have the same hash.
+	///
 	/// @return {Real} The hash.
 	static get_hash = function () {
 		return (0
@@ -78,8 +82,10 @@ function BBMOD_VertexFormat(
 	};
 
 	/// @func get_byte_size()
+	///
 	/// @desc Retrieves the size of a single vertex using the vertex format in
 	/// bytes.
+	///
 	/// @return {Real} The byte size of a single vertex using the vertex format.
 	static get_byte_size = function () {
 		gml_pragma("forceinline");
@@ -146,9 +152,13 @@ function BBMOD_VertexFormat(
 }
 
 /// @func bbmod_vertex_format_load(_buffer)
+///
 /// @desc Loads a vertex format from a buffer.
+///
 /// @param {Id.Buffer} _buffer The buffer to load the vertex format from.
+///
 /// @return {Struct.BBMOD_VertexFormat} The loaded vetex format.
+///
 /// @private
 function bbmod_vertex_format_load(_buffer)
 {

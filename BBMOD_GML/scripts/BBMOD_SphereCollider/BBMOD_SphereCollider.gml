@@ -1,9 +1,14 @@
 /// @func BBMOD_SphereCollider([_position[, _radius]])
+///
 /// @extends BBMOD_Collider
+///
 /// @desc A sphere collider.
+///
 /// @param {Struct.BBMOD_Vec3} [_position] The position of the sphere Defaults
 /// to `(0, 0, 0)`.
+///
 /// @param {Real} [_radius] The radius of the sphere. Defaults to 1.
+///
 /// @see BBMOD_AABBCollider
 /// @see BBMOD_PlaneCollider
 function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)

@@ -38,31 +38,36 @@
 
 function __bbmod_vformat_particle()
 {
-	static _vformat = new BBMOD_VertexFormat(true, false, true, false, false, false, false);
+	static _vformat = new BBMOD_VertexFormat(
+		true, false, true, false, false, false, false);
 	return _vformat;
 }
 
 function __bbmod_vformat_particle_batched()
 {
-	static _vformat = new BBMOD_VertexFormat(true, false, true, false, false, false, true);
+	static _vformat = new BBMOD_VertexFormat(
+		true, false, true, false, false, false, true);
 	return _vformat;
 }
 
 function __bbmod_shader_particle_unlit()
 {
-	static _shader = new BBMOD_ParticleShader(BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_ParticleShader(
+		BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
 function __bbmod_shader_particle_lit()
 {
-	static _shader = new BBMOD_ParticleShader(BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_ParticleShader(
+		BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
 function __bbmod_shader_particle_depth()
 {
-	static _shader = new BBMOD_BaseShader(BBMOD_ShParticleDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_BaseShader(
+		BBMOD_ShParticleDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 

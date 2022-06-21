@@ -73,7 +73,9 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	};
 
 	/// @func get_texture()
+	///
 	/// @desc Retrieves a pointer to the texture.
+	///
 	/// @return {Pointer.Texture} The pointer to the texture.
 	static get_texture = function () {
 		gml_pragma("forceinline");

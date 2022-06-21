@@ -83,7 +83,9 @@
 #macro BBMOD_C_YELLOW (new BBMOD_Color().FromConstant(c_yellow))
 
 /// @func BBMOD_Color([_red, _green, _blue])
+///
 /// @desc A color with support for high dynamic range.
+///
 /// @param {Real} [_red] The value of the red channel. Use values in range
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
 /// @param {Real} [_green] The value of the green channel. Use values in range
@@ -93,6 +95,7 @@
 /// @param {Real} [_alpha] The value of the alpha channel. Use values in range
 /// 0..1.
 /// Defaults to 1.
+///
 /// @see BBMOD_C_AQUA
 /// @see BBMOD_C_BLACK
 /// @see BBMOD_C_BLUE
@@ -132,7 +135,9 @@ function BBMOD_Color(
 	Alpha = _alpha;
 
 	/// @func Copy(_dest)
+	///
 	/// @desc Copies properties to another color struct.
+	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
 	static Copy = function (_dest) {
 		gml_pragma("forceinline");
@@ -144,7 +149,9 @@ function BBMOD_Color(
 	};
 
 	/// @func Clone()
+	///
 	/// @desc Creates a clone of the color struct.
+	///
 	/// @return {Struct.BBMOD_Color} The created clone.
 	static Clone = function () {
 		gml_pragma("forceinline");
@@ -154,9 +161,13 @@ function BBMOD_Color(
 	};
 
 	/// @func FromConstant(_color)
+	///
 	/// @desc Initializes the color using a color constant.
+	///
 	/// @param {Real} _color The color constant.
+	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// var _red = new BBMOD_Color().FromConstant(c_red);
@@ -170,14 +181,18 @@ function BBMOD_Color(
 	};
 
 	/// @func FromRGBA(_red, _green, _blue[, _alpha])
+	///
 	/// @desc Initializes the color using RGBA.
+	///
 	/// @param {Real} _red The value of the red channel. Use values in range
 	/// 0..`BBMOD_RGBM_VALUE_MAX`.
 	/// @param {Real} _green The value of the green channel. Use values in range
 	/// 0..`BBMOD_RGBM_VALUE_MAX`.
 	/// @param {Real} _blue The value of the blue channel. Use values in range
 	/// 0..`BBMOD_RGBM_VALUE_MAX`.
+	///
 	/// @param {Real} [_alpha] The value of the alpha channel. Defaults to 1.
+	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
 	static FromRGBA = function (_red, _green, _blue, _alpha=1.0) {
 		gml_pragma("forceinline");
@@ -189,10 +204,14 @@ function BBMOD_Color(
 	};
 
 	/// @func FromHex(_hex)
+	///
 	/// @desc Initializes the color using `RRGGBB` hexadecimal format. Alpha
 	/// channel is set to 1.
+	///
 	/// @param {Real} _hex The hexadecimal color.
+	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
+	///
 	/// @example
 	/// ```gml
 	/// new BBMOD_Color().FromHex($FF0000); // Same as FromConstant(c_red)
@@ -209,10 +228,13 @@ function BBMOD_Color(
 	};
 
 	/// @func FromHSV(_hue, _saturation, _value)
+	///
 	/// @desc Initializes the color using HSV. Alpha channel is set to 1.
+	///
 	/// @param {Real} _hue Color hue. Use values in range 0..255.
 	/// @param {Real} _saturation Color saturation. Use values in range 0..255.
 	/// @param {Real} _value Color value. Use values in range 0..255.
+	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
 	static FromHSV = function (_hue, _saturation, _value) {
 		gml_pragma("forceinline");
@@ -225,11 +247,15 @@ function BBMOD_Color(
 	};
 
 	/// @func Mix(_color, _factor)
+	///
 	/// @desc Mixes two colors.
+	///
 	/// @param {Struct.BBMOD_Color} _color The other color to mix this one with.
+	///
 	/// @param {Real} _factor The mixing factor. Use values in range 0..1,
 	/// where 0 would result into this color, 1 would be the other color and
 	/// 0.5 would return a merge of both colors equally.
+	///
 	/// @return {Struct.BBMOD_Color} The new color.
 	static Mix = function (_color, _factor) {
 		gml_pragma("forceinline");
@@ -241,9 +267,12 @@ function BBMOD_Color(
 	};
 
 	/// @func ToConstant()
+	///
 	/// @desc Encodes the color into a single value, compatible with GameMaker's
 	/// color constants. Ignores the alpha channel.
+	///
 	/// @return {Real} The color as a single value.
+	///
 	/// @example
 	/// ```gml
 	/// var _red = new BBMOD_Color(255, 0, 0);
@@ -255,11 +284,14 @@ function BBMOD_Color(
 	};
 
 	/// @func ToHSV([_array[, _index]])
+	///
 	/// @desc Encodes the color into HSV format, ignoring the alpha channel.
+	///
 	/// @param {Array<Real>} [_array] The array to output the values to. A new
 	/// one is created if not defined.
 	/// @param {Real} [_index] The index to start writing the values to. Defaults
 	/// to 0.
+	///
 	/// @return {Array<Real>} Returns the array with HSV values.
 	static ToHSV = function (_array, _index) {
 		gml_pragma("forceinline");
@@ -273,11 +305,14 @@ function BBMOD_Color(
 	};
 
 	/// @func ToRGBM([_array[, _index]])
+	///
 	/// @desc Encodes the color into RGBM format, ignoring the alpha channel.
+	///
 	/// @param {Array<Real>} [_array] The array to output the values to. If
 	/// `undefined`, then a new one is created.
 	/// @param {Real} [_index] The index to start writing the values to.
 	/// Defaults to 0.
+	///
 	/// @return {Array<Real>} Returns the array with RGBM values.
 	static ToRGBM = function (_array=undefined, _index=0) {
 		gml_pragma("forceinline");

@@ -139,9 +139,12 @@ function BBMOD_Camera() constructor
 	ViewProjectionMatrix = matrix_build_identity();
 
 	/// @func set_mouselook(_enable)
+	///
 	/// @desc Enable/disable mouselook. This locks the mouse cursor at its
 	/// current position when enabled.
+	///
 	/// @param {Bool} _enable USe `true` to enable mouselook.
+	///
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
 	static set_mouselook = function (_enable) {
 		if (_enable)
@@ -167,12 +170,16 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func update_matrices()
+	///
 	/// @desc Recomputes camera's view and projection matrices.
+	///
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
+	///
 	/// @note This is called automatically in the {@link BBMOD_Camera.update}
 	/// method, so you do not need to call this unless you modify
 	/// {@link BBMOD_Camera.Position} or {@link BBMOD_Camera.Target} after the
 	/// `update` method.
+	///
 	/// @example
 	/// ```gml
 	/// /// @desc Step event
@@ -237,13 +244,16 @@ function BBMOD_Camera() constructor
 	}
 
 	/// @func update(_deltaTime[, _positionHandler])
+	///
 	/// @desc Handles mouselook, updates camera's position, matrices etc.
+	///
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
 	/// @param {Function} [_positionHandler] A function which takes the camera's
 	/// position (@{link BBMOD_Vec3}) and returns a new position. This could be
 	/// used for example for camera collisions in a third-person game. Defaults
 	/// to `undefined`.
+	///
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
 	static update = function (_deltaTime, _positionHandler=undefined) {
 		if (os_browser != browser_not_a_browser)
@@ -350,7 +360,9 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func get_view_mat()
+	///
 	/// @desc Retrieves camera's view matrix.
+	///
 	/// @return {Array<Real>} The view matrix.
 	static get_view_mat = function () {
 		gml_pragma("forceinline");
@@ -371,7 +383,9 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func get_proj_mat()
+	///
 	/// @desc Retrieves camera's projection matrix.
+	///
 	/// @return {Array<Real>} The projection matrix.
 	static get_proj_mat = function () {
 		gml_pragma("forceinline");
@@ -392,8 +406,10 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func get_right()
+	///
 	/// @desc Retrieves a vector pointing right relative to the camera's
 	/// direction.
+	///
 	/// @return {Struct.BBMOD_Vec3} The right vector.
 	static get_right = function () {
 		gml_pragma("forceinline");
@@ -406,8 +422,10 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func get_up()
+	///
 	/// @desc Retrieves a vector pointing up relative to the camera's
 	/// direction.
+	///
 	/// @return {Struct.BBMOD_Vec3} The up vector.
 	static get_up = function () {
 		gml_pragma("forceinline");
@@ -420,7 +438,9 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func get_forward()
+	///
 	/// @desc Retrieves a vector pointing forward in the camera's direction.
+	///
 	/// @return {Struct.BBMOD_Vec3} The forward vector.
 	static get_forward = function () {
 		gml_pragma("forceinline");
@@ -433,14 +453,18 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func world_to_screen(_position[, _screenWidth[, _screenHeight]])
+	///
 	/// @desc Computes screen-space position of a point in world-space.
+	///
 	/// @param {Struct.BBMOD_Vec3} _position The world-space position.
 	/// @param {Real} [_screenWidth] The width of the screen. If `undefined`, it
 	/// is retrieved using `window_get_width`.
 	/// @param {Real} [_screenHeight] The height of the screen. If `undefined`,
 	/// it is retrieved using `window_get_height`.
+	///
 	/// @return {Struct.BBMOD_Vec4} The screen-space position or `undefined` if
 	/// the point is outside of the screen.
+	///
 	/// @note This requires {@link BBMOD_Camera.ViewProjectionMatrix}, so you
 	/// should use this *after* {@link BBMOD_Camera.update_matrices} (or
 	/// {@link BBMOD_Camera.update}) is called!
@@ -461,9 +485,12 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func screen_point_to_vec3(_vector[, _renderer])
+	///
 	/// @desc Unprojects a position on the screen into a direction in world-space.
+	///
 	/// @param {Struct.BBMOD_Vector2} _vector The position on the screen.
 	/// @param {Struct.BBMOD_Renderer} [_renderer] A renderer or `undefined`.
+	///
 	/// @return {Struct.BBMOD_Vec3} The world-space direction.
 	static screen_point_to_vec3 = function (_vector, _renderer=undefined) {
 		var _forward = get_forward();
@@ -482,8 +509,11 @@ function BBMOD_Camera() constructor
 	};
 
 	/// @func apply()
+	///
 	/// @desc Applies the camera.
+	///
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
+	///
 	/// @example
 	/// Following code renders a model from the camera's view.
 	/// ```gml
@@ -492,6 +522,7 @@ function BBMOD_Camera() constructor
 	/// model.submit();
 	/// bbmod_material_reset();
 	/// ```
+	///
 	/// @note This also overrides the camera position and exposure passed to
 	/// shaders using {@link bbmod_camera_set_position} and
 	/// {@link bbmod_camera_set_exposure} respectively!

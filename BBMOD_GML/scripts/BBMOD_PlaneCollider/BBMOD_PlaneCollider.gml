@@ -1,9 +1,13 @@
 /// @func BBMOD_PlaneCollider([_normal[, _distance]])
+///
 /// @extends BBMOD_Collider
+///
 /// @desc A plane collider.
+///
 /// @param {Struct.BBMOD_Vec3} [_normal] The plane's normal vector. Defaults to
 /// {@link BBMOD_VEC3_UP}.
 /// @param {Real} [_distance] The plane's distance from the world origin.
+///
 /// @see BBMOD_AABBCollider
 /// @see BBMOD_SphereCollider
 function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
@@ -16,8 +20,11 @@ function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
 	Distance = _distance;
 
 	/// @func GetPointDistance(_point)
+	///
 	/// @param {Struct.BBMOD_Vec3} _point
+	///
 	/// @return {Real}
+	///
 	/// @private
 	static GetPointDistance = function (_point) {
 		gml_pragma("forceinline");

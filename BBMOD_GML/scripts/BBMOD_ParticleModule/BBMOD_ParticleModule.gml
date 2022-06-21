@@ -1,6 +1,8 @@
 /// @func BBMOD_ParticleModule()
+///
 /// @desc Base struct for particle modules. These are composed into particle
 /// system to define behavior of their particles.
+///
 /// @see BBMOD_ParticleSystem
 function BBMOD_ParticleModule() constructor
 {

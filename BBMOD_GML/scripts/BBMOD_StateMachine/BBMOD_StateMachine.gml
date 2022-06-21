@@ -1,6 +1,9 @@
 /// @func BBMOD_StateMachine()
+///
 /// @extends BBMOD_Class
+///
 /// @desc A state machine.
+///
 /// @see BBMOD_State
 function BBMOD_StateMachine()
 	: BBMOD_Class() constructor
@@ -58,7 +61,9 @@ function BBMOD_StateMachine()
 	OnExit = undefined;
 
 	/// @func start()
+	///
 	/// @desc Enters the initial state of the state machine.
+	///
 	/// @return {Struct.BBMOD_StateMachine} Returns `self`.
 	static start = function () {
 		gml_pragma("forceinline");
@@ -72,7 +77,9 @@ function BBMOD_StateMachine()
 	};
 
 	/// @func finish()
+	///
 	/// @desc Enters the exit state of the state machine.
+	///
 	/// @return {Struct.BBMOD_StateMachine} Returns `self`.
 	static finish = function () {
 		gml_pragma("forceinline");
@@ -85,8 +92,11 @@ function BBMOD_StateMachine()
 	};
 
 	/// @func add_state(_state)
+	///
 	/// @desc Adds a state to the state machine.
+	///
 	/// @param {Struct.BBMOD_State} _state The state to add.
+	///
 	/// @return {Struct.BBMOD_StateMachine} Returns `self`.
 	static add_state = function (_state) {
 		gml_pragma("forceinline");
@@ -96,10 +106,14 @@ function BBMOD_StateMachine()
 	};
 
 	/// @func change_state(_state)
+	///
 	/// @desc Changes the state of the state machine and executes
 	/// {@link BBMOD_StateMachine.OnStateChange}.
+	///
 	/// @param {Real} _state The new state.
+	///
 	/// @return {Struct.BBMOD_StateMachine} Returns itself.
+	///
 	/// @throws {BBMOD_Exception} If an invalid state is passed.
 	static change_state = function (_state) {
 		gml_pragma("forceinline");
@@ -142,13 +156,18 @@ function BBMOD_StateMachine()
 	};
 
 	/// @func update(_deltaTime)
+	///
 	/// @desc Executes function for the current state of the state machine
 	/// (if defined).
+	///
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
+	///
 	/// @return {Struct.BBMOD_StateMachine} Returns `self`.
+	///
 	/// @note This function does not do anything if the state machine has not
 	/// started yet or if it has already reached its final state.
+	///
 	/// @see BBMOD_StateMachine.start
 	/// @see BBMOD_StateMachine.finish
 	static update = function (_deltaTime) {

@@ -1,5 +1,7 @@
 /// @func BBMOD_RaycastResult()
+///
 /// @desc A structure for holding additional raycast data.
+///
 /// @see BBMOD_Collider.Raycast
 /// @see BBMOD_Ray.Raycast
 function BBMOD_RaycastResult() constructor

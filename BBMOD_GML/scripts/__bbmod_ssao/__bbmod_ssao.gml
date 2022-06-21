@@ -16,9 +16,13 @@ global.__bbmodSSAONoise = bbmod_ssao_make_noise(BBMOD_SSAO_NOISE_TEXTURE_SIZE);
 global.__bbmodSSAOKernel = bbmod_ssao_create_kernel(BBMOD_SSAO_KERNEL_SIZE);
 
 /// @func bbmod_ssao_make_noise(_size)
+///
 /// @desc Creates a sprite containing a random noise for the SSAO.
+///
 /// @param {Real} _size The size of the sprite.
+///
 /// @return {Id.Sprite} The created noise sprite.
+///
 /// @private
 function bbmod_ssao_make_noise(_size)
 {
@@ -49,9 +53,14 @@ function bbmod_ssao_make_noise(_size)
 }
 
 /// @func bbmod_ssao_create_kernel(_size)
+///
 /// @desc Generates a kernel of random vectors to be used for the SSAO.
+///
 /// @param {Real} _size Number of vectors in the kernel.
-/// @return {Array} The created kernel as `[v1X, v1Y, v1Z, v2X, v2Y, v2Z, ..., vnX, vnY, vnZ]`.
+///
+/// @return {Array} The created kernel as
+/// `[v1X, v1Y, v1Z, v2X, v2Y, v2Z, ..., vnX, vnY, vnZ]`.
+///
 /// @private
 function bbmod_ssao_create_kernel(_size)
 {
@@ -72,18 +81,22 @@ function bbmod_ssao_create_kernel(_size)
 }
 
 /// @func bbmod_ssao_draw(_radius, _power, _angleBias, _depthRange, _surSsao, _surWork, _surDepth, _matProj, _clipFar)
+///
 /// @desc Renders SSAO into the `_surSsao` surface.
+///
 /// @param {Real} _radius Screen-space radius of the occlusion effect.
-/// @param {Real} _power Strength of the occlusion effect. Should be greater than 0.
+/// @param {Real} _power Strength of the occlusion effect. Should be greater
+/// than 0.
 /// @param {Real} _angleBias Angle bias in radians.
 /// @param {Real} _depthRange Maximum depth difference of samples.
 /// @param {Id.Surface} _surSsao The surface to draw the SSAO to.
-/// @param {Id.Surface} _surWork A working surface used for blurring the SSAO. Must
-/// have the same size as `_surSsao`!
+/// @param {Id.Surface} _surWork A working surface used for blurring the SSAO.
+/// Must have the same size as `_surSsao`!
 /// @param {Id.Surface} _surDepth G-buffer surface.
-/// @param {Array<Real>} _matProj    The projection matrix used when rendering the scene.
-/// @param {Real} _clipFar Distance to the far clipping plane (same as in the projection
-/// used when rendering the scene).
+/// @param {Array<Real>} _matProj The projection matrix used when rendering the
+/// scene.
+/// @param {Real} _clipFar Distance to the far clipping plane (same as in the
+/// projection used when rendering the scene).
 function bbmod_ssao_draw(
 	_radius,
 	_power,
