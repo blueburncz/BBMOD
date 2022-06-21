@@ -136,7 +136,7 @@ function BBMOD_IEventListener()
 	/// @func trigger_event(_event, _data)
 	/// @desc Triggers an event in the event listener.
 	/// @param {String} _event The event name.
-	/// @param {Mixed} _data The event data.
+	/// @param {Any} _data The event data.
 	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
 	trigger_event = _triggerEvent;
 

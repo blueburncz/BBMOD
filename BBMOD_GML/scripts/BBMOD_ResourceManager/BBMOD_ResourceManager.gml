@@ -209,8 +209,8 @@ function BBMOD_ResourceManager()
 	/// @func free(_resourceOrPath)
 	/// @desc Frees a reference to the resource. When there are no other no other
 	/// references, the resource is destroyed.
-	/// @param {Mixed} _resourceOrPath Either a {@link BBMOD_Resource} or a
-	/// path (string).
+	/// @param {Struct.BBMOD_Resource, String} _resourceOrPath Either a resource
+	/// or a path (string).
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	static free = function (_resourceOrPath) {
 		// Note: Resource removes itself from the map

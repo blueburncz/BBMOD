@@ -226,7 +226,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func find_node(_idOrName)
 	/// @desc Finds a node by its name or id.
-	/// @param {Mixed} _idOrName The id (real) or the name (string) of the node.
+	/// @param {Real, String} _idOrName The id (real) or the name (string) of
+	/// the node.
 	/// @return {Struct.BBMOD_Node} Returns the found node `undefined`.
 	static find_node = function (_idOrName) {
 		var _isName = is_string(_idOrName);

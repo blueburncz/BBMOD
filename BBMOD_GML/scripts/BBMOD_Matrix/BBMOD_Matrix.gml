@@ -455,8 +455,8 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func Translate(_x[, _y, _z])
 	/// @desc Translates the matrix.
-	/// @param {Mixed} _x Translation on the X axis or a {@link BBMOD_Vec3} with
-	/// translations on all axes.
+	/// @param {Real, Struct.BBMOD_Vec3} _x Translation on the X axis or a
+	/// vector with translations on all axes.
 	/// @param {Real} [_y] Translation on the Y axis. Use `undefined` if `_x` is
 	/// a vector. Defaults to `undefined`.
 	/// @param {Real} [_z] Translation on the Z axis. Use `undefined` if `_x` is
@@ -510,8 +510,8 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func RotateEuler(_x[, _y, _z])
 	/// @desc Rotates the matrix using euler angles.
-	/// @param {Mixed} _x Rotation on the X axis or a {@link BBMOD_Vec3} with
-	/// rotations on all axes.
+	/// @param {Real, Struct.BBMOD_Vec3} _x Rotation on the X axis or a vector
+	/// with rotations on all axes.
 	/// @param {Real} [_y] Rotation on the Y axis. Use `undefined` if `_x` is a
 	/// vector. Defaults to `undefined`.
 	/// @param {Real} [_z] Rotation on the Z axis. Use `undefined` if `_x` is a
@@ -578,8 +578,8 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func Scale(_x[, _y, _z])
 	/// @desc Scales the matrix.
-	/// @param {Mixed} _x Scale on the X axis or a {@link BBMOD_Vec3} with scale
-	/// on all axes.
+	/// @param {Real, Struct.BBMOD_Vec3} _x Scale on the X axis or a vector with
+	/// scale on all axes.
 	/// @param {Real} [_y] Scale on the Y axis. Use `undefined` if `_x` is a
 	/// vector. Defaults to `undefined`.
 	/// @param {Real} [_z] Scale on the Z axis. Use `undefined` if `_x` is a
