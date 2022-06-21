@@ -5,8 +5,8 @@
 /// @desc A universal particle module that randomly mixes initial value of
 /// particles' property between two values when they are spawned.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The property to set
-/// initial value of. Defaults to `undefined`.
+/// @param {Real} [_property] The property to set initial value of. Use values
+/// from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Real} [_from] The value to mix from. Defaults to 0.0.
 /// @param {Real} [_to] The value to mix to. Defaults to `_from`.
 ///
@@ -14,8 +14,8 @@
 function BBMOD_MixRealModule(_property=undefined, _from=0.0, _to=_from)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The property to set initial value
-	/// of. Default value is `undefined`.
+	/// @var {Real} The property to set initial value of. Use values from
+	/// {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Real} The initial value to mix from. Default value is 0.0.

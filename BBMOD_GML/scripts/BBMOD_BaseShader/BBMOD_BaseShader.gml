@@ -2,13 +2,14 @@
 /// @extends BBMOD_Shader
 /// @desc Base class for BBMOD shaders.
 /// @param {Resource.GMShader} _shader The shader resource.
-/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
+/// by the shader.
 /// @see BBMOD_VertexFormat
 function BBMOD_BaseShader(_shader, _vertexFormat)
 	: BBMOD_Shader(_shader, _vertexFormat) constructor
 {
-	/// @var {Real} Maximum number of point lights in the shader. This must match
-	/// with value defined in the raw GameMaker shader!
+	/// @var {Real} Maximum number of point lights in the shader. This must
+	/// match with value defined in the raw GameMaker shader!
 	MaxPointLights = 8;
 
 	UBaseOpacityMultiplier = get_uniform("bbmod_BaseOpacityMultiplier");
@@ -143,7 +144,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @desc Sets a fragment shader uniform `bbmod_IBLTexel` and samplers
 	/// `bbmod_IBL` and `bbmod_BRDF`. These are required for image based
 	/// lighting.
-	/// @param {Struct.BBMOD_ImageBasedLight/Undefined} [_ibl] The image based light.
+	/// @param {Struct.BBMOD_ImageBasedLight} [_ibl] The image based light.
 	/// If `undefined`, then the value set by {@link bbmod_ibl_set} is used. If
 	/// the light is not enabled, then it is not passed.
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
@@ -172,11 +173,11 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_ambient_light([_up[, _down]])
 	/// @desc Sets the `bbmod_LightAmbientUp`, `bbmod_LightAmbientDown` uniforms.
-	/// @param {Struct.BBMOD_Color/Undefined} [_up] RGBM encoded ambient light
-	/// color on the upper hemisphere. If `undefined`, then the value set by
+	/// @param {Struct.BBMOD_Color} [_up] RGBM encoded ambient light color on
+	/// the upper hemisphere. If `undefined`, then the value set by
 	/// {@link bbmod_light_ambient_set_up} is used.
-	/// @param {Struct.BBMOD_Color/Undefined} [_down] RGBM encoded ambient light
-	/// color on the lower hemisphere. If `undefined`, then the value set by
+	/// @param {Struct.BBMOD_Color} [_down] RGBM encoded ambient light color on
+	/// the lower hemisphere. If `undefined`, then the value set by
 	/// {@link bbmod_light_ambient_set_down} is used.
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	static set_ambient_light = function (_up=undefined, _down=undefined) {
@@ -193,8 +194,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @func set_directional_light([_light])
 	/// @desc Sets uniforms `bbmod_LightDirectionalDir` and
 	/// `bbmod_LightDirectionalColor`.
-	/// @param {Struct.BBMOD_DirectionalLight/Undefined} [_light] The directional
-	/// light. If `undefined`, then the value set by {@link bbmod_light_directional_set}
+	/// @param {Struct.BBMOD_DirectionalLight} [_light] The directional light.
+	/// If `undefined`, then the value set by {@link bbmod_light_directional_set}
 	/// is used. If the light is not enabled then it is not passed.
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	/// @see BBMOD_DirectionalLight
@@ -208,7 +209,10 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 				_direction.X, _direction.Y, _direction.Z);
 			var _color = _light.Color;
 			set_uniform_f4(ULightDirectionalColor,
-				_color.Red / 255.0, _color.Green / 255.0, _color.Blue / 255.0, _color.Alpha);
+				_color.Red / 255.0,
+				_color.Green / 255.0,
+				_color.Blue / 255.0,
+				_color.Alpha);
 		}
 		else
 		{
@@ -220,8 +224,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_point_lights([_lights])
 	/// @desc Sets uniform `bbmod_LightPointData`.
-	/// @param {Array<Struct.BBMOD_PointLight>/Undefined} [_lights] An array of
-	/// point lights. If `undefined`, then the lights defined using
+	/// @param {Array<Struct.BBMOD_PointLight>} [_lights] An array of point
+	/// lights. If `undefined`, then the lights defined using
 	/// {@link bbmod_light_point_add} are passed. Only enabled lights will be used!
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	static set_point_lights = function (_lights=undefined) {
@@ -258,17 +262,14 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @func set_fog([_color[, _intensity[, _start[, _end]]]])
 	/// @desc Sets uniforms `bbmod_FogColor`, `bbmod_FogIntensity`,
 	/// `bbmod_FogStart` and `bbmod_FogRcpRange`.
-	/// @param {Struct.BBMOD_Color/Undefined} [_color] The color of the fog.
-	/// If `undefined`, then the value set by {@link bbmod_fog_set_color} is
-	/// used.
-	/// @param {Real/Undefined} [_intensity] The fog intensity. If `undefined`,
-	/// then the value set by {@link bbmod_fog_set_intensity} is used.
-	/// @param {Real/Undefined} [_start] The distance at which the fog starts.
-	/// If `undefined`, then the value set by {@link bbmod_fog_set_start} is
-	/// used.
-	/// @param {Real/Undefined} [_end] The distance at which the fog has maximum
-	/// intensity. If `undefined`, then the value set by {@link bbmod_fog_set_end}
-	/// is used.
+	/// @param {Struct.BBMOD_Color} [_color] The color of the fog. If `undefined`,
+	/// then the value set by {@link bbmod_fog_set_color} is used.
+	/// @param {Real} [_intensity] The fog intensity. If `undefined`, then the
+	/// value set by {@link bbmod_fog_set_intensity} is used.
+	/// @param {Real} [_start] The distance at which the fog starts. If
+	/// `undefined`, then the value set by {@link bbmod_fog_set_start} is used.
+	/// @param {Real} [_end] The distance at which the fog has maximum intensity.
+	/// If `undefined`, then the value set by {@link bbmod_fog_set_end} is used.
 	/// @return {Struct.BBMOD_BaseShader] Returns `self`.
 	static set_fog = function (_color=undefined, _intensity=undefined, _start=undefined, _end=undefined) {
 		gml_pragma("forceinline");
@@ -277,7 +278,11 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		_start ??= global.__bbmodFogStart;
 		_end ??= global.__bbmodFogEnd;
 		var _rcpFogRange = 1.0 / (_end - _start);
-		set_uniform_f4(UFogColor, _color.Red / 255.0, _color.Green / 255.0, _color.Blue / 255.0, _color.Alpha);
+		set_uniform_f4(UFogColor,
+			_color.Red / 255.0,
+			_color.Green / 255.0,
+			_color.Blue / 255.0,
+			_color.Alpha);
 		set_uniform_f(UFogIntensity, _intensity);
 		set_uniform_f(UFogStart, _start);
 		set_uniform_f(UFogRcpRange, _rcpFogRange);
@@ -298,7 +303,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_material(_material)
 	/// @desc Sets shader uniforms using values from the material.
-	/// @param {Struct.BBMOD_BaseMaterial} _material The material to take the values from.
+	/// @param {Struct.BBMOD_BaseMaterial} _material The material to take the
+	/// values from.
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	/// @see BBMOD_BaseMaterial
 	static set_material = function (_material) {
@@ -409,8 +415,8 @@ global.__bbmodAmbientLightDown = BBMOD_C_GRAY;
 
 /// @func bbmod_light_ambient_set(_color)
 /// @desc Defines color of the ambient light passed to shaders.
-/// @param {Struct.BBMOD_Color} _color The new color of the ambient light (both upper
-/// and lower hemisphere).
+/// @param {Struct.BBMOD_Color} _color The new color of the ambient light (both
+/// upper and lower hemisphere).
 /// @see bbmod_light_ambient_get_up
 /// @see bbmod_light_ambient_set_up
 /// @see bbmod_light_ambient_get_down
@@ -426,7 +432,8 @@ function bbmod_light_ambient_set(_color)
 /// @func bbmod_light_ambient_get_up()
 /// @desc Retrieves color of the upper hemisphere of the ambient light passed
 /// to shaders.
-/// @return {Struct.BBMOD_Color} The color of the upper hemisphere of the ambient light.
+/// @return {Struct.BBMOD_Color} The color of the upper hemisphere of the
+/// ambient light.
 /// @see bbmod_light_ambient_set
 /// @see bbmod_light_ambient_set_up
 /// @see bbmod_light_ambient_get_down
@@ -441,7 +448,8 @@ function bbmod_light_ambient_get_up()
 /// @func bbmod_light_ambient_set_up(_color)
 /// @desc Defines color of the upper hemisphere of the ambient light passed to
 /// shaders.
-/// @param {Struct.BBMOD_Color} _color The new color of the upper hemisphere of the
+/// @param {Struct.BBMOD_Color} _color The new color of the upper hemisphere of
+/// the
 /// ambient light.
 /// @see bbmod_light_ambient_set
 /// @see bbmod_light_ambient_get_up
@@ -457,7 +465,8 @@ function bbmod_light_ambient_set_up(_color)
 /// @func bbmod_light_ambient_get_down()
 /// @desc Retrieves color of the lower hemisphere of the ambient light passed
 /// to shaders.
-/// @return {Struct.BBMOD_Color} The color of the lower hemisphere of the ambient light.
+/// @return {Struct.BBMOD_Color} The color of the lower hemisphere of the
+/// ambient light.
 /// @see bbmod_light_ambient_set
 /// @see bbmod_light_ambient_get_up
 /// @see bbmod_light_ambient_set_up
@@ -472,8 +481,8 @@ function bbmod_light_ambient_get_down()
 /// @func bbmod_light_ambient_set_down(_color)
 /// @desc Defines color of the lower hemisphere of the ambient light passed to
 /// shaders.
-/// @param {Struct.BBMOD_Color} _color The new color of the lower hemisphere of the
-/// ambient light.
+/// @param {Struct.BBMOD_Color} _color The new color of the lower hemisphere of
+/// the ambient light.
 /// @see bbmod_light_ambient_set
 /// @see bbmod_light_ambient_get_up
 /// @see bbmod_light_ambient_set_up
@@ -490,13 +499,13 @@ function bbmod_light_ambient_set_down(_color)
 // Image based light
 //
 
-/// @var {Struct.BBMOD_ImageBasedLight/Undefined}
+/// @var {Struct.BBMOD_ImageBasedLight}
 /// @private
 global.__bbmodImageBasedLight = undefined;
 
 /// @func bbmod_ibl_get()
 /// @desc Retrieves the image based light passed to shaders.
-/// @return {Struct.BBMOD_ImageBasedLight/Undefined} The image based light.
+/// @return {Struct.BBMOD_ImageBasedLight} The image based light or `undefined`.
 /// @see bbmod_ibl_set
 /// @see BBMOD_ImageBasedLight
 function bbmod_ibl_get()
@@ -507,7 +516,8 @@ function bbmod_ibl_get()
 
 /// @func bbmod_ibl_set(_ibl)
 /// @desc Defines the image based light passed to shaders.
-/// @param {Struct.BBMOD_ImageBasedLight/Undefined} _ibl The new image based light.
+/// @param {Struct.BBMOD_ImageBasedLight} _ibl The new image based light or
+/// `undefined`.
 /// @see bbmod_ibl_get
 /// @see BBMOD_ImageBasedLight
 function bbmod_ibl_set(_ibl)
@@ -521,13 +531,13 @@ function bbmod_ibl_set(_ibl)
 // Directional light
 //
 
-/// @var {Struct.BBMOD_DirectionalLight/Undefined}
+/// @var {Struct.BBMOD_DirectionalLight}
 /// @private
 global.__bbmodDirectionalLight = undefined;
 
 /// @func bbmod_light_directional_get()
 /// @desc Retrieves the directional light passed to shaders.
-/// @return {Struct.BBMOD_DirectionalLight/Undefined} The directional light.
+/// @return {Struct.BBMOD_DirectionalLight} The directional light or `undefined`.
 /// @see bbmod_light_directional_set
 /// @see BBMOD_DirectionalLight
 function bbmod_light_directional_get()
@@ -538,7 +548,8 @@ function bbmod_light_directional_get()
 
 /// @func bbmod_light_directional_set(_light)
 /// @desc Defines the directional light passed to shaders.
-/// @param {Struct.BBMOD_DirectionalLight/Undefined} _light The new directional light.
+/// @param {Struct.BBMOD_DirectionalLight} _light The new directional light or
+/// `undefined`.
 /// @see bbmod_light_directional_get
 /// @see BBMOD_DirectionalLight
 function bbmod_light_directional_set(_light)
@@ -685,14 +696,14 @@ global.__bbmodFogEnd = 1.0;
 
 /// @func bbmod_fog_set(_color, _intensity, _start, _end)
 /// @desc Defines fog properties sent to shaders.
-/// @param {Struct.BBMOD_Color} _color The color of the fog. The default fog color is
-/// white.
+/// @param {Struct.BBMOD_Color} _color The color of the fog. The default fog
+/// color is white.
 /// @param {Real} _intensity The intensity of the fog. Use values in range 0..1.
 /// The default fog intensity is 0 (no fog).
 /// @param {Real} _start The distance from the camera where the fog starts at.
 /// The default fog start is 0.
-/// @param {Real} _end The distance from the camera where the fog has the maximum
-/// intensity. The default fog end is 1.
+/// @param {Real} _end The distance from the camera where the fog has the
+/// maximum intensity. The default fog end is 1.
 /// @see bbmod_fog_get_color
 /// @see bbmod_fog_set_color
 /// @see bbmod_fog_get_intensity
@@ -731,8 +742,8 @@ function bbmod_fog_get_color()
 
 /// @func bbmod_fog_set_color(_color)
 /// @desc Defines the color of the fog that is sent to shaders.
-/// @param {Struct.BBMOD_Color} _color The new fog color. The default fog color is
-/// white.
+/// @param {Struct.BBMOD_Color} _color The new fog color. The default fog color
+/// is white.
 /// @see bbmod_fog_set
 /// @see bbmod_fog_get_color
 /// @see bbmod_fog_get_intensity

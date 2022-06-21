@@ -70,15 +70,15 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @readonly
 	TicsPerSecond = 0;
 
-	/// @var {Array<Array<Real>>/Undefined}
+	/// @var {Array<Array<Real>>}
 	/// @private
 	FramesParent = [];
 
-	/// @var {Array<Array<Real>>/Undefined}
+	/// @var {Array<Array<Real>>}
 	/// @private
 	FramesWorld = [];
 
-	/// @var {Array<Array<Real>>/Undefined}
+	/// @var {Array<Array<Real>>}
 	/// @private
 	FramesBone = [];
 
@@ -246,9 +246,9 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// transitioning from.
 	/// @param {Struct.BBMOD_Animation} _animTo The animation to transition to.
 	/// @param {Real} _timeTo Animation time of the target animation.
-	/// @return {Struct.BBMOD_Animation/Undefined} The created transition or
-	/// `undefined` if the animations have different optimization levels or if
-	/// they do not support transitions.
+	/// @return {Struct.BBMOD_Animation} The created transition or `undefined`
+	/// if the animations have different optimization levels or if they do not
+	/// support transitions.
 	static create_transition = function (_timeFrom, _animTo, _timeTo) {
 		if ((Spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) == 0
 			|| Spaces != _animTo.Spaces)
@@ -263,7 +263,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		_transition.Spaces = (Spaces & BBMOD_BONE_SPACE_PARENT)
 			? BBMOD_BONE_SPACE_PARENT
 			: BBMOD_BONE_SPACE_WORLD;
-		_transition.Duration = round((TransitionOut + _animTo.TransitionIn) * TicsPerSecond);
+		_transition.Duration = round((TransitionOut + _animTo.TransitionIn)
+			* TicsPerSecond);
 		_transition.TicsPerSecond = TicsPerSecond;
 		_transition.IsTransition = true;
 

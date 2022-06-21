@@ -12,8 +12,12 @@
 /// @param {Real} [_radius] The radius of the influence. Defaults to 1.0.
 /// @param {Real} [_force] The strength of the force. Use negative to repel the
 /// particles. Defaults to 1.0.
-function BBMOD_AttractorModule(_position=new BBMOD_Vec3(), _relative=true, _radius=1.0, _force=1.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_AttractorModule(
+	_position=new BBMOD_Vec3(),
+	_relative=true,
+	_radius=1.0,
+	_force=1.0
+) : BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The position to attract/repel particles to/from.
 	/// Default value is `(0, 0, 0)`.
@@ -50,16 +54,22 @@ function BBMOD_AttractorModule(_position=new BBMOD_Vec3(), _relative=true, _radi
 			var _mass = _particles[# BBMOD_EParticle.Mass, _particleIndex];
 			if (_mass != 0.0)
 			{
-				var _vecX = _positionRealX - _particles[# BBMOD_EParticle.PositionX, _particleIndex];
-				var _vecY = _positionRealY - _particles[# BBMOD_EParticle.PositionY, _particleIndex];
-				var _vecZ = _positionRealZ - _particles[# BBMOD_EParticle.PositionZ, _particleIndex];
+				var _vecX = _positionRealX
+					- _particles[# BBMOD_EParticle.PositionX, _particleIndex];
+				var _vecY = _positionRealY
+					- _particles[# BBMOD_EParticle.PositionY, _particleIndex];
+				var _vecZ = _positionRealZ
+					- _particles[# BBMOD_EParticle.PositionZ, _particleIndex];
 				var _distance = sqrt((_vecX * _vecX) + (_vecY * _vecY) + (_vecZ * _vecZ));
 				if (_distance <= _radius)
 				{
 					var _scale = (_force * (1.0 - (_distance / _radius))) / _mass;
-					_particles[# BBMOD_EParticle.AccelerationX, _particleIndex] += (_vecX / _distance) * _scale;
-					_particles[# BBMOD_EParticle.AccelerationY, _particleIndex] += (_vecY / _distance) * _scale;
-					_particles[# BBMOD_EParticle.AccelerationZ, _particleIndex] += (_vecZ / _distance) * _scale;
+					_particles[# BBMOD_EParticle.AccelerationX, _particleIndex] +=
+						(_vecX / _distance) * _scale;
+					_particles[# BBMOD_EParticle.AccelerationY, _particleIndex] +=
+						(_vecY / _distance) * _scale;
+					_particles[# BBMOD_EParticle.AccelerationZ, _particleIndex] +=
+						(_vecZ / _distance) * _scale;
 				}
 			}
 			++_particleIndex;

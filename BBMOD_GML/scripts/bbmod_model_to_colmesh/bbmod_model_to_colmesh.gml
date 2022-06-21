@@ -2,9 +2,9 @@
 /// @desc Adds a {@link BBMOD_Model} into a colmesh.
 /// @param {Struct.BBMOD_Model} _model The model to add.
 /// @param {Struct.colmesh} _colmesh The colmesh to add the model to.
-/// @param {Array<Real>/Undefined} [_transform] A matrix to transform the model
-/// with before it is added to the colmesh. Leave `undefined` if you do not wish
-/// to transform the model.
+/// @param {Array<Real>} [_transform] A matrix to transform the model with
+/// before it is added to the colmesh. Leave `undefined` if you do not wish to
+/// transform the model.
 /// @see https://marketplace.yoyogames.com/assets/8130/colmesh
 function bbmod_model_to_colmesh(_model, _colmesh, _transform=undefined)
 {

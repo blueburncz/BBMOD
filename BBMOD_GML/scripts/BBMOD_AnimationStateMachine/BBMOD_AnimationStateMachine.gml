@@ -4,13 +4,14 @@
 ///
 /// @desc A state machine that controls animation playback.
 ///
-/// @param {Struct.BBMOD_AnimationPlayer} _animationPlayer The animation player to control.
+/// @param {Struct.BBMOD_AnimationPlayer} _animationPlayer The animation player
+/// to control.
 ///
 /// @example
-/// Following code shows an animation state machine which goes to the "Idle" state
-/// on start and independently on the current state switches to "Dead" state when
-/// variable `hp` meets 0. After the death animation ends, the state machine enters
-/// the final state and the instance is destroyed.
+/// Following code shows an animation state machine which goes to the "Idle"
+/// state on start and independently on the current state switches to "Dead"
+/// state when variable `hp` meets 0. After the death animation ends, the state
+/// machine enters the final state and the instance is destroyed.
 ///
 /// ```gml
 /// // Create event

@@ -1,9 +1,9 @@
 /// @func BBMOD_Camera()
 ///
-/// @desc A camera with support for both orthographic and perspective projection.
-/// While using perspective projection, you can easily switch between first-person
-/// and third-person view. Comes with a mouselook implementation that also works
-/// in HTML5.
+/// @desc A camera with support for both orthographic and perspective
+/// projection. While using perspective projection, you can easily switch
+/// between first-person and third-person view. Comes with a mouselook
+/// implementation that also works in HTML5.
 ///
 /// @example
 /// ```gml
@@ -64,18 +64,18 @@ function BBMOD_Camera() constructor
 	/// @see BBMOD_Camera.Orthographic
 	Width = window_get_width();
 
-	/// @var {Id.Instance/Undefined} An id of an instance to follow or
-	/// `undefined`. The object must have a `z` variable (position on the z
-	/// axis) defined! Defaults to `undefined`.
+	/// @var {Id.Instance} An id of an instance to follow or `undefined`. The
+	/// object must have a `z` variable (position on the z axis) defined!
+	/// Defaults to `undefined`.
 	FollowObject = undefined;
 
 	/// @var {Bool} Used to determine change of the object to follow.
 	/// @private
 	FollowObjectLast = undefined;
 
-	/// @var {Function/Undefined} A function which remaps value in range `0..1`
-	/// to a different `0..1` value. This is used to control the follow curve.
-	/// If not defined then `lerp` is used. Defaults to `undefined`.
+	/// @var {Function} A function which remaps value in range `0..1` to a
+	/// different `0..1` value. This is used to control the follow curve.
+	/// If `undefined` then `lerp` is used. Defaults to `undefined`.
 	FollowCurve = undefined;
 
 	/// @var {Real} Controls lerp factor between the previous camera position
@@ -97,8 +97,9 @@ function BBMOD_Camera() constructor
 	/// @var {Real} Controls the mouselook sensitivity. Defaults to `1`.
 	MouseSensitivity = 1.0;
 
-	/// @var {Struct.BBMOD_Vec2/Undefined} The position on the screen where the cursor
-	/// is locked when {@link BBMOD_Camera.MouseLook} is `true`.
+	/// @var {Struct.BBMOD_Vec2} The position on the screen where the cursor
+	/// is locked when {@link BBMOD_Camera.MouseLook} is `true`. Can be
+	/// `undefined`.
 	/// @private
 	MouseLockAt = undefined;
 
@@ -110,11 +111,11 @@ function BBMOD_Camera() constructor
 	/// {@link BBMOD_Camera.DirectionUpMax}. Defaults to `0`.
 	DirectionUp = 0.0;
 
-	/// @var {Real/Undefined} Minimum angle that {@link BBMOD_Camrea.DirectionUp}
+	/// @var {Real} Minimum angle that {@link BBMOD_Camrea.DirectionUp}
 	/// can be. Use `undefined` to remove the limit. Default value is `-89`.
 	DirectionUpMin = -89.0;
 
-	/// @var {Real/Undefined} Maximum angle that {@link BBMOD_Camrea.DirectionUp}
+	/// @var {Real} Maximum angle that {@link BBMOD_Camrea.DirectionUp}
 	/// can be. Use `undefined` to remove the limit. Default value is `89`.
 	DirectionUpMax = 89.0;
 
@@ -239,11 +240,11 @@ function BBMOD_Camera() constructor
 	/// @desc Handles mouselook, updates camera's position, matrices etc.
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
-	/// @param {Function/Undefined} [_positionHandler] A function which takes
-	/// the camera's position (@{link BBMOD_Vec3}) and returns a new position.
-	/// This could be used for example for camera collisions in a third-person
-	/// game. Defaults to `undefined`.
-	/// @return {BBMOD_Camera} Returns `self`.
+	/// @param {Function} [_positionHandler] A function which takes the camera's
+	/// position (@{link BBMOD_Vec3}) and returns a new position. This could be
+	/// used for example for camera collisions in a third-person game. Defaults
+	/// to `undefined`.
+	/// @return {Struct.BBMOD_Camera} Returns `self`.
 	static update = function (_deltaTime, _positionHandler=undefined) {
 		if (os_browser != browser_not_a_browser)
 		{
@@ -314,7 +315,8 @@ function BBMOD_Camera() constructor
 				if (FollowObjectLast == FollowObject
 					&& FollowFactor < 1.0)
 				{
-					var _factor = 1.0 - bbmod_lerp_delta_time(0.0, 1.0, FollowFactor, _deltaTime);
+					var _factor = 1.0
+						- bbmod_lerp_delta_time(0.0, 1.0, FollowFactor, _deltaTime);
 					if (FollowCurve != undefined)
 					{
 						_factor = FollowCurve(0.0, 1.0, _factor);
@@ -432,13 +434,13 @@ function BBMOD_Camera() constructor
 
 	/// @func world_to_screen(_position[, _screenWidth[, _screenHeight]])
 	/// @desc Computes screen-space position of a point in world-space.
-	/// @param {BBMOD_Vec3} _position The world-space position.
-	/// @param {Real/Undefined} [_screenWidth] The width of the screen. If
-	/// `undefined`, it is retrieved using `window_get_width`.
-	/// @param {Real/Undefined} [_screenHeight] The height of the screen. If
-	/// `undefined`, it is retrieved using `window_get_height`.
-	/// @return {BBMOD_Vec4/Undefined} The screen-space position or `undefined`
-	/// if the point is outside of the screen.
+	/// @param {Struct.BBMOD_Vec3} _position The world-space position.
+	/// @param {Real} [_screenWidth] The width of the screen. If `undefined`, it
+	/// is retrieved using `window_get_width`.
+	/// @param {Real} [_screenHeight] The height of the screen. If `undefined`,
+	/// it is retrieved using `window_get_height`.
+	/// @return {Struct.BBMOD_Vec4} The screen-space position or `undefined` if
+	/// the point is outside of the screen.
 	/// @note This requires {@link BBMOD_Camera.ViewProjectionMatrix}, so you
 	/// should use this *after* {@link BBMOD_Camera.update_matrices} (or
 	/// {@link BBMOD_Camera.update}) is called!
@@ -461,7 +463,7 @@ function BBMOD_Camera() constructor
 	/// @func screen_point_to_vec3(_vector[, _renderer])
 	/// @desc Unprojects a position on the screen into a direction in world-space.
 	/// @param {Struct.BBMOD_Vector2} _vector The position on the screen.
-	/// @param {Struct.BBMOD_Renderer/Undefined} [_renderer] A renderer.
+	/// @param {Struct.BBMOD_Renderer} [_renderer] A renderer or `undefined`.
 	/// @return {Struct.BBMOD_Vec3} The world-space direction.
 	static screen_point_to_vec3 = function (_vector, _renderer=undefined) {
 		var _forward = get_forward();

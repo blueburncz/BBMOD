@@ -4,8 +4,8 @@
 /// @param {Array<Real>} _viewProjMat A `view * projection` matrix.
 /// @param {Real} _screenWidth The width of the screen.
 /// @param {Real} _screenHeight The height of the screen.
-/// @return {Struct.BBMOD_Vec4/Undefined} The screen-space position or `undefined` if
-/// the point is outside of the screen.
+/// @return {Struct.BBMOD_Vec4} The screen-space position or `undefined` if the
+/// point is outside of the screen.
 function WorldToScreen(_pos, _viewProjMat, _screenWidth, _screenHeight)
 {
 	var _screenPos = new BBMOD_Vec4(_pos.X, _pos.Y, _pos.Z, 1.0).Transform(_viewProjMat);

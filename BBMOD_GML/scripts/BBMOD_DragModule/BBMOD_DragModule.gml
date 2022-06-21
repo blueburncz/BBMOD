@@ -20,9 +20,12 @@ function BBMOD_DragModule()
 				var _velocityX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 				var _velocityY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];
 				var _velocityZ = _particles[# BBMOD_EParticle.VelocityZ, _particleIndex];
-				_particles[# BBMOD_EParticle.AccelerationX, _particleIndex] -= (_dragHalf * _velocityX * abs(_velocityX)) / _mass;
-				_particles[# BBMOD_EParticle.AccelerationY, _particleIndex] -= (_dragHalf * _velocityY * abs(_velocityY)) / _mass;
-				_particles[# BBMOD_EParticle.AccelerationZ, _particleIndex] -= (_dragHalf * _velocityZ * abs(_velocityZ)) / _mass;
+				_particles[# BBMOD_EParticle.AccelerationX, _particleIndex] -=
+					(_dragHalf * _velocityX * abs(_velocityX)) / _mass;
+				_particles[# BBMOD_EParticle.AccelerationY, _particleIndex] -=
+					(_dragHalf * _velocityY * abs(_velocityY)) / _mass;
+				_particles[# BBMOD_EParticle.AccelerationZ, _particleIndex] -=
+					(_dragHalf * _velocityZ * abs(_velocityZ)) / _mass;
 			}
 			++_particleIndex;
 		}

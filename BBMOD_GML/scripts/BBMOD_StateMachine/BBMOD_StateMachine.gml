@@ -26,31 +26,35 @@ function BBMOD_StateMachine()
 	/// @see BBMOD_StateMachine.finish
 	Finished = false;
 
-	/// @var {Struct.BBMOD_State/Undefined} The current state.
+	/// @var {Struct.BBMOD_State} The current state or `undefined`.
 	/// @readonly
 	State = undefined;
 
-	/// @var {Function/Undefined} A function executed on the start of the state of
-	/// the state machine. It should take the state machine as the first argument.
+	/// @var {Function} A function executed on the start of the state of the
+	/// state machine. It should take the state machine as the first argument.
+	/// Default value is `undefined`.
 	OnEnter = undefined;
 
-	/// @var {Function/Undefined} A function executed in the update method *before*
+	/// @var {Function} A function executed in the update method *before*
 	/// the current state is updated. It should take the state machine as the
-	/// first argument and delta time as the second argument.
+	/// first argument and delta time as the second argument. Default value is
+	/// `undefined`.
 	OnPreUpdate = undefined;
 
-	/// @var {Function/Undefined} A function executed when the state changes.
-	/// It should take the state machine as the first argument and its previous
-	/// state as the second argument.
+	/// @var {Function} A function executed when the state changes. It should
+	/// take the state machine as the first argument and its previous state as
+	/// the second argument. Default value is `undefined`.
 	OnStateChange = undefined;
 
-	/// @var {Function/Undefined} A function executed in the update method *after*
+	/// @var {Function} A function executed in the update method *after*
 	/// the current state is updated. It should take the state machine as the
-	/// first argument and delta time as the second argument.
+	/// first argument and delta time as the second argument. Default value is
+	/// `undefined`.
 	OnPostUpdate = undefined;
 
-	/// @var {Function/Undefined} A function executed on the end of the state machine.
-	/// It should take the state machine as the first argument.
+	/// @var {Function} A function executed on the end of the state machine.
+	/// It should take the state machine as the first argument. Default value is
+	/// `undefined`.
 	OnExit = undefined;
 
 	/// @func start()

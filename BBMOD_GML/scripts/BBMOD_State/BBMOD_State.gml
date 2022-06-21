@@ -8,24 +8,27 @@ function BBMOD_State(_name)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {Struct.BBMOD_StateMachine/Undefined} The state machine to which this state
-	/// belongs.
+	/// @var {Struct.BBMOD_StateMachine} The state machine to which this state
+	/// belongs or `undefined`.
 	/// @readonly
 	StateMachine = undefined;
 
 	/// @var {String} The name of the state.
 	Name = _name;
 
-	/// @var {func/Undefined} A function executed when a state machines enters
-	/// this state. Should take the state as the first argument.
+	/// @var {Function} A function executed when a state machines enters this
+	/// state. Should take the state as the first argument. Default value is
+	/// `undefined`.
 	OnEnter = undefined;
 
-	/// @var {func/Undefined} A function executed while the state is active.
-	/// Should take the state as the first argument and delta time as the second.
+	/// @var {Function} A function executed while the state is active. Should
+	/// take the state as the first argument and delta time as the second.
+	/// Default value is `undefined`.
 	OnUpdate = undefined;
 
-	/// @var {func/Undefined} A function executed when a state machine exists this
-	/// state. Should take the state as the first argument.
+	/// @var {Function} A function executed when a state machine exists this
+	/// state. Should take the state as the first argument. Default value is
+	/// `undefined`.
 	OnExit = undefined;
 
 	/// @var {Bool} If `true` then the state is currently active.

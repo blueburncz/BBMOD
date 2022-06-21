@@ -1,6 +1,6 @@
 /// @func BBMOD_Vertex(_vertexFormat)
-/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex. This
-/// drives which properties of the vertex should be defined.
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex.
+/// This drives which properties of the vertex should be defined.
 /// @example
 /// Following code shows how the constructor fills in the vertex properties to
 /// default values if they are enabled in the vertex format.
@@ -16,48 +16,50 @@
 /// @see BBMOD_VertexFormat
 function BBMOD_Vertex(_vertexFormat) constructor
 {
-	/// @var {Struct.BBMOD_VertexFormat} The vertex format. This drives which properties
-	/// of the vertex should be defined.
+	/// @var {Struct.BBMOD_VertexFormat} The vertex format. This drives which
+	/// properties of the vertex should be defined.
 	VertexFormat = _vertexFormat;
 
-	/// @var {Struct.BBMOD_Vec3/Undefined} The 3D position of the vertex or `undefined`
-	/// if the vertex format does not have positions.
+	/// @var {Struct.BBMOD_Vec3} The 3D position of the vertex or `undefined` if
+	/// the vertex format does not have positions.
 	/// @see BBMOD_VertexFormat.Vertices
 	Position = VertexFormat.Vertices ? new BBMOD_Vec3() : undefined;
 
-	/// @var {Struct.BBMOD_Vec3/Undefined} The normal vector of the vertex or
-	/// `undefined` if the vertex format does not have normals.
+	/// @var {Struct.BBMOD_Vec3} The normal vector of the vertex or `undefined`
+	/// if the vertex format does not have normals.
 	/// @see BBMOD_VertexFormat.Normals
 	Normal = VertexFormat.Normals ? BBMOD_VEC3_UP : undefined;
 
-	/// @var {Struct.BBMOD_Vec2/Undefined} The texture coordinates of the vertex or
+	/// @var {Struct.BBMOD_Vec2} The texture coordinates of the vertex or
 	/// `undefined` if the vertex format does not have texture coordinates.
 	/// @see BBMOD_VertexFormat.TextureCoords
 	TextureCoord = VertexFormat.TextureCoords ? new BBMOD_Vec2() : undefined;
 
-	/// @var {Real/Undefined} The ARGB color of the vertex or `undefined` if the
-	/// vertex format does not have colors.
+	/// @var {Real} The ARGB color of the vertex or `undefined` if the vertex
+	/// format does not have colors.
 	/// @see BBMOD_VertexFormat.Colors
 	Color = VertexFormat.Colors ? 0 : undefined;
 
-	/// @var {Struct.BBMOD_Vec4/Undefined} The tangent vector & bitangent sign of the
+	/// @var {Struct.BBMOD_Vec4} The tangent vector & bitangent sign of the
 	/// vertex or `undefined` if the vertex format does not have tangents &
 	/// bitangents.
 	/// @see BBMOD_VertexFormat.TangentW
-	TangentW = VertexFormat.TangentW ? new BBMOD_Vec4(1.0, 0.0, 0.0, 1.0) : undefined;
+	TangentW = VertexFormat.TangentW
+		? new BBMOD_Vec4(1.0, 0.0, 0.0, 1.0)
+		: undefined;
 
-	/// @var {Struct.BBMOD_Vec4/Undefined} The bone ids of the vertex or `undefined` if
+	/// @var {Struct.BBMOD_Vec4} The bone ids of the vertex or `undefined` if
 	/// the vertex format does not have bones.
 	/// @see BBMOD_VertexFormat.Bones
 	Bones = VertexFormat.Bones ? new BBMOD_Vec4() : undefined;
 
-	/// @var {Struct.BBMOD_Vec4/Undefined} The bone weights of the vertex or
-	/// `undefined` if the vertex format does not have bones.
+	/// @var {Struct.BBMOD_Vec4} The bone weights of the vertex or `undefined`
+	/// if the vertex format does not have bones.
 	/// @see BBMOD_VertexFormat.Bones
 	Weights = VertexFormat.Bones ? new BBMOD_Vec4() : undefined;
 
-	/// @var {Real/Undefined} The id of the model in a dynamic batch or
-	/// `undefined` if the vertex format does not have ids.
+	/// @var {Real} The id of the model in a dynamic batch or `undefined` if the
+	/// vertex format does not have ids.
 	/// @see BBMOD_VertexFormat.Ids
 	/// @see BBMOD_DynamicBatch
 	Id = VertexFormat.Ids ? 0 : undefined;
@@ -65,8 +67,8 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	/// @func to_vertex_buffer(_vbuffer[, _vformat])
 	/// @desc Adds the vertex to the vertex buffer.
 	/// @param {Id.VertexBuffer} _vbuffer The vertex buffer to add the vertex to.
-	/// @param {Struct.BBMOD_VertexFormat/Undefined} [_vformat] The vertex format
-	/// of the vertex buffer. Defaults to the format of the vertex.
+	/// @param {Struct.BBMOD_VertexFormat} [_vformat] The vertex format of the
+	/// vertex buffer. Defaults to the format of the vertex if `undefined`.
 	/// @return {Struct.BBMOD_Vertex} Returns `self`.
 	/// @throws {BBMOD_Exception} If the format of the vertex and the format of
 	/// the buffer are not compatible.

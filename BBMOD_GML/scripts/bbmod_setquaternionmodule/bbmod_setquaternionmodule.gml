@@ -5,17 +5,19 @@
 /// @desc A universal particle module that sets initial value of particles'
 /// quaternion property when they are spawned.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the four
-/// properties that together form a quaternion. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the four properties that together
+/// form a quaternion. Use values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Quaternion} [_value] The initial value of the quaternion
 /// property. Defaults to an identity quaternion.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_SetQuaternionModule(_property=undefined, _value=new BBMOD_Quaternion())
-	: BBMOD_ParticleModule() constructor
+function BBMOD_SetQuaternionModule(
+	_property=undefined,
+	_value=new BBMOD_Quaternion()
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four properties
-	/// that together form a quaternion. Defaults to `undefined`.
+	/// @var {Real} The first of the four properties that together form a
+	/// quaternion. Use values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Quaternion} The initial value of the quaternion property.

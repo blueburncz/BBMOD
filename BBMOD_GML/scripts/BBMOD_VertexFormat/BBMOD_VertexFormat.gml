@@ -1,20 +1,27 @@
 /// @func BBMOD_VertexFormat([_vertices[, _normals[, _uvs[, _colors[, _tangentw[, _bones[, _ids]]]]]]])
 /// @desc A wrapper of a raw GameMaker vertex format.
-/// @param {Bool} [_vertices] If `true` then the vertex format must have vertices. This should
-/// always be `true`! Defaults to `true`.
-/// @param {Bool} [_normals] If `true` then the vertex format must have normal vectors.
-/// Defaults to `false`.
-/// @param {Bool} [_uvs] If `true` then the vertex format must have texture coordinates.
-/// Defaults to `false`.
-/// @param {Bool} [_colors] If `true` then the vertex format must have vertex colors.
-/// Defaults to `false`.
-/// @param {Bool} [_tangentw] If `true` then the vertex format must have tangent vectors and
-/// bitangent signs. Defaults to `false`.
-/// @param {Bool} [_bones] If `true` then the vertex format must have vertex weights and bone
-/// indices. Defaults to `false`.
-/// @param {Bool} [_ids] If `true` then the vertex format must have ids for dynamic batching.
-/// Defaults to `false`.
-function BBMOD_VertexFormat(_vertices=true, _normals=false, _uvs=false, _colors=false, _tangentw=false, _bones=false, _ids=false) constructor
+/// @param {Bool} [_vertices] If `true` then the vertex format must have
+/// vertices. This should always be `true`! Defaults to `true`.
+/// @param {Bool} [_normals] If `true` then the vertex format must have normal
+/// vectors. Defaults to `false`.
+/// @param {Bool} [_uvs] If `true` then the vertex format must have texture
+/// coordinates. Defaults to `false`.
+/// @param {Bool} [_colors] If `true` then the vertex format must have vertex
+/// colors. Defaults to `false`.
+/// @param {Bool} [_tangentw] If `true` then the vertex format must have tangent
+/// vectors and bitangent signs. Defaults to `false`.
+/// @param {Bool} [_bones] If `true` then the vertex format must have vertex
+/// weights and bone indices. Defaults to `false`.
+/// @param {Bool} [_ids] If `true` then the vertex format must have ids for
+/// dynamic batching. Defaults to `false`.
+function BBMOD_VertexFormat(
+	_vertices=true,
+	_normals=false,
+	_uvs=false,
+	_colors=false,
+	_tangentw=false,
+	_bones=false,
+	_ids=false) constructor
 {
 	/// @var {Bool} If `true` then the vertex format has vertices.
 	/// @readonly
@@ -71,7 +78,8 @@ function BBMOD_VertexFormat(_vertices=true, _normals=false, _uvs=false, _colors=
 	};
 
 	/// @func get_byte_size()
-	/// @desc Retrieves the size of a single vertex using the vertex format in bytes.
+	/// @desc Retrieves the size of a single vertex using the vertex format in
+	/// bytes.
 	/// @return {Real} The byte size of a single vertex using the vertex format.
 	static get_byte_size = function () {
 		gml_pragma("forceinline");

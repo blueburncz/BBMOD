@@ -6,33 +6,37 @@
 /// particles' three consecutive properties between two values when they are
 /// spawned.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the three
-/// consecutive properties. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the three consecutive properties. Use
+/// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec3} [_from] The value to mix from. Defaults to
 /// `(0.0, 0.0, 0.0)`.
 /// @param {Struct.BBMOD_Vec3} [_to] The value to mix to. Defaults to `_from`.
-/// @param {Bool} [_separate] If `true`, then each component is mixed independently
-/// on other components, otherwise all components are mixed using the same factor.
-/// Defaults to `true`.
+/// @param {Bool} [_separate] If `true`, then each component is mixed
+/// independently on other components, otherwise all components are mixed using
+/// the same factor. Defaults to `true`.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixVec3Module(_property=undefined, _from=new BBMOD_Vec3(), _to=_from.Clone(), _separate=true)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixVec3Module(
+	_property=undefined,
+	_from=new BBMOD_Vec3(),
+	_to=_from.Clone(),
+	_separate=true
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the three consecutive
-	/// properties. Default value is `undefined`.
+	/// @var {Real} The first of the three consecutive properties. Use values
+	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec3} The initial value to mix from. Default value is
 	/// `(0.0, 0.0, 0.0)`.
 	From = _from;
 
-	/// @var {Struct.BBMOD_Vec3} The initial value to mix to. Default value is the
-	/// same as {@link BBMOD_MixVec3Module.From}.
+	/// @var {Struct.BBMOD_Vec3} The initial value to mix to. Default value is
+	/// the same as {@link BBMOD_MixVec3Module.From}.
 	To = _to;
 
-	/// @var {Bool} If `true`, then each component is mixed independently on other
-	/// components. Default value is `true`.
+	/// @var {Bool} If `true`, then each component is mixed independently on
+	/// other components. Default value is `true`.
 	Separate = _separate;
 
 	static on_particle_start = function (_emitter, _particleIndex) {
@@ -40,9 +44,12 @@ function BBMOD_MixVec3Module(_property=undefined, _from=new BBMOD_Vec3(), _to=_f
 		{
 			var _separate = Separate;
 			var _factor = random(1.0);
-			_emitter.Particles[# Property, _particleIndex]     = lerp(From.X, To.X, _factor);
-			_emitter.Particles[# Property + 1, _particleIndex] = lerp(From.Y, To.Y, _separate ? random(1.0) : _factor);
-			_emitter.Particles[# Property + 2, _particleIndex] = lerp(From.Z, To.Z, _separate ? random(1.0) : _factor);
+			_emitter.Particles[# Property, _particleIndex] =
+				lerp(From.X, To.X, _factor);
+			_emitter.Particles[# Property + 1, _particleIndex] =
+				lerp(From.Y, To.Y, _separate ? random(1.0) : _factor);
+			_emitter.Particles[# Property + 2, _particleIndex] =
+				lerp(From.Z, To.Z, _separate ? random(1.0) : _factor);
 		}
 	};
 }

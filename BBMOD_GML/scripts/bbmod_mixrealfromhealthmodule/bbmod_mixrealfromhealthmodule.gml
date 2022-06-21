@@ -5,19 +5,22 @@
 /// @desc A universal particle module that mixes value of particles'
 /// property between two values based on their remaining health.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The property to set
-/// initial value of. Defaults to `undefined`.
+/// @param {Real} [_property] The property to set initial value of. Use values
+/// from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Real} [_from] The value when the particle has full health.
 /// Defaults to 0.0.
 /// @param {Real} [_to] The value when the particle has no health left.
 /// Defaults to `_from`.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixRealFromHealthModule(_property=undefined, _from=0.0, _to=_from)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixRealFromHealthModule(
+	_property=undefined,
+	_from=0.0,
+	_to=_from
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The property to set initial value
-	/// of. Default value is `undefined`.
+	/// @var {Real} The property to set initial value of. Use values from
+	/// {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Real} The value when the particle has full health. Default value

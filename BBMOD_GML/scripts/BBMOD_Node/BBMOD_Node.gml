@@ -21,8 +21,8 @@ function BBMOD_Node(_model) constructor
 	/// @readonly
 	Index = 0;
 
-	/// @var {Struct.BBMOD_Node/Undefined} The parent of this node or `undefined`
-	/// if it is the root node.
+	/// @var {Struct.BBMOD_Node} The parent of this node or `undefined` if it is
+	/// the root node.
 	/// @readonly
 	Parent = undefined;
 
@@ -148,8 +148,8 @@ function BBMOD_Node(_model) constructor
 	/// @desc Immediately submits the node for rendering.
 	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
 	/// one for each material slot of the model.
-	/// @param {Array<Real/Undefined>} _transform An array of transformation matrices
-	/// (for animated models) or `undefined`.
+	/// @param {Array<Real>} _transform An array of dual quaternions for
+	/// transforming animated models or `undefined`.
 	/// @private
 	static submit = function (_materials, _transform) {
 		var _meshes = Model.Meshes;
@@ -221,8 +221,8 @@ function BBMOD_Node(_model) constructor
 	/// @desc Enqueues the node for rendering.
 	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
 	/// one for each material slot of the model.
-	/// @param {Array<Real/Undefined>} _transform An array of transformation
-	/// matrices (for animated models) or `undefined`.
+	/// @param {Array<Real>} _transform An array of dual quaternions for
+	/// transforming animated models or `undefined`.
 	/// @private
 	static render = function (_materials, _transform, _matrix) {
 		var _meshes = Model.Meshes;

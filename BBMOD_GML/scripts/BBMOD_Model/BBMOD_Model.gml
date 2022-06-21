@@ -6,9 +6,12 @@
 ///
 /// @desc A model.
 ///
-/// @param {String/Undefined} [_file] The "*.bbmod" model file to load.
-/// @param {String/Undefined} [_sha1] Expected SHA1 of the file. If the actual
-/// one does not match with this, then the model will not be loaded.
+/// @param {String} [_file] The "*.bbmod" model file to load or `undefined`.
+/// Defaults to `undefined`.
+/// @param {String} [_sha1] Expected SHA1 of the file. If the actual
+/// one does not match with this, then the model will not be loaded. Use
+/// `undefined` if you do not want to check the SHA1 of the file. Defaults to
+/// `undefined`.
 ///
 /// @example
 /// ```gml
@@ -223,8 +226,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func find_node(_idOrName)
 	/// @desc Finds a node by its name or id.
-	/// @param {Real/String} _idOrName The id or the name of the node.
-	/// @return {Struct.BBMOD_Node/Undefined} Returns the found node `undefined`.
+	/// @param {Mixed} _idOrName The id (real) or the name (string) of the node.
+	/// @return {Struct.BBMOD_Node} Returns the found node `undefined`.
 	static find_node = function (_idOrName) {
 		var _isName = is_string(_idOrName);
 		var _node = (argument_count > 1) ? argument[1] : RootNode;
@@ -252,8 +255,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @func find_node_id(_nodeName)
 	/// @desc Finds id of the model's node by its name.
 	/// @param {String} _nodeName The name of the node.
-	/// @return {Real/Undefined} The id of the node or `undefined` when it is
-	/// not found.
+	/// @return {Real} The id of the node or `undefined` when it is not found.
 	/// @note It is not recommended to use this method in release builds, because
 	/// having many of these lookups can slow down your game! You should instead
 	/// use the ids available from the `_log.txt` files, which are created during
@@ -344,11 +346,11 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @desc Immediately submits the model for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_BaseMaterial>/Undefined} [_materials] An array
-	/// of materials, one for each material slot of the model. If not specified,
+	/// @param {Array<Struct.BBMOD_BaseMaterial>} [_materials] An array of
+	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
-	/// @param {Array<Real>/Undefined} [_transform] An array of transformation
-	/// matrices (for animated models) or `undefined`.
+	/// @param {Array<Real>} [_transform] An array of dual quaternions for
+	/// transforming animated models or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
@@ -386,11 +388,11 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @desc Enqueues the model for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_BaseMaterial>/Undefined} [_materials] An array
-	/// of materials, one for each material slot of the model. If not specified,
+	/// @param {Array<Struct.BBMOD_BaseMaterial>} [_materials] An array of
+	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
-	/// @param {Array<Real>/Undefined} [_transform] An array of transformation
-	/// matrices (for animated models) or `undefined`.
+	/// @param {Array<Real>} [_transform] An array of dual quaternions for
+	/// transforming animated models or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///

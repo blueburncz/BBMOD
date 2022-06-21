@@ -5,8 +5,8 @@
 /// @desc A universal particle module that adds a value to particles' property
 /// when they have a collision.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The property to add the
-/// value to. Defaults to `undefined`.
+/// @param {Real} [_property] The property to add the value to. Use values from
+/// {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Real} [_change] The value to add to particles' health. Defaults
 /// to 1.0.
 ///
@@ -14,8 +14,8 @@
 function BBMOD_AddRealOnCollisionModule(_property=undefined, _change=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The property to add the value to.
-	/// Default value is `undefined`.
+	/// @var {Real} The property to add the value to. Use values from
+	/// {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Real} The value to add on collision. Default value is 1.0.

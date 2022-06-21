@@ -44,8 +44,8 @@ function BBMOD_IEventListener()
 	///
 	/// @desc Adds a listener for a specific event.
 	///
-	/// @param {String/Undefined} [_event] The event name. If not specified,
-	/// then the listener is executed on every event.
+	/// @param {String} [_event] The event name. If `undefined`, then the
+	/// listener is executed on every event.
 	/// @param {Function} _listener A function executed when the event occurs.
 	/// Should take the event data as the first argument and the event name
 	/// as the second argument.
@@ -94,9 +94,9 @@ function BBMOD_IEventListener()
 
 	/// @func off_event([_event])
 	/// @desc Removes event listeners.
-	/// @param {String/Undefined} [_event] The name of the event for which
-	/// should be the listener removed. If `undefined`, then listeners for all
-	/// events are removed.
+	/// @param {String} [_event] The name of the event for which should be the
+	/// listener removed. If `undefined`, then listeners for all events are
+	/// removed.
 	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
 	/// @see BBMOD_IEventListener.on_event
 	off_event = _offEvent;

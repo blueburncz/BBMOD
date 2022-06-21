@@ -21,16 +21,16 @@
 /// resourceManager.async_save_load_update(async_load);
 /// ```
 ///
-/// Use the resource manager in another object to load its model or just retrieve
-/// a reference to it, if it is already loaded.
+/// Use the resource manager in another object to load its model or just
+/// retrieve a reference to it, if it is already loaded.
 /// ```gml
 /// /// @desc Create event
 /// model = OMain.resourceManager.load("Data/Model.bbmod");
 ///
 /// /// @desc Clean Up event
-/// // Free the reference. This is not necessary if you do not want to unload the
-/// // model when all instances are destroyed. It will always be unloaded when the
-/// // resource manager is destroyed.
+/// // Free the reference. This is not necessary if you do not want to unload
+/// // the model when all instances are destroyed. It will always be unloaded
+/// // when the resource manager is destroyed.
 /// model.free();
 ///
 /// /// @desc Draw event
@@ -140,15 +140,16 @@ function BBMOD_ResourceManager()
 	/// a reference to it, if it is already loaded.
 	///
 	/// @param {String} _path The path to the resource.
-	/// @param {String/Undefined [_sha1] Expected SHA1 of the file. If the actual
-	/// one does not match with this, then the resource will not be loaded.
-	/// @param {Function/Undefined} [_onLoad] A function to execute when the
+	/// @param {String [_sha1] Expected SHA1 of the file. If the actual
+	/// one does not match with this, then the resource will not be loaded. Use
+	/// `undefined` if you do not want to check the SHA1 of the file.
+	/// @param {Function} [_onLoad] A function to execute when the
 	/// resource is loaded or if an error occurs while loading it. It must take
 	/// the error as the first argument and the resource as the second argument.
 	/// If no error occurs, then `undefined` is passed. If the resource was already
 	/// loaded when calling this function, then this callback is not executed.
 	///
-	/// @return {Struct.BBMOD_Resource/Undefined} The resource.
+	/// @return {Struct.BBMOD_Resource} The resource or `undefined`.
 	///
 	/// @note Currently supported files formats are `*.bbmod` for {@link BBMOD_Model},
 	/// `*.bbanim` for {@link BBMOD_Animation} and `*.png`, `*.gif`, `*.jpg/jpeg`
@@ -208,7 +209,8 @@ function BBMOD_ResourceManager()
 	/// @func free(_resourceOrPath)
 	/// @desc Frees a reference to the resource. When there are no other no other
 	/// references, the resource is destroyed.
-	/// @param {Struct.BBMOD_Resource/string} _resourceOrPath
+	/// @param {Mixed} _resourceOrPath Either a {@link BBMOD_Resource} or a
+	/// path (string).
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	static free = function (_resourceOrPath) {
 		// Note: Resource removes itself from the map
@@ -257,7 +259,8 @@ function BBMOD_ResourceManager()
 		repeat (ds_map_size(_resources))
 		{
 			var _res = _resources[? _key];
-			_res.Manager = undefined; // Do not remove from the map, we destroy it anyways
+			// Do not remove from the map, we destroy it anyways:
+			_res.Manager = undefined;
 			_res.Counter = 0; // Otherwise we could call destroy multiple times
 			_res.destroy();
 			_key = ds_map_find_next(_resources, _key);

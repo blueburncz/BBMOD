@@ -4,11 +4,13 @@
 ///
 /// @desc A particle module that handles collisions with a terrain.
 ///
-/// @param {Struct.BBMOD_Terrain/Undefined} [_terrain] The terrain to collide with.
+/// @param {Struct.BBMOD_Terrain} [_terrain] The terrain to collide with.
+/// Defaults to `undefined`.
 function BBMOD_TerrainCollisionModule(_terrain=undefined)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Struct.BBMOD_Terrain/Undefined} The terrain to collide with.
+	/// @var {Struct.BBMOD_Terrain} The terrain to collide with. Default value
+	/// is `undefined`.
 	Terrain = _terrain;
 
 	static on_update = function (_emitter, _deltaTime) {
@@ -40,10 +42,14 @@ function BBMOD_TerrainCollisionModule(_terrain=undefined)
 						+ _velocityZ * _normal.Z
 					) * 2.0;
 					var _bounce = _particles[# BBMOD_EParticle.Bounce, _particleIndex];
-					_particles[# BBMOD_EParticle.VelocityX, _particleIndex] = (_velocityX - (_dot2 * _normal.X)) * _bounce;
-					_particles[# BBMOD_EParticle.VelocityY, _particleIndex] = (_velocityY - (_dot2 * _normal.Y)) * _bounce;
-					_particles[# BBMOD_EParticle.VelocityZ, _particleIndex] = (_velocityZ - (_dot2 * _normal.Z)) * _bounce;
-					_particles[# BBMOD_EParticle.HasCollided, _particleIndex] = true;
+					_particles[# BBMOD_EParticle.VelocityX, _particleIndex] =
+						(_velocityX - (_dot2 * _normal.X)) * _bounce;
+					_particles[# BBMOD_EParticle.VelocityY, _particleIndex] =
+						(_velocityY - (_dot2 * _normal.Y)) * _bounce;
+					_particles[# BBMOD_EParticle.VelocityZ, _particleIndex] =
+						(_velocityZ - (_dot2 * _normal.Z)) * _bounce;
+					_particles[# BBMOD_EParticle.HasCollided, _particleIndex] =
+						true;
 				}
 			}
 			++_particleIndex;

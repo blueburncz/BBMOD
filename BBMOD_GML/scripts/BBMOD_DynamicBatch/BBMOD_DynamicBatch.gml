@@ -11,8 +11,8 @@
 /// is also affected by maximum number of uniforms that a vertex shader can
 /// accept.
 ///
-/// @param {Struct.BBMOD_Model} _model The model to create a dynamic batch of. Must
-/// use a single material and must not have bones.
+/// @param {Struct.BBMOD_Model} _model The model to create a dynamic batch of.
+/// Must use a single material and must not have bones.
 /// @param {Real} _size Number of model instances in the batch.
 ///
 /// @example
@@ -54,7 +54,8 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @private
 	VertexFormat = Model.get_vertex_format(false, true);
 
-	/// @var {Constant.PrimitiveType/Undefined} The primitive type of the batch.
+	/// @var {Constant.PrimitiveType} The primitive type of the batch. Can be
+	/// `undefined`.
 	/// @private
 	PrimitiveType = undefined;
 
@@ -75,9 +76,10 @@ function BBMOD_DynamicBatch(_model, _size)
 	///
 	/// @desc Immediately submits the dynamic batch for rendering.
 	///
-	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader that
-	/// expects ids in the vertex format.
-	/// @param {Array<Real>} _data An array containing data for each rendered instance.
+	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader
+	/// that expects ids in the vertex format.
+	/// @param {Array<Real>} _data An array containing data for each rendered
+	/// instance.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
@@ -102,9 +104,10 @@ function BBMOD_DynamicBatch(_model, _size)
 
 	/// @func render(_material, _data)
 	/// @desc Enqueues the dynamic batch for rendering.
-	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader that
-	/// expects ids in the vertex format.
-	/// @param {Array<Real>} _data An array containing data for each rendered instance.
+	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader
+	/// that expects ids in the vertex format.
+	/// @param {Array<Real>} _data An array containing data for each rendered
+	/// instance.
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.submit_object
@@ -112,7 +115,8 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_Material
 	static render = function (_material, _data) {
 		gml_pragma("forceinline");
-		_material.RenderQueue.draw_mesh_batched(VertexBuffer, matrix_get(matrix_world), _material, _data, PrimitiveType);
+		_material.RenderQueue.draw_mesh_batched(
+			VertexBuffer, matrix_get(matrix_world), _material, _data, PrimitiveType);
 		return self;
 	};
 
@@ -120,8 +124,8 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @desc The default function used in {@link BBMOD_DynamicBatch.render_object}.
 	/// Uses instance's variables `x`, `y`, `z` for position, `image_xscale` for
 	/// uniform scale and `image_angle` for rotation around the `z` axis.
-	/// @param {Array<Real>} _data An array to which the function will write instance
-	/// data. The data layout is compatible with shader `BBMOD_ShDefaultBatched`
+	/// @param {Array<Real>} _data An array to which the function will write
+	/// instance data. The data layout is compatible with shader `BBMOD_ShDefaultBatched`
 	/// and hence with material {@link BBMOD_MATERIAL_DEFAULT_BATCHED}.
 	/// @param {Real} _index An index at which the first variable will be written.
 	/// @return {Real} Number of slots it has written to. Always equals 8.
@@ -175,12 +179,12 @@ function BBMOD_DynamicBatch(_model, _size)
 	///
 	/// @param {Real} _object An object to submit.
 	/// @param {Struct.BBMOD_Material} _material A material to use.
-	/// @param {Function/Undefined} [_fn] A function that writes instance data
-	/// to an array which is then passed to the material's shader. Must return
-	/// number of slots it has written to. Defaults to
-	/// {@link BBMOD_DynamicBatch.default_fn}.
+	/// @param {Function} [_fn] A function that writes instance data to an array
+	/// which is then passed to the material's shader. Must return number of
+	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}
+	/// if `undefined`.
 	///
-	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
 	/// @example
 	/// ```gml
@@ -219,12 +223,12 @@ function BBMOD_DynamicBatch(_model, _size)
 	///
 	/// @param {Real} _object An object to render.
 	/// @param {Struct.BBMOD_Material} _material A material to use.
-	/// @param {Function/Undefined} [_fn] A function that writes instance data
-	/// to an array which is then passed to the material's shader. Must return
-	/// number of slots it has written to. Defaults to
-	/// {@link BBMOD_DynamicBatch.default_fn}.
+	/// @param {Function} [_fn] A function that writes instance data  to an
+	/// array which is then passed to the material's shader. Must return number
+	/// of slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}
+	/// if `undefined`.
 	///
-	/// @return {BBMOD_DynamicBatch} Returns `self`.
+	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
 	/// @example
 	/// ```gml

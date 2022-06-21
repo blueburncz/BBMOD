@@ -5,19 +5,22 @@
 /// @desc A universal particle module that mixes values of particles' two
 /// consecutive properties between two values based on their remaining health.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the two
-/// consecutive properties. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the two consecutive properties. Use
+/// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec2} [_from] The value when the particle has full health.
 /// Defaults to `(0.0, 0.0)`.
 /// @param {Struct.BBMOD_Vec2} [_to] The value when the particle has no health left.
 /// Defaults to `_from`.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixVec2FromHealthModule(_property=undefined, _from=new BBMOD_Vec2(), _to=_from.Clone())
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixVec2FromHealthModule(
+	_property=undefined,
+	_from=new BBMOD_Vec2(),
+	_to=_from.Clone()
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the two consecutive
-	/// properties. Default value is `undefined`.
+	/// @var {Real} The first of the two consecutive properties. Use values from
+	/// {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec2} The value when the particle has full health.

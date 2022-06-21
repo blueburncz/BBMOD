@@ -7,9 +7,9 @@ global.bbmod_render_queues = [];
 /// @func BBMOD_RenderQueue([_name[, _priority]])
 /// @extends BBMOD_Class
 /// @desc A cointainer of render commands.
-/// @param {String/Undefined} [_name] The name of the render queue. Defaults to
-/// "RenderQueue" + number of created render queues - 1, e.g. "RenderQueue0",
-/// "RenderQueue1" etc.
+/// @param {String} [_name] The name of the render queue. Defaults to
+/// "RenderQueue" + number of created render queues - 1 (e.g. "RenderQueue0",
+/// "RenderQueue1" etc.) if `undefined`.
 /// @param {Real} [_priority] The priority of the render queue. Defaults to 0.
 /// @see bbmod_render_queue_get_default
 /// @see BBMOD_ERenderCommand
@@ -1044,8 +1044,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 	/// @func submit([_instances])
 	/// @desc Submits render commands.
-	/// @param {Id.DsList<Id.Instance>/Undefined} [_instances] If specified then
-	/// only meshes with an instance ID from the list are submitted. Defaults to
+	/// @param {Id.DsList<Id.Instance>} [_instances] If specified then only
+	/// meshes with an instance ID from the list are submitted. Defaults to
 	/// `undefined`.
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	/// @see BBMOD_RenderQueue.clear

@@ -5,8 +5,8 @@
 /// @desc A universal particle module that sets initial value of three consecutive
 /// particle properties when it is spawned.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first property.
-/// Defaults to `undefined`.
+/// @param {Real} [_property] The first property. Use values from
+/// {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec3} [_value] The initial value of the properties.
 /// Defaults to `(0.0, 0.0, 0.0).
 ///
@@ -14,8 +14,8 @@
 function BBMOD_SetVec3Module(_property=undefined, _value=new BBMOD_Vec3())
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first property. Default value
-	/// is `undefined`.
+	/// @var {Real} The first property. Use values from {@link BBMOD_EParticle}.
+	/// Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec3} The initial value of the properties. Default

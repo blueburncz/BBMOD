@@ -1,8 +1,8 @@
-/// @var {Struct.BBMOD_Shader/Undefined}
+/// @var {Struct.BBMOD_Shader}
 /// @private
 global.__bbmodShaderCurrent = undefined;
 
-/// @macro {Struct.BBMOD_Shader/Undefined} The current shader in use or
+/// @macro {Struct.BBMOD_Shader} The current shader in use or
 /// `undefined`.
 /// @readonly
 #macro BBMOD_SHADER_CURRENT global.__bbmodShaderCurrent
@@ -251,8 +251,9 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 
 	/// @func set_material(_material)
 	/// @desc Sets shader uniforms using values from the material.
-	/// @param {BBMOD_BaseMaterial} _material The material to take the values from.
-	/// @return {BBMOD_Shader} Returns `self`.
+	/// @param {Struct.BBMOD_BaseMaterial} _material The material to take the
+	/// values from.
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	/// @see BBMOD_BaseMaterial
 	static set_material = function (_material) {
 		return self;
@@ -454,7 +455,7 @@ function bbmod_shader_get_global(_name)
 /// @func __bbmod_shader_set_global_impl(_name, _type, _value)
 /// @desc
 /// @param {String} _name
-/// @param {Enum.BBMOD_EPropertyType} _type
+/// @param {Real} _type
 /// @param {Mixed} _value
 /// @private
 function __bbmod_shader_set_global_impl(_name, _type, _value)
@@ -630,8 +631,8 @@ function bbmod_shader_set_global_sampler(_name, _texture)
 /// @func bbmod_shader_set_global_sampler_filter(_name, _filter)
 /// @desc Enables/disables linear filtering of a global texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @param {Bool/Undefined} _filter Use `true`/`false` to enable/disable linear
-/// texture filtering or `undefined` to unset.
+/// @param {Bool} _filter Use `true`/`false` to enable/disable linear texture
+/// filtering or `undefined` to unset.
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!
 function bbmod_shader_set_global_sampler_filter(_name, _filter)
@@ -643,8 +644,7 @@ function bbmod_shader_set_global_sampler_filter(_name, _filter)
 /// @func bbmod_shader_set_global_sampler_max_aniso(_name, _value)
 /// @desc Sets maximum anisotropy level of a global texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @param {Real/Undefined} _value The new maximum anisotropy. Use `undefined`
-/// to unset.
+/// @param {Real} _value The new maximum anisotropy. Use `undefined` to unset.
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!
 function bbmod_shader_set_global_sampler_max_aniso(_name, _value)
@@ -656,8 +656,7 @@ function bbmod_shader_set_global_sampler_max_aniso(_name, _value)
 /// @func bbmod_shader_set_global_sampler_max_mip(_name, _value)
 /// @desc Sets maximum mipmap level of a global texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @param {Real/Undefined} _value The new maxmimum mipmap level or `undefined`
-/// to unset.
+/// @param {Real} _value The new maxmimum mipmap level or `undefined` to unset.
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!
 function bbmod_shader_set_global_sampler_max_mip(_name, _value)
@@ -669,8 +668,7 @@ function bbmod_shader_set_global_sampler_max_mip(_name, _value)
 /// @func bbmod_shader_set_global_sampler_min_mip(_name, _value)
 /// @desc Sets minimum mipmap level of a global texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @param {Real/Undefined} _value The new minimum mipmap level or `undefined`
-/// to unset.
+/// @param {Real} _value The new minimum mipmap level or `undefined` to unset.
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!
 function bbmod_shader_set_global_sampler_min_mip(_name, _value)
@@ -682,7 +680,7 @@ function bbmod_shader_set_global_sampler_min_mip(_name, _value)
 /// @func bbmod_shader_set_global_sampler_mip_bias(_name, _value)
 /// @desc Sets mipmap bias of a global texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @param {Real/Undefined} _value The new bias or `undefined` to unset.
+/// @param {Real} _value The new bias or `undefined` to unset.
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!
 function bbmod_shader_set_global_sampler_mip_bias(_name, _value)
@@ -694,8 +692,8 @@ function bbmod_shader_set_global_sampler_mip_bias(_name, _value)
 /// @func bbmod_shader_set_global_sampler_mip_enable(_name, _enable)
 /// @desc Enable/disable mipmapping of a global texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @param {Bool/Undefined} _enable Use `true`/`false` to enable/disable
-/// mipmapping or `undefined` to unset.
+/// @param {Bool} _enable Use `true`/`false` to enable/disable mipmapping or
+/// `undefined` to unset.
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!
 function bbmod_shader_set_global_sampler_mip_enable(_name, _enable)
@@ -707,8 +705,8 @@ function bbmod_shader_set_global_sampler_mip_enable(_name, _enable)
 /// @func bbmod_shader_set_global_sampler_mip_filter(_name, _filter)
 /// @desc Sets mipmap filter function of a global texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @param {Constant.MipFilter/Undefined} _filter The new mipmap filter or
-/// `undefined` to unset.
+/// @param {Constant.MipFilter} _filter The new mipmap filter or `undefined` to
+/// unset.
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!
 function bbmod_shader_set_global_sampler_mip_filter(_name, _filter)
@@ -720,8 +718,8 @@ function bbmod_shader_set_global_sampler_mip_filter(_name, _filter)
 /// @func bbmod_shader_set_global_sampler_repeat(_name, _enable)
 /// @desc Enable/disable repeat of a global texture sampler.
 /// @param {String} _name The name of the sampler.
-/// @param {Bool/Undefined} _enable Use `true`/`false` to enable/disable texture
-/// repeat or `undefined` to unset.
+/// @param {Bool} _enable Use `true`/`false` to enable/disable texture repeat or
+/// `undefined` to unset.
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!
 function bbmod_shader_set_global_sampler_repeat(_name, _enable)

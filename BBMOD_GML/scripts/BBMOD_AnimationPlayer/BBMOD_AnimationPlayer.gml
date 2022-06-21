@@ -28,7 +28,8 @@
 /// @desc An animation player. Each instance of an animated model should have
 /// its own animation player.
 ///
-/// @param {Struct.BBMOD_Model} _model A model that the animation player animates.
+/// @param {Struct.BBMOD_Model} _model A model that the animation player
+/// animates.
 /// @param {Bool} [_paused] If `true` then the animation player is created
 /// as paused. Defaults to `false`.
 ///
@@ -77,7 +78,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @private
 	Animations = ds_list_create();
 
-	/// @var {Struct.BBMOD_Animation/Undefined} The currently playing animation.
+	/// @var {Struct.BBMOD_Animation} The currently playing animation or
+	/// `undefined`.
 	/// @readonly
 	Animation = undefined;
 
@@ -85,19 +87,19 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @readonly
 	AnimationLoops = false;
 
-	/// @var {Struct.BBMOD_Animation/Undefined}
+	/// @var {Struct.BBMOD_Animation}
 	/// @private
 	AnimationLast = undefined;
 
-	/// @var {Struct.BBMOD_AnimationInstance/Undefined}
+	/// @var {Struct.BBMOD_AnimationInstance}
 	/// @private
 	AnimationInstanceLast = undefined;
 
-	/// @var {Array<Struct.BBMOD_Vec3/Undefined>} Array of node position overrides.
+	/// @var {Array<Struct.BBMOD_Vec3>} Array of node position overrides.
 	/// @private
 	NodePositionOverride = array_create(64/*Model.NodeCount*/, undefined);
 
-	/// @var {Array<Struct.BBMOD_Quaternion/Undefined>} Array of node rotation
+	/// @var {Array<Struct.BBMOD_Quaternion>} Array of node rotation
 	/// overrides.
 	/// @private
 	NodeRotationOverride = array_create(64/*Model.NodeCount*/, undefined);
@@ -109,14 +111,14 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @readonly
 	Time = 0;
 
-	/// @var {Array<Real>/Undefined}
+	/// @var {Array<Real>}
 	/// @private
 	Frame = undefined;
 
 	/// @var {Real} Number of frames (calls to {@link BBMOD_AnimationPlayer.update})
-	/// to skip. Defaults to 0 (frame skipping is disabled). Increasing the value
-	/// increases performance. Use `infinity` to disable computing animation frames
-	/// entirely.
+	/// to skip. Defaults to 0 (frame skipping is disabled). Increasing the
+	/// value increases performance. Use `infinity` to disable computing
+	/// animation frames entirely.
 	/// @note This does not affect animation events. These are still triggered
 	/// even if the frame is skipped.
 	Frameskip = 0;
@@ -125,7 +127,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @private
 	FrameskipCurrent = 0;
 
-	/// @var {Real} Controls animation playback speed. Must be a positive number!
+	/// @var {Real} Controls animation playback speed. Must be a positive
+	/// number!
 	PlaybackSpeed = 1;
 
 	/// @var {Array<Real>} An array of node transforms in world space.
@@ -192,7 +195,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 				_dq.FromTranslationRotation(_position, _rotation);
 				if (_parentIndex != -1)
 				{
-					_dq = _dq.Mul(new BBMOD_DualQuaternion().FromArray(_nodeTransform, _parentIndex * 8));
+					_dq = _dq.Mul(new BBMOD_DualQuaternion()
+						.FromArray(_nodeTransform, _parentIndex * 8));
 				}
 				_dq.ToArray(_nodeTransform, _nodeOffset);
 			}
@@ -207,7 +211,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 				{
 					// Multiply node transform with parent's transform
 					bbmod_dual_quaternion_array_multiply(
-						_frame, _nodeOffset, _nodeTransform, _parentIndex * 8, _nodeTransform, _nodeOffset);
+						_frame, _nodeOffset, _nodeTransform, _parentIndex * 8,
+						_nodeTransform, _nodeOffset);
 				}
 			}
 
@@ -324,7 +329,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 					}
 
 					// TODO: Just use the animation's array right away?
-					array_copy(TransformArray, 0, _animation.FramesBone[_animationTime], 0, _boneSize);
+					array_copy(TransformArray, 0,
+						_animation.FramesBone[_animationTime], 0, _boneSize);
 				}
 				else if (_animation.Spaces & BBMOD_BONE_SPACE_WORLD)
 				{
@@ -350,7 +356,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 					animate(_animInst, _animationTime);
 				}
 
-				array_copy(TransformArray, _boneSize, NodeTransform, _boneSize, _nodeSize - _boneSize);
+				array_copy(TransformArray, _boneSize, NodeTransform, _boneSize,
+					_nodeSize - _boneSize);
 			}
 
 			if (Frameskip == infinity)
@@ -379,7 +386,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @param {Struct.BBMOD_Animation} _animation An animation to play.
 	/// @param {Bool} [_loop] If `true` then the animation will be looped.
 	/// Defaults to `false`.
-	/// @return {BBMOD_AnimationPlayer} Returns `self`.
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static play = function (_animation, _loop=false) {
 		Animation = _animation;
 		AnimationLoops = _loop;
@@ -475,7 +482,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @func set_node_position(_nodeIndex, _position)
 	/// @desc Overrides a position of a node.
 	/// @param {Real} _nodeIndex An index of a node.
-	/// @param {Struct.BBMOD_Vec3/Undefined} _position A new position of a node. Use
+	/// @param {Struct.BBMOD_Vec3} _position A new position of a node. Use
 	/// `undefined` to unset the position override.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static set_node_position = function (_nodeIndex, _position) {
@@ -487,7 +494,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @func set_node_rotation(_nodeIndex, _rotation)
 	/// @desc Overrides a rotation of a node.
 	/// @param {Real} _nodeIndex An index of a node.
-	/// @param {Struct.BBMOD_Quaternion/Undefined} _rotation A new rotation of a node.
+	/// @param {Struct.BBMOD_Quaternion} _rotation A new rotation of a node.
 	/// Use `undefined` to unset the rotation override.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static set_node_rotation = function (_nodeIndex, _rotation) {
@@ -498,9 +505,9 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 	/// @func submit([_materials])
 	/// @desc Immediately submits the animated model for rendering.
-	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] An array of
-	/// materials, one for each material slot of the model. If not specified,
-	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of materials,
+	/// one for each material slot of the model. If not specified, then
+	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static submit = function (_materials=undefined) {
 		gml_pragma("forceinline");
@@ -510,9 +517,9 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 	/// @func render([_materials])
 	/// @desc Enqueues the animated model for rendering.
-	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] An array of
-	/// materials, one for each material slot of the model. If not specified,
-	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of materials,
+	/// one for each material slot of the model. If not specified, then
+	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static render = function (_materials=undefined) {
 		gml_pragma("forceinline");

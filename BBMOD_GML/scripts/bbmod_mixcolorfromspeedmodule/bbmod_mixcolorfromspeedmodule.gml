@@ -5,8 +5,9 @@
 /// @desc A universal particle module that mixes particles' color property
 /// between two values based on the magnitude of their velocity vector.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the four
-/// consecutive properties that together form a color. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the four consecutive properties that
+/// together form a color. Use values from {@link BBMOD_EParticle}. Defaults to
+/// `undefined`.
 /// @param {Struct.BBMOD_Color} [_from] The color when the particle has full
 /// health. Defaults to {@link BBMOD_C_WHITE}.
 /// @param {Struct.BBMOD_Color} [_to] The color when the particle has no health
@@ -17,11 +18,17 @@
 /// property is equal to `_to`. Defaults to 1.0.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixColorFromSpeedModule(_property=undefined, _from=BBMOD_C_WHITE, _to=_from.Clone(), _min=0.0, _max=1.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixColorFromSpeedModule(
+	_property=undefined,
+	_from=BBMOD_C_WHITE,
+	_to=_from.Clone(),
+	_min=0.0,
+	_max=1.0
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four consecutive
-	/// properties that together form a color. Default value is `undefined`.
+	/// @var {Real} The first of the four consecutive properties that together
+	/// form a color. Use values from {@link BBMOD_EParticle}. Default value is
+	/// `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Color} The color when the particle has full

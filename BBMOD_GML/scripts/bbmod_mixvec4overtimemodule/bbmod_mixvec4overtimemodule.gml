@@ -5,8 +5,8 @@
 /// @desc A universal particle module that mixes values of particles' four
 /// consecutive properties between two values based on their time alive.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the four
-/// consecutive properties. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the four consecutive properties. Use
+/// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec4} [_from] The value when the particle has full health.
 /// Defaults to `(0.0, 0.0, 0.0, 0.0)`.
 /// @param {Struct.BBMOD_Vec4} [_to] The value when the particle has no health left.
@@ -15,11 +15,15 @@
 /// two values. Defaults to 1.0.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixVec4OverTimeModule(_property=undefined, _from=new BBMOD_Vec4(), _to=_from.Clone(), _duration=1.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixVec4OverTimeModule(
+	_property=undefined,
+	_from=new BBMOD_Vec4(),
+	_to=_from.Clone(),
+	_duration=1.0
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four consecutive
-	/// properties. Default value is `undefined`.
+	/// @var {Real} The first of the four consecutive properties. Use values
+	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec4} The value when the particle has full health.

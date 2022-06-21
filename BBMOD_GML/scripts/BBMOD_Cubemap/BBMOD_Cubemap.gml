@@ -62,8 +62,8 @@ function BBMOD_Cubemap(_resolution)
 	/// @readonly
 	Resolution = _resolution;
 
-	/// @var {Enum.BBMOD_ECubeSide} An index of a side that we are currently
-	/// rendering to.
+	/// @var {Real} An index of a side that we are currently rendering to.
+	/// Contains values from {@link BBMOD_ECubeSide}.
 	/// @see BBMOD_Cubemap.set_target
 	/// @private
 	RenderTo = 0;
@@ -71,8 +71,9 @@ function BBMOD_Cubemap(_resolution)
 	/// @func get_surface(_side)
 	/// @desc Gets a surface for given cubemap side. If the surface is corrupted,
 	/// then a new one is created.
-	/// @param {BBMOD_ECubeSide} _side The cubemap side.
+	/// @param {Real} _side The cubemap side.
 	/// @return {Id.Surface} The surface.
+	/// @see BBMOD_ECubeSide
 	static get_surface = function (_side) {
 		var _surOld = Sides[_side];
 		var _sur = bbmod_surface_check(_surOld, Resolution, Resolution);
@@ -106,7 +107,8 @@ function BBMOD_Cubemap(_resolution)
 
 	/// @func get_view_matrix(_side)
 	/// @desc Creates a view matrix for given cubemap side.
-	/// @param {BBMOD_ECubeSide} side The cubemap side.
+	/// @param {Real} side The cubemap side. Use values from
+	/// {@link BBMOD_ECubeSide}.
 	/// @return {Array<Real>} The created view matrix.
 	static get_view_matrix = function (_side) {
 		var _negEye = Position.Scale(-1.0);

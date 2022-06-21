@@ -6,8 +6,8 @@
 /// particles' four consecutive properties between two values  when they are
 /// spawned.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the four
-/// consecutive properties. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the four consecutive properties. Use
+/// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec4} [_from] The value to mix from. Defaults to
 /// `(0.0, 0.0, 0.0, 0.0)`.
 /// @param {Struct.BBMOD_Vec4} [_to] The value to mix to. Defaults to `_from`.
@@ -16,11 +16,15 @@
 /// Defaults to `true`.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixVec4Module(_property=undefined, _from=new BBMOD_Vec4(), _to=_from.Clone(), _separate=true)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixVec4Module(
+	_property=undefined,
+	_from=new BBMOD_Vec4(),
+	_to=_from.Clone(),
+	_separate=true
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four consecutive
-	/// properties. Default value is `undefined`.
+	/// @var {Real} The first of the four consecutive properties. Use values
+	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec4} The initial value to mix from. Default value is

@@ -19,20 +19,20 @@
 /// @func BBMOD_Vec3([_x[, _y, _z]])
 /// @desc A 3D vector.
 /// @param {Real} [_x] The first component of the vector. Defaults to 0.
-/// @param {Real/Undefined} [_y] The second component of the vector. Defaults to `_x`.
-/// @param {Real/Undefined} [_z] The third component of the vector. Defaults to `_x`.
+/// @param {Real} [_y] The second component of the vector. Defaults to `_x`.
+/// @param {Real} [_z] The third component of the vector. Defaults to `_x`.
 /// @see BBMOD_Vec2
 /// @see BBMOD_Vec4
-function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
+function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 {
 	/// @var {Real} The first component of the vector.
 	X = _x;
 
 	/// @var {Real} The second component of the vector.
-	Y = _y ?? X;
+	Y = _y;
 
 	/// @var {Real} The third component of the vector.
-	Z = _z ?? X;
+	Z = _z;
 
 	/// @func Abs()
 	/// @desc Creates a new vector where each component is equal to the absolute
@@ -84,9 +84,9 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Clamp(_min, _max)
 	/// @desc Clamps each component of the vector between corresponding
 	/// components of `_min` and `_max` and returns the result as a new vector.
-	/// @param {BBMOD_Vec3} _min A vector with minimum components.
-	/// @param {BBMOD_Vec3} _max A vector with maximum components.
-	/// @return {BBMOD_Vec3} The resulting vector.
+	/// @param {Struct.BBMOD_Vec3} _min A vector with minimum components.
+	/// @param {Struct.BBMOD_Vec3} _max A vector with maximum components.
+	/// @return {Struct.BBMOD_Vec3} The resulting vector.
 	static Clamp = function (_min, _max) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
@@ -104,9 +104,12 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	/// @example
 	/// ```gml
-	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLength(1.0, 5.0) // => BBMOD_Vec3(3.0, 0.0, 0.0)
-	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLength(4.0, 5.0) // => BBMOD_Vec3(4.0, 0.0, 0.0)
-	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLength(1.0, 2.0) // => BBMOD_Vec3(2.0, 0.0, 0.0)
+	/// // => BBMOD_Vec3(3.0, 0.0, 0.0):
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLength(1.0, 5.0)
+	/// // => BBMOD_Vec3(4.0, 0.0, 0.0):
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLength(4.0, 5.0)
+	/// // => BBMOD_Vec3(2.0, 0.0, 0.0):
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLength(1.0, 2.0)
 	/// ```
 	static ClampLength = function (_min, _max) {
 		gml_pragma("forceinline");
@@ -517,14 +520,14 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 	/// @func Set([_x[, _y, _z]])
 	/// @desc Sets vector components in-place.
 	/// @param {Real} [_x] The new value of the first component. Defaults to 0.
-	/// @param {Real/Undefined} [_y] The new value of the second component. Defaults to `_x`.
-	/// @param {Real/Undefined} [_z] The new value of the third component. Defaults to `_x`.
-	/// @return {BBMOD_Vec3} Returns `self`.
-	static Set = function (_x=0.0, _y=undefined, _z=undefined) {
+	/// @param {Real} [_y] The new value of the second component. Defaults to `_x`.
+	/// @param {Real} [_z] The new value of the third component. Defaults to `_x`.
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static Set = function (_x=0.0, _y=_x, _z=_x) {
 		gml_pragma("forceinline");
 		X = _x;
-		Y = _y ?? X;
-		Z = _z ?? X;
+		Y = _y;
+		Z = _z;
 		return self;
 	};
 
@@ -580,8 +583,8 @@ function BBMOD_Vec3(_x=0.0, _y=undefined, _z=undefined) constructor
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes the components of the vector into the target array.
-	/// @param {Array<Real>/Undefined} [_array] The array to write to. If not
-	/// specified a new one of required size is created.
+	/// @param {Array<Real>} [_array] The array to write to. If `undefined` a
+	/// new one of required size is created.
 	/// @param {Real} [_index] The starting index within the target array.
 	/// Defaults to 0.
 	/// @return {Array<Real>} The target array.

@@ -37,14 +37,17 @@ camera.MouseSensitivity = 0.75;
 // Load resources
 matPlayer = global.resourceManager.get_or_add("matPlayer", function () {
 	var _material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
+		.set_shader(
+			BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
 	_material.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
 	return _material;
 });
 
-animAim = global.resourceManager.load("Data/Assets/Character/Character_Aim.bbanim");
+animAim = global.resourceManager.load(
+	"Data/Assets/Character/Character_Aim.bbanim");
 
-animShoot = global.resourceManager.load("Data/Assets/Character/Character_Shoot.bbanim");
+animShoot = global.resourceManager.load(
+	"Data/Assets/Character/Character_Shoot.bbanim");
 
 animPunchLeft = global.resourceManager.load(
 	"Data/Assets/Character/Character_PunchLeft.bbanim",
@@ -66,7 +69,8 @@ animPunchRight = global.resourceManager.load(
 		}
 	});
 
-animIdle = global.resourceManager.load("Data/Assets/Character/Character_Idle.bbanim");
+animIdle = global.resourceManager.load(
+	"Data/Assets/Character/Character_Idle.bbanim");
 
 animInteractGround = global.resourceManager.load(
 	"Data/Assets/Character/Character_Interact_ground.bbanim",
@@ -78,7 +82,8 @@ animInteractGround = global.resourceManager.load(
 		}
 	});
 
-animJump = global.resourceManager.load("Data/Assets/Character/Character_Jump.bbanim");
+animJump = global.resourceManager.load(
+	"Data/Assets/Character/Character_Jump.bbanim");
 
 animRun = global.resourceManager.load(
 	"Data/Assets/Character/Character_Run.bbanim",

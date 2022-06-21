@@ -60,14 +60,12 @@ function BBMOD_Renderer()
 	/// is 0.
 	Y = 0;
 
-	/// @var {Real/Undefined} The width of the renderer on the screen.
-	/// If `undefined` then the window width is used. Default value is
-	/// `undefined`.
+	/// @var {Real} The width of the renderer on the screen. If `undefined` then
+	/// the window width is used. Default value is `undefined`.
 	Width = undefined;
 
-	/// @var {Real/Undefined} The height of the renderer on the screen.
-	/// If `undefined` then the window height is used. Default value is
-	/// `undefined`.
+	/// @var {Real} The height of the renderer on the screen. If `undefined`
+	/// then the window height is used. Default value is `undefined`.
 	Height = undefined;
 
 	/// @var {Bool} If `true` then rendering of instance IDs into an off-screen
@@ -94,11 +92,12 @@ function BBMOD_Renderer()
 	ButtonSelect = mb_left;
 
 	/// @var {Constant.VirtualKey} The keyboard key used to add/remove instances
-	/// from multiple selection when edit mode is enabled. Default value is `vk_shift`.
+	/// from multiple selection when edit mode is enabled. Default value is
+	/// `vk_shift`.
 	/// @see BBMOD_Renderer.EditMode
 	KeyMultiSelect = vk_shift;
 
-	/// @var {Struct.BBMOD_Gizmo/Undefined} A gizmo for transforming instances when
+	/// @var {Struct.BBMOD_Gizmo} A gizmo for transforming instances when
 	/// {@link BBMOD_Renderer.EditMode} is enabled. This is by default `undefined`.
 	/// @see BBMOD_Gizmo
 	Gizmo = undefined;
@@ -237,9 +236,8 @@ function BBMOD_Renderer()
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	VignetteColor = c_black;
 
-	/// @var {Enum.BBMOD_EAntialiasing} Antialiasing technique to use. Defaults
-	/// to {@link BBMOD_EAntialiasing.None}.
-	/// @see BBMOD_EAntialiasing
+	/// @var {Real} Antialiasing technique to use. Use values from
+	/// {@link BBMOD_EAntialiasing}. Defaults to {@link BBMOD_EAntialiasing.None}.
 	Antialiasing = BBMOD_EAntialiasing.None;
 
 	/// @func get_width()
@@ -373,8 +371,8 @@ function BBMOD_Renderer()
 
 	/// @func add(_renderable)
 	/// @desc Adds a renderable object or struct to the renderer.
-	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable object or struct
-	/// to add.
+	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable object or
+	/// struct to add.
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	/// @see BBMOD_Renderer.remove
 	/// @see BBMOD_IRenderable
@@ -386,8 +384,8 @@ function BBMOD_Renderer()
 
 	/// @func remove(_renderable)
 	/// @desc Removes a renderable object or a struct from the renderer.
-	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable object or struct
-	/// to remove.
+	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable object or
+	/// struct to remove.
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	/// @see BBMOD_Renderer.add
 	/// @see BBMOD_IRenderable
@@ -486,7 +484,8 @@ function BBMOD_Renderer()
 			&& _directionalLight != undefined
 			&& _directionalLight.CastShadows)
 		{
-			SurShadowmap = bbmod_surface_check(SurShadowmap, ShadowmapResolution, ShadowmapResolution);
+			SurShadowmap = bbmod_surface_check(
+				SurShadowmap, ShadowmapResolution, ShadowmapResolution);
 			surface_set_target(SurShadowmap);
 			draw_clear(c_red);
 			matrix_set(matrix_view, get_shadowmap_view());
@@ -552,7 +551,8 @@ function BBMOD_Renderer()
 		if (_editMode)
 		{
 			_gizmoSize = Gizmo.Size;
-			Gizmo.Size = _gizmoSize * Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+			Gizmo.Size = _gizmoSize
+				* Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -611,7 +611,8 @@ function BBMOD_Renderer()
 				if (_id != 0)
 				{
 					Gizmo.toggle_select(_id).update_position();
-					Gizmo.Size = _gizmoSize * Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+					Gizmo.Size = _gizmoSize
+						* Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
 				}
 			}
 		}
@@ -620,7 +621,8 @@ function BBMOD_Renderer()
 		{
 			////////////////////////////////////////////////////////////////////
 			// Instance highlight
-			SurInstanceHighlight = bbmod_surface_check(SurInstanceHighlight, _renderWidth, _renderHeight);
+			SurInstanceHighlight = bbmod_surface_check(
+				SurInstanceHighlight, _renderWidth, _renderHeight);
 
 			surface_set_target(SurInstanceHighlight);
 			draw_clear_alpha(0, 0.0);
@@ -701,13 +703,16 @@ function BBMOD_Renderer()
 			SurSSAO = bbmod_surface_check(SurSSAO, _width, _height);
 			SurWork = bbmod_surface_check(SurWork, _width, _height);
 			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
-				SSAODepthRange, SurSSAO, SurWork, SurGBuffer, _projection, bbmod_camera_get_zfar());
+				SSAODepthRange, SurSSAO, SurWork, SurGBuffer, _projection,
+				bbmod_camera_get_zfar());
 			bbmod_material_reset();
-			bbmod_shader_set_global_sampler("bbmod_SSAO", surface_get_texture(SurSSAO));
+			bbmod_shader_set_global_sampler(
+				"bbmod_SSAO", surface_get_texture(SurSSAO));
 		}
 		else
 		{
-			bbmod_shader_set_global_sampler("bbmod_SSAO", sprite_get_texture(BBMOD_SprWhite, 0));
+			bbmod_shader_set_global_sampler(
+				"bbmod_SSAO", sprite_get_texture(BBMOD_SprWhite, 0));
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -735,8 +740,10 @@ function BBMOD_Renderer()
 				texture_get_texel_height(_shadowmapTexture));
 			bbmod_shader_set_global_f("bbmod_ShadowmapAreaVS", ShadowmapArea);
 			bbmod_shader_set_global_f("bbmod_ShadowmapAreaPS", ShadowmapArea);
-			bbmod_shader_set_global_f("bbmod_ShadowmapNormalOffset", ShadowmapNormalOffset);
-			bbmod_shader_set_global_matrix_array("bbmod_ShadowmapMatrix", get_shadowmap_matrix());
+			bbmod_shader_set_global_f("bbmod_ShadowmapNormalOffset",
+				ShadowmapNormalOffset);
+			bbmod_shader_set_global_matrix_array("bbmod_ShadowmapMatrix",
+				get_shadowmap_matrix());
 		}
 		else
 		{
@@ -801,13 +808,15 @@ function BBMOD_Renderer()
 				{
 					var _shader = BBMOD_ShInstanceHighlight;
 					shader_set(_shader);
-					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
+					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
+						_texelWidth, _texelHeight);
 					shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
 						InstanceHighlightColor.Red / 255.0,
 						InstanceHighlightColor.Green / 255.0,
 						InstanceHighlightColor.Blue / 255.0,
 						InstanceHighlightColor.Alpha);
-					draw_surface_stretched(SurInstanceHighlight, 0, 0, _renderWidth, _renderHeight);
+					draw_surface_stretched(
+						SurInstanceHighlight, 0, 0, _renderWidth, _renderHeight);
 					shader_reset();
 				}
 
@@ -835,10 +844,14 @@ function BBMOD_Renderer()
 				shader_set(_shader);
 				var _uLut = shader_get_sampler_index(_shader, "u_texLut");
 				texture_set_stage(_uLut, ColorGradingLUT);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_fDistortion"), ChromaticAberration);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_fGrayscale"), Grayscale);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_fVignette"), Vignette);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
+					_texelWidth, _texelHeight);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_fDistortion"),
+					ChromaticAberration);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_fGrayscale"),
+					Grayscale);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_fVignette"),
+					Vignette);
 				shader_set_uniform_f(shader_get_uniform(_shader, "u_vVignetteColor"),
 					color_get_red(VignetteColor) / 255,
 					color_get_green(VignetteColor) / 255,
@@ -862,8 +875,10 @@ function BBMOD_Renderer()
 			{
 				var _shader = BBMOD_ShFXAA;
 				shader_set(_shader);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexelVS"), _texelWidth, _texelHeight);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexelPS"), _texelWidth, _texelHeight);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexelVS"),
+					_texelWidth, _texelHeight);
+				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexelPS"),
+					_texelWidth, _texelHeight);
 				draw_surface_stretched(_surFinal, X, Y, _width, _height);
 				shader_reset();
 			}
@@ -883,7 +898,8 @@ function BBMOD_Renderer()
 				{
 					var _shader = BBMOD_ShInstanceHighlight;
 					shader_set(_shader);
-					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"), _texelWidth, _texelHeight);
+					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
+						_texelWidth, _texelHeight);
 					shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
 						InstanceHighlightColor.Red / 255.0,
 						InstanceHighlightColor.Green / 255.0,

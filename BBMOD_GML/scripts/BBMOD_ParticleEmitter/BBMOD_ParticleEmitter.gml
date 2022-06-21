@@ -2,7 +2,8 @@
 /// @desc Emits particles at a specific position in the world. The behavior of
 /// the emitted particles is defined by a particle system.
 /// @param {Struct.BBMOD_Vec3} _position The emitter's position in world-space.
-/// @param {Struct.BBMOD_ParticleSystem} _system The particle system that defines
+/// @param {Struct.BBMOD_ParticleSystem} _system The particle system that
+/// defines
 /// behavior of emitted particles.
 /// @see BBBMOD_ParticleSystem
 function BBMOD_ParticleEmitter(_position, _system)
@@ -49,7 +50,9 @@ function BBMOD_ParticleEmitter(_position, _system)
 	// Initialize particle index
 	ds_grid_clear(Particles, 0.0);
 
-	for (var _particleIndex = 0; _particleIndex < System.ParticleCount; ++_particleIndex)
+	for (var _particleIndex = 0;
+		_particleIndex < System.ParticleCount;
+		++_particleIndex)
 	{
 		Particles[# BBMOD_EParticle.Id, _particleIndex] = _particleIndex;
 	}
@@ -155,7 +158,9 @@ function BBMOD_ParticleEmitter(_position, _system)
 
 		////////////////////////////////////////////////////////////////////////
 		// Kill particles
-		for (var _particleIndex = 0; _particleIndex < ParticlesAlive; ++_particleIndex)
+		for (var _particleIndex = 0;
+			_particleIndex < ParticlesAlive;
+			++_particleIndex)
 		{
 			if (Particles[# BBMOD_EParticle.HealthLeft, _particleIndex] <= 0.0)
 			{
@@ -438,8 +443,8 @@ function BBMOD_ParticleEmitter(_position, _system)
 
 	/// @func submit([_material])
 	/// @desc Immediately submits particles for rendering.
-	/// @param {Struct.BBMOD_Material/Undefined} [_material] The material to use
-	/// instead of the one defined in the particle system.
+	/// @param {Struct.BBMOD_Material} [_material] The material to use instead
+	/// of the one defined in the particle system or `undefined`.
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static submit = function (_material=undefined) {
 		var _dynamicBatch = System.DynamicBatch;
@@ -449,8 +454,8 @@ function BBMOD_ParticleEmitter(_position, _system)
 
 	/// @func render([_material])
 	/// @desc Enqueus particles for rendering.
-	/// @param {Struct.BBMOD_Material/Undefined} [_material] The material to use
-	/// instead of the one defined in the particle system.
+	/// @param {Struct.BBMOD_Material} [_material] The material to use instead
+	/// of the one defined in the particle system or `undefined`.
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static render = function (_material=undefined) {
 		var _dynamicBatch = System.DynamicBatch;

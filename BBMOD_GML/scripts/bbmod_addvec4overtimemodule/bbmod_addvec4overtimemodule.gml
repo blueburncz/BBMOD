@@ -5,19 +5,22 @@
 /// @desc A universal particle module that adds a value to four consecutive
 /// particle properties over time.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the four
-/// consecutive properties. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the four consecutive properties. Use
+/// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec4} [_change] The value added over specified period.
 /// Defaults to `(1.0, 1.0, 1.0, 1.0)`.
 /// @param {Real} [_period] How long in seconds it takes to add the value to the
 /// properties. Defaults to 1.0.
 ///
 /// @see BBMOD_EParticle.HealthLeft
-function BBMOD_AddVec4OverTimeModule(_property=undefined, _change=new BBMOD_Vec4(1.0), _period=1.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_AddVec4OverTimeModule(
+	_property=undefined,
+	_change=new BBMOD_Vec4(1.0),
+	_period=1.0
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four
-	/// consecutive properties. Default value is `undefined`.
+	/// @var {Real} The first of the four consecutive properties. Use values
+	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec4} The value added over

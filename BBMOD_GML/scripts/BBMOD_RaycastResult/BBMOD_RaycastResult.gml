@@ -8,9 +8,11 @@ function BBMOD_RaycastResult() constructor
 	/// the collider.
 	Distance = 0.0;
 
-	/// @var {Struct.BBMOD_Vec3/Undefined} The point of collision in world-space.
+	/// @var {Struct.BBMOD_Vec3} The point of collision in world-space or
+	/// `undefined`.
 	Point = undefined;
 
-	/// @var {Struct.BBMOD_Vec3/Undefined} The normal vector at the collision.
+	/// @var {Struct.BBMOD_Vec3} The normal vector at the collision or
+	/// `undefined`.
 	Normal = undefined;
 }

@@ -6,8 +6,8 @@
 /// consecutive properties between two values based on the magnitude of their
 /// velocity vector.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the three
-/// consecutive properties. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the three consecutive properties. Use
+/// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec3} [_from] The value when the particle has full health.
 /// Defaults to `(0.0, 0.0, 0.0)`.
 /// @param {Struct.BBMOD_Vec3} [_to] The value when the particle has no health left.
@@ -18,11 +18,16 @@
 /// property is equal to `_to`. Defaults to 1.0.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixVec3FromSpeedModule(_property=undefined, _from=new BBMOD_Vec3(), _to=_from.Clone(), _min=0.0, _max=1.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixVec3FromSpeedModule(
+	_property=undefined,
+	_from=new BBMOD_Vec3(),
+	_to=_from.Clone(),
+	_min=0.0,
+	_max=1.0
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the three consecutive
-	/// properties. Default value is `undefined`.
+	/// @var {Real} The first of the three consecutive properties. Use values
+	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec3} The value when the particle has full health. Default

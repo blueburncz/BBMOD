@@ -23,7 +23,8 @@ with (OZombie)
 	var _x = round(_screenPos.X - _width * 0.5);
 	var _y = round(_screenPos.Y - _height * 0.5);
 	draw_rectangle_color(_x, _y, _x + _width, _y + _height, 0, 0, 0, 0, false);
-	draw_rectangle_color(_x + 2, _y + 2, _x + 2 + (_width - 4) * (hp / hpMax), _y + 2 + _height - 4,
+	draw_rectangle_color(
+		_x + 2, _y + 2, _x + 2 + (_width - 4) * (hp / hpMax), _y + 2 + _height - 4,
 		c_red, c_red, c_maroon, c_maroon, false);
 }
 
@@ -89,7 +90,10 @@ DrawTextShadow(floor(_windowWidth * 0.5), 16, _text);
 // Draw time remaining till the next wave is spawned
 draw_set_font(Fnt16);
 draw_set_halign(fa_right);
-DrawTextShadow(_windowWidth - 16, 16, string(ceil(waveTimeout)) + "s", (waveTimeout > 5.0) ? c_white : c_red);
+DrawTextShadow(
+	_windowWidth - 16, 16,
+	string(ceil(waveTimeout)) + "s",
+	(waveTimeout > 5.0) ? c_white : c_red);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Draw ammo

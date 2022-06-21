@@ -1,6 +1,7 @@
 /// @func BBMOD_AnimationInstance(_animation)
 /// @desc An instance of an animation. Used for animation playback.
-/// @param {Struct.BBMOD_Animation} _animation An animation to create an instance of.
+/// @param {Struct.BBMOD_Animation} _animation An animation to create an
+/// instance of.
 /// @see BBMOD_Animation
 function BBMOD_AnimationInstance(_animation) constructor
 {

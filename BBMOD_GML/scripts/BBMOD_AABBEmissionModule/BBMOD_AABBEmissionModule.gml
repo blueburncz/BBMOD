@@ -4,18 +4,21 @@
 ///
 /// @desc A particle module that positions spawned particles into an AABB shape.
 ///
-/// @param {Struct.BBMOD_Vec3} [_min] The minimum coordinate of the AABB. Defaults
-/// to `(-0.5, -0.5, -0.5)`.
-/// @param {Struct.BBMOD_Vec3} [_max] The maximum coordinate of the AABB. Defaults
-/// to `(0.5, 0.5, 0.5)`.
-/// @param {Bool} [_inside] If `true` then the particles can be spawned inside of
-/// the AABB. Defaults to `true`.
+/// @param {Struct.BBMOD_Vec3} [_min] The minimum coordinate of the AABB.
+/// Defaults to `(-0.5, -0.5, -0.5)`.
+/// @param {Struct.BBMOD_Vec3} [_max] The maximum coordinate of the AABB.
+/// Defaults to `(0.5, 0.5, 0.5)`.
+/// @param {Bool} [_inside] If `true` then the particles can be spawned inside
+/// of the AABB. Defaults to `true`.
 ///
 /// @see BBMOD_EParticle.PositionX
 /// @see BBMOD_EParticle.PositionY
 /// @see BBMOD_EParticle.PositionZ
-function BBMOD_AABBEmissionModule(_min=new BBMOD_Vec3(-0.5), _max=new BBMOD_Vec3(0.5), _inside=true)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_AABBEmissionModule(
+	_min=new BBMOD_Vec3(-0.5),
+	_max=new BBMOD_Vec3(0.5),
+	_inside=true
+) : BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The minimum coordinate of the AABB. Default value is
 	/// to `(-0.5, -0.5, -0.5)`.

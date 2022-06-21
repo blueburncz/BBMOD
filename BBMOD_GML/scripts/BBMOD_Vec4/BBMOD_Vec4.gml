@@ -1,24 +1,24 @@
 /// @func BBMOD_Vec4([_x[, _y, _z, _w]])
 /// @desc A 3D vector.
 /// @param {Real} [_x] The first component of the vector. Defaults to 0.
-/// @param {Real/Undefined} [_y] The second component of the vector. Defaults to `_x`.
-/// @param {Real/Undefined} [_z] The third component of the vector. Defaults to `_x`.
-/// @param {Real/Undefined} [_w] The fourth component of the vector. Defaults to `_x`.
+/// @param {Real} [_y] The second component of the vector. Defaults to `_x`.
+/// @param {Real} [_z] The third component of the vector. Defaults to `_x`.
+/// @param {Real} [_w] The fourth component of the vector. Defaults to `_x`.
 /// @see BBMOD_Vec2
 /// @see BBMOD_Vec3
-function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructor
+function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 {
 	/// @var {Real} The first component of the vector.
 	X = _x;
 
 	/// @var {Real} The second component of the vector.
-	Y = _y ?? X;
+	Y = _y;
 
 	/// @var {Real} The third component of the vector.
-	Z = _z ?? X;
+	Z = _z;
 
 	/// @var {Real} The fourth component of the vector.
-	W = _w ?? X;
+	W = _w;
 
 	/// @func Abs()
 	/// @desc Creates a new vector where each component is equal to the absolute
@@ -26,7 +26,8 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	/// @example
 	/// ```gml
-	/// new BBMOD_Vec4(-1.0, 2.0, -3.0, 4.0).Abs() // => BBMOD_Vec4(1.0, 2.0, 3.0, 4.0)
+	/// // => BBMOD_Vec4(1.0, 2.0, 3.0, 4.0):
+	/// new BBMOD_Vec4(-1.0, 2.0, -3.0, 4.0).Abs()
 	/// ```
 	static Abs = function () {
 		gml_pragma("forceinline");
@@ -58,7 +59,8 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	/// @example
 	/// ```gml
-	/// new BBMOD_Vec4(0.2, 1.6, 2.4, 3.1).Ceil() // => BBMOD_Vec4(1.0, 2.0, 3.0, 4.0)
+	/// // => BBMOD_Vec4(1.0, 2.0, 3.0, 4.0):
+	/// new BBMOD_Vec4(0.2, 1.6, 2.4, 3.1).Ceil()
 	/// ```
 	static Ceil = function () {
 		gml_pragma("forceinline");
@@ -73,9 +75,9 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @func Clamp(_min, _max)
 	/// @desc Clamps each component of the vector between corresponding
 	/// components of `_min` and `_max` and returns the result as a new vector.
-	/// @param {BBMOD_Vec4} _min A vector with minimum components.
-	/// @param {BBMOD_Vec4} _max A vector with maximum components.
-	/// @return {BBMOD_Vec4} The resulting vector.
+	/// @param {Struct.BBMOD_Vec4} _min A vector with minimum components.
+	/// @param {Struct.BBMOD_Vec4} _max A vector with maximum components.
+	/// @return {Struct.BBMOD_Vec4} The resulting vector.
 	static Clamp = function (_min, _max) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec4(
@@ -94,9 +96,12 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	/// @example
 	/// ```gml
-	/// new BBMOD_Vec4(3.0, 0.0, 0.0, 0.0).ClampLength(1.0, 5.0) // => BBMOD_Vec4(3.0, 0.0, 0.0, 0.0)
-	/// new BBMOD_Vec4(3.0, 0.0, 0.0, 0.0).ClampLength(4.0, 5.0) // => BBMOD_Vec4(4.0, 0.0, 0.0, 0.0)
-	/// new BBMOD_Vec4(3.0, 0.0, 0.0, 0.0).ClampLength(1.0, 2.0) // => BBMOD_Vec4(2.0, 0.0, 0.0, 0.0)
+	/// // => BBMOD_Vec4(3.0, 0.0, 0.0, 0.0):
+	/// new BBMOD_Vec4(3.0, 0.0, 0.0, 0.0).ClampLength(1.0, 5.0)
+	/// // => BBMOD_Vec4(4.0, 0.0, 0.0, 0.0):
+	/// new BBMOD_Vec4(3.0, 0.0, 0.0, 0.0).ClampLength(4.0, 5.0)
+	/// // => BBMOD_Vec4(2.0, 0.0, 0.0, 0.0):
+	/// new BBMOD_Vec4(3.0, 0.0, 0.0, 0.0).ClampLength(1.0, 2.0)
 	/// ```
 	static ClampLength = function (_min, _max) {
 		gml_pragma("forceinline");
@@ -183,7 +188,8 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	/// @example
 	/// ```gml
-	/// new BBMOD_Vec4(0.2, 1.6, 2.4, 3.1).Floor() // => BBMOD_Vec4(0.0, 1.0, 2.0, 3.0)
+	/// // => BBMOD_Vec4(0.0, 1.0, 2.0, 3.0):
+	/// new BBMOD_Vec4(0.2, 1.6, 2.4, 3.1).Floor()
 	/// ```
 	static Floor = function () {
 		gml_pragma("forceinline");
@@ -201,7 +207,8 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	/// @example
 	/// ```gml
-	/// new BBMOD_Vec4(0.2, 1.6, 2.4, 3.1).Frac() // => BBMOD_Vec4(0.2, 0.6, 0.4, 0.1)
+	/// // => BBMOD_Vec4(0.2, 0.6, 0.4, 0.1)
+	/// new BBMOD_Vec4(0.2, 1.6, 2.4, 3.1).Frac()
 	/// ```
 	static Frac = function () {
 		gml_pragma("forceinline");
@@ -443,7 +450,8 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	/// @example
 	/// ```gml
-	/// new BBMOD_Vec4(0.2, 1.6, 2.4, 3.1).Round() // => BBMOD_Vec4(0.0, 2.0, 2.0, 3.0)
+	/// // => BBMOD_Vec4(0.0, 2.0, 2.0, 3.0):
+	/// new BBMOD_Vec4(0.2, 1.6, 2.4, 3.1).Round()
 	/// ```
 	static Round = function () {
 		gml_pragma("forceinline");
@@ -462,7 +470,8 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	/// @example
 	/// ```gml
-	/// new BBMOD_Vec4(1.0, 2.0, 3.0, 4.0).Scale(2.0) // => BBMOD_Vec4(2.0, 4.0, 6.0, 8.0)
+	/// // => BBMOD_Vec4(2.0, 4.0, 6.0, 8.0):
+	/// new BBMOD_Vec4(1.0, 2.0, 3.0, 4.0).Scale(2.0)
 	/// ```
 	static Scale = function (_s) {
 		gml_pragma("forceinline")
@@ -501,16 +510,16 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 	/// @func Set([_x[, _y, _z, _w]])
 	/// @desc Sets vector components in-place.
 	/// @param {Real} [_x] The new value of the first component. Defaults to 0.
-	/// @param {Real/Undefined} [_y] The new value of the second component. Defaults to `_x`.
-	/// @param {Real/Undefined} [_z] The new value of the third component. Defaults to `_x`.
-	/// @param {Real/Undefined} [_w] The new value of the fourth component. Defaults to `_x`.
-	/// @return {BBMOD_Vec4} Returns `self`.
-	static Set = function (_x=0.0, _y=undefined, _z=undefined, _w=undefined) {
+	/// @param {Real} [_y] The new value of the second component. Defaults to `_x`.
+	/// @param {Real} [_z] The new value of the third component. Defaults to `_x`.
+	/// @param {Real} [_w] The new value of the fourth component. Defaults to `_x`.
+	/// @return {Struct.BBMOD_Vec4} Returns `self`.
+	static Set = function (_x=0.0, _y=_x, _z=_x, _w=_x) {
 		gml_pragma("forceinline");
 		X = _x;
-		Y = _y ?? X;
-		Z = _z ?? X;
-		W = _w ?? X;
+		Y = _y;
+		Z = _z;
+		W = _w;
 		return self;
 	};
 
@@ -571,8 +580,8 @@ function BBMOD_Vec4(_x=0.0, _y=undefined, _z=undefined, _w=undefined) constructo
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes the components of the vector into the target array.
-	/// @param {Array<Real>/Undefined} [_array] The array to write to. If not
-	/// specified a new one of required size is created.
+	/// @param {Array<Real>} [_array] The array to write to. If `undefined` a
+	/// new one of required size is created.
 	/// @param {Real} [_index] The starting index within the target array.
 	/// Defaults to 0.
 	/// @return {Array<Real>} The target array.

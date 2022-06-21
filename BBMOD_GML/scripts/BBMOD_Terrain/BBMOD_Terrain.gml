@@ -2,9 +2,9 @@
 /// @extends BBMOD_Class
 /// @desc A heightmap based terrain with five material layers controlled through
 /// a splatmap.
-/// @param {Resource.GMSprite/Undefined} [_heightmap] The heightmap to make the
-/// terrain from. If `undefined`, then you will need to build the terrain mesh
-/// yourself later using the terrain's methods.
+/// @param {Resource.GMSprite} [_heightmap] The heightmap to make the terrain
+/// from. If `undefined`, then you will need to build the terrain mesh yourself
+/// later using the terrain's methods.
 /// @param {Real} [_subimage] The sprite subimage to use for the heightmap.
 /// Defaults to 0.
 function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
@@ -20,8 +20,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @readonly
 	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
 
-	/// @var {Array<Struct.BBMOD_Material/Undefined>} Array of five material
-	/// layers. Use `undefined` instead of a material to disable certain layer.
+	/// @var {Array<Struct.BBMOD_Material>} Array of five material layers. Use
+	/// `undefined` instead of a material to disable certain layer.
 	Layer = array_create(5, undefined);
 
 	/// @var {Pointer.Texture} A texture that controls visibility of individual
@@ -89,8 +89,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @readonly
 	VertexFormat = BBMOD_VFORMAT_DEFAULT;
 
-	/// @var {Id.VertexBuffer/Undefined} The vertex buffer or `undefined` if
-	/// the terrain was not built yet.
+	/// @var {Id.VertexBuffer} The vertex buffer or `undefined` if the terrain
+	/// was not built yet.
 	/// @readonly
 	/// @see BBMOD_Terrain.build_mesh
 	VertexBuffer = undefined;
@@ -225,8 +225,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Retrieves terrain's height at given coordinate.
 	/// @param {Real} _x The x position to get the height at.
 	/// @param {Real} _y The y position to get the height at.
-	/// @return {Real/Undefined} The terrain's height at given coordinate or
-	/// `undefined` if the coordinate is outside of the terrain.
+	/// @return {Real} The terrain's height at given coordinate or `undefined`
+	/// if the coordinate is outside of the terrain.
 	static get_height = function (_x, _y) {
 		gml_pragma("forceinline");
 		var _xScaled = (_x - Position.X) / Scale.X;
@@ -258,7 +258,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Retrieves terrain's normal at given coordinate.
 	/// @param {Real} _x The x position to get the normal at.
 	/// @param {Real} _y The y position to get the normal at.
-	/// @return {Struct.BBMOD_Vec3/Undefined} The terrain's normal at given coordinate or
+	/// @return {Struct.BBMOD_Vec3} The terrain's normal at given coordinate or
 	/// `undefined` if the coordinate is outside of the terrain.
 	static get_normal = function (_x, _y) {
 		gml_pragma("forceinline");
@@ -294,9 +294,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @param {Real} _x The x coordinate to retrieve the layer at.
 	/// @param {Real} _y The y coordinate to retrieve the layer at.
 	/// @param {Real} [_threshold] The minimum required opacity. Defaults to 0.5.
-	/// @return {Real/Undefined} The topmost splatmap layer at given coordinate.
-	/// Returns `undefined` if the coordinate is outside of the terrain or if no
-	/// layer was found.
+	/// @return {Real} The topmost splatmap layer at given coordinate. Returns
+	/// `undefined` if the coordinate is outside of the terrain or if no layer
+	/// was found!
 	/// @note Method {@link BBMOD_Terrain.build_layer_index} needs to be called
 	/// first!
 	static get_layer = function (_x, _y, _threshold=0.5) {

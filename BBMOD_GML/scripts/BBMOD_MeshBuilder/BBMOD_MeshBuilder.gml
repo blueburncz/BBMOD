@@ -94,7 +94,8 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 		if (PrimitiveType != pr_trianglelist)
 		{
 			throw new BBMOD_Exception(
-				"Cannot build tangents and bitangents for meshes with primitive type other than pr_trianglelist!");
+				"Cannot build tangents and bitangents for meshes with primitive"
+				+ " type other than pr_trianglelist!");
 		}
 
 		var _faceCount = ds_list_size(Faces);
@@ -221,10 +222,9 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	///
 	/// @desc Builds a mesh from the added vertices and faces.
 	///
-	/// @param {Struct.BBMOD_VertexFormat/Undefined [_vertexFormat] The vertex
-	/// format of the mesh. This must be compatible with the format of the added
-	/// vertices. If `undefined`, then the format of the first added vertex is
-	/// used.
+	/// @param {Struct.BBMOD_VertexFormat [_vertexFormat] The vertex format of
+	/// the mesh. This must be compatible with the format of the added vertices.
+	/// If `undefined`, then the format of the first added vertex is used.
 	///
 	/// @return {Struct.BBMOD_Mesh} The created mesh.
 	///

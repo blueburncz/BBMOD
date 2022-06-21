@@ -5,18 +5,21 @@
 /// @desc A universal particle module that adds a value to particles' property
 /// over time.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The property to add the
-/// value to. Defaults to `undefined`.
+/// @param {Real} [_property] The property to add the value to. Use values from
+/// {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Real} [_change] The value added over specified period. Defaults to 1.0.
 /// @param {Real} [_period] How long in seconds it takes to add the value to the
 /// property. Defaults to 1.0.
 ///
 /// @see BBMOD_EParticle.HealthLeft
-function BBMOD_AddRealOverTimeModule(_property=undefined, _change=1.0, _period=1.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_AddRealOverTimeModule(
+	_property=undefined,
+	_change=1.0,
+	_period=1.0
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The property to add the value to.
-	/// Default value is `undefined`.
+	/// @var {Real} The property to add the value to. Use values from
+	/// {@link BBMOD_EParticle} Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Real} The value added over {@link BBMOD_AddRealOverTimeModule.Period}.

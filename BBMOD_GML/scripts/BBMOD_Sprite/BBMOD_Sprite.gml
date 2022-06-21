@@ -4,9 +4,10 @@
 ///
 /// @desc A sprite.
 ///
-/// @param {String/Undefined} [_file] The file to load the sprite ffrom.
-/// @param {String/Undefined} [_sha1] Expected SHA1 of the file. If the actual
-/// one does not match with this, then the model will not be loaded.
+/// @param {String} [_file] The file to load the sprite from or `undefined`.
+/// @param {String} [_sha1] Expected SHA1 of the file. If the actual  one does
+/// not match with this, then the model will not be loaded. Use `undefined` if
+/// you do not want to check the SHA1 of the file.
 ///
 /// @throws {BBMOD_Exception} When the sprite fails to load.
 function BBMOD_Sprite(_file=undefined, _sha1=undefined)
@@ -18,8 +19,8 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 		destroy: destroy,
 	};
 
-	/// @var {Resource.GMSprite/Undefined} The raw sprite resource of `undefined`
-	/// if it has not been loaded yet.
+	/// @var {Resource.GMSprite} The raw sprite resource of `undefined` if it
+	/// has not been loaded yet.
 	/// @readonly
 	Raw = undefined;
 

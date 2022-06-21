@@ -5,19 +5,24 @@
 /// @desc A universal particle module that mixes particles' quaternion
 /// property between two values based on their remaining health.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the four
-/// consecutive properties that together form a quaternion. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the four consecutive properties that
+/// together form a quaternion. Use values from {@link BBMOD_EParticle}.
+/// Defaults to `undefined`.
 /// @param {Struct.BBMOD_Quaternion} [_from] The quaternion when the particle has
 /// a full health. Defaults to an identity quaternion.
 /// @param {Struct.BBMOD_Quaternion} [_to] The quaternion when the particle has
 /// no health left. Defaults to `_from`.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixQuaternionFromHealthModule(_property=undefined, _from=new BBMOD_Quaternion(), _to=_from.Clone())
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixQuaternionFromHealthModule(
+	_property=undefined,
+	_from=new BBMOD_Quaternion(),
+	_to=_from.Clone()
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four consecutive
-	/// properties that together form a quaternion. Default value is `undefined`.
+	/// @var {Real} The first of the four consecutive properties that together
+	/// form a quaternion. Use values from {@link BBMOD_EParticle}. Default
+	/// value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Quaternion} The quaternion when the particle has full

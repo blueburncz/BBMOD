@@ -2,10 +2,12 @@
 ///
 /// @extends BBMOD_ParticleModule
 ///
-/// @desc A particle module that positions spawned particles into a sphere shape.
+/// @desc A particle module that positions spawned particles into a sphere
+/// shape.
 ///
 /// @param {Real} [_radius] The radius of the sphere. Defaults to 0.5.
-/// @param {Bool} [_inside] Whether the particles can be spawned inside the sphere.
+/// @param {Bool} [_inside] Whether the particles can be spawned inside the
+/// sphere.
 /// Defaults to `true`.
 ///
 /// @see BBMOD_EParticle.PositionX

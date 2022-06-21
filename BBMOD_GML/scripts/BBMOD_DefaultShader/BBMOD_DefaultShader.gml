@@ -2,7 +2,8 @@
 /// @extends BBMOD_BaseShader
 /// @desc Shader used by the default BBMOD materials.
 /// @param {Resource.GMShader} _shader The shader resource.
-/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
+/// by the shader.
 /// @see BBMOD_DefaultMaterial
 function BBMOD_DefaultShader(_shader, _vertexFormat)
 	: BBMOD_BaseShader(_shader, _vertexFormat) constructor

@@ -1,7 +1,7 @@
 /// @func BBMOD_BaseMaterial([_shader])
 /// @extends BBMOD_Material
 /// @desc A material that can be used when rendering models.
-/// @param {Struct.BBMOD_Shader/Undefined} [_shader] A shader that the material uses in
+/// @param {Struct.BBMOD_Shader} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
@@ -19,11 +19,13 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// Default value is {@link BBMOD_C_WHITE}.
 	BaseOpacityMultiplier = BBMOD_C_WHITE;
 
-	/// @var {Struct.BBMOD_Vec2} An offset of texture UV coordinates. Defaults to `(0, 0)`.
-	/// Using this you can control texture's position within texture page.
+	/// @var {Struct.BBMOD_Vec2} An offset of texture UV coordinates. Defaults
+	/// to `(0, 0)`. Using this you can control texture's position within texture
+	/// page.
 	TextureOffset = new BBMOD_Vec2(0.0);
 
-	/// @var {Struct.BBMOD_Vec2} A scale of texture UV coordinates. Defaults to `(1, 1)`.
+	/// @var {Struct.BBMOD_Vec2} A scale of texture UV coordinates. Defaults to
+	/// `(1, 1)`.
 	/// Using this you can control texture's size within texture page.
 	TextureScale = new BBMOD_Vec2(1.0);
 

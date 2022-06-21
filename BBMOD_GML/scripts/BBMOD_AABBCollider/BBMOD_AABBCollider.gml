@@ -1,22 +1,24 @@
 /// @func BBMOD_AABBCollider([_position[, _size]])
 /// @extends BBMOD_Collider
 /// @desc An axis-aligned bounding box (AABB) collider.
-/// @param {Struct.BBMOD_Vec3/Undefined} [_position] The position (center) of
-/// the AABB. Defaults to `0, 0, 0`.
-/// @param {Struct.BBMOD_Vec3/Undefined} [_size] The size of the AABB on each
+/// @param {Struct.BBMOD_Vec3} [_position] The position (center) of the AABB.
+/// Defaults to `(0, 0, 0)`.
+/// @param {Struct.BBMOD_Vec3} [_size] The size of the AABB on each
 /// axis in both directions (e.g. `new BBMOD_Vec3(2)` would make a 4x4x4 box).
-/// Defaults to `0.5, 0.5, 0.5`.
+/// Defaults to `(0.5, 0.5, 0.5)`.
 /// @see BBMOD_PlaneCollider
 /// @see BBMOD_SphereCollider
-function BBMOD_AABBCollider(_position=undefined, _size=undefined)
-	: BBMOD_Collider() constructor
+function BBMOD_AABBCollider(
+	_position=new BBMOD_Vec3(),
+	_size=new BBMOD_Vec3(0.5)
+) : BBMOD_Collider() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The center position of the AABB.
-	Position = _position ?? new BBMOD_Vec3();
+	Position = _position;
 
 	/// @var {Struct.BBMOD_Vec3} The size of the AABB on each axis in both
 	/// directions (e.g. `new BBMOD_Vec3(2)` would be a 4x4x4 box).
-	Size = _size ?? new BBMOD_Vec3(0.5);
+	Size = _size;
 
 	/// @func FromMinMax(_min, _max)
 	/// @desc Initializes the AABB using its minimum and maximum coordinates.
@@ -112,12 +114,18 @@ function BBMOD_AABBCollider(_position=undefined, _size=undefined)
 		var _min = GetMin();
 		var _max = GetMax();
 
-		var _t1 = (_min.X - _ray.Origin.X) / (bbmod_cmp(_ray.Direction.X, 0.0) ? 0.00001 : _ray.Direction.X);
-		var _t2 = (_max.X - _ray.Origin.X) / (bbmod_cmp(_ray.Direction.X, 0.0) ? 0.00001 : _ray.Direction.X);
-		var _t3 = (_min.Y - _ray.Origin.Y) / (bbmod_cmp(_ray.Direction.Y, 0.0) ? 0.00001 : _ray.Direction.Y);
-		var _t4 = (_max.Y - _ray.Origin.Y) / (bbmod_cmp(_ray.Direction.Y, 0.0) ? 0.00001 : _ray.Direction.Y);
-		var _t5 = (_min.Z - _ray.Origin.Z) / (bbmod_cmp(_ray.Direction.Z, 0.0) ? 0.00001 : _ray.Direction.Z);
-		var _t6 = (_max.Z - _ray.Origin.Z) / (bbmod_cmp(_ray.Direction.Z, 0.0) ? 0.00001 : _ray.Direction.Z);
+		var _t1 = (_min.X - _ray.Origin.X)
+			/ (bbmod_cmp(_ray.Direction.X, 0.0) ? 0.00001 : _ray.Direction.X);
+		var _t2 = (_max.X - _ray.Origin.X)
+			/ (bbmod_cmp(_ray.Direction.X, 0.0) ? 0.00001 : _ray.Direction.X);
+		var _t3 = (_min.Y - _ray.Origin.Y)
+			/ (bbmod_cmp(_ray.Direction.Y, 0.0) ? 0.00001 : _ray.Direction.Y);
+		var _t4 = (_max.Y - _ray.Origin.Y)
+			/ (bbmod_cmp(_ray.Direction.Y, 0.0) ? 0.00001 : _ray.Direction.Y);
+		var _t5 = (_min.Z - _ray.Origin.Z)
+			/ (bbmod_cmp(_ray.Direction.Z, 0.0) ? 0.00001 : _ray.Direction.Z);
+		var _t6 = (_max.Z - _ray.Origin.Z)
+			/ (bbmod_cmp(_ray.Direction.Z, 0.0) ? 0.00001 : _ray.Direction.Z);
 
 		var _tmin = max(max(min(_t1, _t2), min(_t3, _t4)), min(_t5, _t6));
 		var _tmax = min(min(max(_t1, _t2), max(_t3, _t4)), max(_t5, _t6));

@@ -16,8 +16,8 @@ function BBMOD_Ray(_origin, _direction) constructor
 	/// @desc Casts the ray against a collider.
 	/// @param {Struct.BBMOD_Collider} _collider The collider to cast the ray
 	/// against.
-	/// @param {Struct.BBMOD_RaycastResult/Undefined} [_result] Where to store
-	/// additional raycast info to.
+	/// @param {Struct.BBMOD_RaycastResult} [_result] Where to store
+	/// additional raycast info to or `undefined`.
 	/// @return {Bool} Returns `true` if the ray hits the collider.
 	/// @throws {BBMOD_NotImplementedException} If the collider does not
 	/// implement method `Raycast`.

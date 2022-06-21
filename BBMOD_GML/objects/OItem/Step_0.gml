@@ -1,2 +1,7 @@
-x = global.terrain.Position.X + clamp(x, 0, global.terrain.Size.X * global.terrain.Scale.X);
-y = global.terrain.Position.Y + clamp(y, 0, global.terrain.Size.Y * global.terrain.Scale.Y);
+var _terrain = global.terrain;
+var _terrainPosition = _terrain.Position;
+var _terrainSize = _terrain.Size;
+var _terrainScale = _terrain.Scale;
+
+x = _terrainPosition.X + clamp(x, 0, _terrainSize.X * _terrainScale.X);
+y = _terrainPosition.Y + clamp(y, 0, _terrainSize.Y * _terrainScale.Y);

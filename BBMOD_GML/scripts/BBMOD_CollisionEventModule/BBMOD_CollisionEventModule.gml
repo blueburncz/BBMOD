@@ -4,9 +4,9 @@
 ///
 /// @desc A particle module that executes a callback on particle collision.
 ///
-/// @param {Function/Undefined} [_callback] The function to execute. Must take
-/// the emitter as the first argument and the particle's index as the second
-/// argument.
+/// @param {Function} [_callback] The function to execute. Must take the emitter
+/// as the first argument and the particle's index as the second argument.
+/// Defaults to `undefined`.
 ///
 /// @see BBMOD_EParticle.HasCollided
 /// @see BBMOD_ParticleEmitter
@@ -14,9 +14,9 @@
 function BBMOD_CollisionEventModule(_callback=undefined)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Function/Undefined} The function to execute on particle collision.
-	/// Must take the emitter as the first argument and the particle's index as
-	/// the second argument.
+	/// @var {Function} The function to execute on particle collision. Must take
+	/// the emitter as the first argument and the particle's index as the second
+	/// argument. Default value is `undefined`.
 	/// @see BBMOD_ParticleEmitter
 	/// @see BBMOD_ParticleEmitter.Particles
 	Callback = _callback;

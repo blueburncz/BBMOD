@@ -34,17 +34,20 @@ modGun = _objImporter.import("Data/Assets/Pistol.obj");
 modGun.freeze();
 
 matGun0 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+	.set_shader(
+		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
 	.set_base_opacity(BBMOD_C_SILVER)
 	.set_specular_color(BBMOD_C_SILVER)
 	.set_normal_smoothness(BBMOD_VEC3_UP, 0.8);
 
 matGun1 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+	.set_shader(
+		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
 	.set_base_opacity(new BBMOD_Color(32, 32, 32));
 
 matGun2 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+	.set_shader(
+		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
 	.set_base_opacity(BBMOD_C_BLACK);
 
 modGun.Materials[@ 0] = matGun0;

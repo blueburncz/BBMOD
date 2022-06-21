@@ -1,16 +1,16 @@
 /// @func BBMOD_Vec2([_x[, _y]])
 /// @desc A 2D vector.
 /// @param {Real} [_x] The first component of the vector. Defaults to 0.
-/// @param {Real/Undefined} [_y] The second component of the vector. Defaults to `_x`.
+/// @param {Real} [_y] The second component of the vector. Defaults to `_x`.
 /// @see BBMOD_Vec3
 /// @see BBMOD_Vec4
-function BBMOD_Vec2(_x=0.0, _y=undefined) constructor
+function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 {
 	/// @var {Real} The first component of the vector.
 	X = _x;
 
 	/// @var {Real} The second component of the vector.
-	Y = _y ?? X;
+	Y = _y;
 
 	/// @func Abs()
 	/// @desc Creates a new vector where each component is equal to the absolute
@@ -59,9 +59,9 @@ function BBMOD_Vec2(_x=0.0, _y=undefined) constructor
 	/// @func Clamp(_min, _max)
 	/// @desc Clamps each component of the vector between corresponding
 	/// components of `_min` and `_max` and returns the result as a new vector.
-	/// @param {BBMOD_Vec2} _min A vector with minimum components.
-	/// @param {BBMOD_Vec2} _max A vector with maximum components.
-	/// @return {BBMOD_Vec2} The resulting vector.
+	/// @param {Struct.BBMOD_Vec2} _min A vector with minimum components.
+	/// @param {Struct.Struct.BBMOD_Vec2} _max A vector with maximum components.
+	/// @return {Struct.BBMOD_Vec2} The resulting vector.
 	static Clamp = function (_min, _max) {
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
@@ -481,8 +481,8 @@ function BBMOD_Vec2(_x=0.0, _y=undefined) constructor
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes the components of the vector into the target array.
-	/// @param {Array<Real>/Undefined} [_array] The array to write to. If not
-	/// specified a new one of required size is created.
+	/// @param {Array<Real>} [_array] The array to write to. If `undefined` a
+	/// new one of required size is created.
 	/// @param {Real} [_index] The starting index within the target array.
 	/// Defaults to 0.
 	/// @return {Array<Real>} The target array.
@@ -507,8 +507,8 @@ function BBMOD_Vec2(_x=0.0, _y=undefined) constructor
 	};
 
 	/// @func Transform(_matrix)
-	/// @desc Transforms vector `(X, Y, 0.0, 1.0)` by a matrix and returns the result
-	/// as a new vector.
+	/// @desc Transforms vector `(X, Y, 0.0, 1.0)` by a matrix and returns the
+	/// result as a new vector.
 	/// @param {Array<Real>} _matrix The matrix to transform the vector by.
 	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Transform = function (_matrix) {

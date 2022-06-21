@@ -120,8 +120,8 @@ function bbmod_is_class(_value)
 
 /// @func bbmod_class_get_name(_class)
 /// @desc Retrieves class name from class instance or class type.
-/// @param {typeof BBMOD_Class/BBMOD_Class} _class The class instance or the
-/// class type.
+/// @param {Mixed} _class An instance of {@link BBMOD_Class} or the class type
+/// (function).
 /// @return {String} The name of the class.
 function bbmod_class_get_name(_class)
 {

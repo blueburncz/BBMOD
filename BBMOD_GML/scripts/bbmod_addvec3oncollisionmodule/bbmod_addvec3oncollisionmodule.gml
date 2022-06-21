@@ -5,17 +5,19 @@
 /// @desc A universal particle module that adds a value to three consecutive
 /// particle properties it has a collision.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the three
-/// consecutive properties. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the three consecutive properties. Use
+/// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec3} [_change] The value to add to particles' health. Defaults
 /// to `(1.0, 1.0, 1.0)`.
 ///
 /// @see BBMOD_EParticle.HasCollided
-function BBMOD_AddVec3OnCollisionModule(_property=undefined, _change=new BBMOD_Vec3(1.0))
-	: BBMOD_ParticleModule() constructor
+function BBMOD_AddVec3OnCollisionModule(
+	_property=undefined,
+	_change=new BBMOD_Vec3(1.0)
+): BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the three consecutive
-	/// properties. Default value is `undefined`.
+	/// @var {Real} The first of the three consecutive properties. Use values
+	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec3} The value to add on collision. Default value is

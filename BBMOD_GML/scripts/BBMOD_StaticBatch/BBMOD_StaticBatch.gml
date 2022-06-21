@@ -5,9 +5,11 @@
 /// @desc A static batch is a structure that allows you to compose static models
 /// into a single one. Compared to {@link BBMOD_Model.submit}, this drastically
 /// reduces draw calls and increases performance, but requires more memory.
-/// Current limitation is that the added models must use the same single material.
+/// Current limitation is that the added models must use the same single
+/// material.
 ///
-/// @param {Struct.BBMOD_VertexFormat} _vformat The vertex format of the static batch.
+/// @param {Struct.BBMOD_VertexFormat} _vformat The vertex format of the static
+/// batch.
 /// All models added to the same static batch must have the same vertex format.
 /// This vertex format must not contain bone data!
 ///
@@ -45,7 +47,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @private
 	VertexFormat = _vformat;
 
-	/// @var {Constant.PrimitiveType/Undefined} The primitive type of the batch.
+	/// @var {Constant.PrimitiveType} The primitive type of the batch.
 	/// @private
 	PrimitiveType = undefined;
 
@@ -140,7 +142,8 @@ function BBMOD_StaticBatch(_vformat)
 	/// @see BBMOD_BaseMaterial
 	static render = function (_material) {
 		gml_pragma("forceinline");
-		_material.RenderQueue.draw_mesh(VertexBuffer, matrix_get(matrix_world), _material, PrimitiveType);
+		_material.RenderQueue.draw_mesh(
+			VertexBuffer, matrix_get(matrix_world), _material, PrimitiveType);
 		return self;
 	};
 

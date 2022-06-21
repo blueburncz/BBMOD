@@ -71,7 +71,8 @@ function BBMOD_Gizmo(_size=10.0)
 
 	if (Models == undefined)
 	{
-		var _shaderSelect = new BBMOD_BaseShader(BBMOD_ShGizmoSelect, BBMOD_VFORMAT_DEFAULT);
+		var _shaderSelect = new BBMOD_BaseShader(
+			BBMOD_ShGizmoSelect, BBMOD_VFORMAT_DEFAULT);
 		var _materialSelect = new BBMOD_BaseMaterial(_shaderSelect);
 		_materialSelect.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 1);
 		MaterialsSelect = [_materialSelect];
@@ -80,15 +81,18 @@ function BBMOD_Gizmo(_size=10.0)
 		var _material = new BBMOD_BaseMaterial(_shader);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 0);
 
-		var _modelMove = new BBMOD_Model("Data/BBMOD/Models/GizmoMove.bbmod").freeze();
+		var _modelMove = new BBMOD_Model("Data/BBMOD/Models/GizmoMove.bbmod")
+			.freeze();
 		// TODO: Fix gizmo model
 		_modelMove.RootNode.Transform = new BBMOD_DualQuaternion();
 		_modelMove.Materials[0] = _material;
 
-		var _modelScale = new BBMOD_Model("Data/BBMOD/Models/GizmoScale.bbmod").freeze();
+		var _modelScale = new BBMOD_Model("Data/BBMOD/Models/GizmoScale.bbmod")
+			.freeze();
 		_modelScale.Materials[0] = _material;
 
-		var _modelRotate = new BBMOD_Model("Data/BBMOD/Models/GizmoRotate.bbmod").freeze();
+		var _modelRotate = new BBMOD_Model("Data/BBMOD/Models/GizmoRotate.bbmod")
+			.freeze();
 		_modelRotate.Materials[0] = _material;
 
 		Models = [
@@ -101,13 +105,13 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Bool} If `true` then the gizmo is editing selected instances.
 	IsEditing = false;
 
-	/// @var {Struct.BBMOD_Vec2/Undefined} Screen-space coordinates to lock the
-	/// mouse cursor at.
+	/// @var {Struct.BBMOD_Vec2} Screen-space coordinates to lock the mouse
+	/// cursor at or `undefined`.
 	/// @private
 	MouseLockAt = undefined;
 
-	/// @var {Struct.BBMOD_Vec3/Undefined} World-space offset from the mouse to
-	/// the gizmo.
+	/// @var {Struct.BBMOD_Vec3} World-space offset from the mouse to the gizmo
+	/// or `undefined`.
 	/// @private
 	MouseOffset = undefined;
 
@@ -115,19 +119,16 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @private
 	CursorBackup = undefined;
 
-	/// @var {Enum.BBMOD_EEditSpace} Determines the space in which are the
-	/// selected instances transformed.
-	/// @see BBMOD_EEditSpace
+	/// @var {Real} Determines the space in which are the selected instances
+	/// transformed. Use values from {@link BBMOD_EEditSpace}.
 	EditSpace = BBMOD_EEditSpace.Global;
 
-	/// @var {Enum.BBMOD_EEditType} Determines how are the selected instances
-	/// transformed (translated/rotated/scaled.
-	/// @see BBMOD_EEditType
+	/// @var {Real} Determines how are the selected instances transformed
+	/// (translated/rotated/scaled. Use values from {@link BBMOD_EEditType}.
 	EditType = BBMOD_EEditType.Position;
 
-	/// @var {Enum.BBMOD_EEditAxis} Determines on which axes are the selected
-	/// instances edited.
-	/// @see BBMOD_EEditAxis
+	/// @var {Real} Determines on which axes are the selected instances edited.
+	/// Use values from {@link BBMOD_EEditAxis}.
 	EditAxis = BBMOD_EEditAxis.None;
 
 	/// @var {Constant.MouseButton} The mouse button used for dragging the gizmo.
@@ -158,8 +159,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @readonly
 	Position = new BBMOD_Vec3();
 
-	/// @var {Struct.BBMOD_Vec3/Undefined} The gizmo's position in world-space
-	/// before editing started.
+	/// @var {Struct.BBMOD_Vec3} The gizmo's position in world-space before
+	/// editing started or `undefined`.
 	/// @private
 	PositionBackup = undefined;
 
@@ -680,7 +681,8 @@ function BBMOD_Gizmo(_size=10.0)
 			CursorBackup = window_get_cursor();
 		}
 
-		var _quaternion = new BBMOD_Quaternion().FromEuler(Rotation.X, Rotation.Y, Rotation.Z);
+		var _quaternion = new BBMOD_Quaternion()
+			.FromEuler(Rotation.X, Rotation.Y, Rotation.Z);
 		var _forward = _quaternion.Rotate(BBMOD_VEC3_FORWARD);
 		var _right = _quaternion.Rotate(BBMOD_VEC3_RIGHT);
 		var _up = _quaternion.Rotate(BBMOD_VEC3_UP);
@@ -700,7 +702,8 @@ function BBMOD_Gizmo(_size=10.0)
 				: _up));
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+				global.__bbmodCameraCurrent.screen_point_to_vec3(
+					new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 				PositionBackup,
 				_planeNormal);
 
@@ -733,7 +736,8 @@ function BBMOD_Gizmo(_size=10.0)
 				: _up));
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+				global.__bbmodCameraCurrent.screen_point_to_vec3(
+					new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 				Position,
 				_planeNormal);
 
@@ -772,7 +776,8 @@ function BBMOD_Gizmo(_size=10.0)
 			var _planeNormal = (EditAxis == BBMOD_EEditAxis.Z) ? _forward : _up;
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+				global.__bbmodCameraCurrent.screen_point_to_vec3(
+					new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 				Position,
 				_planeNormal);
 
@@ -872,19 +877,22 @@ function BBMOD_Gizmo(_size=10.0)
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
 			if (_rotateByX != 0.0)
 			{
-				var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forward, _rotateByX);
+				var _quaternionX = new BBMOD_Quaternion()
+					.FromAxisAngle(_forward, _rotateByX);
 				_positionOffset = _quaternionX.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionX);
 			}
 			if (_rotateByY != 0.0)
 			{
-				var _quaternionY = new BBMOD_Quaternion().FromAxisAngle(_right, _rotateByY);
+				var _quaternionY = new BBMOD_Quaternion()
+					.FromAxisAngle(_right, _rotateByY);
 				_positionOffset = _quaternionY.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionY);
 			}
 			if (_rotateByZ != 0.0)
 			{
-				var _quaternionZ = new BBMOD_Quaternion().FromAxisAngle(_up, _rotateByZ);
+				var _quaternionZ = new BBMOD_Quaternion()
+					.FromAxisAngle(_up, _rotateByZ);
 				_positionOffset = _quaternionZ.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionZ);
 			}
@@ -913,7 +921,8 @@ function BBMOD_Gizmo(_size=10.0)
 			_scaleNew.Z += ScaleBy.Z * abs(_up.Dot(_upLocal));
 
 			// Scale offset
-			var _vI = matrix_transform_vertex(_matRotInverse, _positionOffset.X, _positionOffset.Y, _positionOffset.Z);
+			var _vI = matrix_transform_vertex(_matRotInverse,
+				_positionOffset.X, _positionOffset.Y, _positionOffset.Z);
 			var _vIRot = matrix_transform_vertex(
 				matrix_build(
 					0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -935,7 +944,8 @@ function BBMOD_Gizmo(_size=10.0)
 
 	/// @func submit([_materials])
 	/// @desc Immediately submits the gizmo for rendering.
-	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] Materials to use.
+	/// @param {Array<Struct.BBMOD_Material>} [_materials] Materials to use or
+	/// `undefined`.
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	/// @note This changes the world matrix based on the gizmo's position and size!
 	static submit = function (_materials=undefined) {
@@ -951,7 +961,8 @@ function BBMOD_Gizmo(_size=10.0)
 
 	/// @func render([_materials])
 	/// @desc Enqueues the gizmo for rendering.
-	/// @param {Array<Struct.BBMOD_Material>/Undefined} [_materials] Materials to use.
+	/// @param {Array<Struct.BBMOD_Material>} [_materials] Materials to use or
+	/// `undefined`.
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	/// @note This changes the world matrix based on the gizmo's position and size!
 	static render = function (_materials=undefined) {

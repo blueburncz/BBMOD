@@ -70,7 +70,8 @@ function BBMOD_AnimationState(_name, _animation, _loop=false)
 
 	implement(BBMOD_IEventListener);
 
-	/// @var {Struct.BBMOD_Animation} The animation played while the state is active.
+	/// @var {Struct.BBMOD_Animation} The animation played while the state is
+	/// active.
 	/// @readonly
 	Animation = _animation;
 

@@ -457,8 +457,8 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 
 	/// @func ToArray([_array[, _index]])
 	/// @desc Writes components `(x, y, z, w)` of the quaternion into an array.
-	/// @param {Array<Real>} [_array] The destination array. If not defined, a new one
-	/// is created.
+	/// @param {Array<Real>} [_array] The destination array. If not defined, a
+	/// new one is created.
 	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
 	/// @return {Array<Real>} Returns the destination array.
 	static ToArray = function (_array=undefined, _index=0) {
@@ -473,10 +473,10 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 
 	/// @func ToMatrix([_dest[, _index]])
 	/// @desc Converts quaternion into a matrix.
-	/// @param {Array<Real>} [_dest] The destination array. If not specified, a new one is
-	/// created.
-	/// @param {Real} [_index] The starting index in the destination array. Defaults
-	/// to 0.
+	/// @param {Array<Real>} [_dest] The destination array. If not specified, a
+	/// new one is created.
+	/// @param {Real} [_index] The starting index in the destination array.
+	/// Defaults to 0.
 	/// @return {Array<Real>} Returns the destination array.
 	static ToMatrix = function (_dest=undefined, _index=0) {
 		gml_pragma("forceinline");

@@ -1,11 +1,11 @@
-/// @var {Struct.BBMOD_Material/Undefined} The currently applied material.
+/// @var {Struct.BBMOD_Material} The currently applied material or `undefined`.
 /// @private
 global.__bbmodMaterialCurrent = undefined;
 
 /// @func BBMOD_Material([_shader])
 /// @extends BBMOD_Resource
 /// @desc Base class for materials.
-/// @param {Struct.BBMOD_Shader/Undefined} [_shader] A shader that the material uses in
+/// @param {Struct.BBMOD_Shader} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
@@ -38,9 +38,9 @@ function BBMOD_Material(_shader=undefined)
 	/// @see bbmod_render_queue_get_default
 	RenderQueue = bbmod_render_queue_get_default();
 
-	/// @var {Function/Undefined} A function that is executed when the shader is
-	/// applied. Must take the material as the first argument. Use `undefined`
-	/// if you do not want to execute any function. Defaults to `undefined`.
+	/// @var {Function} A function that is executed when the shader is applied.
+	/// Must take the material as the first argument. Use `undefined` if you do
+	/// not want to execute any function. Defaults to `undefined`.
 	OnApply = undefined;
 
 	/// @var {Constant.BlendMode} A blend mode. Default value is `bm_normal`.
@@ -227,12 +227,11 @@ function BBMOD_Material(_shader=undefined)
 
 	/// @func set_shader(_pass, _shader)
 	/// @desc Defines a shader used in a specific render pass.
-	/// @param {Enum.BBMOD_ERenderPass} _pass The render pass.
+	/// @param {Real} _pass The render pass. Use values from {@link BBMOD_ERenderPass}.
 	/// @param {Struct.BBMOD_Shader} _shader The shader used in the render pass.
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	/// @see BBMOD_Material.get_shader
 	/// @see bbmod_render_pass_set
-	/// @see BBMOD_ERenderPass
 	static set_shader = function (_pass, _shader) {
 		gml_pragma("forceinline");
 		RenderPass |= (1 << _pass);
@@ -242,10 +241,9 @@ function BBMOD_Material(_shader=undefined)
 
 	/// @func has_shader(_pass)
 	/// @desc Checks whether the material has a shader for the render pass.
-	/// @param {Enum.BBMOD_ERenderPass} _pass The render pass.
+	/// @param {Real} _pass The render pass. Use values from {@link BBMOD_ERenderPass}.
 	/// @return {Bool} Returns `true` if the material has a shader for the
 	/// render pass.
-	/// @see BBMOD_ERenderPass
 	static has_shader = function (_pass) {
 		gml_pragma("forceinline");
 		return ((RenderPass & (1 << _pass)) != 0);
@@ -253,10 +251,10 @@ function BBMOD_Material(_shader=undefined)
 
 	/// @func get_shader(_pass)
 	/// @desc Retrieves a shader used in a specific render pass.
-	/// @param {BBMOD_ERenderPass} _pass The render pass.
-	/// @return {Struct.BBMOD_Shader/Undefined} The shader.
+	/// @param {Real} _pass The render pass. Use values from
+	/// {@link BBMOD_ERenderPass}.
+	/// @return {Struct.BBMOD_Shader} The shader or `undefined`.
 	/// @see BBMOD_Material.set_shader
-	/// @see BBMOD_ERenderPass
 	static get_shader = function (_pass) {
 		gml_pragma("forceinline");
 		return Shaders[_pass];

@@ -5,8 +5,8 @@
 /// @desc A universal particle module that sets initial value of particles'
 /// color property when they are spawned.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the four
-/// properties that together form a color. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the four properties that together
+/// form a color. Use values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Color} [_value] The initial value of the color
 /// property. Defaults to {@link BBMOD_C_WHITE}.
 ///
@@ -14,8 +14,8 @@
 function BBMOD_SetColorModule(_property=undefined, _value=BBMOD_C_WHITE)
 	: BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four
-	/// properties that together form a color. Default value is `undefined`.
+	/// @var {Real} The first of the four properties that together form a color.
+	/// Use values from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Color} The initial value of the color

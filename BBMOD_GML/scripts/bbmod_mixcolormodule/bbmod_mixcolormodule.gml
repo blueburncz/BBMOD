@@ -5,18 +5,23 @@
 /// @desc A universal particle module that randomly mixes particles' color
 /// property when they are spawned.
 ///
-/// @param {Enum.BBMOD_EParticle/Undefined} [_property] The first of the four
-/// consecutive properties that together form a color. Defaults to `undefined`.
+/// @param {Real} [_property] The first of the four consecutive properties that
+/// together form a color. Use values from {@link BBMOD_EParticle}. Defaults to
+/// `undefined`.
 /// @param {Struct.BBMOD_Color} [_from] The color to mix from. Defaults to
 /// {@link BBMOD_C_WHITE}.
 /// @param {Struct.BBMOD_Color} [_to] The value to mix to. Defaults to `_from`.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixColorModule(_property=undefined, _from=BBMOD_C_WHITE, _to=_from.Clone())
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixColorModule(
+	_property=undefined,
+	_from=BBMOD_C_WHITE,
+	_to=_from.Clone()
+) : BBMOD_ParticleModule() constructor
 {
-	/// @var {Enum.BBMOD_EParticle/Undefined} The first of the four consecutive
-	/// properties that together form a color. Default value is `undefined`.
+	/// @var {Real} The first of the four consecutive properties that together
+	/// form a color. Use values from {@link BBMOD_EParticle}. Default value is
+	/// `undefined`.
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Color} The color to mix from. Default value is

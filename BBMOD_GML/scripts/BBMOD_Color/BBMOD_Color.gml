@@ -90,7 +90,8 @@
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
 /// @param {Real} [_blue] The value of the blue channel. Use values in range
 /// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
-/// @param {Real} [_alpha] The value of the alpha channel. Use values in range 0..1.
+/// @param {Real} [_alpha] The value of the alpha channel. Use values in range
+/// 0..1.
 /// Defaults to 1.
 /// @see BBMOD_C_AQUA
 /// @see BBMOD_C_BLACK
@@ -112,7 +113,11 @@
 /// @see BBMOD_C_WHITE
 /// @see BBMOD_C_YELLOW
 /// @see BBMOD_RGBM_VALUE_MAX
-function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) constructor
+function BBMOD_Color(
+	_red=255.0,
+	_green=255.0,
+	_blue=255.0,
+	_alpha=1.0) constructor
 {
 	/// @var {Real} The value of the red color channel.
 	Red = _red;
@@ -269,8 +274,8 @@ function BBMOD_Color(_red=255.0, _green=255.0, _blue=255.0, _alpha=1.0) construc
 
 	/// @func ToRGBM([_array[, _index]])
 	/// @desc Encodes the color into RGBM format, ignoring the alpha channel.
-	/// @param {Array<Real>/Undefined} [_array] The array to output the values to.
-	/// If `undefined`, then a new one is created.
+	/// @param {Array<Real>} [_array] The array to output the values to. If
+	/// `undefined`, then a new one is created.
 	/// @param {Real} [_index] The index to start writing the values to.
 	/// Defaults to 0.
 	/// @return {Array<Real>} Returns the array with RGBM values.

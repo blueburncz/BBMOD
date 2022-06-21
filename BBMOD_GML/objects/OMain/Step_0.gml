@@ -45,7 +45,8 @@ if (!instance_exists(OZombie)
 ////////////////////////////////////////////////////////////////////////////////
 // Screen effects based on players health etc.
 var _grayscale = (OPlayer.hp <= ceil(OPlayer.hpMax / 3.0)) ? 0.75 : 0.0;
-renderer.Grayscale = bbmod_lerp_delta_time(renderer.Grayscale, _grayscale, 0.1, DELTA_TIME);
+renderer.Grayscale = bbmod_lerp_delta_time(
+	renderer.Grayscale, _grayscale, 0.1, DELTA_TIME);
 
 var _hurt = OPlayer.hurt;
 renderer.Vignette = lerp(0.8, 1.5, _hurt);
