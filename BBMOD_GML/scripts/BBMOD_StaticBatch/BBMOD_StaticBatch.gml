@@ -89,8 +89,8 @@ function BBMOD_StaticBatch(_vformat)
 	/// batch.freeze();
 	/// ```
 	///
-	/// @note You must first call {@link BBMOD_StaticBatch.begin} before using this
-	/// function!
+	/// @note You must first call {@link BBMOD_StaticBatch.begin} before using
+	/// this function!
 	///
 	/// @see BBMOD_StaticBatch.finish
 	static add = function (_model, _transform) {

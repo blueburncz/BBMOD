@@ -5,8 +5,7 @@
 ///
 /// @param {Struct.BBMOD_Vec3} _position The emitter's position in world-space.
 /// @param {Struct.BBMOD_ParticleSystem} _system The particle system that
-/// defines
-/// behavior of emitted particles.
+/// defines behavior of emitted particles.
 ///
 /// @see BBBMOD_ParticleSystem
 function BBMOD_ParticleEmitter(_position, _system)

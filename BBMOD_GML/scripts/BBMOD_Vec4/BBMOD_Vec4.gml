@@ -106,7 +106,6 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 	/// @func ClampLength(_min, _max)
 	///
 	/// @desc Clamps the length of the vector between `_min` and `_max` and
-	///
 	/// returns the result as a new vector.
 	///
 	/// @param {Real} _min The minimum length of the vector.

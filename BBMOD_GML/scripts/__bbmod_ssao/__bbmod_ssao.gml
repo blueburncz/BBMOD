@@ -47,7 +47,8 @@ function bbmod_ssao_make_noise(_size)
 	}
 	surface_reset_target();
 	random_set_seed(_seed);
-	var _sprite = sprite_create_from_surface(_sur, 0, 0, _size, _size, false, false, 0, 0);
+	var _sprite = sprite_create_from_surface(
+		_sur, 0, 0, _size, _size, false, false, 0, 0);
 	surface_free(_sur);
 	return _sprite;
 }

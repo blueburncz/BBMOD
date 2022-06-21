@@ -60,7 +60,8 @@ function BBMOD_MixColorOverTimeModule(
 			var _particleIndex = 0;
 			repeat (_emitter.ParticlesAlive)
 			{
-				var _factor = clamp(_particles[# BBMOD_EParticle.TimeAlive, _particleIndex] / _duration, 0.0, 1.0);
+				var _factor = clamp(_particles[# BBMOD_EParticle.TimeAlive, _particleIndex]
+					/ _duration, 0.0, 1.0);
 				_particles[# _property, _particleIndex]     = lerp(_fromR, _toR, _factor);
 				_particles[# _property + 1, _particleIndex] = lerp(_fromG, _toG, _factor);
 				_particles[# _property + 2, _particleIndex] = lerp(_fromB, _toB, _factor);

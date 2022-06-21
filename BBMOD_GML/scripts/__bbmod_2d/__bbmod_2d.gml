@@ -12,13 +12,15 @@
 
 function __bbmod_vformat_sprite()
 {
-	static _vformat = new BBMOD_VertexFormat(true, false, true, true, false, false, false);
+	static _vformat = new BBMOD_VertexFormat(
+		true, false, true, true, false, false, false);
 	return _vformat;
 }
 
 function __bbmod_shader_sprite()
 {
-	static _shader = new BBMOD_DefaultSpriteShader(BBMOD_ShSprite, BBMOD_VFORMAT_SPRITE)
+	static _shader = new BBMOD_DefaultSpriteShader(
+		BBMOD_ShSprite, BBMOD_VFORMAT_SPRITE)
 	return _shader;
 }
 
