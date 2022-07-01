@@ -404,7 +404,7 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","resourceVersion":"1.0","name":"assimp-vc143-mt.dll","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.5.1.16",
+    "IDEVersion": "2022.6.0.23",
   },
   "resourceVersion": "1.5",
   "name": "BBMOD",

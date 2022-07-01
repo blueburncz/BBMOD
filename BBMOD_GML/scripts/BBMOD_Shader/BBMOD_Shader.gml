@@ -523,7 +523,7 @@ function bbmod_shader_clear_globals()
 ///
 /// @param {String} _name The name of the uniform.
 ///
-/// @return {Mixed} The value of the uniform or `undefined` if it is not set.
+/// @return {Any} The value of the uniform or `undefined` if it is not set.
 /// The type of the returned value changes based on the type of the uniform.
 function bbmod_shader_get_global(_name)
 {
@@ -547,7 +547,7 @@ function bbmod_shader_get_global(_name)
 ///
 /// @param {String} _name
 /// @param {Real} _type
-/// @param {Mixed} _value
+/// @param {Any} _value
 ///
 /// @private
 function __bbmod_shader_set_global_impl(_name, _type, _value)

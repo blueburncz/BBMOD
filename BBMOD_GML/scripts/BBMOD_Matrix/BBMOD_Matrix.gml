@@ -82,7 +82,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @desc Initializes the matrix from a buffer.
 	///
-	/// @param {buffer} _buffer The buffer to read values from.
+	/// @param {Id.Buffer} _buffer The buffer to read values from.
 	/// @param {Real} _type The type of values. Use one of the `buffer_` constants.
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
@@ -100,7 +100,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	///
 	/// @desc Writes the matrix into a buffer.
 	///
-	/// @param {buffer} _buffer The buffer to write to.
+	/// @param {Id.Buffer} _buffer The buffer to write to.
 	/// @param {Real} _type The type of values. Use one of the `buffer_` constants.
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.

@@ -11,7 +11,7 @@ global.__bbmodSpriteCallback = ds_map_create();
 /// @desc An empty callback function. Does nothing.
 ///
 /// @param {Struct.BBMOD_Exception} _err An error or `undefined`.
-/// @param {Mixed} [_res] A return value. Should be `undefined` if there is an
+/// @param {Any} [_res] A return value. Should be `undefined` if there is an
 /// error.
 function bbmod_empty_callback(_err, _res=undefined)
 {

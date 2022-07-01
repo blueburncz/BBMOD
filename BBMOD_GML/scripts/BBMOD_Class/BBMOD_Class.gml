@@ -47,7 +47,7 @@ function BBMOD_Class() constructor
 	///
 	/// @desc Checks if the struct inherits from given class.
 	///
-	/// @param {typeof BBMOD_Class} _class The class type.
+	/// @param {Function} _class The class constructor.
 	///
 	/// @return {Bool} Returns `true` if the struct inherits from the class.
 	static is_instance = function (_class) {
