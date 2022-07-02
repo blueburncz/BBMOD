@@ -153,13 +153,10 @@ function BBMOD_Camera() constructor
 			{
 				bbmod_html5_pointer_lock();
 			}
-			if (MouseLockAt == undefined)
-			{
-				MouseLockAt = new BBMOD_Vec2(
-					window_mouse_get_x(),
-					window_mouse_get_y(),
-				);
-			}
+			MouseLockAt ??= new BBMOD_Vec2(
+				window_mouse_get_x(),
+				window_mouse_get_y()
+			);
 		}
 		else
 		{
@@ -307,7 +304,7 @@ function BBMOD_Camera() constructor
 			Target = Position.Add(new BBMOD_Vec3(
 				+dcos(Direction),
 				-dsin(Direction),
-				+dtan(DirectionUp),
+				+dtan(DirectionUp)
 			));
 		}
 		else
@@ -319,7 +316,7 @@ function BBMOD_Camera() constructor
 				var _targetNew = new BBMOD_Vec3(
 					FollowObject.x + _offsetX,
 					FollowObject.y + _offsetY,
-					FollowObject.z + _offsetZ,
+					FollowObject.z + _offsetZ
 				);
 
 				if (FollowObjectLast == FollowObject
@@ -343,7 +340,7 @@ function BBMOD_Camera() constructor
 			Position = Target.Add(new BBMOD_Vec3(
 				-dcos(Direction) * _l,
 				+dsin(Direction) * _l,
-				-dsin(DirectionUp) * Zoom,
+				-dsin(DirectionUp) * Zoom
 			));
 		}
 
@@ -417,7 +414,7 @@ function BBMOD_Camera() constructor
 		return new BBMOD_Vec3(
 			_view[0],
 			_view[4],
-			_view[8],
+			_view[8]
 		);
 	};
 
@@ -433,7 +430,7 @@ function BBMOD_Camera() constructor
 		return new BBMOD_Vec3(
 			_view[1],
 			_view[5],
-			_view[9],
+			_view[9]
 		);
 	};
 
@@ -448,7 +445,7 @@ function BBMOD_Camera() constructor
 		return new BBMOD_Vec3(
 			_view[2],
 			_view[6],
-			_view[10],
+			_view[10]
 		);
 	};
 

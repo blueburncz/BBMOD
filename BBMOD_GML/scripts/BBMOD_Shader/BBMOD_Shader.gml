@@ -11,14 +11,14 @@ global.__bbmodShaderCurrent = undefined;
 ///
 /// @desc Base class for wrappers of raw GameMaker shader resources.
 ///
-/// @param {Resource.GMShader} _shader The shader resource.
+/// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
 /// by the shader.
 ///
 /// @see BBMOD_VertexFormat
 function BBMOD_Shader(_shader, _vertexFormat) constructor
 {
-	/// @var {Resource.GMShader} The shader resource.
+	/// @var {Asset.GMShader} The shader resource.
 	/// @readonly
 	Raw = _shader;
 
@@ -246,10 +246,11 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 		return self;
 	};
 
-	/// @func set_uniform_matrix_array(_hande, _array)
+	/// @func set_uniform_matrix_array(_handle, _array)
 	///
 	/// @desc Sets a shader uniform to hold an array of matrix values.
 	///
+	/// @param {Id.Uniform} _handle The handle of the shader uniform.
 	/// @param {Array<Real>} _array An array of real values.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
@@ -373,7 +374,7 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 ///
 /// @desc
 ///
-/// @return {Struct}
+/// @return {Array}
 ///
 /// @private
 function __bbmod_shader_get_globals()
@@ -386,7 +387,7 @@ function __bbmod_shader_get_globals()
 ///
 /// @desc
 ///
-/// @param {Resource.GMShader} _shader
+/// @param {Asset.GMShader} _shader
 ///
 /// @private
 function __bbmod_shader_set_globals(_shader)

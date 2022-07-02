@@ -370,8 +370,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @param {Constant.BlendMode} _src Source blend mode.
 	/// @param {Constant.BlendMode} _dest Destination blend mode.
-	/// @param {Constant.BlendMode} _src Blend mode for source alpha channel.
-	/// @param {Constant.BlendMode} _src Blend mode for destination alpha
+	/// @param {Constant.BlendMode} _srcalpha Blend mode for source alpha channel.
+	/// @param {Constant.BlendMode} _destalpha Blend mode for destination alpha
 	/// channel.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
@@ -873,7 +873,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetShader} command into the
 	/// queue.
 	///
-	/// @param {Resource.GMShader} _shader The shader to set.
+	/// @param {Asset.GMShader} _shader The shader to set.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_shader = function (_shader) {
@@ -1095,6 +1095,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformIntArray} command
 	/// into the queue.
 	///
+	/// @param {String} _name The name of the uniform.
 	/// @param {Array<Real>} _array The array of values.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.

@@ -11,10 +11,10 @@
 /// @param {Real} [_alpha] The alpha of both the text and its shadow. Defaults
 /// to 1.
 function DrawTextShadow(
-	_x, _y, _text, _color=c_white, _colorShadow=c_black, _shadow=1)
+	_x, _y, _text, _color=c_white, _colorShadow=c_black, _alpha=1.0)
 {
 	gml_pragma("forceinline");
 	draw_text_color(_x + 2, _y + 2, _text,
-		_colorShadow, _colorShadow, _colorShadow, _colorShadow, _shadow);
-	draw_text_color(_x, _y, _text, _color, _color, _color, _color, _shadow);
+		_colorShadow, _colorShadow, _colorShadow, _colorShadow, _alpha);
+	draw_text_color(_x, _y, _text, _color, _color, _color, _color, _alpha);
 }

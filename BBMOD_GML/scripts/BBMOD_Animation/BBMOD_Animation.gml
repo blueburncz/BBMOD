@@ -341,19 +341,19 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 				var _pos0 = lerp(
 					_dq17 * (-_dq10) + _dq14 * _dq13 + _dq15 * (-_dq12) - _dq16 * (-_dq11),
 					_dq27 * (-_dq20) + _dq24 * _dq23 + _dq25 * (-_dq22) - _dq26 * (-_dq21),
-					_factor,
+					_factor
 				);
 
 				var _pos1 = lerp(
 					_dq17 * (-_dq11) + _dq15 * _dq13 + _dq16 * (-_dq10) - _dq14 * (-_dq12),
 					_dq27 * (-_dq21) + _dq25 * _dq23 + _dq26 * (-_dq20) - _dq24 * (-_dq22),
-					_factor,
+					_factor
 				);
 
 				var _pos2 = lerp(
 					_dq17 * (-_dq12) + _dq16 * _dq13 + _dq14 * (-_dq11) - _dq15 * (-_dq10),
 					_dq27 * (-_dq22) + _dq26 * _dq23 + _dq24 * (-_dq21) - _dq25 * (-_dq20),
-					_factor,
+					_factor
 				);
 
 				// Slerp rotations and store result into _dq1

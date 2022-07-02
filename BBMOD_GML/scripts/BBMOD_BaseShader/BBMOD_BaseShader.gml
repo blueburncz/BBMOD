@@ -4,7 +4,7 @@
 ///
 /// @desc Base class for BBMOD shaders.
 ///
-/// @param {Resource.GMShader} _shader The shader resource.
+/// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
 /// by the shader.
 ///
@@ -198,7 +198,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gpu_set_tex_filter_ext(UIBL, true);
 		gpu_set_tex_repeat_ext(UIBL, false);
 		set_sampler(UIBL, _texture);
-		set_uniform_f(UIBLTexel, _texel, _texel);
+		set_uniform_f2(UIBLTexel, _texel, _texel)
 
 		return self;
 	};
@@ -315,7 +315,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Real} [_end] The distance at which the fog has maximum intensity.
 	/// If `undefined`, then the value set by {@link bbmod_fog_set_end} is used.
 	///
-	/// @return {Struct.BBMOD_BaseShader] Returns `self`.
+	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	static set_fog = function (_color=undefined, _intensity=undefined, _start=undefined, _end=undefined) {
 		gml_pragma("forceinline");
 		_color ??= global.__bbmodFogColor;

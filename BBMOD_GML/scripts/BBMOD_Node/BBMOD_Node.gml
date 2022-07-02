@@ -64,7 +64,7 @@ function BBMOD_Node(_model) constructor
 	///
 	/// @desc Adds a child node.
 	///
-	/// @param {Struct.BBMOD_Node} The child node to add.
+	/// @param {Struct.BBMOD_Node} _node The child node to add.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
 	static add_child = function (_node) {

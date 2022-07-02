@@ -95,7 +95,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	///
 	/// @private
-	static freeze = function (_material, _transform) {
+	static freeze = function () {
 		gml_pragma("forceinline");
 		vertex_freeze(VertexBuffer);
 		return self;

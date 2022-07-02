@@ -69,7 +69,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 			(_normal.X * 0.5 + 0.5) * 255.0,
 			(_normal.Y * 0.5 + 0.5) * 255.0,
 			(_normal.Z * 0.5 + 0.5) * 255.0,
-			_smoothness,
+			_smoothness
 		);
 		NormalSmoothness = sprite_get_texture(NormalSmoothnessSprite, 0);
 		return self;
@@ -92,7 +92,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 			_color.Red,
 			_color.Green,
 			_color.Blue,
-			1.0,
+			1.0
 		);
 		SpecularColor = sprite_get_texture(SpecularColorSprite, 0);
 		return self;

@@ -83,7 +83,8 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @desc Initializes the matrix from a buffer.
 	///
 	/// @param {Id.Buffer} _buffer The buffer to read values from.
-	/// @param {Real} _type The type of values. Use one of the `buffer_` constants.
+	/// @param {Constant.BufferDataType} _type The type of values. Use one of
+	/// the `buffer_` constants.
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static FromBuffer = function (_buffer, _type) {
@@ -443,7 +444,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _index = 0;
 		repeat (16)
 		{
-			_res[@ _index] = _selfRaw[_index] * _otherRaw[_index];
+			_res.Raw[@ _index] = _selfRaw[_index] * _otherRaw[_index];
 			++_index;
 		}
 		return _res;
@@ -465,7 +466,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _index = 0;
 		repeat (16)
 		{
-			_res[@ _index] = _selfRaw[_index] + _otherRaw[_index];
+			_res.Raw[@ _index] = _selfRaw[_index] + _otherRaw[_index];
 			++_index;
 		}
 		return _res;
@@ -488,7 +489,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _index = 0;
 		repeat (16)
 		{
-			_res[@ _index] = _selfRaw[_index] - _otherRaw[_index];
+			_res.Raw[@ _index] = _selfRaw[_index] - _otherRaw[_index];
 			++_index;
 		}
 		return _res;
@@ -712,7 +713,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _index = 0;
 		repeat (16)
 		{
-			_res[@ _index] = _selfRaw[_index] * _s;
+			_res.Raw[@ _index] = _selfRaw[_index] * _s;
 			++_index;
 		}
 		return _res;

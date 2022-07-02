@@ -209,10 +209,7 @@ function BBMOD_OBJImporter()
 
 			// Face
 			case "f":
-				if (_meshBuilder == undefined)
-				{
-					_meshBuilder = new BBMOD_MeshBuilder();
-				}
+				_meshBuilder ??= new BBMOD_MeshBuilder();
 
 				_split_string(_line, " ", _split);
 				_face[@ 0] = _split[0];

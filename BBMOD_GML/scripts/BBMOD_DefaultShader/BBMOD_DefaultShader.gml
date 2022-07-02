@@ -4,7 +4,7 @@
 ///
 /// @desc Shader used by the default BBMOD materials.
 ///
-/// @param {Resource.GMShader} _shader The shader resource.
+/// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
 /// by the shader.
 ///

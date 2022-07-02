@@ -120,7 +120,7 @@ function BBMOD_Cubemap(_resolution)
 	///
 	/// @desc Creates a view matrix for given cubemap side.
 	///
-	/// @param {Real} side The cubemap side. Use values from
+	/// @param {Real} _side The cubemap side. Use values from
 	/// {@link BBMOD_ECubeSide}.
 	///
 	/// @return {Array<Real>} The created view matrix.

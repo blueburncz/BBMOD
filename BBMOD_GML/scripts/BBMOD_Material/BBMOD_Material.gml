@@ -179,7 +179,7 @@ function BBMOD_Material(_shader=undefined)
 			_isReal ? color_get_red(_color) : _color.Red,
 			_isReal ? color_get_green(_color) : _color.Green,
 			_isReal ? color_get_blue(_color) : _color.Blue,
-			_isReal ? argument[1] : _color.Alpha,
+			_isReal ? argument[1] : _color.Alpha
 		);
 		BaseOpacity = sprite_get_texture(BaseOpacitySprite, 0);
 		return self;

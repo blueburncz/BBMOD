@@ -4,7 +4,7 @@
 ///
 /// @desc A wrapper for a raw GameMaker shader resource using PBR.
 ///
-/// @param {Resource.GMShader} _shader The shader resource.
+/// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
 function BBMOD_PBRShader(_shader, _vertexFormat)
 	: BBMOD_BaseShader(_shader, _vertexFormat) constructor

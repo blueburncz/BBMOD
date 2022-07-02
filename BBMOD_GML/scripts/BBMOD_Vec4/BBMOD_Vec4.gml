@@ -41,7 +41,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			abs(X),
 			abs(Y),
 			abs(Z),
-			abs(W),
+			abs(W)
 		);
 	};
 
@@ -58,7 +58,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			X + _v.X,
 			Y + _v.Y,
 			Z + _v.Z,
-			W + _v.W,
+			W + _v.W
 		);
 	};
 
@@ -80,7 +80,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			ceil(X),
 			ceil(Y),
 			ceil(Z),
-			ceil(W),
+			ceil(W)
 		);
 	};
 
@@ -99,7 +99,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			clamp(X, _min.X, _max.X),
 			clamp(Y, _min.Y, _max.Y),
 			clamp(Z, _min.Z, _max.Z),
-			clamp(W, _min.W, _max.W),
+			clamp(W, _min.W, _max.W)
 		);
 	};
 
@@ -135,7 +135,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			(X / _length) * _newLength,
 			(Y / _length) * _newLength,
 			(Z / _length) * _newLength,
-			(W / _length) * _newLength,
+			(W / _length) * _newLength
 		);
 	};
 
@@ -150,7 +150,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			X,
 			Y,
 			Z,
-			W,
+			W
 		);
 	};
 
@@ -231,7 +231,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			floor(X),
 			floor(Y),
 			floor(Z),
-			floor(W),
+			floor(W)
 		);
 	};
 
@@ -253,7 +253,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			frac(X),
 			frac(Y),
 			frac(Z),
-			frac(W),
+			frac(W)
 		);
 	};
 
@@ -360,7 +360,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			lerp(X, _v.X, _amount),
 			lerp(Y, _v.Y, _amount),
 			lerp(Z, _v.Z, _amount),
-			lerp(W, _v.W, _amount),
+			lerp(W, _v.W, _amount)
 		);
 	};
 
@@ -400,7 +400,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			max(X, _v.X),
 			max(Y, _v.Y),
 			max(Z, _v.Z),
-			max(W, _v.W),
+			max(W, _v.W)
 		);
 	};
 
@@ -440,7 +440,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			min(X, _v.X),
 			min(Y, _v.Y),
 			min(Z, _v.Z),
-			min(W, _v.W),
+			min(W, _v.W)
 		);
 	};
 
@@ -458,7 +458,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			X * _v.X,
 			Y * _v.Y,
 			Z * _v.Z,
-			W * _v.W,
+			W * _v.W
 		);
 	};
 
@@ -482,14 +482,14 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 				X * _n,
 				Y * _n,
 				Z * _n,
-				W * _n,
+				W * _n
 			);
 		}
 		return new BBMOD_Vec4(
 			X,
 			Y,
 			Z,
-			W,
+			W
 		);
 	};
 
@@ -513,7 +513,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			X - (_dot2 * _v.X),
 			Y - (_dot2 * _v.Y),
 			Z - (_dot2 * _v.Z),
-			W - (_dot2 * _v.W),
+			W - (_dot2 * _v.W)
 		);
 	};
 
@@ -535,7 +535,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			round(X),
 			round(Y),
 			round(Z),
-			round(W),
+			round(W)
 		);
 	};
 
@@ -559,7 +559,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			X * _s,
 			Y * _s,
 			Z * _s,
-			W * _s,
+			W * _s
 		);
 	};
 
@@ -669,7 +669,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			X - _v.X,
 			Y - _v.Y,
 			Z - _v.Z,
-			W - _v.W,
+			W - _v.W
 		);
 	};
 
@@ -728,7 +728,7 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 			_m[0] * _x + _m[4] * _y + _m[ 8] * _z + _m[12] * _w,
 			_m[1] * _x + _m[5] * _y + _m[ 9] * _z + _m[13] * _w,
 			_m[2] * _x + _m[6] * _y + _m[10] * _z + _m[14] * _w,
-			_m[3] * _x + _m[7] * _y + _m[11] * _z + _m[15] * _w,
+			_m[3] * _x + _m[7] * _y + _m[11] * _z + _m[15] * _w
 		);
 	};
 }

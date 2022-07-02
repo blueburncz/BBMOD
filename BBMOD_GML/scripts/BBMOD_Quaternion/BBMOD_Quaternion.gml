@@ -27,7 +27,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @desc Adds quaternions and returns the result as a new quaternion.
 	///
-	/// @param {Struct.BBMOD_Quaternion} _dq The other quaternion.
+	/// @param {Struct.BBMOD_Quaternion} _q The other quaternion.
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
 	static Add = function (_q) {
@@ -36,7 +36,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			X + _q.X,
 			Y + _q.Y,
 			Z + _q.Z,
-			W + _q.W,
+			W + _q.W
 		);
 	};
 
@@ -64,7 +64,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	///
 	/// @desc Copies components of the quaternion into other quaternion.
 	///
-	/// @param {Struct.BBMOD_Quaternion} _dq The destination quaternion.
+	/// @param {Struct.BBMOD_Quaternion} _dest The destination quaternion.
 	///
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static Copy = function (_dest) {
@@ -109,7 +109,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 				X * _sinc,
 				Y * _sinc,
 				Z * _sinc,
-				exp(W) * cos(_length),
+				exp(W) * cos(_length)
 			);
 		}
 		return new BBMOD_Quaternion(0.0, 0.0, 0.0, exp(W));
@@ -276,7 +276,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		return new BBMOD_Vec3(
 			X * _sinThetaInv,
 			Y * _sinThetaInv,
-			Z * _sinThetaInv,
+			Z * _sinThetaInv
 		);
 	};
 
@@ -336,7 +336,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			lerp(X, _q.X, _s),
 			lerp(Y, _q.Y, _s),
 			lerp(Z, _q.Z, _s),
-			lerp(W, _q.W, _s),
+			lerp(W, _q.W, _s)
 		);
 	};
 
@@ -358,7 +358,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 				X * _mag,
 				Y * _mag,
 				Z * _mag,
-				_w,
+				_w
 			);
 		}
 		return new BBMOD_Quaternion(0.0, 0.0, 0.0, _w);
@@ -378,7 +378,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			W * _q.X + X * _q.W + Y * _q.Z - Z * _q.Y,
 			W * _q.Y + Y * _q.W + Z * _q.X - X * _q.Z,
 			W * _q.Z + Z * _q.W + X * _q.Y - Y * _q.X,
-			W * _q.W - X * _q.X - Y * _q.Y - Z * _q.Z,
+			W * _q.W - X * _q.X - Y * _q.Y - Z * _q.Z
 		);
 	};
 
@@ -428,7 +428,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			X * _s,
 			Y * _s,
 			Z * _s,
-			W * _s,
+			W * _s
 		);
 	};
 
@@ -442,7 +442,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// @desc Computes a spherical linear interpolation of two quaternions
 	/// and returns the result as a new quaternion.
 	///
-	/// @param {Struct.BBMOD_Quaternion} _dq The other quaternion.
+	/// @param {Struct.BBMOD_Quaternion} _q The other quaternion.
 	/// @param {Real} _s The interpolation factor.
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
@@ -501,7 +501,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 				lerp(_q10, _q20, _s),
 				lerp(_q11, _q21, _s),
 				lerp(_q12, _q22, _s),
-				lerp(_q13, _q23, _s),
+				lerp(_q13, _q23, _s)
 			);
 		}
 
@@ -516,7 +516,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			(_q10 * _s1) + (_q20 * _s2),
 			(_q11 * _s1) + (_q21 * _s2),
 			(_q12 * _s1) + (_q22 * _s2),
-			(_q13 * _s1) + (_q23 * _s2),
+			(_q13 * _s1) + (_q23 * _s2)
 		);
 	};
 

@@ -129,7 +129,7 @@ function BBMOD_PBRMaterial(_shader=undefined)
 			(_normal.X * 0.5 + 0.5) * 255.0,
 			(_normal.Y * 0.5 + 0.5) * 255.0,
 			(_normal.Z * 0.5 + 0.5) * 255.0,
-			_roughness,
+			_roughness
 		);
 		NormalRoughness = sprite_get_texture(NormalRoughnessSprite, 0);
 		return self;
@@ -156,7 +156,7 @@ function BBMOD_PBRMaterial(_shader=undefined)
 			_metallic * 255.0,
 			_ao * 255.0,
 			0.0,
-			0.0,
+			0.0
 		);
 		MetallicAO = sprite_get_texture(MetallicAOSprite, 0);
 		return self;
@@ -181,7 +181,7 @@ function BBMOD_PBRMaterial(_shader=undefined)
 			color_get_red(_color),
 			color_get_green(_color),
 			color_get_blue(_color),
-			_intensity,
+			_intensity
 		);
 		Subsurface = sprite_get_texture(SubsurfaceSprite, 0);
 		return self;
@@ -208,7 +208,7 @@ function BBMOD_PBRMaterial(_shader=undefined)
 			_rgbm[0] * 255.0,
 			_rgbm[1] * 255.0,
 			_rgbm[2] * 255.0,
-			_rgbm[3],
+			_rgbm[3]
 		);
 		Emissive = sprite_get_texture(EmissiveSprite, 0);
 		return self;

@@ -53,7 +53,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			abs(X),
 			abs(Y),
-			abs(Z),
+			abs(Z)
 		);
 	};
 
@@ -69,7 +69,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			X + _v.X,
 			Y + _v.Y,
-			Z + _v.Z,
+			Z + _v.Z
 		);
 	};
 
@@ -89,7 +89,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			ceil(X),
 			ceil(Y),
-			ceil(Z),
+			ceil(Z)
 		);
 	};
 
@@ -107,7 +107,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			clamp(X, _min.X, _max.X),
 			clamp(Y, _min.Y, _max.Y),
-			clamp(Z, _min.Z, _max.Z),
+			clamp(Z, _min.Z, _max.Z)
 		);
 	};
 
@@ -141,7 +141,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			(X / _length) * _newLength,
 			(Y / _length) * _newLength,
-			(Z / _length) * _newLength,
+			(Z / _length) * _newLength
 		);
 	};
 
@@ -155,7 +155,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			X,
 			Y,
-			Z,
+			Z
 		);
 	};
 
@@ -188,7 +188,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	/// @desc Computes a cross product of this vector and vector `_v` and returns
 	/// the result as a new vector.
 	///
-	/// @param {Struct.BBMOD_Vec3} The other vector.
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Cross = function (_v) {
@@ -196,7 +196,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			Y * _v.Z - Z * _v.Y,
 			Z * _v.X - X * _v.Z,
-			X * _v.Y - Y * _v.X,
+			X * _v.Y - Y * _v.X
 		);
 	};
 
@@ -248,7 +248,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			floor(X),
 			floor(Y),
-			floor(Z),
+			floor(Z)
 		);
 	};
 
@@ -268,7 +268,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			frac(X),
 			frac(Y),
-			frac(Z),
+			frac(Z)
 		);
 	};
 
@@ -367,7 +367,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			lerp(X, _v.X, _amount),
 			lerp(Y, _v.Y, _amount),
-			lerp(Z, _v.Z, _amount),
+			lerp(Z, _v.Z, _amount)
 		);
 	};
 
@@ -405,7 +405,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			max(X, _v.X),
 			max(Y, _v.Y),
-			max(Z, _v.Z),
+			max(Z, _v.Z)
 		);
 	};
 
@@ -443,7 +443,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			min(X, _v.X),
 			min(Y, _v.Y),
-			min(Z, _v.Z),
+			min(Z, _v.Z)
 		);
 	};
 
@@ -460,7 +460,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			X * _v.X,
 			Y * _v.Y,
-			Z * _v.Z,
+			Z * _v.Z
 		);
 	};
 
@@ -482,13 +482,13 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			return new BBMOD_Vec3(
 				X * _n,
 				Y * _n,
-				Z * _n,
+				Z * _n
 			);
 		}
 		return new BBMOD_Vec3(
 			X,
 			Y,
-			Z,
+			Z
 		);
 	};
 
@@ -535,7 +535,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			X - (_dot2 * _v.X),
 			Y - (_dot2 * _v.Y),
-			Z - (_dot2 * _v.Z),
+			Z - (_dot2 * _v.Z)
 		);
 	};
 
@@ -555,7 +555,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			round(X),
 			round(Y),
-			round(Z),
+			round(Z)
 		);
 	};
 
@@ -577,7 +577,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			X * _s,
 			Y * _s,
-			Z * _s,
+			Z * _s
 		);
 	};
 
@@ -677,7 +677,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			X - _v.X,
 			Y - _v.Y,
-			Z - _v.Z,
+			Z - _v.Z
 		);
 	};
 
@@ -731,7 +731,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		return new BBMOD_Vec3(
 			_res[0],
 			_res[1],
-			_res[2],
+			_res[2]
 		);
 	};
 }

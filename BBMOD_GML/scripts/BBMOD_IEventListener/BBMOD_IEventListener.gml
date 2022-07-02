@@ -28,10 +28,7 @@ function BBMOD_IEventListener()
 			_listener = _event;
 			_event = __BBMOD_EV_ALL;
 		}
-		if (Listeners == undefined)
-		{
-			Listeners = ds_map_create();
-		}
+		Listeners ??= ds_map_create();
 		if (!ds_map_exists(Listeners, _event))
 		{
 			Listeners[? _event] = [];

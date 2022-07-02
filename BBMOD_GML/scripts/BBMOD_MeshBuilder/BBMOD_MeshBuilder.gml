@@ -217,7 +217,7 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 			var _t = new BBMOD_Vec3(
 				_v.TangentW.X,
 				_v.TangentW.Y,
-				_v.TangentW.Z,
+				_v.TangentW.Z
 			);
 
 			// Gram-Schmidt orthogonalize
@@ -235,7 +235,7 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	///
 	/// @desc Builds a mesh from the added vertices and faces.
 	///
-	/// @param {Struct.BBMOD_VertexFormat [_vertexFormat] The vertex format of
+	/// @param {Struct.BBMOD_VertexFormat} [_vertexFormat] The vertex format of
 	/// the mesh. This must be compatible with the format of the added vertices.
 	/// If `undefined`, then the format of the first added vertex is used.
 	///

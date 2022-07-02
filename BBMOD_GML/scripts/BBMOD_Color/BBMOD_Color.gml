@@ -270,7 +270,7 @@ function BBMOD_Color(
 	/// @desc Encodes the color into a single value, compatible with GameMaker's
 	/// color constants. Ignores the alpha channel.
 	///
-	/// @return {Real} The color as a single value.
+	/// @return {Constant.Color} The color as a single value.
 	///
 	/// @example
 	/// ```gml

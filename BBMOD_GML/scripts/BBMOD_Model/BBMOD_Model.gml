@@ -230,17 +230,18 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
-	/// @func find_node(_idOrName)
+	/// @func find_node(_idOrName[, _node])
 	///
 	/// @desc Finds a node by its name or id.
 	///
 	/// @param {Real, String} _idOrName The id (real) or the name (string) of
 	/// the node.
+	/// @param {Struct.BBMOD_Node} [_node] The node to start searching from.
+	/// Defaults to the root node.
 	///
 	/// @return {Struct.BBMOD_Node} Returns the found node or `undefined`.
-	static find_node = function (_idOrName) {
+	static find_node = function (_idOrName, _node=RootNode) {
 		var _isName = is_string(_idOrName);
-		var _node = (argument_count > 1) ? argument[1] : RootNode;
 		if (_isName && _node.Name == _idOrName)
 		{
 			return _node;
@@ -445,7 +446,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @param {Struct.BBMOD_DynamicBatch} _dynamicBatch
 	///
-	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
 	/// @private
 	static to_dynamic_batch = function (_dynamicBatch) {
@@ -458,13 +459,12 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
-	/// @func to_static_batch(_model, _staticBatch, _transform)
+	/// @func to_static_batch(_staticBatch, _transform)
 	///
-	/// @param {Struct.BBMOD_Model} _model
 	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
 	/// @param {Array<Real>} _transform
 	///
-	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
 	/// @private
 	static to_static_batch = function (_staticBatch, _transform) {

@@ -5,7 +5,7 @@
 /// @desc A heightmap based terrain with five material layers controlled through
 /// a splatmap.
 ///
-/// @param {Resource.GMSprite} [_heightmap] The heightmap to make the terrain
+/// @param {Asset.GMSprite} [_heightmap] The heightmap to make the terrain
 /// from. If `undefined`, then you will need to build the terrain mesh yourself
 /// later using the terrain's methods.
 /// @param {Real} [_subimage] The sprite subimage to use for the heightmap.
@@ -130,7 +130,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @desc Initializes terrain height from a sprite.
 	///
-	/// @param {Resource.GMSprite} _sprite The heightmap sprite.
+	/// @param {Asset.GMSprite} _sprite The heightmap sprite.
 	/// @param {Real} [_subimage] The subimage to use for the heightmap.
 	/// Defaults to 0.
 	///
@@ -303,11 +303,11 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		// TODO: Optimize retrieving terrain normal
 		if (frac(_xScaled) <= frac(_yScaled))
 		{
-			return new BBMOD_Vec3(0.0, -Scale.Y, (_h1 - _h4) * Scale.Z)
+			return (new BBMOD_Vec3(0.0, -Scale.Y, (_h1 - _h4) * Scale.Z))
 				.Cross(new BBMOD_Vec3(Scale.X, 0.0, (_h3 - _h4) * Scale.Z))
 				.Normalize();
 		}
-		return new BBMOD_Vec3(0.0, Scale.Y, (_h3 - _h2) * Scale.Z)
+		return (new BBMOD_Vec3(0.0, Scale.Y, (_h3 - _h2) * Scale.Z))
 			.Cross(new BBMOD_Vec3(-Scale.X, 0.0, (_h1 - _h2) * Scale.Z))
 			.Normalize();
 	};
@@ -596,7 +596,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 				var bitangent1x = f * (-deltaUV2x * edge1x + deltaUV1x * edge2x);
 				var bitangent1y = f * (-deltaUV2x * edge1y + deltaUV1x * edge2y);
 				var bitangent1z = f * (-deltaUV2x * edge1z + deltaUV1x * edge2z);
-				var _dot = new BBMOD_Vec3(_n1X, _n1Y, _n1Z)
+				var _dot = (new BBMOD_Vec3(_n1X, _n1Y, _n1Z))
 					.Cross(new BBMOD_Vec3(tangent1x, tangent1y, tangent1z))
 					.Dot(new BBMOD_Vec3(bitangent1x, bitangent1y, bitangent1z));
 				var _sign = (_dot < 0.0) ? -1.0 : 1.0;
@@ -651,7 +651,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 				var bitangent1x = f * (-deltaUV2x * edge1x + deltaUV1x * edge2x);
 				var bitangent1y = f * (-deltaUV2x * edge1y + deltaUV1x * edge2y);
 				var bitangent1z = f * (-deltaUV2x * edge1z + deltaUV1x * edge2z);
-				var _dot = new BBMOD_Vec3(_n1X, _n1Y, _n1Z)
+				var _dot = (new BBMOD_Vec3(_n1X, _n1Y, _n1Z))
 					.Cross(new BBMOD_Vec3(tangent1x, tangent1y, tangent1z))
 					.Dot(new BBMOD_Vec3(bitangent1x, bitangent1y, bitangent1z));
 				var _sign = (_dot < 0.0) ? -1.0 : 1.0;

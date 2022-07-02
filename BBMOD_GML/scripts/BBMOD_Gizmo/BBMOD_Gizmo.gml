@@ -435,7 +435,7 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @desc Changes an instance's scale using a {@link BBMOD_Vec3}.
 	///
 	/// @param {Id.Instance} _instance The ID of the instance.
-	/// @param {Struct.BBMOD_Vec3} _rotation The new scale of the instance.
+	/// @param {Struct.BBMOD_Vec3} _scale The new scale of the instance.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	static set_instance_scale_vec3 = function (_instance, _scale) {
@@ -996,7 +996,7 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @note This changes the world matrix based on the gizmo's position and size!
 	static submit = function (_materials=undefined) {
 		gml_pragma("forceinline");
-		new BBMOD_Matrix()
+		(new BBMOD_Matrix())
 			.Scale(new BBMOD_Vec3(Size))
 			.RotateEuler(Rotation)
 			.Translate(Position)

@@ -152,7 +152,7 @@ function BBMOD_ResourceManager()
 	/// a reference to it, if it is already loaded.
 	///
 	/// @param {String} _path The path to the resource.
-	/// @param {String [_sha1] Expected SHA1 of the file. If the actual
+	/// @param {String} [_sha1] Expected SHA1 of the file. If the actual
 	/// one does not match with this, then the resource will not be loaded. Use
 	/// `undefined` if you do not want to check the SHA1 of the file.
 	/// @param {Function} [_onLoad] A function to execute when the

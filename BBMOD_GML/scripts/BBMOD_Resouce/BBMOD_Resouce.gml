@@ -35,10 +35,12 @@ function BBMOD_Resource()
 	///
 	/// @desc Loads the resource from a buffer.
 	///
+	/// @param {Id.Buffer} _buffer The buffer to load the resource from.
+	///
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static from_buffer = function () {
+	static from_buffer = function (_buffer) {
 		throw new BBMOD_NotImplementedException();
 		// When implementing this method, do not forget to set IsLoaded to true!
 		//return self;

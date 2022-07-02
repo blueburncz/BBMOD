@@ -30,7 +30,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			abs(X),
-			abs(Y),
+			abs(Y)
 		);
 	};
 
@@ -45,7 +45,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			X + _v.X,
-			Y + _v.Y,
+			Y + _v.Y
 		);
 	};
 
@@ -64,7 +64,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			ceil(X),
-			ceil(Y),
+			ceil(Y)
 		);
 	};
 
@@ -81,7 +81,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			clamp(X, _min.X, _max.X),
-			clamp(Y, _min.Y, _max.Y),
+			clamp(Y, _min.Y, _max.Y)
 		);
 	};
 
@@ -110,7 +110,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		var _newLength = clamp(_length, _min, _max);
 		return new BBMOD_Vec2(
 			(X / _length) * _newLength,
-			(Y / _length) * _newLength,
+			(Y / _length) * _newLength
 		);
 	};
 
@@ -123,7 +123,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			X,
-			Y,
+			Y
 		);
 	};
 
@@ -195,7 +195,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			floor(X),
-			floor(Y),
+			floor(Y)
 		);
 	};
 
@@ -214,7 +214,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			frac(X),
-			frac(Y),
+			frac(Y)
 		);
 	};
 
@@ -306,7 +306,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			lerp(X, _v.X, _amount),
-			lerp(Y, _v.Y, _amount),
+			lerp(Y, _v.Y, _amount)
 		);
 	};
 
@@ -342,7 +342,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			max(X, _v.X),
-			max(Y, _v.Y),
+			max(Y, _v.Y)
 		);
 	};
 
@@ -378,7 +378,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			min(X, _v.X),
-			min(Y, _v.Y),
+			min(Y, _v.Y)
 		);
 	};
 
@@ -394,7 +394,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			X * _v.X,
-			Y * _v.Y,
+			Y * _v.Y
 		);
 	};
 
@@ -414,12 +414,12 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 			var _n = 1.0 / sqrt(_lengthSqr);
 			return new BBMOD_Vec2(
 				X * _n,
-				Y * _n,
+				Y * _n
 			);
 		}
 		return new BBMOD_Vec2(
 			X,
-			Y,
+			Y
 		);
 	};
 
@@ -439,7 +439,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		) * 2.0;
 		return new BBMOD_Vec2(
 			X - (_dot2 * _v.X),
-			Y - (_dot2 * _v.Y),
+			Y - (_dot2 * _v.Y)
 		);
 	};
 
@@ -458,7 +458,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			round(X),
-			round(Y),
+			round(Y)
 		);
 	};
 
@@ -479,7 +479,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline")
 		return new BBMOD_Vec2(
 			X * _s,
-			Y * _s,
+			Y * _s
 		);
 	};
 
@@ -569,7 +569,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline")
 		return new BBMOD_Vec2(
 			X - _v.X,
-			Y - _v.Y,
+			Y - _v.Y
 		);
 	};
 
@@ -619,7 +619,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		var _res = matrix_transform_vertex(_matrix, X, Y, 0.0);
 		return new BBMOD_Vec2(
 			_res[0],
-			_res[1],
+			_res[1]
 		);
 	};
 }

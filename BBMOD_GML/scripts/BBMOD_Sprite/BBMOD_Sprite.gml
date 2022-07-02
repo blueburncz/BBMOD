@@ -19,7 +19,7 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 		destroy: destroy,
 	};
 
-	/// @var {Resource.GMSprite} The raw sprite resource of `undefined` if it
+	/// @var {Asset.GMSprite} The raw sprite resource of `undefined` if it
 	/// has not been loaded yet.
 	/// @readonly
 	Raw = undefined;
@@ -63,7 +63,7 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 				Sprite.Height = sprite_get_height(_res);
 				Sprite.IsLoaded = true;
 			}
-			if (Callback != undefined)
+			if (Callback)
 			{
 				Callback(_err, _res);
 			}

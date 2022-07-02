@@ -110,7 +110,7 @@ function BBMOD_StateMachine()
 	/// @desc Changes the state of the state machine and executes
 	/// {@link BBMOD_StateMachine.OnStateChange}.
 	///
-	/// @param {Real} _state The new state.
+	/// @param {Struct.BBMOD_State} _state The new state.
 	///
 	/// @return {Struct.BBMOD_StateMachine} Returns itself.
 	///

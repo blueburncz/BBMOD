@@ -226,19 +226,19 @@ var _rightArmIndex = 16;
 if (aiming)
 {
 	var _chestDq = animationPlayer.get_node_transform_from_frame(_chestIndex);
-	var _chestRot = new BBMOD_Quaternion()
+	var _chestRot = (new BBMOD_Quaternion())
 		.FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -camera.DirectionUp * 0.25)
 		.Mul(_chestDq.GetRotation());
 	animationPlayer.set_node_rotation(_chestIndex, _chestRot);
 
 	var _neckDq = animationPlayer.get_node_transform_from_frame(_neckIndex);
-	var _neckRot = new BBMOD_Quaternion()
+	var _neckRot = (new BBMOD_Quaternion())
 		.FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -camera.DirectionUp * 0.25)
 		.Mul(_neckDq.GetRotation());
 	animationPlayer.set_node_rotation(_neckIndex, _neckRot);
 
 	var _rightArmDq = animationPlayer.get_node_transform_from_frame(_rightArmIndex);
-	var _rightArmRot = new BBMOD_Quaternion()
+	var _rightArmRot = (new BBMOD_Quaternion())
 		.FromAxisAngle(new BBMOD_Vec3(0, 1, 0), camera.DirectionUp * 0.75)
 		.Mul(_rightArmDq.GetRotation());
 	animationPlayer.set_node_rotation(_rightArmIndex, _rightArmRot);

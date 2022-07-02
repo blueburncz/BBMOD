@@ -242,7 +242,7 @@ function BBMOD_DualQuaternion(
 		return new BBMOD_Vec3(
 			_q13 * _q20 + _q10 * _q23 + _q11 * _q22 - _q12 * _q21,
 			_q13 * _q21 + _q11 * _q23 + _q12 * _q20 - _q10 * _q22,
-			_q13 * _q22 + _q12 * _q23 + _q10 * _q21 - _q11 * _q20,
+			_q13 * _q22 + _q12 * _q23 + _q10 * _q21 - _q11 * _q20
 		);
 	};
 
