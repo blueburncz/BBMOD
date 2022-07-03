@@ -28,6 +28,9 @@ function updatePosition(e) {
 }
 
 function bbmod_html5_pointer_lock() {
+  if (!canvas.requestPointerLock) {
+    return;
+  }
   var res = canvas.requestPointerLock();
   if (res && res.then) {
     res.catch(function () {});

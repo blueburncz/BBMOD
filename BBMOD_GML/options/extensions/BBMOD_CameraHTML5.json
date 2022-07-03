@@ -1,0 +1,9 @@
+{
+  "extensionId": {
+    "name": "BBMOD_CameraHTML5",
+    "path": "extensions/BBMOD_CameraHTML5/BBMOD_CameraHTML5.yy"
+  },
+  "resourceVersion": "1.0",
+  "resourceType": "GMExtensionConfigSet",
+  "configurables": null
+}

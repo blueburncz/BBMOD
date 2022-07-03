@@ -86,6 +86,12 @@ function BBMOD_Renderer()
 	/// @var {Bool} If `true` then edit mode is enabled. Default value is `false`.
 	EditMode = false;
 
+	/// @var {Bool} If `true` then mousepicking of gizmo and instances is enabled.
+	/// Default value is `true`.
+	/// @note This can be useful for example to disable mousepicking when the
+	/// mouse cursor is over UI.
+	EnableMousepick = true;
+
 	/// @var {Constant.MouseButton} The mouse button used to select instances when
 	/// edit mode is enabled. Default value is `mb_left`.
 	/// @see BBMOD_Renderer.EditMode
@@ -589,7 +595,7 @@ function BBMOD_Renderer()
 		var _mouseY = window_mouse_get_y();
 		var _mouseOver = (_mouseX >= X && _mouseX < X + get_width()
 			&& _mouseY >= Y && _mouseY < Y + get_height());
-		var _continueMousePick = true;
+		var _continueMousePick = EnableMousepick;
 		var _gizmoSize;
 
 		if (_editMode)
@@ -601,7 +607,10 @@ function BBMOD_Renderer()
 
 		////////////////////////////////////////////////////////////////////////
 		// Gizmo select
-		if (_editMode && _mouseOver && mouse_check_button_pressed(Gizmo.ButtonDrag))
+		if (_editMode
+			&& _continueMousePick
+			&& _mouseOver
+			&& mouse_check_button_pressed(Gizmo.ButtonDrag))
 		{
 			SurSelect = bbmod_surface_check(SurSelect, _renderWidth, _renderHeight);
 			surface_set_target(SurSelect);
