@@ -8,7 +8,7 @@ documentation comments of functions was also adopted to make them easier to read
 * Fixed methods `MulComponentwise`, `AddComponentwise`, `SubComponentwise` and `ScaleComponentwise` of `BBMOD_Matrix`.
 
 ### Camera module:
-* Fixed crash that would occur if mouselook was enabled in browsers that do not support it.
+* Fixed crash that would occur if mouselook was enabled in browsers that do not support it (HTML5 exports).
 
 ### Gizmo module:
 * Fixed gizmo model for moving objects, which was rotated wrongly after release 3.6.1.
