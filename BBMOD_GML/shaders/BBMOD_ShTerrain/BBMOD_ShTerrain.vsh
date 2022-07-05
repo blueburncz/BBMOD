@@ -1,4 +1,3 @@
-#pragma include("Uber_VS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -11,8 +10,6 @@ precision highp float;
 #define MAX_BONES 64
 // Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
-// Maximum number of point lights
-#define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -46,7 +43,6 @@ uniform float bbmod_ShadowmapNormalOffset;
 //
 // Varyings
 //
-#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
@@ -56,13 +52,11 @@ varying vec4 v_vPosition;
 varying vec3 v_vPosShadowmap;
 
 varying vec2 v_vSplatmapCoord;
-// include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
-#pragma include("Transform.xsh")
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
@@ -73,7 +67,6 @@ void Transform(out vec4 vertex, out vec3 normal)
 	normal = in_Normal;
 
 }
-// include("Transform.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -114,4 +107,3 @@ void main()
 		v_vPosShadowmap.z /= bbmod_ShadowmapAreaVS;
 	}
 }
-// include("Uber_VS.xsh")

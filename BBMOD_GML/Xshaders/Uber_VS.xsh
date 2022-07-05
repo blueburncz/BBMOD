@@ -10,8 +10,6 @@ precision highp float;
 #define MAX_BONES 64
 // Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
-// Maximum number of point lights
-#define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
 //

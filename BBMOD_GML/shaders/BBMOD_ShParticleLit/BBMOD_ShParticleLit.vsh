@@ -1,4 +1,3 @@
-#pragma include("Uber_VS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -11,8 +10,6 @@ precision highp float;
 #define MAX_BONES 64
 // Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
-// Maximum number of point lights
-#define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -46,7 +43,6 @@ uniform float bbmod_ShadowmapNormalOffset;
 //
 // Varyings
 //
-#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
 varying vec4 v_vColor;
@@ -57,20 +53,15 @@ varying vec4 v_vPosition;
 
 varying vec3 v_vPosShadowmap;
 
-// include("Varyings.xsh")
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
-#pragma include("QuaternionRotate.xsh")
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
-// include("QuaternionRotate.xsh")
 
-#pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -90,7 +81,6 @@ float xLuminance(vec3 rgb)
 {
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
-// include("Color.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -145,4 +135,3 @@ void main()
 		v_vPosShadowmap.z /= bbmod_ShadowmapAreaVS;
 	}
 }
-// include("Uber_VS.xsh")

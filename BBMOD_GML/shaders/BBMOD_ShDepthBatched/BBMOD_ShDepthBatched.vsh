@@ -1,4 +1,3 @@
-#pragma include("Uber_VS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -11,8 +10,6 @@ precision highp float;
 #define MAX_BONES 64
 // Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
-// Maximum number of point lights
-#define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -41,26 +38,20 @@ uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 //
 // Varyings
 //
-#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 
-// include("Varyings.xsh")
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
-#pragma include("Transform.xsh")
-#pragma include("QuaternionRotate.xsh")
 vec3 QuaternionRotate(vec4 q, vec3 v)
 {
 	return (v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v));
 }
-// include("QuaternionRotate.xsh")
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
@@ -77,7 +68,6 @@ void Transform(out vec4 vertex, out vec3 normal)
 	vertex = vec4(posScale.xyz + (QuaternionRotate(rot, vertex.xyz) * posScale.w), 1.0);
 	normal = QuaternionRotate(rot, normal);
 }
-// include("Transform.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -104,4 +94,3 @@ void main()
 	v_mTBN = mat3(tangent, bitangent, normal);
 
 }
-// include("Uber_VS.xsh")

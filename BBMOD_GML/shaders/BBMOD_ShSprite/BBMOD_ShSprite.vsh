@@ -1,4 +1,3 @@
-#pragma include("Uber_VS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -11,8 +10,6 @@ precision highp float;
 #define MAX_BONES 64
 // Maximum number of vec4 uniforms for dynamic batch data
 #define MAX_BATCH_DATA_SIZE 128
-// Maximum number of point lights
-#define MAX_POINT_LIGHTS 8
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -35,7 +32,6 @@ uniform vec2 bbmod_TextureScale;
 //
 // Varyings
 //
-#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
 varying vec4 v_vColor;
@@ -44,13 +40,10 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 
-// include("Varyings.xsh")
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
-#pragma include("Transform.xsh")
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
 /// @param vertex Variable to hold the transformed vertex.
@@ -61,9 +54,7 @@ void Transform(out vec4 vertex, out vec3 normal)
 	normal = vec3(0.0, 0.0, 1.0);
 
 }
-// include("Transform.xsh")
 
-#pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -83,7 +74,6 @@ float xLuminance(vec3 rgb)
 {
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
-// include("Color.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -111,4 +101,3 @@ void main()
 	v_mTBN = mat3(tangent, bitangent, normal);
 
 }
-// include("Uber_VS.xsh")

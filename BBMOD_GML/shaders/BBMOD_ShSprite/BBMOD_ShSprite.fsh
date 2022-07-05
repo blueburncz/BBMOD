@@ -1,4 +1,3 @@
-#pragma include("Uber_PS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -17,7 +16,6 @@ precision highp float;
 // Varyings
 //
 
-#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
 varying vec4 v_vColor;
@@ -25,8 +23,6 @@ varying vec4 v_vColor;
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
-
-// include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -127,8 +123,6 @@ uniform float bbmod_ShadowmapBias;
 //
 // Includes
 //
-#pragma include("SpecularMaterial.xsh")
-#pragma include("Material.xsh")
 struct Material
 {
 	vec3 Base;
@@ -160,8 +154,6 @@ Material CreateMaterial(mat3 TBN)
 	m.Subsurface = vec4(0.0);
 	return m;
 }
-// include("Material.xsh")
-#pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -181,8 +173,6 @@ float xLuminance(vec3 rgb)
 {
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
-// include("Color.xsh")
-#pragma include("RGBM.xsh")
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -200,7 +190,6 @@ vec3 xDecodeRGBM(vec4 rgbm)
 {
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
-// include("RGBM.xsh")
 
 /// @desc Unpacks material from textures.
 /// @param texBaseOpacity      RGB: base color, A: opacity
@@ -244,11 +233,6 @@ Material UnpackMaterial(
 
 	return m;
 }
-// include("SpecularMaterial.xsh")
-
-#pragma include("DefaultShader.xsh")
-#pragma include("DoDirectionalLightPS.xsh")
-#pragma include("SpecularBlinnPhong.xsh")
 
 vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
 {
@@ -263,7 +247,6 @@ vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
 	float normalDistribution = blinnPhong * blinnNormalization;
 	return fresnel * visibility * normalDistribution;
 }
-// include("SpecularBlinnPhong.xsh")
 
 void DoDirectionalLightPS(
 	vec3 direction,
@@ -283,8 +266,6 @@ void DoDirectionalLightPS(
 	diffuse += color;
 	specular += color * SpecularBlinnPhong(m, N, V, L);
 }
-// include("DoDirectionalLightPS.xsh")
-#pragma include("DoPointLightPS.xsh")
 
 void DoPointLightPS(
 	vec3 position,
@@ -307,14 +288,10 @@ void DoPointLightPS(
 	diffuse += color;
 	specular += color * SpecularBlinnPhong(m, N, V, L);
 }
-// include("DoPointLightPS.xsh")
-#pragma include("Exposure.xsh")
 void Exposure()
 {
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 }
-// include("Exposure.xsh")
-#pragma include("Fog.xsh")
 void Fog(float depth)
 {
 	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
@@ -324,16 +301,11 @@ void Fog(float depth)
 	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0) * bbmod_FogColor.a;
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
 }
-// include("Fog.xsh")
-#pragma include("GammaCorrect.xsh")
 
 void GammaCorrect()
 {
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 }
-// include("GammaCorrect.xsh")
-#pragma include("IBL.xsh")
-#pragma include("OctahedronMapping.xsh")
 // Source: https://gamedev.stackexchange.com/questions/169508/octahedral-impostors-octahedral-mapping
 
 /// @param dir Sampling dir vector in world-space.
@@ -363,7 +335,6 @@ vec3 xOctahedronUvToVec3Normalized(vec2 uv)
 	}
 	return position;
 }
-// include("OctahedronMapping.xsh")
 
 vec3 xDiffuseIBL(sampler2D ibl, vec2 texel, vec3 N)
 {
@@ -429,8 +400,6 @@ vec3 xSpecularIBL(sampler2D ibl, vec2 texel/*, sampler2D brdf*/, vec3 f0, float 
 
 	return mix(col0, col1, rDiff);
 }
-// include("IBL.xsh")
-#pragma include("Projecting.xsh")
 /// @param tanAspect (tanFovY*(screenWidth/screenHeight),-tanFovY), where
 ///                  tanFovY = dtan(fov*0.5)
 /// @param texCoord  Sceen-space UV.
@@ -451,9 +420,6 @@ vec2 xUnproject(vec4 p)
 	uv.y = 1.0 - uv.y;
 	return uv;
 }
-// include("Projecting.xsh")
-#pragma include("ShadowMap.xsh")
-#pragma include("DepthEncoding.xsh")
 /// @param d Linearized depth to encode.
 /// @return Encoded depth.
 /// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
@@ -480,16 +446,12 @@ float xDecodeDepth(vec3 c)
 	const float inv255 = 1.0 / 255.0;
 	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
 }
-// include("DepthEncoding.xsh")
-#pragma include("InterleavedGradientNoise.xsh")
 // Shadowmap filtering source: https://www.gamedev.net/tutorials/programming/graphics/contact-hardening-soft-shadows-made-fast-r4906/
 float InterleavedGradientNoise(vec2 positionScreen)
 {
 	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
 	return fract(magic.z * fract(dot(positionScreen, magic.xy)));
 }
-// include("InterleavedGradientNoise.xsh")
-#pragma include("VogelDiskSample.xsh")
 vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
 {
 	float GoldenAngle = 2.4;
@@ -499,7 +461,6 @@ vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
 	float cosine = cos(theta);
 	return vec2(r * cosine, r * sine);
 }
-// include("VogelDiskSample.xsh")
 
 float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 {
@@ -525,7 +486,6 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	}
 	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }
-// include("ShadowMap.xsh")
 
 void DefaultShader(Material material, float depth)
 {
@@ -586,7 +546,6 @@ void DefaultShader(Material material, float depth)
 	Exposure();
 	GammaCorrect();
 }
-// include("DefaultShader.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -615,4 +574,3 @@ void main()
 	DefaultShader(material, v_vPosition.z);
 
 }
-// include("Uber_PS.xsh")

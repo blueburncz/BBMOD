@@ -36,7 +36,7 @@ uniform float u_fAngleBias;
 // Maximum depth difference of samples taken into account.
 uniform float u_fDepthRange;
 
-#pragma include("DepthEncoding.xsh", "glsl")
+//#pragma include("DepthEncoding.xsh", "glsl")
 /// @param d Linearized depth to encode.
 /// @return Encoded depth.
 /// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
@@ -65,7 +65,7 @@ float xDecodeDepth(vec3 c)
 }
 // include("DepthEncoding.xsh")
 
-#pragma include("Projecting.xsh", "glsl")
+//#pragma include("Projecting.xsh", "glsl")
 /// @param tanAspect (tanFovY*(screenWidth/screenHeight),-tanFovY), where
 ///                  tanFovY = dtan(fov*0.5)
 /// @param texCoord  Sceen-space UV.
@@ -88,7 +88,7 @@ vec2 xUnproject(vec4 p)
 }
 // include("Projecting.xsh")
 
-#pragma include("Math.xsh", "glsl")
+//#pragma include("Math.xsh", "glsl")
 #define X_PI   3.14159265359
 #define X_2_PI 6.28318530718
 

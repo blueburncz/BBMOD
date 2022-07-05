@@ -1,4 +1,3 @@
-#pragma include("Uber_PS.xsh")
 // FIXME: Temporary fix!
 precision highp float;
 
@@ -17,14 +16,11 @@ precision highp float;
 // Varyings
 //
 
-#pragma include("Varyings.xsh")
 varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
-
-// include("Varyings.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -57,8 +53,6 @@ uniform float bbmod_Exposure;
 //
 // Includes
 //
-#pragma include("SpecularMaterial.xsh")
-#pragma include("Material.xsh")
 struct Material
 {
 	vec3 Base;
@@ -90,8 +84,6 @@ Material CreateMaterial(mat3 TBN)
 	m.Subsurface = vec4(0.0);
 	return m;
 }
-// include("Material.xsh")
-#pragma include("Color.xsh")
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -111,8 +103,6 @@ float xLuminance(vec3 rgb)
 {
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
-// include("Color.xsh")
-#pragma include("RGBM.xsh")
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -130,7 +120,6 @@ vec3 xDecodeRGBM(vec4 rgbm)
 {
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
-// include("RGBM.xsh")
 
 /// @desc Unpacks material from textures.
 /// @param texBaseOpacity      RGB: base color, A: opacity
@@ -169,10 +158,7 @@ Material UnpackMaterial(
 
 	return m;
 }
-// include("SpecularMaterial.xsh")
 
-#pragma include("DepthShader.xsh")
-#pragma include("DepthEncoding.xsh")
 /// @param d Linearized depth to encode.
 /// @return Encoded depth.
 /// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
@@ -199,14 +185,12 @@ float xDecodeDepth(vec3 c)
 	const float inv255 = 1.0 / 255.0;
 	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
 }
-// include("DepthEncoding.xsh")
 
 void DepthShader(float depth)
 {
 	gl_FragColor.rgb = xEncodeDepth(depth / bbmod_ZFar);
 	gl_FragColor.a = 1.0;
 }
-// include("DepthShader.xsh")
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -229,4 +213,3 @@ void main()
 	DepthShader(v_vPosition.z);
 
 }
-// include("Uber_PS.xsh")

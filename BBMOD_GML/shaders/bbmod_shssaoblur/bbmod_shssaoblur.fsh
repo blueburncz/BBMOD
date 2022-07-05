@@ -7,7 +7,7 @@ uniform sampler2D u_texDepth;
 uniform vec2 u_vTexel; // (1 / screenWidth, 0) for horizontal blur, (0 , 1 / screenHeight) for vertical
 uniform float u_fClipFar;
 
-#pragma include("DepthEncoding.xsh", "glsl")
+//#pragma include("DepthEncoding.xsh", "glsl")
 /// @param d Linearized depth to encode.
 /// @return Encoded depth.
 /// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
