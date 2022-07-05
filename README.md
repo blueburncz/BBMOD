@@ -50,6 +50,7 @@ Support us in developing BBMOD, get priority assistance and more of our amazing 
 
 # Special thanks
 * To [Assimp](https://github.com/assimp/assimp) for making BBMOD CLI possible!
+* To [Bane-Me Please](#) for extensive testing of BBMOD on Android devices.
 * To Gabor Szauer and their [Game Physics Cookbook](https://github.com/gszauer/GamePhysicsCookbook) for making the Raycasting module possible!
 * To [Kenney.nl](https://www.kenney.nl/) for CC0 assets used in the demo project!
 * To [Poly Haven](https://polyhaven.com/) for CC0 textures used in the demo project!
