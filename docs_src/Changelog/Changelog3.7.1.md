@@ -1,7 +1,5 @@
 # Changelog 3.7.1
-This release mostly focuses on compatibility issues with Feather and errors in
-code and documentation that were discovered thanks to Feather. New style for
-documentation comments of functions was also adopted to make them easier to read.
+This release mostly focuses on compatibility issues with Feather and errors in code and documentation that were discovered thanks to Feather. New style for documentation comments of functions was also adopted to make them easier to read.
 
 ## GML API:
 ### Core module:
