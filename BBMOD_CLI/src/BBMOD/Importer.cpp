@@ -32,7 +32,8 @@ static std::string GetFilename(const char* out, const char* name, const char* ex
 	std::string fname = std::filesystem::path(out).stem().string() + "_";
 	fname.append(name);
 	StringReplaceUnsafe(fname);
-	return std::filesystem::path(out).replace_filename(fname.c_str()).replace_extension(extension).string();
+	return std::filesystem::path(out).parent_path().append(fname.append(extension)).string();
+	//return std::filesystem::path(out).replace_filename(fname.c_str()).replace_extension(extension).string();
 }
 
 static std::string GetAnimationFilename(SAnimation* animation, int index, const char* out)
