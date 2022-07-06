@@ -347,7 +347,7 @@ vec3 xBRDF(vec3 f0, float roughness, float NdotL, float NdotV, float NdotH, floa
 	vec3 specular = xSpecularD_GGX(roughness, NdotH)
 		* xSpecularF_Schlick(f0, VdotH)
 		* xSpecularG_Schlick(xK_Analytic(roughness), NdotL, NdotH);
-	return specular / ((4.0 * NdotL * NdotV) + 0.01);
+	return specular / ((4.0 * NdotL * NdotV) + 0.1);
 }
 
 vec3 SpecularGGX(Material m, vec3 N, vec3 V, vec3 L)
