@@ -86,7 +86,7 @@ function BBMOD_Node(_model) constructor
 		{
 			//if (_current.IsRenderable)
 			//{
-			//	return;
+			//	return self;
 			//}
 			_current.IsRenderable = true;
 			_current = _current.Parent;
@@ -149,8 +149,9 @@ function BBMOD_Node(_model) constructor
 
 		repeat (_childCount)
 		{
-			var _child = new BBMOD_Node(Model).from_buffer(_buffer);
+			var _child = new BBMOD_Node(Model);
 			add_child(_child);
+			_child.from_buffer(_buffer);
 			if (_child.IsRenderable)
 			{
 				set_renderable();
