@@ -55,7 +55,7 @@ uniform vec4 bbmod_Bones[2 * MAX_BONES];
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 #endif
 
-#if !defined(X_UNLIT) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
+#if defined(X_PBR) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
 // 1.0 to enable shadows
 uniform float bbmod_ShadowmapEnableVS;
 // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
@@ -156,7 +156,7 @@ void main()
 	v_vSplatmapCoord = in_TextureCoord0;
 #endif
 
-#if !defined(X_UNLIT) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
+#if defined(X_PBR) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
 	////////////////////////////////////////////////////////////////////////////
 	// Vertex position in shadowmap
 	if (bbmod_ShadowmapEnableVS == 1.0)
@@ -169,5 +169,5 @@ void main()
 	#endif
 		v_vPosShadowmap.z /= bbmod_ShadowmapAreaVS;
 	}
-#endif // !X_UNLIT
+#endif
 }

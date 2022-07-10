@@ -86,7 +86,7 @@ function BBMOD_Node(_model) constructor
 		{
 			//if (_current.IsRenderable)
 			//{
-			//	return self;
+			//	break;
 			//}
 			_current.IsRenderable = true;
 			_current = _current.Parent;
@@ -199,8 +199,7 @@ function BBMOD_Node(_model) constructor
 			repeat (array_length(_meshIndices))
 			{
 				var _mesh = _meshes[_meshIndices[i++]];
-				var _materialIndex = _mesh.MaterialIndex;
-				var _material = _materials[_materialIndex];
+				var _material = _materials[_mesh.MaterialIndex];
 
 				if (_mesh.VertexFormat.Bones)
 				{
@@ -274,8 +273,7 @@ function BBMOD_Node(_model) constructor
 			repeat (array_length(_meshIndices))
 			{
 				var _mesh = _meshes[_meshIndices[i++]];
-				var _materialIndex = _mesh.MaterialIndex;
-				var _material = _materials[_materialIndex];
+				var _material = _materials[_mesh.MaterialIndex];
 
 				var _meshMatrix;
 

@@ -36,12 +36,19 @@ varying vec2 v_vSplatmapCoord;
 
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
+
 // RGBA
 uniform vec4 bbmod_BaseOpacityMultiplier;
-// RGB: Tangent space normal, A: Smoothness
-uniform sampler2D bbmod_NormalSmoothness;
-// RGB: Specular color
-uniform sampler2D bbmod_SpecularColor;
+
+// If 1.0 then the material uses roughness
+uniform float bbmod_IsRoughness;
+// If 1.0 then the material uses metallic workflow
+uniform float bbmod_IsMetallic;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_NormalW;
+// RGB: specular color / R: Metallic, G: ambient occlusion
+uniform sampler2D bbmod_Material;
+
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
 
@@ -160,6 +167,7 @@ Material CreateMaterial(mat3 TBN)
 	m.Subsurface = vec4(0.0);
 	return m;
 }
+#define F0_DEFAULT vec3(0.04)
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -198,55 +206,172 @@ vec3 xDecodeRGBM(vec4 rgbm)
 }
 
 /// @desc Unpacks material from textures.
-/// @param texBaseOpacity      RGB: base color, A: opacity
-/// @param texNormalSmoothness RGB: tangent-space normal vector, A: smoothness
-/// @param texSpecularColor    RGB: specular color
-/// @param TBN                 Tangent-bitangent-normal matrix
-/// @param uv                  Texture coordinates
+/// @param texBaseOpacity     RGB: base color, A: opacity
+/// @param isRoughness
+/// @param texNormalW
+/// @param isMetallic
+/// @param texMaterial
+/// @param texSubsurface      RGB: subsurface color, A: intensity
+/// @param texEmissive        RGBA: RGBM encoded emissive color
+/// @param TBN                Tangent-bitangent-normal matrix
+/// @param uv                 Texture coordinates
 Material UnpackMaterial(
 	sampler2D texBaseOpacity,
-	sampler2D texNormalSmoothness,
-	sampler2D texSpecularColor,
+	float isRoughness,
+	sampler2D texNormalW,
+	float isMetallic,
+	sampler2D texMaterial,
 	mat3 TBN,
 	vec2 uv)
 {
 	Material m = CreateMaterial(TBN);
 
 	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	vec4 baseOpacity = texture2D(texBaseOpacity,
+		uv
+		);
 	m.Base = xGammaToLinear(baseOpacity.rgb);
 	m.Opacity = baseOpacity.a;
 
-	// Normal vector and smoothness
-	vec4 normalSmoothness = texture2D(texNormalSmoothness, uv);
-	m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
-	m.Smoothness = normalSmoothness.a;
+	// Normal vector and smoothness/roughness
+	vec4 normalW = texture2D(texNormalW,
+		uv
+		);
+	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
-	// Specular color
-	vec4 specularColor = texture2D(texSpecularColor, uv);
-	m.Specular = xGammaToLinear(specularColor.rgb);
+	if (isRoughness == 1.0)
+	{
+		m.Roughness = mix(0.1, 0.9, normalW.a);
+		m.Smoothness = 1.0 - m.Roughness;
+	}
+	else
+	{
+		m.Smoothness = mix(0.1, 0.9, normalW.a);
+		m.Roughness = 1.0 - m.Smoothness;
+	}
 
-	// Roughness
-	m.Roughness = 1.0 - m.Smoothness;
+	// Material properties
+	vec4 materialProps = texture2D(texMaterial,
+		uv
+		);
 
-	// Specular power
-	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
+	if (isMetallic == 1.0)
+	{
+		m.Metallic = materialProps.r;
+		m.AO = materialProps.g;
+		m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
+		m.Base *= (1.0 - m.Metallic);
+	}
+	else
+	{
+		m.Specular = xGammaToLinear(materialProps.rgb);
+		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
+	}
 
 	return m;
 }
 
-vec3 SpecularBlinnPhong(Material m, vec3 N, vec3 V, vec3 L)
+#define X_PI   3.14159265359
+#define X_2_PI 6.28318530718
+
+/// @return x^2
+#define xPow2(x) ((x) * (x))
+
+/// @return x^3
+#define xPow3(x) ((x) * (x) * (x))
+
+/// @return x^4
+#define xPow4(x) ((x) * (x) * (x) * (x))
+
+/// @return x^5
+#define xPow5(x) ((x) * (x) * (x) * (x) * (x))
+
+/// @return arctan2(x,y)
+#define xAtan2(x, y) atan(y, x)
+
+/// @return Direction from point `from` to point `to` in degrees (0-360 range).
+float xPointDirection(vec2 from, vec2 to)
+{
+	float x = xAtan2(from.x - to.x, from.y - to.y);
+	return ((x > 0.0) ? x : (2.0 * X_PI + x)) * 180.0 / X_PI;
+}
+
+/// @desc Default specular color for dielectrics
+/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+#define X_F0_DEFAULT vec3(0.04, 0.04, 0.04)
+
+/// @desc Normal distribution function
+/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+float xSpecularD_GGX(float roughness, float NdotH)
+{
+	float r = xPow4(roughness);
+	float a = NdotH * NdotH * (r - 1.0) + 1.0;
+	return r / (X_PI * a * a);
+}
+
+/// @source https://www.unrealengine.com/en-US/blog/physically-based-shading-on-mobile
+float xSpecularD_Approx(float roughness, float RdotL)
+{
+	float a = roughness * roughness;
+	float a2 = a * a;
+	float rcp_a2 = 1.0 / a2;
+	// 0.5 / ln(2), 0.275 / ln(2)
+	float c = (0.72134752 * rcp_a2) + 0.39674113;
+	return (rcp_a2 * exp2((c * RdotL) - c));
+}
+
+/// @desc Roughness remapping for analytic lights.
+/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+float xK_Analytic(float roughness)
+{
+	return xPow2(roughness + 1.0) * 0.125;
+}
+
+/// @desc Roughness remapping for IBL lights.
+/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+float xK_IBL(float roughness)
+{
+	return xPow2(roughness) * 0.5;
+}
+
+/// @desc Geometric attenuation
+/// @param k Use either xK_Analytic for analytic lights or xK_IBL for image based lighting.
+/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+float xSpecularG_Schlick(float k, float NdotL, float NdotV)
+{
+	return (NdotL / (NdotL * (1.0 - k) + k))
+		* (NdotV / (NdotV * (1.0 - k) + k));
+}
+
+/// @desc Fresnel
+/// @source https://en.wikipedia.org/wiki/Schlick%27s_approximation
+vec3 xSpecularF_Schlick(vec3 f0, float VdotH)
+{
+	return f0 + (1.0 - f0) * xPow5(1.0 - VdotH);
+}
+
+/// @desc Cook-Torrance microfacet specular shading
+/// @note N = normalize(vertexNormal)
+///       L = normalize(light - vertex)
+///       V = normalize(camera - vertex)
+///       H = normalize(L + V)
+/// @source http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+vec3 xBRDF(vec3 f0, float roughness, float NdotL, float NdotV, float NdotH, float VdotH)
+{
+	vec3 specular = xSpecularD_GGX(roughness, NdotH)
+		* xSpecularF_Schlick(f0, VdotH)
+		* xSpecularG_Schlick(xK_Analytic(roughness), NdotL, NdotH);
+	return specular / ((4.0 * NdotL * NdotV) + 0.1);
+}
+
+vec3 SpecularGGX(Material m, vec3 N, vec3 V, vec3 L)
 {
 	vec3 H = normalize(L + V);
+	float NdotL = max(dot(N, L), 0.0);
+	float NdotV = max(dot(N, V), 0.0);
 	float NdotH = max(dot(N, H), 0.0);
 	float VdotH = max(dot(V, H), 0.0);
-	vec3 fresnel = m.Specular + (1.0 - m.Specular) * pow(1.0 - VdotH, 5.0);
-	float visibility = 0.25;
-	float A = m.SpecularPower / log(2.0);
-	float blinnPhong = exp2(A * NdotH - A);
-	float blinnNormalization = (m.SpecularPower + 8.0) / 8.0;
-	float normalDistribution = blinnPhong * blinnNormalization;
-	return fresnel * visibility * normalDistribution;
+	return xBRDF(m.Specular, m.Roughness, NdotL, NdotV, NdotH, VdotH);
 }
 
 void DoDirectionalLightPS(
@@ -265,7 +390,7 @@ void DoDirectionalLightPS(
 	float NdotL = max(dot(N, L), 0.0);
 	color *= (1.0 - shadow) * NdotL;
 	diffuse += color;
-	specular += color * SpecularBlinnPhong(m, N, V, L);
+	specular += color * SpecularGGX(m, N, V, L);
 }
 
 void DoPointLightPS(
@@ -287,7 +412,7 @@ void DoPointLightPS(
 	float NdotL = max(dot(N, L), 0.0);
 	color *= NdotL * att;
 	diffuse += color;
-	specular += color * SpecularBlinnPhong(m, N, V, L);
+	specular += color * SpecularGGX(m, N, V, L);
 }
 void Exposure()
 {
@@ -488,7 +613,7 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }
 
-void DefaultShader(Material material, float depth)
+void PBRShader(Material material, float depth)
 {
 	vec3 N = material.Normal;
 	vec3 lightDiffuse = vec3(0.0);
@@ -510,6 +635,7 @@ void DefaultShader(Material material, float depth)
 	// IBL
 	lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
 	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
+	// TODO: Subsurface scattering for IBL
 
 	// Directional light
 	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
@@ -533,11 +659,13 @@ void DefaultShader(Material material, float depth)
 		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
 			material, lightDiffuse, lightSpecular, lightSubsurface);
 	}
-	
+
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;
 	// Specular
 	gl_FragColor.rgb += lightSpecular;
+	// Ambient occlusion
+	gl_FragColor.rgb *= material.AO;
 	// Emissive
 	gl_FragColor.rgb += material.Emissive;
 	// Subsurface scattering
@@ -560,8 +688,10 @@ void main()
 {
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
-		bbmod_NormalSmoothness,
-		bbmod_SpecularColor,
+		bbmod_IsRoughness,
+		bbmod_NormalW,
+		bbmod_IsMetallic,
+		bbmod_Material,
 		v_mTBN,
 		v_vTexCoord);
 
@@ -584,6 +714,6 @@ void main()
 		discard;
 	}
 
-	DefaultShader(material, v_vPosition.z);
+	PBRShader(material, v_vPosition.z);
 
 }

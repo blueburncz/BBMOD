@@ -1,61 +1,69 @@
-/// @macro {Struct.BBMOD_PBRMaterial} A material for rendering RGBM encoded
-/// skies.
+/// @macro {Struct.BBMOD_PBRShader} PBR shader for static models.
+/// @see BBMOD_PBRShader
+/// @obsolete Please use {@link BBMOD_SHADER_DEFAULT} instead.
+#macro BBMOD_SHADER_PBR __bbmod_shader_pbr()
+
+/// @macro {Struct.BBMOD_PBRShader} PBR shader for animated models with bones.
+/// @see BBMOD_PBRShader
+/// @obsolete Please use {@link BBMOD_SHADER_DEFAULT_ANIMATED} instead.
+#macro BBMOD_SHADER_PBR_ANIMATED __bbmod_shader_pbr_animated()
+
+/// @macro {Struct.BBMOD_PBRShader} PBR shader for dynamically batched models.
+/// @see BBMOD_PBRShader
+/// @see BBMOD_DynamicBatch
+/// @obsolete Please use {@link BBMOD_SHADER_BATCHED} instead.
+#macro BBMOD_SHADER_PBR_BATCHED __bbmod_shader_pbr_batched()
+
+/// @macro {Struct.BBMOD_PBRMaterial} PBR material for static models.
 /// @see BBMOD_PBRMaterial
-#macro BBMOD_MATERIAL_SKY __bbmod_material_sky()
+/// @obsolete Please use {@link BBMOD_MATERIAL_DEFAULT} instead.
+#macro BBMOD_MATERIAL_PBR __bbmod_material_pbr()
+
+/// @macro {Struct.BBMOD_PBRMaterial} PBR material for animated models with
+/// bones.
+/// @see BBMOD_PBRMaterial
+/// @obsolete Please use {@link BBMOD_MATERIAL_DEFAULT_ANIMATED} instead.
+#macro BBMOD_MATERIAL_PBR_ANIMATED __bbmod_material_pbr_animated()
+
+/// @macro {Struct.BBMOD_PBRMaterial} PBR material for dynamically batched
+/// models.
+/// @see BBMOD_PBRMaterial
+/// @see BBMOD_DynamicBatch
+/// @obsolete Please use {@link BBMOD_MATERIAL_DEFAULT_BATCHED} instead.
+#macro BBMOD_MATERIAL_PBR_BATCHED __bbmod_material_pbr_batched()
 
 function __bbmod_shader_pbr()
 {
-	static _shader = new BBMOD_PBRShader(BBMOD_ShPBR, BBMOD_VFORMAT_DEFAULT);
-	return _shader;
+	gml_pragma("forceinline");
+	return __bbmod_shader_default();
 }
 
 function __bbmod_shader_pbr_animated()
 {
-	static _shader = new BBMOD_PBRShader(
-		BBMOD_ShPBRAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED);
-	return _shader;
+	gml_pragma("forceinline");
+	return __bbmod_shader_default_animated();
 }
 
 function __bbmod_shader_pbr_batched()
 {
-	static _shader = new BBMOD_PBRShader(
-		BBMOD_ShPBRBatched, BBMOD_VFORMAT_DEFAULT_BATCHED);
-	return _shader;
+	gml_pragma("forceinline");
+	return __bbmod_shader_default_batched();
 }
 
 function __bbmod_material_pbr()
 {
-	static _material = new BBMOD_PBRMaterial(BBMOD_SHADER_PBR);
-	return _material;
+	gml_pragma("forceinline");
+	return __bbmod_material_default();
 }
 
 function __bbmod_material_pbr_animated()
 {
-	static _material = new BBMOD_PBRMaterial(BBMOD_SHADER_PBR_ANIMATED);
-	return _material;
+	gml_pragma("forceinline");
+	return __bbmod_material_default_animated();
 }
 
 function __bbmod_material_pbr_batched()
 {
-	static _material = new BBMOD_PBRMaterial(BBMOD_SHADER_PBR_BATCHED);
-	return _material;
-}
-
-function __bbmod_material_sky()
-{
-	static _skyRenderQueue = new BBMOD_RenderQueue("Sky", -$FFFFFFFF);
-	static _material = undefined;
-	if (_material == undefined)
-	{
-		var _skSky = new BBMOD_BaseShader(
-			BBMOD_ShSky, new BBMOD_VertexFormat(true));
-		_material = new BBMOD_BaseMaterial(_skSky);
-		_material.Culling = cull_noculling;
-		_material.Mipmapping = false;
-		_material.ZWrite = false;
-		_material.ZTest = false;
-		_material.Filtering = true;
-		_material.RenderQueue = _skyRenderQueue;
-	}
-	return _material;
+	gml_pragma("forceinline");
+	return __bbmod_material_default_batched();
 }

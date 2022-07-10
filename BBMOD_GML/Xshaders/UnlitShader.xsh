@@ -1,4 +1,3 @@
-#pragma include("SpecularMaterial.xsh")
 #pragma include("Fog.xsh")
 #pragma include("Exposure.xsh")
 #pragma include("GammaCorrect.xsh")

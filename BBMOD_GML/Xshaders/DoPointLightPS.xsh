@@ -1,6 +1,8 @@
 #pragma include("Material.xsh")
 #if defined(X_PBR)
+#if !defined(X_TERRAIN)
 #pragma include("CheapSubsurface.xsh")
+#endif
 #pragma include("SpecularGGX.xsh")
 #else
 #pragma include("SpecularBlinnPhong.xsh")
@@ -23,7 +25,7 @@ void DoPointLightPS(
 	L = normalize(L);
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
 	float NdotL = max(dot(N, L), 0.0);
-#if defined(X_PBR)
+#if defined(X_PBR) && !defined(X_TERRAIN)
 	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 #endif
 	color *= NdotL * att;

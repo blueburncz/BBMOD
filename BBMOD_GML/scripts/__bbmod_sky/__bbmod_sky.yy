@@ -1,11 +1,12 @@
 {
-  "type": 1,
+  "isDnD": false,
+  "isCompatibility": false,
   "parent": {
     "name": "Sky",
     "path": "folders/BBMOD/Rendering/Sky.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_ShSky",
+  "name": "__bbmod_sky",
   "tags": [],
-  "resourceType": "GMShader",
+  "resourceType": "GMScript",
 }

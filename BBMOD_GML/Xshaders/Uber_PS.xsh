@@ -71,33 +71,37 @@ uniform vec4 bbmod_InstanceID;
 
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
+
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
 // RGBA
 uniform vec4 bbmod_BaseOpacityMultiplier;
 #endif
-#if defined(X_PBR)
-// RGB: Tangent space normal, A: Roughness
-uniform sampler2D bbmod_NormalRoughness;
-// R: Metallic, G: Ambient occlusion
-uniform sampler2D bbmod_MetallicAO;
+
+// If 1.0 then the material uses roughness
+uniform float bbmod_IsRoughness;
+// If 1.0 then the material uses metallic workflow
+uniform float bbmod_IsMetallic;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_NormalW;
+// RGB: specular color / R: Metallic, G: ambient occlusion
+uniform sampler2D bbmod_Material;
+
+#if !defined(X_TERRAIN)
 // RGB: Subsurface color, A: Intensity
 uniform sampler2D bbmod_Subsurface;
 // RGBA: RGBM encoded emissive color
 uniform sampler2D bbmod_Emissive;
-#else // X_PBR
+#endif
+
 #if defined(X_2D)
 // UVs of the BaseOpacity texture
 uniform vec4 bbmod_BaseOpacityUV;
-// UVs of the NormalSmoothness texture
-uniform vec4 bbmod_NormalSmoothnessUV;
-// UVs of the SpecularColor texture
-uniform vec4 bbmod_SpecularColorUV;
+// UVs of the NormalW texture
+uniform vec4 bbmod_NormalWUV;
+// UVs of the Material texture
+uniform vec4 bbmod_MaterialUV;
 #endif // X_2D
-// RGB: Tangent space normal, A: Smoothness
-uniform sampler2D bbmod_NormalSmoothness;
-// RGB: Specular color
-uniform sampler2D bbmod_SpecularColor;
-#endif // !X_PBR
+
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
 
@@ -154,7 +158,7 @@ uniform vec3 bbmod_LightDirectionalDir;
 // RGBM encoded color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
-#if !defined(X_UNLIT)
+#if defined(X_PBR)
 ////////////////////////////////////////////////////////////////////////////////
 // SSAO
 
@@ -174,7 +178,7 @@ uniform vec2 bbmod_IBLTexel;
 
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-#endif // !X_UNLIT
+#endif // X_PBR
 
 #if defined(X_TERRAIN)
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,7 +190,7 @@ uniform sampler2D bbmod_Splatmap;
 uniform int bbmod_SplatmapIndex;
 #endif // X_TERRAIN
 
-#if !defined(X_UNLIT)
+#if defined(X_PBR)
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
 
@@ -200,18 +204,14 @@ uniform vec2 bbmod_ShadowmapTexel;
 uniform float bbmod_ShadowmapAreaPS;
 // The range over which meshes smoothly transition into shadow.
 uniform float bbmod_ShadowmapBias;
-#endif // !X_UNLIT
+#endif // X_PBR
 #endif // !X_OUTPUT_DEPTH
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
-#if defined(X_PBR)
 #pragma include("MetallicMaterial.xsh")
-#else
-#pragma include("SpecularMaterial.xsh")
-#endif
 
 #if !defined(X_ID)
 #if defined(X_OUTPUT_DEPTH)
@@ -220,11 +220,7 @@ uniform float bbmod_ShadowmapBias;
 #if defined(X_PBR)
 #pragma include("PBRShader.xsh")
 #else // X_PBR
-#if defined(X_UNLIT)
 #pragma include("UnlitShader.xsh")
-#else // X_UNLIT
-#pragma include("DefaultShader.xsh")
-#endif // !X_UNLIT
 #endif // !X_PBR
 #endif // !X_OUTPUT_DEPTH
 #endif // !X_ID
@@ -235,23 +231,18 @@ uniform float bbmod_ShadowmapBias;
 //
 void main()
 {
-#if defined(X_PBR)
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
-		bbmod_NormalRoughness,
-		bbmod_MetallicAO,
+		bbmod_IsRoughness,
+		bbmod_NormalW,
+		bbmod_IsMetallic,
+		bbmod_Material,
+#if !defined(X_TERRAIN)
 		bbmod_Subsurface,
 		bbmod_Emissive,
-		v_mTBN,
-		v_vTexCoord);
-#else
-	Material material = UnpackMaterial(
-		bbmod_BaseOpacity,
-		bbmod_NormalSmoothness,
-		bbmod_SpecularColor,
-		v_mTBN,
-		v_vTexCoord);
 #endif
+		v_mTBN,
+		v_vTexCoord);
 
 #if defined(X_2D) || defined(X_PARTICLES)
 	material.Base *= v_vColor.rgb;
@@ -298,11 +289,7 @@ void main()
 #if defined(X_PBR)
 	PBRShader(material, v_vPosition.z);
 #else // X_PBR
-#if defined(X_UNLIT)
 	UnlitShader(material, v_vPosition.z);
-#else // X_UNLIT
-	DefaultShader(material, v_vPosition.z);
-#endif // !X_UNLIT
 #endif // !X_PBR
 #endif // !X_OUTPUT_DEPTH
 

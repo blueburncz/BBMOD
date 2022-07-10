@@ -30,15 +30,6 @@ attribute vec4 in_TangentW;
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
-// 1.0 to enable shadows
-uniform float bbmod_ShadowmapEnableVS;
-// WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
-uniform mat4 bbmod_ShadowmapMatrix;
-// The area that the shadowmap captures
-uniform float bbmod_ShadowmapAreaVS;
-// Offsets vertex position by its normal scaled by this value
-uniform float bbmod_ShadowmapNormalOffset;
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings
@@ -90,16 +81,4 @@ void main()
 	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 	v_mTBN = mat3(tangent, bitangent, normal);
 
-	////////////////////////////////////////////////////////////////////////////
-	// Vertex position in shadowmap
-	if (bbmod_ShadowmapEnableVS == 1.0)
-	{
-		v_vPosShadowmap = (bbmod_ShadowmapMatrix
-			* vec4(v_vVertex + normal * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
-		v_vPosShadowmap.xy = v_vPosShadowmap.xy * 0.5 + 0.5;
-	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-		v_vPosShadowmap.y = 1.0 - v_vPosShadowmap.y;
-	#endif
-		v_vPosShadowmap.z /= bbmod_ShadowmapAreaVS;
-	}
 }

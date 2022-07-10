@@ -40,10 +40,21 @@ uniform vec4 bbmod_InstanceID;
 
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
-// RGB: Tangent space normal, A: Smoothness
-uniform sampler2D bbmod_NormalSmoothness;
-// RGB: Specular color
-uniform sampler2D bbmod_SpecularColor;
+
+// If 1.0 then the material uses roughness
+uniform float bbmod_IsRoughness;
+// If 1.0 then the material uses metallic workflow
+uniform float bbmod_IsMetallic;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_NormalW;
+// RGB: specular color / R: Metallic, G: ambient occlusion
+uniform sampler2D bbmod_Material;
+
+// RGB: Subsurface color, A: Intensity
+uniform sampler2D bbmod_Subsurface;
+// RGBA: RGBM encoded emissive color
+uniform sampler2D bbmod_Emissive;
+
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
 
@@ -86,40 +97,6 @@ uniform vec3 bbmod_LightDirectionalDir;
 uniform vec4 bbmod_LightDirectionalColor;
 
 ////////////////////////////////////////////////////////////////////////////////
-// SSAO
-
-// SSAO texture
-uniform sampler2D bbmod_SSAO;
-
-////////////////////////////////////////////////////////////////////////////////
-// Image based lighting
-
-// Prefiltered octahedron env. map
-uniform sampler2D bbmod_IBL;
-// Texel size of one octahedron
-uniform vec2 bbmod_IBLTexel;
-
-////////////////////////////////////////////////////////////////////////////////
-// Point lights
-
-// [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
-////////////////////////////////////////////////////////////////////////////////
-// Shadow mapping
-
-// 1.0 to enable shadows
-uniform float bbmod_ShadowmapEnablePS;
-// Shadowmap texture
-uniform sampler2D bbmod_Shadowmap;
-// (1.0/shadowmapWidth, 1.0/shadowmapHeight)
-uniform vec2 bbmod_ShadowmapTexel;
-// The area that the shadowmap captures
-uniform float bbmod_ShadowmapAreaPS;
-// The range over which meshes smoothly transition into shadow.
-uniform float bbmod_ShadowmapBias;
-
-////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
@@ -154,6 +131,7 @@ Material CreateMaterial(mat3 TBN)
 	m.Subsurface = vec4(0.0);
 	return m;
 }
+#define F0_DEFAULT vec3(0.04)
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -192,39 +170,76 @@ vec3 xDecodeRGBM(vec4 rgbm)
 }
 
 /// @desc Unpacks material from textures.
-/// @param texBaseOpacity      RGB: base color, A: opacity
-/// @param texNormalSmoothness RGB: tangent-space normal vector, A: smoothness
-/// @param texSpecularColor    RGB: specular color
-/// @param TBN                 Tangent-bitangent-normal matrix
-/// @param uv                  Texture coordinates
+/// @param texBaseOpacity     RGB: base color, A: opacity
+/// @param isRoughness
+/// @param texNormalW
+/// @param isMetallic
+/// @param texMaterial
+/// @param texSubsurface      RGB: subsurface color, A: intensity
+/// @param texEmissive        RGBA: RGBM encoded emissive color
+/// @param TBN                Tangent-bitangent-normal matrix
+/// @param uv                 Texture coordinates
 Material UnpackMaterial(
 	sampler2D texBaseOpacity,
-	sampler2D texNormalSmoothness,
-	sampler2D texSpecularColor,
+	float isRoughness,
+	sampler2D texNormalW,
+	float isMetallic,
+	sampler2D texMaterial,
+	sampler2D texSubsurface,
+	sampler2D texEmissive,
 	mat3 TBN,
 	vec2 uv)
 {
 	Material m = CreateMaterial(TBN);
 
 	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
+	vec4 baseOpacity = texture2D(texBaseOpacity,
+		uv
+		);
 	m.Base = xGammaToLinear(baseOpacity.rgb);
 	m.Opacity = baseOpacity.a;
 
-	// Normal vector and smoothness
-	vec4 normalSmoothness = texture2D(texNormalSmoothness, uv);
-	m.Normal = normalize(TBN * (normalSmoothness.rgb * 2.0 - 1.0));
-	m.Smoothness = normalSmoothness.a;
+	// Normal vector and smoothness/roughness
+	vec4 normalW = texture2D(texNormalW,
+		uv
+		);
+	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
-	// Specular color
-	vec4 specularColor = texture2D(texSpecularColor, uv);
-	m.Specular = xGammaToLinear(specularColor.rgb);
+	if (isRoughness == 1.0)
+	{
+		m.Roughness = mix(0.1, 0.9, normalW.a);
+		m.Smoothness = 1.0 - m.Roughness;
+	}
+	else
+	{
+		m.Smoothness = mix(0.1, 0.9, normalW.a);
+		m.Roughness = 1.0 - m.Smoothness;
+	}
 
-	// Roughness
-	m.Roughness = 1.0 - m.Smoothness;
+	// Material properties
+	vec4 materialProps = texture2D(texMaterial,
+		uv
+		);
 
-	// Specular power
-	m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
+	if (isMetallic == 1.0)
+	{
+		m.Metallic = materialProps.r;
+		m.AO = materialProps.g;
+		m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
+		m.Base *= (1.0 - m.Metallic);
+	}
+	else
+	{
+		m.Specular = xGammaToLinear(materialProps.rgb);
+		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
+	}
+
+	// Subsurface (color and intensity)
+	vec4 subsurface = texture2D(texSubsurface, uv);
+	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
+
+	// Emissive color
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
 
 	return m;
 }
@@ -237,8 +252,12 @@ void main()
 {
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
-		bbmod_NormalSmoothness,
-		bbmod_SpecularColor,
+		bbmod_IsRoughness,
+		bbmod_NormalW,
+		bbmod_IsMetallic,
+		bbmod_Material,
+		bbmod_Subsurface,
+		bbmod_Emissive,
 		v_mTBN,
 		v_vTexCoord);
 
