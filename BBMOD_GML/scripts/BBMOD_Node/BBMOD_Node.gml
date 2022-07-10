@@ -82,7 +82,7 @@ function BBMOD_Node(_model) constructor
 	static set_renderable = function () {
 		gml_pragma("forceinline");
 		var _current = self;
-		while (_current)
+		while (_current != undefined)
 		{
 			//if (_current.IsRenderable)
 			//{
@@ -135,7 +135,11 @@ function BBMOD_Node(_model) constructor
 		var _meshCount = buffer_read(_buffer, buffer_u32);
 		var _meshes = array_create(_meshCount, undefined);
 		Meshes = _meshes;
-		IsRenderable = (_meshCount > 0);
+
+		if (_meshCount > 0)
+		{
+			set_renderable();
+		}
 
 		i = 0;
 		repeat (_meshCount)
@@ -152,10 +156,6 @@ function BBMOD_Node(_model) constructor
 			var _child = new BBMOD_Node(Model);
 			add_child(_child);
 			_child.from_buffer(_buffer);
-			if (_child.IsRenderable)
-			{
-				set_renderable();
-			}
 		}
 
 		return self;
