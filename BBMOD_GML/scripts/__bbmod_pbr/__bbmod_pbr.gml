@@ -1,3 +1,18 @@
+/// @macro {Asset.GMShader} Equals to `BBMOD_ShDefault`.
+/// @obsolete This was added only for backwards compatibility purposes and will
+/// eventually be removed. Please use `BBMOD_ShDefault` instead.
+#macro BBMOD_ShPBR BBMOD_ShDefault
+
+/// @macro {Asset.GMShader} Equals to `BBMOD_ShDefaultAnimated`.
+/// @obsolete This was added only for backwards compatibility purposes and will
+/// eventually be removed. Please use `BBMOD_ShDefaultAnimated` instead.
+#macro BBMOD_ShPBRAnimated BBMOD_ShDefaultAnimated
+
+/// @macro {Asset.GMShader} Equals to `BBMOD_ShDefaultBatched`.
+/// @obsolete This was added only for backwards compatibility purposes and will
+/// eventually be removed. Please use `BBMOD_ShDefaultBatched` instead.
+#macro BBMOD_ShPBRBatched BBMOD_ShDefaultBatched
+
 /// @macro {Struct.BBMOD_PBRShader} PBR shader for static models.
 /// @see BBMOD_PBRShader
 /// @obsolete Please use {@link BBMOD_SHADER_DEFAULT} instead.
