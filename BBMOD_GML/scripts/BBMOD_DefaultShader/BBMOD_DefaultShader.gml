@@ -30,7 +30,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_normal_smoothness(_texture)
 	///
-	/// @desc Sets the `bbmod_NormalSmoothness` uniform.
+	/// @desc Sets the `bbmod_NormalW` uniform.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with normal vector in
 	/// the RGB channels and smoothness in the A channel.
@@ -44,7 +44,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_specular_color(_texture)
 	///
-	/// @desc Sets the `bbmod_SpecularColor` uniform.
+	/// @desc Sets the `bbmod_Material` uniform.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with specular color in
 	/// the RGB channels.
@@ -58,7 +58,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_normal_roughness(_texture)
 	///
-	/// @desc Sets the `bbmod_NormalRoughness` uniform.
+	/// @desc Sets the `bbmod_NormalW` uniform.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with normal vector in
 	/// the RGB channels and roughness in the A channel.
@@ -72,7 +72,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_metallic_ao(_texture)
 	///
-	/// @desc Sets the `bbmod_MetallicAO` uniform.
+	/// @desc Sets the `bbmod_Material` uniform.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with metalness in the
 	/// R channel and ambient occlusion in the G channel.
