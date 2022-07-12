@@ -1,7 +1,7 @@
 {
   "option_tvos_display_name": "BBMOD Demo",
   "option_tvos_bundle_name": "com.company.game",
-  "option_tvos_version": "3.7.2",
+  "option_tvos_version": "3.8.0",
   "option_tvos_output_dir": "~/GameMakerStudio2/tvOS",
   "option_tvos_team_id": "",
   "option_tvos_icon_400": "${base_options_dir}/tvos/icons/400.png",

@@ -8,4 +8,5 @@ Encapsulates submodules related to rendering.
 * [PBR submodule](./PBRSubmodule.html)
 * [Post-processing submodule](./PostProcessingSubmodule.html)
 * [Renderer submodule](./RendererSubmodule.html)
+* [Sky submodule](./SkySubmodule.html)
 * [SSAO submodule](./SSAOSubmodule.html)

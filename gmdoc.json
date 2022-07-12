@@ -5,7 +5,7 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
-  "version": "3.7.2",
+  "version": "3.8.0",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
@@ -15,6 +15,7 @@
     "Changelog": {
       "file": "Changelog/Changelog_.md",
       "pages": {
+        "3.8.0": "Changelog/Changelog3.8.0.md",
         "3.7.2": "Changelog/Changelog3.7.2.md",
         "3.7.1": "Changelog/Changelog3.7.1.md",
         "3.7.0": "Changelog/Changelog3.7.0.md",
@@ -97,6 +98,7 @@
             "PBR submodule": "Modules/Rendering/PBRSubmodule.md",
             "Post-processing submodule": "Modules/Rendering/PostProcessingSubmodule.md",
             "Renderer submodule": "Modules/Rendering/RendererSubmodule.md",
+            "Sky submodule": "Modules/Rendering/SkySubmodule.md",
             "SSAO submodule": "Modules/Rendering/SSAOSubmodule.md"
           }
         },

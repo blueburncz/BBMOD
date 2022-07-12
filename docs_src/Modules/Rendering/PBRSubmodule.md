@@ -1,15 +1,15 @@
 # PBR submodule
-This module contains physically based (PBR) shaders and materials with full
-support for the metallic-roughness workflow. Using this module you can render
-models textured in professional, industry standard software like
-[Substance Painter](https://www.substance3d.com/).
+This module contains now obsolete shaders and materials for physically based
+rendering (PBR). These have been merged into the default ones, which now support
+both specular color & smoothness and metallic & roughness workflows. Please use
+the default shaders and materials instead, as this module will be removed in a
+future release.
 
 ## Scripting API
 ### Macros
 * [BBMOD_MATERIAL_PBR_ANIMATED](./BBMOD_MATERIAL_PBR_ANIMATED.html)
 * [BBMOD_MATERIAL_PBR_BATCHED](./BBMOD_MATERIAL_PBR_BATCHED.html)
 * [BBMOD_MATERIAL_PBR](./BBMOD_MATERIAL_PBR.html)
-* [BBMOD_MATERIAL_SKY](./BBMOD_MATERIAL_SKY.html)
 * [BBMOD_SHADER_PBR_ANIMATED](./BBMOD_SHADER_PBR_ANIMATED.html)
 * [BBMOD_SHADER_PBR_BATCHED](./BBMOD_SHADER_PBR_BATCHED.html)
 * [BBMOD_SHADER_PBR](./BBMOD_SHADER_PBR.html)
