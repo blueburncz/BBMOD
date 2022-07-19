@@ -86,6 +86,7 @@
         "DLL module": "Modules/DLLModule.md",
         "Gizmo module": "Modules/GizmoModule.md",
         "Importer module": "Modules/ImporterModule.md",
+        "Lightmap module": "Modules/LightmapModule.md",
         "Mesh builder module": "Modules/MeshBuilderModule.md",
         "Particles module": "Modules/ParticlesModule.md",
         "Raycasting module": "Modules/RaycastingModule.md",

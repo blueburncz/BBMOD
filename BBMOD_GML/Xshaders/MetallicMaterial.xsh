@@ -4,15 +4,17 @@
 #pragma include("RGBM.xsh")
 
 /// @desc Unpacks material from textures.
-/// @param texBaseOpacity     RGB: base color, A: opacity
+/// @param texBaseOpacity RGB: base color, A: opacity
 /// @param isRoughness
 /// @param texNormalW
 /// @param isMetallic
 /// @param texMaterial
-/// @param texSubsurface      RGB: subsurface color, A: intensity
-/// @param texEmissive        RGBA: RGBM encoded emissive color
-/// @param TBN                Tangent-bitangent-normal matrix
-/// @param uv                 Texture coordinates
+/// @param texSubsurface  RGB: subsurface color, A: intensity
+/// @param texEmissive    RGBA: RGBM encoded emissive color
+/// @param texLightmap    RGBA: RGBM encoded lightmap
+/// @param uvLightmap     Lightmap texture coordinates
+/// @param TBN            Tangent-bitangent-normal matrix
+/// @param uv             Texture coordinates
 Material UnpackMaterial(
 	sampler2D texBaseOpacity,
 	float isRoughness,
@@ -20,8 +22,14 @@ Material UnpackMaterial(
 	float isMetallic,
 	sampler2D texMaterial,
 #if !defined(X_TERRAIN)
+#if !defined(X_LIGHTMAP)
 	sampler2D texSubsurface,
+#endif
 	sampler2D texEmissive,
+#endif
+#if defined(X_LIGHTMAP)
+	sampler2D texLightmap,
+	vec2 uvLightmap,
 #endif
 	mat3 TBN,
 	vec2 uv)
@@ -78,17 +86,24 @@ Material UnpackMaterial(
 	}
 	else
 	{
-		m.Specular = xGammaToLinear(materialProps.rgb);
+		m.Specular = materialProps.rgb;
 		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 	}
 
 #if !defined(X_TERRAIN)
+#if !defined(X_LIGHTMAP)
 	// Subsurface (color and intensity)
 	vec4 subsurface = texture2D(texSubsurface, uv);
 	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
+#endif
 
 	// Emissive color
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+#endif
+
+#if defined(X_LIGHTMAP)
+	// Lightmap
+	m.Lightmap = xGammaToLinear(xDecodeRGBM(texture2D(texLightmap, uvLightmap)));
 #endif
 
 	return m;

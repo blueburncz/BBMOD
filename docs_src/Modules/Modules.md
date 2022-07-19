@@ -13,6 +13,7 @@ individual modules.
 * [DLL module](./DLLModule.html)
 * [Gizmo module](./GizmoModule.html)
 * [Importer module](./ImporterModule.html)
+* [Lightmap module](./LightmapModule.html)
 * [Mesh builder module](./MeshBuilderModule.html)
 * [Particles module](./ParticlesModule.html)
 * [Raycasting module](./RaycastingModule.html)

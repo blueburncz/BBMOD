@@ -280,7 +280,7 @@ SModel* SModel::Load(std::string path)
 	SVertexFormat* vertexFormat = nullptr;
 	if (!hasMinorVersion || versionMinor < 2)
 	{
-		vertexFormat = SVertexFormat::Load(file);
+		vertexFormat = SVertexFormat::Load(file, versionMinor);
 		model->VertexFormat = vertexFormat;
 	}
 

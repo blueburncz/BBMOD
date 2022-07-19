@@ -5,6 +5,9 @@ varying vec4 v_vColor;
 #endif
 
 varying vec2 v_vTexCoord;
+#if defined(X_LIGHTMAP)
+varying vec2 v_vTexCoord2;
+#endif
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 

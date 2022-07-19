@@ -55,6 +55,9 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 	EmissiveSprite = undefined;
 
+	/// @var {Pointer.Texture} A texture with RGBM encoded lightmap.
+	Lightmap = undefined;
+
 	/// @func set_normal_smoothness(_normal, _smoothness)
 	///
 	/// @desc Changes the normal vector and smoothness to a uniform value for
@@ -341,6 +344,9 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		{
 			_dest.Emissive = Emissive;
 		}
+
+		// Lightmap
+		_dest.Lightmap = Lightmap;
 
 		return self;
 	};

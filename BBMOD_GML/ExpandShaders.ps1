@@ -43,6 +43,10 @@ Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShParticleLit\BBMOD_ShPart
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShParticleUnlit\BBMOD_ShParticleUnlit.vsh --x .\Xshaders\ -ci X_PARTICLES=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShParticleUnlit\BBMOD_ShParticleUnlit.fsh --x .\Xshaders\ -ci X_PARTICLES=1
 
+# Lightmap shaders
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShLightmap\BBMOD_ShLightmap.vsh --x .\Xshaders\ -ci X_PBR=1 X_LIGHTMAP=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShLightmap\BBMOD_ShLightmap.fsh --x .\Xshaders\ -ci X_PBR=1 X_LIGHTMAP=1
+
 # Zombie shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\ShZombie\ShZombie.vsh --x .\Xshaders\ -ci X_PBR=1 X_ZOMBIE=1 X_ANIMATED=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\ShZombie\ShZombie.fsh --x .\Xshaders\ -ci X_PBR=1 X_ZOMBIE=1 X_ANIMATED=1

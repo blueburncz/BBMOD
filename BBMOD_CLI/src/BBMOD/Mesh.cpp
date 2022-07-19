@@ -89,6 +89,7 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 	vertexFormat->Vertices = true;
 	vertexFormat->Normals = aiMesh->HasNormals() && !config.DisableNormals;
 	vertexFormat->TextureCoords = aiMesh->HasTextureCoords(0) && !config.DisableTextureCoords;
+	vertexFormat->TextureCoords2 = aiMesh->HasTextureCoords(1) && !config.DisableTextureCoords && !config.DisableTextureCoords2;
 	vertexFormat->Colors = aiMesh->HasVertexColors(0) && !config.DisableVertexColors;
 	vertexFormat->TangentW = aiMesh->HasTangentsAndBitangents() && !(config.DisableNormals || config.DisableTangentW);
 	vertexFormat->Bones = aiMesh->HasBones() && !config.DisableBones;
@@ -243,6 +244,24 @@ SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
 				vertex->Texture[1] = texture.y;
 			}
 
+			// Texture2
+			if (vertexFormat->TextureCoords2)
+			{
+				aiVector3D texture = aiMesh->HasTextureCoords(1)
+					? aiMesh->mTextureCoords[1][idx]
+					: aiVector3D();
+				if (config.FlipTextureHorizontally)
+				{
+					texture.x = 1.0f - texture.x;
+				}
+				if (config.FlipTextureVertically)
+				{
+					texture.y = 1.0f - texture.y;
+				}
+				vertex->Texture2[0] = texture.x;
+				vertex->Texture2[1] = texture.y;
+			}
+
 			// Color
 			if (vertexFormat->Colors)
 			{
@@ -318,6 +337,11 @@ bool SVertex::Save(std::ofstream& file)
 		FILE_WRITE_VEC2(file, Texture);
 	}
 
+	if (vertexFormat->TextureCoords2)
+	{
+		FILE_WRITE_VEC2(file, Texture2);
+	}
+
 	if (vertexFormat->Colors)
 	{
 		FILE_WRITE_DATA(file, Color);
@@ -368,6 +392,11 @@ SVertex* SVertex::Load(std::ifstream& file, SVertexFormat* vertexFormat)
 	if (vertexFormat->TextureCoords)
 	{
 		FILE_READ_VEC2(file, vertex->Texture);
+	}
+
+	if (vertexFormat->TextureCoords2)
+	{
+		FILE_READ_VEC2(file, vertex->Texture2);
 	}
 
 	if (vertexFormat->Colors)
@@ -452,7 +481,7 @@ SMesh* SMesh::Load(std::ifstream& file, SVertexFormat* vertexFormat, SModel* mod
 
 	if (model->VersionMinor >= 2)
 	{
-		vertexFormat = SVertexFormat::Load(file);
+		vertexFormat = SVertexFormat::Load(file, model->VersionMinor);
 		mesh->VertexFormat = vertexFormat;
 
 		FILE_READ_DATA(file, mesh->PrimitiveType);

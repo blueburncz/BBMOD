@@ -1,23 +1,31 @@
-/// @func BBMOD_VertexFormat([_vertices[, _normals[, _uvs[, _colors[, _tangentw[, _bones[, _ids]]]]]]])
+/// @func BBMOD_VertexFormat([_confOrVertices[, _normals[, _uvs[, _colors[, _tangentw[, _bones[, _ids]]]]]]])
 ///
 /// @desc A wrapper of a raw GameMaker vertex format.
 ///
-/// @param {Bool} [_vertices] If `true` then the vertex format must have
-/// vertices. This should always be `true`! Defaults to `true`.
+/// @param {Struct, Bool} [_confOrVertices] Either a struct with keys called
+/// after properties of `BBMOD_VertexFormat` and values `true` or `false`,
+/// depending on whether the vertex format should have the property, or `true`,
+/// since every vertex format must have vertex positions.
 /// @param {Bool} [_normals] If `true` then the vertex format must have normal
-/// vectors. Defaults to `false`.
+/// vectors. Defaults to `false`. Used only if the first argument is not a
+/// struct.
 /// @param {Bool} [_uvs] If `true` then the vertex format must have texture
-/// coordinates. Defaults to `false`.
+/// coordinates. Defaults to `false`. Used only if the first argument is not a
+/// struct.
 /// @param {Bool} [_colors] If `true` then the vertex format must have vertex
-/// colors. Defaults to `false`.
+/// colors. Defaults to `false`. Used only if the first argument is not a
+/// struct.
 /// @param {Bool} [_tangentw] If `true` then the vertex format must have tangent
-/// vectors and bitangent signs. Defaults to `false`.
+/// vectors and bitangent signs. Defaults to `false`. Used only if the first
+/// argument is not a struct.
 /// @param {Bool} [_bones] If `true` then the vertex format must have vertex
-/// weights and bone indices. Defaults to `false`.
+/// weights and bone indices. Defaults to `false`. Used only if the first
+/// argument is not a struct.
 /// @param {Bool} [_ids] If `true` then the vertex format must have ids for
-/// dynamic batching. Defaults to `false`.
+/// dynamic batching. Defaults to `false`. Used only if the first argument
+/// is not a struct.
 function BBMOD_VertexFormat(
-	_vertices=true,
+	_confOrVertices=true,
 	_normals=false,
 	_uvs=false,
 	_colors=false,
@@ -25,34 +33,59 @@ function BBMOD_VertexFormat(
 	_bones=false,
 	_ids=false) constructor
 {
-	/// @var {Bool} If `true` then the vertex format has vertices.
+	var _isConf = is_struct(_confOrVertices);
+
+	/// @var {Bool} If `true` then the vertex format has vertices. Should always
+	/// be `true`!
 	/// @readonly
-	Vertices = _vertices;
+	Vertices = _isConf
+		? (_confOrVertices[$ "Vertices"] ?? true)
+		: _confOrVertices;
 
 	/// @var {Bool} If `true` then the vertex format has normal vectors.
 	/// @readonly
-	Normals = _normals;
+	Normals = _isConf
+		? (_confOrVertices[$ "Normals"] ?? false)
+		: _normals;
 
 	/// @var {Bool} If `true` then the vertex format has texture coordinates.
 	/// @readonly
-	TextureCoords = _uvs;
+	TextureCoords = _isConf
+		? (_confOrVertices[$ "TextureCoords"] ?? false)
+		: _uvs;
+
+	/// @var {Bool} If `true` then the vertex format has a second texture
+	/// coordinates layer.
+	/// @readonly
+	TextureCoords2 = _isConf
+		? (_confOrVertices[$ "TextureCoords2"] ?? false)
+		: false;
 
 	/// @var {Bool} If `true` then the vertex format has vertex colors.
 	/// @readonly
-	Colors = _colors;
+	Colors = _isConf
+		? (_confOrVertices[$ "Colors"] ?? false)
+		: _colors;
 
 	/// @var {Bool} If `true` then the vertex format has tangent vectors and
 	/// bitangent sign.
 	/// @readonly
-	TangentW = _tangentw;
+	TangentW = _isConf
+		? (_confOrVertices[$ "TangentW"] ?? false)
+		: _tangentw;
 
 	/// @var {Bool} If `true` then the vertex format has vertex weights and bone
 	/// indices.
-	Bones = _bones;
+	Bones = _isConf
+		? (_confOrVertices[$ "Bones"] ?? false)
+		: _bones;
 
-	/// @var {Bool} If `true` then the vertex format has ids for dynamic batching.
+	/// @var {Bool} If `true` then the vertex format has ids for dynamic
+	/// batching.
 	/// @readonly
-	Ids = _ids;
+	Ids = _isConf
+		? (_confOrVertices[$ "Ids"] ?? false)
+		: _ids;
 
 	/// @var {Id.VertexFormat} The raw vertex format.
 	/// @readonly
@@ -74,10 +107,11 @@ function BBMOD_VertexFormat(
 			| (Vertices << 0)
 			| (Normals << 1)
 			| (TextureCoords << 2)
-			| (Colors << 3)
-			| (TangentW << 4)
-			| (Bones << 5)
-			| (Ids << 6)
+			| (TextureCoords2 << 3)
+			| (Colors << 4)
+			| (TangentW << 5)
+			| (Bones << 6)
+			| (Ids << 7)
 			);
 	};
 
@@ -93,6 +127,7 @@ function BBMOD_VertexFormat(
 			+ (buffer_sizeof(buffer_f32) * 3 * Vertices)
 			+ (buffer_sizeof(buffer_f32) * 3 * Normals)
 			+ (buffer_sizeof(buffer_f32) * 2 * TextureCoords)
+			+ (buffer_sizeof(buffer_f32) * 2 * TextureCoords2)
 			+ (buffer_sizeof(buffer_u32) * 1 * Colors)
 			+ (buffer_sizeof(buffer_f32) * 4 * TangentW)
 			+ (buffer_sizeof(buffer_f32) * 8 * Bones)
@@ -125,6 +160,11 @@ function BBMOD_VertexFormat(
 			vertex_format_add_texcoord();
 		}
 
+		if (TextureCoords2)
+		{
+			vertex_format_add_texcoord();
+		}
+
 		if (Colors)
 		{
 			vertex_format_add_colour();
@@ -151,31 +191,37 @@ function BBMOD_VertexFormat(
 	}
 }
 
-/// @func bbmod_vertex_format_load(_buffer)
+/// @func bbmod_vertex_format_load(_buffer[, _versionMinor])
 ///
 /// @desc Loads a vertex format from a buffer.
 ///
 /// @param {Id.Buffer} _buffer The buffer to load the vertex format from.
+/// @param {Real} _buffer The buffer to load the vertex format from.
 ///
 /// @return {Struct.BBMOD_VertexFormat} The loaded vetex format.
 ///
 /// @private
-function bbmod_vertex_format_load(_buffer)
+function bbmod_vertex_format_load(_buffer, _versionMinor=BBMOD_VERSION_MINOR)
 {
 	var _vertices = buffer_read(_buffer, buffer_bool);
 	var _normals = buffer_read(_buffer, buffer_bool);
 	var _textureCoords = buffer_read(_buffer, buffer_bool);
+	var _textureCoords2 = (_versionMinor >= 3)
+		? buffer_read(_buffer, buffer_bool)
+		: false;
 	var _colors = buffer_read(_buffer, buffer_bool);
 	var _tangentW = buffer_read(_buffer, buffer_bool);
 	var _bones = buffer_read(_buffer, buffer_bool);
 	var _ids = buffer_read(_buffer, buffer_bool);
 
-	return new BBMOD_VertexFormat(
-		_vertices,
-		_normals,
-		_textureCoords,
-		_colors,
-		_tangentW,
-		_bones,
-		_ids);
+	return new BBMOD_VertexFormat({
+		"Vertices": _vertices,
+		"Normals": _normals,
+		"TextureCoords": _textureCoords,
+		"TextureCoords2": _textureCoords2,
+		"Colors": _colors,
+		"TangentW": _tangentW,
+		"Bones": _bones,
+		"Ids": _ids,
+	});
 }

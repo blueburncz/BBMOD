@@ -15,6 +15,7 @@ struct SVertex
 		: Position VEC3_ZERO
 		, Normal VEC3_ZERO
 		, Texture VEC2_ZERO
+		, Texture2 VEC2_ZERO
 		, Tangent VEC3_ZERO
 		, Bones VEC4_ZERO
 		, Weights VEC4_ZERO
@@ -32,6 +33,8 @@ struct SVertex
 	vec3_t Normal;
 
 	vec2_t Texture;
+
+	vec2_t Texture2;
 
 	uint32_t Color = 0;
 

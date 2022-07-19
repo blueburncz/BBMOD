@@ -11,6 +11,7 @@ struct Material
 	float AO;
 	vec3 Emissive;
 	vec4 Subsurface;
+	vec3 Lightmap;
 };
 
 Material CreateMaterial(mat3 TBN)
@@ -27,5 +28,6 @@ Material CreateMaterial(mat3 TBN)
 	m.AO = 1.0;
 	m.Emissive = vec3(0.0);
 	m.Subsurface = vec4(0.0);
+	m.Lightmap = vec3(0.0);
 	return m;
 }

@@ -142,7 +142,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		// Vertex format
 		if (VersionMinor < 2)
 		{
-			VertexFormat = bbmod_vertex_format_load(_buffer);
+			VertexFormat = bbmod_vertex_format_load(_buffer, VersionMinor);
 		}
 
 		// Meshes

@@ -358,6 +358,45 @@ function BBMOD_DLL(_path="Data/BBMOD/BBMOD.dll")
 		return self;
 	};
 
+	/// @func get_disable_uv2()
+	///
+	/// @desc Checks whether second UV channel is disabled.
+	///
+	/// @return {Bool} If `true` then second UV channel is disabled.
+	///
+	/// @see BBMOD_DLL.set_disable_uv2
+	static get_disable_uv2 = function () {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			Path, "bbmod_dll_get_disable_uv2", dll_cdecl, ty_real, 0);
+		return external_call(_fn);
+	};
+
+	/// @func set_disable_uv2(_disable)
+	///
+	/// @desc Enables/disables second UV channel. Second UV channel is by
+	/// default **disabled**. Changing this makes the model incompatible
+	/// with the default shaders!
+	///
+	/// @param {Bool} _disable `true` to disable second UV channel.
+	///
+	/// @return {Struct.BBMOD_DLL} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If the operation fails.
+	///
+	/// @see BBMOD_DLL.get_disable_uv2
+	static set_disable_uv2 = function (_disable) {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			Path, "bbmod_dll_set_disable_uv2", dll_cdecl, ty_real, 1, ty_real);
+		var _retval = external_call(_fn, _disable);
+		if (_retval != BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Exception();
+		}
+		return self;
+	};
+
 	/// @func get_flip_uv_horizontally()
 	///
 	/// @desc Checks whether flipping texture coordinates horizontally is

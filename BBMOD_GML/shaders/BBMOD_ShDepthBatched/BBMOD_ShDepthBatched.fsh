@@ -77,6 +77,7 @@ struct Material
 	float AO;
 	vec3 Emissive;
 	vec4 Subsurface;
+	vec3 Lightmap;
 };
 
 Material CreateMaterial(mat3 TBN)
@@ -93,6 +94,7 @@ Material CreateMaterial(mat3 TBN)
 	m.AO = 1.0;
 	m.Emissive = vec3(0.0);
 	m.Subsurface = vec4(0.0);
+	m.Lightmap = vec3(0.0);
 	return m;
 }
 #define F0_DEFAULT vec3(0.04)
@@ -134,15 +136,17 @@ vec3 xDecodeRGBM(vec4 rgbm)
 }
 
 /// @desc Unpacks material from textures.
-/// @param texBaseOpacity     RGB: base color, A: opacity
+/// @param texBaseOpacity RGB: base color, A: opacity
 /// @param isRoughness
 /// @param texNormalW
 /// @param isMetallic
 /// @param texMaterial
-/// @param texSubsurface      RGB: subsurface color, A: intensity
-/// @param texEmissive        RGBA: RGBM encoded emissive color
-/// @param TBN                Tangent-bitangent-normal matrix
-/// @param uv                 Texture coordinates
+/// @param texSubsurface  RGB: subsurface color, A: intensity
+/// @param texEmissive    RGBA: RGBM encoded emissive color
+/// @param texLightmap    RGBA: RGBM encoded lightmap
+/// @param uvLightmap     Lightmap texture coordinates
+/// @param TBN            Tangent-bitangent-normal matrix
+/// @param uv             Texture coordinates
 Material UnpackMaterial(
 	sampler2D texBaseOpacity,
 	float isRoughness,
@@ -194,7 +198,7 @@ Material UnpackMaterial(
 	}
 	else
 	{
-		m.Specular = xGammaToLinear(materialProps.rgb);
+		m.Specular = materialProps.rgb;
 		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 	}
 

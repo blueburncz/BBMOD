@@ -84,6 +84,17 @@ GM_EXPORT gmreal_t bbmod_dll_set_disable_uv(gmreal_t disable)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_disable_uv2()
+{
+	return (gmreal_t)gConfig.DisableTextureCoords2;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_disable_uv2(gmreal_t disable)
+{
+	gConfig.DisableTextureCoords2 = (bool)disable;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_get_flip_uv_horizontally()
 {
 	return (gmreal_t)gConfig.FlipTextureHorizontally;

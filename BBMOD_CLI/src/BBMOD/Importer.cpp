@@ -51,12 +51,9 @@ static std::string GetAnimationFilename(SAnimation* animation, int index, const 
 	return GetFilename(out, animationName.c_str(), ".bbanim");
 }
 
-static void LogNode(std::ofstream& log, SNode* node, uint32_t indent)
+static void LogNode(std::ofstream& log, SModel* model, SNode* node, uint32_t indent)
 {
-	for (uint32_t i = 0; i < indent * 4; ++i)
-	{
-		log << " ";
-	}
+	for (uint32_t i = 0; i < indent * 4; ++i) { log << " "; }
 	log << (int)node->Index << ": " << node->Name;
 	if (node->IsBone)
 	{
@@ -64,13 +61,29 @@ static void LogNode(std::ofstream& log, SNode* node, uint32_t indent)
 	}
 	if (!node->Meshes.empty())
 	{
-		log << " [" << node->Meshes.size() << " mesh(es)]";
+		log << ":" << std::endl;
+		for (uint32_t m = 0; m < node->Meshes.size(); ++m)
+		{
+			for (uint32_t i = 0; i < (indent + 1) * 4; ++i) { log << " "; }
+			log << "* Mesh " << m << " [";
+			
+			SVertexFormat* vformat = model->Meshes[node->Meshes[m]]->VertexFormat;
+			if (vformat->Vertices) { log << "V,"; }
+			if (vformat->Normals) { log << "N,"; }
+			if (vformat->TextureCoords) { log << "UV,"; }
+			if (vformat->TextureCoords2) { log << "UV2,"; }
+			if (vformat->Colors) { log << "C,"; }
+			if (vformat->TangentW) { log << "T,"; }
+			if (vformat->Bones) { log << "B,"; }
+			if (vformat->Ids) { log << "I,"; }
+			log << "]" << std::endl;
+		}
 	}
 	log << std::endl;
 	++indent;
 	for (SNode* child : node->Children)
 	{
-		LogNode(log, child, indent);
+		LogNode(log, model, child, indent);
 	}
 }
 
@@ -170,7 +183,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 
 	log << "Nodes:" << std::endl;
 	log << "======" << std::endl;
-	LogNode(log, model->RootNode, 0);
+	LogNode(log, model, model->RootNode, 0);
 	log << std::endl;
 
 	if (model->BoneCount > 64)

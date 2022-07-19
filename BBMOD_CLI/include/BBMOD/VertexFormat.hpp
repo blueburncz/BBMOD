@@ -6,13 +6,15 @@ struct SVertexFormat
 {
 	bool Save(std::ofstream& file);
 
-	static SVertexFormat* Load(std::ifstream& file);
+	static SVertexFormat* Load(std::ifstream& file, uint8_t versionMinor);
 
 	bool Vertices = true;
 
 	bool Normals = false;
 
 	bool TextureCoords = false;
+
+	bool TextureCoords2 = false;
 
 	bool Colors = false;
 

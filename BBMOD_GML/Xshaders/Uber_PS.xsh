@@ -87,10 +87,17 @@ uniform sampler2D bbmod_NormalW;
 uniform sampler2D bbmod_Material;
 
 #if !defined(X_TERRAIN)
+#if !defined(X_LIGHTMAP)
 // RGB: Subsurface color, A: Intensity
 uniform sampler2D bbmod_Subsurface;
+#endif
 // RGBA: RGBM encoded emissive color
 uniform sampler2D bbmod_Emissive;
+#endif
+
+#if defined(X_LIGHTMAP)
+// RGBA: RGBM encoded lightmap
+uniform sampler2D bbmod_Lightmap;
 #endif
 
 #if defined(X_2D)
@@ -238,8 +245,14 @@ void main()
 		bbmod_IsMetallic,
 		bbmod_Material,
 #if !defined(X_TERRAIN)
+#if !defined(X_LIGHTMAP)
 		bbmod_Subsurface,
+#endif
 		bbmod_Emissive,
+#endif
+#if defined(X_LIGHTMAP)
+		bbmod_Lightmap,
+		v_vTexCoord2,
 #endif
 		v_mTBN,
 		v_vTexCoord);

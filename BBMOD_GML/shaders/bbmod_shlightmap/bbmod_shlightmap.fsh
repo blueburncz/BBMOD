@@ -19,12 +19,11 @@ precision highp float;
 varying vec3 v_vVertex;
 
 varying vec2 v_vTexCoord;
+varying vec2 v_vTexCoord2;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 
 varying vec3 v_vPosShadowmap;
-
-varying vec2 v_vSplatmapCoord;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -48,6 +47,12 @@ uniform float bbmod_IsMetallic;
 uniform sampler2D bbmod_NormalW;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
+
+// RGBA: RGBM encoded emissive color
+uniform sampler2D bbmod_Emissive;
+
+// RGBA: RGBM encoded lightmap
+uniform sampler2D bbmod_Lightmap;
 
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
@@ -109,14 +114,6 @@ uniform vec2 bbmod_IBLTexel;
 
 // [(x, y, z, range), (r, g, b, m), ...]
 uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
-
-////////////////////////////////////////////////////////////////////////////////
-// Terrain
-
-// Splatmap texture
-uniform sampler2D bbmod_Splatmap;
-// Splatmap channel to read. Use -1 for none.
-uniform int bbmod_SplatmapIndex;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
@@ -225,6 +222,9 @@ Material UnpackMaterial(
 	sampler2D texNormalW,
 	float isMetallic,
 	sampler2D texMaterial,
+	sampler2D texEmissive,
+	sampler2D texLightmap,
+	vec2 uvLightmap,
 	mat3 TBN,
 	vec2 uv)
 {
@@ -272,9 +272,26 @@ Material UnpackMaterial(
 		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 	}
 
+	// Emissive color
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+
+	// Lightmap
+	m.Lightmap = xGammaToLinear(xDecodeRGBM(texture2D(texLightmap, uvLightmap)));
+
 	return m;
 }
 
+/// @param subsurface Color in RGB and thickness/intensity in A.
+/// @source https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
+vec3 xCheapSubsurface(vec4 subsurface, vec3 eye, vec3 normal, vec3 light, vec3 lightColor)
+{
+	const float fLTPower = 1.0;
+	const float fLTScale = 1.0;
+	vec3 vLTLight = light + normal;
+	float fLTDot = pow(clamp(dot(eye, -vLTLight), 0.0, 1.0), fLTPower) * fLTScale;
+	float fLT = fLTDot * subsurface.a;
+	return subsurface.rgb * lightColor * fLT;
+}
 #define X_PI   3.14159265359
 #define X_2_PI 6.28318530718
 
@@ -666,6 +683,7 @@ void PBRShader(Material material, float depth)
 	}
 
 	// Lightmap
+	lightDiffuse += material.Lightmap;
 
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;
@@ -699,19 +717,11 @@ void main()
 		bbmod_NormalW,
 		bbmod_IsMetallic,
 		bbmod_Material,
+		bbmod_Emissive,
+		bbmod_Lightmap,
+		v_vTexCoord2,
 		v_mTBN,
 		v_vTexCoord);
-
-	// Splatmap
-	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
-	if (bbmod_SplatmapIndex >= 0)
-	{
-		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
-		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
-			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
-			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
-			: splatmap.a)));
-	}
 
 	material.Base *= bbmod_BaseOpacityMultiplier.rgb;
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;

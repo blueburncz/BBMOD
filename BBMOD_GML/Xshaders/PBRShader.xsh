@@ -21,6 +21,7 @@ void PBRShader(Material material, float depth)
 	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
 	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
 	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
+
 	// Shadow mapping
 	float shadow = 0.0;
 #if !defined(X_2D)
@@ -64,6 +65,11 @@ void PBRShader(Material material, float depth)
 		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
 			material, lightDiffuse, lightSpecular, lightSubsurface);
 	}
+
+	// Lightmap
+#if defined(X_LIGHTMAP)
+	lightDiffuse += material.Lightmap;
+#endif
 
 	// Diffuse
 	gl_FragColor.rgb = material.Base * lightDiffuse;

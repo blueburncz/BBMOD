@@ -41,6 +41,9 @@ struct SConfig
 	/** Disable saving texture coordinates. */
 	bool DisableTextureCoords = false;
 
+	/** Disable saving of second texture coordinate layer. */
+	bool DisableTextureCoords2 = true;
+
 	/** Disable saving vertex colors. */
 	bool DisableVertexColors = true;
 
