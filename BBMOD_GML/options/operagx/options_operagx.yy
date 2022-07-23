@@ -1,5 +1,5 @@
 {
-  "option_operagx_version": "3.8.0.0",
+  "option_operagx_version": "3.9.0.0",
   "option_operagx_game_name": "BBMOD Demo",
   "option_operagx_interpolate_pixels": false,
   "option_operagx_scale": 1,
