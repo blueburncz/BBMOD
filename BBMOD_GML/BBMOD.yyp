@@ -237,6 +237,7 @@
     {"id":{"name":"BBMOD_Exception","path":"scripts/BBMOD_Exception/BBMOD_Exception.yy",},"order":0,},
     {"id":{"name":"SprCrosshair","path":"sprites/SprCrosshair/SprCrosshair.yy",},"order":2,},
     {"id":{"name":"BBMOD_SphereCollider","path":"scripts/BBMOD_SphereCollider/BBMOD_SphereCollider.yy",},"order":6,},
+    {"id":{"name":"BBMOD_ShLightmapInstanceID","path":"shaders/BBMOD_ShLightmapInstanceID/BBMOD_ShLightmapInstanceID.yy",},"order":5,},
     {"id":{"name":"BBMOD_SetColorModule","path":"scripts/BBMOD_SetColorModule/BBMOD_SetColorModule.yy",},"order":0,},
     {"id":{"name":"SndGunshot4","path":"sounds/SndGunshot4/SndGunshot4.yy",},"order":4,},
     {"id":{"name":"BBMOD_ShDepthBatched","path":"shaders/BBMOD_ShDepthBatched/BBMOD_ShDepthBatched.yy",},"order":3,},

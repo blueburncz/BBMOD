@@ -50,6 +50,9 @@ Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShLightmap\BBMOD_ShLightma
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShLightmapDepth\BBMOD_ShLightmapDepth.vsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_OUTPUT_DEPTH=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShLightmapDepth\BBMOD_ShLightmapDepth.fsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_OUTPUT_DEPTH=1
 
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShLightmapInstanceID\BBMOD_ShLightmapInstanceID.vsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_ID=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShLightmapInstanceID\BBMOD_ShLightmapInstanceID.fsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_ID=1
+
 # Zombie shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\ShZombie\ShZombie.vsh --x .\Xshaders\ -ci X_PBR=1 X_ZOMBIE=1 X_ANIMATED=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\ShZombie\ShZombie.fsh --x .\Xshaders\ -ci X_PBR=1 X_ZOMBIE=1 X_ANIMATED=1

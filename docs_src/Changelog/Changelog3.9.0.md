@@ -25,5 +25,7 @@ using specular color textures is also included in this release.
 * Added new struct `BBMOD_LightmapMaterial`, which is a material that can be used when rendering models with two UV channels, the second one being used for lightmaps.
 * Added new macro `BBMOD_VFORMAT_LIGHTMAP`, which is a vertex format of models with two UV channels, the second one being used for lightmaps.
 * Added new macro `BBMOD_SHADER_LIGHTMAP`, which is a shader for rendering models with two UV channels, the second one being used for lightmaps.
+* Added new macro `BBMOD_SHADER_LIGHTMAP_DEPTH`, which is a depth shader for lightmapped models with two UV channels.
+* Added new macro `BBMOD_SHADER_LIGHTMAP_INSTANCE_ID`, which is a shader used when rendering instance IDs for lightmapped models.
 * Added new macro `BBMOD_MATERIAL_LIGHTMAP`, which is a material for models with two UV channels, the second one being used for lightmaps.
 * Added new functions `bbmod_lightmap_get` and `bbmod_lightmap_set`, using which you can get/set the default lightmap texture used by all lightmapped materials (unless they override it).
