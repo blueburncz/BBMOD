@@ -16,8 +16,8 @@ using specular color textures is also included in this release.
 * Added new property `AffectLightmaps` to struct `BBMOD_Light`, using which you can enable/disable the light for materials that use baked lightmaps. By default this is enabled.
 
 ### DLL module:
-* Added new property `get_disable_uv2` to struct `BBMOD_DLL`, using which you can check whether second UV channel is disabled.
-* Added new property `set_disable_uv2` to struct `BBMOD_DLL`, using which you can enable/disable second UV channel.
+* Added new method `get_disable_uv2` to struct `BBMOD_DLL`, using which you can check whether second UV channel is disabled.
+* Added new method `set_disable_uv2` to struct `BBMOD_DLL`, using which you can enable/disable second UV channel.
 
 ### Lightmap module:
 * Added new module - Lightmap.
