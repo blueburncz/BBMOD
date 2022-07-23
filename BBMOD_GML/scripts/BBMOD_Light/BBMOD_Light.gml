@@ -19,7 +19,11 @@ function BBMOD_Light()
 	/// @var {Struct.BBMOD_Vec3} The position of the light.
 	Position = new BBMOD_Vec3();
 
-	/// @var {Bool} If `true` then the light should casts shadows.
-	/// Defaults to `false`.
+	/// @var {Bool} If `true` then the light affects also materials with baked
+	/// lightmaps. Defaults to `true`.
+	AffectLightmaps = true;
+
+	/// @var {Bool} If `true` then the light should casts shadows. This may
+	/// not be implemented for all types of lights! Defaults to `false`.
 	CastShadows = false;
 }

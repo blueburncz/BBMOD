@@ -112,18 +112,6 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 		return set_sampler(UEmissive, _texture);
 	};
 
-	/// @func set_lightmap(_texture)
-	///
-	/// @desc Sets the `bbmod_Lightmap` uniform.
-	///
-	/// @param {Pointer.Texture} _texture The new RGBM encoded lightmap texture.
-	///
-	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
-	static set_lightmap = function (_texture) {
-		gml_pragma("forceinline");
-		return set_sampler(UEmissive, _texture);
-	};
-
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
 		method(self, Super_BaseShader.set_material)(_material);
@@ -155,12 +143,6 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 		// Emissive
 		set_emissive(_material.Emissive);
-
-		// Lightmap
-		if (_material.Lightmap != undefined)
-		{
-			set_lightmap(_material.Lightmap);
-		}
 
 		return self;
 	};

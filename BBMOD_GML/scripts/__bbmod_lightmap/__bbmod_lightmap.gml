@@ -1,13 +1,17 @@
-/// @macro {Struct.BBMOD_VertexFormat} A vertex format of models with two
-/// UV channels, the second one being used for lightmaps.
+/// @macro {Struct.BBMOD_VertexFormat} A vertex format of lightmapped models
+/// with two UV channels.
 #macro BBMOD_VFORMAT_LIGHTMAP __bbmod_vformat_lightmap()
 
-/// @macro {Struct.BBMOD_DefaultShader} Shader for rendering models with
-/// two UV channels, the second one being used for lightmaps.
+/// @macro {Struct.BBMOD_LightmapShader} Shader for rendering lightmapped models
+/// with two UV channels.
 #macro BBMOD_SHADER_LIGHTMAP __bbmod_shader_lightmap()
 
-/// @macro {Struct.BBMOD_DefaultMaterial} Material for models with two UV
-/// channels, the second one being used for lightmaps.
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for lightmapped models with
+/// two UV channels.
+#macro BBMOD_SHADER_LIGHTMAP_DEPTH __bbmod_shader_lightmap_depth()
+
+/// @macro {Struct.BBMOD_LightmapMaterial} Material for lightmapped models with
+/// two UV channels.
 #macro BBMOD_MATERIAL_LIGHTMAP __bbmod_material_lightmap()
 
 function __bbmod_vformat_lightmap()
@@ -24,13 +28,20 @@ function __bbmod_vformat_lightmap()
 
 function __bbmod_shader_lightmap()
 {
-	static _shader = new BBMOD_DefaultShader(
+	static _shader = new BBMOD_LightmapShader(
 		BBMOD_ShLightmap, __bbmod_vformat_lightmap);
+	return _shader;
+}
+
+function __bbmod_shader_lightmap_depth()
+{
+	static _shader = new BBMOD_BaseShader(
+		BBMOD_ShLightmapDepth, __bbmod_vformat_lightmap);
 	return _shader;
 }
 
 function __bbmod_material_lightmap()
 {
-	static _material = new BBMOD_DefaultMaterial(__bbmod_shader_lightmap());
+	static _material = new BBMOD_LightmapMaterial(__bbmod_shader_lightmap());
 	return _material;
 }

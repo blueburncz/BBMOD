@@ -479,6 +479,10 @@ global.__bbmodAmbientLightUp = BBMOD_C_WHITE;
 /// @private
 global.__bbmodAmbientLightDown = BBMOD_C_GRAY;
 
+/// @var {Bool}
+/// @private
+global.__bbmodAmbientAffectLightmap = true;
+
 /// @func bbmod_light_ambient_set(_color)
 ///
 /// @desc Defines color of the ambient light passed to shaders.
@@ -572,6 +576,32 @@ function bbmod_light_ambient_set_down(_color)
 {
 	gml_pragma("forceinline");
 	global.__bbmodAmbientLightDown = _color;
+}
+
+/// @func bbmod_light_ambient_get_affect_lightmaps()
+///
+/// @desc Checks whether ambient light affects materials that use baked
+/// lightmaps.
+///
+/// @return {Bool} Returns `true` if ambient light affects materials that
+/// use lightmaps.
+function bbmod_light_ambient_get_affect_lightmaps()
+{
+	gml_pragma("forceinline");
+	return global.__bbmodAmbientAffectLightmap;
+}
+
+/// @func bbmod_light_ambient_set_affect_lightmaps(_enable)
+///
+/// @desc Configures whether ambient light affects materials that use baked
+/// lightmaps.
+///
+/// @param {Bool} _enable Use `true` to enable ambient light affecting materials
+/// that use baked lightmaps.
+function bbmod_light_ambient_set_affect_lightmaps(_enable)
+{
+	gml_pragma("forceinline");
+	global.__bbmodAmbientAffectLightmap = _enable;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
