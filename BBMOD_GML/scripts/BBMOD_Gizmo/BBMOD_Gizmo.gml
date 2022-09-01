@@ -623,7 +623,8 @@ function BBMOD_Gizmo(_size=10.0)
 		//
 		if (!IsEditing || !mouse_check_button(ButtonDrag))
 		{
-			if (keyboard_check_pressed(KeyNextEditType))
+			if (KeyNextEditType != undefined
+				&& keyboard_check_pressed(KeyNextEditType))
 			{
 				if (++EditType >= BBMOD_EEditType.SIZE)
 				{
@@ -631,7 +632,8 @@ function BBMOD_Gizmo(_size=10.0)
 				}
 			}
 
-			if (keyboard_check_pressed(KeyNextEditSpace))
+			if (KeyNextEditSpace != undefined
+				&& keyboard_check_pressed(KeyNextEditSpace))
 			{
 				if (++EditSpace >= BBMOD_EEditSpace.SIZE)
 				{
