@@ -153,10 +153,13 @@ function BBMOD_Camera() constructor
 			{
 				bbmod_html5_pointer_lock();
 			}
-			MouseLockAt ??= new BBMOD_Vec2(
-				window_mouse_get_x(),
-				window_mouse_get_y()
-			);
+
+			if (MouseLockAt == undefined)
+			{
+				MouseLockAt = new BBMOD_Vec2(
+					window_mouse_get_x(),
+					window_mouse_get_y());
+			}
 		}
 		else
 		{
