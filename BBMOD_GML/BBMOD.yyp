@@ -63,6 +63,7 @@
     {"id":{"name":"__bbmod_init","path":"scripts/__bbmod_init/__bbmod_init.yy",},"order":14,},
     {"id":{"name":"BBMOD_SphereEmissionModule","path":"scripts/BBMOD_SphereEmissionModule/BBMOD_SphereEmissionModule.yy",},"order":1,},
     {"id":{"name":"BBMOD_Color","path":"scripts/BBMOD_Color/BBMOD_Color.yy",},"order":4,},
+    {"id":{"name":"__bbmod_save","path":"scripts/__bbmod_save/__bbmod_save.yy",},"order":0,},
     {"id":{"name":"bbmod_mesh_to_colmesh","path":"scripts/bbmod_mesh_to_colmesh/bbmod_mesh_to_colmesh.yy",},"order":0,},
     {"id":{"name":"Fnt24","path":"fonts/Fnt24/Fnt24.yy",},"order":1,},
     {"id":{"name":"BBMOD_MixRealFromHealthModule","path":"scripts/BBMOD_MixRealFromHealthModule/BBMOD_MixRealFromHealthModule.yy",},"order":1,},
@@ -157,6 +158,7 @@
     {"id":{"name":"BBMOD_MixVec4Module","path":"scripts/BBMOD_MixVec4Module/BBMOD_MixVec4Module.yy",},"order":1,},
     {"id":{"name":"BBMOD_ShDepthAnimated","path":"shaders/BBMOD_ShDepthAnimated/BBMOD_ShDepthAnimated.yy",},"order":2,},
     {"id":{"name":"BBMOD_MixVec4FromSpeedModule","path":"scripts/BBMOD_MixVec4FromSpeedModule/BBMOD_MixVec4FromSpeedModule.yy",},"order":5,},
+    {"id":{"name":"RmTest","path":"rooms/RmTest/RmTest.yy",},"order":54,},
     {"id":{"name":"BBMOD_IRenderTarget","path":"scripts/BBMOD_IRenderTarget/BBMOD_IRenderTarget.yy",},"order":2,},
     {"id":{"name":"BBMOD_Class","path":"scripts/BBMOD_Class/BBMOD_Class.yy",},"order":6,},
     {"id":{"name":"BBMOD_EmissionOverTimeModule","path":"scripts/BBMOD_EmissionOverTimeModule/BBMOD_EmissionOverTimeModule.yy",},"order":0,},
@@ -272,6 +274,7 @@
     "children": [],
   },
   "RoomOrderNodes": [
+    {"roomId":{"name":"RmTest","path":"rooms/RmTest/RmTest.yy",},},
     {"roomId":{"name":"RmInit","path":"rooms/RmInit/RmInit.yy",},},
     {"roomId":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},},
     {"roomId":{"name":"RmGameOver","path":"rooms/RmGameOver/RmGameOver.yy",},},
@@ -347,6 +350,7 @@
     {"folderPath":"folders/Demo/ParticleSystems.yy","order":8,"resourceVersion":"1.0","name":"ParticleSystems","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/BBMOD/Rendering/Sky.yy","order":7,"resourceVersion":"1.0","name":"Sky","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/BBMOD/Lightmap.yy","order":14,"resourceVersion":"1.0","name":"Lightmap","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/BBMOD/Save.yy","order":15,"resourceVersion":"1.0","name":"Save","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":-1,"resourceVersion":"1.3","name":"audiogroup_default","resourceType":"GMAudioGroup",},

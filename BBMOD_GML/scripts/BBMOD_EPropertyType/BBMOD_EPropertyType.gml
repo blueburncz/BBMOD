@@ -13,4 +13,5 @@ enum BBMOD_EPropertyType
 	Matrix,
 	MatrixArray,
 	Sampler,
+	String,
 };
