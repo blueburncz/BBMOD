@@ -1,5 +1,3 @@
-// TODO: Add bbmod_save_exclude_object(_object)
-
 /// @macro {Real}
 /// @private
 #macro __BBMOD_SAVE_VERSION 0
