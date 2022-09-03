@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Core",
-    "path": "folders/BBMOD/Core.yy",
+    "name": "Rendering",
+    "path": "folders/BBMOD/Core/Rendering.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_defines",
+  "name": "__bbmod_render_pass",
   "tags": [],
   "resourceType": "GMScript",
 }

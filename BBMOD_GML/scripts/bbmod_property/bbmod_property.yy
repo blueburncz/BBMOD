@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Utils",
-    "path": "folders/BBMOD/Core/Utils.yy",
+    "name": "Properties",
+    "path": "folders/BBMOD/Core/Properties.yy",
   },
   "resourceVersion": "1.0",
-  "name": "bbmod_async",
+  "name": "BBMOD_Property",
   "tags": [],
   "resourceType": "GMScript",
 }

@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Properties",
-    "path": "folders/BBMOD/Core/Properties.yy",
+    "name": "Rendering",
+    "path": "folders/BBMOD/Core/Rendering.yy",
   },
   "resourceVersion": "1.0",
-  "name": "BBMOD_EPropertyType",
+  "name": "BBMOD_EShaderUniformType",
   "tags": [],
   "resourceType": "GMScript",
 }
