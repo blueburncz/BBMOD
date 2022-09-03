@@ -54,6 +54,7 @@ of the animation player:
 bbmod_material_reset();
 matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, direction, 1, 1, 1));
 animationPlayer.submit();
+matrix_set(matrix_world, matrix_build_identity());
 bbmod_material_reset();
 ```
 

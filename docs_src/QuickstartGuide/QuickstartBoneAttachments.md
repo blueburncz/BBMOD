@@ -18,5 +18,6 @@ var _swordMatrix = matrix_multiply(_handMatrix, _bodyMatrix);
 matrix_set(matrix_world, _swordMatrix);
 modSword.submit();
 
+matrix_set(matrix_world, matrix_build_identity());
 bbmod_material_reset();
 ```
