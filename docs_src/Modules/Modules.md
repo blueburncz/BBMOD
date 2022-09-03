@@ -19,6 +19,7 @@ individual modules.
 * [Raycasting module](./RaycastingModule.html)
 * [Rendering module](./RenderingModule.html)
 * [Resource manager module](./ResourceManagerModule.html)
+* [Save module](./SaveModule.html)
 * [State machine module](./StateMachineModule.html)
 * [Terrain module](./TerrainModule.html)
 * [ColMesh module](./ColMeshModule.html)

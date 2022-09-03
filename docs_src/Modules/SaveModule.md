@@ -1,0 +1,35 @@
+# Save module
+Using this module you can define serializable properties of objects and save and
+load instances to and from buffers.
+
+## Scripting API
+### Functions
+* [bbmod_instance_from_buffer](./bbmod_instance_from_buffer.html)
+* [bbmod_instance_to_buffer](./bbmod_instance_to_buffer.html)
+* [bbmod_load_instances_from_buffer](./bbmod_load_instances_from_buffer.html)
+* [bbmod_object_add_bool](./bbmod_object_add_bool.html)
+* [bbmod_object_add_color](./bbmod_object_add_color.html)
+* [bbmod_object_add_gmfont](./bbmod_object_add_gmfont.html)
+* [bbmod_object_add_gmobject](./bbmod_object_add_gmobject.html)
+* [bbmod_object_add_gmpath](./bbmod_object_add_gmpath.html)
+* [bbmod_object_add_gmroom](./bbmod_object_add_gmroom.html)
+* [bbmod_object_add_gmscript](./bbmod_object_add_gmscript.html)
+* [bbmod_object_add_gmshader](./bbmod_object_add_gmshader.html)
+* [bbmod_object_add_gmsound](./bbmod_object_add_gmsound.html)
+* [bbmod_object_add_gmsprite](./bbmod_object_add_gmsprite.html)
+* [bbmod_object_add_gmtileset](./bbmod_object_add_gmtileset.html)
+* [bbmod_object_add_gmtimeline](./bbmod_object_add_gmtimeline.html)
+* [bbmod_object_add_matrix](./bbmod_object_add_matrix.html)
+* [bbmod_object_add_path](./bbmod_object_add_path.html)
+* [bbmod_object_add_property](./bbmod_object_add_property.html)
+* [bbmod_object_add_property](./bbmod_object_add_property.html)
+* [bbmod_object_add_quaternion](./bbmod_object_add_quaternion.html)
+* [bbmod_object_add_real_array](./bbmod_object_add_real_array.html)
+* [bbmod_object_add_real](./bbmod_object_add_real.html)
+* [bbmod_object_add_string](./bbmod_object_add_string.html)
+* [bbmod_object_add_vec2](./bbmod_object_add_vec2.html)
+* [bbmod_object_add_vec3](./bbmod_object_add_vec3.html)
+* [bbmod_object_add_vec4](./bbmod_object_add_vec4.html)
+* [bbmod_object_get_property_array](./bbmod_object_get_property_array.html)
+* [bbmod_object_get_property_map](./bbmod_object_get_property_map.html)
+* [bbmod_save_instances_to_buffer](./bbmod_save_instances_to_buffer.html)

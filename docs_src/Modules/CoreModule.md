@@ -7,6 +7,7 @@ quaternions etc.
 
 ## Scripting API
 ### Enums
+* [BBMOD_EPropertyType](./BBMOD_EPropertyType.html)
 * [BBMOD_ERenderCommand](./BBMOD_ERenderCommand.html)
 * [BBMOD_ERenderPass](./BBMOD_ERenderPass.html)
 
@@ -158,6 +159,7 @@ quaternions etc.
 * [BBMOD_NotImplementedException](./BBMOD_NotImplementedException.html)
 * [BBMOD_OutOfBoundsException](./BBMOD_OutOfBoundsException.html)
 * [BBMOD_PointLight](./BBMOD_PointLight.html)
+* [BBMOD_Property](./BBMOD_Property.html)
 * [BBMOD_Quaternion](./BBMOD_Quaternion.html)
 * [BBMOD_RenderCommand](./BBMOD_RenderCommand.html)
 * [BBMOD_RenderQueue](./BBMOD_RenderQueue.html)
