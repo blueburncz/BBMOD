@@ -102,7 +102,7 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties=undefined)
 
 			repeat (_propsCount)
 			{
-				var _propertyType = _props[? _propertyName];
+				var _propertyType = _props[? _propertyName].Type;
 
 				buffer_write(_buffer, buffer_string, _propertyName);
 				buffer_write(_buffer, buffer_u32, _propertyType);
