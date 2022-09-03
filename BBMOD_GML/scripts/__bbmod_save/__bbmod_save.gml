@@ -105,6 +105,115 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties=undefined)
 
 				switch (_propertyType)
 				{
+				case BBMOD_EPropertyType.Color:
+					var _color = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _color.Red);
+					buffer_write(_buffer, buffer_f32, _color.Green);
+					buffer_write(_buffer, buffer_f32, _color.Blue);
+					buffer_write(_buffer, buffer_f32, _color.Alpha);
+					break;
+
+				case BBMOD_EPropertyType.GMFont:
+					buffer_write(_buffer, buffer_string, font_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMObject:
+					buffer_write(_buffer, buffer_string, object_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMPath:
+					buffer_write(_buffer, buffer_string, path_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMRoom:
+					buffer_write(_buffer, buffer_string, room_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMScript:
+					buffer_write(_buffer, buffer_string, script_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMShader:
+					buffer_write(_buffer, buffer_string, shader_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMSound:
+					buffer_write(_buffer, buffer_string, audio_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMSprite:
+					buffer_write(_buffer, buffer_string, sprite_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMTileSet:
+					buffer_write(_buffer, buffer_string, tileset_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.GMTimeline:
+					buffer_write(_buffer, buffer_string, timeline_get_name(variable_instance_get(id, _propertyName)));
+					break;
+
+				case BBMOD_EPropertyType.Path:
+					buffer_write(_buffer, buffer_string, variable_instance_get(id, _propertyName));
+					break;
+
+				case BBMOD_EPropertyType.Quaternion:
+					var _quaternion = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _quaternion.X);
+					buffer_write(_buffer, buffer_f32, _quaternion.Y);
+					buffer_write(_buffer, buffer_f32, _quaternion.Z);
+					buffer_write(_buffer, buffer_f32, _quaternion.W);
+					break;
+
+				case BBMOD_EPropertyType.Matrix:
+					var _matrix = variable_instance_get(id, _propertyName);
+					var i = 0;
+					repeat (16)
+					{
+						buffer_write(_buffer, buffer_f32, _matrix[i++]);
+					}
+					break;
+
+				case BBMOD_EPropertyType.Real:
+					buffer_write(_buffer, buffer_f32, variable_instance_get(id, _propertyName));
+					break;
+
+				case BBMOD_EPropertyType.RealArray:
+					var _array = variable_instance_get(id, _propertyName);
+					var _size = array_length(_size);
+					buffer_write(_buffer, buffer_u32, _size);
+					var i = 0;
+					repeat (_size)
+					{
+						buffer_write(_buffer, buffer_f32, _array[i++]);
+					}
+					break;
+
+				case BBMOD_EPropertyType.String:
+					buffer_write(_buffer, buffer_string, variable_instance_get(id, _propertyName));
+					break;
+
+				case BBMOD_EPropertyType.Vec2:
+					var _vec2 = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _vec2.X);
+					buffer_write(_buffer, buffer_f32, _vec2.Y);
+					break;
+
+				case BBMOD_EPropertyType.Vec3:
+					var _vec3 = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _vec3.X);
+					buffer_write(_buffer, buffer_f32, _vec3.Y);
+					buffer_write(_buffer, buffer_f32, _vec3.Z);
+					break;
+
+				case BBMOD_EPropertyType.Vec4:
+					var _vec4 = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _vec4.X);
+					buffer_write(_buffer, buffer_f32, _vec4.Y);
+					buffer_write(_buffer, buffer_f32, _vec4.Z);
+					buffer_write(_buffer, buffer_f32, _vec4.W);
+					break;
+
 				default:
 					throw new BBMOD_Exception("Invalid property type " + string(_propertyType) + "!");
 				}
