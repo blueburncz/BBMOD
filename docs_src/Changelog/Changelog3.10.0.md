@@ -6,6 +6,9 @@ This release adds a new Save module, using which you can easily define serializa
 * Added new enum `BBMOD_EPropertyType`, which is an enumeration of all types of serializable properties.
 * Added new struct `BBMOD_Property`, which is a descriptor of a serializable property.
 
+### Gizmo module:
+* Properties `KeyNextEditType` and `KeyNextEditSpace` of `BBMOD_Gizmo` can now be `undefined`.
+
 ### Save module:
 * Added new module - Save.
 * Added new function `bbmod_object_add_property`, using which you can add a serializable property to an object.
