@@ -4,10 +4,12 @@ global.__bbmodObjectProperties = ds_map_create();
 
 /// @func bbmod_object_add_property(_object, _property)
 ///
-/// @desc
+/// @desc Adds a serializable property to an object.
 ///
-/// @param {Asset.GMObject} _object
-/// @param {Struct.BBMOD_Property} _property
+/// @param {Asset.GMObject} _object The object to add the property to.
+/// @param {Struct.BBMOD_Property} _property The property to add.
+///
+/// @see BBMOD_Property
 function bbmod_object_add_property(_object, _property)
 {
 	if (!ds_map_exists(global.__bbmodObjectProperties, _object))
@@ -20,12 +22,13 @@ function bbmod_object_add_property(_object, _property)
 
 /// @func bbmod_object_get_properties(_object, _dest)
 ///
-/// @desc
+/// @desc Retrieves all serializable properties of an object.
 ///
-/// @param {Asset.GMObject} _object
-/// @param {Id.DsMap<String, Struct.BBMOD_Property>} _dest
+/// @param {Asset.GMObject} _object The object to get serializable properties of.
+/// @param {Id.DsMap<String, Struct.BBMOD_Property>} _dest A map to store the
+/// properties to. It is not automatically cleared before the properties are added!
 ///
-/// @return {Real}
+/// @return {Real} Number of serializable properties that the object has.
 function bbmod_object_get_properties(_object, _dest)
 {
 	var _count = 0;
@@ -58,12 +61,13 @@ function bbmod_object_get_properties(_object, _dest)
 
 /// @func bbmod_instance_to_buffer(_instance, _buffer[, _properties])
 ///
-/// @desc
+/// @desc Serializes an instance to a buffer.
 ///
-/// @param {Id.Instance} _instance
-/// @param {Id.Buffer} _buffer
-/// @param {Id.DsMap<String, Struct.BBMOD_Property>} [_properties] If not
-/// defined, then they are retrieved using {@link bbmod_object_get_properties}.
+/// @param {Id.Instance} _instance The instance to serialize.
+/// @param {Id.Buffer} _buffer The buffer to serialize the instance to.
+/// @param {Id.DsMap<String, Struct.BBMOD_Property>} [_properties] Map of
+/// properties to serialize. If not defined, it is retrieved using
+/// {@link bbmod_object_get_properties}.
 function bbmod_instance_to_buffer(_instance, _buffer, _properties=undefined)
 {
 	static _dest = ds_map_create();
@@ -226,13 +230,13 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties=undefined)
 
 /// @func bbmod_instance_from_buffer(_buffer)
 ///
-/// @desc
+/// @desc Deserializes an instance from a buffer.
 ///
-/// @param {Id.Buffer} _buffer
+/// @param {Id.Buffer} _buffer The buffer to deserialize an instance from.
 ///
-/// @return {Id.Instance}
+/// @return {Id.Instance} The created instnace.
 ///
-/// @throws {BBMOD_Exception}
+/// @throws {BBMOD_Exception} If an error occurs.
 function bbmod_instance_from_buffer(_buffer)
 {
 	var _objectName = buffer_read(_buffer, buffer_string);
@@ -305,7 +309,7 @@ function bbmod_instance_from_buffer(_buffer)
 
 			case BBMOD_EPropertyType.RealArray:
 				var _size = buffer_read(_buffer, buffer_u32);
-				var _array = array_create(_size);
+				var _array = array_create(_size, 0);
 				var i = 0;
 				repeat (_size)
 				{
@@ -355,11 +359,14 @@ function bbmod_instance_from_buffer(_buffer)
 /// @param {Asset.GMObject} _object Use keyword `all` to save all existing
 /// instances.
 /// @param {Id.Buffer} _buffer The buffer to save the instances to.
+///
+/// @return {Real} Number of saved instances.
 function bbmod_save_instances_to_buffer(_object, _buffer)
 {
 	var _props = ds_map_create();
+	var _instanceCount = instance_number(_object);
 
-	buffer_write(_buffer, buffer_u64, instance_number(_object));
+	buffer_write(_buffer, buffer_u64, _instanceCount);
 
 	with (_object)
 	{
@@ -380,14 +387,17 @@ function bbmod_save_instances_to_buffer(_object, _buffer)
 	}
 
 	ds_map_destroy(_props);
+
+	return _instanceCount;
 }
 
 /// @func bbmod_load_instances_from_buffer(_buffer[, _idsOut])
 ///
-/// @desc
+/// @desc Loads instances from a buffer.
 ///
-/// @param {Id.Buffer} _buffer
-/// @param {Array<Id.Instance>} [_idsOut]
+/// @param {Id.Buffer} _buffer A buffer to load instances from.
+/// @param {Array<Id.Instance>} [_idsOut] An array to hold all loaded
+/// instances.
 ///
 /// @return {Real} Returns number of loaded instances.
 function bbmod_load_instances_from_buffer(_buffer, _idsOut=undefined)
