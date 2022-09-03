@@ -2,6 +2,8 @@
 /// @see BBMOD_Property
 enum BBMOD_EPropertyType
 {
+	/// @member A boolean.
+	Bool,
 	/// @member A {@link BBMOD_Color}.
 	Color,
 	/// @member A GameMaker Font asset.
