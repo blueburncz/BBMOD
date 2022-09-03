@@ -1,17 +1,19 @@
 /// @func BBMOD_Property(_name, _type)
 ///
-/// @desc
+/// @desc A descriptor of a serializable property.
 ///
-/// @param {String} _name
-/// @param {Real} _type Use values from {@link BBMOD_EPropertyType}.
+/// @param {String} _name The name of the property.
+/// @param {Real} _type The type of the property. Use values from
+/// {@link BBMOD_EPropertyType}.
 ///
 /// @see BBMOD_EPropertyType
 function BBMOD_Property(_name, _type) constructor
 {
-	/// @var {String}
+	/// @var {String} The name of the property.
 	Name = _name;
 
-	/// @var {Real} Use values from {@link BBMOD_EPropertyType}.
+	/// @var {Real} The type of the property. Use values from
+	/// {@link BBMOD_EPropertyType}.
 	/// @see BBMOD_EPropertyType
 	Type = _type;
 
