@@ -70,7 +70,7 @@ static inline void quaternion_scale(quat_t q, float s)
 	q[3] *= s;
 }
 
-static inline float quaternion_inverse(quat_t q)
+static inline void quaternion_inverse(quat_t q)
 {
 	quaternion_conjugate(q);
 	float s = 1.0f / quaternion_length(q);
@@ -142,7 +142,7 @@ static inline void quaternion_to_matrix(const quat_t q, float m[16])
 	float q1q2 = q[1] * q[2];
 	float q3q0 = q[3] * q[0];
 	float q3q1 = q[3] * q[1];
-	
+
 	m[0] = 1.0f - 2.0f * (q1sqr + q2sqr);
 	m[1] = 2.0f * (q0q1 + q3q2);
 	m[2] = 2.0f * (q0q2 - q3q1);

@@ -1,10 +1,12 @@
-#ifdef _WINDLL
-
 #include <BBMOD/Importer.hpp>
 
 #include <cmath>
 
+#ifdef _WIN32
 #define GM_EXPORT extern "C" __declspec (dllexport)
+#else
+#define GM_EXPORT extern "C"
+#endif
 
 #define GM_TRUE 1.0
 
@@ -210,5 +212,3 @@ GM_EXPORT gmreal_t bbmod_dll_convert(gmstring_t fin, gmstring_t fout)
 {
 	return ConvertToBBMOD(fin, fout, gConfig);
 }
-
-#endif // _WINDLL

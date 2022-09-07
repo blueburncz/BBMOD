@@ -1,2 +1,5 @@
 /docs_build/
 /docs_src/ScriptingAPI/
+
+.vscode
+.DS_Store
