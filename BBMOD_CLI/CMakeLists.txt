@@ -13,12 +13,17 @@ set(SOURCES
     src/BBMOD/Node.cpp
     src/BBMOD/VertexFormat.cpp)
 
-if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+# TODO: Figure out cmake configurations
+if(("${CMAKE_BUILD_TYPE}" STREQUAL Debug) OR ("${CMAKE_BUILD_TYPE}" STREQUAL Release))
     add_executable(BBMOD
         src/main.cpp
         src/terminal.cpp
         ${SOURCES})
-elseif(${CMAKE_BUILD_TYPE} STREQUAL Debug_DLL)
+elseif(("${CMAKE_BUILD_TYPE}" STREQUAL Debug_DLL) OR ("${CMAKE_BUILD_TYPE}" STREQUAL Release_DLL))
     add_library(BBMOD SHARED
         src/exports.cpp
         ${SOURCES})

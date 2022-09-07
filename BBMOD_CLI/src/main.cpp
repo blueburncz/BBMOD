@@ -1,5 +1,3 @@
-#ifndef _WINDLL
-
 #include <BBMOD/Importer.hpp>
 #include <terminal.hpp>
 #include <iostream>
@@ -229,5 +227,3 @@ int main(int argc, const char* argv[])
 
 	return EXIT_SUCCESS;
 }
-
-#endif // _WINDLL
