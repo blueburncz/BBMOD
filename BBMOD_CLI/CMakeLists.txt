@@ -55,13 +55,13 @@ if(WIN32)
         TARGET BBMOD_CLI POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
             ${CMAKE_CURRENT_SOURCE_DIR}/bin/assimp-vc143-mt.dll
-            ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assimp-vc143-mt.dll)
+            $<TARGET_FILE_DIR:BBMOD_CLI>)
 elseif(APPLE)
     add_custom_command(
         TARGET BBMOD_CLI POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_CURRENT_SOURCE_DIR}/lib/assimp.5.dylib
-            ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assimp.5.dylib)
+            ${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimp.5.dylib
+            $<TARGET_FILE_DIR:BBMOD_CLI>)
 endif()
 
 # Copy Assimp license
@@ -69,4 +69,4 @@ add_custom_command(
     TARGET BBMOD_CLI POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_SOURCE_DIR}/bin/LICENSE-Assimp
-        ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/LICENSE-Assimp)
+        $<TARGET_FILE_DIR:BBMOD_CLI>)
