@@ -34,6 +34,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	UInstanceID = get_uniform("bbmod_InstanceID");
 
+	UMaterialIndex = get_uniform("bbmod_MaterialIndex");
+
 	UIBL = get_sampler_index("bbmod_IBL");
 
 	UIBLTexel = get_uniform("bbmod_IBLTexel");
@@ -167,6 +169,18 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 			((_id & $0000FF00) >> 8) / 255,
 			((_id & $00FF0000) >> 16) / 255,
 			((_id & $FF000000) >> 24) / 255);
+	};
+
+	/// @func set_material_index(_index)
+	///
+	/// @desc Sets the `bbmod_MaterialIndex` uniform.
+	///
+	/// @param {Real} [_index] The index of the current material.
+	///
+	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
+	static set_material_index = function (_index) {
+		gml_pragma("forceinline");
+		return set_uniform_f(UMaterialIndex, _index);
 	};
 
 	/// @func set_ibl([_ibl])

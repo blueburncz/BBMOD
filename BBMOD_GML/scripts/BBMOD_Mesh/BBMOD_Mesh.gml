@@ -115,11 +115,15 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		{
 			return self;
 		}
-		if (_transform != undefined)
+		with (BBMOD_SHADER_CURRENT)
 		{
-			BBMOD_SHADER_CURRENT.set_bones(_transform);
+			if (_transform != undefined)
+			{
+				set_bones(_transform);
+			}
+			set_instance_id();
+			set_material_index(MaterialIndex);
 		}
-		BBMOD_SHADER_CURRENT.set_instance_id();
 		vertex_submit(VertexBuffer, PrimitiveType, _material.BaseOpacity);
 		return self;
 	};
@@ -140,12 +144,12 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		if (_transform != undefined)
 		{
 			_material.RenderQueue.draw_mesh_animated(
-				VertexBuffer, _matrix, _material, _transform, PrimitiveType);
+				VertexBuffer, _matrix, _material, _transform, PrimitiveType, MaterialIndex);
 		}
 		else
 		{
 			_material.RenderQueue.draw_mesh(
-				VertexBuffer, _matrix, _material, PrimitiveType);
+				VertexBuffer, _matrix, _material, PrimitiveType, MaterialIndex);
 		}
 		return self;
 	};

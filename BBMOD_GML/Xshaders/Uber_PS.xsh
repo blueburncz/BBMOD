@@ -69,6 +69,9 @@ uniform vec4 bbmod_InstanceID;
 ////////////////////////////////////////////////////////////////////////////////
 // Material
 
+// Material index
+// uniform float bbmod_MaterialIndex;
+
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
 

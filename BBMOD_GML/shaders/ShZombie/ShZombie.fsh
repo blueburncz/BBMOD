@@ -63,6 +63,9 @@ varying vec3 v_vPosShadowmap;
 ////////////////////////////////////////////////////////////////////////////////
 // Material
 
+// Material index
+// uniform float bbmod_MaterialIndex;
+
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
 

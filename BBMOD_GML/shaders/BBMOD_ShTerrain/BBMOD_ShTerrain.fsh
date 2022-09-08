@@ -34,6 +34,9 @@ varying vec2 v_vSplatmapCoord;
 ////////////////////////////////////////////////////////////////////////////////
 // Material
 
+// Material index
+// uniform float bbmod_MaterialIndex;
+
 // RGB: Base color, A: Opacity
 #define bbmod_BaseOpacity gm_BaseTexture
 
