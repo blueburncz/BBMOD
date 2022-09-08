@@ -26,11 +26,11 @@
 ///
 /// @extends BBMOD_Class
 ///
-/// @desc Loads a DLL which allows you to convert models into BBMOD.
+/// @desc Loads a dynamic library which allows you to convert models into BBMOD.
 ///
-/// @param {String} [_path] The path to the DLL file. Defaults to
+/// @param {String} [_path] The path to the dynamic library file. Defaults to
 /// "Data/BBMOD/BBMOD.dll" on Windows and "Data/BBMOD/libBBMOD.dylib"
-/// on Mac.
+/// on macOS.
 ///
 /// @throws {BBMOD_Exception} If the DLL file does not exist.
 ///
@@ -52,7 +52,7 @@ function BBMOD_DLL(
 		destroy: destroy,
 	};
 
-	/// @var {String} Path to the DLL file.
+	/// @var {String} Path to the dynamic library.
 	/// @readonly
 	Path = _path;
 
