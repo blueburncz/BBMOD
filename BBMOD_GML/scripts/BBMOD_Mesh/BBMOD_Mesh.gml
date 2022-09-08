@@ -122,7 +122,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 				set_bones(_transform);
 			}
 			set_instance_id();
-			set_material_index(MaterialIndex);
+			set_material_index(other.MaterialIndex);
 		}
 		vertex_submit(VertexBuffer, PrimitiveType, _material.BaseOpacity);
 		return self;
