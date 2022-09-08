@@ -13,35 +13,60 @@ set(SOURCES
     src/BBMOD/Node.cpp
     src/BBMOD/VertexFormat.cpp)
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
-endif()
-
-# TODO: Figure out cmake configurations
-if(("${CMAKE_BUILD_TYPE}" STREQUAL Debug) OR ("${CMAKE_BUILD_TYPE}" STREQUAL Release))
-    add_executable(BBMOD
-        src/main.cpp
-        src/terminal.cpp
-        ${SOURCES})
-elseif(("${CMAKE_BUILD_TYPE}" STREQUAL Debug_DLL) OR ("${CMAKE_BUILD_TYPE}" STREQUAL Release_DLL))
-    add_library(BBMOD SHARED
-        src/exports.cpp
-        ${SOURCES})
-endif()
-
-target_include_directories(BBMOD PRIVATE include/)
-
 find_library(LIBASSIMP
     NAMES assimp-vc143-mt assimp.5
     PATHS lib/)
 
-target_link_libraries(BBMOD ${LIBASSIMP})
+function(configure_target target)
+    set_target_properties(${target} PROPERTIES OUTPUT_NAME BBMOD)
 
-if(APPLE)
-    # Find shared libraries next to the executable
-    # Source: https://stackoverflow.com/a/69707790
-    # ($ORIGIN doesn't work but . does)
-    set_target_properties(BBMOD PROPERTIES
-        BUILD_WITH_INSTALL_RPATH FALSE
-        LINK_FLAGS "-Wl,-rpath,./")
+    target_include_directories(${target} PRIVATE include/)
+
+    target_link_libraries(${target} ${LIBASSIMP})
+
+    if(APPLE)
+        # Find shared libraries next to the executable
+        # Source: https://stackoverflow.com/a/69707790
+        # ($ORIGIN doesn't work but . does)
+        set_target_properties(${target} PROPERTIES
+            BUILD_WITH_INSTALL_RPATH FALSE
+            LINK_FLAGS "-Wl,-rpath,./")
+    endif()
+endfunction()
+
+# BBMOD CLI
+add_executable(BBMOD_CLI
+    src/main.cpp
+    src/terminal.cpp
+    ${SOURCES})
+
+configure_target(BBMOD_CLI)
+
+# BBMOD DLL
+add_library(BBMOD_DLL SHARED
+    src/exports.cpp
+    ${SOURCES})
+
+configure_target(BBMOD_DLL)
+
+# Copy Assimp dynamic library
+if(WIN32)
+    add_custom_command(
+        TARGET BBMOD_CLI POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_CURRENT_SOURCE_DIR}/bin/assimp-vc143-mt.dll
+            ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assimp-vc143-mt.dll)
+elseif(APPLE)
+    add_custom_command(
+        TARGET BBMOD_CLI POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_CURRENT_SOURCE_DIR}/lib/assimp.5.dylib
+            ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/assimp.5.dylib)
 endif()
+
+# Copy Assimp license
+add_custom_command(
+    TARGET BBMOD_CLI POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/bin/LICENSE-Assimp
+        ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/LICENSE-Assimp)
