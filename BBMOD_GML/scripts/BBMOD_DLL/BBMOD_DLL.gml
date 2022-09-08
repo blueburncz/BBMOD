@@ -29,7 +29,8 @@
 /// @desc Loads a DLL which allows you to convert models into BBMOD.
 ///
 /// @param {String} [_path] The path to the DLL file. Defaults to
-/// "Data/BBMOD/BBMOD.dll".
+/// "Data/BBMOD/BBMOD.dll" on Windows and "Data/BBMOD/libBBMOD.dylib"
+/// on Mac.
 ///
 /// @throws {BBMOD_Exception} If the DLL file does not exist.
 ///
@@ -41,8 +42,9 @@
 /// _dll.destroy();
 /// modHouse = new BBMOD_Model("House.bbmod");
 /// ```
-function BBMOD_DLL(_path="Data/BBMOD/BBMOD.dll")
-	: BBMOD_Class() constructor
+function BBMOD_DLL(
+	_path=((os_type == os_windows) ? "Data/BBMOD/BBMOD.dll" : "Data/BBMOD/libBBMOD.dylib")
+) : BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
 

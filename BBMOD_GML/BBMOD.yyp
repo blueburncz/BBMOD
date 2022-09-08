@@ -415,6 +415,8 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","resourceVersion":"1.0","name":"GizmoScale.bbmod","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","resourceVersion":"1.0","name":"GizmoRotate.bbmod","resourceType":"GMIncludedFile",},
     {"CopyToMask":64,"filePath":"datafiles/Data/BBMOD","resourceVersion":"1.0","name":"assimp-vc143-mt.dll","resourceType":"GMIncludedFile",},
+    {"CopyToMask":2,"filePath":"datafiles/Data/BBMOD","resourceVersion":"1.0","name":"libassimp.5.dylib","resourceType":"GMIncludedFile",},
+    {"CopyToMask":2,"filePath":"datafiles/Data/BBMOD","resourceVersion":"1.0","name":"libBBMOD.dylib","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2022.6.1.26",

@@ -112,7 +112,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
-	
 	/// @func draw_mesh(_vertexBuffer, _matrix, _material[, _primitiveType])
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the
