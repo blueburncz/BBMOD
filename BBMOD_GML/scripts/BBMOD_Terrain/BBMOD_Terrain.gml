@@ -720,8 +720,16 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			var _mat = Layer[i];
 			if (_mat != undefined)
 			{
+				if (i == 0)
+				{
+					RenderQueue.apply_material(_mat);
+				}
+				else
+				{
+					RenderQueue.apply_material(_mat, ~(1 << BBMOD_ERenderPass.Shadows));
+				}
+
 				RenderQueue
-					.apply_material(_mat, ~(1 << BBMOD_ERenderPass.Shadows))
 					.begin_conditional_block()
 					.set_gpu_zwriteenable(i == 0)
 					.set_gpu_zfunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
