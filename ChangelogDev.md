@@ -6,3 +6,5 @@
 * Added method `to_buffer` to `BBMOD_Resource`, using which you can write a resource into a buffer.
 * Implemented method `to_buffer` for resources `BBMOD_Model`, `BBMOD_Animation` and `BBMOD_Sprite`.
 * Added method `to_file` to `BBMOD_Resource`, using which you can write a resource into a file.
+* Increased minor version of the BBMOD file format to 4.
+* `*.bbanim` files can now contain animation events.

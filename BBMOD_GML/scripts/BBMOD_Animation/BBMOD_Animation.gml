@@ -256,6 +256,16 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 			}
 		}
 
+		if (VersionMinor >= 4)
+		{
+			var _eventCount = buffer_read(_buffer, buffer_u32);
+			repeat (_eventCount)
+			{
+				array_push(Events, buffer_read(_buffer, buffer_f64)); // Frame
+				array_push(Events, buffer_read(_buffer, buffer_string)); // Event name
+			}
+		}
+
 		IsLoaded = true;
 
 		return self;
@@ -296,6 +306,17 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 			{
 				bbmod_array_to_buffer(FramesBone, _buffer, buffer_f32);
 			}
+		}
+
+		var _eventCount = array_length(Events) / 2;
+		buffer_write(_buffer, buffer_u32, _eventCount);
+
+		var i = 0;
+		repeat (_eventCount)
+		{
+			buffer_write(_buffer, buffer_f64, Events[i]);
+			buffer_write(_buffer, buffer_string, Events[i + 1]);
+			i += 2;
 		}
 
 		return self;

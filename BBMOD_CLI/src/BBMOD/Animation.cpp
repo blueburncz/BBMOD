@@ -367,6 +367,9 @@ bool SAnimation::Save(std::string path, const SConfig& config)
 	delete[] frameWorld;
 	delete[] frameBone;
 
+	uint32_t eventCount = 0;
+	FILE_WRITE_DATA(file, eventCount);
+
 	file.flush();
 	file.close();
 
