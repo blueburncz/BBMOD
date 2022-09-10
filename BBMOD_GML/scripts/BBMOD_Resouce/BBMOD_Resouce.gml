@@ -46,6 +46,21 @@ function BBMOD_Resource()
 		//return self;
 	};
 
+	/// @func to_buffer(_buffer)
+	///
+	/// @desc Writes the resource to a buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to write the resource to.
+	///
+	/// @return {Struct.BBMOD_Resource} Returns `self`.
+	///
+	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
+	static to_buffer = function (_buffer) {
+		throw new BBMOD_NotImplementedException();
+		// When implementing this method, do not forget to set IsLoaded to true!
+		//return self;
+	};
+
 	/// @func check_file(_file[, _sha1[, _callback]])
 	///
 	/// @param {String} _file
@@ -111,6 +126,39 @@ function BBMOD_Resource()
 		try
 		{
 			from_buffer(_buffer);
+			buffer_delete(_buffer);
+		}
+		catch (_e)
+		{
+			buffer_delete(_buffer);
+			throw _e;
+		}
+
+		return self;
+	};
+
+	/// @func to_file(_file)
+	///
+	/// @desc Writes a resource to a file.
+	///
+	/// @param {String} _file The path to the file.
+	///
+	/// @return {Struct.BBMOD_Resource} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If saving fails.
+	static to_file = function (_file) {
+		var _buffer = buffer_create(1, buffer_grow, 1);
+
+		var _dirname = filename_dir(_file);
+		if (!directory_exists(_dirname))
+		{
+			directory_create(_dirname);
+		}
+
+		try
+		{
+			to_buffer(_buffer);
+			buffer_save(_buffer, _file);
 			buffer_delete(_buffer);
 		}
 		catch (_e)

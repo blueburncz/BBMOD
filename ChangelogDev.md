@@ -3,5 +3,6 @@
 > created.
 
 * Fixed terrain not casting shadows.
-* Added method `to_buffer` to `BBMOD_Model`, using which you can write a model's data into a buffer.
-* Added method `to_buffer` to `BBMOD_Animation`, using which you can write an animation's data into a buffer.
+* Added method `to_buffer` to `BBMOD_Resource`, using which you can write a resource into a buffer.
+* Implemented method `to_buffer` for resources `BBMOD_Model`, `BBMOD_Animation` and `BBMOD_Sprite`.
+* Added method `to_file` to `BBMOD_Resource`, using which you can write a resource into a file.

@@ -72,6 +72,16 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
+	static to_file = function (_file) {
+		var _dirname = filename_dir(_file);
+		if (!directory_exists(_dirname))
+		{
+			directory_create(_dirname);
+		}
+		sprite_save_strip(Raw, _file);
+		return self;
+	};
+
 	/// @func get_texture()
 	///
 	/// @desc Retrieves a pointer to the texture.
