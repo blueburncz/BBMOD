@@ -214,6 +214,73 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
+	/// @func to_buffer(_buffer)
+	///
+	/// @desc Writes model data to a buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to write the data to.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static to_buffer = function (_buffer) {
+		buffer_write(_buffer, buffer_string, "BBMOD");
+		buffer_write(_buffer, buffer_u8, VersionMajor);
+		buffer_write(_buffer, buffer_u8, VersionMinor);
+
+		// Vertex format
+		if (VersionMinor < 2)
+		{
+			bbmod_vertex_format_save(VertexFormat, _buffer, VersionMinor);
+		}
+
+		// Meshes
+		var _meshCount = array_length(Meshes);
+		buffer_write(_buffer, buffer_u32, _meshCount)
+
+		var i = 0;
+		repeat (_meshCount)
+		{
+			Meshes[i++].to_buffer(_buffer);
+		}
+
+		// Node count and root node
+		buffer_write(_buffer, buffer_u32, NodeCount);
+		RootNode.to_buffer(_buffer);
+
+		// Bone offsets
+		buffer_write(_buffer, buffer_u32, BoneCount);
+
+		if (BoneCount > 0)
+		{
+			OffsetArray = array_create(BoneCount * 8, 0);
+
+			var _index = 0;
+			repeat (BoneCount)
+			{
+				buffer_write(_buffer, buffer_f32, _index / 8); // Bone index
+				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 0]);
+				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 1]);
+				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 2]);
+				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 3]);
+				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 4]);
+				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 5]);
+				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 6]);
+				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 7]);
+				i += 8;
+			}
+		}
+
+		// Materials
+		buffer_write(_buffer, buffer_u32, MaterialCount);
+
+		i = 0;
+		repeat (MaterialCount)
+		{
+			buffer_write(_buffer, buffer_string, MaterialNames[i++]);
+		}
+
+		return self;
+	};
+
 	/// @func freeze()
 	///
 	/// @desc Freezes all vertex buffers used by the model. This should make its

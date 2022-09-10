@@ -191,12 +191,41 @@ function BBMOD_VertexFormat(
 	}
 }
 
+/// @func bbmod_vertex_format_save(_vertexFormat, _buffer[, _versionMinor])
+///
+/// @desc Saves a vertex format to a buffer.
+///
+/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format to save.
+/// @param {Id.Buffer} _buffer The buffer to save the vertex format to.
+/// @param {Real} [_versionMinor] The minor version of the BBMOD file format.
+/// Defaults to {@link BBMOD_VERSION_MINOR}.
+///
+/// @private
+function bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_VERSION_MINOR)
+{
+	with (_vertexFormat)
+	{
+		buffer_write(_buffer, buffer_bool, Vertices);
+		buffer_write(_buffer, buffer_bool, Normals);
+		buffer_write(_buffer, buffer_bool, TextureCoords);
+		if (_versionMinor >= 3)
+		{
+			buffer_write(_buffer, buffer_bool, TextureCoords2);
+		}
+		buffer_write(_buffer, buffer_bool, Colors);
+		buffer_write(_buffer, buffer_bool, TangentW);
+		buffer_write(_buffer, buffer_bool, Bones);
+		buffer_write(_buffer, buffer_bool, Ids);
+	}
+}
+
 /// @func bbmod_vertex_format_load(_buffer[, _versionMinor])
 ///
 /// @desc Loads a vertex format from a buffer.
 ///
 /// @param {Id.Buffer} _buffer The buffer to load the vertex format from.
-/// @param {Real} _buffer The buffer to load the vertex format from.
+/// @param {Real} _versionMinor The minor version of the BBMOD file format.
+/// Defaults to {@link BBMOD_VERSION_MINOR}.
 ///
 /// @return {Struct.BBMOD_VertexFormat} The loaded vetex format.
 ///

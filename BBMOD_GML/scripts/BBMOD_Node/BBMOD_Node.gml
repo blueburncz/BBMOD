@@ -161,6 +161,46 @@ function BBMOD_Node(_model) constructor
 		return self;
 	};
 
+	/// @func to_buffer(_buffer)
+	///
+	/// @desc Writes node data to a buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to write the data to.
+	///
+	/// @return {Struct.BBMOD_Node} Returns `self`.
+	///
+	/// @private
+	static to_buffer = function (_buffer) {
+		var i;
+
+		buffer_write(_buffer, buffer_string, Name);
+		buffer_write(_buffer, buffer_f32, Index);
+		buffer_write(_buffer, buffer_bool, IsBone);
+		Transform.ToBuffer(_buffer, buffer_f32);
+
+		// Meshes
+		var _meshCount = array_length(Meshes);
+		buffer_write(_buffer, buffer_u32, _meshCount)
+
+		i = 0;
+		repeat (_meshCount)
+		{
+			 buffer_write(_buffer, buffer_u32, Meshes[i++]);
+		}
+
+		// Child nodes
+		var _childCount = array_length(Children);
+		buffer_write(_buffer, buffer_u32, _childCount);
+
+		i = 0;
+		repeat (_childCount)
+		{
+			Children[i++].to_buffer(_buffer);
+		}
+
+		return self;
+	};
+
 	/// @func submit(_materials, _transform)
 	///
 	/// @desc Immediately submits the node for rendering.

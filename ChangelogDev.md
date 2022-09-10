@@ -3,3 +3,4 @@
 > created.
 
 * Fixed terrain not casting shadows.
+* Added method `to_buffer` to `BBMOD_Model`, using which you can write a model's data into a buffer.
