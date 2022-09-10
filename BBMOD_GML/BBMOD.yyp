@@ -49,7 +49,7 @@
     {"id":{"name":"DissolveParticleSystem","path":"scripts/DissolveParticleSystem/DissolveParticleSystem.yy",},"order":1,},
     {"id":{"name":"bbmod_set_instance_id","path":"scripts/bbmod_set_instance_id/bbmod_set_instance_id.yy",},"order":12,},
     {"id":{"name":"BBMOD_ShInstanceIDAnimated","path":"shaders/BBMOD_ShInstanceIDAnimated/BBMOD_ShInstanceIDAnimated.yy",},"order":1,},
-    {"id":{"name":"bbmod_array_from_buffer","path":"scripts/bbmod_array_from_buffer/bbmod_array_from_buffer.yy",},"order":0,},
+    {"id":{"name":"__bbmod_array","path":"scripts/__bbmod_array/__bbmod_array.yy",},"order":0,},
     {"id":{"name":"BBMOD_VertexFormat","path":"scripts/BBMOD_VertexFormat/BBMOD_VertexFormat.yy",},"order":5,},
     {"id":{"name":"BBMOD_EShaderUniformType","path":"scripts/BBMOD_EShaderUniformType/BBMOD_EShaderUniformType.yy",},"order":13,},
     {"id":{"name":"SprSand","path":"sprites/SprSand/SprSand.yy",},"order":1,},
