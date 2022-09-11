@@ -148,6 +148,36 @@ function BBMOD_Material(_shader=undefined)
 		return _clone;
 	};
 
+	/// @func to_json(_json)
+	///
+	/// @desc Saves material properties to a JSON object.
+	///
+	/// @param {Struct} _json The object to save the properties to.
+	///
+	/// @return {Struct.BBMOD_Material} Returns `self`.
+	///
+	/// @note This method currently does not support saving of properties
+	/// {@link BBMOD_Material.Shaders}, {@link BBMOD_Material.RenderQueue},
+	/// {@link BBMOD_Material.OnApply} and {@link BBMOD_Material.BaseOpacity}!
+	static to_json = function (_json) {
+		_json.RenderPass = RenderPass;
+		// TODO: Save Shaders
+		// TODO: Save RenderQueue
+		// TODO: Save OnApply
+		_json.BlendMode = BlendMode;
+		_json.Culling = Culling;
+		_json.ZWrite = ZWrite;
+		_json.ZTest = ZTest;
+		_json.ZFunc = ZFunc;
+		_json.AlphaTest = AlphaTest;
+		_json.AlphaBlend = AlphaBlend;
+		_json.Mipmapping = Mipmapping;
+		_json.Filtering = Filtering;
+		_json.Repeat = Repeat;
+		// TODO: Save BaseOpacity/BaseOpacitySprite
+		return self;
+	};
+
 	/// @func from_json(_json)
 	///
 	/// @desc Loads material properties from a JSON object.
