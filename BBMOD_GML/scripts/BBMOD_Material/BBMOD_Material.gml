@@ -156,9 +156,7 @@ function BBMOD_Material(_shader=undefined)
 	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	///
-	/// @note This method currently does not support saving of properties
-	/// {@link BBMOD_Material.Shaders}, {@link BBMOD_Material.RenderQueue},
-	/// {@link BBMOD_Material.OnApply} and {@link BBMOD_Material.BaseOpacity}!
+	/// @note This currently does not support saving of textures and shaders!
 	static to_json = function (_json) {
 		_json.RenderPass = RenderPass;
 		// TODO: Save Shaders

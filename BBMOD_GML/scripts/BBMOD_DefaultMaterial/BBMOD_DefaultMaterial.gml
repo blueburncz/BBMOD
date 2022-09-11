@@ -6,8 +6,8 @@
 ///
 /// @param {Struct.BBMOD_DefaultShader} [_shader] A shader that the material
 /// uses in the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you
-/// would like to use {@link BBMOD_Material.set_shader} to specify shaders
-/// used in specific render passes.
+/// would like to use {@link BBMOD_Material.set_shader} to specify shaders used
+/// in specific render passes.
 ///
 /// @see BBMOD_DefaultShader
 function BBMOD_DefaultMaterial(_shader=undefined)
@@ -17,6 +17,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 	static Super_BaseMaterial = {
 		copy: copy,
+		from_json: from_json,
 		destroy: destroy,
 	};
 
@@ -54,6 +55,80 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	Emissive = sprite_get_texture(BBMOD_SprBlack, 0);
 
 	EmissiveSprite = undefined;
+
+	// TODO: Add to_json
+
+	static from_json = function (_json) {
+		method(self, Super_BaseMaterial.from_json)(_json);
+
+		if (variable_struct_exists(_json, "NormalSmoothness"))
+		{
+			if (NormalSmoothnessSprite != undefined)
+			{
+				sprite_delete(NormalSmoothnessSprite);
+				NormalSmoothnessSprite = undefined;
+			}
+
+			NormalSmoothness = _json.NormalSmoothness;
+		}
+
+		if (variable_struct_exists(_json, "SpecularColor"))
+		{
+			if (SpecularColorSprite != undefined)
+			{
+				sprite_delete(SpecularColorSprite);
+				SpecularColorSprite = undefined;
+			}
+
+			SpecularColor = _json.SpecularColor;
+		}
+
+		if (variable_struct_exists(_json, "NormalRoughness"))
+		{
+			if (NormalRoughnessSprite != undefined)
+			{
+				sprite_delete(NormalRoughnessSprite);
+				NormalRoughnessSprite = undefined;
+			}
+
+			NormalRoughness = _json.NormalRoughness;
+		}
+
+		if (variable_struct_exists(_json, "MetallicAO"))
+		{
+			if (MetallicAOSprite != undefined)
+			{
+				sprite_delete(MetallicAOSprite);
+				MetallicAOSprite = undefined;
+			}
+
+			MetallicAO = _json.MetallicAO;
+		}
+
+		if (variable_struct_exists(_json, "Subsurface"))
+		{
+			if (SubsurfaceSprite != undefined)
+			{
+				sprite_delete(SubsurfaceSprite);
+				SubsurfaceSprite = undefined;
+			}
+
+			Subsurface = _json.Subsurface;
+		}
+
+		if (variable_struct_exists(_json, "Emissive"))
+		{
+			if (EmissiveSprite != undefined)
+			{
+				sprite_delete(EmissiveSprite);
+				EmissiveSprite = undefined;
+			}
+
+			Emissive = _json.Emissive;
+		}
+
+		return self;
+	};
 
 	/// @func set_normal_smoothness(_normal, _smoothness)
 	///
