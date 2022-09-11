@@ -268,6 +268,47 @@ function BBMOD_Material(_shader=undefined)
 		return self;
 	};
 
+	static to_file = function (_file) {
+		var _dirname = filename_dir(_file);
+		if (!directory_exists(_dirname))
+		{
+			directory_create(_dirname);
+		}
+
+		var _json = {};
+		to_json(_json);
+
+		var _jsonFile = file_text_open_write(_file);
+		file_text_write_string(_jsonFile, json_stringify(_json));
+		file_text_close(_jsonFile);
+
+		return self;
+	};
+
+	static from_file = function (_file, _sha1=undefined) {
+		Path = _file;
+
+		check_file(_file, _sha1);
+
+		var _jsonFile = file_text_open_read(_file);
+		var _jsonString = "";
+
+		while (!file_text_eof(_jsonFile))
+		{
+			_jsonString += file_text_read_string(_jsonFile) + "\n";
+			file_text_readln(_jsonFile);
+		}
+		file_text_close(_jsonFile);
+
+		var _json = json_parse(_jsonString);
+		from_json(_json);
+
+		show_debug_message(_jsonString);
+		show_debug_message(_json);
+
+		return self;
+	};
+
 	static _make_sprite = function (_r, _g, _b, _a) {
 		gml_pragma("forceinline");
 		static _sur = noone;
