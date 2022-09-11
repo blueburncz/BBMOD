@@ -148,6 +148,98 @@ function BBMOD_Material(_shader=undefined)
 		return _clone;
 	};
 
+	/// @func from_json(_json)
+	///
+	/// @desc Loads material properties from a JSON object.
+	///
+	/// @param {Struct} _json The object to load the properties from.
+	///
+	/// @return {Struct.BBMOD_Material} Returns `self`.
+	static from_json = function (_json) {
+		if (variable_struct_exists(_json, "RenderPass"))
+		{
+			RenderPass = _json.RenderPass;
+		}
+
+		if (variable_struct_exists(_json, "Shaders"))
+		{
+			Shaders = _json.Shaders;
+		}
+
+		if (variable_struct_exists(_json, "RenderQueue"))
+		{
+			RenderQueue = _json.RenderQueue;
+		}
+
+		if (variable_struct_exists(_json, "OnApply"))
+		{
+			OnApply = _json.OnApply;
+		}
+
+		if (variable_struct_exists(_json, "BlendMode"))
+		{
+			BlendMode = _json.BlendMode;
+		}
+
+		if (variable_struct_exists(_json, "Culling"))
+		{
+			Culling = _json.Culling;
+		}
+
+		if (variable_struct_exists(_json, "ZWrite"))
+		{
+			ZWrite = _json.ZWrite;
+		}
+
+		if (variable_struct_exists(_json, "ZTest"))
+		{
+			ZTest = _json.ZTest;
+		}
+
+		if (variable_struct_exists(_json, "ZFunc"))
+		{
+			ZFunc = _json.ZFunc;
+		}
+
+		if (variable_struct_exists(_json, "AlphaTest"))
+		{
+			AlphaTest = _json.AlphaTest;
+		}
+
+		if (variable_struct_exists(_json, "AlphaBlend"))
+		{
+			AlphaBlend = _json.AlphaBlend;
+		}
+
+		if (variable_struct_exists(_json, "Mipmapping"))
+		{
+			Mipmapping = _json.Mipmapping;
+		}
+
+		if (variable_struct_exists(_json, "Filtering"))
+		{
+			Filtering = _json.Filtering;
+		}
+
+		if (variable_struct_exists(_json, "Repeat"))
+		{
+			Repeat = _json.Repeat;
+		}
+
+		if (variable_struct_exists(_json, "BaseOpacity"))
+		{
+			if (BaseOpacitySprite != undefined)
+			{
+				sprite_delete(BaseOpacitySprite);
+				BaseOpacitySprite = undefined;
+			}
+
+			BaseOpacity = _json.BaseOpacity;
+		}
+
+		return self;
+	};
+
 	static _make_sprite = function (_r, _g, _b, _a) {
 		gml_pragma("forceinline");
 		static _sur = noone;
