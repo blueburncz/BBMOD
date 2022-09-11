@@ -10,3 +10,4 @@
 * `*.bbanim` files can now contain animation events.
 * Added method `to_json` to `BBMOD_Material`, using which you can save material properties to a JSON object.
 * Added method `from_json` to `BBMOD_Material`, using which you can load material properties from a JSON object.
+* Implemented methods `to_file` and `from_file` for `BBMOD_Material`.
