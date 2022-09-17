@@ -525,6 +525,8 @@ function BBMOD_Renderer()
 	static render_shadowmap = function () {
 		gml_pragma("forceinline");
 
+		static _renderQueues = bbmod_render_queues_get();
+
 		var _directionalLight = bbmod_light_directional_get();
 
 		if (EnableShadows
@@ -542,7 +544,6 @@ function BBMOD_Renderer()
 
 			bbmod_shader_set_global_f("bbmod_ZFar", _shadowmapArea);
 
-			var _renderQueues = global.bbmod_render_queues;
 			var _rqi = 0;
 			repeat (array_length(_renderQueues))
 			{
@@ -568,6 +569,8 @@ function BBMOD_Renderer()
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	static render = function (_clearQueues=true) {
 		global.__bbmodRendererCurrent = self;
+
+		static _renderQueues = bbmod_render_queues_get();
 
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
@@ -643,7 +646,6 @@ function BBMOD_Renderer()
 	
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
-			var _renderQueues = global.bbmod_render_queues;
 			var _rqi = 0;
 			repeat (array_length(_renderQueues))
 			{
@@ -686,7 +688,6 @@ function BBMOD_Renderer()
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
 			var _selectedInstances = Gizmo.Selected;
-			var _renderQueues = global.bbmod_render_queues;
 			var _rqi = 0;
 			repeat (array_length(_renderQueues))
 			{
@@ -735,7 +736,6 @@ function BBMOD_Renderer()
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			bbmod_render_pass_set(BBMOD_ERenderPass.Deferred);
-			var _renderQueues = global.bbmod_render_queues;
 			var _rqi = 0;
 			repeat (array_length(_renderQueues))
 			{
@@ -806,7 +806,6 @@ function BBMOD_Renderer()
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
-		var _renderQueues = global.bbmod_render_queues;
 		var _rqi = 0;
 		repeat (array_length(_renderQueues))
 		{

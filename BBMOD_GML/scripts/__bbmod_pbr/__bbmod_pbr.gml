@@ -82,3 +82,7 @@ function __bbmod_material_pbr_batched()
 	gml_pragma("forceinline");
 	return __bbmod_material_default_batched();
 }
+
+bbmod_material_register("BBMOD_MATERIAL_PBR", BBMOD_MATERIAL_PBR);
+bbmod_material_register("BBMOD_MATERIAL_PBR_ANIMATED", BBMOD_MATERIAL_PBR_ANIMATED);
+bbmod_material_register("BBMOD_MATERIAL_PBR_BATCHED", BBMOD_MATERIAL_PBR_BATCHED);

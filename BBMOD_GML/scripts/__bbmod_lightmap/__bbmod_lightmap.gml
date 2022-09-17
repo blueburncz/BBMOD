@@ -63,3 +63,5 @@ function __bbmod_material_lightmap()
 	static _material = new BBMOD_LightmapMaterial(__bbmod_shader_lightmap());
 	return _material;
 }
+
+bbmod_material_register("BBMOD_MATERIAL_LIGHTMAP", BBMOD_MATERIAL_LIGHTMAP);

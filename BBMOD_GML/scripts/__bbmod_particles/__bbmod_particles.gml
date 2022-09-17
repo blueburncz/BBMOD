@@ -144,3 +144,6 @@ function __bbmod_model_particle()
 	}
 	return _model;
 }
+
+bbmod_material_register("BBMOD_MATERIAL_PARTICLE_LIT", BBMOD_MATERIAL_PARTICLE_LIT);
+bbmod_material_register("BBMOD_MATERIAL_PARTICLE_UNLIT", BBMOD_MATERIAL_PARTICLE_UNLIT);

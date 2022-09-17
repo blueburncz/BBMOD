@@ -2,7 +2,22 @@
 /// sorted by their priority in an asceding order.
 /// @see BBMOD_RenderQueue
 /// @readonly
+/// @obsolete Please use {@ bbmod_render_queues_get} instead.
 global.bbmod_render_queues = [];
+
+/// @func bbmod_render_queues_get()
+///
+/// @desc Retrieves a read-only array of existing render queues.
+///
+/// @return {Array<Struct.BBMOD_RenderQueue>} The array of render queues.
+///
+/// @see BBMOD_RenderQueue
+function bbmod_render_queues_get()
+{
+	gml_pragma("forceinline");
+	static _renderQueues = [];
+	return _renderQueues;
+}
 
 /// @func BBMOD_RenderQueue([_name[, _priority]])
 ///
@@ -33,7 +48,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	Name = _name ?? ("RenderQueue" + string(IdNext++));
 
 	/// @var {Real} The priority of the render queue. Render queues with lower
-	/// priority come first in the {@link global.bbmod_render_queues} array.
+	/// priority come first in the array returned by {@link bbmod_render_queues_get}.
 	/// @readonly
 	Priority = _priority;
 
@@ -45,7 +60,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @func set_priority(_p)
 	///
 	/// @desc Changes the priority of the render queue. Render queues with lower
-	/// priority come first in the {@link global.bbmod_render_queues} array.
+	/// priority come first in the array returned by {@link bbmod_render_queues_get}.
 	///
 	/// @param {Real} _p The new priority of the render queue.
 	///
@@ -1640,18 +1655,21 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 function __bbmod_add_render_queue(_renderQueue)
 {
 	gml_pragma("forceinline");
-	array_push(global.bbmod_render_queues, _renderQueue);
+	static _renderQueues = bbmod_render_queues_get();
+	array_push(_renderQueues, _renderQueue);
 	__bbmod_reindex_render_queues();
 }
 
 function __bbmod_remove_render_queue(_renderQueue)
 {
 	gml_pragma("forceinline");
-	for (var i = 0; i < array_length(global.bbmod_render_queues); ++i)
+	static _renderQueues = bbmod_render_queues_get();
+	var _renderQueueCount = array_length(_renderQueues);
+	for (var i = 0; i < _renderQueueCount; ++i)
 	{
-		if (global.bbmod_render_queues[i] == _renderQueue)
+		if (_renderQueues[i] == _renderQueue)
 		{
-			array_delete(global.bbmod_render_queues, i, 1);
+			array_delete(_renderQueues, i, 1);
 			break;
 		}
 	}
@@ -1661,12 +1679,13 @@ function __bbmod_remove_render_queue(_renderQueue)
 function __bbmod_reindex_render_queues()
 {
 	gml_pragma("forceinline");
+	static _renderQueues = bbmod_render_queues_get();
 	static _sortFn = function (_a, _b) {
 		if (_b.Priority > _a.Priority) return -1;
 		if (_b.Priority < _a.Priority) return +1;
 		return 0;
 	};
-	array_sort(global.bbmod_render_queues, _sortFn);
+	array_sort(_renderQueues, _sortFn);
 }
 
 /// @func bbmod_render_queue_get_default()

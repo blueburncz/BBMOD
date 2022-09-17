@@ -21,3 +21,5 @@ function __bbmod_material_sky()
 	}
 	return _material;
 }
+
+bbmod_material_register("BBMOD_MATERIAL_SKY", BBMOD_MATERIAL_SKY);

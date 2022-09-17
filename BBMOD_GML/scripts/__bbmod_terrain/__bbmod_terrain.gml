@@ -25,3 +25,5 @@ function __bbmod_material_terrain()
 	}
 	return _material;
 }
+
+bbmod_material_register("BBMOD_MATERIAL_TERRAIN", BBMOD_MATERIAL_TERRAIN);

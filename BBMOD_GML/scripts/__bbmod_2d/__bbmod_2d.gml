@@ -29,3 +29,5 @@ function __bbmod_material_sprite()
 	static _material = new BBMOD_DefaultMaterial(BBMOD_SHADER_SPRITE);
 	return _material;
 }
+
+bbmod_material_register("BBMOD_MATERIAL_SPRITE", BBMOD_MATERIAL_SPRITE);

@@ -164,7 +164,8 @@ function BBMOD_ResourceManager()
 	/// @return {Struct.BBMOD_Resource} The resource or `undefined`.
 	///
 	/// @note Currently supported files formats are `*.bbmod` for {@link BBMOD_Model},
-	/// `*.bbanim` for {@link BBMOD_Animation} and `*.png`, `*.gif`, `*.jpg/jpeg`
+	/// `*.bbanim` for {@link BBMOD_Animation}, `*.bbmat` for {@link BBMOD_Material}
+	/// and `*.png`, `*.gif`, `*.jpg/jpeg`
 	/// for {@link BBMOD_Sprite}.
 	static load = function (_path, _sha1=undefined, _onLoad=undefined) {
 		var _resources = Resources;
@@ -176,6 +177,48 @@ function BBMOD_ResourceManager()
 
 		var _ext = filename_ext(_path);
 		var _res;
+
+		////////////////////////////////////////////////////////////////////////
+		// BBMAT
+		if (_ext == ".bbmat")
+		{
+			if (_sha1 != undefined)
+			{
+				if (sha1_file(_path) != _sha1)
+				{
+					if (_onLoad != undefined)
+					{
+						_onLoad(new BBMOD_Exception("SHA1 does not match!"), undefined);
+					}
+					return undefined;
+				}
+			}
+
+			var _json = bbmod_json_load(_path);
+			var _name = _json[$ "__name"];
+
+			if (_name == undefined
+				|| !bbmod_material_exists(_name))
+			{
+				if (_onLoad != undefined)
+				{
+					_onLoad(new BBMOD_Exception("Material \"" + _name + "\" does not exist!"), undefined);
+				}
+				return undefined;
+			}
+
+			_res = bbmod_material_get(_name).clone().from_json(_json);
+
+			if (_onLoad != undefined)
+			{
+				_onLoad(undefined, _res);
+			}
+
+			return _res;
+		}
+
+		////////////////////////////////////////////////////////////////////////
+		// Others...
 		switch (_ext)
 		{
 		case ".bbmod":
@@ -197,7 +240,6 @@ function BBMOD_ResourceManager()
 			_onLoad(new BBMOD_Exception("Invalid file extension '" + _ext + "'!"));
 			return undefined;
 		}
-
 
 		_res.Manager = self;
 		var _manager = self;

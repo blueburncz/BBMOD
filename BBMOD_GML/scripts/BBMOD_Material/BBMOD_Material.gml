@@ -1,3 +1,60 @@
+/// @func __bbmod_material_get_map()
+///
+/// @desc Retrieves a map of registered materials.
+///
+/// @return {Id.DsMap<String, Struct.BBMOD_Material>} The map of registered
+/// materials.
+///
+/// @private
+function __bbmod_material_get_map()
+{
+	static _map = ds_map_create();
+	return _map;
+}
+
+/// @func bbmod_material_register(_name, _material)
+///
+/// @desc Registers a material.
+///
+/// @param {String} _name The name of the material.
+/// @param {Struct.BBMOD_Material} _material The material.
+function bbmod_material_register(_name, _material)
+{
+	gml_pragma("forceinline");
+	static _map =__bbmod_material_get_map();
+	_map[? _name] = _material;
+}
+
+/// @func bbmod_material_exists(_name)
+///
+/// @desc Checks if there is a material registered under the name.
+///
+/// @param {String} _name The name of the material.
+///
+/// @return {Bool} Returns `true` if there is a material registered under the
+/// name.
+function bbmod_material_exists(_name)
+{
+	gml_pragma("forceinline");
+	static _map =__bbmod_material_get_map();
+	return ds_map_exists(_map, _name);
+}
+
+/// @func bbmod_material_get(_name)
+///
+/// @desc Retrieves a material registered under the name.
+///
+/// @param {String} _name The name of the material.
+///
+/// @return {Struct.BBMOD_Material} The material or `undefined` if no
+/// material registered under the given name exists.
+function bbmod_material_get(_name)
+{
+	gml_pragma("forceinline");
+	static _map =__bbmod_material_get_map();
+	return _map[? _name];
+}
+
 /// @var {Struct.BBMOD_Material} The currently applied material or `undefined`.
 /// @private
 global.__bbmodMaterialCurrent = undefined;
@@ -287,24 +344,42 @@ function BBMOD_Material(_shader=undefined)
 
 	static from_file = function (_file, _sha1=undefined) {
 		Path = _file;
-
 		check_file(_file, _sha1);
+		from_json(bbmod_json_load(_file));
+		IsLoaded = true;
+		return self;
+	};
 
-		var _jsonFile = file_text_open_read(_file);
-		var _jsonString = "";
+	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
+		Path = _file;
 
-		while (!file_text_eof(_jsonFile))
+		if (!check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
 		{
-			_jsonString += file_text_read_string(_jsonFile) + "\n";
-			file_text_readln(_jsonFile);
+			return self;
 		}
-		file_text_close(_jsonFile);
 
-		var _json = json_parse(_jsonString);
+		var _json;
+
+		try
+		{
+			_json = bbmod_json_load(_file);
+		}
+		catch (_err)
+		{
+			if (_callback)
+			{
+				_callback(_err, self);
+			}
+			return self;
+		}
+
 		from_json(_json);
+		IsLoaded = true;
 
-		show_debug_message(_jsonString);
-		show_debug_message(_json);
+		if (_callback != undefined)
+		{
+			_callback(undefined, self);
+		}
 
 		return self;
 	};

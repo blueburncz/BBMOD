@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "BBMOD_RenderQueue",
+  "name": "bbmod_json_load",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Rendering",
-    "path": "folders/BBMOD/Core/Rendering.yy",
+    "name": "Utils",
+    "path": "folders/BBMOD/Core/Utils.yy",
   },
 }
