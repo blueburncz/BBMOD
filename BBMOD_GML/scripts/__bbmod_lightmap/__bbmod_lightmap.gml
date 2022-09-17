@@ -64,4 +64,8 @@ function __bbmod_material_lightmap()
 	return _material;
 }
 
+bbmod_shader_register("BBMOD_SHADER_LIGHTMAP", BBMOD_SHADER_LIGHTMAP);
+bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_DEPTH", BBMOD_SHADER_LIGHTMAP_DEPTH);
+bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_INSTANCE_ID", BBMOD_SHADER_LIGHTMAP_INSTANCE_ID);
+
 bbmod_material_register("BBMOD_MATERIAL_LIGHTMAP", BBMOD_MATERIAL_LIGHTMAP);

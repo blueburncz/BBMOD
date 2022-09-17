@@ -1,3 +1,60 @@
+/// @func __bbmod_shader_get_map()
+///
+/// @desc Retrieves a map of registered shader.
+///
+/// @return {Id.DsMap<String, Struct.BBMOD_Shader>} The map of registered
+/// shader.
+///
+/// @private
+function __bbmod_shader_get_map()
+{
+	static _map = ds_map_create();
+	return _map;
+}
+
+/// @func bbmod_shader_register(_name, _shader)
+///
+/// @desc Registers a shader.
+///
+/// @param {String} _name The name of the shader.
+/// @param {Struct.BBMOD_Shader} _shader The shader.
+function bbmod_shader_register(_name, _shader)
+{
+	gml_pragma("forceinline");
+	static _map =__bbmod_shader_get_map();
+	_map[? _name] = _shader;
+}
+
+/// @func bbmod_shader_exists(shader)
+///
+/// @desc Checks if there is a shader registered under the name.
+///
+/// @param {String} _name The name of the shader.
+///
+/// @return {Bool} Returns `true` if there is a shader registered under the
+/// name.
+function bbmod_shader_exists(_name)
+{
+	gml_pragma("forceinline");
+	static _map =__bbmod_shader_get_map();
+	return ds_map_exists(_map, _name);
+}
+
+/// @func bbmod_shader_get(_name)
+///
+/// @desc Retrieves a shader registered under the name.
+///
+/// @param {String} _name The name of the shader.
+///
+/// @return {Struct.BBMOD_Shader} The shader or `undefined` if no
+/// shader registered under the given name exists.
+function bbmod_shader_get(_name)
+{
+	gml_pragma("forceinline");
+	static _map =__bbmod_shader_get_map();
+	return _map[? _name];
+}
+
 /// @var {Struct.BBMOD_Shader}
 /// @private
 global.__bbmodShaderCurrent = undefined;

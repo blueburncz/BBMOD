@@ -19,3 +19,6 @@ function __bbmod_shader_id_animated()
 		BBMOD_ShInstanceIDAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED);
 	return _shader;
 }
+
+bbmod_shader_register("BBMOD_SHADER_INSTANCE_ID", BBMOD_SHADER_INSTANCE_ID);
+bbmod_shader_register("BBMOD_SHADER_INSTANCE_ID_ANIMATED", BBMOD_SHADER_INSTANCE_ID_ANIMATED);

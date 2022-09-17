@@ -26,4 +26,6 @@ function __bbmod_material_terrain()
 	return _material;
 }
 
+bbmod_shader_register("BBMOD_SHADER_TERRAIN", BBMOD_SHADER_TERRAIN);
+
 bbmod_material_register("BBMOD_MATERIAL_TERRAIN", BBMOD_MATERIAL_TERRAIN);

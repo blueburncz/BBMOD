@@ -145,5 +145,9 @@ function __bbmod_model_particle()
 	return _model;
 }
 
+bbmod_shader_register("BBMOD_SHADER_PARTICLE_DEPTH", BBMOD_SHADER_PARTICLE_DEPTH);
+bbmod_shader_register("BBMOD_SHADER_PARTICLE_LIT", BBMOD_SHADER_PARTICLE_LIT);
+bbmod_shader_register("BBMOD_SHADER_PARTICLE_UNLIT", BBMOD_SHADER_PARTICLE_UNLIT);
+
 bbmod_material_register("BBMOD_MATERIAL_PARTICLE_LIT", BBMOD_MATERIAL_PARTICLE_LIT);
 bbmod_material_register("BBMOD_MATERIAL_PARTICLE_UNLIT", BBMOD_MATERIAL_PARTICLE_UNLIT);

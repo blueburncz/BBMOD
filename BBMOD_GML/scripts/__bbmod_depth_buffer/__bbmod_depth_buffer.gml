@@ -66,3 +66,7 @@ function __bbmod_shader_depth_batched()
 		BBMOD_ShDepthBatched, BBMOD_VFORMAT_DEFAULT_BATCHED);
 	return _shader;
 }
+
+bbmod_shader_register("BBMOD_SHADER_DEPTH", BBMOD_SHADER_DEPTH);
+bbmod_shader_register("BBMOD_SHADER_DEPTH_ANIMATED", BBMOD_SHADER_DEPTH_ANIMATED);
+bbmod_shader_register("BBMOD_SHADER_DEPTH_BATCHED", BBMOD_SHADER_DEPTH_BATCHED);

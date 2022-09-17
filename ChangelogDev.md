@@ -30,3 +30,6 @@
 * Added function `bbmod_path_get_absolute`, which retrieves an absolute version of a path.
 * Added function `bbmod_render_pass_to_string`, which retrieves a name of a render pass.
 * Added function `bbmod_render_pass_from_string`, which retrieves a render pass from its name.
+* Added function `bbmod_shader_register`, using which you can register a shader under a name.
+* Added function `bbmod_shader_exists`, using which you can check if there is a shader registered under given name.
+* Added function `bbmod_shader_get`, using which you can retrieve registered shaders.

@@ -30,4 +30,6 @@ function __bbmod_material_sprite()
 	return _material;
 }
 
+bbmod_shader_register("BBMOD_SHADER_SPRITE", BBMOD_SHADER_SPRITE);
+
 bbmod_material_register("BBMOD_MATERIAL_SPRITE", BBMOD_MATERIAL_SPRITE);

@@ -118,6 +118,10 @@ function __bbmod_material_default_batched()
 	return _material;
 }
 
+bbmod_shader_register("BBMOD_SHADER_DEFAULT", BBMOD_SHADER_DEFAULT);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_ANIMATED", BBMOD_SHADER_DEFAULT_ANIMATED);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_BATCHED", BBMOD_SHADER_DEFAULT_BATCHED);
+
 bbmod_material_register("BBMOD_MATERIAL_DEFAULT", BBMOD_MATERIAL_DEFAULT);
 bbmod_material_register("BBMOD_MATERIAL_DEFAULT_ANIMATED", BBMOD_MATERIAL_DEFAULT_ANIMATED);
 bbmod_material_register("BBMOD_MATERIAL_DEFAULT_BATCHED", BBMOD_MATERIAL_DEFAULT_BATCHED);

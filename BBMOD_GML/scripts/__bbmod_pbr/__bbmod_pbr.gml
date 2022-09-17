@@ -83,6 +83,10 @@ function __bbmod_material_pbr_batched()
 	return __bbmod_material_default_batched();
 }
 
+bbmod_shader_register("BBMOD_SHADER_PBR", BBMOD_SHADER_PBR);
+bbmod_shader_register("BBMOD_SHADER_PBR_ANIMATED", BBMOD_SHADER_PBR_ANIMATED);
+bbmod_shader_register("BBMOD_SHADER_PBR_BATCHED", BBMOD_SHADER_PBR_BATCHED);
+
 bbmod_material_register("BBMOD_MATERIAL_PBR", BBMOD_MATERIAL_PBR);
 bbmod_material_register("BBMOD_MATERIAL_PBR_ANIMATED", BBMOD_MATERIAL_PBR_ANIMATED);
 bbmod_material_register("BBMOD_MATERIAL_PBR_BATCHED", BBMOD_MATERIAL_PBR_BATCHED);
