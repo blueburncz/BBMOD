@@ -58,41 +58,66 @@ function BBMOD_BaseMaterial(_shader=undefined)
 
 	static to_json = function (_json) {
 		method(self, Super_Material.to_json)(_json);
+
 		_json.BaseOpacityMultiplier = {
 			Red: BaseOpacityMultiplier.Red,
 			Green: BaseOpacityMultiplier.Green,
 			Blue: BaseOpacityMultiplier.Blue,
 			Alpha: BaseOpacityMultiplier.Alpha,
 		};
+
 		_json.TextureOffset = {
 			X: TextureOffset.X,
 			Y: TextureOffset.Y,
 		};
+
 		_json.TextureScale = {
 			X: TextureScale.X,
 			Y: TextureScale.Y,
 		};
+
 		_json.ShadowmapBias = ShadowmapBias;
+
 		return self;
 	};
 
 	static from_json = function (_json) {
 		method(self, Super_Material.from_json)(_json);
-		BaseOpacityMultiplier = new BBMOD_Color(
-			_json.BaseOpacityMultiplier.Red,
-			_json.BaseOpacityMultiplier.Green,
-			_json.BaseOpacityMultiplier.Blue,
-			_json.BaseOpacityMultiplier.Alpha
-		)
-		TextureOffset = new BBMOD_Vec2(
-			_json.TextureOffset.X,
-			_json.TextureOffset.Y
-		);
-		TextureScale = new BBMOD_Vec2(
-			_json.TextureScale.X,
-			_json.TextureScale.Y
-		);
-		ShadowmapBias = _json.ShadowmapBias;
+
+		var _baseOpacityMultiplier = _json[$ "BaseOpacityMultiplier"];
+		if (_baseOpacityMultiplier != undefined)
+		{
+			BaseOpacityMultiplier = new BBMOD_Color(
+				_baseOpacityMultiplier.Red,
+				_baseOpacityMultiplier.Green,
+				_baseOpacityMultiplier.Blue,
+				_baseOpacityMultiplier.Alpha
+			);
+		}
+
+		var _textureOffset = _json[$ "TextureOffset"];
+		if (_textureOffset != undefined)
+		{
+			TextureOffset = new BBMOD_Vec2(
+				_textureOffset.X,
+				_textureOffset.Y
+			);
+		}
+
+		var _textureScale = _json[$ "TextureScale"];
+		if (_textureScale != undefined)
+		{
+			TextureScale = new BBMOD_Vec2(
+				_textureScale.X,
+				_textureScale.Y
+			);
+		}
+
+		if (variable_struct_exists(_json, "ShadowmapBias"))
+		{
+			ShadowmapBias = _json.ShadowmapBias;
+		}
+
 		return self;
 	};
 }

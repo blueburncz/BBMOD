@@ -181,6 +181,7 @@ function BBMOD_ResourceManager()
 		// BBMAT
 		if (_ext == ".bbmat")
 		{
+			// Check SHA1
 			if (_sha1 != undefined)
 			{
 				if (sha1_file(_path) != _sha1)
@@ -193,20 +194,68 @@ function BBMOD_ResourceManager()
 				}
 			}
 
+			// Load JSON
 			var _json = bbmod_json_load(_path);
-			var _name = _json[$ "__name"];
 
-			if (_name == undefined
-				|| !bbmod_material_exists(_name))
+			// Check if the material is registered
+			var _materialName = _json[$ "__MaterialName"];
+
+			if (_materialName == undefined
+				|| !bbmod_material_exists(_materialName))
 			{
 				if (_onLoad != undefined)
 				{
-					_onLoad(new BBMOD_Exception("Material \"" + _name + "\" does not exist!"), undefined);
+					_onLoad(new BBMOD_Exception("Material \"" + _materialName + "\" does not exist!"), undefined);
 				}
 				return undefined;
 			}
 
-			_res = bbmod_material_get(_name).clone().from_json(_json);
+			// Load textures
+			var _textures = _json[$ "__Textures"];
+
+			if (_textures != undefined)
+			{
+				var _pathAbsolute = bbmod_path_get_absolute(_path);
+				var _propertyNames = variable_struct_get_names(_textures);
+				var _index = 0;
+
+				repeat (array_length(_propertyNames))
+				{
+					var _property = _propertyNames[_index++];
+					var _propertyValue = _textures[$ _property];
+
+					var _texturePath;
+					var _textureSha1 = undefined;
+
+					if (is_string(_propertyValue))
+					{
+						_texturePath = _propertyValue;
+					}
+					else
+					{
+						_texturePath = _propertyValue.Path;
+						_textureSha1 = _propertyValue[$ "SHA1"];
+					}
+
+					_texturePath = bbmod_path_get_absolute(_texturePath, filename_dir(_pathAbsolute));
+
+					var _sprite;
+					if (has(_texturePath))
+					{
+						_sprite = get(_texturePath);
+					}
+					else
+					{
+						_sprite = new BBMOD_Sprite(_texturePath, _textureSha1);
+						add(_texturePath, _sprite);
+					}
+
+					_json[$ _property] = _sprite.get_texture();
+				}
+			}
+
+			// Create the material and apply props.
+			_res = bbmod_material_get(_materialName).clone().from_json(_json);
 
 			if (_onLoad != undefined)
 			{
