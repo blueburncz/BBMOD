@@ -57,7 +57,7 @@
 /// ```
 ///
 /// @see BBMOD_Animation
-/// @see BBMOD_EventListener
+/// @see BBMOD_IEventListener
 /// @see BBMOD_Model
 function BBMOD_AnimationPlayer(_model, _paused=false)
 	: BBMOD_Class() constructor

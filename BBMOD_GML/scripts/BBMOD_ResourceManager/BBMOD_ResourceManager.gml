@@ -165,8 +165,7 @@ function BBMOD_ResourceManager()
 	///
 	/// @note Currently supported files formats are `*.bbmod` for {@link BBMOD_Model},
 	/// `*.bbanim` for {@link BBMOD_Animation}, `*.bbmat` for {@link BBMOD_Material}
-	/// and `*.png`, `*.gif`, `*.jpg/jpeg`
-	/// for {@link BBMOD_Sprite}.
+	/// and `*.png`, `*.gif`, `*.jpg/jpeg` for {@link BBMOD_Sprite}.
 	static load = function (_path, _sha1=undefined, _onLoad=undefined) {
 		var _resources = Resources;
 

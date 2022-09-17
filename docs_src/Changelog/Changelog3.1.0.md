@@ -7,9 +7,9 @@ for animation playback control.
 **Core module:**
 * Added new struct `BBMOD_Class` which is a base struct for BBMOD structs that require more OOP functionality.
 * Moved methods `on_event`, `off_event` and `trigger_event` of `BBMOD_AnimationPlayer` into a new interface `BBMOD_IEventListener`.
-* Struct `BBMOD_AnimationPlayer` now implements interface `BBMOD_EventListener`.
-* Listeners passed to method `BBMOD_EventListener.on_event` can now take the event name as the second argument.
-* The event name argument of method `BBMOD_EventListener.on_event` is now optional. If it is not specified, then the listener is executed on every event.
+* Struct `BBMOD_AnimationPlayer` now implements interface `BBMOD_IEventListener`.
+* Listeners passed to method `BBMOD_IEventListener.on_event` can now take the event name as the second argument.
+* The event name argument of method `BBMOD_IEventListener.on_event` is now optional. If it is not specified, then the listener is executed on every event.
 * Fixed material `BBMOD_VFORMAT_DEFAULT_BATCHED`, which by accident used shader `BBMOD_ShDefaultAnimated`.
 * Added method `BBMOD_Quaternion.FromEuler`, which initializes a quaternion using euler angles.
 

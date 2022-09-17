@@ -1,5 +1,5 @@
 # Animation events
-Using [BBMOD_AnimationPlayer.on_event](./BBMOD_AnimationPlayer.on_event.html)
+Using [BBMOD_AnimationPlayer.on_event](./BBMOD_IEventListener.on_event.html)
 you can add functions that will be executed when an event occurs during the
 animation playback. The build-in animation events are:
 

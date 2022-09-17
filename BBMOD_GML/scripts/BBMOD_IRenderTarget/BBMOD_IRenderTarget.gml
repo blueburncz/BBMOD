@@ -1,5 +1,7 @@
 /// @func BBMOD_IRenderTarget()
 ///
+/// @interface
+///
 /// @desc An interface for structs which can be used as a render target.
 function BBMOD_IRenderTarget()
 {
