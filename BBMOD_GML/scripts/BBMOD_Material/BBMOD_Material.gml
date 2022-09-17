@@ -23,6 +23,7 @@ function bbmod_material_register(_name, _material)
 	gml_pragma("forceinline");
 	static _map =__bbmod_material_get_map();
 	_map[? _name] = _material;
+	_material.Name = _name;
 }
 
 /// @func bbmod_material_exists(_name)
@@ -79,6 +80,11 @@ function BBMOD_Material(_shader=undefined)
 	static Super_Resource = {
 		destroy: destroy,
 	};
+
+	/// @var {String} The name under which is this material registered or
+	/// `undefined`.
+	/// @private
+	Name = undefined;
 
 	/// @var {Real} Render passes in which is the material rendered. Defaults
 	/// to 0 (no passes).
@@ -159,6 +165,7 @@ function BBMOD_Material(_shader=undefined)
 	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static copy = function (_dest) {
+		_dest.Name = Name;
 		_dest.RenderPass = RenderPass;
 		_dest.Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
 		array_copy(_dest.Shaders, 0, Shaders, 0, BBMOD_ERenderPass.SIZE);

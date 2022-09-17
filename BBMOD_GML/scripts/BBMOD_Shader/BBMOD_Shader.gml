@@ -23,6 +23,7 @@ function bbmod_shader_register(_name, _shader)
 	gml_pragma("forceinline");
 	static _map =__bbmod_shader_get_map();
 	_map[? _name] = _shader;
+	_shader.Name = _name;
 }
 
 /// @func bbmod_shader_exists(shader)
@@ -75,6 +76,11 @@ global.__bbmodShaderCurrent = undefined;
 /// @see BBMOD_VertexFormat
 function BBMOD_Shader(_shader, _vertexFormat) constructor
 {
+	/// @var {String} The name under which is the shader registered or
+	/// `undefined`.
+	/// @private
+	Name = undefined;
+
 	/// @var {Asset.GMShader} The shader resource.
 	/// @readonly
 	Raw = _shader;
