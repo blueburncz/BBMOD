@@ -240,20 +240,50 @@ function BBMOD_Material(_shader=undefined)
 	/// @param {Struct} _json The object to load the properties from.
 	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If an error occurs.
 	static from_json = function (_json) {
-		if (variable_struct_exists(_json, "RenderPass"))
-		{
-			RenderPass = _json.RenderPass;
-		}
-
 		if (variable_struct_exists(_json, "Shaders"))
 		{
-			Shaders = _json.Shaders;
+			var _shaders = _json.Shaders;
+			var _keys = variable_struct_get_names(_shaders);
+			var _index = 0;
+			repeat (array_length(_keys))
+			{
+				var _passName = _keys[_index++];
+				var _pass = bbmod_render_pass_from_string(_passName);
+				var _shader = _shaders[$ _passName];
+				if (is_string(_shader))
+				{
+					_shader = bbmod_shader_get(_shader);
+				}
+				set_shader(_pass, _shader);
+			}
 		}
 
 		if (variable_struct_exists(_json, "RenderQueue"))
 		{
-			RenderQueue = _json.RenderQueue;
+			var _renderQueue = _json.RenderQueue;
+			if (is_string(_renderQueue))
+			{
+				var _renderQueues = bbmod_render_queues_get();
+				var _index = 0;
+				repeat (array_length(_renderQueues))
+				{
+					with (_renderQueues[_index++])
+					{
+						if (Name == _renderQueue)
+						{
+							_renderQueue = self;
+							break;
+						}
+					}
+				}
+				if (is_string(_renderQueue))
+				{
+					throw new BBMOD_Exception("Invalid render queue \"" + _renderQueue + "\"!");
+				}
+			}
 		}
 
 		if (variable_struct_exists(_json, "OnApply"))
