@@ -39,18 +39,6 @@ function BBMOD_OBJImporter()
 		return (filename_ext(_path) == ".obj");
 	};
 
-	static _split_string = function (_string, _delimiter, _arrayOut) {
-		var _pos = string_pos(_delimiter, _string);
-		if (_pos == 0)
-		{
-			_arrayOut[@ 0] = _string;
-			_arrayOut[@ 1] = "";
-			return;
-		}
-		_arrayOut[@ 0] = string_copy(_string, 1, _pos - 1);
-		_arrayOut[@ 1] = string_delete(_string, 1, _pos);
-	};
-
 	static import = function (_path) {
 		ds_list_clear(Vertices);
 		ds_list_clear(Normals);
@@ -85,7 +73,7 @@ function BBMOD_OBJImporter()
 		while (true)
 		{
 			var _line = file_text_read_string(_file);
-			_split_string(_line, " ", _split);
+			bbmod_string_split_on_first(_line, " ", _split);
 			var _keyword = _split[0];
 			_line = _split[1];
 
@@ -148,13 +136,13 @@ function BBMOD_OBJImporter()
 
 			// Vertex
 			case "v":
-				_split_string(_line, " ", _split);
+				bbmod_string_split_on_first(_line, " ", _split);
 				var _vx = real(_split[0]);
 
-				_split_string(_split[1], " ", _split);
+				bbmod_string_split_on_first(_split[1], " ", _split);
 				var _vy = real(_split[0]);
 
-				_split_string(_split[1], " ", _split);
+				bbmod_string_split_on_first(_split[1], " ", _split);
 				var _vz = real(_split[0]);
 
 				if (ConvertYToZUp)
@@ -169,13 +157,13 @@ function BBMOD_OBJImporter()
 
 			// Normal
 			case "vn":
-				_split_string(_line, " ", _split);
+				bbmod_string_split_on_first(_line, " ", _split);
 				var _nx = real(_split[0]);
 
-				_split_string(_split[1], " ", _split);
+				bbmod_string_split_on_first(_split[1], " ", _split);
 				var _ny = real(_split[0]);
 
-				_split_string(_split[1], " ", _split);
+				bbmod_string_split_on_first(_split[1], " ", _split);
 				var _nz = real(_split[0]);
 
 				if (ConvertYToZUp)
@@ -190,14 +178,14 @@ function BBMOD_OBJImporter()
 
 			// Texture
 			case "vt":
-				_split_string(_line, " ", _split);
+				bbmod_string_split_on_first(_line, " ", _split);
 				var _tx = real(_split[0]);
 				if (FlipUVHorizontally)
 				{
 					_tx = 1.0 - _tx;
 				}
 
-				_split_string(_split[1], " ", _split);
+				bbmod_string_split_on_first(_split[1], " ", _split);
 				var _ty = real(_split[0]);
 				if (FlipUVVertically)
 				{
@@ -214,24 +202,24 @@ function BBMOD_OBJImporter()
 					_meshBuilder = new BBMOD_MeshBuilder();
 				}
 
-				_split_string(_line, " ", _split);
+				bbmod_string_split_on_first(_line, " ", _split);
 				_face[@ 0] = _split[0];
-				_split_string(_split[1], " ", _split);
+				bbmod_string_split_on_first(_split[1], " ", _split);
 				_face[@ 1] = _split[0];
-				_split_string(_split[1], " ", _split);
+				bbmod_string_split_on_first(_split[1], " ", _split);
 				_face[@ 2] = _split[0];
 
 				for (var i = 0; i < 3; ++i)
 				{
-					_split_string(_face[i], "/", _split);
+					bbmod_string_split_on_first(_face[i], "/", _split);
 					var _v = (real(_split[0]) - 1) * 3;
 
-					_split_string(_split[1], "/", _split);
+					bbmod_string_split_on_first(_split[1], "/", _split);
 					var _t = (_split[0] != "")
 						? (real(_split[0]) - 1) * 2
 						: -1;
 
-					_split_string(_split[1], "/", _split);
+					bbmod_string_split_on_first(_split[1], "/", _split);
 					var _n = (real(_split[0]) - 1) * 3;
 
 					var _vertex = new BBMOD_Vertex(_vformat);

@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "BBMOD_OBJImporter",
+  "name": "__bbmod_string",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Importer",
-    "path": "folders/BBMOD/Importer.yy",
+    "name": "Utils",
+    "path": "folders/BBMOD/Core/Utils.yy",
   },
 }
