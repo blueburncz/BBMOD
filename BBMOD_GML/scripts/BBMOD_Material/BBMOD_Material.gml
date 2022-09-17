@@ -217,7 +217,10 @@ function BBMOD_Material(_shader=undefined)
 	static to_json = function (_json) {
 		_json.RenderPass = RenderPass;
 		// TODO: Save Shaders
-		// TODO: Save RenderQueue
+		if (RenderQueue.Name != undefined)
+		{
+			_json.RenderQueue = RenderQueue.Name;
+		}
 		// TODO: Save OnApply
 		_json.BlendMode = BlendMode;
 		_json.Culling = Culling;
