@@ -220,15 +220,38 @@ function BBMOD_Material(_shader=undefined)
 	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	///
-	/// @note This currently does not support saving of textures and shaders!
+	/// @throws {BBMOD_Exception} If an error occurs.
 	static to_json = function (_json) {
-		_json.RenderPass = RenderPass;
-		// TODO: Save Shaders
+		var _shaders = {};
+		var _pass = 0;
+		repeat (BBMOD_ERenderPass.SIZE)
+		{
+			var _shader = Shaders[_pass];
+			if (_shader != undefined)
+			{
+				var _passName = bbmod_render_pass_to_string(_pass);
+				if (_shader.Name == undefined)
+				{
+					throw new BBMOD_Exception(
+						"Cannot save to JSON, shader for render pass \""
+						+ _passName + "\" is not registered!");
+				}
+				else
+				{
+					_shaders[$ _passName] = _shader.Name;
+				}
+			}
+			++_pass;
+		}
+		_json.Shaders = _shaders;
+
 		if (RenderQueue.Name != undefined)
 		{
 			_json.RenderQueue = RenderQueue.Name;
 		}
+
 		// TODO: Save OnApply
+
 		_json.BlendMode = BlendMode;
 		_json.Culling = Culling;
 		_json.ZWrite = ZWrite;
@@ -239,7 +262,9 @@ function BBMOD_Material(_shader=undefined)
 		_json.Mipmapping = Mipmapping;
 		_json.Filtering = Filtering;
 		_json.Repeat = Repeat;
+
 		// TODO: Save BaseOpacity/BaseOpacitySprite
+
 		return self;
 	};
 
