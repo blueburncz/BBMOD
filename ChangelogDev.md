@@ -2,7 +2,7 @@
 > This file is used to accumulate changes before a changelog for a release is
 > created.
 
-* Disabled color grading on GLSL ES platforms, as it did not work consistently across various devices. This may be addresed in future versions.
+* Disabled color grading on GLSL ES platforms, as it did not work consistently across various devices. This may be addressed in future versions.
 * Fixed terrain not casting shadows.
 * Added method `to_buffer` to `BBMOD_Resource`, using which you can write a resource into a buffer.
 * Implemented method `to_buffer` for resources `BBMOD_Model`, `BBMOD_Animation` and `BBMOD_Sprite`.
