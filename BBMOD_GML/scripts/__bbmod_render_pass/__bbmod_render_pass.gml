@@ -22,6 +22,65 @@ enum BBMOD_ERenderPass
 /// @private
 global.__bbmodRenderPass = BBMOD_ERenderPass.Forward;
 
+/// @func bbmod_render_pass_to_string(_pass)
+///
+/// @desc Retrieves a name of a render pass.
+///
+/// @param {Real} _pass The render pass to get the name of. Use values from
+/// {@link BBMOD_ERenderPass}.
+///
+/// @return {String} The name of the render pass.
+function bbmod_render_pass_to_string(_pass)
+{
+	switch (_pass)
+	{
+	case BBMOD_ERenderPass.Shadows:
+		return "Shadows";
+
+	case BBMOD_ERenderPass.Deferred:
+		return "Deferred";
+
+	case BBMOD_ERenderPass.Forward:
+		return "Forward";
+
+	case BBMOD_ERenderPass.Alpha:
+		return "Alpha";
+
+	default:
+		return "";
+	}
+}
+
+/// @func bbmod_render_pass_from_string(_name)
+///
+/// @desc Retrieves a render pass from its name.
+///
+/// @param {String} _name The name of the render pass.
+///
+/// @return {Real} One of the render passes defined in {@link BBMOD_ERenderPass}.
+///
+/// @throws {BBMOD_Exception} If an invalid name is passed.
+function bbmod_render_pass_from_string(_name)
+{
+	switch (_name)
+	{
+	case "Shadows":
+		return BBMOD_ERenderPass.Shadows;
+
+	case "Deferred":
+		return BBMOD_ERenderPass.Deferred;
+
+	case "Forward":
+		return BBMOD_ERenderPass.Forward;
+
+	case "Alpha":
+		return BBMOD_ERenderPass.Alpha;
+
+	default:
+		throw new BBMOD_Exception("Invalid render pass \"" + _name + "\"!");
+	}
+}
+
 /// @func bbmod_render_pass_get()
 ///
 /// @desc Retrieves the current render pass.

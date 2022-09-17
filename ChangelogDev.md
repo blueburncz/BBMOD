@@ -28,3 +28,5 @@
 * Added function `bbmod_path_is_absolute`, which checks if a path is absolute.
 * Added function `bbmod_path_get_relative`, which retrieves a relative version of a path.
 * Added function `bbmod_path_get_absolute`, which retrieves an absolute version of a path.
+* Added function `bbmod_render_pass_to_string`, which retrieves a name of a render pass.
+* Added function `bbmod_render_pass_from_string`, which retrieves a render pass from its name.
