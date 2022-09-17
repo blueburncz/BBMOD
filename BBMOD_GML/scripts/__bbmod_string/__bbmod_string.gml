@@ -69,7 +69,7 @@ function bbmod_string_explode(_string, _char, _dest)
 /// @desc Joins an array into a string, putting separator in between each
 /// entry.
 ///
-/// @param {String} _separator The string to put inbetween entries.
+/// @param {String} _separator The string to put in between entries.
 /// @param {Array} _array The array to join.
 ///
 /// @return {String} The resulting string.
