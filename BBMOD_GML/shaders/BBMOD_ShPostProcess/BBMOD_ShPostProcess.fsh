@@ -16,7 +16,7 @@ uniform vec3 u_vVignetteColor; // The color of the vignette effect
 vec3 ColorGrade(vec3 color, sampler2D lut)
 {
 	// This fixes color grading on HTML5. May be precision issues?
-	color = clamp(color, vec3(0.06), vec3(1.0 - 0.06));
+	//color = clamp(color, vec3(0.06), vec3(1.0 - 0.06));
 
 	// Fixes selecting wrong mips on HTML5.
 	const float bias = -5.0;
@@ -72,7 +72,9 @@ void main()
 	}
 
 	// Color grading
+#ifndef _YY_GLSLES_
 	color = ColorGrade(color, u_texLut);
+#endif
 
 	// Grayscale
 	if (u_fGrayscale != 0.0)
