@@ -46,6 +46,9 @@ function bbmod_render_pass_to_string(_pass)
 	case BBMOD_ERenderPass.Alpha:
 		return "Alpha";
 
+	case BBMOD_ERenderPass.Id:
+		return "Id";
+
 	default:
 		return "";
 	}
@@ -75,6 +78,9 @@ function bbmod_render_pass_from_string(_name)
 
 	case "Alpha":
 		return BBMOD_ERenderPass.Alpha;
+
+	case "Id":
+		return BBMOD_ERenderPass.Id;
 
 	default:
 		throw new BBMOD_Exception("Invalid render pass \"" + _name + "\"!");
