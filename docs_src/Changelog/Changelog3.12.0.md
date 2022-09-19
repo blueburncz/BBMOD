@@ -1,5 +1,6 @@
 # Changelog 3.12.0
 
+* Updated Assimp to v5.2.5.
 * Disabled color grading on GLSL ES platforms, as it did not work consistently across various devices. This may be addressed in future versions.
 * Fixed terrain not casting shadows.
 * Added method `to_buffer` to `BBMOD_Resource`, using which you can write a resource into a buffer.
