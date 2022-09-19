@@ -6,7 +6,7 @@ This update mainly adds support for loading materials from `*.bbmat` files. BBMA
 * Fixed terrain not casting shadows.
 * BBANIM files can now contain animation events.
 
-## BBMOD CLI:
+## CLI:
 * **Updated** Assimp from v5.2.4 to v5.2.5. This release for example fixes vertex weight issues, which in some cases lead into model deformations. You can find the full changelog [here](https://github.com/assimp/assimp/releases/tag/v5.2.5).
 
 ## GML API:
