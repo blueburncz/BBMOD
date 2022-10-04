@@ -256,6 +256,7 @@ function BBMOD_ResourceManager()
 
 			// Create the material and apply props.
 			_res = bbmod_material_get(_materialName).clone().from_json(_json);
+			_resources[? _path] = _res;
 
 			if (_onLoad != undefined)
 			{
