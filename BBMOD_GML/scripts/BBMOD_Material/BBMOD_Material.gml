@@ -512,7 +512,7 @@ function BBMOD_Material(_shader=undefined)
 			gpu_set_zwriteenable(_isShadows ? true : ZWrite);
 			gpu_set_ztestenable(_isShadows ? true : ZTest);
 			gpu_set_zfunc(ZFunc);
-			gpu_set_tex_mip_enable(Mipmapping ? mip_markedonly : mip_off);
+			gpu_set_tex_mip_enable(Mipmapping ? mip_on : mip_off);
 			gpu_set_tex_filter(Filtering);
 			gpu_set_tex_repeat(Repeat);
 		}
