@@ -62,9 +62,7 @@ function BBMOD_AnimationStateMachine(_animationPlayer)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_StateMachine = {
-		update: update,
-	};
+	static StateMachine_update = update;
 
 	/// @var {Struct.BBMOD_AnimationPlayer} The state machine's animation player.
 	/// @readonly
@@ -78,7 +76,7 @@ function BBMOD_AnimationStateMachine(_animationPlayer)
 	}));
 
 	static update = function (_deltaTime) {
-		method(self, Super_StateMachine.update)(_deltaTime);
+		StateMachine_update(_deltaTime);
 		if (State != undefined)
 		{
 			AnimationPlayer.change(State.Animation, State.Loop);

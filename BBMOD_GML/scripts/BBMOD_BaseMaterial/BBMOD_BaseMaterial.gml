@@ -15,11 +15,9 @@ function BBMOD_BaseMaterial(_shader=undefined)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Material = {
-		copy: copy,
-		to_json: to_json,
-		from_json: from_json,
-	};
+	static Material_copy = copy;
+	static Material_to_json = to_json;
+	static Material_from_json = from_json;
 
 	/// @var {Struct.BBMOD_Color} Multiplier for {@link BBMOD_Material.BaseOpacity}.
 	/// Default value is {@link BBMOD_C_WHITE}.
@@ -42,7 +40,7 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	ShadowmapBias = 0.0;
 
 	static copy = function (_dest) {
-		method(self, Super_Material.copy)(_dest);
+		Material_copy(_dest);
 		BaseOpacityMultiplier.Copy(_dest.BaseOpacityMultiplier);
 		_dest.TextureOffset = TextureOffset.Clone();
 		_dest.TextureScale = TextureScale.Clone();
@@ -57,7 +55,7 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	};
 
 	static to_json = function (_json) {
-		method(self, Super_Material.to_json)(_json);
+		Material_to_json(_json);
 
 		_json.BaseOpacityMultiplier = {
 			Red: BaseOpacityMultiplier.Red,
@@ -82,7 +80,7 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	};
 
 	static from_json = function (_json) {
-		method(self, Super_Material.from_json)(_json);
+		Material_from_json(_json);
 
 		var _baseOpacityMultiplier = _json[$ "BaseOpacityMultiplier"];
 		if (_baseOpacityMultiplier != undefined)

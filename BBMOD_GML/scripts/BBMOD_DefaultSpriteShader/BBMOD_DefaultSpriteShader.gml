@@ -13,9 +13,7 @@
 function BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
 	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
 {
-	static Super_DefaultShader = {
-		set_material: set_material,
-	};
+	static DefaultShader_set_material = set_material;
 
 	UBaseOpacityUV = get_uniform("bbmod_BaseOpacityUV");
 
@@ -25,24 +23,24 @@ function BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
 
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
-		method(self, Super_DefaultShader.set_material)(_material);
+		DefaultShader_set_material(_material);
 
 		var _texture = _material.BaseOpacity;
 		if (_texture != pointer_null)
 		{
-			set_uniform_f_array(UBaseOpacityUV, texture_get_uvs(_texture));
+			shader_set_uniform_f_array(UBaseOpacityUV, texture_get_uvs(_texture));
 		}
 
 		_texture = _material.NormalSmoothness ?? _material.NormalRoughness;
 		if (_texture != undefined)
 		{
-			set_uniform_f_array(UNormalWUV, texture_get_uvs(_texture));
+			shader_set_uniform_f_array(UNormalWUV, texture_get_uvs(_texture));
 		}
 
 		_texture = _material.SpecularColor ?? _material.MetallicAO;
 		if (_texture != undefined)
 		{
-			set_uniform_f_array(UMaterialUV, texture_get_uvs(_texture));
+			shader_set_uniform_f_array(UMaterialUV, texture_get_uvs(_texture));
 		}
 
 		return self;

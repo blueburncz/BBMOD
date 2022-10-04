@@ -37,9 +37,7 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Constant.PrimitiveType} The primitive type of built meshes.
 	/// @readonly
@@ -276,7 +274,7 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Faces);
 		return undefined;

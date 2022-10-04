@@ -6,14 +6,12 @@
 /// {
 ///     BBMOD_CLASS_GENERATED_BODY;
 ///
-///     static Super_Class = {
-///         destroy: destroy,
-///     };
+///     static Class_destroy = destroy;
 ///
 ///     Surface = surface_create(_width, _height);
 ///
 ///     static destroy = function () {
-///         method(self, Super_Class.destroy)();
+///         Class_destroy();
 ///         surface_free(Surface);
 ///         return undefined;
 ///     };

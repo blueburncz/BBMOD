@@ -17,9 +17,7 @@ function BBMOD_OBJImporter()
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Importer = {
-		destroy: destroy,
-	};
+	static Importer_destroy = destroy;
 
 	/// @var {Bool} If `true`, then Y and Z axes are switched in imported
 	/// models. Default value is `false.`
@@ -291,7 +289,7 @@ function BBMOD_OBJImporter()
 	};
 
 	static destroy = function () {
-		method(self, Super_Importer.destroy)();
+		Importer_destroy();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Normals);
 		ds_list_destroy(TextureCoords);

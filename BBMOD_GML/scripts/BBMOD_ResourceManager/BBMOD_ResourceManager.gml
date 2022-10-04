@@ -42,9 +42,7 @@ function BBMOD_ResourceManager()
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Id.DsMap<String, Struct.BBMOD_Resource>}
 	/// @private
@@ -369,7 +367,7 @@ function BBMOD_ResourceManager()
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		var _resources = Resources;
 		var _key = ds_map_find_first(_resources);
 		repeat (ds_map_size(_resources))

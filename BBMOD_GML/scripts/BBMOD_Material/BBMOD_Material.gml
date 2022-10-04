@@ -77,9 +77,7 @@ function BBMOD_Material(_shader=undefined)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Resource = {
-		destroy: destroy,
-	};
+	static Resource_destroy = destroy;
 
 	/// @var {String} The name under which is this material registered or
 	/// `undefined`.
@@ -616,7 +614,7 @@ function BBMOD_Material(_shader=undefined)
 	};
 
 	static destroy = function () {
-		method(self, Super_Resource.destroy)();
+		Resource_destroy();
 		if (BaseOpacitySprite != undefined)
 		{
 			sprite_delete(BaseOpacitySprite);

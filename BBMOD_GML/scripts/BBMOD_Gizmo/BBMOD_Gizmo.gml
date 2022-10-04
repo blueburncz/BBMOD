@@ -53,9 +53,7 @@ function BBMOD_Gizmo(_size=10.0)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Array<Struct.BBMOD_Model>} Gizmo models for individual edit modes.
 	/// @note Please note that these are not loaded asynchronnously, therefore
@@ -1029,7 +1027,7 @@ function BBMOD_Gizmo(_size=10.0)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		ds_list_destroy(Selected);
 		ds_list_destroy(InstanceData);
 		return undefined;

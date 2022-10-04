@@ -15,9 +15,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
 	/// @readonly
@@ -747,7 +745,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		ds_grid_destroy(SplatmapGrid);
 		ds_grid_destroy(Height);
 		ds_grid_destroy(NormalX);

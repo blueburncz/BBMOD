@@ -15,9 +15,7 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Resource = {
-		destroy: destroy,
-	};
+	static Resource_destroy = destroy;
 
 	/// @var {Asset.GMSprite} The raw sprite resource of `undefined` if it
 	/// has not been loaded yet.
@@ -97,7 +95,7 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	};
 
 	static destroy = function () {
-		method(self, Super_Resource.destroy)();
+		Resource_destroy();
 		if (Raw != undefined)
 		{
 			sprite_delete(Raw);

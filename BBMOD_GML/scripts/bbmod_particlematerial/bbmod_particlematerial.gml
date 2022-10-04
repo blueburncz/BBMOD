@@ -13,9 +13,7 @@
 function BBMOD_ParticleMaterial(_shader=undefined)
 	: BBMOD_DefaultMaterial(_shader) constructor
 {
-	static Super_DefaultMaterial = {
-		copy: copy,
-	};
+	static DefaultMaterial_copy = copy;
 
 	/// @var {Real} Distance over which the particle smoothly dissappears when
 	/// getting closer to geometry rendered in the depth buffer. Use values less
@@ -23,7 +21,7 @@ function BBMOD_ParticleMaterial(_shader=undefined)
 	SoftDistance = 0.0;
 
 	static copy = function (_dest) {
-		method(self, Super_DefaultMaterial.copy)(_dest);
+		DefaultMaterial_copy(_dest);
 		_dest.SoftDistance = SoftDistance;
 		return self;
 	};

@@ -61,11 +61,11 @@ material.OnApply = method(self, function (_material) {
 	var _dissolveRange = _shader.get_uniform("u_fDissolveRange");
 	var _dissolveScale = _shader.get_uniform("u_vDissolveScale");
 	var _silhouette = _shader.get_uniform("u_vSilhouette");
-	_shader.set_uniform_f3(_dissolveColor, 0.0, 1.0, 0.5);
-	_shader.set_uniform_f(_dissolveThreshold, dissolve);
-	_shader.set_uniform_f(_dissolveRange, 0.3);
-	_shader.set_uniform_f2(_dissolveScale, 20.0, 20.0);
-	_shader.set_uniform_f4(_silhouette, 1.0, 1.0, 1.0, hurt);
+	shader_set_uniform_f(_dissolveColor, 0.0, 1.0, 0.5);
+	shader_set_uniform_f(_dissolveThreshold, dissolve);
+	shader_set_uniform_f(_dissolveRange, 0.3);
+	shader_set_uniform_f(_dissolveScale, 20.0, 20.0);
+	shader_set_uniform_f(_silhouette, 1.0, 1.0, 1.0, hurt);
 });
 
 ////////////////////////////////////////////////////////////////////////////////

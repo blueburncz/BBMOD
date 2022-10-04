@@ -10,9 +10,7 @@ function BBMOD_StateMachine()
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Array<Struct.BBMOD_State>} An array of sates.
 	/// @private
@@ -197,7 +195,7 @@ function BBMOD_StateMachine()
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		for (var i = array_length(StateArray) - 1; i >= 0; --i)
 		{
 			StateArray[i].destroy();

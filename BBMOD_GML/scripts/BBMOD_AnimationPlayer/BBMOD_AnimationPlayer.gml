@@ -66,9 +66,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 	implement(BBMOD_IEventListener);
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Struct.BBMOD_Model} A model that the animation player animates.
 	/// @readonly
@@ -560,7 +558,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		ds_list_destroy(Animations);
 		return undefined;
 	};

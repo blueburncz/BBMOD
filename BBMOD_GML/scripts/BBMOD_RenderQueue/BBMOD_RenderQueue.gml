@@ -38,9 +38,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	static IdNext = 0;
 
@@ -1645,7 +1643,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		__bbmod_remove_render_queue(self);
 		return undefined;
 	};

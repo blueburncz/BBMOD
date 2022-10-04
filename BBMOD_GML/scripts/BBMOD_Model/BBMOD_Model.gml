@@ -33,9 +33,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	implement(BBMOD_IRenderable);
 
-	static Super_Resource = {
-		destroy: destroy,
-	};
+	static Resource_destroy = destroy;
 
 	/// @var {Real} The major version of the model file.
 	VersionMajor = BBMOD_VERSION_MAJOR;
@@ -419,7 +417,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @param {Bool} [_ids] Use `true` to include model instance ids in the
 	/// vertex format. Defaults to `false`.
 	///
-	/// @obsolete Each {@link BBMOD_Mesh} now has its own vertex format!
+	/// @deprecated Each {@link BBMOD_Mesh} now has its own vertex format!
 	static get_vertex_format = function (_bones=true, _ids=false) {
 		gml_pragma("forceinline");
 		var _vertexFormat = VertexFormat ? VertexFormat : Meshes[0].VertexFormat;
@@ -540,7 +538,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	};
 
 	static destroy = function () {
-		method(self, Super_Resource.destroy)();
+		Resource_destroy();
 		var i = 0;
 		repeat (array_length(Meshes))
 		{

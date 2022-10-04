@@ -48,9 +48,7 @@ function BBMOD_Renderer()
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Real} The X position of the renderer on the screen. Default value
 	/// is 0.
@@ -979,7 +977,7 @@ function BBMOD_Renderer()
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		if (global.__bbmodRendererCurrent == self)
 		{
 			global.__bbmodRendererCurrent = undefined;

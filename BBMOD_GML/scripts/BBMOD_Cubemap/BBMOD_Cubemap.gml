@@ -35,9 +35,7 @@ function BBMOD_Cubemap(_resolution)
 
 	implement(BBMOD_IRenderTarget);
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Array} The position of the cubemap in the world space.
 	/// @see BBMOD_Cubemap.get_view_matrix
@@ -224,7 +222,7 @@ function BBMOD_Cubemap(_resolution)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		var i = 0;
 		repeat (BBMOD_ECubeSide.SIZE)
 		{

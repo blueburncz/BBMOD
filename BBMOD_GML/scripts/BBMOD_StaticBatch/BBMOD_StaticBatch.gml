@@ -35,9 +35,7 @@ function BBMOD_StaticBatch(_vformat)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Id.VertexBuffer} A vertex buffer.
 	/// @private
@@ -166,7 +164,7 @@ function BBMOD_StaticBatch(_vformat)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		vertex_delete_buffer(VertexBuffer);
 		return undefined;
 	};

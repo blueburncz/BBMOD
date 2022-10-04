@@ -8,9 +8,7 @@ function BBMOD_Resource()
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Bool} If `false` then the resource has not been loaded yet.
 	/// @readonly
@@ -264,7 +262,7 @@ function BBMOD_Resource()
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		if (Manager != undefined)
 		{
 			ds_map_delete(Manager.Resources, Path);

@@ -12,9 +12,7 @@
 function BBMOD_DefaultShader(_shader, _vertexFormat)
 	: BBMOD_BaseShader(_shader, _vertexFormat) constructor
 {
-	static Super_BaseShader = {
-		set_material: set_material,
-	};
+	static BaseShader_set_material = set_material;
 
 	UIsRoughness = get_uniform("bbmod_IsRoughness");
 
@@ -40,8 +38,9 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_normal_smoothness = function (_texture) {
 		gml_pragma("forceinline");
-		set_uniform_f(UIsRoughness, 0.0);
-		return set_sampler(UNormalW, _texture);
+		shader_set_uniform_f(UIsRoughness, 0.0);
+		texture_set_stage(UNormalW, _texture);
+		return self;
 	};
 
 	/// @func set_specular_color(_texture)
@@ -54,8 +53,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_specular_color = function (_texture) {
 		gml_pragma("forceinline");
-		set_uniform_f(UIsMetallic, 0.0);
-		return set_sampler(UMaterial, _texture);
+		shader_set_uniform_f(UIsMetallic, 0.0);
+		texture_set_stage(UMaterial, _texture);
 	};
 
 	/// @func set_normal_roughness(_texture)
@@ -68,8 +67,9 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_normal_roughness = function (_texture) {
 		gml_pragma("forceinline");
-		set_uniform_f(UIsRoughness, 1.0);
-		return set_sampler(UNormalW, _texture);
+		shader_set_uniform_f(UIsRoughness, 1.0);
+		texture_set_stage(UNormalW, _texture);
+		return self;
 	};
 
 	/// @func set_metallic_ao(_texture)
@@ -82,8 +82,9 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_metallic_ao = function (_texture) {
 		gml_pragma("forceinline");
-		set_uniform_f(UIsMetallic, 1.0);
-		return set_sampler(UMaterial, _texture);
+		shader_set_uniform_f(UIsMetallic, 1.0);
+		texture_set_stage(UMaterial, _texture);
+		return self;
 	};
 
 	/// @func set_subsurface(_texture)
@@ -96,7 +97,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_subsurface = function (_texture) {
 		gml_pragma("forceinline");
-		return set_sampler(USubsurface, _texture);
+		texture_set_stage(USubsurface, _texture);
+		return self;
 	};
 
 	/// @func set_emissive(_texture)
@@ -109,12 +111,13 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_emissive = function (_texture) {
 		gml_pragma("forceinline");
-		return set_sampler(UEmissive, _texture);
+		texture_set_stage(UEmissive, _texture);
+		return self;
 	};
 
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
-		method(self, Super_BaseShader.set_material)(_material);
+		BaseShader_set_material(_material);
 
 		// Normal smoothness/roughness
 		if (_material.NormalSmoothness != undefined)

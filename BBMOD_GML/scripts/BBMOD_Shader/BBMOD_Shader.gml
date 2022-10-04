@@ -132,6 +132,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_f` instead!
 	static set_uniform_f = function (_handle, _value) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(_handle, _value);
@@ -149,6 +151,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_f` instead!
 	static set_uniform_f2 = function (_handle, _val1, _val2) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(_handle, _val1, _val2);
@@ -167,6 +171,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_f` instead!
 	static set_uniform_f3 = function (_handle, _val1, _val2, _val3) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(_handle, _val1, _val2, _val3);
@@ -186,6 +192,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_f` instead!
 	static set_uniform_f4 = function (_handle, _val1, _val2, _val3, _val4) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(_handle, _val1, _val2, _val3, _val4);
@@ -202,6 +210,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_f_array` instead!
 	static set_uniform_f_array = function (_handle, _array) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f_array(_handle, _array);
@@ -218,6 +228,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_i` instead!
 	static set_uniform_i = function (_handle, _value) {
 		gml_pragma("forceinline");
 		shader_set_uniform_i(_handle, _value);
@@ -235,6 +247,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_i` instead!
 	static set_uniform_i2 = function (_handle, _val1, _val2) {
 		gml_pragma("forceinline");
 		shader_set_uniform_i(_handle, _val1, _val2);
@@ -253,6 +267,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_i` instead!
 	static set_uniform_i3 = function (_handle, _val1, _val2, _val3) {
 		gml_pragma("forceinline");
 		shader_set_uniform_i(_handle, _val1, _val2, _val3);
@@ -272,6 +288,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_i` instead!
 	static set_uniform_i4 = function (_handle, _val1, _val2, _val3, _val4) {
 		gml_pragma("forceinline");
 		shader_set_uniform_i(_handle, _val1, _val2, _val3, _val4);
@@ -288,6 +306,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_i_array` instead!
 	static set_uniform_i_array = function (_handle, _array) {
 		gml_pragma("forceinline");
 		shader_set_uniform_i_array(_handle, _array);
@@ -303,6 +323,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_matrix` instead!
 	static set_uniform_matrix = function (_handle) {
 		gml_pragma("forceinline");
 		shader_set_uniform_matrix(_handle);
@@ -319,6 +341,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_Shader.get_uniform
+	///
+	/// @deprecated Please use built-in `shader_set_uniform_matrix_array` instead!
 	static set_uniform_matrix_array = function (_handle, _array) {
 		gml_pragma("forceinline");
 		shader_set_uniform_matrix_array(_handle, _array);
@@ -345,6 +369,8 @@ function BBMOD_Shader(_shader, _vertexFormat) constructor
 	/// @param {Pointer.Texture} _texture The new texture to sample.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
+	///
+	/// @deprecated Please use built-in `texture_set_stage` instead!
 	static set_sampler = function (_index, _texture) {
 		gml_pragma("forceinline");
 		texture_set_stage(_index, _texture);

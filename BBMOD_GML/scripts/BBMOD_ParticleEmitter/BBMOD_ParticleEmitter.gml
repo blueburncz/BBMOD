@@ -13,9 +13,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Struct.BBMOD_Vec3} The emitter's position in world-space.
 	Position = _position;
@@ -480,7 +478,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		ds_grid_destroy(Particles);
 		ds_grid_destroy(GridCompute);
 		return undefined;

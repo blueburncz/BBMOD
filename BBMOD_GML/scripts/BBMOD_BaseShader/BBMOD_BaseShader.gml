@@ -71,7 +71,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_texture_offset = function (_offset) {
 		gml_pragma("forceinline");
-		return set_uniform_f2(UTextureOffset, _offset.X, _offset.Y);
+		return shader_set_uniform_f(UTextureOffset, _offset.X, _offset.Y);
 	};
 
 	/// @func set_texture_scale(_scale)
@@ -83,7 +83,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_texture_scale = function (_scale) {
 		gml_pragma("forceinline");
-		return set_uniform_f2(UTextureScale, _scale.X, _scale.Y);
+		return shader_set_uniform_f(UTextureScale, _scale.X, _scale.Y);
 	};
 
 	/// @func set_bones(_bones)
@@ -97,7 +97,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @see BBMOD_AnimationPlayer.get_transform
 	static set_bones = function (_bones) {
 		gml_pragma("forceinline");
-		return set_uniform_f_array(UBones, _bones);
+		return shader_set_uniform_f_array(UBones, _bones);
 	};
 
 	/// @func set_batch_data(_data)
@@ -109,7 +109,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_batch_data = function (_data) {
 		gml_pragma("forceinline");
-		return set_uniform_f_array(UBatchData, _data);
+		return shader_set_uniform_f_array(UBatchData, _data);
 	};
 
 	/// @func set_alpha_test(_value)
@@ -121,7 +121,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_alpha_test = function (_value) {
 		gml_pragma("forceinline");
-		return set_uniform_f(UAlphaTest, _value);
+		return shader_set_uniform_f(UAlphaTest, _value);
 	};
 
 	/// @func set_cam_pos([_pos])
@@ -135,7 +135,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_cam_pos = function (_pos=undefined) {
 		gml_pragma("forceinline");
 		_pos ??= global.__bbmodCameraPosition;
-		return set_uniform_f3(UCamPos, _pos.X, _pos.Y, _pos.Z);
+		return shader_set_uniform_f(UCamPos, _pos.X, _pos.Y, _pos.Z);
 	};
 
 	/// @func set_exposure([_value])
@@ -149,7 +149,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_exposure = function (_value=undefined) {
 		gml_pragma("forceinline");
 		_value ??= global.__bbmodCameraExposure;
-		return set_uniform_f(UExposure, _value);
+		return shader_set_uniform_f(UExposure, _value);
 	};
 
 	/// @func set_instance_id([_id])
@@ -163,7 +163,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_instance_id = function (_id=undefined) {
 		gml_pragma("forceinline");
 		_id ??= global.__bbmodInstanceID;
-		return set_uniform_f4(
+		return shader_set_uniform_f(
 			UInstanceID,
 			((_id & $000000FF) >> 0) / 255,
 			((_id & $0000FF00) >> 8) / 255,
@@ -180,7 +180,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	static set_material_index = function (_index) {
 		gml_pragma("forceinline");
-		return set_uniform_f(UMaterialIndex, _index);
+		return shader_set_uniform_f(UMaterialIndex, _index);
 	};
 
 	/// @func set_ibl([_ibl])
@@ -211,8 +211,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gpu_set_tex_mip_enable_ext(UIBL, mip_off);
 		gpu_set_tex_filter_ext(UIBL, true);
 		gpu_set_tex_repeat_ext(UIBL, false);
-		set_sampler(UIBL, _texture);
-		set_uniform_f2(UIBLTexel, _texel, _texel)
+		texture_set_stage(UIBL, _texture);
+		shader_set_uniform_f(UIBLTexel, _texel, _texel)
 
 		return self;
 	};
@@ -233,9 +233,9 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gml_pragma("forceinline");
 		_up ??= global.__bbmodAmbientLightUp;
 		_down ??= global.__bbmodAmbientLightDown;
-		set_uniform_f4(ULightAmbientUp,
+		shader_set_uniform_f(ULightAmbientUp,
 			_up.Red / 255.0, _up.Green / 255.0, _up.Blue / 255.0, _up.Alpha);
-		set_uniform_f4(ULightAmbientDown,
+		shader_set_uniform_f(ULightAmbientDown,
 			_down.Red / 255.0, _down.Green / 255.0, _down.Blue / 255.0, _down.Alpha);
 		return self;
 	};
@@ -258,10 +258,10 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		if (_light != undefined	&& _light.Enabled)
 		{
 			var _direction = _light.Direction;
-			set_uniform_f3(ULightDirectionalDir,
+			shader_set_uniform_f(ULightDirectionalDir,
 				_direction.X, _direction.Y, _direction.Z);
 			var _color = _light.Color;
-			set_uniform_f4(ULightDirectionalColor,
+			shader_set_uniform_f(ULightDirectionalColor,
 				_color.Red / 255.0,
 				_color.Green / 255.0,
 				_color.Blue / 255.0,
@@ -269,8 +269,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		}
 		else
 		{
-			set_uniform_f3(ULightDirectionalDir, 0.0, 0.0, -1.0);
-			set_uniform_f4(ULightDirectionalColor, 0.0, 0.0, 0.0, 0.0);
+			shader_set_uniform_f(ULightDirectionalDir, 0.0, 0.0, -1.0);
+			shader_set_uniform_f(ULightDirectionalColor, 0.0, 0.0, 0.0, 0.0);
 		}
 		return self;
 	};
@@ -311,7 +311,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 				}
 			}
 		}
-		set_uniform_f_array(ULightPointData, _data);
+		shader_set_uniform_f_array(ULightPointData, _data);
 		return self;
 	};
 
@@ -337,14 +337,14 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		_start ??= global.__bbmodFogStart;
 		_end ??= global.__bbmodFogEnd;
 		var _rcpFogRange = 1.0 / (_end - _start);
-		set_uniform_f4(UFogColor,
+		shader_set_uniform_f(UFogColor,
 			_color.Red / 255.0,
 			_color.Green / 255.0,
 			_color.Blue / 255.0,
 			_color.Alpha);
-		set_uniform_f(UFogIntensity, _intensity);
-		set_uniform_f(UFogStart, _start);
-		set_uniform_f(UFogRcpRange, _rcpFogRange);
+		shader_set_uniform_f(UFogIntensity, _intensity);
+		shader_set_uniform_f(UFogStart, _start);
+		shader_set_uniform_f(UFogRcpRange, _rcpFogRange);
 		return self;
 	};
 
@@ -357,7 +357,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_directional_light();
 		set_point_lights();
 		set_fog();
-		set_sampler(USSAO, sprite_get_texture(BBMOD_SprWhite, 0));
+		texture_set_stage(USSAO, sprite_get_texture(BBMOD_SprWhite, 0));
 	};
 
 	/// @func set_material(_material)
@@ -371,7 +371,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @see BBMOD_BaseMaterial
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
-		set_uniform_f4(
+		shader_set_uniform_f(
 			UBaseOpacityMultiplier,
 			_material.BaseOpacityMultiplier.Red / 255.0,
 			_material.BaseOpacityMultiplier.Green / 255.0,
@@ -380,7 +380,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_alpha_test(_material.AlphaTest);
 		set_texture_offset(_material.TextureOffset);
 		set_texture_scale(_material.TextureScale);
-		set_uniform_f(UShadowmapBias, _material.ShadowmapBias);
+		shader_set_uniform_f(UShadowmapBias, _material.ShadowmapBias);
 		return self;
 	};
 }

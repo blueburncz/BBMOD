@@ -15,11 +15,9 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_BaseMaterial = {
-		copy: copy,
-		from_json: from_json,
-		destroy: destroy,
-	};
+	static BaseMaterial_copy = copy;
+	static BaseMaterial_from_json = from_json;
+	static BaseMaterial_destroy = destroy;
 
 	/// @var {Pointer.Texture} A texture with tangent-space normals in the RGB
 	/// channels and smoothness in the alpha channel or `undefined`.
@@ -59,7 +57,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	// TODO: Add to_json
 
 	static from_json = function (_json) {
-		method(self, Super_BaseMaterial.from_json)(_json);
+		BaseMaterial_from_json(_json);
 
 		if (variable_struct_exists(_json, "NormalSmoothness"))
 		{
@@ -313,7 +311,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	};
 
 	static copy = function (_dest) {
-		method(self, Super_BaseMaterial.copy)(_dest);
+		BaseMaterial_copy(_dest);
 
 		// NormalSmoothness
 		if (_dest.NormalSmoothnessSprite != undefined)
@@ -427,7 +425,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	};
 
 	static destroy = function () {
-		method(self, Super_BaseMaterial.destroy)();
+		BaseMaterial_destroy();
 		if (NormalSmoothnessSprite != undefined)
 		{
 			sprite_delete(NormalSmoothnessSprite);

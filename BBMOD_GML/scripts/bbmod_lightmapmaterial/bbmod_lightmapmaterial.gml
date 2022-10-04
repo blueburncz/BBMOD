@@ -16,16 +16,14 @@ function BBMOD_LightmapMaterial(_shader=undefined)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_DefaultMaterial = {
-		copy: copy,
-	};
+	static DefaultMaterial_copy = copy;
 
 	/// @var {Pointer.Texture} A texture with RGBM encoded lightmap. Overrides
 	/// the default lightmap texture defined with {@link bbmod_lightmap_set}.
 	Lightmap = undefined;
 
 	static copy = function (_dest) {
-		method(self, Super_DefaultMaterial.copy)(_dest);
+		DefaultMaterial_copy(_dest);
 		_dest.Lightmap = Lightmap;
 		return self;
 	};

@@ -34,9 +34,7 @@ function BBMOD_DynamicBatch(_model, _size)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Struct.BBMOD_Model} A model that is being batched.
 	/// @readonly
@@ -271,7 +269,7 @@ function BBMOD_DynamicBatch(_model, _size)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		vertex_delete_buffer(VertexBuffer);
 		return undefined;
 	};

@@ -12,10 +12,8 @@
 function BBMOD_LightmapShader(_shader, _vertexFormat)
 	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
 {
-	static Super_DefaultShader = {
-		on_set: on_set,
-		set_material: set_material,
-	};
+	static DefaultShader_on_set = on_set;
+	static DefaultShader_set_material = set_material;
 
 	ULightmap = get_sampler_index("bbmod_Lightmap");
 
@@ -38,8 +36,8 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 		gpu_set_tex_mip_enable_ext(UIBL, mip_off);
 		gpu_set_tex_filter_ext(UIBL, true);
 		gpu_set_tex_repeat_ext(UIBL, false);
-		set_sampler(UIBL, _texture);
-		set_uniform_f2(UIBLTexel, _texel, _texel)
+		texture_set_stage(UIBL, _texture);
+		shader_set_uniform_f(UIBLTexel, _texel, _texel)
 
 		return self;
 	};
@@ -50,15 +48,15 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 		{
 			_up ??= global.__bbmodAmbientLightUp;
 			_down ??= global.__bbmodAmbientLightDown;
-			set_uniform_f4(ULightAmbientUp,
+			shader_set_uniform_f(ULightAmbientUp,
 				_up.Red / 255.0, _up.Green / 255.0, _up.Blue / 255.0, _up.Alpha);
-			set_uniform_f4(ULightAmbientDown,
+			shader_set_uniform_f(ULightAmbientDown,
 				_down.Red / 255.0, _down.Green / 255.0, _down.Blue / 255.0, _down.Alpha);
 		}
 		else
 		{
-			set_uniform_f4(ULightAmbientUp, 0.0, 0.0, 0.0, 0.0);
-			set_uniform_f4(ULightAmbientDown, 0.0, 0.0, 0.0, 0.0);
+			shader_set_uniform_f(ULightAmbientUp, 0.0, 0.0, 0.0, 0.0);
+			shader_set_uniform_f(ULightAmbientDown, 0.0, 0.0, 0.0, 0.0);
 		}
 		return self;
 	};
@@ -71,10 +69,10 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 			&& _light.AffectLightmaps)
 		{
 			var _direction = _light.Direction;
-			set_uniform_f3(ULightDirectionalDir,
+			shader_set_uniform_f(ULightDirectionalDir,
 				_direction.X, _direction.Y, _direction.Z);
 			var _color = _light.Color;
-			set_uniform_f4(ULightDirectionalColor,
+			shader_set_uniform_f(ULightDirectionalColor,
 				_color.Red / 255.0,
 				_color.Green / 255.0,
 				_color.Blue / 255.0,
@@ -82,8 +80,8 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 		}
 		else
 		{
-			set_uniform_f3(ULightDirectionalDir, 0.0, 0.0, -1.0);
-			set_uniform_f4(ULightDirectionalColor, 0.0, 0.0, 0.0, 0.0);
+			shader_set_uniform_f(ULightDirectionalDir, 0.0, 0.0, -1.0);
+			shader_set_uniform_f(ULightDirectionalColor, 0.0, 0.0, 0.0, 0.0);
 		}
 		return self;
 	};
@@ -116,7 +114,7 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 				}
 			}
 		}
-		set_uniform_f_array(ULightPointData, _data);
+		shader_set_uniform_f_array(ULightPointData, _data);
 		return self;
 	};
 
@@ -131,21 +129,21 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_LightmapShader} Returns `self`.
 	static set_lightmap = function (_texture=global.__bbmodLightmap) {
 		gml_pragma("forceinline");
-		set_sampler(ULightmap, _texture);
+		texture_set_stage(ULightmap, _texture);
 		gpu_set_tex_mip_enable_ext(ULightmap, mip_off);
 		gpu_set_tex_filter_ext(ULightmap, true);
 		return self;
 	};
 
 	static on_set = function () {
-		method(self, Super_DefaultShader.on_set)();
+		DefaultShader_on_set();
 		set_lightmap();
 		return self;
 	};
 
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
-		method(self, Super_DefaultShader.set_material)(_material);
+		DefaultShader_set_material(_material);
 		if (_material.Lightmap != undefined)
 		{
 			set_lightmap(_material.Lightmap);

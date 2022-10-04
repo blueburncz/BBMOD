@@ -23,9 +23,7 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	static Super_Class = {
-		destroy: destroy,
-	};
+	static Class_destroy = destroy;
 
 	/// @var {Struct.BBMOD_Material} _material The material used by the particle
 	/// system.
@@ -76,7 +74,7 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 	};
 
 	static destroy = function () {
-		method(self, Super_Class.destroy)();
+		Class_destroy();
 		DynamicBatch.destroy();
 		return undefined;
 	};
