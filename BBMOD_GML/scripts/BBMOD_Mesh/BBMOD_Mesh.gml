@@ -211,11 +211,11 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		}
 		_dynamicBatch.PrimitiveType = PrimitiveType;
 		var _vertexBuffer = _dynamicBatch.VertexBuffer;
-		var _model = _dynamicBatch.Model;
-		var _vertexFormat = _model.VertexFormat;
+		var _vertexFormat = VertexFormat;
 		var _hasVertices = _vertexFormat.Vertices;
 		var _hasNormals = _vertexFormat.Normals;
 		var _hasUvs = _vertexFormat.TextureCoords;
+		var _hasUvs2 = _vertexFormat.TextureCoords2;
 		var _hasColors = _vertexFormat.Colors;
 		var _hasTangentW = _vertexFormat.TangentW;
 		var _hasBones = _vertexFormat.Bones;
@@ -256,6 +256,12 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 					var _v = buffer_read(_buffer, buffer_f32);
 
 					vertex_texcoord(_vertexBuffer, _u, _v);
+				}
+
+				if (_hasUvs2)
+				{
+					buffer_read(_buffer, buffer_f32);
+					buffer_read(_buffer, buffer_f32);
 				}
 
 				if (_hasColors)
@@ -327,6 +333,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		var _hasVertices = _vertexFormat.Vertices;
 		var _hasNormals = _vertexFormat.Normals;
 		var _hasUvs = _vertexFormat.TextureCoords;
+		var _hasUvs2 = _vertexFormat.TextureCoords2;
 		var _hasColors = _vertexFormat.Colors;
 		var _hasTangentW = _vertexFormat.TangentW;
 		var _hasBones = _vertexFormat.Bones;
@@ -365,6 +372,12 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 				var _v = buffer_read(_buffer, buffer_f32);
 
 				vertex_texcoord(_vertexBuffer, _u, _v);
+			}
+
+			if (_hasUvs2)
+			{
+				buffer_read(_buffer, buffer_f32);
+				buffer_read(_buffer, buffer_f32);
 			}
 
 			if (_hasColors)
