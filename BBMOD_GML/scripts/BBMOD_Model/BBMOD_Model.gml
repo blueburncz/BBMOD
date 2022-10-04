@@ -412,29 +412,24 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func get_vertex_format([_bones[, _ids]])
 	///
-	/// @desc Retrieves or creates a vertex format compatible with the model.
-	/// This can be used when creating a {@link BBMOD_StaticBatch}.
+	/// @desc Used to retrieve or create a vertex format compatible with the model.
 	///
 	/// @param {Bool} [_bones] Use `true` to include bone data in the vertex
 	/// format. Defaults to `true`.
 	/// @param {Bool} [_ids] Use `true` to include model instance ids in the
 	/// vertex format. Defaults to `false`.
 	///
-	/// @return {Struct.BBMOD_VertexFormat} The vertex format.
-	///
-	/// @example
-	/// ```gml
-	/// staticBatch = new BBMOD_StaticBatch(mod_tree.get_vertex_format());
-	/// ```
+	/// @obsolete Each {@link BBMOD_Mesh} now has its own vertex format!
 	static get_vertex_format = function (_bones=true, _ids=false) {
 		gml_pragma("forceinline");
+		var _vertexFormat = VertexFormat ? VertexFormat : Meshes[0].VertexFormat;
 		return new BBMOD_VertexFormat(
-			VertexFormat.Vertices,
-			VertexFormat.Normals,
-			VertexFormat.TextureCoords,
-			VertexFormat.Colors,
-			VertexFormat.TangentW,
-			_bones ? VertexFormat.Bones : false,
+			_vertexFormat.Vertices,
+			_vertexFormat.Normals,
+			_vertexFormat.TextureCoords,
+			_vertexFormat.Colors,
+			_vertexFormat.TangentW,
+			_bones ? _vertexFormat.Bones : false,
 			_ids);
 	};
 
