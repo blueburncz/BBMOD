@@ -71,7 +71,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_texture_offset = function (_offset) {
 		gml_pragma("forceinline");
-		return shader_set_uniform_f(UTextureOffset, _offset.X, _offset.Y);
+		shader_set_uniform_f(UTextureOffset, _offset.X, _offset.Y);
+		return self;
 	};
 
 	/// @func set_texture_scale(_scale)
@@ -83,7 +84,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_texture_scale = function (_scale) {
 		gml_pragma("forceinline");
-		return shader_set_uniform_f(UTextureScale, _scale.X, _scale.Y);
+		shader_set_uniform_f(UTextureScale, _scale.X, _scale.Y);
+		return self;
 	};
 
 	/// @func set_bones(_bones)
@@ -97,7 +99,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @see BBMOD_AnimationPlayer.get_transform
 	static set_bones = function (_bones) {
 		gml_pragma("forceinline");
-		return shader_set_uniform_f_array(UBones, _bones);
+		shader_set_uniform_f_array(UBones, _bones);
+		return self;
 	};
 
 	/// @func set_batch_data(_data)
@@ -109,7 +112,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_batch_data = function (_data) {
 		gml_pragma("forceinline");
-		return shader_set_uniform_f_array(UBatchData, _data);
+		shader_set_uniform_f_array(UBatchData, _data);
+		return self;
 	};
 
 	/// @func set_alpha_test(_value)
@@ -121,7 +125,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	static set_alpha_test = function (_value) {
 		gml_pragma("forceinline");
-		return shader_set_uniform_f(UAlphaTest, _value);
+		shader_set_uniform_f(UAlphaTest, _value);
+		return self;
 	};
 
 	/// @func set_cam_pos([_pos])
@@ -135,7 +140,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_cam_pos = function (_pos=undefined) {
 		gml_pragma("forceinline");
 		_pos ??= global.__bbmodCameraPosition;
-		return shader_set_uniform_f(UCamPos, _pos.X, _pos.Y, _pos.Z);
+		shader_set_uniform_f(UCamPos, _pos.X, _pos.Y, _pos.Z);
+		return self;
 	};
 
 	/// @func set_exposure([_value])
@@ -149,7 +155,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_exposure = function (_value=undefined) {
 		gml_pragma("forceinline");
 		_value ??= global.__bbmodCameraExposure;
-		return shader_set_uniform_f(UExposure, _value);
+		shader_set_uniform_f(UExposure, _value);
+		return self;
 	};
 
 	/// @func set_instance_id([_id])
@@ -163,12 +170,13 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_instance_id = function (_id=undefined) {
 		gml_pragma("forceinline");
 		_id ??= global.__bbmodInstanceID;
-		return shader_set_uniform_f(
+		shader_set_uniform_f(
 			UInstanceID,
 			((_id & $000000FF) >> 0) / 255,
 			((_id & $0000FF00) >> 8) / 255,
 			((_id & $00FF0000) >> 16) / 255,
 			((_id & $FF000000) >> 24) / 255);
+		return self;
 	};
 
 	/// @func set_material_index(_index)
@@ -180,7 +188,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	static set_material_index = function (_index) {
 		gml_pragma("forceinline");
-		return shader_set_uniform_f(UMaterialIndex, _index);
+		shader_set_uniform_f(UMaterialIndex, _index);
+		return self;
 	};
 
 	/// @func set_ibl([_ibl])
