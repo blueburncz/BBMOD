@@ -290,12 +290,14 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 			_animInst.AnimationTime = _animationTime;
 
 			var _nodeSize = Model.NodeCount * 8;
-			var _boneSize = Model.BoneCount * 8;
-
-			if (array_length(NodeTransform) < _nodeSize
-				|| array_length(TransformArray) != _boneSize)
+			if (array_length(NodeTransform) < _nodeSize)
 			{
 				array_resize(NodeTransform, _nodeSize);
+			}
+
+			var _boneSize = Model.BoneCount * 8;
+			if (array_length(TransformArray) != _boneSize)
+			{
 				array_resize(TransformArray, _boneSize);
 			}
 
@@ -325,8 +327,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 				{
 					if (_animation.Spaces & BBMOD_BONE_SPACE_WORLD)
 					{
-						var _frame = _animation.FramesWorld[_animationTime];
-						array_copy(NodeTransform, 0, _frame, 0, _nodeSize);
+						array_copy(NodeTransform, 0,
+							_animation.FramesWorld[_animationTime], 0, _nodeSize);
 					}
 
 					// TODO: Just use the animation's array right away?

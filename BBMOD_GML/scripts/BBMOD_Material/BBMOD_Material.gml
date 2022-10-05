@@ -553,6 +553,7 @@ function BBMOD_Material(_shader=undefined)
 				on_set();
 				__bbmod_shader_set_globals(Raw);
 			}
+			_shader.set_material(self);
 		}
 
 		if (OnApply != undefined)
