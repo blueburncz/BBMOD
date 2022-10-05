@@ -52,8 +52,7 @@ emitter = undefined;
 // Create a custom material. Each zombie has its own since each instance needs
 // to pass its own values for the dissolve effect.
 
-material = MatZombie().clone();
-material.BaseOpacity = sprite_get_texture(SprZombie, choose(0, 1));
+material = choose(MatZombieMale, MatZombieFemale)().clone();
 material.OnApply = method(self, function (_material) {
 	var _shader = BBMOD_SHADER_CURRENT;
 	var _dissolveColor = _shader.get_uniform("u_vDissolveColor");

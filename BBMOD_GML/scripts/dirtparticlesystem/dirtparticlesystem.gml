@@ -9,7 +9,7 @@ function DirtParticleSystem()
 		_material.SoftDistance = 2.0;
 		_material.AlphaBlend = true;
 
-		_particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, _material, 10)
+		_particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, _material, 500)
 			.add_modules(
 				// Set particle color
 				new BBMOD_SetColorModule(BBMOD_EParticle.ColorR, new BBMOD_Color(153, 140, 127)),
