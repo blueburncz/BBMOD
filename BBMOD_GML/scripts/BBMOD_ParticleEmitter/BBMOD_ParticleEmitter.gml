@@ -57,15 +57,18 @@ function BBMOD_ParticleEmitter(_position, _system)
 		Particles[# BBMOD_EParticle.Id, _particleIndex] = _particleIndex;
 	}
 
-	/// @func spawn_particle()
+	/// @func spawn_particle([_position])
 	///
 	/// @desc If the particle system has not reached the end of the emit cycle
 	/// yet or if it is looping, then a new particle is spawned. If the maximum
 	/// number of particles has already been reached, then an existing particle
 	/// is used, without calling {@link BBMOD_ParticleModule.on_particle_finish}.
 	///
+	/// @param {Struct.BBMOD_Vec3} [_position] The position to spawn the particle
+	/// at. Defaults to the emitter's position.
+	///
 	/// @return {Bool} Returns `true` if a particle was spawned.
-	static spawn_particle = function () {
+	static spawn_particle = function (_position=undefined) {
 		gml_pragma("forceinline");
 		if (Time >= System.Duration && !System.Loop)
 		{
@@ -87,13 +90,15 @@ function BBMOD_ParticleEmitter(_position, _system)
 			}
 		}
 
+		_position ??= Position;
+
 		Particles[# BBMOD_EParticle.IsAlive, _particleIndex] = true;
 		Particles[# BBMOD_EParticle.TimeAlive, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.Health, _particleIndex] = 1.0;
 		Particles[# BBMOD_EParticle.HealthLeft, _particleIndex] = 1.0;
-		Particles[# BBMOD_EParticle.PositionX, _particleIndex] = Position.X;
-		Particles[# BBMOD_EParticle.PositionY, _particleIndex] = Position.Y;
-		Particles[# BBMOD_EParticle.PositionZ, _particleIndex] = Position.Z;
+		Particles[# BBMOD_EParticle.PositionX, _particleIndex] = _position.X;
+		Particles[# BBMOD_EParticle.PositionY, _particleIndex] = _position.Y;
+		Particles[# BBMOD_EParticle.PositionZ, _particleIndex] = _position.Z;
 		Particles[# BBMOD_EParticle.VelocityX, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.VelocityY, _particleIndex] = 0.0;
 		Particles[# BBMOD_EParticle.VelocityZ, _particleIndex] = 0.0;
