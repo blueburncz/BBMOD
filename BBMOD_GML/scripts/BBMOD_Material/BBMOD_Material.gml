@@ -497,13 +497,41 @@ function BBMOD_Material(_shader=undefined)
 			return false;
 		}
 
+		var _shader = Shaders[bbmod_render_pass_get()];
+		var _shaderChanged = false;
+		if (BBMOD_SHADER_CURRENT != _shader)
+		{
+			if (BBMOD_SHADER_CURRENT != undefined)
+			{
+				BBMOD_SHADER_CURRENT.reset();
+			}
+			shader_set(_shader.Raw);
+			BBMOD_SHADER_CURRENT = _shader;
+			_shaderChanged = true;
+		}
+
 		if (global.__bbmodMaterialCurrent != self)
 		{
 			// TODO: GPU settings override per render pass!
 			var _isShadows = (bbmod_render_pass_get() == BBMOD_ERenderPass.Shadows);
 
-			reset();
+			if (global.__bbmodMaterialCurrent != undefined)
+			{
+				gpu_pop_state();
+			}
+
 			gpu_push_state();
+
+			if (_shaderChanged)
+			{
+				with (_shader)
+				{
+					on_set();
+					__bbmod_shader_set_globals(Raw);
+				}
+				_shaderChanged = false;
+			}
+
 			gpu_set_blendmode(_isShadows ? bm_normal : BlendMode);
 			gpu_set_blendenable(_isShadows ? false : AlphaBlend);
 			gpu_set_cullmode(Culling);
@@ -513,22 +541,18 @@ function BBMOD_Material(_shader=undefined)
 			gpu_set_tex_mip_enable(Mipmapping ? mip_on : mip_off);
 			gpu_set_tex_filter(Filtering);
 			gpu_set_tex_repeat(Repeat);
-		}
 
-		var _shader = Shaders[bbmod_render_pass_get()];
-		if (BBMOD_SHADER_CURRENT != _shader)
-		{
-			if (BBMOD_SHADER_CURRENT != undefined)
-			{
-				BBMOD_SHADER_CURRENT.reset();
-			}
-			_shader.set();
-		}
-
-		if (global.__bbmodMaterialCurrent != self)
-		{
 			_shader.set_material(self);
 			global.__bbmodMaterialCurrent = self;
+		}
+
+		if (_shaderChanged)
+		{
+			with (_shader)
+			{
+				on_set();
+				__bbmod_shader_set_globals(Raw);
+			}
 		}
 
 		if (OnApply != undefined)

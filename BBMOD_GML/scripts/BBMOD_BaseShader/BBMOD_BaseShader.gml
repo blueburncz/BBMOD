@@ -217,11 +217,11 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 			_texel = _ibl.Texel;
 		}
 
-		gpu_set_tex_mip_enable_ext(UIBL, mip_off);
+		texture_set_stage(UIBL, _texture);
+		gpu_set_tex_mip_enable_ext(UIBL, mip_off)
 		gpu_set_tex_filter_ext(UIBL, true);
 		gpu_set_tex_repeat_ext(UIBL, false);
-		texture_set_stage(UIBL, _texture);
-		shader_set_uniform_f(UIBLTexel, _texel, _texel)
+		shader_set_uniform_f(UIBLTexel, _texel, _texel);
 
 		return self;
 	};

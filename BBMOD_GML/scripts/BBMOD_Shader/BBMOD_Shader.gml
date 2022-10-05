@@ -540,54 +540,58 @@ function __bbmod_shader_set_globals(_shader)
 
 			case BBMOD_EShaderUniformType.Sampler:
 				var _index = shader_get_sampler_index(_shader, _globals[i]);
-				texture_set_stage(_index, _value.Texture);
 
-				var _temp = _value.Filter;
-				if (_temp != undefined)
+				if (_index != -1)
 				{
-					gpu_set_tex_filter_ext(_index, _temp);
-				}
+					texture_set_stage(_index, _value.Texture);
 
-				_temp = _value.MaxAniso;
-				if (_temp != undefined)
-				{
-					gpu_set_tex_max_aniso_ext(_index, _temp);
-				}
+					var _temp = _value.Filter;
+					if (_temp != undefined)
+					{
+						gpu_set_tex_filter_ext(_index, _temp);
+					}
 
-				_temp = _value.MaxMip;
-				if (_temp != undefined)
-				{
-					gpu_set_tex_max_mip_ext(_index, _temp);
-				}
+					_temp = _value.MaxAniso;
+					if (_temp != undefined)
+					{
+						gpu_set_tex_max_aniso_ext(_index, _temp);
+					}
 
-				_temp = _value.MinMip;
-				if (_temp != undefined)
-				{
-					gpu_set_tex_min_mip_ext(_index, _temp);
-				}
+					_temp = _value.MaxMip;
+					if (_temp != undefined)
+					{
+						gpu_set_tex_max_mip_ext(_index, _temp);
+					}
 
-				_temp = _value.MipBias;
-				if (_temp != undefined)
-				{
-					gpu_set_tex_mip_bias_ext(_index, _temp);
-				}
+					_temp = _value.MinMip;
+					if (_temp != undefined)
+					{
+						gpu_set_tex_min_mip_ext(_index, _temp);
+					}
 
-				_temp = _value.MipEnable;
-				if (_temp != undefined)
-				{
-					gpu_set_tex_mip_enable_ext(_index, _temp);
-				}
+					_temp = _value.MipBias;
+					if (_temp != undefined)
+					{
+						gpu_set_tex_mip_bias_ext(_index, _temp);
+					}
 
-				_temp = _value.MipFilter;
-				if (_temp != undefined)
-				{
-					gpu_set_tex_mip_filter_ext(_index, _temp);
-				}
+					_temp = _value.MipEnable;
+					if (_temp != undefined)
+					{
+						gpu_set_tex_mip_enable_ext(_index, _temp);
+					}
 
-				_temp = _value.Repeat;
-				if (_temp != undefined)
-				{
-					gpu_set_tex_repeat_ext(_index, _temp);
+					_temp = _value.MipFilter;
+					if (_temp != undefined)
+					{
+						gpu_set_tex_mip_filter_ext(_index, _temp);
+					}
+
+					_temp = _value.Repeat;
+					if (_temp != undefined)
+					{
+						gpu_set_tex_repeat_ext(_index, _temp);
+					}
 				}
 				break;
 			}
