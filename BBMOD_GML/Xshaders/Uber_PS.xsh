@@ -309,15 +309,13 @@ void main()
 #endif // !X_PBR
 #endif // !X_OUTPUT_DEPTH
 
-#if defined(X_ZOMBIE)
+#if defined(X_ZOMBIE) && !defined(X_OUTPUT_DEPTH)
 	// Dissolve
 	gl_FragColor.rgb = mix(
 		gl_FragColor.rgb,
 		u_vDissolveColor,
 		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
-#if !defined(X_OUTPUT_DEPTH)
 	// Silhouette
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
-#endif // !X_OUTPUT_DEPTH
-#endif // X_ZOBMIE
+#endif
 }

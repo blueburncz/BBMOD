@@ -91,6 +91,96 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_BaseMaterial
 	Materials = [];
 
+	/// @var {Bool} If `true` then the model is frozen.
+	/// @readonly
+	/// @see BBMOD_Model.freeze
+	Frozen = false;
+
+	/// @func copy(_dest)
+	///
+	/// @desc Copies model data into another model.
+	///
+	/// @param {Struct.BBMOD_Model} _dest The model to copy data to.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static copy = function (_dest) {
+		_dest.IsLoaded = IsLoaded;
+		_dest.Path = Path;
+
+		_dest.VersionMajor = VersionMajor;
+		_dest.VersionMinor = VersionMinor;
+		_dest.VertexFormat = VertexFormat;
+
+		for (var i = array_length(_dest.Meshes) - 1; i >= 0; --i)
+		{
+			_dest.Meshes[i].destroy();
+		}
+
+		var _meshCount = array_length(Meshes);
+		_dest.Meshes = array_create(_meshCount);
+
+		for (var i = 0; i < _meshCount; ++i)
+		{
+			var _meshClone = Meshes[i].clone();
+			_meshClone.Model = _dest;
+			_dest.Meshes[i] = _meshClone;
+		}
+
+		_dest.NodeCount = NodeCount;
+
+		if (_dest.RootNode)
+		{
+			_dest.RootNode.destroy();
+		}
+
+		if (RootNode)
+		{
+			_dest.RootNode = RootNode.clone();
+			_dest.pass_self_to_nodes();
+		}
+		else
+		{
+			_dest.RootNode = undefined;
+		}
+
+		_dest.BoneCount = BoneCount;
+		_dest.OffsetArray = bbmod_array_clone(OffsetArray);
+		_dest.MaterialCount = MaterialCount;
+		_dest.MaterialNames = bbmod_array_clone(MaterialNames);
+		_dest.Materials = bbmod_array_clone(Materials);
+		_dest.Frozen = Frozen;
+
+		return self;
+	};
+
+	/// @func clone()
+	///
+	/// @desc Creates a clone of the model.
+	///
+	/// @return {Struct.BBMOD_Model} The created clone.
+	static clone = function () {
+		var _clone = new BBMOD_Model();
+		copy(_clone);
+		return _clone;
+	};
+
+	/// @func pass_self_to_nodes([_node])
+	///
+	/// @desc
+	///
+	/// @param {Struct.BBMOD_Node} [_node]
+	///
+	/// @private
+	static pass_self_to_nodes = function (_node=undefined) {
+		_node ??= RootNode;
+		_node.Model = self;
+		for (var i = array_length(_node.Children) - 1; i >= 0; --i)
+		{
+			pass_self_to_nodes(_node.Children[i]);
+		}
+		return self;
+	};
+
 	/// @func from_buffer(_buffer)
 	///
 	/// @desc Loads model data from a buffer.
@@ -287,10 +377,14 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	static freeze = function () {
 		gml_pragma("forceinline");
-		var i = 0;
-		repeat (array_length(Meshes))
+		if (!Frozen)
 		{
-			Meshes[i++].freeze();
+			var i = 0;
+			repeat (array_length(Meshes))
+			{
+				Meshes[i++].freeze();
+			}
+			Frozen = true;
 		}
 		return self;
 	};
@@ -431,7 +525,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			_ids);
 	};
 
-	/// @func submit([_materials[, _transform]])
+	/// @func submit([_materials[, _transform[, _batchData]]])
 	///
 	/// @desc Immediately submits the model for rendering.
 	///
@@ -440,6 +534,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {Array<Real>} [_transform] An array of dual quaternions for
 	/// transforming animated models or `undefined`.
+	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
+	/// batching or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
@@ -463,17 +559,17 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	/// @see BBMOD_ERenderPass
-	static submit = function (_materials=undefined, _transform=undefined) {
+	static submit = function (_materials=undefined, _transform=undefined, _batchData=undefined) {
 		gml_pragma("forceinline");
 		if (RootNode != undefined)
 		{
 			_materials ??= Materials;
-			RootNode.submit(_materials, _transform);
+			RootNode.submit(_materials, _transform, _batchData);
 		}
 		return self;
 	};
 
-	/// @func render([_materials[, _transform]])
+	/// @func render([_materials[, _transform[, _batchData]]])
 	///
 	/// @desc Enqueues the model for rendering.
 	///
@@ -482,6 +578,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {Array<Real>} [_transform] An array of dual quaternions for
 	/// transforming animated models or `undefined`.
+	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
+	/// batching or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
@@ -492,12 +590,12 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
-	static render = function (_materials=undefined, _transform=undefined) {
+	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined) {
 		gml_pragma("forceinline");
 		if (RootNode != undefined)
 		{
 			_materials ??= Materials;
-			RootNode.render(_materials, _transform, matrix_get(matrix_world));
+			RootNode.render(_materials, _transform, matrix_get(matrix_world), _batchData);
 		}
 		return self;
 	};
@@ -544,6 +642,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		{
 			Meshes[i++].destroy();
 		}
+		Meshes = [];
 		return undefined;
 	};
 

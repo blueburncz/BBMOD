@@ -416,10 +416,13 @@ function BBMOD_ParticleEmitter(_position, _system)
 		}
 
 		var _particles = Particles;
-		var _color = new BBMOD_Color();
+		//var _color = new BBMOD_Color();
 		var _particleIndex = 0;
+		var _batchCount = ceil(_particleCount / _batchSize);
+		var _batchData = array_create(_batchCount);
+		var _batchIndex = 0;
 
-		repeat (ceil(_particleCount / _batchSize))
+		repeat (_batchCount)
 		{
 			var _data = array_create(_batchSize * 16, 0);
 			var d = 0;
@@ -450,7 +453,12 @@ function BBMOD_ParticleEmitter(_position, _system)
 				d += 16;
 			}
 			_particleCount -= _batchSize;
-			_method(_material, _data);
+			_batchData[@ _batchIndex++] = _data;
+		}
+
+		if (_batchCount > 0)
+		{
+			_method(_material, _batchData);
 		}
 	};
 

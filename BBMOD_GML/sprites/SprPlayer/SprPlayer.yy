@@ -17,6 +17,7 @@
   "HTile": false,
   "VTile": false,
   "For3D": true,
+  "DynamicTexturePage": false,
   "width": 1024,
   "height": 1024,
   "textureGroupId": {

@@ -60,6 +60,52 @@ function BBMOD_Node(_model) constructor
 	/// @readonly
 	Children = [];
 
+	/// @func copy(_dest)
+	///
+	/// @desc Copies node data into another node.
+	///
+	/// @param {Struct.BBMOD_Node} _dest The node to copy data to.
+	///
+	/// @return {Struct.BBMOD_Node} Returns `self`.
+	static copy = function (_dest) {
+		_dest.Model = Model;
+		_dest.Name = Name;
+		_dest.Index = Index;
+		_dest.Parent = Parent;
+		_dest.IsBone = IsBone;
+		_dest.IsSkeleton = IsSkeleton;
+		_dest.Visible = Visible;
+		_dest.Transform = Transform.Clone();
+		_dest.Meshes = bbmod_array_clone(Meshes);
+		_dest.IsRenderable = IsRenderable;
+
+		for (var i = array_length(_dest.Children) - 1; i >= 0; --i)
+		{
+			_dest.Children[i].destroy();
+		}
+
+		_dest.Children = [];
+
+		var i = 0;
+		repeat (array_length(Children))
+		{
+			_dest.add_child(Children[i++].clone());
+		}
+
+		return self;
+	};
+
+	/// @func clone()
+	///
+	/// @desc Creates a clone of the node.
+	///
+	/// @return {Struct.BBMOD_Node} The created clone.
+	static clone = function () {
+		var _clone = new BBMOD_Node(Model);
+		copy(_clone);
+		return _clone;
+	};
+
 	/// @func add_child(_node)
 	///
 	/// @desc Adds a child node.
@@ -201,18 +247,19 @@ function BBMOD_Node(_model) constructor
 		return self;
 	};
 
-	/// @func submit(_materials, _transform)
+	/// @func submit(_materials, _transform, _batchData)
 	///
 	/// @desc Immediately submits the node for rendering.
 	///
 	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
 	/// one for each material slot of the model.
-	///
 	/// @param {Array<Real>} _transform An array of dual quaternions for
 	/// transforming animated models or `undefined`.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
+	/// batching or `undefined`.
 	///
 	/// @private
-	static submit = function (_materials, _transform) {
+	static submit = function (_materials, _transform, _batchData) {
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;
 		var _node = self;
@@ -264,7 +311,7 @@ function BBMOD_Node(_model) constructor
 					matrix_set(matrix_world, _nodeMatrix);
 				}
 
-				_mesh.submit(_material, _transform);
+				_mesh.submit(_material, _transform, _batchData);
 			}
 
 			i = 0;
@@ -277,7 +324,7 @@ function BBMOD_Node(_model) constructor
 		matrix_set(matrix_world, _matrix);
 	};
 
-	/// @func render(_materials, _transform)
+	/// @func render(_materials, _transform, _matrix, _batchData)
 	///
 	/// @desc Enqueues the node for rendering.
 	///
@@ -285,9 +332,12 @@ function BBMOD_Node(_model) constructor
 	/// one for each material slot of the model.
 	/// @param {Array<Real>} _transform An array of dual quaternions for
 	/// transforming animated models or `undefined`.
+	/// @param {Array<Real>} _matrix The current world matrix.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
+	/// batching or `undefined`.
 	///
 	/// @private
-	static render = function (_materials, _transform, _matrix) {
+	static render = function (_materials, _transform, _matrix, _batchData) {
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;
 		var _node = self;
@@ -340,7 +390,7 @@ function BBMOD_Node(_model) constructor
 					_meshMatrix = _nodeMatrix;
 				}
 
-				_mesh.render(_material, _transform, _meshMatrix);
+				_mesh.render(_material, _transform, _meshMatrix, _batchData);
 			}
 
 			i = 0;

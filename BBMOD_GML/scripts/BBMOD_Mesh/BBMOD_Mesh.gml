@@ -49,6 +49,57 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @readonly
 	PrimitiveType = pr_trianglelist;
 
+	/// @var {Bool} If `true` then the mesh is frozen.
+	/// @readonly
+	Frozen = false;
+
+	/// @func copy(_dest)
+	///
+	/// @desc Copies mesh data into another mesh.
+	///
+	/// @param {Struct.BBMOD_Mesh} _dest The mesh to copy data to.
+	///
+	/// @return {Struct.BBMOD_Mesh} Returns `self`.
+	static copy = function (_dest) {
+		_dest.Model = Model;
+		_dest.MaterialIndex = MaterialIndex;
+		_dest.BboxMin = (BboxMin != undefined) ? BboxMin.Clone() : undefined;
+		_dest.BboxMax = (BboxMax != undefined) ? BboxMax.Clone() : undefined;
+
+		if (_dest.VertexBuffer != undefined)
+		{
+			vertex_delete_buffer(_dest.VertexBuffer);
+		}
+
+		if (VertexBuffer)
+		{
+			var _buffer = buffer_create_from_vertex_buffer(VertexBuffer, buffer_fixed, 1);
+			_dest.VertexBuffer = vertex_create_buffer_from_buffer(_buffer,
+				(VertexFormat != undefined) ? VertexFormat.Raw : Model.VertexFormat.Raw);
+			buffer_delete(_buffer);
+		}
+		else
+		{
+			_dest.VertexBuffer = undefined;
+		}
+
+		_dest.VertexFormat = VertexFormat;
+		_dest.PrimitiveType = PrimitiveType;
+
+		return self;
+	};
+
+	/// @func clone()
+	///
+	/// @desc Creates a clone of the mesh.
+	///
+	/// @return {Struct.BBMOD_Mesh} The created clone.
+	static clone = function () {
+		var _clone = new BBMOD_Mesh(VertexFormat, Model);
+		copy(_clone);
+		return _clone;
+	};
+
 	/// @func from_buffer(_buffer)
 	///
 	/// @desc Loads mesh data from a bufffer.
@@ -133,51 +184,87 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @private
 	static freeze = function () {
 		gml_pragma("forceinline");
-		vertex_freeze(VertexBuffer);
+		if (!Frozen)
+		{
+			vertex_freeze(VertexBuffer);
+			Frozen = true;
+		}
 		return self;
 	};
 
-	/// @func submit(_material[, _transform])
+	/// @func submit(_material, _transform, _batchData)
 	///
 	/// @param {Struct.BBMOD_BaseMaterial} _material
-	///
-	/// @param {Array<Real>} [_transform]
+	/// @param {Array<Real>} _transform
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	///
 	/// @private
-	static submit = function (_material, _transform=undefined) {
+	static submit = function (_material, _transform, _batchData) {
 		if (!_material.apply())
 		{
 			return self;
 		}
+
+		var _vertexBuffer = VertexBuffer;
+		var _primitiveType = PrimitiveType;
+		var _baseOpacity = _material.BaseOpacity;
+
 		with (BBMOD_SHADER_CURRENT)
 		{
+			set_instance_id();
+			set_material_index(other.MaterialIndex);
+
 			if (_transform != undefined)
 			{
 				set_bones(_transform);
 			}
-			set_instance_id();
-			set_material_index(other.MaterialIndex);
+
+			if (_batchData != undefined)
+			{
+				if (is_array(_batchData[0]))
+				{
+					var _dataIndex = 0;
+					repeat (array_length(_batchData))
+					{
+						set_batch_data(_batchData[_dataIndex++]);
+						vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+					}
+				}
+				else
+				{
+					set_batch_data(_batchData);
+					vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+				}
+			}
+			else
+			{
+				vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+			}
 		}
-		vertex_submit(VertexBuffer, PrimitiveType, _material.BaseOpacity);
+
 		return self;
 	};
 
-	/// @func render(_material, _transform, _matrix)
+	/// @func render(_material, _transform, _matrix, _batchData)
 	///
 	/// @param {Struct.BBMOD_BaseMaterial} _material
-	///
 	/// @param {Array<Real>} _transform
-	///
 	/// @param {Array<Real>} _matrix
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	///
 	/// @private
-	static render = function (_material, _transform, _matrix) {
+	static render = function (_material, _transform, _matrix, _batchData) {
 		gml_pragma("forceinline");
-		if (_transform != undefined)
+		if (_batchData != undefined)
+		{
+			_material.RenderQueue.draw_mesh_batched(
+				VertexBuffer, _matrix, _material, _batchData, PrimitiveType, MaterialIndex);
+		}
+		else if (_transform != undefined)
 		{
 			_material.RenderQueue.draw_mesh_animated(
 				VertexBuffer, _matrix, _material, _transform, PrimitiveType, MaterialIndex);

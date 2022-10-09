@@ -72,14 +72,14 @@ function BBMOD_DynamicBatch(_model, _size)
 		return self;
 	};
 
-	/// @func submit(_material, _data)
+	/// @func submit(_material, _batchData)
 	///
 	/// @desc Immediately submits the dynamic batch for rendering.
 	///
 	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader
 	/// that expects ids in the vertex format.
-	/// @param {Array<Real>} _data An array containing data for each rendered
-	/// instance.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
+	/// batching.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
@@ -91,25 +91,46 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
 	/// @see BBMOD_ERenderPass
-	static submit = function (_material, _data) {
+	static submit = function (_material, _batchData) {
 		gml_pragma("forceinline");
 		if (!_material.apply())
 		{
 			return self;
 		}
-		BBMOD_SHADER_CURRENT.set_batch_data(_data);
-		vertex_submit(VertexBuffer, PrimitiveType, _material.BaseOpacity);
+
+		var _vertexBuffer = VertexBuffer;
+		var _primitiveType = PrimitiveType;
+		var _baseOpacity = _material.BaseOpacity;
+
+		with (BBMOD_SHADER_CURRENT)
+		{
+			if (is_array(_batchData[0]))
+			{
+				var _dataIndex = 0;
+				repeat (array_length(_batchData))
+				{
+					set_batch_data(_batchData[_dataIndex++]);
+					vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+				}
+			}
+			else
+			{
+				set_batch_data(_batchData);
+				vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+			}
+		}
+
 		return self;
 	};
 
-	/// @func render(_material, _data)
+	/// @func render(_material, _batchData)
 	///
 	/// @desc Enqueues the dynamic batch for rendering.
 	///
 	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader
 	/// that expects ids in the vertex format.
-	/// @param {Array<Real>} _data An array containing data for each rendered
-	/// instance.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
+	/// batching.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
@@ -117,10 +138,10 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
-	static render = function (_material, _data) {
+	static render = function (_material, _batchData) {
 		gml_pragma("forceinline");
 		_material.RenderQueue.draw_mesh_batched(
-			VertexBuffer, matrix_get(matrix_world), _material, _data, PrimitiveType);
+			VertexBuffer, matrix_get(matrix_world), _material, _batchData, PrimitiveType);
 		return self;
 	};
 
@@ -157,27 +178,30 @@ function BBMOD_DynamicBatch(_model, _size)
 	static _draw_object = function (_method, _object, _material, _fn=undefined) {
 		gml_pragma("forceinline");
 
+		if (!instance_exists(_object))
+		{
+			return;
+		}
+
 		_fn ??= default_fn;
 
 		var _dataSize = Size * 8;
-		var _data = array_create(_dataSize, 0);
+		var _data = array_create(_dataSize, 0.0);
 		var _index = 0;
+		var _batchData = [_data];
 
 		with (_object)
 		{
 			_index += method(self, _fn)(_data, _index);
 			if (_index >= _dataSize)
 			{
-				_method(_material, _data);
-				_data = array_create(_dataSize, 0);
+				_data = array_create(_dataSize, 0.0);
 				_index = 0;
+				array_push(_batchData, _data);
 			}
 		}
-
-		if (_index > 0)
-		{
-			_method(_material, _data);
-		}
+	
+		_method(_material, _batchData);
 	};
 
 	/// @func submit_object(_object, _material[, _fn])

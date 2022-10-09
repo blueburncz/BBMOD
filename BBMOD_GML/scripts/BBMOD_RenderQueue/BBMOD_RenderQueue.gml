@@ -193,7 +193,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
 	/// @param {Array<Real>} _matrix The world matrix.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
-	/// @param {Array<Real>} _batchData An array with batch data.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Either a single array
+	/// of batch data or an array of arrays of batch data.
 	/// @param {Constant.PrimitiveType} [_primitiveType] The primitive type of
 	/// the mesh. Defaults to `pr_trianglelist`.
 	///
@@ -1354,9 +1355,23 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				}
 				BBMOD_SHADER_CURRENT.set_instance_id(_id);
 				matrix_set(matrix_world, _renderCommands[| i++]);
-				BBMOD_SHADER_CURRENT.set_batch_data(_renderCommands[| i++]);
+				var _batchData = _renderCommands[| i++];
 				var _primitiveType = _renderCommands[| i++];
-				vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
+				var _vertexBuffer = _renderCommands[| i++];
+				if (is_array(_batchData[0]))
+				{
+					var _dataIndex = 0;
+					repeat (array_length(_batchData))
+					{
+						BBMOD_SHADER_CURRENT.set_batch_data(_batchData[_dataIndex++]);
+						vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
+					}
+				}
+				else
+				{
+					BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
+					vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.EndConditionalBlock:
