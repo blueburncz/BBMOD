@@ -115,9 +115,9 @@ function BBMOD_Renderer()
 	/// @private
 	SurSelect = noone;
 
-	/// @var <Struct.BBMOD_IRenderable>} An array of renderable objects and
-	/// structs.
-	/// These are automatically rendered in {@link BBMOD_Renderer.render}.
+	/// @var {Array<Struct.BBMOD_IRenderable>} An array of renderable objects
+	/// and structs. These are automatically rendered in
+	/// {@link BBMOD_Renderer.render}.
 	/// @readonly
 	/// @see BBMOD_Renderer.add
 	/// @see BBMOD_Renderer.remove
