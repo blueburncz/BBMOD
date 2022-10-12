@@ -135,7 +135,7 @@ void main()
 
 	Transform(position, normal, tangent, bitangent);
 
-	vec4 positionWVP = (gm_Matrices[MATRIX_PROJECTION] * gm_Matrices[MATRIX_VIEW]) * position;
+	vec4 positionWVP = gm_Matrices[MATRIX_PROJECTION] * (gm_Matrices[MATRIX_VIEW] * position);
 	v_vVertex = position.xyz;
 
 	gl_Position = positionWVP;
