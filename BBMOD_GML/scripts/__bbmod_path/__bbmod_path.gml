@@ -1,10 +1,13 @@
 /// @macro {String} Directory separator.
+/// @private
 #macro __BBMOD_PATH_SEPARATOR ((os_type == os_windows) ? "\\" : "/")
 
 /// @macro {String} The current directory in relative paths.
+/// @private
 #macro __BBMOD_PATH_CURRENT "."
 
 /// @macro {String} The parent directory in relative paths.
+/// @private
 #macro __BBMOD_PATH_PARENT ".."
 
 /// @func bbmod_path_normalize(_path)
