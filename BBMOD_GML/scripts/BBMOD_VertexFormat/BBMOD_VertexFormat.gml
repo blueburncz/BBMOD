@@ -191,7 +191,7 @@ function BBMOD_VertexFormat(
 	}
 }
 
-/// @func bbmod_vertex_format_save(_vertexFormat, _buffer[, _versionMinor])
+/// @func __bbmod_vertex_format_save(_vertexFormat, _buffer[, _versionMinor])
 ///
 /// @desc Saves a vertex format to a buffer.
 ///
@@ -201,7 +201,7 @@ function BBMOD_VertexFormat(
 /// Defaults to {@link BBMOD_VERSION_MINOR}.
 ///
 /// @private
-function bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_VERSION_MINOR)
+function __bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_VERSION_MINOR)
 {
 	with (_vertexFormat)
 	{
@@ -219,7 +219,7 @@ function bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_VE
 	}
 }
 
-/// @func bbmod_vertex_format_load(_buffer[, _versionMinor])
+/// @func __bbmod_vertex_format_load(_buffer[, _versionMinor])
 ///
 /// @desc Loads a vertex format from a buffer.
 ///
@@ -230,7 +230,7 @@ function bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_VE
 /// @return {Struct.BBMOD_VertexFormat} The loaded vetex format.
 ///
 /// @private
-function bbmod_vertex_format_load(_buffer, _versionMinor=BBMOD_VERSION_MINOR)
+function __bbmod_vertex_format_load(_buffer, _versionMinor=BBMOD_VERSION_MINOR)
 {
 	var _vertices = buffer_read(_buffer, buffer_bool);
 	var _normals = buffer_read(_buffer, buffer_bool);

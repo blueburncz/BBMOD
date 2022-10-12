@@ -1,19 +1,19 @@
-/// @func BBMOD_DynamicBatch(_model, _size)
+/// @func BBMOD_DynamicBatch([_model[, _size[, _slotsPerInstance]]])
 ///
 /// @extends BBMOD_Class
 ///
 /// @desc A dynamic batch is a structure that allows you to render multiple
 /// instances of a single model at once, each with its own position, scale and
 /// rotation. Compared to {@link BBMOD_Model.submit}, this drastically reduces
-/// draw calls and increases performance, but requires more memory. Current
-/// limitations are that the model must not have bones (it cannot be animated)
-/// and it can use only a single material. Number of model instances per batch
-/// is also affected by maximum number of uniforms that a vertex shader can
-/// accept.
+/// draw calls and increases performance, but requires more memory. Number of
+/// model instances per batch is also affected by maximum number of uniforms
+/// that a vertex shader can accept.
 ///
-/// @param {Struct.BBMOD_Model} _model The model to create a dynamic batch of.
-/// Must use a single material and must not have bones.
-/// @param {Real} _size Number of model instances in the batch.
+/// @param {Struct.BBMOD_Model} [_model] The model to create a dynamic batch of.
+/// @param {Real} [_size] Number of model instances in the batch. Default value
+/// is 32.
+/// @param {Real} [_slotsPerInstance] Number of slots that each instance takes
+/// in the data array. Default value is 8.
 ///
 /// @example
 /// Following code renders all instances of a car object in batches of 64.
@@ -29,7 +29,7 @@
 /// ```
 ///
 /// @see BBMOD_StaticBatch
-function BBMOD_DynamicBatch(_model, _size)
+function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=8)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -38,98 +38,197 @@ function BBMOD_DynamicBatch(_model, _size)
 
 	/// @var {Struct.BBMOD_Model} A model that is being batched.
 	/// @readonly
-	Model = _model
+	Model = _model;
+
+	/// @var {Struct.BBMOD_Model} The batched model.
+	/// @readonly
+	Batch = undefined;
 
 	/// @var {Real} Number of model instances in the batch.
 	/// @readonly
 	Size = _size;
 
-	/// @var {vertex_buffer} A vertex buffer.
+	/// @var {Real} Number of instances currently added to the dynamic batch.
+	/// @readonly
+	/// @see BBMOD_DynamicBatch.add_instance
+	InstanceCount = 0;
+
+	/// @var {Real} Number of slots that each instance takes in the data array.
+	/// @readonly
+	SlotsPerInstance = _slotsPerInstance;
+
+	/// @var {Real} Total length of batch data array for a single draw call.
+	/// @readonly
+	BatchLength = Size * SlotsPerInstance;
+
+	/// @var {Function} A function that writes instance data into the batch data
+	/// array. It must take the instance, array and starting index as arguments!
+	/// Defaults to {@link BBMOD_DynamicBatch.default_fn}.
+	DataWriter = default_fn;
+
+	/// @var {Array<Array<Real>>}
 	/// @private
-	VertexBuffer = vertex_create_buffer();
+	__data = [];
 
-	/// @var {Real} The format of the vertex buffer.
+	/// @var {Id.DsMap} Mapping from instances to indices at which they are
+	/// stored in the data array.
 	/// @private
-	VertexFormat = Model.get_vertex_format(false, true);
+	__instanceToIndex = ds_map_create();
 
-	/// @var {Constant.PrimitiveType} The primitive type of the batch. Can be
-	/// `undefined`.
+	/// @var {Id.DsMap} Mapping from data array indices to instances that they
+	/// hold.
 	/// @private
-	PrimitiveType = undefined;
+	__indexToInstance = ds_map_create();
 
-	vertex_begin(VertexBuffer, VertexFormat.Raw);
-	Model.to_dynamic_batch(self);
-	vertex_end(VertexBuffer);
-
-	/// @func freeze()
+	// @func from_model(_model)
 	///
-	/// @desc Freezes the dynamic batch. This makes it render faster.
+	/// @desc
+	///
+	/// @param {Struct.BBMOD_Model} _model
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
-	static freeze = function () {
-		gml_pragma("forceinline");
-		vertex_freeze(VertexBuffer);
+	static from_model = function (_model) {
+		Model = _model;
+		build_batch();
 		return self;
 	};
 
-	/// @func submit(_material, _batchData)
+	/// @func __resize_data()
 	///
-	/// @desc Immediately submits the dynamic batch for rendering.
+	/// @desc Resizes __data array to required size.
 	///
-	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader
-	/// that expects ids in the vertex format.
-	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
-	/// batching.
+	/// @private
+	static __resize_data = function () {
+		var _requiredArrayCount = ceil(InstanceCount / Size);
+		var _currentArrayCount = array_length(__data);
+
+		if (_currentArrayCount > _requiredArrayCount)
+		{
+			array_resize(__data, _requiredArrayCount);
+		}
+		else if (_currentArrayCount < _requiredArrayCount)
+		{
+			repeat (_requiredArrayCount - _currentArrayCount)
+			{
+				array_push(__data, array_create(BatchLength, 0.0));
+			}
+		}
+	};
+
+	/// @func add_instance(_instance)
+	///
+	/// @desc Adds an instance to the dynamic batch.
+	///
+	/// @param {Id.Instance, Struct} _instance The instance to be added.
+	///
+	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	static add_instance = function (_instance) {
+		var _index = InstanceCount * SlotsPerInstance;
+		__instanceToIndex[? _instance] = _index;
+		__indexToInstance[? _index] = _instance;
+		++InstanceCount;
+		__resize_data();
+		method(_instance, DataWriter)(__data[_index div BatchLength], _index mod BatchLength);
+		return self;
+	};
+
+	/// @func update_instance(_instance)
+	///
+	/// @desc Updates batch data for given instance.
+	///
+	/// @param {Id.Instance, Struct} _instance The instance to update.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
-	/// @note The dynamic batch is *not* submitted if the material used is not
-	/// compatible with the current render pass!
+	/// @see BBMOD_DynamicBatch.DataWriter
+	static update_instance = function (_instance) {
+		gml_pragma("forceinline");
+		var _index = __instanceToIndex[? _instance];
+		method(_instance, DataWriter)(__data[_index div BatchLength], _index mod BatchLength);
+		return self;
+	};
+
+	/// @func remove_instance(_instance)
+	///
+	/// @desc Removes an instance from the dynamic batch.
+	///
+	/// @param {Id.Instance, Struct} _instance The instance to remove.
+	///
+	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	static remove_instance = function (_instance) {
+		var _indexDeleted = __instanceToIndex[? _instance];
+		if (_indexDeleted != undefined)
+		{
+			--InstanceCount;
+			if (InstanceCount > 0)
+			{
+				// Get last used index
+				var _indexLast = InstanceCount * SlotsPerInstance;
+				// Get instance that is stored on that index
+				var _instanceLast = __indexToInstance[? _indexLast];
+				// Find the exact array that stores the data
+				var _dataLast = __data[_indexLast div BatchLength];
+				// Get starting index within that array
+				var i = _indexLast mod BatchLength;
+
+				// Copy data of the last instance over the data of the removed instance
+				array_copy(
+					__data[_indexDeleted div BatchLength], _indexDeleted mod BatchLength,
+					_dataLast, i, SlotsPerInstance);
+
+				// Clear slots
+				repeat (SlotsPerInstance)
+				{
+					_dataLast[i++] = 0.0;
+				}
+
+				// Last instance is now stored instead of the deleted one
+				__instanceToIndex[? _instanceLast] = _indexDeleted;
+				__indexToInstance[? _indexDeleted] = _instanceLast;
+				ds_map_delete(__indexToInstance, _indexLast);
+			}
+			__resize_data();
+		}
+		return self;
+	};
+
+	/// @func submit([_materials[, _batchData]])
+	///
+	/// @desc Immediately submits the dynamic batch for rendering.
+	///
+	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of materials.
+	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
+	/// batching.
+	///
+	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
 	/// @see BBMOD_ERenderPass
-	static submit = function (_material, _batchData) {
+	static submit = function (_materials=undefined, _batchData=undefined) {
 		gml_pragma("forceinline");
-		if (!_material.apply())
+		_batchData ??= __data;
+		if (array_length(_batchData) > 0)
 		{
-			return self;
-		}
-
-		var _vertexBuffer = VertexBuffer;
-		var _primitiveType = PrimitiveType;
-		var _baseOpacity = _material.BaseOpacity;
-
-		with (BBMOD_SHADER_CURRENT)
-		{
-			if (is_array(_batchData[0]))
+			if (_materials != undefined
+				&& !is_array(_materials))
 			{
-				var _dataIndex = 0;
-				repeat (array_length(_batchData))
-				{
-					set_batch_data(_batchData[_dataIndex++]);
-					vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
-				}
+				_materials = [_materials];
 			}
-			else
-			{
-				set_batch_data(_batchData);
-				vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
-			}
+			matrix_set(matrix_world, matrix_build_identity());
+			Batch.submit(_materials, undefined, _batchData);
 		}
-
 		return self;
 	};
 
-	/// @func render(_material, _batchData)
+	/// @func render([_materials[, _batchData]])
 	///
 	/// @desc Enqueues the dynamic batch for rendering.
 	///
-	/// @param {Struct.BBMOD_Material} _material A material. Must use a shader
-	/// that expects ids in the vertex format.
-	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
+	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of materials.
+	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
 	/// batching.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
@@ -138,25 +237,32 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
-	static render = function (_material, _batchData) {
+	static render = function (_materials=undefined, _batchData=undefined) {
 		gml_pragma("forceinline");
-		_material.RenderQueue.draw_mesh_batched(
-			VertexBuffer, matrix_get(matrix_world), _material, _batchData, PrimitiveType);
+		_batchData ??= __data;
+		if (array_length(_batchData) > 0)
+		{
+			if (_materials != undefined
+				&& !is_array(_materials))
+			{
+				_materials = [_materials];
+			}
+			matrix_set(matrix_world, matrix_build_identity());
+			Batch.render(_materials, undefined, _batchData);
+		}
 		return self;
 	};
 
 	/// @func default_fn(_data, _index)
 	///
-	/// @desc The default function used in {@link BBMOD_DynamicBatch.render_object}.
-	/// Uses instance's variables `x`, `y`, `z` for position, `image_xscale` for
-	/// uniform scale and `image_angle` for rotation around the `z` axis.
+	/// @desc The default data writer function. Uses instance's variables
+	/// `x`, `y`, `z` for position, `image_xscale` for uniform scale and
+	/// `image_angle` for rotation around the `z` axis.
 	///
 	/// @param {Array<Real>} _data An array to which the function will write
 	/// instance data. The data layout is compatible with shader `BBMOD_ShDefaultBatched`
 	/// and hence with material {@link BBMOD_MATERIAL_DEFAULT_BATCHED}.
 	/// @param {Real} _index An index at which the first variable will be written.
-	///
-	/// @return {Real} Number of slots it has written to. Always equals 8.
 	///
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
@@ -168,31 +274,29 @@ function BBMOD_DynamicBatch(_model, _size)
 		// Uniform scale
 		_data[@ _index + 3] = image_xscale;
 		// Rotation
-		var _quat = new BBMOD_Quaternion()
-			.FromAxisAngle(new BBMOD_Vec3(0, 0, 1), image_angle);
-		_quat.ToArray(_data, _index + 4);
-		// Written 8 slots in total
-		return 8;
+		new BBMOD_Quaternion()
+			.FromAxisAngle(BBMOD_VEC3_UP, image_angle)
+			.ToArray(_data, _index + 4);
 	};
 
-	static _draw_object = function (_method, _object, _material, _fn=undefined) {
-		gml_pragma("forceinline");
-
+	static __draw_object = function (_method, _object, _materials, _fn=undefined) {
 		if (!instance_exists(_object))
 		{
 			return;
 		}
 
-		_fn ??= default_fn;
+		_fn ??= DataWriter;
 
-		var _dataSize = Size * 8;
+		var _slotsPerInstance = SlotsPerInstance;
+		var _dataSize = Size * _slotsPerInstance;
 		var _data = array_create(_dataSize, 0.0);
 		var _index = 0;
 		var _batchData = [_data];
 
 		with (_object)
 		{
-			_index += method(self, _fn)(_data, _index);
+			 method(self, _fn)(_data, _index);
+			 _index += _slotsPerInstance;
 			if (_index >= _dataSize)
 			{
 				_data = array_create(_dataSize, 0.0);
@@ -204,23 +308,23 @@ function BBMOD_DynamicBatch(_model, _size)
 		_method(_material, _batchData);
 	};
 
-	/// @func submit_object(_object, _material[, _fn])
+	/// @func submit_object(_object[, _materials[, _fn]])
 	///
 	/// @desc Immediately submits all instances of an object for rendering in
 	/// batches of {@link BBMOD_DynamicBatch.size}.
 	///
 	/// @param {Real} _object An object to submit.
-	/// @param {Struct.BBMOD_Material} _material A material to use.
+	/// @param {Array<Struct.BBMOD_Materials>} [_material] An array of materials
+	/// to use.
 	/// @param {Function} [_fn] A function that writes instance data to an array
-	/// which is then passed to the material's shader. Must return number of
-	/// slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}
-	/// if `undefined`.
+	/// which is then passed to the material's shader. Defaults to
+	/// {@link BBMOD_DynamicBatch.default_fn} if `undefined`.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
 	/// @example
 	/// ```gml
-	/// carBatch.submit_object(OCar, mat_car, function (_data, _index) {
+	/// carBatch.submit_object(OCar, [matCar], function (_data, _index) {
 	///     // Position
 	///     _data[@ _index] = x;
 	///     _data[@ _index + 1] = y;
@@ -228,43 +332,42 @@ function BBMOD_DynamicBatch(_model, _size)
 	///     // Uniform scale
 	///     _data[@ _index + 3] = image_xscale;
 	///     // Rotation
-	///     var _quat = new BBMOD_Quaternion()
-	///         .FromAxisAngle(new BBMOD_Vec3(0, 0, 1), image_angle);
-	///         _quat.ToArray(_data, _index + 4);
-	///     // Written 8 slots in total
-	///     return 8;
+	///     new BBMOD_Quaternion()
+	///         .FromAxisAngle(BBMOD_VEC3_UP, image_angle)
+	///         .ToArray(_data, _index + 4);
 	/// });
 	/// ```
 	/// The function defined in this example is actually the implementation of
-	/// {@link BBMOD_DynamicBatch.default_fn}. You can use this to create you own
+	/// {@link BBMOD_DynamicBatch.DataWriter}. You can use this to create you own
 	/// variation of it.
 	///
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
-	/// @see BBMOD_DynamicBatch.default_fn
-	static submit_object = function (_object, _material, _fn=undefined) {
-		_draw_object(method(self, submit), _object, _material, _fn);
+	/// @see BBMOD_DynamicBatch.DataWriter
+	static submit_object = function (_object, _materials=undefined, _fn=undefined) {
+		gml_pragma("forceinline");
+		__draw_object(method(self, submit), _object, _materials, _fn);
 		return self;
 	};
 
-	/// @func render_object(_object, _material[, _fn])
+	/// @func render_object(_object[, _materials[, _fn]])
 	///
 	/// @desc Enqueues all instances of an object for rendering in batches of
 	/// {@link BBMOD_DynamicBatch.size}.
 	///
 	/// @param {Asset.GMObject} _object An object to render.
-	/// @param {Struct.BBMOD_Material} _material A material to use.
-	/// @param {Function} [_fn] A function that writes instance data  to an
-	/// array which is then passed to the material's shader. Must return number
-	/// of slots it has written to. Defaults to {@link BBMOD_DynamicBatch.default_fn}
-	/// if `undefined`.
+	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of materials
+	/// to use.
+	/// @param {Function} [_fn] A function that writes instance data to an
+	/// array which is then passed to the material's shader. Defaults to
+	/// {@link BBMOD_DynamicBatch.DataWriter} if `undefined`.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
 	/// @example
 	/// ```gml
-	/// carBatch.render_object(OCar, mat_car, function (_data, _index) {
+	/// carBatch.render_object(OCar, [matCar], function (_data, _index) {
 	///     // Position
 	///     _data[@ _index] = x;
 	///     _data[@ _index + 1] = y;
@@ -272,11 +375,9 @@ function BBMOD_DynamicBatch(_model, _size)
 	///     // Uniform scale
 	///     _data[@ _index + 3] = image_xscale;
 	///     // Rotation
-	///     var _quat = new BBMOD_Quaternion()
-	///         .FromAxisAngle(new BBMOD_Vec3(0, 0, 1), image_angle);
-	///         _quat.ToArray(_data, _index + 4);
-	///     // Written 8 slots in total
-	///     return 8;
+	///     new BBMOD_Quaternion()
+	///         .FromAxisAngle(BBMOD_VEC3_UP, image_angle)
+	///         .ToArray(_data, _index + 4);
 	/// });
 	/// ```
 	/// The function defined in this example is actually the implementation of
@@ -286,15 +387,121 @@ function BBMOD_DynamicBatch(_model, _size)
 	/// @see BBMOD_DynamicBatch.submit
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
-	/// @see BBMOD_DynamicBatch.default_fn
-	static render_object = function (_object, _material, _fn=undefined) {
-		_draw_object(method(self, render), _object, _material, _fn);
+	/// @see BBMOD_DynamicBatch.DataWriter
+	static render_object = function (_object, _materials=undefined, _fn=undefined) {
+		gml_pragma("forceinline");
+		__draw_object(method(self, render), _object, _materials, _fn);
 		return self;
+	};
+
+	/// @func freeze()
+	///
+	/// @desc Freezes the dynamic batch. This makes it render faster.
+	///
+	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	static freeze = function () {
+		gml_pragma("forceinline");
+		Batch.freeze();
+		return self;
+	};
+
+	static build_batch = function () {
+		if (Batch != undefined)
+		{
+			return;
+		}
+
+		Batch = Model.clone();
+		var _vertexFormatOld = Batch.VertexFormat;
+		var _vertexFormatNew;
+
+		if (_vertexFormatOld != undefined)
+		{
+			_vertexFormatNew = new BBMOD_VertexFormat({
+				Vertices: _vertexFormatOld.Vertices,
+				Normals: _vertexFormatOld.Normals,
+				TextureCoords: _vertexFormatOld.TextureCoords,
+				TextureCoords2: _vertexFormatOld.TextureCoords2,
+				Colors: _vertexFormatOld.Colors,
+				TangentW: _vertexFormatOld.TangentW,
+				Bones: _vertexFormatOld.Bones,
+				Ids: true,
+			});
+			Batch.VertexFormat = _vertexFormatNew;
+		}
+
+		for (var i = array_length(Batch.Meshes) - 1; i >= 0; --i)
+		{
+			var _mesh = Batch.Meshes[i];
+			var _meshVertexFormatOld = _mesh.VertexFormat ?? _vertexFormatOld;
+			var _byteSizeOld = _meshVertexFormatOld.get_byte_size();
+
+			var _meshVertexFormatNew;
+			if (_mesh.VertexFormat)
+			{
+				_meshVertexFormatNew = new BBMOD_VertexFormat({
+					Vertices: _meshVertexFormatOld.Vertices,
+					Normals: _meshVertexFormatOld.Normals,
+					TextureCoords: _meshVertexFormatOld.TextureCoords,
+					TextureCoords2: _meshVertexFormatOld.TextureCoords2,
+					Colors: _meshVertexFormatOld.Colors,
+					TangentW: _meshVertexFormatOld.TangentW,
+					Bones: _meshVertexFormatOld.Bones,
+					Ids: true,
+				});
+			}
+			else
+			{
+				_meshVertexFormatNew = _vertexFormatNew;
+			}
+
+			var _byteSizeNew = _meshVertexFormatNew.get_byte_size();
+			var _vertexBufferOld = _mesh.VertexBuffer;
+			var _bufferOld = buffer_create_from_vertex_buffer(_vertexBufferOld, buffer_fixed, 1);
+			var _vertexCount = buffer_get_size(_bufferOld) / _byteSizeOld;
+			var _bufferNew = buffer_create(Size * _vertexCount * _byteSizeNew, buffer_fixed, 1);
+			var _offsetNew = 0;
+			var _sizeOfF32 = buffer_sizeof(buffer_f32);
+
+			var _id = 0;
+			repeat (Size)
+			{
+				var _offsetOld = 0;
+				repeat (_vertexCount)
+				{
+					buffer_copy(_bufferOld, _offsetOld, _byteSizeOld, _bufferNew, _offsetNew);
+					_offsetOld += _byteSizeOld;
+					_offsetNew += _byteSizeOld;
+					buffer_poke(_bufferNew, _offsetNew, buffer_f32, _id);
+					_offsetNew += _sizeOfF32;
+				}
+				++_id;
+			}
+
+			_mesh.VertexBuffer = vertex_create_buffer_from_buffer(_bufferNew, _meshVertexFormatNew.Raw);
+			_mesh.VertexFormat = _meshVertexFormatNew;
+			buffer_delete(_bufferNew);
+
+			vertex_delete_buffer(_vertexBufferOld);
+			buffer_delete(_bufferOld);
+		}
 	};
 
 	static destroy = function () {
 		Class_destroy();
-		vertex_delete_buffer(VertexBuffer);
+		if (Batch != undefined)
+		{
+			Batch.destroy();
+			Batch = undefined;
+		}
+		__data = undefined;
+		ds_map_destroy(__instanceToIndex);
+		ds_map_destroy(__indexToInstance);
 		return undefined;
 	};
+
+	if (Model != undefined)
+	{
+		build_batch();
+	}
 }

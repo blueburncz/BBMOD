@@ -443,7 +443,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 
 			shader_reset();
 
-			_buffer[i] = buffer_create(_width * _height * 4, buffer_fast, 1);
+			_buffer[@ i] = buffer_create(_width * _height * 4, buffer_fast, 1);
 			buffer_get_surface(_buffer[i], _surface, 0);
 			// Offset to the second byte, just in case the format was ARGB for example.
 			buffer_seek(_buffer[i], buffer_seek_start, 1);

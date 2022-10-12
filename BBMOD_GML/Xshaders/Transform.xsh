@@ -11,15 +11,22 @@ vec3 DualQuaternionTransform(vec4 real, vec4 dual, vec3 v)
 #endif
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
+///
 /// @param vertex Variable to hold the transformed vertex.
 /// @param normal Variable to hold the transformed normal.
-void Transform(out vec4 vertex, out vec3 normal)
+/// @param tangent Variable to hold the transformed tangent.
+/// @param bitangent Variable to hold the transformed bitangent.
+void Transform(
+	inout vec4 vertex,
+	inout vec3 normal,
+	inout vec3 tangent,
+	inout vec3 bitangent)
 {
-	vertex = in_Position;
-#if defined(X_2D)
-	normal = vec3(0.0, 0.0, 1.0);
-#else
-	normal = in_Normal;
+#if defined(X_BATCHED)
+	vertex = gm_Matrices[MATRIX_WORLD] * vertex;
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 #endif
 
 #if defined(X_ANIMATED)
@@ -61,6 +68,8 @@ void Transform(out vec4 vertex, out vec3 normal)
 
 	vertex = vec4(DualQuaternionTransform(blendReal, blendDual, vertex.xyz), 1.0);
 	normal = QuaternionRotate(blendReal, normal);
+	tangent = QuaternionRotate(blendReal, tangent);
+	bitangent = QuaternionRotate(blendReal, bitangent);
 #endif
 
 #if defined(X_BATCHED)
@@ -70,5 +79,14 @@ void Transform(out vec4 vertex, out vec3 normal)
 
 	vertex = vec4(posScale.xyz + (QuaternionRotate(rot, vertex.xyz) * posScale.w), 1.0);
 	normal = QuaternionRotate(rot, normal);
+	tangent = QuaternionRotate(rot, tangent);
+	bitangent = QuaternionRotate(rot, bitangent);
+#endif
+
+#if !defined(X_BATCHED)
+	vertex = gm_Matrices[MATRIX_WORLD] * vertex;
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 #endif
 }

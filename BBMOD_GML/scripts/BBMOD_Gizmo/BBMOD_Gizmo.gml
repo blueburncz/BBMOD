@@ -83,15 +83,15 @@ function BBMOD_Gizmo(_size=10.0)
 			.freeze();
 		// TODO: Fix gizmo model
 		_modelMove.RootNode.Transform = new BBMOD_DualQuaternion();
-		_modelMove.Materials[0] = _material;
+		_modelMove.Materials[@ 0] = _material;
 
 		var _modelScale = new BBMOD_Model("Data/BBMOD/Models/GizmoScale.bbmod")
 			.freeze();
-		_modelScale.Materials[0] = _material;
+		_modelScale.Materials[@ 0] = _material;
 
 		var _modelRotate = new BBMOD_Model("Data/BBMOD/Models/GizmoRotate.bbmod")
 			.freeze();
-		_modelRotate.Materials[0] = _material;
+		_modelRotate.Materials[@ 0] = _material;
 
 		Models = [
 			_modelMove,

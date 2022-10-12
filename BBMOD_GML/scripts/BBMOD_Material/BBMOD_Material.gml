@@ -578,7 +578,7 @@ function BBMOD_Material(_shader=undefined)
 	static set_shader = function (_pass, _shader) {
 		gml_pragma("forceinline");
 		RenderPass |= (1 << _pass);
-		Shaders[_pass] = _shader;
+		Shaders[@ _pass] = _shader;
 		return self;
 	};
 
@@ -620,7 +620,7 @@ function BBMOD_Material(_shader=undefined)
 	static remove_shader = function (_pass) {
 		gml_pragma("forceinline");
 		RenderPass &= ~(1 << _pass);
-		Shaders[_pass] = undefined;
+		Shaders[@ _pass] = undefined;
 		return self;
 	};
 

@@ -12,6 +12,9 @@ quaternions etc.
 * [BBMOD_ERenderPass](./BBMOD_ERenderPass.html)
 
 ### Functions
+* [bbmod_array_clone](./bbmod_array_clone.html)
+* [bbmod_array_from_buffer](./bbmod_array_from_buffer.html)
+* [bbmod_array_to_buffer](./bbmod_array_to_buffer.html)
 * [bbmod_async_image_loaded_update](./bbmod_async_image_loaded_update.html)
 * [bbmod_async_save_load_update](./bbmod_async_save_load_update.html)
 * [bbmod_buffer_load_async](./bbmod_buffer_load_async.html)

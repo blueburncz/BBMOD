@@ -63,8 +63,8 @@ matShell = BBMOD_MATERIAL_DEFAULT_BATCHED.clone()
 	.set_normal_smoothness(BBMOD_VEC3_UP, 0.7);
 matShell.Culling = cull_noculling;
 
-batchShell = new BBMOD_DynamicBatch(modShell, 32);
-batchShell.freeze();
+batchShell = new BBMOD_DynamicBatch(modShell, 32).freeze();
+batchShell.Batch.Materials[0] = matShell;
 
 _objImporter.destroy();
 
@@ -88,11 +88,5 @@ if (os_browser == browser_not_a_browser)
 }
 
 // Any object/struct that has a render method can be added to the renderer:
-renderer.add(
-	{
-		render: method(self, function () {
-			matrix_set(matrix_world, matrix_build_identity());
-			batchShell.render_object(OShell, matShell);
-		})
-	})
+renderer.add(batchShell)
 	.add(global.terrain);

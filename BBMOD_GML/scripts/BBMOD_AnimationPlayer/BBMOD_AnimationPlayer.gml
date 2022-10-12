@@ -158,7 +158,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 			array_resize(_animStack, _model.NodeCount);
 		}
 
-		_animStack[0] = _model.RootNode;
+		_animStack[@ 0] = _model.RootNode;
 		var _stackNext = 1;
 
 		repeat (_model.NodeCount)
@@ -208,7 +208,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 				else
 				{
 					// Multiply node transform with parent's transform
-					bbmod_dual_quaternion_array_multiply(
+					__bbmod_dual_quaternion_array_multiply(
 						_frame, _nodeOffset, _nodeTransform, _parentIndex * 8,
 						_nodeTransform, _nodeOffset);
 				}
@@ -216,7 +216,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 			if (_node.IsBone)
 			{
-				bbmod_dual_quaternion_array_multiply(
+				__bbmod_dual_quaternion_array_multiply(
 					_offsetArray, _nodeOffset,
 					_nodeTransform, _nodeOffset,
 					_transformArray, _nodeOffset);
@@ -347,7 +347,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 					var _index = 0;
 					repeat (Model.BoneCount)
 					{
-						bbmod_dual_quaternion_array_multiply(
+						__bbmod_dual_quaternion_array_multiply(
 							_offsetArray, _index,
 							_frame, _index,
 							_transformArray, _index);

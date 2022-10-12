@@ -23,19 +23,19 @@ function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform=undefined)
 
 	repeat (_vertexCount / 3)
 	{
-		_vertex[0] = buffer_read(_buffer, buffer_f32);
-		_vertex[1] = buffer_read(_buffer, buffer_f32);
-		_vertex[2] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 0] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 1] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 2] = buffer_read(_buffer, buffer_f32);
 		buffer_seek(_buffer, buffer_seek_relative, _vertexStep);
 
-		_vertex[3] = buffer_read(_buffer, buffer_f32);
-		_vertex[4] = buffer_read(_buffer, buffer_f32);
-		_vertex[5] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 3] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 4] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 5] = buffer_read(_buffer, buffer_f32);
 		buffer_seek(_buffer, buffer_seek_relative, _vertexStep);
 
-		_vertex[6] = buffer_read(_buffer, buffer_f32);
-		_vertex[7] = buffer_read(_buffer, buffer_f32);
-		_vertex[8] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 6] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 7] = buffer_read(_buffer, buffer_f32);
+		_vertex[@ 8] = buffer_read(_buffer, buffer_f32);
 		buffer_seek(_buffer, buffer_seek_relative, _vertexStep);
 
 		if (_transform != undefined)

@@ -26,8 +26,8 @@ _sand.NormalSmoothness = sprite_get_texture(SprSand, 1);
 global.terrain = new BBMOD_Terrain(SprHeightmap);
 global.terrain.Scale = new BBMOD_Vec3(4.0, 4.0, 1.0);
 global.terrain.TextureRepeat = new BBMOD_Vec2(32.0);
-global.terrain.Layer[0] = _sand;
-global.terrain.Layer[1] = _dirt;
+global.terrain.Layer[@ 0] = _sand;
+global.terrain.Layer[@ 1] = _dirt;
 global.terrain.Splatmap = sprite_get_texture(SprSplatmap, 0);
 global.terrain.build_layer_index();
 

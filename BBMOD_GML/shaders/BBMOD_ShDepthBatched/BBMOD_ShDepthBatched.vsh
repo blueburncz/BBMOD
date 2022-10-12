@@ -54,12 +54,21 @@ vec3 QuaternionRotate(vec4 q, vec3 v)
 }
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
+///
 /// @param vertex Variable to hold the transformed vertex.
 /// @param normal Variable to hold the transformed normal.
-void Transform(out vec4 vertex, out vec3 normal)
+/// @param tangent Variable to hold the transformed tangent.
+/// @param bitangent Variable to hold the transformed bitangent.
+void Transform(
+	inout vec4 vertex,
+	inout vec3 normal,
+	inout vec3 tangent,
+	inout vec3 bitangent)
 {
-	vertex = in_Position;
-	normal = in_Normal;
+	vertex = gm_Matrices[MATRIX_WORLD] * vertex;
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 
 	int idx = int(in_Id) * 2;
 	vec4 posScale = bbmod_BatchData[idx];
@@ -67,6 +76,9 @@ void Transform(out vec4 vertex, out vec3 normal)
 
 	vertex = vec4(posScale.xyz + (QuaternionRotate(rot, vertex.xyz) * posScale.w), 1.0);
 	normal = QuaternionRotate(rot, normal);
+	tangent = QuaternionRotate(rot, tangent);
+	bitangent = QuaternionRotate(rot, bitangent);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,22 +87,20 @@ void Transform(out vec4 vertex, out vec3 normal)
 //
 void main()
 {
-	vec4 position;
-	vec3 normal;
-	Transform(position, normal);
+	vec4 position = in_Position;
+	vec3 normal = in_Normal;
+	vec3 tangent = in_TangentW.xyz;
+	vec3 bitangent = cross(normal, tangent) * in_TangentW.w;
 
-	vec4 positionWVP = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
-	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
+	Transform(position, normal, tangent, bitangent);
+
+	vec4 positionWVP = (gm_Matrices[MATRIX_PROJECTION] * gm_Matrices[MATRIX_VIEW]) * position;
+	v_vVertex = position.xyz;
 
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
-	vec3 tangent = in_TangentW.xyz;
-	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
-	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
-	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
-	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 	v_mTBN = mat3(tangent, bitangent, normal);
 
 }

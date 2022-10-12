@@ -28,3 +28,5 @@ if (onGround)
 	var _deltaTime = DELTA_TIME / _gameSpeed;
 	speedCurrent *= 1.0 - (0.05 * _deltaTime);
 }
+
+OMain.batchShell.update_instance(id);

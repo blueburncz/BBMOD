@@ -120,7 +120,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 
 		if (Model.VersionMinor >= 2)
 		{
-			VertexFormat = bbmod_vertex_format_load(_buffer, Model.VersionMinor);
+			VertexFormat = __bbmod_vertex_format_load(_buffer, Model.VersionMinor);
 			PrimitiveType = buffer_read(_buffer, buffer_u32);
 		}
 
@@ -161,7 +161,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 
 		if (_versionMinor >= 2)
 		{
-			bbmod_vertex_format_save(VertexFormat, _buffer, _versionMinor);
+			__bbmod_vertex_format_save(VertexFormat, _buffer, _versionMinor);
 			buffer_write(_buffer, buffer_u32, PrimitiveType);
 		}
 

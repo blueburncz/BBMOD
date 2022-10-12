@@ -11,9 +11,9 @@
 /// /// @desc Create event
 /// render = function () {
 ///     var _matrix = matrix_build_identity();
-///     _matrix[12] = x;
-///     _matrix[13] = y;
-///     _matrix[14] = z;
+///     _matrix[@ 12] = x;
+///     _matrix[@ 13] = y;
+///     _matrix[@ 14] = z;
 ///     matrix_set(matrix_world, _matrix);
 ///     model.render();
 ///     return self;

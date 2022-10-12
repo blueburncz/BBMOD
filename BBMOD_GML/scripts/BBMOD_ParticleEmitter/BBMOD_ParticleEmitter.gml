@@ -388,7 +388,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 			var i = 0;
 			repeat (_particleCount)
 			{
-				_particlesSorted[i] = i;
+				_particlesSorted[@ i] = i;
 				++i;
 			}
 

@@ -46,13 +46,22 @@ varying vec4 v_vPosition;
 //
 
 /// @desc Transforms vertex and normal by animation and/or batch data.
+///
 /// @param vertex Variable to hold the transformed vertex.
 /// @param normal Variable to hold the transformed normal.
-void Transform(out vec4 vertex, out vec3 normal)
+/// @param tangent Variable to hold the transformed tangent.
+/// @param bitangent Variable to hold the transformed bitangent.
+void Transform(
+	inout vec4 vertex,
+	inout vec3 normal,
+	inout vec3 tangent,
+	inout vec3 bitangent)
 {
-	vertex = in_Position;
-	normal = vec3(0.0, 0.0, 1.0);
 
+	vertex = gm_Matrices[MATRIX_WORLD] * vertex;
+	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
+	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 }
 
 #define X_GAMMA 2.2
@@ -81,23 +90,21 @@ float xLuminance(vec3 rgb)
 //
 void main()
 {
-	vec4 position;
-	vec3 normal;
-	Transform(position, normal);
+	vec4 position = in_Position;
+	vec3 normal = vec3(0.0, 0.0, 1.0);
+	vec3 tangent = vec3(1.0, 0.0, 0.0);
+	vec3 bitangent = vec3(0.0, 1.0, 0.0);
 
-	vec4 positionWVP = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
-	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
+	Transform(position, normal, tangent, bitangent);
+
+	vec4 positionWVP = (gm_Matrices[MATRIX_PROJECTION] * gm_Matrices[MATRIX_VIEW]) * position;
+	v_vVertex = position.xyz;
 
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;
 	v_vColor = in_Color;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
-	vec3 tangent = vec3(1.0, 0.0, 0.0);
-	vec3 bitangent = vec3(0.0, 1.0, 0.0);
-	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
-	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
-	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 	v_mTBN = mat3(tangent, bitangent, normal);
 
 }

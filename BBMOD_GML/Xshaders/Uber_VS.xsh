@@ -122,12 +122,21 @@ void main()
 	vec4 positionWVP = (P * (WV * position));
 	v_vVertex = (W * position).xyz;
 #else // X_PARTICLES
-	vec4 position;
-	vec3 normal;
-	Transform(position, normal);
+	vec4 position = in_Position;
+#if !defined(X_2D)
+	vec3 normal = in_Normal;
+	vec3 tangent = in_TangentW.xyz;
+	vec3 bitangent = cross(normal, tangent) * in_TangentW.w;
+#else
+	vec3 normal = vec3(0.0, 0.0, 1.0);
+	vec3 tangent = vec3(1.0, 0.0, 0.0);
+	vec3 bitangent = vec3(0.0, 1.0, 0.0);
+#endif
 
-	vec4 positionWVP = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * position;
-	v_vVertex = (gm_Matrices[MATRIX_WORLD] * position).xyz;
+	Transform(position, normal, tangent, bitangent);
+
+	vec4 positionWVP = (gm_Matrices[MATRIX_PROJECTION] * gm_Matrices[MATRIX_VIEW]) * position;
+	v_vVertex = position.xyz;
 #endif // !X_PARTICLES
 
 	gl_Position = positionWVP;
@@ -145,16 +154,6 @@ void main()
 	vec3 bitangent = QuaternionRotate(batchRot, vec3(0.0, 1.0, 0.0));
 	v_mTBN = mat3(W) * mat3(tangent, bitangent, normal);
 #else
-#if defined(X_2D)
-	vec3 tangent = vec3(1.0, 0.0, 0.0);
-	vec3 bitangent = vec3(0.0, 1.0, 0.0);
-#else
-	vec3 tangent = in_TangentW.xyz;
-	vec3 bitangent = cross(in_Normal, tangent) * in_TangentW.w;
-#endif
-	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
-	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
-	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 	v_mTBN = mat3(tangent, bitangent, normal);
 #endif
 

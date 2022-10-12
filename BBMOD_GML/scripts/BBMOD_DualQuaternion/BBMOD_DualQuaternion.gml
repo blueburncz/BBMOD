@@ -462,7 +462,7 @@ function BBMOD_DualQuaternion(
 	};
 }
 
-/// @func bbmod_dual_quaternion_array_multiply(_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
+/// @func __bbmod_dual_quaternion_array_multiply(_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
 ///
 /// @desc Multiplies two dual quaternions stored in arrays and writes the result
 /// into the destination array.
@@ -479,7 +479,7 @@ function BBMOD_DualQuaternion(
 /// variables before the multiplication.
 ///
 /// @private
-function bbmod_dual_quaternion_array_multiply(
+function __bbmod_dual_quaternion_array_multiply(
 	_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
 {
 	gml_pragma("forceinline");

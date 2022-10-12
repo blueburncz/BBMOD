@@ -123,7 +123,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		{
 			var _meshClone = Meshes[i].clone();
 			_meshClone.Model = _dest;
-			_dest.Meshes[i] = _meshClone;
+			_dest.Meshes[@ i] = _meshClone;
 		}
 
 		_dest.NodeCount = NodeCount;
@@ -230,7 +230,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		// Vertex format
 		if (VersionMinor < 2)
 		{
-			VertexFormat = bbmod_vertex_format_load(_buffer, VersionMinor);
+			VertexFormat = __bbmod_vertex_format_load(_buffer, VersionMinor);
 		}
 
 		// Meshes
@@ -317,7 +317,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		// Vertex format
 		if (VersionMinor < 2)
 		{
-			bbmod_vertex_format_save(VertexFormat, _buffer, VersionMinor);
+			__bbmod_vertex_format_save(VertexFormat, _buffer, VersionMinor);
 		}
 
 		// Meshes

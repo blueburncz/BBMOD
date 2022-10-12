@@ -9,13 +9,13 @@
 
 /// @var {Id.Sprite}
 /// @private
-global.__bbmodSSAONoise = bbmod_ssao_make_noise(BBMOD_SSAO_NOISE_TEXTURE_SIZE);
+global.__bbmodSSAONoise = __bbmod_ssao_make_noise(BBMOD_SSAO_NOISE_TEXTURE_SIZE);
 
 /// @var {Array<Real>}
 /// @private
-global.__bbmodSSAOKernel = bbmod_ssao_create_kernel(BBMOD_SSAO_KERNEL_SIZE);
+global.__bbmodSSAOKernel = __bbmod_ssao_create_kernel(BBMOD_SSAO_KERNEL_SIZE);
 
-/// @func bbmod_ssao_make_noise(_size)
+/// @func __bbmod_ssao_make_noise(_size)
 ///
 /// @desc Creates a sprite containing a random noise for the SSAO.
 ///
@@ -24,7 +24,7 @@ global.__bbmodSSAOKernel = bbmod_ssao_create_kernel(BBMOD_SSAO_KERNEL_SIZE);
 /// @return {Id.Sprite} The created noise sprite.
 ///
 /// @private
-function bbmod_ssao_make_noise(_size)
+function __bbmod_ssao_make_noise(_size)
 {
 	var _seed = random_get_seed();
 	randomize();
@@ -53,7 +53,7 @@ function bbmod_ssao_make_noise(_size)
 	return _sprite;
 }
 
-/// @func bbmod_ssao_create_kernel(_size)
+/// @func __bbmod_ssao_create_kernel(_size)
 ///
 /// @desc Generates a kernel of random vectors to be used for the SSAO.
 ///
@@ -63,7 +63,7 @@ function bbmod_ssao_make_noise(_size)
 /// `[v1X, v1Y, v1Z, v2X, v2Y, v2Z, ..., vnX, vnY, vnZ]`.
 ///
 /// @private
-function bbmod_ssao_create_kernel(_size)
+function __bbmod_ssao_create_kernel(_size)
 {
 	var _seed = random_get_seed();
 	randomize();
