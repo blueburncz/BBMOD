@@ -225,6 +225,7 @@
     {"id":{"name":"BBMOD_LightmapShader","path":"scripts/BBMOD_LightmapShader/BBMOD_LightmapShader.yy",},"order":4,},
     {"id":{"name":"SndFootstep3","path":"sounds/SndFootstep3/SndFootstep3.yy",},"order":3,},
     {"id":{"name":"__bbmod_particles","path":"scripts/__bbmod_particles/__bbmod_particles.yy",},"order":2,},
+    {"id":{"name":"BBMOD_BaseCamera","path":"scripts/BBMOD_BaseCamera/BBMOD_BaseCamera.yy",},"order":2,},
     {"id":{"name":"BBMOD_MixQuaternionFromHealthModule","path":"scripts/BBMOD_MixQuaternionFromHealthModule/BBMOD_MixQuaternionFromHealthModule.yy",},"order":5,},
     {"id":{"name":"BBMOD_ShParticleLit","path":"shaders/BBMOD_ShParticleLit/BBMOD_ShParticleLit.yy",},"order":8,},
     {"id":{"name":"BBMOD_PlaneCollider","path":"scripts/BBMOD_PlaneCollider/BBMOD_PlaneCollider.yy",},"order":3,},
@@ -424,6 +425,6 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"BBMOD","CopyToMask":0,"filePath":"datafiles/Data/BBMOD",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.9.0.49",
+    "IDEVersion": "2022.9.1.51",
   },
 }
