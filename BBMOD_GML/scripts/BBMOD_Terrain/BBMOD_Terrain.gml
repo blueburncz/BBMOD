@@ -33,8 +33,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 
 	/// @var {Id.DsGrid}
 	/// @private
-	SplatmapGrid = ds_grid_create(1, 1);
-	ds_grid_clear(SplatmapGrid, 0);
+	__splatmapGrid = ds_grid_create(1, 1);
+	ds_grid_clear(__splatmapGrid, 0);
 
 	/// @var {Struct.BBMOD_Vec2} Controls material texture repeat over the
 	/// terrain mesh.
@@ -51,39 +51,39 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @var {Struct.BBMOD_Vec3} The scale of the terrain.
 	Scale = new BBMOD_Vec3(1.0, 1.0, 1.0);
 
-	/// @var {Id.DsGrid} Height of individual vertices (on the z axis).
+	/// @var {Id.DsGrid} __height of individual vertices (on the z axis).
 	/// @private
-	Height = ds_grid_create(1, 1);
+	__height = ds_grid_create(1, 1);
 
 	/// @var {Id.DsGrid} Normal vector's X component of vertices.
 	/// @private
-	NormalX = ds_grid_create(1, 1);
-	ds_grid_clear(NormalX, 0);
+	__normalX = ds_grid_create(1, 1);
+	ds_grid_clear(__normalX, 0);
 
 	/// @var {Id.DsGrid} Normal vector's Y component of vertices.
 	/// @private
-	NormalY = ds_grid_create(1, 1);
-	ds_grid_clear(NormalY, 0);
+	__normalY = ds_grid_create(1, 1);
+	ds_grid_clear(__normalY, 0);
 
 	/// @var {Id.DsGrid} Normal vector's Z component of vertices.
 	/// @private
-	NormalZ = ds_grid_create(1, 1);
-	ds_grid_clear(NormalZ, 1);
+	__normalZ = ds_grid_create(1, 1);
+	ds_grid_clear(__normalZ, 1);
 
 	/// @var {Id.DsGrid} Smooth normal vector's X component of vertices.
 	/// @private
-	NormalSmoothX = ds_grid_create(1, 1);
-	ds_grid_clear(NormalSmoothX, 0);
+	__normalSmoothX = ds_grid_create(1, 1);
+	ds_grid_clear(__normalSmoothX, 0);
 
 	/// @var {Id.DsGrid} Smooth normal vector's Y component of vertices.
 	/// @private
-	NormalSmoothY = ds_grid_create(1, 1);
-	ds_grid_clear(NormalSmoothY, 0);
+	__normalSmoothY = ds_grid_create(1, 1);
+	ds_grid_clear(__normalSmoothY, 0);
 
 	/// @var {Id.DsGrid} Smooth normal vector's Z component of vertices.
 	/// @private
-	NormalSmoothZ = ds_grid_create(1, 1);
-	ds_grid_clear(NormalSmoothZ, 1);
+	__normalSmoothZ = ds_grid_create(1, 1);
+	ds_grid_clear(__normalSmoothZ, 1);
 
 	/// @var {Struct.BBMOD_VertexFormat} The vertex format used by the terrain
 	/// mesh.
@@ -140,26 +140,26 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		Size.X = _spriteWidth;
 		Size.Y = _spriteHeight;
 
-		ds_grid_resize(Height, _spriteWidth, _spriteHeight);
-		ds_grid_clear(Height, 0);
+		ds_grid_resize(__height, _spriteWidth, _spriteHeight);
+		ds_grid_clear(__height, 0);
 
-		ds_grid_resize(NormalX, _spriteWidth, _spriteHeight);
-		ds_grid_clear(NormalX, 0);
+		ds_grid_resize(__normalX, _spriteWidth, _spriteHeight);
+		ds_grid_clear(__normalX, 0);
 
-		ds_grid_resize(NormalY, _spriteWidth, _spriteHeight);
-		ds_grid_clear(NormalY, 0);
+		ds_grid_resize(__normalY, _spriteWidth, _spriteHeight);
+		ds_grid_clear(__normalY, 0);
 
-		ds_grid_resize(NormalZ, _spriteWidth, _spriteHeight);
-		ds_grid_clear(NormalZ, 1);
+		ds_grid_resize(__normalZ, _spriteWidth, _spriteHeight);
+		ds_grid_clear(__normalZ, 1);
 
-		ds_grid_resize(NormalSmoothX, _spriteWidth, _spriteHeight);
-		ds_grid_clear(NormalSmoothX, 0);
+		ds_grid_resize(__normalSmoothX, _spriteWidth, _spriteHeight);
+		ds_grid_clear(__normalSmoothX, 0);
 
-		ds_grid_resize(NormalSmoothY, _spriteWidth, _spriteHeight);
-		ds_grid_clear(NormalSmoothY, 0);
+		ds_grid_resize(__normalSmoothY, _spriteWidth, _spriteHeight);
+		ds_grid_clear(__normalSmoothY, 0);
 
-		ds_grid_resize(NormalSmoothZ, _spriteWidth, _spriteHeight);
-		ds_grid_clear(NormalSmoothZ, 1);
+		ds_grid_resize(__normalSmoothZ, _spriteWidth, _spriteHeight);
+		ds_grid_clear(__normalSmoothZ, 1);
 
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
@@ -183,7 +183,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			var _i = 0;
 			repeat (_spriteWidth)
 			{
-				Height[# _i++, _j] = buffer_read(_buffer, buffer_u8);
+				__height[# _i++, _j] = buffer_read(_buffer, buffer_u8);
 				buffer_seek(_buffer, buffer_seek_relative, 3);
 			}
 			++_j;
@@ -200,19 +200,19 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static smooth_height = function () {
-		var _width = ds_grid_width(Height);
-		var _height = ds_grid_height(Height);
+		var _width = ds_grid_width(__height);
+		var _height = ds_grid_height(__height);
 		var _heightSmooth = ds_grid_create(_width, _height);
 
 		for (var x1 = 0; x1 < _width; ++x1)
 		{
 			for (var y1 = 0; y1 < _height; ++y1)
 			{
-				_heightSmooth[# x1, y1] = ds_grid_get_mean(Height, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
+				_heightSmooth[# x1, y1] = ds_grid_get_mean(__height, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
 			}
 		}
 
-		ds_grid_copy(Height, _heightSmooth);
+		ds_grid_copy(__height, _heightSmooth);
 		ds_grid_destroy(_heightSmooth);
 
 		return self;
@@ -227,12 +227,12 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @return {Real} The terrain's height at given index.
 	///
-	/// @see BBMOD_Terrain.Height
+	/// @see BBMOD_Terrain.__height
 	static get_height_index = function (_i, _j) {
 		gml_pragma("forceinline");
-		return Height[#
-			clamp(_i, 0, ds_grid_width(Height) - 1),
-			clamp(_j, 0, ds_grid_height(Height) - 1)
+		return __height[#
+			clamp(_i, 0, ds_grid_width(__height) - 1),
+			clamp(_j, 0, ds_grid_height(__height) - 1)
 		];
 	};
 
@@ -254,14 +254,14 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		{
 			return undefined;
 		}
-		var _imax = ds_grid_width(Height) - 1;
-		var _jmax = ds_grid_height(Height) - 1;
+		var _imax = ds_grid_width(__height) - 1;
+		var _jmax = ds_grid_height(__height) - 1;
 		var _i1 = floor(_xScaled);
 		var _j1 = floor(_yScaled);
-		var _h1 = Height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
-		var _h2 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
-		var _h3 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
-		var _h4 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		var _h1 = __height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
+		var _h2 = __height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
+		var _h3 = __height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		var _h4 = __height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
 		var _offsetX = frac(_xScaled);
 		var _offsetY = frac(_yScaled);
 		// TODO: Optimize retrieving terrain height
@@ -290,14 +290,14 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		{
 			return undefined;
 		}
-		var _imax = ds_grid_width(Height) - 1;
-		var _jmax = ds_grid_height(Height) - 1;
+		var _imax = ds_grid_width(__height) - 1;
+		var _jmax = ds_grid_height(__height) - 1;
 		var _i1 = floor(_xScaled);
 		var _j1 = floor(_yScaled);
-		var _h1 = Height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
-		var _h2 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
-		var _h3 = Height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
-		var _h4 = Height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		var _h1 = __height[# clamp(_i1, 0, _imax), clamp(_j1, 0, _jmax)];
+		var _h2 = __height[# clamp(_i1 + 1, 0, _imax), clamp(_j1, 0, _jmax)];
+		var _h3 = __height[# clamp(_i1 + 1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
+		var _h4 = __height[# clamp(_i1, 0, _imax), clamp(_j1 + 1, 0, _jmax)];
 		// TODO: Optimize retrieving terrain normal
 		if (frac(_xScaled) <= frac(_yScaled))
 		{
@@ -333,9 +333,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		{
 			return undefined;
 		}
-		var _i = floor((_xScaled / Size.X) * ds_grid_width(SplatmapGrid));
-		var _j = floor((_yScaled / Size.Y) * ds_grid_height(SplatmapGrid));
-		var _rgba = SplatmapGrid[# _i, _j];
+		var _i = floor((_xScaled / Size.X) * ds_grid_width(__splatmapGrid));
+		var _j = floor((_yScaled / Size.Y) * ds_grid_height(__splatmapGrid));
+		var _rgba = __splatmapGrid[# _i, _j];
 		// TODO: Could be a loop
 		if (Layer[4] != undefined && (((_rgba & $FF) >> 0) / 255.0) >= _threshold)
 		{
@@ -363,10 +363,10 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static build_normals = function () {
 		var _i = 0;
-		repeat (ds_grid_width(Height))
+		repeat (ds_grid_width(__height))
 		{
 			var _j = 0;
-			repeat (ds_grid_height(Height))
+			repeat (ds_grid_height(__height))
 			{
 				var _nx = get_height_index(_i - 1, _j) - get_height_index(_i + 1, _j);
 				var _ny = get_height_index(_i, _j - 1) - get_height_index(_i, _j + 1);
@@ -375,9 +375,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 				_nx /= _r;
 				_ny /= _r;
 				_nz /= _r;
-				NormalX[# _i, _j] = _nx;
-				NormalY[# _i, _j] = _ny;
-				NormalZ[# _i, _j] = _nz;
+				__normalX[# _i, _j] = _nx;
+				__normalY[# _i, _j] = _ny;
+				__normalZ[# _i, _j] = _nz;
 				++_j;
 			}
 			++_i;
@@ -393,22 +393,22 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @note {@link BBMOD_Terrain.build_normals} should be called first!
 	static build_smooth_normals = function () {
-		var _width = ds_grid_width(Height);
-		var _height = ds_grid_height(Height);
+		var _width = ds_grid_width(__height);
+		var _height = ds_grid_height(__height);
 		for (var x1 = 0; x1 < _width; ++x1)
 		{
 			for (var y1 = 0; y1 < _height; ++y1)
 			{
-				var _nx = ds_grid_get_mean(NormalX, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
-				var _ny = ds_grid_get_mean(NormalY, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
-				var _nz = ds_grid_get_mean(NormalZ, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
+				var _nx = ds_grid_get_mean(__normalX, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
+				var _ny = ds_grid_get_mean(__normalY, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
+				var _nz = ds_grid_get_mean(__normalZ, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
 				var _r = sqrt((_nx * _nx) + (_ny * _ny) + (_nz * _nz));
 				_nx /= _r;
 				_ny /= _r;
 				_nz /= _r;
-				NormalSmoothX[# x1, y1] = _nx;
-				NormalSmoothY[# x1, y1] = _ny;
-				NormalSmoothZ[# x1, y1] = _nz;
+				__normalSmoothX[# x1, y1] = _nx;
+				__normalSmoothY[# x1, y1] = _ny;
+				__normalSmoothZ[# x1, y1] = _nz;
 			}
 		}
 		return self;
@@ -452,8 +452,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		gpu_pop_state();
 		surface_free(_surface);
 
-		ds_grid_resize(SplatmapGrid, _width, _height);
-		ds_grid_clear(SplatmapGrid, 0);
+		ds_grid_resize(__splatmapGrid, _width, _height);
+		ds_grid_clear(__splatmapGrid, 0);
 
 		var _j = 0;
 		repeat (_height)
@@ -461,7 +461,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			var _i = 0;
 			repeat (_width)
 			{
-				SplatmapGrid[# _i, _j] = (0
+				__splatmapGrid[# _i, _j] = (0
 					| (buffer_read(_buffer[0], buffer_u8) << 24)
 					| (buffer_read(_buffer[1], buffer_u8) << 16)
 					| (buffer_read(_buffer[2], buffer_u8) << 8)
@@ -493,7 +493,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		{
 			vertex_delete_buffer(VertexBuffer);
 		}
-		var _height = Height;
+		var _height = __height;
 		var _rows = ds_grid_width(_height);
 		var _cols = ds_grid_height(_height);
 		var _vbuffer = vertex_create_buffer();
@@ -527,21 +527,21 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 				var _u4 = _i / _rows;
 				var _v4 = (_j + 1) / _cols;
 
-				var _n1X = NormalSmoothX[# _i, _j];
-				var _n1Y = NormalSmoothY[# _i, _j];
-				var _n1Z = NormalSmoothZ[# _i, _j];
+				var _n1X = __normalSmoothX[# _i, _j];
+				var _n1Y = __normalSmoothY[# _i, _j];
+				var _n1Z = __normalSmoothZ[# _i, _j];
 
-				var _n2X = NormalSmoothX[# _i + 1, _j];
-				var _n2Y = NormalSmoothY[# _i + 1, _j];
-				var _n2Z = NormalSmoothZ[# _i + 1, _j];
+				var _n2X = __normalSmoothX[# _i + 1, _j];
+				var _n2Y = __normalSmoothY[# _i + 1, _j];
+				var _n2Z = __normalSmoothZ[# _i + 1, _j];
 
-				var _n3X = NormalSmoothX[# _i + 1, _j + 1];
-				var _n3Y = NormalSmoothY[# _i + 1, _j + 1];
-				var _n3Z = NormalSmoothZ[# _i + 1, _j + 1];
+				var _n3X = __normalSmoothX[# _i + 1, _j + 1];
+				var _n3Y = __normalSmoothY[# _i + 1, _j + 1];
+				var _n3Z = __normalSmoothZ[# _i + 1, _j + 1];
 
-				var _n4X = NormalSmoothX[# _i, _j + 1];
-				var _n4Y = NormalSmoothY[# _i, _j + 1];
-				var _n4Z = NormalSmoothZ[# _i, _j + 1];
+				var _n4X = __normalSmoothX[# _i, _j + 1];
+				var _n4Y = __normalSmoothY[# _i, _j + 1];
+				var _n4Z = __normalSmoothZ[# _i, _j + 1];
 
 				//var _t1X = - _n1X * _n1Y;
 				//var _t1Y = _n1X * _n1X - (-_n1Z) * _n1Z;
@@ -746,14 +746,14 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 
 	static destroy = function () {
 		Class_destroy();
-		ds_grid_destroy(SplatmapGrid);
-		ds_grid_destroy(Height);
-		ds_grid_destroy(NormalX);
-		ds_grid_destroy(NormalY);
-		ds_grid_destroy(NormalZ);
-		ds_grid_destroy(NormalSmoothX);
-		ds_grid_destroy(NormalSmoothY);
-		ds_grid_destroy(NormalSmoothZ);
+		ds_grid_destroy(__splatmapGrid);
+		ds_grid_destroy(__height);
+		ds_grid_destroy(__normalX);
+		ds_grid_destroy(__normalY);
+		ds_grid_destroy(__normalZ);
+		ds_grid_destroy(__normalSmoothX);
+		ds_grid_destroy(__normalSmoothY);
+		ds_grid_destroy(__normalSmoothZ);
 		if (VertexBuffer != undefined)
 		{
 			vertex_delete_buffer(VertexBuffer);

@@ -106,16 +106,16 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Struct.BBMOD_Vec2} Screen-space coordinates to lock the mouse
 	/// cursor at or `undefined`.
 	/// @private
-	MouseLockAt = undefined;
+	__mouseLockAt = undefined;
 
 	/// @var {Struct.BBMOD_Vec3} World-space offset from the mouse to the gizmo
 	/// or `undefined`.
 	/// @private
-	MouseOffset = undefined;
+	__mouseOffset = undefined;
 
 	/// @var {Constant.Cursor} The cursor used before editing started.
 	/// @private
-	CursorBackup = undefined;
+	__cursorBackup = undefined;
 
 	/// @var {Real} Determines the space in which are the selected instances
 	/// transformed. Use values from {@link BBMOD_EEditSpace}.
@@ -160,7 +160,7 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Struct.BBMOD_Vec3} The gizmo's position in world-space before
 	/// editing started or `undefined`.
 	/// @private
-	PositionBackup = undefined;
+	__positionBackup = undefined;
 
 	/// @var {Struct.BBMOD_Vec3} The gizmo's rotation in euler angles.
 	Rotation = new BBMOD_Vec3();
@@ -172,16 +172,16 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Id.DsList<Struct>} A list of additional data required for editing
 	/// instances, e.g. their original offset from the gizmo, rotation and scale.
 	/// @private
-	InstanceData = ds_list_create();
+	__instanceData = ds_list_create();
 
 	/// @var {Struct.BBMOD_Vec3} The current scaling factor of selected instances.
 	/// @private
-	ScaleBy = new BBMOD_Vec3(0.0);
+	__scaleBy = new BBMOD_Vec3(0.0);
 
 	/// @var {Struct.BBMOD_Vec3} The current euler angles we are rotating selected
 	/// instances by.
 	/// @private
-	RotateBy = new BBMOD_Vec3(0.0);
+	__rotateBy = new BBMOD_Vec3(0.0);
 
 	/// @var {Function} A function that the gizmo uses to check whether an instance
 	/// exists. Must take the instance as the first argument and return a bool.
@@ -456,7 +456,7 @@ function BBMOD_Gizmo(_size=10.0)
 		if (!is_selected(_instance))
 		{
 			ds_list_add(Selected, _instance);
-			ds_list_add(InstanceData, {
+			ds_list_add(__instanceData, {
 				Offset: new BBMOD_Vec3(),
 				Rotation: new BBMOD_Vec3(),
 				Scale: new BBMOD_Vec3(),
@@ -490,7 +490,7 @@ function BBMOD_Gizmo(_size=10.0)
 		if (_index != -1)
 		{
 			ds_list_delete(Selected, _index);
-			ds_list_delete(InstanceData, _index);
+			ds_list_delete(__instanceData, _index);
 		}
 		return self;
 	};
@@ -523,7 +523,7 @@ function BBMOD_Gizmo(_size=10.0)
 	static clear_selection = function () {
 		gml_pragma("forceinline");
 		ds_list_clear(Selected);
-		ds_list_clear(InstanceData);
+		ds_list_clear(__instanceData);
 		return self;
 	};
 
@@ -562,7 +562,7 @@ function BBMOD_Gizmo(_size=10.0)
 			if (!InstanceExists(_instance))
 			{
 				ds_list_delete(Selected, i);
-				ds_list_delete(InstanceData, i);
+				ds_list_delete(__instanceData, i);
 				--_size;
 				continue;
 			}
@@ -652,7 +652,7 @@ function BBMOD_Gizmo(_size=10.0)
 				if (!InstanceExists(_instance))
 				{
 					ds_list_delete(Selected, i);
-					ds_list_delete(InstanceData, i);
+					ds_list_delete(__instanceData, i);
 					--_size;
 					continue;
 				}
@@ -688,7 +688,7 @@ function BBMOD_Gizmo(_size=10.0)
 			for (var i = _size - 1; i >= 0; --i)
 			{
 				var _instance = Selected[| i];
-				var _data = InstanceData[| i];
+				var _data = __instanceData[| i];
 				_data.Offset = get_instance_position_vec3(_instance).Sub(Position);
 				_data.Rotation = get_instance_rotation_vec3(_instance);
 				_data.Scale = get_instance_scale_vec3(_instance);
@@ -696,16 +696,16 @@ function BBMOD_Gizmo(_size=10.0)
 
 			// Clear properties used when editing
 			IsEditing = false;
-			MouseOffset = undefined;
-			MouseLockAt = undefined;
-			PositionBackup = undefined;
-			if (CursorBackup != undefined)
+			__mouseOffset = undefined;
+			__mouseLockAt = undefined;
+			__positionBackup = undefined;
+			if (__cursorBackup != undefined)
 			{
-				window_set_cursor(CursorBackup);
-				CursorBackup = undefined;
+				window_set_cursor(__cursorBackup);
+				__cursorBackup = undefined;
 			}
-			ScaleBy = new BBMOD_Vec3(0.0);
-			RotateBy = new BBMOD_Vec3(0.0);
+			__scaleBy = new BBMOD_Vec3(0.0);
+			__rotateBy = new BBMOD_Vec3(0.0);
 
 			return self;
 		}
@@ -717,10 +717,10 @@ function BBMOD_Gizmo(_size=10.0)
 		var _mouseX = window_mouse_get_x();
 		var _mouseY = window_mouse_get_y();
 
-		if (!MouseLockAt)
+		if (!__mouseLockAt)
 		{
-			MouseLockAt = new BBMOD_Vec2(_mouseX, _mouseY);
-			CursorBackup = window_get_cursor();
+			__mouseLockAt = new BBMOD_Vec2(_mouseX, _mouseY);
+			__cursorBackup = window_get_cursor();
 		}
 
 		var _quaternion = new BBMOD_Quaternion()
@@ -734,9 +734,9 @@ function BBMOD_Gizmo(_size=10.0)
 		switch (EditType)
 		{
 		case BBMOD_EEditType.Position:
-			if (!PositionBackup)
+			if (!__positionBackup)
 			{
-				PositionBackup = Position.Clone();
+				__positionBackup = Position.Clone();
 			}
 
 			var _planeNormal = ((EditAxis == BBMOD_EEditAxis.Z) ? _forward
@@ -746,15 +746,15 @@ function BBMOD_Gizmo(_size=10.0)
 				global.__bbmodCameraCurrent.Position,
 				global.__bbmodCameraCurrent.screen_point_to_vec3(
 					new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
-				PositionBackup,
+				__positionBackup,
 				_planeNormal);
 
-			if (!MouseOffset)
+			if (!__mouseOffset)
 			{
-				MouseOffset = Position.Sub(_mouseWorld);
+				__mouseOffset = Position.Sub(_mouseWorld);
 			}
 
-			var _diff = _mouseWorld.Add(MouseOffset).Sub(Position);
+			var _diff = _mouseWorld.Add(__mouseOffset).Sub(Position);
 
 			if (EditAxis & BBMOD_EEditAxis.X)
 			{
@@ -783,34 +783,34 @@ function BBMOD_Gizmo(_size=10.0)
 				Position,
 				_planeNormal);
 
-			if (!MouseOffset)
+			if (!__mouseOffset)
 			{
-				MouseOffset = _mouseWorld;
+				__mouseOffset = _mouseWorld;
 			}
 
 			var _mul = (keyboard_check(KeyEditFaster) ? 2.0
 				: (keyboard_check(KeyEditSlower) ? 0.1
 				: 1.0));
-			var _v1 = MouseOffset.Sub(Position);
+			var _v1 = __mouseOffset.Sub(Position);
 			var _v2 = _mouseWorld.Sub(Position);
 			var _angle = darctan2(_v2.Cross(_v1).Dot(_planeNormal), _v1.Dot(_v2)) * _mul;
 
 			switch (EditAxis)
 			{
 			case BBMOD_EEditAxis.X:
-				RotateBy.X += _angle;
+				__rotateBy.X += _angle;
 				break;
 
 			case BBMOD_EEditAxis.Y:
-				RotateBy.Y += _angle;
+				__rotateBy.Y += _angle;
 				break;
 
 			case BBMOD_EEditAxis.Z:
-				RotateBy.Z += _angle;
+				__rotateBy.Z += _angle;
 				break;
 			}
 
-			window_mouse_set(MouseLockAt.X, MouseLockAt.Y);
+			window_mouse_set(__mouseLockAt.X, __mouseLockAt.Y);
 			window_set_cursor(cr_none);
 			break;
 
@@ -823,45 +823,45 @@ function BBMOD_Gizmo(_size=10.0)
 				Position,
 				_planeNormal);
 
-			if (!MouseOffset)
+			if (!__mouseOffset)
 			{
-				MouseOffset = _mouseWorld;
+				__mouseOffset = _mouseWorld;
 			}
 
 			var _mul = (keyboard_check(KeyEditFaster) ? 5.0
 				: (keyboard_check(KeyEditSlower) ? 0.1
 				: 1.0));
 
-			var _diff = _mouseWorld.Sub(MouseOffset).Scale(_mul);
+			var _diff = _mouseWorld.Sub(__mouseOffset).Scale(_mul);
 
 			if (EditAxis == BBMOD_EEditAxis.All)
 			{
 				var _diffX = _diff.Mul(_forward.Abs()).Dot(_forward);
 				var _diffY = _diff.Mul(_right.Abs()).Dot(_right);
 				var _scaleBy = (abs(_diffX) > abs(_diffY)) ? _diffX : _diffY;
-				ScaleBy.X += _scaleBy;
-				ScaleBy.Y += _scaleBy;
-				ScaleBy.Z += _scaleBy;
+				__scaleBy.X += _scaleBy;
+				__scaleBy.Y += _scaleBy;
+				__scaleBy.Z += _scaleBy;
 			}
 			else
 			{
 				if (EditAxis & BBMOD_EEditAxis.X)
 				{
-					ScaleBy.X += _diff.Mul(_forward.Abs()).Dot(_forward);
+					__scaleBy.X += _diff.Mul(_forward.Abs()).Dot(_forward);
 				}
 
 				if (EditAxis & BBMOD_EEditAxis.Y)
 				{
-					ScaleBy.Y += _diff.Mul(_right.Abs()).Dot(_right);
+					__scaleBy.Y += _diff.Mul(_right.Abs()).Dot(_right);
 				}
 
 				if (EditAxis & BBMOD_EEditAxis.Z)
 				{
-					ScaleBy.Z += _diff.Mul(_up.Abs()).Dot(_up);
+					__scaleBy.Z += _diff.Mul(_up.Abs()).Dot(_up);
 				}
 			}
 
-			window_mouse_set(MouseLockAt.X, MouseLockAt.Y);
+			window_mouse_set(__mouseLockAt.X, __mouseLockAt.Y);
 			window_set_cursor(cr_none);
 			break;
 		}
@@ -891,12 +891,12 @@ function BBMOD_Gizmo(_size=10.0)
 			if (!InstanceExists(_instance))
 			{
 				ds_list_delete(Selected, i);
-				ds_list_delete(InstanceData, i);
+				ds_list_delete(__instanceData, i);
 				--_size;
 				continue;
 			}
 
-			var _data = InstanceData[| i];
+			var _data = __instanceData[| i];
 			var _positionOffset = _data.Offset;
 			var _rotationStored = _data.Rotation;
 			var _scaleStored = _data.Scale;
@@ -912,9 +912,9 @@ function BBMOD_Gizmo(_size=10.0)
 
 			// Apply rotation
 			// TODO: Add configurable angle increments
-			var _rotateByX = RotateBy.X; //floor(RotateBy.X / 45.0) * 45.0;
-			var _rotateByY = RotateBy.Y; //floor(RotateBy.Y / 45.0) * 45.0;
-			var _rotateByZ = RotateBy.Z; //floor(RotateBy.Z / 45.0) * 45.0;
+			var _rotateByX = __rotateBy.X; //floor(__rotateBy.X / 45.0) * 45.0;
+			var _rotateByY = __rotateBy.Y; //floor(__rotateBy.Y / 45.0) * 45.0;
+			var _rotateByZ = __rotateBy.Z; //floor(__rotateBy.Z / 45.0) * 45.0;
 
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
 			if (_rotateByX != 0.0)
@@ -948,19 +948,19 @@ function BBMOD_Gizmo(_size=10.0)
 			var _scaleOld = _scaleNew.Clone();
 
 			// Scale on X
-			_scaleNew.X += ScaleBy.X * abs(_forward.Dot(_forwardLocal));
-			_scaleNew.Y += ScaleBy.X * abs(_forward.Dot(_rightLocal));
-			_scaleNew.Z += ScaleBy.X * abs(_forward.Dot(_upLocal));
+			_scaleNew.X += __scaleBy.X * abs(_forward.Dot(_forwardLocal));
+			_scaleNew.Y += __scaleBy.X * abs(_forward.Dot(_rightLocal));
+			_scaleNew.Z += __scaleBy.X * abs(_forward.Dot(_upLocal));
 
 			// Scale on Y
-			_scaleNew.X += ScaleBy.Y * abs(_right.Dot(_forwardLocal));
-			_scaleNew.Y += ScaleBy.Y * abs(_right.Dot(_rightLocal));
-			_scaleNew.Z += ScaleBy.Y * abs(_right.Dot(_upLocal));
+			_scaleNew.X += __scaleBy.Y * abs(_right.Dot(_forwardLocal));
+			_scaleNew.Y += __scaleBy.Y * abs(_right.Dot(_rightLocal));
+			_scaleNew.Z += __scaleBy.Y * abs(_right.Dot(_upLocal));
 
 			// Scale on Z
-			_scaleNew.X += ScaleBy.Z * abs(_up.Dot(_forwardLocal));
-			_scaleNew.Y += ScaleBy.Z * abs(_up.Dot(_rightLocal));
-			_scaleNew.Z += ScaleBy.Z * abs(_up.Dot(_upLocal));
+			_scaleNew.X += __scaleBy.Z * abs(_up.Dot(_forwardLocal));
+			_scaleNew.Y += __scaleBy.Z * abs(_up.Dot(_rightLocal));
+			_scaleNew.Z += __scaleBy.Z * abs(_up.Dot(_upLocal));
 
 			// Scale offset
 			var _vI = matrix_transform_vertex(_matRotInverse,
@@ -968,9 +968,9 @@ function BBMOD_Gizmo(_size=10.0)
 			var _vIRot = matrix_transform_vertex(
 				matrix_build(
 					0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-					(1.0 / max(_scaleOld.X, 0.0001)) * (_scaleOld.X + ScaleBy.X),
-					(1.0 / max(_scaleOld.Y, 0.0001)) * (_scaleOld.Y + ScaleBy.Y),
-					(1.0 / max(_scaleOld.Z, 0.0001)) * (_scaleOld.Z + ScaleBy.Z)),
+					(1.0 / max(_scaleOld.X, 0.0001)) * (_scaleOld.X + __scaleBy.X),
+					(1.0 / max(_scaleOld.Y, 0.0001)) * (_scaleOld.Y + __scaleBy.Y),
+					(1.0 / max(_scaleOld.Z, 0.0001)) * (_scaleOld.Z + __scaleBy.Z)),
 				_vI[0], _vI[1], _vI[2]);
 			var _v = matrix_transform_vertex(_matRot, _vIRot[0], _vIRot[1], _vIRot[2]);
 
@@ -1029,7 +1029,7 @@ function BBMOD_Gizmo(_size=10.0)
 	static destroy = function () {
 		Class_destroy();
 		ds_list_destroy(Selected);
-		ds_list_destroy(InstanceData);
+		ds_list_destroy(__instanceData);
 		return undefined;
 	};
 }

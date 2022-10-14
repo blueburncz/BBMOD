@@ -1,26 +1,26 @@
 /// @macro {Real} A code returned from the DLL on fail, when none of
 /// `BBMOD_DLL_ERR_` is applicable.
 /// @private
-#macro BBMOD_DLL_FAILURE -1
+#macro __BBMOD_DLL_FAILURE -1
 
 /// @macro {Real} A code returned from the DLL when a model is successfully
 /// converted.
 /// @private
-#macro BBMOD_DLL_SUCCESS 0
+#macro __BBMOD_DLL_SUCCESS 0
 
 /// @macro {Real} An error code returned from the DLL when model loading fails.
 /// @private
-#macro BBMOD_DLL_ERR_LOAD_FAILED 1
+#macro __BBMOD_DLL_ERR_LOAD_FAILED 1
 
 /// @macro {Real} An error code returned from the DLL when model conversion
 /// fails.
 /// @private
-#macro BBMOD_DLL_ERR_CONVERSION_FAILED 2
+#macro __BBMOD_DLL_ERR_CONVERSION_FAILED 2
 
 /// @macro {Real} An error code returned from the DLL when converted model
 /// is not saved.
 /// @private
-#macro BBMOD_DLL_ERR_SAVE_FAILED 3
+#macro __BBMOD_DLL_ERR_SAVE_FAILED 3
 
 /// @func BBMOD_DLL([_path])
 ///
@@ -74,7 +74,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_convert", dll_cdecl, ty_real, 2, ty_string, ty_string);
 		var _retval = external_call(_fn, _fin, _fout);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -112,7 +112,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_disable_bone", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _disable);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -151,7 +151,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_disable_color", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _disable);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -190,7 +190,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_disable_normal", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _disable);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -228,7 +228,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_flip_normal", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _flip);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -273,7 +273,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_gen_normal", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _normals);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -312,7 +312,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_disable_tangent", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _disable);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -351,7 +351,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_disable_uv", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _disable);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -390,7 +390,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_disable_uv2", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _disable);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -429,7 +429,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_flip_uv_horizontally", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _flip);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -467,7 +467,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_flip_uv_vertically", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _flip);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -505,7 +505,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_invert_winding", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _invert);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -546,7 +546,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_left_handed", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _leftHanded);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -585,7 +585,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_optimize_nodes", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _optimize);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -624,7 +624,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_optimize_meshes", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _optimize);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -663,7 +663,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_optimize_materials", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _optimize);
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -705,7 +705,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_optimize_animations", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, clamp(_level, 0, 2));
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}
@@ -743,7 +743,7 @@ function BBMOD_DLL(
 		static _fn = external_define(
 			Path, "bbmod_dll_set_sampling_rate", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, max(floor(_fps), 1));
-		if (_retval != BBMOD_DLL_SUCCESS)
+		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
 		}

@@ -94,7 +94,7 @@ function BBMOD_VertexFormat(
 	/// @var {Ds.Map} A map of existing raw vertex formats (`Real`s to
 	/// `Id.VertexFormat`s).
 	/// @private
-	static Formats = ds_map_create();
+	static __formats = ds_map_create();
 
 	/// @func get_hash()
 	///
@@ -137,9 +137,9 @@ function BBMOD_VertexFormat(
 
 	var _hash = get_hash();
 
-	if (ds_map_exists(Formats, _hash))
+	if (ds_map_exists(__formats, _hash))
 	{
-		Raw = Formats[? _hash];
+		Raw = __formats[? _hash];
 	}
 	else
 	{
@@ -187,7 +187,7 @@ function BBMOD_VertexFormat(
 		}
 
 		Raw = vertex_format_end();
-		Formats[? _hash] = Raw;
+		__formats[? _hash] = Raw;
 	}
 }
 
