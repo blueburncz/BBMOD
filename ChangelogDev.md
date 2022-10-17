@@ -3,6 +3,9 @@
 > created.
 
 ## GML API:
+### Core module:
+* `BBMOD_RenderQueue.set_sampler` now also accepts a specific index instead of just a uniform name. This is useful for HLSL11.
+
 ### Camera module:
 * Added `Up`.
 * Changed `AspectRatio` default value to window width / window height.
