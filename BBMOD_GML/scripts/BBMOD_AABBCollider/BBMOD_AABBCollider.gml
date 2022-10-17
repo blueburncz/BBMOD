@@ -10,6 +10,7 @@
 /// axis in both directions (e.g. `new BBMOD_Vec3(2)` would make a 4x4x4 box).
 /// Defaults to `(0.5, 0.5, 0.5)`.
 ///
+/// @see BBMOD_FrustumCollider
 /// @see BBMOD_PlaneCollider
 /// @see BBMOD_SphereCollider
 function BBMOD_AABBCollider(

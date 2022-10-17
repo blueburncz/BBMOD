@@ -9,6 +9,7 @@
 /// @param {Real} [_distance] The plane's distance from the world origin.
 ///
 /// @see BBMOD_AABBCollider
+/// @see BBMOD_FrustumCollider
 /// @see BBMOD_SphereCollider
 function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
 	: BBMOD_Collider() constructor

@@ -255,6 +255,7 @@
     {"id":{"name":"Fnt16","path":"fonts/Fnt16/Fnt16.yy",},"order":0,},
     {"id":{"name":"BBMOD_RaycastResult","path":"scripts/BBMOD_RaycastResult/BBMOD_RaycastResult.yy",},"order":5,},
     {"id":{"name":"__bbmod_default_material","path":"scripts/__bbmod_default_material/__bbmod_default_material.yy",},"order":2,},
+    {"id":{"name":"BBMOD_FrustumCollider","path":"scripts/BBMOD_FrustumCollider/BBMOD_FrustumCollider.yy",},"order":7,},
     {"id":{"name":"BBMOD_RandomRotationModule","path":"scripts/BBMOD_RandomRotationModule/BBMOD_RandomRotationModule.yy",},"order":0,},
     {"id":{"name":"__bbmod_pbr","path":"scripts/__bbmod_pbr/__bbmod_pbr.yy",},"order":3,},
   ],

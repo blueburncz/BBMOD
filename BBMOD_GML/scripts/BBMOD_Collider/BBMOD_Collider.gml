@@ -3,6 +3,7 @@
 /// @desc Base struct for colliders.
 ///
 /// @see BBMOD_AABBCollider
+/// @see BBMOD_FrustumCollider
 /// @see BBMOD_PlaneCollider
 /// @see BBMOD_SphereCollider
 function BBMOD_Collider() constructor
@@ -33,6 +34,20 @@ function BBMOD_Collider() constructor
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
 	static TestAABB = function (_aabb) {
+		throw new BBMOD_NotImplementedException();
+	};
+
+	/// @func TestFrustum(_frustum)
+	///
+	/// @desc Tests whether the collider intersects with a frustum.
+	///
+	/// @param {Struct.BBMOD_FrustumCollider} _frustum The frustum to check intersection
+	/// with.
+	///
+	/// @return {Bool} Returns `true` if the colliders intersect.
+	///
+	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
+	static TestFrustum = function (_frustum) {
 		throw new BBMOD_NotImplementedException();
 	};
 

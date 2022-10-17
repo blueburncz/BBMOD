@@ -10,6 +10,7 @@
 /// @param {Real} [_radius] The radius of the sphere. Defaults to 1.
 ///
 /// @see BBMOD_AABBCollider
+/// @see BBMOD_FrustumCollider
 /// @see BBMOD_PlaneCollider
 function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 	: BBMOD_Collider() constructor
@@ -36,6 +37,11 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L319
 	static TestAABB = _TestImpl;
+
+	static TestFrustum = function (_frustum) {
+		gml_pragma("forceinline");
+		return _frustum.TestSphere(self);
+	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L333
 	static TestPlane = _TestImpl;
