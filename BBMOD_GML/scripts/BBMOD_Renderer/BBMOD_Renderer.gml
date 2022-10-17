@@ -205,44 +205,23 @@ function BBMOD_Renderer()
 
 	/// @var {Bool} Enables post-processing effects. Defaults to `false`. Enabling
 	/// this requires the [Post-processing submodule](./PostProcessingSubmodule.html)!
+	///
 	/// @note {@link BBMOD_Renderer.UseAppSurface} must be enabled for this to
 	/// have any effect!
+	///
+	/// @obsolete Post-processing is now handled through
+	/// {@link BBMOD_Renderer.PostProcessor}!
 	EnablePostProcessing = false;
+
+	/// @var {Struct.BBMOD_PostProcessor} Handles post-processing effects if
+	/// isn't `undefined` and {@link BBMOD_Renderer.UseAppSurface} is enabled.
+	/// Default value is `undefined`.
+	/// @see BBMOD_PostProcessor
+	PostProcessor = undefined;
 
 	/// @var {Id.Surface}
 	/// @private
-	SurPostProcess = noone;
-
-	/// @var {Pointer.Texture} The lookup table texture used for color grading.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
-	ColorGradingLUT = sprite_get_texture(BBMOD_SprColorGradingLUT, 0);
-
-	/// @var {Real} The strength of the chromatic aberration effect. Use 0 to
-	/// disable the effect. Defaults to 0.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
-	ChromaticAberration = 0.0;
-
-	/// @var {Real} The strength of the grayscale effect. Use values in range 0..1,
-	/// where 0 means the original color and 1 means grayscale. Defaults to 0.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
-	Grayscale = 0.0;
-
-	/// @var {Real} The strength of the vignette effect. Defaults to 0.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
-	Vignette = 0.0;
-
-	/// @var {Real} The color of the vignette effect. Defaults to `c_black`.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
-	VignetteColor = c_black;
-
-	/// @var {Real} Antialiasing technique to use. Use values from
-	/// {@link BBMOD_EAntialiasing}. Defaults to {@link BBMOD_EAntialiasing.None}.
-	Antialiasing = BBMOD_EAntialiasing.None;
+	__surFinal = noone;
 
 	/// @func get_width()
 	///
@@ -827,121 +806,46 @@ function BBMOD_Renderer()
 
 	/// @func present()
 	///
-	/// @desc Presents the rendered graphics on the screen.
+	/// @desc Presents the rendered graphics on the screen, with post-processing
+	/// applied (if {@link BBMOD_Renderer.PostProcessor} is defined).
 	///
 	/// @return {Struct.BBMOD_Renderer} Returns `self`.
 	///
 	/// @note If {@link BBMOD_Renderer.UseAppSurface} is `false`, then this only
-	/// draws {@link BBMOD_Renderer.Gizmo} (if defined).
+	/// draws the gizmo and selected instances.
 	static present = function () {
 		global.__bbmodRendererCurrent = self;
 
-		var _world = matrix_get(matrix_world);
+		static _gpuState = undefined;
+		if (_gpuState == undefined)
+		{
+			gpu_push_state();
+			gpu_set_state(bbmod_gpu_get_default_state());
+			gpu_set_tex_filter(true);
+			gpu_set_tex_repeat(false);
+			gpu_set_blendenable(false);
+			_gpuState = gpu_get_state();
+			gpu_pop_state();
+		}
+
 		var _width = get_width();
 		var _height = get_height();
-		var _renderWidth = get_render_width();
-		var _renderHeight = get_render_height();
 		var _texelWidth = 1.0 / _width;
 		var _texelHeight = 1.0 / _height;
-		gpu_push_state();
-		gpu_set_tex_filter(true);
-		gpu_set_tex_repeat(false);
 
-		if (UseAppSurface)
+		if ((PostProcessor == undefined || !PostProcessor.Enabled)
+			|| !UseAppSurface)
 		{
-			var _surFinal = application_surface;
-			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))
-			{
-				surface_set_target(_surFinal);
-				matrix_set(matrix_world, matrix_build_identity());
+			gpu_push_state();
+			gpu_set_state(_gpuState);
 
-				////////////////////////////////////////////////////////////////
-				// Highlighted instances
-				if (surface_exists(SurInstanceHighlight))
-				{
-					var _shader = BBMOD_ShInstanceHighlight;
-					shader_set(_shader);
-					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
-						_texelWidth, _texelHeight);
-					shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
-						InstanceHighlightColor.Red / 255.0,
-						InstanceHighlightColor.Green / 255.0,
-						InstanceHighlightColor.Blue / 255.0,
-						InstanceHighlightColor.Alpha);
-					draw_surface_stretched(
-						SurInstanceHighlight, 0, 0, _renderWidth, _renderHeight);
-					shader_reset();
-				}
-
-				////////////////////////////////////////////////////////////////
-				// Gizmo
-				if (surface_exists(SurGizmo))
-				{
-					draw_surface_stretched(SurGizmo, 0, 0, _renderWidth, _renderHeight);
-				}
-
-				surface_reset_target();
-				matrix_set(matrix_world, _world);
-			}
 			////////////////////////////////////////////////////////////////////
-			// Post-processing
-			if (EnablePostProcessing)
-			{
-				if (Antialiasing != BBMOD_EAntialiasing.None)
-				{
-					SurPostProcess = bbmod_surface_check(SurPostProcess, _width, _height);
-					surface_set_target(SurPostProcess);
-					matrix_set(matrix_world, matrix_build_identity());
-				}
-				var _shader = BBMOD_ShPostProcess;
-				shader_set(_shader);
-				var _uLut = shader_get_sampler_index(_shader, "u_texLut");
-				texture_set_stage(_uLut, ColorGradingLUT);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
-					_texelWidth, _texelHeight);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_fDistortion"),
-					ChromaticAberration);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_fGrayscale"),
-					Grayscale);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_fVignette"),
-					Vignette);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_vVignetteColor"),
-					color_get_red(VignetteColor) / 255,
-					color_get_green(VignetteColor) / 255,
-					color_get_blue(VignetteColor) / 255);
-				draw_surface_stretched(
-					application_surface,
-					(Antialiasing == BBMOD_EAntialiasing.None) ? X : 0,
-					(Antialiasing == BBMOD_EAntialiasing.None) ? Y : 0,
-					_width, _height);
-				shader_reset();
-				if (Antialiasing != BBMOD_EAntialiasing.None)
-				{
-					surface_reset_target();
-					matrix_set(matrix_world, _world);
-					_surFinal = SurPostProcess;
-				}
-			}
-			////////////////////////////////////////////////////////////////////
-			// Anti-aliasing
-			if (Antialiasing == BBMOD_EAntialiasing.FXAA)
-			{
-				var _shader = BBMOD_ShFXAA;
-				shader_set(_shader);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexelVS"),
-					_texelWidth, _texelHeight);
-				shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexelPS"),
-					_texelWidth, _texelHeight);
-				draw_surface_stretched(_surFinal, X, Y, _width, _height);
-				shader_reset();
-			}
-			else if (!EnablePostProcessing)
+			// Post-processing disabled
+			if (UseAppSurface)
 			{
 				draw_surface_stretched(application_surface, X, Y, _width, _height);
 			}
-		}
-		else
-		{
+
 			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))
 			{
 				////////////////////////////////////////////////////////////////
@@ -958,7 +862,7 @@ function BBMOD_Renderer()
 						InstanceHighlightColor.Green / 255.0,
 						InstanceHighlightColor.Blue / 255.0,
 						InstanceHighlightColor.Alpha);
-					draw_surface_stretched(SurInstanceHighlight, X, Y, _width, _height)
+					draw_surface_stretched(SurInstanceHighlight, X, Y, _width, _height);
 					shader_reset();
 				}
 			
@@ -969,56 +873,117 @@ function BBMOD_Renderer()
 					draw_surface_stretched(SurGizmo, X, Y, _width, _height);
 				}
 			}
-		}
 
-		gpu_pop_state();
+			gpu_pop_state();
+		}
+		else
+		{
+			var _world = matrix_get(matrix_world);
+
+			__surFinal = bbmod_surface_check(__surFinal, _width, _height);
+
+			gpu_push_state();
+			gpu_set_state(_gpuState);
+
+			surface_set_target(__surFinal);
+			matrix_set(matrix_world, matrix_build_identity());
+
+			////////////////////////////////////////////////////////////////////
+			// App. surface
+			draw_surface_stretched(application_surface, 0, 0, _width, _height);
+
+			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))
+			{
+				////////////////////////////////////////////////////////////////
+				// Highlighted instances
+				if (!ds_list_empty(Gizmo.Selected)
+					&& surface_exists(SurInstanceHighlight))
+				{
+					var _shader = BBMOD_ShInstanceHighlight;
+					shader_set(_shader);
+					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
+						_texelWidth, _texelHeight);
+					shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
+						InstanceHighlightColor.Red / 255.0,
+						InstanceHighlightColor.Green / 255.0,
+						InstanceHighlightColor.Blue / 255.0,
+						InstanceHighlightColor.Alpha);
+					draw_surface_stretched(SurInstanceHighlight, 0, 0, _width, _height);
+					shader_reset();
+				}
+			
+				////////////////////////////////////////////////////////////////
+				// Gizmo
+				if (surface_exists(SurGizmo))
+				{
+					draw_surface_stretched(SurGizmo, 0, 0, _width, _height);
+				}
+			}
+
+			surface_reset_target();
+			matrix_set(matrix_world, _world);
+			gpu_pop_state();
+
+			PostProcessor.draw(__surFinal, X, Y);
+		}
 
 		return self;
 	};
 
 	static destroy = function () {
 		Class_destroy();
+
 		if (global.__bbmodRendererCurrent == self)
 		{
 			global.__bbmodRendererCurrent = undefined;
 		}
+
 		if (surface_exists(SurGBuffer))
 		{
 			surface_free(SurGBuffer);
 		}
+
 		if (surface_exists(SurSSAO))
 		{
 			surface_free(SurSSAO);
 		}
+
 		if (surface_exists(SurWork))
 		{
 			surface_free(SurWork);
 		}
+
 		if (surface_exists(SurSelect))
 		{
 			surface_free(SurSelect);
 		}
+
 		if (surface_exists(SurInstanceHighlight))
 		{
 			surface_free(SurInstanceHighlight);
 		}
+
 		if (surface_exists(SurGizmo))
 		{
 			surface_free(SurGizmo);
 		}
+
 		if (surface_exists(SurShadowmap))
 		{
 			surface_free(SurShadowmap);
 		}
-		if (surface_exists(SurPostProcess))
+
+		if (surface_exists(__surFinal))
 		{
-			surface_free(SurPostProcess);
+			surface_free(__surFinal);
 		}
+
 		if (UseAppSurface)
 		{
 			application_surface_enable(false);
 			application_surface_draw_enable(true);
 		}
+
 		return undefined;
 	};
 }

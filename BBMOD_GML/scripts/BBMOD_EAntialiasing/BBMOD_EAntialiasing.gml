@@ -4,6 +4,6 @@ enum BBMOD_EAntialiasing
 	/// @member Anti-aliasing is turned off.
 	None,
 	/// @member Use fast approximate anti-aliasing.
-	/// Requires [FXAA submodule](./FXAASubmodule.html).
+	/// Requires the [FXAA submodule](./FXAASubmodule.html)!
 	FXAA,
 };

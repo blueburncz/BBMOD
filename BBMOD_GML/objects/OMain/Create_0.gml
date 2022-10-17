@@ -74,9 +74,12 @@ renderer = new BBMOD_Renderer();
 renderer.UseAppSurface = true;
 renderer.RenderScale = (os_browser == browser_not_a_browser) ? 1.0 : 0.8;
 renderer.EnableShadows = true;
-renderer.EnablePostProcessing = true;
-renderer.ChromaticAberration = 3.0;
-renderer.ColorGradingLUT = sprite_get_texture(SprColorGrading, 0);
+
+postProcessor = new BBMOD_PostProcessor();
+postProcessor.ChromaticAberration = 3.0;
+postProcessor.ColorGradingLUT = sprite_get_texture(SprColorGrading, 0);
+renderer.PostProcessor = postProcessor;
+
 if (os_browser == browser_not_a_browser)
 {
 	renderer.EnableGBuffer = true;
@@ -84,7 +87,8 @@ if (os_browser == browser_not_a_browser)
 	renderer.SSAORadius = 32.0;
 	renderer.SSAODepthRange = 5.0;
 	renderer.SSAOPower = 2.0;
-	renderer.Antialiasing = BBMOD_EAntialiasing.FXAA;
+
+	postProcessor.Antialiasing = BBMOD_EAntialiasing.FXAA;
 }
 
 // Any object/struct that has a render method can be added to the renderer:

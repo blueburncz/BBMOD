@@ -4,6 +4,7 @@
   "name": "BBMOD",
   "resources": [
     {"id":{"name":"BBMOD_Cubemap","path":"scripts/BBMOD_Cubemap/BBMOD_Cubemap.yy",},"order":0,},
+    {"id":{"name":"BBMOD_PostProcessor","path":"scripts/BBMOD_PostProcessor/BBMOD_PostProcessor.yy",},"order":2,},
     {"id":{"name":"SndZombie0","path":"sounds/SndZombie0/SndZombie0.yy",},"order":1,},
     {"id":{"name":"BBMOD_MixVec3FromSpeedModule","path":"scripts/BBMOD_MixVec3FromSpeedModule/BBMOD_MixVec3FromSpeedModule.yy",},"order":4,},
     {"id":{"name":"SndZombie1","path":"sounds/SndZombie1/SndZombie1.yy",},"order":1,},
