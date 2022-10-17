@@ -866,22 +866,22 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
-	/// @func set_sampler(_name _texture)
+	/// @func set_sampler(_nameOrIndex, _texture)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetSampler} command into the
 	/// queue.
 	///
-	/// @param {String} _name The name of the sampler.
+	/// @param {String, Real} _nameOrIndex The name or index of the sampler.
 	/// @param {Pointer.Texture} _texture The new texture.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_sampler = function (_name, _texture) {
+	static set_sampler = function (_nameOrIndex, _texture) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			RenderCommands,
 			BBMOD_ERenderCommand.SetSampler,
 			2,
-			_name,
+			_nameOrIndex,
 			_texture);
 		return self;
 	};
@@ -1539,7 +1539,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetSampler:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+				var _nameOrIndex = _renderCommands[| i++];
+				var _index = is_string(_nameOrIndex)
+					? shader_get_sampler_index(shader_current(), _nameOrIndex)
+					: _nameOrIndex;
 				texture_set_stage(_index, _renderCommands[| i++]);
 				break;
 
