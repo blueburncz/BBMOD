@@ -12,8 +12,5 @@ In combination with [render queues](./BBMOD_RenderQueue.html), this module
 provides a much more sophisticated way to create such rendering pipelines.
 
 ## Scripting API
-### Enums
-* [BBMOD_EAntialiasing](./BBMOD_EAntialiasing.html)
-
 ### Structs
 * [BBMOD_Renderer](./BBMOD_Renderer.html)
