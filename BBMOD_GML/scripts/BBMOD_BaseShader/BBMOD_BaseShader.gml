@@ -14,7 +14,12 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 {
 	/// @var {Real} Maximum number of point lights in the shader. This must
 	/// match with value defined in the raw GameMaker shader!
+	/// @obsolete This was replaced with {@link BBMOD_BaseShader.MaxPunctualLights}!
 	MaxPointLights = 8;
+
+	/// @var {Real} Maximum number of punctual lights in the shader. This must
+	/// match with value defined in the raw GameMaker shader!
+	MaxPunctualLights = 8;
 
 	UBaseOpacityMultiplier = get_uniform("bbmod_BaseOpacityMultiplier");
 
@@ -48,7 +53,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	ULightDirectionalColor = get_uniform("bbmod_LightDirectionalColor");
 
-	ULightPointData = get_uniform("bbmod_LightPointData");
+	ULightPunctualData = get_uniform("bbmod_LightPunctualData");
 
 	UFogColor = get_uniform("bbmod_FogColor");
 
@@ -286,17 +291,34 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_point_lights([_lights])
 	///
-	/// @desc Sets uniform `bbmod_LightPointData`.
+	/// @desc Sets uniform `bbmod_LightPunctualData`.
 	///
 	/// @param {Array<Struct.BBMOD_PointLight>} [_lights] An array of point
 	/// lights. If `undefined`, then the lights defined using
 	/// {@link bbmod_light_point_add} are passed. Only enabled lights will be used!
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
+	///
+	/// @deprecated Please use {@link set_punctual_lights} instead.
 	static set_point_lights = function (_lights=undefined) {
 		gml_pragma("forceinline");
-		_lights ??= global.__bbmodPointLights;
-		var _maxLights = MaxPointLights;
+		set_punctual_lights(_lights);
+		return self;
+	};
+
+	/// @func set_punctual_lights([_lights])
+	///
+	/// @desc Sets uniform `bbmod_LightPunctualData`.
+	///
+	/// @param {Array<Struct.BBMOD_PunctualLight>} [_lights] An array of punctual
+	/// lights. If `undefined`, then the lights defined using
+	/// {@link bbmod_light_punctual_add} are passed. Only enabled lights will be used!
+	///
+	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
+	static set_punctual_lights = function (_lights=undefined) {
+		gml_pragma("forceinline");
+		_lights ??= global.__bbmodPunctualLights;
+		var _maxLights = MaxPunctualLights;
 		var _index = 0;
 		var _indexMax = _maxLights * 8;
 		var _data = array_create(_indexMax, 0.0);
@@ -320,7 +342,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 				}
 			}
 		}
-		shader_set_uniform_f_array(ULightPointData, _data);
+		shader_set_uniform_f_array(ULightPunctualData, _data);
 		return self;
 	};
 
@@ -364,7 +386,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_ibl();
 		set_ambient_light();
 		set_directional_light();
-		set_point_lights();
+		set_punctual_lights();
 		set_fog();
 		texture_set_stage(USSAO, sprite_get_texture(BBMOD_SprWhite, 0));
 	};

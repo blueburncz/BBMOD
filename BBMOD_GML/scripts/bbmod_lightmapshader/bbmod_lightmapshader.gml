@@ -86,10 +86,10 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 		return self;
 	};
 
-	static set_point_lights = function (_lights=undefined) {
+	static set_punctual_lights = function (_lights=undefined) {
 		gml_pragma("forceinline");
 		_lights ??= global.__bbmodPointLights;
-		var _maxLights = MaxPointLights;
+		var _maxLights = MaxPunctualLights;
 		var _index = 0;
 		var _indexMax = _maxLights * 8;
 		var _data = array_create(_indexMax, 0.0);
@@ -114,7 +114,7 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 				}
 			}
 		}
-		shader_set_uniform_f_array(ULightPointData, _data);
+		shader_set_uniform_f_array(ULightPunctualData, _data);
 		return self;
 	};
 

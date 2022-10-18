@@ -56,11 +56,11 @@ void PBRShader(Material material, float depth)
 	lightSpecular *= ssao;
 #endif
 
-	// Point lights
-	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	// Punctual lights
+	for (int i = 0; i < MAX_PUNCTUAL_LIGHTS; ++i)
 	{
-		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec4 colorAlpha = bbmod_LightPointData[(i * 2) + 1];
+		vec4 positionRange = bbmod_LightPunctualData[i * 2];
+		vec4 colorAlpha = bbmod_LightPunctualData[(i * 2) + 1];
 		vec3 color = xGammaToLinear(colorAlpha.rgb) * colorAlpha.a;
 		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
 			material, lightDiffuse, lightSpecular, lightSubsurface);

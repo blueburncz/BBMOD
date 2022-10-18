@@ -129,6 +129,7 @@
     {"id":{"name":"BBMOD_LightmapMaterial","path":"scripts/BBMOD_LightmapMaterial/BBMOD_LightmapMaterial.yy",},"order":3,},
     {"id":{"name":"BBMOD_MixColorOverTimeModule","path":"scripts/BBMOD_MixColorOverTimeModule/BBMOD_MixColorOverTimeModule.yy",},"order":0,},
     {"id":{"name":"bbmod_lerp_delta_time","path":"scripts/bbmod_lerp_delta_time/bbmod_lerp_delta_time.yy",},"order":5,},
+    {"id":{"name":"BBMOD_PunctualLight","path":"scripts/BBMOD_PunctualLight/BBMOD_PunctualLight.yy",},"order":6,},
     {"id":{"name":"BBMOD_SprWhite","path":"sprites/BBMOD_SprWhite/BBMOD_SprWhite.yy",},"order":15,},
     {"id":{"name":"BBMOD_OBJImporter","path":"scripts/BBMOD_OBJImporter/BBMOD_OBJImporter.yy",},"order":2,},
     {"id":{"name":"RmInit","path":"rooms/RmInit/RmInit.yy",},"order":2,},

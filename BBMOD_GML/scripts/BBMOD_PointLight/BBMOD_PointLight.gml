@@ -1,10 +1,6 @@
-/// @var {Array<Struct.BBMOD_PointLight>}
-/// @private
-global.__bbmodPointLights = [];
-
 /// @func BBMOD_PointLight([_color[, _position[, _range]]])
 ///
-/// @extends BBMOD_Light
+/// @extends BBMOD_PunctualLight
 ///
 /// @desc A point light.
 ///
@@ -14,21 +10,9 @@ global.__bbmodPointLights = [];
 /// Defaults to `(0, 0, 0)`.
 /// @param {Real} [_range] The light's range. Defaults to 1.
 function BBMOD_PointLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1.0)
-	: BBMOD_Light() constructor
+	: BBMOD_PunctualLight(_color, _position, _range) constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
-
-	/// @var {Struct.BBMOD_Color} The color of the light. Default value is
-	/// {@link BBMOD_C_WHITE}.
-	Color = _color;
-
-	if (_position != undefined)
-	{
-		Position = _position;
-	}
-
-	/// @var {Real} The range of the light.
-	Range = _range;
 }
 
 /// @func bbmod_light_point_add(_light)
@@ -37,17 +21,11 @@ function BBMOD_PointLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1.0)
 ///
 /// @param {Struct.BBMOD_PointLight} _light The point light.
 ///
-/// @see bbmod_light_point_add
-/// @see bbmod_light_point_count
-/// @see bbmod_light_point_get
-/// @see bbmod_light_point_remove
-/// @see bbmod_light_point_remove_index
-/// @see bbmod_light_point_clear
-/// @see BBMOD_PointLight
+/// @deprecated Please use {@link bbmod_light_punctual_add} instead.
 function bbmod_light_point_add(_light)
 {
 	gml_pragma("forceinline");
-	array_push(global.__bbmodPointLights, _light);
+	bbmod_light_punctual_add(_light);
 }
 
 /// @func bbmod_light_point_count()
@@ -56,16 +34,11 @@ function bbmod_light_point_add(_light)
 ///
 /// @return {Real} The number of point lights added to be sent to shaders.
 ///
-/// @see bbmod_light_point_add
-/// @see bbmod_light_point_get
-/// @see bbmod_light_point_remove
-/// @see bbmod_light_point_remove_index
-/// @see bbmod_light_point_clear
-/// @see BBMOD_PointLight
+/// @deprecated Please use {@link bbmod_light_punctual_count} instead.
 function bbmod_light_point_count()
 {
 	gml_pragma("forceinline");
-	return array_length(global.__bbmodPointLights);
+	return bbmod_light_punctual_count();
 }
 
 /// @func bbmod_light_point_get(_index)
@@ -76,16 +49,11 @@ function bbmod_light_point_count()
 ///
 /// @return {Struct.BBMOD_PointLight} The point light.
 ///
-/// @see bbmod_light_point_add
-/// @see bbmod_light_point_count
-/// @see bbmod_light_point_remove
-/// @see bbmod_light_point_remove_index
-/// @see bbmod_light_point_clear
-/// @see BBMOD_PointLight
+/// @deprecated Please use {@link bbmod_light_punctual_get} instead.
 function bbmod_light_point_get(_index)
 {
 	gml_pragma("forceinline");
-	return global.__bbmodPointLights[_index];
+	return bbmod_light_punctual_get(_index);
 }
 
 /// @func bbmod_light_point_remove(_light)
@@ -97,27 +65,11 @@ function bbmod_light_point_get(_index)
 /// @return {Bool} Returns `true` if the point light was removed or `false` if
 /// the light was not found.
 ///
-/// @see bbmod_light_point_add
-/// @see bbmod_light_point_count
-/// @see bbmod_light_point_get
-/// @see bbmod_light_point_remove_index
-/// @see bbmod_light_point_clear
-/// @see BBMOD_PointLight
+/// @deprecated Please use {@link bbmod_light_punctual_remove} instead.
 function bbmod_light_point_remove(_light)
 {
 	gml_pragma("forceinline");
-	var _pointLights = global.__bbmodPointLights;
-	var i = 0;
-	repeat (array_length(_pointLights))
-	{
-		if (_pointLights[i] == _light)
-		{
-			array_delete(_pointLights, i, 1);
-			return true;
-		}
-		++i;
-	}
-	return false;
+	return bbmod_light_punctual_remove(_light);
 }
 
 /// @func bbmod_light_point_remove_index(_index)
@@ -128,31 +80,20 @@ function bbmod_light_point_remove(_light)
 ///
 /// @return {Bool} Always returns `true`.
 ///
-/// @see bbmod_light_point_add
-/// @see bbmod_light_point_count
-/// @see bbmod_light_point_get
-/// @see bbmod_light_point_remove
-/// @see bbmod_light_point_clear
-/// @see BBMOD_PointLight
+/// @deprecated Please use {@link bbmod_light_punctual_remove_index} instead.
 function bbmod_light_point_remove_index(_index)
 {
 	gml_pragma("forceinline");
-	array_delete(global.__bbmodPointLights, _index, 1);
-	return true;
+	return bbmod_light_punctual_remove_index(_index);
 }
 
 /// @func bbmod_light_point_clear()
 ///
 /// @desc Removes all point lights sent to shaders.
 ///
-/// @see bbmod_light_point_add
-/// @see bbmod_light_point_count
-/// @see bbmod_light_point_get
-/// @see bbmod_light_point_remove
-/// @see bbmod_light_point_remove_index
-/// @see BBMOD_PointLight
-function bbmod_light_point_clear(_index)
+/// @deprecated Please use {@link bbmod_light_punctual_clear} instead.
+function bbmod_light_point_clear()
 {
 	gml_pragma("forceinline");
-	global.__bbmodPointLights = [];
+	bbmod_light_punctual_clear();
 }

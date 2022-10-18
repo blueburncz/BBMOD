@@ -7,7 +7,7 @@ precision highp float;
 //
 
 // Maximum number of point lights
-#define MAX_POINT_LIGHTS 8
+#define MAX_PUNCTUAL_LIGHTS 8
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 
@@ -108,10 +108,10 @@ uniform sampler2D bbmod_IBL;
 uniform vec2 bbmod_IBLTexel;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Point lights
+// Punctual lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPointData[2 * MAX_POINT_LIGHTS];
+uniform vec4 bbmod_LightPunctualData[2 * MAX_PUNCTUAL_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -658,11 +658,11 @@ void PBRShader(Material material, float depth)
 	lightDiffuse *= ssao;
 	lightSpecular *= ssao;
 
-	// Point lights
-	for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+	// Punctual lights
+	for (int i = 0; i < MAX_PUNCTUAL_LIGHTS; ++i)
 	{
-		vec4 positionRange = bbmod_LightPointData[i * 2];
-		vec4 colorAlpha = bbmod_LightPointData[(i * 2) + 1];
+		vec4 positionRange = bbmod_LightPunctualData[i * 2];
+		vec4 colorAlpha = bbmod_LightPunctualData[(i * 2) + 1];
 		vec3 color = xGammaToLinear(colorAlpha.rgb) * colorAlpha.a;
 		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
 			material, lightDiffuse, lightSpecular, lightSubsurface);

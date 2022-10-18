@@ -5,7 +5,20 @@
 ## GML API:
 ### Core module:
 * Method `BBMOD_RenderQueue.set_sampler` now also accepts a specific index instead of just a uniform name. This is useful for HLSL11, which does not have the `uniform` keyword.
-* Added new struct `BBMOD_SpotLight`, which is a spot light.
+* Added new struct `BBMOD_PunctualLight`, which is a base struct for punctual lights.
+* Struct `BBMOD_PointLight` now inherits from `BBMOD_PunctualLight`.
+* Added new struct `BBMOD_SpotLight`, which is a new punctual light - a spot light.
+* Added new function `bbmod_light_punctual_add`, which adds a punctual light to be sent to shaders.
+* Added new function `bbmod_light_punctual_count`, which retrieves number of punctual lights added to be sent to shaders.
+* Added new function `bbmod_light_punctual_get`, which retrieves a punctual light at given index.
+* Added new function `bbmod_light_punctual_remove`, which removes a punctual light so it is not sent to shaders anymore.
+* Added new function `bbmod_light_punctual_remove_index`, which removes a punctual light so it is not sent to shaders anymore.
+* Added new function `bbmod_light_punctual_clear`, which removes all punctual lights sent to shaders.
+* Functions `bbmod_light_point_add`, `bbmod_light_point_count`, `bbmod_light_point_get`, `bbmod_light_point_remove`, `bbmod_light_point_remove_index` and `bbmod_light_point_clear` are now deprecated. Please use the new `bbmod_light_punctual_*` functions instead.
+* Added new property `MaxPunctualLights` to `BBMOD_BaseShader`, which is the maximum number of punctual lights in the shader. This must match with value defined in the raw GameMaker shader!
+* Property `MaxPointLights` of `BBMOD_BaseShader` is now obsolete. Please use the new `MaxPunctualLights` instead.
+* Added new method `set_punctual_lights` to `BBMOD_BaseShader`, which sets uniform `bbmod_LightPunctualData`.
+* Method `set_point_lights` of `BBMOD_BaseShader` is now deprecated, please use the new `set_punctual_lights` instead.
 
 ### Camera module:
 * Added new property `Up` to `BBMOD_Camera`, which is the camera's up vector.

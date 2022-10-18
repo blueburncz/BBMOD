@@ -7,7 +7,7 @@ precision highp float;
 //
 
 // Maximum number of point lights
-#define MAX_POINT_LIGHTS 8
+#define MAX_PUNCTUAL_LIGHTS 8
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 
