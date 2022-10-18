@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "BBMOD_PointLight",
+  "name": "BBMOD_SpotLight",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {

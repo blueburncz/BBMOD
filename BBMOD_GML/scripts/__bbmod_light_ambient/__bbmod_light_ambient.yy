@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "BBMOD_PointLight",
+  "name": "__bbmod_light_ambient",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {

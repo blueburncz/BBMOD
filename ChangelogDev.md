@@ -5,6 +5,7 @@
 ## GML API:
 ### Core module:
 * Method `BBMOD_RenderQueue.set_sampler` now also accepts a specific index instead of just a uniform name. This is useful for HLSL11, which does not have the `uniform` keyword.
+* Added new struct `BBMOD_SpotLight`, which is a spot light.
 
 ### Camera module:
 * Added new property `Up` to `BBMOD_Camera`, which is the camera's up vector.
