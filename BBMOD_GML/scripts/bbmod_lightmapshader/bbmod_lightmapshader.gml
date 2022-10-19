@@ -88,33 +88,56 @@ function BBMOD_LightmapShader(_shader, _vertexFormat)
 
 	static set_punctual_lights = function (_lights=undefined) {
 		gml_pragma("forceinline");
-		_lights ??= global.__bbmodPointLights;
+
+		_lights ??= global.__bbmodPunctualLights;
+
 		var _maxLights = MaxPunctualLights;
-		var _index = 0;
-		var _indexMax = _maxLights * 8;
-		var _data = array_create(_indexMax, 0.0);
+
+		var _indexA = 0;
+		var _indexMaxA = _maxLights * 8;
+		var _dataA = array_create(_indexMaxA, 0.0);
+
+		var _indexB = 0;
+		var _indexMaxB = _maxLights * 6;
+		var _dataB = array_create(_indexMaxB, 0.0);
+
 		var i = 0;
+
 		repeat (array_length(_lights))
 		{
 			var _light = _lights[i++];
+
 			if (_light.Enabled
 				&& _light.AffectLightmaps)
 			{
-				_light.Position.ToArray(_data, _index);
-				_data[@ _index + 3] = _light.Range;
+				_light.Position.ToArray(_dataA, _indexA);
+				_dataA[@ _indexA + 3] = _light.Range;
 				var _color = _light.Color;
-				_data[@ _index + 4] = _color.Red / 255.0;
-				_data[@ _index + 5] = _color.Green / 255.0;
-				_data[@ _index + 6] = _color.Blue / 255.0;
-				_data[@ _index + 7] = _color.Alpha;
-				_index += 8;
-				if (_index >= _indexMax)
+				_dataA[@ _indexA + 4] = _color.Red / 255.0;
+				_dataA[@ _indexA + 5] = _color.Green / 255.0;
+				_dataA[@ _indexA + 6] = _color.Blue / 255.0;
+				_dataA[@ _indexA + 7] = _color.Alpha;
+				_indexA += 8;
+
+				if (_light.is_instance(BBMOD_SpotLight)) // Ugh, but works!
+				{
+					_dataB[@ _indexB] = 1.0; // Is spot light
+					_dataB[@ _indexB + 1] = dcos(_light.AngleInner);
+					_dataB[@ _indexB + 2] = dcos(_light.AngleOuter);
+					_light.Direction.ToArray(_dataB, _indexB + 3);
+				}
+				_indexB += 6;
+
+				if (_indexA >= _indexMaxA)
 				{
 					break;
 				}
 			}
 		}
-		shader_set_uniform_f_array(ULightPunctualData, _data);
+
+		shader_set_uniform_f_array(ULightPunctualDataA, _dataA);
+		shader_set_uniform_f_array(ULightPunctualDataB, _dataB);
+
 		return self;
 	};
 

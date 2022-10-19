@@ -1,6 +1,7 @@
 #pragma include("Color.xsh")
 #pragma include("DoDirectionalLightPS.xsh")
 #pragma include("DoPointLightPS.xsh")
+#pragma include("DoSpotLightPS.xsh")
 #pragma include("Exposure.xsh")
 #pragma include("Fog.xsh")
 #pragma include("GammaCorrect.xsh")
@@ -59,11 +60,27 @@ void PBRShader(Material material, float depth)
 	// Punctual lights
 	for (int i = 0; i < MAX_PUNCTUAL_LIGHTS; ++i)
 	{
-		vec4 positionRange = bbmod_LightPunctualData[i * 2];
-		vec4 colorAlpha = bbmod_LightPunctualData[(i * 2) + 1];
+		vec4 positionRange = bbmod_LightPunctualDataA[i * 2];
+		vec4 colorAlpha = bbmod_LightPunctualDataA[(i * 2) + 1];
+		vec3 isSpotInnerOuter = bbmod_LightPunctualDataB[i * 2];
+		vec3 direction = bbmod_LightPunctualDataB[(i * 2) + 1];
 		vec3 color = xGammaToLinear(colorAlpha.rgb) * colorAlpha.a;
-		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
-			material, lightDiffuse, lightSpecular, lightSubsurface);
+
+		if (isSpotInnerOuter.x == 1.0)
+		{
+			DoSpotLightPS(
+				positionRange.xyz, positionRange.w, color,
+				direction, isSpotInnerOuter.y, isSpotInnerOuter.z,
+				v_vVertex, N, V, material,
+				lightDiffuse, lightSpecular, lightSubsurface);
+		}
+		else
+		{
+			DoPointLightPS(
+				positionRange.xyz, positionRange.w, color,
+				v_vVertex, N, V, material,
+				lightDiffuse, lightSpecular, lightSubsurface);
+		}
 	}
 
 	// Lightmap

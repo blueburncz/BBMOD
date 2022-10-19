@@ -187,7 +187,9 @@ uniform vec2 bbmod_IBLTexel;
 // Punctual lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPunctualData[2 * MAX_PUNCTUAL_LIGHTS];
+uniform vec4 bbmod_LightPunctualDataA[2 * MAX_PUNCTUAL_LIGHTS];
+// [(isSpotLight, dcosInner, dcosOuter), (dX, dY, dZ), ...]
+uniform vec3 bbmod_LightPunctualDataB[2 * MAX_PUNCTUAL_LIGHTS];
 #endif // X_PBR
 
 #if defined(X_TERRAIN)

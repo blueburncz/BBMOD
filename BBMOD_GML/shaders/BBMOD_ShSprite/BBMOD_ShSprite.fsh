@@ -119,7 +119,9 @@ uniform vec2 bbmod_IBLTexel;
 // Punctual lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPunctualData[2 * MAX_PUNCTUAL_LIGHTS];
+uniform vec4 bbmod_LightPunctualDataA[2 * MAX_PUNCTUAL_LIGHTS];
+// [(isSpotLight, dcosInner, dcosOuter), (dX, dY, dZ), ...]
+uniform vec3 bbmod_LightPunctualDataB[2 * MAX_PUNCTUAL_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
@@ -437,9 +439,38 @@ void DoPointLightPS(
 	float dist = length(L);
 	L = normalize(L);
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
+	att *= att;
 	float NdotL = max(dot(N, L), 0.0);
 	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 	color *= NdotL * att;
+	diffuse += color;
+	specular += color * SpecularGGX(m, N, V, L);
+}
+
+void DoSpotLightPS(
+	vec3 position,
+	float range,
+	vec3 color,
+	vec3 direction,
+	float dcosInner,
+	float dcosOuter,
+	vec3 vertex,
+	vec3 N,
+	vec3 V,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular,
+	inout vec3 subsurface)
+{
+	vec3 L = position - vertex;
+	float dist = length(L);
+	L = normalize(L);
+	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
+	float theta = dot(L, normalize(-direction));
+	float epsilon = dcosInner - dcosOuter;
+	float intensity = clamp((theta - dcosOuter) / epsilon, 0.0, 1.0);
+	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
+	color *= intensity * att;
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
 }
@@ -679,11 +710,27 @@ void PBRShader(Material material, float depth)
 	// Punctual lights
 	for (int i = 0; i < MAX_PUNCTUAL_LIGHTS; ++i)
 	{
-		vec4 positionRange = bbmod_LightPunctualData[i * 2];
-		vec4 colorAlpha = bbmod_LightPunctualData[(i * 2) + 1];
+		vec4 positionRange = bbmod_LightPunctualDataA[i * 2];
+		vec4 colorAlpha = bbmod_LightPunctualDataA[(i * 2) + 1];
+		vec3 isSpotInnerOuter = bbmod_LightPunctualDataB[i * 2];
+		vec3 direction = bbmod_LightPunctualDataB[(i * 2) + 1];
 		vec3 color = xGammaToLinear(colorAlpha.rgb) * colorAlpha.a;
-		DoPointLightPS(positionRange.xyz, positionRange.w, color, v_vVertex, N, V,
-			material, lightDiffuse, lightSpecular, lightSubsurface);
+
+		if (isSpotInnerOuter.x == 1.0)
+		{
+			DoSpotLightPS(
+				positionRange.xyz, positionRange.w, color,
+				direction, isSpotInnerOuter.y, isSpotInnerOuter.z,
+				v_vVertex, N, V, material,
+				lightDiffuse, lightSpecular, lightSubsurface);
+		}
+		else
+		{
+			DoPointLightPS(
+				positionRange.xyz, positionRange.w, color,
+				v_vVertex, N, V, material,
+				lightDiffuse, lightSpecular, lightSubsurface);
+		}
 	}
 
 	// Lightmap

@@ -11,15 +11,15 @@
 /// @param {Real} [_range] The light's range. Defaults to 1.
 /// @param {Struct.BBMOD_Vec3} [_direction] The light's direction. Defaults to
 /// {@link BBMOD_VEC3_FORWARD} if `undefined`.
-/// @param {Real} [_angleInner] The inner cone angle in degrees. Defaults to 25.
-/// @param {Real} [_angleOuter] The outer cone angle in degrees. Defaults to 30.
+/// @param {Real} [_angleInner] The inner cone angle in degrees. Defaults to 10.
+/// @param {Real} [_angleOuter] The outer cone angle in degrees. Defaults to 20.
 function BBMOD_SpotLight(
 	_color=BBMOD_C_WHITE,
 	_position=undefined,
 	_range=1.0,
 	_direction=undefined,
-	_angleInner=25,
-	_angleOuter=30
+	_angleInner=10,
+	_angleOuter=20
 ) : BBMOD_PunctualLight(_color, _position, _range) constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -28,9 +28,9 @@ function BBMOD_SpotLight(
 	/// `(1, 0, 0)`.
 	Direction = _direction ?? BBMOD_VEC3_FORWARD;
 
-	/// @var {Real} The inner cone angle in degrees. Default value is 25.
+	/// @var {Real} The inner cone angle in degrees. Default value is 10.
 	AngleInner = _angleInner;
 
-	/// @var {Real} The inner cone angle in degrees. Default value is 30.
+	/// @var {Real} The inner cone angle in degrees. Default value is 20.
 	AngleOuter = _angleOuter;
 }

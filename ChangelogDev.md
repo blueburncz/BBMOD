@@ -17,7 +17,7 @@
 * Functions `bbmod_light_point_add`, `bbmod_light_point_count`, `bbmod_light_point_get`, `bbmod_light_point_remove`, `bbmod_light_point_remove_index` and `bbmod_light_point_clear` are now deprecated. Please use the new `bbmod_light_punctual_*` functions instead.
 * Added new property `MaxPunctualLights` to `BBMOD_BaseShader`, which is the maximum number of punctual lights in the shader. This must match with value defined in the raw GameMaker shader!
 * Property `MaxPointLights` of `BBMOD_BaseShader` is now obsolete. Please use the new `MaxPunctualLights` instead.
-* Added new method `set_punctual_lights` to `BBMOD_BaseShader`, which sets uniform `bbmod_LightPunctualData`.
+* Added new method `set_punctual_lights` to `BBMOD_BaseShader`, which sets uniform `bbmod_LightPunctualDataA`.
 * Method `set_point_lights` of `BBMOD_BaseShader` is now deprecated, please use the new `set_punctual_lights` instead.
 
 ### Camera module:

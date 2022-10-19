@@ -6,4 +6,4 @@ emitter = new BBMOD_ParticleEmitter(position, DissolveParticleSystem());
 
 light = new BBMOD_PointLight(new BBMOD_Color(0, 255, 127, 0), position, 40);
 
-bbmod_light_point_add(light);
+bbmod_light_punctual_add(light);
