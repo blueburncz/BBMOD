@@ -1,3 +1,7 @@
+/// @var {Struct.BBMOD_BaseCamera} The last used camera. Can be `undefined`.
+/// @private
+global.__bbmodCameraCurrent = undefined;
+
 /// @var {Struct.BBMOD_Vec3}
 /// @private
 global.__bbmodCameraPosition = new BBMOD_Vec3();

@@ -606,9 +606,9 @@ function BBMOD_Gizmo(_size=10.0)
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	///
-	/// @note This requires you to use a {@link BBMOD_Camera} and it will not
-	/// do anything if its [apply](./BBMOD_Camera.apply.html) method has not been
-	/// called yet!
+	/// @note This requires you to use a {@link BBMOD_BaseCamera} and it will
+	/// not do anything if its [apply](./BBMOD_BaseCamera.apply.html) method has
+	/// not been called yet!
 	static update = function (_deltaTime) {
 		if (!global.__bbmodCameraCurrent)
 		{

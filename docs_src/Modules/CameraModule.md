@@ -5,4 +5,5 @@ making 3D games using BBMOD.
 
 ## Scripting API
 ### Structs
+* [BBMOD_BaseCamera](./BBMOD_BaseCamera.html)
 * [BBMOD_Camera](./BBMOD_Camera.html)

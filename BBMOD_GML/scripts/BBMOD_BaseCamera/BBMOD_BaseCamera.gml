@@ -72,12 +72,12 @@ function BBMOD_BaseCamera()
 	///
 	/// @desc Recomputes camera's view and projection matrices.
 	///
-	/// @return {Struct.BBMOD_Camera} Returns `self`.
+	/// @return {Struct.BBMOD_BaseCamera} Returns `self`.
 	///
-	/// @note This is called automatically in the {@link BBMOD_Camera.update}
+	/// @note This is called automatically in the {@link BBMOD_BaseCamera.update}
 	/// method, so you do not need to call this unless you modify
-	/// {@link BBMOD_Camera.Position} or {@link BBMOD_Camera.Target} after the
-	/// `update` method.
+	/// {@link BBMOD_BaseCamera.Position} or {@link BBMOD_BaseCamera.Target}
+	/// after the `update` method.
 	///
 	/// @example
 	/// ```gml

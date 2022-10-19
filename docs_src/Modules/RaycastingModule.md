@@ -9,6 +9,7 @@ used for smaller projects that do not require complex collision checking.
 ### Structs
 * [BBMOD_AABBCollider](./BBMOD_AABBCollider.html)
 * [BBMOD_Collider](./BBMOD_Collider.html)
+* [BBMOD_FrustumCollider](./BBMOD_FrustumCollider.html)
 * [BBMOD_PlaneCollider](./BBMOD_PlaneCollider.html)
 * [BBMOD_Ray](./BBMOD_Ray.html)
 * [BBMOD_RaycastResult](./BBMOD_RaycastResult.html)

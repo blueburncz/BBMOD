@@ -293,7 +293,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_point_lights([_lights])
 	///
-	/// @desc Sets uniform `bbmod_LightPunctualDataA`.
+	/// @desc Sets uniforms `bbmod_LightPunctualDataA` and
+	/// `bbmod_LightPunctualDataB`.
 	///
 	/// @param {Array<Struct.BBMOD_PointLight>} [_lights] An array of point
 	/// lights. If `undefined`, then the lights defined using
@@ -310,7 +311,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_punctual_lights([_lights])
 	///
-	/// @desc Sets uniform `bbmod_LightPunctualDataA`.
+	/// @desc Sets uniforms `bbmod_LightPunctualDataA` and
+	/// `bbmod_LightPunctualDataB`.
 	///
 	/// @param {Array<Struct.BBMOD_PunctualLight>} [_lights] An array of punctual
 	/// lights. If `undefined`, then the lights defined using

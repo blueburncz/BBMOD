@@ -17,6 +17,11 @@ matrixGun = matrix_build_identity();
 
 punchRight = true;
 
+flashlight = new BBMOD_SpotLight();
+flashlight.Range = 300;
+flashlight.Color.Alpha = 0.1;
+bbmod_light_punctual_add(flashlight);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Camera
 
