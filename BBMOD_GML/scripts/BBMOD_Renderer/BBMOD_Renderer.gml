@@ -823,7 +823,7 @@ function BBMOD_Renderer()
 			gpu_set_state(bbmod_gpu_get_default_state());
 			gpu_set_tex_filter(true);
 			gpu_set_tex_repeat(false);
-			gpu_set_blendenable(false);
+			gpu_set_blendenable(true);
 			_gpuState = gpu_get_state();
 			gpu_pop_state();
 		}
@@ -833,17 +833,21 @@ function BBMOD_Renderer()
 		var _texelWidth = 1.0 / _width;
 		var _texelHeight = 1.0 / _height;
 
-		if ((PostProcessor == undefined || !PostProcessor.Enabled)
-			|| !UseAppSurface)
+		if (!UseAppSurface // Can't use post-processing even if it was defined
+			|| (PostProcessor == undefined || !PostProcessor.Enabled))
 		{
+			////////////////////////////////////////////////////////////////////
+			//
+			// Post-processing DISABLED
+			//
 			gpu_push_state();
 			gpu_set_state(_gpuState);
 
-			////////////////////////////////////////////////////////////////////
-			// Post-processing disabled
 			if (UseAppSurface)
 			{
+				gpu_set_blendenable(false);
 				draw_surface_stretched(application_surface, X, Y, _width, _height);
+				gpu_set_blendenable(true);
 			}
 
 			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))
@@ -878,6 +882,10 @@ function BBMOD_Renderer()
 		}
 		else
 		{
+			////////////////////////////////////////////////////////////////////
+			//
+			// Post-processing ENABLED
+			//
 			var _world = matrix_get(matrix_world);
 
 			__surFinal = bbmod_surface_check(__surFinal, _width, _height);
@@ -888,8 +896,6 @@ function BBMOD_Renderer()
 			surface_set_target(__surFinal);
 			matrix_set(matrix_world, matrix_build_identity());
 
-			////////////////////////////////////////////////////////////////////
-			// App. surface
 			draw_surface_stretched(application_surface, 0, 0, _width, _height);
 
 			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))

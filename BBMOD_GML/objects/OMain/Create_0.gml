@@ -33,21 +33,21 @@ _objImporter.FlipUVVertically = true;
 modGun = _objImporter.import("Data/Assets/Pistol.obj");
 modGun.freeze();
 
-matGun0 = BBMOD_MATERIAL_DEFAULT.clone()
+var _matGunBase = BBMOD_MATERIAL_DEFAULT.clone()
 	.set_shader(
-		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+		BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID) // Enable instance selecting
+	.set_shader(
+		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH); // Enable casting shadows
+
+matGun0 = _matGunBase.clone()
 	.set_base_opacity(BBMOD_C_SILVER)
 	.set_specular_color(BBMOD_C_SILVER)
 	.set_normal_smoothness(BBMOD_VEC3_UP, 0.8);
 
-matGun1 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_shader(
-		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+matGun1 = _matGunBase.clone()
 	.set_base_opacity(new BBMOD_Color(32, 32, 32));
 
-matGun2 = BBMOD_MATERIAL_DEFAULT.clone()
-	.set_shader(
-		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH) // Enable casting shadows
+matGun2 = _matGunBase.clone()
 	.set_base_opacity(BBMOD_C_BLACK);
 
 modGun.Materials[@ 0] = matGun0;
@@ -70,7 +70,12 @@ _objImporter.destroy();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Create a renderer
+gizmo = new BBMOD_Gizmo();
+gizmo.ButtonDrag = mb_right;
+
 renderer = new BBMOD_Renderer();
+renderer.Gizmo = gizmo;
+renderer.ButtonSelect = mb_right;
 renderer.UseAppSurface = true;
 renderer.RenderScale = (os_browser == browser_not_a_browser) ? 1.0 : 0.8;
 renderer.EnableShadows = true;

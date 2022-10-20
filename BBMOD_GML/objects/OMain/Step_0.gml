@@ -5,6 +5,9 @@ if (keyboard_check_pressed(vk_f1))
 	show_debug_overlay(debugOverlay);
 }
 
+// Enable editing mode when the game is paused
+renderer.EditMode = (global.gameSpeed == 0.0);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Spawn waves of zombies
 waveTimeout -= DELTA_TIME * 0.000001;

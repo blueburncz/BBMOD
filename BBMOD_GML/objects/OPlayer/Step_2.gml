@@ -10,3 +10,22 @@ if (ammo > 0)
 			_matrixHand),
 		matrixBody);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Adjust flashlight
+flashlight.Enabled = !global.day;
+
+if (flashlight.Enabled
+	&& modCharacter.IsLoaded)
+{
+	var _idHead = modCharacter.find_node_id("Head");
+	var _dqHead = animationPlayer.get_node_transform(_idHead);
+	var _matrixHead = _dqHead.ToMatrix();
+	var _matrixFlashlight = matrix_multiply(
+		matrix_multiply(
+			matrix_build(0, 1, -1, 0, -90, 0, 1, 1, 1),
+			_matrixHead),
+		matrixBody);
+	flashlight.Direction = new BBMOD_Vec4(1.0, 0.0, 0.0, 0.0).Transform(_matrixFlashlight);
+	flashlight.Position.Set(_matrixFlashlight[12], _matrixFlashlight[13], _matrixFlashlight[14]);
+}

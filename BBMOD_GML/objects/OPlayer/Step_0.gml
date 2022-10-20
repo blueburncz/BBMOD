@@ -251,13 +251,6 @@ else
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Adjust flashlight
-flashlight.Enabled = !global.day;
-flashlight.Direction = new BBMOD_Vec3(dcos(directionBody), -dsin(directionBody), 0.0);
-flashlight.Position = new BBMOD_Vec3(x, y, z + 20.0)
-	.Add(flashlight.Direction.Scale(2.0));
-
-////////////////////////////////////////////////////////////////////////////////
 // Game over
 if (hp <= 0.0)
 {
