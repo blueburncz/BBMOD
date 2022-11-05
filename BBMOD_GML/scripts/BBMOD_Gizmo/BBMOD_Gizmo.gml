@@ -117,6 +117,25 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @private
 	__cursorBackup = undefined;
 
+	/// @var {Bool} Enables snapping to grid when moving objects. Default value
+	/// is `true`.
+	/// @see BBMOD_Gizmo.GridSize
+	EnableGridSnap = true;
+
+	/// @var {Struct.BBMOD_Vec3} The size of the grid. Default value is
+	/// `(1, 1, 1)`.
+	/// @see BBMOD_Gizmo.EnableGridSnap
+	GridSize = new BBMOD_Vec3(1.0);
+
+	/// @var {Bool} Enables angle snapping when rotating objects. Default value
+	/// is `true`.
+	/// @see BBMOD_Gizmo.AngleSnap
+	EnableAngleSnap = true;
+
+	/// @var {Real} Angle snapping size. Default value is 1.
+	/// @see BBMOD_Gizmo.EnableAngleSnap
+	AngleSnap = 1.0;
+
 	/// @var {Real} Determines the space in which are the selected instances
 	/// transformed. Use values from {@link BBMOD_EEditSpace}.
 	EditSpace = BBMOD_EEditSpace.Global;
@@ -130,25 +149,38 @@ function BBMOD_Gizmo(_size=10.0)
 	EditAxis = BBMOD_EEditAxis.None;
 
 	/// @var {Constant.MouseButton} The mouse button used for dragging the gizmo.
+	/// Default is `mb_left`.
 	ButtonDrag = mb_left;
 
 	/// @var {Constant.VirtualKey} The virtual key used to switch to the next
-	/// edit type.
+	/// edit type. Default is `vk_tab`.
 	/// @see BBMOD_Gizmo.EditType
 	KeyNextEditType = vk_tab;
 
 	/// @var {Constant.VirtualKey} The virtual key used to switch to the next
-	/// edit space.
+	/// edit space. Default is `vk_space`.
 	/// @see BBMOD_Gizmo.EditSpace
 	KeyNextEditSpace = vk_space;
 
 	/// @var {Constant.VirtualKey} The virtual key used to increase
-	/// speed of editing (e.g. rotate objects by a larger angle).
+	/// speed of editing (e.g. rotate objects by a larger angle). Default is
+	/// `vk_shift`.
 	KeyEditFaster = vk_shift;
 
 	/// @var {Constant.VirtualKey} The virtual key used to decrease
-	/// speed of editing (e.g. rotate objects by a smaller angle).
+	/// speed of editing (e.g. rotate objects by a smaller angle). Default is
+	/// `vk_control`.
 	KeyEditSlower = vk_control;
+
+	/// @var {Constant.VirtualKey} The virtual key used to cancel editing and
+	/// revert changes. Default is `vk_escape`.
+	KeyCancel = vk_escape;
+
+	/// @var {Constant.VirtualKey} The virtual key used to ignore grid and
+	/// angle snapping when they are enabled. Default is `vk_alt`.
+	/// @see BBMOD_Gizmo.EnableGridSnap
+	/// @see BBMOD_Gizmo.EnableAngleSnap
+	KeyIgnoreSnap = vk_alt;
 
 	/// @var {Real} The size of the gizmo. Default value is 10.
 	Size = _size;
@@ -189,6 +221,17 @@ function BBMOD_Gizmo(_size=10.0)
 	InstanceExists = function (_instance) {
 		gml_pragma("forceinline");
 		return instance_exists(_instance);
+	};
+
+	/// @var {Function} A function that the gizmo uses to retrieve an instance's
+	/// global matrix. Normally this is an identity matrix. If the instance is
+	/// attached to another instance for example, then this will be that
+	/// instance's transformation matrix. Must take the instance as the first
+	/// argument and return a {@link BBMOD_Matrix}. Defaults to a function that
+	/// always returns an identity matrix.
+	GetInstanceGlobalMatrix = function (_instance) {
+		gml_pragma("forceinline");
+		return new BBMOD_Matrix();
 	};
 
 	/// @var {Function} A function that the gizmo uses to retrieve an instance's
@@ -536,11 +579,16 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Struct.BBMOD_Vec3} _plane The plane origin.
 	/// @param {Struct.BBMOD_Vec3} _normal The plane normal.
 	///
-	/// @return {Struct.BBMOD_Vec3} The point of intersection.
+	/// @return {Struct.BBMOD_Vec3} The point of intersection or `undefined`.
 	///
 	/// @private
 	static intersect_ray_plane = function (_origin, _direction, _plane, _normal) {
-		var _t = -(_origin.Sub(_plane).Dot(_normal) / _direction.Dot(_normal));
+		var _dot = _direction.Dot(_normal);
+		if (_dot == 0.0)
+		{
+			return undefined;
+		}
+		var _t = -(_origin.Sub(_plane).Dot(_normal) / _dot);
 		return _origin.Add(_direction.Scale(_t));
 	};
 
@@ -673,10 +721,11 @@ function BBMOD_Gizmo(_size=10.0)
 				if (EditSpace == BBMOD_EEditSpace.Local)
 				{
 					var _lastSelected = Selected[| _size - 1];
-					Rotation.Set(
-						GetInstanceRotationX(_lastSelected),
-						GetInstanceRotationY(_lastSelected),
-						GetInstanceRotationZ(_lastSelected));
+					var _mat = GetInstanceGlobalMatrix(_lastSelected);
+					var _mat2 = new BBMOD_Matrix().RotateEuler(get_instance_rotation_vec3(_lastSelected));
+					var _mat3 = _mat2.Mul(_mat);
+					var _euler = _mat3.ToEuler();
+					Rotation.FromArray(_euler);
 				}
 				else
 				{
@@ -723,11 +772,24 @@ function BBMOD_Gizmo(_size=10.0)
 			__cursorBackup = window_get_cursor();
 		}
 
-		var _quaternion = new BBMOD_Quaternion()
-			.FromEuler(Rotation.X, Rotation.Y, Rotation.Z);
-		var _forward = _quaternion.Rotate(BBMOD_VEC3_FORWARD);
-		var _right = _quaternion.Rotate(BBMOD_VEC3_RIGHT);
-		var _up = _quaternion.Rotate(BBMOD_VEC3_UP);
+		var _quaternionGizmo = new BBMOD_Quaternion().FromEuler(Rotation.X, Rotation.Y, Rotation.Z);
+		var _forwardGizmo    = _quaternionGizmo.Rotate(BBMOD_VEC3_FORWARD);
+		var _rightGizmo      = _quaternionGizmo.Rotate(BBMOD_VEC3_RIGHT);
+		var _upGizmo         = _quaternionGizmo.Rotate(BBMOD_VEC3_UP);
+
+		var _matRot = [
+			_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0,
+			_rightGizmo.X,   _rightGizmo.Y,   _rightGizmo.Z,   0.0,
+			_upGizmo.X,      _upGizmo.Y,      _upGizmo.Z,      0.0,
+			0.0,             0.0,             0.0,             1.0,
+		];
+
+		var _matRotInverse = [
+			_forwardGizmo.X, _rightGizmo.X, _upGizmo.X, 0.0,
+			_forwardGizmo.Y, _rightGizmo.Y, _upGizmo.Y, 0.0,
+			_forwardGizmo.Z, _rightGizmo.Z, _upGizmo.Z, 0.0,
+			0.0,             0.0,           0.0,        1.0,
+		];
 
 		////////////////////////////////////////////////////////////////////////
 		// Handle editing
@@ -739,149 +801,263 @@ function BBMOD_Gizmo(_size=10.0)
 				__positionBackup = Position.Clone();
 			}
 
-			var _planeNormal = ((EditAxis == BBMOD_EEditAxis.Z) ? _forward
-				: ((EditAxis == BBMOD_EEditAxis.All) ? BBMOD_VEC3_UP
-				: _up));
-			var _mouseWorld = intersect_ray_plane(
-				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(
-					new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
-				__positionBackup,
-				_planeNormal);
-
-			if (!__mouseOffset)
-			{
-				__mouseOffset = Position.Sub(_mouseWorld);
-			}
-
-			var _diff = _mouseWorld.Add(__mouseOffset).Sub(Position);
-
-			if (EditAxis & BBMOD_EEditAxis.X)
-			{
-				Position = Position.Add(_forward.Scale(_diff.Dot(_forward)));
-			}
-
-			if (EditAxis & BBMOD_EEditAxis.Y)
-			{
-				Position = Position.Add(_right.Scale(_diff.Dot(_right)));
-			}
-
-			if (EditAxis & BBMOD_EEditAxis.Z)
-			{
-				Position = Position.Add(_up.Scale(_diff.Dot(_up)));
-			}
-			break;
-
-		case BBMOD_EEditType.Rotation:
-			var _planeNormal = ((EditAxis == BBMOD_EEditAxis.X) ? _forward
-				: ((EditAxis == BBMOD_EEditAxis.Y) ? _right
-				: _up));
-			var _mouseWorld = intersect_ray_plane(
-				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(
-					new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
-				Position,
-				_planeNormal);
-
-			if (!__mouseOffset)
-			{
-				__mouseOffset = _mouseWorld;
-			}
-
-			var _mul = (keyboard_check(KeyEditFaster) ? 2.0
-				: (keyboard_check(KeyEditSlower) ? 0.1
-				: 1.0));
-			var _v1 = __mouseOffset.Sub(Position);
-			var _v2 = _mouseWorld.Sub(Position);
-			var _angle = darctan2(_v2.Cross(_v1).Dot(_planeNormal), _v1.Dot(_v2)) * _mul;
+			var _planeNormal;
 
 			switch (EditAxis)
 			{
 			case BBMOD_EEditAxis.X:
-				__rotateBy.X += _angle;
+				var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
 				break;
 
 			case BBMOD_EEditAxis.Y:
-				__rotateBy.Y += _angle;
+				var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
 				break;
 
 			case BBMOD_EEditAxis.Z:
-				__rotateBy.Z += _angle;
+				var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
+				break;
+
+			case BBMOD_EEditAxis.All:
+				_planeNormal = global.__bbmodCameraCurrent.get_forward();
 				break;
 			}
 
-			window_mouse_set(__mouseLockAt.X, __mouseLockAt.Y);
-			window_set_cursor(cr_none);
-			break;
-
-		case BBMOD_EEditType.Scale:
-			var _planeNormal = (EditAxis == BBMOD_EEditAxis.Z) ? _forward : _up;
 			var _mouseWorld = intersect_ray_plane(
 				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(
-					new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+				__positionBackup,
+				_planeNormal);
+
+			if (_mouseWorld)
+			{
+				var _snap = (EnableGridSnap && !keyboard_check(KeyIgnoreSnap));
+
+				if (EditAxis == BBMOD_EEditAxis.All)
+				{
+					if (!__mouseOffset)
+					{
+						__mouseOffset = _mouseWorld.Sub(Position);
+					}
+
+					Position = _mouseWorld.Add(__mouseOffset);
+				}
+				else
+				{
+					if (!__mouseOffset)
+					{
+						__mouseOffset = _mouseWorld;
+					}
+
+					var _diff = _mouseWorld.Sub(__mouseOffset);
+
+					if (EditAxis & BBMOD_EEditAxis.X)
+					{
+						var _moveX = _forwardGizmo.Scale(_diff.Dot(_forwardGizmo));
+						if (_snap
+							&& EditSpace == BBMOD_EEditSpace.Local
+							&& GridSize.X != 0.0)
+						{
+							var _moveXLength = _moveX.Length();
+							if (_moveXLength > 0.0)
+							{
+								var _s = round(_moveXLength / GridSize.X) * GridSize.X;
+								_moveX = _moveX.Normalize().Scale(_s);
+							}
+						}
+						Position = __positionBackup.Add(_moveX);
+					}
+
+					if (EditAxis & BBMOD_EEditAxis.Y)
+					{
+						var _moveY = _rightGizmo.Scale(_diff.Dot(_rightGizmo));
+						if (_snap
+							&& EditSpace == BBMOD_EEditSpace.Local
+							&& GridSize.Y != 0.0)
+						{
+							var _moveYLength = _moveY.Length();
+							if (_moveYLength > 0.0)
+							{
+								var _s = round(_moveYLength / GridSize.Y) * GridSize.Y;
+								_moveY = _moveY.Normalize().Scale(_s);
+							}
+						}
+						Position = __positionBackup.Add(_moveY);
+					}
+
+					if (EditAxis & BBMOD_EEditAxis.Z)
+					{
+						var _moveZ = _upGizmo.Scale(_diff.Dot(_upGizmo));
+						if (_snap
+							&& EditSpace == BBMOD_EEditSpace.Local
+							&& GridSize.Z != 0.0)
+						{
+							var _moveZLength = _moveZ.Length();
+							if (_moveZLength > 0.0)
+							{
+								var _s = round(_moveZLength / GridSize.Z) * GridSize.Z;
+								_moveZ = _moveZ.Normalize().Scale(_s);
+							}
+						}
+						Position = __positionBackup.Add(_moveZ);
+					}
+				}
+
+				if (_snap
+					&& (EditSpace == BBMOD_EEditSpace.Global
+					|| EditAxis == BBMOD_EEditAxis.All))
+				{
+					if (GridSize.X != 0.0)
+					{
+						Position.X = round(Position.X / GridSize.X) * GridSize.X;
+					}
+
+					if (GridSize.Y != 0.0)
+					{
+						Position.Y = round(Position.Y / GridSize.Y) * GridSize.Y;
+					}
+
+					if (GridSize.Z != 0.0)
+					{
+						Position.Z = round(Position.Z / GridSize.Z) * GridSize.Z;
+					}
+				}
+			}
+			break;
+
+		case BBMOD_EEditType.Rotation:
+			var _planeNormal = ((EditAxis == BBMOD_EEditAxis.X) ? _forwardGizmo
+				: ((EditAxis == BBMOD_EEditAxis.Y) ? _rightGizmo
+				: _upGizmo));
+
+			var _mouseWorld = intersect_ray_plane(
+				global.__bbmodCameraCurrent.Position,
+				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 				Position,
 				_planeNormal);
 
-			if (!__mouseOffset)
+			if (_mouseWorld)
 			{
-				__mouseOffset = _mouseWorld;
-			}
-
-			var _mul = (keyboard_check(KeyEditFaster) ? 5.0
-				: (keyboard_check(KeyEditSlower) ? 0.1
-				: 1.0));
-
-			var _diff = _mouseWorld.Sub(__mouseOffset).Scale(_mul);
-
-			if (EditAxis == BBMOD_EEditAxis.All)
-			{
-				var _diffX = _diff.Mul(_forward.Abs()).Dot(_forward);
-				var _diffY = _diff.Mul(_right.Abs()).Dot(_right);
-				var _scaleBy = (abs(_diffX) > abs(_diffY)) ? _diffX : _diffY;
-				__scaleBy.X += _scaleBy;
-				__scaleBy.Y += _scaleBy;
-				__scaleBy.Z += _scaleBy;
-			}
-			else
-			{
-				if (EditAxis & BBMOD_EEditAxis.X)
+				if (!__mouseOffset)
 				{
-					__scaleBy.X += _diff.Mul(_forward.Abs()).Dot(_forward);
+					__mouseOffset = _mouseWorld;
 				}
 
-				if (EditAxis & BBMOD_EEditAxis.Y)
-				{
-					__scaleBy.Y += _diff.Mul(_right.Abs()).Dot(_right);
-				}
+				var _v1 = __mouseOffset.Sub(Position);
+				var _v2 = _mouseWorld.Sub(Position);
+				var _angle = darctan2(_v2.Cross(_v1).Dot(_planeNormal), _v1.Dot(_v2));
 
-				if (EditAxis & BBMOD_EEditAxis.Z)
+				switch (EditAxis)
 				{
-					__scaleBy.Z += _diff.Mul(_up.Abs()).Dot(_up);
+				case BBMOD_EEditAxis.X:
+					__rotateBy.X = _angle;
+					break;
+
+				case BBMOD_EEditAxis.Y:
+					__rotateBy.Y = _angle;
+					break;
+
+				case BBMOD_EEditAxis.Z:
+					__rotateBy.Z = _angle;
+					break;
+				}
+			}
+			break;
+
+		case BBMOD_EEditType.Scale:
+			var _planeNormal;
+
+			switch (EditAxis)
+			{
+			case BBMOD_EEditAxis.X:
+				var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
+				break;
+
+			case BBMOD_EEditAxis.Y:
+				var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
+				break;
+
+			case BBMOD_EEditAxis.Z:
+				var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
+				break;
+
+			case BBMOD_EEditAxis.All:
+				_planeNormal = global.__bbmodCameraCurrent.get_forward();
+				break;
+			}
+
+			var _mouseWorld = intersect_ray_plane(
+				global.__bbmodCameraCurrent.Position,
+				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+				Position,
+				_planeNormal);
+
+			if (_mouseWorld && __mouseOffset)
+			{
+				var _mul = (keyboard_check(KeyEditFaster) ? 5.0
+					: (keyboard_check(KeyEditSlower) ? 0.1
+					: 1.0));
+
+				var _diff = _mouseWorld.Sub(__mouseOffset).Scale(_mul);
+
+				if (EditAxis == BBMOD_EEditAxis.All)
+				{
+					var _diffX = _diff.Mul(_forwardGizmo.Abs()).Dot(_forwardGizmo);
+					var _diffY = _diff.Mul(_rightGizmo.Abs()).Dot(_rightGizmo);
+					var _scaleBy = (abs(_diffX) > abs(_diffY)) ? _diffX : _diffY;
+					__scaleBy.X += _scaleBy;
+					__scaleBy.Y += _scaleBy;
+					__scaleBy.Z += _scaleBy;
+				}
+				else
+				{
+					if (EditAxis & BBMOD_EEditAxis.X)
+					{
+						__scaleBy.X += _diff.Mul(_forwardGizmo.Abs()).Dot(_forwardGizmo);
+					}
+
+					if (EditAxis & BBMOD_EEditAxis.Y)
+					{
+						__scaleBy.Y += _diff.Mul(_rightGizmo.Abs()).Dot(_rightGizmo);
+					}
+
+					if (EditAxis & BBMOD_EEditAxis.Z)
+					{
+						__scaleBy.Z += _diff.Mul(_upGizmo.Abs()).Dot(_upGizmo);
+					}
 				}
 			}
 
-			window_mouse_set(__mouseLockAt.X, __mouseLockAt.Y);
-			window_set_cursor(cr_none);
+			__mouseOffset = _mouseWorld;
 			break;
 		}
 
 		////////////////////////////////////////////////////////////////////////
+		// Cancel editing?
+		if (keyboard_check_pressed(KeyCancel))
+		{
+			if (__positionBackup)
+			{
+				__positionBackup.Copy(Position);
+			}
+			__rotateBy.Set(0.0, 0.0, 0.0);
+			__scaleBy.Set(0.0, 0.0, 0.0);
+			IsEditing = false;
+		}
+
+		////////////////////////////////////////////////////////////////////////
 		// Apply to selected instances
-		var _matRot = [
-			_forward.X, _forward.Y, _forward.Z, 0.0,
-			_right.X,   _right.Y,   _right.Z,   0.0,
-			_up.X,      _up.Y,      _up.Z,      0.0,
-			0.0,        0.0,        0.0,        1.0,
-		];
-
-		var _matRotInverse = [
-			_forward.X, _right.X, _up.X, 0.0,
-			_forward.Y, _right.Y, _up.Y, 0.0,
-			_forward.Z, _right.Z, _up.Z, 0.0,
-			0.0,        0.0,      0.0,   1.0,
-		];
-
 		var _size = ds_list_size(Selected);
 
 		for (var i = _size - 1; i >= 0; --i)
@@ -902,39 +1078,53 @@ function BBMOD_Gizmo(_size=10.0)
 			var _scaleStored = _data.Scale;
 
 			// Get local basis
-			var _quaternionLocal = new BBMOD_Quaternion().FromEuler(
+			var _quaternionInstance = new BBMOD_Quaternion().FromEuler(
 				GetInstanceRotationX(_instance),
 				GetInstanceRotationY(_instance),
 				GetInstanceRotationZ(_instance));
-			var _forwardLocal = _quaternionLocal.Rotate(BBMOD_VEC3_FORWARD);
-			var _rightLocal = _quaternionLocal.Rotate(BBMOD_VEC3_RIGHT);
-			var _upLocal = _quaternionLocal.Rotate(BBMOD_VEC3_UP);
+			var _forwardInstance    = _quaternionInstance.Rotate(BBMOD_VEC3_FORWARD);
+			var _rightInstance      = _quaternionInstance.Rotate(BBMOD_VEC3_RIGHT);
+			var _upInstance         = _quaternionInstance.Rotate(BBMOD_VEC3_UP);
 
 			// Apply rotation
-			// TODO: Add configurable angle increments
-			var _rotateByX = __rotateBy.X; //floor(__rotateBy.X / 45.0) * 45.0;
-			var _rotateByY = __rotateBy.Y; //floor(__rotateBy.Y / 45.0) * 45.0;
-			var _rotateByZ = __rotateBy.Z; //floor(__rotateBy.Z / 45.0) * 45.0;
+			var _matGlobal    = GetInstanceGlobalMatrix(_instance);
+			var _matGlobalInv = _matGlobal.Inverse();
+			var _rotateByX    = __rotateBy.X;
+			var _rotateByY    = __rotateBy.Y;
+			var _rotateByZ    = __rotateBy.Z;
+
+			if (EnableAngleSnap
+				&& AngleSnap != 0.0
+				&& !keyboard_check(KeyIgnoreSnap))
+			{
+				_rotateByX = floor(__rotateBy.X / AngleSnap) * AngleSnap;
+				_rotateByY = floor(__rotateBy.Y / AngleSnap) * AngleSnap;
+				_rotateByZ = floor(__rotateBy.Z / AngleSnap) * AngleSnap;
+			}
+
+			var _temp          = new BBMOD_Vec4(_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
+			var _forwardGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
+			var _temp          = new BBMOD_Vec4(_rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
+			var _rightGlobal   = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
+			var _temp          = new BBMOD_Vec4(_upGizmo.X, _upGizmo.Y, _upGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
+			var _upGlobal      = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
 
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
 			if (_rotateByX != 0.0)
 			{
-				var _quaternionX = new BBMOD_Quaternion()
-					.FromAxisAngle(_forward, _rotateByX);
+				var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forwardGlobal, _rotateByX);
 				_positionOffset = _quaternionX.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionX);
 			}
 			if (_rotateByY != 0.0)
 			{
-				var _quaternionY = new BBMOD_Quaternion()
-					.FromAxisAngle(_right, _rotateByY);
+				var _quaternionY = new BBMOD_Quaternion().FromAxisAngle(_rightGlobal, _rotateByY);
 				_positionOffset = _quaternionY.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionY);
 			}
 			if (_rotateByZ != 0.0)
 			{
-				var _quaternionZ = new BBMOD_Quaternion()
-					.FromAxisAngle(_up, _rotateByZ);
+				var _quaternionZ = new BBMOD_Quaternion().FromAxisAngle(_upGlobal, _rotateByZ);
 				_positionOffset = _quaternionZ.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionZ);
 			}
@@ -948,23 +1138,22 @@ function BBMOD_Gizmo(_size=10.0)
 			var _scaleOld = _scaleNew.Clone();
 
 			// Scale on X
-			_scaleNew.X += __scaleBy.X * abs(_forward.Dot(_forwardLocal));
-			_scaleNew.Y += __scaleBy.X * abs(_forward.Dot(_rightLocal));
-			_scaleNew.Z += __scaleBy.X * abs(_forward.Dot(_upLocal));
+			_scaleNew.X += __scaleBy.X * abs(_forwardGlobal.Dot(_forwardInstance));
+			_scaleNew.Y += __scaleBy.X * abs(_forwardGlobal.Dot(_rightInstance));
+			_scaleNew.Z += __scaleBy.X * abs(_forwardGlobal.Dot(_upInstance));
 
 			// Scale on Y
-			_scaleNew.X += __scaleBy.Y * abs(_right.Dot(_forwardLocal));
-			_scaleNew.Y += __scaleBy.Y * abs(_right.Dot(_rightLocal));
-			_scaleNew.Z += __scaleBy.Y * abs(_right.Dot(_upLocal));
+			_scaleNew.X += __scaleBy.Y * abs(_rightGlobal.Dot(_forwardInstance));
+			_scaleNew.Y += __scaleBy.Y * abs(_rightGlobal.Dot(_rightInstance));
+			_scaleNew.Z += __scaleBy.Y * abs(_rightGlobal.Dot(_upInstance));
 
 			// Scale on Z
-			_scaleNew.X += __scaleBy.Z * abs(_up.Dot(_forwardLocal));
-			_scaleNew.Y += __scaleBy.Z * abs(_up.Dot(_rightLocal));
-			_scaleNew.Z += __scaleBy.Z * abs(_up.Dot(_upLocal));
+			_scaleNew.X += __scaleBy.Z * abs(_upGlobal.Dot(_forwardInstance));
+			_scaleNew.Y += __scaleBy.Z * abs(_upGlobal.Dot(_rightInstance));
+			_scaleNew.Z += __scaleBy.Z * abs(_upGlobal.Dot(_upInstance));
 
 			// Scale offset
-			var _vI = matrix_transform_vertex(_matRotInverse,
-				_positionOffset.X, _positionOffset.Y, _positionOffset.Z);
+			var _vI = matrix_transform_vertex(_matRotInverse, _positionOffset.X, _positionOffset.Y, _positionOffset.Z);
 			var _vIRot = matrix_transform_vertex(
 				matrix_build(
 					0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
