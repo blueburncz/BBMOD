@@ -11,3 +11,7 @@
 * Added new property `KeyIgnoreSnap` to `BBMOD_Gizmo`, which is the virtual key used to ignore grid and angle snapping when they are enabled. Default is `vk_alt`.
 * Added new method `GetInstanceGlobalMatrix` to `BBMOD_Gizmo`, which is a function that the gizmo uses to retrieve an instance's global matrix. Normally this is an identity matrix. If the instance is attached to another instance for example, then this will be that instance's transformation matrix.
 * Fixed the gizmo to work independently on from which direction is the camera looking at it and whether it's moving or not.
+
+## Rendering module:
+### Sky submodule:
+* Fixed shader `BBMOD_ShSky` ignoring matrix rotation.
