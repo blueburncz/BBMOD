@@ -9,5 +9,5 @@ varying vec3 v_vNormal;
 void main()
 {
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * in_Position;
-	v_vNormal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(in_Normal, 0.0)).xyz);
+	v_vNormal = normalize(in_Normal); //normalize((gm_Matrices[MATRIX_WORLD] * vec4(in_Normal, 0.0)).xyz);
 }
