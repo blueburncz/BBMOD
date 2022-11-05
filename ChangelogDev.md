@@ -2,7 +2,10 @@
 > This file is used to accumulate changes before a changelog for a release is
 > created.
 
-## Gizmo module
+## Core module:
+* Struct `BBMOD_StaticBatch` is now deprecated. We recommend using a `BBMOD_DynamicBatch` instead.
+
+## Gizmo module:
 * Added new property `EnableGridSnap` to `BBMOD_Gizmo`, which enables snapping to grid when moving objects.
 * Added new property `GridSize` to `BBMOD_Gizmo`, which is the size of the grid.
 * Added new property `EnableAngleSnap` to `BBMOD_Gizmo`, which enables angle snapping when rotating objects.

@@ -30,6 +30,8 @@
 ///
 /// @see BBMOD_Model.get_vertex_format
 /// @see BBMOD_DynamicBatch
+///
+/// @deprecated
 function BBMOD_StaticBatch(_vformat)
 	: BBMOD_Class() constructor
 {
