@@ -3,6 +3,7 @@
 > created.
 
 ## Core module:
+* Added new function `bbmod_matrix_build_normalmatrix`, which creates a matrix using which you can safely transform normal vectors in shaders.
 * Struct `BBMOD_StaticBatch` is now deprecated. We recommend using a `BBMOD_DynamicBatch` instead.
 
 ## Gizmo module:

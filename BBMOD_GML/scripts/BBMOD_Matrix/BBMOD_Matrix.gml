@@ -764,3 +764,55 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 }
+
+/// @func bbmod_matrix_build_normalmatrix(_m[, _dest[, _index]])
+///
+/// @desc Creates a matrix using which you can safely transform normal vectors.
+///
+/// @param {Array<Real>} _m A matrix to build the normal matrix from.
+/// @param {Array} [_dest] An array to store the resulting matrix to. Defaults
+/// to a new array empty array.
+/// @param {Real} [_index] An index to start writing the result at. Defaults to
+/// 0.
+///
+/// @return {Array} The destination array.
+function bbmod_matrix_build_normalmatrix(_m, _dest=[], _index=0)
+{
+	gml_pragma("forceinline");
+
+	var _m0  = _m[ 0];
+	var _m1  = _m[ 1];
+	var _m2  = _m[ 2];
+	var _m4  = _m[ 4];
+	var _m5  = _m[ 5];
+	var _m6  = _m[ 6];
+	var _m8  = _m[ 8];
+	var _m9  = _m[ 9];
+	var _m10 = _m[10];
+
+	var _determinant = (0.0
+		+ _m0 * ((_m5 * _m10) - (_m6 *  _m9))
+		+ _m4 * ((_m9 *  _m2) - (_m1 * _m10))
+		+ _m8 * ((_m1 *  _m6) - (_m5 *  _m2)));
+
+	var _s = 1.0 / _determinant;
+
+	_dest[@ _index + 0]  = _s * ((_m5 * _m10) - (_m6 *  _m9));
+	_dest[@ _index + 1]  = _s * ((_m8 *  _m6) - (_m4 * _m10));
+	_dest[@ _index + 2]  = _s * ((_m4 *  _m9) - (_m8 *  _m5));
+	_dest[@ _index + 3]  = 0.0;
+	_dest[@ _index + 4]  = _s * ((_m9 *  _m2) - (_m1 * _m10));
+	_dest[@ _index + 5]  = _s * ((_m0 * _m10) - (_m8 *  _m2));
+	_dest[@ _index + 6]  = _s * ((_m1 *  _m8) - (_m0 *  _m9));
+	_dest[@ _index + 7]  = 0.0;
+	_dest[@ _index + 8]  = _s * ((_m1 * _m6) - (_m2 * _m5));
+	_dest[@ _index + 9]  = _s * ((_m2 * _m4) - (_m0 * _m6));
+	_dest[@ _index + 10] = _s * ((_m0 * _m5) - (_m1 * _m4));
+	_dest[@ _index + 11] = 0.0;
+	_dest[@ _index + 12] = 0.0;
+	_dest[@ _index + 13] = 0.0;
+	_dest[@ _index + 14] = 0.0;
+	_dest[@ _index + 15] = 1.0;
+
+	return _dest;
+}
