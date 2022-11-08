@@ -35,7 +35,7 @@ if (camera.Position.Z < _cameraHeight)
 }
 
 // Increase camera exposure during nighttime
-camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, global.day ? 1.0 : 10.0, 0.05, delta_time);
+camera.Exposure = bbmod_lerp_delta_time(camera.Exposure, global.day ? 1.0 : 2.0, 0.05, delta_time);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Player controls

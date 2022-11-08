@@ -27,4 +27,24 @@ function BBMOD_Light()
 	/// @var {Bool} If `true` then the light should casts shadows. This may
 	/// not be implemented for all types of lights! Defaults to `false`.
 	CastShadows = false;
+
+	/// @var {Real} The resolution of the shadowmap surface. Must be power of 2.
+	/// Defaults to 512.
+	ShadowmapResolution = 512;
+
+	/// @var {Function}
+	/// @private
+	__getZFar = undefined;
+
+	/// @var {Function}
+	/// @private
+	__getViewMatrix = undefined;
+
+	/// @var {Function}
+	/// @private
+	__getProjMatrix = undefined;
+
+	/// @var {Function}
+	/// @private
+	__getShadowmapMatrix = undefined;
 }

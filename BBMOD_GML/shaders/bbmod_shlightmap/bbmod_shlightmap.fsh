@@ -133,6 +133,8 @@ uniform vec2 bbmod_ShadowmapTexel;
 uniform float bbmod_ShadowmapAreaPS;
 // The range over which meshes smoothly transition into shadow.
 uniform float bbmod_ShadowmapBias;
+// The index of the light that casts shadows. Use -1 for the directional light.
+uniform float bbmod_ShadowCasterIndex;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -423,6 +425,7 @@ void DoPointLightPS(
 	vec3 position,
 	float range,
 	vec3 color,
+	float shadow,
 	vec3 vertex,
 	vec3 N,
 	vec3 V,
@@ -437,7 +440,7 @@ void DoPointLightPS(
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
 	att *= att;
 	float NdotL = max(dot(N, L), 0.0);
-	color *= NdotL * att;
+	color *= (1.0 - shadow) * NdotL * att;
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
 }
@@ -446,6 +449,7 @@ void DoSpotLightPS(
 	vec3 position,
 	float range,
 	vec3 color,
+	float shadow,
 	vec3 direction,
 	float dcosInner,
 	float dcosOuter,
@@ -464,7 +468,7 @@ void DoSpotLightPS(
 	float theta = dot(L, normalize(-direction));
 	float epsilon = dcosInner - dcosOuter;
 	float intensity = clamp((theta - dcosOuter) / epsilon, 0.0, 1.0);
-	color *= intensity * att;
+	color *= (1.0 - shadow) * intensity * att;
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
 }
@@ -697,7 +701,7 @@ void PBRShader(Material material, float depth)
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
 		directionalLightColor,
-		shadow,
+		(bbmod_ShadowCasterIndex == -1.0) ? shadow : 0.0,
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
 
 	// SSAO
@@ -718,6 +722,7 @@ void PBRShader(Material material, float depth)
 		{
 			DoSpotLightPS(
 				positionRange.xyz, positionRange.w, color,
+				(bbmod_ShadowCasterIndex == float(i)) ? shadow : 0.0,
 				direction, isSpotInnerOuter.y, isSpotInnerOuter.z,
 				v_vVertex, N, V, material,
 				lightDiffuse, lightSpecular, lightSubsurface);
@@ -726,6 +731,7 @@ void PBRShader(Material material, float depth)
 		{
 			DoPointLightPS(
 				positionRange.xyz, positionRange.w, color,
+				(bbmod_ShadowCasterIndex == float(i)) ? shadow : 0.0,
 				v_vVertex, N, V, material,
 				lightDiffuse, lightSpecular, lightSubsurface);
 		}

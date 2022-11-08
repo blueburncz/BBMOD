@@ -12,6 +12,7 @@ void DoSpotLightPS(
 	vec3 position,
 	float range,
 	vec3 color,
+	float shadow,
 	vec3 direction,
 	float dcosInner,
 	float dcosOuter,
@@ -33,7 +34,7 @@ void DoSpotLightPS(
 #if defined(X_PBR) && !defined(X_TERRAIN) && !defined(X_LIGHTMAP)
 	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 #endif
-	color *= intensity * att;
+	color *= (1.0 - shadow) * intensity * att;
 	diffuse += color;
 #if defined(X_PBR)
 	specular += color * SpecularGGX(m, N, V, L);

@@ -5,6 +5,8 @@
 ## Core module:
 * Added new function `bbmod_matrix_build_normalmatrix`, which creates a matrix using which you can safely transform normal vectors in shaders.
 * Struct `BBMOD_StaticBatch` is now deprecated. We recommend using a `BBMOD_DynamicBatch` instead.
+* Added new property `ShadowmapResolution` to `BBMOD_Light`, which is the shadowmap resolution.
+* Added new property `ShadowmapArea` to `BBMOD_DirectionalLight`, which is the area captured by the shadowmap.
 
 ## Gizmo module:
 * Added new property `EnableGridSnap` to `BBMOD_Gizmo`, which enables snapping to grid when moving objects.
@@ -17,6 +19,10 @@
 * Fixed the gizmo to work independently on from which direction is the camera looking at it and whether it's moving or not.
 
 ## Rendering module:
+### Renderer module:
+* Property `ShadowmapResolution` of `BBMOD_Renderer` is now obsolete. Please use `BBMOD_Light.ShadowmapResolution` instead.
+* Property `ShadowmapArea` of `BBMOD_Renderer` is now obsolete. Please use `BBMOD_DirectionalLight.ShadowmapArea` instead.
+
 ### Sky submodule:
 * Fixed shader `BBMOD_ShSky` ignoring matrix rotation.
 

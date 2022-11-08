@@ -33,4 +33,42 @@ function BBMOD_SpotLight(
 
 	/// @var {Real} The inner cone angle in degrees. Default value is 20.
 	AngleOuter = _angleOuter;
+
+	__getZFar = __get_shadowmap_zfar;
+
+	__getViewMatrix = __get_shadowmap_view;
+
+	__getProjMatrix = __get_shadowmap_projection;
+
+	__getShadowmapMatrix = __get_shadowmap_matrix;
+
+	static __get_shadowmap_zfar = function () {
+		gml_pragma("forceinline");
+		return Range;
+	};
+
+	static __get_shadowmap_view = function () {
+		gml_pragma("forceinline");
+		return matrix_build_lookat(
+			Position.X,
+			Position.Y,
+			Position.Z,
+			Position.X + Direction.X,
+			Position.Y + Direction.Y,
+			Position.Z + Direction.Z,
+			0.0, 0.0, 1.0); // TODO: Find the up vector
+	};
+
+	static __get_shadowmap_projection = function () {
+		gml_pragma("forceinline");
+		return matrix_build_projection_perspective_fov(
+			AngleOuter * 2.0, 1.0, 0.1, Range);
+	};
+
+	static __get_shadowmap_matrix = function () {
+		gml_pragma("forceinline");
+		return matrix_multiply(
+			__getViewMatrix(),
+			__getProjMatrix());
+	};
 }

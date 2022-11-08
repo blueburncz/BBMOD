@@ -18,7 +18,8 @@ matSky.BaseOpacity = -1;
 bbmod_light_ambient_set(BBMOD_C_BLACK);
 
 sunLight = new BBMOD_DirectionalLight();
-sunLight.CastShadows = true;
+sunLight.CastShadows = global.day;
+sunLight.ShadowmapResolution = 4096;
 bbmod_light_directional_set(sunLight);
 
 // TODO: Fix memory leaks

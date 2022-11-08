@@ -170,8 +170,10 @@ void main()
 	// Vertex position in shadowmap
 	if (bbmod_ShadowmapEnableVS == 1.0)
 	{
-		v_vPosShadowmap = (bbmod_ShadowmapMatrix
-			* vec4(v_vVertex + normal * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
+		vec4 temp = bbmod_ShadowmapMatrix
+			* vec4(v_vVertex + normal * bbmod_ShadowmapNormalOffset, 1.0);
+		v_vPosShadowmap = temp.xyz;
+		v_vPosShadowmap.xy /= temp.w;
 		v_vPosShadowmap.xy = v_vPosShadowmap.xy * 0.5 + 0.5;
 	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
 		v_vPosShadowmap.y = 1.0 - v_vPosShadowmap.y;

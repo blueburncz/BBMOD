@@ -47,7 +47,7 @@ void PBRShader(Material material, float depth)
 	DoDirectionalLightPS(
 		bbmod_LightDirectionalDir,
 		directionalLightColor,
-		shadow,
+		(bbmod_ShadowCasterIndex == -1.0) ? shadow : 0.0,
 		v_vVertex, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
 
 #if !defined(X_PARTICLES)
@@ -70,6 +70,7 @@ void PBRShader(Material material, float depth)
 		{
 			DoSpotLightPS(
 				positionRange.xyz, positionRange.w, color,
+				(bbmod_ShadowCasterIndex == float(i)) ? shadow : 0.0,
 				direction, isSpotInnerOuter.y, isSpotInnerOuter.z,
 				v_vVertex, N, V, material,
 				lightDiffuse, lightSpecular, lightSubsurface);
@@ -78,6 +79,7 @@ void PBRShader(Material material, float depth)
 		{
 			DoPointLightPS(
 				positionRange.xyz, positionRange.w, color,
+				(bbmod_ShadowCasterIndex == float(i)) ? shadow : 0.0,
 				v_vVertex, N, V, material,
 				lightDiffuse, lightSpecular, lightSubsurface);
 		}

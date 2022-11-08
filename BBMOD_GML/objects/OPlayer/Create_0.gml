@@ -18,8 +18,11 @@ matrixGun = matrix_build_identity();
 punchRight = true;
 
 flashlight = new BBMOD_SpotLight();
+flashlight.CastShadows = true;
 flashlight.Range = 300;
-flashlight.Color.Alpha = 0.1;
+flashlight.Color.Alpha = 0.5;
+flashlight.AngleInner = 15;
+flashlight.AngleOuter = 30;
 bbmod_light_punctual_add(flashlight);
 
 ////////////////////////////////////////////////////////////////////////////////

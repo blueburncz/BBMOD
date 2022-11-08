@@ -216,6 +216,8 @@ uniform vec2 bbmod_ShadowmapTexel;
 uniform float bbmod_ShadowmapAreaPS;
 // The range over which meshes smoothly transition into shadow.
 uniform float bbmod_ShadowmapBias;
+// The index of the light that casts shadows. Use -1 for the directional light.
+uniform float bbmod_ShadowCasterIndex;
 #endif // X_PBR
 #endif // !X_OUTPUT_DEPTH
 
