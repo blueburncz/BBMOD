@@ -6,9 +6,25 @@ zspeed -= 0.1 * global.gameSpeed;
 
 var _terrainHeight = global.terrain.get_height(x, y);
 
-if (_terrainHeight != undefined
-	&& z < _terrainHeight)
+if (_terrainHeight != undefined)
 {
-	z = _terrainHeight;
-	zspeed = 0;
+	if (zspeed > 0)
+	{
+		onGround = false;
+	}
+
+	if (z < _terrainHeight)
+	{
+		onGround = true;
+	}
+
+	if (onGround)
+	{
+		z = _terrainHeight;
+		zspeed = 0;
+	}
+}
+else
+{
+	onGround = false;
 }

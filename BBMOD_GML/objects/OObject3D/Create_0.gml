@@ -6,3 +6,6 @@ z = 0;
 
 // The object's speed on the z axis.
 zspeed = 0;
+
+// True if the object is on ground.
+onGround = false;
