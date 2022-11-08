@@ -58,6 +58,7 @@ modGun.Materials[@ 2] = matGun2;
 modShell = _objImporter.import("Data/Assets/Shell.obj");
 
 matShell = BBMOD_MATERIAL_DEFAULT_BATCHED.clone()
+	.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID_BATCHED)
 	.set_base_opacity(new BBMOD_Color().FromHex($E8DA56))
 	.set_specular_color(new BBMOD_Color().FromConstant($E8DA56))
 	.set_normal_smoothness(BBMOD_VEC3_UP, 0.7);

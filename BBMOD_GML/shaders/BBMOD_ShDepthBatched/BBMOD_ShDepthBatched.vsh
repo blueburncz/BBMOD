@@ -71,7 +71,7 @@ void Transform(
 	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
 	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 
-	int idx = int(in_Id) * 2;
+	int idx = int(in_Id) * 3;
 	vec4 posScale = bbmod_BatchData[idx];
 	vec4 rot = bbmod_BatchData[idx + 1];
 

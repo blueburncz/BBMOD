@@ -73,7 +73,7 @@ void Transform(
 #endif
 
 #if defined(X_BATCHED)
-	int idx = int(in_Id) * 2;
+	int idx = int(in_Id) * 3;
 	vec4 posScale = bbmod_BatchData[idx];
 	vec4 rot = bbmod_BatchData[idx + 1];
 

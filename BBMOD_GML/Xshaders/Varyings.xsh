@@ -18,3 +18,7 @@ varying vec3 v_vPosShadowmap;
 #if defined(X_TERRAIN)
 varying vec2 v_vSplatmapCoord;
 #endif
+
+#if defined(X_ID) && defined(X_BATCHED)
+varying vec4 v_vInstanceID;
+#endif

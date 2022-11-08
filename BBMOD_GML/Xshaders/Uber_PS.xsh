@@ -58,7 +58,7 @@ float Noise(in vec2 st)
 // Uniforms
 //
 
-#if defined(X_ID)
+#if defined(X_ID) && !defined(X_BATCHED)
 ////////////////////////////////////////////////////////////////////////////////
 // Instance IDs
 
@@ -302,7 +302,11 @@ void main()
 	}
 
 #if defined(X_ID)
+#if defined(X_BATCHED)
+	gl_FragColor = v_vInstanceID;
+#else
 	gl_FragColor = bbmod_InstanceID;
+#endif
 #elif defined(X_OUTPUT_DEPTH)
 	DepthShader(v_vPosition.z);
 #else // X_OUTPUT_DEPTH

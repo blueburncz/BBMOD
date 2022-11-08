@@ -13,7 +13,7 @@
 /// @param {Real} [_size] Number of model instances in the batch. Default value
 /// is 32.
 /// @param {Real} [_slotsPerInstance] Number of slots that each instance takes
-/// in the data array. Default value is 8.
+/// in the data array. Default value is 12.
 ///
 /// @example
 /// Following code renders all instances of a car object in batches of 64.
@@ -29,7 +29,7 @@
 /// ```
 ///
 /// @see BBMOD_StaticBatch
-function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=8)
+function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -277,6 +277,11 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=8)
 		new BBMOD_Quaternion()
 			.FromAxisAngle(BBMOD_VEC3_UP, image_angle)
 			.ToArray(_data, _index + 4);
+		// ID
+		_data[@ _index + 8] = ((id & $000000FF) >> 0) / 255;
+		_data[@ _index + 9] = ((id & $0000FF00) >> 8) / 255;
+		_data[@ _index + 10] = ((id & $00FF0000) >> 16) / 255;
+		_data[@ _index + 11] = ((id & $FF000000) >> 24) / 255;
 	};
 
 	static __draw_object = function (_method, _object, _materials, _fn=undefined) {
@@ -335,6 +340,11 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=8)
 	///     new BBMOD_Quaternion()
 	///         .FromAxisAngle(BBMOD_VEC3_UP, image_angle)
 	///         .ToArray(_data, _index + 4);
+	///     // ID
+	///     _data[@ _index + 8] = ((id & $000000FF) >> 0) / 255;
+	///     _data[@ _index + 9] = ((id & $0000FF00) >> 8) / 255;
+	///     _data[@ _index + 10] = ((id & $00FF0000) >> 16) / 255;
+	///     _data[@ _index + 11] = ((id & $FF000000) >> 24) / 255;
 	/// });
 	/// ```
 	/// The function defined in this example is actually the implementation of
@@ -378,6 +388,11 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=8)
 	///     new BBMOD_Quaternion()
 	///         .FromAxisAngle(BBMOD_VEC3_UP, image_angle)
 	///         .ToArray(_data, _index + 4);
+	///     // ID
+	///     _data[@ _index + 8] = ((id & $000000FF) >> 0) / 255;
+	///     _data[@ _index + 9] = ((id & $0000FF00) >> 8) / 255;
+	///     _data[@ _index + 10] = ((id & $00FF0000) >> 16) / 255;
+	///     _data[@ _index + 11] = ((id & $FF000000) >> 24) / 255;
 	/// });
 	/// ```
 	/// The function defined in this example is actually the implementation of

@@ -165,6 +165,10 @@ void main()
 	v_vSplatmapCoord = in_TextureCoord0;
 #endif
 
+#if defined(X_ID) && defined(X_BATCHED)
+	v_vInstanceID = bbmod_BatchData[(int(in_Id) * 3) + 2];
+#endif
+
 #if defined(X_PBR) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
 	////////////////////////////////////////////////////////////////////////////
 	// Vertex position in shadowmap

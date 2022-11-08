@@ -33,6 +33,9 @@ Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShInstanceID\BBMOD_ShInsta
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShInstanceIDAnimated\BBMOD_ShInstanceIDAnimated.vsh --x .\Xshaders\ -ci X_ID=1 X_ANIMATED=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShInstanceIDAnimated\BBMOD_ShInstanceIDAnimated.fsh --x .\Xshaders\ -ci X_ID=1 X_ANIMATED=1
 
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShInstanceIDBatched\BBMOD_ShInstanceIDBatched.vsh --x .\Xshaders\ -ci X_ID=1 X_BATCHED=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShInstanceIDBatched\BBMOD_ShInstanceIDBatched.fsh --x .\Xshaders\ -ci X_ID=1 X_BATCHED=1
+
 # Particle shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShParticleDepth\BBMOD_ShParticleDepth.vsh --x .\Xshaders\ -ci X_PBR=1 X_PARTICLES=1 X_OUTPUT_DEPTH=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShParticleDepth\BBMOD_ShParticleDepth.fsh --x .\Xshaders\ -ci X_PBR=1 X_PARTICLES=1 X_OUTPUT_DEPTH=1

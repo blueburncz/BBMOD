@@ -35,15 +35,6 @@ uniform vec2 bbmod_TextureScale;
 
 uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
 
-// 1.0 to enable shadows
-uniform float bbmod_ShadowmapEnableVS;
-// WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
-uniform mat4 bbmod_ShadowmapMatrix;
-// The area that the shadowmap captures
-uniform float bbmod_ShadowmapAreaVS;
-// Offsets vertex position by its normal scaled by this value
-uniform float bbmod_ShadowmapNormalOffset;
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings
@@ -55,6 +46,8 @@ varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 
 varying vec3 v_vPosShadowmap;
+
+varying vec4 v_vInstanceID;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -115,18 +108,6 @@ void main()
 
 	v_mTBN = mat3(tangent, bitangent, normal);
 
-	////////////////////////////////////////////////////////////////////////////
-	// Vertex position in shadowmap
-	if (bbmod_ShadowmapEnableVS == 1.0)
-	{
-		vec4 temp = bbmod_ShadowmapMatrix
-			* vec4(v_vVertex + normal * bbmod_ShadowmapNormalOffset, 1.0);
-		v_vPosShadowmap = temp.xyz;
-		v_vPosShadowmap.xy /= temp.w;
-		v_vPosShadowmap.xy = v_vPosShadowmap.xy * 0.5 + 0.5;
-	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-		v_vPosShadowmap.y = 1.0 - v_vPosShadowmap.y;
-	#endif
-		v_vPosShadowmap.z /= bbmod_ShadowmapAreaVS;
-	}
+	v_vInstanceID = bbmod_BatchData[(int(in_Id) * 3) + 2];
+
 }
