@@ -27,6 +27,8 @@ attribute vec4 in_TangentW;
 //
 // Uniforms
 //
+uniform mat4 bbmod_NormalMatrix;
+
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
@@ -72,9 +74,9 @@ void Transform(
 {
 
 	vertex = gm_Matrices[MATRIX_WORLD] * vertex;
-	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
-	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
-	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
+	normal = normalize((bbmod_NormalMatrix * vec4(normal, 0.0)).xyz);
+	tangent = normalize((bbmod_NormalMatrix * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((bbmod_NormalMatrix * vec4(bitangent, 0.0)).xyz);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

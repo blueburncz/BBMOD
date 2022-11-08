@@ -28,6 +28,7 @@ attribute vec4 in_TangentW;
 //
 // Uniforms
 //
+
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 

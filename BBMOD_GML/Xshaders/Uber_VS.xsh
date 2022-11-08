@@ -47,6 +47,10 @@ attribute float in_Id;
 //
 // Uniforms
 //
+#if defined(X_TERRAIN)
+uniform mat4 bbmod_NormalMatrix;
+#endif
+
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 

@@ -29,6 +29,7 @@ attribute float in_Id;
 //
 // Uniforms
 //
+
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 

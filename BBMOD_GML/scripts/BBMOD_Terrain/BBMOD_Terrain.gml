@@ -685,7 +685,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static submit = function () {
-		matrix_set(matrix_world, matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z));
+		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
+		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
+		matrix_set(matrix_world, _matrix);
 		var i = 0;
 		repeat (5)
 		{
@@ -695,9 +697,11 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 				var _uSplatmap = BBMOD_SHADER_CURRENT.get_sampler_index("bbmod_Splatmap");
 				var _uSplatmapIndex = BBMOD_SHADER_CURRENT.get_uniform("bbmod_SplatmapIndex");
 				var _uTextureScale = BBMOD_SHADER_CURRENT.get_uniform("bbmod_TextureScale");
+				var _uNormalMatrix = BBMOD_SHADER_CURRENT.get_uniform("bbmod_NormalMatrix");
 				texture_set_stage(_uSplatmap, Splatmap);
 				shader_set_uniform_i(_uSplatmapIndex, i - 1);
 				shader_set_uniform_f(_uTextureScale, TextureRepeat.X, TextureRepeat.Y);
+				shader_set_uniform_matrix_array(_uNormalMatrix, _normalMatrix);
 				vertex_submit(VertexBuffer, pr_trianglelist, _mat.BaseOpacity);
 			}
 			++i;
@@ -712,6 +716,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static render = function () {
 		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
+		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
 		var i = 0;
 		repeat (5)
 		{
@@ -734,6 +739,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 					.set_sampler("bbmod_Splatmap", Splatmap)
 					.set_uniform_i("bbmod_SplatmapIndex", i - 1)
 					.set_uniform_f2("bbmod_TextureScale", TextureRepeat.X, TextureRepeat.Y)
+					.set_uniform_matrix_array("bbmod_NormalMatrix", _normalMatrix)
 					.set_world_matrix(_matrix)
 					.submit_vertex_buffer(VertexBuffer, pr_trianglelist, _mat.BaseOpacity)
 					.reset_material()

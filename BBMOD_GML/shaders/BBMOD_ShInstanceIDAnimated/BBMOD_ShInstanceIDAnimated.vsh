@@ -30,6 +30,7 @@ attribute vec4 in_BoneWeight;
 //
 // Uniforms
 //
+
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 

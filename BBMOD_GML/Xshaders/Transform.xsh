@@ -85,8 +85,14 @@ void Transform(
 
 #if !defined(X_BATCHED)
 	vertex = gm_Matrices[MATRIX_WORLD] * vertex;
+#if defined(X_TERRAIN)
+	normal = normalize((bbmod_NormalMatrix * vec4(normal, 0.0)).xyz);
+	tangent = normalize((bbmod_NormalMatrix * vec4(tangent, 0.0)).xyz);
+	bitangent = normalize((bbmod_NormalMatrix * vec4(bitangent, 0.0)).xyz);
+#else
 	normal = normalize((gm_Matrices[MATRIX_WORLD] * vec4(normal, 0.0)).xyz);
 	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
 	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
+#endif
 #endif
 }
