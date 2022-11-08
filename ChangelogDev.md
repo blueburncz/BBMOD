@@ -19,3 +19,6 @@
 ## Rendering module:
 ### Sky submodule:
 * Fixed shader `BBMOD_ShSky` ignoring matrix rotation.
+
+## Terrain module:
+* Fixed terrain normals when using non-uniform scaling.
