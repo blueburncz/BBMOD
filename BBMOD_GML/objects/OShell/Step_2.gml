@@ -1,10 +1,6 @@
 event_inherited();
 
-var _terrainHeight = global.terrain.get_height(x, y);
-
-if (_terrainHeight != undefined
-	&& z <= _terrainHeight
-	&& !onGround)
+if (onGround && alarm[0] == -1)
 {
 	var _sound = choose(
 		SndShell0,
@@ -18,7 +14,6 @@ if (_terrainHeight != undefined
 	);
 	audio_play_sound_at(_sound, x, y, z, 1, 100, 1, false, 1);
 
-	onGround = true;
 	alarm[0] = 600;
 }
 
