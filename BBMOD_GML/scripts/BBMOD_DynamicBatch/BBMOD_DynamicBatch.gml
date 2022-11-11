@@ -254,13 +254,18 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 		return self;
 	};
 
-	/// @func render([_materials[, _batchData]])
+	/// @func render([_materials[, _batchData[, _ids]]])
 	///
 	/// @desc Enqueues the dynamic batch for rendering.
 	///
 	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of materials.
 	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
-	/// batching.
+	/// batching. Defaults to data of instances added with
+	/// {@link BBMOD_DynamicBatch.add_instance}.
+	/// @param {Array<Id.Instance>, Array<Array<Id.Instance>>} [_ids] IDs of
+	/// instances in the `_batchData` array(s). Defaults to IDs of instances
+	/// added with {@link BBMOD_DynamicBatch.add_instance}. Applicable only when
+	/// `_batchData` is `undefined`!
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
@@ -268,7 +273,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
-	static render = function (_materials=undefined, _batchData=undefined) {
+	static render = function (_materials=undefined, _batchData=undefined, _ids=undefined) {
 		gml_pragma("forceinline");
 
 		if (_batchData == undefined)
@@ -278,7 +283,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 		}
 		else
 		{
-			global.__bbmodInstanceIDBatch = undefined;
+			global.__bbmodInstanceIDBatch = _ids;
 		}
 
 		if (array_length(_batchData) > 0)
@@ -335,24 +340,35 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 		_fn ??= DataWriter;
 
 		var _slotsPerInstance = SlotsPerInstance;
-		var _dataSize = Size * _slotsPerInstance;
+		var _size = Size;
+		var _dataSize = _size * _slotsPerInstance;
 		var _data = array_create(_dataSize, 0.0);
-		var _index = 0;
+		var _ids = array_create(_size, 0.0);
+		var _indexData = 0;
+		var _indexId = 0;
 		var _batchData = [_data];
+		var _batchIds = [_ids];
 
 		with (_object)
 		{
-			 method(self, _fn)(_data, _index);
-			 _index += _slotsPerInstance;
-			if (_index >= _dataSize)
+			method(self, _fn)(_data, _indexData);
+			_indexData += _slotsPerInstance;
+
+			_ids[@ _indexId++] = real(self[$ "id"] ?? 0.0);
+
+			if (_indexData >= _dataSize)
 			{
 				_data = array_create(_dataSize, 0.0);
-				_index = 0;
+				_indexData = 0;
 				array_push(_batchData, _data);
+
+				_ids = array_create(_size, 0.0);
+				_indexId = 0;
+				array_push(_batchIds, _ids);
 			}
 		}
 	
-		_method(_material, _batchData);
+		_method(_material, _batchData, _batchIds);
 	};
 
 	/// @func submit_object(_object[, _materials[, _fn]])

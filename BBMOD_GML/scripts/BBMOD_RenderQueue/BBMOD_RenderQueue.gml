@@ -1358,21 +1358,68 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				{
 					if (is_array(_id))
 					{
-						////////////////////////////////////////////////////////
-						// _id is an array of arrays of IDs
 						var _hasInstances = false;
 
-						_batchData = bbmod_array_clone(_batchData);
-
-						var j = 0;
-						repeat (array_length(_id))
+						if (is_array(_id[0]))
 						{
-							var _idsCurrent = _id[j];
+							////////////////////////////////////////////////////
+							// _id is an array of arrays of IDs
+
+							_batchData = bbmod_array_clone(_batchData);
+
+							var j = 0;
+							repeat (array_length(_id))
+							{
+								var _idsCurrent = _id[j];
+								var _idsCount = array_length(_idsCurrent);
+								var _dataCurrent = bbmod_array_clone(_batchData[j]);
+								_batchData[@ j] = _dataCurrent;
+								var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
+								var _hasData = false;
+
+								var k = 0;
+								repeat (_idsCount)
+								{
+									if (ds_list_find_index(_instances, _idsCurrent[k]) == -1)
+									{
+										var l = 0;
+										repeat (_slotsPerInstance)
+										{
+											_dataCurrent[@ (k * _slotsPerInstance) + l] = 0.0;
+											++l;
+										}
+									}
+									else
+									{
+										_hasData = true;
+										_hasInstances = true;
+									}
+									++k;
+								}
+
+								if (!_hasData)
+								{
+									// Filtered out all instances in _dataCurrent - we can remove it
+									// from _batchData
+									array_delete(_batchData, j, 1);
+								}
+								else
+								{
+									++j;
+								}
+							}
+						}
+						else
+						{
+							////////////////////////////////////////////////////
+							// _id is an array of IDs
+
+							_batchData = bbmod_array_clone(_batchData);
+
+							var _idsCurrent = _id;
 							var _idsCount = array_length(_idsCurrent);
-							var _dataCurrent = bbmod_array_clone(_batchData[j]);
-							_batchData[@ j] = _dataCurrent;
+							var _dataCurrent = _batchData;
 							var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
-							var _hasData = false;
 
 							var k = 0;
 							repeat (_idsCount)
@@ -1388,21 +1435,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 								}
 								else
 								{
-									_hasData = true;
 									_hasInstances = true;
 								}
 								++k;
-							}
-
-							if (!_hasData)
-							{
-								// Filtered out all instances in _dataCurrent - we can remove it
-								// from _batchData
-								array_delete(_batchData, j, 1);
-							}
-							else
-							{
-								++j;
 							}
 						}
 

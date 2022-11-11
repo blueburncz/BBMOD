@@ -9,6 +9,7 @@
 * Added new property `ShadowmapArea` to `BBMOD_DirectionalLight`, which is the area captured by the shadowmap.
 * Argument `_slotsPerInstance` of `BBMOD_DynamicBatch`'s constructor now defaults to 12 instead of 8.
 * Method `default_fn` of `BBMOD_DynamicBatch`, which is the default data writer, now also writes instance `id` (12 places in total instead of 8)!
+* Added new optional argument `_ids` to method `render` of `BBMOD_DynamicBatch`, which are IDs of instances in the `_batchData` array(s). Defaults to IDs of instances added to the batch using its `add_instance` method.
 
 ## Gizmo module:
 * Added new property `EnableGridSnap` to `BBMOD_Gizmo`, which enables snapping to grid when moving objects.
