@@ -4,7 +4,7 @@
 
 ## General:
 * Default animated shaders now accept max 128 bones instead of 64.
-* Default batched shaders now expect data in form of `[(x, y, z, uniformScale), (qX, qY, qZ, qW), (idX, idY, idZ, idW), ...]`, where `(idX, idY, idZ, idW)` is instance ID encoded as color.
+* **Default batched shaders now expect data in form of `[(x, y, z, uniformScale), (qX, qY, qZ, qW), (idX, idY, idZ, idW), ...]`, where `(idX, idY, idZ, idW)` is instance ID encoded as color!**
 
 ## Core module:
 * Added new function `bbmod_matrix_build_normalmatrix`, which creates a matrix using which you can safely transform normal vectors in shaders.
@@ -12,7 +12,7 @@
 * Added new property `ShadowmapResolution` to `BBMOD_Light`, which is the shadowmap resolution.
 * Added new property `ShadowmapArea` to `BBMOD_DirectionalLight`, which is the area captured by the shadowmap.
 * Argument `_slotsPerInstance` of `BBMOD_DynamicBatch`'s constructor now defaults to 12 instead of 8.
-* Method `default_fn` of `BBMOD_DynamicBatch`, which is the default data writer, now also writes instance `id` (12 places in total instead of 8)!
+* **Method `default_fn` of `BBMOD_DynamicBatch`, which is the default data writer, now also writes instance `id` encoded as color (12 places in total instead of 8)!**
 * Added new optional argument `_ids` to method `render` of `BBMOD_DynamicBatch`, which are IDs of instances in the `_batchData` array(s). Defaults to IDs of instances added to the batch using its `add_instance` method.
 
 ## Gizmo module:
