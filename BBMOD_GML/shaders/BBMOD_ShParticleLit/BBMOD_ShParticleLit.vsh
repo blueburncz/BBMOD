@@ -7,9 +7,9 @@ precision highp float;
 //
 
 // Maximum number of bones of animated models
-#define MAX_BONES 64
+#define MAX_BONES 128
 // Maximum number of vec4 uniforms for dynamic batch data
-#define MAX_BATCH_DATA_SIZE 128
+#define MAX_BATCH_DATA_SIZE 192
 
 ////////////////////////////////////////////////////////////////////////////////
 //

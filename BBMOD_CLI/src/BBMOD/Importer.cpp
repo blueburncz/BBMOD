@@ -186,20 +186,20 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 	LogNode(log, model, model->RootNode, 0);
 	log << std::endl;
 
-	if (model->BoneCount > 64)
+	if (model->BoneCount > 128)
 	{
 		PRINT_WARNING(
-			"This model has %d bones, but the default upper limit defined in shader BBMOD_ShDefaultAnimated is 64!"
+			"This model has %d bones, but the default upper limit defined in shader BBMOD_ShDefaultAnimated is 128!"
 			" You will need to increase this limit in order to render this model, though be aware that the maximum"
-			" number of vertex shader uniforms is determined by the target platform! Setting it higher than 64 can"
+			" number of vertex shader uniforms is determined by the target platform! Setting it higher than 128 can"
 			" make your game incompatible with some devices!"
 			, model->BoneCount);
 
 		log << "WARNING:" << std::endl
 			<< "========" << std::endl
-			<< "This model has " << model->BoneCount << " bones, but the default upper limit defined in shader BBMOD_ShDefaultAnimated is 64!" << std::endl
+			<< "This model has " << model->BoneCount << " bones, but the default upper limit defined in shader BBMOD_ShDefaultAnimated is 128!" << std::endl
 			<< "You will need to increase this limit in order to render this model, though be aware that the maximum" << std::endl
-			<< "number of vertex shader uniforms is determined by the target platform! Setting it higher than 64 can" << std::endl
+			<< "number of vertex shader uniforms is determined by the target platform! Setting it higher than 128 can" << std::endl
 			<< "make your game incompatible with some devices!" << std::endl << std::endl;
 	}
 

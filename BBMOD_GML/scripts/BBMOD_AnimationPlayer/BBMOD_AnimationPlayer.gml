@@ -95,12 +95,12 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 	/// @var {Array<Struct.BBMOD_Vec3>} Array of node position overrides.
 	/// @private
-	NodePositionOverride = array_create(64/*Model.NodeCount*/, undefined);
+	NodePositionOverride = array_create(128/*Model.NodeCount*/, undefined);
 
 	/// @var {Array<Struct.BBMOD_Quaternion>} Array of node rotation
 	/// overrides.
 	/// @private
-	NodeRotationOverride = array_create(64/*Model.NodeCount*/, undefined);
+	NodeRotationOverride = array_create(128/*Model.NodeCount*/, undefined);
 
 	/// @var {Bool} If `true`, then the animation playback is paused.
 	Paused = _paused;
@@ -133,13 +133,13 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// Useful for attachments.
 	/// @see BBMOD_AnimationPlayer.get_node_transform
 	/// @private
-	NodeTransform = array_create(64/*Model.NodeCount*/ * 8, 0.0);
+	NodeTransform = array_create(128/*Model.NodeCount*/ * 8, 0.0);
 
 	/// @var {Array<Real>} An array containing transforms of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @private
-	TransformArray = array_create(64/*Model.BoneCount*/ * 8, 0.0);
+	TransformArray = array_create(128/*Model.BoneCount*/ * 8, 0.0);
 
 	static animate = function (_animationInstance, _animationTime) {
 		var _model = Model;
