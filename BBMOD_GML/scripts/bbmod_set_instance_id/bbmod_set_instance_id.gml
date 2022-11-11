@@ -2,6 +2,10 @@
 /// @private
 global.__bbmodInstanceID = 0;
 
+/// @var {Array<Id.Instance>,Undefined}
+/// @private
+global.__bbmodInstanceIDBatch = undefined;
+
 /// @func bbmod_set_instance_id(_id)
 ///
 /// @desc Sets an instance id for all subsequently rendered models.

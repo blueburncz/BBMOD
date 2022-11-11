@@ -205,7 +205,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			RenderCommands,
 			BBMOD_ERenderCommand.DrawMeshBatched,
 			6,
-			global.__bbmodInstanceID,
+			(global.__bbmodInstanceIDBatch != undefined)
+				? global.__bbmodInstanceIDBatch
+				: global.__bbmodInstanceID,
 			_material,
 			_matrix,
 			_batchData,
@@ -1346,16 +1348,99 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			case BBMOD_ERenderCommand.DrawMeshBatched:
 				var _id = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
-				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-					|| !_material.apply())
+				var _matrix = _renderCommands[| i++];
+				var _batchData = _renderCommands[| i++];
+
+				////////////////////////////////////////////////////////////////
+				// Filter batch data by instance ID
+
+				if (_instances != undefined)
 				{
-					i += 4;
+					if (is_array(_id))
+					{
+						////////////////////////////////////////////////////////
+						// _id is an array of arrays of IDs
+						var _hasInstances = false;
+
+						_batchData = bbmod_array_clone(_batchData);
+
+						var j = 0;
+						repeat (array_length(_id))
+						{
+							var _idsCurrent = _id[j];
+							var _idsCount = array_length(_idsCurrent);
+							var _dataCurrent = bbmod_array_clone(_batchData[j]);
+							_batchData[@ j] = _dataCurrent;
+							var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
+							var _hasData = false;
+
+							var k = 0;
+							repeat (_idsCount)
+							{
+								if (ds_list_find_index(_instances, _idsCurrent[k]) == -1)
+								{
+									var l = 0;
+									repeat (_slotsPerInstance)
+									{
+										_dataCurrent[@ (k * _slotsPerInstance) + l] = 0.0;
+										++l;
+									}
+								}
+								else
+								{
+									_hasData = true;
+									_hasInstances = true;
+								}
+								++k;
+							}
+
+							if (!_hasData)
+							{
+								// Filtered out all instances in _dataCurrent - we can remove it
+								// from _batchData
+								array_delete(_batchData, j, 1);
+							}
+							else
+							{
+								++j;
+							}
+						}
+
+						if (!_hasInstances)
+						{
+							i += 2;
+							_condition = false;
+							continue;
+						}
+					}
+					else
+					{
+						////////////////////////////////////////////////////////
+						// _id is a single ID
+						if (ds_list_find_index(_instances, _id) == -1)
+						{
+							i += 2;
+							_condition = false;
+							continue;
+						}
+					}
+				}
+
+				////////////////////////////////////////////////////////////////
+
+				if (!_material.apply())
+				{
+					i += 2;
 					_condition = false;
 					continue;
 				}
-				BBMOD_SHADER_CURRENT.set_instance_id(_id);
-				matrix_set(matrix_world, _renderCommands[| i++]);
-				var _batchData = _renderCommands[| i++];
+
+				if (is_real(_id))
+				{
+					BBMOD_SHADER_CURRENT.set_instance_id(_id);
+				}
+
+				matrix_set(matrix_world, _matrix);
 				var _primitiveType = _renderCommands[| i++];
 				var _vertexBuffer = _renderCommands[| i++];
 				if (is_array(_batchData[0]))

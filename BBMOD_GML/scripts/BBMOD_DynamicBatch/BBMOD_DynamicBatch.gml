@@ -70,6 +70,10 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @private
 	__data = [];
 
+	/// @var {Array<Array<Id.Instance>}}
+	/// @private
+	__ids = [];
+
 	/// @var {Id.DsMap} Mapping from instances to indices at which they are
 	/// stored in the data array.
 	/// @private
@@ -95,7 +99,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 
 	/// @func __resize_data()
 	///
-	/// @desc Resizes __data array to required size.
+	/// @desc Resizes `__data` and `__ids` arrays to required size.
 	///
 	/// @private
 	static __resize_data = function () {
@@ -105,12 +109,14 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 		if (_currentArrayCount > _requiredArrayCount)
 		{
 			array_resize(__data, _requiredArrayCount);
+			array_resize(__ids, _requiredArrayCount);
 		}
 		else if (_currentArrayCount < _requiredArrayCount)
 		{
 			repeat (_requiredArrayCount - _currentArrayCount)
 			{
 				array_push(__data, array_create(BatchLength, 0.0));
+				array_push(__ids, array_create(Size, 0.0));
 			}
 		}
 	};
@@ -123,12 +129,14 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	static add_instance = function (_instance) {
-		var _index = InstanceCount * SlotsPerInstance;
-		__instanceToIndex[? _instance] = _index;
-		__indexToInstance[? _index] = _instance;
+		var _indexIds = InstanceCount;
+		var _indexData = _indexIds * SlotsPerInstance;
+		__instanceToIndex[? _instance] = _indexData;
+		__indexToInstance[? _indexData] = _instance;
 		++InstanceCount;
 		__resize_data();
-		method(_instance, DataWriter)(__data[_index div BatchLength], _index mod BatchLength);
+		method(_instance, DataWriter)(__data[_indexData div BatchLength], _indexData mod BatchLength);
+		__ids[_indexIds div Size][@ _indexIds mod Size] = real(_instance[$ "id"] ?? 0.0);
 		return self;
 	};
 
@@ -156,12 +164,17 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	static remove_instance = function (_instance) {
-		var _indexDeleted = __instanceToIndex[? _instance];
-		if (_indexDeleted != undefined)
+		var _indexDataDeleted = __instanceToIndex[? _instance];
+		if (_indexDataDeleted != undefined)
 		{
+			var _indexIdDeleted = _indexDataDeleted / SlotsPerInstance;
+
 			--InstanceCount;
 			if (InstanceCount > 0)
 			{
+				////////////////////////////////////////////////////////////////
+				// Data
+
 				// Get last used index
 				var _indexLast = InstanceCount * SlotsPerInstance;
 				// Get instance that is stored on that index
@@ -173,7 +186,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 
 				// Copy data of the last instance over the data of the removed instance
 				array_copy(
-					__data[_indexDeleted div BatchLength], _indexDeleted mod BatchLength,
+					__data[_indexDataDeleted div BatchLength], _indexDataDeleted mod BatchLength,
 					_dataLast, i, SlotsPerInstance);
 
 				// Clear slots
@@ -182,9 +195,27 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 					_dataLast[i++] = 0.0;
 				}
 
+				////////////////////////////////////////////////////////////////
+				// Ids
+
+				// Get last used index
+				var _indexLast = InstanceCount;
+				// Find the exact array that stores the id
+				var _idsLast = __ids[_indexLast div Size];
+				// Get starting index within that array
+				var i = _indexLast mod Size;
+
+				// Copy id of the last instance over the id of the removed instance
+				__ids[_indexIdDeleted div Size][@ _indexIdDeleted mod Size] = _idsLast[i];
+
+				// Clear slots
+				_idsLast[i] = 0.0;
+
+				////////////////////////////////////////////////////////////////
+
 				// Last instance is now stored instead of the deleted one
-				__instanceToIndex[? _instanceLast] = _indexDeleted;
-				__indexToInstance[? _indexDeleted] = _instanceLast;
+				__instanceToIndex[? _instanceLast] = _indexDataDeleted;
+				__indexToInstance[? _indexDataDeleted] = _instanceLast;
 				ds_map_delete(__indexToInstance, _indexLast);
 			}
 			__resize_data();
@@ -239,7 +270,17 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @see BBMOD_Material
 	static render = function (_materials=undefined, _batchData=undefined) {
 		gml_pragma("forceinline");
-		_batchData ??= __data;
+
+		if (_batchData == undefined)
+		{
+			_batchData = __data;
+			global.__bbmodInstanceIDBatch = __ids;
+		}
+		else
+		{
+			global.__bbmodInstanceIDBatch = undefined;
+		}
+
 		if (array_length(_batchData) > 0)
 		{
 			if (_materials != undefined
@@ -250,6 +291,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 			matrix_set(matrix_world, matrix_build_identity());
 			Batch.render(_materials, undefined, _batchData);
 		}
+
 		return self;
 	};
 
