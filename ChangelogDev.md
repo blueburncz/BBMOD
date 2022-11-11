@@ -26,6 +26,9 @@
 * Fixed the gizmo to work independently on from which direction is the camera looking at it and whether it's moving or not.
 * Added new macro `BBMOD_SHADER_INSTANCE_ID_BATCHED`, which is a shader used when rendering instance IDs.
 
+## Raycasting module:
+* Added method `GetCorners` to `BBMOD_FrustumCollider`, which retrieves an array of its corners.
+
 ## Rendering module:
 ### Renderer module:
 * Property `ShadowmapResolution` of `BBMOD_Renderer` is now obsolete. Please use `BBMOD_Light.ShadowmapResolution` instead.

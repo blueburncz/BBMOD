@@ -104,6 +104,69 @@ function BBMOD_FrustumCollider()
 		return self;
 	};
 
+	/// @func __intersectPlanes(_p1, _p2, _p3)
+	///
+	/// @desc
+	///
+	/// @param {Struct.BBMOD_PlaneCollider} _p1
+	/// @param {Struct.BBMOD_PlaneCollider} _p2
+	/// @param {Struct.BBMOD_PlaneCollider} _p3
+	///
+	/// @returns {Struct.BBMOD_Vec3,Undefined}
+	///
+	/// @private
+	// Source: https://gdbooks.gitbooks.io/3dcollisions/content/Chapter1/three_plane_intersection.html
+	static __intersectPlanes = function (_p1, _p2, _p3) {
+		var _m1 = new BBMOD_Vec3(_p1.Normal.X, _p2.Normal.X, _p3.Normal.X);
+		var _m2 = new BBMOD_Vec3(_p1.Normal.Y, _p2.Normal.Y, _p3.Normal.Y);
+		var _m3 = new BBMOD_Vec3(_p1.Normal.Z, _p2.Normal.Z, _p3.Normal.Z);
+		var _d  = new BBMOD_Vec3(_p1.Distance, _p2.Distance, _p3.Distance);
+
+		var _u = _m2.Cross(_m3);
+		var _v = _m1.Cross(_d);
+
+		var _denom = _m1.Dot(_u);
+
+		if (abs(_denom) < math_get_epsilon())
+		{
+			// Planes don't intersect
+			return undefined;
+		}
+
+		return new BBMOD_Vec3(
+			  _d.Dot(_u) / _denom,
+			 _m3.Dot(_v) / _denom,
+			-_m2.Dot(_v) / _denom);
+	};
+
+	/// @func GetCorners()
+	///
+	/// @desc Retrieves an array of frustum corners.
+	///
+	/// @return {Array<Struct.BBMOD_Vec3>} The array of frustum corners in order
+	/// `nearTopLeft`, `nearTopRight`, `nearBottomLeft`, `nearBottomRight`,
+	/// `farTopLeft`, `farTopRight`, `farBottomLeft` and `farBottomRight`.
+	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L1850
+	static GetCorners = function () {
+		var _near   = Planes[BBMOD_EFrustumPlane.Near];
+		var _far    = Planes[BBMOD_EFrustumPlane.Far];
+		var _top    = Planes[BBMOD_EFrustumPlane.Top];
+		var _bottom = Planes[BBMOD_EFrustumPlane.Bottom];
+		var _left   = Planes[BBMOD_EFrustumPlane.Left];
+		var _right  = Planes[BBMOD_EFrustumPlane.Right];
+
+		return [
+			__intersectPlanes(_near, _top,    _left),
+			__intersectPlanes(_near, _top,    _right),
+			__intersectPlanes(_near, _bottom, _left),
+			__intersectPlanes(_near, _bottom, _right),
+			__intersectPlanes(_far,  _top,    _left),
+			__intersectPlanes(_far,  _top,    _right),
+			__intersectPlanes(_far,  _bottom, _left),
+			__intersectPlanes(_far,  _bottom, _right),
+		];
+	};
+
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L1861
 	static TestPoint = function (_point) {
 		for (var i = 0; i < BBMOD_EFrustumPlane.SIZE; ++i)
