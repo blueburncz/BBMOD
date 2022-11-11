@@ -1348,6 +1348,14 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			case BBMOD_ERenderCommand.DrawMeshBatched:
 				var _id = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
+
+				if (!_material.apply())
+				{
+					i += 4;
+					_condition = false;
+					continue;
+				}
+
 				var _matrix = _renderCommands[| i++];
 				var _batchData = _renderCommands[| i++];
 
@@ -1399,8 +1407,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 								if (!_hasData)
 								{
-									// Filtered out all instances in _dataCurrent - we can remove it
-									// from _batchData
+									// Filtered out all instances in _dataCurrent,
+									// we can remove it from _batchData
 									array_delete(_batchData, j, 1);
 								}
 								else
@@ -1462,13 +1470,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				}
 
 				////////////////////////////////////////////////////////////////
-
-				if (!_material.apply())
-				{
-					i += 2;
-					_condition = false;
-					continue;
-				}
 
 				if (is_real(_id))
 				{
