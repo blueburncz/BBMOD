@@ -5,6 +5,7 @@ varying vec2 v_vTexCoord;
 
 uniform sampler2D u_texLut;    // Color grading LUT
 uniform vec2 u_vTexel;         // 1/ScreenWidth, 1/ScreenHeight
+uniform vec3 u_vOffset;        // Chromatic aberration offset for each channel
 uniform float u_fDistortion;   // The strength of the chromatic aberration effect
 uniform float u_fGrayscale;    // The strength of the grayscale effect
 uniform float u_fVignette;     // The strength of the vignette effect
@@ -76,7 +77,7 @@ void main()
 	// Chromatic aberration
 	if (u_fDistortion != 0.0)
 	{
-		vec3 distortion = vec3(-u_vTexel.x, 0.0, u_vTexel.x) * u_fDistortion * min(vecLen / 0.5, 1.0);
+		vec3 distortion = u_vOffset * u_vTexel.x * u_fDistortion* min(vecLen / 0.5, 1.0);
 		color = xChromaticAberration(gm_BaseTexture, v_vTexCoord, normalize(vec), distortion);
 	}
 	else

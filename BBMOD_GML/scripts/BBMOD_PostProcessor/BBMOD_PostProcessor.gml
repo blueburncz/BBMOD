@@ -30,6 +30,12 @@ function BBMOD_PostProcessor()
 	/// @see BBMOD_Renderer.EnablePostProcessing
 	ChromaticAberration = 0.0;
 
+	/// @var {Real} Chromatic aberration offsets for RGB channels. Defaults to
+	/// `(-1, 0, 1)`.
+	/// @note Post-processing must be enabled for this to have any effect!
+	/// @see BBMOD_Renderer.EnablePostProcessing
+	ChromaticAberrationOffset = new BBMOD_Vec3(-1.0, 0.0, 1.0);
+
 	/// @var {Real} The strength of the grayscale effect. Use values in range 0..1,
 	/// where 0 means the original color and 1 means grayscale. Defaults to 0.
 	/// @note Post-processing must be enabled for this to have any effect!
@@ -100,6 +106,11 @@ function BBMOD_PostProcessor()
 		shader_set_uniform_f(
 			shader_get_uniform(_shader, "u_vTexel"),
 			_texelWidth, _texelHeight);
+		shader_set_uniform_f(
+			shader_get_uniform(_shader, "u_vOffset"),
+			ChromaticAberrationOffset.X,
+			ChromaticAberrationOffset.Y,
+			ChromaticAberrationOffset.Z);
 		shader_set_uniform_f(
 			shader_get_uniform(_shader, "u_fDistortion"),
 			ChromaticAberration);

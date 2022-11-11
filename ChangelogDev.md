@@ -30,7 +30,10 @@
 * Added method `GetCorners` to `BBMOD_FrustumCollider`, which retrieves an array of its corners.
 
 ## Rendering module:
-### Renderer module:
+### Post-processing submodule:
+* Added new property `ChromaticAberrationOffset` to `BBMOD_PostProcessor`, which are chromatic aberration offsets for RGB channels.
+
+### Renderer submodule:
 * Property `ShadowmapResolution` of `BBMOD_Renderer` is now obsolete. Please use `BBMOD_Light.ShadowmapResolution` instead.
 * Property `ShadowmapArea` of `BBMOD_Renderer` is now obsolete. Please use `BBMOD_DirectionalLight.ShadowmapArea` instead.
 
