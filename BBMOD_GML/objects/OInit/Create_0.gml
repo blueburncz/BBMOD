@@ -2,13 +2,13 @@ randomize();
 global.day = choose(true, false);
 
 BBMOD_MATERIAL_TERRAIN.set_shader(
-    BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH);
+	BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH);
 BBMOD_MATERIAL_DEFAULT.set_shader(
-    BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH);
+	BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH);
 BBMOD_MATERIAL_DEFAULT_ANIMATED.set_shader(
-    BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH_ANIMATED);
+	BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH_ANIMATED);
 BBMOD_MATERIAL_DEFAULT_BATCHED.set_shader(
-    BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH_BATCHED);
+	BBMOD_ERenderPass.Deferred, BBMOD_SHADER_DEPTH_BATCHED);
 
 // Used to easily load, retrieve and free resources from memory.
 global.resourceManager = new BBMOD_ResourceManager();
