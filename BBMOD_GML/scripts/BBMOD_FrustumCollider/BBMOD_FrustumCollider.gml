@@ -116,28 +116,13 @@ function BBMOD_FrustumCollider()
 	/// @returns {Struct.BBMOD_Vec3,Undefined}
 	///
 	/// @private
-	// Source: https://gdbooks.gitbooks.io/3dcollisions/content/Chapter1/three_plane_intersection.html
-	static __intersectPlanes = function (_p1, _p2, _p3) {
-		var _m1 = new BBMOD_Vec3(_p1.Normal.X, _p2.Normal.X, _p3.Normal.X);
-		var _m2 = new BBMOD_Vec3(_p1.Normal.Y, _p2.Normal.Y, _p3.Normal.Y);
-		var _m3 = new BBMOD_Vec3(_p1.Normal.Z, _p2.Normal.Z, _p3.Normal.Z);
-		var _d  = new BBMOD_Vec3(_p1.Distance, _p2.Distance, _p3.Distance);
-
-		var _u = _m2.Cross(_m3);
-		var _v = _m1.Cross(_d);
-
-		var _denom = _m1.Dot(_u);
-
-		if (abs(_denom) < math_get_epsilon())
-		{
-			// Planes don't intersect
-			return undefined;
-		}
-
-		return new BBMOD_Vec3(
-			  _d.Dot(_u) / _denom,
-			 _m3.Dot(_v) / _denom,
-			-_m2.Dot(_v) / _denom);
+	// Source: https://donw.io/post/frustum-point-extraction/
+	static __intersectPlanes = function (_p0, _p1, _p2) {
+		var bxc = _p1.Normal.Cross(_p2.Normal);
+		var cxa = _p2.Normal.Cross(_p0.Normal);
+		var axb = _p0.Normal.Cross(_p1.Normal);
+		var r = bxc.Scale(-_p0.Distance).Sub(cxa.Scale(_p1.Distance)).Sub(axb.Scale(_p2.Distance));
+		return r.Scale(1.0 / _p0.Normal.Dot(bxc));
 	};
 
 	/// @func GetCorners()
