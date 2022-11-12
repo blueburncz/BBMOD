@@ -112,15 +112,16 @@ function BBMOD_Collider() constructor
 
 	/// @func DrawDebug([_color])
 	///
-	/// @desc Draws a wireframe preview of the collider.
+	/// @desc Draws a debug preview of the collider.
 	///
-	/// @param {Constant.Color} [_color] The wireframe color. Defaults to
+	/// @param {Constant.Color} [_color] The preview color. Defaults to
 	/// `c_white`.
+	/// @param {Real} [_alpha] The preview alpha. Defaults to 1.
 	///
 	/// @return {Struct.BBMOD_Collider} Returns `self`.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static DrawDebug = function (_color=c_white) {
+	static DrawDebug = function (_color=c_white, _alpha=1.0) {
 		throw new BBMOD_NotImplementedException();
 	};
 }

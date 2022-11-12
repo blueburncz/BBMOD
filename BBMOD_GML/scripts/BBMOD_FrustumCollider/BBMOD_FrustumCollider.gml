@@ -192,4 +192,15 @@ function BBMOD_FrustumCollider()
 		}
 		return true;
 	};
+
+	static DrawDebug = function (_color=c_white, _alpha=1.0) {
+		var _vbuffer = global.__bbmodVBufferDebug;
+
+		//vertex_begin(_vbuffer, BBMOD_VFORMAT_DEBUG.Raw);
+		//vertex_position_3d(_vbuffer, _x1, _y1, _z1); vertex_color(_vbuffer, _color, _alpha);
+		//vertex_end(_vbuffer);
+		//vertex_submit(_vbuffer, pr_linelist, -1);
+
+		return self;
+	};
 }

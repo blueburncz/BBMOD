@@ -702,13 +702,17 @@ void PBRShader(Material material, float depth)
 	{
 		vec4 shadowmapPos = v_vPosShadowmap;
 		shadowmapPos.xy /= shadowmapPos.w;
+		float shadowmapAtt = (bbmod_ShadowCasterIndex == -1.0)
+			? clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0)
+			: 1.0;
 		shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
 	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
 		shadowmapPos.y = 1.0 - shadowmapPos.y;
 	#endif
 		shadowmapPos.z /= bbmod_ShadowmapArea;
 
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z);
+		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
+			* shadowmapAtt;
 	}
 
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);

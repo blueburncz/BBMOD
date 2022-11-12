@@ -61,9 +61,19 @@ vec3 xChromaticAberration(
 	vec3 distortion)
 {
 	return vec3(
-		texture2D(tex, uv + direction * distortion.r).r,
-		texture2D(tex, uv + direction * distortion.g).g,
-		texture2D(tex, uv + direction * distortion.b).b);
+		texture2D(tex, uv + direction * distortion.r).r
+			+ texture2D(tex, uv + direction * distortion.r * (1.0 / 4.0)).r
+			+ texture2D(tex, uv + direction * distortion.r * (2.0 / 4.0)).r
+			+ texture2D(tex, uv + direction * distortion.r * (3.0 / 4.0)).r,
+		texture2D(tex, uv + direction * distortion.g).g
+			+ texture2D(tex, uv + direction * distortion.g * (1.0 / 4.0)).g
+			+ texture2D(tex, uv + direction * distortion.g * (2.0 / 4.0)).g
+			+ texture2D(tex, uv + direction * distortion.g * (3.0 / 4.0)).g,
+		texture2D(tex, uv + direction * distortion.b).b
+			+ texture2D(tex, uv + direction * distortion.b * (1.0 / 4.0)).b
+			+ texture2D(tex, uv + direction * distortion.b * (2.0 / 4.0)).b
+			+ texture2D(tex, uv + direction * distortion.b * (3.0 / 4.0)).b
+	) / 4.0;
 }
 
 // include("ChromaticAberration.xsh")
@@ -77,7 +87,7 @@ void main()
 	// Chromatic aberration
 	if (u_fDistortion != 0.0)
 	{
-		vec3 distortion = u_vOffset * u_vTexel.x * u_fDistortion* min(vecLen / 0.5, 1.0);
+		vec3 distortion = u_vOffset * u_vTexel.x * u_fDistortion * min(vecLen / 0.5, 1.0);
 		color = xChromaticAberration(gm_BaseTexture, v_vTexCoord, normalize(vec), distortion);
 	}
 	else

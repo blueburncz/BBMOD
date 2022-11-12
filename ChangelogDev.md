@@ -14,7 +14,7 @@
 * Argument `_slotsPerInstance` of `BBMOD_DynamicBatch`'s constructor now defaults to 12 instead of 8.
 * **Method `default_fn` of `BBMOD_DynamicBatch`, which is the default data writer, now also writes instance `id` encoded as color (12 places in total instead of 8)!**
 * Added new optional argument `_ids` to method `render` of `BBMOD_DynamicBatch`, which are IDs of instances in the `_batchData` array(s). Defaults to IDs of instances added to the batch using its `add_instance` method.
-* Added new macro `BBMOD_VFORMAT_WIREFRAME`, which is a vertex format useful for debugging purposes, like drawing wireframe previews of colliders.
+* Added new macro `BBMOD_VFORMAT_DEBUG`, which is a vertex format useful for debugging purposes, like drawing previews of colliders.
 
 ## Gizmo module:
 * Added new property `EnableGridSnap` to `BBMOD_Gizmo`, which enables snapping to grid when moving objects.
@@ -29,9 +29,9 @@
 
 ## Raycasting module:
 * Added new method `GetCorners` to `BBMOD_FrustumCollider`, which retrieves an array of its corners.
-* Added new method `DrawDebug` to `BBMOD_Ray`, which draws a wireframe preview of the collider.
-* Added new method `DrawDebug` to `BBMOD_Collider`, which draws a wireframe preview of the collider. By default this method is not implemented and it will throw `BBMOD_NotImplementedException` if used!
-* Implemented method `DrawDebug` for collider `BBMOD_AABBCollider`.
+* Added new method `DrawDebug` to `BBMOD_Ray`, which draws a debug preview of the ray.
+* Added new method `DrawDebug` to `BBMOD_Collider`, which draws a debug preview of the collider. By default this method is not implemented and it will throw `BBMOD_NotImplementedException` if used!
+* Implemented method `DrawDebug` for colliders `BBMOD_AABBCollider`, `BBMOD_FrustumCollider`, `BBMOD_PlaneCollider` and `BBMOD_SphereCollider`.
 
 ## Rendering module:
 ### Post-processing submodule:

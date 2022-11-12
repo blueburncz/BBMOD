@@ -83,6 +83,7 @@ renderer.EnableShadows = true;
 
 postProcessor = new BBMOD_PostProcessor();
 postProcessor.ChromaticAberration = 3.0;
+postProcessor.ChromaticAberrationOffset.Set(-1.0, 1.0, -1.0);
 postProcessor.ColorGradingLUT = sprite_get_texture(SprColorGrading, 0);
 renderer.PostProcessor = postProcessor;
 
