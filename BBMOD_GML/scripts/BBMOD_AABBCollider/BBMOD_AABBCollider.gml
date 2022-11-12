@@ -224,4 +224,71 @@ function BBMOD_AABBCollider(
 
 		return true;
 	};
+
+	static DrawDebug = function (_color=c_white) {
+		var _vbuffer = global.__bbmodVBufferDebug;
+
+		var _x1 = Position.X - Size.X;
+		var _x2 = Position.X + Size.X;
+		var _y1 = Position.Y - Size.Y;
+		var _y2 = Position.Y + Size.Y;
+		var _z1 = Position.Z - Size.Z;
+		var _z2 = Position.Z + Size.Z;
+
+		vertex_begin(_vbuffer, BBMOD_VFORMAT_WIREFRAME.Raw);
+
+		// Bottom
+		// 1--2
+		// |  |
+		// 4--3
+		vertex_position_3d(_vbuffer, _x1, _y1, _z1); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z1); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x2, _y1, _z1); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z1); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x2, _y2, _z1); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z1); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x1, _y2, _z1); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z1); vertex_color(_vbuffer, _color, 1.0);
+
+		// Top
+		// 1--2
+		// |  |
+		// 4--3
+		vertex_position_3d(_vbuffer, _x1, _y1, _z2); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z2); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x2, _y1, _z2); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z2); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x2, _y2, _z2); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z2); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x1, _y2, _z2); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z2); vertex_color(_vbuffer, _color, 1.0);
+
+		// Sides
+		// 1--2
+		// |  |
+		// 4--3
+		vertex_position_3d(_vbuffer, _x1, _y1, _z1); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z2); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x2, _y1, _z1); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z2); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x2, _y2, _z1); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z2); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_position_3d(_vbuffer, _x1, _y2, _z1); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z2); vertex_color(_vbuffer, _color, 1.0);
+
+		vertex_end(_vbuffer);
+
+		vertex_submit(_vbuffer, pr_linelist, -1);
+
+		return self;
+	};
 }

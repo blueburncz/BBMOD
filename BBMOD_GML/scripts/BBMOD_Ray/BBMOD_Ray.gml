@@ -37,4 +37,27 @@ function BBMOD_Ray(_origin, _direction) constructor
 		gml_pragma("forceinline");
 		return _collider.Raycast(self, _result);
 	};
+
+	/// @func DrawDebug([_length[, _color]])
+	///
+	/// @desc Draws a wireframe preview of the ray.
+	///
+	/// @param {Real} [_length] The length of the ray. Defaults to 9999.
+	/// @param {Constant.Color} [_color] The wireframe color. Defaults to
+	/// `c_white`.
+	///
+	/// @return {Struct.BBMOD_Ray} Returns `self`.
+	static DrawDebug = function (_length=9999.0, _color=c_white) {
+		var _vbuffer = global.__bbmodVBufferDebug;
+		var _start = Origin;
+		var _end = _start.Add(Direction.Normalize().Scale(_length));
+
+		vertex_begin(_vbuffer, BBMOD_VFORMAT_WIREFRAME.Raw);
+		vertex_position_3d(_vbuffer, _start.X, _start.Y, _start.Z); vertex_color(_vbuffer, _color, 1.0);
+		vertex_position_3d(_vbuffer,   _end.X,   _end.Y,   _end.Z); vertex_color(_vbuffer, _color, 1.0);
+		vertex_end(_vbuffer);
+		vertex_submit(_vbuffer, pr_linelist, -1);
+
+		return self;
+	};
 }

@@ -109,4 +109,18 @@ function BBMOD_Collider() constructor
 	static Raycast = function (_ray, _result=undefined) {
 		throw new BBMOD_NotImplementedException();
 	};
+
+	/// @func DrawDebug([_color])
+	///
+	/// @desc Draws a wireframe preview of the collider.
+	///
+	/// @param {Constant.Color} [_color] The wireframe color. Defaults to
+	/// `c_white`.
+	///
+	/// @return {Struct.BBMOD_Collider} Returns `self`.
+	///
+	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
+	static DrawDebug = function (_color=c_white) {
+		throw new BBMOD_NotImplementedException();
+	};
 }

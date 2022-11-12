@@ -79,6 +79,7 @@
     {"id":{"name":"BBMOD_MixRealFromHealthModule","path":"scripts/BBMOD_MixRealFromHealthModule/BBMOD_MixRealFromHealthModule.yy",},"order":1,},
     {"id":{"name":"__bbmod_defines","path":"scripts/__bbmod_defines/__bbmod_defines.yy",},"order":5,},
     {"id":{"name":"BBMOD_Vec2","path":"scripts/BBMOD_Vec2/BBMOD_Vec2.yy",},"order":2,},
+    {"id":{"name":"__bbmod_debug","path":"scripts/__bbmod_debug/__bbmod_debug.yy",},"order":0,},
     {"id":{"name":"SndGunshot0","path":"sounds/SndGunshot0/SndGunshot0.yy",},"order":0,},
     {"id":{"name":"OInit","path":"objects/OInit/OInit.yy",},"order":8,},
     {"id":{"name":"SndFootstep7","path":"sounds/SndFootstep7/SndFootstep7.yy",},"order":7,},
@@ -365,6 +366,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy","order":7,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy","order":4,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy","order":7,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Debug","folderPath":"folders/BBMOD/Core/Debug.yy","order":18,},
   ],
   "AudioGroups": [
     {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},
