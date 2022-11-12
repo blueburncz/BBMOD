@@ -5,6 +5,7 @@
 ## General:
 * Default animated shaders now accept max 128 bones instead of 64.
 * **Default batched shaders now expect data in form of `[(x, y, z, uniformScale), (qX, qY, qZ, qW), (idX, idY, idZ, idW), ...]`, where `(idX, idY, idZ, idW)` is instance ID encoded as color!**
+* Shadows from directional lights now smoothly transition out at shadowmap borders instead of being cut off right away.
 
 ## Core module:
 * Added new function `bbmod_matrix_build_normalmatrix`, which creates a matrix using which you can safely transform normal vectors in shaders.
