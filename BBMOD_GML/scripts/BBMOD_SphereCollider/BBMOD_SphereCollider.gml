@@ -98,10 +98,52 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 	static DrawDebug = function (_color=c_white, _alpha=1.0) {
 		var _vbuffer = global.__bbmodVBufferDebug;
 
-		//vertex_begin(_vbuffer, BBMOD_VFORMAT_DEBUG.Raw);
-		//vertex_position_3d(_vbuffer, _x1, _y1, _z1); vertex_color(_vbuffer, _color, _alpha);
-		//vertex_end(_vbuffer);
-		//vertex_submit(_vbuffer, pr_linelist, -1);
+		vertex_begin(_vbuffer, BBMOD_VFORMAT_DEBUG.Raw);
+
+		var _x = Position.X;
+		var _y = Position.Y;
+		var _z = Position.Z;
+		var _radius = Radius;
+		var _steps = 16;
+		var _inc = 360.0 / _steps;
+		var _angle = 0.0;
+		var _ldirx1 = lengthdir_x(_radius, _angle);
+		var _ldiry1 = lengthdir_y(_radius, _angle);
+
+		repeat (_steps)
+		{
+			var _ldirx2 = lengthdir_x(_radius, _angle + _inc);
+			var _ldiry2 = lengthdir_y(_radius, _angle + _inc);
+
+			// Circle around X axis
+			vertex_position_3d(_vbuffer, _x, _y + _ldirx1, _z + _ldiry1);
+			vertex_color(_vbuffer, _color, _alpha);
+
+			vertex_position_3d(_vbuffer, _x, _y + _ldirx2, _z + _ldiry2);
+			vertex_color(_vbuffer, _color, _alpha);
+
+			// Circle around Y axis
+			vertex_position_3d(_vbuffer, _x + _ldirx1, _y, _z + _ldiry1);
+			vertex_color(_vbuffer, _color, _alpha);
+
+			vertex_position_3d(_vbuffer, _x + _ldirx2, _y, _z + _ldiry2);
+			vertex_color(_vbuffer, _color, _alpha);
+
+			// Circle around Z axis
+			vertex_position_3d(_vbuffer, _x + _ldirx1, _y + _ldiry1, _z);
+			vertex_color(_vbuffer, _color, _alpha);
+
+			vertex_position_3d(_vbuffer, _x + _ldirx2, _y + _ldiry2, _z);
+			vertex_color(_vbuffer, _color, _alpha);
+
+			_ldirx1 = _ldirx2;
+			_ldiry1 = _ldiry2;
+			_angle += _inc;
+		}
+
+		vertex_end(_vbuffer);
+
+		vertex_submit(_vbuffer, pr_linelist, -1);
 
 		return self;
 	};
