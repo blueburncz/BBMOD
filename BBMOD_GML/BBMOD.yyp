@@ -301,6 +301,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Core","folderPath":"folders/BBMOD/Core.yy","order":0,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Animation","folderPath":"folders/BBMOD/Core/Animation.yy","order":0,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Batching","folderPath":"folders/BBMOD/Core/Batching.yy","order":1,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Debug","folderPath":"folders/BBMOD/Core/Debug.yy","order":18,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"DefaultMaterial","folderPath":"folders/BBMOD/Core/DefaultMaterial.yy","order":10,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Exceptions","folderPath":"folders/BBMOD/Core/Exceptions.yy","order":2,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Interfaces","folderPath":"folders/BBMOD/Core/Interfaces.yy","order":7,},
@@ -366,7 +367,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy","order":7,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy","order":4,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy","order":7,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Debug","folderPath":"folders/BBMOD/Core/Debug.yy","order":18,},
   ],
   "AudioGroups": [
     {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},

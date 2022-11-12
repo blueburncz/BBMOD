@@ -31,7 +31,7 @@
 * Added new method `GetCorners` to `BBMOD_FrustumCollider`, which retrieves an array of its corners.
 * Added new method `DrawDebug` to `BBMOD_Ray`, which draws a debug preview of the ray.
 * Added new method `DrawDebug` to `BBMOD_Collider`, which draws a debug preview of the collider. By default this method is not implemented and it will throw `BBMOD_NotImplementedException` if used!
-* Implemented method `DrawDebug` for colliders `BBMOD_AABBCollider`, `BBMOD_FrustumCollider`, `BBMOD_PlaneCollider` and `BBMOD_SphereCollider`.
+* Implemented method `DrawDebug` for colliders `BBMOD_AABBCollider`, `BBMOD_FrustumCollider` and `BBMOD_SphereCollider`.
 
 ## Rendering module:
 ### Post-processing submodule:
