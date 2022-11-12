@@ -23,9 +23,9 @@ if (flashlight.Enabled
 	var _matrixHead = _dqHead.ToMatrix();
 	var _matrixFlashlight = matrix_multiply(
 		matrix_multiply(
-			matrix_build(0, 1, -1, 0, -90, 0, 1, 1, 1),
+			matrix_build(0, 0.5, -1, 0, -90, 0, 1, 1, 1),
 			_matrixHead),
 		matrixBody);
-	flashlight.Direction = new BBMOD_Vec4(1.0, 0.0, 0.0, 0.0).Transform(_matrixFlashlight);
+	flashlight.Direction = new BBMOD_Vec4(1.0, -0.25, 0.0, 0.0).Transform(_matrixFlashlight);
 	flashlight.Position.Set(_matrixFlashlight[12], _matrixFlashlight[13], _matrixFlashlight[14]);
 }

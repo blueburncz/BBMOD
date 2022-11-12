@@ -12,7 +12,7 @@ varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 
 #if !defined(X_UNLIT) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
-varying vec3 v_vPosShadowmap;
+varying vec4 v_vPosShadowmap;
 #endif
 
 #if defined(X_TERRAIN)

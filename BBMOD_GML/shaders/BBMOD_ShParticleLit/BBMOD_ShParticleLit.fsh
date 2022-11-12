@@ -24,7 +24,7 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 
-varying vec3 v_vPosShadowmap;
+varying vec4 v_vPosShadowmap;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -140,7 +140,7 @@ uniform sampler2D bbmod_Shadowmap;
 // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
 uniform vec2 bbmod_ShadowmapTexel;
 // The area that the shadowmap captures
-uniform float bbmod_ShadowmapAreaPS;
+uniform float bbmod_ShadowmapArea;
 // The range over which meshes smoothly transition into shadow.
 uniform float bbmod_ShadowmapBias;
 // The index of the light that casts shadows. Use -1 for the directional light.
@@ -667,7 +667,7 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	}
 	float shadow = 0.0;
 	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
-	float bias = bbmod_ShadowmapBias / bbmod_ShadowmapAreaPS;
+	float bias = bbmod_ShadowmapBias / bbmod_ShadowmapArea;
 	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
 	{
 		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;
@@ -700,7 +700,15 @@ void PBRShader(Material material, float depth)
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, v_vPosShadowmap.xy, v_vPosShadowmap.z);
+		vec4 shadowmapPos = v_vPosShadowmap;
+		shadowmapPos.xy /= shadowmapPos.w;
+		shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
+	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+		shadowmapPos.y = 1.0 - shadowmapPos.y;
+	#endif
+		shadowmapPos.z /= bbmod_ShadowmapArea;
+
+		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z);
 	}
 
 	vec3 V = normalize(bbmod_CamPos - v_vVertex);

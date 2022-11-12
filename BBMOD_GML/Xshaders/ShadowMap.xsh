@@ -10,7 +10,7 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 	}
 	float shadow = 0.0;
 	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
-	float bias = bbmod_ShadowmapBias / bbmod_ShadowmapAreaPS;
+	float bias = bbmod_ShadowmapBias / bbmod_ShadowmapArea;
 	for (int i = 0; i < SHADOWMAP_SAMPLE_COUNT; ++i)
 	{
 		vec2 uv2 = uv + VogelDiskSample(i, SHADOWMAP_SAMPLE_COUNT, noise) * texel * 4.0;

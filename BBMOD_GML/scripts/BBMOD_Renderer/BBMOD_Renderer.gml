@@ -773,8 +773,7 @@ function BBMOD_Renderer()
 			bbmod_shader_set_global_f2("bbmod_ShadowmapTexel",
 				texture_get_texel_width(_shadowmapTexture),
 				texture_get_texel_height(_shadowmapTexture));
-			bbmod_shader_set_global_f("bbmod_ShadowmapAreaVS", _shadowmapZFar);
-			bbmod_shader_set_global_f("bbmod_ShadowmapAreaPS", _shadowmapZFar);
+			bbmod_shader_set_global_f("bbmod_ShadowmapArea", _shadowmapZFar);
 			bbmod_shader_set_global_f("bbmod_ShadowmapNormalOffset", ShadowmapNormalOffset);
 			bbmod_shader_set_global_matrix_array("bbmod_ShadowmapMatrix", _shadowmapMatrix);
 			bbmod_shader_set_global_f("bbmod_ShadowCasterIndex", _shadowCasterIndex);
@@ -935,6 +934,11 @@ function BBMOD_Renderer()
 			gpu_pop_state();
 
 			PostProcessor.draw(__surFinal, X, Y);
+		}
+
+		if (surface_exists(__surShadowmap))
+		{
+			draw_surface_stretched(__surShadowmap, 0, 0, 256, 256);
 		}
 
 		return self;

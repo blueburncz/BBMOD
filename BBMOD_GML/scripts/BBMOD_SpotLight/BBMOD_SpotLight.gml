@@ -62,7 +62,7 @@ function BBMOD_SpotLight(
 	static __get_shadowmap_projection = function () {
 		gml_pragma("forceinline");
 		return matrix_build_projection_perspective_fov(
-			AngleOuter * 2.0, 1.0, 0.1, Range);
+			AngleOuter * 2.0, 1.0, 0.01, Range);
 	};
 
 	static __get_shadowmap_matrix = function () {
