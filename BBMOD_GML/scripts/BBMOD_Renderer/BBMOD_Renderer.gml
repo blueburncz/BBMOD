@@ -936,11 +936,6 @@ function BBMOD_Renderer()
 			PostProcessor.draw(__surFinal, X, Y);
 		}
 
-		if (surface_exists(__surShadowmap))
-		{
-			draw_surface_stretched(__surShadowmap, 0, 0, 256, 256);
-		}
-
 		return self;
 	};
 
