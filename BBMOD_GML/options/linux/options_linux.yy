@@ -1,6 +1,6 @@
 {
   "option_linux_display_name": "BBMOD Demo",
-  "option_linux_version": "3.14.1",
+  "option_linux_version": "3.15.0",
   "option_linux_maintainer_email": "",
   "option_linux_homepage": "http://www.yoyogames.com",
   "option_linux_short_desc": "",
