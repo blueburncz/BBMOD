@@ -10,6 +10,7 @@ Contains a gizmo structs and shaders for rendering instance IDs. Useful for leve
 ### Macros
 * [BBMOD_SHADER_INSTANCE_ID](./BBMOD_SHADER_INSTANCE_ID.html)
 * [BBMOD_SHADER_INSTANCE_ID_ANIMATED](./BBMOD_SHADER_INSTANCE_ID_ANIMATED.html)
+* [BBMOD_SHADER_INSTANCE_ID_BATCHED](./BBMOD_SHADER_INSTANCE_ID_BATCHED.html)
 
 ### Structs
 * [BBMOD_Gizmo](./BBMOD_Gizmo.html)
