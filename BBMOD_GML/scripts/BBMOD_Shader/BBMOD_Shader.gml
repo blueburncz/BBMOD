@@ -543,51 +543,51 @@ function __bbmod_shader_set_globals(_shader)
 
 				if (_index != -1)
 				{
-					texture_set_stage(_index, _value.Texture);
+					texture_set_stage(_index, _value.__texture);
 
-					var _temp = _value.Filter;
+					var _temp = _value.__filter;
 					if (_temp != undefined)
 					{
 						gpu_set_tex_filter_ext(_index, _temp);
 					}
 
-					_temp = _value.MaxAniso;
+					_temp = _value.__maxAniso;
 					if (_temp != undefined)
 					{
 						gpu_set_tex_max_aniso_ext(_index, _temp);
 					}
 
-					_temp = _value.MaxMip;
+					_temp = _value.__maxMip;
 					if (_temp != undefined)
 					{
 						gpu_set_tex_max_mip_ext(_index, _temp);
 					}
 
-					_temp = _value.MinMip;
+					_temp = _value.__minMip;
 					if (_temp != undefined)
 					{
 						gpu_set_tex_min_mip_ext(_index, _temp);
 					}
 
-					_temp = _value.MipBias;
+					_temp = _value.__mipBias;
 					if (_temp != undefined)
 					{
 						gpu_set_tex_mip_bias_ext(_index, _temp);
 					}
 
-					_temp = _value.MipEnable;
+					_temp = _value.__mipEnable;
 					if (_temp != undefined)
 					{
 						gpu_set_tex_mip_enable_ext(_index, _temp);
 					}
 
-					_temp = _value.MipFilter;
+					_temp = _value.__mipFilter;
 					if (_temp != undefined)
 					{
 						gpu_set_tex_mip_filter_ext(_index, _temp);
 					}
 
-					_temp = _value.Repeat;
+					_temp = _value.__repeat;
 					if (_temp != undefined)
 					{
 						gpu_set_tex_repeat_ext(_index, _temp);
@@ -828,15 +828,15 @@ function bbmod_shader_set_global_sampler(_name, _texture)
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Sampler,
 		{
-			Texture: _texture,
-			Filter: undefined,
-			MaxAniso: undefined,
-			MaxMip: undefined,
-			MinMip: undefined,
-			MipBias: undefined,
-			MipEnable: undefined,
-			MipFilter: undefined,
-			Repeat: undefined,
+			__texture: _texture,
+			__filter: undefined,
+			__maxAniso: undefined,
+			__maxMip: undefined,
+			__minMip: undefined,
+			__mipBias: undefined,
+			__mipEnable: undefined,
+			__mipFilter: undefined,
+			__repeat: undefined,
 		});
 }
 
@@ -853,7 +853,7 @@ function bbmod_shader_set_global_sampler(_name, _texture)
 function bbmod_shader_set_global_sampler_filter(_name, _filter)
 {
 	gml_pragma("forceinline");
-	bbmod_shader_get_global(_name).Filter = _filter;
+	bbmod_shader_get_global(_name).__filter = _filter;
 }
 
 /// @func bbmod_shader_set_global_sampler_max_aniso(_name, _value)
@@ -868,7 +868,7 @@ function bbmod_shader_set_global_sampler_filter(_name, _filter)
 function bbmod_shader_set_global_sampler_max_aniso(_name, _value)
 {
 	gml_pragma("forceinline");
-	bbmod_shader_get_global(_name).MaxAniso = _value;
+	bbmod_shader_get_global(_name).__maxAniso = _value;
 }
 
 /// @func bbmod_shader_set_global_sampler_max_mip(_name, _value)
@@ -883,7 +883,7 @@ function bbmod_shader_set_global_sampler_max_aniso(_name, _value)
 function bbmod_shader_set_global_sampler_max_mip(_name, _value)
 {
 	gml_pragma("forceinline");
-	bbmod_shader_get_global(_name).MaxMip = _value;
+	bbmod_shader_get_global(_name).__maxMip = _value;
 }
 
 /// @func bbmod_shader_set_global_sampler_min_mip(_name, _value)
@@ -898,7 +898,7 @@ function bbmod_shader_set_global_sampler_max_mip(_name, _value)
 function bbmod_shader_set_global_sampler_min_mip(_name, _value)
 {
 	gml_pragma("forceinline");
-	bbmod_shader_get_global(_name).MinMip = _value;
+	bbmod_shader_get_global(_name).__minMip = _value;
 }
 
 /// @func bbmod_shader_set_global_sampler_mip_bias(_name, _value)
@@ -914,7 +914,7 @@ function bbmod_shader_set_global_sampler_min_mip(_name, _value)
 function bbmod_shader_set_global_sampler_mip_bias(_name, _value)
 {
 	gml_pragma("forceinline");
-	bbmod_shader_get_global(_name).MipBias = _value;
+	bbmod_shader_get_global(_name).__mipBias = _value;
 }
 
 /// @func bbmod_shader_set_global_sampler_mip_enable(_name, _enable)
@@ -930,7 +930,7 @@ function bbmod_shader_set_global_sampler_mip_bias(_name, _value)
 function bbmod_shader_set_global_sampler_mip_enable(_name, _enable)
 {
 	gml_pragma("forceinline");
-	bbmod_shader_get_global(_name).MipEnable = _enable;
+	bbmod_shader_get_global(_name).__mipEnable = _enable;
 }
 
 /// @func bbmod_shader_set_global_sampler_mip_filter(_name, _filter)
@@ -946,7 +946,7 @@ function bbmod_shader_set_global_sampler_mip_enable(_name, _enable)
 function bbmod_shader_set_global_sampler_mip_filter(_name, _filter)
 {
 	gml_pragma("forceinline");
-	bbmod_shader_get_global(_name).MipFilter = _filter;
+	bbmod_shader_get_global(_name).__mipFilter = _filter;
 }
 
 /// @func bbmod_shader_set_global_sampler_repeat(_name, _enable)
@@ -962,7 +962,7 @@ function bbmod_shader_set_global_sampler_mip_filter(_name, _filter)
 function bbmod_shader_set_global_sampler_repeat(_name, _enable)
 {
 	gml_pragma("forceinline");
-	bbmod_shader_get_global(_name).Repeat = _enable;
+	bbmod_shader_get_global(_name).__repeat = _enable;
 }
 
 /// @func bbmod_shader_unset_global(_name)

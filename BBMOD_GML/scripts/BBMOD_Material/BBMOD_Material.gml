@@ -137,9 +137,32 @@ function BBMOD_Material(_shader=undefined)
 	/// Default value is `false`.
 	AlphaBlend = false;
 
-	/// @var {Bool} Use `false` to disable mimapping for this material. Default
-	/// value is `true`.
-	Mipmapping = true;
+	/// @var {Real} Use one of the `mip_` constants. Default value is `mip_on`.
+	Mipmapping = mip_on;
+
+	/// @var {Real} Defines a bias for which mip level is used. Can be also
+	/// negative values to select lower mip levels. E.g. if mip level 2 would be
+	/// normally selected and bias was -1, then level 1 would be selected instead
+	/// and if it was 1, then level 3 would be selected instead. Default value is
+	/// 0.
+	MipBias = 0;
+
+	/// @var {Real} The mip filter mode used for the material. Use one of the
+	/// `tf_` constants. Default value is `tf_anisotropic`.
+	MipFilter = tf_anisotropic;
+
+	/// @var {Real} The minimum mip level used, where 0 is the highest resolution,
+	/// 1 is the first mipmap, 2 is the second etc. Default value is 0.
+	MipMin = 0;
+
+	/// @var {Real} The maximum mip level used, where 0 is the highest resolution,
+	/// 1 is the first mipmap, 2 is the second etc. Default value is 16.
+	MipMax = 16;
+
+	/// @var {Real} The maximum level of anisotropy when
+	/// {@link BBMOD_Material.MipFilter} is set to `tf_anisotropic`. Must be in
+	/// range 1..16. Default value is 16.
+	Anisotropy = 16;
 
 	/// @var {Bool} Use `false` to disable linear texture filtering for this
 	/// material. Default value is `true`.
@@ -177,6 +200,11 @@ function BBMOD_Material(_shader=undefined)
 		_dest.AlphaTest = AlphaTest;
 		_dest.AlphaBlend = AlphaBlend;
 		_dest.Mipmapping = Mipmapping;
+		_dest.MipBias = MipBias;
+		_dest.MipFilter = MipFilter;
+		_dest.MipMin = MipMin;
+		_dest.MipMax = MipMax;
+		_dest.Anisotropy = Anisotropy;
 		_dest.Filtering = Filtering;
 		_dest.Repeat = Repeat;
 
@@ -258,6 +286,11 @@ function BBMOD_Material(_shader=undefined)
 		_json.AlphaTest = AlphaTest;
 		_json.AlphaBlend = AlphaBlend;
 		_json.Mipmapping = Mipmapping;
+		_json.MipBias = MipBias;
+		_json.MipFilter = MipFilter;
+		_json.MipMin = MipMin;
+		_json.MipMax = MipMax;
+		_json.Anisotropy = Anisotropy;
 		_json.Filtering = Filtering;
 		_json.Repeat = Repeat;
 
@@ -362,6 +395,31 @@ function BBMOD_Material(_shader=undefined)
 		if (variable_struct_exists(_json, "Mipmapping"))
 		{
 			Mipmapping = _json.Mipmapping;
+		}
+
+		if (variable_struct_exists(_json, "MipBias"))
+		{
+			MipBias = _json.MipBias;
+		}
+
+		if (variable_struct_exists(_json, "MipFilter"))
+		{
+			MipFilter = _json.MipFilter;
+		}
+
+		if (variable_struct_exists(_json, "MipMin"))
+		{
+			MipMin = _json.MipMin;
+		}
+
+		if (variable_struct_exists(_json, "MipMax"))
+		{
+			MipMax = _json.MipMax;
+		}
+
+		if (variable_struct_exists(_json, "Anisotropy"))
+		{
+			Anisotropy = _json.Anisotropy;
 		}
 
 		if (variable_struct_exists(_json, "Filtering"))
@@ -538,7 +596,12 @@ function BBMOD_Material(_shader=undefined)
 			gpu_set_zwriteenable(_isShadows ? true : ZWrite);
 			gpu_set_ztestenable(_isShadows ? true : ZTest);
 			gpu_set_zfunc(ZFunc);
-			gpu_set_tex_mip_enable(Mipmapping ? mip_on : mip_off);
+			gpu_set_tex_mip_enable(Mipmapping);
+			gpu_set_tex_mip_bias(MipBias);
+			gpu_set_tex_mip_filter(MipFilter);
+			gpu_set_tex_min_mip(MipMin);
+			gpu_set_tex_max_mip(MipMax);
+			gpu_set_tex_max_aniso(Anisotropy);
 			gpu_set_tex_filter(Filtering);
 			gpu_set_tex_repeat(Repeat);
 

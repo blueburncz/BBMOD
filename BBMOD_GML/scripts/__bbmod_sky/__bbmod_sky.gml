@@ -13,7 +13,7 @@ function __bbmod_material_sky()
 			BBMOD_ShSky, new BBMOD_VertexFormat(true));
 		_material = new BBMOD_BaseMaterial(_skSky);
 		_material.Culling = cull_noculling;
-		_material.Mipmapping = false;
+		_material.Mipmapping = mip_off;
 		_material.ZWrite = false;
 		_material.ZTest = false;
 		_material.Filtering = true;
