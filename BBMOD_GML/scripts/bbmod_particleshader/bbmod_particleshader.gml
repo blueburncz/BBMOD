@@ -11,6 +11,8 @@
 function BBMOD_ParticleShader(_shader, _vertexFormat)
 	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static DefaultShader_set_material = set_material;
 
 	USoftDistance = get_uniform("bbmod_SoftDistance");

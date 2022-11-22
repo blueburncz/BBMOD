@@ -12,6 +12,8 @@
 function BBMOD_DefaultShader(_shader, _vertexFormat)
 	: BBMOD_BaseShader(_shader, _vertexFormat) constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static BaseShader_set_material = set_material;
 
 	UIsRoughness = get_uniform("bbmod_IsRoughness");

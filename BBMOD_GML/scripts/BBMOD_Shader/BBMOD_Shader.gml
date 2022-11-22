@@ -67,6 +67,8 @@ global.__bbmodShaderCurrent = undefined;
 
 /// @func BBMOD_Shader(_shader, _vertexFormat)
 ///
+/// @extends BBMOD_Class
+///
 /// @desc Base class for wrappers of raw GameMaker shader resources.
 ///
 /// @param {Asset.GMShader} _shader The shader resource.
@@ -74,8 +76,11 @@ global.__bbmodShaderCurrent = undefined;
 /// by the shader.
 ///
 /// @see BBMOD_VertexFormat
-function BBMOD_Shader(_shader, _vertexFormat) constructor
+function BBMOD_Shader(_shader, _vertexFormat)
+	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {String} The name under which is the shader registered or
 	/// `undefined`.
 	/// @private

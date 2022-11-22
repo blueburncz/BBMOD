@@ -74,7 +74,7 @@ _objImporter = _objImporter.destroy();
 gizmo = new BBMOD_Gizmo();
 gizmo.ButtonDrag = mb_right;
 
-renderer = new BBMOD_Renderer();
+renderer = new BBMOD_DefaultRenderer();
 renderer.Gizmo = gizmo;
 renderer.ButtonSelect = mb_right;
 renderer.UseAppSurface = true;

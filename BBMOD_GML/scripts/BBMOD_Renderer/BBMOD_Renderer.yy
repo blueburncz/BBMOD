@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Rendering",
-    "path": "folders/BBMOD/Core/Rendering.yy",
+    "name": "Obsolete",
+    "path": "folders/BBMOD/Core/DefaultRenderer/Obsolete.yy",
   },
 }

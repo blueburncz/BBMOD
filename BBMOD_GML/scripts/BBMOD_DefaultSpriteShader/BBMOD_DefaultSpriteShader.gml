@@ -13,6 +13,8 @@
 function BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
 	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static DefaultShader_set_material = set_material;
 
 	UBaseOpacityUV = get_uniform("bbmod_BaseOpacityUV");
