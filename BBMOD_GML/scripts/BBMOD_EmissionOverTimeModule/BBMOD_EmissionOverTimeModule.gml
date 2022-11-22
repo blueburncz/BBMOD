@@ -21,17 +21,17 @@ function BBMOD_EmissionOverTimeModule(_count=1, _interval=1.0)
 
 	/// @var {Real}
 	/// @private
-	Timer = 0.0;
+	__timer = 0.0;
 
 	static on_update = function (_emitter, _deltaTime) {
-		Timer += _deltaTime * 0.000001;
-		if (Timer >= Interval)
+		__timer += _deltaTime * 0.000001;
+		if (__timer >= Interval)
 		{
 			repeat (Count)
 			{
 				_emitter.spawn_particle();
 			}
-			Timer = 0.0;
+			__timer = 0.0;
 		}
 	};
 }

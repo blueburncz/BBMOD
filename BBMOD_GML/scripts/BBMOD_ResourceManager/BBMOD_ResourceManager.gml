@@ -12,7 +12,7 @@
 /// resourceManager = new BBMOD_ResourceManager();
 ///
 /// /// @desc Clean Up event
-/// resourceManager.destroy();
+/// resourceManager = resourceManager.destroy();
 ///
 /// /// @desc Async - Image Loaded event
 /// resourceManager.async_image_loaded_update(async_load);
@@ -46,7 +46,7 @@ function BBMOD_ResourceManager()
 
 	/// @var {Id.DsMap<String, Struct.BBMOD_Resource>}
 	/// @private
-	Resources = ds_map_create();
+	__resources = ds_map_create();
 
 	/// @var {Real} Number of resources that are currently loading.
 	/// @readonly
@@ -64,12 +64,12 @@ function BBMOD_ResourceManager()
 	/// @throws {BBMOD_Exception} If the resource is already added to a manager.
 	static add = function (_uniqueName, _resource) {
 		gml_pragma("forceinline");
-		if (_resource.Manager != undefined)
+		if (_resource.__manager != undefined)
 		{
 			throw new BBMOD_Exception("Resource is already added to a manager!");
 		}
-		Resources[? _uniqueName] = _resource;
-		_resource.Manager = self;
+		__resources[? _uniqueName] = _resource;
+		_resource.__manager = self;
 		return self;
 	};
 
@@ -83,7 +83,7 @@ function BBMOD_ResourceManager()
 	/// @return {Bool} Returns `true` if the resource manager has the resource.
 	static has = function (_pathOrUniqueName) {
 		gml_pragma("forceinline");
-		return ds_map_exists(Resources, _pathOrUniqueName);
+		return ds_map_exists(__resources, _pathOrUniqueName);
 	};
 
 	/// @func get(_pathOrUniqueName)
@@ -101,11 +101,11 @@ function BBMOD_ResourceManager()
 	/// resource.
 	static get = function (_pathOrUniqueName) {
 		gml_pragma("forceinline");
-		if (!ds_map_exists(Resources, _pathOrUniqueName))
+		if (!ds_map_exists(__resources, _pathOrUniqueName))
 		{
 			throw new BBMOD_Exception("Resource not found!");
 		}
-		return Resources[? _pathOrUniqueName].ref();
+		return __resources[? _pathOrUniqueName].ref();
 	};
 
 	/// @func get_or_add(_uniqueName, _onAdd)
@@ -135,9 +135,9 @@ function BBMOD_ResourceManager()
 	/// ```
 	static get_or_add = function (_uniqueName, _onAdd) {
 		gml_pragma("forceinline");
-		if (ds_map_exists(Resources, _uniqueName))
+		if (ds_map_exists(__resources, _uniqueName))
 		{
-			return Resources[? _uniqueName].ref();
+			return __resources[? _uniqueName].ref();
 		}
 		var _res = _onAdd();
 		add(_uniqueName, _res);
@@ -165,7 +165,7 @@ function BBMOD_ResourceManager()
 	/// `*.bbanim` for {@link BBMOD_Animation}, `*.bbmat` for {@link BBMOD_Material}
 	/// and `*.png`, `*.gif`, `*.jpg/jpeg` for {@link BBMOD_Sprite}.
 	static load = function (_path, _sha1=undefined, _onLoad=undefined) {
-		var _resources = Resources;
+		var _resources = __resources;
 
 		if (ds_map_exists(_resources, _path))
 		{
@@ -288,15 +288,15 @@ function BBMOD_ResourceManager()
 			return undefined;
 		}
 
-		_res.Manager = self;
+		_res.__manager = self;
 		var _manager = self;
 		var _struct = {
-			Manager: _manager,
+			__manager: _manager,
 			Callback: _onLoad,
 		};
 		++Loading;
 		_res.from_file_async(_path, _sha1, method(_struct, function (_err, _res) {
-			--Manager.Loading;
+			--__manager.Loading;
 			if (Callback != undefined)
 			{
 				Callback(_err, _res);
@@ -318,7 +318,7 @@ function BBMOD_ResourceManager()
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	static free = function (_resourceOrPath) {
 		// Note: Resource removes itself from the map
-		var _resources = Resources;
+		var _resources = __resources;
 		if (is_struct(_resourceOrPath))
 		{
 			_resourceOrPath.free();
@@ -368,14 +368,14 @@ function BBMOD_ResourceManager()
 
 	static destroy = function () {
 		Class_destroy();
-		var _resources = Resources;
+		var _resources = __resources;
 		var _key = ds_map_find_first(_resources);
 		repeat (ds_map_size(_resources))
 		{
 			var _res = _resources[? _key];
 			// Do not remove from the map, we destroy it anyways:
-			_res.Manager = undefined;
-			_res.Counter = 0; // Otherwise we could call destroy multiple times
+			_res.__manager = undefined;
+			_res.__counter = 0; // Otherwise we could call destroy multiple times
 			_res.destroy();
 			_key = ds_map_find_next(_resources, _key);
 		}

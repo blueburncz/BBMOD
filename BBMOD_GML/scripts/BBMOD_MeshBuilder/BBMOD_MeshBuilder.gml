@@ -27,6 +27,7 @@
 /// _meshBuilder.add_face(_v1, _v2, _v4);
 /// _meshBuilder.add_face(_v2, _v3, _v4);
 /// var _mesh = _meshBuilder.build();
+/// _meshBuilder = _meshBuilder.destroy();
 /// ```
 ///
 /// @see BBMOD_Mesh

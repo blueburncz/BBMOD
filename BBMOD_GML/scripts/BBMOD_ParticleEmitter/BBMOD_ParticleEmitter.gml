@@ -41,11 +41,11 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// @var {Real} The index of the particle that will be spawned next if all
 	/// particles are already alive.
 	/// @private
-	ParticleSpawnNext = 0;
+	__particleSpawnNext = 0;
 
 	/// @var {Real}
 	/// @private
-	Time = 0.0;
+	__time = 0.0;
 
 	// Initialize particle index
 	ds_grid_clear(Particles, 0.0);
@@ -70,7 +70,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// @return {Bool} Returns `true` if a particle was spawned.
 	static spawn_particle = function (_position=undefined) {
 		gml_pragma("forceinline");
-		if (Time >= System.Duration && !System.Loop)
+		if (__time >= System.Duration && !System.Loop)
 		{
 			return false;
 		}
@@ -83,10 +83,10 @@ function BBMOD_ParticleEmitter(_position, _system)
 		}
 		else
 		{
-			_particleIndex = ParticleSpawnNext;
-			if (++ParticleSpawnNext >= System.ParticleCount)
+			_particleIndex = __particleSpawnNext;
+			if (++__particleSpawnNext >= System.ParticleCount)
 			{
-				ParticleSpawnNext = 0;
+				__particleSpawnNext = 0;
 			}
 		}
 
@@ -155,12 +155,12 @@ function BBMOD_ParticleEmitter(_position, _system)
 		var _deltaTimeS = _deltaTime * 0.000001;
 		var _modules = System.Modules;
 
-		var _timeStart = (Time == 0.0 && _deltaTime != 0.0);
-		Time += _deltaTimeS;
-		var _timeOut = (Time >= System.Duration);
+		var _timeStart = (__time == 0.0 && _deltaTime != 0.0);
+		__time += _deltaTimeS;
+		var _timeOut = (__time >= System.Duration);
 		if (_timeOut && System.Loop)
 		{
-			Time = 0.0;
+			__time = 0.0;
 		}
 
 		var _temp1 = _deltaTimeS * 0.5;
@@ -362,7 +362,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 		{
 			return false;
 		}
-		if (Time >= System.Duration)
+		if (__time >= System.Duration)
 		{
 			if (!_particlesDead || ParticlesAlive == 0)
 			{
@@ -375,7 +375,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 	static _draw = function (_method, _material=undefined) {
 		gml_pragma("forceinline");
 
-		var _dynamicBatch = System.DynamicBatch;
+		var _dynamicBatch = System.__dynamicBatch;
 		var _batchSize = _dynamicBatch.Size;
 		_material ??= System.Material;
 
@@ -471,7 +471,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static submit = function (_material=undefined) {
-		var _dynamicBatch = System.DynamicBatch;
+		var _dynamicBatch = System.__dynamicBatch;
 		_draw(method(_dynamicBatch, _dynamicBatch.submit), _material);
 		return self;
 	};
@@ -485,7 +485,7 @@ function BBMOD_ParticleEmitter(_position, _system)
 	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
 	static render = function (_material=undefined) {
-		var _dynamicBatch = System.DynamicBatch;
+		var _dynamicBatch = System.__dynamicBatch;
 		_draw(method(_dynamicBatch, _dynamicBatch.render), _material);
 		return self;
 	};

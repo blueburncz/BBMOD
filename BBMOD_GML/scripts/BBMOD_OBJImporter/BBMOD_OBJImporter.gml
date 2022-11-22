@@ -10,7 +10,7 @@
 /// modHouse = _objImporter.import("Data/Assets/House.obj");
 /// modTree = _objImporter.import("Data/Assets/Tree.obj");
 /// modFence = _objImporter.import("Data/Assets/Fence.obj");
-/// _objImporter.destroy();
+/// _objImporter = _objImporter.destroy();
 /// ```
 function BBMOD_OBJImporter()
 	: BBMOD_Importer() constructor
@@ -97,8 +97,7 @@ function BBMOD_OBJImporter()
 				}
 				_mesh.MaterialIndex = _material;
 
-				_meshBuilder.destroy();
-				_meshBuilder = undefined;
+				_meshBuilder = _meshBuilder.destroy();
 			}
 
 			switch (_keyword)
@@ -281,8 +280,7 @@ function BBMOD_OBJImporter()
 			}
 			_mesh.MaterialIndex = _material;
 
-			_meshBuilder.destroy();
-			_meshBuilder = undefined;
+			_meshBuilder = _meshBuilder.destroy();
 		}
 
 		return _model;

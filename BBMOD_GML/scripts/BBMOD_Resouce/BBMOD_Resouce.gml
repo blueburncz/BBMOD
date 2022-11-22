@@ -22,12 +22,12 @@ function BBMOD_Resource()
 	/// @var {Struct.BBMOD_ResourceManager} The resource manager that loaded
 	/// the resource.
 	/// @private
-	Manager = undefined;
+	__manager = undefined;
 
 	/// @var {Real} Number of resource "lives". If it reaches 0, the resource is
 	/// destroyed.
 	/// @private
-	Counter = 1;
+	__counter = 1;
 
 	/// @func from_buffer(_buffer)
 	///
@@ -241,7 +241,7 @@ function BBMOD_Resource()
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	static ref = function () {
 		gml_pragma("forceinline");
-		++Counter;
+		++__counter;
 		return self;
 	};
 
@@ -253,7 +253,7 @@ function BBMOD_Resource()
 	/// resource and the resource is destroyed.
 	static free = function () {
 		gml_pragma("forceinline");
-		if (--Counter == 0)
+		if (--__counter == 0)
 		{
 			destroy();
 			return true;
@@ -263,10 +263,10 @@ function BBMOD_Resource()
 
 	static destroy = function () {
 		Class_destroy();
-		if (Manager != undefined)
+		if (__manager != undefined)
 		{
-			ds_map_delete(Manager.Resources, Path);
-			Manager = undefined;
+			ds_map_delete(__manager.__resources, Path);
+			__manager = undefined;
 		}
 		return undefined;
 	};

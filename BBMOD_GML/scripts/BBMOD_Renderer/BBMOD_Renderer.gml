@@ -38,7 +38,7 @@
 /// renderer.present();
 ///
 /// // Clean Up event
-/// renderer.destroy();
+/// renderer = renderer.destroy();
 /// ```
 ///
 /// @see BBMOD_IRenderable
@@ -74,7 +74,7 @@ function BBMOD_Renderer()
 
 	/// @var {Id.Surface} Surface for rendering highlight of selected instances.
 	/// @private
-	SurInstanceHighlight = noone;
+	__surInstanceHighlight = noone;
 
 	/// @var {Struct.BBMOD_Color} Outline color of instances selected by gizmo.
 	/// Default value is {@link BBMOD_C_ORANGE}.
@@ -109,11 +109,11 @@ function BBMOD_Renderer()
 	/// @var {Id.Surface} A surface containing the gizmo. Used to enable
 	/// z-testing against itself, but ingoring the scene geometry.
 	/// @private
-	SurGizmo = noone;
+	__surGizmo = noone;
 
 	/// @var {Id.Surface} Surface for mouse-picking the gizmo.
 	/// @private
-	SurSelect = noone;
+	__surSelect = noone;
 
 	/// @var {Array<Struct.BBMOD_IRenderable>} An array of renderable objects
 	/// and structs. These are automatically rendered in
@@ -145,7 +145,7 @@ function BBMOD_Renderer()
 
 	/// @var {Id.Surface} The G-buffer surface.
 	/// @private
-	SurGBuffer = noone;
+	__surGBuffer = noone;
 
 	/// @var {Bool} Enables screen-space ambient occlusion. This requires
 	/// the G-buffer. Defaults to `false`. Enabling this requires the
@@ -155,11 +155,11 @@ function BBMOD_Renderer()
 
 	/// @var {Id.Surface} The SSAO surface.
 	/// @private
-	SurSSAO = noone;
+	__surSSAO = noone;
 
 	/// @var {Id.Surface} Surface used for blurring SSAO.
 	/// @private
-	SurWork = noone;
+	__surWork = noone;
 
 	/// @var {Real} Resolution multiplier for SSAO surface. Defaults to 1.
 	SSAOScale = 1.0;
@@ -336,7 +336,7 @@ function BBMOD_Renderer()
 
 		Gizmo.EditAxis = BBMOD_EEditAxis.None;
 
-		var _pixel = surface_getpixel_ext(SurSelect, _screenX, _screenY);
+		var _pixel = surface_getpixel_ext(__surSelect, _screenX, _screenY);
 		if (_pixel & $FF000000 == 0)
 		{
 			return false;
@@ -372,13 +372,13 @@ function BBMOD_Renderer()
 	/// @note {@link BBMOD_Renderer.RenderInstanceIDs} must be enabled.
 	static get_instance_id = function (_screenX, _screenY) {
 		gml_pragma("forceinline");
-		if (!surface_exists(SurSelect))
+		if (!surface_exists(__surSelect))
 		{
 			return 0;
 		}
 		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
 		_screenY = clamp(_screenY - Y, 0, get_height()) * RenderScale;
-		return surface_getpixel_ext(SurSelect, _screenX, _screenY);
+		return surface_getpixel_ext(__surSelect, _screenX, _screenY);
 	};
 
 	/// @func add(_renderable)
@@ -549,8 +549,8 @@ function BBMOD_Renderer()
 			&& _mouseOver
 			&& mouse_check_button_pressed(Gizmo.ButtonDrag))
 		{
-			SurSelect = bbmod_surface_check(SurSelect, _renderWidth, _renderHeight);
-			surface_set_target(SurSelect);
+			__surSelect = bbmod_surface_check(__surSelect, _renderWidth, _renderHeight);
+			surface_set_target(__surSelect);
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
@@ -571,9 +571,9 @@ function BBMOD_Renderer()
 
 		if (_mousePickInstance || RenderInstanceIDs)
 		{
-			SurSelect = bbmod_surface_check(SurSelect, _renderWidth, _renderHeight);
+			__surSelect = bbmod_surface_check(__surSelect, _renderWidth, _renderHeight);
 
-			surface_set_target(SurSelect);
+			surface_set_target(__surSelect);
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
@@ -610,10 +610,10 @@ function BBMOD_Renderer()
 		{
 			////////////////////////////////////////////////////////////////////
 			// Instance highlight
-			SurInstanceHighlight = bbmod_surface_check(
-				SurInstanceHighlight, _renderWidth, _renderHeight);
+			__surInstanceHighlight = bbmod_surface_check(
+				__surInstanceHighlight, _renderWidth, _renderHeight);
 
-			surface_set_target(SurInstanceHighlight);
+			surface_set_target(__surInstanceHighlight);
 			draw_clear_alpha(0, 0.0);
 
 			matrix_set(matrix_view, _view);
@@ -634,8 +634,8 @@ function BBMOD_Renderer()
 			// Gizmo
 			bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
-			SurGizmo = bbmod_surface_check(SurGizmo, _renderWidth, _renderHeight);
-			surface_set_target(SurGizmo);
+			__surGizmo = bbmod_surface_check(__surGizmo, _renderWidth, _renderHeight);
+			surface_set_target(__surGizmo);
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
@@ -712,8 +712,8 @@ function BBMOD_Renderer()
 		{
 			var _width = _renderWidth * GBufferScale;
 			var _height = _renderHeight * GBufferScale;
-			SurGBuffer = bbmod_surface_check(SurGBuffer, _width, _height);
-			surface_set_target(SurGBuffer);
+			__surGBuffer = bbmod_surface_check(__surGBuffer, _width, _height);
+			surface_set_target(__surGBuffer);
 			draw_clear(c_white);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
@@ -735,14 +735,14 @@ function BBMOD_Renderer()
 			bbmod_material_reset();
 			var _width = _renderWidth * SSAOScale;
 			var _height = _renderHeight * SSAOScale;
-			SurSSAO = bbmod_surface_check(SurSSAO, _width, _height);
-			SurWork = bbmod_surface_check(SurWork, _width, _height);
+			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height);
+			__surWork = bbmod_surface_check(__surWork, _width, _height);
 			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
-				SSAODepthRange, SurSSAO, SurWork, SurGBuffer, _projection,
+				SSAODepthRange, __surSSAO, __surWork, __surGBuffer, _projection,
 				bbmod_camera_get_zfar());
 			bbmod_material_reset();
 			bbmod_shader_set_global_sampler(
-				"bbmod_SSAO", surface_get_texture(SurSSAO));
+				"bbmod_SSAO", surface_get_texture(__surSSAO));
 		}
 		else
 		{
@@ -755,7 +755,7 @@ function BBMOD_Renderer()
 		// Forward pass
 		//
 		bbmod_shader_set_global_sampler("bbmod_GBuffer", EnableGBuffer
-			? surface_get_texture(SurGBuffer)
+			? surface_get_texture(__surGBuffer)
 			: sprite_get_texture(BBMOD_SprWhite, 0));
 
 		matrix_set(matrix_view, _view);
@@ -858,7 +858,7 @@ function BBMOD_Renderer()
 				////////////////////////////////////////////////////////////////
 				// Highlighted instances
 				if (!ds_list_empty(Gizmo.Selected)
-					&& surface_exists(SurInstanceHighlight))
+					&& surface_exists(__surInstanceHighlight))
 				{
 					var _shader = BBMOD_ShInstanceHighlight;
 					shader_set(_shader);
@@ -869,15 +869,15 @@ function BBMOD_Renderer()
 						InstanceHighlightColor.Green / 255.0,
 						InstanceHighlightColor.Blue / 255.0,
 						InstanceHighlightColor.Alpha);
-					draw_surface_stretched(SurInstanceHighlight, X, Y, _width, _height);
+					draw_surface_stretched(__surInstanceHighlight, X, Y, _width, _height);
 					shader_reset();
 				}
 			
 				////////////////////////////////////////////////////////////////
 				// Gizmo
-				if (surface_exists(SurGizmo))
+				if (surface_exists(__surGizmo))
 				{
-					draw_surface_stretched(SurGizmo, X, Y, _width, _height);
+					draw_surface_stretched(__surGizmo, X, Y, _width, _height);
 				}
 			}
 
@@ -906,7 +906,7 @@ function BBMOD_Renderer()
 				////////////////////////////////////////////////////////////////
 				// Highlighted instances
 				if (!ds_list_empty(Gizmo.Selected)
-					&& surface_exists(SurInstanceHighlight))
+					&& surface_exists(__surInstanceHighlight))
 				{
 					var _shader = BBMOD_ShInstanceHighlight;
 					shader_set(_shader);
@@ -917,15 +917,15 @@ function BBMOD_Renderer()
 						InstanceHighlightColor.Green / 255.0,
 						InstanceHighlightColor.Blue / 255.0,
 						InstanceHighlightColor.Alpha);
-					draw_surface_stretched(SurInstanceHighlight, 0, 0, _width, _height);
+					draw_surface_stretched(__surInstanceHighlight, 0, 0, _width, _height);
 					shader_reset();
 				}
 			
 				////////////////////////////////////////////////////////////////
 				// Gizmo
-				if (surface_exists(SurGizmo))
+				if (surface_exists(__surGizmo))
 				{
-					draw_surface_stretched(SurGizmo, 0, 0, _width, _height);
+					draw_surface_stretched(__surGizmo, 0, 0, _width, _height);
 				}
 			}
 
@@ -947,34 +947,34 @@ function BBMOD_Renderer()
 			global.__bbmodRendererCurrent = undefined;
 		}
 
-		if (surface_exists(SurGBuffer))
+		if (surface_exists(__surGBuffer))
 		{
-			surface_free(SurGBuffer);
+			surface_free(__surGBuffer);
 		}
 
-		if (surface_exists(SurSSAO))
+		if (surface_exists(__surSSAO))
 		{
-			surface_free(SurSSAO);
+			surface_free(__surSSAO);
 		}
 
-		if (surface_exists(SurWork))
+		if (surface_exists(__surWork))
 		{
-			surface_free(SurWork);
+			surface_free(__surWork);
 		}
 
-		if (surface_exists(SurSelect))
+		if (surface_exists(__surSelect))
 		{
-			surface_free(SurSelect);
+			surface_free(__surSelect);
 		}
 
-		if (surface_exists(SurInstanceHighlight))
+		if (surface_exists(__surInstanceHighlight))
 		{
-			surface_free(SurInstanceHighlight);
+			surface_free(__surInstanceHighlight);
 		}
 
-		if (surface_exists(SurGizmo))
+		if (surface_exists(__surGizmo))
 		{
-			surface_free(SurGizmo);
+			surface_free(__surGizmo);
 		}
 
 		if (surface_exists(__surShadowmap))

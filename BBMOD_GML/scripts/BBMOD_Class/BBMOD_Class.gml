@@ -19,7 +19,7 @@
 /// ```
 #macro BBMOD_CLASS_GENERATED_BODY \
 	static __ClassName = bbmod_get_calling_function_name(); \
-	array_push(__Inheritance, __ClassName)
+	array_push(__inheritance, __ClassName)
 
 /// @func BBMOD_Class()
 ///
@@ -28,18 +28,18 @@ function BBMOD_Class() constructor
 {
 	/// @var {Array<String>} An array of names of inherited classes.
 	/// @private
-	__Inheritance = [];
+	__inheritance = [];
 
 	BBMOD_CLASS_GENERATED_BODY;
 
 	/// @var {Array<Function>} An array of implemented interfaces.
 	/// @private
-	__Interfaces = [];
+	__interfaces = [];
 
 	/// @var {Array<Function>} An array of functions executed when the destroy
 	/// method is called.
 	/// @private
-	__DestroyActions = [];
+	__destroyActions = [];
 
 	/// @func is_instance(_class)
 	///
@@ -52,9 +52,9 @@ function BBMOD_Class() constructor
 		gml_pragma("forceinline");
 		var _className = bbmod_class_get_name(_class);
 		var i = 0;
-		repeat (array_length(__Inheritance))
+		repeat (array_length(__inheritance))
 		{
-			if (__Inheritance[i++] == _className)
+			if (__inheritance[i++] == _className)
 			{
 				return true;
 			}
@@ -75,7 +75,7 @@ function BBMOD_Class() constructor
 			throw new BBMOD_Exception("Interface already implemented!");
 			return self;
 		}
-		array_push(__Interfaces, _interface);
+		array_push(__interfaces, _interface);
 		method(self, _interface)();
 		return self;
 	};
@@ -90,9 +90,9 @@ function BBMOD_Class() constructor
 	static implements = function (_interface) {
 		gml_pragma("forceinline");
 		var i = 0;
-		repeat (array_length(__Interfaces))
+		repeat (array_length(__interfaces))
 		{
-			if (__Interfaces[i++] == _interface)
+			if (__interfaces[i++] == _interface)
 			{
 				return true;
 			}
@@ -107,9 +107,9 @@ function BBMOD_Class() constructor
 	/// @return {Undefined} Returns `undefined`.
 	static destroy = function () {
 		var i = 0;
-		repeat (array_length(__DestroyActions))
+		repeat (array_length(__destroyActions))
 		{
-			method(self, __DestroyActions[i++])();
+			method(self, __destroyActions[i++])();
 		}
 		return undefined;
 	};

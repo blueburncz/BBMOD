@@ -68,7 +68,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @var {Array<Real>} An array of bone offset dual quaternions.
 	/// @private
-	OffsetArray = [];
+	__offsetArray = [];
 
 	/// @var {Real} Number of materials that the model uses.
 	/// @see BBMOD_BaseMaterial
@@ -136,7 +136,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		if (RootNode)
 		{
 			_dest.RootNode = RootNode.clone();
-			_dest.pass_self_to_nodes();
+			_dest.__pass_self_to_nodes();
 		}
 		else
 		{
@@ -144,7 +144,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		}
 
 		_dest.BoneCount = BoneCount;
-		_dest.OffsetArray = bbmod_array_clone(OffsetArray);
+		_dest.__offsetArray = bbmod_array_clone(__offsetArray);
 		_dest.MaterialCount = MaterialCount;
 		_dest.MaterialNames = bbmod_array_clone(MaterialNames);
 		_dest.Materials = bbmod_array_clone(Materials);
@@ -164,19 +164,19 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		return _clone;
 	};
 
-	/// @func pass_self_to_nodes([_node])
+	/// @func __pass_self_to_nodes([_node])
 	///
 	/// @desc
 	///
 	/// @param {Struct.BBMOD_Node} [_node]
 	///
 	/// @private
-	static pass_self_to_nodes = function (_node=undefined) {
+	static __pass_self_to_nodes = function (_node=undefined) {
 		_node ??= RootNode;
 		_node.Model = self;
 		for (var i = array_length(_node.Children) - 1; i >= 0; --i)
 		{
-			pass_self_to_nodes(_node.Children[i]);
+			__pass_self_to_nodes(_node.Children[i]);
 		}
 		return self;
 	};
@@ -252,19 +252,19 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 		if (BoneCount > 0)
 		{
-			OffsetArray = array_create(BoneCount * 8, 0);
+			__offsetArray = array_create(BoneCount * 8, 0);
 
 			repeat (BoneCount)
 			{
 				var _index = buffer_read(_buffer, buffer_f32) * 8; // Bone index
-				OffsetArray[@ _index + 0] = buffer_read(_buffer, buffer_f32);
-				OffsetArray[@ _index + 1] = buffer_read(_buffer, buffer_f32);
-				OffsetArray[@ _index + 2] = buffer_read(_buffer, buffer_f32);
-				OffsetArray[@ _index + 3] = buffer_read(_buffer, buffer_f32);
-				OffsetArray[@ _index + 4] = buffer_read(_buffer, buffer_f32);
-				OffsetArray[@ _index + 5] = buffer_read(_buffer, buffer_f32);
-				OffsetArray[@ _index + 6] = buffer_read(_buffer, buffer_f32);
-				OffsetArray[@ _index + 7] = buffer_read(_buffer, buffer_f32);
+				__offsetArray[@ _index + 0] = buffer_read(_buffer, buffer_f32);
+				__offsetArray[@ _index + 1] = buffer_read(_buffer, buffer_f32);
+				__offsetArray[@ _index + 2] = buffer_read(_buffer, buffer_f32);
+				__offsetArray[@ _index + 3] = buffer_read(_buffer, buffer_f32);
+				__offsetArray[@ _index + 4] = buffer_read(_buffer, buffer_f32);
+				__offsetArray[@ _index + 5] = buffer_read(_buffer, buffer_f32);
+				__offsetArray[@ _index + 6] = buffer_read(_buffer, buffer_f32);
+				__offsetArray[@ _index + 7] = buffer_read(_buffer, buffer_f32);
 			}
 		}
 
@@ -339,20 +339,20 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 		if (BoneCount > 0)
 		{
-			OffsetArray = array_create(BoneCount * 8, 0);
+			__offsetArray = array_create(BoneCount * 8, 0);
 
 			var _index = 0;
 			repeat (BoneCount)
 			{
 				buffer_write(_buffer, buffer_f32, _index / 8); // Bone index
-				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 0]);
-				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 1]);
-				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 2]);
-				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 3]);
-				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 4]);
-				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 5]);
-				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 6]);
-				buffer_write(_buffer, buffer_f32, OffsetArray[_index + 7]);
+				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 0]);
+				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 1]);
+				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 2]);
+				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 3]);
+				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 4]);
+				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 5]);
+				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 6]);
+				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 7]);
 				i += 8;
 			}
 		}
@@ -600,24 +600,24 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
-	/// @func to_dynamic_batch(_dynamicBatch)
+	/// @func __to_dynamic_batch(_dynamicBatch)
 	///
 	/// @param {Struct.BBMOD_DynamicBatch} _dynamicBatch
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
 	/// @private
-	static to_dynamic_batch = function (_dynamicBatch) {
+	static __to_dynamic_batch = function (_dynamicBatch) {
 		gml_pragma("forceinline");
 		var i = 0;
 		repeat (array_length(Meshes))
 		{
-			Meshes[i++].to_dynamic_batch(_dynamicBatch);
+			Meshes[i++].__to_dynamic_batch(_dynamicBatch);
 		}
 		return self;
 	};
 
-	/// @func to_static_batch(_staticBatch, _transform)
+	/// @func __to_static_batch(_staticBatch, _transform)
 	///
 	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
 	/// @param {Array<Real>} _transform
@@ -625,12 +625,12 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
 	/// @private
-	static to_static_batch = function (_staticBatch, _transform) {
+	static __to_static_batch = function (_staticBatch, _transform) {
 		gml_pragma("forceinline");
 		var i = 0;
 		repeat (array_length(Meshes))
 		{
-			Meshes[i++].to_static_batch(self, _staticBatch, _transform);
+			Meshes[i++].__to_static_batch(self, _staticBatch, _transform);
 		}
 		return self;
 	};

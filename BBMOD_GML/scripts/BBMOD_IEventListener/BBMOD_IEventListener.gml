@@ -19,7 +19,7 @@ function BBMOD_IEventListener()
 {
 	/// @var {Id.DsMap<String, Function>}
 	/// @private
-	Listeners = undefined;
+	__listeners = undefined;
 
 	/// @func on_event([_event, ]_listener)
 	///
@@ -61,12 +61,12 @@ function BBMOD_IEventListener()
 			_listener = _event;
 			_event = __BBMOD_EV_ALL;
 		}
-		Listeners ??= ds_map_create();
-		if (!ds_map_exists(Listeners, _event))
+		__listeners ??= ds_map_create();
+		if (!ds_map_exists(__listeners, _event))
 		{
-			Listeners[? _event] = [];
+			__listeners[? _event] = [];
 		}
-		array_push(Listeners[? _event], _listener);
+		array_push(__listeners[? _event], _listener);
 		return self;
 	};
 
@@ -85,17 +85,17 @@ function BBMOD_IEventListener()
 	/// @see BBMOD_IEventListener.on_event
 	static _offEvent = function (_event=undefined) {
 		gml_pragma("forceinline");
-		if (Listeners == undefined)
+		if (__listeners == undefined)
 		{
 			return self;
 		}
 		if (_event != undefined)
 		{
-			ds_map_delete(Listeners, _event);
+			ds_map_delete(__listeners, _event);
 		}
 		else
 		{
-			ds_map_destroy(Listeners);
+			ds_map_destroy(__listeners);
 		}
 		return self;
 	};
@@ -112,16 +112,16 @@ function BBMOD_IEventListener()
 	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
 	static _triggerEvent = function (_event, _data) {
 		gml_pragma("forceinline");
-		if (Listeners == undefined)
+		if (__listeners == undefined)
 		{
 			return self;
 		}
 
 		var _events, i;
 
-		if (ds_map_exists(Listeners, _event))
+		if (ds_map_exists(__listeners, _event))
 		{
-			_events = Listeners[? _event];
+			_events = __listeners[? _event];
 			i = 0;
 			repeat (array_length(_events))
 			{
@@ -129,9 +129,9 @@ function BBMOD_IEventListener()
 			}
 		}
 
-		if (ds_map_exists(Listeners, __BBMOD_EV_ALL))
+		if (ds_map_exists(__listeners, __BBMOD_EV_ALL))
 		{
-			_events = Listeners[? __BBMOD_EV_ALL];
+			_events = __listeners[? __BBMOD_EV_ALL];
 			i = 0;
 			repeat (array_length(_events))
 			{
@@ -144,10 +144,10 @@ function BBMOD_IEventListener()
 
 	trigger_event = _triggerEvent;
 
-	array_push(__DestroyActions, function () {
-		if (Listeners != undefined)
+	array_push(__destroyActions, function () {
+		if (__listeners != undefined)
 		{
-			ds_map_destroy(Listeners);
+			ds_map_destroy(__listeners);
 		}
 	});
 }

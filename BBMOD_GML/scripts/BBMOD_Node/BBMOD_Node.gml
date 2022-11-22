@@ -166,8 +166,6 @@ function BBMOD_Node(_model) constructor
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	///
-	/// @private
 	static from_buffer = function (_buffer) {
 		var i;
 
@@ -214,8 +212,6 @@ function BBMOD_Node(_model) constructor
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	///
-	/// @private
 	static to_buffer = function (_buffer) {
 		var i;
 
@@ -257,8 +253,6 @@ function BBMOD_Node(_model) constructor
 	/// transforming animated models or `undefined`.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
 	/// batching or `undefined`.
-	///
-	/// @private
 	static submit = function (_materials, _transform, _batchData) {
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;
@@ -335,8 +329,6 @@ function BBMOD_Node(_model) constructor
 	/// @param {Array<Real>} _matrix The current world matrix.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
 	/// batching or `undefined`.
-	///
-	/// @private
 	static render = function (_materials, _transform, _matrix, _batchData) {
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;

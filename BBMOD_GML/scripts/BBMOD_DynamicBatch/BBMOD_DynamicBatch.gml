@@ -564,8 +564,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 		Class_destroy();
 		if (Batch != undefined)
 		{
-			Batch.destroy();
-			Batch = undefined;
+			Batch = Batch.destroy();
 		}
 		__data = undefined;
 		ds_map_destroy(__instanceToIndex);

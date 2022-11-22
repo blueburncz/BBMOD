@@ -39,7 +39,7 @@
 /// var _dll = new BBMOD_DLL();
 /// _dll.set_gen_normal(BBMOD_NORMALS_FLAT);
 /// _dll.convert("House.fbx", "House.bbmod");
-/// _dll.destroy();
+/// _dll = _dll.destroy();
 /// modHouse = new BBMOD_Model("House.bbmod");
 /// ```
 function BBMOD_DLL(

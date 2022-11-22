@@ -1,1 +1,1 @@
-material.destroy();
+material = material.destroy();

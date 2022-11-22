@@ -7,8 +7,6 @@
 /// @param {Real} _b The second number.
 ///
 /// @return {Bool} Returns `true` if the two numbers are equal.
-///
-/// @private
 // Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L6
 function bbmod_cmp(_a, _b)
 {

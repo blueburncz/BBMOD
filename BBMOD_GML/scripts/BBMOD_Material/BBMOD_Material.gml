@@ -23,7 +23,7 @@ function bbmod_material_register(_name, _material)
 	gml_pragma("forceinline");
 	static _map =__bbmod_material_get_map();
 	_map[? _name] = _material;
-	_material.Name = _name;
+	_material.__name = _name;
 }
 
 /// @func bbmod_material_exists(_name)
@@ -82,7 +82,7 @@ function BBMOD_Material(_shader=undefined)
 	/// @var {String} The name under which is this material registered or
 	/// `undefined`.
 	/// @private
-	Name = undefined;
+	__name = undefined;
 
 	/// @var {Real} Render passes in which is the material rendered. Defaults
 	/// to 0 (no passes).
@@ -186,7 +186,7 @@ function BBMOD_Material(_shader=undefined)
 	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static copy = function (_dest) {
-		_dest.Name = Name;
+		_dest.__name = __name;
 		_dest.RenderPass = RenderPass;
 		_dest.Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
 		array_copy(_dest.Shaders, 0, Shaders, 0, BBMOD_ERenderPass.SIZE);
@@ -256,7 +256,7 @@ function BBMOD_Material(_shader=undefined)
 			if (_shader != undefined)
 			{
 				var _passName = bbmod_render_pass_to_string(_pass);
-				if (_shader.Name == undefined)
+				if (_shader.__name == undefined)
 				{
 					throw new BBMOD_Exception(
 						"Cannot save to JSON, shader for render pass \""
@@ -264,7 +264,7 @@ function BBMOD_Material(_shader=undefined)
 				}
 				else
 				{
-					_shaders[$ _passName] = _shader.Name;
+					_shaders[$ _passName] = _shader.__name;
 				}
 			}
 			++_pass;

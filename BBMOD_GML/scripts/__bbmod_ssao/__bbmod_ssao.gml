@@ -1,19 +1,19 @@
 /// @macro {Real} Size of the SSAO noise texture. Must be the same as in shaders!
 /// @private
-#macro BBMOD_SSAO_NOISE_TEXTURE_SIZE 4
+#macro __BBMOD_SSAO_NOISE_TEXTURE_SIZE 4
 
 /// @macro {Real} The size of SSAO sampling kernel. The higher the better quality,
 /// but lower performance. Must be the same as in shaders!
 /// @private
-#macro BBMOD_SSAO_KERNEL_SIZE 8
+#macro __BBMOD_SSAO_KERNEL_SIZE 8
 
 /// @var {Id.Sprite}
 /// @private
-global.__bbmodSSAONoise = __bbmod_ssao_make_noise(BBMOD_SSAO_NOISE_TEXTURE_SIZE);
+global.__bbmodSSAONoise = __bbmod_ssao_make_noise(__BBMOD_SSAO_NOISE_TEXTURE_SIZE);
 
 /// @var {Array<Real>}
 /// @private
-global.__bbmodSSAOKernel = __bbmod_ssao_create_kernel(BBMOD_SSAO_KERNEL_SIZE);
+global.__bbmodSSAOKernel = __bbmod_ssao_create_kernel(__BBMOD_SSAO_KERNEL_SIZE);
 
 /// @func __bbmod_ssao_make_noise(_size)
 ///
@@ -149,8 +149,8 @@ function bbmod_ssao_draw(
 	shader_set_uniform_f(_uRadius, _radius);
 	shader_set_uniform_f(_uPower, _power);
 	shader_set_uniform_f(_uNoiseScale,
-		_width / BBMOD_SSAO_NOISE_TEXTURE_SIZE,
-		_height / BBMOD_SSAO_NOISE_TEXTURE_SIZE);
+		_width / __BBMOD_SSAO_NOISE_TEXTURE_SIZE,
+		_height / __BBMOD_SSAO_NOISE_TEXTURE_SIZE);
 	shader_set_uniform_f(_uAngleBias, _angleBias);
 	shader_set_uniform_f(_uDepthRange, _depthRange);
 	draw_surface_stretched(_surDepth, 0, 0, _width, _height);

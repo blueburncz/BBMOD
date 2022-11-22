@@ -1,2 +1,2 @@
-animationPlayer.destroy();
-animationStateMachine.destroy();
+animationPlayer = animationPlayer.destroy();
+animationStateMachine = animationStateMachine.destroy();

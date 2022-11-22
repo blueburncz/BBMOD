@@ -29,14 +29,14 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 		return Position.Add(_sphereToPoint);
 	};
 
-	static _TestImpl = function (_collider) {
+	static __testImpl = function (_collider) {
 		gml_pragma("forceinline");
 		var _closestPoint = _collider.GetClosestPoint(Position);
 		return (Position.Sub(_closestPoint).Length() < Radius);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L319
-	static TestAABB = _TestImpl;
+	static TestAABB = __testImpl;
 
 	static TestFrustum = function (_frustum) {
 		gml_pragma("forceinline");
@@ -44,7 +44,7 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L333
-	static TestPlane = _TestImpl;
+	static TestPlane = __testImpl;
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L97
 	static TestPoint = function (_point) {

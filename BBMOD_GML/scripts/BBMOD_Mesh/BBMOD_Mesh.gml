@@ -107,8 +107,6 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	///
-	/// @private
 	static from_buffer = function (_buffer) {
 		MaterialIndex = buffer_read(_buffer, buffer_u32);
 
@@ -146,8 +144,6 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	///
-	/// @private
 	static to_buffer = function (_buffer) {
 		buffer_write(_buffer, MaterialIndex, buffer_u32);
 
@@ -180,8 +176,6 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @func freeze()
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	///
-	/// @private
 	static freeze = function () {
 		gml_pragma("forceinline");
 		if (!Frozen)
@@ -194,13 +188,14 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 
 	/// @func submit(_material, _transform, _batchData)
 	///
-	/// @param {Struct.BBMOD_BaseMaterial} _material
-	/// @param {Array<Real>} _transform
-	/// @param {Array<Real>, Array<Array<Real>>} _batchData
+	/// @desc Immediately submits the mesh for rendering.
+	///
+	/// @param {Struct.BBMOD_BaseMaterial} _material The material to use.
+	/// @param {Array<Real>} _transform An array of bone transform or `undefined`.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
+	/// batching or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	///
-	/// @private
 	static submit = function (_material, _transform, _batchData) {
 		if (!_material.apply())
 		{
@@ -249,14 +244,15 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 
 	/// @func render(_material, _transform, _matrix, _batchData)
 	///
-	/// @param {Struct.BBMOD_BaseMaterial} _material
-	/// @param {Array<Real>} _transform
-	/// @param {Array<Real>} _matrix
-	/// @param {Array<Real>, Array<Array<Real>>} _batchData
+	/// @desc Enqueues the mesh for rendering.
+	///
+	/// @param {Struct.BBMOD_BaseMaterial} _material The material to use.
+	/// @param {Array<Real>} _transform An array of bone transforms or `undefined`.
+	/// @param {Array<Real>} _matrix The current world matrix.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
+	/// batching or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	///
-	/// @private
 	static render = function (_material, _transform, _matrix, _batchData) {
 		gml_pragma("forceinline");
 		if (_batchData != undefined)
@@ -277,7 +273,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		return self;
 	};
 
-	/// @func to_dynamic_batch(_dynamicBatch)
+	/// @func __to_dynamic_batch(_dynamicBatch)
 	///
 	/// @param {Struct.BBMOD_DynamicBatch} _dynamicBatch
 	///
@@ -287,7 +283,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// different primitive type.
 	///
 	/// @private
-	static to_dynamic_batch = function (_dynamicBatch) {
+	static __to_dynamic_batch = function (_dynamicBatch) {
 		if (_dynamicBatch.PrimitiveType != undefined
 			&& _dynamicBatch.PrimitiveType != PrimitiveType)
 		{
@@ -393,7 +389,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		return self;
 	};
 
-	/// @func to_static_batch(_model, _staticBatch, _transform)
+	/// @func __to_static_batch(_model, _staticBatch, _transform)
 	///
 	/// @param {Struct.BBMOD_Model} _model
 	/// @param {Struct.BBMOD_StaticBatch} _staticBatch
@@ -405,7 +401,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// different primitive type.
 	///
 	/// @private
-	static to_static_batch = function (_model, _staticBatch, _transform) {
+	static __to_static_batch = function (_model, _staticBatch, _transform) {
 		if (_staticBatch.PrimitiveType != undefined
 			&& _staticBatch.PrimitiveType != PrimitiveType)
 		{

@@ -41,7 +41,7 @@ function BBMOD_State(_name)
 
 	/// @var {Real}
 	/// @private
-	ActiveSince = 0;
+	__activeSince = 0;
 
 	/// @func get_duration()
 	///
@@ -50,6 +50,6 @@ function BBMOD_State(_name)
 	/// @return {Real} Number of milliseconds for which has the state been active.
 	static get_duration = function () {
 		gml_pragma("forceinline");
-		return (current_time - ActiveSince);
+		return (current_time - __activeSince);
 	};
 }

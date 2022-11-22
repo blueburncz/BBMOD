@@ -1,3 +1,19 @@
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static
+/// models.
+/// @see BBMOD_VertexFormat
+#macro BBMOD_VFORMAT_DEFAULT __bbmod_vformat_default()
+
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for animated
+/// models.
+/// @see BBMOD_VertexFormat
+#macro BBMOD_VFORMAT_DEFAULT_ANIMATED __bbmod_vformat_default_animated()
+
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for dynamically
+/// batched models.
+/// @see BBMOD_VertexFormat
+/// @see BBMOD_DynamicBatch
+#macro BBMOD_VFORMAT_DEFAULT_BATCHED __bbmod_vformat_default_batched()
+
 /// @func BBMOD_VertexFormat([_confOrVertices[, _normals[, _uvs[, _colors[, _tangentw[, _bones[, _ids]]]]]]])
 ///
 /// @desc A wrapper of a raw GameMaker vertex format.
@@ -253,4 +269,25 @@ function __bbmod_vertex_format_load(_buffer, _versionMinor=BBMOD_VERSION_MINOR)
 		"Bones": _bones,
 		"Ids": _ids,
 	});
+}
+
+function __bbmod_vformat_default()
+{
+	static _vformat = new BBMOD_VertexFormat(
+		true, true, true, false, true, false, false);
+	return _vformat;
+}
+
+function __bbmod_vformat_default_animated()
+{
+	static _vformat = new BBMOD_VertexFormat(
+		true, true, true, false, true, true, false);
+	return _vformat;
+}
+
+function __bbmod_vformat_default_batched()
+{
+	static _vformat = new BBMOD_VertexFormat(
+		true, true, true, false, true, false, true);
+	return _vformat;
 }

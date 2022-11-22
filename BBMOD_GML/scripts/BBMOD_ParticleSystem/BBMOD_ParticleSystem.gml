@@ -47,7 +47,7 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 
 	/// @var {Struct.BBMOD_DynamicBatch}
 	/// @private
-	DynamicBatch = new BBMOD_DynamicBatch(_model, _batchSize).freeze();
+	__dynamicBatch = new BBMOD_DynamicBatch(_model, _batchSize).freeze();
 
 	/// @var {Array<Struct.BBMOD_ParticleModule>} An array of modules
 	/// affecting individual particles in this system.
@@ -75,7 +75,7 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 
 	static destroy = function () {
 		Class_destroy();
-		DynamicBatch.destroy();
+		__dynamicBatch = __dynamicBatch.destroy();
 		return undefined;
 	};
 }

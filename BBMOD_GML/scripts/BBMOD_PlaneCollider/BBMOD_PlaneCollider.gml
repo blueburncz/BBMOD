@@ -20,14 +20,14 @@ function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
 	/// @var {Real} The plane's distance from the world origin.
 	Distance = _distance;
 
-	/// @func GetPointDistance(_point)
+	/// @func __getPointDistance(_point)
 	///
 	/// @param {Struct.BBMOD_Vec3} _point
 	///
 	/// @return {Real}
 	///
 	/// @private
-	static GetPointDistance = function (_point) {
+	static __getPointDistance = function (_point) {
 		gml_pragma("forceinline");
 		return (_point.Dot(Normal) - Distance);
 	};
@@ -35,7 +35,7 @@ function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L188
 	static GetClosestPoint = function (_point) {
 		gml_pragma("forceinline");
-		return _point.Sub(Normal.Scale(GetPointDistance(_point)));
+		return _point.Sub(Normal.Scale(__getPointDistance(_point)));
 	};
 
 	static TestAABB = function (_aabb) {
@@ -53,7 +53,7 @@ function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L101
 	static TestPoint = function (_point) {
 		gml_pragma("forceinline");
-		return bbmod_cmp(GetPointDistance(_point), 0.0);
+		return bbmod_cmp(__getPointDistance(_point), 0.0);
 	};
 
 	static TestSphere = function (_sphere) {

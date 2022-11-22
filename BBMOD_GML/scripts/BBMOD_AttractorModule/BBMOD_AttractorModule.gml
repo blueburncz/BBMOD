@@ -29,7 +29,7 @@ function BBMOD_AttractorModule(
 
 	/// @var {Struct.BBMOD_Vec3}
 	/// @private
-	PositionReal = Position;
+	__positionReal = Position;
 
 	/// @var {Real} The radius of the influence. Defaults to 1.0.
 	Radius = _radius;
@@ -39,12 +39,12 @@ function BBMOD_AttractorModule(
 	Force = _force;
 
 	static on_update = function (_emitter, _deltaTime) {
-		PositionReal = Relative ? _emitter.Position.Add(Position) : Position;
+		__positionReal = Relative ? _emitter.Position.Add(Position) : Position;
 
 		var _particles = _emitter.Particles;
-		var _positionRealX = PositionReal.X;
-		var _positionRealY = PositionReal.Y;
-		var _positionRealZ = PositionReal.Z;
+		var _positionRealX = __positionReal.X;
+		var _positionRealY = __positionReal.Y;
+		var _positionRealZ = __positionReal.Z;
 		var _radius = Radius;
 		var _force = Force;
 

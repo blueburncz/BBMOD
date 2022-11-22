@@ -1,19 +1,3 @@
-/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static
-/// models.
-/// @see BBMOD_VertexFormat
-#macro BBMOD_VFORMAT_DEFAULT __bbmod_vformat_default()
-
-/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for animated
-/// models.
-/// @see BBMOD_VertexFormat
-#macro BBMOD_VFORMAT_DEFAULT_ANIMATED __bbmod_vformat_default_animated()
-
-/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for dynamically
-/// batched models.
-/// @see BBMOD_VertexFormat
-/// @see BBMOD_DynamicBatch
-#macro BBMOD_VFORMAT_DEFAULT_BATCHED __bbmod_vformat_default_batched()
-
 /// @macro {Struct.BBMOD_DefaultShader} The default shader.
 /// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT __bbmod_shader_default()
@@ -43,27 +27,6 @@
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_MATERIAL_DEFAULT_BATCHED __bbmod_material_default_batched()
 
-function __bbmod_vformat_default()
-{
-	static _vformat = new BBMOD_VertexFormat(
-		true, true, true, false, true, false, false);
-	return _vformat;
-}
-
-function __bbmod_vformat_default_animated()
-{
-	static _vformat = new BBMOD_VertexFormat(
-		true, true, true, false, true, true, false);
-	return _vformat;
-}
-
-function __bbmod_vformat_default_batched()
-{
-	static _vformat = new BBMOD_VertexFormat(
-		true, true, true, false, true, false, true);
-	return _vformat;
-}
-
 function __bbmod_shader_default()
 {
 	static _shader = new BBMOD_DefaultShader(
@@ -91,7 +54,7 @@ function __bbmod_material_default()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT);
-		_material.BaseOpacity = sprite_get_texture(BBMOD_SprCheckerboard, 0);
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
 	}
 	return _material;
 }
@@ -102,7 +65,7 @@ function __bbmod_material_default_animated()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_ANIMATED);
-		_material.BaseOpacity = sprite_get_texture(BBMOD_SprCheckerboard, 0);
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
 	}
 	return _material;
 }
@@ -113,7 +76,7 @@ function __bbmod_material_default_batched()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_BATCHED);
-		_material.BaseOpacity = sprite_get_texture(BBMOD_SprCheckerboard, 0);
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
 	}
 	return _material;
 }

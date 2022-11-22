@@ -67,7 +67,7 @@ matShell.Culling = cull_noculling;
 batchShell = new BBMOD_DynamicBatch(modShell, 32).freeze();
 batchShell.Batch.Materials[0] = matShell;
 
-_objImporter.destroy();
+_objImporter = _objImporter.destroy();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Create a renderer

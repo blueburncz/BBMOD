@@ -68,7 +68,7 @@ function BBMOD_Cubemap(_resolution)
 	/// Contains values from {@link BBMOD_ECubeSide}.
 	/// @see BBMOD_Cubemap.set_target
 	/// @private
-	RenderTo = 0;
+	__renderTo = 0;
 
 	/// @func get_surface(_side)
 	///
@@ -203,7 +203,7 @@ function BBMOD_Cubemap(_resolution)
 	///
 	/// @see BBMOD_IRenderTarget.reset_target
 	static set_target = function () {
-		var _renderTo = RenderTo++;
+		var _renderTo = __renderTo++;
 		if (_renderTo < BBMOD_ECubeSide.SIZE)
 		{
 			surface_set_target(get_surface(_renderTo));
@@ -211,7 +211,7 @@ function BBMOD_Cubemap(_resolution)
 			matrix_set(matrix_projection, get_projection_matrix());
 			return true;
 		}
-		RenderTo = 0;
+		__renderTo = 0;
 		return false;
 	};
 

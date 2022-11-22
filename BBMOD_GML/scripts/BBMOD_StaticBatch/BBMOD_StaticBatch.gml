@@ -39,17 +39,17 @@ function BBMOD_StaticBatch(_vformat)
 
 	static Class_destroy = destroy;
 
-	/// @var {Id.VertexBuffer} A vertex buffer.
+	/// @var {Id.__vertexBuffer} A vertex buffer.
 	/// @private
-	VertexBuffer = vertex_create_buffer();
+	__vertexBuffer = vertex_create_buffer();
 
 	/// @var {Struct.BBMOD_VertexFormat} The format of the vertex buffer.
 	/// @private
-	VertexFormat = _vformat;
+	__vertexFormat = _vformat;
 
-	/// @var {Constant.PrimitiveType} The primitive type of the batch.
+	/// @var {Constant.__primitiveType} The primitive type of the batch.
 	/// @private
-	PrimitiveType = undefined;
+	__primitiveType = undefined;
 
 	/// @func start()
 	///
@@ -61,7 +61,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	static start = function () {
 		gml_pragma("forceinline");
-		vertex_begin(VertexBuffer, VertexFormat.Raw);
+		vertex_begin(__vertexBuffer, __vertexFormat.Raw);
 		return self;
 	};
 
@@ -95,7 +95,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @see BBMOD_StaticBatch.finish
 	static add = function (_model, _transform) {
 		gml_pragma("forceinline");
-		_model.to_static_batch(self, _transform);
+		_model.__to_static_batch(self, _transform);
 		return self;
 	};
 
@@ -108,7 +108,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @see BBMOD_StaticBatch.start
 	static finish = function () {
 		gml_pragma("forceinline");
-		vertex_end(VertexBuffer);
+		vertex_end(__vertexBuffer);
 		return self;
 	};
 
@@ -120,7 +120,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	static freeze = function () {
 		gml_pragma("forceinline");
-		vertex_freeze(VertexBuffer);
+		vertex_freeze(__vertexBuffer);
 		return self;
 	};
 
@@ -144,7 +144,7 @@ function BBMOD_StaticBatch(_vformat)
 		{
 			return self;
 		}
-		vertex_submit(VertexBuffer, PrimitiveType, _material.BaseOpacity);
+		vertex_submit(__vertexBuffer, __primitiveType, _material.BaseOpacity);
 		return self;
 	};
 
@@ -161,13 +161,13 @@ function BBMOD_StaticBatch(_vformat)
 	static render = function (_material) {
 		gml_pragma("forceinline");
 		_material.RenderQueue.draw_mesh(
-			VertexBuffer, matrix_get(matrix_world), _material, PrimitiveType);
+			__vertexBuffer, matrix_get(matrix_world), _material, __primitiveType);
 		return self;
 	};
 
 	static destroy = function () {
 		Class_destroy();
-		vertex_delete_buffer(VertexBuffer);
+		vertex_delete_buffer(__vertexBuffer);
 		return undefined;
 	};
 }

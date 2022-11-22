@@ -14,7 +14,7 @@ function BBMOD_StateMachine()
 
 	/// @var {Array<Struct.BBMOD_State>} An array of sates.
 	/// @private
-	StateArray = [];
+	__stateArray = [];
 
 	/// @var {Bool} If `false` then the state machine has not yet entered its
 	/// initial state.
@@ -99,7 +99,7 @@ function BBMOD_StateMachine()
 	static add_state = function (_state) {
 		gml_pragma("forceinline");
 		_state.StateMachine = self;
-		array_push(StateArray, _state);
+		array_push(__stateArray, _state);
 		return self;
 	};
 
@@ -137,7 +137,7 @@ function BBMOD_StateMachine()
 		// Enter new state
 		State = _state;
 		State.IsActive = true;
-		State.ActiveSince = current_time;
+		State.__activeSince = current_time;
 
 		if (State.OnEnter != undefined)
 		{
@@ -196,10 +196,11 @@ function BBMOD_StateMachine()
 
 	static destroy = function () {
 		Class_destroy();
-		for (var i = array_length(StateArray) - 1; i >= 0; --i)
+		for (var i = array_length(__stateArray) - 1; i >= 0; --i)
 		{
-			StateArray[i].destroy();
+			__stateArray[i].destroy();
 		}
+		__stateArray = [];
 		return undefined;
 	};
 }

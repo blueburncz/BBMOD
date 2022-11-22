@@ -1,10 +1,10 @@
 /// @macro {Real}
 /// @private
-#macro BBMOD_RGBM_RANGE 6.0
+#macro __BBMOD_RGBM_RANGE 6.0
 
 /// @macro {Real} The maximum value of a single channel when using RGBM encoded
 /// colors. This is always at least 255.
-#macro BBMOD_RGBM_VALUE_MAX (255.0 * BBMOD_RGBM_RANGE)
+#macro BBMOD_RGBM_VALUE_MAX (255.0 * __BBMOD_RGBM_RANGE)
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_aqua)`.
 /// @see BBMOD_Color

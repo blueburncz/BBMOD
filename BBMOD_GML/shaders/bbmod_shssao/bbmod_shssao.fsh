@@ -1,4 +1,4 @@
-// Reference: https://de45xmedrsdbp.cloudfront.net/Resources/files/The_Technology_Behind_the_Elemental_Demo_16x9-1248544805.pdf
+// Reference: https://de45xmedrsdbp.cloudfront.net/__resources/files/The_Technology_Behind_the_Elemental_Demo_16x9-1248544805.pdf
 // Reference: http://frederikaalund.com/wp-content/uploads/2013/05/A-Comparative-Study-of-Screen-Space-Ambient-Occlusion-Methods.pdf
 
 // The size of the SSAO kernel.

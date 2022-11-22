@@ -60,7 +60,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @var {Real} The transformation spaces included in the animation file.
 	/// @private
-	Spaces = 0;
+	__spaces = 0;
 
 	/// @var {Real} The duration of the animation (in tics).
 	/// @readonly
@@ -72,27 +72,27 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @var {Real}
 	/// @private
-	ModelNodeCount = 0;
+	__modelNodeCount = 0;
 
 	/// @var {Real}
 	/// @private
-	ModelBoneCount = 0;
+	__modelBoneCount = 0;
 
 	/// @var {Array<Array<Real>>}
 	/// @private
-	FramesParent = [];
+	__framesParent = [];
 
 	/// @var {Array<Array<Real>>}
 	/// @private
-	FramesWorld = [];
+	__framesWorld = [];
 
 	/// @var {Array<Array<Real>>}
 	/// @private
-	FramesBone = [];
+	__framesBone = [];
 
 	/// @var {Bool}
 	/// @private
-	IsTransition = false;
+	__isTransition = false;
 
 	/// @var {Real} Duration of transition into this animation (in seconds).
 	/// Must be a value greater or equal to 0!
@@ -104,7 +104,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 	/// @var {Array} Custom animation events in form of `[frame, name, ...]`.
 	/// @private
-	Events = [];
+	__events = [];
 
 	/// @func add_event(_frame, _name)
 	///
@@ -126,7 +126,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// ```
 	static add_event = function (_frame, _name) {
 		gml_pragma("forceinline");
-		array_push(Events, _frame, _name);
+		array_push(__events, _frame, _name);
 		return self;
 	};
 
@@ -137,7 +137,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @return {Bool} Returns true if the animation supports bone attachments.
 	static supports_attachments = function () {
 		gml_pragma("forceinline");
-		return ((Spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) != 0);
+		return ((__spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) != 0);
 	};
 
 	/// @func supports_bone_transform()
@@ -149,7 +149,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// transformation through code.
 	static supports_bone_transform = function () {
 		gml_pragma("forceinline");
-		return ((Spaces & BBMOD_BONE_SPACE_PARENT) != 0);
+		return ((__spaces & BBMOD_BONE_SPACE_PARENT) != 0);
 	};
 
 	/// @func supports_transitions()
@@ -159,7 +159,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @return {Bool} Returns true if the animation supports transitions.
 	static supports_transitions = function () {
 		gml_pragma("forceinline");
-		return ((Spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) != 0);
+		return ((__spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) != 0);
 	};
 
 	/// @func get_animation_time(_timeInSeconds)
@@ -169,8 +169,6 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @param {Real} _timeInSeconds The current time in seconds.
 	///
 	/// @return {Real} The animation time.
-	///
-	/// @private
 	static get_animation_time = function (_timeInSeconds) {
 		gml_pragma("forceinline");
 		return round(_timeInSeconds * TicsPerSecond);
@@ -222,36 +220,36 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 			VersionMinor = 0;
 		}
 
-		Spaces = buffer_read(_buffer, buffer_u8);
+		__spaces = buffer_read(_buffer, buffer_u8);
 		Duration = buffer_read(_buffer, buffer_f64);
 		TicsPerSecond = buffer_read(_buffer, buffer_f64);
 
-		ModelNodeCount = buffer_read(_buffer, buffer_u32);
-		var _modelNodeSize = ModelNodeCount * 8;
-		ModelBoneCount = buffer_read(_buffer, buffer_u32);
-		var _modelBoneSize = ModelBoneCount * 8;
+		__modelNodeCount = buffer_read(_buffer, buffer_u32);
+		var _modelNodeSize = __modelNodeCount * 8;
+		__modelBoneCount = buffer_read(_buffer, buffer_u32);
+		var _modelBoneSize = __modelBoneCount * 8;
 
-		FramesParent = (Spaces & BBMOD_BONE_SPACE_PARENT) ? [] : undefined;
-		FramesWorld = (Spaces & BBMOD_BONE_SPACE_WORLD) ? [] : undefined;
-		FramesBone = (Spaces & BBMOD_BONE_SPACE_BONE) ? [] : undefined;
+		__framesParent = (__spaces & BBMOD_BONE_SPACE_PARENT) ? [] : undefined;
+		__framesWorld = (__spaces & BBMOD_BONE_SPACE_WORLD) ? [] : undefined;
+		__framesBone = (__spaces & BBMOD_BONE_SPACE_BONE) ? [] : undefined;
 
 		repeat (Duration)
 		{
-			if (Spaces & BBMOD_BONE_SPACE_PARENT)
+			if (__spaces & BBMOD_BONE_SPACE_PARENT)
 			{
-				array_push(FramesParent,
+				array_push(__framesParent,
 					bbmod_array_from_buffer(_buffer, buffer_f32, _modelNodeSize));
 			}
 
-			if (Spaces & BBMOD_BONE_SPACE_WORLD)
+			if (__spaces & BBMOD_BONE_SPACE_WORLD)
 			{
-				array_push(FramesWorld,
+				array_push(__framesWorld,
 					bbmod_array_from_buffer(_buffer, buffer_f32, _modelNodeSize));
 			}
 
-			if (Spaces & BBMOD_BONE_SPACE_BONE)
+			if (__spaces & BBMOD_BONE_SPACE_BONE)
 			{
-				array_push(FramesBone,
+				array_push(__framesBone,
 					bbmod_array_from_buffer(_buffer, buffer_f32, _modelBoneSize));
 			}
 		}
@@ -261,8 +259,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 			var _eventCount = buffer_read(_buffer, buffer_u32);
 			repeat (_eventCount)
 			{
-				array_push(Events, buffer_read(_buffer, buffer_f64)); // Frame
-				array_push(Events, buffer_read(_buffer, buffer_string)); // Event name
+				array_push(__events, buffer_read(_buffer, buffer_f64)); // Frame
+				array_push(__events, buffer_read(_buffer, buffer_string)); // Event name
 			}
 		}
 
@@ -283,39 +281,39 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		buffer_write(_buffer, buffer_u8, VersionMajor);
 		buffer_write(_buffer, buffer_u8, VersionMinor);
 
-		buffer_write(_buffer, buffer_u8, Spaces);
+		buffer_write(_buffer, buffer_u8, __spaces);
 		buffer_write(_buffer, buffer_f64, Duration);
 		buffer_write(_buffer, buffer_f64, TicsPerSecond);
 
-		buffer_write(_buffer, buffer_u32, ModelNodeCount);
-		buffer_write(_buffer, buffer_u32, ModelBoneCount);
+		buffer_write(_buffer, buffer_u32, __modelNodeCount);
+		buffer_write(_buffer, buffer_u32, __modelBoneCount);
 
 		repeat (Duration)
 		{
-			if (Spaces & BBMOD_BONE_SPACE_PARENT)
+			if (__spaces & BBMOD_BONE_SPACE_PARENT)
 			{
-				bbmod_array_to_buffer(FramesParent, _buffer, buffer_f32);
+				bbmod_array_to_buffer(__framesParent, _buffer, buffer_f32);
 			}
 
-			if (Spaces & BBMOD_BONE_SPACE_WORLD)
+			if (__spaces & BBMOD_BONE_SPACE_WORLD)
 			{
-				bbmod_array_to_buffer(FramesWorld, _buffer, buffer_f32);
+				bbmod_array_to_buffer(__framesWorld, _buffer, buffer_f32);
 			}
 
-			if (Spaces & BBMOD_BONE_SPACE_BONE)
+			if (__spaces & BBMOD_BONE_SPACE_BONE)
 			{
-				bbmod_array_to_buffer(FramesBone, _buffer, buffer_f32);
+				bbmod_array_to_buffer(__framesBone, _buffer, buffer_f32);
 			}
 		}
 
-		var _eventCount = array_length(Events) / 2;
+		var _eventCount = array_length(__events) / 2;
 		buffer_write(_buffer, buffer_u32, _eventCount);
 
 		var i = 0;
 		repeat (_eventCount)
 		{
-			buffer_write(_buffer, buffer_f64, Events[i]);
-			buffer_write(_buffer, buffer_string, Events[i + 1]);
+			buffer_write(_buffer, buffer_f64, __events[i]);
+			buffer_write(_buffer, buffer_string, __events[i + 1]);
 			i += 2;
 		}
 
@@ -340,8 +338,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// if the animations have different optimization levels or if they do not
 	/// support transitions.
 	static create_transition = function (_timeFrom, _animTo, _timeTo) {
-		if ((Spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) == 0
-			|| Spaces != _animTo.Spaces)
+		if ((__spaces & (BBMOD_BONE_SPACE_PARENT | BBMOD_BONE_SPACE_WORLD)) == 0
+			|| __spaces != _animTo.__spaces)
 		{
 			return undefined;
 		}
@@ -350,27 +348,27 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		_transition.IsLoaded = true;
 		_transition.VersionMajor = VersionMajor;
 		_transition.VersionMinor = VersionMinor;
-		_transition.Spaces = (Spaces & BBMOD_BONE_SPACE_PARENT)
+		_transition.__spaces = (__spaces & BBMOD_BONE_SPACE_PARENT)
 			? BBMOD_BONE_SPACE_PARENT
 			: BBMOD_BONE_SPACE_WORLD;
 		_transition.Duration = round((TransitionOut + _animTo.TransitionIn)
 			* TicsPerSecond);
 		_transition.TicsPerSecond = TicsPerSecond;
-		_transition.IsTransition = true;
+		_transition.__isTransition = true;
 
 		var _frameFrom, _frameTo, _framesDest;
 
-		if (Spaces & BBMOD_BONE_SPACE_PARENT)
+		if (__spaces & BBMOD_BONE_SPACE_PARENT)
 		{
-			_frameFrom = FramesParent[_timeFrom];
-			_frameTo = _animTo.FramesParent[_timeTo];
-			_framesDest = _transition.FramesParent;
+			_frameFrom = __framesParent[_timeFrom];
+			_frameTo = _animTo.__framesParent[_timeTo];
+			_framesDest = _transition.__framesParent;
 		}
 		else
 		{
-			_frameFrom = FramesWorld[_timeFrom];
-			_frameTo = _animTo.FramesWorld[_timeTo];
-			_framesDest = _transition.FramesWorld;
+			_frameFrom = __framesWorld[_timeFrom];
+			_frameTo = _animTo.__framesWorld[_timeTo];
+			_framesDest = _transition.__framesWorld;
 		}
 
 		var _time = 0;

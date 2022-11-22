@@ -6,6 +6,9 @@ Szauer. Does not serve as a replacement for more full-fledged solutions like
 used for smaller projects that do not require complex collision checking.
 
 ## Scripting API
+### Functions
+* [bbmod_cmp](./bbmod_cmp.html)
+
 ### Structs
 * [BBMOD_AABBCollider](./BBMOD_AABBCollider.html)
 * [BBMOD_Collider](./BBMOD_Collider.html)

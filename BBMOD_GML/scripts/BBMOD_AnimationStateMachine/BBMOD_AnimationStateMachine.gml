@@ -51,8 +51,8 @@
 /// }
 /// 
 /// // Clean Up event
-/// animationPlayer.destroy();
-/// animationStateMachine.destroy();
+/// animationPlayer = animationPlayer.destroy();
+/// animationStateMachine = animationStateMachine.destroy();
 /// ```
 ///
 /// @see BBMOD_AnimationPlayer

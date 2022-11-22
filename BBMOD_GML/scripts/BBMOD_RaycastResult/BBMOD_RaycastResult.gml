@@ -17,4 +17,17 @@ function BBMOD_RaycastResult() constructor
 	/// @var {Struct.BBMOD_Vec3} The normal vector at the collision or
 	/// `undefined`.
 	Normal = undefined;
+
+	/// @func Reset()
+	///
+	/// @desc Resets properties to their default values.
+	///
+	/// @return {Struct.BBMOD_RaycastResult} Returns `self`.
+	static Reset = function () {
+		gml_pragma("forceinline");
+		Distance = 0.0;
+		Point = undefined;
+		Normal = undefined;
+		return self;
+	};
 }

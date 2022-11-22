@@ -19,9 +19,9 @@ function BBMOD_AnimationInstance(_animation) constructor
 
 	/// @var {Real} The last frame when animation events were executed.
 	/// @private
-	EventExecuted = -1;
+	__eventExecuted = -1;
 
 	/// @var {Real}
 	/// @private
-	AnimationTime = 0;
+	__animationTime = 0;
 }
