@@ -41,15 +41,11 @@
 /// @private
 #macro __BBMOD_DLL_ERR_SAVE_FAILED 3
 
-/// @func BBMOD_DLL([_path])
+/// @func BBMOD_DLL()
 ///
 /// @extends BBMOD_Class
 ///
 /// @desc Loads a dynamic library which allows you to convert models into BBMOD.
-///
-/// @param {String} [_path] The path to the dynamic library file. Defaults to
-/// "Data/BBMOD/BBMOD.dll" on Windows and "Data/BBMOD/libBBMOD.dylib"
-/// on macOS.
 ///
 /// @throws {BBMOD_Exception} If the DLL file does not exist.
 ///
