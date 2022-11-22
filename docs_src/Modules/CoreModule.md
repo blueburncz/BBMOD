@@ -53,12 +53,12 @@ quaternions etc.
 * [bbmod_light_ambient_set](./bbmod_light_ambient_set.html)
 * [bbmod_light_directional_get](./bbmod_light_directional_get.html)
 * [bbmod_light_directional_set](./bbmod_light_directional_set.html)
-* [bbmod_light_point_add](./bbmod_light_point_add.html)
-* [bbmod_light_point_clear](./bbmod_light_point_clear.html)
-* [bbmod_light_point_count](./bbmod_light_point_count.html)
-* [bbmod_light_point_get](./bbmod_light_point_get.html)
-* [bbmod_light_point_remove_index](./bbmod_light_point_remove_index.html)
-* [bbmod_light_point_remove](./bbmod_light_point_remove.html)
+* [bbmod_light_point_add](./bbmod_light_point_add.html) <span class="badge badge-warning">DEPRECATED</span>
+* [bbmod_light_point_clear](./bbmod_light_point_clear.html) <span class="badge badge-warning">DEPRECATED</span>
+* [bbmod_light_point_count](./bbmod_light_point_count.html) <span class="badge badge-warning">DEPRECATED</span>
+* [bbmod_light_point_get](./bbmod_light_point_get.html) <span class="badge badge-warning">DEPRECATED</span>
+* [bbmod_light_point_remove_index](./bbmod_light_point_remove_index.html) <span class="badge badge-warning">DEPRECATED</span>
+* [bbmod_light_point_remove](./bbmod_light_point_remove.html) <span class="badge badge-warning">DEPRECATED</span>
 * [bbmod_light_punctual_add](./bbmod_light_punctual_add.html)
 * [bbmod_light_punctual_clear](./bbmod_light_punctual_clear.html)
 * [bbmod_light_punctual_count](./bbmod_light_punctual_count.html)
@@ -203,8 +203,8 @@ quaternions etc.
 * [BBMOD_IRenderable](./BBMOD_IRenderable.html)
 * [BBMOD_IRenderTarget](./BBMOD_IRenderTarget.html)
 * [BBMOD_Light](./BBMOD_Light.html)
-* [BBMOD_LightmapMaterial](./BBMOD_LightmapMaterial.html)
-* [BBMOD_LightmapShader](./BBMOD_LightmapShader.html)
+* [BBMOD_LightmapMaterial](./BBMOD_LightmapMaterial.html) <span class="badge badge-danger">OBSOLETE</span>
+* [BBMOD_LightmapShader](./BBMOD_LightmapShader.html) <span class="badge badge-danger">OBSOLETE</span>
 * [BBMOD_Material](./BBMOD_Material.html)
 * [BBMOD_Matrix](./BBMOD_Matrix.html)
 * [BBMOD_Mesh](./BBMOD_Mesh.html)
@@ -218,7 +218,7 @@ quaternions etc.
 * [BBMOD_PunctualLight](./BBMOD_PunctualLight.html)
 * [BBMOD_Quaternion](./BBMOD_Quaternion.html)
 * [BBMOD_RenderCommand](./BBMOD_RenderCommand.html)
-* [BBMOD_Renderer](./BBMOD_Renderer.html)
+* [BBMOD_Renderer](./BBMOD_Renderer.html) <span class="badge badge-danger">OBSOLETE</span>
 * [BBMOD_RenderQueue](./BBMOD_RenderQueue.html)
 * [BBMOD_Resource](./BBMOD_Resource.html)
 * [BBMOD_ResourceManager](./BBMOD_ResourceManager.html)
@@ -231,6 +231,3 @@ quaternions etc.
 * [BBMOD_Vec4](./BBMOD_Vec4.html)
 * [BBMOD_Vertex](./BBMOD_Vertex.html)
 * [BBMOD_VertexFormat](./BBMOD_VertexFormat.html)
-
-### Variables
-* [global.bbmod_render_queues](./global.bbmod_render_queues.html)
