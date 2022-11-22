@@ -68,7 +68,7 @@
   ],
   "nineSlice": null,
   "parent": {
-    "name": "DefaultMaterial",
-    "path": "folders/BBMOD/Core/DefaultMaterial.yy",
+    "name": "Sprites",
+    "path": "folders/BBMOD/Core/DefaultRenderer/Sprites.yy",
   },
 }

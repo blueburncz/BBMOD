@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Cubemap",
-    "path": "folders/BBMOD/Rendering/Cubemap.yy",
+    "name": "Rendering",
+    "path": "folders/BBMOD/Core/Rendering.yy",
   },
 }

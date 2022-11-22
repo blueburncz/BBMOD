@@ -8,17 +8,12 @@ individual modules.
 
 ## Contents
 * [Core module](./CoreModule.html)
-* [2D module](./2DModule.html)
-* [Camera module](./CameraModule.html)
 * [DLL module](./DLLModule.html)
 * [Gizmo module](./GizmoModule.html)
-* [Importer module](./ImporterModule.html)
-* [Lightmap module](./LightmapModule.html)
-* [Mesh builder module](./MeshBuilderModule.html)
+* [OBJ importer module](./OBJImporterModule.html)
 * [Particles module](./ParticlesModule.html)
 * [Raycasting module](./RaycastingModule.html)
 * [Rendering module](./RenderingModule.html)
-* [Resource manager module](./ResourceManagerModule.html)
 * [Save module](./SaveModule.html)
 * [State machine module](./StateMachineModule.html)
 * [Terrain module](./TerrainModule.html)

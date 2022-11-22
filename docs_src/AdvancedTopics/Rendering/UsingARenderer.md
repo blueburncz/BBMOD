@@ -40,10 +40,10 @@ renderer.
 
 ## Renderer
 As stated above, when you switch to using method `render`, you need to create
-a [renderer](./BBMOD_Renderer.html) (defined in Rendering/Renderer submodule),
-which then picks up the created render commands and executes them. We recommend
-you to create a renderer in a special controller object like `OMain`, `ORenderer`
-or `OGameController`, based on your likings.
+a [renderer](./BBMOD_Renderer.html), which then picks up the created render
+commands and executes them. We recommend you to create a renderer in a special
+controller object like `OMain`, `ORenderer` or `OGameController`, based on your
+likings.
 
 ```gml
 /// @desc Create event
@@ -81,14 +81,6 @@ dedicated section for each one of these, but to give you an example:
 renderer = new BBMOD_Renderer();
 // Enable control over the application surface
 renderer.UseAppSurface = true;
-// Enable post-processing effects (requires UseAppSurface)
-renderer.EnablePostProcessing = true;
-// Configure strength of chromatic aberration post-processing effect
-renderer.ChromaticAberration = 2.0;
-// Configure strength of vignette post-processing effect
-renderer.Vignette = 1.5;
-// Enable fast approximate anti-aliasing (requires Rendering/FXAA submodule)
-renderer.Antialiasing = BBMOD_EAntialiasing.FXAA;
 
 /// @desc Post-Draw event
 // When UseAppSurface is enabled, you need to call this to draw the application

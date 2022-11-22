@@ -4,7 +4,7 @@
   "name": "BBMOD_ShLightmapDepth",
   "type": 1,
   "parent": {
-    "name": "Lightmap",
-    "path": "folders/BBMOD/Lightmap.yy",
+    "name": "Shaders",
+    "path": "folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
   },
 }

@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "2D",
-    "path": "folders/BBMOD/2D.yy",
+    "name": "DefaultRenderer",
+    "path": "folders/BBMOD/Core/DefaultRenderer.yy",
   },
 }

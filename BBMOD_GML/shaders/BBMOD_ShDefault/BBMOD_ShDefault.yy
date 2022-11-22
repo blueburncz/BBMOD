@@ -4,7 +4,7 @@
   "name": "BBMOD_ShDefault",
   "type": 1,
   "parent": {
-    "name": "DefaultMaterial",
-    "path": "folders/BBMOD/Core/DefaultMaterial.yy",
+    "name": "Shaders",
+    "path": "folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
   },
 }

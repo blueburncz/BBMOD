@@ -14,11 +14,6 @@
 /// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_LIGHTMAP_DEPTH __bbmod_shader_lightmap_depth()
 
-/// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs
-/// for lightmapped models.
-/// @see BBMOD_BaseShader
-#macro BBMOD_SHADER_LIGHTMAP_INSTANCE_ID __bbmod_shader_lightmap_instance_id()
-
 /// @macro {Struct.BBMOD_LightmapMaterial} Material for lightmapped models with
 /// two UV channels.
 /// @macro This material does not support subsurface scattering!
@@ -51,21 +46,13 @@ function __bbmod_shader_lightmap_depth()
 	return _shader;
 }
 
-function __bbmod_shader_lightmap_instance_id()
-{
-	static _shader = new BBMOD_BaseShader(
-		BBMOD_ShLightmapInstanceID, __bbmod_vformat_lightmap);
-	return _shader;
-}
-
 function __bbmod_material_lightmap()
 {
 	static _material = new BBMOD_LightmapMaterial(__bbmod_shader_lightmap());
 	return _material;
 }
 
-bbmod_shader_register("BBMOD_SHADER_LIGHTMAP", BBMOD_SHADER_LIGHTMAP);
+bbmod_shader_register("BBMOD_SHADER_LIGHTMAP",       BBMOD_SHADER_LIGHTMAP);
 bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_DEPTH", BBMOD_SHADER_LIGHTMAP_DEPTH);
-bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_INSTANCE_ID", BBMOD_SHADER_LIGHTMAP_INSTANCE_ID);
 
 bbmod_material_register("BBMOD_MATERIAL_LIGHTMAP", BBMOD_MATERIAL_LIGHTMAP);

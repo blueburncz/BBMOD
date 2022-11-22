@@ -2,7 +2,7 @@
 ///
 /// @extends BBMOD_Resource
 ///
-/// @implements {Struct.BBMOD_IRenderable}
+/// @implements {BBMOD_IRenderable}
 ///
 /// @desc A model.
 ///

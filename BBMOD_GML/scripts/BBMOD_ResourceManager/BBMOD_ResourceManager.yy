@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "ResourceManager",
-    "path": "folders/BBMOD/ResourceManager.yy",
+    "name": "Core",
+    "path": "folders/BBMOD/Core.yy",
   },
 }

@@ -1,10 +1,3 @@
-/// @var {Array<Struct.BBMOD_RenderQueue>} This used to be an array of all
-/// existing render queues, sorted by their priority in an asceding order.
-/// @see BBMOD_RenderQueue
-/// @readonly
-/// @obsolete Please use {@link bbmod_render_queues_get} instead.
-global.bbmod_render_queues = [];
-
 /// @func bbmod_render_queues_get()
 ///
 /// @desc Retrieves a read-only array of existing render queues, sorted by

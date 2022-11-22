@@ -4,7 +4,7 @@
   "name": "BBMOD_ShDepth",
   "type": 1,
   "parent": {
-    "name": "DepthBuffer",
-    "path": "folders/BBMOD/Rendering/DepthBuffer.yy",
+    "name": "Shaders",
+    "path": "folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
   },
 }

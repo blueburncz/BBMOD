@@ -91,29 +91,19 @@
       "file": "Modules/Modules.md",
       "pages": {
         "Core module": "Modules/CoreModule.md",
-        "2D module": "Modules/2DModule.md",
-        "Camera module": "Modules/CameraModule.md",
         "DLL module": "Modules/DLLModule.md",
         "Gizmo module": "Modules/GizmoModule.md",
-        "Importer module": "Modules/ImporterModule.md",
-        "Lightmap module": "Modules/LightmapModule.md",
-        "Mesh builder module": "Modules/MeshBuilderModule.md",
         "Particles module": "Modules/ParticlesModule.md",
         "Raycasting module": "Modules/RaycastingModule.md",
         "Rendering module": {
           "file": "Modules/Rendering/RenderingModule.md",
           "pages": {
-            "Cubemap submodule": "Modules/Rendering/CubemapSubmodule.md",
-            "Depth buffer submodule": "Modules/Rendering/DepthBufferSubmodule.md",
             "FXAA submodule": "Modules/Rendering/FXAASubmodule.md",
-            "PBR submodule": "Modules/Rendering/PBRSubmodule.md",
             "Post-processing submodule": "Modules/Rendering/PostProcessingSubmodule.md",
-            "Renderer submodule": "Modules/Rendering/RendererSubmodule.md",
             "Sky submodule": "Modules/Rendering/SkySubmodule.md",
             "SSAO submodule": "Modules/Rendering/SSAOSubmodule.md"
           }
         },
-        "Resource manager module": "Modules/ResourceManagerModule.md",
         "Save module": "Modules/SaveModule.md",
         "State machine module": "Modules/StateMachineModule.md",
         "Terrain module": "Modules/TerrainModule.md",

@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "DepthBuffer",
-    "path": "folders/BBMOD/Rendering/DepthBuffer.yy",
+    "name": "DefaultRenderer",
+    "path": "folders/BBMOD/Core/DefaultRenderer.yy",
   },
 }

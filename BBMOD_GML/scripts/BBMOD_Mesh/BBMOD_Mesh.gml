@@ -175,6 +175,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 
 	/// @func freeze()
 	///
+	/// @desc Freezes the mesh. This makes it render faster.
+	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	static freeze = function () {
 		gml_pragma("forceinline");

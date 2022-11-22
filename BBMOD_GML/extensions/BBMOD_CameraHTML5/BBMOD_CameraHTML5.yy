@@ -62,6 +62,6 @@
   "tvosCocoaPodDependencies": "",
   "parent": {
     "name": "Camera",
-    "path": "folders/BBMOD/Camera.yy",
+    "path": "folders/BBMOD/Core/Camera.yy",
   },
 }

@@ -22,8 +22,8 @@
 ///
 /// @extends BBMOD_Class
 ///
-/// @implements {Struct.BBMOD_IEventListener}
-/// @implements {Struct.BBMOD_IRenderable}
+/// @implements {BBMOD_IEventListener}
+/// @implements {BBMOD_IRenderable}
 ///
 /// @desc An animation player. Each instance of an animated model should have
 /// its own animation player.

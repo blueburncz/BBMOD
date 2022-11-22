@@ -1,7 +1,7 @@
 /// @func BBMOD_AnimationState(_name, _animation[, _loop])
 ///
 /// @extends BBMOD_State
-/// @implements {Struct.BBMOD_IEventListener}
+/// @implements {BBMOD_IEventListener}
 ///
 /// @desc A state of an animation state machine.
 ///

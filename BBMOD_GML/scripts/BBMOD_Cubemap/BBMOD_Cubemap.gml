@@ -22,7 +22,7 @@ enum BBMOD_ECubeSide
 ///
 /// @extends BBMOD_Class
 ///
-/// @implements {Struct.BBMOD_IRenderTarget}
+/// @implements {BBMOD_IRenderTarget}
 ///
 /// @desc A cubemap.
 ///

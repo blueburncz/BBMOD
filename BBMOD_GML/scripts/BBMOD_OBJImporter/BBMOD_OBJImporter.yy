@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Importer",
-    "path": "folders/BBMOD/Importer.yy",
+    "name": "OBJImporter",
+    "path": "folders/BBMOD/OBJImporter.yy",
   },
 }
