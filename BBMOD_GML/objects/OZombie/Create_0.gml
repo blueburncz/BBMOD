@@ -44,7 +44,7 @@ playerInRange = function () {
 };
 
 // Strength of the dissolve shader effect.
-dissolve = 0;
+dissolve = 1.0;
 
 emitter = undefined;
 

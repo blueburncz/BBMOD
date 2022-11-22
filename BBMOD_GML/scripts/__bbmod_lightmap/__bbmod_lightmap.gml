@@ -34,7 +34,7 @@ function __bbmod_vformat_lightmap()
 
 function __bbmod_shader_lightmap()
 {
-	static _shader = new BBMOD_LightmapShader(
+	static _shader = new BBMOD_DefaultLightmapShader(
 		BBMOD_ShLightmap, __bbmod_vformat_lightmap);
 	return _shader;
 }
@@ -48,7 +48,7 @@ function __bbmod_shader_lightmap_depth()
 
 function __bbmod_material_lightmap()
 {
-	static _material = new BBMOD_LightmapMaterial(__bbmod_shader_lightmap());
+	static _material = new BBMOD_DefaultLightmapMaterial(__bbmod_shader_lightmap());
 	return _material;
 }
 

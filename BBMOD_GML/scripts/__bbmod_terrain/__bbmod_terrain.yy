@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "DefaultRenderer",
-    "path": "folders/BBMOD/Core/DefaultRenderer.yy",
+    "name": "Terrain",
+    "path": "folders/BBMOD/Terrain.yy",
   },
 }

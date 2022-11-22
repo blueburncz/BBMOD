@@ -6,7 +6,7 @@
 * Prefixed all private API with `__` (two underscores) to "hide" it from autocomplete.
 
 ## Core module:
-* **Renamed** sprite `BBMOD_SprCheckerboard` to `BBMOD_SprDefaultBaseOpacity`!
+* **Renamed sprite `BBMOD_SprCheckerboard` to `BBMOD_SprDefaultBaseOpacity`!**
 * Moved in structs `BBMOD_BaseCamera` and `BBMOD_Camera` from the Camera module.
 * Moved in enum `BBMOD_ECubeSide` and struct `BBMOD_Cubemap` from the Rendering/Cubemap submodule.
 * Moved in struct `BBMOD_Renderer` from the Rendering/Renderer submodule.
@@ -17,7 +17,6 @@
 * Moved in macros `BBMOD_SHADER_DEPTH`, `BBMOD_SHADER_DEPTH_ANIMATED` and `BBMOD_SHADER_DEPTH_BATCHED` from the Rendering/Depth buffer submodule.
 * Moved in macros `BBMOD_VFORMAT_SPRITE`, `BBMOD_SHADER_SPRITE` and `BBMOD_MATERIAL_SPRITE` from the 2D module.
 * Moved in struct `BBMOD_Importer` from the Importer module.
-* Moved in macros `BBMOD_SHADER_TERRAIN` and `BBMOD_MATERIAL_TERRAIN` from the Terrain module.
 * Struct `BBMOD_Shader` now inherits from `BBMOD_Class`.
 * **Removed variable `global.bbmod_render_queues`, which was obsolete!**
 
