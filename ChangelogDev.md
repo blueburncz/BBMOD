@@ -6,6 +6,7 @@
 * Prefixed all private API with `__` (two underscores) to "hide" it from autocomplete.
 
 ## Core module:
+* Added new optional argument `_matrix` to `BBMOD_Model.render`, which is the world matrix to use when rendering the model. It defaults to `matrix_get(matrix_world)` when not specified.
 * Moved in structs `BBMOD_BaseCamera` and `BBMOD_Camera` from the Camera module.
 * Moved in enum `BBMOD_ECubeSide` and struct `BBMOD_Cubemap` from the Rendering/Cubemap submodule.
 * Moved in struct `BBMOD_Renderer` from the Rendering/Renderer submodule.
