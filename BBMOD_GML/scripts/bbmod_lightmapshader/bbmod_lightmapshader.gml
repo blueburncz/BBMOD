@@ -2,7 +2,7 @@
 ///
 /// @extends BBMOD_DefaultLightmapShader
 ///
-/// @obsolete Please use {@link BBMOD_DefaultLightmapShader} instead.
+/// @deprecated Please use {@link BBMOD_DefaultLightmapShader} instead.
 function BBMOD_LightmapShader(_shader, _vertexFormat)
 	: BBMOD_DefaultLightmapShader(_shader, _vertexFormat) constructor
 {

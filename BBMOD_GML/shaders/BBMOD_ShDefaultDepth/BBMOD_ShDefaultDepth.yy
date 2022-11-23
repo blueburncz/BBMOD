@@ -1,7 +1,7 @@
 {
   "resourceType": "GMShader",
   "resourceVersion": "1.0",
-  "name": "BBMOD_ShDepthAnimated",
+  "name": "BBMOD_ShDefaultDepth",
   "type": 1,
   "parent": {
     "name": "Shaders",

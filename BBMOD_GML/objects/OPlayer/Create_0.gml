@@ -48,7 +48,7 @@ matPlayer = global.resourceManager.get_or_add("matPlayer", function () {
 		.set_shader(
 			BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID_ANIMATED) // Enable instance selecting
 		.set_shader(
-			BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED); // Enable casting shadows
+			BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH_ANIMATED); // Enable casting shadows
 	_material.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
 	return _material;
 });

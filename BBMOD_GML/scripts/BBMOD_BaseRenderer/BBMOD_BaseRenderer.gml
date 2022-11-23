@@ -115,7 +115,7 @@ function BBMOD_BaseRenderer()
 
 	/// @var {Real} The resolution of the shadowmap surface. Must be power of 2.
 	/// Defaults to 4096.
-	/// @obsolete This has been replaced with {@link BBMOD_Light.ShadowmapArea}.
+	/// @obsolete This has been replaced with {@link BBMOD_Light.ShadowmapResolution}.
 	ShadowmapResolution = 4096;
 
 	/// @var {Real} When rendering shadows, offsets vertex position by its normal
@@ -437,6 +437,7 @@ function BBMOD_BaseRenderer()
 				__surShadowmap = noone;
 			}
 			// No shadow caster was found!!!
+			bbmod_shader_unset_global("bbmod_Shadowmap");
 			bbmod_shader_set_global_f("bbmod_ShadowmapEnableVS", 0.0);
 			bbmod_shader_set_global_f("bbmod_ShadowmapEnablePS", 0.0);
 			return;
@@ -676,8 +677,6 @@ function BBMOD_BaseRenderer()
 
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global("bbmod_Shadowmap");
-		bbmod_shader_unset_global("bbmod_SSAO");
-		bbmod_shader_unset_global("bbmod_GBuffer");
 
 		bbmod_material_reset();
 

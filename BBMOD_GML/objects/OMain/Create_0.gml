@@ -37,7 +37,7 @@ var _matGunBase = BBMOD_MATERIAL_DEFAULT.clone()
 	.set_shader(
 		BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID) // Enable instance selecting
 	.set_shader(
-		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH); // Enable casting shadows
+		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH); // Enable casting shadows
 
 matGun0 = _matGunBase.clone()
 	.set_base_opacity(BBMOD_C_SILVER)

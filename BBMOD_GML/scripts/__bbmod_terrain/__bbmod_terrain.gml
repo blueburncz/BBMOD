@@ -17,7 +17,7 @@ function __bbmod_material_terrain()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_TERRAIN);
-		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH);
+		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 		_material.Mipmapping = mip_on;
 		_material.Repeat = true;
 		_material.AlphaTest = 0.01;

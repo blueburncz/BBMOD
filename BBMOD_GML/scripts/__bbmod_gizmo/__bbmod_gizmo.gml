@@ -15,12 +15,6 @@
 /// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_INSTANCE_ID_LIGHTMAP __bbmod_shader_id_lightmap()
 
-/// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs
-/// for lightmapped models.
-/// @see BBMOD_BaseShader
-/// @obsolete Please use {@link BBMOD_SHADER_INSTANCE_ID_LIGHTMAP} instead.
-#macro BBMOD_SHADER_LIGHTMAP_INSTANCE_ID BBMOD_SHADER_INSTANCE_ID_LIGHTMAP
-
 function __bbmod_shader_id()
 {
 	static _shader = new BBMOD_BaseShader(
@@ -45,7 +39,7 @@ function __bbmod_shader_id_batched()
 function __bbmod_shader_id_lightmap()
 {
 	static _shader = new BBMOD_BaseShader(
-		BBMOD_ShInstanceIDLightmap, __bbmod_vformat_lightmap);
+		BBMOD_ShInstanceIDLightmap, BBMOD_VFORMAT_DEFAULT_LIGHTMAP);
 	return _shader;
 }
 
@@ -54,5 +48,13 @@ bbmod_shader_register("BBMOD_SHADER_INSTANCE_ID_ANIMATED", BBMOD_SHADER_INSTANCE
 bbmod_shader_register("BBMOD_SHADER_INSTANCE_ID_BATCHED",  BBMOD_SHADER_INSTANCE_ID_BATCHED);
 bbmod_shader_register("BBMOD_SHADER_INSTANCE_ID_LIGHTMAP", BBMOD_SHADER_INSTANCE_ID_LIGHTMAP);
 
-// Obsolete:
+////////////////////////////////////////////////////////////////////////////////
+// DEPRECATED!!!
+
+/// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs
+/// for lightmapped models.
+/// @see BBMOD_BaseShader
+/// @deprecated Please use {@link BBMOD_SHADER_INSTANCE_ID_LIGHTMAP} instead.
+#macro BBMOD_SHADER_LIGHTMAP_INSTANCE_ID BBMOD_SHADER_INSTANCE_ID_LIGHTMAP
+
 bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_INSTANCE_ID", BBMOD_SHADER_LIGHTMAP_INSTANCE_ID);

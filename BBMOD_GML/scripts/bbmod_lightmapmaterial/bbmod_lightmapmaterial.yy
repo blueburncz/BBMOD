@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Obsolete",
-    "path": "folders/BBMOD/Core/DefaultRenderer/Obsolete.yy",
+    "name": "Deprecated",
+    "path": "folders/BBMOD/Core/DefaultRenderer/Deprecated.yy",
   },
 }

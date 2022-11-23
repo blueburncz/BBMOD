@@ -2,7 +2,7 @@
 ///
 /// @extends BBMOD_DefaultLightmapMaterial
 ///
-/// @obsolete Please use {@link BBMOD_DefaultLightmapMaterial} instead.
+/// @deprecated Please use {@link BBMOD_DefaultLightmapMaterial} instead.
 function BBMOD_LightmapMaterial(_shader=undefined)
 	: BBMOD_DefaultLightmapMaterial(_shader) constructor
 {

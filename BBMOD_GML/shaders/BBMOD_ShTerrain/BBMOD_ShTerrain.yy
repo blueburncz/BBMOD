@@ -4,7 +4,7 @@
   "name": "BBMOD_ShTerrain",
   "type": 1,
   "parent": {
-    "name": "Shaders",
-    "path": "folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
+    "name": "Terrain",
+    "path": "folders/BBMOD/Terrain.yy",
   },
 }
