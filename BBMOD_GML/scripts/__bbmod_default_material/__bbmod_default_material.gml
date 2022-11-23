@@ -193,7 +193,7 @@ function __bbmod_shader_default_depth_batched()
 function __bbmod_shader_default_depth_lightmap()
 {
 	static _shader = new BBMOD_BaseShader(
-		BBMOD_ShDefaultLightmapDepth, BBMOD_VFORMAT_DEFAULT_LIGHTMAP);
+		BBMOD_ShDefaultDepthLightmap, BBMOD_VFORMAT_DEFAULT_LIGHTMAP);
 	return _shader;
 }
 
