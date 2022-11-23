@@ -725,11 +725,13 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			{
 				if (i == 0)
 				{
-					RenderQueue.apply_material(_mat);
+					RenderQueue
+						.apply_material(_mat)
+						.set_gpu_blendenable(false);
 				}
 				else
 				{
-					RenderQueue.apply_material(_mat, ~(1 << BBMOD_ERenderPass.Shadows));
+					RenderQueue.apply_material(_mat, 1 << BBMOD_ERenderPass.Forward);
 				}
 
 				RenderQueue

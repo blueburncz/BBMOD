@@ -101,8 +101,9 @@ function BBMOD_PostProcessor()
 
 		var _shader = BBMOD_ShPostProcess;
 		shader_set(_shader);
-		var _uLut = shader_get_sampler_index(_shader, "u_texLut");
-		texture_set_stage(_uLut, ColorGradingLUT);
+		texture_set_stage(
+			shader_get_sampler_index(_shader, "u_texLut"),
+			ColorGradingLUT);
 		shader_set_uniform_f(
 			shader_get_uniform(_shader, "u_vTexel"),
 			_texelWidth, _texelHeight);
@@ -122,9 +123,9 @@ function BBMOD_PostProcessor()
 			Vignette);
 		shader_set_uniform_f(
 			shader_get_uniform(_shader, "u_vVignetteColor"),
-			color_get_red(VignetteColor) / 255,
-			color_get_green(VignetteColor) / 255,
-			color_get_blue(VignetteColor) / 255);
+			color_get_red(VignetteColor) / 255.0,
+			color_get_green(VignetteColor) / 255.0,
+			color_get_blue(VignetteColor) / 255.0);
 		draw_surface(
 			_surface,
 			(Antialiasing == BBMOD_EAntialiasing.None) ? _x : 0,
