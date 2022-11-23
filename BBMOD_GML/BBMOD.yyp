@@ -56,7 +56,6 @@
     {"id":{"name":"__bbmod_array","path":"scripts/__bbmod_array/__bbmod_array.yy",},"order":0,},
     {"id":{"name":"BBMOD_VertexFormat","path":"scripts/BBMOD_VertexFormat/BBMOD_VertexFormat.yy",},"order":4,},
     {"id":{"name":"BBMOD_LightmapShader","path":"scripts/BBMOD_LightmapShader/BBMOD_LightmapShader.yy",},"order":1,},
-    {"id":{"name":"BBMOD_EShaderUniformType","path":"scripts/BBMOD_EShaderUniformType/BBMOD_EShaderUniformType.yy",},"order":11,},
     {"id":{"name":"SprSand","path":"sprites/SprSand/SprSand.yy",},"order":1,},
     {"id":{"name":"BBMOD_IRenderable","path":"scripts/BBMOD_IRenderable/BBMOD_IRenderable.yy",},"order":1,},
     {"id":{"name":"BBMOD_MixQuaternionFromSpeedModule","path":"scripts/BBMOD_MixQuaternionFromSpeedModule/BBMOD_MixQuaternionFromSpeedModule.yy",},"order":1,},
