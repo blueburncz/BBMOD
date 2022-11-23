@@ -723,19 +723,20 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			var _mat = Layer[i];
 			if (_mat != undefined)
 			{
+				RenderQueue
+					.apply_material(_mat, (i == 0) ? ~0 : (1 << BBMOD_ERenderPass.Forward))
+					.begin_conditional_block();
+
 				if (i == 0)
 				{
-					RenderQueue
-						.apply_material(_mat)
-						.set_gpu_blendenable(false);
+					RenderQueue.set_gpu_blendenable(false);
 				}
 				else
 				{
-					RenderQueue.apply_material(_mat, 1 << BBMOD_ERenderPass.Forward);
+					RenderQueue.set_gpu_colorwriteenable(true, true, true, false);
 				}
 
 				RenderQueue
-					.begin_conditional_block()
 					.set_gpu_zwriteenable(i == 0)
 					.set_gpu_zfunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
 					.set_sampler("bbmod_Splatmap", Splatmap)

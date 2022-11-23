@@ -86,7 +86,7 @@ function BBMOD_PostProcessor()
 		gpu_push_state();
 		gpu_set_tex_filter(true);
 		gpu_set_tex_repeat(false);
-		gpu_set_blendenable(true);
+		gpu_set_blendenable(false);
 
 		////////////////////////////////////////////////////////////////////
 		// Do post-processing
