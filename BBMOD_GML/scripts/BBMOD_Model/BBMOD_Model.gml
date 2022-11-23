@@ -569,7 +569,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
-	/// @func render([_materials[, _transform[, _batchData]]])
+	/// @func render([_materials[, _transform[, _batchData[, _matrix]]]])
 	///
 	/// @desc Enqueues the model for rendering.
 	///
@@ -580,6 +580,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// transforming animated models or `undefined`.
 	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
 	/// batching or `undefined`.
+	/// @param {Array<Real>} [_matrix] The world matrix. Defaults to
+	/// `matrix_get(matrix_world)`.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
@@ -590,12 +592,16 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
-	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined) {
+	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined, _matrix=undefined) {
 		gml_pragma("forceinline");
 		if (RootNode != undefined)
 		{
 			_materials ??= Materials;
-			RootNode.render(_materials, _transform, matrix_get(matrix_world), _batchData);
+			if (_matrix == undefined)
+			{
+				_matrix = matrix_get(matrix_world);
+			}
+			RootNode.render(_materials, _transform, _batchData, _matrix);
 		}
 		return self;
 	};

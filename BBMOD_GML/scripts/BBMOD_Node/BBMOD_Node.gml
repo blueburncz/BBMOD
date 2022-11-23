@@ -233,6 +233,8 @@ function BBMOD_Node(_model)
 	/// transforming animated models or `undefined`.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
 	/// batching or `undefined`.
+	///
+	/// @return {Struct.BBMOD_Node} Returns `self`.
 	static submit = function (_materials, _transform, _batchData) {
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;
@@ -296,9 +298,11 @@ function BBMOD_Node(_model)
 		}
 
 		matrix_set(matrix_world, _matrix);
+
+		return self;
 	};
 
-	/// @func render(_materials, _transform, _matrix, _batchData)
+	/// @func render(_materials, _transform, _batchData, _matrix)
 	///
 	/// @desc Enqueues the node for rendering.
 	///
@@ -306,10 +310,12 @@ function BBMOD_Node(_model)
 	/// one for each material slot of the model.
 	/// @param {Array<Real>} _transform An array of dual quaternions for
 	/// transforming animated models or `undefined`.
-	/// @param {Array<Real>} _matrix The current world matrix.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
 	/// batching or `undefined`.
-	static render = function (_materials, _transform, _matrix, _batchData) {
+	/// @param {Array<Real>} _matrix The current world matrix.
+	///
+	/// @return {Struct.BBMOD_Node} Returns `self`.
+	static render = function (_materials, _transform, _batchData, _matrix) {
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;
 		var _node = self;
@@ -362,7 +368,7 @@ function BBMOD_Node(_model)
 					_meshMatrix = _nodeMatrix;
 				}
 
-				_mesh.render(_material, _transform, _meshMatrix, _batchData);
+				_mesh.render(_material, _transform, _batchData, _meshMatrix);
 			}
 
 			i = 0;
@@ -371,5 +377,7 @@ function BBMOD_Node(_model)
 				ds_stack_push(_renderStack, _children[i++]);
 			}
 		}
+
+		return self;
 	};
 }

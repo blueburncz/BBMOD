@@ -244,18 +244,18 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		return self;
 	};
 
-	/// @func render(_material, _transform, _matrix, _batchData)
+	/// @func render(_material, _transform, _batchData, _matrix)
 	///
 	/// @desc Enqueues the mesh for rendering.
 	///
 	/// @param {Struct.BBMOD_BaseMaterial} _material The material to use.
 	/// @param {Array<Real>} _transform An array of bone transforms or `undefined`.
-	/// @param {Array<Real>} _matrix The current world matrix.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
 	/// batching or `undefined`.
+	/// @param {Array<Real>} _matrix The current world matrix.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	static render = function (_material, _transform, _matrix, _batchData) {
+	static render = function (_material, _transform, _batchData, _matrix) {
 		gml_pragma("forceinline");
 		if (_batchData != undefined)
 		{
