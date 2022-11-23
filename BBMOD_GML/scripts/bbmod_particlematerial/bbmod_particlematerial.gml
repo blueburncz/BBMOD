@@ -13,6 +13,8 @@
 function BBMOD_ParticleMaterial(_shader=undefined)
 	: BBMOD_DefaultMaterial(_shader) constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static DefaultMaterial_copy = copy;
 
 	/// @var {Real} Distance over which the particle smoothly dissappears when

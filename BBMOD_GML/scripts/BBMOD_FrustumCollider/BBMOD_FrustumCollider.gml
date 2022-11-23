@@ -29,6 +29,8 @@ enum BBMOD_EFrustumPlane
 function BBMOD_FrustumCollider()
 	: BBMOD_Collider() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Array<Struct.BBMOD_PlaneCollider>}
 	/// @see BBMOD_PlaneCollider
 	/// @see BBMOD_EFrustumPlane

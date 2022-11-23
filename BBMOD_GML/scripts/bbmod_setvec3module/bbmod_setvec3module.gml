@@ -14,6 +14,8 @@
 function BBMOD_SetVec3Module(_property=undefined, _value=new BBMOD_Vec3())
 	: BBMOD_ParticleModule() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Real} The first property. Use values from {@link BBMOD_EParticle}.
 	/// Default value is `undefined`.
 	Property = _property;

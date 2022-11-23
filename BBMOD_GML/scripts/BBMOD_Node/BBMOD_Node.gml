@@ -4,6 +4,8 @@ global.__bbmodRenderStack = ds_stack_create();
 
 /// @func BBMOD_Node(_model)
 ///
+/// @extends BBMOD_Class
+///
 /// @implements {BBMOD_IRenderable}
 ///
 /// @desc A node struct.
@@ -11,8 +13,11 @@ global.__bbmodRenderStack = ds_stack_create();
 /// @param {Struct.BBMOD_Model} _model The model which contains this node.
 ///
 /// @see BBMOD_Model.RootNode
-function BBMOD_Node(_model) constructor
+function BBMOD_Node(_model)
+	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Struct.BBMOD_Model} The model which contains this node.
 	/// @readonly
 	Model = _model;
@@ -33,11 +38,6 @@ function BBMOD_Node(_model) constructor
 	/// @var {Bool} If `true` then the node is a bone.
 	/// @readonly
 	IsBone = false;
-
-	/// @var {Bool} If `true` then the node is part of a skeleton node chain.
-	/// @readonly
-	/// @obsolete
-	IsSkeleton = false;
 
 	/// @var {Bool} Set to `false` to disable rendering of the node and its
 	/// child nodes.
@@ -73,7 +73,6 @@ function BBMOD_Node(_model) constructor
 		_dest.Index = Index;
 		_dest.Parent = Parent;
 		_dest.IsBone = IsBone;
-		_dest.IsSkeleton = IsSkeleton;
 		_dest.Visible = Visible;
 		_dest.Transform = Transform.Clone();
 		_dest.Meshes = bbmod_array_clone(Meshes);
@@ -135,25 +134,6 @@ function BBMOD_Node(_model) constructor
 			//	break;
 			//}
 			_current.IsRenderable = true;
-			_current = _current.Parent;
-		}
-		return self;
-	};
-
-	/// @func set_skeleton()
-	///
-	/// @desc Marks the node and nodes up the chain as nodes required for
-	/// animation playback.
-	///
-	/// @return {Struct.BBMOD_Node} Returns `self`.
-	///
-	/// @obsolete
-	static set_skeleton = function () {
-		gml_pragma("forceinline");
-		var _current = self;
-		while (_current)
-		{
-			_current.IsSkeleton = true;
 			_current = _current.Parent;
 		}
 		return self;

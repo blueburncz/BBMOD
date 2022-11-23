@@ -9,6 +9,8 @@
 function BBMOD_EmissionModule(_count=1)
 	: BBMOD_ParticleModule() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Real} Number of particles to spawn.
 	Count = _count;
 

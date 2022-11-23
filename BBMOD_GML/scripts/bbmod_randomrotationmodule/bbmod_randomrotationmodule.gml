@@ -16,6 +16,8 @@
 function BBMOD_RandomRotationModule(_axis=BBMOD_VEC3_UP, _from=0.0, _to=360.0)
 	: BBMOD_ParticleModule() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Struct.BBMOD_Vec3} The axis of rotation. Default value is
 	/// {@link BBMOD_VEC3_UP}.
 	Axis = _axis;

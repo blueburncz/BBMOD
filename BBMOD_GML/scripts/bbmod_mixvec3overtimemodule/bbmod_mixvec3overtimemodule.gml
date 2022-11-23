@@ -22,6 +22,8 @@ function BBMOD_MixVec3OverTimeModule(
 	_duration=1.0
 ) : BBMOD_ParticleModule() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Real} The first of the three consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;

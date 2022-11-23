@@ -8,6 +8,8 @@
 function BBMOD_DragModule()
 	: BBMOD_ParticleModule() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	static on_update = function (_emitter, _deltaTime) {
 		var _particles = _emitter.Particles;
 		var _particleIndex = 0;

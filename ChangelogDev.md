@@ -42,7 +42,9 @@
 * **Renamed shader `BBMOD_ShSprite` to `BBMOD_ShDefaultSprite`!**
 * **Renamed sprite `BBMOD_SprCheckerboard` to `BBMOD_SprDefaultBaseOpacity`!**
 * **Removed variable `global.bbmod_render_queues`, which was obsolete!**
-* Struct `BBMOD_Shader` now inherits from `BBMOD_Class`.
+* **Removed property `IsSkeleton` of `BBMOD_Node`, which was obsolete!**
+* **Removed method `set_skeleton` of `BBMOD_Node`, which was obsolete!**
+* Structs `BBMOD_Node`, `BBMOD_Vertex`, `BBMOD_VertexFormat`, `BBMOD_Property` and `BBMOD_Shader` now inherit from `BBMOD_Class`.
 
 ## 2D module:
 * **Removed the 2D module, as all its contents were moved to the Core module!**
@@ -71,8 +73,12 @@
 ## Mesh builder module:
 * **Removed the Mesh builder module, as all its contents were moved to the Core module!**
 
+## Particles module:
+* Struct `BBMOD_ParticleModule` now inherits from `BBMOD_Class`.
+
 ## Raycast module:
 * Added missing method `Reset` to `BBMOD_RaycastResult`, which resets its properties to their default values.
+* Struct `BBMOD_Collider` now inherits from `BBMOD_Class`.
 
 ## Rendering module:
 ### Cubemap submodule:

@@ -1,5 +1,7 @@
 /// @func BBMOD_Vertex(_vertexFormat)
 ///
+/// @extends BBMOD_Class
+///
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex.
 /// This drives which properties of the vertex should be defined.
 ///
@@ -16,8 +18,11 @@
 /// show_debug_message(_vertex.Normal); // Prints array [0, 0, 0]
 /// ```
 /// @see BBMOD_VertexFormat
-function BBMOD_Vertex(_vertexFormat) constructor
+function BBMOD_Vertex(_vertexFormat)
+	: BBMOD_Class() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Struct.BBMOD_VertexFormat} The vertex format. This drives which
 	/// properties of the vertex should be defined.
 	VertexFormat = _vertexFormat;

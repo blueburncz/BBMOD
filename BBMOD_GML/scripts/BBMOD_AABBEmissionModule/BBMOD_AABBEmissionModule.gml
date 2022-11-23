@@ -20,6 +20,8 @@ function BBMOD_AABBEmissionModule(
 	_inside=true
 ) : BBMOD_ParticleModule() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Real} The minimum coordinate of the AABB. Default value is
 	/// to `(-0.5, -0.5, -0.5)`.
 	Min = _min;

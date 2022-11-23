@@ -14,6 +14,8 @@
 function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
 	: BBMOD_Collider() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Struct.BBMOD_Vec3} The plane's normal vector.
 	Normal = _normal ?? BBMOD_VEC3_UP;
 

@@ -133,7 +133,9 @@ function BBMOD_DefaultRenderer()
 		{
 			var _width = _renderWidth * GBufferScale;
 			var _height = _renderHeight * GBufferScale;
+
 			__surGBuffer = bbmod_surface_check(__surGBuffer, _width, _height);
+
 			surface_set_target(__surGBuffer);
 			draw_clear(c_white);
 			matrix_set(matrix_view, _view);
@@ -153,15 +155,16 @@ function BBMOD_DefaultRenderer()
 		//
 		if (EnableGBuffer && EnableSSAO)
 		{
-			bbmod_material_reset();
 			var _width = _renderWidth * SSAOScale;
 			var _height = _renderHeight * SSAOScale;
+
 			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height);
 			__surWork = bbmod_surface_check(__surWork, _width, _height);
+
 			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
 				SSAODepthRange, __surSSAO, __surWork, __surGBuffer, _projection,
 				bbmod_camera_get_zfar());
-			bbmod_material_reset();
+
 			bbmod_shader_set_global_sampler(
 				"bbmod_SSAO", surface_get_texture(__surSSAO));
 		}

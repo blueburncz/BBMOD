@@ -1,4 +1,4 @@
-# Core shaders
+# Default shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefault\BBMOD_ShDefault.vsh --x .\Xshaders\ -ci X_PBR=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefault\BBMOD_ShDefault.fsh --x .\Xshaders\ -ci X_PBR=1
 
@@ -8,25 +8,25 @@ Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultAnimated\BBMOD_Sh
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultBatched\BBMOD_ShDefaultBatched.vsh --x .\Xshaders\ X_PBR=1 -ci X_BATCHED=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultBatched\BBMOD_ShDefaultBatched.fsh --x .\Xshaders\ X_PBR=1 -ci X_BATCHED=1
 
-# Depth shaders
-Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDepth\BBMOD_ShDepth.vsh --x .\Xshaders\ -ci X_OUTPUT_DEPTH=1
-Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDepth\BBMOD_ShDepth.fsh --x .\Xshaders\ -ci X_OUTPUT_DEPTH=1
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultLightmap\BBMOD_ShDefaultLightmap.vsh --x .\Xshaders\ -ci X_PBR=1 X_LIGHTMAP=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultLightmap\BBMOD_ShDefaultLightmap.fsh --x .\Xshaders\ -ci X_PBR=1 X_LIGHTMAP=1
 
-Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDepthAnimated\BBMOD_ShDepthAnimated.vsh --x .\Xshaders\ -ci X_ANIMATED=1 X_OUTPUT_DEPTH=1
-Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDepthAnimated\BBMOD_ShDepthAnimated.fsh --x .\Xshaders\ -ci X_ANIMATED=1 X_OUTPUT_DEPTH=1
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultSprite\BBMOD_ShDefaultSprite.vsh --x .\Xshaders\ -ci X_PBR=1 X_2D=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultSprite\BBMOD_ShDefaultSprite.fsh --x .\Xshaders\ -ci X_PBR=1 X_2D=1
 
-Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDepthBatched\BBMOD_ShDepthBatched.vsh --x .\Xshaders\ -ci X_BATCHED=1 X_OUTPUT_DEPTH=1
-Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDepthBatched\BBMOD_ShDepthBatched.fsh --x .\Xshaders\ -ci X_BATCHED=1 X_OUTPUT_DEPTH=1
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultDepth\BBMOD_ShDefaultDepth.vsh --x .\Xshaders\ -ci X_OUTPUT_DEPTH=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultDepth\BBMOD_ShDefaultDepth.fsh --x .\Xshaders\ -ci X_OUTPUT_DEPTH=1
 
-# Terrain shaders
-Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShTerrain\BBMOD_ShTerrain.vsh --x .\Xshaders\ -ci X_PBR=1 X_TERRAIN=1
-Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShTerrain\BBMOD_ShTerrain.fsh --x .\Xshaders\ -ci X_PBR=1 X_TERRAIN=1
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultDepthAnimated\BBMOD_ShDefaultDepthAnimated.vsh --x .\Xshaders\ -ci X_ANIMATED=1 X_OUTPUT_DEPTH=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultDepthAnimated\BBMOD_ShDefaultDepthAnimated.fsh --x .\Xshaders\ -ci X_ANIMATED=1 X_OUTPUT_DEPTH=1
 
-# 2D shaders
-Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShSprite\BBMOD_ShSprite.vsh --x .\Xshaders\ -ci X_PBR=1 X_2D=1
-Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShSprite\BBMOD_ShSprite.fsh --x .\Xshaders\ -ci X_PBR=1 X_2D=1
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultDepthBatched\BBMOD_ShDefaultDepthBatched.vsh --x .\Xshaders\ -ci X_BATCHED=1 X_OUTPUT_DEPTH=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultDepthBatched\BBMOD_ShDefaultDepthBatched.fsh --x .\Xshaders\ -ci X_BATCHED=1 X_OUTPUT_DEPTH=1
 
-# Instance ID shaders
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultDepthLightmap\BBMOD_ShDefaultDepthLightmap.vsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_OUTPUT_DEPTH=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultDepthLightmap\BBMOD_ShDefaultDepthLightmap.fsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_OUTPUT_DEPTH=1
+
+# Gizmo shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShInstanceID\BBMOD_ShInstanceID.vsh --x .\Xshaders\ -ci X_ID=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShInstanceID\BBMOD_ShInstanceID.fsh --x .\Xshaders\ -ci X_ID=1
 
@@ -35,6 +35,9 @@ Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShInstanceIDAnimated\BBMOD
 
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShInstanceIDBatched\BBMOD_ShInstanceIDBatched.vsh --x .\Xshaders\ -ci X_ID=1 X_BATCHED=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShInstanceIDBatched\BBMOD_ShInstanceIDBatched.fsh --x .\Xshaders\ -ci X_ID=1 X_BATCHED=1
+
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShInstanceIDLightmap\BBMOD_ShInstanceIDLightmap.vsh --x .\Xshaders\ -ci X_ID=1 X_LIGHTMAP=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShInstanceIDLightmap\BBMOD_ShInstanceIDLightmap.fsh --x .\Xshaders\ -ci X_ID=1 X_LIGHTMAP=1
 
 # Particle shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShParticleDepth\BBMOD_ShParticleDepth.vsh --x .\Xshaders\ -ci X_PBR=1 X_PARTICLES=1 X_OUTPUT_DEPTH=1
@@ -46,15 +49,9 @@ Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShParticleLit\BBMOD_ShPart
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShParticleUnlit\BBMOD_ShParticleUnlit.vsh --x .\Xshaders\ -ci X_PARTICLES=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShParticleUnlit\BBMOD_ShParticleUnlit.fsh --x .\Xshaders\ -ci X_PARTICLES=1
 
-# Lightmap shaders
-Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShLightmap\BBMOD_ShLightmap.vsh --x .\Xshaders\ -ci X_PBR=1 X_LIGHTMAP=1
-Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShLightmap\BBMOD_ShLightmap.fsh --x .\Xshaders\ -ci X_PBR=1 X_LIGHTMAP=1
-
-Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShLightmapDepth\BBMOD_ShLightmapDepth.vsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_OUTPUT_DEPTH=1
-Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShLightmapDepth\BBMOD_ShLightmapDepth.fsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_OUTPUT_DEPTH=1
-
-Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShLightmapInstanceID\BBMOD_ShLightmapInstanceID.vsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_ID=1
-Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShLightmapInstanceID\BBMOD_ShLightmapInstanceID.fsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_ID=1
+# Terrain shaders
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShTerrain\BBMOD_ShTerrain.vsh --x .\Xshaders\ -ci X_PBR=1 X_TERRAIN=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShTerrain\BBMOD_ShTerrain.fsh --x .\Xshaders\ -ci X_PBR=1 X_TERRAIN=1
 
 # Zombie shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\ShZombie\ShZombie.vsh --x .\Xshaders\ -ci X_PBR=1 X_ZOMBIE=1 X_ANIMATED=1

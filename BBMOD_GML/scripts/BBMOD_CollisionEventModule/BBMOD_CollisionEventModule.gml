@@ -14,6 +14,8 @@
 function BBMOD_CollisionEventModule(_callback=undefined)
 	: BBMOD_ParticleModule() constructor
 {
+	BBMOD_CLASS_GENERATED_BODY;
+
 	/// @var {Function} The function to execute on particle collision. Must take
 	/// the emitter as the first argument and the particle's index as the second
 	/// argument. Default value is `undefined`.
