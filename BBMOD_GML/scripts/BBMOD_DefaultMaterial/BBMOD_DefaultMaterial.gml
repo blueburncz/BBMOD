@@ -23,36 +23,36 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// channels and smoothness in the alpha channel or `undefined`.
 	NormalSmoothness = sprite_get_texture(BBMOD_SprDefaultNormalW, 0);
 
-	NormalSmoothnessSprite = undefined;
+	__normalSmoothnessSprite = undefined;
 
 	/// @var {Pointer.Texture} A texture specular color in the RGB channels
 	/// or `undefined`.
 	SpecularColor = sprite_get_texture(BBMOD_SprDefaultSpecularColor, 0);
 
-	SpecularColorSprite = undefined;
+	__specularColorSprite = undefined;
 
 	/// @var {Pointer.Texture} A texture with tangent-space normals in the RGB
 	/// channels and roughness in the alpha channel or `undefined`.
 	NormalRoughness = undefined;
 
-	NormalRoughnessSprite = undefined;
+	__normalRoughnessSprite = undefined;
 
 	/// @var {Pointer.Texture} A texture with metallic in the red channel and
 	/// ambient occlusion in the green channel or `undefined`.
 	MetallicAO = undefined;
 
-	MetallicAOSprite = undefined;
+	__metallicAOSprite = undefined;
 
 	/// @var {Pointer.Texture} A texture with subsurface color in the RGB
 	/// channels and subsurface effect intensity in the alpha channel.
 	Subsurface = sprite_get_texture(BBMOD_SprBlack, 0);
 
-	SubsurfaceSprite = undefined;
+	__subsurfaceSprite = undefined;
 
 	/// @var {Pointer.Texture} RGBM encoded emissive texture.
 	Emissive = sprite_get_texture(BBMOD_SprBlack, 0);
 
-	EmissiveSprite = undefined;
+	__emissiveSprite = undefined;
 
 	// TODO: Add to_json
 
@@ -61,10 +61,10 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 		if (variable_struct_exists(_json, "NormalSmoothness"))
 		{
-			if (NormalSmoothnessSprite != undefined)
+			if (__normalSmoothnessSprite != undefined)
 			{
-				sprite_delete(NormalSmoothnessSprite);
-				NormalSmoothnessSprite = undefined;
+				sprite_delete(__normalSmoothnessSprite);
+				__normalSmoothnessSprite = undefined;
 			}
 
 			NormalSmoothness = _json.NormalSmoothness;
@@ -72,10 +72,10 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 		if (variable_struct_exists(_json, "SpecularColor"))
 		{
-			if (SpecularColorSprite != undefined)
+			if (__specularColorSprite != undefined)
 			{
-				sprite_delete(SpecularColorSprite);
-				SpecularColorSprite = undefined;
+				sprite_delete(__specularColorSprite);
+				__specularColorSprite = undefined;
 			}
 
 			SpecularColor = _json.SpecularColor;
@@ -83,10 +83,10 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 		if (variable_struct_exists(_json, "NormalRoughness"))
 		{
-			if (NormalRoughnessSprite != undefined)
+			if (__normalRoughnessSprite != undefined)
 			{
-				sprite_delete(NormalRoughnessSprite);
-				NormalRoughnessSprite = undefined;
+				sprite_delete(__normalRoughnessSprite);
+				__normalRoughnessSprite = undefined;
 			}
 
 			NormalRoughness = _json.NormalRoughness;
@@ -94,10 +94,10 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 		if (variable_struct_exists(_json, "MetallicAO"))
 		{
-			if (MetallicAOSprite != undefined)
+			if (__metallicAOSprite != undefined)
 			{
-				sprite_delete(MetallicAOSprite);
-				MetallicAOSprite = undefined;
+				sprite_delete(__metallicAOSprite);
+				__metallicAOSprite = undefined;
 			}
 
 			MetallicAO = _json.MetallicAO;
@@ -105,10 +105,10 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 		if (variable_struct_exists(_json, "Subsurface"))
 		{
-			if (SubsurfaceSprite != undefined)
+			if (__subsurfaceSprite != undefined)
 			{
-				sprite_delete(SubsurfaceSprite);
-				SubsurfaceSprite = undefined;
+				sprite_delete(__subsurfaceSprite);
+				__subsurfaceSprite = undefined;
 			}
 
 			Subsurface = _json.Subsurface;
@@ -116,10 +116,10 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 		if (variable_struct_exists(_json, "Emissive"))
 		{
-			if (EmissiveSprite != undefined)
+			if (__emissiveSprite != undefined)
 			{
-				sprite_delete(EmissiveSprite);
-				EmissiveSprite = undefined;
+				sprite_delete(__emissiveSprite);
+				__emissiveSprite = undefined;
 			}
 
 			Emissive = _json.Emissive;
@@ -140,24 +140,24 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
 	static set_normal_smoothness = function (_normal, _smoothness) {
 		NormalRoughness = undefined;
-		if (NormalRoughnessSprite != undefined)
+		if (__normalRoughnessSprite != undefined)
 		{
-			sprite_delete(NormalRoughnessSprite);
-			NormalRoughnessSprite = undefined;
+			sprite_delete(__normalRoughnessSprite);
+			__normalRoughnessSprite = undefined;
 		}
 
-		if (NormalSmoothnessSprite != undefined)
+		if (__normalSmoothnessSprite != undefined)
 		{
-			sprite_delete(NormalSmoothnessSprite);
+			sprite_delete(__normalSmoothnessSprite);
 		}
 		_normal = _normal.Normalize();
-		NormalSmoothnessSprite = _make_sprite(
+		__normalSmoothnessSprite = _make_sprite(
 			(_normal.X * 0.5 + 0.5) * 255.0,
 			(_normal.Y * 0.5 + 0.5) * 255.0,
 			(_normal.Z * 0.5 + 0.5) * 255.0,
 			_smoothness
 		);
-		NormalSmoothness = sprite_get_texture(NormalSmoothnessSprite, 0);
+		NormalSmoothness = sprite_get_texture(__normalSmoothnessSprite, 0);
 		return self;
 	};
 
@@ -171,23 +171,23 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
 	static set_specular_color = function (_color) {
 		MetallicAO = undefined;
-		if (MetallicAOSprite != undefined)
+		if (__metallicAOSprite != undefined)
 		{
-			sprite_delete(MetallicAOSprite);
-			MetallicAOSprite = undefined;
+			sprite_delete(__metallicAOSprite);
+			__metallicAOSprite = undefined;
 		}
 
-		if (SpecularColorSprite != undefined)
+		if (__specularColorSprite != undefined)
 		{
-			sprite_delete(SpecularColorSprite);
+			sprite_delete(__specularColorSprite);
 		}
-		SpecularColorSprite = _make_sprite(
+		__specularColorSprite = _make_sprite(
 			_color.Red,
 			_color.Green,
 			_color.Blue,
 			1.0
 		);
-		SpecularColor = sprite_get_texture(SpecularColorSprite, 0);
+		SpecularColor = sprite_get_texture(__specularColorSprite, 0);
 		return self;
 	};
 
@@ -203,24 +203,24 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
 	static set_normal_roughness = function (_normal, _roughness) {
 		NormalSmoothness = undefined;
-		if (NormalSmoothnessSprite != undefined)
+		if (__normalSmoothnessSprite != undefined)
 		{
-			sprite_delete(NormalSmoothnessSprite);
-			NormalSmoothnessSprite = undefined;
+			sprite_delete(__normalSmoothnessSprite);
+			__normalSmoothnessSprite = undefined;
 		}
 
-		if (NormalRoughnessSprite != undefined)
+		if (__normalRoughnessSprite != undefined)
 		{
-			sprite_delete(NormalRoughnessSprite);
+			sprite_delete(__normalRoughnessSprite);
 		}
 		_normal = _normal.Normalize();
-		NormalRoughnessSprite = _make_sprite(
+		__normalRoughnessSprite = _make_sprite(
 			(_normal.X * 0.5 + 0.5) * 255.0,
 			(_normal.Y * 0.5 + 0.5) * 255.0,
 			(_normal.Z * 0.5 + 0.5) * 255.0,
 			_roughness
 		);
-		NormalRoughness = sprite_get_texture(NormalRoughnessSprite, 0);
+		NormalRoughness = sprite_get_texture(__normalRoughnessSprite, 0);
 		return self;
 	};
 
@@ -238,23 +238,23 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
 	static set_metallic_ao = function (_metallic, _ao) {
 		SpecularColor = undefined;
-		if (SpecularColorSprite != undefined)
+		if (__specularColorSprite != undefined)
 		{
-			sprite_delete(SpecularColorSprite);
-			SpecularColorSprite = undefined;
+			sprite_delete(__specularColorSprite);
+			__specularColorSprite = undefined;
 		}
 
-		if (MetallicAOSprite != undefined)
+		if (__metallicAOSprite != undefined)
 		{
-			sprite_delete(MetallicAOSprite);
+			sprite_delete(__metallicAOSprite);
 		}
-		MetallicAOSprite = _make_sprite(
+		__metallicAOSprite = _make_sprite(
 			_metallic * 255.0,
 			_ao * 255.0,
 			0.0,
 			0.0
 		);
-		MetallicAO = sprite_get_texture(MetallicAOSprite, 0);
+		MetallicAO = sprite_get_texture(__metallicAOSprite, 0);
 		return self;
 	};
 
@@ -269,17 +269,17 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	///
 	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
 	static set_subsurface = function (_color, _intensity) {
-		if (SubsurfaceSprite != undefined)
+		if (__subsurfaceSprite != undefined)
 		{
-			sprite_delete(SubsurfaceSprite);
+			sprite_delete(__subsurfaceSprite);
 		}
-		SubsurfaceSprite = _make_sprite(
+		__subsurfaceSprite = _make_sprite(
 			color_get_red(_color),
 			color_get_green(_color),
 			color_get_blue(_color),
 			_intensity
 		);
-		Subsurface = sprite_get_texture(SubsurfaceSprite, 0);
+		Subsurface = sprite_get_texture(__subsurfaceSprite, 0);
 		return self;
 	};
 
@@ -296,17 +296,17 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 			? new BBMOD_Color(argument[0], argument[1], argument[2])
 			: argument[0];
 		var _rgbm = _color.ToRGBM();
-		if (EmissiveSprite != undefined)
+		if (__emissiveSprite != undefined)
 		{
-			sprite_delete(EmissiveSprite);
+			sprite_delete(__emissiveSprite);
 		}
-		EmissiveSprite = _make_sprite(
+		__emissiveSprite = _make_sprite(
 			_rgbm[0] * 255.0,
 			_rgbm[1] * 255.0,
 			_rgbm[2] * 255.0,
 			_rgbm[3]
 		);
-		Emissive = sprite_get_texture(EmissiveSprite, 0);
+		Emissive = sprite_get_texture(__emissiveSprite, 0);
 		return self;
 	};
 
@@ -314,16 +314,16 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		BaseMaterial_copy(_dest);
 
 		// NormalSmoothness
-		if (_dest.NormalSmoothnessSprite != undefined)
+		if (_dest.__normalSmoothnessSprite != undefined)
 		{
-			sprite_delete(_dest.NormalSmoothnessSprite);
-			_dest.NormalSmoothnessSprite = undefined;
+			sprite_delete(_dest.__normalSmoothnessSprite);
+			_dest.__normalSmoothnessSprite = undefined;
 		}
 
-		if (NormalSmoothnessSprite != undefined)
+		if (__normalSmoothnessSprite != undefined)
 		{
-			_dest.NormalSmoothnessSprite = sprite_duplicate(NormalSmoothnessSprite);
-			_dest.NormalSmoothness = sprite_get_texture(_dest.NormalSmoothnessSprite, 0);
+			_dest.__normalSmoothnessSprite = sprite_duplicate(__normalSmoothnessSprite);
+			_dest.NormalSmoothness = sprite_get_texture(_dest.__normalSmoothnessSprite, 0);
 		}
 		else
 		{
@@ -331,16 +331,16 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		}
 
 		// SpecularColor
-		if (_dest.SpecularColorSprite != undefined)
+		if (_dest.__specularColorSprite != undefined)
 		{
-			sprite_delete(_dest.SpecularColorSprite);
-			_dest.SpecularColorSprite = undefined;
+			sprite_delete(_dest.__specularColorSprite);
+			_dest.__specularColorSprite = undefined;
 		}
 
-		if (SpecularColorSprite != undefined)
+		if (__specularColorSprite != undefined)
 		{
-			_dest.SpecularColorSprite = sprite_duplicate(SpecularColorSprite);
-			_dest.SpecularColor = sprite_get_texture(_dest.SpecularColorSprite, 0);
+			_dest.__specularColorSprite = sprite_duplicate(__specularColorSprite);
+			_dest.SpecularColor = sprite_get_texture(_dest.__specularColorSprite, 0);
 		}
 		else
 		{
@@ -348,16 +348,16 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		}
 
 		// NormalRoughness
-		if (_dest.NormalRoughnessSprite != undefined)
+		if (_dest.__normalRoughnessSprite != undefined)
 		{
-			sprite_delete(_dest.NormalRoughnessSprite);
-			_dest.NormalRoughnessSprite = undefined;
+			sprite_delete(_dest.__normalRoughnessSprite);
+			_dest.__normalRoughnessSprite = undefined;
 		}
 
-		if (NormalRoughnessSprite != undefined)
+		if (__normalRoughnessSprite != undefined)
 		{
-			_dest.NormalRoughnessSprite = sprite_duplicate(NormalRoughnessSprite);
-			_dest.NormalRoughness = sprite_get_texture(_dest.NormalRoughnessSprite, 0);
+			_dest.__normalRoughnessSprite = sprite_duplicate(__normalRoughnessSprite);
+			_dest.NormalRoughness = sprite_get_texture(_dest.__normalRoughnessSprite, 0);
 		}
 		else
 		{
@@ -365,16 +365,16 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		}
 
 		// MetallicAO
-		if (_dest.MetallicAOSprite != undefined)
+		if (_dest.__metallicAOSprite != undefined)
 		{
-			sprite_delete(_dest.MetallicAOSprite);
-			_dest.MetallicAOSprite = undefined;
+			sprite_delete(_dest.__metallicAOSprite);
+			_dest.__metallicAOSprite = undefined;
 		}
 
-		if (MetallicAOSprite != undefined)
+		if (__metallicAOSprite != undefined)
 		{
-			_dest.MetallicAOSprite = sprite_duplicate(MetallicAOSprite);
-			_dest.MetallicAO = sprite_get_texture(_dest.MetallicAOSprite, 0);
+			_dest.__metallicAOSprite = sprite_duplicate(__metallicAOSprite);
+			_dest.MetallicAO = sprite_get_texture(_dest.__metallicAOSprite, 0);
 		}
 		else
 		{
@@ -382,16 +382,16 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		}
 
 		// Subsurface
-		if (_dest.SubsurfaceSprite != undefined)
+		if (_dest.__subsurfaceSprite != undefined)
 		{
-			sprite_delete(_dest.SubsurfaceSprite);
-			_dest.SubsurfaceSprite = undefined;
+			sprite_delete(_dest.__subsurfaceSprite);
+			_dest.__subsurfaceSprite = undefined;
 		}
 
-		if (SubsurfaceSprite != undefined)
+		if (__subsurfaceSprite != undefined)
 		{
-			_dest.SubsurfaceSprite = sprite_duplicate(SubsurfaceSprite);
-			_dest.Subsurface = sprite_get_texture(_dest.SubsurfaceSprite, 0);
+			_dest.__subsurfaceSprite = sprite_duplicate(__subsurfaceSprite);
+			_dest.Subsurface = sprite_get_texture(_dest.__subsurfaceSprite, 0);
 		}
 		else
 		{
@@ -399,16 +399,16 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		}
 
 		// Emissive
-		if (_dest.EmissiveSprite != undefined)
+		if (_dest.__emissiveSprite != undefined)
 		{
-			sprite_delete(_dest.EmissiveSprite);
-			_dest.EmissiveSprite = undefined;
+			sprite_delete(_dest.__emissiveSprite);
+			_dest.__emissiveSprite = undefined;
 		}
 
-		if (EmissiveSprite != undefined)
+		if (__emissiveSprite != undefined)
 		{
-			_dest.EmissiveSprite = sprite_duplicate(EmissiveSprite);
-			_dest.Emissive = sprite_get_texture(_dest.EmissiveSprite, 0);
+			_dest.__emissiveSprite = sprite_duplicate(__emissiveSprite);
+			_dest.Emissive = sprite_get_texture(_dest.__emissiveSprite, 0);
 		}
 		else
 		{
@@ -426,29 +426,29 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 	static destroy = function () {
 		BaseMaterial_destroy();
-		if (NormalSmoothnessSprite != undefined)
+		if (__normalSmoothnessSprite != undefined)
 		{
-			sprite_delete(NormalSmoothnessSprite);
+			sprite_delete(__normalSmoothnessSprite);
 		}
-		if (SpecularColorSprite != undefined)
+		if (__specularColorSprite != undefined)
 		{
-			sprite_delete(SpecularColorSprite);
+			sprite_delete(__specularColorSprite);
 		}
-		if (NormalRoughnessSprite != undefined)
+		if (__normalRoughnessSprite != undefined)
 		{
-			sprite_delete(NormalRoughnessSprite);
+			sprite_delete(__normalRoughnessSprite);
 		}
-		if (MetallicAOSprite != undefined)
+		if (__metallicAOSprite != undefined)
 		{
-			sprite_delete(MetallicAOSprite);
+			sprite_delete(__metallicAOSprite);
 		}
-		if (SubsurfaceSprite != undefined)
+		if (__subsurfaceSprite != undefined)
 		{
-			sprite_delete(SubsurfaceSprite);
+			sprite_delete(__subsurfaceSprite);
 		}
-		if (EmissiveSprite != undefined)
+		if (__emissiveSprite != undefined)
 		{
-			sprite_delete(EmissiveSprite);
+			sprite_delete(__emissiveSprite);
 		}
 		return undefined;
 	};

@@ -27,20 +27,20 @@ function BBMOD_OBJImporter()
 	/// Default value is `false`.
 	InvertWinding = false;
 
-	Vertices = ds_list_create();
+	__vertices = ds_list_create();
 
-	Normals = ds_list_create();
+	__normals = ds_list_create();
 
-	TextureCoords = ds_list_create();
+	__textureCoords = ds_list_create();
 
 	static can_import = function (_path) {
 		return (filename_ext(_path) == ".obj");
 	};
 
 	static import = function (_path) {
-		ds_list_clear(Vertices);
-		ds_list_clear(Normals);
-		ds_list_clear(TextureCoords);
+		ds_list_clear(__vertices);
+		ds_list_clear(__normals);
+		ds_list_clear(__textureCoords);
 
 		var _file = file_text_open_read(_path);
 		if (_file == -1)
@@ -149,7 +149,7 @@ function BBMOD_OBJImporter()
 					_vy = _temp;
 				}
 
-				ds_list_add(Vertices, _vx, _vy, _vz);
+				ds_list_add(__vertices, _vx, _vy, _vz);
 				break;
 
 			// Normal
@@ -170,7 +170,7 @@ function BBMOD_OBJImporter()
 					_ny = _temp;
 				}
 
-				ds_list_add(Normals, _nx, _ny, _nz);
+				ds_list_add(__normals, _nx, _ny, _nz);
 				break;
 
 			// Texture
@@ -189,7 +189,7 @@ function BBMOD_OBJImporter()
 					_ty = 1.0 - _ty;
 				}
 
-				ds_list_add(TextureCoords, _tx, _ty);
+				ds_list_add(__textureCoords, _tx, _ty);
 				break;
 
 			// Face
@@ -220,18 +220,18 @@ function BBMOD_OBJImporter()
 					var _n = (real(_split[0]) - 1) * 3;
 
 					var _vertex = new BBMOD_Vertex(_vformat);
-					_vertex.Position.X = Vertices[| _v];
-					_vertex.Position.Y = Vertices[| _v + 1];
-					_vertex.Position.Z = Vertices[| _v + 2];
+					_vertex.Position.X = __vertices[| _v];
+					_vertex.Position.Y = __vertices[| _v + 1];
+					_vertex.Position.Z = __vertices[| _v + 2];
 
-					_vertex.Normal.X = Normals[| _n];
-					_vertex.Normal.Y = Normals[| _n + 1];
-					_vertex.Normal.Z = Normals[| _n + 2];
+					_vertex.Normal.X = __normals[| _n];
+					_vertex.Normal.Y = __normals[| _n + 1];
+					_vertex.Normal.Z = __normals[| _n + 2];
 
 					if (_t != -1)
 					{
-						_vertex.TextureCoord.X = TextureCoords[| _t];
-						_vertex.TextureCoord.Y = TextureCoords[| _t + 1];
+						_vertex.TextureCoord.X = __textureCoords[| _t];
+						_vertex.TextureCoord.Y = __textureCoords[| _t + 1];
 					}
 
 					_vertexInd[@ i] = _meshBuilder.add_vertex(_vertex);
@@ -288,9 +288,9 @@ function BBMOD_OBJImporter()
 
 	static destroy = function () {
 		Importer_destroy();
-		ds_list_destroy(Vertices);
-		ds_list_destroy(Normals);
-		ds_list_destroy(TextureCoords);
+		ds_list_destroy(__vertices);
+		ds_list_destroy(__normals);
+		ds_list_destroy(__textureCoords);
 		return undefined;
 	};
 }

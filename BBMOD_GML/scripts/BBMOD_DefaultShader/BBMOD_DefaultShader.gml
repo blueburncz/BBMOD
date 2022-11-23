@@ -16,19 +16,19 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	static BaseShader_set_material = set_material;
 
-	UIsRoughness = get_uniform("bbmod_IsRoughness");
+	__uIsRoughness = get_uniform("bbmod_IsRoughness");
 
-	UNormalW = get_sampler_index("bbmod_NormalW");
+	__uNormalW = get_sampler_index("bbmod_NormalW");
 
-	UIsMetallic = get_uniform("bbmod_IsMetallic");
+	__uIsMetallic = get_uniform("bbmod_IsMetallic");
 
-	UMaterial = get_sampler_index("bbmod_Material");
+	__uMaterial = get_sampler_index("bbmod_Material");
 
-	USubsurface = get_sampler_index("bbmod_Subsurface");
+	__uSubsurface = get_sampler_index("bbmod_Subsurface");
 
-	UEmissive = get_sampler_index("bbmod_Emissive");
+	__uEmissive = get_sampler_index("bbmod_Emissive");
 
-	ULightmap = get_sampler_index("bbmod_Lightmap");
+	__uLightmap = get_sampler_index("bbmod_Lightmap");
 
 	/// @func set_normal_smoothness(_texture)
 	///
@@ -40,8 +40,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_normal_smoothness = function (_texture) {
 		gml_pragma("forceinline");
-		shader_set_uniform_f(UIsRoughness, 0.0);
-		texture_set_stage(UNormalW, _texture);
+		shader_set_uniform_f(__uIsRoughness, 0.0);
+		texture_set_stage(__uNormalW, _texture);
 		return self;
 	};
 
@@ -55,8 +55,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_specular_color = function (_texture) {
 		gml_pragma("forceinline");
-		shader_set_uniform_f(UIsMetallic, 0.0);
-		texture_set_stage(UMaterial, _texture);
+		shader_set_uniform_f(__uIsMetallic, 0.0);
+		texture_set_stage(__uMaterial, _texture);
 	};
 
 	/// @func set_normal_roughness(_texture)
@@ -69,8 +69,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_normal_roughness = function (_texture) {
 		gml_pragma("forceinline");
-		shader_set_uniform_f(UIsRoughness, 1.0);
-		texture_set_stage(UNormalW, _texture);
+		shader_set_uniform_f(__uIsRoughness, 1.0);
+		texture_set_stage(__uNormalW, _texture);
 		return self;
 	};
 
@@ -84,8 +84,8 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_metallic_ao = function (_texture) {
 		gml_pragma("forceinline");
-		shader_set_uniform_f(UIsMetallic, 1.0);
-		texture_set_stage(UMaterial, _texture);
+		shader_set_uniform_f(__uIsMetallic, 1.0);
+		texture_set_stage(__uMaterial, _texture);
 		return self;
 	};
 
@@ -99,7 +99,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_subsurface = function (_texture) {
 		gml_pragma("forceinline");
-		texture_set_stage(USubsurface, _texture);
+		texture_set_stage(__uSubsurface, _texture);
 		return self;
 	};
 
@@ -113,7 +113,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
 	static set_emissive = function (_texture) {
 		gml_pragma("forceinline");
-		texture_set_stage(UEmissive, _texture);
+		texture_set_stage(__uEmissive, _texture);
 		return self;
 	};
 

@@ -176,7 +176,7 @@ function BBMOD_Material(_shader=undefined)
 	/// and opacity in the alpha channel.
 	BaseOpacity = pointer_null;
 
-	BaseOpacitySprite = undefined;
+	__baseOpacitySprite = undefined;
 
 	/// @func copy(_dest)
 	///
@@ -208,16 +208,16 @@ function BBMOD_Material(_shader=undefined)
 		_dest.Filtering = Filtering;
 		_dest.Repeat = Repeat;
 
-		if (_dest.BaseOpacitySprite != undefined)
+		if (_dest.__baseOpacitySprite != undefined)
 		{
-			sprite_delete(_dest.BaseOpacitySprite);
-			_dest.BaseOpacitySprite = undefined;
+			sprite_delete(_dest.__baseOpacitySprite);
+			_dest.__baseOpacitySprite = undefined;
 		}
 
-		if (BaseOpacitySprite != undefined)
+		if (__baseOpacitySprite != undefined)
 		{
-			_dest.BaseOpacitySprite = sprite_duplicate(BaseOpacitySprite);
-			_dest.BaseOpacity = sprite_get_texture(_dest.BaseOpacitySprite, 0);
+			_dest.__baseOpacitySprite = sprite_duplicate(__baseOpacitySprite);
+			_dest.BaseOpacity = sprite_get_texture(_dest.__baseOpacitySprite, 0);
 		}
 		else
 		{
@@ -294,7 +294,7 @@ function BBMOD_Material(_shader=undefined)
 		_json.Filtering = Filtering;
 		_json.Repeat = Repeat;
 
-		// TODO: Save BaseOpacity/BaseOpacitySprite
+		// TODO: Save BaseOpacity/__baseOpacitySprite
 
 		return self;
 	};
@@ -434,10 +434,10 @@ function BBMOD_Material(_shader=undefined)
 
 		if (variable_struct_exists(_json, "BaseOpacity"))
 		{
-			if (BaseOpacitySprite != undefined)
+			if (__baseOpacitySprite != undefined)
 			{
-				sprite_delete(BaseOpacitySprite);
-				BaseOpacitySprite = undefined;
+				sprite_delete(__baseOpacitySprite);
+				__baseOpacitySprite = undefined;
 			}
 
 			BaseOpacity = _json.BaseOpacity;
@@ -527,18 +527,18 @@ function BBMOD_Material(_shader=undefined)
 	///
 	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
 	static set_base_opacity = function (_color) {
-		if (BaseOpacitySprite != undefined)
+		if (__baseOpacitySprite != undefined)
 		{
-			sprite_delete(BaseOpacitySprite);
+			sprite_delete(__baseOpacitySprite);
 		}
 		var _isReal = is_real(_color);
-		BaseOpacitySprite = _make_sprite(
+		__baseOpacitySprite = _make_sprite(
 			_isReal ? color_get_red(_color) : _color.Red,
 			_isReal ? color_get_green(_color) : _color.Green,
 			_isReal ? color_get_blue(_color) : _color.Blue,
 			_isReal ? argument[1] : _color.Alpha
 		);
-		BaseOpacity = sprite_get_texture(BaseOpacitySprite, 0);
+		BaseOpacity = sprite_get_texture(__baseOpacitySprite, 0);
 		return self;
 	};
 
@@ -703,9 +703,9 @@ function BBMOD_Material(_shader=undefined)
 
 	static destroy = function () {
 		Resource_destroy();
-		if (BaseOpacitySprite != undefined)
+		if (__baseOpacitySprite != undefined)
 		{
-			sprite_delete(BaseOpacitySprite);
+			sprite_delete(__baseOpacitySprite);
 		}
 		return undefined;
 	};

@@ -17,7 +17,7 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	static DefaultShader_on_set = on_set;
 	static DefaultShader_set_material = set_material;
 
-	ULightmap = get_sampler_index("bbmod_Lightmap");
+	__uLightmap = get_sampler_index("bbmod_Lightmap");
 
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");
@@ -154,9 +154,9 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultLightmapShader} Returns `self`.
 	static set_lightmap = function (_texture=global.__bbmodLightmap) {
 		gml_pragma("forceinline");
-		texture_set_stage(ULightmap, _texture);
-		gpu_set_tex_mip_enable_ext(ULightmap, mip_off);
-		gpu_set_tex_filter_ext(ULightmap, true);
+		texture_set_stage(__uLightmap, _texture);
+		gpu_set_tex_mip_enable_ext(__uLightmap, mip_off);
+		gpu_set_tex_filter_ext(__uLightmap, true);
 		return self;
 	};
 
