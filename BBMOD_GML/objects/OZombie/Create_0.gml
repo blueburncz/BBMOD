@@ -185,7 +185,7 @@ animationStateMachine.add_state(stateWalk);
 // Attack the player.
 stateAttack = new BBMOD_AnimationState("Attack", animAttack);
 stateAttack.on_event("Attack", method(self, function () {
-	if (hp > 0 && z >= 0)
+	if (z >= 0)
 	{
 		var _index;
 

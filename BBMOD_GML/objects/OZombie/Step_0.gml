@@ -16,7 +16,8 @@ else
 	}
 }
 
-if (emitter)
+if (emitter != undefined
+	&& instance_exists(emitter))
 {
 	emitter.x = x;
 	emitter.y = y;

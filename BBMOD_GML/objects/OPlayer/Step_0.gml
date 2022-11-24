@@ -151,6 +151,11 @@ if (global.gameSpeed > 0.0)
 					var _dist = point_distance(x, y, _zombie.x, _zombie.y);
 					if (_dist < 30)
 					{
+						if (_dist < 25)
+						{
+							speedCurrent = 1;
+						}
+
 						if (_dist > 10)
 						{
 							direction = point_direction(x, y, _zombie.x, _zombie.y);
