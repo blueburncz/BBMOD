@@ -133,11 +133,15 @@ if (global.gameSpeed > 0.0)
 					}
 				}
 			}
-			else if (_mouseLeftPressed)
+			else if (_mouseLeftPressed
+				&& ((animationStateMachine.State != statePunchRight
+				&& animationStateMachine.State != statePunchLeft)
+				|| chainPunch))
 			{
 				// Punch
 				animationStateMachine.change_state(punchRight ? statePunchRight : statePunchLeft);
 				punchRight = !punchRight;
+				chainPunch = false;
 				speedCurrent = 2;
 
 				var _hit = false;
@@ -152,11 +156,11 @@ if (global.gameSpeed > 0.0)
 							direction = point_direction(x, y, _zombie.x, _zombie.y);
 						}
 
-						_zombie.ReceiveDamage(irandom_range(20, 25));
+						_zombie.ReceiveDamage(irandom_range(15, 20));
 
 						_zombie.knockback = new BBMOD_Vec3(
-							lengthdir_x(4, direction),
-							lengthdir_y(4, direction),
+							lengthdir_x(2, direction),
+							lengthdir_y(2, direction),
 							0);
 
 						var _index = audio_play_sound_at(
@@ -204,15 +208,13 @@ if (global.gameSpeed > 0.0)
 		var _moveX = keyboard_check(ord("W")) - keyboard_check(ord("S"));
 		var _moveY = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 
-		if (_moveX != 0 || _moveY != 0)
+		if ((_moveX != 0 || _moveY != 0)
+			&& (animationStateMachine.State != statePunchLeft
+			&& animationStateMachine.State != statePunchRight))
 		{
 			aiming = false;
 			direction = point_direction(0, 0, _moveX, _moveY) + camera.Direction;
-			speedCurrent = (keyboard_check(vk_shift)
-				|| animationPlayer.Animation == animPunchLeft
-				|| animationPlayer.Animation == animPunchRight)
-				? speedWalk
-				: speedRun;
+			speedCurrent = keyboard_check(vk_shift) ? speedWalk : speedRun;
 		}
 	}
 }

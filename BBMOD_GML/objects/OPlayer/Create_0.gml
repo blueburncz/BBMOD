@@ -17,6 +17,8 @@ matrixGun = matrix_build_identity();
 
 punchRight = true;
 
+chainPunch = false;
+
 flashlight = new BBMOD_SpotLight();
 flashlight.CastShadows = true;
 flashlight.Range = 300;
@@ -64,6 +66,7 @@ animPunchLeft = global.resourceManager.load(
 		if (!_err)
 		{
 			_animation.add_event(3, "Footstep");
+			_animation.add_event(round(_animation.Duration / 4), "ChainPunch");
 		}
 	});
 
@@ -74,6 +77,7 @@ animPunchRight = global.resourceManager.load(
 		if (!_err)
 		{
 			_animation.add_event(3, "Footstep");
+			_animation.add_event(round(_animation.Duration / 4), "ChainPunch");
 		}
 	});
 
@@ -117,6 +121,10 @@ animWalk = global.resourceManager.load(
 
 ////////////////////////////////////////////////////////////////////////////////
 // Animation state machine
+
+animationPlayer.on_event("ChainPunch", method(self, function () {
+	chainPunch = true;
+}));
 
 // Go to the state "Idle" when the state machine starts.
 animationStateMachine.OnEnter = method(self, function () {
