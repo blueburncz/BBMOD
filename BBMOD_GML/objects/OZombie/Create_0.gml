@@ -54,12 +54,12 @@ emitter = undefined;
 
 material = choose(MatZombieMale, MatZombieFemale)().clone();
 material.OnApply = method(self, function (_material) {
-	var _shader = BBMOD_SHADER_CURRENT;
-	var _dissolveColor = _shader.get_uniform("u_vDissolveColor");
-	var _dissolveThreshold = _shader.get_uniform("u_fDissolveThreshold");
-	var _dissolveRange = _shader.get_uniform("u_fDissolveRange");
-	var _dissolveScale = _shader.get_uniform("u_vDissolveScale");
-	var _silhouette = _shader.get_uniform("u_vSilhouette");
+	var _shaderCurrent = shader_current();
+	var _dissolveColor = shader_get_uniform(_shaderCurrent, "u_vDissolveColor");
+	var _dissolveThreshold = shader_get_uniform(_shaderCurrent, "u_fDissolveThreshold");
+	var _dissolveRange = shader_get_uniform(_shaderCurrent, "u_fDissolveRange");
+	var _dissolveScale = shader_get_uniform(_shaderCurrent, "u_vDissolveScale");
+	var _silhouette = shader_get_uniform(_shaderCurrent, "u_vSilhouette");
 	shader_set_uniform_f(_dissolveColor, 0.0, 1.0, 0.5);
 	shader_set_uniform_f(_dissolveThreshold, dissolve);
 	shader_set_uniform_f(_dissolveRange, 0.3);

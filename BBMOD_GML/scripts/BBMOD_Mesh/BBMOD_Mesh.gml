@@ -199,7 +199,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	static submit = function (_material, _transform, _batchData) {
-		if (!_material.apply())
+		if (!_material.apply(VertexFormat))
 		{
 			return self;
 		}
@@ -260,17 +260,17 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		if (_batchData != undefined)
 		{
 			_material.RenderQueue.draw_mesh_batched(
-				VertexBuffer, _matrix, _material, _batchData, PrimitiveType, MaterialIndex);
+				VertexBuffer, VertexFormat, PrimitiveType, MaterialIndex, _material, _matrix, _batchData);
 		}
 		else if (_transform != undefined)
 		{
 			_material.RenderQueue.draw_mesh_animated(
-				VertexBuffer, _matrix, _material, _transform, PrimitiveType, MaterialIndex);
+				VertexBuffer, VertexFormat, PrimitiveType, MaterialIndex, _material, _matrix, _transform);
 		}
 		else
 		{
 			_material.RenderQueue.draw_mesh(
-				VertexBuffer, _matrix, _material, PrimitiveType, MaterialIndex);
+				VertexBuffer, VertexFormat, PrimitiveType, MaterialIndex, _material, _matrix);
 		}
 		return self;
 	};

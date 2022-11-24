@@ -542,28 +542,43 @@ function BBMOD_Material(_shader=undefined)
 		return self;
 	};
 
-	/// @func apply()
+	/// @func apply(_vertexFormat)
 	///
 	/// @desc Makes this material the current one.
+	///
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format of
+	/// meshes that we are going to use the material for.
 	///
 	/// @return {Bool} Returns `true` if the material was applied.
 	///
 	/// @see BBMOD_Material.reset
-	static apply = function () {
+	static apply = function (_vertexFormat) {
 		if ((RenderPass & (1 << bbmod_render_pass_get())) == 0)
 		{
 			return false;
 		}
 
 		var _shader = Shaders[bbmod_render_pass_get()];
+		var _shaderRaw = _shader.get_variant(_vertexFormat);
+
+		if (_shaderRaw == undefined)
+		{
+			show_debug_message(
+				"WARNING: Shader variant for vertex format "
+				+ string(_vertexFormat.get_hash())
+				+ " was not found! Material not applied!");
+			return false;
+		}
+
 		var _shaderChanged = false;
-		if (BBMOD_SHADER_CURRENT != _shader)
+		if (BBMOD_SHADER_CURRENT != _shader
+			|| shader_current() != _shaderRaw)
 		{
 			if (BBMOD_SHADER_CURRENT != undefined)
 			{
 				BBMOD_SHADER_CURRENT.reset();
 			}
-			shader_set(_shader.Raw);
+			shader_set(_shaderRaw);
 			BBMOD_SHADER_CURRENT = _shader;
 			_shaderChanged = true;
 		}
@@ -585,7 +600,7 @@ function BBMOD_Material(_shader=undefined)
 				with (_shader)
 				{
 					on_set();
-					__bbmod_shader_set_globals(Raw);
+					__bbmod_shader_set_globals(_shaderRaw);
 				}
 				_shaderChanged = false;
 			}
@@ -614,7 +629,7 @@ function BBMOD_Material(_shader=undefined)
 			with (_shader)
 			{
 				on_set();
-				__bbmod_shader_set_globals(Raw);
+				__bbmod_shader_set_globals(_shaderRaw);
 			}
 			_shader.set_material(self);
 		}

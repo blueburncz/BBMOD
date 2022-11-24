@@ -7,10 +7,10 @@ function MatZombie()
 	{
 		_shader = new BBMOD_DefaultShader(ShZombie, BBMOD_VFORMAT_DEFAULT_ANIMATED);
 		_shaderDepth = new BBMOD_BaseShader(ShZombieDepth, BBMOD_VFORMAT_DEFAULT_ANIMATED);
-		_material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
+		_material = BBMOD_MATERIAL_DEFAULT.clone()
 			.set_shader(BBMOD_ERenderPass.Forward, _shader)
 			.set_shader(BBMOD_ERenderPass.Deferred, _shaderDepth)
-			.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID_ANIMATED) // Enable instance selecting
+			.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID) // Enable instance selecting
 			.set_shader(BBMOD_ERenderPass.Shadows, _shaderDepth); // Enable casting shadows
 		_material.Culling = cull_noculling;
 	}

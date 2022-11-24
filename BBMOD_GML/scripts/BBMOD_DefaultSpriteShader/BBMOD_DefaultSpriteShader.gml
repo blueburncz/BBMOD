@@ -17,32 +17,31 @@ function BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
 
 	static DefaultShader_set_material = set_material;
 
-	__uBaseOpacityUV = get_uniform("bbmod_BaseOpacityUV");
-
-	__uNormalWUV = get_uniform("bbmod_NormalWUV");
-
-	__uMaterialUV = get_uniform("bbmod_MaterialUV");
-
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
 		DefaultShader_set_material(_material);
 
+		var _shaderCurrent = shader_current();
+
 		var _texture = _material.BaseOpacity;
 		if (_texture != pointer_null)
 		{
-			shader_set_uniform_f_array(__uBaseOpacityUV, texture_get_uvs(_texture));
+			var _uBaseOpacityUV = shader_get_uniform(_shaderCurrent, "bbmod_BaseOpacityUV");
+			shader_set_uniform_f_array(_uBaseOpacityUV, texture_get_uvs(_texture));
 		}
 
 		_texture = _material.NormalSmoothness ?? _material.NormalRoughness;
 		if (_texture != undefined)
 		{
-			shader_set_uniform_f_array(__uNormalWUV, texture_get_uvs(_texture));
+			var _uNormalWUV = shader_get_uniform(_shaderCurrent, "bbmod_NormalWUV");
+			shader_set_uniform_f_array(_uNormalWUV, texture_get_uvs(_texture));
 		}
 
 		_texture = _material.SpecularColor ?? _material.MetallicAO;
 		if (_texture != undefined)
 		{
-			shader_set_uniform_f_array(__uMaterialUV, texture_get_uvs(_texture));
+			var _uMaterialUV = shader_get_uniform(_shaderCurrent, "bbmod_MaterialUV");
+			shader_set_uniform_f_array(_uMaterialUV, texture_get_uvs(_texture));
 		}
 
 		return self;

@@ -8,7 +8,7 @@ enum BBMOD_ERenderCommand
 	/// block are executed only if the last command was successfully executed.
 	/// @example
 	/// ```gml
-	/// renderQueue.apply_material(material)
+	/// renderQueue.apply_material(material, vertexFormat)
 	///     .begin_conditional_block()
 	///     // Commands here will be executed only if the material was applied...
 	///     .end_conditional_block();

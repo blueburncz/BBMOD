@@ -140,7 +140,7 @@ function BBMOD_StaticBatch(_vformat)
 	/// @see BBMOD_ERenderPass
 	static submit = function (_material) {
 		gml_pragma("forceinline");
-		if (!_material.apply())
+		if (!_material.apply(__vertexFormat))
 		{
 			return self;
 		}
@@ -161,7 +161,7 @@ function BBMOD_StaticBatch(_vformat)
 	static render = function (_material) {
 		gml_pragma("forceinline");
 		_material.RenderQueue.draw_mesh(
-			__vertexBuffer, matrix_get(matrix_world), _material, __primitiveType);
+			__vertexBuffer, __vertexFormat, __primitiveType, -1, _material, matrix_get(matrix_world));
 		return self;
 	};
 

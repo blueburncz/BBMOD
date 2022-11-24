@@ -15,12 +15,11 @@ function BBMOD_ParticleShader(_shader, _vertexFormat)
 
 	static DefaultShader_set_material = set_material;
 
-	USoftDistance = get_uniform("bbmod_SoftDistance");
-
 	static set_material = function (_material) {
 		gml_pragma("forceinline");
 		DefaultShader_set_material(_material);
-		shader_set_uniform_f(USoftDistance, _material.SoftDistance);
+		var _uSoftDistance = shader_get_uniform(shader_current(), "bbmod_SoftDistance");
+		shader_set_uniform_f(_uSoftDistance, _material.SoftDistance);
 		return self;
 	};
 }

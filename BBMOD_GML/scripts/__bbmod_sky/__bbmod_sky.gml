@@ -10,7 +10,7 @@ function __bbmod_material_sky()
 	if (_material == undefined)
 	{
 		var _skSky = new BBMOD_BaseShader(
-			BBMOD_ShSky, new BBMOD_VertexFormat(true));
+			BBMOD_ShSky, BBMOD_VFORMAT_DEFAULT);
 		_material = new BBMOD_BaseMaterial(_skSky);
 		_material.Culling = cull_noculling;
 		_material.Mipmapping = mip_off;

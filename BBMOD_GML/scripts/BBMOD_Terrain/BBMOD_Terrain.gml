@@ -692,12 +692,13 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		repeat (5)
 		{
 			var _mat = Layer[i];
-			if (_mat != undefined && _mat.apply())
+			if (_mat != undefined && _mat.apply(VertexFormat))
 			{
-				var _uSplatmap = BBMOD_SHADER_CURRENT.get_sampler_index("bbmod_Splatmap");
-				var _uSplatmapIndex = BBMOD_SHADER_CURRENT.get_uniform("bbmod_SplatmapIndex");
-				var _uTextureScale = BBMOD_SHADER_CURRENT.get_uniform("bbmod_TextureScale");
-				var _uNormalMatrix = BBMOD_SHADER_CURRENT.get_uniform("bbmod_NormalMatrix");
+				var _shaderCurrent = shader_current();
+				var _uSplatmap = shader_get_sampler_index(_shaderCurrent, "bbmod_Splatmap");
+				var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, "bbmod_SplatmapIndex");
+				var _uTextureScale = shader_get_uniform(_shaderCurrent, "bbmod_TextureScale");
+				var _uNormalMatrix = shader_get_uniform(_shaderCurrent, "bbmod_NormalMatrix");
 				texture_set_stage(_uSplatmap, Splatmap);
 				shader_set_uniform_i(_uSplatmapIndex, i - 1);
 				shader_set_uniform_f(_uTextureScale, TextureRepeat.X, TextureRepeat.Y);
@@ -724,7 +725,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			if (_mat != undefined)
 			{
 				RenderQueue
-					.apply_material(_mat, (i == 0) ? ~0 : (1 << BBMOD_ERenderPass.Forward))
+					.apply_material(_mat, VertexFormat, (i == 0) ? ~0 : (1 << BBMOD_ERenderPass.Forward))
 					.begin_conditional_block();
 
 				if (i == 0)

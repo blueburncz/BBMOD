@@ -11,15 +11,19 @@
 /// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT __bbmod_shader_default()
 
-/// @macro {Struct.BBMOD_DefaultShader} The default shader for animated models.
-/// @see BBMOD_DefaultShader
-#macro BBMOD_SHADER_DEFAULT_ANIMATED __bbmod_shader_default_animated()
-
-/// @macro {Struct.BBMOD_DefaultShader} The default shader for dynamically
-/// batched models.
-/// @see BBMOD_DefaultShader
-/// @see BBMOD_DynamicBatch
-#macro BBMOD_SHADER_DEFAULT_BATCHED __bbmod_shader_default_batched()
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for static models.
+///
+/// @example
+/// Following code enables casting shadows for a custom material
+/// (requires a {@link BBMOD_Renderer} with enabled shadows).
+/// ```gml
+/// material = BBMOD_MATERIAL_DEFAULT.clone()
+///     .set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+/// ```
+///
+/// @see BBMOD_ERenderPass.Shadows
+/// @see BBMOD_BaseShader
+#macro BBMOD_SHADER_DEFAULT_DEPTH __bbmod_shader_default_depth()
 
 /// @macro {Struct.BBMOD_LightmapShader} Shader for rendering lightmapped models
 /// with two UV channels.
@@ -31,74 +35,9 @@
 /// @see BBMOD_DefaultSpriteShader
 #macro BBMOD_SHADER_DEFAULT_SPRITE __bbmod_shader_default_sprite()
 
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for static models.
-///
-/// @example
-/// Following code enables casting shadows for a custom material
-/// (requires a {@link BBMOD_Renderer} with enabled shadows).
-/// ```gml
-/// material = BBMOD_MATERIAL_DEFAULT.clone()
-///     .set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
-/// ```
-///
-/// @see BBMOD_SHADER_DEFAULT_DEPTH_ANIMATED
-/// @see BBMOD_SHADER_DEFAULT_DEPTH_BATCHED
-/// @see BBMOD_ERenderPass.Shadows
-/// @see BBMOD_BaseShader
-#macro BBMOD_SHADER_DEFAULT_DEPTH __bbmod_shader_default_depth()
-
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for animated models with bones.
-///
-/// @example
-/// Following code enables casting shadows for a custom material
-/// (requires a {@link BBMOD_Renderer} with enabled shadows).
-/// ```gml
-/// material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-///     .set_shader(BBMOD_ERenderPass.Shadows, BBMOD_MATERIAL_DEFAULT_ANIMATED);
-/// ```
-///
-/// @see BBMOD_SHADER_DEFAULT_DEPTH
-/// @see BBMOD_SHADER_DEFAULT_DEPTH_BATCHED
-/// @see BBMOD_ERenderPass.Shadows
-/// @see BBMOD_BaseShader
-#macro BBMOD_SHADER_DEFAULT_DEPTH_ANIMATED __bbmod_shader_default_depth_animated()
-
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for dynamically batched models.
-///
-/// @example
-/// Following code enables casting shadows for a custom material
-/// (requires a {@link BBMOD_Renderer} with enabled shadows).
-/// ```gml
-/// material = BBMOD_MATERIAL_DEFAULT_BATCHED.clone()
-///     .set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH_BATCHED);
-/// ```
-///
-/// @see BBMOD_SHADER_DEFAULT_DEPTH
-/// @see BBMOD_SHADER_DEFAULT_DEPTH_ANIMATED
-/// @see BBMOD_ERenderPass.Shadows
-/// @see BBMOD_BaseShader
-/// @see BBMOD_DynamicBatch
-#macro BBMOD_SHADER_DEFAULT_DEPTH_BATCHED __bbmod_shader_default_depth_batched()
-
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for lightmapped models with
-/// two UV channels.
-/// @see BBMOD_BaseShader
-#macro BBMOD_SHADER_DEFAULT_DEPTH_LIGHTMAP __bbmod_shader_default_depth_lightmap()
-
 /// @macro {Struct.BBMOD_DefaultMaterial} The default material.
 /// @see BBMOD_Material
 #macro BBMOD_MATERIAL_DEFAULT __bbmod_material_default()
-
-/// @macro {Struct.BBMOD_DefaultMaterial} The default material for animated
-/// models.
-/// @see BBMOD_Material
-#macro BBMOD_MATERIAL_DEFAULT_ANIMATED __bbmod_material_default_animated()
-
-/// @macro {Struct.BBMOD_DefaultMaterial} The default material for dynamically
-/// batched models.
-/// @see BBMOD_Material
-/// @see BBMOD_DynamicBatch
-#macro BBMOD_MATERIAL_DEFAULT_BATCHED __bbmod_material_default_batched()
 
 /// @macro {Struct.BBMOD_LightmapMaterial} Material for lightmapped models with
 /// two UV channels.
@@ -138,21 +77,9 @@ function __bbmod_vformat_default_sprite()
 function __bbmod_shader_default()
 {
 	static _shader = new BBMOD_DefaultShader(
-		BBMOD_ShDefault, BBMOD_VFORMAT_DEFAULT);
-	return _shader;
-}
-
-function __bbmod_shader_default_animated()
-{
-	static _shader = new BBMOD_DefaultShader(
-		BBMOD_ShDefaultAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED);
-	return _shader;
-}
-
-function __bbmod_shader_default_batched()
-{
-	static _shader = new BBMOD_DefaultShader(
-		BBMOD_ShDefaultBatched, BBMOD_VFORMAT_DEFAULT_BATCHED);
+		             BBMOD_ShDefault,         BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultBatched,  BBMOD_VFORMAT_DEFAULT_BATCHED);
 	return _shader;
 }
 
@@ -172,28 +99,11 @@ function __bbmod_shader_default_sprite()
 
 function __bbmod_shader_default_depth()
 {
-	static _shader = new BBMOD_BaseShader(BBMOD_ShDefaultDepth, BBMOD_VFORMAT_DEFAULT);
-	return _shader;
-}
-
-function __bbmod_shader_default_depth_animated()
-{
 	static _shader = new BBMOD_BaseShader(
-		BBMOD_ShDefaultDepthAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED);
-	return _shader;
-}
-
-function __bbmod_shader_default_depth_batched()
-{
-	static _shader = new BBMOD_BaseShader(
-		BBMOD_ShDefaultDepthBatched, BBMOD_VFORMAT_DEFAULT_BATCHED);
-	return _shader;
-}
-
-function __bbmod_shader_default_depth_lightmap()
-{
-	static _shader = new BBMOD_BaseShader(
-		BBMOD_ShDefaultDepthLightmap, BBMOD_VFORMAT_DEFAULT_LIGHTMAP);
+		             BBMOD_ShDefaultDepth,         BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultDepthAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultDepthBatched,  BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShDefaultDepthLightmap, BBMOD_VFORMAT_DEFAULT_LIGHTMAP);
 	return _shader;
 }
 
@@ -206,28 +116,6 @@ function __bbmod_material_default()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT);
-		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
-	}
-	return _material;
-}
-
-function __bbmod_material_default_animated()
-{
-	static _material = undefined;
-	if (_material == undefined)
-	{
-		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_ANIMATED);
-		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
-	}
-	return _material;
-}
-
-function __bbmod_material_default_batched()
-{
-	static _material = undefined;
-	if (_material == undefined)
-	{
-		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_BATCHED);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
 	}
 	return _material;
@@ -249,19 +137,11 @@ function __bbmod_material_default_sprite()
 // Register
 
 bbmod_shader_register("BBMOD_SHADER_DEFAULT",          BBMOD_SHADER_DEFAULT);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_ANIMATED", BBMOD_SHADER_DEFAULT_ANIMATED);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_BATCHED",  BBMOD_SHADER_DEFAULT_BATCHED);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_DEPTH",    BBMOD_SHADER_DEFAULT_DEPTH);
 bbmod_shader_register("BBMOD_SHADER_DEFAULT_LIGHTMAP", BBMOD_SHADER_DEFAULT_LIGHTMAP);
 bbmod_shader_register("BBMOD_SHADER_DEFAULT_SPRITE",   BBMOD_SHADER_DEFAULT_SPRITE);
 
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_DEPTH",          BBMOD_SHADER_DEFAULT_DEPTH);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_DEPTH_ANIMATED", BBMOD_SHADER_DEFAULT_DEPTH_ANIMATED);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_DEPTH_BATCHED",  BBMOD_SHADER_DEFAULT_DEPTH_BATCHED);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_DEPTH_LIGHTMAP", BBMOD_SHADER_DEFAULT_DEPTH_LIGHTMAP);
-
 bbmod_material_register("BBMOD_MATERIAL_DEFAULT",          BBMOD_MATERIAL_DEFAULT);
-bbmod_material_register("BBMOD_MATERIAL_DEFAULT_ANIMATED", BBMOD_MATERIAL_DEFAULT_ANIMATED);
-bbmod_material_register("BBMOD_MATERIAL_DEFAULT_BATCHED",  BBMOD_MATERIAL_DEFAULT_BATCHED);
 bbmod_material_register("BBMOD_MATERIAL_DEFAULT_LIGHTMAP", BBMOD_MATERIAL_DEFAULT_LIGHTMAP);
 bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAULT_SPRITE);
 
@@ -270,7 +150,7 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 
 /// @macro {Struct.BBMOD_VertexFormat} Vertex format of 2D sprites.
 /// @see BBMOD_VertexFormat
-/// @depreacated Please use {@link BBMOD_VFORMAT_DEFAULT_SPRITE} instead.
+/// @deprecated Please use {@link BBMOD_VFORMAT_DEFAULT_SPRITE} instead.
 #macro BBMOD_VFORMAT_SPRITE BBMOD_VFORMAT_DEFAULT_SPRITE
 
 /// @macro {Struct.BBMOD_VertexFormat} A vertex format of lightmapped models
@@ -278,6 +158,35 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 /// @see BBMOD_VertexFormat
 /// @deprecated Please use {@link BBMOD_VFORMAT_DEFAULT_LIGHTMAP} instead.
 #macro BBMOD_VFORMAT_LIGHTMAP BBMOD_VFORMAT_DEFAULT_LIGHTMAP
+
+/// @macro {Struct.BBMOD_DefaultShader} The default shader for animated models.
+/// @see BBMOD_DefaultShader
+/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT} instead.
+#macro BBMOD_SHADER_DEFAULT_ANIMATED BBMOD_SHADER_DEFAULT
+
+/// @macro {Struct.BBMOD_DefaultShader} The default shader for dynamically
+/// batched models.
+/// @see BBMOD_DefaultShader
+/// @see BBMOD_DynamicBatch
+/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT} instead.
+#macro BBMOD_SHADER_DEFAULT_BATCHED BBMOD_SHADER_DEFAULT
+
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for static models.
+/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_DEPTH} instead.
+#macro BBMOD_SHADER_DEPTH BBMOD_SHADER_DEFAULT_DEPTH
+
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for animated models with bones.
+/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_DEPTH} instead.
+#macro BBMOD_SHADER_DEPTH_ANIMATED BBMOD_SHADER_DEFAULT_DEPTH
+
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for dynamically batched models.
+/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_DEPTH} instead.
+#macro BBMOD_SHADER_DEPTH_BATCHED BBMOD_SHADER_DEFAULT_DEPTH
+
+/// @macro {Struct.BBMOD_BaseShader} Depth shader for lightmapped models with
+/// two UV channels.
+/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_DEPTH} instead.
+#macro BBMOD_SHADER_LIGHTMAP_DEPTH BBMOD_SHADER_DEFAULT_DEPTH
 
 /// @macro {Struct.BBMOD_LightmapShader} Shader for rendering lightmapped models
 /// with two UV channels.
@@ -289,22 +198,18 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 /// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_SPRITE} instead.
 #macro BBMOD_SHADER_SPRITE BBMOD_SHADER_DEFAULT_SPRITE
 
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for static models.
-/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_DEPTH} instead.
-#macro BBMOD_SHADER_DEPTH BBMOD_SHADER_DEFAULT_DEPTH
+/// @macro {Struct.BBMOD_DefaultMaterial} The default material for animated
+/// models.
+/// @see BBMOD_Material
+/// @deprecated Please use {@link BBMOD_MATERIAL_DEFAULT} instead.
+#macro BBMOD_MATERIAL_DEFAULT_ANIMATED BBMOD_MATERIAL_DEFAULT
 
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for animated models with bones.
-/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_DEPTH_ANIMATED} instead.
-#macro BBMOD_SHADER_DEPTH_ANIMATED BBMOD_SHADER_DEFAULT_DEPTH_ANIMATED
-
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for dynamically batched models.
-/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_DEPTH_BATCHED} instead.
-#macro BBMOD_SHADER_DEPTH_BATCHED BBMOD_SHADER_DEFAULT_DEPTH_BATCHED
-
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for lightmapped models with
-/// two UV channels.
-/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_DEPTH_LIGHTMAP} instead.
-#macro BBMOD_SHADER_LIGHTMAP_DEPTH BBMOD_SHADER_DEFAULT_DEPTH_LIGHTMAP
+/// @macro {Struct.BBMOD_DefaultMaterial} The default material for dynamically
+/// batched models.
+/// @see BBMOD_Material
+/// @see BBMOD_DynamicBatch
+/// @deprecated Please use {@link BBMOD_MATERIAL_DEFAULT} instead.
+#macro BBMOD_MATERIAL_DEFAULT_BATCHED BBMOD_MATERIAL_DEFAULT
 
 /// @macro {Struct.BBMOD_LightmapMaterial} Material for lightmapped models with
 /// two UV channels.
@@ -316,12 +221,16 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 /// @deprecated Please use {@link BBMOD_MATERIAL_DEFAULT_SPRITE} instead.
 #macro BBMOD_MATERIAL_SPRITE BBMOD_MATERIAL_DEFAULT_SPRITE
 
-bbmod_shader_register("BBMOD_SHADER_DEPTH",          BBMOD_SHADER_DEPTH);
-bbmod_shader_register("BBMOD_SHADER_DEPTH_ANIMATED", BBMOD_SHADER_DEPTH_ANIMATED);
-bbmod_shader_register("BBMOD_SHADER_DEPTH_BATCHED",  BBMOD_SHADER_DEPTH_BATCHED);
-bbmod_shader_register("BBMOD_SHADER_LIGHTMAP",       BBMOD_SHADER_LIGHTMAP);
-bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_DEPTH", BBMOD_SHADER_LIGHTMAP_DEPTH);
-bbmod_shader_register("BBMOD_SHADER_SPRITE",         BBMOD_SHADER_SPRITE);
+bbmod_shader_register("BBMOD_SHADER_DEPTH",            BBMOD_SHADER_DEPTH);
+bbmod_shader_register("BBMOD_SHADER_DEPTH_ANIMATED",   BBMOD_SHADER_DEPTH_ANIMATED);
+bbmod_shader_register("BBMOD_SHADER_DEPTH_BATCHED",    BBMOD_SHADER_DEPTH_BATCHED);
+bbmod_shader_register("BBMOD_SHADER_LIGHTMAP",         BBMOD_SHADER_LIGHTMAP);
+bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_DEPTH",   BBMOD_SHADER_LIGHTMAP_DEPTH);
+bbmod_shader_register("BBMOD_SHADER_SPRITE",           BBMOD_SHADER_SPRITE);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_ANIMATED", BBMOD_SHADER_DEFAULT_ANIMATED);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_BATCHED",  BBMOD_SHADER_DEFAULT_BATCHED);
 
-bbmod_material_register("BBMOD_MATERIAL_LIGHTMAP", BBMOD_MATERIAL_LIGHTMAP);
-bbmod_material_register("BBMOD_MATERIAL_SPRITE", BBMOD_MATERIAL_SPRITE);
+bbmod_material_register("BBMOD_MATERIAL_DEFAULT_ANIMATED", BBMOD_MATERIAL_DEFAULT_ANIMATED);
+bbmod_material_register("BBMOD_MATERIAL_DEFAULT_BATCHED",  BBMOD_MATERIAL_DEFAULT_BATCHED);
+bbmod_material_register("BBMOD_MATERIAL_LIGHTMAP",         BBMOD_MATERIAL_LIGHTMAP);
+bbmod_material_register("BBMOD_MATERIAL_SPRITE",           BBMOD_MATERIAL_SPRITE);

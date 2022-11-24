@@ -17,8 +17,6 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	static DefaultShader_on_set = on_set;
 	static DefaultShader_set_material = set_material;
 
-	__uLightmap = get_sampler_index("bbmod_Lightmap");
-
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");
 
@@ -35,30 +33,38 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 			_texel = _ibl.Texel;
 		}
 
-		texture_set_stage(UIBL, _texture);
-		gpu_set_tex_mip_enable_ext(UIBL, mip_off);
-		gpu_set_tex_filter_ext(UIBL, true);
-		gpu_set_tex_repeat_ext(UIBL, false);
-		shader_set_uniform_f(UIBLTexel, _texel, _texel)
+		var _shaderCurrent = shader_current();
+		var _uIBL = shader_get_sampler_index(_shaderCurrent, "bbmod_IBL");
+
+		texture_set_stage(_uIBL, _texture);
+		gpu_set_tex_mip_enable_ext(_uIBL, mip_off);
+		gpu_set_tex_filter_ext(_uIBL, true);
+		gpu_set_tex_repeat_ext(_uIBL, false);
+		shader_set_uniform_f(
+			shader_get_uniform(_shaderCurrent, "bbmod_IBLTexel"),
+			_texel, _texel)
 
 		return self;
 	};
 
 	static set_ambient_light = function (_up=undefined, _down=undefined) {
 		gml_pragma("forceinline");
+		var _shaderCurrent = shader_current();
+		var _uLightAmbientUp = shader_get_uniform(_shaderCurrent, "bbmod_LightAmbientUp");
+		var _uLightAmbientDown = shader_get_uniform(_shaderCurrent, "bbmod_LightAmbientDown");
 		if (global.__bbmodAmbientAffectLightmap)
 		{
 			_up ??= global.__bbmodAmbientLightUp;
 			_down ??= global.__bbmodAmbientLightDown;
-			shader_set_uniform_f(ULightAmbientUp,
+			shader_set_uniform_f(_uLightAmbientUp,
 				_up.Red / 255.0, _up.Green / 255.0, _up.Blue / 255.0, _up.Alpha);
-			shader_set_uniform_f(ULightAmbientDown,
+			shader_set_uniform_f(_uLightAmbientDown,
 				_down.Red / 255.0, _down.Green / 255.0, _down.Blue / 255.0, _down.Alpha);
 		}
 		else
 		{
-			shader_set_uniform_f(ULightAmbientUp, 0.0, 0.0, 0.0, 0.0);
-			shader_set_uniform_f(ULightAmbientDown, 0.0, 0.0, 0.0, 0.0);
+			shader_set_uniform_f(_uLightAmbientUp, 0.0, 0.0, 0.0, 0.0);
+			shader_set_uniform_f(_uLightAmbientDown, 0.0, 0.0, 0.0, 0.0);
 		}
 		return self;
 	};
@@ -66,15 +72,18 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	static set_directional_light = function (_light=undefined) {
 		gml_pragma("forceinline");
 		_light ??= global.__bbmodDirectionalLight;
+		var _shaderCurrent = shader_current();
+		var _uLightDirectionalDir = shader_get_uniform(_shaderCurrent, "bbmod_LightDirectionalDir");
+		var _uLightDirectionalColor = shader_get_uniform(_shaderCurrent, "bbmod_LightDirectionalColor");
 		if (_light != undefined
 			&& _light.Enabled
 			&& _light.AffectLightmaps)
 		{
 			var _direction = _light.Direction;
-			shader_set_uniform_f(ULightDirectionalDir,
+			shader_set_uniform_f(_uLightDirectionalDir,
 				_direction.X, _direction.Y, _direction.Z);
 			var _color = _light.Color;
-			shader_set_uniform_f(ULightDirectionalColor,
+			shader_set_uniform_f(_uLightDirectionalColor,
 				_color.Red / 255.0,
 				_color.Green / 255.0,
 				_color.Blue / 255.0,
@@ -82,8 +91,8 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 		}
 		else
 		{
-			shader_set_uniform_f(ULightDirectionalDir, 0.0, 0.0, -1.0);
-			shader_set_uniform_f(ULightDirectionalColor, 0.0, 0.0, 0.0, 0.0);
+			shader_set_uniform_f(_uLightDirectionalDir, 0.0, 0.0, -1.0);
+			shader_set_uniform_f(_uLightDirectionalColor, 0.0, 0.0, 0.0, 0.0);
 		}
 		return self;
 	};
@@ -137,8 +146,14 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 			}
 		}
 
-		shader_set_uniform_f_array(ULightPunctualDataA, _dataA);
-		shader_set_uniform_f_array(ULightPunctualDataB, _dataB);
+		var _shaderCurrent = shader_current();
+
+		shader_set_uniform_f_array(
+			shader_get_uniform(_shaderCurrent, "bbmod_LightPunctualDataA"),
+			_dataA);
+		shader_set_uniform_f_array(
+			shader_get_uniform(_shaderCurrent, "bbmod_LightPunctualDataB"),
+			_dataB);
 
 		return self;
 	};
@@ -154,9 +169,10 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultLightmapShader} Returns `self`.
 	static set_lightmap = function (_texture=global.__bbmodLightmap) {
 		gml_pragma("forceinline");
-		texture_set_stage(__uLightmap, _texture);
-		gpu_set_tex_mip_enable_ext(__uLightmap, mip_off);
-		gpu_set_tex_filter_ext(__uLightmap, true);
+		var _uLightmap = shader_get_sampler_index(shader_current(), "bbmod_Lightmap");
+		texture_set_stage(_uLightmap, _texture);
+		gpu_set_tex_mip_enable_ext(_uLightmap, mip_off);
+		gpu_set_tex_filter_ext(_uLightmap, true);
 		return self;
 	};
 

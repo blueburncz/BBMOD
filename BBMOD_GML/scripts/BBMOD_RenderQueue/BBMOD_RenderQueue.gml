@@ -64,7 +64,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
-	/// @func apply_material(_material[, _enabledPasses])
+	/// @func apply_material(_material, _vertexFormat[, _enabledPasses])
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterial} command into
 	/// the queue.
@@ -75,12 +75,13 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// of them.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static apply_material = function (_material, _enabledPasses=~0) {
+	static apply_material = function (_material, _vertexFormat, _enabledPasses=~0) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.ApplyMaterial,
-			2,
+			3,
+			_vertexFormat,
 			_material,
 			_enabledPasses);
 		return self;
@@ -119,26 +120,28 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
-	/// @func draw_mesh(_vertexBuffer, _matrix, _material[, _primitiveType])
+	/// @func draw_mesh(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the
 	/// queue.
 	///
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
-	/// @param {Array<Real>} _matrix The world matrix.
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex buffer.
+	/// @param {Constant.PrimitiveType} _primitiveType The primitive type of
+	/// the mesh.
+	/// @param {Real} _materialIndex The material's index within the material array.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
-	/// @param {Constant.PrimitiveType} [_primitiveType] The primitive type of
-	/// the mesh. Defaults to `pr_trianglelist`.
-	/// @param {Real} [_materialIndex]
+	/// @param {Array<Real>} _matrix The world matrix.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static draw_mesh = function (_vertexBuffer, _matrix, _material, _primitiveType=pr_trianglelist, _materialIndex=-1) {
+	static draw_mesh = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMesh,
-			6,
+			7,
 			global.__bbmodInstanceID,
+			_vertexFormat,
 			_material,
 			_matrix,
 			_materialIndex,
@@ -147,28 +150,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
-	/// @func draw_mesh_animated(_vertexBuffer, _matrix, _material, _boneTransform[, _primitiveType])
+	/// @func draw_mesh_animated(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _boneTransform)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshAnimated} command into
 	/// the queue.
 	///
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
-	/// @param {Array<Real>} _matrix The world matrix.
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex buffer.
+	/// @param {Constant.PrimitiveType} _primitiveType The primitive type of
+	/// the mesh.
+	/// @param {Real} _materialIndex The material's index within the material array.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
+	/// @param {Array<Real>} _matrix The world matrix.
 	/// @param {Array<Real>} _boneTransform An array with bone transformation
 	/// data.
-	/// @param {Constant.PrimitiveType} [_primitiveType] The primitive type of
-	/// the mesh. Defaults to `pr_trianglelist`.
-	/// @param {Real} [_materialIndex]
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static draw_mesh_animated = function (_vertexBuffer, _matrix, _material, _boneTransform, _primitiveType=pr_trianglelist, _materialIndex=-1) {
+	static draw_mesh_animated = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _boneTransform) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMeshAnimated,
-			7,
+			8,
 			global.__bbmodInstanceID,
+			_vertexFormat,
 			_material,
 			_matrix,
 			_boneTransform,
@@ -178,29 +183,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
-	/// @func draw_mesh_batched(_vertexBuffer, _matrix, _material, _batchData[, _primitiveType])
+	/// @func draw_mesh_batched(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _batchData)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshBatched} command into
 	/// the queue.
 	///
 	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
-	/// @param {Array<Real>} _matrix The world matrix.
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex buffer.
+	/// @param {Constant.PrimitiveType} _primitiveType The primitive type of
+	/// the mesh.
+	/// @param {Real} _materialIndex The material's index within the material array.
 	/// @param {Struct.BBMOD_Material} _material The material to use.
+	/// @param {Array<Real>} _matrix The world matrix.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Either a single array
 	/// of batch data or an array of arrays of batch data.
-	/// @param {Constant.PrimitiveType} [_primitiveType] The primitive type of
-	/// the mesh. Defaults to `pr_trianglelist`.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static draw_mesh_batched = function (_vertexBuffer, _matrix, _material, _batchData, _primitiveType=pr_trianglelist) {
+	static draw_mesh_batched = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _batchData) {
 		gml_pragma("forceinline");
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMeshBatched,
-			6,
+			7,
 			(global.__bbmodInstanceIDBatch != undefined)
 				? global.__bbmodInstanceIDBatch
 				: global.__bbmodInstanceID,
+			_vertexFormat,
 			_material,
 			_matrix,
 			_batchData,
@@ -1256,10 +1264,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			switch (_command)
 			{
 			case BBMOD_ERenderCommand.ApplyMaterial:
+				var _vertexFormat = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
 				var _enabledPasses = _renderCommands[| i++];
 				if (((1 << bbmod_render_pass_get()) & _enabledPasses) == 0
-					|| !_material.apply())
+					|| !_material.apply(_vertexFormat))
 				{
 					_condition = false;
 					continue;
@@ -1299,9 +1308,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 			case BBMOD_ERenderCommand.DrawMesh:
 				var _id = _renderCommands[| i++];
+				var _vertexFormat = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
 				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-					|| !_material.apply())
+					|| !_material.apply(_vertexFormat))
 				{
 					i += 4;
 					_condition = false;
@@ -1319,9 +1329,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 			case BBMOD_ERenderCommand.DrawMeshAnimated:
 				var _id = _renderCommands[| i++];
+				var _vertexFormat = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
 				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-					|| !_material.apply())
+					|| !_material.apply(_vertexFormat))
 				{
 					i += 5;
 					_condition = false;
@@ -1340,9 +1351,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 			case BBMOD_ERenderCommand.DrawMeshBatched:
 				var _id = _renderCommands[| i++];
+				var _vertexFormat = _renderCommands[| i++];
 				var _material = _renderCommands[| i++];
 
-				if (!_material.apply())
+				if (!_material.apply(_vertexFormat))
 				{
 					i += 4;
 					_condition = false;

@@ -84,18 +84,21 @@ global.__bbmodShaderCurrent = undefined;
 /// @readonly
 #macro BBMOD_SHADER_CURRENT global.__bbmodShaderCurrent
 
-/// @func BBMOD_Shader(_shader, _vertexFormat)
+/// @func BBMOD_Shader([_shader[, _vertexFormat]])
 ///
 /// @extends BBMOD_Class
 ///
-/// @desc Base class for wrappers of raw GameMaker shader resources.
+/// @desc Base class for wrappers of raw GameMaker shader assets.
 ///
-/// @param {Asset.GMShader} _shader The shader resource.
-/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
+/// @param {Asset.GMShader} [_shader] The raw GameMaker shader asset.
+/// @param {Struct.BBMOD_VertexFormat} [_vertexFormat] The vertex format required
 /// by the shader.
 ///
+/// @note You can use method {@link BBMOD_Shader.add_variant} to add different
+/// variants of the shader to be used with different vertex formats.
+///
 /// @see BBMOD_VertexFormat
-function BBMOD_Shader(_shader, _vertexFormat)
+function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	: BBMOD_Class() constructor
 {
 	BBMOD_CLASS_GENERATED_BODY;
@@ -105,272 +108,114 @@ function BBMOD_Shader(_shader, _vertexFormat)
 	/// @private
 	__name = undefined;
 
-	/// @var {Asset.GMShader} The shader resource.
+	/// @var {Struct} A mapping from vertex format hashes to raw GameMaker shader
+	/// assets.
+	/// @private
+	__raw = {};
+
+	/// @var {Asset.GMShader} The shader asset.
 	/// @readonly
-	Raw = _shader;
+	/// @obsolete This has been replaced with {@link BBMOD_Shader.get_variant} and
+	/// will always equal `undefined`!
+	Raw = undefined;
 
 	/// @var {Struct.BBMOD_VertexFormat} The vertex format required by the
 	/// shader.
 	/// @readonly
-	VertexFormat = _vertexFormat;
+	/// @obsolete This has been replaced with {@link BBMOD_Shader.has_variant}
+	/// and will always equal `undefined`!
+	VertexFormat = undefined;
+
+	if (_shader != undefined && _vertexFormat != undefined)
+	{
+		add_variant(_shader, _vertexFormat);
+	}
+
+	/// @func add_variant(_shader, _vertexFormat)
+	///
+	/// @desc Adds a shader variant to be used with a specific vertex format.
+	///
+	/// @param {Asset.GMShader} [_shader] The raw GameMaker shader asset.
+	/// @param {Struct.BBMOD_VertexFormat} [_vertexFormat] The vertex format required
+	/// by the shader.
+	///
+	/// @return {Struct.BBMOD_Shader} Returns `self`.
+	static add_variant = function (_shader, _vertexFormat) {
+		gml_pragma("forceinline");
+		__raw[$ _vertexFormat.get_hash()] = _shader;
+		return self;
+	};
+
+	/// @func get_variant(_vertexFormat)
+	///
+	/// @desc Retrieves a shader variant for given vertex format.
+	///
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format.
+	///
+	/// @return {Asset.GMShader} The raw shader asset or `undefined` if the
+	/// vertex format is not supported.
+	static get_variant = function (_vertexFormat) {
+		gml_pragma("forceinline");
+		return __raw[$ _vertexFormat.get_hash()];
+	};
+
+	/// @func has_variant(_vertexFormat)
+	///
+	/// @desc Checks whether the shader has a variant for given vertex format.
+	///
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format.
+	///
+	/// @return {Bool} Returns `true` if the shader has a variant for given
+	/// vertex format.
+	static has_variant = function (_vertexFormat) {
+		gml_pragma("forceinline");
+		return (get_raw(_vertexFormat) != undefined);
+	};
 
 	/// @func get_name()
 	///
 	/// @desc Retrieves the name of the shader.
 	///
 	/// @return {String} The name of the shader.
+	///
+	/// @obsolete This method is now obsolete and will always return `undefined`!
+	/// Please use `shader_get_name(shader.get_variant(vertexFormat))` instead.
 	static get_name = function () {
 		gml_pragma("forceinline");
-		return shader_get_name(Raw);
+		return undefined;
 	};
 
 	/// @func is_compiled()
 	///
-	/// @desc Checks whether the shader is compiled.
+	/// @desc Checks whether all shader variants are compiled.
 	///
-	/// @return {Bool} Returns `true` if the shader is compiled.
+	/// @return {Bool} Returns `true` if all shader variants are compiled.
 	static is_compiled = function () {
 		gml_pragma("forceinline");
-		return shader_is_compiled(Raw);
+		var _keys = variable_struct_get_names(__raw);
+		var i = 0;
+		repeat (array_length(_keys))
+		{
+			if (!shader_is_compiled(__raw[$ _keys[i++]]))
+			{
+				return false;
+			}
+		}
+		return true;
 	};
 
-	/// @func get_uniform(_name)
+	/// @func get_uniform(_name, _vertexFormat)
 	///
 	/// @desc Retrieves a handle of a shader uniform.
 	///
 	/// @param {String} _name The name of the shader uniform.
 	///
 	/// @return {Id.Uniform} The handle of the shader uniform.
+	///
+	/// @obsolete This method is now obsolete and will always return -1!
 	static get_uniform = function (_name) {
 		gml_pragma("forceinline");
-		return shader_get_uniform(Raw, _name);
-	};
-
-	/// @func set_uniform_f(_handle, _value)
-	///
-	/// @desc Sets a `float` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Real} _value The new uniform value.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_f` instead!
-	static set_uniform_f = function (_handle, _value) {
-		gml_pragma("forceinline");
-		shader_set_uniform_f(_handle, _value);
-		return self;
-	};
-
-	/// @func set_uniform_f2(_handle, _val1, _val2)
-	///
-	/// @desc Sets a `vec2` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Real} _val1 The first vector component.
-	/// @param {Real} _val2 The second vector component.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_f` instead!
-	static set_uniform_f2 = function (_handle, _val1, _val2) {
-		gml_pragma("forceinline");
-		shader_set_uniform_f(_handle, _val1, _val2);
-		return self;
-	};
-
-	/// @func set_uniform_f3(_handle, _val1, _val2, _val3)
-	///
-	/// @desc Sets a `vec3` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Real} _val1 The first vector component.
-	/// @param {Real} _val2 The second vector component.
-	/// @param {Real} _val3 The third vector component.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_f` instead!
-	static set_uniform_f3 = function (_handle, _val1, _val2, _val3) {
-		gml_pragma("forceinline");
-		shader_set_uniform_f(_handle, _val1, _val2, _val3);
-		return self;
-	};
-
-	/// @func set_uniform_f4(_handle, _val1, _val2, _val3, _val4)
-	///
-	/// @desc Sets a `vec4` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Real} _val1 The first vector component.
-	/// @param {Real} _val2 The second vector component.
-	/// @param {Real} _val3 The third vector component.
-	/// @param {Real} _val4 The fourth vector component.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_f` instead!
-	static set_uniform_f4 = function (_handle, _val1, _val2, _val3, _val4) {
-		gml_pragma("forceinline");
-		shader_set_uniform_f(_handle, _val1, _val2, _val3, _val4);
-		return self;
-	};
-
-	/// @func set_uniform_f_array(_handle, _array)
-	///
-	/// @desc Sets a `float[]` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Array<Real>} _array The array of new values.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_f_array` instead!
-	static set_uniform_f_array = function (_handle, _array) {
-		gml_pragma("forceinline");
-		shader_set_uniform_f_array(_handle, _array);
-		return self;
-	};
-
-	/// @func set_uniform_i(_handle, _value)
-	///
-	/// @desc Sets an `int` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Real} _value The new uniform value.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_i` instead!
-	static set_uniform_i = function (_handle, _value) {
-		gml_pragma("forceinline");
-		shader_set_uniform_i(_handle, _value);
-		return self;
-	};
-
-	/// @func set_uniform_i2(_handle, _val1, _val2)
-	///
-	/// @desc Sets an `ivec2` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Real} _val1 The first vector component.
-	/// @param {Real} _val2 The second vector component.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_i` instead!
-	static set_uniform_i2 = function (_handle, _val1, _val2) {
-		gml_pragma("forceinline");
-		shader_set_uniform_i(_handle, _val1, _val2);
-		return self;
-	};
-
-	/// @func set_uniform_i3(_handle, _val1, _val2, _val3)
-	///
-	/// @desc Sets an `ivec3` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Real} _val1 The first vector component.
-	/// @param {Real} _val2 The second vector component.
-	/// @param {Real} _val3 The third vector component.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_i` instead!
-	static set_uniform_i3 = function (_handle, _val1, _val2, _val3) {
-		gml_pragma("forceinline");
-		shader_set_uniform_i(_handle, _val1, _val2, _val3);
-		return self;
-	};
-
-	/// @func set_uniform_i4(_handle, _val1, _val2, _val3, _val4)
-	///
-	/// @desc Sets an `ivec4` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Real} _val1 The first vector component.
-	/// @param {Real} _val2 The second vector component.
-	/// @param {Real} _val3 The third vector component.
-	/// @param {Real} _val4 The fourth vector component.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_i` instead!
-	static set_uniform_i4 = function (_handle, _val1, _val2, _val3, _val4) {
-		gml_pragma("forceinline");
-		shader_set_uniform_i(_handle, _val1, _val2, _val3, _val4);
-		return self;
-	};
-
-	/// @func set_uniform_i_array(_handle, _array)
-	///
-	/// @desc Sets an `int[]` uniform.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Array<Real>} _array The array of new values.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_i_array` instead!
-	static set_uniform_i_array = function (_handle, _array) {
-		gml_pragma("forceinline");
-		shader_set_uniform_i_array(_handle, _array);
-		return self;
-	};
-
-	/// @func set_uniform_matrix(_handle)
-	///
-	/// @desc Sets a shader uniform to the current transform matrix.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_matrix` instead!
-	static set_uniform_matrix = function (_handle) {
-		gml_pragma("forceinline");
-		shader_set_uniform_matrix(_handle);
-		return self;
-	};
-
-	/// @func set_uniform_matrix_array(_handle, _array)
-	///
-	/// @desc Sets a shader uniform to hold an array of matrix values.
-	///
-	/// @param {Id.Uniform} _handle The handle of the shader uniform.
-	/// @param {Array<Real>} _array An array of real values.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @see BBMOD_Shader.get_uniform
-	///
-	/// @deprecated Please use built-in `shader_set_uniform_matrix_array` instead!
-	static set_uniform_matrix_array = function (_handle, _array) {
-		gml_pragma("forceinline");
-		shader_set_uniform_matrix_array(_handle, _array);
-		return self;
+		return -1;
 	};
 
 	/// @func get_sampler_index(_name)
@@ -380,25 +225,11 @@ function BBMOD_Shader(_shader, _vertexFormat)
 	/// @param {String} _name The name of the sampler.
 	///
 	/// @return {Real} The index of the texture sampler.
+	///
+	/// @obsolete This method is now obsolete and will always return -1!
 	static get_sampler_index = function (_name) {
 		gml_pragma("forceinline");
-		return shader_get_sampler_index(Raw, _name);
-	};
-
-	/// @func set_sampler(_index, _texture)
-	///
-	/// @desc Sets a texture sampler to the given texture.
-	///
-	/// @param {Real} _index The index of the texture sampler.
-	/// @param {Pointer.Texture} _texture The new texture to sample.
-	///
-	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	///
-	/// @deprecated Please use built-in `texture_set_stage` instead!
-	static set_sampler = function (_index, _texture) {
-		gml_pragma("forceinline");
-		texture_set_stage(_index, _texture);
-		return self;
+		return -1;
 	};
 
 	/// @func on_set()
@@ -407,27 +238,45 @@ function BBMOD_Shader(_shader, _vertexFormat)
 	static on_set = function () {
 	};
 
-	/// @func set()
+	/// @func set(_vertexFormat)
 	///
 	/// @desc Sets the shader as the current shader.
 	///
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat Used to set a specific
+	/// shader variant.
+	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
-	/// @throws {BBMOD_Exception} If there is another shader already in use.
-	static set = function () {
+	/// @throws {BBMOD_Exception} If the shader is not applied.
+	static set = function (_vertexFormat) {
 		gml_pragma("forceinline");
-		if (BBMOD_SHADER_CURRENT != undefined)
+
+		if (BBMOD_SHADER_CURRENT != undefined
+			&& BBMOD_SHADER_CURRENT != self)
 		{
-			if (BBMOD_SHADER_CURRENT != self)
-			{
-				throw new BBMOD_Exception("Another shader is already active!");
-			}
-			return self;
+			throw new BBMOD_Exception("Another shader is already active!");
 		}
-		shader_set(Raw);
+
+		var _shaderRaw = get_variant(_vertexFormat);
+
+		if (_shaderRaw == undefined)
+		{
+			throw new BBMOD_Exception(
+				"Shader variant for vertex format "
+				+ string(_vertexFormat.get_hash())
+				+ " was not found!");
+		}
+
+		if (BBMOD_SHADER_CURRENT != undefined) // Same as == self
+		{
+			reset();
+		}
+
+		shader_set(_shaderRaw);
 		BBMOD_SHADER_CURRENT = self;
 		on_set();
-		__bbmod_shader_set_globals(Raw);
+		__bbmod_shader_set_globals(_shaderRaw);
+
 		return self;
 	};
 

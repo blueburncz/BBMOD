@@ -83,8 +83,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	MaterialNames = [];
 
 	/// @var {Array<Struct.BBMOD_BaseMaterial>} An array of materials. Each entry
-	/// defaults to {@link BBMOD_MATERIAL_DEFAULT} or
-	/// {@link BBMOD_MATERIAL_DEFAULT_ANIMATED} for animated models.
+	/// defaults to {@link BBMOD_MATERIAL_DEFAULT}.
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
@@ -274,17 +273,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		if (MaterialCount > 0)
 		{
 			Materials = array_create(MaterialCount, BBMOD_MATERIAL_DEFAULT);
-
-			i = 0;
-			repeat (_meshCount)
-			{
-				var _mesh = Meshes[i];
-				if (_mesh.VertexFormat.Bones)
-				{
-					Materials[_mesh.MaterialIndex] = BBMOD_MATERIAL_DEFAULT_ANIMATED;
-				}
-				++i;
-			}
 
 			var _materialNames = array_create(MaterialCount, undefined);
 
