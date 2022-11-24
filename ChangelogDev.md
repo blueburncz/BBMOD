@@ -6,6 +6,9 @@
 * Added missing method `Reset` to `BBMOD_RaycastResult`, which resets its properties to their default values.
 * Prefixed all private API with `__` (two underscores) to "hide" it from autocomplete.
 * Structs `BBMOD_Collider`, `BBMOD_Node`, `BBMOD_Vertex`, `BBMOD_VertexFormat`, `BBMOD_ParticleModule`, `BBMOD_Property` and `BBMOD_Shader` now inherit from `BBMOD_Class`.
+* Added new member `DepthOnly` to enum `BBMOD_ERenderPass`, which is a render pass where opaque objects are rendered into an off-screen depth buffer.
+* Member `Deferred` of enum `BBMOD_ERenderPass` is now **deprecated**! Please use the new `DepthOnly` instead.
+* Added new member `GBuffer` to enum `BBMOD_ERenderPass`, which is a render pass where opaque objects are rendered into a G-Buffer.
 * Added new method `add_variant` to `BBMOD_Shader`, which adds a shader variant to be used with a specific vertex format.
 * Added new method `has_variant` to `BBMOD_Shader`, which checks whether the shader has a variant for given vertex format.
 * Property `VertexFormat` of `BBMOD_Shader` is now **obsolete**! Please use the new method `has_variant` instead.

@@ -3,9 +3,16 @@ enum BBMOD_ERenderPass
 {
 	/// @member Render pass where shadow-casting are objects rendered into
 	/// shadow maps.
-	Shadows,
-	/// @member Render pass where opaque objects are rendered into a g-buffer.
-	Deferred,
+	Shadows   = 0,
+	/// @member Render pass where opaque are rendered into an off-screen depth
+	/// buffer when using {@link BBMOD_DefaultRenderer}.
+	/// @deprecated Please use {@link BBMOD_ERenderPass.DepthOnly} instead.
+	Deferred  = 1,
+	/// @member Render pass where opaque objects are rendered into an off-screen
+	/// depth buffer.
+	DepthOnly = 1,
+	/// @member Render pass where opaque objects are rendered into a G-Buffer.
+	GBuffer,
 	/// @member Render pass where opaque objects are rendered into the frame
 	/// buffer.
 	Forward,
@@ -37,8 +44,8 @@ function bbmod_render_pass_to_string(_pass)
 	case BBMOD_ERenderPass.Shadows:
 		return "Shadows";
 
-	case BBMOD_ERenderPass.Deferred:
-		return "Deferred";
+	case BBMOD_ERenderPass.DepthOnly:
+		return "DepthOnly";
 
 	case BBMOD_ERenderPass.Forward:
 		return "Forward";
@@ -71,7 +78,8 @@ function bbmod_render_pass_from_string(_name)
 		return BBMOD_ERenderPass.Shadows;
 
 	case "Deferred":
-		return BBMOD_ERenderPass.Deferred;
+	case "DepthOnly":
+		return BBMOD_ERenderPass.DepthOnly;
 
 	case "Forward":
 		return BBMOD_ERenderPass.Forward;

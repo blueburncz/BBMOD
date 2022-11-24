@@ -44,21 +44,20 @@ function BBMOD_DefaultRenderer()
 
 	static BaseRenderer_destroy = destroy;
 
-	/// @var {Bool} Enables rendering into a G-buffer in the deferred pass.
-	/// Defaults to `false`.
-	/// @see BBMOD_ERenderPass.Deferred
+	/// @var {Bool} Enables rendering scene depth into a depth buffer during the
+	/// {@link BBMOD_ERenderPass.DepthOnly} render pass pass. Defaults to `false`.
 	EnableGBuffer = false;
 
-	/// @var {Real} Resolution multiplier for the G-buffer surface. Defaults
+	/// @var {Real} Resolution multiplier for the depth buffer surface. Defaults
 	/// to 1.
 	GBufferScale = 1.0;
 
 	/// @var {Id.Surface} The G-buffer surface.
 	/// @private
-	__surGBuffer = noone;
+	__surDepthBuffer = noone;
 
 	/// @var {Bool} Enables screen-space ambient occlusion. This requires
-	/// the G-buffer. Defaults to `false`. Enabling this requires the
+	/// the depth buffer. Defaults to `false`. Enabling this requires the
 	/// [SSAO submodule](./SSAOSubmodule.html)!
 	/// @see BBMOD_DefaultRenderer.EnableGBuffer
 	EnableSSAO = false;
@@ -134,13 +133,13 @@ function BBMOD_DefaultRenderer()
 			var _width = _renderWidth * GBufferScale;
 			var _height = _renderHeight * GBufferScale;
 
-			__surGBuffer = bbmod_surface_check(__surGBuffer, _width, _height);
+			__surDepthBuffer = bbmod_surface_check(__surDepthBuffer, _width, _height);
 
-			surface_set_target(__surGBuffer);
+			surface_set_target(__surDepthBuffer);
 			draw_clear(c_white);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
-			bbmod_render_pass_set(BBMOD_ERenderPass.Deferred);
+			bbmod_render_pass_set(BBMOD_ERenderPass.DepthOnly);
 			var _rqi = 0;
 			repeat (array_length(_renderQueues))
 			{
@@ -162,7 +161,7 @@ function BBMOD_DefaultRenderer()
 			__surWork = bbmod_surface_check(__surWork, _width, _height);
 
 			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
-				SSAODepthRange, __surSSAO, __surWork, __surGBuffer, _projection,
+				SSAODepthRange, __surSSAO, __surWork, __surDepthBuffer, _projection,
 				bbmod_camera_get_zfar());
 
 			bbmod_shader_set_global_sampler(
@@ -179,7 +178,7 @@ function BBMOD_DefaultRenderer()
 		// Forward pass
 		//
 		bbmod_shader_set_global_sampler("bbmod_GBuffer", EnableGBuffer
-			? surface_get_texture(__surGBuffer)
+			? surface_get_texture(__surDepthBuffer)
 			: sprite_get_texture(BBMOD_SprWhite, 0));
 
 		matrix_set(matrix_view, _view);
@@ -211,9 +210,9 @@ function BBMOD_DefaultRenderer()
 	static destroy = function () {
 		BaseRenderer_destroy();
 
-		if (surface_exists(__surGBuffer))
+		if (surface_exists(__surDepthBuffer))
 		{
-			surface_free(__surGBuffer);
+			surface_free(__surDepthBuffer);
 		}
 
 		if (surface_exists(__surSSAO))
