@@ -1,8 +1,6 @@
 # Dynamic lights and fog
-Since version 3.1.3 materials [BBMOD_MATERIAL_DEFAULT](./BBMOD_MATERIAL_DEFAULT.html),
-[BBMOD_MATERIAL_DEFAULT_ANIMATED](./BBMOD_MATERIAL_DEFAULT_ANIMATED.html) and
-[BBMOD_MATERIAL_DEFAULT_BATCHED](./BBMOD_MATERIAL_DEFAULT_BATCHED.html) support
-dynamic lights and fog.
+Since version 3.1.3 material [BBMOD_MATERIAL_DEFAULT](./BBMOD_MATERIAL_DEFAULT.html),
+support dynamic lights and fog.
 
 ## Ambient light
 Ambient light represents a light coming in from all directions. When ambient

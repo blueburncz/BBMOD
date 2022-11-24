@@ -9,7 +9,7 @@ modCharacter = new BBMOD_Model("Data/Character.bbmod");
 and assign it materials that support animations:
 
 ```gml
-matCharacter = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone();
+matCharacter = BBMOD_MATERIAL_DEFAULT.clone();
 matCharacter.BaseOpacity = sprite_get_texture(SprCharacter, 0);
 modCharacter.set_material("Material", matCharacter);
 ```

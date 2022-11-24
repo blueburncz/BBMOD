@@ -30,18 +30,12 @@ method [set_shader](./BBMOD_BaseMaterial.set_shader.html).
 
 For example, when you use the default renderer and you want to render models
 using a material into the shadowmap (so they cast shadows), you can configure
-the material to use [BBMOD_SHADER_DEPTH](./BBMOD_SHADER_DEPTH.html) (or
-[BBMOD_SHADER_DEPTH_ANIMATED](./BBMOD_SHADER_DEPTH_ANIMATED.html) for animated
-models) in the [Shadows](./BBMOD_ERenderPass.Shadows.html) render pass like so:
+the material to use [BBMOD_SHADER_DEPTH](./BBMOD_SHADER_DEPTH.html) in the
+[Shadows](./BBMOD_ERenderPass.Shadows.html) render pass like so:
 
 ```gml
 material = BBMOD_MATERIAL_DEFAULT.clone()
     .set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH);
-
-// Or for animated models:
-
-material = BBMOD_MATERIAL_DEFAULT_ANIMATED.clone()
-    .set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEPTH_ANIMATED);
 ```
 
 There are also methods [has_shader](./BBMOD_BaseMaterial.has_shader.html),
