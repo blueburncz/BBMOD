@@ -123,7 +123,7 @@ function BBMOD_DLL()
 	///
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
-	/// @see BBMOD_DLL.get_disable_bone
+	/// @see BBMOD_DLL.get_disable_bone 
 	static set_disable_bone = function (_disable) {
 		gml_pragma("forceinline");
 		static _fn = external_define(

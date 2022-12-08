@@ -91,7 +91,6 @@
       "file": "Modules/Modules.md",
       "pages": {
         "Core module": "Modules/CoreModule.md",
-        "DLL module": "Modules/DLLModule.md",
         "Gizmo module": "Modules/GizmoModule.md",
         "Particles module": "Modules/ParticlesModule.md",
         "Raycasting module": "Modules/RaycastingModule.md",

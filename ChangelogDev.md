@@ -57,10 +57,11 @@
 * Added new struct `BBMOD_DefaultRenderer`, which inherits from `BBMOD_BaseRenderer` and implements the same functionality as `BBMOD_Renderer` did.
 * Struct `BBMOD_Renderer` now inherits from the new `BBMOD_DefaultRenderer` and is marked as **deprecated**! Please use `BBMOD_DefaultRenderer` instead.
 * **Removed** the Rendering/Renderer submodule, since it became empty!
-* Added new macro `BBMOD_DLL_IS_SUPPORTED`, which evalutes to `true` if BBMOD DLL is supported on the current platform.
-* Added new macro `BBMOD_DLL_PATH`, which is the path to the BBMOD dynamic library.
 * **Removed** optional argument `_path` from `BBMOD_DLL`'s constructor. The new `BBMOD_DLL_PATH` is now always used instead!
 * The read-only property `Path` of `BBMOD_DLL` is now **obsolete**!
+* **Moved** contents of the DLL module to the Core module and **removed** the DLL module!
+* Added new macro `BBMOD_DLL_IS_SUPPORTED`, which evaluates to `true` if BBMOD DLL is supported on the current platform and the dynamic library exists.
+* Added new macro `BBMOD_DLL_PATH`, which is the path to the BBMOD dynamic library.
 * Shader `BBMOD_SHADER_INSTANCE_ID` now contains variants for vertex formats `BBMOD_VFORMAT_DEFAULT_ANIMATED`, `BBMOD_VFORMAT_DEFAULT_BATCHED` and `BBMOD_VFORMAT_DEFAULT_LIGHTMAP`.
 * Macros `BBMOD_SHADER_INSTANCE_ID_ANIMATED`, `BBMOD_SHADER_INSTANCE_ID_BATCHED` and `BBMOD_SHADER_LIGHTMAP_INSTANCE_ID` are now **deprecated**! Please use `BBMOD_SHADER_INSTANCE_ID` instead.
 * **Renamed** shader `BBMOD_ShLightmapInstanceID` to `BBMOD_ShInstanceIDLightmap`!

@@ -8,7 +8,6 @@ individual modules.
 
 ## Contents
 * [Core module](./CoreModule.html)
-* [DLL module](./DLLModule.html)
 * [Gizmo module](./GizmoModule.html)
 * [OBJ importer module](./OBJImporterModule.html)
 * [Particles module](./ParticlesModule.html)

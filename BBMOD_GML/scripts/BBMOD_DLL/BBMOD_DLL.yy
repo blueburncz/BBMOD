@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "DLL",
-    "path": "folders/BBMOD/DLL.yy",
+    "name": "Core",
+    "path": "folders/BBMOD/Core.yy",
   },
 }
