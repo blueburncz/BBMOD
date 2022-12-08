@@ -1,5 +1,6 @@
 /// @macro {Bool} Evaluates to `true` if BBMOD DLL is supported on the current
-/// platform.
+/// platform and the BBMOD dynamic library exists.
+///
 /// @example
 /// ```gml
 /// if (BBMOD_DLL_IS_SUPPORTED)
@@ -9,8 +10,9 @@
 ///     _dll = _dll.destroy();
 /// }
 /// ```
-#macro BBMOD_DLL_IS_SUPPORTED \
-	(os_type == os_windows || os_type == os_macosx)
+///
+/// @see BBMOD_DLL_PATH
+#macro BBMOD_DLL_IS_SUPPORTED __bbmod_dll_is_supported()
 
 /// @macro {String} Path to the BBMOD dynamic library. Defaults to
 /// "Data/BBMOD/BBMOD.dll" on Windows and "Data/BBMOD/libBBMOD.dylib" on macOS.
@@ -771,4 +773,16 @@ function BBMOD_DLL()
 		//external_free(BBMOD_DLL_PATH);
 		return undefined;
 	};
+}
+
+/// @func __bbmod_dll_is_supported()
+///
+/// @return {Bool}
+///
+/// @private
+function __bbmod_dll_is_supported()
+{
+	static _isSupported = ((os_type == os_windows || os_type == os_macosx)
+		&& file_exists(BBMOD_DLL_PATH));
+	return _isSupported;
 }
