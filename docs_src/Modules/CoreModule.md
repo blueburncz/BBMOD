@@ -116,6 +116,7 @@ quaternions etc.
 * [bbmod_string_split_on_first](./bbmod_string_split_on_first.html)
 * [bbmod_string_starts_with](./bbmod_string_starts_with.html)
 * [bbmod_surface_check](./bbmod_surface_check.html)
+* [bbmod_vtf_is_supported](./bbmod_vtf_is_supported.html)
 
 ### Macros
 * [BBMOD_C_AQUA](./BBMOD_C_AQUA.html)
