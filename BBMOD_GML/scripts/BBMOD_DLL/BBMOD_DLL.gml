@@ -782,6 +782,7 @@ function BBMOD_DLL()
 /// @private
 function __bbmod_dll_is_supported()
 {
+	gml_pragma("forceinline");
 	static _isSupported = ((os_type == os_windows || os_type == os_macosx)
 		&& file_exists(BBMOD_DLL_PATH));
 	return _isSupported;
