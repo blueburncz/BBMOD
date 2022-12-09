@@ -19,7 +19,7 @@ function bbmod_vtf_is_supported()
 			surface_set_target(_surface);
 			draw_clear(c_black);
 			shader_set(_shader);
-			texture_set_stage(
+			bbmod_texture_set_stage_vs(
 				shader_get_sampler_index(_shader, "u_texTest"),
 				sprite_get_texture(BBMOD_SprWhite, 0));
 			draw_sprite(BBMOD_SprWhite, 0, 0, 0);

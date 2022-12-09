@@ -1,11 +1,14 @@
 #include <BBMOD/Importer.hpp>
 
 #include <cmath>
+#ifdef _WIN32
+#	include <d3d11.h>
+#endif
 
 #ifdef _WIN32
-#define GM_EXPORT extern "C" __declspec (dllexport)
+#	define GM_EXPORT extern "C" __declspec (dllexport)
 #else
-#define GM_EXPORT extern "C"
+#	define GM_EXPORT extern "C"
 #endif
 
 #define GM_TRUE 1.0
@@ -19,6 +22,42 @@ typedef const char* gmstring_t;
 typedef void* gmptr_t;
 
 SConfig gConfig;
+
+#ifdef _WIN32
+ID3D11Device* gDevice;
+
+ID3D11DeviceContext* gContext;
+#endif // _WIN32
+
+GM_EXPORT gmreal_t bbmod_d3d11_init(gmptr_t device, gmptr_t context)
+{
+#ifdef _WIN32
+	gDevice = (ID3D11Device*)device;
+	gContext = (ID3D11DeviceContext*)context;
+	return GM_TRUE;
+#else
+	return GM_FALSE;
+#endif
+}
+
+GM_EXPORT gmreal_t bbmod_d3d11_texture_set_stage_vs(gmreal_t index)
+{
+#ifdef _WIN32
+	UINT startSlot = (UINT)index;
+	// Note: Max could be D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, but this
+	// is for compatibility with the rest of the platforms.
+	if (startSlot < 0 || startSlot >= 8)
+	{
+		return GM_FALSE;
+	}
+	ID3D11ShaderResourceView* shaderResourceView;
+	gContext->PSGetShaderResources(0, 1, &shaderResourceView);
+	gContext->VSSetShaderResources(startSlot, 1, &shaderResourceView);
+	return GM_TRUE;
+#else
+	return GM_FALSE;
+#endif
+}
 
 GM_EXPORT gmreal_t bbmod_dll_get_left_handed()
 {
