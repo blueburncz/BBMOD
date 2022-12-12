@@ -10,7 +10,7 @@ function __bbmod_d3d11_init()
 	static _isSupported = undefined;
 	if (_isSupported == undefined)
 	{
-		if (BBMOD_DLL_IS_SUPPORTED)
+		if (os_type == os_windows && file_exists(BBMOD_DLL_PATH))
 		{
 			var _init = external_define(
 				BBMOD_DLL_PATH, "bbmod_d3d11_init", dll_cdecl, ty_real, 2, ty_string, ty_string);
