@@ -106,6 +106,10 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @private
 	__nodeRotationOverride = array_create(BBMOD_MAX_BONES, undefined);
 
+	/// @var {Array<Struct.BBMOD_Quaternion>} Array of node post-rotations.
+	/// @private
+	__nodeRotationPost = array_create(BBMOD_MAX_BONES, undefined);
+
 	/// @var {Bool} If `true`, then the animation playback is paused.
 	Paused = _paused;
 
@@ -155,6 +159,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 		var _nodeTransform = __nodeTransform;
 		var _positionOverrides = __nodePositionOverride;
 		var _rotationOverrides = __nodeRotationOverride;
+		var _rotationPost = __nodeRotationPost;
 
 		static _animStack = [];
 		if (array_length(_animStack) < _model.NodeCount)
@@ -181,11 +186,13 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 			var _nodeOffset = _nodeIndex * 8;
 			var _nodePositionOverride = _positionOverrides[_nodeIndex];
 			var _nodeRotationOverride = _rotationOverrides[_nodeIndex];
+			var _nodeRotationPost = _rotationPost[_nodeIndex];
 			var _nodeParent = _node.Parent;
 			var _parentIndex = (_nodeParent != undefined) ? _nodeParent.Index : -1;
 
 			if (_nodePositionOverride != undefined
-				|| _nodeRotationOverride != undefined)
+				|| _nodeRotationOverride != undefined
+				|| _nodeRotationPost != undefined)
 			{
 				var _dq = new BBMOD_DualQuaternion().FromArray(_frame, _nodeOffset);
 				var _position = (_nodePositionOverride != undefined)
@@ -194,6 +201,10 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 				var _rotation = (_nodeRotationOverride != undefined)
 					? _nodeRotationOverride
 					: _dq.GetRotation();
+				if (_nodeRotationPost != undefined)
+				{
+					_rotation = _nodeRotationPost.Mul(_rotation);
+				}
 				_dq.FromTranslationRotation(_position, _rotation);
 				if (_parentIndex != -1)
 				{
@@ -533,6 +544,21 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 		return self;
 	};
 
+	/// @func set_node_rotation_post(_nodeIndex, _rotation)
+	///
+	/// @desc Sets a post-rotation of a node.
+	///
+	/// @param {Real} _nodeIndex An index of a node.
+	/// @param {Struct.BBMOD_Quaternion} _rotation A rotation applied after the
+	/// node is rotated using frame data. Use `undefined` to unset the post-rotation.
+	///
+	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
+	static set_node_rotation_post = function (_nodeIndex, _rotation) {
+		gml_pragma("forceinline");
+		__nodeRotationPost[@ _nodeIndex] = _rotation;
+		return self;
+	};
+
 	/// @func submit([_materials])
 	///
 	/// @desc Immediately submits the animated model for rendering.
@@ -566,6 +592,9 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	static destroy = function () {
 		Class_destroy();
 		ds_list_destroy(__animations);
+		__nodePositionOverride = undefined;
+		__nodeRotationOverride = undefined;
+		__nodeRotationPost = undefined;
 		return undefined;
 	};
 }
