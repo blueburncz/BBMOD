@@ -1,3 +1,7 @@
+/// @macro {Real} Maximum number of bones that a single model can have.
+/// Equals to 128.
+#macro BBMOD_MAX_BONES 128
+
 /// @macro {String} An event triggered when an animation player changes to a
 /// different animation. The event data will contain the previous animation.
 /// You can retrieve the new animation using

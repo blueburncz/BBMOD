@@ -7,9 +7,9 @@ precision highp float;
 //
 
 // Maximum number of bones of animated models
-#define MAX_BONES 128
+#define BBMOD_MAX_BONES 128
 // Maximum number of vec4 uniforms for dynamic batch data
-#define MAX_BATCH_DATA_SIZE 192
+#define BBMOD_MAX_BATCH_VEC4S 192
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -55,11 +55,11 @@ uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
 #if defined(X_ANIMATED)
-uniform vec4 bbmod_Bones[2 * MAX_BONES];
+uniform vec4 bbmod_Bones[2 * BBMOD_MAX_BONES];
 #endif
 
 #if defined(X_BATCHED) || defined(X_PARTICLES)
-uniform vec4 bbmod_BatchData[MAX_BATCH_DATA_SIZE];
+uniform vec4 bbmod_BatchData[BBMOD_MAX_BATCH_VEC4S];
 #endif
 
 #if defined(X_PBR) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)

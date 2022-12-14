@@ -6,6 +6,7 @@
 * Added missing method `Reset` to `BBMOD_RaycastResult`, which resets its properties to their default values.
 * Prefixed all private API with `__` (two underscores) to "hide" it from autocomplete.
 * Structs `BBMOD_Collider`, `BBMOD_Node`, `BBMOD_Vertex`, `BBMOD_VertexFormat`, `BBMOD_ParticleModule`, `BBMOD_Property` and `BBMOD_Shader` now inherit from `BBMOD_Class`.
+* Added new macro `BBMOD_MAX_BONES`, which is the maximum number of bones a single model can have. Equals to 128.
 * Added new function `bbmod_vtf_is_supported`, which checks if vertex texture fetching is supported on the current platform.
 * Added new function `bbmod_texture_set_stage_vs`, which passes a texture to a vertex shader.
 * Added new member `DepthOnly` to enum `BBMOD_ERenderPass`, which is a render pass where opaque objects are rendered into an off-screen depth buffer.

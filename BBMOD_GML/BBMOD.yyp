@@ -428,6 +428,6 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"BBMOD","CopyToMask":0,"filePath":"datafiles/Data/BBMOD",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.11.0.54",
+    "IDEVersion": "2022.11.1.56",
   },
 }
