@@ -10,6 +10,8 @@ enum __BBMOD_ELogLevel
 	Warning,
 	/// @member Error messages. Equals 3.
 	Error,
+	/// @member Log messages disabled. Equals 4.
+	Disabled,
 };
 
 /// @func __bbmod_log_level_to_string(_logLevel)
