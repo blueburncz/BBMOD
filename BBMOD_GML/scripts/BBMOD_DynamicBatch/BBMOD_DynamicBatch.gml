@@ -1,3 +1,7 @@
+/// @macro {Real} Maximum number of vec4 uniforms for dynamic batch data
+/// available in the default shaders. Equals to 192.
+#macro BBMOD_MAX_BATCH_VEC4S 192
+
 /// @func BBMOD_DynamicBatch([_model[, _size[, _slotsPerInstance]]])
 ///
 /// @extends BBMOD_Class
