@@ -6,7 +6,7 @@
   "options": [],
   "exportToGame": true,
   "supportedTargets": -1,
-  "extensionVersion": "3.15.1",
+  "extensionVersion": "3.16.0",
   "packageId": "",
   "productId": "",
   "author": "",
