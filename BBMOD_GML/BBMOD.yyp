@@ -183,6 +183,7 @@
     {"id":{"name":"BBMOD_DragModule","path":"scripts/BBMOD_DragModule/BBMOD_DragModule.yy",},"order":1,},
     {"id":{"name":"BBMOD_MixVec4OverTimeModule","path":"scripts/BBMOD_MixVec4OverTimeModule/BBMOD_MixVec4OverTimeModule.yy",},"order":5,},
     {"id":{"name":"BBMOD_AnimationPlayer","path":"scripts/BBMOD_AnimationPlayer/BBMOD_AnimationPlayer.yy",},"order":4,},
+    {"id":{"name":"__bbmod_logging","path":"scripts/__bbmod_logging/__bbmod_logging.yy",},"order":10,},
     {"id":{"name":"OFloatingText","path":"objects/OFloatingText/OFloatingText.yy",},"order":1,},
     {"id":{"name":"BBMOD_AABBCollider","path":"scripts/BBMOD_AABBCollider/BBMOD_AABBCollider.yy",},"order":0,},
     {"id":{"name":"BBMOD_AnimationStateMachine","path":"scripts/BBMOD_AnimationStateMachine/BBMOD_AnimationStateMachine.yy",},"order":2,},

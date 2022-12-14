@@ -40,4 +40,4 @@ function bbmod_vtf_is_supported()
 	return _isSupported;
 }
 
-show_debug_message("BBMOD: VTF " + (bbmod_vtf_is_supported() ? "IS" : "NOT") + " supported!");
+__bbmod_info("Vertex texture fetching " + (bbmod_vtf_is_supported() ? "IS" : "NOT") + " supported!");
