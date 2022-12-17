@@ -1,21 +1,21 @@
 # Changelog 3.16.0
-This release is a preface to bigger new features to come that require some modifications to the library. It is being released earlier to give you, the users, more time to accommodate to the changes and us, the developers, to fix potential issues while we also work on the new features. Please make sure to read this changelog thoroughly before updating to this release!
+This release is a preface to bigger new features to come that require some modifications to the library. It is being released earlier to give you more time to accommodate to the changes and to give us time to fix potential issues while we also work on the new features. Please make sure to read this changelog thoroughly before updating to this release!
 
 ## Feature highlights
 ### Modules reorganized
-To make the structure of the library a lot simpler and to allow certain features planned for future releases, modules were reorganized, putting a lot of API into the Core module. The Core module now actually contains everything you need and the rest of the modules are things that add features on top of that.
+To simplify the structure of the library and to allow certain planned features to be implemented, modules had to be reorganized, with a lot of the API being put into the Core module. The Core module now contains all the basics and the rest are modules that add features on top of that.
 
 ### BBMOD DLL in the core
-BBMOD DLL is now also a part of the Core module and it is no longer possible to change its location in the included files! This is because it could be utilized throughout other parts of the library when possible (e.g. to speed things up or enable features otherwise unsupported on certain platforms).
-
-### Shader variants
-Before it was not possible to share a single material between static, animated and dynamically batched models. Instead you had to create a separate copy of the material using a special dedicated shader. This issue has been resolved by adding **shader variants**. Each `BBMOD_Shader` can now have variants to be used with specific vertex formats. This means you can now use `BBMOD_MATERIAL_DEFAULT` for all three model kinds, without the `_ANIMATED` or `_BATCHED` suffix.
-
-### Default renderer
-To enable us to develop multiple rendering pipelines, `BBMOD_Renderer` was split into `BBMOD_BaseRenderer` and `BBMOD_DefaultRenderer`, the former being a base struct for all renderers and the latter being replacement for the old renderer. Everything regarding the default materials and the default renderer was put into a single folder.
+BBMOD DLL is now also a part of the Core module and its path in the included files can be controlled only through a new macro `BBMOD_DLL_PATH`! This is because it could be utilized throughout other parts of the library when possible (e.g. to speed things up or enable features otherwise unsupported on certain platforms).
 
 ### Vertex texture fetching support
 GameMaker supports vertex texture fetching (VTF) on most platforms, known exceptions being PS4, PS5, Xbox and Windows. We would like to utilize VTF on desktop platforms in one of the future updates, so we are adding support for VTF on Windows through the BBMOD DLL. You can now use `bbmod_vtf_is_supported` to check if VTF is supported on the current platform and `bbmod_texture_set_stage_vs` to pass a texture to a vertex shader.
+
+### Shader variants
+Before it was not possible to share a single material between static, animated and dynamically batched models. Instead you had to create a separate copy of the material with a special shader. This issue has been resolved by adding **shader variants**. Each `BBMOD_Shader` can now consist of multiple GameMaker shader resources, where each is used with a different vertex format. This means that you can now use `BBMOD_MATERIAL_DEFAULT` for all three model kinds, without the `_ANIMATED` or `_BATCHED` suffix.
+
+### Default renderer
+To enable us to develop multiple rendering pipelines, `BBMOD_Renderer` had to be split into `BBMOD_BaseRenderer` and `BBMOD_DefaultRenderer`. The former is a new base struct for all renderers and the latter is a replacement for the old renderer. Aditionally, everything regarding the default materials and the default renderer was put into a single folder, so it is easier to find all resources used in the default rendering pipeline.
 
 ## Scripting API changes
 * Added missing method `Reset` to `BBMOD_RaycastResult`, which resets its properties to their default values.
