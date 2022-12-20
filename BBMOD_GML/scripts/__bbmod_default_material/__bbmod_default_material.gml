@@ -11,6 +11,10 @@
 /// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT __bbmod_shader_default()
 
+/// @macro {Struct.BBMOD_DefaultShader} The default shader for unlit objects.
+/// @see BBMOD_DefaultShader
+#macro BBMOD_SHADER_DEFAULT_UNLIT __bbmod_shader_default_unlit()
+
 /// @macro {Struct.BBMOD_BaseShader} Depth shader for static models.
 ///
 /// @example
@@ -38,6 +42,10 @@
 /// @macro {Struct.BBMOD_DefaultMaterial} The default material.
 /// @see BBMOD_Material
 #macro BBMOD_MATERIAL_DEFAULT __bbmod_material_default()
+
+/// @macro {Struct.BBMOD_DefaultMaterial} The default material for unlit objects.
+/// @see BBMOD_Material
+#macro BBMOD_MATERIAL_DEFAULT_UNLIT __bbmod_material_default_unlit()
 
 /// @macro {Struct.BBMOD_LightmapMaterial} Material for lightmapped models with
 /// two UV channels.
@@ -83,6 +91,15 @@ function __bbmod_shader_default()
 	return _shader;
 }
 
+function __bbmod_shader_default_unlit()
+{
+	static _shader = new BBMOD_DefaultShader(
+		             BBMOD_ShDefaultUnlit,         BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultUnlitAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultUnlitBatched,  BBMOD_VFORMAT_DEFAULT_BATCHED);
+	return _shader;
+}
+
 function __bbmod_shader_default_lightmap()
 {
 	static _shader = new BBMOD_DefaultLightmapShader(
@@ -116,6 +133,17 @@ function __bbmod_material_default()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT);
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
+	}
+	return _material;
+}
+
+function __bbmod_material_default_unlit()
+{
+	static _material = undefined;
+	if (_material == undefined)
+	{
+		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_UNLIT);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
 	}
 	return _material;

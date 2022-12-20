@@ -26,6 +26,15 @@ Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultDepthBatched\BBMO
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultDepthLightmap\BBMOD_ShDefaultDepthLightmap.vsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_OUTPUT_DEPTH=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultDepthLightmap\BBMOD_ShDefaultDepthLightmap.fsh --x .\Xshaders\ -ci X_LIGHTMAP=1 X_OUTPUT_DEPTH=1
 
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultUnlit\BBMOD_ShDefaultUnlit.vsh --x .\Xshaders\ -ci
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultUnlit\BBMOD_ShDefaultUnlit.fsh --x .\Xshaders\ -ci
+
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultUnlitAnimated\BBMOD_ShDefaultUnlitAnimated.vsh --x .\Xshaders\ -ci X_ANIMATED=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultUnlitAnimated\BBMOD_ShDefaultUnlitAnimated.fsh --x .\Xshaders\ -ci X_ANIMATED=1
+
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShDefaultUnlitBatched\BBMOD_ShDefaultUnlitBatched.vsh --x .\Xshaders\ -ci X_BATCHED=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShDefaultUnlitBatched\BBMOD_ShDefaultUnlitBatched.fsh --x .\Xshaders\ -ci X_BATCHED=1
+
 # Gizmo shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShInstanceID\BBMOD_ShInstanceID.vsh --x .\Xshaders\ -ci X_ID=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShInstanceID\BBMOD_ShInstanceID.fsh --x .\Xshaders\ -ci X_ID=1
@@ -52,6 +61,8 @@ Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShParticleUnlit\BBMOD_ShPa
 # Terrain shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShTerrain\BBMOD_ShTerrain.vsh --x .\Xshaders\ -ci X_PBR=1 X_TERRAIN=1
 Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShTerrain\BBMOD_ShTerrain.fsh --x .\Xshaders\ -ci X_PBR=1 X_TERRAIN=1
+Xpanda.exe .\Xshaders\Uber_PS.xsh --o .\shaders\BBMOD_ShTerrainUnlit\BBMOD_ShTerrainUnlit.fsh --x .\Xshaders\ -ci X_TERRAIN=1
+Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\BBMOD_ShTerrainUnlit\BBMOD_ShTerrainUnlit.vsh --x .\Xshaders\ -ci X_TERRAIN=1
 
 # Zombie shaders
 Xpanda.exe .\Xshaders\Uber_VS.xsh --o .\shaders\ShZombie\ShZombie.vsh --x .\Xshaders\ -ci X_PBR=1 X_ZOMBIE=1 X_ANIMATED=1
