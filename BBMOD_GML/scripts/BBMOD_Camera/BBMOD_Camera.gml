@@ -89,6 +89,60 @@ function BBMOD_Camera()
 	/// first-person camera. Defaults to `0`.
 	Zoom = 0.0;
 
+	static update_matrices = function () {
+		gml_pragma("forceinline");
+
+		var _forward = BBMOD_VEC3_FORWARD;
+		var _right = BBMOD_VEC3_RIGHT;
+		var _up = BBMOD_VEC3_UP;
+
+		var _quatZ = new BBMOD_Quaternion().FromAxisAngle(_up, Direction);
+		_forward = _quatZ.Rotate(_forward);
+		_right = _quatZ.Rotate(_right);
+		_up = _quatZ.Rotate(_up);
+
+		var _quatY = new BBMOD_Quaternion().FromAxisAngle(_right, DirectionUp);
+		_forward = _quatY.Rotate(_forward);
+		_right = _quatY.Rotate(_right);
+		_up = _quatY.Rotate(_up);
+
+		var _quatX = new BBMOD_Quaternion().FromAxisAngle(_forward, Roll);
+		_forward = _quatX.Rotate(_forward);
+		_right = _quatX.Rotate(_right);
+		_up = _quatX.Rotate(_up);
+
+		var _target = Position.Add(_forward);
+
+		var _view = matrix_build_lookat(
+			Position.X, Position.Y, Position.Z,
+			_target.X, _target.Y, _target.Z,
+			_up.X, _up.Y, _up.Z);
+		camera_set_view_mat(Raw, _view);
+
+		var _proj = Orthographic
+			? matrix_build_projection_ortho(Width, -Width / AspectRatio, ZNear, ZFar)
+			: matrix_build_projection_perspective_fov(
+				-Fov, -AspectRatio, ZNear, ZFar);
+		camera_set_proj_mat(Raw, _proj);
+
+		// Note: Using _view and _proj mat straight away leads into a weird result...
+		ViewProjectionMatrix = matrix_multiply(
+			get_view_mat(),
+			get_proj_mat());
+
+		if (AudioListener)
+		{
+			audio_listener_position(Position.X, Position.Y, Position.Z);
+			audio_listener_orientation(
+				Target.X, Target.Y, Target.Z,
+				_up.X, _up.Y, _up.Z);
+		}
+
+		Up = _up;
+
+		return self;
+	}
+
 	/// @func set_mouselook(_enable)
 	///
 	/// @desc Enable/disable mouselook. This locks the mouse cursor at its

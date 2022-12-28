@@ -97,31 +97,10 @@ function BBMOD_BaseCamera()
 	static update_matrices = function () {
 		gml_pragma("forceinline");
 
-		var _forward = BBMOD_VEC3_FORWARD;
-		var _right = BBMOD_VEC3_RIGHT;
-		var _up = BBMOD_VEC3_UP;
-
-		var _quatZ = new BBMOD_Quaternion().FromAxisAngle(_up, Direction);
-		_forward = _quatZ.Rotate(_forward);
-		_right = _quatZ.Rotate(_right);
-		_up = _quatZ.Rotate(_up);
-
-		var _quatY = new BBMOD_Quaternion().FromAxisAngle(_right, DirectionUp);
-		_forward = _quatY.Rotate(_forward);
-		_right = _quatY.Rotate(_right);
-		_up = _quatY.Rotate(_up);
-
-		var _quatX = new BBMOD_Quaternion().FromAxisAngle(_forward, Roll);
-		_forward = _quatX.Rotate(_forward);
-		_right = _quatX.Rotate(_right);
-		_up = _quatX.Rotate(_up);
-
-		var _target = Position.Add(_forward);
-
 		var _view = matrix_build_lookat(
 			Position.X, Position.Y, Position.Z,
-			_target.X, _target.Y, _target.Z,
-			_up.X, _up.Y, _up.Z);
+			Target.X, Target.Y, Target.Z,
+			Up.X, Up.Y, Up.Z);
 		camera_set_view_mat(Raw, _view);
 
 		var _proj = Orthographic
@@ -139,11 +118,9 @@ function BBMOD_BaseCamera()
 		{
 			audio_listener_position(Position.X, Position.Y, Position.Z);
 			audio_listener_orientation(
-				_forward.X, _forward.Y, _forward.Z,
-				_up.X, _up.Y, _up.Z);
+				Target.X, Target.Y, Target.Z,
+				Up.X, Up.Y, Up.Z);
 		}
-
-		Up = _up;
 
 		return self;
 	}
