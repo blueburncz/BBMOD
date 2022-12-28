@@ -327,8 +327,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 		if (BoneCount > 0)
 		{
-			__offsetArray = array_create(BoneCount * 8, 0);
-
 			var _index = 0;
 			repeat (BoneCount)
 			{
@@ -341,7 +339,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 5]);
 				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 6]);
 				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 7]);
-				i += 8;
+				_index += 8;
 			}
 		}
 

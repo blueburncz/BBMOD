@@ -145,7 +145,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	static to_buffer = function (_buffer) {
-		buffer_write(_buffer, MaterialIndex, buffer_u32);
+		buffer_write(_buffer, buffer_u32, MaterialIndex);
 
 		var _versionMinor = Model.VersionMinor;
 
@@ -165,7 +165,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		var _bufferVerticesSize = buffer_get_size(_bufferVertices);
 		var _vertexCount = _bufferVerticesSize / VertexFormat.get_byte_size();
 
-		buffer_write(_buffer, _vertexCount, buffer_u32);
+		buffer_write(_buffer, buffer_u32, _vertexCount);
 		buffer_copy(_bufferVertices, 0, _bufferVerticesSize, _buffer, buffer_tell(_buffer));
 		buffer_seek(_buffer, buffer_seek_relative, _bufferVerticesSize);
 		buffer_delete(_bufferVertices);

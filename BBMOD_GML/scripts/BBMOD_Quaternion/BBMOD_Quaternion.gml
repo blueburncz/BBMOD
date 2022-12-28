@@ -539,6 +539,23 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		return _array;
 	};
 
+	/// @func ToBuffer(_buffer, _type)
+	///
+	/// @desc Writes the quaternion into a buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to write the quaternion to.
+	/// @param {Constant.BufferDataType} _type The type of each component.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static ToBuffer = function (_buffer, _type) {
+		gml_pragma("forceinline");
+		buffer_write(_buffer, _type, X);
+		buffer_write(_buffer, _type, Y);
+		buffer_write(_buffer, _type, Z);
+		buffer_write(_buffer, _type, W);
+		return self;
+	};
+
 	/// @func ToMatrix([_dest[, _index]])
 	///
 	/// @desc Converts quaternion into a matrix.
