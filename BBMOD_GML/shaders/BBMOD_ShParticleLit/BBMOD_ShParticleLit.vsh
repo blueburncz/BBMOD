@@ -99,8 +99,11 @@ void main()
 	position.xyz = QuaternionRotate(batchRot, position.xyz);
 	vec3 normal = QuaternionRotate(batchRot, vec3(0.0, 0.0, -1.0));
 
-	mat4 W;
-	W[3][3] = 1.0;
+	mat4 W = mat4(
+		vec4(1.0, 0.0, 0.0, 0.0),
+		vec4(0.0, 1.0, 0.0, 0.0),
+		vec4(0.0, 0.0, 1.0, 0.0),
+		vec4(0.0, 0.0, 0.0, 1.0));
 	W[3].xyz += batchPosition;
 	mat4 V = gm_Matrices[MATRIX_VIEW];
 	mat4 P = gm_Matrices[MATRIX_PROJECTION];

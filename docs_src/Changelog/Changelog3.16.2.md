@@ -1,6 +1,5 @@
 # Changelog 3.16.2
-This is a tiny release that fixes `BBMOD_BaseCamera` and model serialization
-to buffers.
+This is a tiny release that fixes `BBMOD_BaseCamera` and model serialization to buffers.
 
 ## Scripting API changes
 * Fixed method `update_matrices` of `BBMOD_BaseCamera`.

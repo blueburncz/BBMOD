@@ -130,14 +130,14 @@ function bbmod_ssao_draw(
 	gpu_push_state();
 	gpu_set_tex_repeat(false);
 
-	var _cam = camera_create();
+	static _cam = camera_create();
 	camera_set_view_size(_cam, _width, _height);
 
 	gpu_set_tex_filter(false);
 
 	surface_set_target(_surSsao);
-	matrix_set(matrix_world, matrix_build_identity());
 	camera_apply(_cam);
+	matrix_set(matrix_world, matrix_build_identity());
 	draw_clear(c_white);
 	shader_set(BBMOD_ShSSAO);
 	texture_set_stage(_uTexNoise, sprite_get_texture(global.__bbmodSSAONoise, 0));
@@ -159,31 +159,29 @@ function bbmod_ssao_draw(
 
 	gpu_set_tex_filter(true);
 
-	surface_set_target(_surWork);
-	camera_apply(_cam);
-	draw_clear(0);
 	shader_set(BBMOD_ShSSAOBlur);
 	shader_set_uniform_f(_uBlurTexel, 1.0 / _width, 0.0);
 	shader_set_uniform_f(_uBlurClipFar, _clipFar);
 	texture_set_stage(_uBlurTexDepth, surface_get_texture(_surDepth));
 	gpu_set_tex_filter_ext(_uBlurTexDepth, false);
+
+	surface_set_target(_surWork);
+	camera_apply(_cam);
+	matrix_set(matrix_world, matrix_build_identity());
+	draw_clear(0);
+	shader_set_uniform_f(_uBlurTexel, 1.0 / _width, 0.0);
 	draw_surface(_surSsao, 0, 0);
-	shader_reset();
 	surface_reset_target();
 
 	surface_set_target(_surSsao);
 	camera_apply(_cam);
+	matrix_set(matrix_world, matrix_build_identity());
 	draw_clear(0);
-	shader_set(BBMOD_ShSSAOBlur);
 	shader_set_uniform_f(_uBlurTexel, 0.0, 1.0 / _height);
-	shader_set_uniform_f(_uBlurClipFar, _clipFar);
-	texture_set_stage(_uBlurTexDepth, surface_get_texture(_surDepth));
-	gpu_set_tex_filter_ext(_uBlurTexDepth, false);
 	draw_surface(_surWork, 0, 0);
-	shader_reset();
 	surface_reset_target();
 
-	gpu_pop_state();
+	shader_reset();
 
-	camera_destroy(_cam);
+	gpu_pop_state();
 }

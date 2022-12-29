@@ -160,6 +160,8 @@ function BBMOD_DefaultRenderer()
 			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height);
 			__surWork = bbmod_surface_check(__surWork, _width, _height);
 
+			bbmod_material_reset();
+
 			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
 				SSAODepthRange, __surSSAO, __surWork, __surDepthBuffer, _projection,
 				bbmod_camera_get_zfar());
