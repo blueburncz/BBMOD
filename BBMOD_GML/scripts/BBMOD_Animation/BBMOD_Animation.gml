@@ -288,22 +288,25 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		buffer_write(_buffer, buffer_u32, __modelNodeCount);
 		buffer_write(_buffer, buffer_u32, __modelBoneCount);
 
+		var d = 0;
 		repeat (Duration)
 		{
 			if (__spaces & BBMOD_BONE_SPACE_PARENT)
 			{
-				bbmod_array_to_buffer(__framesParent, _buffer, buffer_f32);
+				bbmod_array_to_buffer(__framesParent[d], _buffer, buffer_f32);
 			}
 
 			if (__spaces & BBMOD_BONE_SPACE_WORLD)
 			{
-				bbmod_array_to_buffer(__framesWorld, _buffer, buffer_f32);
+				bbmod_array_to_buffer(__framesWorld[d], _buffer, buffer_f32);
 			}
 
 			if (__spaces & BBMOD_BONE_SPACE_BONE)
 			{
-				bbmod_array_to_buffer(__framesBone, _buffer, buffer_f32);
+				bbmod_array_to_buffer(__framesBone[d], _buffer, buffer_f32);
 			}
+
+			++d;
 		}
 
 		var _eventCount = array_length(__events) / 2;
