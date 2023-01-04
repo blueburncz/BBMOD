@@ -1,3 +1,7 @@
+/// @macro {Struct.BBMOD_ResourceManager} The default resource manager.
+/// @note This resoure manager should never be destroyed!
+#macro BBMOD_RESOURCE_MANAGER __bbmod_resource_manager()
+
 /// @func BBMOD_ResourceManager()
 ///
 /// @extends BBMOD_Class
@@ -330,6 +334,30 @@ function BBMOD_ResourceManager()
 		return self;
 	};
 
+	/// @func clear()
+	///
+	/// @desc Destroys all non-persistent resources.
+	///
+	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
+	///
+	/// @see BBMOD_Resource.Persistent
+	static clear = function () {
+		var _resources = __resources;
+		var _key = ds_map_find_first(_resources);
+		repeat (ds_map_size(_resources))
+		{
+			var _keyNext = ds_map_find_next(_resources, _key);
+			var _res = _resources[? _key];
+			if (!_res.Persistent)
+			{
+				_res.__counter = 0; // Otherwise we could call destroy multiple times
+				_res.destroy();
+			}
+			_key = _keyNext;
+		}
+		return self;
+	};
+
 	/// @func async_image_loaded_update(_asyncLoad)
 	///
 	/// @desc Must be executed in the "Async - Image Loaded" event!
@@ -373,8 +401,7 @@ function BBMOD_ResourceManager()
 		repeat (ds_map_size(_resources))
 		{
 			var _res = _resources[? _key];
-			// Do not remove from the map, we destroy it anyways:
-			_res.__manager = undefined;
+			_res.__manager = undefined; // To not remove from the map, we destroy it anyways...
 			_res.__counter = 0; // Otherwise we could call destroy multiple times
 			_res.destroy();
 			_key = ds_map_find_next(_resources, _key);
@@ -382,4 +409,17 @@ function BBMOD_ResourceManager()
 		ds_map_destroy(_resources);
 		return undefined;
 	};
+}
+
+
+/// @func __bbmod_resource_manager()
+///
+/// @return {Struct.BBMOD_ResourceManager}
+///
+/// @private
+function __bbmod_resource_manager()
+{
+	gml_pragma("forceinline");
+	static _resourceManager = new BBMOD_ResourceManager();
+	return _resourceManager;
 }

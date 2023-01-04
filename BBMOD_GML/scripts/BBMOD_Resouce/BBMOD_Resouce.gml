@@ -19,6 +19,12 @@ function BBMOD_Resource()
 	/// @readonly
 	Path = undefined;
 
+	/// @var {Bool] If `true` then the resource is persistent and it is not
+	/// destroyed when method `free` is used. Default value is `false`.
+	/// @see BBMOD_Resource.free
+	/// @see BBMOD_ResourceManager.free
+	Persistent = false;
+
 	/// @var {Struct.BBMOD_ResourceManager} The resource manager that loaded
 	/// the resource.
 	/// @private
@@ -241,7 +247,10 @@ function BBMOD_Resource()
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	static ref = function () {
 		gml_pragma("forceinline");
-		++__counter;
+		if (!Persistent)
+		{
+			++__counter;
+		}
 		return self;
 	};
 
@@ -251,9 +260,13 @@ function BBMOD_Resource()
 	///
 	/// @return {Bool} Returns `true` if there are no other references to the
 	/// resource and the resource is destroyed.
+	///
+	/// @note This does not destroy the resource if it is persistent!
+	///
+	/// @see BBMOD_Resource.Persistent
 	static free = function () {
 		gml_pragma("forceinline");
-		if (--__counter == 0)
+		if (!Persistent && --__counter == 0)
 		{
 			destroy();
 			return true;
