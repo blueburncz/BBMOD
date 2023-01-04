@@ -350,7 +350,6 @@ function BBMOD_ResourceManager()
 			var _res = _resources[? _key];
 			if (!_res.Persistent)
 			{
-				_res.__counter = 0; // Otherwise we could call destroy multiple times
 				_res.destroy();
 			}
 			_key = _keyNext;
@@ -402,7 +401,6 @@ function BBMOD_ResourceManager()
 		{
 			var _res = _resources[? _key];
 			_res.__manager = undefined; // To not remove from the map, we destroy it anyways...
-			_res.__counter = 0; // Otherwise we could call destroy multiple times
 			_res.destroy();
 			_key = ds_map_find_next(_resources, _key);
 		}
