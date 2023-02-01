@@ -56,10 +56,17 @@ function BBMOD_BaseCamera()
 	/// `false` (perspective projection).
 	Orthographic = false;
 
-	/// @var {Real} The width of the orthographic projection. Height is computed
-	/// using {@link BBMOD_BaseCamera.AspectRatio}. Defaults to the window's width.
+	/// @var {Real} The width of the orthographic projection. If `undefined`,
+	/// then it is computed from {@link BBMOD_BaseCamera.Height} using
+	/// {@link BBMOD_BaseCamera.AspectRatio}. Defaults to the window's width.
 	/// @see BBMOD_BaseCamera.Orthographic
 	Width = window_get_width();
+
+	/// @var {Real} The height of the orthographic projection. If `undefined`,
+	/// then it is computed from {@link BBMOD_BaseCamera.Width} using
+	/// {@link BBMOD_BaseCamera.AspectRatio}. Defaults to `undefined`.
+	/// @see BBMOD_BaseCamera.Orthographic
+	Height = undefined;
 
 	/// @var {Bool} If `true` then the camera updates position and orientation
 	/// of the 3D audio listener in the {@link BBMOD_BaseCamera.update_matrices}
@@ -71,6 +78,29 @@ function BBMOD_BaseCamera()
 	/// is called.
 	/// @readonly
 	ViewProjectionMatrix = matrix_build_identity();
+
+	/// @func __build_proj_mat()
+	///
+	/// @desc Builds a projection matrix based on the camera's properties.
+	///
+	/// @return {Array<Real>} The projection matrix.
+	///
+	/// @private
+	static __build_proj_mat = function () {
+		var _proj;
+		if (Orthographic)
+		{
+			var _width = (Width != undefined) ? Width : (Height * AspectRatio);
+			var _height = (Height != undefined) ? Height : (Width / AspectRatio);
+			_proj = matrix_build_projection_ortho(_width, -_height, ZNear, ZFar);
+		}
+		else
+		{
+			_proj = matrix_build_projection_perspective_fov(
+				-Fov, -AspectRatio, ZNear, ZFar);
+		}
+		return _proj;
+	};
 
 	/// @func update_matrices()
 	///
@@ -103,10 +133,7 @@ function BBMOD_BaseCamera()
 			Up.X, Up.Y, Up.Z);
 		camera_set_view_mat(Raw, _view);
 
-		var _proj = Orthographic
-			? matrix_build_projection_ortho(Width, -Width / AspectRatio, ZNear, ZFar)
-			: matrix_build_projection_perspective_fov(
-				-Fov, -AspectRatio, ZNear, ZFar);
+		var _proj = __build_proj_mat();
 		camera_set_proj_mat(Raw, _proj);
 
 		// Note: Using _view and _proj mat straight away leads into a weird result...

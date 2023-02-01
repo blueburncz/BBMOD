@@ -119,10 +119,7 @@ function BBMOD_Camera()
 			_up.X, _up.Y, _up.Z);
 		camera_set_view_mat(Raw, _view);
 
-		var _proj = Orthographic
-			? matrix_build_projection_ortho(Width, -Width / AspectRatio, ZNear, ZFar)
-			: matrix_build_projection_perspective_fov(
-				-Fov, -AspectRatio, ZNear, ZFar);
+		var _proj = __build_proj_mat();
 		camera_set_proj_mat(Raw, _proj);
 
 		// Note: Using _view and _proj mat straight away leads into a weird result...
