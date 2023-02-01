@@ -502,8 +502,12 @@ function BBMOD_BaseRenderer()
 		if (_editMode)
 		{
 			_gizmoSize = Gizmo.Size;
-			Gizmo.Size = _gizmoSize
-				* Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+
+			if (_projection[11] != 0.0)
+			{
+				Gizmo.Size = _gizmoSize
+					* Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+			}
 		}
 
 		////////////////////////////////////////////////////////////////////////
