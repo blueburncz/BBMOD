@@ -37,6 +37,10 @@ zoomIdle = 50;
 zoomAim = 5;
 
 camera = new BBMOD_Camera();
+//camera.Width = 200;
+//camera.Orthographic = true;
+//camera.ZFar *= 0.5;
+//camera.ZNear = -camera.ZFar;
 camera.FollowObject = self;
 camera.FollowFactor = 0.25;
 camera.Offset = new BBMOD_Vec3(10, 0, 25);
