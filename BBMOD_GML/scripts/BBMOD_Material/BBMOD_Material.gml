@@ -563,8 +563,8 @@ function BBMOD_Material(_shader=undefined)
 
 		if (_shaderRaw == undefined)
 		{
-			show_debug_message(
-				"WARNING: Shader variant for vertex format "
+			__bbmod_warning(
+				"Shader variant for vertex format "
 				+ string(_vertexFormat.get_hash())
 				+ " was not found! Material not applied!");
 			return false;
