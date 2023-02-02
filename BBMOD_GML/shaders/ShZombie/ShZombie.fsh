@@ -55,6 +55,8 @@ varying vec4 v_vPosition;
 
 varying vec4 v_vPosShadowmap;
 
+varying vec4 v_vEye;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Uniforms
@@ -708,6 +710,7 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 void PBRShader(Material material, float depth)
 {
 	vec3 N = material.Normal;
+	vec3 V = (v_vEye.w == 1.0) ? v_vEye.xyz : normalize(bbmod_CamPos - v_vVertex);
 	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
 	vec3 lightSubsurface = vec3(0.0);
@@ -736,7 +739,6 @@ void PBRShader(Material material, float depth)
 			* shadowmapAtt;
 	}
 
-	vec3 V = normalize(bbmod_CamPos - v_vVertex);
 	// IBL
 	lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
 	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);

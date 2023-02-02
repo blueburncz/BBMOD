@@ -154,6 +154,15 @@ void main()
 	v_vTexCoord2 = in_TextureCoord1;
 #endif
 
+#if defined(X_PBR)
+	v_vEye.xyz = normalize(-vec3(
+		gm_Matrices[MATRIX_VIEW][0][2],
+		gm_Matrices[MATRIX_VIEW][1][2],
+		gm_Matrices[MATRIX_VIEW][2][2]
+	));
+	v_vEye.w = (gm_Matrices[MATRIX_PROJECTION][2][3] == 0.0) ? 1.0 : 0.0;
+#endif
+
 #if defined(X_PARTICLES)
 	vec3 tangent = QuaternionRotate(batchRot, vec3(1.0, 0.0, 0.0));
 	vec3 bitangent = QuaternionRotate(batchRot, vec3(0.0, 1.0, 0.0));

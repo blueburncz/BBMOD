@@ -22,3 +22,7 @@ varying vec2 v_vSplatmapCoord;
 #if defined(X_ID) && defined(X_BATCHED)
 varying vec4 v_vInstanceID;
 #endif
+
+#if defined(X_PBR)
+varying vec4 v_vEye;
+#endif

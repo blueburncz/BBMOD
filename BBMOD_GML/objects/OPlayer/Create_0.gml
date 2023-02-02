@@ -43,6 +43,12 @@ camera.Offset = new BBMOD_Vec3(10, 0, 25);
 camera.Zoom = zoomIdle;
 camera.MouseSensitivity = 0.75;
 
+//camera.Width = undefined;
+//camera.Height = 150;
+//camera.Orthographic = true;
+//camera.ZFar = 300;
+//camera.ZNear = -300;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Load resources
 matPlayer = global.resourceManager.get_or_add("matPlayer", function () {

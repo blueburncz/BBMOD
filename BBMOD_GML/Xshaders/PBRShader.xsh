@@ -14,6 +14,11 @@
 void PBRShader(Material material, float depth)
 {
 	vec3 N = material.Normal;
+#if defined(X_2D)
+	vec3 V = v_vEye.xyz;
+#else
+	vec3 V = (v_vEye.w == 1.0) ? v_vEye.xyz : normalize(bbmod_CamPos - v_vVertex);
+#endif
 	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
 	vec3 lightSubsurface = vec3(0.0);
@@ -44,11 +49,6 @@ void PBRShader(Material material, float depth)
 	}
 #endif
 
-#if defined(X_2D)
-	vec3 V = vec3(0.0, 0.0, 1.0);
-#else
-	vec3 V = normalize(bbmod_CamPos - v_vVertex);
-#endif
 	// IBL
 	lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
 	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);

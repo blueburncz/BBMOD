@@ -24,6 +24,8 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 
+varying vec4 v_vEye;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Uniforms

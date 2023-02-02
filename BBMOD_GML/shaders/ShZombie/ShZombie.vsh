@@ -55,6 +55,8 @@ varying vec4 v_vPosition;
 
 varying vec4 v_vPosShadowmap;
 
+varying vec4 v_vEye;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
@@ -149,6 +151,13 @@ void main()
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
+
+	v_vEye.xyz = normalize(-vec3(
+		gm_Matrices[MATRIX_VIEW][0][2],
+		gm_Matrices[MATRIX_VIEW][1][2],
+		gm_Matrices[MATRIX_VIEW][2][2]
+	));
+	v_vEye.w = (gm_Matrices[MATRIX_PROJECTION][2][3] == 0.0) ? 1.0 : 0.0;
 
 	v_mTBN = mat3(tangent, bitangent, normal);
 
