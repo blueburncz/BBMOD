@@ -1,5 +1,5 @@
 # Changelog 3.16.5
-This release mainly fixes specular relections and the size of the gizmo when using an orthographic projection. Additionally, resources can now be marked as persistent and a new `clear` method was added to the resource manager, which frees all non-persistent resources.
+This release mainly fixes specular reflections and the size of the gizmo when using an orthographic projection. Additionally, resources can now be marked as persistent and a new `clear` method was added to the resource manager, which frees all non-persistent resources.
 
 * Added new property `Height` to `BBMOD_BaseCamera`, which is the height of the orthographic projection. If `undefined`, then it is computed from `Width` using `AspectRatio`. Defaults to `undefined`.
 * Property `Width` of `BBMOD_BaseCamera` can now be `undefined`. It is then computed from `Height` using `AspectRatio`.
