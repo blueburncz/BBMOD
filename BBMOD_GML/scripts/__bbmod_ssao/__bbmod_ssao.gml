@@ -81,7 +81,7 @@ function __bbmod_ssao_create_kernel(_size)
 	return _kernel;
 }
 
-/// @func bbmod_ssao_draw(_radius, _power, _angleBias, _depthRange, _surSsao, _surWork, _surDepth, _matProj, _clipFar)
+/// @func bbmod_ssao_draw(_radius, _power, _angleBias, _depthRange, _surSsao, _surWork, _surDepth, _matProj, _clipFar[, _selfOcclusionBias[, _blurDepthRange]])
 ///
 /// @desc Renders SSAO into the `_surSsao` surface.
 ///
@@ -98,6 +98,10 @@ function __bbmod_ssao_create_kernel(_size)
 /// scene.
 /// @param {Real} _clipFar Distance to the far clipping plane (same as in the
 /// projection used when rendering the scene).
+/// @param {Real} [_selfOcclusionBias] Defaults to 0.01. Increase to fix
+/// self-occlusion.
+/// @param {Real} [_blurDepthRange] Maximum depth difference over which can be SSAO samples
+/// blurred. Defaults to 2.
 function bbmod_ssao_draw(
 	_radius,
 	_power,
@@ -107,25 +111,31 @@ function bbmod_ssao_draw(
 	_surWork,
 	_surDepth,
 	_matProj,
-	_clipFar)
+	_clipFar,
+	_selfOcclusionBias=0.01,
+	_blurDepthRange=2.0)
 {
-	static _uTexNoise     = shader_get_sampler_index(BBMOD_ShSSAO, "u_texNoise");
-	static _uTexel        = shader_get_uniform(BBMOD_ShSSAO, "u_vTexel");
-	static _uClipFar      = shader_get_uniform(BBMOD_ShSSAO, "u_fClipFar");
-	static _uTanAspect    = shader_get_uniform(BBMOD_ShSSAO, "u_vTanAspect");
-	static _uSampleKernel = shader_get_uniform(BBMOD_ShSSAO, "u_vSampleKernel");
-	static _uRadius       = shader_get_uniform(BBMOD_ShSSAO, "u_fRadius");
-	static _uPower        = shader_get_uniform(BBMOD_ShSSAO, "u_fPower");
-	static _uNoiseScale   = shader_get_uniform(BBMOD_ShSSAO, "u_vNoiseScale");
-	static _uAngleBias    = shader_get_uniform(BBMOD_ShSSAO, "u_fAngleBias");
-	static _uDepthRange   = shader_get_uniform(BBMOD_ShSSAO, "u_fDepthRange");
-	static _uBlurTexel    = shader_get_uniform(BBMOD_ShSSAOBlur, "u_vTexel");
-	static _uBlurTexDepth = shader_get_sampler_index(BBMOD_ShSSAOBlur, "u_texDepth");
-	static _uBlurClipFar  = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fClipFar");
+	static _uTexNoise          = shader_get_sampler_index(BBMOD_ShSSAO, "u_texNoise");
+	static _uTexel             = shader_get_uniform(BBMOD_ShSSAO, "u_vTexel");
+	static _uClipFar           = shader_get_uniform(BBMOD_ShSSAO, "u_fClipFar");
+	static _uTanAspect         = shader_get_uniform(BBMOD_ShSSAO, "u_vTanAspect");
+	static _uSampleKernel      = shader_get_uniform(BBMOD_ShSSAO, "u_vSampleKernel");
+	static _uRadius            = shader_get_uniform(BBMOD_ShSSAO, "u_fRadius");
+	static _uPower             = shader_get_uniform(BBMOD_ShSSAO, "u_fPower");
+	static _uNoiseScale        = shader_get_uniform(BBMOD_ShSSAO, "u_vNoiseScale");
+	static _uAngleBias         = shader_get_uniform(BBMOD_ShSSAO, "u_fAngleBias");
+	static _uDepthRange        = shader_get_uniform(BBMOD_ShSSAO, "u_fDepthRange");
+	static _uSelfOcclusionBias = shader_get_uniform(BBMOD_ShSSAO, "u_fSelfOcclusionBias");
+	static _uBlurTexel         = shader_get_uniform(BBMOD_ShSSAOBlur, "u_vTexel");
+	static _uBlurTexDepth      = shader_get_sampler_index(BBMOD_ShSSAOBlur, "u_texDepth");
+	static _uBlurClipFar       = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fClipFar");
+	static _uBlurDepthRange    = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fDepthRange");
 
-	var _tanAspect = [1.0 / _matProj[0], -1.0 / _matProj[5]];
-	var _width     = surface_get_width(_surSsao);
-	var _height    = surface_get_height(_surSsao);
+	var _tanAspect = (_matProj[11] == 0.0)
+		? [1.0, -1.0] // Ortho
+		: [1.0 / _matProj[0], -1.0 / _matProj[5]]; // Perspective
+	var _width  = surface_get_width(_surSsao);
+	var _height = surface_get_height(_surSsao);
 
 	gpu_push_state();
 	gpu_set_tex_repeat(false);
@@ -153,6 +163,7 @@ function bbmod_ssao_draw(
 		_height / __BBMOD_SSAO_NOISE_TEXTURE_SIZE);
 	shader_set_uniform_f(_uAngleBias, _angleBias);
 	shader_set_uniform_f(_uDepthRange, _depthRange);
+	shader_set_uniform_f(_uSelfOcclusionBias, _selfOcclusionBias);
 	draw_surface_stretched(_surDepth, 0, 0, _width, _height);
 	shader_reset();
 	surface_reset_target();
@@ -164,6 +175,7 @@ function bbmod_ssao_draw(
 	shader_set_uniform_f(_uBlurClipFar, _clipFar);
 	texture_set_stage(_uBlurTexDepth, surface_get_texture(_surDepth));
 	gpu_set_tex_filter_ext(_uBlurTexDepth, false);
+	shader_set_uniform_f(_uBlurDepthRange, _blurDepthRange);
 
 	surface_set_target(_surWork);
 	camera_apply(_cam);

@@ -88,6 +88,13 @@ function BBMOD_DefaultRenderer()
 	/// Default value is 10.
 	SSAODepthRange = 10.0;
 
+	/// @var {Real} Defaults to 0.01. Increase to fix self-occlusion.
+	SSAOSelfOcclusionBias = 0.01;
+
+	/// @var {Real} Maximum depth difference over which can be SSAO samples
+	/// blurred. Defaults to 2.
+	SSAOBlurDepthRange = 2.0;
+
 	static render = function (_clearQueues=true) {
 		global.__bbmodRendererCurrent = self;
 
@@ -164,7 +171,7 @@ function BBMOD_DefaultRenderer()
 
 			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
 				SSAODepthRange, __surSSAO, __surWork, __surDepthBuffer, _projection,
-				bbmod_camera_get_zfar());
+				bbmod_camera_get_zfar(), SSAOSelfOcclusionBias, SSAOBlurDepthRange);
 
 			bbmod_shader_set_global_sampler(
 				"bbmod_SSAO", surface_get_texture(__surSSAO));
