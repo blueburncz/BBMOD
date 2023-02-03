@@ -27,6 +27,8 @@ void PrintHelp()
 		<< "  output_file                          Where to save the converted model. If not specified, " << std::endl
 		<< "                                       then the input file path is used. Extensions .bbmod" << std::endl
 		<< "                                       and .bbanim are added automatically." << std::endl
+		<< "  -as|--apply-scale=true|false         Apply global scaling factor defined in the model file." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.ApplyScale) << "." << std::endl
 		<< "  -db|--disable-bone=true|false        Enable/disable saving bones and animations." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.DisableBones) << "." << std::endl
 		<< "  -dc|--disable-color=true|false       Enable/disable saving vertex colors." << std::endl
@@ -66,6 +68,8 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.OptimizeMeshes) << "." << std::endl
 		<< "  -oma|--optimize-materials=true|false Join redundant materials into one and remove unused materials." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.OptimizeMaterials) << "." << std::endl
+		<< "  -pt|--pre-transform=true|false       Pre-transform model and collapse all nodes into one if possible." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.PreTransform) << "." << std::endl
 		<< "  -sr|--sampling-rate=fps              Configure the sampling rate (frames per second) of animations." << std::endl
 		<< "                                       Default is " << config.SamplingRate << "." << std::endl
 		<< std::endl;
@@ -171,6 +175,14 @@ int main(int argc, const char* argv[])
 				else if (o == "-oma" || o == "--optimize-materials")
 				{
 					config.OptimizeMaterials = bValue;
+				}
+				else if (o == "-pt" || o == "--pre-transform")
+				{
+					config.PreTransform = bValue;
+				}
+				else if (o == "-as" || o == "--apply-scale")
+				{
+					config.ApplyScale = bValue;
 				}
 				else if (o == "-sr" || o == "--sampling-rate")
 				{

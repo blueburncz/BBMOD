@@ -95,23 +95,11 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 	//importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 
 	int flags = (0
-		//aiProcessPreset_TargetRealtime_Quality
-		| aiProcess_CalcTangentSpace
-		//| aiProcess_GenSmoothNormals
-		| aiProcess_JoinIdenticalVertices
-		| aiProcess_ImproveCacheLocality
-		| aiProcess_LimitBoneWeights
-		//| aiProcess_RemoveRedundantMaterials
-		| aiProcess_SplitLargeMeshes
+		| aiProcess_PopulateArmatureData
 		| aiProcess_Triangulate
+		| aiProcess_CalcTangentSpace
+		| aiProcess_LimitBoneWeights
 		| aiProcess_GenUVCoords
-		| aiProcess_SortByPType
-		| aiProcess_FindDegenerates
-		| aiProcess_FindInvalidData
-		//
-		| aiProcess_TransformUVCoords
-		//| aiProcess_OptimizeGraph
-		//| aiProcess_OptimizeMeshes
 		);
 
 	if (config.GenNormals == BBMOD_NORMALS_FLAT)
@@ -141,6 +129,16 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 	if (config.LeftHanded)
 	{
 		flags |= aiProcess_ConvertToLeftHanded;
+	}
+
+	if (config.PreTransform)
+	{
+		flags |= aiProcess_PreTransformVertices;
+	}
+
+	if (config.ApplyScale)
+	{
+		flags |= aiProcess_GlobalScale;
 	}
 
 	const aiScene* scene = importer->ReadFile(fin, flags);

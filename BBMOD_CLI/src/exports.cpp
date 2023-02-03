@@ -224,6 +224,28 @@ GM_EXPORT gmreal_t bbmod_dll_set_optimize_nodes(gmreal_t optimize)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_pre_transform()
+{
+	return (gmreal_t)gConfig.PreTransform;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_pre_transform(gmreal_t enable)
+{
+	gConfig.PreTransform = (bool)enable;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_apply_scale()
+{
+	return (gmreal_t)gConfig.ApplyScale;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_apply_scale(gmreal_t enable)
+{
+	gConfig.ApplyScale = (bool)enable;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_get_optimize_animations()
 {
 	return (gmreal_t)gConfig.AnimationOptimization;

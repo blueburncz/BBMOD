@@ -71,6 +71,12 @@ struct SConfig
 	/** Reduces number of meshes. */
 	bool OptimizeMeshes = true;
 
+	/** Pre-transform vertices. */
+	bool PreTransform = false;
+
+	/** Apply scale defined in the model. */
+	bool ApplyScale = false;
+
 	/**
 	 * Configures generation of normal vectors.
 	 * 
