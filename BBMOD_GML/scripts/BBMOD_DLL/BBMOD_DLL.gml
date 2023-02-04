@@ -123,7 +123,7 @@ function BBMOD_DLL()
 	///
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
-	/// @see BBMOD_DLL.get_disable_bone 
+	/// @see BBMOD_DLL.get_disable_bone
 	static set_disable_bone = function (_disable) {
 		gml_pragma("forceinline");
 		static _fn = external_define(
@@ -680,6 +680,84 @@ function BBMOD_DLL()
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_optimize_materials", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _optimize);
+		if (_retval != __BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Exception();
+		}
+		return self;
+	};
+
+	/// @func get_apply_scale()
+	///
+	/// @desc Checks whether the "apply scale" option is enabled.
+	///
+	/// @return {Bool} If `true` then the "apply scale" option is enabled.
+	///
+	/// @see BBMOD_DLL.set_apply_scale
+	static get_apply_scale = function () {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_get_apply_scale", dll_cdecl, ty_real, 0);
+		return external_call(_fn);
+	};
+
+	/// @func set_apply_scale(_enable)
+	///
+	/// @desc Enables/disables the "apply scale" option, which applies global
+	/// scaling factor defined in the model file if enabled.
+	/// This is by default **disabled**.
+	///
+	/// @param {Bool} _enable `true` to enable the option.
+	///
+	/// @return {Struct.BBMOD_DLL} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If the operation fails.
+	///
+	/// @see BBMOD_DLL.get_apply_scale
+	static set_apply_scale = function (_enable) {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_set_apply_scale", dll_cdecl, ty_real, 1, ty_real);
+		var _retval = external_call(_fn, _enable);
+		if (_retval != __BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Exception();
+		}
+		return self;
+	};
+
+	/// @func get_pre_transform()
+	///
+	/// @desc Checks whether the "pre-transform" option is enabled.
+	///
+	/// @return {Bool} If `true` then the "pre-transform" option is enabled.
+	///
+	/// @see BBMOD_DLL.set_pre_transform
+	static get_pre_transform = function () {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_get_pre_transform", dll_cdecl, ty_real, 0);
+		return external_call(_fn);
+	};
+
+	/// @func set_pre_transform(_enable)
+	///
+	/// @desc Enables/disables the "pre-transform" option, which pre-transforms
+	/// the models and collapses all nodes into one if possible.
+	/// This is by default **disabled**.
+	///
+	/// @param {Bool} _enable `true` to enable the option.
+	///
+	/// @return {Struct.BBMOD_DLL} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If the operation fails.
+	///
+	/// @see BBMOD_DLL.get_pre_transform
+	static set_pre_transform = function (_enable) {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_set_apply_scale", dll_cdecl, ty_real, 1, ty_real);
+		var _retval = external_call(_fn, _enable);
 		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
 			throw new BBMOD_Exception();
