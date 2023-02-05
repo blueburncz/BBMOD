@@ -25,7 +25,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 	__normalSmoothnessSprite = undefined;
 
-	/// @var {Pointer.Texture} A texture specular color in the RGB channels
+	/// @var {Pointer.Texture} A texture with specular color in the RGB channels
 	/// or `undefined`.
 	SpecularColor = sprite_get_texture(BBMOD_SprDefaultSpecularColor, 0);
 
