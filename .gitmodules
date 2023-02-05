@@ -1,0 +1,3 @@
+[submodule "BBMOD_GML/Xpanda"]
+	path = BBMOD_GML/Xpanda
+	url = https://github.com/GameMakerDiscord/Xpanda.git
