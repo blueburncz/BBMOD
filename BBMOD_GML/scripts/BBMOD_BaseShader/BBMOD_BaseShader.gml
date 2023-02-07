@@ -14,11 +14,6 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {Real} Maximum number of point lights in the shader. This must
-	/// match with value defined in the raw GameMaker shader!
-	/// @obsolete This was replaced with {@link BBMOD_BaseShader.MaxPunctualLights}!
-	MaxPointLights = 8;
-
 	/// @var {Real} Maximum number of punctual lights in the shader. This must
 	/// match with value defined in the raw GameMaker shader!
 	MaxPunctualLights = 8;

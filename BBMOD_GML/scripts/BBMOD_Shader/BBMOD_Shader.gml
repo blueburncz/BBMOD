@@ -113,19 +113,6 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// @private
 	__raw = {};
 
-	/// @var {Asset.GMShader} The shader asset.
-	/// @readonly
-	/// @obsolete This has been replaced with {@link BBMOD_Shader.get_variant} and
-	/// will always equal `undefined`!
-	Raw = undefined;
-
-	/// @var {Struct.BBMOD_VertexFormat} The vertex format required by the
-	/// shader.
-	/// @readonly
-	/// @obsolete This has been replaced with {@link BBMOD_Shader.has_variant}
-	/// and will always equal `undefined`!
-	VertexFormat = undefined;
-
 	if (_shader != undefined && _vertexFormat != undefined)
 	{
 		add_variant(_shader, _vertexFormat);
@@ -172,19 +159,6 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 		return (get_raw(_vertexFormat) != undefined);
 	};
 
-	/// @func get_name()
-	///
-	/// @desc Retrieves the name of the shader.
-	///
-	/// @return {String} The name of the shader.
-	///
-	/// @obsolete This method is now obsolete and will always return `undefined`!
-	/// Please use `shader_get_name(shader.get_variant(vertexFormat))` instead.
-	static get_name = function () {
-		gml_pragma("forceinline");
-		return undefined;
-	};
-
 	/// @func is_compiled()
 	///
 	/// @desc Checks whether all shader variants are compiled.
@@ -202,34 +176,6 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 			}
 		}
 		return true;
-	};
-
-	/// @func get_uniform(_name, _vertexFormat)
-	///
-	/// @desc Retrieves a handle of a shader uniform.
-	///
-	/// @param {String} _name The name of the shader uniform.
-	///
-	/// @return {Id.Uniform} The handle of the shader uniform.
-	///
-	/// @obsolete This method is now obsolete and will always return -1!
-	static get_uniform = function (_name) {
-		gml_pragma("forceinline");
-		return -1;
-	};
-
-	/// @func get_sampler_index(_name)
-	///
-	/// @desc Retrieves an index of a texture sampler.
-	///
-	/// @param {String} _name The name of the sampler.
-	///
-	/// @return {Real} The index of the texture sampler.
-	///
-	/// @obsolete This method is now obsolete and will always return -1!
-	static get_sampler_index = function (_name) {
-		gml_pragma("forceinline");
-		return -1;
 	};
 
 	/// @func on_set()

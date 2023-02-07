@@ -109,30 +109,11 @@ function BBMOD_BaseRenderer()
 	/// @private
 	__surShadowmap = noone;
 
-	/// @var {Real} The area captured by the shadowmap. Defaults to 1024.
-	/// @obsolete This has been replaced with {@link BBMOD_DirectionalLight.ShadowmapArea}.
-	ShadowmapArea = 1024.
-
-	/// @var {Real} The resolution of the shadowmap surface. Must be power of 2.
-	/// Defaults to 4096.
-	/// @obsolete This has been replaced with {@link BBMOD_Light.ShadowmapResolution}.
-	ShadowmapResolution = 4096;
-
 	/// @var {Real} When rendering shadows, offsets vertex position by its normal
 	/// scaled by this value. Defaults to 1. Increasing the value can remove some
 	/// artifacts but using too high value could make the objects appear flying
 	/// above the ground.
 	ShadowmapNormalOffset = 1;
-
-	/// @var {Bool} Enables post-processing effects. Defaults to `false`. Enabling
-	/// this requires the [Post-processing submodule](./PostProcessingSubmodule.html)!
-	///
-	/// @note {@link BBMOD_BaseRenderer.UseAppSurface} must be enabled for this to
-	/// have any effect!
-	///
-	/// @obsolete Post-processing is now handled through
-	/// {@link BBMOD_BaseRenderer.PostProcessor}!
-	EnablePostProcessing = false;
 
 	/// @var {Struct.BBMOD_PostProcessor} Handles post-processing effects if
 	/// isn't `undefined` and {@link BBMOD_BaseRenderer.UseAppSurface} is enabled.

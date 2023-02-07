@@ -66,11 +66,6 @@ function BBMOD_DLL()
 
 	static Class_destroy = destroy;
 
-	/// @var {String} Path to the dynamic library.
-	/// @readonly
-	/// @obsolete This was replaced with {@link BBMOD_DLL_PATH}.
-	Path = BBMOD_DLL_PATH;
-
 	if (!file_exists(BBMOD_DLL_PATH))
 	{
 		throw new BBMOD_Exception("File " + BBMOD_DLL_PATH + " does not exist!");
