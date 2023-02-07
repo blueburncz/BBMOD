@@ -338,9 +338,9 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 			if (__frameskipCurrent == 0)
 			{
-				if (_animation.__spaces & BBMOD_BONE_SPACE_BONE)
+				if (_animation.__spaces & __BBMOD_BONE_SPACE_BONE)
 				{
-					if (_animation.__spaces & BBMOD_BONE_SPACE_WORLD)
+					if (_animation.__spaces & __BBMOD_BONE_SPACE_WORLD)
 					{
 						array_copy(__nodeTransform, 0,
 							_animation.__framesWorld[_animationTime], 0, _nodeSize);
@@ -350,7 +350,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 					array_copy(__transformArray, 0,
 						_animation.__framesBone[_animationTime], 0, _boneSize);
 				}
-				else if (_animation.__spaces & BBMOD_BONE_SPACE_WORLD)
+				else if (_animation.__spaces & __BBMOD_BONE_SPACE_WORLD)
 				{
 					var _frame = _animation.__framesWorld[_animationTime];
 					var _transformArray = __transformArray;
@@ -369,7 +369,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 						_index += 8;
 					}
 				}
-				else if (_animation.__spaces & BBMOD_BONE_SPACE_PARENT)
+				else if (_animation.__spaces & __BBMOD_BONE_SPACE_PARENT)
 				{
 					animate(_animInst, _animationTime);
 				}
