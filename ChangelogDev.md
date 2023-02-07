@@ -2,6 +2,7 @@
 > This file is used to accumulate changes before a changelog for a release is
 > created.
 
+* Added new function `bbmod_mrt_is_supported`, which checks whether multiple render targets are supported on the current platform.
 * Removed property `BBMOD_BaseRenderer.ShadowmapArea`, which was obsolete. Please use its counterpart `BBMOD_DirectionalLight.ShadowmapArea` before updating to this release.
 * Removed property `BBMOD_BaseRenderer.ShadowmapResolution`, which was obsolete. Please use its counterpart `BBMOD_Light.ShadowmapResolution` before updating to this release.
 * Removed property `BBMOD_BaseRenderer.UseAppSurface`, which was obsolete. Please use its counterpart `BBMOD_BaseRenderer.PostProcessor` before updating to this release.
