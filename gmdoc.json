@@ -99,6 +99,7 @@
       "pages": {
         "Core module": "Modules/CoreModule.md",
         "Gizmo module": "Modules/GizmoModule.md",
+        "OBJ importer module": "Modules/OBJImporterModule.md",
         "Particles module": "Modules/ParticlesModule.md",
         "Raycasting module": "Modules/RaycastingModule.md",
         "Rendering module": {
