@@ -715,11 +715,16 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 	/// @desc Transforms the vector by a matrix and returns the result
 	/// as a new vector.
 	///
-	/// @param {Array<Real>} _m The matrix to transform the vector by.
+	/// @param {Array<Real>, Struct.BBMOD_Matrix} _m The matrix to transform the
+	/// vector by.
 	///
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	static Transform = function (_m) {
 		gml_pragma("forceinline")
+		if (is_struct(_m))
+		{
+			_m = _m.Raw;
+		}
 		var _x = X;
 		var _y = Y;
 		var _z = Z;

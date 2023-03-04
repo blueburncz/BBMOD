@@ -611,11 +611,16 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// @desc Transforms vector `(X, Y, 0.0, 1.0)` by a matrix and returns the
 	/// result as a new vector.
 	///
-	/// @param {Array<Real>} _matrix The matrix to transform the vector by.
+	/// @param {Array<Real>, Struct.BBMOD_Matrix} _matrix The matrix to transform
+	/// the vector by.
 	///
 	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Transform = function (_matrix) {
 		gml_pragma("forceinline")
+		if (is_struct(_matrix))
+		{
+			_matrix = _matrix.Raw;
+		}
 		var _res = matrix_transform_vertex(_matrix, X, Y, 0.0);
 		return new BBMOD_Vec2(
 			_res[0],

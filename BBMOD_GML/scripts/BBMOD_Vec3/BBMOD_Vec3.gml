@@ -719,14 +719,19 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 
 	/// @func Transform(_matrix)
 	///
-	/// @desc Transforms vector `(X, Y, Z, 1.0)` by a matrix and returns the result
-	/// as a new vector.
+	/// @desc Transforms vector `(X, Y, Z, 1.0)` by a matrix and returns the
+	/// result as a new vector.
 	///
-	/// @param {Array<Real>} _matrix The matrix to transform the vector by.
+	/// @param {Array<Real>, Struct.BBMOD_Matrix} _matrix The matrix to transform
+	/// the vector by.
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Transform = function (_matrix) {
 		gml_pragma("forceinline")
+		if (is_struct(_matrix))
+		{
+			_matrix = _matrix.Raw;
+		}
 		var _res = matrix_transform_vertex(_matrix, X, Y, Z);
 		return new BBMOD_Vec3(
 			_res[0],
