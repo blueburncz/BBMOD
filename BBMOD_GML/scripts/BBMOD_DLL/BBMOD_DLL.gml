@@ -148,8 +148,7 @@ function BBMOD_DLL()
 	/// @func set_disable_color(_disable)
 	///
 	/// @desc Enables/disables vertex colors. Vertex colors are by default
-	/// **disabled**. Changing this makes the model incompatible with the
-	/// default shaders!
+	/// **enabled**.
 	///
 	/// @param {Bool} _disable `true` to disable.
 	///
@@ -187,8 +186,7 @@ function BBMOD_DLL()
 	/// @func set_disable_normal(_disable)
 	///
 	/// @desc Enables/disables vertex normals. Vertex normals are by default
-	/// **enabled**. Changing this makes the model incompatible with the default
-	/// shaders!
+	/// **enabled**.
 	///
 	/// @param {Bool} _disable `true` to disable.
 	///
@@ -309,8 +307,7 @@ function BBMOD_DLL()
 	/// @func set_disable_tangent(_disable)
 	///
 	/// @desc Enables/disables tangent and bitangent vectors. These are by
-	/// default **enabled**. Changing this makes the model incompatible with
-	/// the default shaders!
+	/// default **enabled**.
 	///
 	/// @param {Bool} _disable `true` to disable tangent and bitangent vectors.
 	///
@@ -347,9 +344,8 @@ function BBMOD_DLL()
 
 	/// @func set_disable_uv(_disable)
 	///
-	/// @desc Enables/disables texture coordinates. Texture coordinates
-	/// are by default **enabled**. Changing this makes the model incompatible
-	/// with the default shaders!
+	/// @desc Enables/disables texture coordinates. Texture coordinates are by
+	/// default **enabled**.
 	///
 	/// @param {Bool} _disable `true` to disable texture coordinates.
 	///
@@ -387,8 +383,7 @@ function BBMOD_DLL()
 	/// @func set_disable_uv2(_disable)
 	///
 	/// @desc Enables/disables second UV channel. Second UV channel is by
-	/// default **disabled**. Changing this makes the model incompatible
-	/// with the default shaders!
+	/// default **enabled**.
 	///
 	/// @param {Bool} _disable `true` to disable second UV channel.
 	///
@@ -465,7 +460,7 @@ function BBMOD_DLL()
 	/// @func set_flip_uv_vertically(_flip)
 	///
 	/// @desc Enables/disables flipping texture coordinates vertically. This is
-	/// by default **enabled**.
+	/// by default **disabled**.
 	///
 	/// @param {Bool} _flip `true` to enable.
 	///
@@ -583,7 +578,7 @@ function BBMOD_DLL()
 	///
 	/// @desc Enable/disable node optimization. When enabled, multiple
 	/// nodes (without bones, animations, ...) are joined into one.
-	/// This is by default **enabled**.
+	/// This is by default **disabled**.
 	///
 	/// @param {Bool} _optimize `true` to enable node optimization.
 	///
@@ -622,7 +617,7 @@ function BBMOD_DLL()
 	///
 	/// @desc Enables/disables mesh optimization. When enabled, multiple meshes
 	/// with the same material are joined into one to reduce draw calls. This is
-	/// by default **enabled**.
+	/// by default **disabled**.
 	///
 	/// @param {Bool} _optimize `true` to enable mesh optimization.
 	///
@@ -661,7 +656,7 @@ function BBMOD_DLL()
 	///
 	/// @desc Enables/disables material optimization. When enabled, redundant
 	/// materials are joined into one and unused materials are removed.
-	/// This is by default **enabled**.
+	/// This is by default **disabled**.
 	///
 	/// @param {Bool} _optimize `true` to enable material optimization.
 	///

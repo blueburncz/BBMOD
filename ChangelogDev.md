@@ -14,3 +14,11 @@
 * Removed method `BBMOD_Shader.get_sampler_index`, which was obsolete.
 * Removed property `BBMOD_BaseShader.MaxPointLights`, which was obsolete. Please use its counterpart `BBMOD_BaseShader.MaxPunctualLights` before updating to this version.
 * Removed property `BBMOD_DLL.Path`, which was obsolete. Please use `BBMOD_DLL_PATH` before updating to this version.
+
+DisableTextureCoords2 changed to false
+DisableVertexColors changed to false
+FlipTextureVertically changed to false
+OptimizeMaterials changed to false
+OptimizeNodes changed to false
+OptimizeMeshes changed to false
+added new ExportMaterials (default true)
