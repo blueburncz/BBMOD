@@ -1788,6 +1788,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 	static destroy = function () {
 		Class_destroy();
+		ds_list_destroy(__renderCommands);
 		__bbmod_remove_render_queue(self);
 		return undefined;
 	};

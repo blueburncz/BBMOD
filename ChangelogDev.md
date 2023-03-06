@@ -22,3 +22,5 @@ OptimizeMaterials changed to false
 OptimizeNodes changed to false
 OptimizeMeshes changed to false
 added new ExportMaterials (default true)
+Fixed memory leak in `BBMOD_RenderQueue.destroy`.
+Added new methods `get_export_materials` and `set_export_materials` to `BBMOD_DLL`.

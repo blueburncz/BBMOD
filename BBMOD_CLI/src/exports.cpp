@@ -136,6 +136,17 @@ GM_EXPORT gmreal_t bbmod_dll_set_disable_uv2(gmreal_t disable)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_export_materials()
+{
+	return (gmreal_t)gConfig.ExportMaterials;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_export_materials(gmreal_t enable)
+{
+	gConfig.ExportMaterials = (bool)enable;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_get_flip_uv_horizontally()
 {
 	return (gmreal_t)gConfig.FlipTextureHorizontally;
