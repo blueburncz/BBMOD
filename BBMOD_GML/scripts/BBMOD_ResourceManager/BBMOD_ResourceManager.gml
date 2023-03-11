@@ -270,10 +270,13 @@ function BBMOD_ResourceManager()
 
 		////////////////////////////////////////////////////////////////////////
 		// Others...
+		var _isModel = false;
+
 		switch (_ext)
 		{
 		case ".bbmod":
 			_res = new BBMOD_Model();
+			_isModel = true;
 			break;
 
 		case ".bbanim":
@@ -292,20 +295,83 @@ function BBMOD_ResourceManager()
 			return undefined;
 		}
 
-		_res.__manager = self;
+		_res.Manager = self;
 		var _manager = self;
-		var _struct = {
-			__manager: _manager,
+		var _context = {
+			Path: _path,
+			IsModel: _isModel,
+			Manager: _manager,
 			Callback: _onLoad,
 		};
+
 		++Loading;
-		_res.from_file_async(_path, _sha1, method(_struct, function (_err, _res) {
-			--__manager.Loading;
+
+		_res.from_file_async(_path, _sha1, method(_context, function (_err, _res) {
+			--Manager.Loading;
+
+			if (_err == undefined && IsModel)
+			{
+				// Try to load its materials
+				var _modelName = filename_change_ext(filename_name(Path), "");
+				var _counter = { Value: 0 };
+
+				for (var i = array_length(_res.MaterialNames) - 1; i >= 0; --i)
+				{
+					var _matDir = filename_dir(Path) + "/";
+					var _matFilename = _res.MaterialNames[i] + ".bbmat";
+					var _matPath = _matDir + _modelName + "_" + _matFilename;
+					var _callback = method({
+							Model: _res,
+							Index: i,
+							Counter: _counter,
+							Callback: Callback,
+						},
+						function (_err, _res) {
+							if (_err == undefined)
+							{
+								Model.Materials[@ Index] = _res;
+							}
+							if (--Counter.Value == 0
+								&& Callback != undefined)
+							{
+								Callback(undefined, Model);
+							}
+						}
+					);
+
+					if (file_exists(_matPath))
+					{
+						// With "Model_" prefix
+						++_counter.Value;
+						Manager.load(_matPath, undefined, _callback);
+					}
+					else
+					{
+						// Without "Model_" prefix
+						_matPath = _matDir + _matFilename;
+
+						if (file_exists(_matPath))
+						{
+							++_counter.Value;
+							Manager.load(_matPath, undefined, _callback);
+						}
+					}
+				}
+
+				// The last loaded material will do the callback
+				if (_counter.Value > 0)
+				{
+					return;
+				}
+			}
+
+			// We're not loading any materials, just do the callback
 			if (Callback != undefined)
 			{
 				Callback(_err, _res);
 			}
 		}));
+
 		_resources[? _path] = _res;
 
 		return _res;

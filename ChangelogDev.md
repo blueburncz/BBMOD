@@ -24,3 +24,10 @@ OptimizeMeshes changed to false
 added new ExportMaterials (default true)
 Fixed memory leak in `BBMOD_RenderQueue.destroy`.
 Added new methods `get_export_materials` and `set_export_materials` to `BBMOD_DLL`.
+
+* Added new function `bbmod_blendmode_to_string`, which retrieves a name of a blend mode.
+* Added new function `bbmod_blendmode_from_string`, which retrieves a blend mode from its name.
+* Added new function `bbmod_cullmode_to_string`, which retrieves a name of a cull mode.
+* Added new function `bbmod_cullmode_from_string`, which retrieves a cull mode from its name.
+* Added new function `bbmod_cmpfunc_to_string`, which retrieves a name of a cmpfunc.
+* Added new function `bbmod_cmpfunc_from_string`, which retrieves a cmpfunc from its name.
