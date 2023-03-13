@@ -1,7 +1,7 @@
 {
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
-  "name": "BBMOD_SprDefaultBaseOpacity",
+  "name": "BBMOD_SprCheckerboard",
   "bbox_bottom": 63,
   "bbox_left": 0,
   "bbox_right": 63,
@@ -25,14 +25,14 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "Sprites",
-    "path": "folders/BBMOD/Core/DefaultRenderer/Sprites.yy",
+    "name": "Core",
+    "path": "folders/BBMOD/Core.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {
     "resourceType": "GMSequence",
     "resourceVersion": "1.4",
-    "name": "BBMOD_SprDefaultBaseOpacity",
+    "name": "BBMOD_SprCheckerboard",
     "autoRecord": true,
     "backdropHeight": 1080,
     "backdropImageOpacity": 0.5,
@@ -54,7 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"f32abfde-987f-47df-8dc5-6501ccd1cffe","path":"sprites/BBMOD_SprDefaultBaseOpacity/BBMOD_SprDefaultBaseOpacity.yy",},},},"Disabled":false,"id":"7021cfb7-96b5-4338-ae5a-dc725c69dc88","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"f32abfde-987f-47df-8dc5-6501ccd1cffe","path":"sprites/BBMOD_SprCheckerboard/BBMOD_SprCheckerboard.yy",},},},"Disabled":false,"id":"7021cfb7-96b5-4338-ae5a-dc725c69dc88","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,

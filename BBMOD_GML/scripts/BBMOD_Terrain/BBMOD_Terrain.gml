@@ -438,7 +438,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			surface_set_target(_surface);
 			draw_clear_alpha(0, 0);
 			// We just need something that has UVs 0..1
-			draw_sprite_stretched(BBMOD_SprDefaultBaseOpacity, 0, 0, 0, _width, _height);
+			draw_sprite_stretched(BBMOD_SprWhite, 0, 0, 0, _width, _height);
 			surface_reset_target();
 
 			shader_reset();

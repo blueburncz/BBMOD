@@ -5,6 +5,8 @@ This release mainly adds basic export of materials into BBMAT files to BBMOD CLI
 * Added new option `--export-materials` (`-em`) to BBMOD CLI, using which you can enable/disable export of materials to BBMAT files. Defaults to `true`.
 * Added new methods `get_export_materials` and `set_export_materials` to `BBMOD_DLL`.
 * Method `load` of `BBMOD_ResourceManager` now also automatically loads models' materials when BBMAT files are present.
+* **Renamed** sprite `BBMOD_SprDefaultBaseOpacity` to `BBMOD_SprCheckerboard`.
+* Materials `BBMOD_MATERIAL_DEFAULT` and `BBMOD_MATERIAL_DEFAULT_UNLIT` now use `BBMOD_SprWhite` as `BaseOpacity`.
 * Added new function `bbmod_mrt_is_supported`, which checks whether multiple render targets are supported on the current platform.
 * Added new function `bbmod_blendmode_to_string`, which retrieves a name of a basic blend mode.
 * Added new function `bbmod_blendmode_from_string`, which retrieves a basic blend mode from its name.

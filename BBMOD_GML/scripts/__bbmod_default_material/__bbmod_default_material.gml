@@ -133,7 +133,7 @@ function __bbmod_material_default()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT);
-		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
 	}
 	return _material;
 }
@@ -144,7 +144,7 @@ function __bbmod_material_default_unlit()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_UNLIT);
-		_material.BaseOpacity = sprite_get_texture(BBMOD_SprDefaultBaseOpacity, 0);
+		_material.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
 	}
 	return _material;
 }
