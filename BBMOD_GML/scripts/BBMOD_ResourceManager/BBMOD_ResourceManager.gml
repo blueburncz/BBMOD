@@ -1,5 +1,6 @@
 /// @macro {Struct.BBMOD_ResourceManager} The default resource manager.
 /// @note This resoure manager should never be destroyed!
+/// @see BBMOD_ResourceManager
 #macro BBMOD_RESOURCE_MANAGER __bbmod_resource_manager()
 
 /// @func BBMOD_ResourceManager()
@@ -168,6 +169,16 @@ function BBMOD_ResourceManager()
 	/// @note Currently supported files formats are `*.bbmod` for {@link BBMOD_Model},
 	/// `*.bbanim` for {@link BBMOD_Animation}, `*.bbmat` for {@link BBMOD_Material}
 	/// and `*.png`, `*.gif`, `*.jpg/jpeg` for {@link BBMOD_Sprite}.
+	///
+	/// Since version 3.17.0, this also tries to automatically load model's
+	/// materials from BBMAT files. E.g., if you're loading a model `Tree.bbmod`,
+	/// which has materials called "Trunk" and "Leaves", it first tries to load
+	/// them from `Tree_Trunk.bbmat` and `Tree_Leaves.bbmat`. If these files
+	/// don't exist, then it tries to load them without the `Tree_` prefix, i.e.
+	/// `Trunk.bbmat` and `Leaves.bbmat`. If even these are not present, then
+	/// the material slots are left with the default values. If the BBMAT files
+	/// do exist, then the `_onLoad` callback is called after all of them are
+	/// loaded!
 	static load = function (_path, _sha1=undefined, _onLoad=undefined) {
 		var _resources = __resources;
 
