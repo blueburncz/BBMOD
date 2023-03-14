@@ -359,12 +359,18 @@ function BBMOD_Material(_shader=undefined)
 
 		if (variable_struct_exists(_json, "BlendMode"))
 		{
-			BlendMode = _json.BlendMode;
+			var _blendMode = _json.BlendMode;
+			BlendMode = is_string(_blendMode)
+				? bbmod_blendmode_from_string(_blendMode)
+				: _blendMode;
 		}
 
 		if (variable_struct_exists(_json, "Culling"))
 		{
-			Culling = _json.Culling;
+			var _culling = _json.Culling;
+			Culling = is_string(_culling)
+				? bbmod_cullmode_from_string(_culling)
+				: _culling;
 		}
 
 		if (variable_struct_exists(_json, "ZWrite"))
@@ -379,7 +385,10 @@ function BBMOD_Material(_shader=undefined)
 
 		if (variable_struct_exists(_json, "ZFunc"))
 		{
-			ZFunc = _json.ZFunc;
+			var _zFunc = _json.ZFunc;
+			ZFunc = is_string(_zFunc)
+				? bbmod_cmpfunc_from_string(_zFunc)
+				: _zFunc;
 		}
 
 		if (variable_struct_exists(_json, "AlphaTest"))

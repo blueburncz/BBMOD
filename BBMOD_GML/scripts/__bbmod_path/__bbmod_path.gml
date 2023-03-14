@@ -24,22 +24,6 @@ function bbmod_path_normalize(_path)
 		(os_type == os_windows) ? "/" : "\\", __BBMOD_PATH_SEPARATOR);
 }
 
-/// @func bbmod_path_is_relative(_path)
-///
-/// @desc Checks if a path is relative.
-///
-/// @param {String} _path The path to check.
-///
-/// @return {Bool} Returns `true` if the path is relative.
-function bbmod_path_is_relative(_path)
-{
-	gml_pragma("forceinline");
-	_path = bbmod_path_normalize(_path);
-	return (bbmod_string_starts_with(_path, __BBMOD_PATH_CURRENT + __BBMOD_PATH_SEPARATOR)
-		|| bbmod_string_starts_with(_path, __BBMOD_PATH_PARENT + __BBMOD_PATH_SEPARATOR));
-}
-
-
 /// @func bbmod_path_is_absolute(_path)
 ///
 /// @desc Checks if a path is absolute.
@@ -50,7 +34,22 @@ function bbmod_path_is_relative(_path)
 function bbmod_path_is_absolute(_path)
 {
 	gml_pragma("forceinline");
-	return !bbmod_path_is_relative(_path);
+	_path = bbmod_path_normalize(_path);
+	return (string_starts_with(_path, __BBMOD_PATH_SEPARATOR)
+		|| string_pos(":" + __BBMOD_PATH_SEPARATOR, _path) != 0);
+}
+
+/// @func bbmod_path_is_relative(_path)
+///
+/// @desc Checks if a path is relative.
+///
+/// @param {String} _path The path to check.
+///
+/// @return {Bool} Returns `true` if the path is relative.
+function bbmod_path_is_relative(_path)
+{
+	gml_pragma("forceinline");
+	return !bbmod_path_is_absolute(_path);
 }
 
 /// @func bbmod_path_get_relative(_path[, _start])

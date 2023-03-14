@@ -344,7 +344,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 			bbmat << "    \"Culling\": \"cull_counterclockwise\",\n";
 			bbmat << "    \"ZWrite\": " << "true" << ",\n";
 			bbmat << "    \"ZTest\": " << "true" << ",\n";
-			bbmat << "    \"ZFunc\": \"cmpfunc_lessequal\",";
+			bbmat << "    \"ZFunc\": \"cmpfunc_lessequal\",\n";
 			bbmat << "    \"AlphaTest\": " << 1.0f << ",\n";
 			bbmat << "    \"AlphaBlend\": " << "false" << ",\n";
 			bbmat << "    \"Filtering\": " << "true" << ",\n";
