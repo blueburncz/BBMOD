@@ -350,6 +350,7 @@ function BBMOD_Material(_shader=undefined)
 					throw new BBMOD_Exception("Invalid render queue \"" + _renderQueue + "\"!");
 				}
 			}
+			RenderQueue = _renderQueue;
 		}
 
 		if (variable_struct_exists(_json, "OnApply"))

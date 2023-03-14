@@ -15,6 +15,7 @@ This release mainly adds basic export of materials into BBMAT files to BBMOD CLI
 * Added new function `bbmod_cmpfunc_to_string`, which retrieves a name of a cmpfunc.
 * Added new function `bbmod_cmpfunc_from_string`, which retrieves a cmpfunc from its name.
 * Method `from_json` of `BBMOD_Material` now supports strings for properties `BlendMode`, `Culling` and `ZFunc`. E.g. "bm_add", "cull_clockwise" and "cmp_less" respectively, instead of their numeric values.
+* Fixed method `from_json` of `BBMOD_Material` not using the `RenderQueue` property.
 * Function `bbmod_path_is_relative` now returns `true` also for paths that don't begin with "/" or a drive (e.g. "C:\\") instead of just paths that begin with "." or "..".
 * Method `Transform` of structs `BBMOD_Vec2`, `BBMOD_Vec3` and `BBMOD_Vec4` now supports `BBMOD_Matrix` as an argument.
 * **Removed** property `BBMOD_BaseRenderer.ShadowmapArea`, which was obsolete. Please use its counterpart `BBMOD_DirectionalLight.ShadowmapArea` before updating to this release.
