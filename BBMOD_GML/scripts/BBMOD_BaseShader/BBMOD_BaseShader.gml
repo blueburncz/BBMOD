@@ -202,22 +202,26 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		return self;
 	};
 
-	/// @func set_ambient_light([_up[, _down]])
+	/// @func set_ambient_light([_up[, _down[, _dir]]])
 	///
 	/// @desc Sets the `bbmod_LightAmbientUp`, `bbmod_LightAmbientDown` uniforms.
 	///
-	/// @param {Struct.BBMOD_Color} [_up] RGBM encoded ambient light color on
-	/// the upper hemisphere. If `undefined`, then the value set by
+	/// @param {Struct.BBMOD_Color} [_up] Ambient light color on the upper
+	/// hemisphere. If `undefined`, then the value set by
 	/// {@link bbmod_light_ambient_set_up} is used.
-	/// @param {Struct.BBMOD_Color} [_down] RGBM encoded ambient light color on
-	/// the lower hemisphere. If `undefined`, then the value set by
+	/// @param {Struct.BBMOD_Color} [_down] Ambient light color on the lower
+	/// hemisphere. If `undefined`, then the value set by
 	/// {@link bbmod_light_ambient_set_down} is used.
+	/// @param {Struct.BBMOD_Vec3} [_up] Direction to the ambient light's upper
+	/// hemisphere. If `undefined`, then the value set by
+	/// {@link bbmod_light_ambient_set_dir} is used.
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
-	static set_ambient_light = function (_up=undefined, _down=undefined) {
+	static set_ambient_light = function (_up=undefined, _down=undefined, _dir=undefined) {
 		gml_pragma("forceinline");
 		_up ??= global.__bbmodAmbientLightUp;
 		_down ??= global.__bbmodAmbientLightDown;
+		_dir ??= global.__bbmodAmbientLightDirUp;
 		var _shaderCurrent = shader_current();
 		shader_set_uniform_f(
 			shader_get_uniform(_shaderCurrent, "bbmod_LightAmbientUp"),
@@ -225,6 +229,9 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		shader_set_uniform_f(
 			shader_get_uniform(_shaderCurrent, "bbmod_LightAmbientDown"),
 			_down.Red / 255.0, _down.Green / 255.0, _down.Blue / 255.0, _down.Alpha);
+		shader_set_uniform_f(
+			shader_get_uniform(_shaderCurrent, "bbmod_LightAmbientDirUp"),
+			_dir.X, _dir.Y, _dir.Z);
 		return self;
 	};
 

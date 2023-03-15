@@ -82,9 +82,11 @@ uniform float bbmod_FogRcpRange;
 ////////////////////////////////////////////////////////////////////////////////
 // Ambient light
 
-// RGBM encoded ambient light color on the upper hemisphere.
+// Ambient light's up vector.
+uniform vec3 bbmod_LightAmbientDirUp;
+// Ambient light color on the upper hemisphere.
 uniform vec4 bbmod_LightAmbientUp;
-// RGBM encoded ambient light color on the lower hemisphere.
+// Ambient light color on the lower hemisphere.
 uniform vec4 bbmod_LightAmbientDown;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +94,7 @@ uniform vec4 bbmod_LightAmbientDown;
 
 // Direction of the directional light
 uniform vec3 bbmod_LightDirectionalDir;
-// RGBM encoded color of the directional light
+// Color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -669,7 +671,7 @@ void PBRShader(Material material, float depth)
 	// Ambient light
 	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
 	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
-	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
+	lightDiffuse += mix(ambientDown, ambientUp, dot(N, bbmod_LightAmbientDirUp) * 0.5 + 0.5);
 
 	// Shadow mapping
 	float shadow = 0.0;

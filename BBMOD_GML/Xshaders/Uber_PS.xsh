@@ -155,9 +155,11 @@ uniform float bbmod_FogRcpRange;
 ////////////////////////////////////////////////////////////////////////////////
 // Ambient light
 
-// RGBM encoded ambient light color on the upper hemisphere.
+// Ambient light's up vector.
+uniform vec3 bbmod_LightAmbientDirUp;
+// Ambient light color on the upper hemisphere.
 uniform vec4 bbmod_LightAmbientUp;
-// RGBM encoded ambient light color on the lower hemisphere.
+// Ambient light color on the lower hemisphere.
 uniform vec4 bbmod_LightAmbientDown;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -165,7 +167,7 @@ uniform vec4 bbmod_LightAmbientDown;
 
 // Direction of the directional light
 uniform vec3 bbmod_LightDirectionalDir;
-// RGBM encoded color of the directional light
+// Color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
 #if defined(X_PBR)

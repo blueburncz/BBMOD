@@ -17,6 +17,8 @@ This release mainly adds basic export of materials into BBMAT files to BBMOD CLI
 * Method `from_json` of `BBMOD_Material` now supports strings for properties `BlendMode`, `Culling` and `ZFunc`. E.g. "bm_add", "cull_clockwise" and "cmp_less" respectively, instead of their numeric values.
 * Fixed method `from_json` of `BBMOD_Material` not using the `RenderQueue` property.
 * Function `bbmod_path_is_relative` now returns `true` also for paths that don't begin with "/" or a drive (e.g. "C:\\") instead of just paths that begin with "." or "..".
+* Added new functions `bbmod_light_ambient_set_dir` and `bbmod_light_ambient_get_dir`, using which you can set and retrieve the direction to the ambient light's upper hemisphere. By default this is `BBMOD_VEC3_UP` (i.e. vector `0, 0, 1`).
+* Added optional argument `_dir` to method `BBMOD_BaseShader.set_ambient_light`, which is the direction to the ambient light's upper hemisphere. If not defined, then it defaults to the value set by the new `bbmod_light_ambient_set_dir`.
 * Method `Transform` of structs `BBMOD_Vec2`, `BBMOD_Vec3` and `BBMOD_Vec4` now supports `BBMOD_Matrix` as an argument.
 * **Removed** property `BBMOD_BaseRenderer.ShadowmapArea`, which was obsolete. Please use its counterpart `BBMOD_DirectionalLight.ShadowmapArea` before updating to this release.
 * **Removed** property `BBMOD_BaseRenderer.ShadowmapResolution`, which was obsolete. Please use its counterpart `BBMOD_Light.ShadowmapResolution` before updating to this release.

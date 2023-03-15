@@ -26,7 +26,7 @@ void PBRShader(Material material, float depth)
 	// Ambient light
 	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
 	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
-	lightDiffuse += mix(ambientDown, ambientUp, N.z * 0.5 + 0.5);
+	lightDiffuse += mix(ambientDown, ambientUp, dot(N, bbmod_LightAmbientDirUp) * 0.5 + 0.5);
 
 	// Shadow mapping
 	float shadow = 0.0;

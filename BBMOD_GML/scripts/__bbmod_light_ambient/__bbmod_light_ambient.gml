@@ -1,3 +1,7 @@
+/// @var {Struct.BBMOD_Vec3}
+/// @private
+global.__bbmodAmbientLightDirUp = BBMOD_VEC3_UP;
+
 /// @var {Struct.BBMOD_Color}
 /// @private
 global.__bbmodAmbientLightUp = BBMOD_C_WHITE;
@@ -9,6 +13,34 @@ global.__bbmodAmbientLightDown = BBMOD_C_GRAY;
 /// @var {Bool}
 /// @private
 global.__bbmodAmbientAffectLightmap = true;
+
+/// @func bbmod_light_ambient_set_dir(_dir)
+///
+/// @desc Defines the direction towards the ambient light's upper hemisphere.
+///
+/// @param {Struct.BBMOD_Vec3} _dir The direction towards the upper hemisphere.
+/// Should be normalized!
+///
+/// @see bbmod_light_ambient_get_dir
+function bbmod_light_ambient_set_dir(_dir)
+{
+	gml_pragma("forceinline");
+	global.__bbmodAmbientLightDirUp = _dir;
+}
+
+/// @func bbmod_light_ambient_get_dir()
+///
+/// @desc Retrieves the direction towards the ambient light's upper hemisphere.
+///
+/// @return {Struct.BBMOD_Vec3} The direction towards the upper hemisphere.
+/// The default value is {@link BBMOD_VEC3_UP}.
+///
+/// @see bbmod_light_ambient_set_dir
+function bbmod_light_ambient_get_dir(_dir)
+{
+	gml_pragma("forceinline");
+	return global.__bbmodAmbientLightDirUp;
+}
 
 /// @func bbmod_light_ambient_set(_color)
 ///
