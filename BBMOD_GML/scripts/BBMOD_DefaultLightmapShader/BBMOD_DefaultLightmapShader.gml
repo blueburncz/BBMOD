@@ -20,29 +20,33 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");
 
-		static _iblNull = sprite_get_texture(BBMOD_SprBlack, 0);
-		var _texture = _iblNull;
-		var _texel = 0.0;
-
 		_ibl ??= global.__bbmodImageBasedLight;
-		if (_ibl != undefined
-			&& _ibl.Enabled
-			&& _ibl.AffectLightmaps)
-		{
-			_texture = _ibl.Texture;
-			_texel = _ibl.Texel;
-		}
 
 		var _shaderCurrent = shader_current();
-		var _uIBL = shader_get_sampler_index(_shaderCurrent, "bbmod_IBL");
 
-		texture_set_stage(_uIBL, _texture);
-		gpu_set_tex_mip_enable_ext(_uIBL, mip_off);
-		gpu_set_tex_filter_ext(_uIBL, true);
-		gpu_set_tex_repeat_ext(_uIBL, false);
-		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_IBLTexel"),
-			_texel, _texel)
+		if (_ibl != undefined && _ibl.Enabled && _ibl.AffectLightmaps)
+		{
+			var _texture = _ibl.Texture;
+			var _texel = _ibl.Texel;
+			var _uIBL = shader_get_sampler_index(_shaderCurrent, "bbmod_IBL");
+
+			texture_set_stage(_uIBL, _texture);
+			gpu_set_tex_mip_enable_ext(_uIBL, mip_off)
+			gpu_set_tex_filter_ext(_uIBL, true);
+			gpu_set_tex_repeat_ext(_uIBL, false);
+			shader_set_uniform_f(
+				shader_get_uniform(_shaderCurrent, "bbmod_IBLTexel"),
+				_texel, _texel);
+			shader_set_uniform_f(
+				shader_get_uniform(_shaderCurrent, "bbmod_IBLEnable"),
+				1.0);
+		}
+		else
+		{
+			shader_set_uniform_f(
+				shader_get_uniform(_shaderCurrent, "bbmod_IBLEnable"),
+				0.0);
+		}
 
 		return self;
 	};

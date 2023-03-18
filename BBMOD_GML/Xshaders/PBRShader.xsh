@@ -50,9 +50,12 @@ void PBRShader(Material material, float depth)
 #endif
 
 	// IBL
-	lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
-	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
-	// TODO: Subsurface scattering for IBL
+	if (bbmod_IBLEnable == 1.0)
+	{
+		lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
+		lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
+		// TODO: Subsurface scattering for IBL
+	}
 
 	// Directional light
 	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;

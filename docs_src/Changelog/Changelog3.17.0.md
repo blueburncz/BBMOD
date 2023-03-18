@@ -31,3 +31,4 @@ This release mainly adds basic export of materials into BBMAT files to BBMOD CLI
 * **Removed** property `BBMOD_BaseShader.MaxPointLights`, which was obsolete. Please use its counterpart `BBMOD_BaseShader.MaxPunctualLights` before updating to this version.
 * **Removed** property `BBMOD_DLL.Path`, which was obsolete. Please use `BBMOD_DLL_PATH` before updating to this version.
 * Fixed memory leak in `BBMOD_RenderQueue.destroy`.
+* Fixed rendering errors on macOS (and possibly other OpenGL platforms) when image-based lighting is not used.

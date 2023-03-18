@@ -180,6 +180,8 @@ uniform sampler2D bbmod_SSAO;
 ////////////////////////////////////////////////////////////////////////////////
 // Image based lighting
 
+// 1.0 to enable IBL
+uniform float bbmod_IBLEnable;
 // Prefiltered octahedron env. map
 uniform sampler2D bbmod_IBL;
 // Texel size of one octahedron

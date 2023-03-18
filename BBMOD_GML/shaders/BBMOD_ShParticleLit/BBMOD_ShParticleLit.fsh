@@ -121,6 +121,8 @@ uniform sampler2D bbmod_SSAO;
 ////////////////////////////////////////////////////////////////////////////////
 // Image based lighting
 
+// 1.0 to enable IBL
+uniform float bbmod_IBLEnable;
 // Prefiltered octahedron env. map
 uniform sampler2D bbmod_IBL;
 // Texel size of one octahedron
@@ -723,9 +725,12 @@ void PBRShader(Material material, float depth)
 	}
 
 	// IBL
-	lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
-	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
-	// TODO: Subsurface scattering for IBL
+	if (bbmod_IBLEnable == 1.0)
+	{
+		lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
+		lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
+		// TODO: Subsurface scattering for IBL
+	}
 
 	// Directional light
 	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
