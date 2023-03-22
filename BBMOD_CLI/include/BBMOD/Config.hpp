@@ -42,10 +42,10 @@ struct SConfig
 	bool DisableTextureCoords = false;
 
 	/** Disable saving of second texture coordinate layer. */
-	bool DisableTextureCoords2 = false;
+	bool DisableTextureCoords2 = true;
 
 	/** Disable saving vertex colors. */
-	bool DisableVertexColors = false;
+	bool DisableVertexColors = true;
 
 	/** Disable saving tangent vector and bitangent sign. */
 	bool DisableTangentW = false;
@@ -57,28 +57,25 @@ struct SConfig
 	bool FlipTextureHorizontally = false;
 
 	/** Flip texture coordinates vertically. */
-	bool FlipTextureVertically = false;
+	bool FlipTextureVertically = true;
 
 	/** Flip normal vectors. */
 	bool FlipNormals = false;
 
 	/** Removes redundant/unreferenced materials. */
-	bool OptimizeMaterials = false;
+	bool OptimizeMaterials = true;
 
 	/** Optimizes node hierarchy by joining multiple nodes into one. */
-	bool OptimizeNodes = false;
+	bool OptimizeNodes = true;
 
 	/** Reduces number of meshes. */
-	bool OptimizeMeshes = false;
+	bool OptimizeMeshes = true;
 
 	/** Pre-transform vertices. */
 	bool PreTransform = false;
 
 	/** Apply scale defined in the model. */
 	bool ApplyScale = false;
-
-	/** Export materials to BBMAT files. */
-	bool ExportMaterials = true;
 
 	/**
 	 * Configures generation of normal vectors.

@@ -66,7 +66,7 @@ static void LogNode(std::ofstream& log, SModel* model, SNode* node, uint32_t ind
 		{
 			for (uint32_t i = 0; i < (indent + 1) * 4; ++i) { log << " "; }
 			log << "* Mesh " << m << " [";
-
+			
 			SVertexFormat* vformat = model->Meshes[node->Meshes[m]]->VertexFormat;
 			if (vformat->Vertices) { log << "V,"; }
 			if (vformat->Normals) { log << "N,"; }
@@ -219,7 +219,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 			for (uint32_t i = 0; i < numOfAnimations; ++i)
 			{
 				SAnimation* animation = SAnimation::FromAssimp(scene->mAnimations[i], model, config);
-
+		
 				if (!animation)
 				{
 					PRINT_ERROR("Failed to convert an animation to BBANIM!");
@@ -227,7 +227,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 				}
 
 				std::string fname = GetAnimationFilename(animation, i, fout);
-
+	
 				if (!animation->Save(fname, config))
 				{
 					PRINT_ERROR("Could not save an animation to \"%s\"!", fname.c_str());
@@ -236,199 +236,6 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 
 				PRINT_SUCCESS("Animation saved to \"%s\"!", fname.c_str());
 			}
-		}
-	}
-
-	// Write materials
-	if (config.ExportMaterials)
-	{
-		for (int i = 0; i < scene->mNumMaterials; ++i)
-		{
-			aiMaterial* mat = scene->mMaterials[i];
-			const char* matName = mat->GetName().C_Str();
-			std::string matFout = GetFilename(fout, matName, ".bbmat");
-
-			aiColor3D matColor(1.0f, 1.0f, 1.0f);
-			mat->Get(AI_MATKEY_COLOR_DIFFUSE, matColor);
-
-			float matOpacity = 1.0f;
-			mat->Get(AI_MATKEY_OPACITY, matOpacity);
-
-			std::string matBaseOpacity;
-			std::string matNormalRoughness;
-			std::string matMetallicAO;
-			std::string matSpecularColor;
-			std::string matNormalSmoothness;
-			std::string matEmissive;
-			std::string matSubsurface;
-			std::string matLightmap;
-
-			const aiMaterialProperty* prop;
-
-			// Try to get the diffuse texture
-			if (aiGetMaterialProperty(mat, AI_MATKEY_TEXTURE_DIFFUSE(0), &prop) == AI_SUCCESS)
-			{
-				if (prop->mType == aiPTI_String)
-				{
-					aiString s;
-					aiGetMaterialString(mat, prop->mKey.data, prop->mSemantic, prop->mIndex, &s);
-					std::string str(s.C_Str());
-					if (str[0] != '*')
-					{
-						std::replace(str.begin(), str.end(), '\\', '/');
-						matBaseOpacity = str;
-					}
-				}
-			}
-
-			// Try to get other textures from their naming conventions
-			for (int j = 0; j < mat->mNumProperties; ++j)
-			{
-				prop = mat->mProperties[j];
-				if (prop->mKey == aiString(_AI_MATKEY_TEXTURE_BASE))
-				{
-					aiString s;
-					aiGetMaterialString(mat, prop->mKey.data, prop->mSemantic, prop->mIndex, &s);
-
-					std::string str(s.C_Str());
-					std::replace(str.begin(), str.end(), '\\', '/');
-
-					std::string strLower(str);
-					std::transform(strLower.begin(), strLower.end(), strLower.begin(),
-						[](unsigned char c){ return std::tolower(c); });
-					std::string fname = std::filesystem::path(strLower).filename().string();
-
-					if (fname.rfind("normalroughness") != std::string::npos)
-					{
-						matNormalRoughness = str;
-					}
-					else if (fname.rfind("metallicao") != std::string::npos)
-					{
-						matMetallicAO = str;
-					}
-					else if (fname.rfind("normalsmoothness") != std::string::npos)
-					{
-						matNormalSmoothness = str;
-					}
-					else if (fname.rfind("specularcolor") != std::string::npos)
-					{
-						matSpecularColor = str;
-					}
-					else if (fname.rfind("emissive") != std::string::npos)
-					{
-						matEmissive = str;
-					}
-					else if (fname.rfind("subsurface") != std::string::npos)
-					{
-						matSubsurface = str;
-					}
-					else if (fname.rfind("lightmap") != std::string::npos)
-					{
-						matLightmap = str;
-					}
-				}
-			}
-
-			std::ofstream bbmat(matFout, std::ios::out);
-
-			bbmat << "{\n";
-			bbmat << "    \"__MaterialName\": \"BBMOD_MATERIAL_DEFAULT" << (!matLightmap.empty() ? "_LIGHTMAP" : "") << "\",\n";
-			bbmat << "    \"RenderQueue\": \"Default\",\n";
-			bbmat << "    \"BaseOpacityMultiplier\": {\n";
-			bbmat << "        \"Red\": " << matColor.r * 255.0f << ",\n";
-			bbmat << "        \"Green\": " << matColor.g * 255.0f  << ",\n";
-			bbmat << "        \"Blue\": " << matColor.b * 255.0f  << ",\n";
-			bbmat << "        \"Alpha\": " << matOpacity << "\n";
-			bbmat << "    },\n";
-			bbmat << "    \"BlendMode\": \"bm_normal\",\n";
-			bbmat << "    \"Culling\": \"cull_counterclockwise\",\n";
-			bbmat << "    \"ZWrite\": " << "true" << ",\n";
-			bbmat << "    \"ZTest\": " << "true" << ",\n";
-			bbmat << "    \"ZFunc\": \"cmpfunc_lessequal\",\n";
-			bbmat << "    \"AlphaTest\": " << 1.0f << ",\n";
-			bbmat << "    \"AlphaBlend\": " << "false" << ",\n";
-			bbmat << "    \"Filtering\": " << "true" << ",\n";
-			bbmat << "    \"Mipmapping\": " << "true" << ",\n";
-			bbmat << "    \"Repeat\": " << "false" << ",\n";
-			bbmat << "    \"TextureOffset\": {\n";
-			bbmat << "        \"X\": " << 0.0f << ",\n";
-			bbmat << "        \"Y\": " << 0.0f << "\n";
-			bbmat << "    },\n";
-			bbmat << "    \"TextureScale\": {\n";
-			bbmat << "        \"X\": " << 1.0f << ",\n";
-			bbmat << "        \"Y\": " << 1.0f << "\n";
-			bbmat << "    },\n";
-			bbmat << "    \"ShadowmapBias\": " << 0.0f << ",\n";
-			bbmat << "    \"Shaders\": {\n";
-			bbmat << "        \"Shadows\": \"BBMOD_SHADER_DEFAULT_DEPTH\",\n";
-			bbmat << "        \"DepthOnly\": \"BBMOD_SHADER_DEFAULT_DEPTH\",\n";
-			bbmat << "        \"Id\": \"BBMOD_SHADER_INSTANCE_ID\"\n";
-			bbmat << "    },\n";
-			bbmat << "    \"__Textures\": {";
-
-			bool hasPrev = false;
-			if (!matBaseOpacity.empty())
-			{
-				bbmat << "\n        \"BaseOpacity\": \"" << matBaseOpacity << "\"";
-				hasPrev = true;
-			}
-
-			if (!matNormalRoughness.empty())
-			{
-				if (hasPrev) { bbmat << ","; }
-				bbmat << "\n        \"NormalRoughness\": \"" << matNormalRoughness << "\"";
-				hasPrev = true;
-			}
-
-			if (!matMetallicAO.empty())
-			{
-				if (hasPrev) { bbmat << ","; }
-				bbmat << "\n        \"MetallicAO\": \"" << matMetallicAO << "\"";
-				hasPrev = true;
-			}
-			
-			if (!matNormalSmoothness.empty())
-			{
-				if (hasPrev) { bbmat << ","; }
-				bbmat << "\n        \"NormalSmoothness\": \"" << matNormalSmoothness << "\"";
-				hasPrev = true;
-			}
-
-			if (!matSpecularColor.empty())
-			{
-				if (hasPrev) { bbmat << ","; }
-				bbmat << "\n        \"SpecularColor\": \"" << matSpecularColor << "\"";
-				hasPrev = true;
-			}
-
-			if (!matEmissive.empty())
-			{
-				if (hasPrev) { bbmat << ","; }
-				bbmat << "\n        \"Emissive\": \"" << matEmissive << "\"";
-				hasPrev = true;
-			}
-
-			if (!matSubsurface.empty())
-			{
-				if (hasPrev) { bbmat << ","; }
-				bbmat << "\n        \"Subsurface\": \"" << matSubsurface << "\"";
-				hasPrev = true;
-			}
-
-			if (!matLightmap.empty())
-			{
-				if (hasPrev) { bbmat << ","; }
-				bbmat << "\n        \"Lightmap\": \"" << matLightmap << "\"";
-				hasPrev = true;
-			}
-
-			bbmat << "\n    }\n";
-			bbmat << "}\n";
-
-			PRINT_SUCCESS("Material saved to \"%s\"!", matFout.c_str());
-
-			bbmat.flush();
-			bbmat.close();
 		}
 	}
 

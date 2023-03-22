@@ -5,7 +5,7 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
-  "version": "3.17.0",
+  "version": "3.16.8",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
@@ -15,7 +15,7 @@
     "Changelog": {
       "file": "Changelog/Changelog_.md",
       "pages": {
-        "3.17.0": "Changelog/Changelog3.17.0.md",
+        "3.16.8": "Changelog/Changelog3.16.8.md",
         "3.16.7": "Changelog/Changelog3.16.7.md",
         "3.16.6": "Changelog/Changelog3.16.6.md",
         "3.16.5": "Changelog/Changelog3.16.5.md",

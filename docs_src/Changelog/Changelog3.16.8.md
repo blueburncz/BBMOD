@@ -1,9 +1,6 @@
-# Changelog 3.17.0
+# Changelog 3.16.8
 This release mainly adds basic export of materials into BBMAT files to BBMOD CLI.
 
-* BBMOD CLI's destructive options `--disable-uv2` (`-duv2`), `--disable-color` (`-dc`), `--flip-uv-y` (`-fuvy`), `--optimize-nodes` (`-on`), `--optimize-meshes` (`-ome`) and `--optimize-materials` (`-oma`) now default to `false`!
-* Added new option `--export-materials` (`-em`) to BBMOD CLI, using which you can enable/disable export of materials to BBMAT files. Defaults to `true`.
-* Added new methods `get_export_materials` and `set_export_materials` to `BBMOD_DLL`.
 * Method `load` of `BBMOD_ResourceManager` now also automatically loads models' materials when BBMAT files are present.
 * **Renamed** sprite `BBMOD_SprDefaultBaseOpacity` to `BBMOD_SprCheckerboard`.
 * Materials `BBMOD_MATERIAL_DEFAULT` and `BBMOD_MATERIAL_DEFAULT_UNLIT` now use `BBMOD_SprWhite` as `BaseOpacity`.

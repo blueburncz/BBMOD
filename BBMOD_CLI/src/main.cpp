@@ -42,8 +42,6 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.DisableTextureCoords) << "." << std::endl
 		<< "  -duv2|--disable-uv2=true|false       Enable/disable saving of second texture coordinate layer." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.DisableTextureCoords2) << "." << std::endl
-		<< "  -em|--export-materials=true|false    Enable/disable export of materials to .bbmat files." << std::endl
-		<< "                                       Default is " << PRINT_BOOL(config.ExportMaterials) << "." << std::endl
 		<< "  -fn|--flip-normal=true|false         Enable/disable flipping normal vectors." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.FlipNormals) << "." << std::endl
 		<< "  -fuvx|--flip-uv-x=true|false         Enable/disable flipping texture coordinates horizontally." << std::endl
@@ -141,10 +139,6 @@ int main(int argc, const char* argv[])
 				else if (o == "-duv2" || o == "--disable-uv2")
 				{
 					config.DisableTextureCoords2 = bValue;
-				}
-				else if (o == "-em" || o == "--export-materials")
-				{
-					config.ExportMaterials = bValue;
 				}
 				else if (o == "-fuvx" || o == "--flip-uv-x")
 				{
