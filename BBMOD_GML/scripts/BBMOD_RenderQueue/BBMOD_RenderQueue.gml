@@ -49,6 +49,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @private
 	__renderCommands = ds_list_create();
 
+	/// @var {Real} Render passes that the queue has commands for.
+	/// @private
+	__renderPasses = 0;
+
 	/// @func set_priority(_p)
 	///
 	/// @desc Changes the priority of the render queue. Render queues with lower
@@ -77,6 +81,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static apply_material = function (_material, _vertexFormat, _enabledPasses=~0) {
 		gml_pragma("forceinline");
+		__renderPasses |= _material.RenderPass;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.ApplyMaterial,
@@ -95,6 +100,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static begin_conditional_block = function () {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.BeginConditionalBlock,
@@ -112,6 +118,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static check_render_pass = function (_passes) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.CheckRenderPass,
@@ -136,6 +143,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix) {
 		gml_pragma("forceinline");
+		__renderPasses |= _material.RenderPass;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMesh,
@@ -168,6 +176,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh_animated = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _boneTransform) {
 		gml_pragma("forceinline");
+		__renderPasses |= _material.RenderPass;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMeshAnimated,
@@ -201,6 +210,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static draw_mesh_batched = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _batchData) {
 		gml_pragma("forceinline");
+		__renderPasses |= _material.RenderPass;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMeshBatched,
@@ -225,6 +235,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static end_conditional_block = function () {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.EndConditionalBlock,
@@ -240,6 +251,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static pop_gpu_state = function () {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.PopGpuState,
@@ -255,6 +267,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static push_gpu_state = function () {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.PushGpuState,
@@ -270,6 +283,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static reset_material = function () {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.ResetMaterial,
@@ -285,6 +299,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static reset_shader = function () {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.ResetShader,
@@ -302,6 +317,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_alphatestenable = function (_enable) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuAlphaTestEnable,
@@ -320,6 +336,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_alphatestref = function (_value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuAlphaTestRef,
@@ -338,6 +355,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_blendenable = function (_enable) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuBlendEnable,
@@ -356,6 +374,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_blendmode = function (_blendmode) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuBlendMode,
@@ -375,6 +394,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_blendmode_ext = function (_src, _dest) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuBlendModeExt,
@@ -398,6 +418,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_blendmode_ext_sepalpha = function (_src, _dest, _srcalpha, _destalpha) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha,
@@ -425,6 +446,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_colorwriteenable = function (_red, _green, _blue, _alpha) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuColorWriteEnable,
@@ -446,6 +468,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_cullmode = function (_cullmode) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuCullMode,
@@ -469,6 +492,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_fog = function (_enable, _color, _start, _end) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		if (_enable)
 		{
 			ds_list_add(
@@ -501,6 +525,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_filter = function (_linear) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexFilter,
@@ -521,6 +546,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_filter_ext = function (_name, _linear) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexFilterExt,
@@ -540,6 +566,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_max_aniso = function (_value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMaxAniso,
@@ -559,6 +586,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_max_aniso_ext = function (_name, _value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt,
@@ -578,6 +606,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_max_mip = function (_value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMaxMip,
@@ -597,6 +626,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_max_mip_ext = function (_name, _value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMaxMipExt,
@@ -616,6 +646,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_min_mip = function (_value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMinMip,
@@ -635,6 +666,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_min_mip_ext = function (_name, _value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMinMipExt,
@@ -654,6 +686,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_mip_bias = function (_value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipBias,
@@ -673,6 +706,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_mip_bias_ext = function (_name, _value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipBiasExt,
@@ -692,6 +726,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_mip_enable = function (_enable) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipEnable,
@@ -711,6 +746,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_mip_enable_ext = function (_name, _enable) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipEnableExt,
@@ -730,6 +766,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_mip_filter = function (_filter) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipFilter,
@@ -749,6 +786,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_mip_filter_ext = function (_name, _filter) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexMipFilterExt,
@@ -768,6 +806,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_repeat = function (_enable) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexRepeat,
@@ -787,6 +826,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_tex_repeat_ext = function (_name, _enable) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuTexRepeatExt,
@@ -806,6 +846,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_zfunc = function (_func) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuZFunc,
@@ -825,6 +866,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_ztestenable = function (_enable) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuZTestEnable,
@@ -843,6 +885,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_gpu_zwriteenable = function (_enable) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetGpuZWriteEnable,
@@ -861,6 +904,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_projection_matrix = function (_matrix) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetProjectionMatrix,
@@ -880,6 +924,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_sampler = function (_nameOrIndex, _texture) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetSampler,
@@ -899,6 +944,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_shader = function (_shader) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetShader,
@@ -918,6 +964,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_f = function (_name, _value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformFloat,
@@ -939,6 +986,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_f2 = function (_name, _v1, _v2) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformFloat2,
@@ -962,6 +1010,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_f3 = function (_name, _v1, _v2, _v3) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformFloat3,
@@ -987,6 +1036,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_f4 = function (_name, _v1, _v2, _v3, _v4) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformFloat4,
@@ -1010,6 +1060,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_f_array = function (_name, _array) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformFloatArray,
@@ -1030,6 +1081,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_i = function (_name, _value) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformInt,
@@ -1051,6 +1103,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_i2 = function (_name, _v1, _v2) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformInt2,
@@ -1074,6 +1127,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_i3 = function (_name, _v1, _v2, _v3) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformInt3,
@@ -1099,6 +1153,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_i4 = function (_name, _v1, _v2, _v3, _v4) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformInt4,
@@ -1122,6 +1177,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_i_array = function (_name, _array) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformIntArray,
@@ -1141,6 +1197,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_matrix = function (_name) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformMatrix,
@@ -1160,6 +1217,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_uniform_matrix_array = function (_name, _array) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetUniformMatrixArray,
@@ -1179,6 +1237,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_view_matrix = function (_matrix) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetViewMatrix,
@@ -1197,6 +1256,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_world_matrix = function (_matrix) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SetWorldMatrix,
@@ -1218,6 +1278,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static submit_vertex_buffer = function (_vertexBuffer, _prim, _texture) {
 		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.SubmitVertexBuffer,
@@ -1239,6 +1300,21 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return ds_list_empty(__renderCommands);
 	};
 
+	/// @func has_commands(_renderPass)
+	///
+	/// @desc Checks whether the render queue has commands for given render pass.
+	///
+	/// @param {Real} _renderPass The render pass.
+	///
+	/// @return {Bool} Returns `true` if the render queue has commands for given
+	/// render pass.
+	///
+	/// @see BBMOD_ERenderPass
+	static has_commands = function (_renderPass) {
+		gml_pragma("forceinline");
+		return (__renderPasses & (1 << _renderPass));
+	};
+
 	/// @func submit([_instances])
 	///
 	/// @desc Submits render commands.
@@ -1249,8 +1325,14 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
+	/// @see BBMOD_RenderQueue.has_commands
 	/// @see BBMOD_RenderQueue.clear
 	static submit = function (_instances=undefined) {
+		if (!has_commands(global.__bbmodRenderPass))
+		{
+			return self;
+		}
+
 		var i = 0;
 		var _renderCommands = __renderCommands;
 		var _renderCommandsCount = ds_list_size(_renderCommands);
@@ -1782,6 +1864,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static clear = function () {
 		gml_pragma("forceinline");
+		__renderPasses = 0;
 		ds_list_clear(__renderCommands);
 		return self;
 	};
