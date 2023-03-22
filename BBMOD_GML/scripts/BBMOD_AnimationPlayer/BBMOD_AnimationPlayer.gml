@@ -149,6 +149,11 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @private
 	__transformArray = array_create(BBMOD_MAX_BONES * 8, 0.0);
 
+	/// @var {Bool} If `true` then transitions between animations are enabled.
+	/// The default value is `true`.
+	/// @see BBMOD_Animation.create_transition
+	EnableTransitions = true;
+
 	static animate = function (_animationInstance, _animationTime) {
 		var _model = Model;
 		var _animation = _animationInstance.Animation;
@@ -425,7 +430,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 		ds_list_clear(_animationList);
 
-		if (_animationLast != undefined
+		if (EnableTransitions
+			&& _animationLast != undefined
 			&& _animationLast.Animation.TransitionOut + _animation.TransitionIn > 0)
 		{
 			var _transition = _animationLast.Animation.create_transition(

@@ -34,3 +34,4 @@ This release mainly adds basic export of materials into BBMAT files to BBMOD CLI
 * Fixed rendering errors on macOS (and possibly other OpenGL platforms) when image-based lighting is not used.
 * Added new method `has_commands` to `BBMOD_RenderQueue`, which checks whether the render queue has commands for given render pass.
 * Particle materials now use the `Aplha` render pass instead of `Forward`!
+* Added new property `EnableTransitions` to `BBMOD_AnimationPlayer`, which enables/disables transitions between animations. By default this is enabled!
