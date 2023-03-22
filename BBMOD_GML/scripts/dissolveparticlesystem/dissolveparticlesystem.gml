@@ -9,6 +9,7 @@ function DissolveParticleSystem()
 	if (!_particleSystem)
 	{
 		var _material = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
+		_material.RenderQueue = new BBMOD_RenderQueue("Dissolve");
 
 		_particleSystem = new BBMOD_ParticleSystem(BBMOD_MODEL_PARTICLE, _material, 100)
 			.add_modules(

@@ -4,6 +4,7 @@ function GunfireParticleSystem()
 	if (!_particleSystem)
 	{
 		var _material = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
+		_material.RenderQueue = new BBMOD_RenderQueue("Gunfire");
 		_material.BaseOpacity = sprite_get_texture(SprGunfire, 0);
 		_material.BlendMode = bm_add;
 

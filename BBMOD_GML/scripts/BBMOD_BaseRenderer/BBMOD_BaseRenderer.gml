@@ -653,6 +653,18 @@ function BBMOD_BaseRenderer()
 		var _rqi = 0;
 		repeat (array_length(_renderQueues))
 		{
+			_renderQueues[_rqi++].submit();
+		}
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Alpha pass
+		//
+		bbmod_render_pass_set(BBMOD_ERenderPass.Alpha);
+
+		var _rqi = 0;
+		repeat (array_length(_renderQueues))
+		{
 			var _queue = _renderQueues[_rqi++].submit();
 			if (_clearQueues)
 			{
