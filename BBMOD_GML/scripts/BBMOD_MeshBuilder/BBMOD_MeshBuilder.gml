@@ -48,6 +48,14 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	/// @readonly
 	Vertices = ds_list_create();
 
+	/// @var {Struct.BBMOD_Vec3}
+	/// @private
+	__bboxMin = undefined;
+
+	/// @var {Struct.BBMOD_Vec3}
+	/// @private
+	__bboxMax = undefined;
+
 	/// @var {Id.DsList<Real>} List of vertex indices that make up a face. First
 	/// three indices are the first face, next three indices are the second face
 	/// etc.
@@ -65,8 +73,20 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	/// @see BBMOD_Vertex
 	static add_vertex = function (_vertex) {
 		gml_pragma("forceinline");
+
+		// Add vertex
 		var _ind = ds_list_size(Vertices);
 		ds_list_add(Vertices, _vertex);
+
+		// Update AABB
+		if (_vertex.Position != undefined)
+		{
+			__bboxMin = (__bboxMin == undefined)
+				? _vertex.Position : __bboxMin.Minimize(_vertex.Position);
+			__bboxMax = (__bboxMax == undefined)
+				? _vertex.Position : __bboxMax.Maximize(_vertex.Position);
+		}
+
 		return _ind;
 	};
 
@@ -269,6 +289,8 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 		vertex_end(_vbuffer);
 
 		var _mesh = new BBMOD_Mesh(_vertexFormat);
+		if (__bboxMin != undefined) { _mesh.BboxMin = __bboxMin.Clone(); }
+		if (__bboxMax != undefined) { _mesh.BboxMax = __bboxMax.Clone(); }
 		_mesh.VertexBuffer = _vbuffer;
 		_mesh.PrimitiveType = PrimitiveType;
 		return _mesh;

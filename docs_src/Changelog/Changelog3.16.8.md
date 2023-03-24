@@ -17,6 +17,7 @@ This release mainly adds support for automatic loading of model's materials from
 * Added new functions `bbmod_light_ambient_set_dir` and `bbmod_light_ambient_get_dir`, using which you can set and retrieve the direction to the ambient light's upper hemisphere. By default this is `BBMOD_VEC3_UP` (i.e. vector `0, 0, 1`).
 * Added optional argument `_dir` to method `BBMOD_BaseShader.set_ambient_light`, which is the direction to the ambient light's upper hemisphere. If not defined, then it defaults to the value set by the new `bbmod_light_ambient_set_dir`.
 * Method `Transform` of structs `BBMOD_Vec2`, `BBMOD_Vec3` and `BBMOD_Vec4` now supports `BBMOD_Matrix` as an argument.
+* Method `build` of `BBMOD_MeshBuilder` now also assigns `BboxMin` and `BboxMax` properties of the created mesh.
 * Added new property `EnableTransitions` to `BBMOD_AnimationPlayer`, which enables/disables transitions between animations. By default this is enabled!
 * Added new method `has_commands` to `BBMOD_RenderQueue`, which checks whether the render queue has commands for given render pass.
 * Fixed memory leak in `BBMOD_RenderQueue.destroy`.
