@@ -20,6 +20,7 @@ This release mainly adds support for automatic loading of model's materials from
 * Method `build` of `BBMOD_MeshBuilder` now also assigns `BboxMin` and `BboxMax` properties of the created mesh.
 * Added new property `EnableTransitions` to `BBMOD_AnimationPlayer`, which enables/disables transitions between animations. By default this is enabled!
 * Added new method `has_commands` to `BBMOD_RenderQueue`, which checks whether the render queue has commands for given render pass.
+* Method `submit` of `BBMOD_RenderQueue` now exits early if it does not have any commands for the current render pass.
 * Fixed memory leak in `BBMOD_RenderQueue.destroy`.
 * Particle materials now use the `Alpha` render pass instead of `Forward`!
 * Fixed rendering errors on macOS (and possibly other OpenGL platforms) when image-based lighting is not used.
