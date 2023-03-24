@@ -22,8 +22,8 @@ This release mainly adds support for automatic loading of model's materials from
 * Added new method `has_commands` to `BBMOD_RenderQueue`, which checks whether the render queue has commands for given render pass.
 * Method `submit` of `BBMOD_RenderQueue` now exits early if it does not have any commands for the current render pass.
 * Fixed memory leak in `BBMOD_RenderQueue.destroy`.
-* Fixed method `get_projection_matrix` of `BBMOD_Cubemap`, which returned a projection matrix that did not use negative FOV and aspect ratio. It is reset back to the original when `reset_target` is called.
-* Method `set_target` of `BBMOD_Cubemap` now calls `bbmod_camera_set_position` to update the camera position (for correct specular reflections etc.).
+* Fixed method `get_projection_matrix` of `BBMOD_Cubemap`, which returned a projection matrix that did not use negative FOV and aspect ratio.
+* Method `set_target` of `BBMOD_Cubemap` now calls `bbmod_camera_set_position` to update the camera position (for correct specular reflections etc.). It is reset back to the original value when `reset_target` is called.
 * Added new method `draw_cross` to `BBMOD_Cubemap`, which draws a cubemap cross at given position.
 * Particle materials now use the `Alpha` render pass instead of `Forward`!
 * Fixed rendering errors on macOS (and possibly other OpenGL platforms) when image-based lighting is not used.
