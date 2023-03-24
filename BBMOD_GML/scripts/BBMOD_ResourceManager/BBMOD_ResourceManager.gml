@@ -57,6 +57,12 @@ function BBMOD_ResourceManager()
 	/// @readonly
 	Loading = 0;
 
+	/// @var {Bool} If `true` then {@link BBMOD_ResourceManager.load}
+	/// automatically loads model materials when BBMAT files are found. Default
+	/// value is `true`.
+	/// @see BBMOD_ResourceManager.load
+	LoadMaterials = true;
+
 	/// @func add(_uniqueName, _resource)
 	///
 	/// @desc Adds a resource to the resource manager.
@@ -170,15 +176,18 @@ function BBMOD_ResourceManager()
 	/// `*.bbanim` for {@link BBMOD_Animation}, `*.bbmat` for {@link BBMOD_Material}
 	/// and `*.png`, `*.gif`, `*.jpg/jpeg` for {@link BBMOD_Sprite}.
 	///
-	/// Since version 3.17.0, this also tries to automatically load model's
-	/// materials from BBMAT files. E.g., if you're loading a model `Tree.bbmod`,
-	/// which has materials called "Trunk" and "Leaves", it first tries to load
-	/// them from `Tree_Trunk.bbmat` and `Tree_Leaves.bbmat`. If these files
+	/// Since version 3.16.8, this can also automatically load model's materials
+	/// from BBMAT files when {@link BBMOD_ResourceManager.LoadMaterials} is set
+	/// to `true`. If you're loading for example a model called `Tree.bbmod`,
+	/// which has materials "Trunk" and "Leaves", it first tries to load them
+	/// from files `Tree_Trunk.bbmat` and `Tree_Leaves.bbmat`. If these files
 	/// don't exist, then it tries to load them without the `Tree_` prefix, i.e.
 	/// `Trunk.bbmat` and `Leaves.bbmat`. If even these are not present, then
 	/// the material slots are left with the default values. If the BBMAT files
 	/// do exist, then the `_onLoad` callback is called after all of them are
 	/// loaded!
+	///
+	/// @see BBMOD_ResourceManager.LoadMaterials
 	static load = function (_path, _sha1=undefined, _onLoad=undefined) {
 		var _resources = __resources;
 
@@ -310,7 +319,7 @@ function BBMOD_ResourceManager()
 		var _manager = self;
 		var _context = {
 			Path: _path,
-			IsModel: _isModel,
+			LoadMaterials: _isModel && LoadMaterials,
 			Manager: _manager,
 			Callback: _onLoad,
 		};
@@ -320,7 +329,7 @@ function BBMOD_ResourceManager()
 		_res.from_file_async(_path, _sha1, method(_context, function (_err, _res) {
 			--Manager.Loading;
 
-			if (_err == undefined && IsModel)
+			if (_err == undefined && LoadMaterials)
 			{
 				// Try to load its materials
 				var _modelName = filename_change_ext(filename_name(Path), "");
