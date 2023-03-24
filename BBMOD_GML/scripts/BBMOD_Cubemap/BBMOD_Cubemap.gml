@@ -70,6 +70,10 @@ function BBMOD_Cubemap(_resolution)
 	/// @private
 	__renderTo = 0;
 
+	/// @var {Struct.BBMOD_Vec3}
+	/// @private
+	__camPosBackup = undefined;
+
 	/// @func get_surface(_side)
 	///
 	/// @desc Gets a surface for given cubemap side. If the surface is corrupted,
@@ -180,7 +184,7 @@ function BBMOD_Cubemap(_resolution)
 	/// @return {Array<Real>} The created projection matrix.
 	static get_projection_matrix = function () {
 		gml_pragma("forceinline");
-		return matrix_build_projection_perspective_fov(90.0, 1.0, ZNear, ZFar);
+		return matrix_build_projection_perspective_fov(-90.0, -1.0, ZNear, ZFar);
 	};
 
 	/// @func set_target()
@@ -201,11 +205,17 @@ function BBMOD_Cubemap(_resolution)
 	/// }
 	/// ```
 	///
+	/// @note This also sets the camera position using {@link bbmod_camera_set_position}
+	/// and it is reset back to its original value when the `reset_target` method
+	/// is called.
+	///
 	/// @see BBMOD_IRenderTarget.reset_target
 	static set_target = function () {
 		var _renderTo = __renderTo++;
 		if (_renderTo < BBMOD_ECubeSide.SIZE)
 		{
+			__camPosBackup = bbmod_camera_get_position();
+			bbmod_camera_set_position(Position);
 			surface_set_target(get_surface(_renderTo));
 			matrix_set(matrix_view, get_view_matrix(_renderTo));
 			matrix_set(matrix_projection, get_projection_matrix());
@@ -217,7 +227,29 @@ function BBMOD_Cubemap(_resolution)
 
 	static reset_target = function () {
 		gml_pragma("forceinline");
+		bbmod_camera_set_position(__camPosBackup);
 		surface_reset_target();
+		return self;
+	};
+
+	/// @func draw_cross(_x, _y[, _scale])
+	///
+	/// @desc Draws a cubemap cross at given position.
+	///
+	/// @param {Real} _x The X position to draw the cubemap at.
+	/// @param {Real} _y The Y position to draw the cubemap at.
+	/// @param {Real} [_scale] The scale of the cubemap. Default value is 1.
+	///
+	/// @return {Struct.BBMOD_Cubemap} Returns `self`.
+	static draw_cross = function (_x, _y, _scale=1.0) {
+		var _s = Resolution * _scale;
+		_y += _s;
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegX), _x, _y, _s, _s); _x += _s;
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegY), _x, _y, _s, _s); _x += _s;
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.PosZ), _x, _y - _s, _s, _s);
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegZ), _x, _y + _s, _s, _s);
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.PosX), _x, _y, _s, _s); _x += _s;
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.PosY), _x, _y, _s, _s); _x += _s;
 		return self;
 	};
 
