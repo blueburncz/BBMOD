@@ -55,7 +55,10 @@ matPlayer = global.resourceManager.get_or_add("matPlayer", function () {
 	var _material = BBMOD_MATERIAL_DEFAULT.clone()
 		.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID) // Enable instance selecting
 		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH); // Enable casting shadows
-	_material.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
+	//_material.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));
+	_material.set_base_opacity(BBMOD_C_WHITE);
+	_material.set_normal_roughness(BBMOD_VEC3_UP, 0);
+	_material.set_metallic_ao(1, 1);
 	return _material;
 });
 

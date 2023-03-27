@@ -51,14 +51,28 @@ function BBMOD_Cubemap(_resolution)
 	/// @see BBMOD_Cubemap.get_projection_matrix
 	ZFar = 8192.0;
 
+	/// @var {Real} The format of created surfaces. Use one of the `surface_`
+	/// constants. Default value is `surface_rgba8unorm`.
+	/// @see BBMOD_Cubemap.Sides
+	/// @see BBMOD_Cubemap.Surface
+	/// @see BBMOD_Cubemap.SurfaceOctahedron
+	Format = surface_rgba8unorm;
+
 	/// @var {Array<Id.Surface>} An array of surfaces.
 	/// @readonly
 	Sides = array_create(BBMOD_ECubeSide.SIZE, noone);
 
 	/// @var {Id.Surface} A single surface containing all cubemap sides.
 	/// This can be passed as uniform to a shader for cubemapping.
+	/// @see BBMOD_Cubemap.to_single_surface
 	/// @readonly
 	Surface = noone;
+
+	/// @var {Id.Surface} A surface with the cubemap converted into an
+	/// octahedral map.
+	/// @see BBMOD_Cubemap.to_octahedron
+	/// @readonly
+	SurfaceOctahedron = noone;
 
 	/// @var {Real} A resolution of single cubemap side. Must be power of two.
 	/// @readonly
@@ -86,7 +100,7 @@ function BBMOD_Cubemap(_resolution)
 	/// @see BBMOD_ECubeSide
 	static get_surface = function (_side) {
 		var _surOld = Sides[_side];
-		var _sur = bbmod_surface_check(_surOld, Resolution, Resolution);
+		var _sur = bbmod_surface_check(_surOld, Resolution, Resolution, Format);
 		if (_sur != _surOld)
 		{
 			Sides[@ _side] = _sur;
@@ -94,18 +108,18 @@ function BBMOD_Cubemap(_resolution)
 		return _sur;
 	};
 
-	/// @func to_single_surface(_clearColor, _clearAlpha)
+	/// @func to_single_surface([_clearColor[, _clearAlpha]])
 	///
 	/// @desc Puts all faces of the cubemap into a single surface.
 	///
-	/// @param {Real} _clearColor The color to clear the target surface with
-	/// before the cubemap is rendered into it.
-	/// @param {Real} _clearAlpha The alpha to clear the targe surface with
-	/// before the cubemap is rendered into it.
+	/// @param {Real} [_clearColor] The color to clear the target surface with
+	/// before the cubemap is rendered into it. Defaults to `c_black`.
+	/// @param {Real} [_clearAlpha] The alpha to clear the targe surface with
+	/// before the cubemap is rendered into it. Defaults to 1.
 	///
 	/// @see BBMOD_Cubemap.Surface
-	static to_single_surface = function (_clearColor, _clearAlpha) {
-		Surface = bbmod_surface_check(Surface, Resolution * 8, Resolution);
+	static to_single_surface = function (_clearColor=c_black, _clearAlpha=1) {
+		Surface = bbmod_surface_check(Surface, Resolution * 8, Resolution, Format);
 		surface_set_target(Surface);
 		draw_clear_alpha(_clearColor, _clearAlpha);
 		var _x = 0;
@@ -116,6 +130,37 @@ function BBMOD_Cubemap(_resolution)
 			_x += Resolution;
 		}
 		surface_reset_target();
+	};
+
+	/// @func to_octahedron([_clearColor[, _clearAlpha]])
+	///
+	/// @desc Converts the cubmap into an octahedral map.
+	///
+	/// @param {Real} [_clearColor] The color to clear the target surface with
+	/// before the cubemap is rendered into it. Defaults to `c_black`.
+	/// @param {Real} [_clearAlpha] The alpha to clear the targe surface with
+	/// before the cubemap is rendered into it. Defaults to 1.
+	///
+	/// @note You must use {@link BBMOD_Cubemap.to_single_surface} first for
+	/// this method to work!
+	///
+	/// @see BBMOD_Cubemap.SurfaceOctahedron
+	static to_octahedron = function (_clearColor=c_black, _clearAlpha=1) {
+		SurfaceOctahedron = bbmod_surface_check(SurfaceOctahedron, Resolution, Resolution, Format);
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_tex_filter(true);
+		surface_set_target(SurfaceOctahedron);
+		draw_clear_alpha(_clearColor, _clearAlpha);
+		shader_set(__BBMOD_ShCubemapToOctahedron);
+		shader_set_uniform_f(
+			shader_get_uniform(__BBMOD_ShCubemapToOctahedron, "u_vTexel"),
+			1 / Resolution,
+			1 / Resolution);
+		draw_surface_stretched(Surface, 0, 0, Resolution, Resolution);
+		shader_reset();
+		surface_reset_target();
+		gpu_pop_state();
 	};
 
 	/// @func get_view_matrix(_side)
@@ -267,6 +312,10 @@ function BBMOD_Cubemap(_resolution)
 		if (surface_exists(Surface))
 		{
 			surface_free(Surface);
+		}
+		if (surface_exists(SurfaceOctahedron))
+		{
+			surface_free(SurfaceOctahedron);
 		}
 		return undefined;
 	};
