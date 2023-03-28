@@ -74,6 +74,10 @@ function BBMOD_Cubemap(_resolution)
 	/// @private
 	__camPosBackup = undefined;
 
+	/// @var {Id.Camera}
+	/// @private
+	static __camera = camera_create();
+
 	/// @func get_surface(_side)
 	///
 	/// @desc Gets a surface for given cubemap side. If the surface is corrupted,
@@ -169,12 +173,13 @@ function BBMOD_Cubemap(_resolution)
 			break;
 		}
 
-		return [
+		camera_set_view_mat(__camera, [
 			_x.X, _y.X, _z.X, 0.0,
 			_x.Y, _y.Y, _z.Y, 0.0,
 			_x.Z, _y.Z, _z.Z, 0.0,
 			_x.Dot(_negEye), _y.Dot(_negEye), _z.Dot(_negEye), 1.0
-		];
+		]);
+		return camera_get_view_mat(__camera);
 	}
 
 	/// @func get_projection_matrix()
@@ -184,7 +189,8 @@ function BBMOD_Cubemap(_resolution)
 	/// @return {Array<Real>} The created projection matrix.
 	static get_projection_matrix = function () {
 		gml_pragma("forceinline");
-		return matrix_build_projection_perspective_fov(-90.0, -1.0, ZNear, ZFar);
+		camera_set_proj_mat(__camera, matrix_build_projection_perspective_fov(-90.0, -1.0, ZNear, ZFar));
+		return camera_get_proj_mat(__camera);
 	};
 
 	/// @func set_target()
