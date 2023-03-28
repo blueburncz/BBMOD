@@ -121,6 +121,8 @@ function BBMOD_Camera()
 
 		var _proj = __build_proj_mat();
 		camera_set_proj_mat(Raw, _proj);
+		var _projRaw = camera_get_proj_mat(Raw);
+		__projFlipped = (_projRaw[5] == -_proj[5]);
 
 		// Note: Using _view and _proj mat straight away leads into a weird result...
 		ViewProjectionMatrix = matrix_multiply(

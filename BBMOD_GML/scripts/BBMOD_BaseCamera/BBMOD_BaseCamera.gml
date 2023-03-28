@@ -79,6 +79,11 @@ function BBMOD_BaseCamera()
 	/// @readonly
 	ViewProjectionMatrix = matrix_build_identity();
 
+	/// @var {Bool} If `true` then projection matrix is flipped vertically by
+	/// `camera_set_proj_mat`.
+	/// @private
+	__projFlipped = false;
+
 	/// @func __build_proj_mat()
 	///
 	/// @desc Builds a projection matrix based on the camera's properties.
@@ -135,6 +140,8 @@ function BBMOD_BaseCamera()
 
 		var _proj = __build_proj_mat();
 		camera_set_proj_mat(Raw, _proj);
+		var _projRaw = camera_get_proj_mat(Raw);
+		__projFlipped = (_projRaw[5] == -_proj[5]);
 
 		// Note: Using _view and _proj mat straight away leads into a weird result...
 		ViewProjectionMatrix = matrix_multiply(
@@ -286,7 +293,11 @@ function BBMOD_BaseCamera()
 		}
 		_screenPos = _screenPos.Scale(1.0 / _screenPos.W);
 		_screenPos.X = ((_screenPos.X * 0.5) + 0.5) * _screenWidth;
-		_screenPos.Y = (1.0 - ((_screenPos.Y * 0.5) + 0.5)) * _screenHeight;
+		_screenPos.Y = ((_screenPos.Y * 0.5) + 0.5) * _screenHeight;
+		if (__projFlipped)
+		{
+			_screenPos.Y = _screenHeight - _screenPos.Y;
+		}
 		return _screenPos;
 	};
 
@@ -309,8 +320,13 @@ function BBMOD_BaseCamera()
 		var _screenHeight = _renderer ? _renderer.get_height() : window_get_height();
 		var _screenX = _vector.X - (_renderer ? _renderer.X : 0);
 		var _screenY = _vector.Y - (_renderer ? _renderer.Y : 0);
-		var _ray = _forward.Add(_up.Scale(1.0 - 2.0 * (_screenY / _screenHeight))
-			.Add(_right.Scale(2.0 * (_screenX / _screenWidth) - 1.0)));
+		var _scaleUp = (_screenY / _screenHeight) * 2.0 - 1.0;
+		if (__projFlipped)
+		{
+			_scaleUp = -_scaleUp;
+		}
+		var _ray = _forward.Add(_up.Scale(_scaleUp).Add(
+			_right.Scale((_screenX / _screenWidth) * 2.0 - 1.0)));
 		return _ray.Normalize();
 	};
 

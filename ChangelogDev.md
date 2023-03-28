@@ -8,3 +8,4 @@
 * Added new property `SurfaceOctahedron` to `BBMOD_Cubemap`, which is a surface with the cubemap converted into an octahedral map.
 * Arguments of `_clearColor` and `_clearAlpha` of method `BBMOD_Cubemap.to_single_surface` are now optional and they default to `c_black` and 1 respectively.
 * Added new method `to_octahedron` to `BBMOD_Cubemap`, which converts the cubemap to an octahedral map.
+* Fixed methods `world_to_screen` and `screen_point_to_vec3` of `BBMOD_BaseCamera`, which returned coordinates mirrored on the Y axis on some platforms.
