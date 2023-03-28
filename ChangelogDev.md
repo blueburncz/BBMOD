@@ -2,6 +2,7 @@
 > This file is used to accumulate changes before a changelog for a release is
 > created.
 
+* Fixed `BBMOD_Cubemap` contents being flipped vertically on Windows.
 * Added an optional argument `_format` to function `bbmod_surface_check`, which is the surface format to use when the surface is created.
 * Added new property `Format` to `BBMOD_Cubemap`, which is the format of created surfaces. Default value is `surface_rgba8unorm`.
 * Added new property `SurfaceOctahedron` to `BBMOD_Cubemap`, which is a surface with the cubemap converted into an octahedral map.
