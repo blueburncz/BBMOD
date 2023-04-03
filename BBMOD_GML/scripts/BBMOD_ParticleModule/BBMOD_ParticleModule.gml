@@ -41,7 +41,7 @@ function BBMOD_ParticleModule()
 	/// {@link BBMOD_ParticleEmitter.Particles} at which is the particle stored.
 	static on_particle_start = undefined;
 
-	/// @func (_emitter, _particleIndex)
+	/// @func on_particle_finish(_emitter, _particleIndex)
 	/// @desc Executed when a particle dies.
 	/// @param {Struct.BBMOD_ParticleEmitter} _emitter The emitter.
 	/// @param {Real} _particleIndex The row within
