@@ -37,6 +37,7 @@
 ///
 /// @see BBMOD_IRenderable
 /// @see BBMOD_Camera
+
 function BBMOD_DefaultRenderer()
 	: BBMOD_BaseRenderer() constructor
 {
@@ -207,7 +208,7 @@ function BBMOD_DefaultRenderer()
 		//
 		bbmod_render_pass_set(BBMOD_ERenderPass.Alpha);
 
-		var _rqi = 0;
+		_rqi = 0;
 		repeat (array_length(_renderQueues))
 		{
 			var _queue = _renderQueues[_rqi++].submit();
@@ -216,6 +217,9 @@ function BBMOD_DefaultRenderer()
 				_queue.clear();
 			}
 		}
+
+		// Reset render pass back to Forward at the end!
+		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global("bbmod_Shadowmap");
