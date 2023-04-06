@@ -21,6 +21,22 @@ function BBMOD_IEventListener()
 	/// @private
 	__listeners = undefined;
 
+	static _onEvent = function (_event, _listener=undefined) {
+		gml_pragma("forceinline");
+		if (is_method(_event))
+		{
+			_listener = _event;
+			_event = __BBMOD_EV_ALL;
+		}
+		__listeners ??= ds_map_create();
+		if (!ds_map_exists(__listeners, _event))
+		{
+			__listeners[? _event] = [];
+		}
+		array_push(__listeners[? _event], _listener);
+		return self;
+	};
+
 	/// @func on_event([_event, ]_listener)
 	///
 	/// @desc Adds a listener for a specific event.
@@ -54,35 +70,8 @@ function BBMOD_IEventListener()
 	/// ```
 	///
 	/// @see BBMOD_IEventListener.off_event
-	static _onEvent = function (_event, _listener=undefined) {
-		gml_pragma("forceinline");
-		if (is_method(_event))
-		{
-			_listener = _event;
-			_event = __BBMOD_EV_ALL;
-		}
-		__listeners ??= ds_map_create();
-		if (!ds_map_exists(__listeners, _event))
-		{
-			__listeners[? _event] = [];
-		}
-		array_push(__listeners[? _event], _listener);
-		return self;
-	};
-
 	on_event = _onEvent;
 
-	/// @func off_event([_event])
-	///
-	/// @desc Removes event listeners.
-	///
-	/// @param {String} [_event] The name of the event for which should be the
-	/// listener removed. If `undefined`, then listeners for all events are
-	/// removed.
-	///
-	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
-	///
-	/// @see BBMOD_IEventListener.on_event
 	static _offEvent = function (_event=undefined) {
 		gml_pragma("forceinline");
 		if (__listeners == undefined)
@@ -100,16 +89,19 @@ function BBMOD_IEventListener()
 		return self;
 	};
 
-	off_event = _offEvent;
-
-	/// @func trigger_event(_event, _data)
+	/// @func off_event([_event])
 	///
-	/// @desc Triggers an event in the event listener.
+	/// @desc Removes event listeners.
 	///
-	/// @param {String} _event The event name.
-	/// @param {Any} _data The event data.
+	/// @param {String} [_event] The name of the event for which should be the
+	/// listener removed. If `undefined`, then listeners for all events are
+	/// removed.
 	///
 	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
+	///
+	/// @see BBMOD_IEventListener.on_event
+	off_event = _offEvent;
+
 	static _triggerEvent = function (_event, _data) {
 		gml_pragma("forceinline");
 		if (__listeners == undefined)
@@ -142,6 +134,14 @@ function BBMOD_IEventListener()
 		return self;
 	};
 
+	/// @func trigger_event(_event, _data)
+	///
+	/// @desc Triggers an event in the event listener.
+	///
+	/// @param {String} _event The event name.
+	/// @param {Any} _data The event data.
+	///
+	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
 	trigger_event = _triggerEvent;
 
 	array_push(__destroyActions, function () {
