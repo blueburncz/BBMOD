@@ -48,10 +48,6 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {Bool} If `false` then the animation has not been loaded yet.
-	/// @readonly
-	IsLoaded = false;
-
 	/// @var {Real} The major version of the animation file.
 	VersionMajor = BBMOD_VERSION_MAJOR;
 
