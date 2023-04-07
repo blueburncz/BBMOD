@@ -5,8 +5,6 @@
 /// @desc Base struct for renderers, which execute
 /// [render commands](./BBMOD_RenderCommand.html) created with method
 /// [render](./BBMOD_Model.render.html).
-///
-/// @see BBMOD_DefaultRenderer
 function BBMOD_BaseRenderer()
 	: BBMOD_Class() constructor
 {
