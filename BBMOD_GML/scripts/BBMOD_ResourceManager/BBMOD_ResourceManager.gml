@@ -1,6 +1,5 @@
 /// @macro {Struct.BBMOD_ResourceManager} The default resource manager.
 /// @note This resoure manager should never be destroyed!
-/// @see BBMOD_ResourceManager
 #macro BBMOD_RESOURCE_MANAGER __bbmod_resource_manager()
 
 /// @func BBMOD_ResourceManager()
@@ -42,6 +41,8 @@
 /// matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, 0, 1, 1, 1));
 /// model.render();
 /// ```
+///
+/// @see BBMOD_Resource
 function BBMOD_ResourceManager()
 	: BBMOD_Class() constructor
 {

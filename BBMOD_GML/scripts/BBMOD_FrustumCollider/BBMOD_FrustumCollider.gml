@@ -31,9 +31,10 @@ function BBMOD_FrustumCollider()
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {Array<Struct.BBMOD_PlaneCollider>}
-	/// @see BBMOD_PlaneCollider
-	/// @see BBMOD_EFrustumPlane
+	/// @var {Array<Struct.BBMOD_PlaneCollider>} An array of planes that define
+	/// the frustum.
+	/// @note You can use values from {@link BBMOD_EFrustumPlane} as an index
+	/// to access a specific plane.
 	Planes = [
 		new BBMOD_PlaneCollider(),
 		new BBMOD_PlaneCollider(),

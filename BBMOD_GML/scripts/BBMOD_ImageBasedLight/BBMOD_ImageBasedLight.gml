@@ -32,7 +32,6 @@ function BBMOD_ImageBasedLight(_texture)
 /// @return {Struct.BBMOD_ImageBasedLight} The image based light or `undefined`.
 ///
 /// @see bbmod_ibl_set
-/// @see BBMOD_ImageBasedLight
 function bbmod_ibl_get()
 {
 	gml_pragma("forceinline");
@@ -47,7 +46,6 @@ function bbmod_ibl_get()
 /// `undefined`.
 ///
 /// @see bbmod_ibl_get
-/// @see BBMOD_ImageBasedLight
 function bbmod_ibl_set(_ibl)
 {
 	gml_pragma("forceinline");

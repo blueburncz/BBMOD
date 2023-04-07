@@ -7,91 +7,69 @@
 #macro BBMOD_RGBM_VALUE_MAX (255.0 * __BBMOD_RGBM_RANGE)
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_aqua)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_AQUA (new BBMOD_Color().FromConstant(c_aqua))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_black)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_BLACK (new BBMOD_Color().FromConstant(c_black))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_blue)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_BLUE (new BBMOD_Color().FromConstant(c_blue))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_dkgray)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_DKGRAY (new BBMOD_Color().FromConstant(c_dkgray))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_fuchsia)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_FUCHSIA (new BBMOD_Color().FromConstant(c_fuchsia))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_gray)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_GRAY (new BBMOD_Color().FromConstant(c_gray))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_green)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_GREEN (new BBMOD_Color().FromConstant(c_green))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_lime)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_LIME (new BBMOD_Color().FromConstant(c_lime))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_ltgray)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_LTGRAY (new BBMOD_Color().FromConstant(c_ltgray))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_maroon)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_MAROON (new BBMOD_Color().FromConstant(c_maroon))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_navy)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_NAVY (new BBMOD_Color().FromConstant(c_navy))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_olive)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_OLIVE (new BBMOD_Color().FromConstant(c_olive))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_orange)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_ORANGE (new BBMOD_Color().FromConstant(c_orange))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_purple)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_PURPLE (new BBMOD_Color().FromConstant(c_purple))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_red)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_RED (new BBMOD_Color().FromConstant(c_red))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_silver)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_SILVER (new BBMOD_Color().FromConstant(c_silver))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_teal)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_TEAL (new BBMOD_Color().FromConstant(c_teal))
 
 /// @macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_white)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_WHITE (new BBMOD_Color().FromConstant(c_white))
 
 ///@macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_yellow)`.
-/// @see BBMOD_Color
 #macro BBMOD_C_YELLOW (new BBMOD_Color().FromConstant(c_yellow))
 
 /// @func BBMOD_Color([_red[, _green[, _blue[, _alpha]]]])
 ///
 /// @desc A color struct with support for high dynamic range.
 ///
-/// @param {Real} [_red] The value of the red channel. Use values in range
-/// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
-/// @param {Real} [_green] The value of the green channel. Use values in range
-/// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
-/// @param {Real} [_blue] The value of the blue channel. Use values in range
-/// 0..`BBMOD_RGBM_VALUE_MAX`. Defaults to 255.
+/// @param {Real} [_red] The value of the red channel. Defaults to 255.
+/// @param {Real} [_green] The value of the green channel. Defaults to 255.
+/// @param {Real} [_blue] The value of the blue channel. Defaults to 255.
 /// @param {Real} [_alpha] The value of the alpha channel. Use values in range
 /// 0..1. Defaults to 1.
 ///

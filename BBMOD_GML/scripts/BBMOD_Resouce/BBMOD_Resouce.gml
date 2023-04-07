@@ -3,6 +3,8 @@
 /// @extends BBMOD_Class
 ///
 /// @desc Base struct for all BBMOD resources.
+///
+/// @see BBMOD_ResourceManager
 function BBMOD_Resource()
 	: BBMOD_Class() constructor
 {

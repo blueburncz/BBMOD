@@ -55,6 +55,8 @@
 /// animationStateMachine = animationStateMachine.destroy();
 /// ```
 ///
+/// @see BBMOD_Animation
+/// @see BBMOD_AnimationInstance
 /// @see BBMOD_AnimationPlayer
 /// @see BBMOD_AnimationState
 function BBMOD_AnimationStateMachine(_animationPlayer)

@@ -3,11 +3,6 @@
 /// @extends BBMOD_Class
 ///
 /// @desc Base class for lights.
-///
-/// @see BBMOD_DirectionalLight
-/// @see BBMOD_ImageBasedLight
-/// @see BBMOD_PointLight
-/// @see BBMOD_SpotLight
 function BBMOD_Light()
 	: BBMOD_Class() constructor
 {

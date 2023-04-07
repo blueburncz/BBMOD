@@ -96,8 +96,6 @@ global.__bbmodShaderCurrent = undefined;
 ///
 /// @note You can use method {@link BBMOD_Shader.add_variant} to add different
 /// variants of the shader to be used with different vertex formats.
-///
-/// @see BBMOD_VertexFormat
 function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	: BBMOD_Class() constructor
 {

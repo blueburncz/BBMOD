@@ -1,60 +1,49 @@
 /// @macro {Struct.BBMOD_VertexFormat} A vertex format of lightmapped models
 /// with two UV channels.
-/// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_DEFAULT_LIGHTMAP __bbmod_vformat_default_lightmap()
 
 /// @macro {Struct.BBMOD_VertexFormat} Vertex format of 2D sprites.
-/// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_DEFAULT_SPRITE __bbmod_vformat_default_sprite()
 
 /// @macro {Struct.BBMOD_DefaultShader} The default shader.
-/// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT __bbmod_shader_default()
 
 /// @macro {Struct.BBMOD_DefaultShader} The default shader for unlit objects.
-/// @see BBMOD_DefaultShader
 #macro BBMOD_SHADER_DEFAULT_UNLIT __bbmod_shader_default_unlit()
 
 /// @macro {Struct.BBMOD_BaseShader} Depth shader for static models.
 ///
 /// @example
 /// Following code enables casting shadows for a custom material
-/// (requires a {@link BBMOD_Renderer} with enabled shadows).
+/// (requires a {@link BBMOD_BaseRenderer} with enabled shadows).
 /// ```gml
 /// material = BBMOD_MATERIAL_DEFAULT.clone()
 ///     .set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 /// ```
 ///
 /// @see BBMOD_ERenderPass.Shadows
-/// @see BBMOD_BaseShader
 #macro BBMOD_SHADER_DEFAULT_DEPTH __bbmod_shader_default_depth()
 
 /// @macro {Struct.BBMOD_LightmapShader} Shader for rendering lightmapped models
 /// with two UV channels.
 /// @note This shader does not support subsurface scattering!
-/// @see BBMOD_LightmapShader
 #macro BBMOD_SHADER_DEFAULT_LIGHTMAP __bbmod_shader_default_lightmap()
 
 /// @macro {Struct.BBMOD_DefaultSpriteShader} Shader for 2D sprites.
-/// @see BBMOD_DefaultSpriteShader
 #macro BBMOD_SHADER_DEFAULT_SPRITE __bbmod_shader_default_sprite()
 
 /// @macro {Struct.BBMOD_DefaultMaterial} The default material.
-/// @see BBMOD_Material
 #macro BBMOD_MATERIAL_DEFAULT __bbmod_material_default()
 
 /// @macro {Struct.BBMOD_DefaultMaterial} The default material for unlit objects.
-/// @see BBMOD_Material
 #macro BBMOD_MATERIAL_DEFAULT_UNLIT __bbmod_material_default_unlit()
 
 /// @macro {Struct.BBMOD_LightmapMaterial} Material for lightmapped models with
 /// two UV channels.
 /// @macro This material does not support subsurface scattering!
-/// @see BBMOD_LightmapMaterial
 #macro BBMOD_MATERIAL_DEFAULT_LIGHTMAP __bbmod_material_default_lightmap()
 
 /// @macro {Struct.BBMOD_DefaultMaterial} Material for 2D sprites.
-/// @see BBMOD_DefaultMaterial
 #macro BBMOD_MATERIAL_DEFAULT_SPRITE __bbmod_material_default_sprite()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -179,24 +168,20 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 // DEPRECATED!!!
 
 /// @macro {Struct.BBMOD_VertexFormat} Vertex format of 2D sprites.
-/// @see BBMOD_VertexFormat
 /// @deprecated Please use {@link BBMOD_VFORMAT_DEFAULT_SPRITE} instead.
 #macro BBMOD_VFORMAT_SPRITE BBMOD_VFORMAT_DEFAULT_SPRITE
 
 /// @macro {Struct.BBMOD_VertexFormat} A vertex format of lightmapped models
 /// with two UV channels.
-/// @see BBMOD_VertexFormat
 /// @deprecated Please use {@link BBMOD_VFORMAT_DEFAULT_LIGHTMAP} instead.
 #macro BBMOD_VFORMAT_LIGHTMAP BBMOD_VFORMAT_DEFAULT_LIGHTMAP
 
 /// @macro {Struct.BBMOD_DefaultShader} The default shader for animated models.
-/// @see BBMOD_DefaultShader
 /// @deprecated Please use {@link BBMOD_SHADER_DEFAULT} instead.
 #macro BBMOD_SHADER_DEFAULT_ANIMATED BBMOD_SHADER_DEFAULT
 
 /// @macro {Struct.BBMOD_DefaultShader} The default shader for dynamically
 /// batched models.
-/// @see BBMOD_DefaultShader
 /// @see BBMOD_DynamicBatch
 /// @deprecated Please use {@link BBMOD_SHADER_DEFAULT} instead.
 #macro BBMOD_SHADER_DEFAULT_BATCHED BBMOD_SHADER_DEFAULT
@@ -224,19 +209,16 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 #macro BBMOD_SHADER_LIGHTMAP BBMOD_SHADER_DEFAULT_LIGHTMAP
 
 /// @macro {Struct.BBMOD_DefaultSpriteShader} Shader for 2D sprites.
-/// @see BBMOD_DefaultSpriteShader
 /// @deprecated Please use {@link BBMOD_SHADER_DEFAULT_SPRITE} instead.
 #macro BBMOD_SHADER_SPRITE BBMOD_SHADER_DEFAULT_SPRITE
 
 /// @macro {Struct.BBMOD_DefaultMaterial} The default material for animated
 /// models.
-/// @see BBMOD_Material
 /// @deprecated Please use {@link BBMOD_MATERIAL_DEFAULT} instead.
 #macro BBMOD_MATERIAL_DEFAULT_ANIMATED BBMOD_MATERIAL_DEFAULT
 
 /// @macro {Struct.BBMOD_DefaultMaterial} The default material for dynamically
 /// batched models.
-/// @see BBMOD_Material
 /// @see BBMOD_DynamicBatch
 /// @deprecated Please use {@link BBMOD_MATERIAL_DEFAULT} instead.
 #macro BBMOD_MATERIAL_DEFAULT_BATCHED BBMOD_MATERIAL_DEFAULT
@@ -247,7 +229,6 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 #macro BBMOD_MATERIAL_LIGHTMAP BBMOD_MATERIAL_DEFAULT_LIGHTMAP
 
 /// @macro {Struct.BBMOD_DefaultMaterial} Material for 2D sprites.
-/// @see BBMOD_DefaultMaterial
 /// @deprecated Please use {@link BBMOD_MATERIAL_DEFAULT_SPRITE} instead.
 #macro BBMOD_MATERIAL_SPRITE BBMOD_MATERIAL_DEFAULT_SPRITE
 
