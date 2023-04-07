@@ -9,11 +9,11 @@ function BBMOD_Importer()
 	BBMOD_CLASS_GENERATED_BODY;
 
 	/// @var {Bool} If true then UV texture coordinates of imported models
-	/// will be flipped horizontally. Defaults to false.
+	/// will be flipped horizontally. Defaults to `false`.
 	FlipUVHorizontally = false;
 
 	/// @var {Bool} If true then UV texture coordinates of imported models
-	/// will be flipped vertically. Defaults to false.
+	/// will be flipped vertically. Defaults to `false`.
 	FlipUVVertically = false;
 
 	/// @func can_import(_path)
