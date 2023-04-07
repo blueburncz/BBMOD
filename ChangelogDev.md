@@ -9,3 +9,6 @@
 * Arguments of `_clearColor` and `_clearAlpha` of method `BBMOD_Cubemap.to_single_surface` are now optional and they default to `c_black` and 1 respectively.
 * Added new method `to_octahedron` to `BBMOD_Cubemap`, which converts the cubemap to an octahedral map.
 * Fixed methods `world_to_screen` and `screen_point_to_vec3` of `BBMOD_BaseCamera`, which returned coordinates mirrored on the Y axis on some platforms.
+* Fixed `BBMOD_Cubemap` contents being flipped vertically on Windows.
+* Fixed crash in `bbmod_instance_to_buffer` when saving `BBMOD_EPropertyType.RealArray` properties.
+* Fixed gizmo, which couldn't be clicked on after update 3.16.8.

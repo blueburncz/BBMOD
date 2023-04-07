@@ -665,7 +665,7 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties)
 
 			case BBMOD_EPropertyType.RealArray:
 				var _array = variable_instance_get(id, _propertyName);
-				var _size = array_length(_size);
+				var _size = array_length(_array);
 				buffer_write(_buffer, buffer_u32, _size);
 				var i = 0;
 				repeat (_size)
