@@ -33,7 +33,7 @@
 ///     },
 /// };
 /// ```
-/// @see BBMOD_Renderer
+/// @see BBMOD_BaseRenderer
 function BBMOD_IRenderable()
 {
 	/// @func render()
