@@ -103,4 +103,5 @@ renderer.add(batchShell)
 	.add(global.terrain);
 
 reflectionProbe = new BBMOD_ReflectionProbe();
+reflectionProbe.Size = new BBMOD_Vec3(100);
 bbmod_reflection_probe_add(reflectionProbe);

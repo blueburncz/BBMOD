@@ -416,6 +416,12 @@ function BBMOD_BaseRenderer()
 				NeedsUpdate = false;
 			}
 		}
+
+		var _reflectionProbe = bbmod_reflection_probe_find(bbmod_camera_get_position());
+		if (_reflectionProbe != undefined)
+		{
+			global.__bbmodReflectionProbeTexture = sprite_get_texture(_reflectionProbe.Sprite, 0);
+		}
 	};
 
 	/// @func __render_shadowmap()
