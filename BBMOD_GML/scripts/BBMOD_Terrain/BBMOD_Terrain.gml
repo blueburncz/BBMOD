@@ -725,7 +725,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			if (_mat != undefined)
 			{
 				RenderQueue
-					.apply_material(_mat, VertexFormat, (i == 0) ? ~0 : (1 << BBMOD_ERenderPass.Forward))
+					.apply_material(_mat, VertexFormat, (i == 0) ? ~0 : ((1 << BBMOD_ERenderPass.Forward) | (1 << BBMOD_ERenderPass.ReflectionCapture)))
 					.begin_conditional_block();
 
 				if (i == 0)

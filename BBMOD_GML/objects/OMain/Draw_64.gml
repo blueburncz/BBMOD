@@ -3,14 +3,6 @@ if (!renderer.UseAppSurface)
 	renderer.present();
 }
 
-if (debugOverlay)
-{
-	if (reflectionProbe.Sprite != undefined)
-	{
-		draw_sprite(reflectionProbe.Sprite, 0, 0, 0);
-	}
-}
-
 var _windowWidth = window_get_width();
 var _windowHeight = window_get_height();
 var _font = draw_get_font();

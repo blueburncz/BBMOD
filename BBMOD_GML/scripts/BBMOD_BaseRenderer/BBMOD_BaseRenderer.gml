@@ -372,6 +372,10 @@ function BBMOD_BaseRenderer()
 
 		static _renderQueues = bbmod_render_queues_get();
 
+		bbmod_shader_unset_global("bbmod_Shadowmap");
+		bbmod_shader_set_global_f("bbmod_ShadowmapEnableVS", 0.0);
+		bbmod_shader_set_global_f("bbmod_ShadowmapEnablePS", 0.0);
+
 		bbmod_render_pass_set(BBMOD_ERenderPass.ReflectionCapture);
 		var _cubemap = __cubemap;
 
@@ -884,6 +888,8 @@ function BBMOD_BaseRenderer()
 
 			PostProcessor.draw(__surFinal, X, Y);
 		}
+
+		//__cubemap.draw_cross(0, 0);
 
 		return self;
 	};

@@ -30,6 +30,7 @@ function __bbmod_material_terrain()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_TERRAIN);
+		_material.set_shader(BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_TERRAIN);
 		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 		_material.Mipmapping = mip_on;
 		_material.Repeat = true;
@@ -45,6 +46,7 @@ function __bbmod_material_terrain_unlit()
 	if (_material == undefined)
 	{
 		_material = BBMOD_MATERIAL_TERRAIN.clone();
+		_material.set_shader(BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_TERRAIN_UNLIT);
 		_material.set_shader(BBMOD_ERenderPass.Forward, BBMOD_SHADER_TERRAIN_UNLIT);
 	}
 	return _material;

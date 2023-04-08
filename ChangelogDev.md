@@ -21,6 +21,6 @@
 * Added new function `bbmod_reflection_probe_remove`
 * Added new function `bbmod_reflection_probe_remove_index`
 * Added new function `bbmod_reflection_probe_clear`
-* Added `ReflectionProbe` to `BBMOD_ERenderPass`
+* Added new member `ReflectionCapture` to `BBMOD_ERenderPass`
 * Added new method `prefilter_ibl` to `BBMOD_Cubemap`
-* Material `BBMOD_MATERIAL_SKY` now has a shader for the new `BBMOD_ERenderPass.ReflectionCapture` pass.
+* Materials `BBMOD_MATERIAL_SKY`, `BBMOD_MATERIAL_TERRAIN` and `BBMOD_MATERIAL_TERRAIN_UNLIT` now have a shader for the new `BBMOD_ERenderPass.ReflectionCapture` pass, so they are visible in reflection probes.

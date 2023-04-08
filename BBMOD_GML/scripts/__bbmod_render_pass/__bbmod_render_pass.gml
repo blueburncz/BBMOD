@@ -1,18 +1,18 @@
 /// @enum Enumeration of render passes.
 enum BBMOD_ERenderPass
 {
+	/// @member Render pass where objects are rendered into reflection probes.
+	ReflectionCapture = 0,
 	/// @member Render pass where shadow-casting are objects rendered into
 	/// shadow maps.
-	Shadows   = 0,
+	Shadows = 1,
 	/// @member Render pass where opaque are rendered into an off-screen depth
 	/// buffer when using {@link BBMOD_DefaultRenderer}.
 	/// @deprecated Please use {@link BBMOD_ERenderPass.DepthOnly} instead.
-	Deferred  = 1,
+	Deferred = 2,
 	/// @member Render pass where opaque objects are rendered into an off-screen
 	/// depth buffer.
-	DepthOnly = 1,
-	/// @member Render pass where objects are rendered into reflection probes.
-	ReflectionCapture,
+	DepthOnly = 2,
 	/// @member Render pass where opaque objects are rendered into a G-Buffer.
 	GBuffer,
 	/// @member Render pass where opaque objects are rendered into the frame
@@ -43,6 +43,9 @@ function bbmod_render_pass_to_string(_pass)
 {
 	switch (_pass)
 	{
+	case BBMOD_ERenderPass.ReflectionCapture:
+		return "ReflectionCapture";
+
 	case BBMOD_ERenderPass.Shadows:
 		return "Shadows";
 
@@ -76,6 +79,9 @@ function bbmod_render_pass_from_string(_name)
 {
 	switch (_name)
 	{
+	case "ReflectionCapture":
+		return BBMOD_ERenderPass.ReflectionCapture;
+
 	case "Shadows":
 		return BBMOD_ERenderPass.Shadows;
 
