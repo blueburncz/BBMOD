@@ -17,7 +17,6 @@
 /// var _vertexWithNormal = new BBMOD_Vertex(_vformatWithNormals);
 /// show_debug_message(_vertex.Normal); // Prints array [0, 0, 0]
 /// ```
-/// @see BBMOD_VertexFormat
 function BBMOD_Vertex(_vertexFormat)
 	: BBMOD_Class() constructor
 {

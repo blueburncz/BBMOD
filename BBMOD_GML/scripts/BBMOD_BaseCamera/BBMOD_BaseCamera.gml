@@ -8,8 +8,6 @@ global.__bbmodCameraCurrent = undefined;
 ///
 /// @desc A camera with support for both orthographic and perspective
 /// projection.
-///
-/// @see BBMOD_Camera
 function BBMOD_BaseCamera()
 	: BBMOD_Class() constructor
 {

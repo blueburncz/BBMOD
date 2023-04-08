@@ -1,19 +1,16 @@
 /// @macro {Struct.BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(1, 0, 0)`.
 /// @see BBMOD_VEC3_RIGHT
 /// @see BBMOD_VEC3_UP
-/// @see BBMOD_Vec3
 #macro BBMOD_VEC3_FORWARD new BBMOD_Vec3(1.0, 0.0, 0.0)
 
 /// @macro {Struct.BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(0, 1, 0)`.
 /// @see BBMOD_VEC3_FORWARD
 /// @see BBMOD_VEC3_UP
-/// @see BBMOD_Vec3
 #macro BBMOD_VEC3_RIGHT new BBMOD_Vec3(0.0, 1.0, 0.0)
 
 /// @macro {Struct.BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(0, 0, 1)`.
 /// @see BBMOD_VEC3_RIGHT
 /// @see BBMOD_VEC3_FORWARD
-/// @see BBMOD_Vec3
 #macro BBMOD_VEC3_UP new BBMOD_Vec3(0.0, 0.0, 1.0)
 
 /// @func BBMOD_Vec3([_x[, _y, _z]])

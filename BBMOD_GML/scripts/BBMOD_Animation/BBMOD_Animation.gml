@@ -43,6 +43,11 @@
 /// ```
 ///
 /// @throws {BBMOD_Exception} When the animation fails to load.
+///
+/// @see BBMOD_AnimationInstance
+/// @see BBMOD_AnimationPlayer
+/// @see BBMOD_AnimationState
+/// @see BBMOD_AnimationStateMachine
 function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {

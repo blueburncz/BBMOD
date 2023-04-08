@@ -1,5 +1,12 @@
 /// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs.
-/// @see BBMOD_BaseShader
+///
+/// @example
+/// ```gml
+/// material = BBMOD_MATERIAL_DEFAULT.clone()
+///     .set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID);
+/// ```
+///
+/// @see BBMOD_ERenderPass.Id
 #macro BBMOD_SHADER_INSTANCE_ID __bbmod_shader_id()
 
 function __bbmod_shader_id()
@@ -16,19 +23,16 @@ function __bbmod_shader_id()
 // DEPRECATED!!!
 
 /// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs.
-/// @see BBMOD_BaseShader
 /// @deprecated Please use {@link BBMOD_SHADER_INSTANCE_ID} instead.
 #macro BBMOD_SHADER_INSTANCE_ID_ANIMATED BBMOD_SHADER_INSTANCE_ID
 
 /// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs.
-/// @see BBMOD_BaseShader
 /// @deprecated Please use {@link BBMOD_SHADER_INSTANCE_ID} instead.
 #macro BBMOD_SHADER_INSTANCE_ID_BATCHED BBMOD_SHADER_INSTANCE_ID
 
 /// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs
 /// for lightmapped models.
-/// @see BBMOD_BaseShader
-/// @deprecated Please use {@link BBMOD_SHADER_INSTANCE_ID_LIGHTMAP} instead.
+/// @deprecated Please use {@link BBMOD_SHADER_INSTANCE_ID} instead.
 #macro BBMOD_SHADER_LIGHTMAP_INSTANCE_ID BBMOD_SHADER_INSTANCE_ID
 
 bbmod_shader_register("BBMOD_SHADER_INSTANCE_ID",          BBMOD_SHADER_INSTANCE_ID);

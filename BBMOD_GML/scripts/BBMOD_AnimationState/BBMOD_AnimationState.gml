@@ -62,6 +62,9 @@
 /// }));
 /// ```
 ///
+/// @see BBMOD_Animation
+/// @see BBMOD_AnimationInstance
+/// @see BBMOD_AnimationPlayer
 /// @see BBMOD_AnimationStateMachine
 function BBMOD_AnimationState(_name, _animation, _loop=false)
 	: BBMOD_State(_name) constructor

@@ -6,6 +6,9 @@
 /// instance of.
 ///
 /// @see BBMOD_Animation
+/// @see BBMOD_AnimationPlayer
+/// @see BBMOD_AnimationState
+/// @see BBMOD_AnimationStateMachine
 function BBMOD_AnimationInstance(_animation) constructor
 {
 	/// @var {Struct.BBMOD_Animation} The animation to be played.

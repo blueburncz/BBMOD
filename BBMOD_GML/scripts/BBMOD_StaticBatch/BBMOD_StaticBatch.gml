@@ -28,7 +28,6 @@
 /// batch.freeze();
 /// ```
 ///
-/// @see BBMOD_Model.get_vertex_format
 /// @see BBMOD_DynamicBatch
 ///
 /// @deprecated

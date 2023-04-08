@@ -3,6 +3,8 @@
 /// @extends BBMOD_Class
 ///
 /// @desc Base struct for all BBMOD resources.
+///
+/// @see BBMOD_ResourceManager
 function BBMOD_Resource()
 	: BBMOD_Class() constructor
 {
@@ -19,7 +21,7 @@ function BBMOD_Resource()
 	/// @readonly
 	Path = undefined;
 
-	/// @var {Bool] If `true` then the resource is persistent and it is not
+	/// @var {Bool} If `true` then the resource is persistent and it is not
 	/// destroyed when method `free` is used. Default value is `false`.
 	/// @see BBMOD_Resource.free
 	/// @see BBMOD_ResourceManager.free
