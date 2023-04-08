@@ -268,6 +268,7 @@
     {"name":"BBMOD_MixEmissionModule","order":2,"path":"scripts/BBMOD_MixEmissionModule/BBMOD_MixEmissionModule.yy",},
     {"name":"SndShell7","order":7,"path":"sounds/SndShell7/SndShell7.yy",},
     {"name":"BBMOD_MixQuaternionOverTimeModule","order":1,"path":"scripts/BBMOD_MixQuaternionOverTimeModule/BBMOD_MixQuaternionOverTimeModule.yy",},
+    {"name":"__BBMOD_ShMixRGBM","order":19,"path":"shaders/__BBMOD_ShMixRGBM/__BBMOD_ShMixRGBM.yy",},
     {"name":"OGunfireEmitter","order":6,"path":"objects/OGunfireEmitter/OGunfireEmitter.yy",},
     {"name":"BBMOD_ShInstanceIDBatched","order":8,"path":"shaders/BBMOD_ShInstanceIDBatched/BBMOD_ShInstanceIDBatched.yy",},
     {"name":"OSky","order":2,"path":"objects/OSky/OSky.yy",},

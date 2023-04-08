@@ -101,7 +101,3 @@ if (os_browser == browser_not_a_browser)
 // Any object/struct that has a render method can be added to the renderer:
 renderer.add(batchShell)
 	.add(global.terrain);
-
-reflectionProbe = new BBMOD_ReflectionProbe();
-reflectionProbe.Size = new BBMOD_Vec3(100);
-bbmod_reflection_probe_add(reflectionProbe);

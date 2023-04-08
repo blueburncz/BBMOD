@@ -356,6 +356,9 @@ function BBMOD_BaseRenderer()
 
 	static __cubemap = new BBMOD_Cubemap(128);
 
+	__surProbe1 = -1;
+	__surProbe2 = -1;
+
 	/// @func __render_reflection_probes()
 	///
 	/// @desc
@@ -419,11 +422,84 @@ function BBMOD_BaseRenderer()
 			}
 		}
 
+		var _to = global.__bbmodImageBasedLight.Texture;
+
 		var _reflectionProbe = bbmod_reflection_probe_find(bbmod_camera_get_position());
 		if (_reflectionProbe != undefined)
 		{
-			global.__bbmodReflectionProbeTexture = sprite_get_texture(_reflectionProbe.Sprite, 0);
+			_to = sprite_get_texture(_reflectionProbe.Sprite, 0);
 		}
+
+		var _world = matrix_get(matrix_world);
+		matrix_set(matrix_world, matrix_build_identity());
+		{
+			gpu_push_state();
+			gpu_set_state(bbmod_gpu_get_default_state());
+			gpu_set_blendenable(false);
+			gpu_set_tex_filter(false);
+			{
+				var _height = 128;
+				var _width = _height * 8;
+
+				var _surOld = __surProbe1;
+				__surProbe1 = bbmod_surface_check(__surProbe1, _width, _height);
+				__surProbe2 = bbmod_surface_check(__surProbe2, _width, _height);
+
+				if (__surProbe1 != _surOld)
+				{
+					surface_set_target(__surProbe1);
+					{
+						draw_clear_alpha(c_black, 0);
+
+						var _camera = camera_create();
+						camera_set_view_size(_camera, _width, _height);
+						camera_apply(_camera);
+
+						shader_set(__BBMOD_ShMixRGBM);
+						texture_set_stage(shader_get_sampler_index(__BBMOD_ShMixRGBM, "u_texTo"), _to);
+						shader_set_uniform_f(shader_get_uniform(__BBMOD_ShMixRGBM, "u_fFactor"), 1.0);
+						draw_surface(__surProbe2, 0, 0);
+						shader_reset();
+
+						camera_destroy(_camera);
+					}
+					surface_reset_target();
+				}
+
+				surface_set_target(__surProbe2);
+				{
+					draw_clear_alpha(c_black, 0);
+					var _camera = camera_create();
+					camera_set_view_size(_camera, _width, _height);
+					camera_apply(_camera);
+					draw_surface(__surProbe1, 0, 0);
+					camera_destroy(_camera);
+				}
+				surface_reset_target();
+
+				surface_set_target(__surProbe1);
+				{
+					draw_clear_alpha(c_black, 0);
+
+					var _camera = camera_create();
+					camera_set_view_size(_camera, _width, _height);
+					camera_apply(_camera);
+
+					shader_set(__BBMOD_ShMixRGBM);
+					texture_set_stage(shader_get_sampler_index(__BBMOD_ShMixRGBM, "u_texTo"), _to);
+					shader_set_uniform_f(shader_get_uniform(__BBMOD_ShMixRGBM, "u_fFactor"), 0.1);
+					draw_surface(__surProbe2, 0, 0);
+					shader_reset();
+
+					camera_destroy(_camera);
+				}
+				surface_reset_target();
+			}
+			gpu_pop_state();
+		}
+		matrix_set(matrix_world, _world);
+
+		global.__bbmodReflectionProbeTexture = surface_get_texture(__surProbe1);
 	};
 
 	/// @func __render_shadowmap()
@@ -889,8 +965,6 @@ function BBMOD_BaseRenderer()
 			PostProcessor.draw(__surFinal, X, Y);
 		}
 
-		//__cubemap.draw_cross(0, 0);
-
 		return self;
 	};
 
@@ -925,6 +999,16 @@ function BBMOD_BaseRenderer()
 		if (surface_exists(__surFinal))
 		{
 			surface_free(__surFinal);
+		}
+
+		if (surface_exists(__surProbe1))
+		{
+			surface_free(__surProbe1);
+		}
+
+		if (surface_exists(__surProbe2))
+		{
+			surface_free(__surProbe2);
 		}
 
 		if (UseAppSurface)

@@ -396,6 +396,7 @@
     {"id":{"name":"BBMOD_ShFXAA","path":"shaders/BBMOD_ShFXAA/BBMOD_ShFXAA.yy",},},
     {"id":{"name":"BBMOD_DynamicBatch","path":"scripts/BBMOD_DynamicBatch/BBMOD_DynamicBatch.yy",},},
     {"id":{"name":"BBMOD_MixQuaternionOverTimeModule","path":"scripts/BBMOD_MixQuaternionOverTimeModule/BBMOD_MixQuaternionOverTimeModule.yy",},},
+    {"id":{"name":"__BBMOD_ShMixRGBM","path":"shaders/__BBMOD_ShMixRGBM/__BBMOD_ShMixRGBM.yy",},},
     {"id":{"name":"OGunfireEmitter","path":"objects/OGunfireEmitter/OGunfireEmitter.yy",},},
     {"id":{"name":"BBMOD_ShInstanceIDBatched","path":"shaders/BBMOD_ShInstanceIDBatched/BBMOD_ShInstanceIDBatched.yy",},},
     {"id":{"name":"OSky","path":"objects/OSky/OSky.yy",},},
