@@ -74,6 +74,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// the queue.
 	///
 	/// @param {Struct.BBMOD_Material} _material The material to apply.
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format of
+	/// models that will be rendered using this material.
 	/// @param {Real} [_enabledPasses] Mask of enabled rendering passes. The
 	/// material will not be applied if the current rendering pass is not one
 	/// of them.
