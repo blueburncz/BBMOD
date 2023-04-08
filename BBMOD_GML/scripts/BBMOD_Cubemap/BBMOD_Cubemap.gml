@@ -72,7 +72,7 @@ function BBMOD_Cubemap(_resolution)
 	/// octahedral map.
 	/// @see BBMOD_Cubemap.to_octahedron
 	/// @readonly
-	SurfaceOctahedron = noone;
+	SurfaceOctahedron = -1;
 
 	/// @var {Real} A resolution of single cubemap side. Must be power of two.
 	/// @readonly
@@ -91,6 +91,10 @@ function BBMOD_Cubemap(_resolution)
 	/// @var {Id.Camera}
 	/// @private
 	static __camera = camera_create();
+
+	/// @var {Id.Camera}
+	/// @private
+	static __camera2D = camera_create();
 
 	/// @func get_surface(_side)
 	///
@@ -123,9 +127,17 @@ function BBMOD_Cubemap(_resolution)
 	///
 	/// @see BBMOD_Cubemap.Surface
 	static to_single_surface = function (_clearColor=c_black, _clearAlpha=1) {
-		Surface = bbmod_surface_check(Surface, Resolution * 8, Resolution, Format);
+		var _width = Resolution * 8;
+		var _height = Resolution;
+		var _world = matrix_get(matrix_world);
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		matrix_set(matrix_world, matrix_build_identity());
+		Surface = bbmod_surface_check(Surface, _width, _height, Format);
 		surface_set_target(Surface);
 		draw_clear_alpha(_clearColor, _clearAlpha);
+		camera_set_view_size(__camera2D, _width, _height);
+		camera_apply(__camera2D);
 		var _x = 0;
 		var i = 0;
 		repeat (BBMOD_ECubeSide.SIZE)
@@ -134,6 +146,8 @@ function BBMOD_Cubemap(_resolution)
 			_x += Resolution;
 		}
 		surface_reset_target();
+		matrix_set(matrix_world, _world);
+		gpu_pop_state();
 	};
 
 	/// @func to_octahedron([_clearColor[, _clearAlpha]])
@@ -150,12 +164,16 @@ function BBMOD_Cubemap(_resolution)
 	///
 	/// @see BBMOD_Cubemap.SurfaceOctahedron
 	static to_octahedron = function (_clearColor=c_black, _clearAlpha=1) {
+		var _world = matrix_get(matrix_world);
 		SurfaceOctahedron = bbmod_surface_check(SurfaceOctahedron, Resolution, Resolution, Format);
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
 		gpu_set_tex_filter(true);
+		matrix_set(matrix_world, matrix_build_identity());
 		surface_set_target(SurfaceOctahedron);
 		draw_clear_alpha(_clearColor, _clearAlpha);
+		camera_set_view_size(__camera2D, Resolution, Resolution);
+		camera_apply(__camera2D);
 		shader_set(__BBMOD_ShCubemapToOctahedron);
 		shader_set_uniform_f(
 			shader_get_uniform(__BBMOD_ShCubemapToOctahedron, "u_vTexel"),
@@ -164,7 +182,56 @@ function BBMOD_Cubemap(_resolution)
 		draw_surface_stretched(Surface, 0, 0, Resolution, Resolution);
 		shader_reset();
 		surface_reset_target();
+		matrix_set(matrix_world, _world);
 		gpu_pop_state();
+	};
+
+	/// @func prefilter_ibl()
+	///
+	/// @desc
+	///
+	/// @return {Asset.GMSprite}
+	static prefilter_ibl = function () {
+		var _x = 0;
+
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_tex_filter(true);
+		gpu_set_blendenable(false);
+
+		var _width = Resolution * 8;
+		var _height = Resolution;
+		var _world = matrix_get(matrix_world);
+		var _surface = surface_create(_width, _height);
+		surface_set_target(_surface);
+
+		matrix_set(matrix_world, matrix_build_identity());
+		camera_set_view_size(__camera2D, _width, _height);
+		camera_apply(__camera2D);
+
+		shader_set(__BBMOD_ShPrefilterSpecular);
+		var _uRoughness = shader_get_uniform(__BBMOD_ShPrefilterSpecular, "u_fRoughness");
+		for (var i = 0; i <= 6; ++i)
+		{
+			shader_set_uniform_f(_uRoughness, i / 6);
+			draw_surface(SurfaceOctahedron, _x, 0);
+			_x += Resolution;
+		}
+		shader_reset();
+
+		shader_set(__BBMOD_ShPrefilterDiffuse);
+		draw_surface(SurfaceOctahedron, _x, 0);
+		_x += Resolution;
+		shader_reset();
+
+		surface_reset_target();
+
+		gpu_pop_state();
+		matrix_set(matrix_world, _world);
+
+		var _sprite = sprite_create_from_surface(_surface, 0, 0, _width, _height, false, false, 0, 0);
+		surface_free(_surface);
+		return _sprite;
 	};
 
 	/// @func get_view_matrix(_side)

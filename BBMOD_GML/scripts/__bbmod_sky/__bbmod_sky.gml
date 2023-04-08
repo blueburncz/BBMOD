@@ -9,9 +9,9 @@ function __bbmod_material_sky()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		var _skSky = new BBMOD_BaseShader(
-			BBMOD_ShSky, BBMOD_VFORMAT_DEFAULT);
-		_material = new BBMOD_BaseMaterial(_skSky);
+		var _skSky = new BBMOD_BaseShader(BBMOD_ShSky, BBMOD_VFORMAT_DEFAULT);
+		_material = new BBMOD_BaseMaterial(_skSky)
+			.set_shader(BBMOD_ERenderPass.ReflectionCapture, _skSky);
 		_material.Culling = cull_noculling;
 		_material.Mipmapping = mip_off;
 		_material.ZWrite = false;

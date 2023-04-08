@@ -3,6 +3,8 @@ global.day = choose(true, false);
 
 BBMOD_MATERIAL_TERRAIN.set_shader(
 	BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
+BBMOD_MATERIAL_TERRAIN.set_shader(
+	BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_DEFAULT);
 BBMOD_MATERIAL_DEFAULT.set_shader(
 	BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
 

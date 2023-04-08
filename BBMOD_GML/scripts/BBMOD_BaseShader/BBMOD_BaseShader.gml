@@ -177,14 +177,27 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_ibl = function (_ibl=undefined) {
 		gml_pragma("forceinline");
 
-		_ibl ??= global.__bbmodImageBasedLight;
+		var _texture = pointer_null;
+		var _texel;
 
-		var _shaderCurrent = shader_current();
+		_ibl ??= global.__bbmodImageBasedLight;
 
 		if (_ibl != undefined && _ibl.Enabled)
 		{
-			var _texture = _ibl.Texture;
-			var _texel = _ibl.Texel;
+			_texture = _ibl.Texture;
+			_texel = _ibl.Texel;
+		}
+
+		if (global.__bbmodReflectionProbeTexture != pointer_null)
+		{
+			_texture = global.__bbmodReflectionProbeTexture;
+			_texel = texture_get_texel_height(_texture);
+		}
+
+		var _shaderCurrent = shader_current();
+
+		if (_texture != pointer_null)
+		{
 			var _uIBL = shader_get_sampler_index(_shaderCurrent, "bbmod_IBL");
 
 			texture_set_stage(_uIBL, _texture);

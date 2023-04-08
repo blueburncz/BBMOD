@@ -14,8 +14,12 @@ global.__bbmodPunctualLights = [];
 /// Defaults to `(0, 0, 0)`.
 /// @param {Real} [_range] The light's range. Defaults to 1.
 ///
-/// @see BBMOD_PointLight
-/// @see BBMOD_SpotLight
+/// @see bbmod_light_punctual_add
+/// @see bbmod_light_punctual_count
+/// @see bbmod_light_punctual_get
+/// @see bbmod_light_punctual_remove
+/// @see bbmod_light_punctual_remove_index
+/// @see bbmod_light_punctual_clear
 function BBMOD_PunctualLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1.0)
 	: BBMOD_Light() constructor
 {
@@ -46,7 +50,6 @@ function BBMOD_PunctualLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-/// @see BBMOD_PunctualLight
 function bbmod_light_punctual_add(_light)
 {
 	gml_pragma("forceinline");
@@ -64,7 +67,6 @@ function bbmod_light_punctual_add(_light)
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-/// @see BBMOD_PunctualLight
 function bbmod_light_punctual_count()
 {
 	gml_pragma("forceinline");
@@ -84,7 +86,6 @@ function bbmod_light_punctual_count()
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-/// @see BBMOD_PunctualLight
 function bbmod_light_punctual_get(_index)
 {
 	gml_pragma("forceinline");
@@ -105,7 +106,6 @@ function bbmod_light_punctual_get(_index)
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-/// @see BBMOD_PunctualLight
 function bbmod_light_punctual_remove(_light)
 {
 	gml_pragma("forceinline");
@@ -136,7 +136,6 @@ function bbmod_light_punctual_remove(_light)
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_clear
-/// @see BBMOD_PunctualLight
 function bbmod_light_punctual_remove_index(_index)
 {
 	gml_pragma("forceinline");
@@ -153,7 +152,6 @@ function bbmod_light_punctual_remove_index(_index)
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
-/// @see BBMOD_PunctualLight
 function bbmod_light_punctual_clear()
 {
 	gml_pragma("forceinline");

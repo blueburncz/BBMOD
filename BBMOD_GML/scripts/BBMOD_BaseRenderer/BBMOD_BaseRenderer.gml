@@ -356,6 +356,68 @@ function BBMOD_BaseRenderer()
 		return self;
 	};
 
+	static __cubemap = new BBMOD_Cubemap(128);
+
+	/// @func __render_reflection_probes()
+	///
+	/// @desc
+	///
+	/// @note This modifies render pass and view and projection matrices and
+	/// for optimization reasons it does not reset them back! Make sure to do
+	/// that yourself in the calling function if needed.
+	///
+	/// @private
+	static __render_reflection_probes = function () {
+		gml_pragma("forceinline");
+
+		global.__bbmodReflectionProbeTexture = pointer_null;
+
+		static _renderQueues = bbmod_render_queues_get();
+
+		bbmod_render_pass_set(BBMOD_ERenderPass.ReflectionCapture);
+		var _cubemap = __cubemap;
+
+		var _reflectionProbes = global.__bbmodReflectionProbes;
+		var i = 0;
+		repeat (array_length(_reflectionProbes))
+		{
+			with (_reflectionProbes[i++])
+			{
+				if (!Enabled || !NeedsUpdate)
+				{
+					continue;
+				}
+
+				// Copy reflection probe settings to cubemap
+				Position.Copy(_cubemap.Position);
+				_cubemap.Resolution = Resolution;
+				// TODO: HDR (cubemap surface format)
+
+				// Fill cubemap
+				bbmod_material_reset();
+				while (_cubemap.set_target())
+				{
+					draw_clear(c_black);
+					var _rqi = 0;
+					repeat (array_length(_renderQueues))
+					{
+						_renderQueues[_rqi++].submit();
+					}
+					_cubemap.reset_target();
+				}
+				bbmod_material_reset();
+
+				// Prefilter and apply
+				_cubemap.to_single_surface();
+				_cubemap.to_octahedron();
+				var _sprite = _cubemap.prefilter_ibl();
+				set_sprite(_sprite);
+
+				NeedsUpdate = false;
+			}
+		}
+	};
+
 	/// @func __render_shadowmap()
 	///
 	/// @desc Renders a shadowmap.
@@ -626,6 +688,12 @@ function BBMOD_BaseRenderer()
 		}
 
 		bbmod_material_reset();
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Reflection probes
+		//
+		__render_reflection_probes();
 
 		////////////////////////////////////////////////////////////////////////
 		//

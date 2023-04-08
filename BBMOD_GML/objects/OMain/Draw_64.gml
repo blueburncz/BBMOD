@@ -5,7 +5,10 @@ if (!renderer.UseAppSurface)
 
 if (debugOverlay)
 {
-	cubemap.draw_cross(0, 0);
+	if (reflectionProbe.Sprite != undefined)
+	{
+		draw_sprite(reflectionProbe.Sprite, 0, 0, 0);
+	}
 }
 
 var _windowWidth = window_get_width();

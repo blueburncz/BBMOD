@@ -102,4 +102,5 @@ if (os_browser == browser_not_a_browser)
 renderer.add(batchShell)
 	.add(global.terrain);
 
-cubemap = new BBMOD_Cubemap(128);
+reflectionProbe = new BBMOD_ReflectionProbe();
+bbmod_reflection_probe_add(reflectionProbe);

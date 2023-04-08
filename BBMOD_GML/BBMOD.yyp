@@ -415,6 +415,7 @@
     {"id":{"name":"SndGunshot4","path":"sounds/SndGunshot4/SndGunshot4.yy",},},
     {"id":{"name":"BBMOD_ShDefaultDepthBatched","path":"shaders/BBMOD_ShDefaultDepthBatched/BBMOD_ShDefaultDepthBatched.yy",},},
     {"id":{"name":"Fnt16","path":"fonts/Fnt16/Fnt16.yy",},},
+    {"id":{"name":"BBMOD_ReflectionProbe","path":"scripts/BBMOD_ReflectionProbe/BBMOD_ReflectionProbe.yy",},},
     {"id":{"name":"BBMOD_RaycastResult","path":"scripts/BBMOD_RaycastResult/BBMOD_RaycastResult.yy",},},
     {"id":{"name":"__bbmod_default_material","path":"scripts/__bbmod_default_material/__bbmod_default_material.yy",},},
     {"id":{"name":"BBMOD_FrustumCollider","path":"scripts/BBMOD_FrustumCollider/BBMOD_FrustumCollider.yy",},},

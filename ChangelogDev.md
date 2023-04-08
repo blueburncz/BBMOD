@@ -12,3 +12,15 @@
 * Fixed `BBMOD_Cubemap` contents being flipped vertically on Windows.
 * Fixed crash in `bbmod_instance_to_buffer` when saving `BBMOD_EPropertyType.RealArray` properties.
 * Fixed gizmo, which couldn't be clicked on after update 3.16.8.
+
+
+* Added new struct `BBMOD_ReflectionProbe`
+* Added new function `bbmod_reflection_probe_add`
+* Added new function `bbmod_reflection_probe_count`
+* Added new function `bbmod_reflection_probe_get`
+* Added new function `bbmod_reflection_probe_remove`
+* Added new function `bbmod_reflection_probe_remove_index`
+* Added new function `bbmod_reflection_probe_clear`
+* Added `ReflectionProbe` to `BBMOD_ERenderPass`
+* Added new method `prefilter_ibl` to `BBMOD_Cubemap`
+* Material `BBMOD_MATERIAL_SKY` now has a shader for the new `BBMOD_ERenderPass.ReflectionCapture` pass.

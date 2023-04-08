@@ -11,6 +11,8 @@ enum BBMOD_ERenderPass
 	/// @member Render pass where opaque objects are rendered into an off-screen
 	/// depth buffer.
 	DepthOnly = 1,
+	/// @member Render pass where objects are rendered into reflection probes.
+	ReflectionCapture,
 	/// @member Render pass where opaque objects are rendered into a G-Buffer.
 	GBuffer,
 	/// @member Render pass where opaque objects are rendered into the frame
