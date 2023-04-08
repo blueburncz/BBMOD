@@ -191,6 +191,10 @@ function bbmod_reflection_probe_find(_position)
 	{
 		with (_reflectionProbes[i])
 		{
+			if (!Enabled)
+			{
+				continue;
+			}
 			var _min = Position.Sub(Size);
 			var _max = Position.Add(Size);
 			if (_position.X < _min.X || _position.X > _max.X
