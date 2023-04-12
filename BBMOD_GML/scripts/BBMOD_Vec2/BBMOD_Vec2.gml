@@ -398,6 +398,19 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		);
 	};
 
+	/// @func Negate()
+	///
+	/// @desc Negates the vector and returns the result as a new vector.
+	///
+	/// @return {Struct.BBMOD_Vec2} The created vector.
+	static Negate = function () {
+		gml_pragma("forceinline");
+		return new BBMOD_Vec2(
+			-X,
+			-Y
+		);
+	};
+
 	/// @func Normalize()
 	///
 	/// @desc Normalizes the vector and returns the result as a new vector.
