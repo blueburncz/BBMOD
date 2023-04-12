@@ -13,7 +13,7 @@ function BBMOD_PostProcessor()
 
 	/// @var {Id.Surface}
 	/// @private
-	__surPostProcess = noone;
+	__surPostProcess = -1;
 
 	/// @var {Bool} If `true` then the post-processor is enabled. Default value
 	/// is `true`.

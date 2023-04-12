@@ -517,7 +517,7 @@ function BBMOD_Material(_shader=undefined)
 
 	static _make_sprite = function (_r, _g, _b, _a) {
 		gml_pragma("forceinline");
-		static _sur = noone;
+		static _sur = -1;
 		if (!surface_exists(_sur))
 		{
 			_sur = surface_create(1, 1);

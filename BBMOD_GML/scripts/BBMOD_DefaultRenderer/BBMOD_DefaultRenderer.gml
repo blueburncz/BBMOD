@@ -55,7 +55,7 @@ function BBMOD_DefaultRenderer()
 
 	/// @var {Id.Surface} The G-buffer surface.
 	/// @private
-	__surDepthBuffer = noone;
+	__surDepthBuffer = -1;
 
 	/// @var {Bool} Enables screen-space ambient occlusion. This requires
 	/// the depth buffer. Defaults to `false`. Enabling this requires the
@@ -65,11 +65,11 @@ function BBMOD_DefaultRenderer()
 
 	/// @var {Id.Surface} The SSAO surface.
 	/// @private
-	__surSSAO = noone;
+	__surSSAO = -1;
 
 	/// @var {Id.Surface} Surface used for blurring SSAO.
 	/// @private
-	__surWork = noone;
+	__surWork = -1;
 
 	/// @var {Real} Resolution multiplier for SSAO surface. Defaults to 1.
 	SSAOScale = 1.0;
