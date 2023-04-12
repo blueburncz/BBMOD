@@ -392,7 +392,7 @@ function BBMOD_BaseRenderer()
 				var i = 0;
 				repeat (array_length(global.__bbmodPunctualLights))
 				{
-					var _light = global.__bbmodPunctualLights[i];
+					_light = global.__bbmodPunctualLights[i];
 					if (_light.CastShadows
 						&& _light.__getZFar != undefined
 						&& _light.__getShadowmapMatrix != undefined)

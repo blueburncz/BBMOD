@@ -591,11 +591,13 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties)
 				break;
 
 			case BBMOD_EPropertyType.Color:
-				var _color = variable_instance_get(id, _propertyName);
-				buffer_write(_buffer, buffer_f32, _color.Red);
-				buffer_write(_buffer, buffer_f32, _color.Green);
-				buffer_write(_buffer, buffer_f32, _color.Blue);
-				buffer_write(_buffer, buffer_f32, _color.Alpha);
+				{
+					var _color = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _color.Red);
+					buffer_write(_buffer, buffer_f32, _color.Green);
+					buffer_write(_buffer, buffer_f32, _color.Blue);
+					buffer_write(_buffer, buffer_f32, _color.Alpha);
+				}
 				break;
 
 			case BBMOD_EPropertyType.GMFont:
@@ -643,19 +645,23 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties)
 				break;
 
 			case BBMOD_EPropertyType.Quaternion:
-				var _quaternion = variable_instance_get(id, _propertyName);
-				buffer_write(_buffer, buffer_f32, _quaternion.X);
-				buffer_write(_buffer, buffer_f32, _quaternion.Y);
-				buffer_write(_buffer, buffer_f32, _quaternion.Z);
-				buffer_write(_buffer, buffer_f32, _quaternion.W);
+				{
+					var _quaternion = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _quaternion.X);
+					buffer_write(_buffer, buffer_f32, _quaternion.Y);
+					buffer_write(_buffer, buffer_f32, _quaternion.Z);
+					buffer_write(_buffer, buffer_f32, _quaternion.W);
+				}
 				break;
 
 			case BBMOD_EPropertyType.Matrix:
-				var _matrix = variable_instance_get(id, _propertyName);
-				var i = 0;
-				repeat (16)
 				{
-					buffer_write(_buffer, buffer_f32, _matrix[i++]);
+					var _matrix = variable_instance_get(id, _propertyName);
+					var i = 0;
+					repeat (16)
+					{
+						buffer_write(_buffer, buffer_f32, _matrix[i++]);
+					}
 				}
 				break;
 
@@ -664,13 +670,15 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties)
 				break;
 
 			case BBMOD_EPropertyType.RealArray:
-				var _array = variable_instance_get(id, _propertyName);
-				var _size = array_length(_array);
-				buffer_write(_buffer, buffer_u32, _size);
-				var i = 0;
-				repeat (_size)
 				{
-					buffer_write(_buffer, buffer_f32, _array[i++]);
+					var _array = variable_instance_get(id, _propertyName);
+					var _size = array_length(_array);
+					buffer_write(_buffer, buffer_u32, _size);
+					var i = 0;
+					repeat (_size)
+					{
+						buffer_write(_buffer, buffer_f32, _array[i++]);
+					}
 				}
 				break;
 
@@ -679,24 +687,30 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties)
 				break;
 
 			case BBMOD_EPropertyType.Vec2:
-				var _vec2 = variable_instance_get(id, _propertyName);
-				buffer_write(_buffer, buffer_f32, _vec2.X);
-				buffer_write(_buffer, buffer_f32, _vec2.Y);
+				{
+					var _vec2 = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _vec2.X);
+					buffer_write(_buffer, buffer_f32, _vec2.Y);
+				}
 				break;
 
 			case BBMOD_EPropertyType.Vec3:
-				var _vec3 = variable_instance_get(id, _propertyName);
-				buffer_write(_buffer, buffer_f32, _vec3.X);
-				buffer_write(_buffer, buffer_f32, _vec3.Y);
-				buffer_write(_buffer, buffer_f32, _vec3.Z);
+				{
+					var _vec3 = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _vec3.X);
+					buffer_write(_buffer, buffer_f32, _vec3.Y);
+					buffer_write(_buffer, buffer_f32, _vec3.Z);
+				}
 				break;
 
 			case BBMOD_EPropertyType.Vec4:
-				var _vec4 = variable_instance_get(id, _propertyName);
-				buffer_write(_buffer, buffer_f32, _vec4.X);
-				buffer_write(_buffer, buffer_f32, _vec4.Y);
-				buffer_write(_buffer, buffer_f32, _vec4.Z);
-				buffer_write(_buffer, buffer_f32, _vec4.W);
+				{
+					var _vec4 = variable_instance_get(id, _propertyName);
+					buffer_write(_buffer, buffer_f32, _vec4.X);
+					buffer_write(_buffer, buffer_f32, _vec4.Y);
+					buffer_write(_buffer, buffer_f32, _vec4.Z);
+					buffer_write(_buffer, buffer_f32, _vec4.W);
+				}
 				break;
 
 			default:
@@ -727,10 +741,10 @@ function bbmod_instance_from_buffer(_buffer, _properties)
 		throw new BBMOD_Exception("Object \"" + _objectName + "\" not found!");
 	}
 
-	var _x = buffer_read(_buffer, buffer_f32);
-	var _y = buffer_read(_buffer, buffer_f32);
+	var _instanceX = buffer_read(_buffer, buffer_f32);
+	var _instanceY = buffer_read(_buffer, buffer_f32);
 	var _layerName = buffer_read(_buffer, buffer_string);
-	var _instance = instance_create_layer(_x, _y, _layerName, _objectIndex);
+	var _instance = instance_create_layer(_instanceX, _instanceY, _layerName, _objectIndex);
 
 	if (!ds_map_exists(_properties, _objectName))
 	{
@@ -755,11 +769,13 @@ function bbmod_instance_from_buffer(_buffer, _properties)
 				break;
 
 			case BBMOD_EPropertyType.Color:
-				var _r = buffer_read(_buffer, buffer_f32);
-				var _g = buffer_read(_buffer, buffer_f32);
-				var _b = buffer_read(_buffer, buffer_f32);
-				var _a = buffer_read(_buffer, buffer_f32);
-				variable_instance_set(id, _propertyName, new BBMOD_Color(_r, _g, _b, _a));
+				{
+					var _r = buffer_read(_buffer, buffer_f32);
+					var _g = buffer_read(_buffer, buffer_f32);
+					var _b = buffer_read(_buffer, buffer_f32);
+					var _a = buffer_read(_buffer, buffer_f32);
+					variable_instance_set(id, _propertyName, new BBMOD_Color(_r, _g, _b, _a));
+				}
 				break;
 
 			case BBMOD_EPropertyType.GMFont:
@@ -780,21 +796,25 @@ function bbmod_instance_from_buffer(_buffer, _properties)
 				break;
 
 			case BBMOD_EPropertyType.Quaternion:
-				var _x = buffer_read(_buffer, buffer_f32);
-				var _y = buffer_read(_buffer, buffer_f32);
-				var _z = buffer_read(_buffer, buffer_f32);
-				var _w = buffer_read(_buffer, buffer_f32);
-				variable_instance_set(id, _propertyName, new BBMOD_Quaternion(_x, _y, _z, _w));
+				{
+					var _x = buffer_read(_buffer, buffer_f32);
+					var _y = buffer_read(_buffer, buffer_f32);
+					var _z = buffer_read(_buffer, buffer_f32);
+					var _w = buffer_read(_buffer, buffer_f32);
+					variable_instance_set(id, _propertyName, new BBMOD_Quaternion(_x, _y, _z, _w));
+				}
 				break;
 
 			case BBMOD_EPropertyType.Matrix:
-				var _matrix = array_create(16, 0);
-				var i = 0;
-				repeat (16)
 				{
-					_matrix[@ i++] = buffer_read(_buffer, buffer_f32);
+					var _matrix = array_create(16, 0);
+					var i = 0;
+					repeat (16)
+					{
+						_matrix[@ i++] = buffer_read(_buffer, buffer_f32);
+					}
+					variable_instance_set(id, _propertyName, _matrix);
 				}
-				variable_instance_set(id, _propertyName, _matrix);
 				break;
 
 			case BBMOD_EPropertyType.Real:
@@ -802,14 +822,16 @@ function bbmod_instance_from_buffer(_buffer, _properties)
 				break;
 
 			case BBMOD_EPropertyType.RealArray:
-				var _size = buffer_read(_buffer, buffer_u32);
-				var _array = array_create(_size, 0);
-				var i = 0;
-				repeat (_size)
 				{
-					_array[@ i++] = buffer_read(_buffer, buffer_f32);
+					var _size = buffer_read(_buffer, buffer_u32);
+					var _array = array_create(_size, 0);
+					var i = 0;
+					repeat (_size)
+					{
+						_array[@ i++] = buffer_read(_buffer, buffer_f32);
+					}
+					variable_instance_set(id, _propertyName, _array);
 				}
-				variable_instance_set(id, _propertyName, _array);
 				break;
 
 			case BBMOD_EPropertyType.String:
@@ -817,24 +839,30 @@ function bbmod_instance_from_buffer(_buffer, _properties)
 				break;
 
 			case BBMOD_EPropertyType.Vec2:
-				var _x = buffer_read(_buffer, buffer_f32);
-				var _y = buffer_read(_buffer, buffer_f32);
-				variable_instance_set(id, _propertyName, new BBMOD_Vec2(_x, _y));
+				{
+					var _x = buffer_read(_buffer, buffer_f32);
+					var _y = buffer_read(_buffer, buffer_f32);
+					variable_instance_set(id, _propertyName, new BBMOD_Vec2(_x, _y));
+				}
 				break;
 
 			case BBMOD_EPropertyType.Vec3:
-				var _x = buffer_read(_buffer, buffer_f32);
-				var _y = buffer_read(_buffer, buffer_f32);
-				var _z = buffer_read(_buffer, buffer_f32);
-				variable_instance_set(id, _propertyName, new BBMOD_Vec3(_x, _y, _z));
+				{
+					var _x = buffer_read(_buffer, buffer_f32);
+					var _y = buffer_read(_buffer, buffer_f32);
+					var _z = buffer_read(_buffer, buffer_f32);
+					variable_instance_set(id, _propertyName, new BBMOD_Vec3(_x, _y, _z));
+				}
 				break;
 
 			case BBMOD_EPropertyType.Vec4:
-				var _x = buffer_read(_buffer, buffer_f32);
-				var _y = buffer_read(_buffer, buffer_f32);
-				var _z = buffer_read(_buffer, buffer_f32);
-				var _w = buffer_read(_buffer, buffer_f32);
-				variable_instance_set(id, _propertyName, new BBMOD_Vec4(_x, _y, _z, _w));
+				{
+					var _x = buffer_read(_buffer, buffer_f32);
+					var _y = buffer_read(_buffer, buffer_f32);
+					var _z = buffer_read(_buffer, buffer_f32);
+					var _w = buffer_read(_buffer, buffer_f32);
+					variable_instance_set(id, _propertyName, new BBMOD_Vec4(_x, _y, _z, _w));
+				}
 				break;
 
 			default:

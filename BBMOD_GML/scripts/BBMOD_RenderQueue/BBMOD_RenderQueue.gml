@@ -1348,14 +1348,16 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			switch (_command)
 			{
 			case BBMOD_ERenderCommand.ApplyMaterial:
-				var _vertexFormat = _renderCommands[| i++];
-				var _material = _renderCommands[| i++];
-				var _enabledPasses = _renderCommands[| i++];
-				if (((1 << bbmod_render_pass_get()) & _enabledPasses) == 0
-					|| !_material.apply(_vertexFormat))
 				{
-					_condition = false;
-					continue;
+					var _vertexFormat = _renderCommands[| i++];
+					var _material = _renderCommands[| i++];
+					var _enabledPasses = _renderCommands[| i++];
+					if (((1 << bbmod_render_pass_get()) & _enabledPasses) == 0
+						|| !_material.apply(_vertexFormat))
+					{
+						_condition = false;
+						continue;
+					}
 				}
 				break;
 
@@ -1391,88 +1393,137 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.DrawMesh:
-				var _id = _renderCommands[| i++];
-				var _vertexFormat = _renderCommands[| i++];
-				var _material = _renderCommands[| i++];
-				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-					|| !_material.apply(_vertexFormat))
 				{
-					i += 4;
-					_condition = false;
-					continue;
+					var _id = _renderCommands[| i++];
+					var _vertexFormat = _renderCommands[| i++];
+					var _material = _renderCommands[| i++];
+					if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
+						|| !_material.apply(_vertexFormat))
+					{
+						i += 4;
+						_condition = false;
+						continue;
+					}
+					with (BBMOD_SHADER_CURRENT)
+					{
+						set_instance_id(_id);
+						matrix_set(matrix_world, _renderCommands[| i++]);
+						set_material_index(_renderCommands[| i++]);
+					}
+					var _primitiveType = _renderCommands[| i++];
+					vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				}
-				with (BBMOD_SHADER_CURRENT)
-				{
-					set_instance_id(_id);
-					matrix_set(matrix_world, _renderCommands[| i++]);
-					set_material_index(_renderCommands[| i++]);
-				}
-				var _primitiveType = _renderCommands[| i++];
-				vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshAnimated:
-				var _id = _renderCommands[| i++];
-				var _vertexFormat = _renderCommands[| i++];
-				var _material = _renderCommands[| i++];
-				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-					|| !_material.apply(_vertexFormat))
 				{
-					i += 5;
-					_condition = false;
-					continue;
+					var _id = _renderCommands[| i++];
+					var _vertexFormat = _renderCommands[| i++];
+					var _material = _renderCommands[| i++];
+					if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
+						|| !_material.apply(_vertexFormat))
+					{
+						i += 5;
+						_condition = false;
+						continue;
+					}
+					with (BBMOD_SHADER_CURRENT)
+					{
+						set_instance_id(_id);
+						matrix_set(matrix_world, _renderCommands[| i++]);
+						set_bones(_renderCommands[| i++]);
+						set_material_index(_renderCommands[| i++]);
+					}
+					var _primitiveType = _renderCommands[| i++];
+					vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				}
-				with (BBMOD_SHADER_CURRENT)
-				{
-					set_instance_id(_id);
-					matrix_set(matrix_world, _renderCommands[| i++]);
-					set_bones(_renderCommands[| i++]);
-					set_material_index(_renderCommands[| i++]);
-				}
-				var _primitiveType = _renderCommands[| i++];
-				vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshBatched:
-				var _id = _renderCommands[| i++];
-				var _vertexFormat = _renderCommands[| i++];
-				var _material = _renderCommands[| i++];
-
-				if (!_material.apply(_vertexFormat))
 				{
-					i += 4;
-					_condition = false;
-					continue;
-				}
+					var _id = _renderCommands[| i++];
+					var _vertexFormat = _renderCommands[| i++];
+					var _material = _renderCommands[| i++];
 
-				var _matrix = _renderCommands[| i++];
-				var _batchData = _renderCommands[| i++];
-
-				////////////////////////////////////////////////////////////////
-				// Filter batch data by instance ID
-
-				if (_instances != undefined)
-				{
-					if (is_array(_id))
+					if (!_material.apply(_vertexFormat))
 					{
-						var _hasInstances = false;
+						i += 4;
+						_condition = false;
+						continue;
+					}
 
-						if (is_array(_id[0]))
+					var _matrix = _renderCommands[| i++];
+					var _batchData = _renderCommands[| i++];
+
+					////////////////////////////////////////////////////////////////
+					// Filter batch data by instance ID
+
+					if (_instances != undefined)
+					{
+						if (is_array(_id))
 						{
-							////////////////////////////////////////////////////
-							// _id is an array of arrays of IDs
+							var _hasInstances = false;
 
-							_batchData = bbmod_array_clone(_batchData);
-
-							var j = 0;
-							repeat (array_length(_id))
+							if (is_array(_id[0]))
 							{
-								var _idsCurrent = _id[j];
+								////////////////////////////////////////////////////
+								// _id is an array of arrays of IDs
+
+								_batchData = bbmod_array_clone(_batchData);
+
+								var j = 0;
+								repeat (array_length(_id))
+								{
+									var _idsCurrent = _id[j];
+									var _idsCount = array_length(_idsCurrent);
+									var _dataCurrent = bbmod_array_clone(_batchData[j]);
+									_batchData[@ j] = _dataCurrent;
+									var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
+									var _hasData = false;
+
+									var k = 0;
+									repeat (_idsCount)
+									{
+										if (ds_list_find_index(_instances, _idsCurrent[k]) == -1)
+										{
+											var l = 0;
+											repeat (_slotsPerInstance)
+											{
+												_dataCurrent[@ (k * _slotsPerInstance) + l] = 0.0;
+												++l;
+											}
+										}
+										else
+										{
+											_hasData = true;
+											_hasInstances = true;
+										}
+										++k;
+									}
+
+									if (!_hasData)
+									{
+										// Filtered out all instances in _dataCurrent,
+										// we can remove it from _batchData
+										array_delete(_batchData, j, 1);
+									}
+									else
+									{
+										++j;
+									}
+								}
+							}
+							else
+							{
+								////////////////////////////////////////////////////
+								// _id is an array of IDs
+
+								_batchData = bbmod_array_clone(_batchData);
+
+								var _idsCurrent = _id;
 								var _idsCount = array_length(_idsCurrent);
-								var _dataCurrent = bbmod_array_clone(_batchData[j]);
-								_batchData[@ j] = _dataCurrent;
+								var _dataCurrent = _batchData;
 								var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
-								var _hasData = false;
 
 								var k = 0;
 								repeat (_idsCount)
@@ -1488,99 +1539,56 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 									}
 									else
 									{
-										_hasData = true;
 										_hasInstances = true;
 									}
 									++k;
 								}
+							}
 
-								if (!_hasData)
-								{
-									// Filtered out all instances in _dataCurrent,
-									// we can remove it from _batchData
-									array_delete(_batchData, j, 1);
-								}
-								else
-								{
-									++j;
-								}
+							if (!_hasInstances)
+							{
+								i += 2;
+								_condition = false;
+								continue;
 							}
 						}
 						else
 						{
-							////////////////////////////////////////////////////
-							// _id is an array of IDs
-
-							_batchData = bbmod_array_clone(_batchData);
-
-							var _idsCurrent = _id;
-							var _idsCount = array_length(_idsCurrent);
-							var _dataCurrent = _batchData;
-							var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
-
-							var k = 0;
-							repeat (_idsCount)
+							////////////////////////////////////////////////////////
+							// _id is a single ID
+							if (ds_list_find_index(_instances, _id) == -1)
 							{
-								if (ds_list_find_index(_instances, _idsCurrent[k]) == -1)
-								{
-									var l = 0;
-									repeat (_slotsPerInstance)
-									{
-										_dataCurrent[@ (k * _slotsPerInstance) + l] = 0.0;
-										++l;
-									}
-								}
-								else
-								{
-									_hasInstances = true;
-								}
-								++k;
+								i += 2;
+								_condition = false;
+								continue;
 							}
 						}
+					}
 
-						if (!_hasInstances)
+					////////////////////////////////////////////////////////////////
+
+					if (is_real(_id))
+					{
+						BBMOD_SHADER_CURRENT.set_instance_id(_id);
+					}
+
+					matrix_set(matrix_world, _matrix);
+					var _primitiveType = _renderCommands[| i++];
+					var _vertexBuffer = _renderCommands[| i++];
+					if (is_array(_batchData[0]))
+					{
+						var _dataIndex = 0;
+						repeat (array_length(_batchData))
 						{
-							i += 2;
-							_condition = false;
-							continue;
+							BBMOD_SHADER_CURRENT.set_batch_data(_batchData[_dataIndex++]);
+							vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 						}
 					}
 					else
 					{
-						////////////////////////////////////////////////////////
-						// _id is a single ID
-						if (ds_list_find_index(_instances, _id) == -1)
-						{
-							i += 2;
-							_condition = false;
-							continue;
-						}
-					}
-				}
-
-				////////////////////////////////////////////////////////////////
-
-				if (is_real(_id))
-				{
-					BBMOD_SHADER_CURRENT.set_instance_id(_id);
-				}
-
-				matrix_set(matrix_world, _matrix);
-				var _primitiveType = _renderCommands[| i++];
-				var _vertexBuffer = _renderCommands[| i++];
-				if (is_array(_batchData[0]))
-				{
-					var _dataIndex = 0;
-					repeat (array_length(_batchData))
-					{
-						BBMOD_SHADER_CURRENT.set_batch_data(_batchData[_dataIndex++]);
+						BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
 						vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 					}
-				}
-				else
-				{
-					BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
-					vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 				}
 				break;
 
@@ -1621,25 +1629,31 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuBlendModeExt:
-				var _src = _renderCommands[| i++];
-				var _dest = _renderCommands[| i++];
-				gpu_set_blendmode_ext(_src, _dest);
+				{
+					var _src = _renderCommands[| i++];
+					var _dest = _renderCommands[| i++];
+					gpu_set_blendmode_ext(_src, _dest);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha:
-				var _src = _renderCommands[| i++];
-				var _dest = _renderCommands[| i++];
-				var _srcalpha = _renderCommands[| i++];
-				var _destalpha = _renderCommands[| i++];
-				gpu_set_blendmode_ext_sepalpha(_src, _dest, _srcalpha, _destalpha);
+				{
+					var _src = _renderCommands[| i++];
+					var _dest = _renderCommands[| i++];
+					var _srcalpha = _renderCommands[| i++];
+					var _destalpha = _renderCommands[| i++];
+					gpu_set_blendmode_ext_sepalpha(_src, _dest, _srcalpha, _destalpha);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuColorWriteEnable:
-				var _red = _renderCommands[| i++];
-				var _green = _renderCommands[| i++];
-				var _blue = _renderCommands[| i++];
-				var _alpha = _renderCommands[| i++];
-				gpu_set_colorwriteenable(_red, _green, _blue, _alpha);
+				{
+					var _red = _renderCommands[| i++];
+					var _green = _renderCommands[| i++];
+					var _blue = _renderCommands[| i++];
+					var _alpha = _renderCommands[| i++];
+					gpu_set_colorwriteenable(_red, _green, _blue, _alpha);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuCullMode:
@@ -1665,8 +1679,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexFilterExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_filter_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+					gpu_set_tex_filter_ext(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMaxAniso:
@@ -1674,8 +1690,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_max_aniso_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+					gpu_set_tex_max_aniso_ext(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMaxMip:
@@ -1683,8 +1701,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMaxMipExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_max_mip_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+					gpu_set_tex_max_mip_ext(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMinMip:
@@ -1692,8 +1712,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMinMipExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_min_mip_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+					gpu_set_tex_min_mip_ext(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipBias:
@@ -1701,8 +1723,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipBiasExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_mip_bias_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+					gpu_set_tex_mip_bias_ext(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipEnable:
@@ -1710,8 +1734,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipEnableExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_mip_enable_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+					gpu_set_tex_mip_enable_ext(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipFilter:
@@ -1719,8 +1745,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipFilterExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_mip_filter_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+					gpu_set_tex_mip_filter_ext(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexRepeat:
@@ -1728,8 +1756,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexRepeatExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_repeat_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
+					gpu_set_tex_repeat_ext(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuZFunc:
@@ -1749,11 +1779,13 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetSampler:
-				var _nameOrIndex = _renderCommands[| i++];
-				var _index = is_string(_nameOrIndex)
-					? shader_get_sampler_index(shader_current(), _nameOrIndex)
-					: _nameOrIndex;
-				texture_set_stage(_index, _renderCommands[| i++]);
+				{
+					var _nameOrIndex = _renderCommands[| i++];
+					var _index = is_string(_nameOrIndex)
+						? shader_get_sampler_index(shader_current(), _nameOrIndex)
+						: _nameOrIndex;
+					texture_set_stage(_index, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetShader:
@@ -1761,71 +1793,91 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloat:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_f(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					shader_set_uniform_f(_uniform, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloat2:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				shader_set_uniform_f(_uniform, _v1, _v2);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					var _v1 = _renderCommands[| i++];
+					var _v2 = _renderCommands[| i++];
+					shader_set_uniform_f(_uniform, _v1, _v2);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloat3:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				var _v3 = _renderCommands[| i++];
-				shader_set_uniform_f(_uniform, _v1, _v2, _v3);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					var _v1 = _renderCommands[| i++];
+					var _v2 = _renderCommands[| i++];
+					var _v3 = _renderCommands[| i++];
+					shader_set_uniform_f(_uniform, _v1, _v2, _v3);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloat4:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				var _v3 = _renderCommands[| i++];
-				var _v4 = _renderCommands[| i++];
-				shader_set_uniform_f(_uniform, _v1, _v2, _v3, _v4);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					var _v1 = _renderCommands[| i++];
+					var _v2 = _renderCommands[| i++];
+					var _v3 = _renderCommands[| i++];
+					var _v4 = _renderCommands[| i++];
+					shader_set_uniform_f(_uniform, _v1, _v2, _v3, _v4);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloatArray:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_f_array(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					shader_set_uniform_f_array(_uniform, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformInt:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_i(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					shader_set_uniform_i(_uniform, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformInt2:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				shader_set_uniform_i(_uniform, _v1, _v2);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					var _v1 = _renderCommands[| i++];
+					var _v2 = _renderCommands[| i++];
+					shader_set_uniform_i(_uniform, _v1, _v2);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformInt3:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				var _v3 = _renderCommands[| i++];
-				shader_set_uniform_i(_uniform, _v1, _v2, _v3);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					var _v1 = _renderCommands[| i++];
+					var _v2 = _renderCommands[| i++];
+					var _v3 = _renderCommands[| i++];
+					shader_set_uniform_i(_uniform, _v1, _v2, _v3);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformInt4:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				var _v3 = _renderCommands[| i++];
-				var _v4 = _renderCommands[| i++];
-				shader_set_uniform_i(_uniform, _v1, _v2, _v3, _v4);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					var _v1 = _renderCommands[| i++];
+					var _v2 = _renderCommands[| i++];
+					var _v3 = _renderCommands[| i++];
+					var _v4 = _renderCommands[| i++];
+					shader_set_uniform_i(_uniform, _v1, _v2, _v3, _v4);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformIntArray:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_i_array(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					shader_set_uniform_i_array(_uniform, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformMatrix:
@@ -1833,8 +1885,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformMatrixArray:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_matrix_array(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
+					shader_set_uniform_matrix_array(_uniform, _renderCommands[| i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetViewMatrix:
@@ -1846,10 +1900,12 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SubmitVertexBuffer:
-				var _vertexBuffer = _renderCommands[| i++];
-				var _prim = _renderCommands[| i++];
-				var _texture = _renderCommands[| i++];
-				vertex_submit(_vertexBuffer, _prim, _texture);
+				{
+					var _vertexBuffer = _renderCommands[| i++];
+					var _prim = _renderCommands[| i++];
+					var _texture = _renderCommands[| i++];
+					vertex_submit(_vertexBuffer, _prim, _texture);
+				}
 				break;
 			}
 

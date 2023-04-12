@@ -144,7 +144,7 @@ function BBMOD_PostProcessor()
 		// Apply anti-aliasing to the final surface
 		if (Antialiasing == BBMOD_EAntialiasing.FXAA)
 		{
-			var _shader = BBMOD_ShFXAA;
+			_shader = BBMOD_ShFXAA;
 			shader_set(_shader);
 			shader_set_uniform_f(
 				shader_get_uniform(_shader, "u_vTexelVS"),

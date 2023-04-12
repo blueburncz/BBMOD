@@ -806,21 +806,27 @@ function BBMOD_Gizmo(_size=10.0)
 			switch (EditAxis)
 			{
 			case BBMOD_EEditAxis.X:
-				var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
+				{
+					var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
+				}
 				break;
 
 			case BBMOD_EEditAxis.Y:
-				var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
+				{
+					var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
+				}
 				break;
 
 			case BBMOD_EEditAxis.Z:
-				var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
+				{
+					var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
+				}
 				break;
 
 			case BBMOD_EEditAxis.All:
@@ -931,115 +937,123 @@ function BBMOD_Gizmo(_size=10.0)
 			break;
 
 		case BBMOD_EEditType.Rotation:
-			var _planeNormal = ((EditAxis == BBMOD_EEditAxis.X) ? _forwardGizmo
-				: ((EditAxis == BBMOD_EEditAxis.Y) ? _rightGizmo
-				: _upGizmo));
-
-			var _mouseWorld = intersect_ray_plane(
-				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
-				Position,
-				_planeNormal);
-
-			if (_mouseWorld)
 			{
-				if (!__mouseOffset)
+				_planeNormal = ((EditAxis == BBMOD_EEditAxis.X) ? _forwardGizmo
+					: ((EditAxis == BBMOD_EEditAxis.Y) ? _rightGizmo
+					: _upGizmo));
+
+				_mouseWorld = intersect_ray_plane(
+					global.__bbmodCameraCurrent.Position,
+					global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+					Position,
+					_planeNormal);
+
+				if (_mouseWorld)
 				{
-					__mouseOffset = _mouseWorld;
-				}
+					if (!__mouseOffset)
+					{
+						__mouseOffset = _mouseWorld;
+					}
 
-				var _v1 = __mouseOffset.Sub(Position);
-				var _v2 = _mouseWorld.Sub(Position);
-				var _angle = darctan2(_v2.Cross(_v1).Dot(_planeNormal), _v1.Dot(_v2));
+					var _v1 = __mouseOffset.Sub(Position);
+					var _v2 = _mouseWorld.Sub(Position);
+					var _angle = darctan2(_v2.Cross(_v1).Dot(_planeNormal), _v1.Dot(_v2));
 
-				switch (EditAxis)
-				{
-				case BBMOD_EEditAxis.X:
-					__rotateBy.X = _angle;
-					break;
+					switch (EditAxis)
+					{
+					case BBMOD_EEditAxis.X:
+						__rotateBy.X = _angle;
+						break;
 
-				case BBMOD_EEditAxis.Y:
-					__rotateBy.Y = _angle;
-					break;
+					case BBMOD_EEditAxis.Y:
+						__rotateBy.Y = _angle;
+						break;
 
-				case BBMOD_EEditAxis.Z:
-					__rotateBy.Z = _angle;
-					break;
+					case BBMOD_EEditAxis.Z:
+						__rotateBy.Z = _angle;
+						break;
+					}
 				}
 			}
 			break;
 
 		case BBMOD_EEditType.Scale:
-			var _planeNormal;
-
-			switch (EditAxis)
 			{
-			case BBMOD_EEditAxis.X:
-				var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
-				break;
-
-			case BBMOD_EEditAxis.Y:
-				var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
-				break;
-
-			case BBMOD_EEditAxis.Z:
-				var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-				_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
-				break;
-
-			case BBMOD_EEditAxis.All:
-				_planeNormal = global.__bbmodCameraCurrent.get_forward();
-				break;
-			}
-
-			var _mouseWorld = intersect_ray_plane(
-				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
-				Position,
-				_planeNormal);
-
-			if (_mouseWorld && __mouseOffset)
-			{
-				var _mul = (keyboard_check(KeyEditFaster) ? 5.0
-					: (keyboard_check(KeyEditSlower) ? 0.1
-					: 1.0));
-
-				var _diff = _mouseWorld.Sub(__mouseOffset).Scale(_mul);
-
-				if (EditAxis == BBMOD_EEditAxis.All)
+				switch (EditAxis)
 				{
-					var _diffX = _diff.Mul(_forwardGizmo.Abs()).Dot(_forwardGizmo);
-					var _diffY = _diff.Mul(_rightGizmo.Abs()).Dot(_rightGizmo);
-					var _scaleBy = (abs(_diffX) > abs(_diffY)) ? _diffX : _diffY;
-					__scaleBy.X += _scaleBy;
-					__scaleBy.Y += _scaleBy;
-					__scaleBy.Z += _scaleBy;
+				case BBMOD_EEditAxis.X:
+					{
+						var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
+					}
+					break;
+
+				case BBMOD_EEditAxis.Y:
+					{
+						var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
+					}
+					break;
+
+				case BBMOD_EEditAxis.Z:
+					{
+						var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
+					}
+					break;
+
+				case BBMOD_EEditAxis.All:
+					_planeNormal = global.__bbmodCameraCurrent.get_forward();
+					break;
 				}
-				else
+
+				_mouseWorld = intersect_ray_plane(
+					global.__bbmodCameraCurrent.Position,
+					global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+					Position,
+					_planeNormal);
+
+				if (_mouseWorld && __mouseOffset)
 				{
-					if (EditAxis & BBMOD_EEditAxis.X)
-					{
-						__scaleBy.X += _diff.Mul(_forwardGizmo.Abs()).Dot(_forwardGizmo);
-					}
+					var _mul = (keyboard_check(KeyEditFaster) ? 5.0
+						: (keyboard_check(KeyEditSlower) ? 0.1
+						: 1.0));
 
-					if (EditAxis & BBMOD_EEditAxis.Y)
-					{
-						__scaleBy.Y += _diff.Mul(_rightGizmo.Abs()).Dot(_rightGizmo);
-					}
+					var _diff = _mouseWorld.Sub(__mouseOffset).Scale(_mul);
 
-					if (EditAxis & BBMOD_EEditAxis.Z)
+					if (EditAxis == BBMOD_EEditAxis.All)
 					{
-						__scaleBy.Z += _diff.Mul(_upGizmo.Abs()).Dot(_upGizmo);
+						var _diffX = _diff.Mul(_forwardGizmo.Abs()).Dot(_forwardGizmo);
+						var _diffY = _diff.Mul(_rightGizmo.Abs()).Dot(_rightGizmo);
+						var _scaleBy = (abs(_diffX) > abs(_diffY)) ? _diffX : _diffY;
+						__scaleBy.X += _scaleBy;
+						__scaleBy.Y += _scaleBy;
+						__scaleBy.Z += _scaleBy;
+					}
+					else
+					{
+						if (EditAxis & BBMOD_EEditAxis.X)
+						{
+							__scaleBy.X += _diff.Mul(_forwardGizmo.Abs()).Dot(_forwardGizmo);
+						}
+
+						if (EditAxis & BBMOD_EEditAxis.Y)
+						{
+							__scaleBy.Y += _diff.Mul(_rightGizmo.Abs()).Dot(_rightGizmo);
+						}
+
+						if (EditAxis & BBMOD_EEditAxis.Z)
+						{
+							__scaleBy.Z += _diff.Mul(_upGizmo.Abs()).Dot(_upGizmo);
+						}
 					}
 				}
-			}
 
-			__mouseOffset = _mouseWorld;
+				__mouseOffset = _mouseWorld;
+			}
 			break;
 		}
 
@@ -1104,9 +1118,9 @@ function BBMOD_Gizmo(_size=10.0)
 
 			var _temp          = new BBMOD_Vec4(_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
 			var _forwardGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
-			var _temp          = new BBMOD_Vec4(_rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
+			_temp              = new BBMOD_Vec4(_rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
 			var _rightGlobal   = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
-			var _temp          = new BBMOD_Vec4(_upGizmo.X, _upGizmo.Y, _upGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
+			_temp              = new BBMOD_Vec4(_upGizmo.X, _upGizmo.Y, _upGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
 			var _upGlobal      = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
 
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
