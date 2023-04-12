@@ -372,10 +372,11 @@ function BBMOD_BaseRenderer()
 		var _shadowCasterIndex = -1;
 		var _shadowmapMatrix;
 		var _shadowmapZFar;
+		var _light;
 
 		if (EnableShadows)
 		{
-			var _light = bbmod_light_directional_get();
+			_light = bbmod_light_directional_get();
 			if (_light != undefined
 				&& _light.CastShadows
 				&& _light.__getZFar != undefined
