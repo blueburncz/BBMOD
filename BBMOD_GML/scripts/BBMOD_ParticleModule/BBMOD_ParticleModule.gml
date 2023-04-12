@@ -1,6 +1,6 @@
 /// @func BBMOD_ParticleModule()
 ///
-/// @desc BBMOD_Class
+/// @extends BBMOD_Class
 ///
 /// @desc Base struct for particle modules. These are composed into particle
 /// system to define behavior of their particles.
