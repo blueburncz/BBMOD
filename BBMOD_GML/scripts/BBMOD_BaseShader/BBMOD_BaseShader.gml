@@ -218,7 +218,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Struct.BBMOD_Color} [_down] Ambient light color on the lower
 	/// hemisphere. If `undefined`, then the value set by
 	/// {@link bbmod_light_ambient_set_down} is used.
-	/// @param {Struct.BBMOD_Vec3} [_up] Direction to the ambient light's upper
+	/// @param {Struct.BBMOD_Vec3} [_dir] Direction to the ambient light's upper
 	/// hemisphere. If `undefined`, then the value set by
 	/// {@link bbmod_light_ambient_set_dir} is used.
 	///

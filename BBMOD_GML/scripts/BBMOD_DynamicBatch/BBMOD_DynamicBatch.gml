@@ -381,7 +381,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// batches of {@link BBMOD_DynamicBatch.size}.
 	///
 	/// @param {Real} _object An object to submit.
-	/// @param {Array<Struct.BBMOD_Materials>} [_material] An array of materials
+	/// @param {Array<Struct.BBMOD_Materials>} [_materials] An array of materials
 	/// to use.
 	/// @param {Function} [_fn] A function that writes instance data to an array
 	/// which is then passed to the material's shader. Defaults to
