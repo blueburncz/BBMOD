@@ -200,7 +200,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// sure what this value should be, use {@link BBMOD_VEC3_UP}.
 	/// @param {Real} _roughness The new roughness. Use values in range 0..1.
 	///
-	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
+	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
 	static set_normal_roughness = function (_normal, _roughness) {
 		NormalSmoothness = undefined;
 		if (__normalSmoothnessSprite != undefined)
@@ -235,7 +235,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @param {Real} _ao The new ambient occlusion value. Use values in range
 	/// 0..1, where 0 means full occlusion and 1 means no occlusion.
 	///
-	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
+	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
 	static set_metallic_ao = function (_metallic, _ao) {
 		SpecularColor = undefined;
 		if (__specularColorSprite != undefined)
@@ -267,7 +267,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @param {Real} _intensity The subsurface color intensity. Use values in
 	/// range 0..1. The higher the value, the more visible the effect is.
 	///
-	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
+	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
 	static set_subsurface = function (_color, _intensity) {
 		if (__subsurfaceSprite != undefined)
 		{
@@ -290,7 +290,7 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	///
 	/// @param {Struct.BBMOD_Color} _color The new emissive color.
 	///
-	/// @return {Struct.BBMOD_PBRMaterial} Returns `self`.
+	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
 	static set_emissive = function () {
 		var _color = (argument_count == 3)
 			? new BBMOD_Color(argument[0], argument[1], argument[2])
