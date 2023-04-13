@@ -6,8 +6,8 @@ precision highp float;
 // Defines
 //
 
-// Maximum number of point lights
-#define MAX_PUNCTUAL_LIGHTS 8
+// Maximum number of punctual lights
+#define BBMOD_MAX_PUNCTUAL_LIGHTS 8
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 

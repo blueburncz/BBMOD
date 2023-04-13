@@ -37,8 +37,8 @@ float Noise(in vec2 st)
 // Defines
 //
 
-// Maximum number of point lights
-#define MAX_PUNCTUAL_LIGHTS 8
+// Maximum number of punctual lights
+#define BBMOD_MAX_PUNCTUAL_LIGHTS 8
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 
@@ -151,9 +151,9 @@ uniform vec2 bbmod_IBLTexel;
 // Punctual lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPunctualDataA[2 * MAX_PUNCTUAL_LIGHTS];
+uniform vec4 bbmod_LightPunctualDataA[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 // [(isSpotLight, dcosInner, dcosOuter), (dX, dY, dZ), ...]
-uniform vec3 bbmod_LightPunctualDataB[2 * MAX_PUNCTUAL_LIGHTS];
+uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
@@ -765,7 +765,7 @@ void PBRShader(Material material, float depth)
 	lightSpecular *= ssao;
 
 	// Punctual lights
-	for (int i = 0; i < MAX_PUNCTUAL_LIGHTS; ++i)
+	for (int i = 0; i < BBMOD_MAX_PUNCTUAL_LIGHTS; ++i)
 	{
 		vec4 positionRange = bbmod_LightPunctualDataA[i * 2];
 		vec4 colorAlpha = bbmod_LightPunctualDataA[(i * 2) + 1];

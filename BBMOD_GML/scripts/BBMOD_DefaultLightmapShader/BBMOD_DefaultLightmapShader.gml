@@ -106,14 +106,12 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 
 		_lights ??= global.__bbmodPunctualLights;
 
-		var _maxLights = MaxPunctualLights;
-
 		var _indexA = 0;
-		var _indexMaxA = _maxLights * 8;
+		var _indexMaxA = BBMOD_MAX_PUNCTUAL_LIGHTS * 8;
 		var _dataA = array_create(_indexMaxA, 0.0);
 
 		var _indexB = 0;
-		var _indexMaxB = _maxLights * 6;
+		var _indexMaxB = BBMOD_MAX_PUNCTUAL_LIGHTS * 6;
 		var _dataB = array_create(_indexMaxB, 0.0);
 
 		var i = 0;

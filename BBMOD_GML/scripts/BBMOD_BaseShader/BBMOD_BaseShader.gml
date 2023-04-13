@@ -1,3 +1,6 @@
+/// @macro {Real} Maximum number of punctual lights in shaders. Equals to 8.
+#macro BBMOD_MAX_PUNCTUAL_LIGHTS 8
+
 /// @func BBMOD_BaseShader(_shader, _vertexFormat)
 ///
 /// @extends BBMOD_Shader
@@ -14,9 +17,10 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {Real} Maximum number of punctual lights in the shader. This must
-	/// match with value defined in the raw GameMaker shader!
-	MaxPunctualLights = 8;
+	/// @var {Real} Maximum number of punctual lights in the shader.
+	/// @deprecated Please use {@link BBMOD_MAX_PUNCTUAL_LIGHTS} instead.
+	/// @readonly
+	MaxPunctualLights = BBMOD_MAX_PUNCTUAL_LIGHTS;
 
 	/// @func set_texture_offset(_offset)
 	///
@@ -312,14 +316,12 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 		_lights ??= global.__bbmodPunctualLights;
 
-		var _maxLights = MaxPunctualLights;
-
 		var _indexA = 0;
-		var _indexMaxA = _maxLights * 8;
+		var _indexMaxA = BBMOD_MAX_PUNCTUAL_LIGHTS * 8;
 		var _dataA = array_create(_indexMaxA, 0.0);
 
 		var _indexB = 0;
-		var _indexMaxB = _maxLights * 6;
+		var _indexMaxB = BBMOD_MAX_PUNCTUAL_LIGHTS * 6;
 		var _dataB = array_create(_indexMaxB, 0.0);
 
 		var i = 0;
