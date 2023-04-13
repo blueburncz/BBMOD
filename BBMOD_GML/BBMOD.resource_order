@@ -117,6 +117,7 @@
     {"name":"BBMOD_MixVec2OverTimeModule","order":3,"path":"scripts/BBMOD_MixVec2OverTimeModule/BBMOD_MixVec2OverTimeModule.yy",},
     {"name":"__bbmod_fog","order":12,"path":"scripts/__bbmod_fog/__bbmod_fog.yy",},
     {"name":"BBMOD_ParticleSystem","order":6,"path":"scripts/BBMOD_ParticleSystem/BBMOD_ParticleSystem.yy",},
+    {"name":"BBMOD_MaterialPropertyBlock","order":17,"path":"scripts/BBMOD_MaterialPropertyBlock/BBMOD_MaterialPropertyBlock.yy",},
     {"name":"BBMOD_ShGizmo","order":7,"path":"shaders/BBMOD_ShGizmo/BBMOD_ShGizmo.yy",},
     {"name":"BBMOD_ShDefaultUnlit","order":10,"path":"shaders/BBMOD_ShDefaultUnlit/BBMOD_ShDefaultUnlit.yy",},
     {"name":"BBMOD_MixQuaternionModule","order":5,"path":"scripts/BBMOD_MixQuaternionModule/BBMOD_MixQuaternionModule.yy",},

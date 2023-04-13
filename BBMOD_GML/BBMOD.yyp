@@ -207,6 +207,7 @@
     {"id":{"name":"BBMOD_MixColorFromHealthModule","path":"scripts/BBMOD_MixColorFromHealthModule/BBMOD_MixColorFromHealthModule.yy",},},
     {"id":{"name":"__bbmod_fog","path":"scripts/__bbmod_fog/__bbmod_fog.yy",},},
     {"id":{"name":"BBMOD_ParticleSystem","path":"scripts/BBMOD_ParticleSystem/BBMOD_ParticleSystem.yy",},},
+    {"id":{"name":"BBMOD_MaterialPropertyBlock","path":"scripts/BBMOD_MaterialPropertyBlock/BBMOD_MaterialPropertyBlock.yy",},},
     {"id":{"name":"BBMOD_ShGizmo","path":"shaders/BBMOD_ShGizmo/BBMOD_ShGizmo.yy",},},
     {"id":{"name":"BBMOD_ShDefaultUnlit","path":"shaders/BBMOD_ShDefaultUnlit/BBMOD_ShDefaultUnlit.yy",},},
     {"id":{"name":"BBMOD_Animation","path":"scripts/BBMOD_Animation/BBMOD_Animation.yy",},},
