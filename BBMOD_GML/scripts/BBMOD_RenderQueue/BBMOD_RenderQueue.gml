@@ -87,10 +87,31 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.ApplyMaterial,
-			3,
+			4,
+			global.__bbmodMaterialProps,
 			_vertexFormat,
 			_material,
 			_enabledPasses);
+		return self;
+	};
+
+	/// @func apply_material_props(_materialPropertyBlock)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterialProps} command
+	/// into the queue.
+	///
+	/// @param {Struct.BBMOD_MaterialPropertyBlock} _materialPropertyBlock The
+	/// material property block to apply.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static apply_material_props = function (_materialPropertyBlock) {
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		ds_list_add(
+			__renderCommands,
+			BBMOD_ERenderCommand.ApplyMaterialProps,
+			1,
+			_materialPropertyBlock);
 		return self;
 	};
 
@@ -149,8 +170,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMesh,
-			7,
+			8,
 			global.__bbmodInstanceID,
+			global.__bbmodMaterialProps,
 			_vertexFormat,
 			_material,
 			_matrix,
@@ -182,8 +204,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMeshAnimated,
-			8,
+			9,
 			global.__bbmodInstanceID,
+			global.__bbmodMaterialProps,
 			_vertexFormat,
 			_material,
 			_matrix,
@@ -216,10 +239,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.DrawMeshBatched,
-			7,
+			8,
 			(global.__bbmodInstanceIDBatch != undefined)
 				? global.__bbmodInstanceIDBatch
 				: global.__bbmodInstanceID,
+			global.__bbmodMaterialProps,
 			_vertexFormat,
 			_material,
 			_matrix,
@@ -289,6 +313,22 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		ds_list_add(
 			__renderCommands,
 			BBMOD_ERenderCommand.ResetMaterial,
+			0);
+		return self;
+	};
+
+	/// @func reset_material_props()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ResetMaterialProps} command
+	/// into the queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static reset_material_props = function () {
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		ds_list_add(
+			__renderCommands,
+			BBMOD_ERenderCommand.ResetMaterialProps,
 			0);
 		return self;
 	};
@@ -896,6 +936,26 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
+	/// @func set_material_props(_materialPropertyBlock)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetMaterialProps} command into
+	/// the queue.
+	///
+	/// @param {Struct.BBMOD_MaterialPropertyBlock} _materialPropertyBlock The
+	/// material property block to set as the current one.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static set_material_props = function (_materialPropertyBlock) {
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		ds_list_add(
+			__renderCommands,
+			BBMOD_ERenderCommand.SetMaterialProps,
+			1,
+			_materialPropertyBlock);
+		return self;
+	};
+
 	/// @func set_projection_matrix(_matrix)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetProjectionMatrix} command
@@ -1349,16 +1409,24 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			{
 			case BBMOD_ERenderCommand.ApplyMaterial:
 				{
+					var _materialPropsOld = global.__bbmodMaterialProps;
+					global.__bbmodMaterialProps = _renderCommands[| i++];
 					var _vertexFormat = _renderCommands[| i++];
 					var _material = _renderCommands[| i++];
 					var _enabledPasses = _renderCommands[| i++];
 					if (((1 << bbmod_render_pass_get()) & _enabledPasses) == 0
 						|| !_material.apply(_vertexFormat))
 					{
+						global.__bbmodMaterialProps = _materialPropsOld;
 						_condition = false;
 						continue;
 					}
+					global.__bbmodMaterialProps = _materialPropsOld;
 				}
+				break;
+
+			case BBMOD_ERenderCommand.ApplyMaterialProps:
+				_renderCommands[| i++].apply();
 				break;
 
 			case BBMOD_ERenderCommand.BeginConditionalBlock:
@@ -1395,12 +1463,15 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			case BBMOD_ERenderCommand.DrawMesh:
 				{
 					var _id = _renderCommands[| i++];
+					var _materialPropsOld = global.__bbmodMaterialProps;
+					global.__bbmodMaterialProps = _renderCommands[| i++];
 					var _vertexFormat = _renderCommands[| i++];
 					var _material = _renderCommands[| i++];
 					if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
 						|| !_material.apply(_vertexFormat))
 					{
 						i += 4;
+						global.__bbmodMaterialProps = _materialPropsOld;
 						_condition = false;
 						continue;
 					}
@@ -1412,18 +1483,22 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 					}
 					var _primitiveType = _renderCommands[| i++];
 					vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
+					global.__bbmodMaterialProps = _materialPropsOld;
 				}
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshAnimated:
 				{
 					var _id = _renderCommands[| i++];
+					var _materialPropsOld = global.__bbmodMaterialProps;
+					global.__bbmodMaterialProps = _renderCommands[| i++];
 					var _vertexFormat = _renderCommands[| i++];
 					var _material = _renderCommands[| i++];
 					if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
 						|| !_material.apply(_vertexFormat))
 					{
 						i += 5;
+						global.__bbmodMaterialProps = _materialPropsOld;
 						_condition = false;
 						continue;
 					}
@@ -1436,18 +1511,22 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 					}
 					var _primitiveType = _renderCommands[| i++];
 					vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
+					global.__bbmodMaterialProps = _materialPropsOld;
 				}
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshBatched:
 				{
 					var _id = _renderCommands[| i++];
+					var _materialPropsOld = global.__bbmodMaterialProps;
+					global.__bbmodMaterialProps = _renderCommands[| i++];
 					var _vertexFormat = _renderCommands[| i++];
 					var _material = _renderCommands[| i++];
 
 					if (!_material.apply(_vertexFormat))
 					{
 						i += 4;
+						global.__bbmodMaterialProps = _materialPropsOld;
 						_condition = false;
 						continue;
 					}
@@ -1548,6 +1627,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 							if (!_hasInstances)
 							{
 								i += 2;
+								global.__bbmodMaterialProps = _materialPropsOld;
 								_condition = false;
 								continue;
 							}
@@ -1559,6 +1639,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 							if (ds_list_find_index(_instances, _id) == -1)
 							{
 								i += 2;
+								global.__bbmodMaterialProps = _materialPropsOld;
 								_condition = false;
 								continue;
 							}
@@ -1589,6 +1670,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 						BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
 						vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 					}
+
+					global.__bbmodMaterialProps = _materialPropsOld;
 				}
 				break;
 
@@ -1606,6 +1689,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 			case BBMOD_ERenderCommand.ResetMaterial:
 				bbmod_material_reset();
+				break;
+
+			case BBMOD_ERenderCommand.ResetMaterialProps:
+				bbmod_material_props_reset();
 				break;
 
 			case BBMOD_ERenderCommand.ResetShader:
@@ -1772,6 +1859,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 			case BBMOD_ERenderCommand.SetGpuZWriteEnable:
 				gpu_set_zwriteenable(_renderCommands[| i++]);
+				break;
+
+			case BBMOD_ERenderCommand.SetMaterialProps:
+				bbmod_material_props_set(_renderCommands[| i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetProjectionMatrix:

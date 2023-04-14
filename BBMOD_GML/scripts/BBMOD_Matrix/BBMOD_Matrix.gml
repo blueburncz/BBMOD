@@ -6,7 +6,7 @@
 /// identity matrix is created.
 function BBMOD_Matrix(_raw=undefined) constructor
 {
-	/// @var {Array<Real>} A raw GameMaker matrix.
+	/// @var {Array<Real>} The underlying GameMaker matrix.
 	Raw = _raw ?? matrix_build_identity();
 
 	/// @func Copy(_dest)

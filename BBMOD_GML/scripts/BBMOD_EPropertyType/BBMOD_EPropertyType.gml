@@ -1,4 +1,4 @@
-/// @enum An enumeration of all property types.
+/// @enum Enumeration of all property types.
 /// @see BBMOD_Property
 enum BBMOD_EPropertyType
 {

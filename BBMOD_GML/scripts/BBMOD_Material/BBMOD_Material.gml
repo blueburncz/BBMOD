@@ -71,6 +71,7 @@ global.__bbmodMaterialCurrent = undefined;
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
 ///
+/// @see BBMOD_MaterialPropertyBlock
 /// @see BBMOD_Shader
 function BBMOD_Material(_shader=undefined)
 	: BBMOD_Resource() constructor
@@ -106,6 +107,12 @@ function BBMOD_Material(_shader=undefined)
 	/// @var {Function} A function that is executed when the shader is applied.
 	/// Must take the material as the first argument. Use `undefined` if you do
 	/// not want to execute any function. Defaults to `undefined`.
+	///
+	/// @note If there is a material property block set, then this is executed
+	/// *after* the material property block is applied!
+	///
+	/// @see BBMOD_MaterialPropertyBlock
+	/// @see bbmod_material_props_set
 	OnApply = undefined;
 
 	/// @var {Constant.BlendMode} A blend mode. Default value is `bm_normal`.
@@ -642,6 +649,12 @@ function BBMOD_Material(_shader=undefined)
 				__bbmod_shader_set_globals(_shaderRaw);
 			}
 			_shader.set_material(self);
+		}
+
+		var _materialProps = global.__bbmodMaterialProps;
+		if (_materialProps != undefined)
+		{
+			_materialProps.apply();
 		}
 
 		if (OnApply != undefined)

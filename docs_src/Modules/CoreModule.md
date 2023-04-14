@@ -69,6 +69,9 @@ quaternions etc.
 * [bbmod_lightmap_set](./bbmod_lightmap_set.html)
 * [bbmod_material_exists](./bbmod_material_exists.html)
 * [bbmod_material_get](./bbmod_material_get.html)
+* [bbmod_material_props_get](./bbmod_material_props_get.html)
+* [bbmod_material_props_reset](./bbmod_material_props_reset.html)
+* [bbmod_material_props_set](./bbmod_material_props_set.html)
 * [bbmod_material_register](./bbmod_material_register.html)
 * [bbmod_material_reset](./bbmod_material_reset.html)
 * [bbmod_path_get_absolute](./bbmod_path_get_absolute.html)
@@ -153,8 +156,9 @@ quaternions etc.
 * [BBMOD_MATERIAL_DEFAULT_UNLIT](./BBMOD_MATERIAL_DEFAULT_UNLIT.html)
 * [BBMOD_MATERIAL_LIGHTMAP](./BBMOD_MATERIAL_LIGHTMAP.html) <span class="badge badge-warning">DEPRECATED</span>
 * [BBMOD_MATERIAL_SPRITE](./BBMOD_MATERIAL_SPRITE.html) <span class="badge badge-warning">DEPRECATED</span>
-* [BBMOD_MAX_BONES](./BBMOD_MAX_BONES.html)
 * [BBMOD_MAX_BATCH_VEC4S](./BBMOD_MAX_BATCH_VEC4S.html)
+* [BBMOD_MAX_BONES](./BBMOD_MAX_BONES.html)
+* [BBMOD_MAX_PUNCTUAL_LIGHTS](./BBMOD_MAX_PUNCTUAL_LIGHTS.html)
 * [BBMOD_NORMALS_FLAT](./BBMOD_NORMALS_FLAT.html)
 * [BBMOD_NORMALS_NONE](./BBMOD_NORMALS_NONE.html)
 * [BBMOD_NORMALS_SMOOTH](./BBMOD_NORMALS_SMOOTH.html)
@@ -220,6 +224,7 @@ quaternions etc.
 * [BBMOD_LightmapMaterial](./BBMOD_LightmapMaterial.html) <span class="badge badge-warning">DEPRECATED</span>
 * [BBMOD_LightmapShader](./BBMOD_LightmapShader.html) <span class="badge badge-warning">DEPRECATED</span>
 * [BBMOD_Material](./BBMOD_Material.html)
+* [BBMOD_MaterialPropertyBlock](./BBMOD_MaterialPropertyBlock.html)
 * [BBMOD_Matrix](./BBMOD_Matrix.html)
 * [BBMOD_Mesh](./BBMOD_Mesh.html)
 * [BBMOD_MeshBuilder](./BBMOD_MeshBuilder.html)

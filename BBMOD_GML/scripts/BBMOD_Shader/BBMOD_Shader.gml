@@ -1,6 +1,10 @@
-/// @enum Enum of shader uniform types.
+/// @enum Enumeration of shader uniform types.
+/// @see BBMOD_MaterialPropertyBlock
 enum BBMOD_EShaderUniformType
 {
+	/// @member A color. It is automatically normalized from 0..255 range
+	/// to 0..1 when passed to a shader.
+	Color,
 	/// @member A single float.
 	Float,
 	/// @member A 2D vector of floats.
@@ -370,58 +374,60 @@ function __bbmod_shader_set_globals(_shader)
 				break;
 
 			case BBMOD_EShaderUniformType.Sampler:
-				var _index = shader_get_sampler_index(_shader, _globals[i]);
-
-				if (_index != -1)
 				{
-					texture_set_stage(_index, _value.__texture);
+					var _index = shader_get_sampler_index(_shader, _globals[i]);
 
-					var _temp = _value.__filter;
-					if (_temp != undefined)
+					if (_index != -1)
 					{
-						gpu_set_tex_filter_ext(_index, _temp);
-					}
+						texture_set_stage(_index, _value.__texture);
 
-					_temp = _value.__maxAniso;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_max_aniso_ext(_index, _temp);
-					}
+						var _temp = _value.__filter;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_filter_ext(_index, _temp);
+						}
 
-					_temp = _value.__maxMip;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_max_mip_ext(_index, _temp);
-					}
+						_temp = _value.__maxAniso;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_max_aniso_ext(_index, _temp);
+						}
 
-					_temp = _value.__minMip;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_min_mip_ext(_index, _temp);
-					}
+						_temp = _value.__maxMip;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_max_mip_ext(_index, _temp);
+						}
 
-					_temp = _value.__mipBias;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_mip_bias_ext(_index, _temp);
-					}
+						_temp = _value.__minMip;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_min_mip_ext(_index, _temp);
+						}
 
-					_temp = _value.__mipEnable;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_mip_enable_ext(_index, _temp);
-					}
+						_temp = _value.__mipBias;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_mip_bias_ext(_index, _temp);
+						}
 
-					_temp = _value.__mipFilter;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_mip_filter_ext(_index, _temp);
-					}
+						_temp = _value.__mipEnable;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_mip_enable_ext(_index, _temp);
+						}
 
-					_temp = _value.__repeat;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_repeat_ext(_index, _temp);
+						_temp = _value.__mipFilter;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_mip_filter_ext(_index, _temp);
+						}
+
+						_temp = _value.__repeat;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_repeat_ext(_index, _temp);
+						}
 					}
 				}
 				break;
