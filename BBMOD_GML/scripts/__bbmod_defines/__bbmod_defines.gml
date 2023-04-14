@@ -87,6 +87,8 @@
 ///     ((id & $00FF0000) >> 16) / 255,
 ///     ((id & $FF000000) >> 24) / 255);
 /// ```
+///
+/// @see bbmod_set_instance_id
 #macro BBMOD_U_INSTANCE_ID "bbmod_InstanceID"
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
@@ -126,6 +128,8 @@
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds a texture with a baked lightmap applied to the model.
+/// @see bbmod_lightmap_set
+/// @see bbmod_lightmap_get
 #macro BBMOD_U_LIGHTMAP "bbmod_Lightmap"
 
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
@@ -150,14 +154,20 @@
 
 /// @macro {String} Name of a fragment shader uniform of type `vec3` that holds
 /// the world-space camera position.
+/// @see bbmod_camera_set_position
+/// @see bbmod_camera_get_position
 #macro BBMOD_U_CAM_POS "bbmod_CamPos"
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// the distance to the far clipping plane.
+/// @see bbmod_camera_set_zfar
+/// @see bbmod_camera_get_zfar
 #macro BBMOD_U_ZFAR "bbmod_ZFar"
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// the camera exposure value.
+/// @see bbmod_camera_set_exposure
+/// @see bbmod_camera_get_exposure
 #macro BBMOD_U_EXPOSURE "bbmod_Exposure"
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
@@ -172,40 +182,58 @@
 
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
 /// the fog color.
+/// @see bbmod_fog_set_color
+/// @see bbmod_fog_get_color
 #macro BBMOD_U_FOG_COLOR "bbmod_FogColor"
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// the maximum fog intensity.
+/// @see bbmod_fog_set_intensity
+/// @see bbmod_fog_get_intensity
 #macro BBMOD_U_FOG_INTENSITY "bbmod_FogIntensity"
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// the distance from the camera at which the fog starts.
+/// @see bbmod_fog_set_start
+/// @see bbmod_fog_get_start
 #macro BBMOD_U_FOG_START "bbmod_FogStart"
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// `1.0 / (fogEnd - fogStart)`, where `fogEnd` is the distance from the camera
 /// where fog reaches its maximum intensity and `fogStart` is the distance from
 /// camera where the fog begins.
+/// @see bbmod_fog_set_end
+/// @see bbmod_fog_get_end
 #macro BBMOD_U_FOG_RCP_RANGE "bbmod_FogRcpRange"
 
 /// @macro {String} Name of a fragment shader uniform of type `vec3` that holds
 /// the ambient light's up vector.
+/// @see bbmod_light_ambient_set_dir
+/// @see bbmod_light_ambient_get_dir
 #macro BBMOD_U_LIGHT_AMBIENT_DIR_UP "bbmod_LightAmbientDirUp"
 
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
 /// the ambient light color on the upper hemisphere.
+/// @see bbmod_light_ambient_set_up
+/// @see bbmod_light_ambient_get_up
 #macro BBMOD_U_LIGHT_AMBIENT_UP "bbmod_LightAmbientUp"
 
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
 /// the ambient light color on the lower hemisphere.
+/// @see bbmod_light_ambient_set_down
+/// @see bbmod_light_ambient_get_down
 #macro BBMOD_U_LIGHT_AMBIENT_DOWN "bbmod_LightAmbientDown"
 
 /// @macro {String} Name of a fragment shader uniform of type `vec3` that holds
 /// the directional light's direction.
+/// @see bbmod_light_directional_set
+/// @see bbmod_light_directional_get
 #macro BBMOD_U_LIGHT_DIRECTIONAL_DIR "bbmod_LightDirectionalDir"
 
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
 /// the directional light's color in RGB and intensity in the A channel.
+/// @see bbmod_light_directional_set
+/// @see bbmod_light_directional_get
 #macro BBMOD_U_LIGHT_DIRECTIONAL_COLOR "bbmod_LightDirectionalColor"
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
@@ -214,20 +242,27 @@
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// whether image based lighting is enabled (1.0) or disabled (0.0).
+/// @see bbmod_ibl_set
+/// @see bbmod_ibl_get
 #macro BBMOD_U_IBL_ENABLE "bbmod_IBLEnable"
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds the image based lighting texture.
+/// @see bbmod_ibl_set
+/// @see bbmod_ibl_get
 #macro BBMOD_U_IBL "bbmod_IBL"
 
 /// @macro {String} Name of a fragment shader uniform of type `vec2` that holds
 /// the texel size of image based lighting texture.
+/// @see bbmod_ibl_set
+/// @see bbmod_ibl_get
 #macro BBMOD_U_IBL_TEXEL "bbmod_IBLTexel"
 
 /// @macro {String} Name of a fragment shader uniform of type
 /// `vec4[2 * BBMOD_MAX_PUNCTUAL_LIGHTS]` that holds vectors `(x, y, z, range)`
 /// and `(r, g, b, intensity)` for each punctual light.
 /// @see BBMOD_MAX_PUNCTUAL_LIGHTS
+/// @see bbmod_light_punctual_add
 #macro BBMOD_U_LIGHT_PUNCTUAL_DATA_A "bbmod_LightPunctualDataA"
 
 /// @macro {String} Name of a fragment shader uniform of type
@@ -235,6 +270,7 @@
 /// `(isSpotLight, dcosInner, dcosOuter)` and `(dirX, dirY, dirZ)` for each
 /// punctual light.
 /// @see BBMOD_MAX_PUNCTUAL_LIGHTS
+/// @see bbmod_light_punctual_add
 #macro BBMOD_U_LIGHT_PUNCTUAL_DATA_B "bbmod_LightPunctualDataB"
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
