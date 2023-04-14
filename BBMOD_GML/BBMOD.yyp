@@ -216,7 +216,6 @@
     {"id":{"name":"BBMOD_RenderQueue","path":"scripts/BBMOD_RenderQueue/BBMOD_RenderQueue.yy",},},
     {"id":{"name":"BBMOD_MixRealFromSpeedModule","path":"scripts/BBMOD_MixRealFromSpeedModule/BBMOD_MixRealFromSpeedModule.yy",},},
     {"id":{"name":"BBMOD_DefaultRenderer","path":"scripts/BBMOD_DefaultRenderer/BBMOD_DefaultRenderer.yy",},},
-    {"id":{"name":"__bbmod_init","path":"scripts/__bbmod_init/__bbmod_init.yy",},},
     {"id":{"name":"__bbmod_cullmode","path":"scripts/__bbmod_cullmode/__bbmod_cullmode.yy",},},
     {"id":{"name":"BBMOD_SphereEmissionModule","path":"scripts/BBMOD_SphereEmissionModule/BBMOD_SphereEmissionModule.yy",},},
     {"id":{"name":"BBMOD_Color","path":"scripts/BBMOD_Color/BBMOD_Color.yy",},},

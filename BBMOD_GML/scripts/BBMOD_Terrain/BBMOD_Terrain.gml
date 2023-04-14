@@ -432,8 +432,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		for (var i = 0; i < 4; ++i)
 		{
 			shader_set(BBMOD_ShExtractSplatmapLayer);
-			texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, "bbmod_Splatmap"), Splatmap);
-			shader_set_uniform_i(shader_get_uniform(BBMOD_ShExtractSplatmapLayer, "bbmod_SplatmapIndex"), i);
+			texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP), Splatmap);
+			shader_set_uniform_i(shader_get_uniform(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP_INDEX), i);
 
 			surface_set_target(_surface);
 			draw_clear_alpha(0, 0);
@@ -695,10 +695,10 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			if (_mat != undefined && _mat.apply(VertexFormat))
 			{
 				var _shaderCurrent = shader_current();
-				var _uSplatmap = shader_get_sampler_index(_shaderCurrent, "bbmod_Splatmap");
-				var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, "bbmod_SplatmapIndex");
-				var _uTextureScale = shader_get_uniform(_shaderCurrent, "bbmod_TextureScale");
-				var _uNormalMatrix = shader_get_uniform(_shaderCurrent, "bbmod_NormalMatrix");
+				var _uSplatmap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_SPLATMAP);
+				var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_SPLATMAP_INDEX);
+				var _uTextureScale = shader_get_uniform(_shaderCurrent, BBMOD_U_TEXTURE_SCALE);
+				var _uNormalMatrix = shader_get_uniform(_shaderCurrent, BBMOD_U_NORMAL_MATRIX);
 				texture_set_stage(_uSplatmap, Splatmap);
 				shader_set_uniform_i(_uSplatmapIndex, i - 1);
 				shader_set_uniform_f(_uTextureScale, TextureRepeat.X, TextureRepeat.Y);

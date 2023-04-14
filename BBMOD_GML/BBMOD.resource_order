@@ -124,7 +124,6 @@
     {"name":"BBMOD_RenderQueue","order":6,"path":"scripts/BBMOD_RenderQueue/BBMOD_RenderQueue.yy",},
     {"name":"BBMOD_MixRealFromSpeedModule","order":2,"path":"scripts/BBMOD_MixRealFromSpeedModule/BBMOD_MixRealFromSpeedModule.yy",},
     {"name":"BBMOD_DefaultRenderer","order":12,"path":"scripts/BBMOD_DefaultRenderer/BBMOD_DefaultRenderer.yy",},
-    {"name":"__bbmod_init","order":13,"path":"scripts/__bbmod_init/__bbmod_init.yy",},
     {"name":"__bbmod_cullmode","order":13,"path":"scripts/__bbmod_cullmode/__bbmod_cullmode.yy",},
     {"name":"BBMOD_SphereEmissionModule","order":1,"path":"scripts/BBMOD_SphereEmissionModule/BBMOD_SphereEmissionModule.yy",},
     {"name":"BBMOD_Color","order":3,"path":"scripts/BBMOD_Color/BBMOD_Color.yy",},
