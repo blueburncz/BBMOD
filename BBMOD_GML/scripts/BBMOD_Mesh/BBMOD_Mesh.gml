@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Mesh(_vertexFormat[, _model])
 ///
 /// @extends BBMOD_Class

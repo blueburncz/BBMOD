@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_IRenderTarget()
 ///
 /// @interface

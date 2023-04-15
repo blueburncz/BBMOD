@@ -1,3 +1,5 @@
+/// @module OBJImporter
+
 /// @func BBMOD_OBJImporter()
 ///
 /// @extends BBMOD_Importer

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_mrt_is_supported()
 ///
 /// @desc Checks whether multiple render targets are supported on the current

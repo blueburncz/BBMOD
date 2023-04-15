@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Real} Maximum number of punctual lights in shaders. Equals to 8.
 #macro BBMOD_MAX_PUNCTUAL_LIGHTS 8
 

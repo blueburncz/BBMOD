@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Matrix([_raw])
 ///
 /// @desc A matrix.

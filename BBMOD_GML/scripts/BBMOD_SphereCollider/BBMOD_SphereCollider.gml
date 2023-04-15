@@ -1,3 +1,5 @@
+/// @module Raycasting
+
 /// @func BBMOD_SphereCollider([_position[, _radius]])
 ///
 /// @extends BBMOD_Collider

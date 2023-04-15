@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_StaticBatch(_vformat)
 ///
 /// @extends BBMOD_Class

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Property(_name, _type)
 ///
 /// @extends BBMOD_Class

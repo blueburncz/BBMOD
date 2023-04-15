@@ -1,3 +1,5 @@
+/// @module Rendering.PostProcessing
+
 /// @enum Enumeration of anti-aliasing techniques.
 enum BBMOD_EAntialiasing
 {

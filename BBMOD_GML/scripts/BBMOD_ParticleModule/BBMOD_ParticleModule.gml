@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_ParticleModule()
 ///
 /// @extends BBMOD_Class

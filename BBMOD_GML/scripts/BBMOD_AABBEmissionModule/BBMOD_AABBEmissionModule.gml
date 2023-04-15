@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_AABBEmissionModule([_min[, _max[, _inside]]])
 ///
 /// @extends BBMOD_ParticleModule

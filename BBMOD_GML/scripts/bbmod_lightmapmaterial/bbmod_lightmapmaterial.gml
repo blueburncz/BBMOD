@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_LightmapMaterial([_shader])
 ///
 /// @extends BBMOD_DefaultLightmapMaterial

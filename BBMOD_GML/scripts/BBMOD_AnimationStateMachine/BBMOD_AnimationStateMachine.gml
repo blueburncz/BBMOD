@@ -1,3 +1,5 @@
+/// @module StateMachine
+
 /// @func BBMOD_AnimationStateMachine(_animationPlayer)
 ///
 /// @extends BBMOD_StateMachine

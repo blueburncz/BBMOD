@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_GravityModule([_gravity])
 ///
 /// @extends BBMOD_ParticleModule

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_render_queues_get()
 ///
 /// @desc Retrieves a read-only array of existing render queues, sorted by

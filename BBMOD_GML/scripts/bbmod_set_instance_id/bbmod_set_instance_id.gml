@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Id.Instance}
 /// @private
 global.__bbmodInstanceID = 0;

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_lerp_delta_time(_from, _to, _factor, _deltaTime)
 ///
 /// @desc Linearly interpolates two values, taking delta time into account.

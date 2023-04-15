@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_AttractorModule([_position[, _relative[, _radius[, _force]]]])
 ///
 /// @extends BBMOD_ParticleModule

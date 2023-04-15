@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_EmissionOverTimeModule([_count[, _interval]])
 ///
 /// @extends BBMOD_ParticleModule

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_vtf_is_supported()
 ///
 /// @desc Checks whether vertex texture fetching is supported on the current

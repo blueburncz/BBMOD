@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_string_starts_with(_string, _substr)
 ///
 /// @desc Checks whether a string starts with a substring.

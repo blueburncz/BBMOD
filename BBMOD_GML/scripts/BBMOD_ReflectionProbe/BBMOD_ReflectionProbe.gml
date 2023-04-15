@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Array<Struct.BBMOD_ReflectionProbe>}
 /// @private
 global.__bbmodReflectionProbes = [];

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_BaseMaterial([_shader])
 ///
 /// @extends BBMOD_Material

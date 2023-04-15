@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_SphereEmissionModule([_radius[, _inside]])
 ///
 /// @extends BBMOD_ParticleModule

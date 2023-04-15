@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_OutOfRangeException([_msg])
 ///
 /// @extends BBMOD_Exception

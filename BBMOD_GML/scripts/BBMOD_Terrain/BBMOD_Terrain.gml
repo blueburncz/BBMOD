@@ -1,3 +1,5 @@
+/// @module Terrain
+
 /// @func BBMOD_Terrain([_heightmap[, _subimage]])
 ///
 /// @extends BBMOD_Class

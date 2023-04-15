@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_json_load(_file)
 ///
 /// @desc Loads a JSON file.

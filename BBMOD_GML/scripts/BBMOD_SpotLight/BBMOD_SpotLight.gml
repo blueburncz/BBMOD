@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_SpotLight([_color[, _position[, _range[, _direction[, _angleInner[, _angleOuter]]]]]])
 ///
 /// @extends BBMOD_PunctualLight

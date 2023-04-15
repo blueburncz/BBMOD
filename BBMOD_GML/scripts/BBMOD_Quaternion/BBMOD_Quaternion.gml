@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Quaternion([_x, _y, _z, _w])
 ///
 /// @desc A quaternion.

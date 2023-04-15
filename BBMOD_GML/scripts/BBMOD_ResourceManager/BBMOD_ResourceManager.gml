@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Struct.BBMOD_ResourceManager} The default resource manager.
 /// @note This resoure manager should never be destroyed!
 #macro BBMOD_RESOURCE_MANAGER __bbmod_resource_manager()

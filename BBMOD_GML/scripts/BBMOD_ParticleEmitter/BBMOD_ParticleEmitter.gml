@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_ParticleEmitter(_position, _system)
 ///
 /// @desc Emits particles at a specific position in the world. The behavior of

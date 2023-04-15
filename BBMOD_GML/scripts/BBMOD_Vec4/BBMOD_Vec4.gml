@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Vec4([_x[, _y, _z, _w]])
 ///
 /// @desc A 4D vector.

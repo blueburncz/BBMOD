@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro Must be the first line when defining a custom class!
 /// @example
 /// ```gml

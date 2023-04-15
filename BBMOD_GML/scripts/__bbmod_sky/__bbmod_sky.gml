@@ -1,3 +1,5 @@
+/// @module Rendering.Sky
+
 /// @macro {Struct.BBMOD_BaseMaterial} A material for rendering RGBM encoded
 /// skies.
 /// @see BBMOD_BaseMaterial

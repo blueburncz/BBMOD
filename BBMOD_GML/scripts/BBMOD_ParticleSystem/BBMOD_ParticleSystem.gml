@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_ParticleSystem(_model, _material, _particleCount[, _batchSize])
 ///
 /// @extends BBMOD_Class

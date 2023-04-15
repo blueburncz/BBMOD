@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Struct.BBMOD_ImageBasedLight}
 /// @private
 global.__bbmodImageBasedLight = undefined;

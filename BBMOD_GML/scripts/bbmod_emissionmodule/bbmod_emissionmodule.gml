@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_EmissionModule([_count])
 ///
 /// @extends BBMOD_ParticleModule

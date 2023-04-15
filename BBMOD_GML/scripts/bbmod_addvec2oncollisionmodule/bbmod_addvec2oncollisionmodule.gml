@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_AddVec2OnCollisionModule([_property[, _change]])
 ///
 /// @extends BBMOD_ParticleModule

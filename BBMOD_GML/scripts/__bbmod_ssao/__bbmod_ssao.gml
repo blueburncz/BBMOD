@@ -1,3 +1,5 @@
+/// @module Rendering.SSAO
+
 /// @macro {Real} Size of the SSAO noise texture. Must be the same as in shaders!
 /// @private
 #macro __BBMOD_SSAO_NOISE_TEXTURE_SIZE 4

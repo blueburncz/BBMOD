@@ -1,3 +1,5 @@
+/// @module Raycasting
+
 /// @func BBMOD_AABBCollider([_position[, _size]])
 ///
 /// @extends BBMOD_Collider

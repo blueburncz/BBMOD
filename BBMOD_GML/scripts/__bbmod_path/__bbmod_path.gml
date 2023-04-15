@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {String} Directory separator.
 /// @private
 #macro __BBMOD_PATH_SEPARATOR ((os_type == os_windows) ? "\\" : "/")

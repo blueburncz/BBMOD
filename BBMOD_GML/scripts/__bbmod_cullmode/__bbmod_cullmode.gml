@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_cullmode_to_string(_cullmode)
 ///
 /// @desc Retrieves a name of a cull mode.

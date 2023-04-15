@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Real} The supported major version of BBMOD and BBANIM files.
 /// @see BBMOD_VERSION_MINOR
 #macro BBMOD_VERSION_MAJOR 3

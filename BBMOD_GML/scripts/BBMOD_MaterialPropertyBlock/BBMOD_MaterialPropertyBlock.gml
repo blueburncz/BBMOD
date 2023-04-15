@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Struct.BBMOD_MaterialPropertyBlock}
 /// @private
 global.__bbmodMaterialProps = undefined;

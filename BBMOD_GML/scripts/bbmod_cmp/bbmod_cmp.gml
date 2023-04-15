@@ -1,3 +1,5 @@
+/// @module Raycasting
+
 /// @func bbmod_cmp(_a, _b)
 ///
 /// @desc Checks whether two number are equal, taking into account

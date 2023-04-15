@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Exception([_msg])
 ///
 /// @extends BBMOD_Class

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Camera()
 ///
 /// @extends BBMOD_BaseCamera

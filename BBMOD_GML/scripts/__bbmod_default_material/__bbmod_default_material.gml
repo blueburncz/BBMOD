@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Struct.BBMOD_VertexFormat} A vertex format of lightmapped models
 /// with two UV channels.
 #macro BBMOD_VFORMAT_DEFAULT_LIGHTMAP __bbmod_vformat_default_lightmap()

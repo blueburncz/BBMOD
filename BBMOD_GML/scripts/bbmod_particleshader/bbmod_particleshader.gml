@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_ParticleShader(_shader, _vertexFormat)
 ///
 /// @extends BBMOD_DefaultShader

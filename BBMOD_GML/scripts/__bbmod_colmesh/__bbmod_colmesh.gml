@@ -1,3 +1,5 @@
+/// @module ColMesh
+
 /// @func bbmod_mesh_to_colmesh(_mesh, _colmesh[, _transform])
 ///
 /// @desc Adds a {@link BBMOD_Mesh} into a colmesh.

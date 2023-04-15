@@ -1,3 +1,5 @@
+/// @module Gizmo
+
 /// @enum Enumeration of edit spaces.
 enum BBMOD_EEditSpace
 {

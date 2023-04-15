@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_NotImplementedException()
 ///
 /// @extends BBMOD_Exception

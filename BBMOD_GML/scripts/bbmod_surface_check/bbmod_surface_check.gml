@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_surface_check(_surface, _width, _height[, _format])
 ///
 /// @desc Checks whether the surface exists and if it has correct size. Broken

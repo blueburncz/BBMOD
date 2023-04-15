@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_MixColorModule([_property[, _from[, _to]]])
 ///
 /// @extends BBMOD_ParticleModule

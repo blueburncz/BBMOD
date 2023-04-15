@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Id.DsMap<Real, Function>}
 /// @private
 global.__bbmodAsyncCallback = ds_map_create();

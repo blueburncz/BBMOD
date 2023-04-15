@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_MeshBuilder([_primitiveType])
 ///
 /// @extends BBMOD_Class

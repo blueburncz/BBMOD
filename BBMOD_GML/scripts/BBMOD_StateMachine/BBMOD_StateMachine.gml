@@ -1,3 +1,5 @@
+/// @module StateMachine
+
 /// @func BBMOD_StateMachine()
 ///
 /// @extends BBMOD_Class

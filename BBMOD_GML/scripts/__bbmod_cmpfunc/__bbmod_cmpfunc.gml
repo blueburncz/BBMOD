@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_cmpfunc_to_string(_cmpfunc)
 ///
 /// @desc Retrieves a name of a cmpfunc.

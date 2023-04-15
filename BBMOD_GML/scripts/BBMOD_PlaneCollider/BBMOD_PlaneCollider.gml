@@ -1,3 +1,5 @@
+/// @module Raycasting
+
 /// @func BBMOD_PlaneCollider([_normal[, _distance]])
 ///
 /// @extends BBMOD_Collider

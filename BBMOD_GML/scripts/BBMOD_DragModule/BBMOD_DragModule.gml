@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_DragModule()
 ///
 /// @extends BBMOD_ParticleModule

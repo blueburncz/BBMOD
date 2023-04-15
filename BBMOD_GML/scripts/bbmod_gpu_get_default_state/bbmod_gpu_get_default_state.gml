@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_gpu_get_default_state()
 ///
 /// @desc Retrieves the default GPU state.

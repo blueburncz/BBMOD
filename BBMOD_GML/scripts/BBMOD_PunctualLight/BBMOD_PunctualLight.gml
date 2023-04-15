@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Array<Struct.BBMOD_PunctualLight>}
 /// @private
 global.__bbmodPunctualLights = [];

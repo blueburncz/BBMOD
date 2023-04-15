@@ -5,5 +5,8 @@ but for production you should aim to use BBMOD files, because they are faster to
 load an they take less disk space compared to OBJ.
 
 ## Scripting API
-### Structs
-* [BBMOD_OBJImporter](./BBMOD_OBJImporter.html)
+<ul>
+{% for v in modules_toc['OBJImporter'] -%}
+    <li><a href="{{ v['name'] }}.html">{{ v['name'] }}{{ v['tags'] }}</a></li>
+{%- endfor %}
+</ul>

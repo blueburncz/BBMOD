@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static
 /// models.
 /// @see BBMOD_VertexFormat

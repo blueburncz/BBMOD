@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Id.DsStack} A stack used when rendering nodes to avoid recursion.
 /// @private
 global.__bbmodRenderStack = ds_stack_create();

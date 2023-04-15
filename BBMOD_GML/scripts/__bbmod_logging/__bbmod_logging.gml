@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @enum Enumeration of log levels.
 /// @private
 enum __BBMOD_ELogLevel

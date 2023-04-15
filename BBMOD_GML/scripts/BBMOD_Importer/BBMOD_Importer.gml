@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Importer()
 ///
 /// @extends BBMOD_Class

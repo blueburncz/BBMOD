@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_MixVec3FromSpeedModule([_property[, _from[, _to[, _min[, _max]]]]])
 ///
 /// @extends BBMOD_ParticleModule

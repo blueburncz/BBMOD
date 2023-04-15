@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_blendmode_to_string(_blendmode)
 ///
 /// @desc Retrieves a name of a basic blend mode.

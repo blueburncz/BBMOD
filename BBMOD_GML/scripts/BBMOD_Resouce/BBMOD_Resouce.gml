@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Resource()
 ///
 /// @extends BBMOD_Class

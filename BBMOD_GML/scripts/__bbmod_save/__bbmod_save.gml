@@ -1,3 +1,5 @@
+/// @module Save
+
 /// @macro {Real}
 /// @private
 #macro __BBMOD_SAVE_VERSION 0

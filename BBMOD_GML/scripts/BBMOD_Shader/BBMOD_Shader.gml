@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @enum Enumeration of shader uniform types.
 /// @see BBMOD_MaterialPropertyBlock
 enum BBMOD_EShaderUniformType

@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_MixQuaternionFromSpeedModule([_property[, _from[, _to[, _min[, _max]]]]])
 ///
 /// @extends BBMOD_ParticleModule

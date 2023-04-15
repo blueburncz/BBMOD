@@ -6,14 +6,8 @@ Szauer. Does not serve as a replacement for more full-fledged solutions like
 used for smaller projects that do not require complex collision checking.
 
 ## Scripting API
-### Functions
-* [bbmod_cmp](./bbmod_cmp.html)
-
-### Structs
-* [BBMOD_AABBCollider](./BBMOD_AABBCollider.html)
-* [BBMOD_Collider](./BBMOD_Collider.html)
-* [BBMOD_FrustumCollider](./BBMOD_FrustumCollider.html)
-* [BBMOD_PlaneCollider](./BBMOD_PlaneCollider.html)
-* [BBMOD_Ray](./BBMOD_Ray.html)
-* [BBMOD_RaycastResult](./BBMOD_RaycastResult.html)
-* [BBMOD_SphereCollider](./BBMOD_SphereCollider.html)
+<ul>
+{% for v in modules_toc['Raycasting'] -%}
+    <li><a href="{{ v['name'] }}.html">{{ v['name'] }}{{ v['tags'] }}</a></li>
+{%- endfor %}
+</ul>

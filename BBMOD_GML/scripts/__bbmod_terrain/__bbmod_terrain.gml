@@ -1,3 +1,5 @@
+/// @module Terrain
+
 /// @macro {Struct.BBMOD_DefaultShader} Shader for terrain materials.
 #macro BBMOD_SHADER_TERRAIN __bbmod_shader_terrain()
 

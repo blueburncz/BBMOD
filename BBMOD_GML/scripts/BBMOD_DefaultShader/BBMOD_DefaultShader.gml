@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_DefaultShader(_shader, _vertexFormat)
 ///
 /// @extends BBMOD_BaseShader

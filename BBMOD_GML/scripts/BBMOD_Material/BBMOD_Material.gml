@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func __bbmod_material_get_map()
 ///
 /// @desc Retrieves a map of registered materials.

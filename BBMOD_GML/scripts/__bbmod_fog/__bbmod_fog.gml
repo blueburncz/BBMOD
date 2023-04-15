@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Struct.BBMOD_Color}
 /// @private
 global.__bbmodFogColor = BBMOD_C_WHITE;

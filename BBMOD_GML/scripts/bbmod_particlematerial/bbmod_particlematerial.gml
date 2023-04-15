@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_ParticleMaterial([_shader])
 ///
 /// @extends BBMOD_DefaultMaterial

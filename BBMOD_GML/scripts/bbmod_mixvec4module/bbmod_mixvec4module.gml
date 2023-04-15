@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_MixVec4Module([_property[, _from[, _to[, _separate]]]])
 ///
 /// @extends BBMOD_ParticleModule

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_array_clone(_array)
 ///
 /// @desc Creates a shallow clone of an array.

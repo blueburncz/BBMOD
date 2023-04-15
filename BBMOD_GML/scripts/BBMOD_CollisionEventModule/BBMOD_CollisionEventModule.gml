@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_CollisionEventModule([_callback])
 ///
 /// @extends BBMOD_ParticleModule

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Renderer()
 ///
 /// @extends BBMOD_DefaultRenderer

@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_RandomRotationModule([_axis[, _from[, _to]]])
 ///
 /// @extends BBMOD_ParticleModule

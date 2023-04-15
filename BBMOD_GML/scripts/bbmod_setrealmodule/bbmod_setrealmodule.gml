@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_SetRealModule([_property[, _value]])
 ///
 /// @extends BBMOD_ParticleModule

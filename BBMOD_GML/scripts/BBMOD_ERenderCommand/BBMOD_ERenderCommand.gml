@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @enum Enumeration of all possible render commands.
 enum BBMOD_ERenderCommand
 {

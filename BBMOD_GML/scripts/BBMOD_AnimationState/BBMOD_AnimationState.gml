@@ -1,3 +1,5 @@
+/// @module StateMachine
+
 /// @func BBMOD_AnimationState(_name, _animation[, _loop])
 ///
 /// @extends BBMOD_State

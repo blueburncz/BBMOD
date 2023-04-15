@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Struct.BBMOD_BaseCamera} The last used camera. Can be `undefined`.
 /// @private
 global.__bbmodCameraCurrent = undefined;

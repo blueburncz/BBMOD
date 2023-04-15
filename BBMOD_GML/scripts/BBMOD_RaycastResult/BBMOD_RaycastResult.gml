@@ -1,3 +1,5 @@
+/// @module Raycasting
+
 /// @func BBMOD_RaycastResult()
 ///
 /// @desc A structure for holding additional raycast data.

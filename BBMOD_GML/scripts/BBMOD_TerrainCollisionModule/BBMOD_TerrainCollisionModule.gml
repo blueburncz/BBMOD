@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_TerrainCollisionModule([_terrain])
 ///
 /// @extends BBMOD_ParticleModule

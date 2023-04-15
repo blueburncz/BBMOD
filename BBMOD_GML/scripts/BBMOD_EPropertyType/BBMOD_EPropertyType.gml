@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @enum Enumeration of all property types.
 /// @see BBMOD_Property
 enum BBMOD_EPropertyType

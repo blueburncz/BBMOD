@@ -1,3 +1,5 @@
+/// @module Rendering.PostProcessing
+
 /// @func BBMOD_PostProcessor()
 ///
 /// @extends BBMOD_Class

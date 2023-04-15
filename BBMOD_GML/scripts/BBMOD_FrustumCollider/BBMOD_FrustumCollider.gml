@@ -1,3 +1,5 @@
+/// @module Raycasting
+
 /// @enum Enumeration of frustum planes.
 enum BBMOD_EFrustumPlane
 {

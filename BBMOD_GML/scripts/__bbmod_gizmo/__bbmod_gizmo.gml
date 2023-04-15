@@ -1,3 +1,5 @@
+/// @module Gizmo
+
 /// @macro {Struct.BBMOD_BaseShader} A shader used when rendering instance IDs.
 ///
 /// @example

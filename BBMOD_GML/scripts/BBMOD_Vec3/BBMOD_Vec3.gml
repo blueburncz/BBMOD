@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Struct.BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(1, 0, 0)`.
 /// @see BBMOD_VEC3_RIGHT
 /// @see BBMOD_VEC3_UP

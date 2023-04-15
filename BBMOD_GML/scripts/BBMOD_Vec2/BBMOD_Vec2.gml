@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Vec2([_x[, _y]])
 ///
 /// @desc A 2D vector.

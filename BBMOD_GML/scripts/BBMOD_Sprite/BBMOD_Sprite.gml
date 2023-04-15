@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Sprite([_file[, _sha1]])
 ///
 /// @extends BBMOD_Resource

@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Struct.BBMOD_Vec3}
 /// @private
 global.__bbmodCameraPosition = new BBMOD_Vec3();

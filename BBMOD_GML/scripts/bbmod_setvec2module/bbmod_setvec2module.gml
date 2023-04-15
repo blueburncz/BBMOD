@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @func BBMOD_SetVec2Module([_property[, _value]])
 ///
 /// @extends BBMOD_ParticleModule

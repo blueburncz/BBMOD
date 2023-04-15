@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_AnimationInstance(_animation)
 ///
 /// @desc An instance of an animation. Used for animation playback.

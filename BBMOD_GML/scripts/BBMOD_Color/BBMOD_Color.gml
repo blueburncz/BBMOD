@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Real}
 /// @private
 #macro __BBMOD_RGBM_RANGE 6.0

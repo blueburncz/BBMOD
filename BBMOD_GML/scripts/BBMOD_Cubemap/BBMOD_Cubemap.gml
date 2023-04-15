@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @enum Enumeration of cube sides, compatible with
 /// [Xpanda](https://github.com/GameMakerDiscord/Xpanda)'s cubemap layout.
 enum BBMOD_ECubeSide

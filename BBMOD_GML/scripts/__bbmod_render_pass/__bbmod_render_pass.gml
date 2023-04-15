@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @enum Enumeration of render passes.
 enum BBMOD_ERenderPass
 {

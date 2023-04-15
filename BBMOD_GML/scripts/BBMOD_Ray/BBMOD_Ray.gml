@@ -1,3 +1,5 @@
+/// @module Raycasting
+
 /// @func BBMOD_Ray(_origin, _direction)
 ///
 /// @desc A ray used to raycast colliders.

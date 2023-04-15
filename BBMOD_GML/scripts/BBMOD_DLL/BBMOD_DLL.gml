@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Bool} Evaluates to `true` if BBMOD DLL is supported on the current
 /// platform and the BBMOD dynamic library exists.
 ///

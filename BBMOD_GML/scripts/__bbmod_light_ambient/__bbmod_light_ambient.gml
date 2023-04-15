@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Struct.BBMOD_Vec3}
 /// @private
 global.__bbmodAmbientLightDirUp = BBMOD_VEC3_UP;

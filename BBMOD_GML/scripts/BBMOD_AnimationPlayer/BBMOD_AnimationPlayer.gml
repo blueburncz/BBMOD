@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Real} Maximum number of bones that a single model can have.
 /// Equals to 128.
 #macro BBMOD_MAX_BONES 128

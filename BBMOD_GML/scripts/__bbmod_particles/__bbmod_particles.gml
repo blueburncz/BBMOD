@@ -1,3 +1,5 @@
+/// @module Particles
+
 /// @macro {Struct.BBMOD_VertexFormat} Vertex format of a single billboard
 /// particle.
 #macro BBMOD_VFORMAT_PARTICLE __bbmod_vformat_particle()

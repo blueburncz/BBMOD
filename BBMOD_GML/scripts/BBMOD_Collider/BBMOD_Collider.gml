@@ -1,3 +1,5 @@
+/// @module Raycasting
+
 /// @func BBMOD_Collider()
 ///
 /// @extends BBMOD_Class

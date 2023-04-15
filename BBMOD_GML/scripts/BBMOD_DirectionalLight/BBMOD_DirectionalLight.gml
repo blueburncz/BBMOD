@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @var {Struct.BBMOD_DirectionalLight}
 /// @private
 global.__bbmodDirectionalLight = undefined;

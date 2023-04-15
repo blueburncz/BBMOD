@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @macro {Struct.BBMOD_VertexFormat} A vertex format useful for debugging
 /// purposes, like drawing previews of colliders.
 #macro BBMOD_VFORMAT_DEBUG __bbmod_vformat_debug()

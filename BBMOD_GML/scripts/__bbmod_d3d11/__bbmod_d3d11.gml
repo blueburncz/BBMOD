@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func __bbmod_d3d11_init()
 ///
 /// @return {Bool} Returns `true` if BBMOD.dll is available and D3D11 is

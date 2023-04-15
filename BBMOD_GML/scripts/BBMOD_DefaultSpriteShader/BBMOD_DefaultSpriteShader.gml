@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
 ///
 /// @extends BBMOD_DefaultShader

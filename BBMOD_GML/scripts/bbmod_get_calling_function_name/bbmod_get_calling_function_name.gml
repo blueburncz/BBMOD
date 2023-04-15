@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_get_calling_function_name()
 ///
 /// @desc Retrieves name of the calling function.

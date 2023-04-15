@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func BBMOD_Light()
 ///
 /// @extends BBMOD_Class

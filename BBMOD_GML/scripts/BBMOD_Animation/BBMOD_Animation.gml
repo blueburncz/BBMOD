@@ -1,3 +1,5 @@
+/// @module Core
+
 #macro __BBMOD_BONE_SPACE_PARENT (1 << 0)
 #macro __BBMOD_BONE_SPACE_WORLD  (1 << 1)
 #macro __BBMOD_BONE_SPACE_BONE   (1 << 2)
