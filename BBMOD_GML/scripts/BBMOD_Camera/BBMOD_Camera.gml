@@ -158,12 +158,9 @@ function BBMOD_Camera()
 				bbmod_html5_pointer_lock();
 			}
 
-			if (__mouseLockAt == undefined)
-			{
-				__mouseLockAt = new BBMOD_Vec2(
-					window_mouse_get_x(),
-					window_mouse_get_y());
-			}
+			__mouseLockAt ??= new BBMOD_Vec2(
+				window_mouse_get_x(),
+				window_mouse_get_y());
 		}
 		else
 		{

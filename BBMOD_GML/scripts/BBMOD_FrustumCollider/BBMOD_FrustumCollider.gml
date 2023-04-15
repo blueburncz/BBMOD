@@ -108,13 +108,13 @@ function BBMOD_FrustumCollider()
 		return self;
 	};
 
-	/// @func __intersectPlanes(_p1, _p2, _p3)
+	/// @func __intersectPlanes(_p0, _p1, _p2)
 	///
 	/// @desc
 	///
+	/// @param {Struct.BBMOD_PlaneCollider} _p0
 	/// @param {Struct.BBMOD_PlaneCollider} _p1
 	/// @param {Struct.BBMOD_PlaneCollider} _p2
-	/// @param {Struct.BBMOD_PlaneCollider} _p3
 	///
 	/// @returns {Struct.BBMOD_Vec3,Undefined}
 	///

@@ -1,3 +1,7 @@
+/// @var {Struct.BBMOD_Renderer} The last used renderer. Can be `undefined`.
+/// @private
+global.__bbmodRendererCurrent = undefined;
+
 /// @func BBMOD_BaseRenderer()
 ///
 /// @extends BBMOD_Class
@@ -36,7 +40,7 @@ function BBMOD_BaseRenderer()
 
 	/// @var {Id.Surface} Surface for rendering highlight of selected instances.
 	/// @private
-	__surInstanceHighlight = noone;
+	__surInstanceHighlight = -1;
 
 	/// @var {Struct.BBMOD_Color} Outline color of instances selected by gizmo.
 	/// Default value is {@link BBMOD_C_ORANGE}.
@@ -71,11 +75,11 @@ function BBMOD_BaseRenderer()
 	/// @var {Id.Surface} A surface containing the gizmo. Used to enable
 	/// z-testing against itself, but ingoring the scene geometry.
 	/// @private
-	__surGizmo = noone;
+	__surGizmo = -1;
 
 	/// @var {Id.Surface} Surface for mouse-picking the gizmo.
 	/// @private
-	__surSelect = noone;
+	__surSelect = -1;
 
 	/// @var {Array<Struct.BBMOD_IRenderable>} An array of renderable objects
 	/// and structs. These are automatically rendered in
@@ -105,7 +109,7 @@ function BBMOD_BaseRenderer()
 	/// @var {Id.Surface} The surface used for rendering the scene's depth from the
 	/// directional light's view.
 	/// @private
-	__surShadowmap = noone;
+	__surShadowmap = -1;
 
 	/// @var {Real} When rendering shadows, offsets vertex position by its normal
 	/// scaled by this value. Defaults to 1. Increasing the value can remove some
@@ -121,7 +125,7 @@ function BBMOD_BaseRenderer()
 
 	/// @var {Id.Surface}
 	/// @private
-	__surFinal = noone;
+	__surFinal = -1;
 
 	/// @func get_width()
 	///
@@ -520,10 +524,11 @@ function BBMOD_BaseRenderer()
 		var _shadowCasterIndex = -1;
 		var _shadowmapMatrix;
 		var _shadowmapZFar;
+		var _light;
 
 		if (EnableShadows)
 		{
-			var _light = bbmod_light_directional_get();
+			_light = bbmod_light_directional_get();
 			if (_light != undefined
 				&& _light.CastShadows
 				&& _light.__getZFar != undefined
@@ -540,7 +545,7 @@ function BBMOD_BaseRenderer()
 				var i = 0;
 				repeat (array_length(global.__bbmodPunctualLights))
 				{
-					var _light = global.__bbmodPunctualLights[i];
+					_light = global.__bbmodPunctualLights[i];
 					if (_light.CastShadows
 						&& _light.__getZFar != undefined
 						&& _light.__getShadowmapMatrix != undefined)
@@ -561,7 +566,7 @@ function BBMOD_BaseRenderer()
 			if (surface_exists(__surShadowmap))
 			{
 				surface_free(__surShadowmap);
-				__surShadowmap = noone;
+				__surShadowmap = -1;
 			}
 			// No shadow caster was found!!!
 			bbmod_shader_unset_global("bbmod_Shadowmap");

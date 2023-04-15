@@ -461,6 +461,20 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func Negate()
+	///
+	/// @desc Negates the vector and returns the result as a new vector.
+	///
+	/// @return {Struct.BBMOD_Vec3} The created vector.
+	static Negate = function () {
+		gml_pragma("forceinline");
+		return new BBMOD_Vec3(
+			-X,
+			-Y,
+			-Z
+		);
+	};
+
 	/// @func Normalize()
 	///
 	/// @desc Normalizes the vector and returns the result as a new vector.

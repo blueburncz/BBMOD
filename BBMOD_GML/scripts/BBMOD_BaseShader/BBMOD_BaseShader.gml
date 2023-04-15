@@ -1,3 +1,6 @@
+/// @macro {Real} Maximum number of punctual lights in shaders. Equals to 8.
+#macro BBMOD_MAX_PUNCTUAL_LIGHTS 8
+
 /// @func BBMOD_BaseShader(_shader, _vertexFormat)
 ///
 /// @extends BBMOD_Shader
@@ -14,9 +17,10 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 {
 	BBMOD_CLASS_GENERATED_BODY;
 
-	/// @var {Real} Maximum number of punctual lights in the shader. This must
-	/// match with value defined in the raw GameMaker shader!
-	MaxPunctualLights = 8;
+	/// @var {Real} Maximum number of punctual lights in the shader.
+	/// @deprecated Please use {@link BBMOD_MAX_PUNCTUAL_LIGHTS} instead.
+	/// @readonly
+	MaxPunctualLights = BBMOD_MAX_PUNCTUAL_LIGHTS;
 
 	/// @func set_texture_offset(_offset)
 	///
@@ -28,7 +32,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_texture_offset = function (_offset) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
-			shader_get_uniform(shader_current(), "bbmod_TextureOffset"),
+			shader_get_uniform(shader_current(), BBMOD_U_TEXTURE_OFFSET),
 			_offset.X, _offset.Y);
 		return self;
 	};
@@ -43,7 +47,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_texture_scale = function (_scale) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
-			shader_get_uniform(shader_current(), "bbmod_TextureScale"),
+			shader_get_uniform(shader_current(), BBMOD_U_TEXTURE_SCALE),
 			_scale.X, _scale.Y);
 		return self;
 	};
@@ -60,7 +64,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_bones = function (_bones) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f_array(
-			shader_get_uniform(shader_current(), "bbmod_Bones"),
+			shader_get_uniform(shader_current(), BBMOD_U_BONES),
 			_bones);
 		return self;
 	};
@@ -75,7 +79,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_batch_data = function (_data) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f_array(
-			shader_get_uniform(shader_current(), "bbmod_BatchData"),
+			shader_get_uniform(shader_current(), BBMOD_U_BATCH_DATA),
 			_data);
 		return self;
 	};
@@ -90,7 +94,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_alpha_test = function (_value) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
-			shader_get_uniform(shader_current(), "bbmod_AlphaTest"),
+			shader_get_uniform(shader_current(), BBMOD_U_ALPHA_TEST),
 			_value);
 		return self;
 	};
@@ -107,7 +111,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gml_pragma("forceinline");
 		_pos ??= global.__bbmodCameraPosition;
 		shader_set_uniform_f(
-			shader_get_uniform(shader_current(), "bbmod_CamPos"),
+			shader_get_uniform(shader_current(), BBMOD_U_CAM_POS),
 			_pos.X, _pos.Y, _pos.Z);
 		return self;
 	};
@@ -123,7 +127,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_exposure = function (_value=undefined) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
-			shader_get_uniform(shader_current(), "bbmod_Exposure"),
+			shader_get_uniform(shader_current(), BBMOD_U_EXPOSURE),
 			_value ?? global.__bbmodCameraExposure);
 		return self;
 	};
@@ -140,7 +144,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gml_pragma("forceinline");
 		_id ??= global.__bbmodInstanceID;
 		shader_set_uniform_f(
-			shader_get_uniform(shader_current(), "bbmod_InstanceID"),
+			shader_get_uniform(shader_current(), BBMOD_U_INSTANCE_ID),
 			((_id & $000000FF) >> 0) / 255,
 			((_id & $0000FF00) >> 8) / 255,
 			((_id & $00FF0000) >> 16) / 255,
@@ -158,7 +162,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	static set_material_index = function (_index) {
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
-			shader_get_uniform(shader_current(), "bbmod_MaterialIndex"),
+			shader_get_uniform(shader_current(), BBMOD_U_MATERIAL_INDEX),
 			_index);
 		return self;
 	};
@@ -198,23 +202,23 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 		if (_texture != pointer_null)
 		{
-			var _uIBL = shader_get_sampler_index(_shaderCurrent, "bbmod_IBL");
+			var _uIBL = shader_get_sampler_index(_shaderCurrent, BBMOD_U_IBL);
 
 			texture_set_stage(_uIBL, _texture);
 			gpu_set_tex_mip_enable_ext(_uIBL, mip_off)
 			gpu_set_tex_filter_ext(_uIBL, true);
 			gpu_set_tex_repeat_ext(_uIBL, false);
 			shader_set_uniform_f(
-				shader_get_uniform(_shaderCurrent, "bbmod_IBLTexel"),
+				shader_get_uniform(_shaderCurrent, BBMOD_U_IBL_TEXEL),
 				_texel, _texel);
 			shader_set_uniform_f(
-				shader_get_uniform(_shaderCurrent, "bbmod_IBLEnable"),
+				shader_get_uniform(_shaderCurrent, BBMOD_U_IBL_ENABLE),
 				1.0);
 		}
 		else
 		{
 			shader_set_uniform_f(
-				shader_get_uniform(_shaderCurrent, "bbmod_IBLEnable"),
+				shader_get_uniform(_shaderCurrent, BBMOD_U_IBL_ENABLE),
 				0.0);
 		}
 
@@ -231,7 +235,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Struct.BBMOD_Color} [_down] Ambient light color on the lower
 	/// hemisphere. If `undefined`, then the value set by
 	/// {@link bbmod_light_ambient_set_down} is used.
-	/// @param {Struct.BBMOD_Vec3} [_up] Direction to the ambient light's upper
+	/// @param {Struct.BBMOD_Vec3} [_dir] Direction to the ambient light's upper
 	/// hemisphere. If `undefined`, then the value set by
 	/// {@link bbmod_light_ambient_set_dir} is used.
 	///
@@ -243,13 +247,13 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		_dir ??= global.__bbmodAmbientLightDirUp;
 		var _shaderCurrent = shader_current();
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_LightAmbientUp"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_AMBIENT_UP),
 			_up.Red / 255.0, _up.Green / 255.0, _up.Blue / 255.0, _up.Alpha);
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_LightAmbientDown"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_AMBIENT_DOWN),
 			_down.Red / 255.0, _down.Green / 255.0, _down.Blue / 255.0, _down.Alpha);
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_LightAmbientDirUp"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_AMBIENT_DIR_UP),
 			_dir.X, _dir.Y, _dir.Z);
 		return self;
 	};
@@ -270,8 +274,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gml_pragma("forceinline");
 		_light ??= global.__bbmodDirectionalLight;
 		var _shaderCurrent = shader_current();
-		var _uLightDirectionalDir = shader_get_uniform(_shaderCurrent, "bbmod_LightDirectionalDir");
-		var _uLightDirectionalColor = shader_get_uniform(_shaderCurrent, "bbmod_LightDirectionalColor");
+		var _uLightDirectionalDir = shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_DIRECTIONAL_DIR);
+		var _uLightDirectionalColor = shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_DIRECTIONAL_COLOR);
 		if (_light != undefined	&& _light.Enabled)
 		{
 			var _direction = _light.Direction;
@@ -325,14 +329,12 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 		_lights ??= global.__bbmodPunctualLights;
 
-		var _maxLights = MaxPunctualLights;
-
 		var _indexA = 0;
-		var _indexMaxA = _maxLights * 8;
+		var _indexMaxA = BBMOD_MAX_PUNCTUAL_LIGHTS * 8;
 		var _dataA = array_create(_indexMaxA, 0.0);
 
 		var _indexB = 0;
-		var _indexMaxB = _maxLights * 6;
+		var _indexMaxB = BBMOD_MAX_PUNCTUAL_LIGHTS * 6;
 		var _dataB = array_create(_indexMaxB, 0.0);
 
 		var i = 0;
@@ -371,10 +373,10 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		var _shaderCurrent = shader_current();
 
 		shader_set_uniform_f_array(
-			shader_get_uniform(_shaderCurrent, "bbmod_LightPunctualDataA"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_PUNCTUAL_DATA_A),
 			_dataA);
 		shader_set_uniform_f_array(
-			shader_get_uniform(_shaderCurrent, "bbmod_LightPunctualDataB"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_PUNCTUAL_DATA_B),
 			_dataB);
 
 		return self;
@@ -404,19 +406,19 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		var _rcpFogRange = 1.0 / (_end - _start);
 		var _shaderCurrent = shader_current();
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_FogColor"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_FOG_COLOR),
 			_color.Red / 255.0,
 			_color.Green / 255.0,
 			_color.Blue / 255.0,
 			_color.Alpha);
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_FogIntensity"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_FOG_INTENSITY),
 			_intensity);
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_FogStart"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_FOG_START),
 			_start);
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_FogRcpRange"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_FOG_RCP_RANGE),
 			_rcpFogRange);
 		return self;
 	};
@@ -431,7 +433,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_punctual_lights();
 		set_fog();
 		texture_set_stage(
-			shader_get_sampler_index(shader_current(), "bbmod_SSAO"),
+			shader_get_sampler_index(shader_current(), BBMOD_U_SSAO),
 			sprite_get_texture(BBMOD_SprWhite, 0));
 	};
 
@@ -448,7 +450,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		gml_pragma("forceinline");
 		var _shaderCurrent = shader_current();
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_BaseOpacityMultiplier"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_MULTIPLIER),
 			_material.BaseOpacityMultiplier.Red / 255.0,
 			_material.BaseOpacityMultiplier.Green / 255.0,
 			_material.BaseOpacityMultiplier.Blue / 255.0,
@@ -457,7 +459,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_texture_offset(_material.TextureOffset);
 		set_texture_scale(_material.TextureScale);
 		shader_set_uniform_f(
-			shader_get_uniform(_shaderCurrent, "bbmod_ShadowmapBias"),
+			shader_get_uniform(_shaderCurrent, BBMOD_U_SHADOWMAP_BIAS),
 			_material.ShadowmapBias);
 		return self;
 	};

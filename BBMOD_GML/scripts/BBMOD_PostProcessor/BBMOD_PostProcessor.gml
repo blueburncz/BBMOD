@@ -13,7 +13,7 @@ function BBMOD_PostProcessor()
 
 	/// @var {Id.Surface}
 	/// @private
-	__surPostProcess = noone;
+	__surPostProcess = -1;
 
 	/// @var {Bool} If `true` then the post-processor is enabled. Default value
 	/// is `true`.
@@ -144,7 +144,7 @@ function BBMOD_PostProcessor()
 		// Apply anti-aliasing to the final surface
 		if (Antialiasing == BBMOD_EAntialiasing.FXAA)
 		{
-			var _shader = BBMOD_ShFXAA;
+			_shader = BBMOD_ShFXAA;
 			shader_set(_shader);
 			shader_set_uniform_f(
 				shader_get_uniform(_shader, "u_vTexelVS"),

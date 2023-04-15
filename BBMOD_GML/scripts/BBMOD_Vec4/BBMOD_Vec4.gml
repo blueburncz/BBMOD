@@ -462,6 +462,21 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 		);
 	};
 
+	/// @func Negate()
+	///
+	/// @desc Negates the vector and returns the result as a new vector.
+	///
+	/// @return {Struct.BBMOD_Vec4} The created vector.
+	static Negate = function () {
+		gml_pragma("forceinline");
+		return new BBMOD_Vec4(
+			-X,
+			-Y,
+			-Z,
+			-W
+		);
+	};
+
 	/// @func Normalize()
 	///
 	/// @desc Normalizes the vector and returns the result as a new vector.

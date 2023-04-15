@@ -2,7 +2,7 @@
 ///
 /// @desc Retrieves a name of a cmpfunc.
 ///
-/// @param {Real} _cmpfunc The cmpfunc to get the name of. Use one of the
+/// @param {Constant.ZFunction} _cmpfunc The cmpfunc to get the name of. Use one of the
 /// `cmpfunc_*` constants.
 ///
 /// @return {String} The name of the cmpfunc.
@@ -45,7 +45,7 @@ function bbmod_cmpfunc_to_string(_cmpfunc)
 ///
 /// @param {String} _name The name of the cmpfunc.
 ///
-/// @return {Real} One of the `cmpfunc_*` constants.
+/// @return {Constant.ZFunction} One of the `cmpfunc_*` constants.
 ///
 /// @throws {BBMOD_Exception} If an invalid name is passed.
 function bbmod_cmpfunc_from_string(_name)

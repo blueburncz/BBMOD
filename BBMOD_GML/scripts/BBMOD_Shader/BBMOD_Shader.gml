@@ -1,20 +1,38 @@
-/// @enum Enum of shader uniform types. Used in global shader uniforms.
-/// @private
-enum __BBMOD_EShaderUniformType
+/// @enum Enumeration of shader uniform types.
+/// @see BBMOD_MaterialPropertyBlock
+enum BBMOD_EShaderUniformType
 {
+	/// @member A color. It is automatically normalized from 0..255 range
+	/// to 0..1 when passed to a shader.
+	Color,
+	/// @member A single float.
 	Float,
+	/// @member A 2D vector of floats.
 	Float2,
+	/// @member A 3D vector of floats.
 	Float3,
+	/// @member A 4D vector of floats.
 	Float4,
+	/// @member An array of floats.
 	FloatArray,
+	/// @member A single integer.
 	Int,
+	/// @member A 2D vector of integers.
 	Int2,
+	/// @member A 3D vector of integers.
 	Int3,
+	/// @member A 4D vector of integers.
 	Int4,
+	/// @member An array of integers.
 	IntArray,
+	/// @member The current transform matrix.
 	Matrix,
+	/// @member A matrix as an array of 16 floats.
 	MatrixArray,
+	/// @member A texture sampler.
 	Sampler,
+	/// @member Total number of members of this enum.
+	SIZE
 };
 
 /// @func __bbmod_shader_get_map()
@@ -307,107 +325,109 @@ function __bbmod_shader_set_globals(_shader)
 		{
 			switch (_globals[i + 1])
 			{
-			case __BBMOD_EShaderUniformType.Float:
+			case BBMOD_EShaderUniformType.Float:
 				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value);
 				break;
 
-			case __BBMOD_EShaderUniformType.Float2:
+			case BBMOD_EShaderUniformType.Float2:
 				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1]);
 				break;
 
-			case __BBMOD_EShaderUniformType.Float3:
+			case BBMOD_EShaderUniformType.Float3:
 				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2]);
 				break;
 
-			case __BBMOD_EShaderUniformType.Float4:
+			case BBMOD_EShaderUniformType.Float4:
 				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2], _value[3]);
 				break;
 
-			case __BBMOD_EShaderUniformType.FloatArray:
+			case BBMOD_EShaderUniformType.FloatArray:
 				shader_set_uniform_f_array(shader_get_uniform(_shader, _globals[i]), _value);
 				break;
 
-			case __BBMOD_EShaderUniformType.Int:
+			case BBMOD_EShaderUniformType.Int:
 				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value);
 				break;
 
-			case __BBMOD_EShaderUniformType.Int2:
+			case BBMOD_EShaderUniformType.Int2:
 				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1]);
 				break;
 
-			case __BBMOD_EShaderUniformType.Int3:
+			case BBMOD_EShaderUniformType.Int3:
 				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2]);
 				break;
 
-			case __BBMOD_EShaderUniformType.Int4:
+			case BBMOD_EShaderUniformType.Int4:
 				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2], _value[3]);
 				break;
 
-			case __BBMOD_EShaderUniformType.IntArray:
+			case BBMOD_EShaderUniformType.IntArray:
 				shader_set_uniform_i_array(shader_get_uniform(_shader, _globals[i]), _value);
 				break;
 
-			case __BBMOD_EShaderUniformType.Matrix:
+			case BBMOD_EShaderUniformType.Matrix:
 				shader_set_uniform_matrix(shader_get_uniform(_shader, _globals[i]));
 				break;
 
-			case __BBMOD_EShaderUniformType.MatrixArray:
+			case BBMOD_EShaderUniformType.MatrixArray:
 				shader_set_uniform_matrix_array(shader_get_uniform(_shader, _globals[i]), _value);
 				break;
 
-			case __BBMOD_EShaderUniformType.Sampler:
-				var _index = shader_get_sampler_index(_shader, _globals[i]);
-
-				if (_index != -1)
+			case BBMOD_EShaderUniformType.Sampler:
 				{
-					texture_set_stage(_index, _value.__texture);
+					var _index = shader_get_sampler_index(_shader, _globals[i]);
 
-					var _temp = _value.__filter;
-					if (_temp != undefined)
+					if (_index != -1)
 					{
-						gpu_set_tex_filter_ext(_index, _temp);
-					}
+						texture_set_stage(_index, _value.__texture);
 
-					_temp = _value.__maxAniso;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_max_aniso_ext(_index, _temp);
-					}
+						var _temp = _value.__filter;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_filter_ext(_index, _temp);
+						}
 
-					_temp = _value.__maxMip;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_max_mip_ext(_index, _temp);
-					}
+						_temp = _value.__maxAniso;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_max_aniso_ext(_index, _temp);
+						}
 
-					_temp = _value.__minMip;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_min_mip_ext(_index, _temp);
-					}
+						_temp = _value.__maxMip;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_max_mip_ext(_index, _temp);
+						}
 
-					_temp = _value.__mipBias;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_mip_bias_ext(_index, _temp);
-					}
+						_temp = _value.__minMip;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_min_mip_ext(_index, _temp);
+						}
 
-					_temp = _value.__mipEnable;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_mip_enable_ext(_index, _temp);
-					}
+						_temp = _value.__mipBias;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_mip_bias_ext(_index, _temp);
+						}
 
-					_temp = _value.__mipFilter;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_mip_filter_ext(_index, _temp);
-					}
+						_temp = _value.__mipEnable;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_mip_enable_ext(_index, _temp);
+						}
 
-					_temp = _value.__repeat;
-					if (_temp != undefined)
-					{
-						gpu_set_tex_repeat_ext(_index, _temp);
+						_temp = _value.__mipFilter;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_mip_filter_ext(_index, _temp);
+						}
+
+						_temp = _value.__repeat;
+						if (_temp != undefined)
+						{
+							gpu_set_tex_repeat_ext(_index, _temp);
+						}
 					}
 				}
 				break;
@@ -488,7 +508,7 @@ function __bbmod_shader_set_global_impl(_name, _type, _value)
 function bbmod_shader_set_global_f(_name, _value)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Float, _value);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Float, _value);
 }
 
 /// @func bbmod_shader_set_global_f2(_name, _v1, _v2)
@@ -501,7 +521,7 @@ function bbmod_shader_set_global_f(_name, _value)
 function bbmod_shader_set_global_f2(_name, _v1, _v2)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Float2, [_v1, _v2]);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Float2, [_v1, _v2]);
 }
 
 /// @func bbmod_shader_set_global_f3(_name, _v1, _v2, _v3)
@@ -515,7 +535,7 @@ function bbmod_shader_set_global_f2(_name, _v1, _v2)
 function bbmod_shader_set_global_f3(_name, _v1, _v2, _v3)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Float3, [_v1, _v2, _v3]);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Float3, [_v1, _v2, _v3]);
 }
 
 /// @func bbmod_shader_set_global_f4(_name, _v1, _v2, _v3)
@@ -530,7 +550,7 @@ function bbmod_shader_set_global_f3(_name, _v1, _v2, _v3)
 function bbmod_shader_set_global_f4(_name, _v1, _v2, _v3, _v4)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Float4, [_v1, _v2, _v3, _v4]);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Float4, [_v1, _v2, _v3, _v4]);
 }
 
 /// @func bbmod_shader_set_global_f_array(_name, _fArray)
@@ -542,7 +562,7 @@ function bbmod_shader_set_global_f4(_name, _v1, _v2, _v3, _v4)
 function bbmod_shader_set_global_f_array(_name, _fArray)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.FloatArray, _fArray);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.FloatArray, _fArray);
 }
 
 /// @func bbmod_shader_set_global_i(_name, _value)
@@ -554,7 +574,7 @@ function bbmod_shader_set_global_f_array(_name, _fArray)
 function bbmod_shader_set_global_i(_name, _value)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Int, _value);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Int, _value);
 }
 
 /// @func bbmod_shader_set_global_i2(_name, _v1, _v2)
@@ -567,7 +587,7 @@ function bbmod_shader_set_global_i(_name, _value)
 function bbmod_shader_set_global_i2(_name, _v1, _v2)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Int2, [_v1, _v2]);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Int2, [_v1, _v2]);
 }
 
 /// @func bbmod_shader_set_global_i3(_name, _v1, _v2, _v3)
@@ -581,7 +601,7 @@ function bbmod_shader_set_global_i2(_name, _v1, _v2)
 function bbmod_shader_set_global_i3(_name, _v1, _v2, _v3)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Int3, [_v1, _v2, _v3]);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Int3, [_v1, _v2, _v3]);
 }
 
 /// @func bbmod_shader_set_global_i4(_name, _v1, _v2, _v3)
@@ -596,7 +616,7 @@ function bbmod_shader_set_global_i3(_name, _v1, _v2, _v3)
 function bbmod_shader_set_global_i4(_name, _v1, _v2, _v3, _v4)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Int4, [_v1, _v2, _v3, _v4]);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Int4, [_v1, _v2, _v3, _v4]);
 }
 
 /// @func bbmod_shader_set_global_i_array(_name, _iArray)
@@ -608,7 +628,7 @@ function bbmod_shader_set_global_i4(_name, _v1, _v2, _v3, _v4)
 function bbmod_shader_set_global_i_array(_name, _iArray)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.IntArray, _iArray);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.IntArray, _iArray);
 }
 
 /// @func bbmod_shader_set_global_matrix(_name)
@@ -619,7 +639,7 @@ function bbmod_shader_set_global_i_array(_name, _iArray)
 function bbmod_shader_set_global_matrix(_name)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Matrix, true);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Matrix, true);
 }
 
 /// @func bbmod_shader_set_global_matrix_array(_name, _matrixArray)
@@ -631,7 +651,7 @@ function bbmod_shader_set_global_matrix(_name)
 function bbmod_shader_set_global_matrix_array(_name, _matrixArray)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.MatrixArray, _matrixArray);
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.MatrixArray, _matrixArray);
 }
 
 /// @func bbmod_shader_set_global_sampler(_name, _texture)
@@ -643,7 +663,7 @@ function bbmod_shader_set_global_matrix_array(_name, _matrixArray)
 function bbmod_shader_set_global_sampler(_name, _texture)
 {
 	gml_pragma("forceinline");
-	__bbmod_shader_set_global_impl(_name, __BBMOD_EShaderUniformType.Sampler,
+	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Sampler,
 		{
 			__texture: _texture,
 			__filter: undefined,

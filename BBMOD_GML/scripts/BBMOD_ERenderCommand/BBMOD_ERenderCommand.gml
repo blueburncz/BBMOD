@@ -1,9 +1,12 @@
-/// @enum An enumeration of all possible render commands.
+/// @enum Enumeration of all possible render commands.
 enum BBMOD_ERenderCommand
 {
 	/// @member Applies a material if it has a shader that can be used in the
 	/// current render pass.
 	ApplyMaterial,
+	/// @member Applies a material property block.
+	/// @see BBMOD_MaterialPropertyBlock
+	ApplyMaterialProps,
 	/// @member Marks the beginning of a conditional block. Commands within this
 	/// block are executed only if the last command was successfully executed.
 	/// @example
@@ -35,6 +38,9 @@ enum BBMOD_ERenderCommand
 	PushGpuState,
 	/// @member Resets material.
 	ResetMaterial,
+	/// @member Resets current material property block.
+	/// @see BBMOD_MaterialPropertyBlock
+	ResetMaterialProps,
 	/// @member Resets shader.
 	ResetShader,
 	/// @member Enables/disables alpha testing.
@@ -94,6 +100,9 @@ enum BBMOD_ERenderCommand
 	SetGpuZTestEnable,
 	/// @member Enables/disables writing to the depth buffer.
 	SetGpuZWriteEnable,
+	/// @member Sets current material property block.
+	/// @see BBMOD_MaterialPropertyBlock
+	SetMaterialProps,
 	/// @member Sets the projection matrix.
 	SetProjectionMatrix,
 	/// @member Sets a shader texture sampler.

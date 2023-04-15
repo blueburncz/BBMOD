@@ -44,14 +44,47 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @readonly
 	Priority = _priority;
 
-	/// @var {Id.DsList<Struct.BBMOD_RenderCommand>}
-	/// @see BBMOD_RenderCommand
+	/// @var {Array<Array>}
+	/// @see BBMOD_ERenderCommand
 	/// @private
-	__renderCommands = ds_list_create();
+	__renderCommands = [];
+
+	/// @var {Real}
+	/// @private
+	__index = 0;
 
 	/// @var {Real} Render passes that the queue has commands for.
 	/// @private
 	__renderPasses = 0;
+
+	/// @func __get_next(_size)
+	///
+	/// @desc Retreives next render command available to reuse.
+	///
+	/// @param {Real} _size The size of the render command.
+	///
+	/// @return {Array} The render command.
+	///
+	/// @private
+	static __get_next = function (_size) {
+		gml_pragma("forceinline");
+		var _command;
+		if (array_length(__renderCommands) > __index)
+		{
+			_command = __renderCommands[__index++];
+			if (array_length(_command) < _size)
+			{
+				array_resize(_command, _size);
+			}
+		}
+		else
+		{
+			_command = array_create(_size);
+			array_push(__renderCommands, _command);
+			++__index;
+		}
+		return _command;
+	};
 
 	/// @func set_priority(_p)
 	///
@@ -84,13 +117,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static apply_material = function (_material, _vertexFormat, _enabledPasses=~0) {
 		gml_pragma("forceinline");
 		__renderPasses |= _material.RenderPass;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.ApplyMaterial,
-			3,
-			_vertexFormat,
-			_material,
-			_enabledPasses);
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.ApplyMaterial;
+		_command[@ 1] = global.__bbmodMaterialProps;
+		_command[@ 2] = _vertexFormat;
+		_command[@ 3] = _material;
+		_command[@ 4] = _enabledPasses;
+		return self;
+	};
+
+	/// @func apply_material_props(_materialPropertyBlock)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterialProps} command
+	/// into the queue.
+	///
+	/// @param {Struct.BBMOD_MaterialPropertyBlock} _materialPropertyBlock The
+	/// material property block to apply.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static apply_material_props = function (_materialPropertyBlock) {
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.ApplyMaterialProps;
+		_command[@ 1] = _materialPropertyBlock;
 		return self;
 	};
 
@@ -103,10 +153,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static begin_conditional_block = function () {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.BeginConditionalBlock,
-			0);
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.BeginConditionalBlock;
 		return self;
 	};
 
@@ -121,11 +169,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static check_render_pass = function (_passes) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.CheckRenderPass,
-			1,
-			_passes);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.CheckRenderPass;
+		_command[@ 1] = _passes;
 		return self;
 	};
 
@@ -146,17 +192,16 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static draw_mesh = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix) {
 		gml_pragma("forceinline");
 		__renderPasses |= _material.RenderPass;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.DrawMesh,
-			7,
-			global.__bbmodInstanceID,
-			_vertexFormat,
-			_material,
-			_matrix,
-			_materialIndex,
-			_primitiveType,
-			_vertexBuffer);
+		var _command = __get_next(9);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawMesh;
+		_command[@ 1] = global.__bbmodInstanceID;
+		_command[@ 2] = global.__bbmodMaterialProps;
+		_command[@ 3] = _vertexFormat;
+		_command[@ 4] = _material;
+		_command[@ 5] = _matrix;
+		_command[@ 6] = _materialIndex;
+		_command[@ 7] = _primitiveType;
+		_command[@ 8] = _vertexBuffer;
 		return self;
 	};
 
@@ -179,18 +224,17 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static draw_mesh_animated = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _boneTransform) {
 		gml_pragma("forceinline");
 		__renderPasses |= _material.RenderPass;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.DrawMeshAnimated,
-			8,
-			global.__bbmodInstanceID,
-			_vertexFormat,
-			_material,
-			_matrix,
-			_boneTransform,
-			_materialIndex,
-			_primitiveType,
-			_vertexBuffer);
+		var _command = __get_next(10);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawMeshAnimated;
+		_command[@ 1] = global.__bbmodInstanceID;
+		_command[@ 2] = global.__bbmodMaterialProps;
+		_command[@ 3] = _vertexFormat;
+		_command[@ 4] = _material;
+		_command[@ 5] = _matrix;
+		_command[@ 6] = _boneTransform;
+		_command[@ 7] = _materialIndex;
+		_command[@ 8] = _primitiveType;
+		_command[@ 9] = _vertexBuffer;
 		return self;
 	};
 
@@ -213,19 +257,18 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static draw_mesh_batched = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _batchData) {
 		gml_pragma("forceinline");
 		__renderPasses |= _material.RenderPass;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.DrawMeshBatched,
-			7,
-			(global.__bbmodInstanceIDBatch != undefined)
+		var _command = __get_next(9);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawMeshBatched;
+		_command[@ 1] = (global.__bbmodInstanceIDBatch != undefined)
 				? global.__bbmodInstanceIDBatch
-				: global.__bbmodInstanceID,
-			_vertexFormat,
-			_material,
-			_matrix,
-			_batchData,
-			_primitiveType,
-			_vertexBuffer);
+				: global.__bbmodInstanceID;
+		_command[@ 2] = global.__bbmodMaterialProps;
+		_command[@ 3] = _vertexFormat;
+		_command[@ 4] = _material;
+		_command[@ 5] = _matrix;
+		_command[@ 6] = _batchData;
+		_command[@ 7] = _primitiveType;
+		_command[@ 8] = _vertexBuffer;
 		return self;
 	};
 
@@ -238,10 +281,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static end_conditional_block = function () {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.EndConditionalBlock,
-			0);
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.EndConditionalBlock;
 		return self;
 	};
 
@@ -254,10 +295,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static pop_gpu_state = function () {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.PopGpuState,
-			0);
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.PopGpuState;
 		return self;
 	};
 
@@ -270,10 +309,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static push_gpu_state = function () {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.PushGpuState,
-			0);
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.PushGpuState;
 		return self;
 	};
 
@@ -286,10 +323,22 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static reset_material = function () {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.ResetMaterial,
-			0);
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.ResetMaterial;
+		return self;
+	};
+
+	/// @func reset_material_props()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ResetMaterialProps} command
+	/// into the queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static reset_material_props = function () {
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.ResetMaterialProps;
 		return self;
 	};
 
@@ -302,10 +351,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static reset_shader = function () {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.ResetShader,
-			0);
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.ResetShader;
 		return self;
 	};
 
@@ -320,11 +367,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_alphatestenable = function (_enable) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuAlphaTestEnable,
-			1,
-			_enable);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuAlphaTestEnable;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -339,11 +384,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_alphatestref = function (_value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuAlphaTestRef,
-			1,
-			_value);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuAlphaTestRef;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -358,11 +401,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_blendenable = function (_enable) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuBlendEnable,
-			1,
-			_enable);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendEnable;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -377,11 +418,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_blendmode = function (_blendmode) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuBlendMode,
-			1,
-			_blendmode);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendMode;
+		_command[@ 1] = _blendmode;
 		return self;
 	};
 
@@ -397,12 +436,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_blendmode_ext = function (_src, _dest) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuBlendModeExt,
-			2,
-			_src,
-			_dest);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendModeExt;
+		_command[@ 1] = _src;
+		_command[@ 2] = _dest;
 		return self;
 	};
 
@@ -421,14 +458,12 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_blendmode_ext_sepalpha = function (_src, _dest, _srcalpha, _destalpha) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha,
-			4,
-			_src,
-			_dest,
-			_srcalpha,
-			_destalpha);
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha;
+		_command[@ 1] = _src;
+		_command[@ 2] = _dest;
+		_command[@ 3] = _srcalpha;
+		_command[@ 4] = _destalpha;
 		return self;
 	};
 
@@ -449,14 +484,12 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_colorwriteenable = function (_red, _green, _blue, _alpha) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuColorWriteEnable,
-			4,
-			_red,
-			_green,
-			_blue,
-			_alpha);
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuColorWriteEnable;
+		_command[@ 1] = _red;
+		_command[@ 2] = _green;
+		_command[@ 3] = _blue;
+		_command[@ 4] = _alpha;
 		return self;
 	};
 
@@ -471,11 +504,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_cullmode = function (_cullmode) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuCullMode,
-			1,
-			_cullmode);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuCullMode;
+		_command[@ 1] = _cullmode;
 		return self;
 	};
 
@@ -495,25 +526,12 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_fog = function (_enable, _color, _start, _end) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		if (_enable)
-		{
-			ds_list_add(
-				__renderCommands,
-				BBMOD_ERenderCommand.SetGpuFog,
-				4,
-				true,
-				_color,
-				_start,
-				_end);
-		}
-		else
-		{
-			ds_list_add(
-				__renderCommands,
-				BBMOD_ERenderCommand.SetGpuFog,
-				1,
-				false);
-		}
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuFog;
+		_command[@ 1] = _enable;
+		_command[@ 2] = _color;
+		_command[@ 3] = _start;
+		_command[@ 4] = _end;
 		return self;
 	};
 
@@ -528,11 +546,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_filter = function (_linear) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexFilter,
-			1,
-			_linear);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexFilter;
+		_command[@ 1] = _linear;
 		return self;
 	};
 
@@ -549,12 +565,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_filter_ext = function (_name, _linear) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexFilterExt,
-			2,
-			_name,
-			_linear);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexFilterExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _linear;
 		return self;
 	};
 
@@ -569,11 +583,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_max_aniso = function (_value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMaxAniso,
-			1,
-			_value);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxAniso;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -589,12 +601,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_max_aniso_ext = function (_name, _value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt,
-			2,
-			_name,
-			_value);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -609,11 +619,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_max_mip = function (_value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMaxMip,
-			1,
-			_value);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxMip;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -629,12 +637,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_max_mip_ext = function (_name, _value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMaxMipExt,
-			2,
-			_name,
-			_value);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxMipExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -649,11 +655,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_min_mip = function (_value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMinMip,
-			1,
-			_value);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMinMip;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -669,12 +673,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_min_mip_ext = function (_name, _value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMinMipExt,
-			2,
-			_name,
-			_value);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMinMipExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -689,11 +691,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_mip_bias = function (_value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMipBias,
-			1,
-			_value);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipBias;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -709,12 +709,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_mip_bias_ext = function (_name, _value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMipBiasExt,
-			2,
-			_name,
-			_value);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipBiasExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -729,11 +727,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_mip_enable = function (_enable) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMipEnable,
-			1,
-			_enable);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipEnable;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -749,12 +745,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_mip_enable_ext = function (_name, _enable) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMipEnableExt,
-			2,
-			_name,
-			_enable);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipEnableExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _enable;
 		return self;
 	};
 
@@ -769,11 +763,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_mip_filter = function (_filter) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMipFilter,
-			1,
-			_filter);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipFilter;
+		_command[@ 1] = _filter;
 		return self;
 	};
 
@@ -789,12 +781,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_mip_filter_ext = function (_name, _filter) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexMipFilterExt,
-			2,
-			_name,
-			_filter);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipFilterExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _filter;
 		return self;
 	};
 
@@ -809,11 +799,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_repeat = function (_enable) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexRepeat,
-			1,
-			_enable);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexRepeat;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -829,12 +817,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_tex_repeat_ext = function (_name, _enable) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuTexRepeatExt,
-			2,
-			_name,
-			_enable);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexRepeatExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _enable;
 		return self;
 	};
 
@@ -849,11 +835,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_zfunc = function (_func) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuZFunc,
-			1,
-			_func);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZFunc;
+		_command[@ 1] = _func;
 		return self;
 	};
 
@@ -869,11 +853,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_ztestenable = function (_enable) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuZTestEnable,
-			1,
-			_enable);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZTestEnable;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -888,11 +870,27 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_gpu_zwriteenable = function (_enable) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetGpuZWriteEnable,
-			1,
-			_enable);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZWriteEnable;
+		_command[@ 1] = _enable;
+		return self;
+	};
+
+	/// @func set_material_props(_materialPropertyBlock)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetMaterialProps} command into
+	/// the queue.
+	///
+	/// @param {Struct.BBMOD_MaterialPropertyBlock} _materialPropertyBlock The
+	/// material property block to set as the current one.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static set_material_props = function (_materialPropertyBlock) {
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetMaterialProps;
+		_command[@ 1] = _materialPropertyBlock;
 		return self;
 	};
 
@@ -907,11 +905,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_projection_matrix = function (_matrix) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetProjectionMatrix,
-			1,
-			_matrix);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetProjectionMatrix;
+		_command[@ 1] = _matrix;
 		return self;
 	};
 
@@ -927,12 +923,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_sampler = function (_nameOrIndex, _texture) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetSampler,
-			2,
-			_nameOrIndex,
-			_texture);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetSampler;
+		_command[@ 1] = _nameOrIndex;
+		_command[@ 2] = _texture;
 		return self;
 	};
 
@@ -947,11 +941,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_shader = function (_shader) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetShader,
-			1,
-			_shader);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetShader;
+		_command[@ 1] = _shader;
 		return self;
 	};
 
@@ -967,12 +959,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_f = function (_name, _value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformFloat,
-			2,
-			_name,
-			_value);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -989,13 +979,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_f2 = function (_name, _v1, _v2) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformFloat2,
-			3,
-			_name,
-			_v1,
-			_v2);
+		var _command = __get_next(4);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat2;
+		_command[@ 1] = _name;
+		_command[@ 2] = _v1;
+		_command[@ 3] = _v2;
 		return self;
 	};
 
@@ -1013,14 +1001,12 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_f3 = function (_name, _v1, _v2, _v3) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformFloat3,
-			4,
-			_name,
-			_v1,
-			_v2,
-			_v3);
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat3;
+		_command[@ 1] = _name;
+		_command[@ 2] = _v1;
+		_command[@ 3] = _v2;
+		_command[@ 4] = _v3;
 		return self;
 	};
 
@@ -1039,15 +1025,13 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_f4 = function (_name, _v1, _v2, _v3, _v4) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformFloat4,
-			5,
-			_name,
-			_v1,
-			_v2,
-			_v3,
-			_v4);
+		var _command = __get_next(6);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat4;
+		_command[@ 1] = _name;
+		_command[@ 2] = _v1;
+		_command[@ 3] = _v2;
+		_command[@ 4] = _v3;
+		_command[@ 5] = _v4;
 		return self;
 	};
 
@@ -1063,12 +1047,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_f_array = function (_name, _array) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformFloatArray,
-			2,
-			_name,
-			_array);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloatArray;
+		_command[@ 1] = _name;
+		_command[@ 2] = _array;
 		return self;
 	};
 
@@ -1084,12 +1066,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_i = function (_name, _value) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformInt,
-			2,
-			_name,
-			_value);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -1106,13 +1086,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_i2 = function (_name, _v1, _v2) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformInt2,
-			3,
-			_name,
-			_v1,
-			_v2);
+		var _command = __get_next(4);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt2;
+		_command[@ 1] = _name;
+		_command[@ 2] = _v1;
+		_command[@ 3] = _v2;
 		return self;
 	};
 
@@ -1130,14 +1108,12 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_i3 = function (_name, _v1, _v2, _v3) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformInt3,
-			4,
-			_name,
-			_v1,
-			_v2,
-			_v3);
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt3;
+		_command[@ 1] = _name;
+		_command[@ 2] = _v1;
+		_command[@ 3] = _v2;
+		_command[@ 4] = _v3;
 		return self;
 	};
 
@@ -1156,15 +1132,13 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_i4 = function (_name, _v1, _v2, _v3, _v4) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformInt4,
-			5,
-			_name,
-			_v1,
-			_v2,
-			_v3,
-			_v4);
+		var _command = __get_next(6);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt4;
+		_command[@ 1] = _name;
+		_command[@ 2] = _v1;
+		_command[@ 3] = _v2;
+		_command[@ 4] = _v3;
+		_command[@ 5] = _v4;
 		return self;
 	};
 
@@ -1180,12 +1154,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_i_array = function (_name, _array) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformIntArray,
-			2,
-			_name,
-			_array);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformIntArray;
+		_command[@ 1] = _name;
+		_command[@ 2] = _array;
 		return self;
 	};
 
@@ -1200,11 +1172,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_matrix = function (_name) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformMatrix,
-			1,
-			_name);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformMatrix;
+		_command[@ 1] = _name;
 		return self;
 	};
 
@@ -1220,12 +1190,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_uniform_matrix_array = function (_name, _array) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetUniformMatrixArray,
-			2,
-			_name,
-			_array);
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformMatrixArray;
+		_command[@ 1] = _name;
+		_command[@ 2] = _array;
 		return self;
 	};
 
@@ -1240,11 +1208,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_view_matrix = function (_matrix) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetViewMatrix,
-			1,
-			_matrix);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetViewMatrix;
+		_command[@ 1] = _matrix;
 		return self;
 	};
 
@@ -1259,11 +1225,9 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static set_world_matrix = function (_matrix) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SetWorldMatrix,
-			1,
-			_matrix);
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetWorldMatrix;
+		_command[@ 1] = _matrix;
 		return self;
 	};
 
@@ -1281,13 +1245,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static submit_vertex_buffer = function (_vertexBuffer, _prim, _texture) {
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		ds_list_add(
-			__renderCommands,
-			BBMOD_ERenderCommand.SubmitVertexBuffer,
-			3,
-			_vertexBuffer,
-			_prim,
-			_texture);
+		var _command = __get_next(4);
+		_command[@ 0] = BBMOD_ERenderCommand.SubmitVertexBuffer;
+		_command[@ 1] = _vertexBuffer;
+		_command[@ 2] = _prim;
+		_command[@ 3] = _texture;
 		return self;
 	};
 
@@ -1299,7 +1261,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// queue.
 	static is_empty = function () {
 		gml_pragma("forceinline");
-		return ds_list_empty(__renderCommands);
+		return (__index == 0);
 	};
 
 	/// @func has_commands(_renderPass)
@@ -1335,55 +1297,71 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 			return self;
 		}
 
-		var i = 0;
+		var _commandIndex = 0;
 		var _renderCommands = __renderCommands;
-		var _renderCommandsCount = ds_list_size(_renderCommands);
 		var _condition = false;
+		var _skipCounter = 0;
+		var _matchCounter = 0;
 
-		while (i < _renderCommandsCount)
+		repeat (__index)
 		{
-			var _command = _renderCommands[| i++];
-			var _size = _renderCommands[| i++];
+			var _command = _renderCommands[_commandIndex++];
+			var i = 0;
+			var _commandType = _command[i++];
 
-			switch (_command)
+			if (_skipCounter > 0)
+			{
+				switch (_commandType)
+				{
+				case BBMOD_ERenderCommand.BeginConditionalBlock:
+					++_skipCounter;
+					break;
+
+				case BBMOD_ERenderCommand.EndConditionalBlock:
+					--_skipCounter;
+					break;
+				}
+
+				continue;
+			}
+
+			switch (_commandType)
 			{
 			case BBMOD_ERenderCommand.ApplyMaterial:
-				var _vertexFormat = _renderCommands[| i++];
-				var _material = _renderCommands[| i++];
-				var _enabledPasses = _renderCommands[| i++];
-				if (((1 << bbmod_render_pass_get()) & _enabledPasses) == 0
-					|| !_material.apply(_vertexFormat))
 				{
-					_condition = false;
-					continue;
+					var _materialPropsOld = global.__bbmodMaterialProps;
+					global.__bbmodMaterialProps = _command[i++];
+					var _vertexFormat = _command[i++];
+					var _material = _command[i++];
+					var _enabledPasses = _command[i++];
+					if (((1 << bbmod_render_pass_get()) & _enabledPasses) == 0
+						|| !_material.apply(_vertexFormat))
+					{
+						global.__bbmodMaterialProps = _materialPropsOld;
+						_condition = false;
+						continue;
+					}
+					global.__bbmodMaterialProps = _materialPropsOld;
 				}
+				break;
+
+			case BBMOD_ERenderCommand.ApplyMaterialProps:
+				_command[i++].apply();
 				break;
 
 			case BBMOD_ERenderCommand.BeginConditionalBlock:
 				if (!_condition)
 				{
-					var _counter = 1;
-					while (_counter > 0)
-					{
-						var _commandInner = _renderCommands[| i++];
-						var _sizeInner = _renderCommands[| i++];
-						switch (_commandInner)
-						{
-						case BBMOD_ERenderCommand.BeginConditionalBlock:
-							++_counter;
-							break;
-
-						case BBMOD_ERenderCommand.EndConditionalBlock:
-							--_counter;
-							break;
-						}
-						i += _sizeInner;
-					}
+					++_skipCounter;
+				}
+				else
+				{
+					++_matchCounter;
 				}
 				break;
 
 			case BBMOD_ERenderCommand.CheckRenderPass:
-				if (((1 << bbmod_render_pass_get()) & _renderCommands[| i++]) == 0)
+				if (((1 << bbmod_render_pass_get()) & _command[i++]) == 0)
 				{
 					_condition = false;
 					continue;
@@ -1391,88 +1369,145 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.DrawMesh:
-				var _id = _renderCommands[| i++];
-				var _vertexFormat = _renderCommands[| i++];
-				var _material = _renderCommands[| i++];
-				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-					|| !_material.apply(_vertexFormat))
 				{
-					i += 4;
-					_condition = false;
-					continue;
+					var _id = _command[i++];
+					var _materialPropsOld = global.__bbmodMaterialProps;
+					global.__bbmodMaterialProps = _command[i++];
+					var _vertexFormat = _command[i++];
+					var _material = _command[i++];
+					if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
+						|| !_material.apply(_vertexFormat))
+					{
+						global.__bbmodMaterialProps = _materialPropsOld;
+						_condition = false;
+						continue;
+					}
+					with (BBMOD_SHADER_CURRENT)
+					{
+						set_instance_id(_id);
+						matrix_set(matrix_world, _command[i++]);
+						set_material_index(_command[i++]);
+					}
+					var _primitiveType = _command[i++];
+					vertex_submit(_command[i++], _primitiveType, _material.BaseOpacity);
+					global.__bbmodMaterialProps = _materialPropsOld;
 				}
-				with (BBMOD_SHADER_CURRENT)
-				{
-					set_instance_id(_id);
-					matrix_set(matrix_world, _renderCommands[| i++]);
-					set_material_index(_renderCommands[| i++]);
-				}
-				var _primitiveType = _renderCommands[| i++];
-				vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshAnimated:
-				var _id = _renderCommands[| i++];
-				var _vertexFormat = _renderCommands[| i++];
-				var _material = _renderCommands[| i++];
-				if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-					|| !_material.apply(_vertexFormat))
 				{
-					i += 5;
-					_condition = false;
-					continue;
+					var _id = _command[i++];
+					var _materialPropsOld = global.__bbmodMaterialProps;
+					global.__bbmodMaterialProps = _command[i++];
+					var _vertexFormat = _command[i++];
+					var _material = _command[i++];
+					if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
+						|| !_material.apply(_vertexFormat))
+					{
+						global.__bbmodMaterialProps = _materialPropsOld;
+						_condition = false;
+						continue;
+					}
+					with (BBMOD_SHADER_CURRENT)
+					{
+						set_instance_id(_id);
+						matrix_set(matrix_world, _command[i++]);
+						set_bones(_command[i++]);
+						set_material_index(_command[i++]);
+					}
+					var _primitiveType = _command[i++];
+					vertex_submit(_command[i++], _primitiveType, _material.BaseOpacity);
+					global.__bbmodMaterialProps = _materialPropsOld;
 				}
-				with (BBMOD_SHADER_CURRENT)
-				{
-					set_instance_id(_id);
-					matrix_set(matrix_world, _renderCommands[| i++]);
-					set_bones(_renderCommands[| i++]);
-					set_material_index(_renderCommands[| i++]);
-				}
-				var _primitiveType = _renderCommands[| i++];
-				vertex_submit(_renderCommands[| i++], _primitiveType, _material.BaseOpacity);
 				break;
 
 			case BBMOD_ERenderCommand.DrawMeshBatched:
-				var _id = _renderCommands[| i++];
-				var _vertexFormat = _renderCommands[| i++];
-				var _material = _renderCommands[| i++];
-
-				if (!_material.apply(_vertexFormat))
 				{
-					i += 4;
-					_condition = false;
-					continue;
-				}
+					var _id = _command[i++];
+					var _materialPropsOld = global.__bbmodMaterialProps;
+					global.__bbmodMaterialProps = _command[i++];
+					var _vertexFormat = _command[i++];
+					var _material = _command[i++];
 
-				var _matrix = _renderCommands[| i++];
-				var _batchData = _renderCommands[| i++];
-
-				////////////////////////////////////////////////////////////////
-				// Filter batch data by instance ID
-
-				if (_instances != undefined)
-				{
-					if (is_array(_id))
+					if (!_material.apply(_vertexFormat))
 					{
-						var _hasInstances = false;
+						global.__bbmodMaterialProps = _materialPropsOld;
+						_condition = false;
+						continue;
+					}
 
-						if (is_array(_id[0]))
+					var _matrix = _command[i++];
+					var _batchData = _command[i++];
+
+					////////////////////////////////////////////////////////////
+					// Filter batch data by instance ID
+
+					if (_instances != undefined)
+					{
+						if (is_array(_id))
 						{
-							////////////////////////////////////////////////////
-							// _id is an array of arrays of IDs
+							var _hasInstances = false;
 
-							_batchData = bbmod_array_clone(_batchData);
-
-							var j = 0;
-							repeat (array_length(_id))
+							if (is_array(_id[0]))
 							{
-								var _idsCurrent = _id[j];
+								////////////////////////////////////////////////////
+								// _id is an array of arrays of IDs
+
+								_batchData = bbmod_array_clone(_batchData);
+
+								var j = 0;
+								repeat (array_length(_id))
+								{
+									var _idsCurrent = _id[j];
+									var _idsCount = array_length(_idsCurrent);
+									var _dataCurrent = bbmod_array_clone(_batchData[j]);
+									_batchData[@ j] = _dataCurrent;
+									var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
+									var _hasData = false;
+
+									var k = 0;
+									repeat (_idsCount)
+									{
+										if (ds_list_find_index(_instances, _idsCurrent[k]) == -1)
+										{
+											var l = 0;
+											repeat (_slotsPerInstance)
+											{
+												_dataCurrent[@ (k * _slotsPerInstance) + l] = 0.0;
+												++l;
+											}
+										}
+										else
+										{
+											_hasData = true;
+											_hasInstances = true;
+										}
+										++k;
+									}
+
+									if (!_hasData)
+									{
+										// Filtered out all instances in _dataCurrent,
+										// we can remove it from _batchData
+										array_delete(_batchData, j, 1);
+									}
+									else
+									{
+										++j;
+									}
+								}
+							}
+							else
+							{
+								////////////////////////////////////////////////////
+								// _id is an array of IDs
+
+								_batchData = bbmod_array_clone(_batchData);
+
+								var _idsCurrent = _id;
 								var _idsCount = array_length(_idsCurrent);
-								var _dataCurrent = bbmod_array_clone(_batchData[j]);
-								_batchData[@ j] = _dataCurrent;
+								var _dataCurrent = _batchData;
 								var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
-								var _hasData = false;
 
 								var k = 0;
 								repeat (_idsCount)
@@ -1488,104 +1523,66 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 									}
 									else
 									{
-										_hasData = true;
 										_hasInstances = true;
 									}
 									++k;
 								}
+							}
 
-								if (!_hasData)
-								{
-									// Filtered out all instances in _dataCurrent,
-									// we can remove it from _batchData
-									array_delete(_batchData, j, 1);
-								}
-								else
-								{
-									++j;
-								}
+							if (!_hasInstances)
+							{
+								global.__bbmodMaterialProps = _materialPropsOld;
+								_condition = false;
+								continue;
 							}
 						}
 						else
 						{
 							////////////////////////////////////////////////////
-							// _id is an array of IDs
-
-							_batchData = bbmod_array_clone(_batchData);
-
-							var _idsCurrent = _id;
-							var _idsCount = array_length(_idsCurrent);
-							var _dataCurrent = _batchData;
-							var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
-
-							var k = 0;
-							repeat (_idsCount)
+							// _id is a single ID
+							if (ds_list_find_index(_instances, _id) == -1)
 							{
-								if (ds_list_find_index(_instances, _idsCurrent[k]) == -1)
-								{
-									var l = 0;
-									repeat (_slotsPerInstance)
-									{
-										_dataCurrent[@ (k * _slotsPerInstance) + l] = 0.0;
-										++l;
-									}
-								}
-								else
-								{
-									_hasInstances = true;
-								}
-								++k;
+								global.__bbmodMaterialProps = _materialPropsOld;
+								_condition = false;
+								continue;
 							}
 						}
+					}
 
-						if (!_hasInstances)
+					////////////////////////////////////////////////////////////
+
+					if (is_real(_id))
+					{
+						BBMOD_SHADER_CURRENT.set_instance_id(_id);
+					}
+
+					matrix_set(matrix_world, _matrix);
+					var _primitiveType = _command[i++];
+					var _vertexBuffer = _command[i++];
+					if (is_array(_batchData[0]))
+					{
+						var _dataIndex = 0;
+						repeat (array_length(_batchData))
 						{
-							i += 2;
-							_condition = false;
-							continue;
+							BBMOD_SHADER_CURRENT.set_batch_data(_batchData[_dataIndex++]);
+							vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 						}
 					}
 					else
 					{
-						////////////////////////////////////////////////////////
-						// _id is a single ID
-						if (ds_list_find_index(_instances, _id) == -1)
-						{
-							i += 2;
-							_condition = false;
-							continue;
-						}
-					}
-				}
-
-				////////////////////////////////////////////////////////////////
-
-				if (is_real(_id))
-				{
-					BBMOD_SHADER_CURRENT.set_instance_id(_id);
-				}
-
-				matrix_set(matrix_world, _matrix);
-				var _primitiveType = _renderCommands[| i++];
-				var _vertexBuffer = _renderCommands[| i++];
-				if (is_array(_batchData[0]))
-				{
-					var _dataIndex = 0;
-					repeat (array_length(_batchData))
-					{
-						BBMOD_SHADER_CURRENT.set_batch_data(_batchData[_dataIndex++]);
+						BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
 						vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 					}
-				}
-				else
-				{
-					BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
-					vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
+
+					global.__bbmodMaterialProps = _materialPropsOld;
 				}
 				break;
 
 			case BBMOD_ERenderCommand.EndConditionalBlock:
-				// TODO: show_error("Found unmatching end of conditional block in render queue " + Name + "!", true);
+				if (--_matchCounter < 0)
+				{
+					show_error("Found unmatching end of conditional block in render queue " + Name + "!", true);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.PopGpuState:
@@ -1600,58 +1597,68 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				bbmod_material_reset();
 				break;
 
+			case BBMOD_ERenderCommand.ResetMaterialProps:
+				bbmod_material_props_reset();
+				break;
+
 			case BBMOD_ERenderCommand.ResetShader:
 				shader_reset();
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuAlphaTestEnable:
-				gpu_set_alphatestenable(_renderCommands[| i++]);
+				gpu_set_alphatestenable(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuAlphaTestRef:
-				gpu_set_alphatestref(_renderCommands[| i++]);
+				gpu_set_alphatestref(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuBlendEnable:
-				gpu_set_blendenable(_renderCommands[| i++]);
+				gpu_set_blendenable(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuBlendMode:
-				gpu_set_blendmode(_renderCommands[| i++]);
+				gpu_set_blendmode(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuBlendModeExt:
-				var _src = _renderCommands[| i++];
-				var _dest = _renderCommands[| i++];
-				gpu_set_blendmode_ext(_src, _dest);
+				{
+					var _src = _command[i++];
+					var _dest = _command[i++];
+					gpu_set_blendmode_ext(_src, _dest);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha:
-				var _src = _renderCommands[| i++];
-				var _dest = _renderCommands[| i++];
-				var _srcalpha = _renderCommands[| i++];
-				var _destalpha = _renderCommands[| i++];
-				gpu_set_blendmode_ext_sepalpha(_src, _dest, _srcalpha, _destalpha);
+				{
+					var _src = _command[i++];
+					var _dest = _command[i++];
+					var _srcalpha = _command[i++];
+					var _destalpha = _command[i++];
+					gpu_set_blendmode_ext_sepalpha(_src, _dest, _srcalpha, _destalpha);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuColorWriteEnable:
-				var _red = _renderCommands[| i++];
-				var _green = _renderCommands[| i++];
-				var _blue = _renderCommands[| i++];
-				var _alpha = _renderCommands[| i++];
-				gpu_set_colorwriteenable(_red, _green, _blue, _alpha);
+				{
+					var _red = _command[i++];
+					var _green = _command[i++];
+					var _blue = _command[i++];
+					var _alpha = _command[i++];
+					gpu_set_colorwriteenable(_red, _green, _blue, _alpha);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuCullMode:
-				gpu_set_cullmode(_renderCommands[| i++]);
+				gpu_set_cullmode(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuFog:
-				if (_renderCommands[| i++])
+				if (_command[i++])
 				{
-					var _color = _renderCommands[| i++];
-					var _start = _renderCommands[| i++];
-					var _end = _renderCommands[| i++];
+					var _color = _command[i++];
+					var _start = _command[i++];
+					var _end = _command[i++];
 					gpu_set_fog(true, _color, _start, _end);
 				}
 				else
@@ -1661,195 +1668,241 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexFilter:
-				gpu_set_tex_filter(_renderCommands[| i++]);
+				gpu_set_tex_filter(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexFilterExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_filter_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
+					gpu_set_tex_filter_ext(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMaxAniso:
-				gpu_set_tex_max_aniso(_renderCommands[| i++]);
+				gpu_set_tex_max_aniso(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_max_aniso_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
+					gpu_set_tex_max_aniso_ext(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMaxMip:
-				gpu_set_tex_max_mip(_renderCommands[| i++]);
+				gpu_set_tex_max_mip(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMaxMipExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_max_mip_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
+					gpu_set_tex_max_mip_ext(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMinMip:
-				gpu_set_tex_min_mip(_renderCommands[| i++]);
+				gpu_set_tex_min_mip(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMinMipExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_min_mip_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
+					gpu_set_tex_min_mip_ext(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipBias:
-				gpu_set_tex_mip_bias(_renderCommands[| i++]);
+				gpu_set_tex_mip_bias(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipBiasExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_mip_bias_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
+					gpu_set_tex_mip_bias_ext(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipEnable:
-				gpu_set_tex_mip_enable(_renderCommands[| i++]);
+				gpu_set_tex_mip_enable(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipEnableExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_mip_enable_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
+					gpu_set_tex_mip_enable_ext(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipFilter:
-				gpu_set_tex_mip_filter(_renderCommands[| i++]);
+				gpu_set_tex_mip_filter(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexMipFilterExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_mip_filter_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
+					gpu_set_tex_mip_filter_ext(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexRepeat:
-				gpu_set_tex_repeat(_renderCommands[| i++]);
+				gpu_set_tex_repeat(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexRepeatExt:
-				var _index = shader_get_sampler_index(shader_current(), _renderCommands[| i++]);
-				gpu_set_tex_repeat_ext(_index, _renderCommands[| i++]);
+				{
+					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
+					gpu_set_tex_repeat_ext(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuZFunc:
-				gpu_set_zfunc(_renderCommands[| i++]);
+				gpu_set_zfunc(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuZTestEnable:
-				gpu_set_ztestenable(_renderCommands[| i++]);
+				gpu_set_ztestenable(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuZWriteEnable:
-				gpu_set_zwriteenable(_renderCommands[| i++]);
+				gpu_set_zwriteenable(_command[i++]);
+				break;
+
+			case BBMOD_ERenderCommand.SetMaterialProps:
+				bbmod_material_props_set(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetProjectionMatrix:
-				matrix_set(matrix_projection, _renderCommands[| i++]);
+				matrix_set(matrix_projection, _command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetSampler:
-				var _nameOrIndex = _renderCommands[| i++];
-				var _index = is_string(_nameOrIndex)
-					? shader_get_sampler_index(shader_current(), _nameOrIndex)
-					: _nameOrIndex;
-				texture_set_stage(_index, _renderCommands[| i++]);
+				{
+					var _nameOrIndex = _command[i++];
+					var _index = is_string(_nameOrIndex)
+						? shader_get_sampler_index(shader_current(), _nameOrIndex)
+						: _nameOrIndex;
+					texture_set_stage(_index, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetShader:
-				shader_set(_renderCommands[| i++]);
+				shader_set(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloat:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_f(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					shader_set_uniform_f(_uniform, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloat2:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				shader_set_uniform_f(_uniform, _v1, _v2);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					var _v1 = _command[i++];
+					var _v2 = _command[i++];
+					shader_set_uniform_f(_uniform, _v1, _v2);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloat3:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				var _v3 = _renderCommands[| i++];
-				shader_set_uniform_f(_uniform, _v1, _v2, _v3);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					var _v1 = _command[i++];
+					var _v2 = _command[i++];
+					var _v3 = _command[i++];
+					shader_set_uniform_f(_uniform, _v1, _v2, _v3);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloat4:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				var _v3 = _renderCommands[| i++];
-				var _v4 = _renderCommands[| i++];
-				shader_set_uniform_f(_uniform, _v1, _v2, _v3, _v4);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					var _v1 = _command[i++];
+					var _v2 = _command[i++];
+					var _v3 = _command[i++];
+					var _v4 = _command[i++];
+					shader_set_uniform_f(_uniform, _v1, _v2, _v3, _v4);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformFloatArray:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_f_array(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					shader_set_uniform_f_array(_uniform, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformInt:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_i(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					shader_set_uniform_i(_uniform, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformInt2:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				shader_set_uniform_i(_uniform, _v1, _v2);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					var _v1 = _command[i++];
+					var _v2 = _command[i++];
+					shader_set_uniform_i(_uniform, _v1, _v2);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformInt3:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				var _v3 = _renderCommands[| i++];
-				shader_set_uniform_i(_uniform, _v1, _v2, _v3);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					var _v1 = _command[i++];
+					var _v2 = _command[i++];
+					var _v3 = _command[i++];
+					shader_set_uniform_i(_uniform, _v1, _v2, _v3);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformInt4:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				var _v1 = _renderCommands[| i++];
-				var _v2 = _renderCommands[| i++];
-				var _v3 = _renderCommands[| i++];
-				var _v4 = _renderCommands[| i++];
-				shader_set_uniform_i(_uniform, _v1, _v2, _v3, _v4);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					var _v1 = _command[i++];
+					var _v2 = _command[i++];
+					var _v3 = _command[i++];
+					var _v4 = _command[i++];
+					shader_set_uniform_i(_uniform, _v1, _v2, _v3, _v4);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformIntArray:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_i_array(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					shader_set_uniform_i_array(_uniform, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformMatrix:
-				shader_set_uniform_matrix(shader_get_uniform(shader_current(), _renderCommands[| i++]));
+				shader_set_uniform_matrix(shader_get_uniform(shader_current(), _command[i++]));
 				break;
 
 			case BBMOD_ERenderCommand.SetUniformMatrixArray:
-				var _uniform = shader_get_uniform(shader_current(), _renderCommands[| i++]);
-				shader_set_uniform_matrix_array(_uniform, _renderCommands[| i++]);
+				{
+					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
+					shader_set_uniform_matrix_array(_uniform, _command[i++]);
+				}
 				break;
 
 			case BBMOD_ERenderCommand.SetViewMatrix:
-				matrix_set(matrix_view, _renderCommands[| i++]);
+				matrix_set(matrix_view, _command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetWorldMatrix:
-				matrix_set(matrix_world, _renderCommands[| i++]);
+				matrix_set(matrix_world, _command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SubmitVertexBuffer:
-				var _vertexBuffer = _renderCommands[| i++];
-				var _prim = _renderCommands[| i++];
-				var _texture = _renderCommands[| i++];
-				vertex_submit(_vertexBuffer, _prim, _texture);
+				{
+					var _vertexBuffer = _command[i++];
+					var _prim = _command[i++];
+					var _texture = _command[i++];
+					vertex_submit(_vertexBuffer, _prim, _texture);
+				}
 				break;
 			}
 
@@ -1867,13 +1920,13 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	static clear = function () {
 		gml_pragma("forceinline");
 		__renderPasses = 0;
-		ds_list_clear(__renderCommands);
+		__index = 0;
 		return self;
 	};
 
 	static destroy = function () {
 		Class_destroy();
-		ds_list_destroy(__renderCommands);
+		__renderCommands = undefined;
 		__bbmod_remove_render_queue(self);
 		return undefined;
 	};

@@ -60,13 +60,13 @@ function BBMOD_Cubemap(_resolution)
 
 	/// @var {Array<Id.Surface>} An array of surfaces.
 	/// @readonly
-	Sides = array_create(BBMOD_ECubeSide.SIZE, noone);
+	Sides = array_create(BBMOD_ECubeSide.SIZE, -1);
 
 	/// @var {Id.Surface} A single surface containing all cubemap sides.
 	/// This can be passed as uniform to a shader for cubemapping.
 	/// @see BBMOD_Cubemap.to_single_surface
 	/// @readonly
-	Surface = noone;
+	Surface = -1;
 
 	/// @var {Id.Surface} A surface with the cubemap converted into an
 	/// octahedral map.

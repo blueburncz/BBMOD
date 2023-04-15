@@ -41,8 +41,8 @@ float Noise(in vec2 st)
 // Defines
 //
 
-// Maximum number of point lights
-#define MAX_PUNCTUAL_LIGHTS 8
+// Maximum number of punctual lights
+#define BBMOD_MAX_PUNCTUAL_LIGHTS 8
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 
@@ -191,9 +191,9 @@ uniform vec2 bbmod_IBLTexel;
 // Punctual lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPunctualDataA[2 * MAX_PUNCTUAL_LIGHTS];
+uniform vec4 bbmod_LightPunctualDataA[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 // [(isSpotLight, dcosInner, dcosOuter), (dX, dY, dZ), ...]
-uniform vec3 bbmod_LightPunctualDataB[2 * MAX_PUNCTUAL_LIGHTS];
+uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 #endif // X_PBR
 
 #if defined(X_TERRAIN)

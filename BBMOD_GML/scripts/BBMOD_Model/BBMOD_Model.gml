@@ -583,10 +583,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		if (RootNode != undefined)
 		{
 			_materials ??= Materials;
-			if (_matrix == undefined)
-			{
-				_matrix = matrix_get(matrix_world);
-			}
+			_matrix ??= matrix_get(matrix_world);
 			RootNode.render(_materials, _transform, _batchData, _matrix);
 		}
 		return self;

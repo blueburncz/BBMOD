@@ -49,23 +49,14 @@ dissolve = 1.0;
 emitter = undefined;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Create a custom material. Each zombie has its own since each instance needs
-// to pass its own values for the dissolve effect.
+// Create material and prepare material property block
 
-material = choose(MatZombieMale, MatZombieFemale)().clone();
-material.OnApply = method(self, function (_material) {
-	var _shaderCurrent = shader_current();
-	var _dissolveColor = shader_get_uniform(_shaderCurrent, "u_vDissolveColor");
-	var _dissolveThreshold = shader_get_uniform(_shaderCurrent, "u_fDissolveThreshold");
-	var _dissolveRange = shader_get_uniform(_shaderCurrent, "u_fDissolveRange");
-	var _dissolveScale = shader_get_uniform(_shaderCurrent, "u_vDissolveScale");
-	var _silhouette = shader_get_uniform(_shaderCurrent, "u_vSilhouette");
-	shader_set_uniform_f(_dissolveColor, 0.0, 1.0, 0.5);
-	shader_set_uniform_f(_dissolveThreshold, dissolve);
-	shader_set_uniform_f(_dissolveRange, 0.3);
-	shader_set_uniform_f(_dissolveScale, 20.0, 20.0);
-	shader_set_uniform_f(_silhouette, 1.0, 1.0, 1.0, hurt);
-});
+material = choose(MatZombieMale, MatZombieFemale)();
+
+materialProps = new BBMOD_MaterialPropertyBlock();
+materialProps.set_float3("u_vDissolveColor", new BBMOD_Vec3(0.0, 1.0, 0.5));
+materialProps.set_float("u_fDissolveRange", 0.3);
+materialProps.set_float2("u_vDissolveScale", new BBMOD_Vec2(20.0));
 
 ////////////////////////////////////////////////////////////////////////////////
 // Load resources

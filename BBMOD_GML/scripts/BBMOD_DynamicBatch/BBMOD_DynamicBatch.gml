@@ -203,11 +203,11 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 				// Ids
 
 				// Get last used index
-				var _indexLast = InstanceCount;
+				_indexLast = InstanceCount;
 				// Find the exact array that stores the id
 				var _idsLast = __ids[_indexLast div Size];
 				// Get starting index within that array
-				var i = _indexLast mod Size;
+				i = _indexLast mod Size;
 
 				// Copy id of the last instance over the id of the removed instance
 				__ids[_indexIdDeleted div Size][@ _indexIdDeleted mod Size] = _idsLast[i];
@@ -381,7 +381,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// batches of {@link BBMOD_DynamicBatch.size}.
 	///
 	/// @param {Real} _object An object to submit.
-	/// @param {Array<Struct.BBMOD_Materials>} [_material] An array of materials
+	/// @param {Array<Struct.BBMOD_Materials>} [_materials] An array of materials
 	/// to use.
 	/// @param {Function} [_fn] A function that writes instance data to an array
 	/// which is then passed to the material's shader. Defaults to

@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "__bbmod_init",
+  "name": "BBMOD_MaterialPropertyBlock",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Core",
-    "path": "folders/BBMOD/Core.yy",
+    "name": "Rendering",
+    "path": "folders/BBMOD/Core/Rendering.yy",
   },
 }

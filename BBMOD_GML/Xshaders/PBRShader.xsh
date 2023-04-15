@@ -73,7 +73,7 @@ void PBRShader(Material material, float depth)
 #endif
 
 	// Punctual lights
-	for (int i = 0; i < MAX_PUNCTUAL_LIGHTS; ++i)
+	for (int i = 0; i < BBMOD_MAX_PUNCTUAL_LIGHTS; ++i)
 	{
 		vec4 positionRange = bbmod_LightPunctualDataA[i * 2];
 		vec4 colorAlpha = bbmod_LightPunctualDataA[(i * 2) + 1];

@@ -7,7 +7,7 @@
 /// @private
 #macro __BBMOD_SSAO_KERNEL_SIZE 8
 
-/// @var {Id.Sprite}
+/// @var {Asset.GMSprite}
 /// @private
 global.__bbmodSSAONoise = __bbmod_ssao_make_noise(__BBMOD_SSAO_NOISE_TEXTURE_SIZE);
 
@@ -21,7 +21,7 @@ global.__bbmodSSAOKernel = __bbmod_ssao_create_kernel(__BBMOD_SSAO_KERNEL_SIZE);
 ///
 /// @param {Real} _size The size of the sprite.
 ///
-/// @return {Id.Sprite} The created noise sprite.
+/// @return {Asset.GMSprite} The created noise sprite.
 ///
 /// @private
 function __bbmod_ssao_make_noise(_size)

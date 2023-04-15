@@ -23,3 +23,6 @@ if (emitter != undefined
 	emitter.y = y;
 	emitter.z = z;
 }
+
+materialProps.set_float("u_fDissolveThreshold", dissolve);
+materialProps.set_float4("u_vSilhouette", new BBMOD_Vec4(1.0, 1.0, 1.0, hurt));

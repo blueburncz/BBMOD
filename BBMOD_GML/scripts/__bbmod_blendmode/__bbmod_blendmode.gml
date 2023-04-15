@@ -2,8 +2,8 @@
 ///
 /// @desc Retrieves a name of a basic blend mode.
 ///
-/// @param {Real} _blendmode The basic blend mode to get the name of. Use one of
-/// constants `bm_add`, `bm_max`, `bm_normal` or `bm_subtract`.
+/// @param {Constant.BlendMode} _blendmode The basic blend mode to get the name of.
+/// Use one of constants `bm_add`, `bm_max`, `bm_normal` or `bm_subtract`.
 ///
 /// @return {String} The name of the basic blend mode.
 function bbmod_blendmode_to_string(_blendmode)
@@ -33,7 +33,7 @@ function bbmod_blendmode_to_string(_blendmode)
 ///
 /// @param {String} _name The name of the basic blend mode.
 ///
-/// @return {Real} One of constants `bm_add`, `bm_max`, `bm_normal` or
+/// @return {Constant.BlendMode} One of constants `bm_add`, `bm_max`, `bm_normal` or
 /// `bm_subtract`.
 ///
 /// @throws {BBMOD_Exception} If an invalid name is passed.
