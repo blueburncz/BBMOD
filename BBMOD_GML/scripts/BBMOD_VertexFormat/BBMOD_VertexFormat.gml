@@ -123,7 +123,8 @@ function BBMOD_VertexFormat(
 	/// with same propereties will have the same hash.
 	///
 	/// @return {Real} The hash.
-	static get_hash = function () {
+	static get_hash = function ()
+	{
 		return (0
 			| (Vertices << 0)
 			| (Normals << 1)
@@ -142,7 +143,8 @@ function BBMOD_VertexFormat(
 	/// bytes.
 	///
 	/// @return {Real} The byte size of a single vertex using the vertex format.
-	static get_byte_size = function () {
+	static get_byte_size = function ()
+	{
 		gml_pragma("forceinline");
 		return (0
 			+ (buffer_sizeof(buffer_f32) * 3 * Vertices)

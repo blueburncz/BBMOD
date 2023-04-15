@@ -132,7 +132,8 @@ function BBMOD_BaseRenderer()
 	/// @desc Retrieves the width of the renderer on the screen.
 	///
 	/// @return {Real} The width of the renderer on the screen.
-	static get_width = function () {
+	static get_width = function ()
+	{
 		gml_pragma("forceinline");
 		return max((Width == undefined) ? window_get_width() : Width, 1);
 	};
@@ -142,7 +143,8 @@ function BBMOD_BaseRenderer()
 	/// @desc Retrieves the height of the renderer on the screen.
 	///
 	/// @return {Real} The height of the renderer on the screen.
-	static get_height = function () {
+	static get_height = function ()
+	{
 		gml_pragma("forceinline");
 		return max((Height == undefined) ? window_get_height() : Height, 1);
 	};
@@ -154,7 +156,8 @@ function BBMOD_BaseRenderer()
 	/// {@link BBMOD_BaseRenderer.RenderScale} applied.
 	///
 	/// @return {Real} The width of the renderer after `RenderScale` is applied.
-	static get_render_width = function () {
+	static get_render_width = function ()
+	{
 		gml_pragma("forceinline");
 		return max(get_width() * RenderScale, 1);
 	};
@@ -165,7 +168,8 @@ function BBMOD_BaseRenderer()
 	/// {@link BBMOD_BaseRenderer.RenderScale} applied.
 	///
 	/// @return {Real} The height of the renderer after `RenderScale` is applied.
-	static get_render_height = function () {
+	static get_render_height = function ()
+	{
 		gml_pragma("forceinline");
 		return max(get_height() * RenderScale, 1);
 	};
@@ -178,7 +182,8 @@ function BBMOD_BaseRenderer()
 	/// @param {Real} _y The new Y position on the screen.
 	///
 	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
-	static set_position = function (_x, _y) {
+	static set_position = function (_x, _y)
+	{
 		gml_pragma("forceinline");
 		X = _x;
 		Y = _y;
@@ -193,7 +198,8 @@ function BBMOD_BaseRenderer()
 	/// @param {Real} _height The new height on the screen.
 	///
 	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
-	static set_size = function (_width, _height) {
+	static set_size = function (_width, _height)
+	{
 		gml_pragma("forceinline");
 		Width = _width;
 		Height = _height;
@@ -210,7 +216,8 @@ function BBMOD_BaseRenderer()
 	/// @param {Real} _height The new height on the screen.
 	///
 	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
-	static set_rectangle = function (_x, _y, _width, _height) {
+	static set_rectangle = function (_x, _y, _width, _height)
+	{
 		gml_pragma("forceinline");
 		set_position(_x, _y);
 		set_size(_width, _height);
@@ -232,7 +239,8 @@ function BBMOD_BaseRenderer()
 	/// @note {@link BBMOD_BaseRenderer.Gizmo} must be defined.
 	///
 	/// @private
-	static select_gizmo = function (_screenX, _screenY) {
+	static select_gizmo = function (_screenX, _screenY)
+	{
 		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
 		_screenY = clamp(_screenY - Y, 0, get_height()) * RenderScale;
 
@@ -272,7 +280,8 @@ function BBMOD_BaseRenderer()
 	/// found at the given position.
 	///
 	/// @note {@link BBMOD_BaseRenderer.RenderInstanceIDs} must be enabled.
-	static get_instance_id = function (_screenX, _screenY) {
+	static get_instance_id = function (_screenX, _screenY)
+	{
 		gml_pragma("forceinline");
 		if (!surface_exists(__surSelect))
 		{
@@ -294,7 +303,8 @@ function BBMOD_BaseRenderer()
 	///
 	/// @see BBMOD_BaseRenderer.remove
 	/// @see BBMOD_IRenderable
-	static add = function (_renderable) {
+	static add = function (_renderable)
+	{
 		gml_pragma("forceinline");
 		array_push(Renderables, _renderable);
 		return self;
@@ -311,7 +321,8 @@ function BBMOD_BaseRenderer()
 	///
 	/// @see BBMOD_BaseRenderer.add
 	/// @see BBMOD_IRenderable
-	static remove = function (_renderable) {
+	static remove = function (_renderable)
+	{
 		gml_pragma("forceinline");
 		for (var i = array_length(Renderables) - 1; i >= 0; --i)
 		{
@@ -331,7 +342,8 @@ function BBMOD_BaseRenderer()
 	/// (in microseconds).
 	///
 	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
-	static update = function (_deltaTime) {
+	static update = function (_deltaTime)
+	{
 		global.__bbmodRendererCurrent = self;
 
 		if (UseAppSurface)
@@ -372,7 +384,8 @@ function BBMOD_BaseRenderer()
 	/// that yourself in the calling function if needed.
 	///
 	/// @private
-	static __render_reflection_probes = function () {
+	static __render_reflection_probes = function ()
+	{
 		gml_pragma("forceinline");
 
 		global.__bbmodReflectionProbeTexture = pointer_null;
@@ -515,7 +528,8 @@ function BBMOD_BaseRenderer()
 	/// that yourself in the calling function if needed.
 	///
 	/// @private
-	static __render_shadowmap = function () {
+	static __render_shadowmap = function ()
+	{
 		gml_pragma("forceinline");
 
 		static _renderQueues = bbmod_render_queues_get();
@@ -615,7 +629,8 @@ function BBMOD_BaseRenderer()
 	/// @desc Renders gizmo and instance IDs into dedicated surfaces.
 	///
 	/// @private
-	static __render_gizmo_and_instance_ids = function () {
+	static __render_gizmo_and_instance_ids = function ()
+	{
 		static _renderQueues = bbmod_render_queues_get();
 
 		var _view = matrix_get(matrix_view);
@@ -758,7 +773,8 @@ function BBMOD_BaseRenderer()
 	/// at the end of this method. Default value is `true`.
 	///
 	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
-	static render = function (_clearQueues=true) {
+	static render = function (_clearQueues=true)
+	{
 		global.__bbmodRendererCurrent = self;
 
 		static _renderQueues = bbmod_render_queues_get();
@@ -850,7 +866,8 @@ function BBMOD_BaseRenderer()
 	///
 	/// @note If {@link BBMOD_BaseRenderer.UseAppSurface} is `false`, then this only
 	/// draws the gizmo and selected instances.
-	static present = function () {
+	static present = function ()
+	{
 		global.__bbmodRendererCurrent = self;
 
 		static _gpuState = undefined;
@@ -973,7 +990,8 @@ function BBMOD_BaseRenderer()
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 
 		if (global.__bbmodRendererCurrent == self)

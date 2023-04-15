@@ -68,7 +68,8 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// at. Defaults to the emitter's position.
 	///
 	/// @return {Bool} Returns `true` if a particle was spawned.
-	static spawn_particle = function (_position=undefined) {
+	static spawn_particle = function (_position=undefined)
+	{
 		gml_pragma("forceinline");
 		if (__time >= System.Duration && !System.Loop)
 		{
@@ -146,7 +147,8 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// (in microseconds).
 	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
-	static update = function (_deltaTime) {
+	static update = function (_deltaTime)
+	{
 		if (finished(true))
 		{
 			return self;
@@ -356,7 +358,8 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// @return {Bool} Returns `true` if the emitter cycle has finished
 	/// (and there are no particles alive). Aalways returns `false` if the
 	/// emitted particle system is looping.
-	static finished = function (_particlesDead=false) {
+	static finished = function (_particlesDead=false)
+	{
 		gml_pragma("forceinline");
 		if (System.Loop)
 		{
@@ -372,7 +375,8 @@ function BBMOD_ParticleEmitter(_position, _system)
 		return false;
 	};
 
-	static _draw = function (_method, _material=undefined) {
+	static _draw = function (_method, _material=undefined)
+	{
 		gml_pragma("forceinline");
 
 		var _dynamicBatch = System.__dynamicBatch;
@@ -470,7 +474,8 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// of the one defined in the particle system or `undefined`.
 	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
-	static submit = function (_material=undefined) {
+	static submit = function (_material=undefined)
+	{
 		var _dynamicBatch = System.__dynamicBatch;
 		_draw(method(_dynamicBatch, _dynamicBatch.submit), _material);
 		return self;
@@ -484,13 +489,15 @@ function BBMOD_ParticleEmitter(_position, _system)
 	/// of the one defined in the particle system or `undefined`.
 	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
-	static render = function (_material=undefined) {
+	static render = function (_material=undefined)
+	{
 		var _dynamicBatch = System.__dynamicBatch;
 		_draw(method(_dynamicBatch, _dynamicBatch.render), _material);
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		ds_grid_destroy(Particles);
 		ds_grid_destroy(GridCompute);

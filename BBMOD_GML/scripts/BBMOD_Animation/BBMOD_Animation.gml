@@ -125,7 +125,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	///     // Play footstep sound...
 	/// }));
 	/// ```
-	static add_event = function (_frame, _name) {
+	static add_event = function (_frame, _name)
+	{
 		gml_pragma("forceinline");
 		array_push(__events, _frame, _name);
 		return self;
@@ -136,7 +137,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @desc Checks whether the animation supports bone attachments.
 	///
 	/// @return {Bool} Returns true if the animation supports bone attachments.
-	static supports_attachments = function () {
+	static supports_attachments = function ()
+	{
 		gml_pragma("forceinline");
 		return ((__spaces & (__BBMOD_BONE_SPACE_PARENT | __BBMOD_BONE_SPACE_WORLD)) != 0);
 	};
@@ -148,7 +150,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	///
 	/// @return {Bool} Returns true if the animation supports bone
 	/// transformation through code.
-	static supports_bone_transform = function () {
+	static supports_bone_transform = function ()
+	{
 		gml_pragma("forceinline");
 		return ((__spaces & __BBMOD_BONE_SPACE_PARENT) != 0);
 	};
@@ -158,7 +161,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @desc Checks whether the animation supports transitions.
 	///
 	/// @return {Bool} Returns true if the animation supports transitions.
-	static supports_transitions = function () {
+	static supports_transitions = function ()
+	{
 		gml_pragma("forceinline");
 		return ((__spaces & (__BBMOD_BONE_SPACE_PARENT | __BBMOD_BONE_SPACE_WORLD)) != 0);
 	};
@@ -170,7 +174,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @param {Real} _timeInSeconds The current time in seconds.
 	///
 	/// @return {Real} The animation time.
-	static get_animation_time = function (_timeInSeconds) {
+	static get_animation_time = function (_timeInSeconds)
+	{
 		gml_pragma("forceinline");
 		return round(_timeInSeconds * TicsPerSecond);
 	};
@@ -184,7 +189,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Animation} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If loading fails.
-	static from_buffer = function (_buffer) {
+	static from_buffer = function (_buffer)
+	{
 		var _hasMinorVersion = false;
 
 		var _type = buffer_read(_buffer, buffer_string);
@@ -277,7 +283,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Animation} Returns `self`.
-	static to_buffer = function (_buffer) {
+	static to_buffer = function (_buffer)
+	{
 		buffer_write(_buffer, buffer_string, "BBANIM");
 		buffer_write(_buffer, buffer_u8, VersionMajor);
 		buffer_write(_buffer, buffer_u8, VersionMinor);
@@ -341,7 +348,8 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Animation} The created transition or `undefined`
 	/// if the animations have different optimization levels or if they do not
 	/// support transitions.
-	static create_transition = function (_timeFrom, _animTo, _timeTo) {
+	static create_transition = function (_timeFrom, _animTo, _timeTo)
+	{
 		if ((__spaces & (__BBMOD_BONE_SPACE_PARENT | __BBMOD_BONE_SPACE_WORLD)) == 0
 			|| __spaces != _animTo.__spaces)
 		{

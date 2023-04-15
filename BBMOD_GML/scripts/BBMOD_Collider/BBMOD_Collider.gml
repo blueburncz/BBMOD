@@ -19,7 +19,8 @@ function BBMOD_Collider()
 	/// is closest to the point specified.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static GetClosestPoint = function (_point) {
+	static GetClosestPoint = function (_point)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 
@@ -33,7 +34,8 @@ function BBMOD_Collider()
 	/// @return {Bool} Returns `true` if the colliders intersect.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static TestAABB = function (_aabb) {
+	static TestAABB = function (_aabb)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 
@@ -47,7 +49,8 @@ function BBMOD_Collider()
 	/// @return {Bool} Returns `true` if the colliders intersect.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static TestFrustum = function (_frustum) {
+	static TestFrustum = function (_frustum)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 
@@ -61,7 +64,8 @@ function BBMOD_Collider()
 	/// @return {Bool} Returns `true` if the colliders intersect.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static TestPlane = function (_plane) {
+	static TestPlane = function (_plane)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 
@@ -74,7 +78,8 @@ function BBMOD_Collider()
 	/// @return {Bool} Returns `true` if the colliders intersect.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static TestPoint = function (_point) {
+	static TestPoint = function (_point)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 
@@ -88,7 +93,8 @@ function BBMOD_Collider()
 	/// @return {Bool} Returns `true` if the colliders intersect.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static TestSphere = function (_sphere) {
+	static TestSphere = function (_sphere)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 
@@ -106,7 +112,8 @@ function BBMOD_Collider()
 	///
 	/// @see BBMOD_RaycastResult
 	/// @see BBMOD_Ray.Raycast
-	static Raycast = function (_ray, _result=undefined) {
+	static Raycast = function (_ray, _result=undefined)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 
@@ -121,7 +128,8 @@ function BBMOD_Collider()
 	/// @return {Struct.BBMOD_Collider} Returns `self`.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static DrawDebug = function (_color=c_white, _alpha=1.0) {
+	static DrawDebug = function (_color=c_white, _alpha=1.0)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 }

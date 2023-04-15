@@ -36,7 +36,8 @@ function BBMOD_AABBCollider(
 	///
 	/// @return {Struct.BBMOD_AABBCollider} Returns `self`.
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L37
-	static FromMinMax = function (_min, _max) {
+	static FromMinMax = function (_min, _max)
+	{
 		gml_pragma("forceinline");
 		Position = _min.Add(_max).Scale(0.5);
 		Size = _max.Sub(_min).Scale(0.5);
@@ -49,7 +50,8 @@ function BBMOD_AABBCollider(
 	///
 	/// @return {Struct.BBMOD_Vec3} The minimum coordinate.
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L24
-	static GetMin = function () {
+	static GetMin = function ()
+	{
 		gml_pragma("forceinline");
 		var _p1 = Position.Add(Size);
 		var _p2 = Position.Sub(Size);
@@ -62,7 +64,8 @@ function BBMOD_AABBCollider(
 	///
 	/// @return {Struct.BBMOD_Vec3} The maximum coordinate.
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L30
-	static GetMax = function () {
+	static GetMax = function ()
+	{
 		gml_pragma("forceinline");
 		var _p1 = Position.Add(Size);
 		var _p2 = Position.Sub(Size);
@@ -70,13 +73,15 @@ function BBMOD_AABBCollider(
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L149
-	static GetClosestPoint = function (_point) {
+	static GetClosestPoint = function (_point)
+	{
 		gml_pragma("forceinline");
 		return _point.Clamp(GetMin(), GetMax());
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L340
-	static TestAABB = function (_aabb) {
+	static TestAABB = function (_aabb)
+	{
 		gml_pragma("forceinline");
 		var _aMin = GetMin();
 		var _aMax = GetMax();
@@ -88,7 +93,8 @@ function BBMOD_AABBCollider(
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L482
-	static TestPlane = function (_plane) {
+	static TestPlane = function (_plane)
+	{
 		gml_pragma("forceinline");
 		var _pLen = (Size.X * abs(_plane.Normal.X)
 			+ Size.Y * abs(_plane.Normal.Y)
@@ -98,7 +104,8 @@ function BBMOD_AABBCollider(
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L108
-	static TestPoint = function (_point) {
+	static TestPoint = function (_point) 
+	{
 		gml_pragma("forceinline");
 		var _min = GetMin();
 		var _max = GetMax();
@@ -113,13 +120,15 @@ function BBMOD_AABBCollider(
 		return true;
 	};
 
-	static TestSphere = function (_sphere) {
+	static TestSphere = function (_sphere)
+	{
 		gml_pragma("forceinline");
 		return _sphere.TestAABB(self);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L707
-	static Raycast = function (_ray, _result=undefined) {
+	static Raycast = function (_ray, _result=undefined)
+	{
 		if (_result != undefined)
 		{
 			_result.Reset();
@@ -227,7 +236,8 @@ function BBMOD_AABBCollider(
 		return true;
 	};
 
-	static DrawDebug = function (_color=c_white, _alpha=1.0) {
+	static DrawDebug = function (_color=c_white, _alpha=1.0)
+	{
 		var _vbuffer = global.__bbmodVBufferDebug;
 
 		var _x1 = Position.X - Size.X;

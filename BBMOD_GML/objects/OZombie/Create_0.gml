@@ -7,7 +7,8 @@ collider = new BBMOD_AABBCollider(
 	new BBMOD_Vec3(x, y, z),
 	new BBMOD_Vec3(5, 5, 18));
 
-ReceiveDamage = function (_damage) {
+ReceiveDamage = function (_damage)
+{
 	hp -= _damage;
 	hurt = 1.0;
 	var _floatingText = instance_create_layer(x, y, layer, OFloatingText);
@@ -39,7 +40,8 @@ direction = point_direction(x, y, OPlayer.x, OPlayer.y);
 directionBody = direction;
 
 // Returns true if the player is within the zombie's attack range.
-playerInRange = function () {
+playerInRange = function ()
+{
 	return (point_distance(x, y, OPlayer.x, OPlayer.y) <= 30);
 };
 

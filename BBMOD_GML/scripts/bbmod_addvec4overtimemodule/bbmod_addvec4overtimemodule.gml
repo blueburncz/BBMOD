@@ -34,7 +34,8 @@ function BBMOD_AddVec4OverTimeModule(
 	/// properties. Defaults to 1.0.
 	Period = _period;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		var _property = Property;
 		if (_property != undefined)
 		{

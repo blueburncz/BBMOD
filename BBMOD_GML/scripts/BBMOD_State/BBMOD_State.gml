@@ -48,7 +48,8 @@ function BBMOD_State(_name)
 	/// @desc Retrieves how long (in milliseconds) has the state been active for.
 	///
 	/// @return {Real} Number of milliseconds for which has the state been active.
-	static get_duration = function () {
+	static get_duration = function ()
+	{
 		gml_pragma("forceinline");
 		return (current_time - __activeSince);
 	};

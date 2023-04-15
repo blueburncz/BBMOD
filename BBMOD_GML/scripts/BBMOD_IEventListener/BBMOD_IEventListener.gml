@@ -21,7 +21,8 @@ function BBMOD_IEventListener()
 	/// @private
 	__listeners = undefined;
 
-	static _onEvent = function (_event, _listener=undefined) {
+	static _onEvent = function (_event, _listener=undefined)
+	{
 		gml_pragma("forceinline");
 		if (is_method(_event))
 		{
@@ -72,7 +73,8 @@ function BBMOD_IEventListener()
 	/// @see BBMOD_IEventListener.off_event
 	on_event = _onEvent;
 
-	static _offEvent = function (_event=undefined) {
+	static _offEvent = function (_event=undefined)
+	{
 		gml_pragma("forceinline");
 		if (__listeners == undefined)
 		{
@@ -102,7 +104,8 @@ function BBMOD_IEventListener()
 	/// @see BBMOD_IEventListener.on_event
 	off_event = _offEvent;
 
-	static _triggerEvent = function (_event, _data) {
+	static _triggerEvent = function (_event, _data)
+	{
 		gml_pragma("forceinline");
 		if (__listeners == undefined)
 		{

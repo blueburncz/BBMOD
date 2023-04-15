@@ -26,7 +26,8 @@ function BBMOD_AddVec3OnCollisionModule(
 	/// `(1.0, 1.0, 1.0)`.
 	Change = _change;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		if (Property != undefined)
 		{
 			var _y2 = _emitter.ParticlesAlive - 1;

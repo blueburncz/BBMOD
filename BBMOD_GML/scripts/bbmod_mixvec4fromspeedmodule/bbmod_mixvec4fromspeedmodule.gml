@@ -48,7 +48,8 @@ function BBMOD_MixVec4FromSpeedModule(
 	/// is equal to {@link BBMOD_MixVec4FromSpeedModule.To}. Default value is 1.0.
 	Max = _max;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		var _property = Property;
 		if (_property != undefined)
 		{

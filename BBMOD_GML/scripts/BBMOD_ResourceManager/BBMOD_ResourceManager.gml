@@ -74,7 +74,8 @@ function BBMOD_ResourceManager()
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If the resource is already added to a manager.
-	static add = function (_uniqueName, _resource) {
+	static add = function (_uniqueName, _resource)
+	{
 		gml_pragma("forceinline");
 		if (_resource.__manager != undefined)
 		{
@@ -93,7 +94,8 @@ function BBMOD_ResourceManager()
 	/// unique name of the resource.
 	///
 	/// @return {Bool} Returns `true` if the resource manager has the resource.
-	static has = function (_pathOrUniqueName) {
+	static has = function (_pathOrUniqueName)
+	{
 		gml_pragma("forceinline");
 		return ds_map_exists(__resources, _pathOrUniqueName);
 	};
@@ -111,7 +113,8 @@ function BBMOD_ResourceManager()
 	///
 	/// @throws {BBMOD_Exception} If the resource manager does not have such
 	/// resource.
-	static get = function (_pathOrUniqueName) {
+	static get = function (_pathOrUniqueName)
+	{
 		gml_pragma("forceinline");
 		if (!ds_map_exists(__resources, _pathOrUniqueName))
 		{
@@ -145,7 +148,8 @@ function BBMOD_ResourceManager()
 	///     return _mat;
 	/// });
 	/// ```
-	static get_or_add = function (_uniqueName, _onAdd) {
+	static get_or_add = function (_uniqueName, _onAdd)
+	{
 		gml_pragma("forceinline");
 		if (ds_map_exists(__resources, _uniqueName))
 		{
@@ -189,7 +193,8 @@ function BBMOD_ResourceManager()
 	/// loaded!
 	///
 	/// @see BBMOD_ResourceManager.LoadMaterials
-	static load = function (_path, _sha1=undefined, _onLoad=undefined) {
+	static load = function (_path, _sha1=undefined, _onLoad=undefined)
+	{
 		var _resources = __resources;
 
 		if (ds_map_exists(_resources, _path))
@@ -407,7 +412,8 @@ function BBMOD_ResourceManager()
 	/// or a path (string).
 	///
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
-	static free = function (_resourceOrPath) {
+	static free = function (_resourceOrPath)
+	{
 		// Note: Resource removes itself from the map
 		var _resources = __resources;
 		if (is_struct(_resourceOrPath))
@@ -428,7 +434,8 @@ function BBMOD_ResourceManager()
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	///
 	/// @see BBMOD_Resource.Persistent
-	static clear = function () {
+	static clear = function ()
+	{
 		var _resources = __resources;
 		var _key = ds_map_find_first(_resources);
 		repeat (ds_map_size(_resources))
@@ -456,7 +463,8 @@ function BBMOD_ResourceManager()
 	/// need to call it again!
 	///
 	/// @see bbmod_async_image_loaded_update
-	static async_image_loaded_update = function (_asyncLoad) {
+	static async_image_loaded_update = function (_asyncLoad)
+	{
 		gml_pragma("forceinline");
 		bbmod_async_image_loaded_update(_asyncLoad);
 		return self;
@@ -474,13 +482,15 @@ function BBMOD_ResourceManager()
 	/// need to call it again!
 	///
 	/// @see bbmod_async_image_loaded_update
-	static async_save_load_update = function (_asyncLoad) {
+	static async_save_load_update = function (_asyncLoad)
+	{
 		gml_pragma("forceinline");
 		bbmod_async_save_load_update(_asyncLoad);
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		var _resources = __resources;
 		var _key = ds_map_find_first(_resources);

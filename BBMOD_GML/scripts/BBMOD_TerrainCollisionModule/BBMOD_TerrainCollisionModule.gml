@@ -15,7 +15,8 @@ function BBMOD_TerrainCollisionModule(_terrain=undefined)
 	/// is `undefined`.
 	Terrain = _terrain;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		var _terrain = Terrain;
 		if (!_terrain)
 		{

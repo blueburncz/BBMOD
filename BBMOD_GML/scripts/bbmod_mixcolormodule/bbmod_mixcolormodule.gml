@@ -34,7 +34,8 @@ function BBMOD_MixColorModule(
 	/// same as {@link BBMOD_MixColorModule.From}.
 	To = _to;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		if (Property != undefined)
 		{
 			var _from = From;

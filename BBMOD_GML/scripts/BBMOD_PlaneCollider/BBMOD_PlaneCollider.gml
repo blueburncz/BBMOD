@@ -29,42 +29,49 @@ function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
 	/// @return {Real}
 	///
 	/// @private
-	static __getPointDistance = function (_point) {
+	static __getPointDistance = function (_point)
+	{
 		gml_pragma("forceinline");
 		return (_point.Dot(Normal) - Distance);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L188
-	static GetClosestPoint = function (_point) {
+	static GetClosestPoint = function (_point)
+	{
 		gml_pragma("forceinline");
 		return _point.Sub(Normal.Scale(__getPointDistance(_point)));
 	};
 
-	static TestAABB = function (_aabb) {
+	static TestAABB = function (_aabb)
+	{
 		gml_pragma("forceinline");
 		return _aabb.TestPlane(self);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L541
-	static TestPlane = function (_plane) {
+	static TestPlane = function (_plane)
+	{
 		gml_pragma("forceinline");
 		var _d = Normal.Cross(_plane.Normal);
 		return !bbmod_cmp(_d.Dot(_d), 0.0);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L101
-	static TestPoint = function (_point) {
+	static TestPoint = function (_point)
+	{
 		gml_pragma("forceinline");
 		return bbmod_cmp(__getPointDistance(_point), 0.0);
 	};
 
-	static TestSphere = function (_sphere) {
+	static TestSphere = function (_sphere)
+	{
 		gml_pragma("forceinline");
 		return _sphere.TestPlane(self);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L769
-	static Raycast = function (_ray, _result=undefined) {
+	static Raycast = function (_ray, _result=undefined)
+	{
 		if (_result != undefined)
 		{
 			_result.Reset();

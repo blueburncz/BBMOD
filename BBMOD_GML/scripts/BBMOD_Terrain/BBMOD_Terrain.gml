@@ -105,7 +105,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @return {Bool} Returns `true` if the coordinate is within the terrain's
 	/// bounds.
-	static in_bounds = function (_x, _y) {
+	static in_bounds = function (_x, _y)
+	{
 		gml_pragma("forceinline");
 		return (_x >= Position.X && _x <= Position.X + (Size.X * Scale.X)
 			&& _y >= Position.Y && _y <= Position.Y + (Size.Y * Scale.Y));
@@ -116,7 +117,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Retrieves a random position on the terrain.
 	///
 	/// @return {Struct.BBMOD_Vec3} A random position on the terrain.
-	static get_random_position = function () {
+	static get_random_position = function ()
+	{
 		gml_pragma("forceinline");
 		var _x = Position.X + (random(Size.X) * Scale.X);
 		var _y = Position.Y + (random(Size.Y) * Scale.Y);
@@ -133,7 +135,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// Defaults to 0.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static from_heightmap = function (_sprite, _subimage=0) {
+	static from_heightmap = function (_sprite, _subimage=0)
+	{
 		var _spriteWidth = sprite_get_width(_sprite);
 		var _spriteHeight = sprite_get_height(_sprite);
 
@@ -199,7 +202,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Smoothens out the terrain's height.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static smooth_height = function () {
+	static smooth_height = function ()
+	{
 		var _width = ds_grid_width(__height);
 		var _height = ds_grid_height(__height);
 		var _heightSmooth = ds_grid_create(_width, _height);
@@ -228,7 +232,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @return {Real} The terrain's height at given index.
 	///
 	/// @see BBMOD_Terrain.__height
-	static get_height_index = function (_i, _j) {
+	static get_height_index = function (_i, _j)
+	{
 		gml_pragma("forceinline");
 		return __height[#
 			clamp(_i, 0, ds_grid_width(__height) - 1),
@@ -245,7 +250,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @return {Real} The terrain's height at given coordinate or `undefined`
 	/// if the coordinate is outside of the terrain.
-	static get_height = function (_x, _y) {
+	static get_height = function (_x, _y)
+	{
 		gml_pragma("forceinline");
 		var _xScaled = (_x - Position.X) / Scale.X;
 		var _yScaled = (_y - Position.Y) / Scale.Y;
@@ -281,7 +287,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @return {Struct.BBMOD_Vec3} The terrain's normal at given coordinate or
 	/// `undefined` if the coordinate is outside of the terrain.
-	static get_normal = function (_x, _y) {
+	static get_normal = function (_x, _y)
+	{
 		gml_pragma("forceinline");
 		var _xScaled = (_x - Position.X) / Scale.X;
 		var _yScaled = (_y - Position.Y) / Scale.Y;
@@ -324,7 +331,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	///
 	/// @note Method {@link BBMOD_Terrain.build_layer_index} needs to be called
 	/// first!
-	static get_layer = function (_x, _y, _threshold=0.5) {
+	static get_layer = function (_x, _y, _threshold=0.5)
+	{
 		gml_pragma("forceinline");
 		var _xScaled = (_x - Position.X) / Scale.X;
 		var _yScaled = (_y - Position.Y) / Scale.Y;
@@ -361,7 +369,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Rebuilds normal vectors.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static build_normals = function () {
+	static build_normals = function ()
+	{
 		var _i = 0;
 		repeat (ds_grid_width(__height))
 		{
@@ -392,7 +401,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	///
 	/// @note {@link BBMOD_Terrain.build_normals} should be called first!
-	static build_smooth_normals = function () {
+	static build_smooth_normals = function ()
+	{
 		var _width = ds_grid_width(__height);
 		var _height = ds_grid_height(__height);
 		for (var x1 = 0; x1 < _width; ++x1)
@@ -419,7 +429,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Builds an index of layers using the current splatmap.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static build_layer_index = function () {
+	static build_layer_index = function ()
+	{
 		var _width = 1.0 / texture_get_texel_width(Splatmap);
 		var _height = 1.0 / texture_get_texel_height(Splatmap);
 		var _buffer = array_create(4);
@@ -488,7 +499,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Rebuilds the terrain's mesh.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static build_mesh = function () {
+	static build_mesh = function ()
+	{
 		if (VertexBuffer != undefined)
 		{
 			vertex_delete_buffer(VertexBuffer);
@@ -684,7 +696,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Immediately submits the terrain mesh for rendering.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static submit = function () {
+	static submit = function ()
+	{
 		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
 		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
 		matrix_set(matrix_world, _matrix);
@@ -715,7 +728,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 	/// @desc Enqueues the terrain mesh for rendering.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static render = function () {
+	static render = function ()
+	{
 		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
 		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
 		var i = 0;
@@ -754,7 +768,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		ds_grid_destroy(__splatmapGrid);
 		ds_grid_destroy(__height);

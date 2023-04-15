@@ -56,7 +56,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 
 	// TODO: Add to_json
 
-	static from_json = function (_json) {
+	static from_json = function (_json)
+	{
 		BaseMaterial_from_json(_json);
 
 		if (variable_struct_exists(_json, "NormalSmoothness"))
@@ -138,7 +139,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @param {Real} _smoothness The new smoothness. Use values in range 0..1.
 	///
 	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
-	static set_normal_smoothness = function (_normal, _smoothness) {
+	static set_normal_smoothness = function (_normal, _smoothness)
+	{
 		NormalRoughness = undefined;
 		if (__normalRoughnessSprite != undefined)
 		{
@@ -169,7 +171,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @param {Struct.BBMOD_Color} _color The new specular color.
 	///
 	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
-	static set_specular_color = function (_color) {
+	static set_specular_color = function (_color)
+	{
 		MetallicAO = undefined;
 		if (__metallicAOSprite != undefined)
 		{
@@ -201,7 +204,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @param {Real} _roughness The new roughness. Use values in range 0..1.
 	///
 	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
-	static set_normal_roughness = function (_normal, _roughness) {
+	static set_normal_roughness = function (_normal, _roughness)
+	{
 		NormalSmoothness = undefined;
 		if (__normalSmoothnessSprite != undefined)
 		{
@@ -236,7 +240,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// 0..1, where 0 means full occlusion and 1 means no occlusion.
 	///
 	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
-	static set_metallic_ao = function (_metallic, _ao) {
+	static set_metallic_ao = function (_metallic, _ao)
+	{
 		SpecularColor = undefined;
 		if (__specularColorSprite != undefined)
 		{
@@ -268,7 +273,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// range 0..1. The higher the value, the more visible the effect is.
 	///
 	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
-	static set_subsurface = function (_color, _intensity) {
+	static set_subsurface = function (_color, _intensity)
+	{
 		if (__subsurfaceSprite != undefined)
 		{
 			sprite_delete(__subsurfaceSprite);
@@ -291,7 +297,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 	/// @param {Struct.BBMOD_Color} _color The new emissive color.
 	///
 	/// @return {Struct.BBMOD_DefaultMaterial} Returns `self`.
-	static set_emissive = function () {
+	static set_emissive = function ()
+	{
 		var _color = (argument_count == 3)
 			? new BBMOD_Color(argument[0], argument[1], argument[2])
 			: argument[0];
@@ -310,7 +317,8 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		return self;
 	};
 
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		BaseMaterial_copy(_dest);
 
 		// NormalSmoothness
@@ -418,13 +426,15 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		return self;
 	};
 
-	static clone = function () {
+	static clone = function ()
+	{
 		var _clone = new BBMOD_DefaultMaterial();
 		copy(_clone);
 		return _clone;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		BaseMaterial_destroy();
 		if (__normalSmoothnessSprite != undefined)
 		{

@@ -9,7 +9,8 @@
 /// A renderable object:
 /// ```gml
 /// /// @desc Create event
-/// render = function () {
+/// render = function ()
+/// {
 ///     var _matrix = matrix_build_identity();
 ///     _matrix[@ 12] = x;
 ///     _matrix[@ 13] = y;
@@ -43,7 +44,8 @@ function BBMOD_IRenderable()
 	/// @return {Struct.BBMOD_IRenderable} Returns `self`.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static render = function () {
+	static render = function ()
+	{
 		throw new BBMOD_NotImplementedException();
 		//return self;
 	};

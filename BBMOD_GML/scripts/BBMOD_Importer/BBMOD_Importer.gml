@@ -25,7 +25,8 @@ function BBMOD_Importer()
 	/// @return {Bool} Returns `true` if the importer can import the file.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static can_import = function (_path) {
+	static can_import = function (_path)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 
@@ -39,7 +40,8 @@ function BBMOD_Importer()
 	///
 	/// @throws {BBMOD_Exception} If the file could not be imported.
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static import = function (_path) {
+	static import = function (_path)
+	{
 		throw new BBMOD_NotImplementedException();
 	};
 }

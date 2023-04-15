@@ -19,7 +19,8 @@ function BBMOD_MixEmissionModule(_from=1, _to=_from)
 	/// {@link BBMOD_MixEmissionModule.From}.
 	To = _to;
 
-	static on_start = function (_emitter) {
+	static on_start = function (_emitter)
+	{
 		repeat (irandom_range(From, To))
 		{
 			_emitter.spawn_particle();

@@ -81,7 +81,8 @@ function BBMOD_DLL()
 	/// @return {Struct.BBMOD_DLL} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If the model conversion fails.
-	static convert = function (_fin, _fout) {
+	static convert = function (_fin, _fout)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_convert", dll_cdecl, ty_real, 2, ty_string, ty_string);
@@ -100,7 +101,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then bones are disabled.
 	///
 	/// @see BBMOD_DLL.set_disable_bone
-	static get_disable_bone = function () {
+	static get_disable_bone = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_disable_bone", dll_cdecl, ty_real, 0);
@@ -119,7 +121,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_disable_bone
-	static set_disable_bone = function (_disable) {
+	static set_disable_bone = function (_disable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_disable_bone", dll_cdecl, ty_real, 1, ty_real);
@@ -138,7 +141,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then vertex colors are disabled.
 	///
 	/// @see BBMOD_DLL.set_disable_color
-	static get_disable_color = function () {
+	static get_disable_color = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_disable_color", dll_cdecl, ty_real, 0);
@@ -157,7 +161,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_disable_color
-	static set_disable_color = function (_disable) {
+	static set_disable_color = function (_disable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_disable_color", dll_cdecl, ty_real, 1, ty_real);
@@ -176,7 +181,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then vertex normals are disabled.
 	///
 	/// @see BBMOD_DLL.set_disable_normal
-	static get_disable_normal = function () {
+	static get_disable_normal = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_disable_normal", dll_cdecl, ty_real, 0);
@@ -195,7 +201,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_disable_normal
-	static set_disable_normal = function (_disable) {
+	static set_disable_normal = function (_disable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_disable_normal", dll_cdecl, ty_real, 1, ty_real);
@@ -214,7 +221,8 @@ function BBMOD_DLL()
 	/// @return {Bool} Returns `true` if enabled.
 	///
 	/// @see BBMOD_DLL.set_flip_normal
-	static get_flip_normal = function () {
+	static get_flip_normal = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_flip_normal", dll_cdecl, ty_real, 0);
@@ -233,7 +241,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_flip_normal
-	static set_flip_normal = function (_flip) {
+	static set_flip_normal = function (_flip)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_flip_normal", dll_cdecl, ty_real, 1, ty_real);
@@ -255,7 +264,8 @@ function BBMOD_DLL()
 	/// @see BBMOD_NORMALS_NONE
 	/// @see BBMOD_NORMALS_FLAT
 	/// @see BBMOD_NORMALS_SMOOTH
-	static get_gen_normal = function () {
+	static get_gen_normal = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_gen_normal", dll_cdecl, ty_real, 0);
@@ -278,7 +288,8 @@ function BBMOD_DLL()
 	/// @see BBMOD_NORMALS_NONE
 	/// @see BBMOD_NORMALS_FLAT
 	/// @see BBMOD_NORMALS_SMOOTH
-	static set_gen_normal = function (_normals) {
+	static set_gen_normal = function (_normals)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_gen_normal", dll_cdecl, ty_real, 1, ty_real);
@@ -297,7 +308,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then tangent and bitangent vectors are disabled.
 	///
 	/// @see BBMOD_DLL.set_disable_tangent
-	static get_disable_tangent = function () {
+	static get_disable_tangent = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_disable_tangent", dll_cdecl, ty_real, 0);
@@ -316,7 +328,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_disable_tangent
-	static set_disable_tangent = function (_disable) {
+	static set_disable_tangent = function (_disable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_disable_tangent", dll_cdecl, ty_real, 1, ty_real);
@@ -335,7 +348,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then texture coordinates are disabled.
 	///
 	/// @see BBMOD_DLL.set_disable_uv
-	static get_disable_uv = function () {
+	static get_disable_uv = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_disable_uv", dll_cdecl, ty_real, 0);
@@ -354,7 +368,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_disable_uv
-	static set_disable_uv = function (_disable) {
+	static set_disable_uv = function (_disable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_disable_uv", dll_cdecl, ty_real, 1, ty_real);
@@ -373,7 +388,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then second UV channel is disabled.
 	///
 	/// @see BBMOD_DLL.set_disable_uv2
-	static get_disable_uv2 = function () {
+	static get_disable_uv2 = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_disable_uv2", dll_cdecl, ty_real, 0);
@@ -392,7 +408,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_disable_uv2
-	static set_disable_uv2 = function (_disable) {
+	static set_disable_uv2 = function (_disable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_disable_uv2", dll_cdecl, ty_real, 1, ty_real);
@@ -412,7 +429,8 @@ function BBMOD_DLL()
 	/// @return {Bool} Returns `true` if enabled.
 	///
 	/// @see BBMOD_DLL.set_flip_uv_horizontally
-	static get_flip_uv_horizontally = function () {
+	static get_flip_uv_horizontally = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_flip_uv_horizontally", dll_cdecl, ty_real, 0);
@@ -431,7 +449,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_flip_uv_horizontally
-	static set_flip_uv_horizontally = function (_flip) {
+	static set_flip_uv_horizontally = function (_flip)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_flip_uv_horizontally", dll_cdecl, ty_real, 1, ty_real);
@@ -450,7 +469,8 @@ function BBMOD_DLL()
 	/// @return {Bool} Returns `true` if enabled.
 	///
 	/// @see BBMOD_DLL.set_flip_uv_vertically
-	static get_flip_uv_vertically = function () {
+	static get_flip_uv_vertically = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_flip_uv_vertically", dll_cdecl, ty_real, 0);
@@ -469,7 +489,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_flip_uv_vertically
-	static set_flip_uv_vertically = function (_flip) {
+	static set_flip_uv_vertically = function (_flip)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_flip_uv_vertically", dll_cdecl, ty_real, 1, ty_real);
@@ -488,7 +509,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then inverse vertex winding is enabled.
 	///
 	/// @see BBMOD_DLL.set_invert_winding
-	static get_invert_winding = function () {
+	static get_invert_winding = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_invert_winding", dll_cdecl, ty_real, 0);
@@ -507,7 +529,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_invert_winding
-	static set_invert_winding = function (_invert) {
+	static set_invert_winding = function (_invert)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_invert_winding", dll_cdecl, ty_real, 1, ty_real);
@@ -528,7 +551,8 @@ function BBMOD_DLL()
 	/// system is enabled.
 	///
 	/// @see BBMOD_DLL.set_left_handed
-	static get_left_handed = function () {
+	static get_left_handed = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_left_handed", dll_cdecl, ty_real, 0);
@@ -548,7 +572,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_left_handed
-	static set_left_handed = function (_leftHanded) {
+	static set_left_handed = function (_leftHanded)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_left_handed", dll_cdecl, ty_real, 1, ty_real);
@@ -567,7 +592,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then node optimization is enabled.
 	///
 	/// @see BBMOD_DLL.set_optimize_nodes
-	static get_optimize_nodes = function () {
+	static get_optimize_nodes = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_optimize_nodes", dll_cdecl, ty_real, 0);
@@ -587,7 +613,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_optimize_nodes
-	static set_optimize_nodes = function (_optimize) {
+	static set_optimize_nodes = function (_optimize)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_optimize_nodes", dll_cdecl, ty_real, 1, ty_real);
@@ -606,7 +633,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then mesh optimization is enabled.
 	///
 	/// @see BBMOD_DLL.set_optimize_meshes
-	static get_optimize_meshes = function () {
+	static get_optimize_meshes = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_optimize_meshes", dll_cdecl, ty_real, 0);
@@ -626,7 +654,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_optimize_meshes
-	static set_optimize_meshes = function (_optimize) {
+	static set_optimize_meshes = function (_optimize)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_optimize_meshes", dll_cdecl, ty_real, 1, ty_real);
@@ -645,7 +674,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then material optimization is enabled.
 	///
 	/// @see BBMOD_DLL.set_optimize_materials
-	static get_optimize_materials = function () {
+	static get_optimize_materials = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_optimize_materials", dll_cdecl, ty_real, 0);
@@ -665,7 +695,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_optimize_materials
-	static set_optimize_materials = function (_optimize) {
+	static set_optimize_materials = function (_optimize)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_optimize_materials", dll_cdecl, ty_real, 1, ty_real);
@@ -684,7 +715,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then the "apply scale" option is enabled.
 	///
 	/// @see BBMOD_DLL.set_apply_scale
-	static get_apply_scale = function () {
+	static get_apply_scale = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_apply_scale", dll_cdecl, ty_real, 0);
@@ -704,7 +736,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_apply_scale
-	static set_apply_scale = function (_enable) {
+	static set_apply_scale = function (_enable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_apply_scale", dll_cdecl, ty_real, 1, ty_real);
@@ -723,7 +756,8 @@ function BBMOD_DLL()
 	/// @return {Bool} If `true` then the "pre-transform" option is enabled.
 	///
 	/// @see BBMOD_DLL.set_pre_transform
-	static get_pre_transform = function () {
+	static get_pre_transform = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_pre_transform", dll_cdecl, ty_real, 0);
@@ -743,7 +777,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_pre_transform
-	static set_pre_transform = function (_enable) {
+	static set_pre_transform = function (_enable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_apply_scale", dll_cdecl, ty_real, 1, ty_real);
@@ -764,7 +799,8 @@ function BBMOD_DLL()
 	/// more info.
 	///
 	/// @see BBMOD_DLL.set_optimize_animations
-	static get_optimize_animations = function () {
+	static get_optimize_animations = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_optimize_animations", dll_cdecl, ty_real, 0);
@@ -785,7 +821,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_optimize_animations
-	static set_optimize_animations = function (_level) {
+	static set_optimize_animations = function (_level)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_optimize_animations", dll_cdecl, ty_real, 1, ty_real);
@@ -804,7 +841,8 @@ function BBMOD_DLL()
 	/// @return {Real} The animation sampling rate.
 	///
 	/// @see BBMOD_DLL.set_sampling_rate
-	static get_sampling_rate = function () {
+	static get_sampling_rate = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_sampling_rate", dll_cdecl, ty_real, 0);
@@ -823,7 +861,8 @@ function BBMOD_DLL()
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_sampling_rate
-	static set_sampling_rate = function (_fps) {
+	static set_sampling_rate = function (_fps)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_sampling_rate", dll_cdecl, ty_real, 1, ty_real);
@@ -835,7 +874,8 @@ function BBMOD_DLL()
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		// This is basically a singleton, so we shouldn't call free!
 		//external_free(BBMOD_DLL_PATH);

@@ -96,7 +96,8 @@ function BBMOD_DefaultRenderer()
 	/// blurred. Defaults to 2.
 	SSAOBlurDepthRange = 2.0;
 
-	static render = function (_clearQueues=true) {
+	static render = function (_clearQueues=true)
+	{
 		global.__bbmodRendererCurrent = self;
 
 		static _renderQueues = bbmod_render_queues_get();
@@ -238,7 +239,8 @@ function BBMOD_DefaultRenderer()
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		BaseRenderer_destroy();
 
 		if (surface_exists(__surDepthBuffer))

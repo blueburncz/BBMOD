@@ -155,7 +155,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @see BBMOD_Animation.create_transition
 	EnableTransitions = true;
 
-	static animate = function (_animationInstance, _animationTime) {
+	static animate = function (_animationInstance, _animationTime)
+	{
 		var _model = Model;
 		var _animation = _animationInstance.Animation;
 		var _frame = _animation.__framesParent[_animationTime];
@@ -261,7 +262,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// (in microseconds).
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static update = function (_deltaTime) {
+	static update = function (_deltaTime)
+	{
 		if (!Model.IsLoaded)
 		{
 			return self;
@@ -414,7 +416,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// Defaults to `false`.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static play = function (_animation, _loop=false) {
+	static play = function (_animation, _loop=false)
+	{
 		Animation = _animation;
 		AnimationLoops = _loop;
 
@@ -465,7 +468,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	///
 	/// @see BBMOD_AnimationPlayer.Animation
-	static change = function (_animation, _loop=false) {
+	static change = function (_animation, _loop=false)
+	{
 		gml_pragma("forceinline");
 		if (Animation != _animation)
 		{
@@ -480,7 +484,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// should be passed to a vertex shader.
 	///
 	/// @return {Array<Real>} The transformation array.
-	static get_transform = function () {
+	static get_transform = function ()
+	{
 		gml_pragma("forceinline");
 		return __transformArray;
 	};
@@ -495,7 +500,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// @return {Struct.BBMOD_DualQuaternion} The transformation.
 	///
 	/// @see BBMOD_Model.find_node_id
-	static get_node_transform = function (_nodeIndex) {
+	static get_node_transform = function (_nodeIndex)
+	{
 		gml_pragma("forceinline");
 		return new BBMOD_DualQuaternion().FromArray(__nodeTransform, _nodeIndex * 8);
 	};
@@ -512,7 +518,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	///
 	/// @see BBMOD_Model.find_node_id
 	/// @see BBMOD_AnimationPlayer.get_node_transform
-	static get_node_transform_from_frame = function (_nodeIndex) {
+	static get_node_transform_from_frame = function (_nodeIndex)
+	{
 		gml_pragma("forceinline");
 		if (__frame == undefined)
 		{
@@ -530,7 +537,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// `undefined` to unset the position override.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static set_node_position = function (_nodeIndex, _position) {
+	static set_node_position = function (_nodeIndex, _position)
+	{
 		gml_pragma("forceinline");
 		__nodePositionOverride[@ _nodeIndex] = _position;
 		return self;
@@ -545,7 +553,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// Use `undefined` to unset the rotation override.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static set_node_rotation = function (_nodeIndex, _rotation) {
+	static set_node_rotation = function (_nodeIndex, _rotation)
+	{
 		gml_pragma("forceinline");
 		__nodeRotationOverride[@ _nodeIndex] = _rotation;
 		return self;
@@ -560,7 +569,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// node is rotated using frame data. Use `undefined` to unset the post-rotation.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static set_node_rotation_post = function (_nodeIndex, _rotation) {
+	static set_node_rotation_post = function (_nodeIndex, _rotation)
+	{
 		gml_pragma("forceinline");
 		__nodeRotationPost[@ _nodeIndex] = _rotation;
 		return self;
@@ -575,7 +585,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static submit = function (_materials=undefined) {
+	static submit = function (_materials=undefined)
+	{
 		gml_pragma("forceinline");
 		Model.submit(_materials, get_transform());
 		return self;
@@ -590,13 +601,15 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static render = function (_materials=undefined) {
+	static render = function (_materials=undefined)
+	{
 		gml_pragma("forceinline");
 		Model.render(_materials, get_transform());
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		ds_list_destroy(__animations);
 		__nodePositionOverride = undefined;

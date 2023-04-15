@@ -66,7 +66,8 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 	/// @param {Struct.BBMOD_Vec3} _position
 	///
 	/// @return {Struct.BBMOD_ReflectionProbe} Returns `self`.
-	static set_position = function (_position) {
+	static set_position = function (_position)
+	{
 		Position = _position;
 		__positionSizeChanged = true;
 		return self;
@@ -79,7 +80,8 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 	/// @param {Struct.BBMOD_Vec3} _size
 	///
 	/// @return {Struct.BBMOD_ReflectionProbe} Returns `self`.
-	static set_size = function (_size) {
+	static set_size = function (_size)
+	{
 		Size = _size;
 		__positionSizeChanged = true;
 		return self;
@@ -92,7 +94,8 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 	/// @param {Asset.GMSprite} _sprite
 	///
 	/// @return {Struct.BBMOD_ReflectionProbe} Returns `self`.
-	static set_sprite = function (_sprite) {
+	static set_sprite = function (_sprite)
+	{
 		if (Sprite != undefined)
 		{
 			sprite_delete(Sprite);
@@ -101,7 +104,8 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		if (Sprite != undefined)
 		{

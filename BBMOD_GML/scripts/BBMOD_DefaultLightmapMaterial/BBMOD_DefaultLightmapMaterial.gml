@@ -22,13 +22,15 @@ function BBMOD_DefaultLightmapMaterial(_shader=undefined)
 	/// the default lightmap texture defined with {@link bbmod_lightmap_set}.
 	Lightmap = undefined;
 
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		DefaultMaterial_copy(_dest);
 		_dest.Lightmap = Lightmap;
 		return self;
 	};
 
-	static clone = function () {
+	static clone = function ()
+	{
 		var _clone = new BBMOD_DefaultLightmapMaterial();
 		copy(_clone);
 		return _clone;

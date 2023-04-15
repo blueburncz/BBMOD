@@ -36,12 +36,14 @@ function BBMOD_DirectionalLight(_color=undefined, _direction=undefined)
 
 	__getShadowmapMatrix = __get_shadowmap_matrix;
 
-	static __get_shadowmap_zfar = function () {
+	static __get_shadowmap_zfar = function ()
+	{
 		gml_pragma("forceinline");
 		return ShadowmapArea;
 	};
 
-	static __get_shadowmap_view = function () {
+	static __get_shadowmap_view = function ()
+	{
 		gml_pragma("forceinline");
 		var _position = bbmod_camera_get_position();
 		return matrix_build_lookat(
@@ -54,13 +56,15 @@ function BBMOD_DirectionalLight(_color=undefined, _direction=undefined)
 			0.0, 0.0, 1.0); // TODO: Find the up vector
 	};
 
-	static __get_shadowmap_projection = function () {
+	static __get_shadowmap_projection = function ()
+	{
 		gml_pragma("forceinline");
 		return matrix_build_projection_ortho(
 			ShadowmapArea, ShadowmapArea, -ShadowmapArea * 0.5, ShadowmapArea * 0.5);
 	};
 
-	static __get_shadowmap_matrix = function () {
+	static __get_shadowmap_matrix = function ()
+	{
 		gml_pragma("forceinline");
 		return matrix_multiply(
 			__getViewMatrix(),

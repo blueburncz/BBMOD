@@ -30,7 +30,8 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	/// @readonly
 	Height = 0;
 
-	static from_file = function (_file, _sha1=undefined) {
+	static from_file = function (_file, _sha1=undefined)
+	{
 		Path = _file;
 		check_file(_file, _sha1);
 		Raw = sprite_add(_file, 1, false, false, 0, 0);
@@ -40,7 +41,8 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
-	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
+	static from_file_async = function (_file, _sha1=undefined, _callback=undefined)
+	{
 		Path = _file;
 
 		if (!check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
@@ -70,7 +72,8 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
-	static to_file = function (_file) {
+	static to_file = function (_file)
+	{
 		var _dirname = filename_dir(_file);
 		if (!directory_exists(_dirname))
 		{
@@ -85,7 +88,8 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	/// @desc Retrieves a pointer to the texture.
 	///
 	/// @return {Pointer.Texture} The pointer to the texture.
-	static get_texture = function () {
+	static get_texture = function ()
+	{
 		gml_pragma("forceinline");
 		if (Raw == undefined)
 		{
@@ -94,7 +98,8 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 		return sprite_get_texture(Raw, 0);
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Resource_destroy();
 		if (Raw != undefined)
 		{

@@ -89,7 +89,8 @@ function BBMOD_BaseCamera()
 	/// @return {Array<Real>} The projection matrix.
 	///
 	/// @private
-	static __build_proj_mat = function () {
+	static __build_proj_mat = function ()
+	{
 		var _proj;
 		if (Orthographic)
 		{
@@ -127,7 +128,8 @@ function BBMOD_BaseCamera()
 	/// }
 	/// camera.update_matrices();
 	/// ```
-	static update_matrices = function () {
+	static update_matrices = function ()
+	{
 		gml_pragma("forceinline");
 
 		var _view = matrix_build_lookat(
@@ -165,7 +167,8 @@ function BBMOD_BaseCamera()
 	/// (in microseconds).
 	///
 	/// @return {Struct.BBMOD_BaseCamera} Returns `self`.
-	static update = function (_deltaTime) {
+	static update = function (_deltaTime)
+	{
 		update_matrices();
 		return self;
 	};
@@ -175,7 +178,8 @@ function BBMOD_BaseCamera()
 	/// @desc Retrieves camera's view matrix.
 	///
 	/// @return {Array<Real>} The view matrix.
-	static get_view_mat = function () {
+	static get_view_mat = function ()
+	{
 		gml_pragma("forceinline");
 
 		if (os_browser == browser_not_a_browser)
@@ -198,7 +202,8 @@ function BBMOD_BaseCamera()
 	/// @desc Retrieves camera's projection matrix.
 	///
 	/// @return {Array<Real>} The projection matrix.
-	static get_proj_mat = function () {
+	static get_proj_mat = function ()
+	{
 		gml_pragma("forceinline");
 
 		if (os_browser == browser_not_a_browser)
@@ -222,7 +227,8 @@ function BBMOD_BaseCamera()
 	/// direction.
 	///
 	/// @return {Struct.BBMOD_Vec3} The right vector.
-	static get_right = function () {
+	static get_right = function ()
+	{
 		gml_pragma("forceinline");
 		var _view = get_view_mat();
 		return new BBMOD_Vec3(
@@ -238,7 +244,8 @@ function BBMOD_BaseCamera()
 	/// direction.
 	///
 	/// @return {Struct.BBMOD_Vec3} The up vector.
-	static get_up = function () {
+	static get_up = function ()
+	{
 		gml_pragma("forceinline");
 		var _view = get_view_mat();
 		return new BBMOD_Vec3(
@@ -253,7 +260,8 @@ function BBMOD_BaseCamera()
 	/// @desc Retrieves a vector pointing forward in the camera's direction.
 	///
 	/// @return {Struct.BBMOD_Vec3} The forward vector.
-	static get_forward = function () {
+	static get_forward = function ()
+	{
 		gml_pragma("forceinline");
 		var _view = get_view_mat();
 		return new BBMOD_Vec3(
@@ -279,7 +287,8 @@ function BBMOD_BaseCamera()
 	/// @note This requires {@link BBMOD_BaseCamera.ViewProjectionMatrix}, so you
 	/// should use this *after* {@link BBMOD_BaseCamera.update_matrices} (or
 	/// {@link BBMOD_BaseCamera.update}) is called!
-	static world_to_screen = function (_position, _screenWidth=undefined, _screenHeight=undefined) {
+	static world_to_screen = function (_position, _screenWidth=undefined, _screenHeight=undefined)
+	{
 		gml_pragma("forceinline");
 		_screenWidth ??= window_get_width();
 		_screenHeight ??= window_get_height();
@@ -307,7 +316,8 @@ function BBMOD_BaseCamera()
 	/// @param {Struct.BBMOD_Renderer} [_renderer] A renderer or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Vec3} The world-space direction.
-	static screen_point_to_vec3 = function (_vector, _renderer=undefined) {
+	static screen_point_to_vec3 = function (_vector, _renderer=undefined)
+	{
 		var _forward = get_forward();
 		var _up = get_up();
 		var _right = get_right();
@@ -346,7 +356,8 @@ function BBMOD_BaseCamera()
 	/// @note This also overrides the camera position and exposure passed to
 	/// shaders using {@link bbmod_camera_set_position} and
 	/// {@link bbmod_camera_set_exposure} respectively!
-	static apply = function () {
+	static apply = function ()
+	{
 		gml_pragma("forceinline");
 		global.__bbmodCameraCurrent = self;
 		camera_apply(Raw);
@@ -356,7 +367,8 @@ function BBMOD_BaseCamera()
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		camera_destroy(Raw);
 		if (global.__bbmodCameraCurrent == self)

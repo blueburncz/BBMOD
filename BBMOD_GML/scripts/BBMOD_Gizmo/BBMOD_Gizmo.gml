@@ -218,7 +218,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Function} A function that the gizmo uses to check whether an instance
 	/// exists. Must take the instance as the first argument and return a bool.
 	/// Defaults a function that returns the result of `instance_exists`.
-	InstanceExists = function (_instance) {
+	InstanceExists = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return instance_exists(_instance);
 	};
@@ -229,7 +230,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// instance's transformation matrix. Must take the instance as the first
 	/// argument and return a {@link BBMOD_Matrix}. Defaults to a function that
 	/// always returns an identity matrix.
-	GetInstanceGlobalMatrix = function (_instance) {
+	GetInstanceGlobalMatrix = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return new BBMOD_Matrix();
 	};
@@ -238,7 +240,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// position on the X axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that returns the instance's `x`
 	/// variable.
-	GetInstancePositionX = function (_instance) {
+	GetInstancePositionX = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return _instance.x;
 	};
@@ -247,7 +250,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// position on the X axis. Must take the instance as the first argument and
 	/// its new position on the X axis as the second argument. Defaults to a
 	/// function that assings the new position to the instance's `x` variable.
-	SetInstancePositionX = function (_instance, _x) {
+	SetInstancePositionX = function (_instance, _x)
+	{
 		gml_pragma("forceinline");
 		_instance.x = _x;
 	};
@@ -256,7 +260,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// position on the Y axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that returns the instance's `y`
 	/// variable.
-	GetInstancePositionY = function (_instance) {
+	GetInstancePositionY = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return _instance.y;
 	};
@@ -265,7 +270,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// position on the Y axis. Must take the instance as the first argument and
 	/// its new position on the Y axis as the second argument. Defaults to a
 	/// function that assings the new position to the instance's `y` variable.
-	SetInstancePositionY = function (_instance, _y) {
+	SetInstancePositionY = function (_instance, _y)
+	{
 		gml_pragma("forceinline");
 		_instance.y = _y;
 	};
@@ -274,7 +280,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// position on the Z axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that returns the instance's `z`
 	/// variable.
-	GetInstancePositionZ = function (_instance) {
+	GetInstancePositionZ = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return _instance.z;
 	};
@@ -283,7 +290,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// position on the Z axis. Must take the instance as the first argument and
 	/// its new position on the Z axis as the second argument. Defaults to a
 	/// function that assings the new position to the instance's `Z` variable.
-	SetInstancePositionZ = function (_instance, _z) {
+	SetInstancePositionZ = function (_instance, _z)
+	{
 		gml_pragma("forceinline");
 		_instance.z = _z;
 	};
@@ -291,7 +299,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Function} A function that the gizmo uses to retrieve an instance's
 	/// rotation on the X axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that always returns 0.
-	GetInstanceRotationX = function (_instance) {
+	GetInstanceRotationX = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return 0.0;
 	};
@@ -300,14 +309,16 @@ function BBMOD_Gizmo(_size=10.0)
 	/// rotation on the X axis. Must take the instance as the first argument and
 	/// its new rotation on the X axis as the second argument. Defaults to a
 	/// function that does not do anything.
-	SetInstanceRotationX = function (_instance, _x) {
+	SetInstanceRotationX = function (_instance, _x)
+	{
 		gml_pragma("forceinline");
 	};
 
 	/// @var {Function} A function that the gizmo uses to retrieve an instance's
 	/// rotation on the Y axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that always returns 0.
-	GetInstanceRotationY = function (_instance) {
+	GetInstanceRotationY = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return 0.0;
 	};
@@ -316,7 +327,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// rotation on the Y axis. Must take the instance as the first argument and
 	/// its new rotation on the Y axis as the second argument. Defaults to a
 	/// function that does not do anything.
-	SetInstanceRotationY = function (_instance, _y) {
+	SetInstanceRotationY = function (_instance, _y)
+	{
 		gml_pragma("forceinline");
 	};
 
@@ -324,7 +336,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// rotation on the Z axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that returns the instance's
 	/// `image_angle` variable.
-	GetInstanceRotationZ = function (_instance) {
+	GetInstanceRotationZ = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return _instance.image_angle;
 	};
@@ -334,7 +347,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// its new rotation on the Z axis as the second argument. Defaults to a
 	/// function that assings the new rotation to the instance's `image_angle`
 	/// variable.
-	SetInstanceRotationZ = function (_instance, _z) {
+	SetInstanceRotationZ = function (_instance, _z)
+	{
 		gml_pragma("forceinline");
 		_instance.image_angle = _z;
 	};
@@ -343,7 +357,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// scale on the X axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that returns the instance's
 	/// `image_xscale` variable.
-	GetInstanceScaleX = function (_instance) {
+	GetInstanceScaleX = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return _instance.image_xscale;
 	};
@@ -353,7 +368,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// its new scale on the X axis as the second argument. Defaults to a
 	/// function that assings the new scale to the instance's `image_xscale`
 	/// variable.
-	SetInstanceScaleX = function (_instance, _x) {
+	SetInstanceScaleX = function (_instance, _x)
+	{
 		gml_pragma("forceinline");
 		_instance.image_xscale = _x;
 	};
@@ -362,7 +378,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// scale on the Y axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that returns the instance's
 	/// `image_yscale` variable.
-	GetInstanceScaleY = function (_instance) {
+	GetInstanceScaleY = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return _instance.image_yscale;
 	};
@@ -372,7 +389,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// its new scale on the Y axis as the second argument. Defaults to a
 	/// function that assings the new scale to the instance's `image_yscale`
 	/// variable.
-	SetInstanceScaleY = function (_instance, _y) {
+	SetInstanceScaleY = function (_instance, _y)
+	{
 		gml_pragma("forceinline");
 		_instance.image_yscale = _y;
 	};
@@ -380,7 +398,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @var {Function} A function that the gizmo uses to retrieve an instance's
 	/// scale on the Z axis. Must take the instance as the first argument and
 	/// return a real. Defaults to a function that always returns 1.
-	GetInstanceScaleZ = function (_instance) {
+	GetInstanceScaleZ = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return 1.0;
 	};
@@ -389,7 +408,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// scale on the Z axis. Must take the instance as the first argument and
 	/// its new scale on the Z axis as the second argument. Defaults to a
 	/// function that does not do anything.
-	SetInstanceScaleZ = function (_instance, _z) {
+	SetInstanceScaleZ = function (_instance, _z)
+	{
 		gml_pragma("forceinline");
 	};
 
@@ -400,7 +420,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Id.Instance} _instance The ID of the instance.
 	///
 	/// @return {Struct.BBMOD_Vec3} The instance's position.
-	static get_instance_position_vec3 = function (_instance) {
+	static get_instance_position_vec3 = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
 			GetInstancePositionX(_instance),
@@ -416,7 +437,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Struct.BBMOD_Vec3} _position The new position of the instance.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static set_instance_position_vec3 = function (_instance, _position) {
+	static set_instance_position_vec3 = function (_instance, _position)
+	{
 		gml_pragma("forceinline");
 		SetInstancePositionX(_instance, _position.X);
 		SetInstancePositionY(_instance, _position.Y);
@@ -431,7 +453,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Id.Instance} _instance The ID of the instance.
 	///
 	/// @return {Struct.BBMOD_Vec3} The instance's rotation in euler angles.
-	static get_instance_rotation_vec3 = function (_instance) {
+	static get_instance_rotation_vec3 = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
 			GetInstanceRotationX(_instance),
@@ -448,7 +471,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// in euler angles.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static set_instance_rotation_vec3 = function (_instance, _rotation) {
+	static set_instance_rotation_vec3 = function (_instance, _rotation)
+	{
 		gml_pragma("forceinline");
 		SetInstanceRotationX(_instance, _rotation.X);
 		SetInstanceRotationY(_instance, _rotation.Y);
@@ -463,7 +487,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Id.Instance} _instance The ID of the instance.
 	///
 	/// @return {Struct.BBMOD_Vec3} The instance's scale.
-	static get_instance_scale_vec3 = function (_instance) {
+	static get_instance_scale_vec3 = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
 			GetInstanceScaleX(_instance),
@@ -479,7 +504,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Struct.BBMOD_Vec3} _scale The new scale of the instance.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static set_instance_scale_vec3 = function (_instance, _scale) {
+	static set_instance_scale_vec3 = function (_instance, _scale)
+	{
 		gml_pragma("forceinline");
 		SetInstanceScaleX(_instance, _scale.X);
 		SetInstanceScaleY(_instance, _scale.Y);
@@ -494,7 +520,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Id.Instance} _instance The instance to select.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static select = function (_instance) {
+	static select = function (_instance)
+	{
 		gml_pragma("forceinline");
 		if (!is_selected(_instance))
 		{
@@ -515,7 +542,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Id.Instance} _instance The instance to check.
 	///
 	/// @return {Bool} Returns `true` if the instance is selected.
-	static is_selected = function (_instance) {
+	static is_selected = function (_instance)
+	{
 		gml_pragma("forceinline");
 		return (ds_list_find_index(Selected, _instance) != -1);
 	};
@@ -527,7 +555,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Id.Instance} _instance The instance to unselect.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static unselect = function (_instance) {
+	static unselect = function (_instance)
+	{
 		gml_pragma("forceinline");
 		var _index = ds_list_find_index(Selected, _instance);
 		if (_index != -1)
@@ -545,7 +574,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @param {Id.Instance} _instance The instance to toggle selection of.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static toggle_select = function (_instance) {
+	static toggle_select = function (_instance)
+	{
 		gml_pragma("forceinline");
 		if (is_selected(_instance))
 		{
@@ -563,7 +593,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @desc Removes all instances from selection.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static clear_selection = function () {
+	static clear_selection = function ()
+	{
 		gml_pragma("forceinline");
 		ds_list_clear(Selected);
 		ds_list_clear(__instanceData);
@@ -582,7 +613,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @return {Struct.BBMOD_Vec3} The point of intersection or `undefined`.
 	///
 	/// @private
-	static intersect_ray_plane = function (_origin, _direction, _plane, _normal) {
+	static intersect_ray_plane = function (_origin, _direction, _plane, _normal)
+	{
 		var _dot = _direction.Dot(_normal);
 		if (_dot == 0.0)
 		{
@@ -597,7 +629,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @desc Updates the gizmo's position, based on its selected instances.
 	///
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
-	static update_position = function () {
+	static update_position = function ()
+	{
 		var _size = ds_list_size(Selected);
 		var _posX = 0.0;
 		var _posY = 0.0;
@@ -657,7 +690,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @note This requires you to use a {@link BBMOD_BaseCamera} and it will
 	/// not do anything if its [apply](./BBMOD_BaseCamera.apply.html) method has
 	/// not been called yet!
-	static update = function (_deltaTime) {
+	static update = function (_deltaTime)
+	{
 		if (!global.__bbmodCameraCurrent)
 		{
 			return self;
@@ -1197,7 +1231,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	///
 	/// @note This changes the world matrix based on the gizmo's position and size!
-	static submit = function (_materials=undefined) {
+	static submit = function (_materials=undefined)
+	{
 		gml_pragma("forceinline");
 		(new BBMOD_Matrix())
 			.Scale(new BBMOD_Vec3(Size))
@@ -1218,7 +1253,8 @@ function BBMOD_Gizmo(_size=10.0)
 	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
 	///
 	/// @note This changes the world matrix based on the gizmo's position and size!
-	static render = function (_materials=undefined) {
+	static render = function (_materials=undefined)
+	{
 		gml_pragma("forceinline");
 		new BBMOD_Matrix()
 			.Scale(new BBMOD_Vec3(Size))
@@ -1229,7 +1265,8 @@ function BBMOD_Gizmo(_size=10.0)
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		ds_list_destroy(Selected);
 		ds_list_destroy(__instanceData);

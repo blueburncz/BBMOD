@@ -116,7 +116,8 @@ function BBMOD_Color(
 	/// @desc Copies properties to another color struct.
 	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
-	static Copy = function (_dest) {
+	static Copy = function (_dest)
+	{
 		gml_pragma("forceinline");
 		_dest.Red = Red;
 		_dest.Green = Green;
@@ -130,7 +131,8 @@ function BBMOD_Color(
 	/// @desc Creates a clone of the color struct.
 	///
 	/// @return {Struct.BBMOD_Color} The created clone.
-	static Clone = function () {
+	static Clone = function ()
+	{
 		gml_pragma("forceinline");
 		var _clone = new BBMOD_Color();
 		Copy(_clone);
@@ -149,7 +151,8 @@ function BBMOD_Color(
 	/// ```gml
 	/// var _red = new BBMOD_Color().FromConstant(c_red);
 	/// ```
-	static FromConstant = function (_color) {
+	static FromConstant = function (_color)
+	{
 		gml_pragma("forceinline");
 		Red = color_get_red(_color);
 		Green = color_get_green(_color);
@@ -171,7 +174,8 @@ function BBMOD_Color(
 	/// @param {Real} [_alpha] The value of the alpha channel. Defaults to 1.
 	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
-	static FromRGBA = function (_red, _green, _blue, _alpha=1.0) {
+	static FromRGBA = function (_red, _green, _blue, _alpha=1.0)
+	{
 		gml_pragma("forceinline");
 		Red = _red;
 		Green = _green;
@@ -195,7 +199,8 @@ function BBMOD_Color(
 	/// new BBMOD_Color().FromHex($00FF00); // Same as FromConstant(c_lime)
 	/// new BBMOD_Color().FromHex($0000FF); // Same as FromConstant(c_blue)
 	/// ```
-	static FromHex = function (_hex) {
+	static FromHex = function (_hex)
+	{
 		gml_pragma("forceinline");
 		Red = color_get_blue(_hex);
 		Green = color_get_green(_hex);
@@ -213,7 +218,8 @@ function BBMOD_Color(
 	/// @param {Real} _value Color value. Use values in range 0..255.
 	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
-	static FromHSV = function (_hue, _saturation, _value) {
+	static FromHSV = function (_hue, _saturation, _value)
+	{
 		gml_pragma("forceinline");
 		var _hsv = make_color_hsv(_hue, _saturation, _value);
 		Red = color_get_red(_hsv);
@@ -234,7 +240,8 @@ function BBMOD_Color(
 	/// 0.5 would return a merge of both colors equally.
 	///
 	/// @return {Struct.BBMOD_Color} The new color.
-	static Mix = function (_color, _factor) {
+	static Mix = function (_color, _factor)
+	{
 		gml_pragma("forceinline");
 		return new BBMOD_Color(
 			lerp(Red, _color.Red, _factor),
@@ -255,7 +262,8 @@ function BBMOD_Color(
 	/// var _red = new BBMOD_Color(255, 0, 0);
 	/// show_debug_message(_red.ToConstant() == c_red); // Prints true
 	/// ```
-	static ToConstant = function () {
+	static ToConstant = function ()
+	{
 		gml_pragma("forceinline");
 		return make_color_rgb(Red, Green, Blue);
 	};
@@ -270,7 +278,8 @@ function BBMOD_Color(
 	/// to 0.
 	///
 	/// @return {Array<Real>} Returns the array with HSV values.
-	static ToHSV = function (_array, _index) {
+	static ToHSV = function (_array, _index)
+	{
 		gml_pragma("forceinline");
 		_array = (_array != undefined) ? _array : array_create(3, 0);
 		_index = (_index != undefined) ? _index : 0;
@@ -291,7 +300,8 @@ function BBMOD_Color(
 	/// Defaults to 0.
 	///
 	/// @return {Array<Real>} Returns the array with RGBM values.
-	static ToRGBM = function (_array=undefined, _index=0) {
+	static ToRGBM = function (_array=undefined, _index=0)
+	{
 		gml_pragma("forceinline");
 		_array ??= array_create(4, 0);
 		var _red = min(Red / BBMOD_RGBM_VALUE_MAX, 1.0);

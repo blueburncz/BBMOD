@@ -34,7 +34,8 @@ function BBMOD_AABBEmissionModule(
 	/// the AABB. Default value is `true`.
 	Inside = _inside;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		var _side = choose(0, 1, 2);
 		_emitter.Particles[# BBMOD_EParticle.PositionX, _particleIndex] +=
 			(Inside || _side != 0) ? random_range(Min.X, Max.X) : choose(Min.X, Max.X);

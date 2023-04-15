@@ -106,7 +106,8 @@ function BBMOD_Cubemap(_resolution)
 	/// @return {Id.Surface} The surface.
 	///
 	/// @see BBMOD_ECubeSide
-	static get_surface = function (_side) {
+	static get_surface = function (_side)
+	{
 		var _surOld = Sides[_side];
 		var _sur = bbmod_surface_check(_surOld, Resolution, Resolution, Format);
 		if (_sur != _surOld)
@@ -126,7 +127,8 @@ function BBMOD_Cubemap(_resolution)
 	/// before the cubemap is rendered into it. Defaults to 1.
 	///
 	/// @see BBMOD_Cubemap.Surface
-	static to_single_surface = function (_clearColor=c_black, _clearAlpha=1) {
+	static to_single_surface = function (_clearColor=c_black, _clearAlpha=1)
+	{
 		var _width = Resolution * 8;
 		var _height = Resolution;
 		var _world = matrix_get(matrix_world);
@@ -163,7 +165,8 @@ function BBMOD_Cubemap(_resolution)
 	/// this method to work!
 	///
 	/// @see BBMOD_Cubemap.SurfaceOctahedron
-	static to_octahedron = function (_clearColor=c_black, _clearAlpha=1) {
+	static to_octahedron = function (_clearColor=c_black, _clearAlpha=1)
+	{
 		var _world = matrix_get(matrix_world);
 		SurfaceOctahedron = bbmod_surface_check(SurfaceOctahedron, Resolution, Resolution, Format);
 		gpu_push_state();
@@ -191,7 +194,8 @@ function BBMOD_Cubemap(_resolution)
 	/// @desc
 	///
 	/// @return {Asset.GMSprite}
-	static prefilter_ibl = function () {
+	static prefilter_ibl = function ()
+	{
 		var _x = 0;
 
 		gpu_push_state();
@@ -242,7 +246,8 @@ function BBMOD_Cubemap(_resolution)
 	/// {@link BBMOD_ECubeSide}.
 	///
 	/// @return {Array<Real>} The created view matrix.
-	static get_view_matrix = function (_side) {
+	static get_view_matrix = function (_side)
+	{
 		var _negEye = Position.Scale(-1.0);
 		var _x, _y, _z;
 
@@ -299,7 +304,8 @@ function BBMOD_Cubemap(_resolution)
 	/// @desc Creates a projection matrix for the cubemap.
 	///
 	/// @return {Array<Real>} The created projection matrix.
-	static get_projection_matrix = function () {
+	static get_projection_matrix = function ()
+	{
 		gml_pragma("forceinline");
 		camera_set_proj_mat(__camera, matrix_build_projection_perspective_fov(-90.0, -1.0, ZNear, ZFar));
 		return camera_get_proj_mat(__camera);
@@ -328,7 +334,8 @@ function BBMOD_Cubemap(_resolution)
 	/// is called.
 	///
 	/// @see BBMOD_IRenderTarget.reset_target
-	static set_target = function () {
+	static set_target = function ()
+	{
 		var _renderTo = __renderTo++;
 		if (_renderTo < BBMOD_ECubeSide.SIZE)
 		{
@@ -343,7 +350,8 @@ function BBMOD_Cubemap(_resolution)
 		return false;
 	};
 
-	static reset_target = function () {
+	static reset_target = function ()
+	{
 		gml_pragma("forceinline");
 		bbmod_camera_set_position(__camPosBackup);
 		surface_reset_target();
@@ -359,7 +367,8 @@ function BBMOD_Cubemap(_resolution)
 	/// @param {Real} [_scale] The scale of the cubemap. Default value is 1.
 	///
 	/// @return {Struct.BBMOD_Cubemap} Returns `self`.
-	static draw_cross = function (_x, _y, _scale=1.0) {
+	static draw_cross = function (_x, _y, _scale=1.0)
+	{
 		var _s = Resolution * _scale;
 		_y += _s;
 		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegX), _x, _y, _s, _s); _x += _s;
@@ -371,7 +380,8 @@ function BBMOD_Cubemap(_resolution)
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		var i = 0;
 		repeat (BBMOD_ECubeSide.SIZE)

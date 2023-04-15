@@ -58,7 +58,8 @@ function BBMOD_StaticBatch(_vformat)
 	/// @see BBMOD_StaticBatch.finish
 	///
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
-	static start = function () {
+	static start = function ()
+	{
 		gml_pragma("forceinline");
 		vertex_begin(__vertexBuffer, __vertexFormat.Raw);
 		return self;
@@ -92,7 +93,8 @@ function BBMOD_StaticBatch(_vformat)
 	/// this function!
 	///
 	/// @see BBMOD_StaticBatch.finish
-	static add = function (_model, _transform) {
+	static add = function (_model, _transform)
+	{
 		gml_pragma("forceinline");
 		_model.__to_static_batch(self, _transform);
 		return self;
@@ -105,7 +107,8 @@ function BBMOD_StaticBatch(_vformat)
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
 	///
 	/// @see BBMOD_StaticBatch.start
-	static finish = function () {
+	static finish = function ()
+	{
 		gml_pragma("forceinline");
 		vertex_end(__vertexBuffer);
 		return self;
@@ -117,7 +120,8 @@ function BBMOD_StaticBatch(_vformat)
 	/// adding more models.
 	///
 	/// @return {Struct.BBMOD_StaticBatch} Returns `self`.
-	static freeze = function () {
+	static freeze = function ()
+	{
 		gml_pragma("forceinline");
 		vertex_freeze(__vertexBuffer);
 		return self;
@@ -137,7 +141,8 @@ function BBMOD_StaticBatch(_vformat)
 	/// @see BBMOD_StaticBatch.render
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_ERenderPass
-	static submit = function (_material) {
+	static submit = function (_material)
+	{
 		gml_pragma("forceinline");
 		if (!_material.apply(__vertexFormat))
 		{
@@ -157,14 +162,16 @@ function BBMOD_StaticBatch(_vformat)
 	///
 	/// @see BBMOD_StaticBatch.submit
 	/// @see BBMOD_BaseMaterial
-	static render = function (_material) {
+	static render = function (_material)
+	{
 		gml_pragma("forceinline");
 		_material.RenderQueue.draw_mesh(
 			__vertexBuffer, __vertexFormat, __primitiveType, -1, _material, matrix_get(matrix_world));
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		vertex_delete_buffer(__vertexBuffer);
 		return undefined;

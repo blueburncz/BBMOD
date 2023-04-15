@@ -33,7 +33,8 @@ function BBMOD_Ray(_origin, _direction) constructor
 	///
 	/// @see BBMOD_RaycastResult
 	/// @see BBMOD_Collider.Raycast
-	static Raycast = function (_collider, _result=undefined) {
+	static Raycast = function (_collider, _result=undefined)
+	{
 		gml_pragma("forceinline");
 		return _collider.Raycast(self, _result);
 	};
@@ -48,7 +49,8 @@ function BBMOD_Ray(_origin, _direction) constructor
 	/// @param {Real} [_alpha] The debug alpha. Defaults to 1.
 	///
 	/// @return {Struct.BBMOD_Ray} Returns `self`.
-	static DrawDebug = function (_length=9999.0, _color=c_white, _alpha=1.0) {
+	static DrawDebug = function (_length=9999.0, _color=c_white, _alpha=1.0)
+	{
 		var _vbuffer = global.__bbmodVBufferDebug;
 		var _start = Origin;
 		var _end = _start.Add(Direction.Normalize().Scale(_length));

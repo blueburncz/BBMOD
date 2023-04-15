@@ -102,7 +102,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @param {Struct.BBMOD_Model} _dest The model to copy data to.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		_dest.IsLoaded = IsLoaded;
 		_dest.Path = Path;
 
@@ -157,7 +158,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @desc Creates a clone of the model.
 	///
 	/// @return {Struct.BBMOD_Model} The created clone.
-	static clone = function () {
+	static clone = function ()
+	{
 		var _clone = new BBMOD_Model();
 		copy(_clone);
 		return _clone;
@@ -170,7 +172,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @param {Struct.BBMOD_Node} [_node]
 	///
 	/// @private
-	static __pass_self_to_nodes = function (_node=undefined) {
+	static __pass_self_to_nodes = function (_node=undefined)
+	{
 		_node ??= RootNode;
 		_node.Model = self;
 		for (var i = array_length(_node.Children) - 1; i >= 0; --i)
@@ -189,7 +192,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If loading fails.
-	static from_buffer = function (_buffer) {
+	static from_buffer = function (_buffer)
+	{
 		var _hasMinorVersion = false;
 
 		var _type = buffer_read(_buffer, buffer_string);
@@ -297,7 +301,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
-	static to_buffer = function (_buffer) {
+	static to_buffer = function (_buffer)
+	{
 		buffer_write(_buffer, buffer_string, "BBMOD");
 		buffer_write(_buffer, buffer_u8, VersionMajor);
 		buffer_write(_buffer, buffer_u8, VersionMinor);
@@ -361,7 +366,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// rendering faster, but it disables creating new batches of the model.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
-	static freeze = function () {
+	static freeze = function ()
+	{
 		gml_pragma("forceinline");
 		if (!Frozen)
 		{
@@ -385,7 +391,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// Defaults to the root node.
 	///
 	/// @return {Struct.BBMOD_Node} Returns the found node or `undefined`.
-	static find_node = function (_idOrName, _node=RootNode) {
+	static find_node = function (_idOrName, _node=RootNode)
+	{
 		var _isName = is_string(_idOrName);
 		if (_isName && _node.Name == _idOrName)
 		{
@@ -420,7 +427,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// having many of these lookups can slow down your game! You should instead
 	/// use the ids available from the `_log.txt` files, which are created during
 	/// model conversion.
-	static find_node_id = function (_nodeName) {
+	static find_node_id = function (_nodeName)
+	{
 		gml_pragma("forceinline");
 		var _node = find_node(_nodeName);
 		if (_node != undefined)
@@ -445,7 +453,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.set_material
 	/// @see BBMOD_BaseMaterial
-	static get_material = function (_name) {
+	static get_material = function (_name)
+	{
 		var i = 0;
 		repeat (MaterialCount)
 		{
@@ -474,7 +483,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_BaseMaterial
-	static set_material = function (_name, _material) {
+	static set_material = function (_name, _material)
+	{
 		var i = 0;
 		repeat (MaterialCount)
 		{
@@ -498,7 +508,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// vertex format. Defaults to `false`.
 	///
 	/// @deprecated Each {@link BBMOD_Mesh} now has its own vertex format!
-	static get_vertex_format = function (_bones=true, _ids=false) {
+	static get_vertex_format = function (_bones=true, _ids=false)
+	{
 		gml_pragma("forceinline");
 		var _vertexFormat = VertexFormat ? VertexFormat : Meshes[0].VertexFormat;
 		return new BBMOD_VertexFormat(
@@ -545,7 +556,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	/// @see BBMOD_ERenderPass
-	static submit = function (_materials=undefined, _transform=undefined, _batchData=undefined) {
+	static submit = function (_materials=undefined, _transform=undefined, _batchData=undefined)
+	{
 		gml_pragma("forceinline");
 		if (RootNode != undefined)
 		{
@@ -578,7 +590,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
-	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined, _matrix=undefined) {
+	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined, _matrix=undefined)
+	{
 		gml_pragma("forceinline");
 		if (RootNode != undefined)
 		{
@@ -596,7 +609,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
 	/// @private
-	static __to_dynamic_batch = function (_dynamicBatch) {
+	static __to_dynamic_batch = function (_dynamicBatch)
+	{
 		gml_pragma("forceinline");
 		var i = 0;
 		repeat (array_length(Meshes))
@@ -614,7 +628,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
 	/// @private
-	static __to_static_batch = function (_staticBatch, _transform) {
+	static __to_static_batch = function (_staticBatch, _transform)
+	{
 		gml_pragma("forceinline");
 		var i = 0;
 		repeat (array_length(Meshes))
@@ -624,7 +639,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Resource_destroy();
 		var i = 0;
 		repeat (array_length(Meshes))

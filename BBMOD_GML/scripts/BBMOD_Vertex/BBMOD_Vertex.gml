@@ -82,7 +82,8 @@ function BBMOD_Vertex(_vertexFormat)
 	///
 	/// @throws {BBMOD_Exception} If the format of the vertex and the format of
 	/// the buffer are not compatible.
-	static to_vertex_buffer = function (_vbuffer, _vformat=undefined) {
+	static to_vertex_buffer = function (_vbuffer, _vformat=undefined)
+	{
 		var _checkFormat = (_vformat == undefined);
 
 		_vformat = _checkFormat ? VertexFormat : _vformat;

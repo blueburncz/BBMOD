@@ -46,7 +46,8 @@ function BBMOD_Resource()
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static from_buffer = function (_buffer) {
+	static from_buffer = function (_buffer)
+	{
 		throw new BBMOD_NotImplementedException();
 		// When implementing this method, do not forget to set IsLoaded to true!
 		//return self;
@@ -61,7 +62,8 @@ function BBMOD_Resource()
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static to_buffer = function (_buffer) {
+	static to_buffer = function (_buffer)
+	{
 		throw new BBMOD_NotImplementedException();
 		// When implementing this method, do not forget to set IsLoaded to true!
 		//return self;
@@ -78,7 +80,8 @@ function BBMOD_Resource()
 	/// @throws {BBMOD_Exception}
 	///
 	/// @private
-	static check_file = function (_file, _sha1=undefined, _callback=undefined) {
+	static check_file = function (_file, _sha1=undefined, _callback=undefined)
+	{
 		var _err = undefined;
 
 		if (!file_exists(_file))
@@ -121,7 +124,8 @@ function BBMOD_Resource()
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If loading fails.
-	static from_file = function (_file, _sha1=undefined) {
+	static from_file = function (_file, _sha1=undefined)
+	{
 		Path = _file;
 
 		check_file(_file, _sha1);
@@ -152,7 +156,8 @@ function BBMOD_Resource()
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If saving fails.
-	static to_file = function (_file) {
+	static to_file = function (_file)
+	{
 		var _buffer = buffer_create(1, buffer_grow, 1);
 
 		var _dirname = filename_dir(_file);
@@ -195,7 +200,8 @@ function BBMOD_Resource()
 	/// {@link bbmod_async_image_loaded_update} in appropriate events when using
 	/// asynchronnous loading! You can also use {@link BBMOD_ResourceManager} for
 	/// unified asynchronnous loading of resources.
-	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
+	static from_file_async = function (_file, _sha1=undefined, _callback=undefined)
+	{
 		Path = _file;
 
 		if (!check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
@@ -247,7 +253,8 @@ function BBMOD_Resource()
 	/// @desc Retrieves a reference to the resource.
 	///
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
-	static ref = function () {
+	static ref = function ()
+	{
 		gml_pragma("forceinline");
 		if (!Persistent)
 		{
@@ -266,7 +273,8 @@ function BBMOD_Resource()
 	/// @note This does not destroy the resource if it is persistent!
 	///
 	/// @see BBMOD_Resource.Persistent
-	static free = function () {
+	static free = function ()
+	{
 		gml_pragma("forceinline");
 		if (!Persistent && --__counter == 0)
 		{
@@ -276,7 +284,8 @@ function BBMOD_Resource()
 		return false;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		if (__manager != undefined)
 		{

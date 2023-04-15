@@ -17,7 +17,8 @@ function BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
 
 	static DefaultShader_set_material = set_material;
 
-	static set_material = function (_material) {
+	static set_material = function (_material)
+	{
 		gml_pragma("forceinline");
 		DefaultShader_set_material(_material);
 

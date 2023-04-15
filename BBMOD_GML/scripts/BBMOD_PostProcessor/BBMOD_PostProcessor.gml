@@ -69,7 +69,8 @@ function BBMOD_PostProcessor()
 	/// @return {Struct.BBMOD_PostProcessor} Returns `self`.
 	///
 	/// @see BBMOD_PostProcessor.Enabled
-	static draw = function (_surface, _x, _y) {
+	static draw = function (_surface, _x, _y)
+	{
 		if (!Enabled)
 		{
 			draw_surface(_surface, _x, _y);
@@ -161,7 +162,8 @@ function BBMOD_PostProcessor()
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 
 		if (surface_exists(__surPostProcess))

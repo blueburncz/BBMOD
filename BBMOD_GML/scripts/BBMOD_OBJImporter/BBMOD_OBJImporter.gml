@@ -33,11 +33,13 @@ function BBMOD_OBJImporter()
 
 	__textureCoords = ds_list_create();
 
-	static can_import = function (_path) {
+	static can_import = function (_path)
+	{
 		return (filename_ext(_path) == ".obj");
 	};
 
-	static import = function (_path) {
+	static import = function (_path)
+	{
 		ds_list_clear(__vertices);
 		ds_list_clear(__normals);
 		ds_list_clear(__textureCoords);
@@ -283,7 +285,8 @@ function BBMOD_OBJImporter()
 		return _model;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Importer_destroy();
 		ds_list_destroy(__vertices);
 		ds_list_destroy(__normals);

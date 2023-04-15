@@ -34,7 +34,8 @@ function BBMOD_MixQuaternionModule(
 	/// same as {@link BBMOD_MixQuaternionModule.From}.
 	To = _to;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		if (Property != undefined)
 		{
 			var _quat = From.Slerp(To, random(1.0));

@@ -14,7 +14,8 @@ function BBMOD_EmissionModule(_count=1)
 	/// @var {Real} Number of particles to spawn.
 	Count = _count;
 
-	static on_start = function (_emitter) {
+	static on_start = function (_emitter)
+	{
 		repeat (Count)
 		{
 			_emitter.spawn_particle();

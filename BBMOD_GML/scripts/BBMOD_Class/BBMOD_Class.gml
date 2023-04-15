@@ -10,7 +10,8 @@
 ///
 ///     Surface = surface_create(_width, _height);
 ///
-///     static destroy = function () {
+///     static destroy = function ()
+///     {
 ///         Class_destroy();
 ///         surface_free(Surface);
 ///         return undefined;
@@ -48,7 +49,8 @@ function BBMOD_Class() constructor
 	/// @param {Function} _class The class constructor.
 	///
 	/// @return {Bool} Returns `true` if the struct inherits from the class.
-	static is_instance = function (_class) {
+	static is_instance = function (_class)
+	{
 		gml_pragma("forceinline");
 		var _className = bbmod_class_get_name(_class);
 		var i = 0;
@@ -68,7 +70,8 @@ function BBMOD_Class() constructor
 	///
 	/// @return {Struct.BBMOD_Class} Returns `self`.
 	/// @throws {BBMOD_Exception} If the struct already implements the interface.
-	static implement = function (_interface) {
+	static implement = function (_interface)
+	{
 		gml_pragma("forceinline");
 		if (implements(_interface))
 		{
@@ -87,7 +90,8 @@ function BBMOD_Class() constructor
 	/// @param {Function} _interface The interface to check.
 	///
 	/// @return {Bool} Returns `true` if the struct implements the interface.
-	static implements = function (_interface) {
+	static implements = function (_interface)
+	{
 		gml_pragma("forceinline");
 		var i = 0;
 		repeat (array_length(__interfaces))
@@ -105,7 +109,8 @@ function BBMOD_Class() constructor
 	/// @desc Frees resources used by the struct from memory.
 	///
 	/// @return {Undefined} Returns `undefined`.
-	static destroy = function () {
+	static destroy = function ()
+	{
 		var i = 0;
 		repeat (array_length(__destroyActions))
 		{

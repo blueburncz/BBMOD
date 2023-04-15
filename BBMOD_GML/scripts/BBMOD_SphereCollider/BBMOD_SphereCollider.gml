@@ -24,14 +24,16 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 	Radius = _radius;
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L142
-	static GetClosestPoint = function (_point) {
+	static GetClosestPoint = function (_point)
+	{
 		gml_pragma("forceinline");
 		var _sphereToPoint = _point.Sub(Position).Normalize()
 			.Scale(Radius);
 		return Position.Add(_sphereToPoint);
 	};
 
-	static __testImpl = function (_collider) {
+	static __testImpl = function (_collider)
+	{
 		gml_pragma("forceinline");
 		var _closestPoint = _collider.GetClosestPoint(Position);
 		return (Position.Sub(_closestPoint).Length() < Radius);
@@ -40,7 +42,8 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L319
 	static TestAABB = __testImpl;
 
-	static TestFrustum = function (_frustum) {
+	static TestFrustum = function (_frustum)
+	{
 		gml_pragma("forceinline");
 		return _frustum.TestSphere(self);
 	};
@@ -49,19 +52,22 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 	static TestPlane = __testImpl;
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L97
-	static TestPoint = function (_point) {
+	static TestPoint = function (_point)
+	{
 		gml_pragma("forceinline");
 		return (_point.Sub(Position).Length() < Radius);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L313
-	static TestSphere = function (_sphere) {
+	static TestSphere = function (_sphere)
+	{
 		gml_pragma("forceinline");
 		return (Position.Sub(_sphere.Position).Length() < Radius + _sphere.Radius);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L552
-	static Raycast = function (_ray, _result=undefined) {
+	static Raycast = function (_ray, _result=undefined)
+	{
 		if (_result != undefined)
 		{
 			_result.Reset();
@@ -97,7 +103,8 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 		return true;
 	};
 
-	static DrawDebug = function (_color=c_white, _alpha=1.0) {
+	static DrawDebug = function (_color=c_white, _alpha=1.0)
+	{
 		var _vbuffer = global.__bbmodVBufferDebug;
 
 		vertex_begin(_vbuffer, BBMOD_VFORMAT_DEBUG.Raw);

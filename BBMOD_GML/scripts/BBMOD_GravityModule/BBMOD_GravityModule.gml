@@ -15,7 +15,8 @@ function BBMOD_GravityModule(_gravity=BBMOD_VEC3_UP.Scale(-9.8))
 	/// `(0, 0, -9.8)`.
 	Gravity = _gravity;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		var _y2 = _emitter.ParticlesAlive - 1;
 		if (_y2 >= 0)
 		{

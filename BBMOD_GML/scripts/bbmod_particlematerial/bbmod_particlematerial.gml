@@ -22,13 +22,15 @@ function BBMOD_ParticleMaterial(_shader=undefined)
 	/// or equal to 0 to disable the effect. Default value is 0.
 	SoftDistance = 0.0;
 
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		DefaultMaterial_copy(_dest);
 		_dest.SoftDistance = SoftDistance;
 		return self;
 	};
 
-	static clone = function () {
+	static clone = function ()
+	{
 		var _clone = new BBMOD_ParticleMaterial();
 		copy(_clone);
 		return _clone;

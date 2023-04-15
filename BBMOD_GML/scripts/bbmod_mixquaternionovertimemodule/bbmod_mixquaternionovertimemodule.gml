@@ -43,7 +43,8 @@ function BBMOD_MixQuaternionOverTimeModule(
 	/// Default value is 1.0.
 	Duration = _duration;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		var _property = Property;
 		if (_property != undefined)
 		{

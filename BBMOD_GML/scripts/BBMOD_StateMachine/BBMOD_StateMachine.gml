@@ -63,7 +63,8 @@ function BBMOD_StateMachine()
 	/// @desc Enters the initial state of the state machine.
 	///
 	/// @return {Struct.BBMOD_StateMachine} Returns `self`.
-	static start = function () {
+	static start = function ()
+	{
 		gml_pragma("forceinline");
 		Started = true;
 		Finished = false;
@@ -79,7 +80,8 @@ function BBMOD_StateMachine()
 	/// @desc Enters the exit state of the state machine.
 	///
 	/// @return {Struct.BBMOD_StateMachine} Returns `self`.
-	static finish = function () {
+	static finish = function ()
+	{
 		gml_pragma("forceinline");
 		Finished = true;
 		if (OnExit != undefined)
@@ -96,7 +98,8 @@ function BBMOD_StateMachine()
 	/// @param {Struct.BBMOD_State} _state The state to add.
 	///
 	/// @return {Struct.BBMOD_StateMachine} Returns `self`.
-	static add_state = function (_state) {
+	static add_state = function (_state)
+	{
 		gml_pragma("forceinline");
 		_state.StateMachine = self;
 		array_push(__stateArray, _state);
@@ -113,7 +116,8 @@ function BBMOD_StateMachine()
 	/// @return {Struct.BBMOD_StateMachine} Returns itself.
 	///
 	/// @throws {BBMOD_Exception} If an invalid state is passed.
-	static change_state = function (_state) {
+	static change_state = function (_state)
+	{
 		gml_pragma("forceinline");
 
 		// Check if the state is valid
@@ -168,7 +172,8 @@ function BBMOD_StateMachine()
 	///
 	/// @see BBMOD_StateMachine.start
 	/// @see BBMOD_StateMachine.finish
-	static update = function (_deltaTime) {
+	static update = function (_deltaTime)
+	{
 		gml_pragma("forceinline");
 
 		if (!Started || Finished)
@@ -194,7 +199,8 @@ function BBMOD_StateMachine()
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		for (var i = array_length(__stateArray) - 1; i >= 0; --i)
 		{

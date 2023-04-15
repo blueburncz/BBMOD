@@ -143,7 +143,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// by the shader.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	static add_variant = function (_shader, _vertexFormat) {
+	static add_variant = function (_shader, _vertexFormat)
+	{
 		gml_pragma("forceinline");
 		__raw[$ _vertexFormat.get_hash()] = _shader;
 		return self;
@@ -157,7 +158,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	///
 	/// @return {Asset.GMShader} The raw shader asset or `undefined` if the
 	/// vertex format is not supported.
-	static get_variant = function (_vertexFormat) {
+	static get_variant = function (_vertexFormat)
+	{
 		gml_pragma("forceinline");
 		return __raw[$ _vertexFormat.get_hash()];
 	};
@@ -170,7 +172,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	///
 	/// @return {Bool} Returns `true` if the shader has a variant for given
 	/// vertex format.
-	static has_variant = function (_vertexFormat) {
+	static has_variant = function (_vertexFormat)
+	{
 		gml_pragma("forceinline");
 		return (get_raw(_vertexFormat) != undefined);
 	};
@@ -180,7 +183,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// @desc Checks whether all shader variants are compiled.
 	///
 	/// @return {Bool} Returns `true` if all shader variants are compiled.
-	static is_compiled = function () {
+	static is_compiled = function ()
+	{
 		gml_pragma("forceinline");
 		var _keys = variable_struct_get_names(__raw);
 		var i = 0;
@@ -197,7 +201,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// @func on_set()
 	///
 	/// @desc A function executed when the shader is set.
-	static on_set = function () {
+	static on_set = function ()
+	{
 	};
 
 	/// @func set(_vertexFormat)
@@ -210,7 +215,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If the shader is not applied.
-	static set = function (_vertexFormat) {
+	static set = function (_vertexFormat)
+	{
 		gml_pragma("forceinline");
 
 		if (BBMOD_SHADER_CURRENT != undefined
@@ -252,7 +258,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_BaseMaterial
-	static set_material = function (_material) {
+	static set_material = function (_material)
+	{
 		return self;
 	};
 
@@ -263,7 +270,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// @return {Bool} Returns `true` if the shader is currently in use.
 	///
 	/// @see BBMOD_Shader.set
-	static is_current = function () {
+	static is_current = function ()
+	{
 		gml_pragma("forceinline");
 		return (BBMOD_SHADER_CURRENT == self);
 	};
@@ -271,7 +279,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// @func on_reset()
 	///
 	/// @desc A function executed when the shader is reset.
-	static on_reset = function () {
+	static on_reset = function ()
+	{
 	};
 
 	/// @func reset()
@@ -281,7 +290,8 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If the shader is not currently in use.
-	static reset = function () {
+	static reset = function ()
+	{
 		gml_pragma("forceinline");
 		if (!is_current())
 		{

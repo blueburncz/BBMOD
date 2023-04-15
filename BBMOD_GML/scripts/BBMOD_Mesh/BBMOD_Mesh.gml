@@ -60,7 +60,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @param {Struct.BBMOD_Mesh} _dest The mesh to copy data to.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		_dest.Model = Model;
 		_dest.MaterialIndex = MaterialIndex;
 		_dest.BboxMin = (BboxMin != undefined) ? BboxMin.Clone() : undefined;
@@ -94,7 +95,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @desc Creates a clone of the mesh.
 	///
 	/// @return {Struct.BBMOD_Mesh} The created clone.
-	static clone = function () {
+	static clone = function ()
+	{
 		var _clone = new BBMOD_Mesh(VertexFormat, Model);
 		copy(_clone);
 		return _clone;
@@ -107,7 +109,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	static from_buffer = function (_buffer) {
+	static from_buffer = function (_buffer)
+	{
 		MaterialIndex = buffer_read(_buffer, buffer_u32);
 
 		if (Model.VersionMinor >= 1)
@@ -144,7 +147,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	static to_buffer = function (_buffer) {
+	static to_buffer = function (_buffer)
+	{
 		buffer_write(_buffer, buffer_u32, MaterialIndex);
 
 		var _versionMinor = Model.VersionMinor;
@@ -178,7 +182,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @desc Freezes the mesh. This makes it render faster.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	static freeze = function () {
+	static freeze = function ()
+	{
 		gml_pragma("forceinline");
 		if (!Frozen)
 		{
@@ -198,7 +203,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// batching or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	static submit = function (_material, _transform, _batchData) {
+	static submit = function (_material, _transform, _batchData)
+	{
 		if (!_material.apply(VertexFormat))
 		{
 			return self;
@@ -255,7 +261,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// @param {Array<Real>} _matrix The current world matrix.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
-	static render = function (_material, _transform, _batchData, _matrix) {
+	static render = function (_material, _transform, _batchData, _matrix)
+	{
 		gml_pragma("forceinline");
 		if (_batchData != undefined)
 		{
@@ -285,7 +292,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// different primitive type.
 	///
 	/// @private
-	static __to_dynamic_batch = function (_dynamicBatch) {
+	static __to_dynamic_batch = function (_dynamicBatch)
+	{
 		if (_dynamicBatch.PrimitiveType != undefined
 			&& _dynamicBatch.PrimitiveType != PrimitiveType)
 		{
@@ -403,7 +411,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 	/// different primitive type.
 	///
 	/// @private
-	static __to_static_batch = function (_model, _staticBatch, _transform) {
+	static __to_static_batch = function (_model, _staticBatch, _transform)
+	{
 		if (_staticBatch.PrimitiveType != undefined
 			&& _staticBatch.PrimitiveType != PrimitiveType)
 		{
@@ -502,7 +511,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		vertex_delete_buffer(VertexBuffer);
 		return undefined;

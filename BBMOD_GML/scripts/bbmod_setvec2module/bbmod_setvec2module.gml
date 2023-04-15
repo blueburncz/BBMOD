@@ -24,7 +24,8 @@ function BBMOD_SetVec2Module(_property=undefined, _value=new BBMOD_Vec2())
 	/// value is `(0.0, 0.0)`.
 	Value = _value;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		if (Property != undefined)
 		{
 			var _value = Value;

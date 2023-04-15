@@ -28,7 +28,8 @@ function BBMOD_RandomRotationModule(_axis=BBMOD_VEC3_UP, _from=0.0, _to=360.0)
 	/// @var {Real} The maximum angle of rotation. Default value is 360.
 	To = _to;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		var _rotation = new BBMOD_Quaternion().FromAxisAngle(Axis, random_range(From, To));
 		_emitter.Particles[# BBMOD_EParticle.RotationX, _particleIndex] = _rotation.X;
 		_emitter.Particles[# BBMOD_EParticle.RotationY, _particleIndex] = _rotation.Y;

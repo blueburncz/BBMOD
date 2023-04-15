@@ -63,7 +63,8 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 	/// @return {Struct.BBMOD_ParticleSystem} Returns `self`.
 	///
 	/// @see BBMOD_ParticleModule
-	static add_modules = function (_module) {
+	static add_modules = function (_module)
+	{
 		gml_pragma("forceinline");
 		var i = 0;
 		repeat (argument_count)
@@ -73,7 +74,8 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		__dynamicBatch = __dynamicBatch.destroy();
 		return undefined;

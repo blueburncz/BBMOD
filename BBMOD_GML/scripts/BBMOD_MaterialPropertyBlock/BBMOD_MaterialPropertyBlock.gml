@@ -75,7 +75,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	///
 	/// @note This removes properties that the other material property block has
 	/// before this one's are copied into it!
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		gml_pragma("forceinline");
 
 		var _props = {};
@@ -98,7 +99,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// @desc Creates a shallow clone of the material property block.
 	///
 	/// @return {Struct.BBMOD_MaterialPropertyBlock} Returns the created clone.
-	static clone = function () {
+	static clone = function ()
+	{
 		gml_pragma("forceinline");
 		var _clone = new BBMOD_MaterialPropertyBlock();
 		copy(_clone);
@@ -140,7 +142,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// @see BBMOD_MaterialPropertyBlock.set_matrix
 	/// @see BBMOD_MaterialPropertyBlock.set_matrix_array
 	/// @see BBMOD_MaterialPropertyBlock.set_sampler
-	static set = function (_name, _type, _value) {
+	static set = function (_name, _type, _value)
+	{
 		gml_pragma("forceinline");
 		__props[$ _name] = { Type: _type, Value: _value };
 		return self;
@@ -165,7 +168,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Color, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_color = function (_name, _value) {
+	static set_color = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Color, _value);
 		return self;
@@ -190,7 +194,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Float, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_float = function (_name, _value) {
+	static set_float = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Float, _value);
 		return self;
@@ -215,7 +220,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Float2, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_float2 = function (_name, _value) {
+	static set_float2 = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Float2, _value);
 		return self;
@@ -240,7 +246,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Float3, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_float3 = function (_name, _value) {
+	static set_float3 = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Float3, _value);
 		return self;
@@ -267,7 +274,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Float4, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_float4 = function (_name, _value) {
+	static set_float4 = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Float4, _value);
 		return self;
@@ -293,7 +301,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.FloatArray, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_float_array = function (_name, _value) {
+	static set_float_array = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.FloatArray, _value);
 		return self;
@@ -318,7 +327,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Int, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_int = function (_name, _value) {
+	static set_int = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Int, _value);
 		return self;
@@ -343,7 +353,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Int2, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_int2 = function (_name, _value) {
+	static set_int2 = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Int2, _value);
 		return self;
@@ -368,7 +379,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Int3, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_int3 = function (_name, _value) {
+	static set_int3 = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Int3, _value);
 		return self;
@@ -393,7 +405,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Int4, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_int4 = function (_name, _value) {
+	static set_int4 = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Int4, _value);
 		return self;
@@ -419,7 +432,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.IntArray, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_int_array = function (_name, _value) {
+	static set_int_array = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.IntArray, _value);
 		return self;
@@ -443,7 +457,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Matrix, undefined)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_matrix = function (_name) {
+	static set_matrix = function (_name)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Matrix, undefined);
 		return self;
@@ -471,7 +486,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
 	/// @see BBMOD_Matrix
-	static set_matrix_array = function (_name, _value) {
+	static set_matrix_array = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.MatrixArray, _value);
 		return self;
@@ -497,7 +513,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// `set(name, BBMOD_EShaderUniformType.Sampler, value)`.
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set
-	static set_sampler = function (_name, _value) {
+	static set_sampler = function (_name, _value)
+	{
 		gml_pragma("forceinline");
 		set(_name, BBMOD_EShaderUniformType.Sampler, _value);
 		return self;
@@ -512,7 +529,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	///
 	/// @return {Bool} Returns `true` if the material property block has
 	/// a property with given name.
-	static has = function (_name) {
+	static has = function (_name)
+	{
 		gml_pragma("forceinline");
 		return variable_struct_exists(__props, _name);
 	};
@@ -524,7 +542,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// @param {String} _name The property to get value of.
 	///
 	/// @return {Any} The property value.
-	static get = function (_name) {
+	static get = function (_name)
+	{
 		gml_pragma("forceinline");
 		return __props[$ _name];
 	};
@@ -535,7 +554,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// property block has.
 	///
 	/// @return {Array<String>} The array of property names.
-	static get_names = function () {
+	static get_names = function ()
+	{
 		gml_pragma("forceinline");
 		return variable_struct_get_names(__props);
 	};
@@ -547,7 +567,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// @param {String} _name The name of the property to remove.
 	///
 	/// @return {Struct.BBMOD_MaterialPropertyBlock} Returns `self`.
-	static remove = function (_name) {
+	static remove = function (_name)
+	{
 		gml_pragma("forceinline");
 		variable_struct_remove(__props, _name);
 		return self;
@@ -558,7 +579,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// @desc Removes all properties.
 	///
 	/// @return {Struct.BBMOD_MaterialPropertyBlock} Returns `self`.
-	static clear = function () {
+	static clear = function ()
+	{
 		gml_pragma("forceinline");
 		__props = {};
 		return self;
@@ -572,7 +594,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// Defaults to the current shader if `undefined`.
 	///
 	/// @return {Struct.BBMOD_MaterialPropertyBlock} Returns `self`.
-	static apply = function (_shader=undefined) {
+	static apply = function (_shader=undefined)
+	{
 		_shader ??= shader_current();
 		var _names = variable_struct_get_names(__props);
 

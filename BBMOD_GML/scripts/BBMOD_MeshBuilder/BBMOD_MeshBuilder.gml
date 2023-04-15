@@ -71,7 +71,8 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	/// @return {Real} Returns the index of the vertex.
 	///
 	/// @see BBMOD_Vertex
-	static add_vertex = function (_vertex) {
+	static add_vertex = function (_vertex)
+	{
 		gml_pragma("forceinline");
 
 		// Add vertex
@@ -100,7 +101,8 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	/// the first vertex was stored.
 	///
 	/// @see BBMOD_MeshBuilder.Faces
-	static add_face = function (_index) {
+	static add_face = function (_index)
+	{
 		gml_pragma("forceinline");
 		var _ind = ds_list_size(Faces);
 		var i = 0;
@@ -122,7 +124,8 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	/// @note This works only for the `pr_trianglelist` primitive type!
 	///
 	/// @source https://gamedev.stackexchange.com/a/68617
-	static make_tangents = function () {
+	static make_tangents = function ()
+	{
 		if (PrimitiveType != pr_trianglelist)
 		{
 			throw new BBMOD_Exception(
@@ -265,7 +268,8 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 	///
 	/// @see BBMOD_Mesh
 	/// @see BBMOD_VertexFormat
-	static build = function (_vertexFormat=undefined) {
+	static build = function (_vertexFormat=undefined)
+	{
 		_vertexFormat ??= Vertices[| 0].VertexFormat;
 
 		var _vbuffer = vertex_create_buffer();
@@ -296,7 +300,8 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 		return _mesh;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Faces);

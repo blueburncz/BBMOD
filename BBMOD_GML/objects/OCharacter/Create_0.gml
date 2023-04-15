@@ -18,7 +18,8 @@ hp = hpMax;
 
 // A function that processes incoming damage. By default it simply subtracts
 // the damage from the character's `hp` and sets `hurt` to 1.
-ReceiveDamage = function (_damage) {
+ReceiveDamage = function (_damage)
+{
 	hp -= _damage;
 	hurt = 1.0;
 };

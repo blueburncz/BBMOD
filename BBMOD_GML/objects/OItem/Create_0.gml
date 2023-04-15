@@ -5,5 +5,6 @@ pickupRange = 20.0;
 
 // A function executed when the item is picked up. `_other` will be an instance
 // that picked up the item.
-OnPickUp = function (_other) {
+OnPickUp = function (_other)
+{
 };

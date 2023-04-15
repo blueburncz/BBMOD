@@ -52,7 +52,8 @@ function BBMOD_FrustumCollider()
 	///
 	/// @return {Struct.BBMOD_FrustumCollider} Returns `self`.
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Camera.cpp#L269
-	static FromViewProjectionMatrix = function (_vp) {
+	static FromViewProjectionMatrix = function (_vp)
+	{
 		var _col1 = new BBMOD_Vec3(_vp[0], _vp[4], _vp[ 8]);
 		var _col2 = new BBMOD_Vec3(_vp[1], _vp[5], _vp[ 9]);
 		var _col3 = new BBMOD_Vec3(_vp[2], _vp[6], _vp[10]);
@@ -102,7 +103,8 @@ function BBMOD_FrustumCollider()
 	/// @return {Struct.BBMOD_FrustumCollider} Returns `self`.
 	///
 	/// @see BBMOD_BaseCamera.ViewProjectionMatrix
-	static FromCamera = function (_camera) {
+	static FromCamera = function (_camera)
+	{
 		gml_pragma("forceinline");
 		FromViewProjectionMatrix(_camera.ViewProjectionMatrix);
 		return self;
@@ -120,7 +122,8 @@ function BBMOD_FrustumCollider()
 	///
 	/// @private
 	// Source: https://donw.io/post/frustum-point-extraction/
-	static __intersectPlanes = function (_p0, _p1, _p2) {
+	static __intersectPlanes = function (_p0, _p1, _p2)
+	{
 		var bxc = _p1.Normal.Cross(_p2.Normal);
 		var cxa = _p2.Normal.Cross(_p0.Normal);
 		var axb = _p0.Normal.Cross(_p1.Normal);
@@ -136,7 +139,8 @@ function BBMOD_FrustumCollider()
 	/// `nearTopLeft`, `nearTopRight`, `nearBottomLeft`, `nearBottomRight`,
 	/// `farTopLeft`, `farTopRight`, `farBottomLeft` and `farBottomRight`.
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L1850
-	static GetCorners = function () {
+	static GetCorners = function ()
+	{
 		var _near   = Planes[BBMOD_EFrustumPlane.Near];
 		var _far    = Planes[BBMOD_EFrustumPlane.Far];
 		var _top    = Planes[BBMOD_EFrustumPlane.Top];
@@ -157,7 +161,8 @@ function BBMOD_FrustumCollider()
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L1861
-	static TestPoint = function (_point) {
+	static TestPoint = function (_point)
+	{
 		for (var i = 0; i < BBMOD_EFrustumPlane.SIZE; ++i)
 		{
 			var _plane = Planes[i];
@@ -170,7 +175,8 @@ function BBMOD_FrustumCollider()
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L1874
-	static TestSphere = function (_sphere) {
+	static TestSphere = function (_sphere)
+	{
 		for (var i = 0; i < BBMOD_EFrustumPlane.SIZE; ++i)
 		{
 			var _plane = Planes[i];
@@ -182,7 +188,8 @@ function BBMOD_FrustumCollider()
 		return true;
 	};
 
-	static DrawDebug = function (_color=c_white, _alpha=1.0) {
+	static DrawDebug = function (_color=c_white, _alpha=1.0)
+	{
 		var _vbuffer = global.__bbmodVBufferDebug;
 
 		var _corners = GetCorners();

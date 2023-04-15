@@ -26,7 +26,8 @@ function BBMOD_SetQuaternionModule(
 	/// Default value is an idenitity quaternion.
 	Value = _value;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		if (Property != undefined)
 		{
 			var _value = Value;

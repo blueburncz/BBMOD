@@ -95,7 +95,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @param {Struct.BBMOD_Model} _model
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
-	static from_model = function (_model) {
+	static from_model = function (_model)
+	{
 		Model = _model;
 		build_batch();
 		return self;
@@ -106,7 +107,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @desc Resizes `__data` and `__ids` arrays to required size.
 	///
 	/// @private
-	static __resize_data = function () {
+	static __resize_data = function ()
+	{
 		var _requiredArrayCount = ceil(InstanceCount / Size);
 		var _currentArrayCount = array_length(__data);
 
@@ -132,7 +134,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @param {Id.Instance, Struct} _instance The instance to be added.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
-	static add_instance = function (_instance) {
+	static add_instance = function (_instance)
+	{
 		var _indexIds = InstanceCount;
 		var _indexData = _indexIds * SlotsPerInstance;
 		__instanceToIndex[? _instance] = _indexData;
@@ -153,7 +156,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
 	/// @see BBMOD_DynamicBatch.DataWriter
-	static update_instance = function (_instance) {
+	static update_instance = function (_instance)
+	{
 		gml_pragma("forceinline");
 		var _index = __instanceToIndex[? _instance];
 		method(_instance, DataWriter)(__data[_index div BatchLength], _index mod BatchLength);
@@ -167,7 +171,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @param {Id.Instance, Struct} _instance The instance to remove.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
-	static remove_instance = function (_instance) {
+	static remove_instance = function (_instance)
+	{
 		var _indexDataDeleted = __instanceToIndex[? _instance];
 		if (_indexDataDeleted != undefined)
 		{
@@ -242,7 +247,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
 	/// @see BBMOD_ERenderPass
-	static submit = function (_materials=undefined, _batchData=undefined) {
+	static submit = function (_materials=undefined, _batchData=undefined)
+	{
 		gml_pragma("forceinline");
 		_batchData ??= __data;
 		if (array_length(_batchData) > 0)
@@ -277,7 +283,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
-	static render = function (_materials=undefined, _batchData=undefined, _ids=undefined) {
+	static render = function (_materials=undefined, _batchData=undefined, _ids=undefined)
+	{
 		gml_pragma("forceinline");
 
 		if (_batchData == undefined)
@@ -317,7 +324,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	///
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
-	static default_fn = function (_data, _index) {
+	static default_fn = function (_data, _index)
+	{
 		// Position
 		_data[@ _index] = x;
 		_data[@ _index + 1] = y;
@@ -335,7 +343,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 		_data[@ _index + 11] = ((id & $FF000000) >> 24) / 255;
 	};
 
-	static __draw_object = function (_method, _object, _materials, _fn=undefined) {
+	static __draw_object = function (_method, _object, _materials, _fn=undefined)
+	{
 		if (!instance_exists(_object))
 		{
 			return;
@@ -417,7 +426,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_DynamicBatch.DataWriter
-	static submit_object = function (_object, _materials=undefined, _fn=undefined) {
+	static submit_object = function (_object, _materials=undefined, _fn=undefined)
+	{
 		gml_pragma("forceinline");
 		__draw_object(method(self, submit), _object, _materials, _fn);
 		return self;
@@ -465,7 +475,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.DataWriter
-	static render_object = function (_object, _materials=undefined, _fn=undefined) {
+	static render_object = function (_object, _materials=undefined, _fn=undefined)
+	{
 		gml_pragma("forceinline");
 		__draw_object(method(self, render), _object, _materials, _fn);
 		return self;
@@ -476,13 +487,15 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 	/// @desc Freezes the dynamic batch. This makes it render faster.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
-	static freeze = function () {
+	static freeze = function ()
+	{
 		gml_pragma("forceinline");
 		Batch.freeze();
 		return self;
 	};
 
-	static build_batch = function () {
+	static build_batch = function ()
+	{
 		if (Batch != undefined)
 		{
 			return;
@@ -564,7 +577,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 		}
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Class_destroy();
 		if (Batch != undefined)
 		{

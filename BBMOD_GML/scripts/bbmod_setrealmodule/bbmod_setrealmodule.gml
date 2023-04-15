@@ -22,7 +22,8 @@ function BBMOD_SetRealModule(_property=undefined, _value=0.0)
 	/// @var {Real} The initial value of the property. Defaults to 0.0.
 	Value = _value;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		if (Property != undefined)
 		{
 			_emitter.Particles[# Property, _particleIndex] = Value;

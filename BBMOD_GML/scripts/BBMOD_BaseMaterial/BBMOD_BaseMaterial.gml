@@ -39,7 +39,8 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// smooth transition.
 	ShadowmapBias = 0.0;
 
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		Material_copy(_dest);
 		BaseOpacityMultiplier.Copy(_dest.BaseOpacityMultiplier);
 		_dest.TextureOffset = TextureOffset.Clone();
@@ -48,13 +49,15 @@ function BBMOD_BaseMaterial(_shader=undefined)
 		return self;
 	};
 
-	static clone = function () {
+	static clone = function ()
+	{
 		var _clone = new BBMOD_BaseMaterial();
 		copy(_clone);
 		return _clone;
 	};
 
-	static to_json = function (_json) {
+	static to_json = function (_json)
+	{
 		Material_to_json(_json);
 
 		_json.BaseOpacityMultiplier = {
@@ -79,7 +82,8 @@ function BBMOD_BaseMaterial(_shader=undefined)
 		return self;
 	};
 
-	static from_json = function (_json) {
+	static from_json = function (_json)
+	{
 		Material_from_json(_json);
 
 		var _baseOpacityMultiplier = _json[$ "BaseOpacityMultiplier"];

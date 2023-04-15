@@ -23,7 +23,8 @@ function BBMOD_MixSpeedModule(_from=1.0, _to=_from)
 	/// same as {@link BBMOD_MixSpeedModule.From}.
 	To = _to;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		var _particles = _emitter.Particles;
 		var _velocityX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 		var _velocityY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];

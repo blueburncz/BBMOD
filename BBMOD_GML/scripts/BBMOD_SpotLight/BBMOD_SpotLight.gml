@@ -42,12 +42,14 @@ function BBMOD_SpotLight(
 
 	__getShadowmapMatrix = __get_shadowmap_matrix;
 
-	static __get_shadowmap_zfar = function () {
+	static __get_shadowmap_zfar = function ()
+	{
 		gml_pragma("forceinline");
 		return Range;
 	};
 
-	static __get_shadowmap_view = function () {
+	static __get_shadowmap_view = function ()
+	{
 		gml_pragma("forceinline");
 		return matrix_build_lookat(
 			Position.X,
@@ -59,13 +61,15 @@ function BBMOD_SpotLight(
 			0.0, 0.0, 1.0); // TODO: Find the up vector
 	};
 
-	static __get_shadowmap_projection = function () {
+	static __get_shadowmap_projection = function ()
+	{
 		gml_pragma("forceinline");
 		return matrix_build_projection_perspective_fov(
 			AngleOuter * 2.0, 1.0, 0.01, Range);
 	};
 
-	static __get_shadowmap_matrix = function () {
+	static __get_shadowmap_matrix = function ()
+	{
 		gml_pragma("forceinline");
 		return matrix_multiply(
 			__getViewMatrix(),

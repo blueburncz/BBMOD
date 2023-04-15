@@ -23,7 +23,8 @@ function BBMOD_RaycastResult() constructor
 	/// @desc Resets properties to their default values.
 	///
 	/// @return {Struct.BBMOD_RaycastResult} Returns `self`.
-	static Reset = function () {
+	static Reset = function ()
+	{
 		gml_pragma("forceinline");
 		Distance = 0.0;
 		Point = undefined;

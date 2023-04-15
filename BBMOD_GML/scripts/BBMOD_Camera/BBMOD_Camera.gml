@@ -89,7 +89,8 @@ function BBMOD_Camera()
 	/// first-person camera. Defaults to `0`.
 	Zoom = 0.0;
 
-	static update_matrices = function () {
+	static update_matrices = function ()
+	{
 		gml_pragma("forceinline");
 
 		var _forward = BBMOD_VEC3_FORWARD;
@@ -150,7 +151,8 @@ function BBMOD_Camera()
 	/// @param {Bool} _enable USe `true` to enable mouselook.
 	///
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
-	static set_mouselook = function (_enable) {
+	static set_mouselook = function (_enable)
+	{
 		if (_enable)
 		{
 			if (os_browser != browser_not_a_browser)
@@ -182,7 +184,8 @@ function BBMOD_Camera()
 	/// to `undefined`.
 	///
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
-	static update = function (_deltaTime, _positionHandler=undefined) {
+	static update = function (_deltaTime, _positionHandler=undefined)
+	{
 		if (os_browser != browser_not_a_browser)
 		{
 			set_mouselook(bbmod_html5_pointer_is_locked());

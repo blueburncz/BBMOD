@@ -25,7 +25,8 @@ function BBMOD_SphereEmissionModule(_radius=0.5, _inside=true)
 	/// Default value is `true`.
 	Inside = _inside;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		var _offsetX = random_range(-1.0, 1.0);
 		var _offsetY = random_range(-1.0, 1.0);
 		var _offsetZ = random_range(-1.0, 1.0);

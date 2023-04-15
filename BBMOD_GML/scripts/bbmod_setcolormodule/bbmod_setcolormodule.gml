@@ -24,7 +24,8 @@ function BBMOD_SetColorModule(_property=undefined, _value=BBMOD_C_WHITE)
 	/// property. Default value is {@link BBMOD_C_WHITE}.
 	Value = _value;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		if (Property != undefined)
 		{
 			var _value = Value;

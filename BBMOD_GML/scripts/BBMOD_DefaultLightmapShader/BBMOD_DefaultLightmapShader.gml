@@ -17,7 +17,8 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	static DefaultShader_on_set = on_set;
 	static DefaultShader_set_material = set_material;
 
-	static set_ibl = function (_ibl=undefined) {
+	static set_ibl = function (_ibl=undefined)
+	{
 		gml_pragma("forceinline");
 
 		_ibl ??= global.__bbmodImageBasedLight;
@@ -51,7 +52,8 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 		return self;
 	};
 
-	static set_ambient_light = function (_up=undefined, _down=undefined, _dir=undefined) {
+	static set_ambient_light = function (_up=undefined, _down=undefined, _dir=undefined)
+	{
 		gml_pragma("forceinline");
 		var _shaderCurrent = shader_current();
 		var _uLightAmbientUp = shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_AMBIENT_UP);
@@ -81,7 +83,8 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 		return self;
 	};
 
-	static set_directional_light = function (_light=undefined) {
+	static set_directional_light = function (_light=undefined)
+	{
 		gml_pragma("forceinline");
 		_light ??= global.__bbmodDirectionalLight;
 		var _shaderCurrent = shader_current();
@@ -109,7 +112,8 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 		return self;
 	};
 
-	static set_punctual_lights = function (_lights=undefined) {
+	static set_punctual_lights = function (_lights=undefined)
+	{
 		gml_pragma("forceinline");
 
 		_lights ??= global.__bbmodPunctualLights;
@@ -177,7 +181,8 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	/// {@link bbmod_lightmap_set}.
 	///
 	/// @return {Struct.BBMOD_DefaultLightmapShader} Returns `self`.
-	static set_lightmap = function (_texture=global.__bbmodLightmap) {
+	static set_lightmap = function (_texture=global.__bbmodLightmap)
+	{
 		gml_pragma("forceinline");
 		var _uLightmap = shader_get_sampler_index(shader_current(), BBMOD_U_LIGHTMAP);
 		texture_set_stage(_uLightmap, _texture);
@@ -186,13 +191,15 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 		return self;
 	};
 
-	static on_set = function () {
+	static on_set = function ()
+	{
 		DefaultShader_on_set();
 		set_lightmap();
 		return self;
 	};
 
-	static set_material = function (_material) {
+	static set_material = function (_material)
+	{
 		gml_pragma("forceinline");
 		DefaultShader_set_material(_material);
 		if (_material.Lightmap != undefined)

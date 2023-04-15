@@ -33,7 +33,8 @@ function BBMOD_MixRealFromHealthModule(
 	/// is the same as {@link BBMOD_MixRealFromHealthModule.From}.
 	To = _to;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		var _property = Property;
 		if (_property != undefined)
 		{

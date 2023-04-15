@@ -23,7 +23,8 @@ function BBMOD_CollisionEventModule(_callback=undefined)
 	/// @see BBMOD_ParticleEmitter.Particles
 	Callback = _callback;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		var _callback = Callback;
 		if (!_callback)
 		{

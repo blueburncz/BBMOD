@@ -41,7 +41,8 @@ function BBMOD_MixVec2Module(
 	/// components. Default value is `true`.
 	Separate = _separate;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		if (Property != undefined)
 		{
 			var _separate = Separate;

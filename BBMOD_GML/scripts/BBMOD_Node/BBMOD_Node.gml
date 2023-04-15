@@ -67,7 +67,8 @@ function BBMOD_Node(_model)
 	/// @param {Struct.BBMOD_Node} _dest The node to copy data to.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		_dest.Model = Model;
 		_dest.Name = Name;
 		_dest.Index = Index;
@@ -99,7 +100,8 @@ function BBMOD_Node(_model)
 	/// @desc Creates a clone of the node.
 	///
 	/// @return {Struct.BBMOD_Node} The created clone.
-	static clone = function () {
+	static clone = function ()
+	{
 		var _clone = new BBMOD_Node(Model);
 		copy(_clone);
 		return _clone;
@@ -112,7 +114,8 @@ function BBMOD_Node(_model)
 	/// @param {Struct.BBMOD_Node} _node The child node to add.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	static add_child = function (_node) {
+	static add_child = function (_node)
+	{
 		gml_pragma("forceinline");
 		array_push(Children, _node);
 		_node.Parent = self;
@@ -124,7 +127,8 @@ function BBMOD_Node(_model)
 	/// @desc Marks the node and nodes up the chain as renderable.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	static set_renderable = function () {
+	static set_renderable = function ()
+	{
 		gml_pragma("forceinline");
 		var _current = self;
 		while (_current != undefined)
@@ -146,7 +150,8 @@ function BBMOD_Node(_model)
 	/// @param {Id.Buffer} _buffer The buffer to load the data from.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	static from_buffer = function (_buffer) {
+	static from_buffer = function (_buffer)
+	{
 		var i;
 
 		Name = buffer_read(_buffer, buffer_string);
@@ -192,7 +197,8 @@ function BBMOD_Node(_model)
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	static to_buffer = function (_buffer) {
+	static to_buffer = function (_buffer)
+	{
 		var i;
 
 		buffer_write(_buffer, buffer_string, Name);
@@ -235,7 +241,8 @@ function BBMOD_Node(_model)
 	/// batching or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	static submit = function (_materials, _transform, _batchData) {
+	static submit = function (_materials, _transform, _batchData)
+	{
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;
 		var _node = self;
@@ -315,7 +322,8 @@ function BBMOD_Node(_model)
 	/// @param {Array<Real>} _matrix The current world matrix.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
-	static render = function (_materials, _transform, _batchData, _matrix) {
+	static render = function (_materials, _transform, _batchData, _matrix)
+	{
 		var _meshes = Model.Meshes;
 		var _renderStack = global.__bbmodRenderStack;
 		var _node = self;

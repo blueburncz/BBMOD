@@ -192,7 +192,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @param {Struct.BBMOD_Material} _dest The destination material.
 	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
-	static copy = function (_dest) {
+	static copy = function (_dest)
+	{
 		_dest.__name = __name;
 		_dest.RenderPass = RenderPass;
 		_dest.Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
@@ -239,7 +240,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @desc Creates a clone of the material.
 	///
 	/// @return {Struct.BBMOD_Material} The created clone.
-	static clone = function () {
+	static clone = function ()
+	{
 		var _clone = new BBMOD_Material();
 		copy(_clone);
 		return _clone;
@@ -254,7 +256,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If an error occurs.
-	static to_json = function (_json) {
+	static to_json = function (_json)
+	{
 		var _shaders = {};
 		var _pass = 0;
 		repeat (BBMOD_ERenderPass.SIZE)
@@ -315,7 +318,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If an error occurs.
-	static from_json = function (_json) {
+	static from_json = function (_json)
+	{
 		if (variable_struct_exists(_json, "Shaders"))
 		{
 			var _shaders = _json.Shaders;
@@ -463,7 +467,8 @@ function BBMOD_Material(_shader=undefined)
 		return self;
 	};
 
-	static to_file = function (_file) {
+	static to_file = function (_file)
+	{
 		var _dirname = filename_dir(_file);
 		if (!directory_exists(_dirname))
 		{
@@ -480,7 +485,8 @@ function BBMOD_Material(_shader=undefined)
 		return self;
 	};
 
-	static from_file = function (_file, _sha1=undefined) {
+	static from_file = function (_file, _sha1=undefined)
+	{
 		Path = _file;
 		check_file(_file, _sha1);
 		from_json(bbmod_json_load(_file));
@@ -488,7 +494,8 @@ function BBMOD_Material(_shader=undefined)
 		return self;
 	};
 
-	static from_file_async = function (_file, _sha1=undefined, _callback=undefined) {
+	static from_file_async = function (_file, _sha1=undefined, _callback=undefined)
+	{
 		Path = _file;
 
 		if (!check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
@@ -522,7 +529,8 @@ function BBMOD_Material(_shader=undefined)
 		return self;
 	};
 
-	static _make_sprite = function (_r, _g, _b, _a) {
+	static _make_sprite = function (_r, _g, _b, _a)
+	{
 		gml_pragma("forceinline");
 		static _sur = -1;
 		if (!surface_exists(_sur))
@@ -543,7 +551,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @param {Struct.BBMOD_Color} _color The new base color and opacity.
 	///
 	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
-	static set_base_opacity = function (_color) {
+	static set_base_opacity = function (_color)
+	{
 		if (__baseOpacitySprite != undefined)
 		{
 			sprite_delete(__baseOpacitySprite);
@@ -569,7 +578,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @return {Bool} Returns `true` if the material was applied.
 	///
 	/// @see BBMOD_Material.reset
-	static apply = function (_vertexFormat) {
+	static apply = function (_vertexFormat)
+	{
 		if ((RenderPass & (1 << bbmod_render_pass_get())) == 0)
 		{
 			return false;
@@ -676,7 +686,8 @@ function BBMOD_Material(_shader=undefined)
 	///
 	/// @see BBMOD_Material.get_shader
 	/// @see bbmod_render_pass_set
-	static set_shader = function (_pass, _shader) {
+	static set_shader = function (_pass, _shader)
+	{
 		gml_pragma("forceinline");
 		RenderPass |= (1 << _pass);
 		Shaders[@ _pass] = _shader;
@@ -691,7 +702,8 @@ function BBMOD_Material(_shader=undefined)
 	///
 	/// @return {Bool} Returns `true` if the material has a shader for the
 	/// render pass.
-	static has_shader = function (_pass) {
+	static has_shader = function (_pass)
+	{
 		gml_pragma("forceinline");
 		return ((RenderPass & (1 << _pass)) != 0);
 	};
@@ -706,7 +718,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @return {Struct.BBMOD_Shader} The shader or `undefined`.
 	///
 	/// @see BBMOD_Material.set_shader
-	static get_shader = function (_pass) {
+	static get_shader = function (_pass)
+	{
 		gml_pragma("forceinline");
 		return Shaders[_pass];
 	};
@@ -718,7 +731,8 @@ function BBMOD_Material(_shader=undefined)
 	/// @param {Real} _pass The render pass.
 	///
 	/// @return {Struct.BBMOD_Material} Returns `self`.
-	static remove_shader = function (_pass) {
+	static remove_shader = function (_pass)
+	{
 		gml_pragma("forceinline");
 		RenderPass &= ~(1 << _pass);
 		Shaders[@ _pass] = undefined;
@@ -733,13 +747,15 @@ function BBMOD_Material(_shader=undefined)
 	///
 	/// @see BBMOD_Material.apply
 	/// @see bbmod_material_reset
-	static reset = function () {
+	static reset = function ()
+	{
 		gml_pragma("forceinline");
 		bbmod_material_reset();
 		return self;
 	};
 
-	static destroy = function () {
+	static destroy = function ()
+	{
 		Resource_destroy();
 		if (__baseOpacitySprite != undefined)
 		{

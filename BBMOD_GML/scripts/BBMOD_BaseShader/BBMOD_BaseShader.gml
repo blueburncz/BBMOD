@@ -29,7 +29,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Struct.BBMOD_Vec2} _offset The texture offset.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	static set_texture_offset = function (_offset) {
+	static set_texture_offset = function (_offset)
+	{
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
 			shader_get_uniform(shader_current(), BBMOD_U_TEXTURE_OFFSET),
@@ -44,7 +45,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Struct.BBMOD_Vec2} _scale The texture scale.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	static set_texture_scale = function (_scale) {
+	static set_texture_scale = function (_scale)
+	{
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
 			shader_get_uniform(shader_current(), BBMOD_U_TEXTURE_SCALE),
@@ -61,7 +63,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @see BBMOD_AnimationPlayer.get_transform
-	static set_bones = function (_bones) {
+	static set_bones = function (_bones)
+	{
 		gml_pragma("forceinline");
 		shader_set_uniform_f_array(
 			shader_get_uniform(shader_current(), BBMOD_U_BONES),
@@ -76,7 +79,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Array<Real>} _data The dynamic batch data.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	static set_batch_data = function (_data) {
+	static set_batch_data = function (_data)
+	{
 		gml_pragma("forceinline");
 		shader_set_uniform_f_array(
 			shader_get_uniform(shader_current(), BBMOD_U_BATCH_DATA),
@@ -91,7 +95,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Real} _value The alpha test value.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	static set_alpha_test = function (_value) {
+	static set_alpha_test = function (_value)
+	{
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
 			shader_get_uniform(shader_current(), BBMOD_U_ALPHA_TEST),
@@ -107,7 +112,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// then the value set by {@link bbmod_camera_set_position} is used.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
-	static set_cam_pos = function (_pos=undefined) {
+	static set_cam_pos = function (_pos=undefined)
+	{
 		gml_pragma("forceinline");
 		_pos ??= global.__bbmodCameraPosition;
 		shader_set_uniform_f(
@@ -124,7 +130,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// then the value set by {@link bbmod_camera_set_exposure} is used.
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
-	static set_exposure = function (_value=undefined) {
+	static set_exposure = function (_value=undefined)
+	{
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
 			shader_get_uniform(shader_current(), BBMOD_U_EXPOSURE),
@@ -140,7 +147,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// then the value set by {@link bbmod_set_instance_id} is used.
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
-	static set_instance_id = function (_id=undefined) {
+	static set_instance_id = function (_id=undefined)
+	{
 		gml_pragma("forceinline");
 		_id ??= global.__bbmodInstanceID;
 		shader_set_uniform_f(
@@ -159,7 +167,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @param {Real} [_index] The index of the current material.
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
-	static set_material_index = function (_index) {
+	static set_material_index = function (_index)
+	{
 		gml_pragma("forceinline");
 		shader_set_uniform_f(
 			shader_get_uniform(shader_current(), BBMOD_U_MATERIAL_INDEX),
@@ -178,7 +187,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// the light is not enabled, then it is not passed.
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
-	static set_ibl = function (_ibl=undefined) {
+	static set_ibl = function (_ibl=undefined)
+	{
 		gml_pragma("forceinline");
 
 		var _texture = pointer_null;
@@ -241,7 +251,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// {@link bbmod_light_ambient_set_dir} is used.
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
-	static set_ambient_light = function (_up=undefined, _down=undefined, _dir=undefined) {
+	static set_ambient_light = function (_up=undefined, _down=undefined, _dir=undefined)
+	{
 		gml_pragma("forceinline");
 		_up ??= global.__bbmodAmbientLightUp;
 		_down ??= global.__bbmodAmbientLightDown;
@@ -271,7 +282,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @see BBMOD_DirectionalLight
-	static set_directional_light = function (_light=undefined) {
+	static set_directional_light = function (_light=undefined)
+	{
 		gml_pragma("forceinline");
 		_light ??= global.__bbmodDirectionalLight;
 		var _shaderCurrent = shader_current();
@@ -309,7 +321,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link set_punctual_lights} instead.
-	static set_point_lights = function (_lights=undefined) {
+	static set_point_lights = function (_lights=undefined)
+	{
 		gml_pragma("forceinline");
 		set_punctual_lights(_lights);
 		return self;
@@ -325,7 +338,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// {@link bbmod_light_punctual_add} are passed. Only enabled lights will be used!
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
-	static set_punctual_lights = function (_lights=undefined) {
+	static set_punctual_lights = function (_lights=undefined)
+	{
 		gml_pragma("forceinline");
 
 		_lights ??= global.__bbmodPunctualLights;
@@ -398,7 +412,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// If `undefined`, then the value set by {@link bbmod_fog_set_end} is used.
 	///
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
-	static set_fog = function (_color=undefined, _intensity=undefined, _start=undefined, _end=undefined) {
+	static set_fog = function (_color=undefined, _intensity=undefined, _start=undefined, _end=undefined)
+	{
 		gml_pragma("forceinline");
 		_color ??= global.__bbmodFogColor;
 		_intensity ??= global.__bbmodFogIntensity;
@@ -424,7 +439,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		return self;
 	};
 
-	static on_set = function () {
+	static on_set = function ()
+	{
 		gml_pragma("forceinline");
 		set_cam_pos();
 		set_exposure();
@@ -447,7 +463,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @see BBMOD_BaseMaterial
-	static set_material = function (_material) {
+	static set_material = function (_material)
+	{
 		gml_pragma("forceinline");
 		var _shaderCurrent = shader_current();
 		shader_set_uniform_f(

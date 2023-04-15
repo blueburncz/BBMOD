@@ -25,7 +25,8 @@ function BBMOD_EmissionOverTimeModule(_count=1, _interval=1.0)
 	/// @private
 	__timer = 0.0;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		__timer += _deltaTime * 0.000001;
 		if (__timer >= Interval)
 		{

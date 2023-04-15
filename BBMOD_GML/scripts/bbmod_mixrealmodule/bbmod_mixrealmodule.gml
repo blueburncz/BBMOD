@@ -27,7 +27,8 @@ function BBMOD_MixRealModule(_property=undefined, _from=0.0, _to=_from)
 	/// {@link BBMOD_MixRealModule.From}.
 	To = _to;
 
-	static on_particle_start = function (_emitter, _particleIndex) {
+	static on_particle_start = function (_emitter, _particleIndex)
+	{
 		if (Property != undefined)
 		{
 			_emitter.Particles[# Property, _particleIndex] = lerp(From, To, random(1.0));

@@ -15,7 +15,8 @@ function BBMOD_ParticleShader(_shader, _vertexFormat)
 
 	static DefaultShader_set_material = set_material;
 
-	static set_material = function (_material) {
+	static set_material = function (_material)
+	{
 		gml_pragma("forceinline");
 		DefaultShader_set_material(_material);
 		shader_set_uniform_f(

@@ -77,7 +77,8 @@ function BBMOD_AnimationStateMachine(_animationPlayer)
 		}
 	}));
 
-	static update = function (_deltaTime) {
+	static update = function (_deltaTime)
+	{
 		StateMachine_update(_deltaTime);
 		if (State != undefined)
 		{

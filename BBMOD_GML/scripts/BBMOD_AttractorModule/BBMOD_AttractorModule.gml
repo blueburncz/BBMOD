@@ -40,7 +40,8 @@ function BBMOD_AttractorModule(
 	/// particles. Defaults value is 1.0.
 	Force = _force;
 
-	static on_update = function (_emitter, _deltaTime) {
+	static on_update = function (_emitter, _deltaTime)
+	{
 		__positionReal = Relative ? _emitter.Position.Add(Position) : Position;
 
 		var _particles = _emitter.Particles;

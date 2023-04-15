@@ -39,7 +39,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Add = function (_dq) {
+	static Add = function (_dq)
+	{
 		gml_pragma("forceinline");
 		return new BBMOD_DualQuaternion()
 			.FromRealDual(
@@ -52,7 +53,8 @@ function BBMOD_DualQuaternion(
 	/// @desc Creates a clone of the dual quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Clone = function () {
+	static Clone = function ()
+	{
 		gml_pragma("forceinline");
 		var _dq = new BBMOD_DualQuaternion();
 		_dq.Real = Real;
@@ -66,7 +68,8 @@ function BBMOD_DualQuaternion(
 	/// dual quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Conjugate = function () {
+	static Conjugate = function ()
+	{
 		gml_pragma("forceinline");
 		return new BBMOD_DualQuaternion()
 			.FromRealDual(
@@ -83,7 +86,8 @@ function BBMOD_DualQuaternion(
 	/// quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
-	static Copy = function (_dest) {
+	static Copy = function (_dest)
+	{
 		gml_pragma("forceinline");
 		_dest.Real = Real;
 		_dest.Dual = Dual;
@@ -97,7 +101,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
 	///
 	/// @return {Real} The dot product of the dual quaternions.
-	static Dot = function (_dq) {
+	static Dot = function (_dq)
+	{
 		gml_pragma("forceinline");
 		return Real.Dot(_dq.Real);
 	};
@@ -108,7 +113,8 @@ function BBMOD_DualQuaternion(
 	/// the result as a new dual quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Exp = function () {
+	static Exp = function ()
+	{
 		gml_pragma("forceinline");
 		var _real = Real.Exp();
 		return new BBMOD_DualQuaternion()
@@ -128,7 +134,8 @@ function BBMOD_DualQuaternion(
 	/// components from. Defaults to 0.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
-	static FromArray = function (_array, _index=0) {
+	static FromArray = function (_array, _index=0)
+	{
 		gml_pragma("forceinline");
 		Real = Real.FromArray(_array, _index);
 		Dual = Dual.FromArray(_array, _index + 4);
@@ -146,7 +153,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Constant.BufferDataType} [_type] The type of each component.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
-	static FromBuffer = function (_buffer, _type) {
+	static FromBuffer = function (_buffer, _type)
+	{
 		gml_pragma("forceinline");
 		Real = Real.FromBuffer(_buffer, _type);
 		Dual = Dual.FromBuffer(_buffer, _type);
@@ -163,7 +171,8 @@ function BBMOD_DualQuaternion(
 	/// quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
-	static FromRealDual = function (_real, _dual) {
+	static FromRealDual = function (_real, _dual)
+	{
 		gml_pragma("forceinline");
 		Real = _real.Normalize();
 		Dual = _dual;
@@ -180,7 +189,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Struct.BBMOD_Quaternion} _r The rotation.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
-	static FromTranslationRotation = function (_t, _r) {
+	static FromTranslationRotation = function (_t, _r)
+	{
 		gml_pragma("forceinline");
 
 		Real = _r.Normalize();
@@ -213,7 +223,8 @@ function BBMOD_DualQuaternion(
 	/// @desc Extracts rotation (quaternion) from dual quaternion.
 	///
 	/// @return {Struct.BBMOD_Quaternion} The created quaternion.
-	static GetRotation = function () {
+	static GetRotation = function ()
+	{
 		gml_pragma("forceinline");
 		return Real.Clone();
 	};
@@ -223,7 +234,8 @@ function BBMOD_DualQuaternion(
 	/// @desc Extracts translation (vec3) from dual quaternion.
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
-	static GetTranslation = function () {
+	static GetTranslation = function ()
+	{
 		gml_pragma("forceinline");
 
 		// Dual.Scale(2.0)
@@ -252,7 +264,8 @@ function BBMOD_DualQuaternion(
 	/// result as a new dual quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Log = function () {
+	static Log = function ()
+	{
 		gml_pragma("forceinline");
 		var _scale = 1.0 / Real.Length();
 		return new BBMOD_DualQuaternion()
@@ -269,7 +282,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Mul = function (_dq) {
+	static Mul = function (_dq)
+	{
 		gml_pragma("forceinline");
 
 		var _dq1r0 = Real.X;
@@ -314,7 +328,8 @@ function BBMOD_DualQuaternion(
 	/// dual quaternion.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Normalize = function () {
+	static Normalize = function ()
+	{
 		gml_pragma("forceinline");
 		var _dq = Clone();
 		var _mag = Real.Dot(Real);
@@ -334,7 +349,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Real} _p The power value.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Pow = function (_p) {
+	static Pow = function (_p)
+	{
 		gml_pragma("forceinline");
 		return Log().Scale(_p).Exp();
 	};
@@ -347,7 +363,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Struct.BBMOD_Vec3} _v The vector to rotate.
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
-	static Rotate = function (_v) {
+	static Rotate = function (_v)
+	{
 		gml_pragma("forceinline");
 		return Real.Rotate(_v);
 	};
@@ -360,7 +377,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Real} _s The value to scale the dual quaternion by.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Scale = function (_s) {
+	static Scale = function (_s)
+	{
 		gml_pragma("forceinline");
 		var _dq = new BBMOD_DualQuaternion();
 		_dq.Real = Real.Scale(_s);
@@ -377,7 +395,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Real} _s The interpolation factor.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} The created dual quaternion.
-	static Sclerp = function (_dq, _s) {
+	static Sclerp = function (_dq, _s)
+	{
 		gml_pragma("forceinline");
 		return _dq.Mul(Conjugate()).Pow(_s).Mul(self).Normalize();
 	};
@@ -393,7 +412,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
 	///
 	/// @return {Array<Real>} Returns the destination array.
-	static ToArray = function (_array=undefined, _index=0) {
+	static ToArray = function (_array=undefined, _index=0)
+	{
 		gml_pragma("forceinline");
 		_array ??= array_create(8, 0.0);
 		Real.ToArray(_array, _index);
@@ -410,7 +430,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Constant.BufferDataType} _type The type of each component.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
-	static ToBuffer = function (_buffer, _type) {
+	static ToBuffer = function (_buffer, _type)
+	{
 		gml_pragma("forceinline");
 		Real.ToBuffer(_buffer, _type);
 		Dual.ToBuffer(_buffer, _type);
@@ -427,7 +448,8 @@ function BBMOD_DualQuaternion(
 	/// Defaults to 0.
 	///
 	/// @return {Array<Real>} Returns the destination array.
-	static ToMatrix = function (_dest=undefined, _index=0) {
+	static ToMatrix = function (_dest=undefined, _index=0)
+	{
 		gml_pragma("forceinline");
 
 		_dest ??= array_create(16, 0.0);
@@ -456,7 +478,8 @@ function BBMOD_DualQuaternion(
 	/// @param {Struct.BBMOD_Vec3} _v The vector to transform.
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
-	static Transform = function (_v) {
+	static Transform = function (_v)
+	{
 		gml_pragma("forceinline");
 		return GetTranslation().Add(Real.Rotate(_v));
 	};
