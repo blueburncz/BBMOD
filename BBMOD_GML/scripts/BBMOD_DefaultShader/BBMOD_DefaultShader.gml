@@ -18,7 +18,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_normal_smoothness(_texture)
 	///
-	/// @desc Sets the `bbmod_NormalW` uniform.
+	/// @desc Sets uniforms {@link BBMOD_U_NORMAL_W} and {@link BBMOD_U_IS_ROUGHNESS}.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with normal vector in
 	/// the RGB channels and smoothness in the A channel.
@@ -36,7 +36,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_specular_color(_texture)
 	///
-	/// @desc Sets the `bbmod_Material` uniform.
+	/// @desc Sets uniforms {@link BBMOD_U_MATERIAL} and {@link BBMOD_U_IS_METALLIC}.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with specular color in
 	/// the RGB channels.
@@ -53,7 +53,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_normal_roughness(_texture)
 	///
-	/// @desc Sets the `bbmod_NormalW` uniform.
+	/// @desc Sets uniforms {@link BBMOD_U_NORMAL_W} and {@link BBMOD_U_IS_ROUGHNESS}.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with normal vector in
 	/// the RGB channels and roughness in the A channel.
@@ -62,7 +62,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	static set_normal_roughness = function (_texture) {
 		gml_pragma("forceinline");
 		var _shaderCurrent = shader_current();
-		var _uIsRoughness = shader_get_uniform(_shaderCurrent,BBMOD_U_IS_ROUGHNESS);
+		var _uIsRoughness = shader_get_uniform(_shaderCurrent, BBMOD_U_IS_ROUGHNESS);
 		var _uNormalW = shader_get_sampler_index(_shaderCurrent, BBMOD_U_NORMAL_W);
 		shader_set_uniform_f(_uIsRoughness, 1.0);
 		texture_set_stage(_uNormalW, _texture);
@@ -71,7 +71,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_metallic_ao(_texture)
 	///
-	/// @desc Sets the `bbmod_Material` uniform.
+	/// @desc Sets uniforms {@link BBMOD_U_MATERIAL} and {@link BBMOD_U_IS_METALLIC}.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with metalness in the
 	/// R channel and ambient occlusion in the G channel.
@@ -89,7 +89,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_subsurface(_texture)
 	///
-	/// @desc Sets the `bbmod_Subsurface` uniform.
+	/// @desc Sets the {@link BBMOD_U_SUBSURFACE} uniform.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with subsurface color
 	/// in the RGB channels and its intensity in the A channel.
@@ -104,7 +104,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 	/// @func set_emissive(_texture)
 	///
-	/// @desc Sets the `bbmod_Emissive` uniform.
+	/// @desc Sets the {@link BBMOD_U_EMISSIVE} uniform.
 	///
 	/// @param {Pointer.Texture} _texture The new texture with RGBM encoded
 	/// emissive color.

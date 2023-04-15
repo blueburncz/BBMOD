@@ -24,7 +24,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_texture_offset(_offset)
 	///
-	/// @desc Sets the `bbmod_TextureOffset` uniform to the given offset.
+	/// @desc Sets the {@link BBMOD_U_TEXTURE_OFFSET} uniform to the given offset.
 	///
 	/// @param {Struct.BBMOD_Vec2} _offset The texture offset.
 	///
@@ -39,7 +39,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_texture_scale(_scale)
 	///
-	/// @desc Sets the `bbmod_TextureScale` uniform to the given scale.
+	/// @desc Sets the {@link BBMOD_U_TEXTURE_SCALE} uniform to the given scale.
 	///
 	/// @param {Struct.BBMOD_Vec2} _scale The texture scale.
 	///
@@ -54,7 +54,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_bones(_bones)
 	///
-	/// @desc Sets the `bbmod_Bones` uniform.
+	/// @desc Sets the {@link BBMOD_U_BONES} uniform.
 	///
 	/// @param {Array<Real>} _bones The array of bone transforms.
 	///
@@ -71,7 +71,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_batch_data(_data)
 	///
-	/// @desc Sets the `bbmod_BatchData` uniform.
+	/// @desc Sets the {@link BBMOD_U_BATCH_DATA} uniform.
 	///
 	/// @param {Array<Real>} _data The dynamic batch data.
 	///
@@ -86,7 +86,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_alpha_test(_value)
 	///
-	/// @desc Sets the `bbmod_AlphaTest` uniform.
+	/// @desc Sets the {@link BBMOD_U_ALPHA_TEST} uniform.
 	///
 	/// @param {Real} _value The alpha test value.
 	///
@@ -101,7 +101,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_cam_pos([_pos])
 	///
-	/// @desc Sets a fragment shader uniform `bbmod_CamPos` to the given position.
+	/// @desc Sets a fragment shader uniform {@link BBMOD_U_CAM_POS} to the given position.
 	///
 	/// @param {Struct.BBMOD_Vec3} [_pos] The camera position. If `undefined`,
 	/// then the value set by {@link bbmod_camera_set_position} is used.
@@ -118,7 +118,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_exposure([_value])
 	///
-	/// @desc Sets the `bbmod_Exposure` uniform.
+	/// @desc Sets the {@link BBMOD_U_EXPOSURE} uniform.
 	///
 	/// @param {Real} [_value] The camera exposure. If `undefined`,
 	/// then the value set by {@link bbmod_camera_set_exposure} is used.
@@ -134,7 +134,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_instance_id([_id])
 	///
-	/// @desc Sets the `bbmod_InstanceID` uniform.
+	/// @desc Sets the {@link BBMOD_U_INSTANCE_ID} uniform.
 	///
 	/// @param {Id.Instance} [_id] The instance ID. If `undefined`,
 	/// then the value set by {@link bbmod_set_instance_id} is used.
@@ -154,7 +154,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_material_index(_index)
 	///
-	/// @desc Sets the `bbmod_MaterialIndex` uniform.
+	/// @desc Sets the {@link BBMOD_U_MATERIAL_INDEX} uniform.
 	///
 	/// @param {Real} [_index] The index of the current material.
 	///
@@ -169,9 +169,9 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_ibl([_ibl])
 	///
-	/// @desc Sets a fragment shader uniform `bbmod_IBLTexel` and samplers
-	/// `bbmod_IBL` and `bbmod_BRDF`. These are required for image based
-	/// lighting.
+	/// @desc Sets a fragment shader uniforms {@link BBMOD_U_IBL_ENABLE},
+	/// {@link BBMOD_U_IBL_TEXEL} and {@link BBMOD_U_IBL}. These are required for
+	/// image based lighting.
 	///
 	/// @param {Struct.BBMOD_ImageBasedLight} [_ibl] The image based light.
 	/// If `undefined`, then the value set by {@link bbmod_ibl_set} is used. If
@@ -227,7 +227,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_ambient_light([_up[, _down[, _dir]]])
 	///
-	/// @desc Sets the `bbmod_LightAmbientUp`, `bbmod_LightAmbientDown` uniforms.
+	/// @desc Sets the {@link BBMOD_U_LIGHT_AMBIENT_UP}, {@link BBMOD_U_LIGHT_AMBIENT_DOWN}
+	/// and {@link BBMOD_U_LIGHT_AMBIENT_DIR_UP} uniforms.
 	///
 	/// @param {Struct.BBMOD_Color} [_up] Ambient light color on the upper
 	/// hemisphere. If `undefined`, then the value set by
@@ -260,8 +261,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_directional_light([_light])
 	///
-	/// @desc Sets uniforms `bbmod_LightDirectionalDir` and
-	/// `bbmod_LightDirectionalColor`.
+	/// @desc Sets uniforms {@link BBMOD_U_LIGHT_DIRECTIONAL_DIR} and
+	/// {@link BBMOD_U_LIGHT_DIRECTIONAL_COLOR}.
 	///
 	/// @param {Struct.BBMOD_DirectionalLight} [_light] The directional light.
 	/// If `undefined`, then the value set by {@link bbmod_light_directional_set}
@@ -298,8 +299,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_point_lights([_lights])
 	///
-	/// @desc Sets uniforms `bbmod_LightPunctualDataA` and
-	/// `bbmod_LightPunctualDataB`.
+	/// @desc Sets uniforms {@link BBMOD_U_LIGHT_PUNCTUAL_DATA_A} and
+	/// {@link BBMOD_U_LIGHT_PUNCTUAL_DATA_B}.
 	///
 	/// @param {Array<Struct.BBMOD_PointLight>} [_lights] An array of point
 	/// lights. If `undefined`, then the lights defined using
@@ -316,8 +317,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_punctual_lights([_lights])
 	///
-	/// @desc Sets uniforms `bbmod_LightPunctualDataA` and
-	/// `bbmod_LightPunctualDataB`.
+	/// @desc Sets uniforms {@link BBMOD_U_LIGHT_PUNCTUAL_DATA_A} and
+	/// {@link BBMOD_U_LIGHT_PUNCTUAL_DATA_B}.
 	///
 	/// @param {Array<Struct.BBMOD_PunctualLight>} [_lights] An array of punctual
 	/// lights. If `undefined`, then the lights defined using
@@ -384,8 +385,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 	/// @func set_fog([_color[, _intensity[, _start[, _end]]]])
 	///
-	/// @desc Sets uniforms `bbmod_FogColor`, `bbmod_FogIntensity`,
-	/// `bbmod_FogStart` and `bbmod_FogRcpRange`.
+	/// @desc Sets uniforms {@link BBMOD_U_FOG_COLOR}, {@link BBMOD_U_FOG_INTENSITY},
+	/// {@link BBMOD_U_FOG_START} and {@link BBMOD_U_FOG_RCP_RANGE}.
 	///
 	/// @param {Struct.BBMOD_Color} [_color] The color of the fog. If `undefined`,
 	/// then the value set by {@link bbmod_fog_set_color} is used.

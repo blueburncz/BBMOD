@@ -170,7 +170,7 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 
 	/// @func set_lightmap(_texture)
 	///
-	/// @desc Sets the `bbmod_Lightmap` uniform.
+	/// @desc Sets the {@link BBMOD_U_LIGHTMAP} uniform.
 	///
 	/// @param {Pointer.Texture} [_texture] The new RGBM encoded lightmap
 	/// texture. If not specified, defaults to the one configured using
