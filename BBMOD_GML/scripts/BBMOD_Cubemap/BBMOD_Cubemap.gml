@@ -26,10 +26,36 @@ enum BBMOD_ECubeSide
 ///
 /// @implements {BBMOD_IRenderTarget}
 ///
-/// @desc A cubemap.
+/// @desc Used for capturing surrounding scene at given position into a texture.
 ///
 /// @param {Real} _resolution A resolution of single cubemap side. Must be power
 /// of 2!
+///
+/// @example
+/// ```gml
+/// /// @desc Create event
+/// // Create a renderer
+/// renderer = new BBMOD_DefaultRenderer();
+/// // Create a cubemap
+/// cubemap = new BBMOD_Cubemap(128);
+/// cubemap.Position = new BBMOD_Vec3(x, y, z);
+///
+/// /// @desc Draw event
+/// // Draw the scene into the cubemap
+/// while (cubemap.set_target())
+/// {
+///     draw_clear(c_black);
+///     renderer.render();
+///     cubemap.reset_target();
+/// }
+///
+/// // Draw the scene into the app. surface
+/// renderer.render();
+///
+/// /// @desc Clean Up event
+/// cubemap = cubemap.destroy();
+/// renderer = renderer.destroy();
+/// ```
 function BBMOD_Cubemap(_resolution)
 	: BBMOD_Class() constructor
 {
@@ -193,9 +219,13 @@ function BBMOD_Cubemap(_resolution)
 
 	/// @func prefilter_ibl()
 	///
-	/// @desc
+	/// @desc Prefilters the cubemap for use with image based lighting.
 	///
-	/// @return {Asset.GMSprite}
+	/// @return {Asset.GMSprite} The prefiltered sprite. This can be used for
+	/// reflections with {@link BBMOD_ReflectionProbe}s.
+	///
+	/// @note You must use {@link BBMOD_Cubemap.to_octahedron} first for
+	/// this method to work!
 	static prefilter_ibl = function ()
 	{
 		var _x = 0;

@@ -12,11 +12,55 @@ global.__bbmodReflectionProbeTexture = pointer_null;
 ///
 /// @extends BBMOD_Class
 ///
-/// @desc
+/// @desc Used to capture surrounding scene at a specific position into a texture
+/// which is then used for reflections.
 ///
-/// @param {Struct.BBMOD_Vec3} [_position]
-/// @param {Asset.GMSprite} [_sprite]
+/// @param {Struct.BBMOD_Vec3} [_position] The position of the reflection probe.
+/// Defaults to vector `(0, 0, 0)` if `undefined`.
+/// @param {Asset.GMSprite} [_sprite] Pre-captured reflection probe sprite. Useful
+/// for example if you want to skip your game with pre-baked probes instead of
+/// capturing them on runtime. **The sprite is deleted when the probe is re-captured
+/// or destroyed!**
 ///
+/// @example
+/// A reflection probe object:
+/// ```gml
+/// /// @desc Create event
+/// reflectionProbe = new BBMOD_ReflectionProbe();
+/// reflectionProbe.set_position(new BBMOD_Vec3(x, y, z));
+/// reflectionProbe.set_size(new BBMOD_Vec3(100, 100, 20));
+/// bbmod_reflection_probe_add(reflectionProbe);
+///
+/// /// @desc Step event
+/// if (x != xprevious || y != yprevious || z != zprevious)
+/// {
+///     // Re-capture the reflection probe if its position changes
+///     reflectionProbe.NeedsUpdate = true;
+/// }
+///
+/// /// @desc Clean Up event
+/// bbmod_reflection_probe_remove(reflectionProbe);
+/// reflectionProbe = reflectionProbe.destroy();
+/// ```
+///
+/// A model captured into reflection probes:
+/// ```gml
+/// /// @desc Create event
+/// material = BBMOD_MATERIAL_DEFAULT.clone();
+/// // Add a shader for the ReflectionCapture render pass to make the model
+/// // visible during reflection capture!
+/// material.set_shader(BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_DEFAULT);
+/// model.set_material("Material", material);
+///
+/// /// @desc Draw event
+/// model.render();
+/// ```
+///
+/// @note You need to be using a {@link BBMOD_BaseRenderer} for reflection probes
+/// to work! By default only materials {@link BBMOD_MATERIAL_TERRAIN} and
+/// {@link BBMOD_MATERIAL_SKY} are captured into reflection probes!
+///
+/// @see BBMOD_ERenderPass.ReflectionCapture
 /// @see bbmod_reflection_probe_add
 /// @see bbmod_reflection_probe_count
 /// @see bbmod_reflection_probe_get
@@ -30,42 +74,50 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 
 	static Class_destroy = destroy;
 
-	/// @var {Bool}
+	/// @var {Bool} If `false` then the probe is disabled and unused. Default
+	/// value is `true`.
 	Enabled = true;
 
-	/// @var {Struct.BBMOD_Vec3}
+	/// @var {Struct.BBMOD_Vec3} The position in the world. Default value is
+	/// `(0, 0, 0)`.
 	/// @readonly
 	/// @see BBMOD_ReflectionProbe.set_position
 	Position = _position ?? new BBMOD_Vec3();
 
-	/// @var {Struct.BBMOD_Vec3}
+	/// @var {Struct.BBMOD_Vec3} Size of AABB on each axis that marks the
+	/// probe's area of influence. The probe is active only when camera enters
+	/// this area. Default value is `(0.5, 0.5, 0.5)`, i.e. a 1x1x1 box.
 	/// @readonly
 	/// @see BBMOD_ReflectionProbe.set_size
 	Size = new BBMOD_Vec3(0.5);
 
-	/// @var {Bool}
+	/// @var {Bool} If `true` then the position or size has changed.
 	/// @private
 	__positionSizeChanged = true;
 
-	/// @var {Asset.GMSprite}
+	/// @var {Asset.GMSprite} The captured sprite used for reflections.
 	/// @readonly
 	/// @see BBMOD_ReflectionProbe.set_sprite
 	Sprite = _sprite;
 
-	/// @var {Real}
+	/// @var {Real} The resolution of a cubemap used when capturing the probe.
 	Resolution = (_sprite != undefined) ? sprite_get_height(_sprite) : 128;
 
-	/// @var {Bool}
+	/// @var {Bool} If `true` then the reflection probe needs to be re-captured.
+	/// Equals `true` when `_sprite` is not passed to the constructor. **Setting
+	/// this to `true` every frame has severe impact on performance, even for a
+	/// single reflection probe!**
 	NeedsUpdate = (_sprite == undefined);
 
-	/// @var {Bool}
-	HDR = false;
+	/// @var {Bool} If `true` then the scene is captured into a high-precision
+	/// texture (if available on the current platform). Default value is `true`.
+	HDR = true;
 
 	/// @func set_position(_position)
 	///
-	/// @desc
+	/// @desc Changes the position of the reflection probe.
 	///
-	/// @param {Struct.BBMOD_Vec3} _position
+	/// @param {Struct.BBMOD_Vec3} _position The new position.
 	///
 	/// @return {Struct.BBMOD_ReflectionProbe} Returns `self`.
 	static set_position = function (_position)
@@ -77,9 +129,9 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 
 	/// @func set_size(_size)
 	///
-	/// @desc
+	/// @desc Changes the probe's area of influence.
 	///
-	/// @param {Struct.BBMOD_Vec3} _size
+	/// @param {Struct.BBMOD_Vec3} _size The new area of influence.
 	///
 	/// @return {Struct.BBMOD_ReflectionProbe} Returns `self`.
 	static set_size = function (_size)
@@ -91,9 +143,9 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 
 	/// @func set_sprite(_sprite)
 	///
-	/// @desc
+	/// @desc Destroys the reflection probe's sprite and replaces it with a new one.
 	///
-	/// @param {Asset.GMSprite} _sprite
+	/// @param {Asset.GMSprite} _sprite The new sprite.
 	///
 	/// @return {Struct.BBMOD_ReflectionProbe} Returns `self`.
 	static set_sprite = function (_sprite)
@@ -176,12 +228,13 @@ function bbmod_reflection_probe_get(_index)
 
 /// @func bbmod_reflection_probe_find(_position)
 ///
-/// @desc Finds a reflection probe at given position.
+/// @desc Finds an enabled reflection probe at given position.
 ///
 /// @param {Struct.BBMOD_Vec3} _position The position to find a reflection probe at.
 ///
 /// @return {Struct.BBMOD_ReflectionProbe} The found reflection probe or `undefined`.
 ///
+/// @see BBMOD_ReflectionProbe.Enabled
 /// @see bbmod_reflection_probe_add
 /// @see bbmod_reflection_probe_count
 /// @see bbmod_reflection_probe_get

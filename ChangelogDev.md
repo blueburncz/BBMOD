@@ -8,15 +8,16 @@
 * Arguments of `_clearColor` and `_clearAlpha` of method `BBMOD_Cubemap.to_single_surface` are now optional and they default to `c_black` and 1 respectively.
 * Added new method `to_octahedron` to `BBMOD_Cubemap`, which converts the cubemap to an octahedral map.
 
-* Added new struct `BBMOD_ReflectionProbe`
-* Added new function `bbmod_reflection_probe_add`
-* Added new function `bbmod_reflection_probe_count`
-* Added new function `bbmod_reflection_probe_get`
-* Added new function `bbmod_reflection_probe_remove`
-* Added new function `bbmod_reflection_probe_remove_index`
-* Added new function `bbmod_reflection_probe_clear`
-* Added new member `ReflectionCapture` to `BBMOD_ERenderPass`
-* Added new method `prefilter_ibl` to `BBMOD_Cubemap`
+* Added new struct `BBMOD_ReflectionProbe`, which is used to capture surrounding scene at a specific position into a texture which is then used for reflections.
+* Added new function `bbmod_reflection_probe_add`, which adds a reflection probe to be sent to shaders.
+* Added new function `bbmod_reflection_probe_count`, which retrieves number of reflection probes added to be sent to shaders.
+* Added new function `bbmod_reflection_probe_get`, which retrieves a reflection probe at given index.
+* Added new function `bbmod_reflection_probe_find`, which finds an enabled reflection probe at given position.
+* Added new function `bbmod_reflection_probe_remove`, which removes a reflection probe so it is not sent to shaders anymore.
+* Added new function `bbmod_reflection_probe_remove_index`, which removes a reflection probe so it is not sent to shaders anymore.
+* Added new function `bbmod_reflection_probe_clear`, which removes all reflection probes sent to shaders.
+* Added new member `ReflectionCapture` to `BBMOD_ERenderPass`, which is a render pass where objects are rendered into reflection probes.
+* Added new method `prefilter_ibl` to `BBMOD_Cubemap`, which prefilters the cubemap for use with image based lighting.
 * Materials `BBMOD_MATERIAL_SKY`, `BBMOD_MATERIAL_TERRAIN` and `BBMOD_MATERIAL_TERRAIN_UNLIT` now have a shader for the new `BBMOD_ERenderPass.ReflectionCapture` pass, so they are visible in reflection probes.
 
 * Added new enum `BBMOD_EShaderUniformType`, which is an enumeration of shader uniform types.
