@@ -346,6 +346,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 		_lights ??= global.__bbmodPunctualLights;
 
+		var _renderPassMask = (1 << bbmod_render_pass_get());
+
 		var _indexA = 0;
 		var _indexMaxA = BBMOD_MAX_PUNCTUAL_LIGHTS * 8;
 		var _dataA = array_create(_indexMaxA, 0.0);
@@ -360,7 +362,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		{
 			var _light = _lights[i++];
 
-			if (_light.Enabled)
+			if (_light.Enabled
+				&& (_light.RenderPass & _renderPassMask) != 0)
 			{
 				_light.Position.ToArray(_dataA, _indexA);
 				_dataA[@ _indexA + 3] = _light.Range;

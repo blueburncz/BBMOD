@@ -14,6 +14,23 @@ function BBMOD_Light()
 	/// light is enabled).
 	Enabled = true;
 
+	/// @var {Real} Bitwise OR of 1 << render pass in which the light is enabled.
+	/// By default this is {@link BBMOD_ERenderPass.Forward}
+	/// and {@link BBMOD_ERenderPass.ReflectionCapture}, which means the light
+	/// is visible only in the forward render pass and during capture of
+	/// reflection probes.
+	///
+	/// @example
+	/// ```gml
+	/// flashlight = new BBMOD_SpotLight();
+	/// // Make the flashlight visible only in the forward render pass
+	/// flashlight.RenderPass = (1 << BBMOD_ERenderPass.Forward);
+	/// ```
+	///
+	/// @see BBMOD_ERenderPass
+	RenderPass = (1 << BBMOD_ERenderPass.Forward)
+		| (1 << BBMOD_ERenderPass.ReflectionCapture);
+
 	/// @var {Struct.BBMOD_Vec3} The position of the light.
 	Position = new BBMOD_Vec3();
 

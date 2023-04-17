@@ -19,6 +19,7 @@
 * Added new member `ReflectionCapture` to `BBMOD_ERenderPass`, which is a render pass where objects are rendered into reflection probes.
 * Added new method `prefilter_ibl` to `BBMOD_Cubemap`, which prefilters the cubemap for use with image based lighting.
 * Materials `BBMOD_MATERIAL_SKY`, `BBMOD_MATERIAL_TERRAIN` and `BBMOD_MATERIAL_TERRAIN_UNLIT` now have a shader for the new `BBMOD_ERenderPass.ReflectionCapture` pass, so they are visible in reflection probes.
+* Added new property `RenderPass` to struct `BBMOD_Light`, which is bitwise OR of 1 << render pass in which the light is enabled. By default this is `BBMOD_ERenderPass.Forward` and `BBMOD_ERenderPass.ReflectionCapture`, which means the light is visible only in the forward render pass and during capture of reflection probes.
 
 * Added new enum `BBMOD_EShaderUniformType`, which is an enumeration of shader uniform types.
 * Added new struct `BBMOD_MaterialPropertyBlock`, which is a collection of material properties. Useful in case you want to use the same material when rendering multiple models and only change some of its properties for each model.
