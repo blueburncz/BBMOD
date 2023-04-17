@@ -35,6 +35,7 @@ global.__bbmodReflectionProbeTexture = pointer_null;
 /// if (x != xprevious || y != yprevious || z != zprevious)
 /// {
 ///     // Re-capture the reflection probe if its position changes
+///     reflectionProbe.set_position(new BBMOD_Vec3(x, y, z));
 ///     reflectionProbe.NeedsUpdate = true;
 /// }
 ///
