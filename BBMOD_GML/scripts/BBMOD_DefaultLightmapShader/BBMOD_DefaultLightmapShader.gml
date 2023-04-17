@@ -23,14 +23,29 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	{
 		gml_pragma("forceinline");
 
+		var _texture = pointer_null;
+		var _texel;
+
 		_ibl ??= global.__bbmodImageBasedLight;
+
+		if (_ibl != undefined
+			&& _ibl.Enabled
+			&& _ibl.AffectLightmaps)
+		{
+			_texture = _ibl.Texture;
+			_texel = _ibl.Texel;
+		}
+
+		if (global.__bbmodReflectionProbeTexture != pointer_null)
+		{
+			_texture = global.__bbmodReflectionProbeTexture;
+			_texel = texture_get_texel_height(_texture);
+		}
 
 		var _shaderCurrent = shader_current();
 
-		if (_ibl != undefined && _ibl.Enabled && _ibl.AffectLightmaps)
+		if (_texture != pointer_null)
 		{
-			var _texture = _ibl.Texture;
-			var _texel = _ibl.Texel;
 			var _uIBL = shader_get_sampler_index(_shaderCurrent, BBMOD_U_IBL);
 
 			texture_set_stage(_uIBL, _texture);

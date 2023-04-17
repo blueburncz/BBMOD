@@ -198,7 +198,8 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 
 		_ibl ??= global.__bbmodImageBasedLight;
 
-		if (_ibl != undefined && _ibl.Enabled)
+		if (_ibl != undefined
+			&& _ibl.Enabled)
 		{
 			_texture = _ibl.Texture;
 			_texel = _ibl.Texel;
