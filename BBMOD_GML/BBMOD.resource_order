@@ -106,6 +106,7 @@
     {"name":"OPlayer","order":1,"path":"objects/OPlayer/OPlayer.yy",},
     {"name":"SndFootstep4","order":4,"path":"sounds/SndFootstep4/SndFootstep4.yy",},
     {"name":"RmGameOver","order":1,"path":"rooms/RmGameOver/RmGameOver.yy",},
+    {"name":"__bbmod_vertex_buffer","order":16,"path":"scripts/__bbmod_vertex_buffer/__bbmod_vertex_buffer.yy",},
     {"name":"DissolveParticleSystem","order":1,"path":"scripts/DissolveParticleSystem/DissolveParticleSystem.yy",},
     {"name":"bbmod_set_instance_id","order":10,"path":"scripts/bbmod_set_instance_id/bbmod_set_instance_id.yy",},
     {"name":"BBMOD_ShInstanceIDAnimated","order":1,"path":"shaders/BBMOD_ShInstanceIDAnimated/BBMOD_ShInstanceIDAnimated.yy",},

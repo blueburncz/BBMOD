@@ -110,10 +110,6 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 	/// single reflection probe!**
 	NeedsUpdate = (_sprite == undefined);
 
-	/// @var {Bool} If `true` then the scene is captured into a high-precision
-	/// texture (if available on the current platform). Default value is `true`.
-	HDR = true;
-
 	/// @func set_position(_position)
 	///
 	/// @desc Changes the position of the reflection probe.

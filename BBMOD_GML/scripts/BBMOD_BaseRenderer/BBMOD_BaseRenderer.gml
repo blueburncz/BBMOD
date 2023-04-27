@@ -415,7 +415,6 @@ function BBMOD_BaseRenderer()
 				// Copy reflection probe settings to cubemap
 				Position.Copy(_cubemap.Position);
 				_cubemap.Resolution = Resolution;
-				// TODO: HDR (cubemap surface format)
 
 				// Fill cubemap
 				bbmod_material_reset();

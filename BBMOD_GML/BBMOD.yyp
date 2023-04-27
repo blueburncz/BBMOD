@@ -194,6 +194,7 @@
     {"id":{"name":"OPlayer","path":"objects/OPlayer/OPlayer.yy",},},
     {"id":{"name":"SndFootstep4","path":"sounds/SndFootstep4/SndFootstep4.yy",},},
     {"id":{"name":"RmGameOver","path":"rooms/RmGameOver/RmGameOver.yy",},},
+    {"id":{"name":"__bbmod_vertex_buffer","path":"scripts/__bbmod_vertex_buffer/__bbmod_vertex_buffer.yy",},},
     {"id":{"name":"DissolveParticleSystem","path":"scripts/DissolveParticleSystem/DissolveParticleSystem.yy",},},
     {"id":{"name":"bbmod_set_instance_id","path":"scripts/bbmod_set_instance_id/bbmod_set_instance_id.yy",},},
     {"id":{"name":"BBMOD_ShInstanceIDAnimated","path":"shaders/BBMOD_ShInstanceIDAnimated/BBMOD_ShInstanceIDAnimated.yy",},},

@@ -44,6 +44,20 @@
 /// @param {Bool} [_ids] If `true` then the vertex format must have ids for
 /// dynamic batching. Defaults to `false`. Used only if the first argument
 /// is not a struct.
+///
+/// @example
+/// ```gml
+/// vformat = new BBMOD_VertexFormat({
+///     Vertices: true,
+///     Normals: true,
+///     TextureCoords: true,
+///     TextureCoords2: false,
+///     Colors: true,
+///     TangentW: true,
+///     Bones: false,
+///     Ids: false,
+/// });
+/// ```
 function BBMOD_VertexFormat(
 	_confOrVertices=true,
 	_normals=false,
