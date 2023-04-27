@@ -368,7 +368,8 @@ function BBMOD_Vec4(_x=0.0, _y=_x, _z=_x, _w=_x) constructor
 
 	/// @func Lerp(_v, _amount)
 	///
-	/// @desc Linearly interpolates between vector `_v` by the given amount.
+	/// @desc Linearly interpolates between vector `_v` by the given amount
+	/// and returns the result as a new vector.
 	///
 	/// @param {Struct.BBMOD_Vec4} _v The vector to interpolate with.
 	/// @param {Real} _amount The interpolation factor.
