@@ -43,6 +43,23 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		);
 	};
 
+	/// @func AddSelf(_q)
+	///
+	/// @desc Adds quaternions and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Quaternion} _q The other quaternion.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static AddSelf = function (_q)
+	{
+		gml_pragma("forceinline");
+		X += _q.X;
+		Y += _q.Y;
+		Z += _q.Z;
+		W += _q.W;
+		return self;
+	};
+
 	/// @func Clone()
 	///
 	/// @desc Creates a clone of the quaternion.
@@ -63,6 +80,21 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	{
 		gml_pragma("forceinline");
 		return new BBMOD_Quaternion(-X, -Y, -Z, W);
+	};
+
+	/// @func ConjugateSelf()
+	///
+	/// @desc Conjugates the quaternion and stores the result into `self`.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static ConjugateSelf = function ()
+	{
+		gml_pragma("forceinline");
+		X = -X;
+		Y = -Y;
+		Z = -Z;
+		// W = W;
+		return self;
 	};
 
 	/// @func Copy(_dest)
@@ -121,6 +153,32 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			);
 		}
 		return new BBMOD_Quaternion(0.0, 0.0, 0.0, exp(W));
+	};
+
+	/// @func ExpSelf()
+	///
+	/// @desc Computes an exponential map of the quaternion and stores the
+	/// result into `self`.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static ExpSelf = function ()
+	{
+		gml_pragma("forceinline");
+		var _length = Length();
+		if (_length >= math_get_epsilon())
+		{
+			var _sinc = Sinc(_length);
+			X *= _sinc;
+			Y *= _sinc;
+			Z *= _sinc;
+			W = exp(W) * cos(_length);
+			return self;
+		}
+		X = 0.0;
+		Y = 0.0;
+		Z = 0.0;
+		W = exp(W);
+		return self;
 	};
 
 	/// @func FromArray(_array[, _index])
@@ -307,6 +365,18 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		return Conjugate().Scale(1.0 / Length());
 	};
 
+	/// @func InverseSelf()
+	///
+	/// @desc Computes an inverse of the quaternion and stores the result into
+	/// `self`.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static InverseSelf = function ()
+	{
+		gml_pragma("forceinline");
+		return ConjugateSelf().ScaleSelf(1.0 / Length());
+	};
+
 	/// @func Length()
 	///
 	/// @desc Computes the length of the quaternion.
@@ -359,6 +429,25 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		);
 	};
 
+	/// @func LerpSelf(_q, _s)
+	///
+	/// @desc Computes a linear interpolation of two quaternions and stores the
+	/// result into `self`.
+	///
+	/// @param {Struct.BBMOD_Quaternion} _q The other quaternion.
+	/// @param {Real} _s The interpolation factor.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static LerpSelf = function (_q, _s)
+	{
+		gml_pragma("forceinline");
+		X = lerp(X, _q.X, _s);
+		Y = lerp(Y, _q.Y, _s);
+		Z = lerp(Z, _q.Z, _s);
+		W = lerp(W, _q.W, _s);
+		return self;
+	};
+
 	/// @func Log()
 	///
 	/// @desc Computes the logarithm map of the quaternion and returns the
@@ -384,6 +473,34 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		return new BBMOD_Quaternion(0.0, 0.0, 0.0, _w);
 	};
 
+	/// @func LogSelf()
+	///
+	/// @desc Computes the logarithm map of the quaternion and stores the result
+	/// into `self`.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static LogSelf = function ()
+	{
+		gml_pragma("forceinline");
+		var _length = Length();
+		var _w = logn(2.71828, _length);
+		var _a = arccos(W / _length);
+		if (_a >= math_get_epsilon())
+		{
+			var _mag = 1.0 / _length / Sinc(_a);
+			X *= _mag;
+			Y *= _mag;
+			Z *= _mag;
+			W = _w;
+			return self;
+		}
+		X = 0.0;
+		Y = 0.0;
+		Z = 0.0;
+		W = _w;
+		return self;
+	};
+
 	/// @func Mul(_q)
 	///
 	/// @desc Multiplies two quaternions and returns the result as a new
@@ -403,6 +520,27 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		);
 	};
 
+	/// @func MulSelf(_q)
+	///
+	/// @desc Multiplies two quaternions and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Quaternion} _q The other quaternion.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static MulSelf = function (_q)
+	{
+		gml_pragma("forceinline");
+		var _x = W * _q.X + X * _q.W + Y * _q.Z - Z * _q.Y;
+		var _y = W * _q.Y + Y * _q.W + Z * _q.X - X * _q.Z;
+		var _z = W * _q.Z + Z * _q.W + X * _q.Y - Y * _q.X;
+		var _w = W * _q.W - X * _q.X - Y * _q.Y - Z * _q.Z;
+		X = _x;
+		Y = _y;
+		Z = _z;
+		W = _w;
+		return self;
+	};
+
 	/// @func Normalize()
 	///
 	/// @desc Normalizes the quaternion and returns the result as a new
@@ -418,6 +556,22 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			return Scale(1.0 / sqrt(_lengthSqr));
 		}
 		return Clone();
+	};
+
+	/// @func NormalizeSelf()
+	///
+	/// @desc Normalizes the quaternion and stores the result into `self`.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self.
+	static NormalizeSelf = function ()
+	{
+		gml_pragma("forceinline");
+		var _lengthSqr = LengthSqr();
+		if (_lengthSqr >= math_get_epsilon())
+		{
+			return ScaleSelf(1.0 / sqrt(_lengthSqr));
+		}
+		return self;
 	};
 
 	/// @func Rotate(_v)
@@ -437,6 +591,26 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		return new BBMOD_Vec3(_rot.X, _rot.Y, _rot.Z);
 	};
 
+	/// @func RotateOther(_v)
+	///
+	/// @desc Rotates a vector using the quaternion and stores the result into
+	/// the vector.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The vector to rotate.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns vector `_v`.
+	static Rotate = function (_v)
+	{
+		gml_pragma("forceinline");
+		var _q = Normalize();
+		var _V = new BBMOD_Quaternion(_v.X, _v.Y, _v.Z, 0.0);
+		var _rot = _q.Mul(_V).Mul(_q.Conjugate());
+		_v.X = _rot.X;
+		_v.Y = _rot.Y;
+		_v.Z = _rot.Z;
+		return _v;
+	};
+
 	/// @func Scale(_s)
 	///
 	/// @desc Scales each component of the quaternion by a real value and
@@ -454,6 +628,24 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			Z * _s,
 			W * _s
 		);
+	};
+
+	/// @func ScaleSelf(_s)
+	///
+	/// @desc Scales each component of the quaternion by a real value and
+	/// stores the result into `self`.
+	///
+	/// @param {Real} _s The value to scale the quaternion by.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static ScaleSelf = function (_s)
+	{
+		gml_pragma("forceinline");
+		X *= _s;
+		Y *= _s;
+		Z *= _s;
+		W *= _s;
+		return self;
 	};
 
 	static Sinc = function (_x)
@@ -544,6 +736,88 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 			(_q12 * _s1) + (_q22 * _s2),
 			(_q13 * _s1) + (_q23 * _s2)
 		);
+	};
+
+	/// @func SlerpSelf(_q, _s)
+	///
+	/// @desc Computes a spherical linear interpolation of two quaternions
+	/// and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Quaternion} _q The other quaternion.
+	/// @param {Real} _s The interpolation factor.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static SlerpSelf = function (_q, _s)
+	{
+		gml_pragma("forceinline");
+
+		var _q10 = X;
+		var _q11 = Y;
+		var _q12 = Z;
+		var _q13 = W;
+
+		var _q20 = _q.X;
+		var _q21 = _q.Y;
+		var _q22 = _q.Z;
+		var _q23 = _q.W;
+
+		var _norm;
+
+		_norm = 1.0 / sqrt(_q10 * _q10
+			+ _q11 * _q11
+			+ _q12 * _q12
+			+ _q13 * _q13);
+
+		_q10 *= _norm;
+		_q11 *= _norm;
+		_q12 *= _norm;
+		_q13 *= _norm;
+
+		_norm = sqrt(_q20 * _q20
+			+ _q21 * _q21
+			+ _q22 * _q22
+			+ _q23 * _q23);
+
+		_q20 *= _norm;
+		_q21 *= _norm;
+		_q22 *= _norm;
+		_q23 *= _norm;
+
+		var _dot = _q10 * _q20
+			+ _q11 * _q21
+			+ _q12 * _q22
+			+ _q13 * _q23;
+
+		if (_dot < 0.0)
+		{
+			_dot = -_dot;
+			_q20 *= -1.0;
+			_q21 *= -1.0;
+			_q22 *= -1.0;
+			_q23 *= -1.0;
+		}
+
+		if (_dot > 0.9995)
+		{
+			X = lerp(_q10, _q20, _s);
+			Y = lerp(_q11, _q21, _s);
+			Z = lerp(_q12, _q22, _s);
+			W = lerp(_q13, _q23, _s);
+			return self;
+		}
+
+		var _theta0 = arccos(_dot);
+		var _theta = _theta0 * _s;
+		var _sinTheta = sin(_theta);
+		var _sinTheta0 = sin(_theta0);
+		var _s2 = _sinTheta / _sinTheta0;
+		var _s1 = cos(_theta) - (_dot * _s2);
+
+		X = (_q10 * _s1) + (_q20 * _s2);
+		Y = (_q11 * _s1) + (_q21 * _s2);
+		Z = (_q12 * _s1) + (_q22 * _s2);
+		W = (_q13 * _s1) + (_q23 * _s2);
+		return self;
 	};
 
 	/// @func ToArray([_array[, _index]])
