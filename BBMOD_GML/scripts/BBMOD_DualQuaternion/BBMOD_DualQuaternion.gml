@@ -50,6 +50,21 @@ function BBMOD_DualQuaternion(
 				Dual.Add(_dq.Dual));
 	};
 
+	/// @func AddSelf(_dq)
+	///
+	/// @desc Adds dual quaternions and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
+	///
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
+	static AddSelf = function (_dq)
+	{
+		gml_pragma("forceinline");
+		Real.AddSelf(_dq.Real),
+		Dual.AddSelf(_dq.Dual);
+		return self;
+	};
+
 	/// @func Clone()
 	///
 	/// @desc Creates a clone of the dual quaternion.
@@ -123,6 +138,21 @@ function BBMOD_DualQuaternion(
 			.FromRealDual(
 				_real,
 				_real.Mul(Dual));
+	};
+
+	/// @func ExpSelf()
+	///
+	/// @desc Computes an exponential map of the dual quaternion and stores the
+	/// result into `self`.
+	///
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
+	static ExpSelf = function ()
+	{
+		gml_pragma("forceinline");
+		var _real = Real.Exp();
+		return FromRealDual(
+			_real,
+			_real.Mul(Dual));
 	};
 
 	/// @func FromArray(_array[, _index])
@@ -276,6 +306,21 @@ function BBMOD_DualQuaternion(
 				Real.Conjugate().Mul(Dual).Scale(_scale * _scale));
 	};
 
+	/// @func LogSelf()
+	///
+	/// @desc Computes the logarithm map of the dual quaternion and stores the
+	/// result into `self`.
+	///
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
+	static LogSelf = function ()
+	{
+		gml_pragma("forceinline");
+		var _scale = 1.0 / Real.Length();
+		return FromRealDual(
+			Real.Log(),
+			Real.Clone().ConjugateSelf().MulSelf(Dual).ScaleSelf(_scale * _scale));
+	};
+
 	/// @func Mul(_dq)
 	///
 	/// @desc Multiplies two dual quaternions and returns the result as a new
@@ -324,6 +369,51 @@ function BBMOD_DualQuaternion(
 		return _res;
 	};
 
+	/// @func MulSelf(_dq)
+	///
+	/// @desc Multiplies two dual quaternions and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
+	///
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
+	static MulSelf = function (_dq)
+	{
+		gml_pragma("forceinline");
+
+		var _dq1r0 = Real.X;
+		var _dq1r1 = Real.Y;
+		var _dq1r2 = Real.Z;
+		var _dq1r3 = Real.W;
+		var _dq1d0 = Dual.X;
+		var _dq1d1 = Dual.Y;
+		var _dq1d2 = Dual.Z;
+		var _dq1d3 = Dual.W;
+		var _dq2r0 = _dq.Real.X;
+		var _dq2r1 = _dq.Real.Y;
+		var _dq2r2 = _dq.Real.Z;
+		var _dq2r3 = _dq.Real.W;
+		var _dq2d0 = _dq.Dual.X;
+		var _dq2d1 = _dq.Dual.Y;
+		var _dq2d2 = _dq.Dual.Z;
+		var _dq2d3 = _dq.Dual.W;
+
+		Real.X = (_dq2r3 * _dq1r0 + _dq2r0 * _dq1r3 + _dq2r1 * _dq1r2 - _dq2r2 * _dq1r1);
+		Real.Y = (_dq2r3 * _dq1r1 + _dq2r1 * _dq1r3 + _dq2r2 * _dq1r0 - _dq2r0 * _dq1r2);
+		Real.Z = (_dq2r3 * _dq1r2 + _dq2r2 * _dq1r3 + _dq2r0 * _dq1r1 - _dq2r1 * _dq1r0);
+		Real.W = (_dq2r3 * _dq1r3 - _dq2r0 * _dq1r0 - _dq2r1 * _dq1r1 - _dq2r2 * _dq1r2);
+
+		Dual.X = (_dq2d3 * _dq1r0 + _dq2d0 * _dq1r3 + _dq2d1 * _dq1r2 - _dq2d2 * _dq1r1)
+			+ (_dq2r3 * _dq1d0 + _dq2r0 * _dq1d3 + _dq2r1 * _dq1d2 - _dq2r2 * _dq1d1);
+		Dual.Y = (_dq2d3 * _dq1r1 + _dq2d1 * _dq1r3 + _dq2d2 * _dq1r0 - _dq2d0 * _dq1r2)
+			+ (_dq2r3 * _dq1d1 + _dq2r1 * _dq1d3 + _dq2r2 * _dq1d0 - _dq2r0 * _dq1d2);
+		Dual.Z = (_dq2d3 * _dq1r2 + _dq2d2 * _dq1r3 + _dq2d0 * _dq1r1 - _dq2d1 * _dq1r0)
+			+ (_dq2r3 * _dq1d2 + _dq2r2 * _dq1d3 + _dq2r0 * _dq1d1 - _dq2r1 * _dq1d0);
+		Dual.W = (_dq2d3 * _dq1r3 - _dq2d0 * _dq1r0 - _dq2d1 * _dq1r1 - _dq2d2 * _dq1r2)
+			+ (_dq2r3 * _dq1d3 - _dq2r0 * _dq1d0 - _dq2r1 * _dq1d1 - _dq2r2 * _dq1d2);
+
+		return self;
+	};
+
 	/// @func Normalize()
 	///
 	/// @desc Normalizes the dual quaternion and returns the result as a new
@@ -343,6 +433,23 @@ function BBMOD_DualQuaternion(
 		return _dq;
 	};
 
+	/// @func NormalizeSelf()
+	///
+	/// @desc Normalizes the dual quaternion and stores the result into `self`.
+	///
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
+	static NormalizeSelf = function ()
+	{
+		gml_pragma("forceinline");
+		var _mag = Real.Dot(Real);
+		if (_mag > math_get_epsilon())
+		{
+			Real.ScaleSelf(1.0 / _mag);
+			Dual.ScaleSelf(1.0 / _mag);
+		}
+		return self;
+	};
+
 	/// @func Pow(_p)
 	///
 	/// @desc Computes the power of the dual quaternion raised to a real number
@@ -357,6 +464,20 @@ function BBMOD_DualQuaternion(
 		return Log().Scale(_p).Exp();
 	};
 
+	/// @func PowSelf(_p)
+	///
+	/// @desc Computes the power of the dual quaternion raised to a real number
+	/// and stores the result into `self`.
+	///
+	/// @param {Real} _p The power value.
+	///
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `sefl`.
+	static PowSelf = function (_p)
+	{
+		gml_pragma("forceinline");
+		return LogSelf().ScaleSelf(_p).ExpSelf();
+	};
+
 	/// @func Rotate(_v)
 	///
 	/// @desc Rotates a vector using the dual quaternion and returns the result
@@ -369,6 +490,20 @@ function BBMOD_DualQuaternion(
 	{
 		gml_pragma("forceinline");
 		return Real.Rotate(_v);
+	};
+
+	/// @func RotateOther(_v)
+	///
+	/// @desc Rotates a vector using the dual quaternion and stores the result
+	/// into the vector,
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The vector to rotate.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns vector `_v`.
+	static RotateOther = function (_v)
+	{
+		gml_pragma("forceinline");
+		return Real.RotateOter(_v);
 	};
 
 	/// @func Scale(_s)
@@ -388,6 +523,22 @@ function BBMOD_DualQuaternion(
 		return _dq;
 	};
 
+	/// @func ScaleSelf(_s)
+	///
+	/// @desc Scales each component of the dual quaternion by a real value and
+	/// stores the result into `self`.
+	///
+	/// @param {Real} _s The value to scale the dual quaternion by.
+	///
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
+	static Scale = function (_s)
+	{
+		gml_pragma("forceinline");
+		Real.ScaleSelf(_s);
+		Dual.ScaleSelf(_s);
+		return self;
+	};
+
 	/// @func Sclerp(_dq, _s)
 	///
 	/// @desc Computes a screw linear interpolation of two dual quaternions
@@ -400,7 +551,25 @@ function BBMOD_DualQuaternion(
 	static Sclerp = function (_dq, _s)
 	{
 		gml_pragma("forceinline");
-		return _dq.Mul(Conjugate()).Pow(_s).Mul(self).Normalize();
+		return _dq.Clone().MulSelf(Conjugate()).PowSelf(_s).MulSelf(self)
+			.NormalizeSelf();
+	};
+
+	/// @func SclerpSelf(_dq, _s)
+	///
+	/// @desc Computes a screw linear interpolation of two dual quaternions
+	/// and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_DualQuaternion} _dq The other dual quaternion.
+	/// @param {Real} _s The interpolation factor.
+	///
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
+	static SclerpSelf = function (_dq, _s)
+	{
+		gml_pragma("forceinline");
+		_dq.Clone().MulSelf(Conjugate()).PowSelf(_s).MulSelf(self)
+			.NormalizeSelf().Copy(self);
+		return self;
 	};
 
 	/// @func ToArray([_array[, _index]])
@@ -483,7 +652,22 @@ function BBMOD_DualQuaternion(
 	static Transform = function (_v)
 	{
 		gml_pragma("forceinline");
-		return GetTranslation().Add(Real.Rotate(_v));
+		return GetTranslation().AddSelf(Real.Rotate(_v));
+	};
+
+	/// @func TransformOther(_v)
+	///
+	/// @desc Translates and rotates a vector using the dual quaternion
+	/// and stores the result into the vector.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The vector to transform.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns vector `_v`.
+	static TransformOther = function (_v)
+	{
+		gml_pragma("forceinline");
+		GetTranslation().AddSelf(Real.Rotate(_v)).Copy(_v);
+		return _v;
 	};
 }
 
