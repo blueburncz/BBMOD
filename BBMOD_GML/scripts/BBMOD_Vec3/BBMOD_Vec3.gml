@@ -57,6 +57,25 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func AbsSelf()
+	///
+	/// @desc Sets each component to its absolute value.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// new BBMOD_Vec3(-1.0, 2.0, -3.0).AbsSelf() // => BBMOD_Vec3(1.0, 2.0, 3.0)
+	/// ```
+	static AbsSelf = function ()
+	{
+		gml_pragma("forceinline");
+		X = abs(X);
+		Y = abs(Y);
+		Z = abs(Z);
+		return self;
+	};
+
 	/// @func Add(_v)
 	///
 	/// @desc Adds vectors and returns the result as a new vector.
@@ -72,6 +91,22 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			Y + _v.Y,
 			Z + _v.Z
 		);
+	};
+
+	/// @func AddSelf(_v)
+	///
+	/// @desc Adds vectors and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static AddSelf = function (_v)
+	{
+		gml_pragma("forceinline");
+		X += _v.X;
+		Y += _v.Y;
+		Z += _v.Z;
+		return self;
 	};
 
 	/// @func Ceil()
@@ -95,6 +130,26 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func CeilSelf()
+	///
+	/// @desc Applies function `ceil` to each component of the vector and stores
+	/// the result into `sefl`.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// new BBMOD_Vec3(0.2, 1.6, 2.4).CeilSelf() // => BBMOD_Vec3(1.0, 2.0, 3.0)
+	/// ```
+	static CeilSelf = function ()
+	{
+		gml_pragma("forceinline");
+		X = ceil(X);
+		Y = ceil(Y);
+		Z = ceil(Z);
+		return self;
+	};
+
 	/// @func Clamp(_min, _max)
 	///
 	/// @desc Clamps each component of the vector between corresponding
@@ -112,6 +167,24 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			clamp(Y, _min.Y, _max.Y),
 			clamp(Z, _min.Z, _max.Z)
 		);
+	};
+
+	/// @func ClampSelf(_min, _max)
+	///
+	/// @desc Clamps each component of the vector between corresponding
+	/// components of `_min` and `_max` and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _min A vector with minimum components.
+	/// @param {Struct.Struct.BBMOD_Vec3} _max A vector with maximum components.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static ClampSelf = function (_min, _max)
+	{
+		gml_pragma("forceinline");
+		X = clamp(X, _min.X, _max.X);
+		Y = clamp(Y, _min.Y, _max.Y);
+		Z = clamp(Z, _min.Z, _max.Z);
+		return self;
 	};
 
 	/// @func ClampLength(_min, _max)
@@ -147,6 +220,40 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			(Y / _length) * _newLength,
 			(Z / _length) * _newLength
 		);
+	};
+
+	/// @func ClampLengthSelf(_min, _max)
+	///
+	/// @desc Clamps the length of the vector between `_min` and `_max` and
+	/// stores the result into `self`.
+	///
+	/// @param {Real} _min The minimum length of the vector.
+	/// @param {Real} _max The maximum length of the vector.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// // => BBMOD_Vec3(3.0, 0.0, 0.0):
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(1.0, 5.0)
+	/// // => BBMOD_Vec3(4.0, 0.0, 0.0):
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(4.0, 5.0)
+	/// // => BBMOD_Vec3(2.0, 0.0, 0.0):
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(1.0, 2.0)
+	/// ```
+	static ClampLengthSelf = function (_min, _max)
+	{
+		gml_pragma("forceinline");
+		var _length = sqrt(
+			  X * X
+			+ Y * Y
+			+ Z * Z
+		);
+		var _newLength = clamp(_length, _min, _max);
+		X = (X / _length) * _newLength;
+		Y = (Y / _length) * _newLength;
+		Z = (Z / _length) * _newLength;
+		return self;
 	};
 
 	/// @func Clone()
@@ -262,6 +369,26 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func FloorSelf()
+	///
+	/// @desc Applies function `floor` to each component of the vector and stores
+	/// the result into `self`.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// new BBMOD_Vec3(0.2, 1.6, 2.4).FloorSelf() // => BBMOD_Vec3(0.0, 1.0, 2.0)
+	/// ```
+	static FloorSelf = function ()
+	{
+		gml_pragma("forceinline");
+		X = floor(X);
+		Y = floor(Y);
+		Z = floor(Z);
+		return self;
+	};
+
 	/// @func Frac()
 	///
 	/// @desc Applies function `frac` to each component of the vector and returns
@@ -281,6 +408,26 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			frac(Y),
 			frac(Z)
 		);
+	};
+
+	/// @func FracSelf()
+	///
+	/// @desc Applies function `frac` to each component of the vector and stores
+	/// the result into `self`.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// new BBMOD_Vec3(0.2, 1.6, 2.4).FracSelf() // => BBMOD_Vec3(0.2, 0.6, 0.4)
+	/// ```
+	static FracSelf = function ()
+	{
+		gml_pragma("forceinline");
+		X = frac(X);
+		Y = frac(Y);
+		Z = frac(Z);
+		return self;
 	};
 
 	/// @func FromArray(_array[, _index])
@@ -389,6 +536,24 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func LerpSelf(_v, _amount)
+	///
+	/// @desc Linearly interpolates between vector `_v` by the given amount
+	/// and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The vector to interpolate with.
+	/// @param {Real} _amount The interpolation factor.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static LerpSelf = function (_v, _amount)
+	{
+		gml_pragma("forceinline");
+		X = lerp(X, _v.X, _amount);
+		Y = lerp(Y, _v.Y, _amount);
+		Z = lerp(Z, _v.Z, _amount);
+		return self;
+	};
+
 	/// @func MaxComponent()
 	///
 	/// @desc Computes the greatest component of the vector.
@@ -427,6 +592,30 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			max(Y, _v.Y),
 			max(Z, _v.Z)
 		);
+	};
+
+	/// @func MaximizeSelf(_v)
+	///
+	/// @desc Takes the maximum of each component of this vector and vector
+	/// `_v` and stores it into `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// var _v1 = new BBMOD_Vec3(1.0, 4.0, 5.0);
+	/// var _v2 = new BBMOD_Vec3(2.0, 3.0, 6.0);
+	/// _v1.MaximizeSelf(_v2); // Equals to BBMOD_Vec3(2.0, 4.0, 6.0)
+	/// ```
+	static MaximizeSelf = function (_v)
+	{
+		gml_pragma("forceinline");
+		X = max(X, _v.X);
+		Y = max(Y, _v.Y);
+		Z = max(Z, _v.Z);
+		return self;
 	};
 
 	/// @func MinComponent()
@@ -469,6 +658,30 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func MinimizeSelf(_v)
+	///
+	/// @desc Takes the minimum from each component of this vector and vector
+	/// `_v` and stores it into `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// var _v1 = new BBMOD_Vec3(1.0, 4.0, 5.0);
+	/// var _v2 = new BBMOD_Vec3(2.0, 3.0, 6.0);
+	/// _v1.MinimizeSelf(_v2); // Equals to BBMOD_Vec3(1.0, 3.0, 5.0)
+	/// ```
+	static MinimizeSelf = function (_v)
+	{
+		gml_pragma("forceinline");
+		X = min(X, _v.X);
+		Y = min(Y, _v.Y);
+		Z = min(Z, _v.Z);
+		return self;
+	};
+
 	/// @func Mul(_v)
 	///
 	/// @desc Multiplies the vector with vector `_v` and returns the result
@@ -487,6 +700,23 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func MulSelf(_v)
+	///
+	/// @desc Multiplies the vector with vector `_v` and stores the result into
+	/// `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static MulSelf = function (_v)
+	{
+		gml_pragma("forceinline");
+		X = X * _v.X;
+		Y = Y * _v.Y;
+		Z = Z * _v.Z;
+		return self;
+	};
+
 	/// @func Negate()
 	///
 	/// @desc Negates the vector and returns the result as a new vector.
@@ -500,6 +730,20 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			-Y,
 			-Z
 		);
+	};
+
+	/// @func NegateSelf()
+	///
+	/// @desc Negates the vector and stores the result into self.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static NegateSelf = function ()
+	{
+		gml_pragma("forceinline");
+		X = -X;
+		Y = -Y;
+		Z = -Z;
+		return self;
 	};
 
 	/// @func Normalize()
@@ -529,6 +773,29 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			Y,
 			Z
 		);
+	};
+
+	/// @func NormalizeSelf()
+	///
+	/// @desc Normalizes the vector and stores the result into `self`.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static NormalizeSelf = function ()
+	{
+		gml_pragma("forceinline");
+		var _lengthSqr = (
+			  X * X
+			+ Y * Y
+			+ Z * Z
+		);
+		if (_lengthSqr >= math_get_epsilon())
+		{
+			var _n = 1.0 / sqrt(_lengthSqr);
+			X = X * _n;
+			Y = Y * _n;
+			Z = Z * _n;
+		}
+		return self;
 	};
 
 	/// @func Orthonormalize(_v)
@@ -580,6 +847,28 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func ReflectSelf(_v)
+	///
+	/// @desc Reflects the vector from vector `_v` and stores the result into
+	/// `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The vector to reflect from.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static ReflectSelf = function (_v)
+	{
+		gml_pragma("forceinline");
+		var _dot2 = (
+			  X * _v.X
+			+ Y * _v.Y
+			+ Z * _v.Z
+		) * 2.0;
+		X = X - (_dot2 * _v.X);
+		Y = Y - (_dot2 * _v.Y);
+		Z = Z - (_dot2 * _v.Z);
+		return self;
+	};
+
 	/// @func Round()
 	///
 	/// @desc Applies function `round` to each component of the vector and returns
@@ -599,6 +888,26 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			round(Y),
 			round(Z)
 		);
+	};
+
+	/// @func RoundSelf()
+	///
+	/// @desc Applies function `round` to each component of the vector and stores
+	/// the result into `self`.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// new BBMOD_Vec3(0.2, 1.6, 2.4).RoundSelf() // => BBMOD_Vec3(0.0, 2.0, 2.0)
+	/// ```
+	static RoundSelf = function ()
+	{
+		gml_pragma("forceinline");
+		X = round(X);
+		Y = round(Y);
+		Z = round(Z);
+		return self;
 	};
 
 	/// @func Scale(_s)
@@ -622,6 +931,28 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			Y * _s,
 			Z * _s
 		);
+	};
+
+	/// @func ScaleSelf(_s)
+	///
+	/// @desc Scales each component of the vector by `_s` and stores the result
+	/// into `self`.
+	///
+	/// @param {Real} _s The value to scale the components by.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// new BBMOD_Vec3(1.0, 2.0, 3.0).Scale(2.0) // => BBMOD_Vec3(2.0, 4.0, 6.0)
+	/// ```
+	static ScaleSelf = function (_s)
+	{
+		gml_pragma("forceinline")
+		X = X * _s;
+		Y = Y * _s;
+		Z = Z * _s;
+		return self;
 	};
 
 	/// @func Get(_index)
@@ -728,6 +1059,30 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func SubSelf(_v)
+	///
+	/// @desc Subtracts vector `_v` from this vector and stores the result
+	/// into `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The vector to subtract from this one.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// var _v1 = new BBMOD_Vec3(1.0, 2.0, 3.0);
+	/// var _v2 = new BBMOD_Vec3(4.0, 5.0, 6.0);
+	/// _v1.SubSelf(_v2); // Equals to BBMOD_Vec3(-3.0, -3.0, -3.0)
+	/// ```
+	static SubSelf = function (_v)
+	{
+		gml_pragma("forceinline")
+		X = X - _v.X;
+		Y = Y - _v.Y;
+		Z = Z - _v.Z;
+		return self;
+	};
+
 	/// @func ToArray([_array[, _index]])
 	///
 	/// @desc Writes the components of the vector into the target array.
@@ -788,5 +1143,28 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			_res[1],
 			_res[2]
 		);
+	};
+
+	/// @func TransformSelf(_matrix)
+	///
+	/// @desc Transforms vector `(X, Y, Z, 1.0)` by a matrix and stores the
+	/// result into `self`.
+	///
+	/// @param {Array<Real>, Struct.BBMOD_Matrix} _matrix The matrix to transform
+	/// the vector by.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static TransformSelf = function (_matrix)
+	{
+		gml_pragma("forceinline")
+		if (is_struct(_matrix))
+		{
+			_matrix = _matrix.Raw;
+		}
+		var _res = matrix_transform_vertex(_matrix, X, Y, Z);
+		X = _res[0];
+		Y = _res[1];
+		Z = _res[2];
+		return self;
 	};
 }
