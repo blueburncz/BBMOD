@@ -365,8 +365,19 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	static Inverse = function ()
 	{
 		gml_pragma("forceinline");
+		return Clone().InverseSelf();
+	};
 
-		var _res = new BBMOD_Matrix();
+	/// @func InverseSelf()
+	///
+	/// @desc Computes a matrix that is inverse to this one and stores it into
+	/// `self`.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static InverseSelf = function ()
+	{
+		gml_pragma("forceinline");
+
 		var _m   = Raw;
 		var _m0  = _m[ 0];
 		var _m1  = _m[ 1];
@@ -395,7 +406,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 		var _s = 1.0 / _determinant;
 
-		_res.Raw = [
+		Raw = [
 			_s * ((_m6 * _m11 * _m13) - (_m7 * _m10 * _m13) + (_m7 * _m9 * _m14) - (_m5 * _m11 * _m14) - (_m6 * _m9 * _m15) + (_m5 * _m10 * _m15)),
 			_s * ((_m3 * _m10 * _m13) - (_m2 * _m11 * _m13) - (_m3 * _m9 * _m14) + (_m1 * _m11 * _m14) + (_m2 * _m9 * _m15) - (_m1 * _m10 * _m15)),
 			_s * ((_m2 *  _m7 * _m13) - (_m3 *  _m6 * _m13) + (_m3 * _m5 * _m14) - (_m1 *  _m7 * _m14) - (_m2 * _m5 * _m15) + (_m1 *  _m6 * _m15)),
@@ -414,12 +425,12 @@ function BBMOD_Matrix(_raw=undefined) constructor
 			_s * ((_m1 *  _m6 *  _m8) - (_m2 *  _m5 *  _m8) + (_m2 * _m4 *  _m9) - (_m0 *  _m6 *  _m9) - (_m1 * _m4 * _m10) + (_m0 *  _m5 * _m10)),
 		];
 
-		return _res;
+		return self;
 	};
 
 	/// @func Mul(_matrix, ...)
 	///
-	/// @desc Multiplies matrices.
+	/// @desc Multiplies matrices and returns the result as a new matrix.
 	///
 	/// @param {Struct.BBMOD_Matrix} _matrix The first matrix to multiply with.
 	///
@@ -450,10 +461,42 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func MulSelf(_matrix, ...)
+	///
+	/// @desc Multiplies matrices and stores the result into `sefl`.
+	///
+	/// @param {Struct.BBMOD_Matrix} _matrix The first matrix to multiply with.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// var _world = new BBMOD_Matrix().FromWorld();
+	/// var _view = new BBMOD_Matrix().FromView();
+	/// var _projection = new BBMOD_Matrix().FromProjection();
+	/// var _worldViewProjection = _world.Mul(_view, _projection);
+	/// ```
+	/// Please note that this example only shows that you can pass multiple
+	/// matrices to this method. If you would actually like to get the
+	/// `world * view * projection` matrix, you can simply call
+	/// {@link BBMOD_Matrix.FromWorldViewProjection}.
+	static MulSelf = function (_matrix)
+	{
+		gml_pragma("forceinline");
+		var _raw = matrix_multiply(Raw, _matrix.Raw);
+		var _index = 1;
+		repeat (argument_count - 1)
+		{
+			_raw = matrix_multiply(_raw, argument[_index++]);
+		}
+		Raw = _raw;
+		return self;
+	};
+
 	/// @func MulComponentwise(_matrix)
 	///
 	/// @desc Multiplies each component of the matrix with corresponding
-	/// component of other matrix.
+	/// component of other matrix and returns the result as a new matrix.
 	///
 	/// @param {Struct.BBMOD_Matrix} _matrix The matrix to multiply componentwise
 	/// with.
@@ -462,22 +505,36 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	static MulComponentwise = function (_matrix)
 	{
 		gml_pragma("forceinline");
-		var _res = new BBMOD_Matrix();
+		return Clone().MulComponentwiseSelf(_matrix);
+	};
+
+	/// @func MulComponentwiseSelf(_matrix)
+	///
+	/// @desc Multiplies each component of the matrix with corresponding
+	/// component of other matrix and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Matrix} _matrix The matrix to multiply componentwise
+	/// with.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static MulComponentwiseSelf = function (_matrix)
+	{
+		gml_pragma("forceinline");
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
 		var _index = 0;
 		repeat (16)
 		{
-			_res.Raw[@ _index] = _selfRaw[_index] * _otherRaw[_index];
+			_selfRaw[@ _index] *= _otherRaw[_index];
 			++_index;
 		}
-		return _res;
+		return self;
 	};
 
 	/// @func AddComponentwise(_matrix)
 	///
 	/// @desc Adds each component of the matrix to corresponding component of
-	/// other matrix.
+	/// other matrix and returns the result as a new matrix.
 	///
 	/// @param {Struct.BBMOD_Matrix} _matrix The matrix to add componentwise with.
 	///
@@ -485,22 +542,35 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	static AddComponentwise = function (_matrix)
 	{
 		gml_pragma("forceinline");
-		var _res = new BBMOD_Matrix();
+		return Clone().AddComponentwiseSelf(_matrix);
+	};
+
+	/// @func AddComponentwiseSelf(_matrix)
+	///
+	/// @desc Adds each component of the matrix to corresponding component of
+	/// other matrix and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Matrix} _matrix The matrix to add componentwise with.
+	///
+	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
+	static AddComponentwiseSelf = function (_matrix)
+	{
+		gml_pragma("forceinline");
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
 		var _index = 0;
 		repeat (16)
 		{
-			_res.Raw[@ _index] = _selfRaw[_index] + _otherRaw[_index];
+			_selfRaw[@ _index] += _otherRaw[_index];
 			++_index;
 		}
-		return _res;
+		return self;
 	};
 
 	/// @func SubComponentwise(_matrix)
 	///
 	/// @desc Subtracts each component of a matrix from corresponding component
-	/// of this matrix.
+	/// of this matrix and returns the result as a new matrix.
 	///
 	/// @param {Struct.BBMOD_Matrix} _matrix The matrix that subtracts
 	/// componentwise from this one.
@@ -509,16 +579,30 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	static SubComponentwise = function (_matrix)
 	{
 		gml_pragma("forceinline");
-		var _res = new BBMOD_Matrix();
+		return Clone().SubComponentwiseSelf(_matrix);
+	};
+
+	/// @func SubComponentwiseSelf(_matrix)
+	///
+	/// @desc Subtracts each component of a matrix from corresponding component
+	/// of this matrix and stores the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Matrix} _matrix The matrix that subtracts
+	/// componentwise from this one.
+	///
+	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
+	static SubComponentwiseSelf = function (_matrix)
+	{
+		gml_pragma("forceinline");
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
 		var _index = 0;
 		repeat (16)
 		{
-			_res.Raw[@ _index] = _selfRaw[_index] - _otherRaw[_index];
+			_selfRaw[@ _index] -= _otherRaw[_index];
 			++_index;
 		}
-		return _res;
+		return self;
 	};
 
 	/// @func Transform(_vector)
@@ -535,6 +619,20 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _vector.Transform(Raw);
 	};
 
+	/// @func TransformOther(_vector)
+	///
+	/// @desc Transforms a vector by the matrix and stores the result into the
+	/// vector.
+	///
+	/// @param {Struct.BBMOD_Vec4} _vector The vector to transform.
+	///
+	/// @return {Struct.BBMOD_Vec4} The vector `_v`.
+	static TransformOther = function (_vector)
+	{
+		gml_pragma("forceinline");
+		return _vector.TransformSelf(Raw);
+	};
+
 	/// @func Transpose()
 	///
 	/// @desc Creates a transpose of this matrix.
@@ -543,20 +641,30 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	static Transpose = function ()
 	{
 		gml_pragma("forceinline");
-		var _res = new BBMOD_Matrix();
+		return Clone().Transpose();
+	};
+
+	/// @func TransposeSelf()
+	///
+	/// @desc Transposes this matrix in-place.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static TransposeSelf = function ()
+	{
+		gml_pragma("forceinline");
 		var _m = Raw;
-		_res.Raw = [
+		Raw = [
 			_m[0], _m[4], _m[ 8], _m[12],
 			_m[1], _m[5], _m[ 9], _m[13],
 			_m[2], _m[6], _m[10], _m[14],
 			_m[3], _m[7], _m[11], _m[15],
 		];
-		return _res;
+		return self;
 	};
 
 	/// @func Translate(_x[, _y, _z])
 	///
-	/// @desc Translates the matrix.
+	/// @desc Translates the matrix and returns the result as a new matrix.
 	///
 	/// @param {Real, Struct.BBMOD_Vec3} _x Translation on the X axis or a
 	/// vector with translations on all axes.
@@ -569,17 +677,35 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	static Translate = function (_x, _y=undefined, _z=undefined)
 	{
 		gml_pragma("forceinline");
-		var _res = new BBMOD_Matrix();
-		_res.Raw = matrix_multiply(Raw,
+		return Clone().TranslateSelf(_x, _y, _z);
+	};
+
+	/// @func TranslateSelf(_x[, _y, _z])
+	///
+	/// @desc Translates the matrix and stores the result into `self`.
+	///
+	/// @param {Real, Struct.BBMOD_Vec3} _x Translation on the X axis or a
+	/// vector with translations on all axes.
+	/// @param {Real} [_y] Translation on the Y axis. Use `undefined` if `_x` is
+	/// a vector. Defaults to `undefined`.
+	/// @param {Real} [_z] Translation on the Z axis. Use `undefined` if `_x` is
+	/// a vector. Defaults to `undefined`.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static TranslateSelf = function (_x, _y=undefined, _z=undefined)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
 			is_struct(_x)
 				? matrix_build(_x.X, _x.Y, _x.Z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
 				: matrix_build(_x, _y, _z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
-		return _res;
+		return self;
 	};
 
 	/// @func TranslateX(_x)
 	///
-	/// @desc Translates the matrix on the X axis.
+	/// @desc Translates the matrix on the X axis and returns the result as a
+	/// new matrix.
 	///
 	/// @param {Real} _x Translation on the X axis.
 	///
@@ -593,9 +719,26 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func TranslateXSelf(_x)
+	///
+	/// @desc Translates the matrix on the X axis and stores the result into
+	/// `self`.
+	///
+	/// @param {Real} _x Translation on the X axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static TranslateXSelf = function (_x)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(_x, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
+		return self;
+	};
+
 	/// @func TranslateY(_y)
 	///
-	/// @desc Translates the matrix on the Y axis.
+	/// @desc Translates the matrix on the Y axis and returns the result as a
+	/// new matrix.
 	///
 	/// @param {Real} _y Translation on the Y axis.
 	///
@@ -608,10 +751,27 @@ function BBMOD_Matrix(_raw=undefined) constructor
 			matrix_build(0.0, _y, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
 		return _res;
 	};
+	
+	/// @func TranslateYSelf(_y)
+	///
+	/// @desc Translates the matrix on the Y axis and stores the result into
+	/// `self`.
+	///
+	/// @param {Real} _y Translation on the Y axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static TranslateYSelf = function (_y)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(0.0, _y, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
+		return self;
+	};
 
 	/// @func TranslateZ(_z)
 	///
-	/// @desc Translates the matrix on the Z axis.
+	/// @desc Translates the matrix on the Z axis and returns the result as a
+	/// new matrix.
 	///
 	/// @param {Real} _z Translation on the Z axis.
 	///
@@ -625,9 +785,26 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func TranslateZSelf(_z)
+	///
+	/// @desc Translates the matrix on the Z axis and stores the result into
+	/// `self`.
+	///
+	/// @param {Real} _z Translation on the Z axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static TranslateZSelf = function (_z)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(0.0, 0.0, _z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
+		return self;
+	};
+
 	/// @func RotateEuler(_x[, _y, _z])
 	///
-	/// @desc Rotates the matrix using euler angles.
+	/// @desc Rotates the matrix using euler angles and returns the result as a
+	/// new matrix.
 	///
 	/// @param {Real, Struct.BBMOD_Vec3} _x Rotation on the X axis or a vector
 	/// with rotations on all axes.
@@ -650,9 +827,35 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func RotateEulerSelf(_x[, _y, _z])
+	///
+	/// @desc Rotates the matrix using euler angles and stores the result into
+	/// `self`.
+	///
+	/// @param {Real, Struct.BBMOD_Vec3} _x Rotation on the X axis or a vector
+	/// with rotations on all axes.
+	/// @param {Real} [_y] Rotation on the Y axis. Use `undefined` if `_x` is a
+	/// vector. Defaults to `undefined`.
+	/// @param {Real} [_z] Rotation on the Z axis. Use `undefined` if `_x` is a
+	/// vector. Defaults to `undefined`.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	///
+	/// @note The order of rotations is YXZ, same as in `matrix_build`.
+	static RotateEulerSelf = function (_x, _y=undefined, _z=undefined)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			is_struct(_x)
+				? matrix_build(0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z, 1.0, 1.0, 1.0)
+				: matrix_build(0.0, 0.0, 0.0, _x, _y, _z, 1.0, 1.0, 1.0));
+		return self;
+	};
+
 	/// @func RotateQuat(_quat)
 	///
-	/// @desc Rotates the matrix using a quaternion
+	/// @desc Rotates the matrix using a quaternion and returns the result as a
+	/// new matrix.
 	///
 	/// @param {Struct.BBMOD_Quaternion} _quat The quaternion to rotate the
 	/// matrix with.
@@ -666,9 +869,26 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func RotateQuatSelf(_quat)
+	///
+	/// @desc Rotates the matrix using a quaternion and stores the result into
+	/// `self`.
+	///
+	/// @param {Struct.BBMOD_Quaternion} _quat The quaternion to rotate the
+	/// matrix with.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static RotateQuatSelf = function (_quat)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw, _quat.ToMatrix());
+		return self;
+	};
+
 	/// @func RotateX(_x)
 	///
-	/// @desc Rotates the matrix on the X axis.
+	/// @desc Rotates the matrix on the X axis and returns the result as a new
+	/// matrix.
 	///
 	/// @param {Real} _x Rotation on the X axis.
 	///
@@ -682,9 +902,25 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func RotateXSelf(_x)
+	///
+	/// @desc Rotates the matrix on the X axis and stores the result into `sefl`.
+	///
+	/// @param {Real} _x Rotation on the X axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static RotateXSelf = function (_x)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(0.0, 0.0, 0.0, _x, 0.0, 0.0, 1.0, 1.0, 1.0));
+		return self;
+	};
+
 	/// @func RotateY(_y)
 	///
-	/// @desc Rotates the matrix on the Y axis.
+	/// @desc Rotates the matrix on the Y axis and returns the result as a new
+	/// matrix.
 	///
 	/// @param {Real} _y Rotation on the Y axis.
 	///
@@ -698,9 +934,25 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func RotateYSelf(_y)
+	///
+	/// @desc Rotates the matrix on the Y axis and stores the result into `self`.
+	///
+	/// @param {Real} _y Rotation on the Y axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static RotateYSelf = function (_y)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(0.0, 0.0, 0.0, 0.0, _y, 0.0, 1.0, 1.0, 1.0));
+		return self;
+	};
+
 	/// @func RotateZ(_z)
 	///
-	/// @desc Rotates the matrix on the Z axis.
+	/// @desc Rotates the matrix on the Z axis and returns the result as a new
+	/// matrix.
 	///
 	/// @param {Real} _z Rotation on the Z axis.
 	///
@@ -714,9 +966,24 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func RotateZSelf(_z)
+	///
+	/// @desc Rotates the matrix on the Z axis and stores the result into `self`.
+	///
+	/// @param {Real} _z Rotation on the Z axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static RotateZSelf = function (_z)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, _z, 1.0, 1.0, 1.0));
+		return self;
+	};
+
 	/// @func Scale(_x[, _y, _z])
 	///
-	/// @desc Scales the matrix.
+	/// @desc Scales the matrix and returns the result as a new matrix.
 	///
 	/// @param {Real, Struct.BBMOD_Vec3} _x Scale on the X axis or a vector with
 	/// scale on all axes.
@@ -737,9 +1004,32 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func Scale(_x[, _y, _z])
+	///
+	/// @desc Scales the matrix and returns the stores the result into `self`.
+	///
+	/// @param {Real, Struct.BBMOD_Vec3} _x Scale on the X axis or a vector with
+	/// scale on all axes.
+	/// @param {Real} [_y] Scale on the Y axis. Use `undefined` if `_x` is a
+	/// vector. Defaults to `undefined`.
+	/// @param {Real} [_z] Scale on the Z axis. Use `undefined` if `_x` is a
+	/// vector. Defaults to `undefined`.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static ScaleSelf = function (_x, _y=undefined, _z=undefined)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			is_struct(_x)
+				? matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z)
+				: matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x, _y, _z));
+		return self;
+	};
+
 	/// @func ScaleComponentwise(_s)
 	///
-	/// @desc Scales each component of the matrix.
+	/// @desc Scales each component of the matrix and returns the result as a
+	/// new matrix.
 	///
 	/// @param {Real} _s The value to scale the components with.
 	///
@@ -758,9 +1048,31 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func ScaleComponentwiseSelf(_s)
+	///
+	/// @desc Scales each component of the matrix and stores the result into
+	/// `self`.
+	///
+	/// @param {Real} _s The value to scale the components with.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static ScaleComponentwiseSelf = function (_s)
+	{
+		gml_pragma("forceinline");
+		var _selfRaw = Raw;
+		var _index = 0;
+		repeat (16)
+		{
+			_selfRaw[@ _index] *= _s;
+			++_index;
+		}
+		return self;
+	};
+
 	/// @func ScaleX(_x)
 	///
-	/// @desc Scales the matrix on the X axis.
+	/// @desc Scales the matrix on the X axis and returns the result as a new
+	/// matrix.
 	///
 	/// @param {Real} _x Scale on the X axis.
 	///
@@ -774,9 +1086,25 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func ScaleXSelf(_x)
+	///
+	/// @desc Scales the matrix on the X axis and stores the result into `sefl`.
+	///
+	/// @param {Real} _x Scale on the X axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
+	static ScaleXSelf = function (_x)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x, 1.0, 1.0));
+		return self;
+	};
+
 	/// @func ScaleY(_y)
 	///
-	/// @desc Scales the matrix on the Y axis.
+	/// @desc Scales the matrix on the Y axis and returns the result as a new
+	/// matrix.
 	///
 	/// @param {Real} _y Scale on the Y axis.
 	///
@@ -790,9 +1118,25 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	};
 
+	/// @func ScaleYSelf(_y)
+	///
+	/// @desc Scales the matrix on the Y axis and stores the result into `self`.
+	///
+	/// @param {Real} _y Scale on the Y axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static ScaleYSelf = function (_y)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, _y, 1.0));
+		return self;
+	};
+
 	/// @func ScaleZ(_z)
 	///
-	/// @desc Scales the matrix on the Z axis.
+	/// @desc Scales the matrix on the Z axis and returns the result as a new
+	/// matrix.
 	///
 	/// @param {Real} _z Scale on the Z axis.
 	///
@@ -804,6 +1148,21 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		_res.Raw = matrix_multiply(Raw,
 			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, _z));
 		return _res;
+	};
+
+	/// @func ScaleZSelf(_z)
+	///
+	/// @desc Scales the matrix on the Z axis and stores the result into `self`.
+	///
+	/// @param {Real} _z Scale on the Z axis.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static ScaleZSelf = function (_z)
+	{
+		gml_pragma("forceinline");
+		Raw = matrix_multiply(Raw,
+			matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, _z));
+		return self;
 	};
 }
 
