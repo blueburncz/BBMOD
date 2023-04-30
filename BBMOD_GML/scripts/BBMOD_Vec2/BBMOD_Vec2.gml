@@ -635,8 +635,8 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	static MulSelf = function (_v)
 	{
 		gml_pragma("forceinline");
-		X = X * _v.X;
-		Y = Y * _v.Y;
+		X *= _v.X;
+		Y *= _v.Y;
 		return self;
 	};
 
@@ -708,8 +708,8 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		if (_lengthSqr >= math_get_epsilon())
 		{
 			var _n = 1.0 / sqrt(_lengthSqr);
-			X = X * _n;
-			Y = Y * _n;
+			X *= _n;
+			Y *= _n;
 		}
 		return self;
 	};
@@ -750,8 +750,8 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 			  X * _v.X
 			+ Y * _v.Y
 		) * 2.0;
-		X = X - (_dot2 * _v.X);
-		Y = Y - (_dot2 * _v.Y);
+		X -= (_dot2 * _v.X);
+		Y -= (_dot2 * _v.Y);
 		return self;
 	};
 
@@ -832,8 +832,8 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	static ScaleSelf = function (_s)
 	{
 		gml_pragma("forceinline")
-		X = X * _s;
-		Y = Y * _s;
+		X *= _s;
+		Y *= _s;
 		return self;
 	};
 

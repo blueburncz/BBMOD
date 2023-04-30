@@ -235,11 +235,11 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	/// @example
 	/// ```gml
 	/// // => BBMOD_Vec3(3.0, 0.0, 0.0):
-	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(1.0, 5.0)
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(1.0, 5.0);
 	/// // => BBMOD_Vec3(4.0, 0.0, 0.0):
-	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(4.0, 5.0)
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(4.0, 5.0);
 	/// // => BBMOD_Vec3(2.0, 0.0, 0.0):
-	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(1.0, 2.0)
+	/// new BBMOD_Vec3(3.0, 0.0, 0.0).ClampLengthSelf(1.0, 2.0);
 	/// ```
 	static ClampLengthSelf = function (_min, _max)
 	{
@@ -711,9 +711,9 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	static MulSelf = function (_v)
 	{
 		gml_pragma("forceinline");
-		X = X * _v.X;
-		Y = Y * _v.Y;
-		Z = Z * _v.Z;
+		X *= _v.X;
+		Y *= _v.Y;
+		Z *= _v.Z;
 		return self;
 	};
 
@@ -791,9 +791,9 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		if (_lengthSqr >= math_get_epsilon())
 		{
 			var _n = 1.0 / sqrt(_lengthSqr);
-			X = X * _n;
-			Y = Y * _n;
-			Z = Z * _n;
+			X *= _n;
+			Y *= _n;
+			Z *= _n;
 		}
 		return self;
 	};
@@ -863,9 +863,9 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			+ Y * _v.Y
 			+ Z * _v.Z
 		) * 2.0;
-		X = X - (_dot2 * _v.X);
-		Y = Y - (_dot2 * _v.Y);
-		Z = Z - (_dot2 * _v.Z);
+		X -= (_dot2 * _v.X);
+		Y -= (_dot2 * _v.Y);
+		Z -= (_dot2 * _v.Z);
 		return self;
 	};
 
@@ -949,9 +949,9 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	static ScaleSelf = function (_s)
 	{
 		gml_pragma("forceinline")
-		X = X * _s;
-		Y = Y * _s;
-		Z = Z * _s;
+		X *= _s;
+		Y *= _s;
+		Z *= _s;
 		return self;
 	};
 
@@ -1077,9 +1077,9 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	static SubSelf = function (_v)
 	{
 		gml_pragma("forceinline")
-		X = X - _v.X;
-		Y = Y - _v.Y;
-		Z = Z - _v.Z;
+		X -= _v.X;
+		Y -= _v.Y;
+		Z -= _v.Z;
 		return self;
 	};
 
