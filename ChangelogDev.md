@@ -86,8 +86,9 @@
 * Property `BBMOD_BaseShader.MaxPunctualLights` is now read-only and deprecated. Please use the new macro `BBMOD_MAX_PUNCTUAL_LIGHTS` instead.
 * Added new method `Negate` to structs `BBMOD_Vec2`, `BBMOD_Vec3` and `BBMOD_Vec4`, which negates the vector and returns the result as a new vector.
 
-* Added `*Self` and `*Other` variations of methods to structs `BBMOD_Vec2`, `BBMOD_Vec3`, `BBMOD_Vec4`, `BBMOD_Quaternion`, `BBMOD_DualQuaternion` and `BBMOD_Matrix`, which instead of creating new struct store the result into themselves or the other struct passed to the method.
 * Added new function `bbmod_vertex_buffer_load`, which loads a vertex buffer from a file.
+* Added `*Self` and `*Other` variations of methods to structs `BBMOD_Vec2`, `BBMOD_Vec3`, `BBMOD_Vec4`, `BBMOD_Quaternion`, `BBMOD_DualQuaternion` and `BBMOD_Matrix`, which instead of creating new struct store the result into themselves or the other struct passed to the method.
+* For each method of `BBMOD_RenderQueue` that adds a render command into the queue there is now an equivalent function with an UpperCamelCase name. Please from now on use these methods instead of the original ones, as they are now deprecated.
 
 * Fixed methods `world_to_screen` and `screen_point_to_vec3` of `BBMOD_BaseCamera`, which returned coordinates mirrored on the Y axis on some platforms.
 * Fixed `BBMOD_Cubemap` contents being flipped vertically on Windows.

@@ -105,6 +105,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
+	/// @func ApplyMaterial(_material, _vertexFormat[, _enabledPasses])
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterial} command into
+	/// the queue.
+	///
+	/// @param {Struct.BBMOD_Material} _material The material to apply.
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format of
+	/// models that will be rendered using this material.
+	/// @param {Real} [_enabledPasses] Mask of enabled rendering passes. The
+	/// material will not be applied if the current rendering pass is not one
+	/// of them.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static ApplyMaterial = function (_material, _vertexFormat, _enabledPasses=~0)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= _material.RenderPass;
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.ApplyMaterial;
+		_command[@ 1] = global.__bbmodMaterialProps;
+		_command[@ 2] = _vertexFormat;
+		_command[@ 3] = _material;
+		_command[@ 4] = _enabledPasses;
+		return self;
+	};
+
 	/// @func apply_material(_material, _vertexFormat[, _enabledPasses])
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterial} command into
@@ -118,16 +144,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// of them.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.ApplyMaterial} instead.
 	static apply_material = function (_material, _vertexFormat, _enabledPasses=~0)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= _material.RenderPass;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.ApplyMaterial;
-		_command[@ 1] = global.__bbmodMaterialProps;
-		_command[@ 2] = _vertexFormat;
-		_command[@ 3] = _material;
-		_command[@ 4] = _enabledPasses;
+		return ApplyMaterial(_material, _vertexFormat, _enabledPasses);
+	};
+
+	/// @func ApplyMaterialProps(_materialPropertyBlock)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ApplyMaterialProps} command
+	/// into the queue.
+	///
+	/// @param {Struct.BBMOD_MaterialPropertyBlock} _materialPropertyBlock The
+	/// material property block to apply.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static ApplyMaterialProps = function (_materialPropertyBlock)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.ApplyMaterialProps;
+		_command[@ 1] = _materialPropertyBlock;
 		return self;
 	};
 
@@ -140,13 +180,27 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// material property block to apply.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.ApplyMaterialProps}
+	/// instead.
 	static apply_material_props = function (_materialPropertyBlock)
 	{
 		gml_pragma("forceinline");
+		return ApplyMaterialProps(_materialPropertyBlock);
+	};
+
+	/// @func BeginConditionalBlock()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.BeginConditionalBlock} command
+	/// into the queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static BeginConditionalBlock = function ()
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.ApplyMaterialProps;
-		_command[@ 1] = _materialPropertyBlock;
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.BeginConditionalBlock;
 		return self;
 	};
 
@@ -156,12 +210,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// into the queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.BeginConditionalBlock}
+	/// instead.
 	static begin_conditional_block = function ()
 	{
 		gml_pragma("forceinline");
+		return BeginConditionalBlock();
+	};
+
+	/// @func CheckRenderPass(_passes)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.CheckRenderPass} command into
+	/// the queue.
+	///
+	/// @param {Real} [_passes] Mask of allowed rendering passes.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static CheckRenderPass = function (_passes)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.BeginConditionalBlock;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.CheckRenderPass;
+		_command[@ 1] = _passes;
 		return self;
 	};
 
@@ -173,13 +245,42 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} [_passes] Mask of allowed rendering passes.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.CheckRenderPass} instead.
 	static check_render_pass = function (_passes)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.CheckRenderPass;
-		_command[@ 1] = _passes;
+		return CheckRenderPass(_passes);
+	};
+
+	/// @func DrawMesh(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the
+	/// queue.
+	///
+	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex buffer.
+	/// @param {Constant.PrimitiveType} _primitiveType The primitive type of
+	/// the mesh.
+	/// @param {Real} _materialIndex The material's index within the material array.
+	/// @param {Struct.BBMOD_Material} _material The material to use.
+	/// @param {Array<Real>} _matrix The world matrix.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawMesh = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= _material.RenderPass;
+		var _command = __get_next(9);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawMesh;
+		_command[@ 1] = global.__bbmodInstanceID;
+		_command[@ 2] = global.__bbmodMaterialProps;
+		_command[@ 3] = _vertexFormat;
+		_command[@ 4] = _material;
+		_command[@ 5] = _matrix;
+		_command[@ 6] = _materialIndex;
+		_command[@ 7] = _primitiveType;
+		_command[@ 8] = _vertexBuffer;
 		return self;
 	};
 
@@ -197,20 +298,45 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Array<Real>} _matrix The world matrix.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.DrawMesh} instead.
 	static draw_mesh = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix)
 	{
 		gml_pragma("forceinline");
+		return DrawMesh(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix);
+	};
+
+	/// @func DrawMeshAnimated(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _boneTransform)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshAnimated} command into
+	/// the queue.
+	///
+	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex buffer.
+	/// @param {Constant.PrimitiveType} _primitiveType The primitive type of
+	/// the mesh.
+	/// @param {Real} _materialIndex The material's index within the material array.
+	/// @param {Struct.BBMOD_Material} _material The material to use.
+	/// @param {Array<Real>} _matrix The world matrix.
+	/// @param {Array<Real>} _boneTransform An array with bone transformation
+	/// data.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawMeshAnimated = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _boneTransform)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= _material.RenderPass;
-		var _command = __get_next(9);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawMesh;
+		var _command = __get_next(10);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawMeshAnimated;
 		_command[@ 1] = global.__bbmodInstanceID;
 		_command[@ 2] = global.__bbmodMaterialProps;
 		_command[@ 3] = _vertexFormat;
 		_command[@ 4] = _material;
 		_command[@ 5] = _matrix;
-		_command[@ 6] = _materialIndex;
-		_command[@ 7] = _primitiveType;
-		_command[@ 8] = _vertexBuffer;
+		_command[@ 6] = _boneTransform;
+		_command[@ 7] = _materialIndex;
+		_command[@ 8] = _primitiveType;
+		_command[@ 9] = _vertexBuffer;
 		return self;
 	};
 
@@ -230,21 +356,46 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// data.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.DrawMeshAnimated} instead.
 	static draw_mesh_animated = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _boneTransform)
 	{
 		gml_pragma("forceinline");
+		return DrawMeshAnimated(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _boneTransform);
+	};
+
+	/// @func DrawMeshBatched(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _batchData)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshBatched} command into
+	/// the queue.
+	///
+	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to draw.
+	/// @param {Struct.BBMOD_VertexFormat} _vertexFormat The format of the vertex buffer.
+	/// @param {Constant.PrimitiveType} _primitiveType The primitive type of
+	/// the mesh.
+	/// @param {Real} _materialIndex The material's index within the material array.
+	/// @param {Struct.BBMOD_Material} _material The material to use.
+	/// @param {Array<Real>} _matrix The world matrix.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Either a single array
+	/// of batch data or an array of arrays of batch data.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawMeshBatched = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _batchData)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= _material.RenderPass;
-		var _command = __get_next(10);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawMeshAnimated;
-		_command[@ 1] = global.__bbmodInstanceID;
+		var _command = __get_next(9);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawMeshBatched;
+		_command[@ 1] = (global.__bbmodInstanceIDBatch != undefined)
+				? global.__bbmodInstanceIDBatch
+				: global.__bbmodInstanceID;
 		_command[@ 2] = global.__bbmodMaterialProps;
 		_command[@ 3] = _vertexFormat;
 		_command[@ 4] = _material;
 		_command[@ 5] = _matrix;
-		_command[@ 6] = _boneTransform;
-		_command[@ 7] = _materialIndex;
-		_command[@ 8] = _primitiveType;
-		_command[@ 9] = _vertexBuffer;
+		_command[@ 6] = _batchData;
+		_command[@ 7] = _primitiveType;
+		_command[@ 8] = _vertexBuffer;
 		return self;
 	};
 
@@ -264,22 +415,26 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// of batch data or an array of arrays of batch data.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.DrawMeshBatched} instead.
 	static draw_mesh_batched = function (_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _batchData)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= _material.RenderPass;
-		var _command = __get_next(9);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawMeshBatched;
-		_command[@ 1] = (global.__bbmodInstanceIDBatch != undefined)
-				? global.__bbmodInstanceIDBatch
-				: global.__bbmodInstanceID;
-		_command[@ 2] = global.__bbmodMaterialProps;
-		_command[@ 3] = _vertexFormat;
-		_command[@ 4] = _material;
-		_command[@ 5] = _matrix;
-		_command[@ 6] = _batchData;
-		_command[@ 7] = _primitiveType;
-		_command[@ 8] = _vertexBuffer;
+		return DrawMeshBatched(_vertexBuffer, _vertexFormat, _primitiveType, _materialIndex, _material, _matrix, _batchData);
+	};
+
+	/// @func EndConditionalBlock()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.EndConditionalBlock} command
+	/// into the queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static EndConditionalBlock = function ()
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		var _command = __get_next(1);
+		_command[@ 0] = BBMOD_ERenderCommand.EndConditionalBlock;
 		return self;
 	};
 
@@ -289,12 +444,27 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// into the queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.EndConditionalBlock}
+	/// instead.
 	static end_conditional_block = function ()
+	{
+		gml_pragma("forceinline");
+		return EndConditionalBlock();
+	};
+
+	/// @func PopGpuState()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.PopGpuState} command into the
+	/// queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static PopGpuState = function ()
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.EndConditionalBlock;
+		_command[@ 0] = BBMOD_ERenderCommand.PopGpuState;
 		return self;
 	};
 
@@ -304,12 +474,26 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.PopGpuState} instead.
 	static pop_gpu_state = function ()
+	{
+		gml_pragma("forceinline");
+		return PopGpuState();
+	};
+
+	/// @func PushGpuState()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.PushGpuState} command into the
+	/// queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static PushGpuState = function ()
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.PopGpuState;
+		_command[@ 0] = BBMOD_ERenderCommand.PushGpuState;
 		return self;
 	};
 
@@ -319,12 +503,26 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.PushGpuState} instead.
 	static push_gpu_state = function ()
+	{
+		gml_pragma("forceinline");
+		return PushGpuState();
+	};
+
+	/// @func ResetMaterial()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ResetMaterial} command into the
+	/// queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static ResetMaterial = function ()
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.PushGpuState;
+		_command[@ 0] = BBMOD_ERenderCommand.ResetMaterial;
 		return self;
 	};
 
@@ -334,12 +532,26 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.ResetMaterial} instead.
 	static reset_material = function ()
+	{
+		gml_pragma("forceinline");
+		return ResetMaterial();
+	};
+
+	/// @func ResetMaterialProps()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ResetMaterialProps} command
+	/// into the queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static ResetMaterialProps = function ()
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.ResetMaterial;
+		_command[@ 0] = BBMOD_ERenderCommand.ResetMaterialProps;
 		return self;
 	};
 
@@ -349,12 +561,27 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// into the queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.ResetMaterialProps}
+	/// instead.
 	static reset_material_props = function ()
+	{
+		gml_pragma("forceinline");
+		return ResetMaterialProps();
+	};
+
+	/// @func ResetShader()
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.ResetShader} command into the
+	/// queue.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static ResetShader = function ()
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.ResetMaterialProps;
+		_command[@ 0] = BBMOD_ERenderCommand.ResetShader;
 		return self;
 	};
 
@@ -364,12 +591,29 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.ResetShader} instead.
 	static reset_shader = function ()
 	{
 		gml_pragma("forceinline");
+		return ResetShader();
+	};
+
+	/// @func SetGpuAlphaTestEnable(_enable)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuAlphaTestEnable} command
+	/// into the queue.
+	///
+	/// @param {Bool} _enable Use `true` to enable alpha testing.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuAlphaTestEnable = function (_enable)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.ResetShader;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuAlphaTestEnable;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -381,13 +625,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Bool} _enable Use `true` to enable alpha testing.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuAlphaTestEnable}
+	/// instead.
 	static set_gpu_alphatestenable = function (_enable)
+	{
+		gml_pragma("forceinline");
+		return SetGpuAlphaTestEnable(_enable);
+	};
+
+	/// @func SetGpuAlphaTestRef(_value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuAlphaTestRef} command
+	/// into the queue.
+	///
+	/// @param {Real} _value The new alpha test threshold value.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuAlphaTestRef = function (_value)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuAlphaTestEnable;
-		_command[@ 1] = _enable;
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuAlphaTestRef;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -399,13 +660,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The new alpha test threshold value.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuAlphaTestRef}
+	/// instead.
 	static set_gpu_alphatestref = function (_value)
+	{
+		gml_pragma("forceinline");
+		return SetGpuAlphaTestRef(_value);
+	};
+
+	/// @func SetGpuBlendEnable(_enable)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuBlendEnable} command into
+	/// the queue.
+	///
+	/// @param {Bool} _enable Use `true` to enable alpha blending.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuBlendEnable = function (_enable)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuAlphaTestRef;
-		_command[@ 1] = _value;
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendEnable;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -417,13 +695,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Bool} _enable Use `true` to enable alpha blending.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuBlendEnable}
+	/// instead.
 	static set_gpu_blendenable = function (_enable)
+	{
+		gml_pragma("forceinline");
+		return SetGpuBlendEnable(_enable);
+	};
+
+	/// @func SetGpuBlendMode(_blendmode)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuBlendMode} command into
+	/// the queue.
+	///
+	/// @param {Constant.BlendMode} _blendmode The new blend mode.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuBlendMode = function (_blendmode)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendEnable;
-		_command[@ 1] = _enable;
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendMode;
+		_command[@ 1] = _blendmode;
 		return self;
 	};
 
@@ -435,13 +730,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Constant.BlendMode} _blendmode The new blend mode.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuBlendMode}
+	/// instead.
 	static set_gpu_blendmode = function (_blendmode)
 	{
 		gml_pragma("forceinline");
+		return SetGpuBlendMode(_blendmode);
+	};
+
+	/// @func SetGpuBlendModeExt(_src, _dest)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuBlendModeExt} command
+	/// into the queue.
+	///
+	/// @param {Constant.BlendMode} _src Source blend mode.
+	/// @param {Constant.BlendMode} _dest Destination blend mode.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuBlendModeExt = function (_src, _dest)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendMode;
-		_command[@ 1] = _blendmode;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendModeExt;
+		_command[@ 1] = _src;
+		_command[@ 2] = _dest;
 		return self;
 	};
 
@@ -454,14 +768,37 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Constant.BlendMode} _dest Destination blend mode.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuBlendModeExt}
+	/// instead.
 	static set_gpu_blendmode_ext = function (_src, _dest)
 	{
 		gml_pragma("forceinline");
+		return SetGpuBlendModeExt(_src, _dest);
+	};
+
+	/// @func set_gpu_blendmode_ext_sepalpha(_src, _dest, _srcalpha, _destalpha)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha}
+	/// command into the queue.
+	///
+	/// @param {Constant.BlendMode} _src Source blend mode.
+	/// @param {Constant.BlendMode} _dest Destination blend mode.
+	/// @param {Constant.BlendMode} _srcalpha Blend mode for source alpha channel.
+	/// @param {Constant.BlendMode} _destalpha Blend mode for destination alpha
+	/// channel.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuBlendModeExtSepAlpha = function (_src, _dest, _srcalpha, _destalpha)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendModeExt;
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha;
 		_command[@ 1] = _src;
 		_command[@ 2] = _dest;
+		_command[@ 3] = _srcalpha;
+		_command[@ 4] = _destalpha;
 		return self;
 	};
 
@@ -477,16 +814,39 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// channel.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuBlendModeExtSepAlpha}
+	/// instead.
 	static set_gpu_blendmode_ext_sepalpha = function (_src, _dest, _srcalpha, _destalpha)
+	{
+		gml_pragma("forceinline");
+		return SetGpuBlendModeExtSepAlpha(_src, _dest, _srcalpha, _destalpha);
+	};
+
+	/// @func SetGpuColorWriteEnable(_red, _green, _blue, _alpha)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuColorWriteEnable} command
+	/// into the queue.
+	///
+	/// @param {Bool} _red Use `true` to enable writing to the red color
+	/// channel.
+	/// @param {Bool} _green Use `true` to enable writing to the green color
+	/// channel.
+	/// @param {Bool} _blue Use `true` to enable writing to the blue color
+	/// channel.
+	/// @param {Bool} _alpha Use `true` to enable writing to the alpha channel.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuColorWriteEnable = function (_red, _green, _blue, _alpha)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha;
-		_command[@ 1] = _src;
-		_command[@ 2] = _dest;
-		_command[@ 3] = _srcalpha;
-		_command[@ 4] = _destalpha;
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuColorWriteEnable;
+		_command[@ 1] = _red;
+		_command[@ 2] = _green;
+		_command[@ 3] = _blue;
+		_command[@ 4] = _alpha;
 		return self;
 	};
 
@@ -504,16 +864,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Bool} _alpha Use `true` to enable writing to the alpha channel.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuColorWriteEnable}
+	/// instead.
 	static set_gpu_colorwriteenable = function (_red, _green, _blue, _alpha)
 	{
 		gml_pragma("forceinline");
+		return SetGpuColorWriteEnable(_red, _green, _blue, _alpha);
+	};
+
+	/// @func SetGpuCullMode(_cullmode)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuCullMode} command into
+	/// the queue.
+	///
+	/// @param {Constant.CullMode} _cullmode The new coll mode.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuCullMode = function (_cullmode)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuColorWriteEnable;
-		_command[@ 1] = _red;
-		_command[@ 2] = _green;
-		_command[@ 3] = _blue;
-		_command[@ 4] = _alpha;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuCullMode;
+		_command[@ 1] = _cullmode;
 		return self;
 	};
 
@@ -525,13 +899,38 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Constant.CullMode} _cullmode The new coll mode.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuCullMode}
+	/// instead.
 	static set_gpu_cullmode = function (_cullmode)
 	{
 		gml_pragma("forceinline");
+		return SetGpuCullMode(_cullmode);
+	};
+
+	/// @func SetGpuFog(_enable, _color, _start, _end)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuFog} command into the
+	/// queue.
+	///
+	/// @param {Bool} _enable Use `true` to enable fog.
+	/// @param {Constant.Color} _color The color of the fog.
+	/// @param {Real} _start The distance from the camera at which the fog
+	/// starts.
+	/// @param {Real} _end The distance from the camera at which the fog reaches
+	/// maximum intensity.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuFog = function (_enable, _color, _start, _end)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuCullMode;
-		_command[@ 1] = _cullmode;
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuFog;
+		_command[@ 1] = _enable;
+		_command[@ 2] = _color;
+		_command[@ 3] = _start;
+		_command[@ 4] = _end;
 		return self;
 	};
 
@@ -548,16 +947,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// maximum intensity.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuFog}
+	/// instead.
 	static set_gpu_fog = function (_enable, _color, _start, _end)
 	{
 		gml_pragma("forceinline");
+		return SetGpuFog(_enable, _color, _start, _end);
+	};
+
+	/// @func SetGpuTexFilter(_linear)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexFilter} command into
+	/// the queue.
+	///
+	/// @param {Bool} _linear Use `true` to enable linear texture filtering.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexFilter = function (_linear)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuFog;
-		_command[@ 1] = _enable;
-		_command[@ 2] = _color;
-		_command[@ 3] = _start;
-		_command[@ 4] = _end;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexFilter;
+		_command[@ 1] = _linear;
 		return self;
 	};
 
@@ -569,13 +982,33 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Bool} _linear Use `true` to enable linear texture filtering.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexFilter}
+	/// instead.
 	static set_gpu_tex_filter = function (_linear)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexFilter(_linear);
+	};
+
+	/// @func SetGpuTexFilterExt(_name, _linear)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexFilterExt} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the sampler.
+	/// @param {Bool} _linear Use `true` to enable linear texture filtering for
+	/// the sampler.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexFilterExt = function (_name, _linear)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexFilter;
-		_command[@ 1] = _linear;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexFilterExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _linear;
 		return self;
 	};
 
@@ -589,18 +1022,16 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// the sampler.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexFilterExt}
+	/// instead.
 	static set_gpu_tex_filter_ext = function (_name, _linear)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexFilterExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _linear;
-		return self;
+		return SetGpuTexFilterExt(_name, _linear);
 	};
 
-	/// @func set_gpu_tex_max_aniso(_value)
+	/// @func SetGpuTexMaxAniso(_value)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMaxAniso} command into
 	/// the queue.
@@ -618,6 +1049,43 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
+	/// @func set_gpu_tex_max_aniso(_value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMaxAniso} command into
+	/// the queue.
+	///
+	/// @param {Real} _value The maximum level of anisotropy.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMaxAniso}
+	/// instead.
+	static set_gpu_tex_max_aniso = function (_value)
+	{
+		gml_pragma("forceinline");
+		return SetGpuTexMaxAniso(_value);
+	};
+
+	/// @func SetGpuTexMaxAnisoExt(_name, _value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the sampler.
+	/// @param {Real} _value The maximum level of anisotropy.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMaxAnisoExt = function (_name, _value)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
+		return self;
+	};
+
 	/// @func set_gpu_tex_max_aniso_ext(_name, _value)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt} command
@@ -627,14 +1095,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The maximum level of anisotropy.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMaxAnisoExt}
+	/// instead.
 	static set_gpu_tex_max_aniso_ext = function (_name, _value)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMaxAnisoExt(_name, _value);
+	};
+
+	/// @func SetGpuTexMaxMip(_value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMaxMip} command into
+	/// the queue.
+	///
+	/// @param {Real} _value The maximum mipmap level.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMaxMip = function (_value)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxMip;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -646,13 +1130,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The maximum mipmap level.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMaxMip}
+	/// instead.
 	static set_gpu_tex_max_mip = function (_value)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMaxMip(_value);
+	};
+
+	/// @func SetGpuTexMaxMipExt(_name, _value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMaxMipExt} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the sampler.
+	/// @param {Real} _value The maximum mipmap level.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMaxMipExt = function (_name, _value)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxMip;
-		_command[@ 1] = _value;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxMipExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -665,14 +1168,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The maximum mipmap level.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMaxMipExt}
+	/// instead.
 	static set_gpu_tex_max_mip_ext = function (_name, _value)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMaxMipExt(_name, _value);
+	};
+
+	/// @func SetGpuTexMinMip(_value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMinMip} command into
+	/// the queue.
+	///
+	/// @param {Real} _value The minimum mipmap level.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMinMip = function (_value)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxMipExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMinMip;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -684,13 +1203,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The minimum mipmap level.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMinMip}
+	/// instead.
 	static set_gpu_tex_min_mip = function (_value)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMinMip(_value);
+	};
+
+	/// @func SetGpuTexMinMipExt(_name, _value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMinMipExt} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the sampler.
+	/// @param {Real} _value The minimum mipmap level.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMinMipExt = function (_name, _value)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMinMip;
-		_command[@ 1] = _value;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMinMipExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -703,14 +1241,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The minimum mipmap level.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMinMipExt}
+	/// instead.
 	static set_gpu_tex_min_mip_ext = function (_name, _value)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMinMipExt(_name, _value);
+	};
+
+	/// @func SetGpuTexMipBias(_value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMipBias} command into
+	/// the queue.
+	///
+	/// @param {Real} _value The mipmap bias.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMipBias = function (_value)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMinMipExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipBias;
+		_command[@ 1] = _value;
 		return self;
 	};
 
@@ -722,13 +1276,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The mipmap bias.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static set_gpu_tex_mip_bias = function (_value)
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipBias}
+	/// instead.
+	static set_gpu_tex_mip_bias = function(_value)
+	{
+		gml_pragma("forceinline");
+		return SetGpuTexMipBias(_value);
+	};
+
+	/// @func SetGpuTexMipBiasExt(_name, _value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMipBiasExt} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the sampler.
+	/// @param {Real} _value The mipmap bias.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMipBiasExt = function (_name, _value)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipBias;
-		_command[@ 1] = _value;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipBiasExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -741,14 +1314,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The mipmap bias.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipBiasExt}
+	/// instead.
 	static set_gpu_tex_mip_bias_ext = function (_name, _value)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMipBiasExt(_name, _value);
+	};
+
+	/// @func SetGpuTexMipEnable(_enable)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMipEnable} command
+	/// into the queue.
+	///
+	/// @param {Bool} _enable Use `true` to enable mipmapping.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMipEnable = function (_enable)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipBiasExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipEnable;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -760,13 +1349,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Bool} _enable Use `true` to enable mipmapping.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipEnable}
+	/// instead.
 	static set_gpu_tex_mip_enable = function (_enable)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMipEnable(_enable);
+	};
+
+	/// @func SetGpuTexMipEnableExt(_name, _enable)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMipEnableExt} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the sampler.
+	/// @param {Bool} _enable Use `true` to enable mipmapping.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMipEnableExt = function (_name, _enable)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipEnable;
-		_command[@ 1] = _enable;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipEnableExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _enable;
 		return self;
 	};
 
@@ -779,14 +1387,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Bool} _enable Use `true` to enable mipmapping.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipEnableExt}
+	/// instead.
 	static set_gpu_tex_mip_enable_ext = function (_name, _enable)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMipEnableExt(_name, _enable);
+	};
+
+	/// @func SetGpuTexMipFilter(_filter)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMipFilter} command
+	/// into the queue.
+	///
+	/// @param {Constant.MipFilter} _filter The mipmap filter.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMipFilter = function (_filter)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipEnableExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _enable;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipFilter;
+		_command[@ 1] = _filter;
 		return self;
 	};
 
@@ -798,13 +1422,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Constant.MipFilter} _filter The mipmap filter.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipFilter}
+	/// instead.
 	static set_gpu_tex_mip_filter = function (_filter)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexMipFilter(_filter);
+	};
+
+	/// @func SetGpuTexMipFilterExt(_name, _filter)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexMipFilterExt} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the sampler.
+	/// @param {Constant.MipFilter} _filter The mipmap filter.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexMipFilterExt = function (_name, _filter)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipFilter;
-		_command[@ 1] = _filter;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipFilterExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _filter;
 		return self;
 	};
 
@@ -817,18 +1460,16 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Constant.MipFilter} _filter The mipmap filter.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipFilterExt}
+	/// instead.
 	static set_gpu_tex_mip_filter_ext = function (_name, _filter)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipFilterExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _filter;
-		return self;
+		return SetGpuTexMipFilterExt(_name, _filter);
 	};
 
-	/// @func set_gpu_tex_repeat(_enable)
+	/// @func SetGpuTexRepeat(_enable)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexRepeat} command into
 	/// the queue.
@@ -846,6 +1487,43 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 		return self;
 	};
 
+	/// @func set_gpu_tex_repeat(_enable)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexRepeat} command into
+	/// the queue.
+	///
+	/// @param {Bool} _enable Use `true` to enable texture repeat.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexRepeat}
+	/// instead.
+	static set_gpu_tex_repeat = function (_enable)
+	{
+		gml_pragma("forceinline");
+		return SetGpuTexRepeat(_enable);
+	};
+
+	/// @func SetGpuTexRepeatExt(_name, _enable)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexRepeatExt} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the sampler.
+	/// @param {Bool} _enable Use `true` to enable texture repeat.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuTexRepeatExt = function (_name, _enable)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFF;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexRepeatExt;
+		_command[@ 1] = _name;
+		_command[@ 2] = _enable;
+		return self;
+	};
+
 	/// @func set_gpu_tex_repeat_ext(_name, _enable)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexRepeatExt} command
@@ -855,14 +1533,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Bool} _enable Use `true` to enable texture repeat.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexRepeatExt}
+	/// instead.
 	static set_gpu_tex_repeat_ext = function (_name, _enable)
 	{
 		gml_pragma("forceinline");
+		return SetGpuTexRepeatExt(_name, _enable);
+	};
+
+	/// @func SetGpuZFunc(_func)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuZFunc} command into the
+	/// queue.
+	///
+	/// @param {Constant.CmpFunc} _func The depth test function.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuZFunc = function (_func)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexRepeatExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _enable;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZFunc;
+		_command[@ 1] = _func;
 		return self;
 	};
 
@@ -874,13 +1568,31 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Constant.CmpFunc} _func The depth test function.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuZFunc}
+	/// instead.
 	static set_gpu_zfunc = function (_func)
+	{
+		gml_pragma("forceinline");
+		return SetGpuZFunc(_func);
+	};
+
+	/// @func SetGpuZTestEnable(_enable)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuZTestEnable} command into
+	/// the queue.
+	///
+	/// @param {Bool} _enable Use `true` to enable testing against the detph
+	/// buffer.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuZTestEnable = function (_enable)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZFunc;
-		_command[@ 1] = _func;
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZTestEnable;
+		_command[@ 1] = _enable;
 		return self;
 	};
 
@@ -893,12 +1605,29 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// buffer.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuZTestEnable}
+	/// instead.
 	static set_gpu_ztestenable = function (_enable)
+	{
+		gml_pragma("forceinline");
+		return SetGpuZTestEnable(_enable);
+	};
+
+	/// @func SetGpuZWriteEnable(_enable)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuZWriteEnable} command
+	/// into the queue.
+	///
+	/// @param {Bool} _enable Use `true` to enable writing to the depth buffer.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuZWriteEnable = function (_enable)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZTestEnable;
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZWriteEnable;
 		_command[@ 1] = _enable;
 		return self;
 	};
@@ -911,13 +1640,31 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Bool} _enable Use `true` to enable writing to the depth buffer.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuZWriteEnable}
+	/// instead.
 	static set_gpu_zwriteenable = function (_enable)
+	{
+		gml_pragma("forceinline");
+		return SetGpuZWriteEnable(_enable);
+	};
+
+	/// @func SetMaterialProps(_materialPropertyBlock)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetMaterialProps} command into
+	/// the queue.
+	///
+	/// @param {Struct.BBMOD_MaterialPropertyBlock} _materialPropertyBlock The
+	/// material property block to set as the current one.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetMaterialProps = function (_materialPropertyBlock)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZWriteEnable;
-		_command[@ 1] = _enable;
+		_command[@ 0] = BBMOD_ERenderCommand.SetMaterialProps;
+		_command[@ 1] = _materialPropertyBlock;
 		return self;
 	};
 
@@ -930,13 +1677,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// material property block to set as the current one.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetMaterialProps}
+	/// instead.
 	static set_material_props = function (_materialPropertyBlock)
+	{
+		gml_pragma("forceinline");
+		return SetMaterialProps(_materialPropertyBlock);
+	};
+
+	/// @func SetProjectionMatrix(_matrix)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetProjectionMatrix} command
+	/// into the queue.
+	///
+	/// @param {Array<Real>} _matrix The new projection matrix.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetProjectionMatrix = function (_matrix)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetMaterialProps;
-		_command[@ 1] = _materialPropertyBlock;
+		_command[@ 0] = BBMOD_ERenderCommand.SetProjectionMatrix;
+		_command[@ 1] = _matrix;
 		return self;
 	};
 
@@ -948,13 +1712,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Array<Real>} _matrix The new projection matrix.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetProjectionMatrix}
+	/// instead.
 	static set_projection_matrix = function (_matrix)
 	{
 		gml_pragma("forceinline");
+		return SetProjectionMatrix(_matrix);
+	};
+
+	/// @func SetSampler(_nameOrIndex, _texture)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetSampler} command into the
+	/// queue.
+	///
+	/// @param {String, Real} _nameOrIndex The name or index of the sampler.
+	/// @param {Pointer.Texture} _texture The new texture.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetSampler = function (_nameOrIndex, _texture)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetProjectionMatrix;
-		_command[@ 1] = _matrix;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetSampler;
+		_command[@ 1] = _nameOrIndex;
+		_command[@ 2] = _texture;
 		return self;
 	};
 
@@ -967,14 +1750,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Pointer.Texture} _texture The new texture.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetSampler}
+	/// instead.
 	static set_sampler = function (_nameOrIndex, _texture)
 	{
 		gml_pragma("forceinline");
+		return SetSampler(_nameOrIndex, _texture);
+	};
+
+	/// @func SetShader(_shader)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetShader} command into the
+	/// queue.
+	///
+	/// @param {Asset.GMShader} _shader The shader to set.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetShader = function (_shader)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetSampler;
-		_command[@ 1] = _nameOrIndex;
-		_command[@ 2] = _texture;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetShader;
+		_command[@ 1] = _shader;
 		return self;
 	};
 
@@ -986,13 +1785,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Asset.GMShader} _shader The shader to set.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetShader}
+	/// instead.
 	static set_shader = function (_shader)
 	{
 		gml_pragma("forceinline");
+		return SetShader(_shader);
+	};
+
+	/// @func SetUniformFloat(_name, _value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloat} command into
+	/// the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Real} _value The new uniform value.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformFloat = function (_name, _value)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetShader;
-		_command[@ 1] = _shader;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat;
+		_command[@ 1] = _name;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -1005,14 +1823,34 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The new uniform value.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloat}
+	/// instead.
 	static set_uniform_f = function (_name, _value)
 	{
 		gml_pragma("forceinline");
+		return SetUniformFloat(_name, _value);
+	};
+
+	/// @func SetUniformFloat2(_name, _v1, _v2)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloat2} command into
+	/// the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Real} _v1 The value of the first component.
+	/// @param {Real} _v2 The value of the second component.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformFloat2 = function (_name, _v1, _v2)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat;
+		var _command = __get_next(4);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat2;
 		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		_command[@ 2] = _v1;
+		_command[@ 3] = _v2;
 		return self;
 	};
 
@@ -1026,15 +1864,36 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _v2 The value of the second component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloat2}
+	/// instead.
 	static set_uniform_f2 = function (_name, _v1, _v2)
 	{
 		gml_pragma("forceinline");
+		return SetUniformFloat2(_name, _v1, _v2);
+	};
+
+	/// @func SetUniformFloat3(_name, _v1, _v2, _v3)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloat3} command into
+	/// the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Real} _v1 The value of the first component.
+	/// @param {Real} _v2 The value of the second component.
+	/// @param {Real} _v3 The value of the third component.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformFloat3 = function (_name, _v1, _v2, _v3)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(4);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat2;
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat3;
 		_command[@ 1] = _name;
 		_command[@ 2] = _v1;
 		_command[@ 3] = _v2;
+		_command[@ 4] = _v3;
 		return self;
 	};
 
@@ -1049,16 +1908,38 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _v3 The value of the third component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloat3}
+	/// instead.
 	static set_uniform_f3 = function (_name, _v1, _v2, _v3)
 	{
 		gml_pragma("forceinline");
+		return SetUniformFloat3(_name, _v1, _v2, _v3);
+	};
+
+	/// @func SetUniformFloat4(_name, _v1, _v2, _v3, _v4)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloat4} command into
+	/// the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Real} _v1 The value of the first component.
+	/// @param {Real} _v2 The value of the second component.
+	/// @param {Real} _v3 The value of the third component.
+	/// @param {Real} _v4 The value of the fourth component.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformFloat4 = function (_name, _v1, _v2, _v3, _v4)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat3;
+		var _command = __get_next(6);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat4;
 		_command[@ 1] = _name;
 		_command[@ 2] = _v1;
 		_command[@ 3] = _v2;
 		_command[@ 4] = _v3;
+		_command[@ 5] = _v4;
 		return self;
 	};
 
@@ -1074,17 +1955,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _v4 The value of the fourth component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloat4}
+	/// instead.
 	static set_uniform_f4 = function (_name, _v1, _v2, _v3, _v4)
 	{
 		gml_pragma("forceinline");
+		return SetUniformFloat4(_name, _v1, _v2, _v3, _v4);
+	};
+
+	/// @func SetUniformFloatArray(_name, _array)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformFloatArray} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Array<Real>} _array The array of values.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformFloatArray = function (_name, _array)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(6);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat4;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloatArray;
 		_command[@ 1] = _name;
-		_command[@ 2] = _v1;
-		_command[@ 3] = _v2;
-		_command[@ 4] = _v3;
-		_command[@ 5] = _v4;
+		_command[@ 2] = _array;
 		return self;
 	};
 
@@ -1097,14 +1993,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Array<Real>} _array The array of values.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloatArray}
+	/// instead.
 	static set_uniform_f_array = function (_name, _array)
+	{
+		gml_pragma("forceinline");
+		return SetUniformFloatArray(_name, _array);
+	};
+
+	/// @func SetUniformInt(_name, _value)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformInt} command into the
+	/// queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Real} _value The new uniform value.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformInt = function (_name, _value)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloatArray;
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt;
 		_command[@ 1] = _name;
-		_command[@ 2] = _array;
+		_command[@ 2] = _value;
 		return self;
 	};
 
@@ -1117,14 +2031,34 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _value The new uniform value.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformInt}
+	/// instead.
 	static set_uniform_i = function (_name, _value)
 	{
 		gml_pragma("forceinline");
+		return SetUniformInt(_name, _value);
+	};
+
+	/// @func SetUniformInt2(_name, _v1, _v2)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformInt2} command into
+	/// the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Real} _v1 The value of the first component.
+	/// @param {Real} _v2 The value of the second component.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformInt2 = function (_name, _v1, _v2)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt;
+		var _command = __get_next(4);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt2;
 		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		_command[@ 2] = _v1;
+		_command[@ 3] = _v2;
 		return self;
 	};
 
@@ -1138,15 +2072,36 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _v2 The value of the second component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformInt2}
+	/// instead.
 	static set_uniform_i2 = function (_name, _v1, _v2)
 	{
 		gml_pragma("forceinline");
+		return SetUniformInt2(_name, _v1, _v2);
+	};
+
+	/// @func SetUniformInt3(_name, _v1, _v2, _v3)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformInt3} command into
+	/// the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Real} _v1 The value of the first component.
+	/// @param {Real} _v2 The value of the second component.
+	/// @param {Real} _v3 The value of the third component.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformInt3 = function (_name, _v1, _v2, _v3)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(4);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt2;
+		var _command = __get_next(5);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt3;
 		_command[@ 1] = _name;
 		_command[@ 2] = _v1;
 		_command[@ 3] = _v2;
+		_command[@ 4] = _v3;
 		return self;
 	};
 
@@ -1161,16 +2116,38 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _v3 The value of the third component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformInt3}
+	/// instead.
 	static set_uniform_i3 = function (_name, _v1, _v2, _v3)
 	{
 		gml_pragma("forceinline");
+		return SetUniformInt3(_name, _v1, _v2, _v3);
+	};
+
+	/// @func SetUniformInt4(_name, _v1, _v2, _v3, _v4)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformInt4} command into
+	/// the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Real} _v1 The value of the first component.
+	/// @param {Real} _v2 The value of the second component.
+	/// @param {Real} _v3 The value of the third component.
+	/// @param {Real} _v4 The value of the fourth component.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformInt4 = function (_name, _v1, _v2, _v3, _v4)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt3;
+		var _command = __get_next(6);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt4;
 		_command[@ 1] = _name;
 		_command[@ 2] = _v1;
 		_command[@ 3] = _v2;
 		_command[@ 4] = _v3;
+		_command[@ 5] = _v4;
 		return self;
 	};
 
@@ -1186,17 +2163,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Real} _v4 The value of the fourth component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformInt4}
+	/// instead.
 	static set_uniform_i4 = function (_name, _v1, _v2, _v3, _v4)
 	{
 		gml_pragma("forceinline");
+		return SetUniformInt4(_name, _v1, _v2, _v3, _v4);
+	};
+
+	/// @func SetUniformIntArray(_name, _array)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformIntArray} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Array<Real>} _array The array of values.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformIntArray = function (_name, _array)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(6);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt4;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformIntArray;
 		_command[@ 1] = _name;
-		_command[@ 2] = _v1;
-		_command[@ 3] = _v2;
-		_command[@ 4] = _v3;
-		_command[@ 5] = _v4;
+		_command[@ 2] = _array;
 		return self;
 	};
 
@@ -1209,14 +2201,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Array<Real>} _array The array of values.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformIntArray}
+	/// instead.
 	static set_uniform_i_array = function (_name, _array)
 	{
 		gml_pragma("forceinline");
+		return SetUniformIntArray(_name, _array);
+	};
+
+	/// @func SetUniformMatrix(_name)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformMatrix} command into
+	/// the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformMatrix = function (_name)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformIntArray;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformMatrix;
 		_command[@ 1] = _name;
-		_command[@ 2] = _array;
 		return self;
 	};
 
@@ -1228,13 +2236,32 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {String} _name The name of the uniform.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformMatrix}
+	/// instead.
 	static set_uniform_matrix = function (_name)
 	{
 		gml_pragma("forceinline");
+		return SetUniformMatrix(_name);
+	};
+
+	/// @func SetUniformMatrixArray(_name, _array)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetUniformMatrixArray} command
+	/// into the queue.
+	///
+	/// @param {String} _name The name of the uniform.
+	/// @param {Array<Real>} _array The array of values.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetUniformMatrixArray = function (_name, _array)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformMatrix;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.SetUniformMatrixArray;
 		_command[@ 1] = _name;
+		_command[@ 2] = _array;
 		return self;
 	};
 
@@ -1247,14 +2274,30 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Array<Real>} _array The array of values.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformMatrixArray}
+	/// instead.
 	static set_uniform_matrix_array = function (_name, _array)
 	{
 		gml_pragma("forceinline");
+		return SetUniformMatrixArray(_name, _array);
+	};
+
+	/// @func SetViewMatrix(_matrix)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetViewMatrix} command into the
+	/// queue.
+	///
+	/// @param {Array<Real>} _matrix The new view matrix.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetViewMatrix = function (_matrix)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformMatrixArray;
-		_command[@ 1] = _name;
-		_command[@ 2] = _array;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetViewMatrix;
+		_command[@ 1] = _matrix;
 		return self;
 	};
 
@@ -1266,12 +2309,29 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Array<Real>} _matrix The new view matrix.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetViewMatrix}
+	/// instead.
 	static set_view_matrix = function (_matrix)
+	{
+		gml_pragma("forceinline");
+		return SetViewMatrix(_matrix);
+	};
+
+	/// @func SetWorldMatrix(_matrix)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetWorldMatrix} command into
+	/// the queue.
+	///
+	/// @param {Array<Real>} _matrix The new world matrix.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetWorldMatrix = function (_matrix)
 	{
 		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
 		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetViewMatrix;
+		_command[@ 0] = BBMOD_ERenderCommand.SetWorldMatrix;
 		_command[@ 1] = _matrix;
 		return self;
 	};
@@ -1284,13 +2344,35 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Array<Real>} _matrix The new world matrix.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SetWorldMatrix}
+	/// instead.
 	static set_world_matrix = function (_matrix)
 	{
 		gml_pragma("forceinline");
+		return SetWorldMatrix(_matrix);
+	};
+
+	/// @func SubmitVertexBuffer(_vertexBuffer, _prim, _texture)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SubmitVertexBuffer} command
+	/// into the queue.
+	///
+	/// @param {Id.VertexBuffer} _vertexBuffer The vertex buffer to submit.
+	/// @param {Constant.PrimitiveType} _prim Primitive type of the vertex
+	/// buffer.
+	/// @param {Pointer.Texture} _texture The texture to use.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SubmitVertexBuffer = function (_vertexBuffer, _prim, _texture)
+	{
+		gml_pragma("forceinline");
 		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetWorldMatrix;
-		_command[@ 1] = _matrix;
+		var _command = __get_next(4);
+		_command[@ 0] = BBMOD_ERenderCommand.SubmitVertexBuffer;
+		_command[@ 1] = _vertexBuffer;
+		_command[@ 2] = _prim;
+		_command[@ 3] = _texture;
 		return self;
 	};
 
@@ -1305,16 +2387,13 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	/// @param {Pointer.Texture} _texture The texture to use.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @depreacted Please use {@link BBMOD_RenderQueue.SubmitVertexBuffer}
+	/// instead.
 	static submit_vertex_buffer = function (_vertexBuffer, _prim, _texture)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFF;
-		var _command = __get_next(4);
-		_command[@ 0] = BBMOD_ERenderCommand.SubmitVertexBuffer;
-		_command[@ 1] = _vertexBuffer;
-		_command[@ 2] = _prim;
-		_command[@ 3] = _texture;
-		return self;
+		return SubmitVertexBuffer(_vertexBuffer, _prim, _texture);
 	};
 
 	/// @func is_empty()

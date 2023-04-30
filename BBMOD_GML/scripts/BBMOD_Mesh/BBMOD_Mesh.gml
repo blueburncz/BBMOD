@@ -268,17 +268,17 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 		gml_pragma("forceinline");
 		if (_batchData != undefined)
 		{
-			_material.RenderQueue.draw_mesh_batched(
+			_material.RenderQueue.DrawMeshBatched(
 				VertexBuffer, VertexFormat, PrimitiveType, MaterialIndex, _material, _matrix, _batchData);
 		}
 		else if (_transform != undefined)
 		{
-			_material.RenderQueue.draw_mesh_animated(
+			_material.RenderQueue.DrawMeshAnimated(
 				VertexBuffer, VertexFormat, PrimitiveType, MaterialIndex, _material, _matrix, _transform);
 		}
 		else
 		{
-			_material.RenderQueue.draw_mesh(
+			_material.RenderQueue.DrawMesh(
 				VertexBuffer, VertexFormat, PrimitiveType, MaterialIndex, _material, _matrix);
 		}
 		return self;

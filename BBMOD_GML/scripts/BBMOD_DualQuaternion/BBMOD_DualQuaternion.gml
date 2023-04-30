@@ -60,7 +60,7 @@ function BBMOD_DualQuaternion(
 	static AddSelf = function (_dq)
 	{
 		gml_pragma("forceinline");
-		Real.AddSelf(_dq.Real),
+		Real.AddSelf(_dq.Real);
 		Dual.AddSelf(_dq.Dual);
 		return self;
 	};

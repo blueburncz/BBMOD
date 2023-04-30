@@ -741,29 +741,29 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 			if (_mat != undefined)
 			{
 				RenderQueue
-					.apply_material(_mat, VertexFormat, (i == 0) ? ~0 : ((1 << BBMOD_ERenderPass.Forward) | (1 << BBMOD_ERenderPass.ReflectionCapture)))
-					.begin_conditional_block();
+					.ApplyMaterial(_mat, VertexFormat, (i == 0) ? ~0 : ((1 << BBMOD_ERenderPass.Forward) | (1 << BBMOD_ERenderPass.ReflectionCapture)))
+					.BeginConditionalBlock();
 
 				if (i == 0)
 				{
-					RenderQueue.set_gpu_blendenable(false);
+					RenderQueue.SetGpuBlendEnable(false);
 				}
 				else
 				{
-					RenderQueue.set_gpu_colorwriteenable(true, true, true, false);
+					RenderQueue.SetGpuColorWriteEnable(true, true, true, false);
 				}
 
 				RenderQueue
-					.set_gpu_zwriteenable(i == 0)
-					.set_gpu_zfunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
-					.set_sampler("bbmod_Splatmap", Splatmap)
-					.set_uniform_i("bbmod_SplatmapIndex", i - 1)
-					.set_uniform_f2("bbmod_TextureScale", TextureRepeat.X, TextureRepeat.Y)
-					.set_uniform_matrix_array("bbmod_NormalMatrix", _normalMatrix)
-					.set_world_matrix(_matrix)
-					.submit_vertex_buffer(VertexBuffer, pr_trianglelist, _mat.BaseOpacity)
-					.reset_material()
-					.end_conditional_block();
+					.SetGpuZWriteEnable(i == 0)
+					.SetGpuZFunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
+					.SetSampler("bbmod_Splatmap", Splatmap)
+					.SetUniformInt("bbmod_SplatmapIndex", i - 1)
+					.SetUniformFloat2("bbmod_TextureScale", TextureRepeat.X, TextureRepeat.Y)
+					.SetUniformMatrixArray("bbmod_NormalMatrix", _normalMatrix)
+					.SetWorldMatrix(_matrix)
+					.SubmitVertexBuffer(VertexBuffer, pr_trianglelist, _mat.BaseOpacity)
+					.ResetMaterial()
+					.EndConditionalBlock();
 			}
 			++i;
 		}
