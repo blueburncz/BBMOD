@@ -234,21 +234,38 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 			_temp.Z += _tdirZ;
 		}
 
+		var _tempVec3 = new BBMOD_Vec3();
+
 		for (var i = 0; i < _vertexCount; ++i)
 		{
 			var _v = Vertices[| i];
 			var _n = _v.Normal;
-			var _t = new BBMOD_Vec3(
-				_v.TangentW.X,
-				_v.TangentW.Y,
-				_v.TangentW.Z
-			);
+			var _t = _v.TangentW;
 
 			// Gram-Schmidt orthogonalize
-			var _tNew = _t.Sub(_n.Scale(_n.Dot(_t))).Normalize().Copy(_v.TangentW);
+			var _nX = _n.X;
+			var _nY = _n.Y;
+			var _nZ = _n.Z;
+
+			var _tX = _t.X;
+			var _tY = _t.Y;
+			var _tZ = _t.Z;
+
+			var _nDotT = (_nX * _tX) + (_nY * _tY) + (_nZ * _tZ);
+
+			_tX -= (_nX * _nDotT);
+			_tY -= (_nY * _nDotT);
+			_tZ -= (_nZ * _nDotT);
+
+			var _tSubNorm = 1.0 / sqrt((_tX * _tX) + (_tY * _tY) + (_tZ * _tZ));
+
+			_t.X = _tX * _tSubNorm;
+			_t.Y = _tY * _tSubNorm;
+			_t.Z = _tZ * _tSubNorm;
 
 			// Calculate handedness
-			var _dot = _n.Cross(_tNew).Dot(_tan2[i]);
+			_n.Copy(_tempVec3);
+			var _dot = _tempVec3.CrossSelf(_t).Dot(_tan2[i]);
 			_v.TangentW.W = (_dot < 0.0) ? -1.0 : 1.0;
 		}
 
