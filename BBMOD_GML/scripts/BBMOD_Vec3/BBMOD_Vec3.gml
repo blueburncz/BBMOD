@@ -314,6 +314,26 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		);
 	};
 
+	/// @func CrossSelf(_v)
+	///
+	/// @desc Computes a cross product of this vector and vector `_v` and stores
+	/// the result into `self`.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v The other vector.
+	///
+	/// @return {Struct.BBMOD_Vec3} Returns `self`.
+	static CrossSelf = function (_v)
+	{
+		gml_pragma("forceinline");
+		var _x = Y * _v.Z - Z * _v.Y;
+		var _y = Z * _v.X - X * _v.Z;
+		var _z = X * _v.Y - Y * _v.X;
+		X = _x;
+		Y = _y;
+		Z = _z;
+		return self;
+	};
+
 	/// @func Dot(_v)
 	///
 	/// @desc Computes the dot product of this vector and vector `_v`.
