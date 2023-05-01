@@ -183,7 +183,7 @@ function BBMOD_ResourceManager()
 	/// `*.bbanim` for {@link BBMOD_Animation}, `*.bbmat` for {@link BBMOD_Material}
 	/// and `*.png`, `*.gif`, `*.jpg/jpeg` for {@link BBMOD_Sprite}.
 	///
-	/// Since version 3.16.8, this can also automatically load model's materials
+	/// Since version 3.17.0, this can also automatically load model's materials
 	/// from BBMAT files when {@link BBMOD_ResourceManager.LoadMaterials} is set
 	/// to `true`. If you're loading for example a model called `Tree.bbmod`,
 	/// which has materials "Trunk" and "Leaves", it first tries to load them
