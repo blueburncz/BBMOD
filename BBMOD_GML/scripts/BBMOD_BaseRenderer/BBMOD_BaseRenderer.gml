@@ -440,7 +440,9 @@ function BBMOD_BaseRenderer()
 			}
 		}
 
-		var _to = global.__bbmodImageBasedLight.Texture;
+		var _to = (global.__bbmodImageBasedLight != undefined)
+			? global.__bbmodImageBasedLight.Texture
+			: sprite_get_texture(BBMOD_SprBlack, 0);
 
 		var _reflectionProbe = bbmod_reflection_probe_find(bbmod_camera_get_position());
 		if (_reflectionProbe != undefined)
