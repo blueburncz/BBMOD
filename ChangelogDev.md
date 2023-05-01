@@ -8,6 +8,12 @@
 * Arguments of `_clearColor` and `_clearAlpha` of method `BBMOD_Cubemap.to_single_surface` are now optional and they default to `c_black` and 1 respectively.
 * Added new method `to_octahedron` to `BBMOD_Cubemap`, which converts the cubemap to an octahedral map.
 
+* Added new function `bbmod_vertex_buffer_load`, which loads a vertex buffer from a file.
+
+* For each method of `BBMOD_RenderQueue` that adds a render command into the queue there is now an equivalent function with an UpperCamelCase name (matching the command name defined in `BBMOD_ERenderCommand`). Please from now on use these methods instead of the original ones, as they are now deprecated.
+* Added new members `DrawSprite`, `DrawSpriteExt`, `DrawSpriteGeneral`, `DrawSpritePart`, `DrawSpritePartExt`, `DrawSpritePos`, `DrawSpriteStretched`, `DrawSpriteStretchedExt`, `DrawSpriteTiled` and `DrawSpriteTiledExt` to enum `BBMOD_ERenderCommand`, which are render commands for drawing sprites.
+* Added new methods `DrawSprite`, `DrawSpriteExt`, `DrawSpriteGeneral`, `DrawSpritePart`, `DrawSpritePartExt`, `DrawSpritePos`, `DrawSpriteStretched`, `DrawSpriteStretchedExt`, `DrawSpriteTiled` and `DrawSpriteTiledExt` to struct `BBMOD_RenderQueue`, which add respective commands into the queue.
+
 * Added new struct `BBMOD_ReflectionProbe`, which is used to capture surrounding scene at a specific position into a texture which is then used for reflections.
 * Added new function `bbmod_reflection_probe_add`, which adds a reflection probe to be sent to shaders.
 * Added new function `bbmod_reflection_probe_count`, which retrieves number of reflection probes added to be sent to shaders.
@@ -85,10 +91,7 @@
 * Added new macro `BBMOD_MAX_PUNCTUAL_LIGHTS`, which is the maximum number of punctual lights in shaders. Equals to 8.
 * Property `BBMOD_BaseShader.MaxPunctualLights` is now read-only and deprecated. Please use the new macro `BBMOD_MAX_PUNCTUAL_LIGHTS` instead.
 * Added new method `Negate` to structs `BBMOD_Vec2`, `BBMOD_Vec3` and `BBMOD_Vec4`, which negates the vector and returns the result as a new vector.
-
-* Added new function `bbmod_vertex_buffer_load`, which loads a vertex buffer from a file.
-* Added `*Self` and `*Other` variations of methods to structs `BBMOD_Vec2`, `BBMOD_Vec3`, `BBMOD_Vec4`, `BBMOD_Quaternion`, `BBMOD_DualQuaternion` and `BBMOD_Matrix`, which instead of creating new struct store the result into themselves or the other struct passed to the method.
-* For each method of `BBMOD_RenderQueue` that adds a render command into the queue there is now an equivalent function with an UpperCamelCase name. Please from now on use these methods instead of the original ones, as they are now deprecated.
+* Added `*Self` and `*Other` variations of methods of structs `BBMOD_Vec2`, `BBMOD_Vec3`, `BBMOD_Vec4`, `BBMOD_Quaternion`, `BBMOD_DualQuaternion` and `BBMOD_Matrix`, which instead of creating new struct store the result into themselves or the other struct passed in as an argument.
 
 * Fixed methods `world_to_screen` and `screen_point_to_vec3` of `BBMOD_BaseCamera`, which returned coordinates mirrored on the Y axis on some platforms.
 * Fixed `BBMOD_Cubemap` contents being flipped vertically on Windows.

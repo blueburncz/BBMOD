@@ -31,6 +31,26 @@ enum BBMOD_ERenderCommand
 	/// @member Draws a dynamically batched mesh if its material can be used in
 	/// the current render pass.
 	DrawMeshBatched,
+	/// @member Draws a sprites using the `draw_sprite` function.
+	DrawSprite,
+	/// @member Draws a sprite using the `draw_sprite_ext` function.
+	DrawSpriteExt,
+	/// @member Draws a sprite using the `draw_sprite_general` function.
+	DrawSpriteGeneral,
+	/// @member Draws a sprite using the `draw_sprite_part` function.
+	DrawSpritePart,
+	/// @member Draws a sprite using the `draw_sprite_part_ext` function.
+	DrawSpritePartExt,
+	/// @member Draws a sprite using the `draw_sprite_pos` function.
+	DrawSpritePos,
+	/// @member Draws a sprite using the `draw_sprite_stretched` function.
+	DrawSpriteStretched,
+	/// @member Draws a sprite using the `draw_sprite_stretched_ext` function.
+	DrawSpriteStretchedExt,
+	/// @member Draws a sprite using the `draw_sprite_tiled` function.
+	DrawSpriteTiled,
+	/// @member Draws a sprite using the `draw_sprite_tiled_ext` function.
+	DrawSpriteTiledExt,
 	/// @member Marks the end of a conditional block.
 	/// @see BBMOD_ERenderCommand.BeginConditionalBlock
 	EndConditionalBlock,
