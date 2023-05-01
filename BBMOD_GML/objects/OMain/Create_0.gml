@@ -40,9 +40,9 @@ var _matGunBase = BBMOD_MATERIAL_DEFAULT.clone()
 		BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH); // Enable casting shadows
 
 matGun0 = _matGunBase.clone()
-	.set_base_opacity(BBMOD_C_SILVER)
-	.set_specular_color(BBMOD_C_SILVER)
-	.set_normal_smoothness(BBMOD_VEC3_UP, 0.8);
+	.set_base_opacity(BBMOD_C_SILVER, 1.0)
+	.set_metallic_ao(1.0, 1.0)
+	.set_normal_roughness(BBMOD_VEC3_UP, 0.3);
 
 matGun1 = _matGunBase.clone()
 	.set_base_opacity(new BBMOD_Color(32, 32, 32));
@@ -101,3 +101,14 @@ if (os_browser == browser_not_a_browser)
 // Any object/struct that has a render method can be added to the renderer:
 renderer.add(batchShell)
 	.add(global.terrain);
+
+// Add a refleciton probe
+var _terrainWidth = global.terrain.Size.X * global.terrain.Scale.X;
+var _terrainHeight = global.terrain.Size.Y * global.terrain.Scale.Y;
+var _probeX = _terrainWidth / 2;
+var _probeY = _terrainHeight / 2;
+var _probeZ = global.terrain.get_height(_probeX, _probeY) + 20;
+
+var _reflectionProbe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(_probeX, _probeY, _probeZ));
+_reflectionProbe.Size = new BBMOD_Vec3(_terrainWidth / 2 + 100, _terrainHeight / 2 + 100, 1000);
+bbmod_reflection_probe_add(_reflectionProbe);
