@@ -93,6 +93,8 @@
 * Added new method `Negate` to structs `BBMOD_Vec2`, `BBMOD_Vec3` and `BBMOD_Vec4`, which negates the vector and returns the result as a new vector.
 * Added `*Self` and `*Other` variations of methods of structs `BBMOD_Vec2`, `BBMOD_Vec3`, `BBMOD_Vec4`, `BBMOD_Quaternion`, `BBMOD_DualQuaternion` and `BBMOD_Matrix`, which instead of creating new struct store the result into themselves or the other struct passed in as an argument.
 
+* Method `BBMOD_MeshBuilder.make_tangents` should now run faster.
+
 * Fixed methods `world_to_screen` and `screen_point_to_vec3` of `BBMOD_BaseCamera`, which returned coordinates mirrored on the Y axis on some platforms.
 * Fixed `BBMOD_Cubemap` contents being flipped vertically on Windows.
 * Fixed crash in `bbmod_instance_to_buffer` when saving `BBMOD_EPropertyType.RealArray` properties.
