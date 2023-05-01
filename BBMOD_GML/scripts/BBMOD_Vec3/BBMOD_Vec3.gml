@@ -133,7 +133,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	/// @func CeilSelf()
 	///
 	/// @desc Applies function `ceil` to each component of the vector and stores
-	/// the result into `sefl`.
+	/// the result into `self`.
 	///
 	/// @return {Struct.BBMOD_Vec3} Returns `self`.
 	///

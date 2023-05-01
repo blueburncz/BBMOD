@@ -471,7 +471,7 @@ function BBMOD_DualQuaternion(
 	///
 	/// @param {Real} _p The power value.
 	///
-	/// @return {Struct.BBMOD_DualQuaternion} Returns `sefl`.
+	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
 	static PowSelf = function (_p)
 	{
 		gml_pragma("forceinline");

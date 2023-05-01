@@ -463,7 +463,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func MulSelf(_matrix, ...)
 	///
-	/// @desc Multiplies matrices and stores the result into `sefl`.
+	/// @desc Multiplies matrices and stores the result into `self`.
 	///
 	/// @param {Struct.BBMOD_Matrix} _matrix The first matrix to multiply with.
 	///
@@ -904,7 +904,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func RotateXSelf(_x)
 	///
-	/// @desc Rotates the matrix on the X axis and stores the result into `sefl`.
+	/// @desc Rotates the matrix on the X axis and stores the result into `self`.
 	///
 	/// @param {Real} _x Rotation on the X axis.
 	///
@@ -1088,7 +1088,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 
 	/// @func ScaleXSelf(_x)
 	///
-	/// @desc Scales the matrix on the X axis and stores the result into `sefl`.
+	/// @desc Scales the matrix on the X axis and stores the result into `self`.
 	///
 	/// @param {Real} _x Scale on the X axis.
 	///

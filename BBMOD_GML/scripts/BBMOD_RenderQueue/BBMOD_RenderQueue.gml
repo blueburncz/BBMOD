@@ -146,7 +146,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.ApplyMaterial} instead.
+	/// @deprecated Please use {@link BBMOD_RenderQueue.ApplyMaterial} instead.
 	static apply_material = function (_material, _vertexFormat, _enabledPasses=~0)
 	{
 		gml_pragma("forceinline");
@@ -1013,7 +1013,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuAlphaTestRef}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuAlphaTestRef}
 	/// instead.
 	static set_gpu_alphatestref = function (_value)
 	{
@@ -1048,7 +1048,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuBlendEnable}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuBlendEnable}
 	/// instead.
 	static set_gpu_blendenable = function (_enable)
 	{
@@ -1083,7 +1083,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuBlendMode}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuBlendMode}
 	/// instead.
 	static set_gpu_blendmode = function (_blendmode)
 	{
@@ -1121,7 +1121,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuBlendModeExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuBlendModeExt}
 	/// instead.
 	static set_gpu_blendmode_ext = function (_src, _dest)
 	{
@@ -1167,7 +1167,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuBlendModeExtSepAlpha}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuBlendModeExtSepAlpha}
 	/// instead.
 	static set_gpu_blendmode_ext_sepalpha = function (_src, _dest, _srcalpha, _destalpha)
 	{
@@ -1217,7 +1217,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuColorWriteEnable}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuColorWriteEnable}
 	/// instead.
 	static set_gpu_colorwriteenable = function (_red, _green, _blue, _alpha)
 	{
@@ -1252,7 +1252,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuCullMode}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuCullMode}
 	/// instead.
 	static set_gpu_cullmode = function (_cullmode)
 	{
@@ -1300,7 +1300,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuFog}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuFog}
 	/// instead.
 	static set_gpu_fog = function (_enable, _color, _start, _end)
 	{
@@ -1335,7 +1335,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexFilter}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexFilter}
 	/// instead.
 	static set_gpu_tex_filter = function (_linear)
 	{
@@ -1375,7 +1375,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexFilterExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexFilterExt}
 	/// instead.
 	static set_gpu_tex_filter_ext = function (_name, _linear)
 	{
@@ -1410,7 +1410,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMaxAniso}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMaxAniso}
 	/// instead.
 	static set_gpu_tex_max_aniso = function (_value)
 	{
@@ -1448,7 +1448,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMaxAnisoExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMaxAnisoExt}
 	/// instead.
 	static set_gpu_tex_max_aniso_ext = function (_name, _value)
 	{
@@ -1483,7 +1483,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMaxMip}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMaxMip}
 	/// instead.
 	static set_gpu_tex_max_mip = function (_value)
 	{
@@ -1521,7 +1521,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMaxMipExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMaxMipExt}
 	/// instead.
 	static set_gpu_tex_max_mip_ext = function (_name, _value)
 	{
@@ -1556,7 +1556,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMinMip}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMinMip}
 	/// instead.
 	static set_gpu_tex_min_mip = function (_value)
 	{
@@ -1594,7 +1594,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMinMipExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMinMipExt}
 	/// instead.
 	static set_gpu_tex_min_mip_ext = function (_name, _value)
 	{
@@ -1629,7 +1629,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipBias}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMipBias}
 	/// instead.
 	static set_gpu_tex_mip_bias = function(_value)
 	{
@@ -1667,7 +1667,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipBiasExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMipBiasExt}
 	/// instead.
 	static set_gpu_tex_mip_bias_ext = function (_name, _value)
 	{
@@ -1702,7 +1702,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipEnable}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMipEnable}
 	/// instead.
 	static set_gpu_tex_mip_enable = function (_enable)
 	{
@@ -1740,7 +1740,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipEnableExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMipEnableExt}
 	/// instead.
 	static set_gpu_tex_mip_enable_ext = function (_name, _enable)
 	{
@@ -1775,7 +1775,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipFilter}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMipFilter}
 	/// instead.
 	static set_gpu_tex_mip_filter = function (_filter)
 	{
@@ -1813,7 +1813,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexMipFilterExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexMipFilterExt}
 	/// instead.
 	static set_gpu_tex_mip_filter_ext = function (_name, _filter)
 	{
@@ -1848,7 +1848,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexRepeat}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexRepeat}
 	/// instead.
 	static set_gpu_tex_repeat = function (_enable)
 	{
@@ -1886,7 +1886,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuTexRepeatExt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuTexRepeatExt}
 	/// instead.
 	static set_gpu_tex_repeat_ext = function (_name, _enable)
 	{
@@ -1921,7 +1921,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuZFunc}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuZFunc}
 	/// instead.
 	static set_gpu_zfunc = function (_func)
 	{
@@ -1958,7 +1958,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuZTestEnable}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuZTestEnable}
 	/// instead.
 	static set_gpu_ztestenable = function (_enable)
 	{
@@ -1993,7 +1993,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetGpuZWriteEnable}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetGpuZWriteEnable}
 	/// instead.
 	static set_gpu_zwriteenable = function (_enable)
 	{
@@ -2030,7 +2030,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetMaterialProps}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetMaterialProps}
 	/// instead.
 	static set_material_props = function (_materialPropertyBlock)
 	{
@@ -2065,7 +2065,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetProjectionMatrix}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetProjectionMatrix}
 	/// instead.
 	static set_projection_matrix = function (_matrix)
 	{
@@ -2103,7 +2103,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetSampler}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetSampler}
 	/// instead.
 	static set_sampler = function (_nameOrIndex, _texture)
 	{
@@ -2138,7 +2138,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetShader}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetShader}
 	/// instead.
 	static set_shader = function (_shader)
 	{
@@ -2176,7 +2176,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloat}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformFloat}
 	/// instead.
 	static set_uniform_f = function (_name, _value)
 	{
@@ -2217,7 +2217,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloat2}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformFloat2}
 	/// instead.
 	static set_uniform_f2 = function (_name, _v1, _v2)
 	{
@@ -2261,7 +2261,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloat3}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformFloat3}
 	/// instead.
 	static set_uniform_f3 = function (_name, _v1, _v2, _v3)
 	{
@@ -2308,7 +2308,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloat4}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformFloat4}
 	/// instead.
 	static set_uniform_f4 = function (_name, _v1, _v2, _v3, _v4)
 	{
@@ -2346,7 +2346,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformFloatArray}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformFloatArray}
 	/// instead.
 	static set_uniform_f_array = function (_name, _array)
 	{
@@ -2384,7 +2384,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformInt}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformInt}
 	/// instead.
 	static set_uniform_i = function (_name, _value)
 	{
@@ -2425,7 +2425,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformInt2}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformInt2}
 	/// instead.
 	static set_uniform_i2 = function (_name, _v1, _v2)
 	{
@@ -2469,7 +2469,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformInt3}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformInt3}
 	/// instead.
 	static set_uniform_i3 = function (_name, _v1, _v2, _v3)
 	{
@@ -2516,7 +2516,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformInt4}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformInt4}
 	/// instead.
 	static set_uniform_i4 = function (_name, _v1, _v2, _v3, _v4)
 	{
@@ -2554,7 +2554,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformIntArray}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformIntArray}
 	/// instead.
 	static set_uniform_i_array = function (_name, _array)
 	{
@@ -2589,7 +2589,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformMatrix}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformMatrix}
 	/// instead.
 	static set_uniform_matrix = function (_name)
 	{
@@ -2627,7 +2627,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetUniformMatrixArray}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetUniformMatrixArray}
 	/// instead.
 	static set_uniform_matrix_array = function (_name, _array)
 	{
@@ -2662,7 +2662,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetViewMatrix}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetViewMatrix}
 	/// instead.
 	static set_view_matrix = function (_matrix)
 	{
@@ -2697,7 +2697,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SetWorldMatrix}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SetWorldMatrix}
 	/// instead.
 	static set_world_matrix = function (_matrix)
 	{
@@ -2740,7 +2740,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	///
-	/// @depreacted Please use {@link BBMOD_RenderQueue.SubmitVertexBuffer}
+	/// @deprecated Please use {@link BBMOD_RenderQueue.SubmitVertexBuffer}
 	/// instead.
 	static submit_vertex_buffer = function (_vertexBuffer, _prim, _texture)
 	{
