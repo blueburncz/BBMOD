@@ -92,6 +92,10 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 	/// @see BBMOD_ReflectionProbe.set_size
 	Size = new BBMOD_Vec3(0.5);
 
+	/// @var {Real} The volume of the reflection probe's AABB.
+	/// @private
+	__volume = 0.5 * 0.5 * 0.5;
+
 	/// @var {Bool} If `true` then the position or size has changed.
 	/// @private
 	__positionSizeChanged = true;
@@ -134,6 +138,7 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 	static set_size = function (_size)
 	{
 		Size = _size;
+		__volume = _size.X * _size.Y * _size.Z;
 		__positionSizeChanged = true;
 		return self;
 	};
@@ -225,11 +230,13 @@ function bbmod_reflection_probe_get(_index)
 
 /// @func bbmod_reflection_probe_find(_position)
 ///
-/// @desc Finds an enabled reflection probe at given position.
+/// @desc Finds a reflection probe that influences given position.
 ///
-/// @param {Struct.BBMOD_Vec3} _position The position to find a reflection probe at.
+/// @param {Struct.BBMOD_Vec3} _position The position to find a reflection probe
+/// at.
 ///
-/// @return {Struct.BBMOD_ReflectionProbe} The found reflection probe or `undefined`.
+/// @return {Struct.BBMOD_ReflectionProbe, undefined} The found reflection probe
+/// or `undefined` if none was found.
 ///
 /// @see BBMOD_ReflectionProbe.Enabled
 /// @see bbmod_reflection_probe_add
@@ -240,30 +247,42 @@ function bbmod_reflection_probe_get(_index)
 /// @see bbmod_reflection_probe_clear
 function bbmod_reflection_probe_find(_position)
 {
+	// TODO: Use spatial index for reflection probes
 	gml_pragma("forceinline");
 	var _reflectionProbes = global.__bbmodReflectionProbes;
+	var _probe = undefined;
+	var _probeVolume = infinity;
 	var i = 0;
 	repeat (array_length(_reflectionProbes))
 	{
-		with (_reflectionProbes[i])
+		with (_reflectionProbes[i++])
 		{
 			if (!Enabled)
 			{
 				continue;
 			}
 			var _min = Position.Sub(Size);
-			var _max = Position.Add(Size);
-			if (_position.X < _min.X || _position.X > _max.X
-				|| _position.Y < _min.Y || _position.Y > _max.Y
-				|| _position.Z < _min.Z || _position.Z > _max.Z)
+			if (_position.X < _min.X
+				|| _position.Y < _min.Y
+				|| _position.Z < _min.Z)
 			{
 				continue;
 			}
-			return self;
+			var _max = Position.Add(Size);
+			if (_position.X > _max.X
+				|| _position.Y > _max.Y
+				|| _position.Z > _max.Z)
+			{
+				continue;
+			}
+			if (__volume < _probeVolume)
+			{
+				_probe = self;
+				_probeVolume = __volume;
+			}
 		}
-		++i;
 	}
-	return undefined;
+	return _probe;
 }
 
 /// @func bbmod_reflection_probe_remove(_reflectionProbe)

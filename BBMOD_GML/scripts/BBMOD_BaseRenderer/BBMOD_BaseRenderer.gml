@@ -129,6 +129,18 @@ function BBMOD_BaseRenderer()
 	/// @private
 	__surFinal = -1;
 
+	/// @var {Struct.BBMOD_Cubemap} For reflection probe capture.
+	/// @private
+	static __cubemap = new BBMOD_Cubemap(128);
+
+	/// @var {Id.Surface} For reflection probe capture.
+	/// @private
+	__surProbe1 = -1;
+
+	/// @var {Id.Surface} For reflection probe capture.
+	/// @private
+	__surProbe2 = -1;
+
 	/// @func get_width()
 	///
 	/// @desc Retrieves the width of the renderer on the screen.
@@ -371,11 +383,6 @@ function BBMOD_BaseRenderer()
 
 		return self;
 	};
-
-	static __cubemap = new BBMOD_Cubemap(128);
-
-	__surProbe1 = -1;
-	__surProbe2 = -1;
 
 	/// @func __render_reflection_probes()
 	///
