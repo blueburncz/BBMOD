@@ -15,7 +15,7 @@
 /// ```gml
 /// /// @desc Create event
 /// model = bbmod_vertex_buffer_load("model.bin", BBMOD_VFORMAT_DEFAULT);
-/// vertex_free(model);
+/// vertex_freeze(model);
 ///
 /// /// @desc Draw event
 /// vertex_submit(model, pr_trianglelist, -1);
