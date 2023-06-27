@@ -35,9 +35,75 @@ function BBMOD_OBJImporter()
 
 	__textureCoords = ds_list_create();
 
+	__materials = [];
+
+	__materialNames = [];
+
 	static can_import = function (_path)
 	{
 		return (filename_ext(_path) == ".obj");
+	};
+
+	static __import_materials = function (_path)
+	{
+		var _file = file_text_open_read(_path);
+		if (_file == -1)
+		{
+			__bbmod_warning("Could not open file \"{0}\"!", [_path]);
+			return;
+		}
+
+		var _material = undefined;
+		var _split = [];
+
+		while (!file_text_eof(_file))
+		{
+			var _line = file_text_read_string(_file);
+			bbmod_string_split_on_first(_line, " ", _split);
+			var _keyword = _split[0];
+			_line = _split[1];
+
+			switch (_keyword)
+			{
+			// New material
+			case "newmtl":
+				_material = BBMOD_MATERIAL_DEFAULT.clone();
+				_material.Repeat = true;
+				array_push(__materials, _material);
+				array_push(__materialNames, _line);
+				break;
+
+			// Difuse color
+			case "Kd":
+				bbmod_string_split_on_first(_line, " ", _split);
+				var _r = real(_split[0]) * 255.0;
+
+				bbmod_string_split_on_first(_split[1], " ", _split);
+				var _g = real(_split[0]) * 255.0;
+
+				bbmod_string_split_on_first(_split[1], " ", _split);
+				var _b = real(_split[0]) * 255.0;
+
+				_material.BaseOpacityMultiplier = new BBMOD_Color(_r, _g, _b, 1.0);
+				break;
+
+			// Diffuse texture
+			case "map_Kd":
+				var _spritePath = filename_path(_path) + _line;
+				BBMOD_RESOURCE_MANAGER.load(_spritePath, undefined, method({ Material: _material, SpritePath: _spritePath }, function (_err, _res) {
+					if (_err != undefined)
+					{
+						__bbmod_warning("Could not open file \"{0}\"!", [SpritePath]);
+						return;
+					}
+					Material.BaseOpacity = sprite_get_texture(_res.Raw, 0);
+				}));
+				break;
+			}
+
+			file_text_readln(_file);
+		}
+		file_text_close(_file);
 	};
 
 	static import = function (_path)
@@ -45,6 +111,8 @@ function BBMOD_OBJImporter()
 		ds_list_clear(__vertices);
 		ds_list_clear(__normals);
 		ds_list_clear(__textureCoords);
+		__materials = [];
+		__materialNames = [];
 
 		var _file = file_text_open_read(_path);
 		if (_file == -1)
@@ -59,6 +127,8 @@ function BBMOD_OBJImporter()
 		_model.VertexFormat = _vformat;
 		_model.Meshes = [];
 		_model.NodeCount = 1;
+		_model.Materials = __materials;
+		_model.MaterialNames = __materialNames;
 
 		var _root = new BBMOD_Node(_model);
 		_root.Name = "Node0";
@@ -106,6 +176,11 @@ function BBMOD_OBJImporter()
 
 			switch (_keyword)
 			{
+			// Import materials
+			case "mtllib":
+				__import_materials(filename_path(_path) + _split[1]);
+				break;
+
 			// Object
 			case "o":
 				_node = new BBMOD_Node(_model);
@@ -115,7 +190,7 @@ function BBMOD_OBJImporter()
 				++_model.NodeCount;
 				break;
 
-			// Material
+			// Use material
 			case "usemtl":
 				var _ind = array_length(_model.MaterialNames) - 1;
 				for (/**/; _ind >= 0; --_ind)
@@ -293,6 +368,8 @@ function BBMOD_OBJImporter()
 		ds_list_destroy(__vertices);
 		ds_list_destroy(__normals);
 		ds_list_destroy(__textureCoords);
+		__materials = [];
+		__materialNames = [];
 		return undefined;
 	};
 }
