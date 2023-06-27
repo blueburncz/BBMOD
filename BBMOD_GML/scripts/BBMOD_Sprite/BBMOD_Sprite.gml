@@ -67,7 +67,7 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 			}
 			if (Callback)
 			{
-				Callback(_err, _res);
+				Callback(_err, Sprite);
 			}
 		}));
 

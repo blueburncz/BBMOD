@@ -319,7 +319,10 @@ function BBMOD_ResourceManager()
 			break;
 
 		default:
-			_onLoad(new BBMOD_Exception("Invalid file extension '" + _ext + "'!"));
+			if (_onLoad != undefined)
+			{
+				_onLoad(new BBMOD_Exception("Invalid file extension '" + _ext + "'!"));
+			}
 			return undefined;
 		}
 
