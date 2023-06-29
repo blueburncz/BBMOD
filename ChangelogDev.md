@@ -4,3 +4,4 @@
 
 * Fixed method `BBMOD_Sprite.from_file_async` passing `Asset.GMSprite` instead of `Struct.BBMOD_Sprite` into the callback function.
 * Fixed method `BBMOD_ResourceManager.load` crashing when callback function is not provided.
+* Removed deprecated `BBMOD_RenderQueue` methods!
