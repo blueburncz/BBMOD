@@ -17,8 +17,6 @@
 function BBMOD_BaseShader(_shader, _vertexFormat)
 	: BBMOD_Shader(_shader, _vertexFormat) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Real} Maximum number of punctual lights in the shader.
 	/// @deprecated Please use {@link BBMOD_MAX_PUNCTUAL_LIGHTS} instead.
 	/// @readonly
@@ -375,7 +373,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 				_dataA[@ _indexA + 7] = _color.Alpha;
 				_indexA += 8;
 
-				if (_light.is_instance(BBMOD_SpotLight)) // Ugh, but works!
+				if (_light[$ "AngleInner"] != undefined) // Ugh, but works!
 				{
 					_dataB[@ _indexB] = 1.0; // Is spot light
 					_dataB[@ _indexB + 1] = dcos(_light.AngleInner);

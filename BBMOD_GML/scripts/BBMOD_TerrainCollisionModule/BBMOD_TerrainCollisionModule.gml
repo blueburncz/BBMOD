@@ -11,8 +11,6 @@
 function BBMOD_TerrainCollisionModule(_terrain=undefined)
 	: BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Struct.BBMOD_Terrain} The terrain to collide with. Default value
 	/// is `undefined`.
 	Terrain = _terrain;

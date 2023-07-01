@@ -16,8 +16,6 @@
 function BBMOD_DefaultLightmapMaterial(_shader=undefined)
 	: BBMOD_DefaultMaterial(_shader) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static DefaultMaterial_copy = copy;
 
 	/// @var {Pointer.Texture} A texture with RGBM encoded lightmap. Overrides

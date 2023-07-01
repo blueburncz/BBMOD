@@ -2,14 +2,9 @@
 
 /// @func BBMOD_Light()
 ///
-/// @extends BBMOD_Class
-///
 /// @desc Base class for lights.
-function BBMOD_Light()
-	: BBMOD_Class() constructor
+function BBMOD_Light() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Bool} Use `false` to disable the light. Defaults to `true` (the
 	/// light is enabled).
 	Enabled = true;

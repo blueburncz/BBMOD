@@ -21,8 +21,6 @@ function BBMOD_AttractorModule(
 	_force=1.0
 ) : BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Struct.BBMOD_Vec3} The position to attract/repel particles to/from.
 	/// Default value is `(0, 0, 0)`.
 	Position = _position;

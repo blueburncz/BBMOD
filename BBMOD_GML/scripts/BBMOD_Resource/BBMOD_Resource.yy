@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "BBMOD_Class",
+  "name": "BBMOD_Resource",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

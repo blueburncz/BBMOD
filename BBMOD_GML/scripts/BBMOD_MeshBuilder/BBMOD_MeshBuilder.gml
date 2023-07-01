@@ -2,7 +2,7 @@
 
 /// @func BBMOD_MeshBuilder([_primitiveType])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc Allows you to build meshes through code.
 ///
@@ -35,13 +35,8 @@
 /// @see BBMOD_Mesh
 /// @see BBMOD_Vertex
 /// @see BBMOD_VertexFormat
-function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
-	: BBMOD_Class() constructor
+function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Constant.PrimitiveType} The primitive type of built meshes.
 	/// @readonly
 	PrimitiveType = _primitiveType;
@@ -321,7 +316,6 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		ds_list_destroy(Vertices);
 		ds_list_destroy(Faces);
 		return undefined;

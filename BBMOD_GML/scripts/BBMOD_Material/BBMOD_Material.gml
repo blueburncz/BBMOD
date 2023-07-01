@@ -78,8 +78,6 @@ global.__bbmodMaterialCurrent = undefined;
 function BBMOD_Material(_shader=undefined)
 	: BBMOD_Resource() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static Resource_destroy = destroy;
 
 	/// @var {String} The name under which is this material registered or

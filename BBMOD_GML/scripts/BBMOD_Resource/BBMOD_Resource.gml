@@ -2,18 +2,13 @@
 
 /// @func BBMOD_Resource()
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc Base struct for all BBMOD resources.
 ///
 /// @see BBMOD_ResourceManager
-function BBMOD_Resource()
-	: BBMOD_Class() constructor
+function BBMOD_Resource() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Bool} If `false` then the resource has not been loaded yet.
 	/// @readonly
 	IsLoaded = false;
@@ -288,7 +283,6 @@ function BBMOD_Resource()
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		if (__manager != undefined)
 		{
 			ds_map_delete(__manager.__resources, Path);

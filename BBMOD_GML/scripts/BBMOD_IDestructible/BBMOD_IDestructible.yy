@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "BBMOD_Resouce",
+  "name": "BBMOD_IDestructible",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Core",
-    "path": "folders/BBMOD/Core.yy",
+    "name": "Interfaces",
+    "path": "folders/BBMOD/Core/Interfaces.yy",
   },
 }

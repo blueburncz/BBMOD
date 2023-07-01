@@ -13,8 +13,6 @@
 function BBMOD_ParticleShader(_shader, _vertexFormat)
 	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static DefaultShader_set_material = set_material;
 
 	static set_material = function (_material)

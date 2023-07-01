@@ -26,8 +26,6 @@
 function BBMOD_Camera()
 	: BBMOD_BaseCamera() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Bool} If `true` then mouselook is enabled. Defaults to `false`.
 	/// @readonly
 	/// @see BBMOD_Camera.set_mouselook

@@ -2,17 +2,12 @@
 
 /// @func BBMOD_PostProcessor()
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc Handles post-processing effects like color grading, chromatic aberration,
 /// grayscale effect, vignette and anti-aliasing.
-function BBMOD_PostProcessor()
-	: BBMOD_Class() constructor
+function BBMOD_PostProcessor() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Id.Surface}
 	/// @private
 	__surPostProcess = -1;
@@ -166,13 +161,10 @@ function BBMOD_PostProcessor()
 
 	static destroy = function ()
 	{
-		Class_destroy();
-
 		if (surface_exists(__surPostProcess))
 		{
 			surface_free(__surPostProcess);
 		}
-
 		return undefined;
 	};
 }

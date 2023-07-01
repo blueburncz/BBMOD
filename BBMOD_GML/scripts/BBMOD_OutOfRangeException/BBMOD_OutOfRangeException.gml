@@ -12,5 +12,4 @@
 function BBMOD_OutOfRangeException(_msg="Index out of range!")
 	: BBMOD_Exception(_msg) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
 }

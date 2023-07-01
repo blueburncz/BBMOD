@@ -66,22 +66,17 @@
 /// @see BBMOD_AnimationInstance
 /// @see BBMOD_AnimationState
 /// @see BBMOD_AnimationStateMachine
-function BBMOD_AnimationPlayer(_model, _paused=false)
-	: BBMOD_Class() constructor
+function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	implement(BBMOD_IEventListener);
-
-	static Class_destroy = destroy;
+	BBMOD_IEventListener();
 
 	/// @var {Struct.BBMOD_Model} A model that the animation player animates.
 	/// @readonly
 	Model = _model;
 
-	/// @var {Id.DsList<Struct.BBMOD_Animation>} List of animations to play.
+	/// @var {Array<Struct.BBMOD_Animation>} List of animations to play.
 	/// @private
-	__animations = ds_list_create();
+	__animations = [];
 
 	/// @var {Struct.BBMOD_Animation} The currently playing animation or
 	/// `undefined`.
@@ -278,9 +273,9 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 		Time += _deltaTime * 0.000001 * PlaybackSpeed;
 
-		repeat (ds_list_size(__animations))
+		repeat (array_length(__animations))
 		{
-			var _animInst = __animations[| 0];
+			var _animInst = __animations[0];
 			var _animation = _animInst.Animation;
 
 			if (!_animation.IsLoaded)
@@ -302,7 +297,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 				else
 				{
 					Time = 0.0;
-					ds_list_delete(__animations, 0);
+					array_delete(__animations, 0, 1);
 					if (!_animation.__isTransition)
 					{
 						Animation = undefined;
@@ -431,10 +426,9 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 		Time = 0;
 
-		var _animationList = __animations;
+		__animations = [];
 		var _animationLast = __animationInstanceLast;
 
-		ds_list_clear(_animationList);
 
 		if (EnableTransitions
 			&& _animationLast != undefined
@@ -447,13 +441,13 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 
 			if (_transition != undefined)
 			{
-				ds_list_add(_animationList, new BBMOD_AnimationInstance(_transition));
+				array_push(__animations, new BBMOD_AnimationInstance(_transition));
 			}
 		}
 
 		var _animationInstance = new BBMOD_AnimationInstance(_animation);
 		_animationInstance.Loop = AnimationLoops;
-		ds_list_add(_animationList, _animationInstance);
+		array_push(__animations, _animationInstance);
 
 		return self;
 	};
@@ -608,15 +602,5 @@ function BBMOD_AnimationPlayer(_model, _paused=false)
 		gml_pragma("forceinline");
 		Model.render(_materials, get_transform());
 		return self;
-	};
-
-	static destroy = function ()
-	{
-		Class_destroy();
-		ds_list_destroy(__animations);
-		__nodePositionOverride = undefined;
-		__nodeRotationOverride = undefined;
-		__nodeRotationPost = undefined;
-		return undefined;
 	};
 }

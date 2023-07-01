@@ -2,7 +2,7 @@
 
 /// @func BBMOD_Terrain([_heightmap[, _subimage]])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A heightmap based terrain with five material layers controlled through
 /// a splatmap.
@@ -12,13 +12,8 @@
 /// later using the terrain's methods.
 /// @param {Real} [_subimage] The sprite subimage to use for the heightmap.
 /// Defaults to 0.
-function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
-	: BBMOD_Class() constructor
+function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
 	/// @readonly
 	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
@@ -772,7 +767,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		ds_grid_destroy(__splatmapGrid);
 		ds_grid_destroy(__height);
 		ds_grid_destroy(__normalX);

@@ -20,8 +20,6 @@ function BBMOD_AABBCollider(
 	_size=new BBMOD_Vec3(0.5)
 ) : BBMOD_Collider() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Struct.BBMOD_Vec3} The center position of the AABB.
 	Position = _position;
 

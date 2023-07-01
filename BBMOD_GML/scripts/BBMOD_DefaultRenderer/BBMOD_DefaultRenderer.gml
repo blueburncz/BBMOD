@@ -43,8 +43,6 @@
 function BBMOD_DefaultRenderer()
 	: BBMOD_BaseRenderer() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static BaseRenderer_destroy = destroy;
 
 	/// @var {Bool} Enables rendering scene depth into a depth buffer during the

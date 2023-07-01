@@ -6,9 +6,9 @@
 ///
 /// @example
 /// ```gml
-/// function MyEventListener() : BBMOD_Class() constructor
+/// function MyEventListener() constructor
 /// {
-///     implement(BBMOD_IEventListener);
+///     BBMOD_IEventListener();
 ///
 ///     on_event("test", function () {
 ///         show_debug_message("It is working!");
@@ -19,9 +19,9 @@
 /// ```
 function BBMOD_IEventListener()
 {
-	/// @var {Id.DsMap<String, Function>}
+	/// @var {Struct}
 	/// @private
-	__listeners = undefined;
+	__listeners = {};
 
 	static _onEvent = function (_event, _listener=undefined)
 	{
@@ -31,12 +31,12 @@ function BBMOD_IEventListener()
 			_listener = _event;
 			_event = __BBMOD_EV_ALL;
 		}
-		__listeners ??= ds_map_create();
-		if (!ds_map_exists(__listeners, _event))
+		__listeners ??= {};
+		if (!variable_struct_exists(__listeners, _event))
 		{
-			__listeners[? _event] = [];
+			__listeners[$ _event] = [];
 		}
-		array_push(__listeners[? _event], _listener);
+		array_push(__listeners[$ _event], _listener);
 		return self;
 	};
 
@@ -54,9 +54,9 @@ function BBMOD_IEventListener()
 	///
 	/// @example
 	/// ```gml
-	/// function Button() : BBMOD_Class() constructor
+	/// function Button() constructor
 	/// {
-	///     implement(BBMOD_IEventListener);
+	///     BBMOD_IEventListener();
 	/// }
 	///
 	/// var _button = new Button();
@@ -84,11 +84,11 @@ function BBMOD_IEventListener()
 		}
 		if (_event != undefined)
 		{
-			ds_map_delete(__listeners, _event);
+			variable_struct_remove(__listeners, _event);
 		}
 		else
 		{
-			ds_map_destroy(__listeners);
+			__listeners = {};
 		}
 		return self;
 	};
@@ -116,9 +116,9 @@ function BBMOD_IEventListener()
 
 		var _events, i;
 
-		if (ds_map_exists(__listeners, _event))
+		if (variable_struct_exists(__listeners, _event))
 		{
-			_events = __listeners[? _event];
+			_events = __listeners[$ _event];
 			i = 0;
 			repeat (array_length(_events))
 			{
@@ -126,9 +126,9 @@ function BBMOD_IEventListener()
 			}
 		}
 
-		if (ds_map_exists(__listeners, __BBMOD_EV_ALL))
+		if (variable_struct_exists(__listeners, __BBMOD_EV_ALL))
 		{
-			_events = __listeners[? __BBMOD_EV_ALL];
+			_events = __listeners[$ __BBMOD_EV_ALL];
 			i = 0;
 			repeat (array_length(_events))
 			{
@@ -148,11 +148,4 @@ function BBMOD_IEventListener()
 	///
 	/// @return {Struct.BBMOD_IEventListener} Returns `self`.
 	trigger_event = _triggerEvent;
-
-	array_push(__destroyActions, function () {
-		if (__listeners != undefined)
-		{
-			ds_map_destroy(__listeners);
-		}
-	});
 }

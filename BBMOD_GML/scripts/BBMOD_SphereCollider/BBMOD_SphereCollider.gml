@@ -17,8 +17,6 @@
 function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 	: BBMOD_Collider() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Struct.BBMOD_Vec3} The position of the sphere.
 	Position = _position;
 

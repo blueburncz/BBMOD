@@ -17,7 +17,7 @@ function bbmod_render_queues_get()
 
 /// @func BBMOD_RenderQueue([_name[, _priority]])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A cointainer of render commands.
 ///
@@ -28,13 +28,8 @@ function bbmod_render_queues_get()
 ///
 /// @see bbmod_render_queue_get_default
 /// @see BBMOD_ERenderCommand
-function BBMOD_RenderQueue(_name=undefined, _priority=0)
-	: BBMOD_Class() constructor
+function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	static IdNext = 0;
 
 	/// @var {String} The name of the render queue. This can be useful for
@@ -2493,7 +2488,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		__renderCommands = undefined;
 		__bbmod_remove_render_queue(self);
 		return undefined;

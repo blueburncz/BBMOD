@@ -11,8 +11,6 @@
 function BBMOD_GravityModule(_gravity=BBMOD_VEC3_UP.Scale(-9.8))
 	: BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Struct.BBMOD_Vec3} The gravity vector. Default value is
 	/// `(0, 0, -9.8)`.
 	Gravity = _gravity;

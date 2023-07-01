@@ -8,5 +8,4 @@
 function BBMOD_LightmapShader(_shader, _vertexFormat)
 	: BBMOD_DefaultLightmapShader(_shader, _vertexFormat) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
 }

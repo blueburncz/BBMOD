@@ -13,8 +13,6 @@
 function BBMOD_EmissionOverTimeModule(_count=1, _interval=1.0)
 	: BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Real} Number of particles to spawn each time. Default
 	/// value is 1.
 	Count = _count;

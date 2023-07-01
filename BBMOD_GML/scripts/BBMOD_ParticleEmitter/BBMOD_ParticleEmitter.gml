@@ -2,6 +2,8 @@
 
 /// @func BBMOD_ParticleEmitter(_position, _system)
 ///
+/// @implements {BBMOD_IDestructible}
+///
 /// @desc Emits particles at a specific position in the world. The behavior of
 /// the emitted particles is defined by a particle system.
 ///
@@ -10,13 +12,8 @@
 /// defines behavior of emitted particles.
 ///
 /// @see BBBMOD_ParticleSystem
-function BBMOD_ParticleEmitter(_position, _system)
-	: BBMOD_Class() constructor
+function BBMOD_ParticleEmitter(_position, _system) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Struct.BBMOD_Vec3} The emitter's position in world-space.
 	Position = _position;
 
@@ -500,7 +497,6 @@ function BBMOD_ParticleEmitter(_position, _system)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		ds_grid_destroy(Particles);
 		ds_grid_destroy(GridCompute);
 		return undefined;

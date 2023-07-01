@@ -2,7 +2,7 @@
 
 /// @func BBMOD_Mesh(_vertexFormat[, _model])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A mesh struct.
 ///
@@ -13,13 +13,8 @@
 ///
 /// @see BBMOD_Model
 /// @see BBMOD_VertexFormat
-function BBMOD_Mesh(_vertexFormat, _model=undefined)
-	: BBMOD_Class() constructor
+function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Struct.BBMOD_Model} The model to which the mesh belongs or
 	/// `undefined`.
 	/// @readonly
@@ -515,7 +510,6 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		vertex_delete_buffer(VertexBuffer);
 		return undefined;
 	};

@@ -22,8 +22,7 @@ enum BBMOD_ECubeSide
 
 /// @func BBMOD_Cubemap(_resolution)
 ///
-/// @extends BBMOD_Class
-///
+/// @implements {BBMOD_IDestructible}
 /// @implements {BBMOD_IRenderTarget}
 ///
 /// @desc Used for capturing surrounding scene at given position into a texture.
@@ -56,15 +55,8 @@ enum BBMOD_ECubeSide
 /// cubemap = cubemap.destroy();
 /// renderer = renderer.destroy();
 /// ```
-function BBMOD_Cubemap(_resolution)
-	: BBMOD_Class() constructor
+function BBMOD_Cubemap(_resolution) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	implement(BBMOD_IRenderTarget);
-
-	static Class_destroy = destroy;
-
 	/// @var {Array} The position of the cubemap in the world space.
 	/// @see BBMOD_Cubemap.get_view_matrix
 	Position = new BBMOD_Vec3();
@@ -414,7 +406,6 @@ function BBMOD_Cubemap(_resolution)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		var i = 0;
 		repeat (BBMOD_ECubeSide.SIZE)
 		{

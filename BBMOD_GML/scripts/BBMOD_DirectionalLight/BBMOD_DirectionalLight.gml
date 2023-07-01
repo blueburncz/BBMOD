@@ -17,8 +17,6 @@ global.__bbmodDirectionalLight = undefined;
 function BBMOD_DirectionalLight(_color=undefined, _direction=undefined)
 	: BBMOD_Light() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Struct.BBMOD_Color} The color of the light. Defaul value is
 	/// {@link BBMOD_C_WHITE}.
 	Color = _color ?? BBMOD_C_WHITE;

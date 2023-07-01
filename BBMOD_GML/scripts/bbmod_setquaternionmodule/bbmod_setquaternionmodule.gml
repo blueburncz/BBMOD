@@ -18,8 +18,6 @@ function BBMOD_SetQuaternionModule(
 	_value=new BBMOD_Quaternion()
 ) : BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Real} The first of the four properties that together form a
 	/// quaternion. Use values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 	Property = _property;

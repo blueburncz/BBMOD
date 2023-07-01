@@ -2,7 +2,7 @@
 
 /// @func BBMOD_ParticleSystem(_model, _material, _particleCount[, _batchSize])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A collection of particle modules that together define behavior of
 /// particles.
@@ -20,13 +20,8 @@
 /// @see BBMOD_MODEL_PARTICLE
 /// @see BBMOD_MATERIAL_PARTICLE_LIT
 /// @see BBMOD_MATERIAL_PARTICLE_UNLIT
-function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
-	: BBMOD_Class() constructor
+function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Struct.BBMOD_Material} _material The material used by the particle
 	/// system.
 	Material = _material;
@@ -78,7 +73,6 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		__dynamicBatch = __dynamicBatch.destroy();
 		return undefined;
 	};

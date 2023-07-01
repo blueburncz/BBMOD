@@ -6,18 +6,13 @@ global.__bbmodRendererCurrent = undefined;
 
 /// @func BBMOD_BaseRenderer()
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc Base struct for renderers, which execute
 /// [render commands](./BBMOD_RenderCommand.html) created with method
 /// [render](./BBMOD_Model.render.html).
-function BBMOD_BaseRenderer()
-	: BBMOD_Class() constructor
+function BBMOD_BaseRenderer() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Real} The X position of the renderer on the screen. Default value
 	/// is 0.
 	X = 0;
@@ -1002,8 +997,6 @@ function BBMOD_BaseRenderer()
 
 	static destroy = function ()
 	{
-		Class_destroy();
-
 		if (global.__bbmodRendererCurrent == self)
 		{
 			global.__bbmodRendererCurrent = undefined;

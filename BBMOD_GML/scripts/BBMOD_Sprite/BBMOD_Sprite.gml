@@ -15,8 +15,6 @@
 function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static Resource_destroy = destroy;
 
 	/// @var {Asset.GMSprite} The raw sprite resource of `undefined` if it

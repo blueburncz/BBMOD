@@ -8,5 +8,4 @@
 function BBMOD_LightmapMaterial(_shader=undefined)
 	: BBMOD_DefaultLightmapMaterial(_shader) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
 }

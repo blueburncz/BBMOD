@@ -12,8 +12,6 @@
 function BBMOD_MixEmissionModule(_from=1, _to=_from)
 	: BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Real} The minimum number of particles to spawn. Default value is 1.
 	From = _from;
 

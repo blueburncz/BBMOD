@@ -5,3 +5,6 @@
 * Fixed method `BBMOD_Sprite.from_file_async` passing `Asset.GMSprite` instead of `Struct.BBMOD_Sprite` into the callback function.
 * Fixed method `BBMOD_ResourceManager.load` crashing when callback function is not provided.
 * Removed deprecated `BBMOD_RenderQueue` methods!
+
+* Removed RTTI mechanisms from BBMOD: removed struct `BBMOD_Class`, macro `BBMOD_CLASS_GENERATED_BODY` and functions `bbmod_is_class` and `bbmod_class_get_name`! This means methods `is_instance`, `implement` and `implements` are also no longer available. Please make sure that you are not using any of these before upgrading to this version!
+* Added `BBMOD_IDestructible`, which is an interface for structs that need to be manually destroyed to properly free used memory. Structs that previously inherited from `BBMOD_Class` and still need a `destroy` method now implement this interface. Structs that did not need the method but still had it, because they inherited from `BBMOD_Class`, now do not have the method and trying to call it will give you an error. To fix this, simply remove these calls.
