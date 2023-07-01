@@ -47,6 +47,7 @@ enum BBMOD_EShaderUniformType
 /// @private
 function __bbmod_shader_get_map()
 {
+	gml_pragma("forceinline");
 	static _map = ds_map_create();
 	return _map;
 }

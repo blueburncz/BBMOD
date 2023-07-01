@@ -907,6 +907,24 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return self;
 	};
 
+	/// @func SetGpuState(_state)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuState} command into the
+	/// queue.
+	///
+	/// @param {Id.DsMap} _state The new GPU state.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuState = function (_state)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuState;
+		_command[@ 1] = _state;
+		return self;
+	};
+
 	/// @func SetGpuTexFilter(_linear)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuTexFilter} command into
@@ -1640,6 +1658,24 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return self;
 	};
 
+	/// @func SubmitRenderQueue(_renderQueue)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SubmitRenderQueue} command
+	/// into the queue.
+	///
+	/// @param {Struct.BBMOD_RenderQueue} _renderQueue The vertex buffer to submit.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SubmitRenderQueue = function (_renderQueue)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SubmitRenderQueue;
+		_command[@ 1] = _renderQueue;
+		return self;
+	};
+
 	/// @func SubmitVertexBuffer(_vertexBuffer, _prim, _texture)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SubmitVertexBuffer} command
@@ -1688,7 +1724,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 	static has_commands = function (_renderPass)
 	{
 		gml_pragma("forceinline");
-		return (__renderPasses & (1 << _renderPass));
+		return (__renderPasses & (1 << _renderPass)) ? true : false;
 	};
 
 	/// @func submit([_instances])
@@ -2227,6 +2263,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					gpu_set_fog(false, c_black, 0, 1);
 				}
 				break;
+			
+			case BBMOD_ERenderCommand.SetGpuState:
+				gpu_set_state(_command[i++]);
+				break;
 
 			case BBMOD_ERenderCommand.SetGpuTexFilter:
 				gpu_set_tex_filter(_command[i++]);
@@ -2457,6 +2497,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 				matrix_set(matrix_world, _command[i++]);
 				break;
 
+			case BBMOD_ERenderCommand.SubmitRenderQueue:
+				_command[i++].submit(_instances);
+				break;
+
 			case BBMOD_ERenderCommand.SubmitVertexBuffer:
 				{
 					var _vertexBuffer = _command[i++];
@@ -2477,7 +2521,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 	///
 	/// @desc Clears the render queue.
 	///
-	/// @return {Struct.BBMOD_Material} Returns `self`.
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static clear = function ()
 	{
 		gml_pragma("forceinline");
@@ -2542,6 +2586,7 @@ function __bbmod_reindex_render_queues()
 /// @see BBMOD_RenderQueue
 function bbmod_render_queue_get_default()
 {
+	gml_pragma("forceinline");
 	static _renderQueue = new BBMOD_RenderQueue("Default");
 	return _renderQueue;
 }

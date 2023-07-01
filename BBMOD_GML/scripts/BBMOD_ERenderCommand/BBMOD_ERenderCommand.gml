@@ -84,6 +84,8 @@ enum BBMOD_ERenderCommand
 	SetGpuCullMode,
 	/// @member Configures fog.
 	SetGpuFog,
+	/// @member Sets the GPU state.
+	SetGpuState,
 	/// @member Enables/disables texture filtering.
 	SetGpuTexFilter,
 	/// @member Enables/disables texture filtering for a specific sampler.
@@ -159,6 +161,8 @@ enum BBMOD_ERenderCommand
 	SetViewMatrix,
 	/// @member Sets the world matrix.
 	SetWorldMatrix,
+	/// @member Submits another render queue.
+	SubmitRenderQueue,
 	/// @member Submits a vertex buffer.
 	SubmitVertexBuffer,
 };

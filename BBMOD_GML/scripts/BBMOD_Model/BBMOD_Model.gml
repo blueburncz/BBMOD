@@ -645,7 +645,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		{
 			Meshes[i++].destroy();
 		}
-		Meshes = [];
+		Meshes = undefined;
 		return undefined;
 	};
 
