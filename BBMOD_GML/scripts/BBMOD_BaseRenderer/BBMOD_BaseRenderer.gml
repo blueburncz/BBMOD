@@ -392,6 +392,9 @@ function BBMOD_BaseRenderer() constructor
 	{
 		gml_pragma("forceinline");
 
+		var _view = matrix_get(matrix_view);
+		var _projection = matrix_get(matrix_projection);
+
 		global.__bbmodReflectionProbeTexture = pointer_null;
 
 		static _renderQueues = bbmod_render_queues_get();
@@ -519,7 +522,10 @@ function BBMOD_BaseRenderer() constructor
 			}
 			gpu_pop_state();
 		}
+
 		matrix_set(matrix_world, _world);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
 
 		global.__bbmodReflectionProbeTexture = surface_get_texture(__surProbe1);
 	};
@@ -669,6 +675,8 @@ function BBMOD_BaseRenderer() constructor
 			&& _mouseOver
 			&& mouse_check_button_pressed(Gizmo.ButtonDrag))
 		{
+			bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
+
 			__surSelect = bbmod_surface_check(__surSelect, _renderWidth, _renderHeight);
 			surface_set_target(__surSelect);
 			draw_clear_alpha(0, 0.0);

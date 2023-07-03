@@ -15,3 +15,5 @@
 * Added new method `BBMOD_RenderQueue.SetGpuState(_state)`, which adds a `BBMOD_ERenderCommand.SetGpuState` command into the queue.
 * Added new render command `BBMOD_ERenderCommand.SubmitRenderQueue`, which submits another render queue.
 * Added new method `BBMOD_RenderQueue.SubmitRenderQueue(_renderQueue)`, which adds a `BBMOD_ERenderCommand.SubmitRenderQueue` command into the queue.
+
+* Fixed gizmo, which still did not work in 3.17.0.
