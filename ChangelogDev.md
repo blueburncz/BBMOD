@@ -17,3 +17,5 @@
 * Added new method `BBMOD_RenderQueue.SubmitRenderQueue(_renderQueue)`, which adds a `BBMOD_ERenderCommand.SubmitRenderQueue` command into the queue.
 
 * Fixed gizmo, which still did not work in 3.17.0.
+
+* Fixed methods `DrawSpriteExt`, `DrawSpriteGeneral` and `DrawSpritePart` of `BBMOD_RenderQueue` crashing because of wrong variable names.

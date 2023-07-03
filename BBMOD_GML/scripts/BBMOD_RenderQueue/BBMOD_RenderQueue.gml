@@ -326,7 +326,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		var _command = __get_next(10);
 		_command[@ 0] = BBMOD_ERenderCommand.DrawSpriteExt;
 		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimage;
+		_command[@ 2] = _subimg;
 		_command[@ 3] = _x;
 		_command[@ 4] = _y;
 		_command[@ 5] = _xscale;
@@ -375,7 +375,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		var _command = __get_next(17);
 		_command[@  0] = BBMOD_ERenderCommand.DrawSpriteGeneral;
 		_command[@  1] = _sprite;
-		_command[@  2] = _subimage;
+		_command[@  2] = _subimg;
 		_command[@  3] = _left;
 		_command[@  4] = _top;
 		_command[@  5] = _width;
@@ -418,7 +418,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		var _command = __get_next(9);
 		_command[@ 0] = BBMOD_ERenderCommand.DrawSpritePart;
 		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimage;
+		_command[@ 2] = _subimg;
 		_command[@ 3] = _left;
 		_command[@ 4] = _top;
 		_command[@ 5] = _width;
