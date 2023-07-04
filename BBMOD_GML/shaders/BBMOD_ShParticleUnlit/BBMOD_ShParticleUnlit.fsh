@@ -114,6 +114,92 @@ uniform vec4 bbmod_LightDirectionalColor;
 //
 // Includes
 //
+#define X_GAMMA 2.2
+
+/// @desc Converts gamma space color to linear space.
+vec3 xGammaToLinear(vec3 rgb)
+{
+	return pow(rgb, vec3(X_GAMMA));
+}
+
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
+{
+	return pow(rgb, vec3(1.0 / X_GAMMA));
+}
+
+/// @desc Gets color's luminance.
+float xLuminance(vec3 rgb)
+{
+	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
+}
+
+void Fog(float depth)
+{
+	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
+	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
+	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
+	vec3 fogColor = xGammaToLinear(bbmod_FogColor.rgb) * (ambientUp + ambientDown + directionalLightColor);
+	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0) * bbmod_FogColor.a;
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
+}
+void Exposure()
+{
+	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+}
+
+void GammaCorrect()
+{
+	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+}
+/// @param tanAspect (tanFovY*(screenWidth/screenHeight),-tanFovY), where
+///                  tanFovY = dtan(fov*0.5)
+/// @param texCoord  Sceen-space UV.
+/// @param depth     Scene depth at texCoord.
+/// @return Point projected to view-space.
+vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
+{
+	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
+}
+
+/// @param p A point in clip space (transformed by projection matrix, but not
+///          normalized).
+/// @return P's UV coordinates on the screen.
+vec2 xUnproject(vec4 p)
+{
+	vec2 uv = p.xy / p.w;
+	uv = uv * 0.5 + 0.5;
+#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+	uv.y = 1.0 - uv.y;
+#endif
+	return uv;
+}
+/// @param d Linearized depth to encode.
+/// @return Encoded depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+vec3 xEncodeDepth(float d)
+{
+	const float inv255 = 1.0 / 255.0;
+	vec3 enc;
+	enc.x = d;
+	enc.y = d * 255.0;
+	enc.z = enc.y * 255.0;
+	enc = fract(enc);
+	float temp = enc.z * inv255;
+	enc.x -= enc.y * inv255;
+	enc.y -= temp;
+	enc.z -= temp;
+	return enc;
+}
+
+/// @param c Encoded depth.
+/// @return Docoded linear depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+float xDecodeDepth(vec3 c)
+{
+	const float inv255 = 1.0 / 255.0;
+	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
+}
 struct Material
 {
 	vec3 Base;
@@ -148,25 +234,6 @@ Material CreateMaterial(mat3 TBN)
 	return m;
 }
 #define F0_DEFAULT vec3(0.04)
-#define X_GAMMA 2.2
-
-/// @desc Converts gamma space color to linear space.
-vec3 xGammaToLinear(vec3 rgb)
-{
-	return pow(rgb, vec3(X_GAMMA));
-}
-
-/// @desc Converts linear space color to gamma space.
-vec3 xLinearToGamma(vec3 rgb)
-{
-	return pow(rgb, vec3(1.0 / X_GAMMA));
-}
-
-/// @desc Gets color's luminance.
-float xLuminance(vec3 rgb)
-{
-	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
-}
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -260,73 +327,6 @@ Material UnpackMaterial(
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
 
 	return m;
-}
-
-void Fog(float depth)
-{
-	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
-	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
-	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
-	vec3 fogColor = xGammaToLinear(bbmod_FogColor.rgb) * (ambientUp + ambientDown + directionalLightColor);
-	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0) * bbmod_FogColor.a;
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-}
-void Exposure()
-{
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
-}
-
-void GammaCorrect()
-{
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-}
-/// @param tanAspect (tanFovY*(screenWidth/screenHeight),-tanFovY), where
-///                  tanFovY = dtan(fov*0.5)
-/// @param texCoord  Sceen-space UV.
-/// @param depth     Scene depth at texCoord.
-/// @return Point projected to view-space.
-vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
-{
-	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
-}
-
-/// @param p A point in clip space (transformed by projection matrix, but not
-///          normalized).
-/// @return P's UV coordinates on the screen.
-vec2 xUnproject(vec4 p)
-{
-	vec2 uv = p.xy / p.w;
-	uv = uv * 0.5 + 0.5;
-#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-	uv.y = 1.0 - uv.y;
-#endif
-	return uv;
-}
-/// @param d Linearized depth to encode.
-/// @return Encoded depth.
-/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
-vec3 xEncodeDepth(float d)
-{
-	const float inv255 = 1.0 / 255.0;
-	vec3 enc;
-	enc.x = d;
-	enc.y = d * 255.0;
-	enc.z = enc.y * 255.0;
-	enc = fract(enc);
-	float temp = enc.z * inv255;
-	enc.x -= enc.y * inv255;
-	enc.y -= temp;
-	enc.z -= temp;
-	return enc;
-}
-
-/// @param c Encoded depth.
-/// @return Docoded linear depth.
-/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
-float xDecodeDepth(vec3 c)
-{
-	const float inv255 = 1.0 / 255.0;
-	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
 }
 
 void UnlitShader(Material material, float depth)

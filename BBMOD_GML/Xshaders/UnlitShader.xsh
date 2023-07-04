@@ -5,6 +5,7 @@
 #pragma include("Projecting.xsh")
 #pragma include("DepthEncoding.xsh")
 #endif
+#pragma include("MetallicMaterial.xsh")
 
 void UnlitShader(Material material, float depth)
 {

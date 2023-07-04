@@ -78,7 +78,6 @@ uniform vec4 bbmod_InstanceID;
 #if !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
 // RGBA
 uniform vec4 bbmod_BaseOpacityMultiplier;
-#endif
 
 // If 1.0 then the material uses roughness
 uniform float bbmod_IsRoughness;
@@ -111,6 +110,8 @@ uniform vec4 bbmod_NormalWUV;
 // UVs of the Material texture
 uniform vec4 bbmod_MaterialUV;
 #endif // X_2D
+
+#endif // !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
 
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
@@ -229,8 +230,6 @@ uniform float bbmod_ShadowCasterIndex;
 //
 // Includes
 //
-#pragma include("MetallicMaterial.xsh")
-
 #if !defined(X_ID)
 #if defined(X_OUTPUT_DEPTH)
 #pragma include("DepthShader.xsh")
@@ -249,6 +248,34 @@ uniform float bbmod_ShadowCasterIndex;
 //
 void main()
 {
+#if defined(X_OUTPUT_DEPTH) || defined(X_ID)
+	float opacity = texture2D(gm_BaseTexture, v_vTexCoord).a;
+
+#if defined(X_ZOMBIE)
+	// Dissolve
+	float noise = Noise(v_vTexCoord * u_vDissolveScale);
+	if (noise < u_fDissolveThreshold)
+	{
+		discard;
+	}
+#endif // X_ZOMBIE
+
+	if (opacity < bbmod_AlphaTest)
+	{
+		discard;
+	}
+
+#if defined(X_ID)
+	#if defined(X_BATCHED)
+		gl_FragColor = v_vInstanceID;
+	#else
+		gl_FragColor = bbmod_InstanceID;
+	#endif
+#elif defined(X_OUTPUT_DEPTH)
+	DepthShader(v_vPosition.z);
+#endif
+
+#else
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
 		bbmod_IsRoughness,
@@ -286,10 +313,8 @@ void main()
 	}
 #endif
 
-#if !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
 	material.Base *= bbmod_BaseOpacityMultiplier.rgb;
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
-#endif
 
 #if defined(X_ZOMBIE)
 	// Dissolve
@@ -305,23 +330,13 @@ void main()
 		discard;
 	}
 
-#if defined(X_ID)
-#if defined(X_BATCHED)
-	gl_FragColor = v_vInstanceID;
-#else
-	gl_FragColor = bbmod_InstanceID;
-#endif
-#elif defined(X_OUTPUT_DEPTH)
-	DepthShader(v_vPosition.z);
-#else // X_OUTPUT_DEPTH
 #if defined(X_PBR)
 	PBRShader(material, v_vPosition.z);
 #else // X_PBR
 	UnlitShader(material, v_vPosition.z);
 #endif // !X_PBR
-#endif // !X_OUTPUT_DEPTH
 
-#if defined(X_ZOMBIE) && !defined(X_OUTPUT_DEPTH)
+#if defined(X_ZOMBIE)
 	// Dissolve
 	gl_FragColor.rgb = mix(
 		gl_FragColor.rgb,
@@ -329,5 +344,7 @@ void main()
 		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
 	// Silhouette
 	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
+#endif
+
 #endif
 }
