@@ -144,8 +144,8 @@ function BBMOD_Material(_shader=undefined)
 	/// Default value is `false`.
 	AlphaBlend = false;
 
-	/// @var {Real} Use one of the `mip_` constants. Default value is `mip_on`.
-	Mipmapping = mip_on;
+	/// @var {Real} Use one of the `mip_` constants. Default value is `mip_markedonly`.
+	Mipmapping = mip_markedonly;
 
 	/// @var {Real} Defines a bias for which mip level is used. Can be also
 	/// negative values to select lower mip levels. E.g. if mip level 2 would be
