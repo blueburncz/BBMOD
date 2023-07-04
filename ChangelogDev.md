@@ -23,3 +23,5 @@
 * Changed default value of property `Mipmapping` of all materials from `mip_on` to `mip_markedonly` to fix performance issues on some platforms. Please make sure to enable option "Generate mipmaps" in "Texture Groups" settings for texture pages that should have mipmaps.
 
 * Fixed formula used in function `bbmod_lerp_delta_time`.
+
+* Reduced complexity of depth and ID shaders and possibly increased rendering performance on some platforms.
