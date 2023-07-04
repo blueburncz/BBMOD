@@ -13,8 +13,6 @@
 function bbmod_lerp_delta_time(_from, _to, _factor, _deltaTime)
 {
 	gml_pragma("forceinline");
-	return lerp(
-		_from,
-		_to,
-		_factor * (_deltaTime / game_get_speed(gamespeed_microseconds)));
+	// * 10 for backwards compatibility!
+	return lerp(_from, _to, 1.0 - power(_factor, _deltaTime * 0.000001 * 10.0));
 }
