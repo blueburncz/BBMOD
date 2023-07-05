@@ -17,7 +17,7 @@ function bbmod_vtf_is_supported()
 
 		if (shader_is_compiled(_shader))
 		{
-			var _surface = surface_create(1, 1);
+			var _surface = bbmod_surface_check(-1, 1, 1, surface_rgba8unorm, false);
 			surface_set_target(_surface);
 			draw_clear(c_black);
 			shader_set(_shader);

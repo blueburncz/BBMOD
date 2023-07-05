@@ -25,3 +25,7 @@
 * Fixed formula used in function `bbmod_lerp_delta_time`.
 
 * Reduced complexity of depth and ID shaders and possibly increased rendering performance on some platforms.
+
+* Added new optional argument `_depthBuffer` to function `bbmod_surface_check`, using which you can configure whether a depth buffer should be created for the surface. Defaults to `true`.
+
+* BBMOD no longer creates depth buffers for surfaces that do not need them (e.g. surfaces for post-processing effects). Likewise it also always creates depth buffers for surfaces that do need them (e.g. the application surface, cubemaps etc.).

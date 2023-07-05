@@ -92,7 +92,7 @@ function BBMOD_PostProcessor() constructor
 		{
 			// If anti-aliasing is enabled, we need to do post-processing in
 			// another surface...
-			__surPostProcess = bbmod_surface_check(__surPostProcess, _width, _height);
+			__surPostProcess = bbmod_surface_check(__surPostProcess, _width, _height, surface_rgba8unorm, false);
 			surface_set_target(__surPostProcess);
 			matrix_set(matrix_world, matrix_build_identity());
 		}

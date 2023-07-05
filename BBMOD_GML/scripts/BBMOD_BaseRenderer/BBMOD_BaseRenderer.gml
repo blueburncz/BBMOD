@@ -363,12 +363,7 @@ function BBMOD_BaseRenderer() constructor
 			var _surfaceWidth = get_render_width();
 			var _surfaceHeight = get_render_height();
 
-			if (surface_exists(application_surface)
-				&& (surface_get_width(application_surface) != _surfaceWidth
-				|| surface_get_height(application_surface) != _surfaceHeight))
-			{
-				surface_resize(application_surface, _surfaceWidth, _surfaceHeight);
-			}
+			bbmod_surface_check(application_surface, _surfaceWidth, _surfaceHeight, surface_rgba8unorm, true);
 		}
 
 		if (Gizmo && EditMode)
@@ -467,8 +462,8 @@ function BBMOD_BaseRenderer() constructor
 				var _width = _height * 8;
 
 				var _surOld = __surProbe1;
-				__surProbe1 = bbmod_surface_check(__surProbe1, _width, _height);
-				__surProbe2 = bbmod_surface_check(__surProbe2, _width, _height);
+				__surProbe1 = bbmod_surface_check(__surProbe1, _width, _height, surface_rgba8unorm, false);
+				__surProbe2 = bbmod_surface_check(__surProbe2, _width, _height, surface_rgba8unorm, false);
 
 				if (__surProbe1 != _surOld)
 				{
@@ -677,7 +672,7 @@ function BBMOD_BaseRenderer() constructor
 		{
 			bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
-			__surSelect = bbmod_surface_check(__surSelect, _renderWidth, _renderHeight);
+			__surSelect = bbmod_surface_check(__surSelect, _renderWidth, _renderHeight, surface_rgba8unorm, true);
 			surface_set_target(__surSelect);
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
@@ -699,7 +694,7 @@ function BBMOD_BaseRenderer() constructor
 
 		if (_mousePickInstance || RenderInstanceIDs)
 		{
-			__surSelect = bbmod_surface_check(__surSelect, _renderWidth, _renderHeight);
+			__surSelect = bbmod_surface_check(__surSelect, _renderWidth, _renderHeight, surface_rgba8unorm, true);
 
 			surface_set_target(__surSelect);
 			draw_clear_alpha(0, 0.0);
@@ -762,7 +757,7 @@ function BBMOD_BaseRenderer() constructor
 			// Gizmo
 			bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
-			__surGizmo = bbmod_surface_check(__surGizmo, _renderWidth, _renderHeight);
+			__surGizmo = bbmod_surface_check(__surGizmo, _renderWidth, _renderHeight, surface_rgba8unorm, true);
 			surface_set_target(__surGizmo);
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
@@ -955,7 +950,7 @@ function BBMOD_BaseRenderer() constructor
 			//
 			var _world = matrix_get(matrix_world);
 
-			__surFinal = bbmod_surface_check(__surFinal, _width, _height);
+			__surFinal = bbmod_surface_check(__surFinal, _width, _height, surface_rgba8unorm, false);
 
 			gpu_push_state();
 			gpu_set_state(_gpuState);

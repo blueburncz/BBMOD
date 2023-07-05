@@ -164,7 +164,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
 
-		var _surface = surface_create(_spriteWidth, _spriteHeight);
+		var _surface = bbmod_surface_check(-1, _spriteWidth, _spriteHeight, surface_rgba8unorm, false);
 		surface_set_target(_surface);
 		draw_sprite(_sprite, _subimage, 0, 0);
 		surface_reset_target();
@@ -431,7 +431,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 		var _width = 1.0 / texture_get_texel_width(Splatmap);
 		var _height = 1.0 / texture_get_texel_height(Splatmap);
 		var _buffer = array_create(4);
-		var _surface = surface_create(_width, _height);
+		var _surface = bbmod_surface_check(-1, _width, _height, surface_rgba8unorm, false);
 
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());

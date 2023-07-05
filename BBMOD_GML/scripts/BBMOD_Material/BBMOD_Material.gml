@@ -533,10 +533,7 @@ function BBMOD_Material(_shader=undefined)
 	{
 		gml_pragma("forceinline");
 		static _sur = -1;
-		if (!surface_exists(_sur))
-		{
-			_sur = surface_create(1, 1);
-		}
+		_sur = bbmod_surface_check(_sur, 1, 1, surface_rgba8unorm, false);
 		surface_set_target(_sur);
 		draw_clear_alpha(make_color_rgb(_r, _g, _b), _a);
 		surface_reset_target();

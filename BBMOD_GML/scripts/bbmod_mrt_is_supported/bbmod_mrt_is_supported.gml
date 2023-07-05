@@ -17,8 +17,8 @@ function bbmod_mrt_is_supported()
 
 		if (shader_is_compiled(_shader))
 		{
-			var _surface1 = surface_create(1, 1);
-			var _surface2 = surface_create(1, 1);
+			var _surface1 = bbmod_surface_check(-1, 1, 1, surface_rgba8unorm, false);
+			var _surface2 = bbmod_surface_check(-1, 1, 1, surface_rgba8unorm, false);
 			surface_set_target_ext(0, _surface1);
 			surface_set_target_ext(1, _surface2);
 			draw_clear(c_black);

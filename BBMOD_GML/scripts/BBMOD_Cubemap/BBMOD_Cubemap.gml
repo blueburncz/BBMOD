@@ -155,7 +155,7 @@ function BBMOD_Cubemap(_resolution) constructor
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
 		matrix_set(matrix_world, matrix_build_identity());
-		Surface = bbmod_surface_check(Surface, _width, _height, Format);
+		Surface = bbmod_surface_check(Surface, _width, _height, Format, false);
 		surface_set_target(Surface);
 		draw_clear_alpha(_clearColor, _clearAlpha);
 		camera_set_view_size(__camera2D, _width, _height);
@@ -230,7 +230,7 @@ function BBMOD_Cubemap(_resolution) constructor
 		var _width = Resolution * 8;
 		var _height = Resolution;
 		var _world = matrix_get(matrix_world);
-		var _surface = surface_create(_width, _height);
+		var _surface = bbmod_surface_check(-1, _width, _height, Format,true);
 		surface_set_target(_surface);
 
 		matrix_set(matrix_world, matrix_build_identity());
