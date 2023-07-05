@@ -31,10 +31,6 @@
 function BBMOD_Model(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	implement(BBMOD_IRenderable);
-
 	static Resource_destroy = destroy;
 
 	/// @var {Real} The major version of the model file.
@@ -649,7 +645,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		{
 			Meshes[i++].destroy();
 		}
-		Meshes = [];
+		Meshes = undefined;
 		return undefined;
 	};
 

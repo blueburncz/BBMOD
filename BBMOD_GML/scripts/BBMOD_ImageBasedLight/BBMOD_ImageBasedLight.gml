@@ -16,8 +16,6 @@ global.__bbmodImageBasedLight = undefined;
 function BBMOD_ImageBasedLight(_texture)
 	: BBMOD_Light() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Pointer.Texture} The texture of the IBL.
 	/// @readonly
 	Texture = _texture;

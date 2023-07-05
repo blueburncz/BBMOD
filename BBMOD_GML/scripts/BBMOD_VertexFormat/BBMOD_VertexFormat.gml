@@ -18,8 +18,6 @@
 
 /// @func BBMOD_VertexFormat([_confOrVertices[, _normals[, _uvs[, _colors[, _tangentw[, _bones[, _ids]]]]]]])
 ///
-/// @extends BBMOD_Class
-///
 /// @desc A wrapper of a raw GameMaker vertex format.
 ///
 /// @param {Struct, Bool} [_confOrVertices] Either a struct with keys called
@@ -65,11 +63,8 @@ function BBMOD_VertexFormat(
 	_colors=false,
 	_tangentw=false,
 	_bones=false,
-	_ids=false
-) : BBMOD_Class() constructor
+	_ids=false) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	var _isConf = is_struct(_confOrVertices);
 
 	/// @var {Bool} If `true` then the vertex format has vertices. Should always

@@ -1,3 +1,5 @@
+#pragma include("Color.xsh")
+
 void Fog(float depth)
 {
 	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;

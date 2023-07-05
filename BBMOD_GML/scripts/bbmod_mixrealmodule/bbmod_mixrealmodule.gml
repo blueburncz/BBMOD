@@ -16,8 +16,6 @@
 function BBMOD_MixRealModule(_property=undefined, _from=0.0, _to=_from)
 	: BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Real} The property to set initial value of. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;

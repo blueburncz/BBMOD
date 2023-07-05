@@ -31,8 +31,6 @@ enum BBMOD_EFrustumPlane
 function BBMOD_FrustumCollider()
 	: BBMOD_Collider() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Array<Struct.BBMOD_PlaneCollider>} An array of planes that define
 	/// the frustum.
 	/// @note You can use values from {@link BBMOD_EFrustumPlane} as an index

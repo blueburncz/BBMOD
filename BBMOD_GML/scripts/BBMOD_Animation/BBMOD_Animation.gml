@@ -53,8 +53,6 @@
 function BBMOD_Animation(_file=undefined, _sha1=undefined)
 	: BBMOD_Resource() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Real} The major version of the animation file.
 	VersionMajor = BBMOD_VERSION_MAJOR;
 

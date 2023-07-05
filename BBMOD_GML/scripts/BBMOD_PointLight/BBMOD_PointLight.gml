@@ -14,7 +14,6 @@
 function BBMOD_PointLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1.0)
 	: BBMOD_PunctualLight(_color, _position, _range) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
 }
 
 /// @func bbmod_light_point_add(_light)

@@ -47,6 +47,7 @@ enum BBMOD_EShaderUniformType
 /// @private
 function __bbmod_shader_get_map()
 {
+	gml_pragma("forceinline");
 	static _map = ds_map_create();
 	return _map;
 }
@@ -106,8 +107,6 @@ global.__bbmodShaderCurrent = undefined;
 
 /// @func BBMOD_Shader([_shader[, _vertexFormat]])
 ///
-/// @extends BBMOD_Class
-///
 /// @desc Base class for wrappers of raw GameMaker shader assets.
 ///
 /// @param {Asset.GMShader} [_shader] The raw GameMaker shader asset.
@@ -116,11 +115,8 @@ global.__bbmodShaderCurrent = undefined;
 ///
 /// @note You can use method {@link BBMOD_Shader.add_variant} to add different
 /// variants of the shader to be used with different vertex formats.
-function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined)
-	: BBMOD_Class() constructor
+function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {String} The name under which is the shader registered or
 	/// `undefined`.
 	/// @private

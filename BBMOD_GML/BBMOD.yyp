@@ -265,7 +265,7 @@
     {"id":{"name":"SndFootstep8","path":"sounds/SndFootstep8/SndFootstep8.yy",},},
     {"id":{"name":"SndFootstep9","path":"sounds/SndFootstep9/SndFootstep9.yy",},},
     {"id":{"name":"SndFootstep5","path":"sounds/SndFootstep5/SndFootstep5.yy",},},
-    {"id":{"name":"BBMOD_Resouce","path":"scripts/BBMOD_Resouce/BBMOD_Resouce.yy",},},
+    {"id":{"name":"BBMOD_Resource","path":"scripts/BBMOD_Resource/BBMOD_Resource.yy",},},
     {"id":{"name":"OZombie","path":"objects/OZombie/OZombie.yy",},},
     {"id":{"name":"SndShell3","path":"sounds/SndShell3/SndShell3.yy",},},
     {"id":{"name":"BBMOD_SprDefaultSpecularColor","path":"sprites/BBMOD_SprDefaultSpecularColor/BBMOD_SprDefaultSpecularColor.yy",},},
@@ -329,7 +329,6 @@
     {"id":{"name":"BBMOD_ShDefaultDepthAnimated","path":"shaders/BBMOD_ShDefaultDepthAnimated/BBMOD_ShDefaultDepthAnimated.yy",},},
     {"id":{"name":"BBMOD_MixVec4FromSpeedModule","path":"scripts/BBMOD_MixVec4FromSpeedModule/BBMOD_MixVec4FromSpeedModule.yy",},},
     {"id":{"name":"BBMOD_IRenderTarget","path":"scripts/BBMOD_IRenderTarget/BBMOD_IRenderTarget.yy",},},
-    {"id":{"name":"BBMOD_Class","path":"scripts/BBMOD_Class/BBMOD_Class.yy",},},
     {"id":{"name":"BBMOD_EmissionOverTimeModule","path":"scripts/BBMOD_EmissionOverTimeModule/BBMOD_EmissionOverTimeModule.yy",},},
     {"id":{"name":"SprCharacterCollisionMask","path":"sprites/SprCharacterCollisionMask/SprCharacterCollisionMask.yy",},},
     {"id":{"name":"BBMOD_Gizmo","path":"scripts/BBMOD_Gizmo/BBMOD_Gizmo.yy",},},
@@ -357,6 +356,7 @@
     {"id":{"name":"OGameOver","path":"objects/OGameOver/OGameOver.yy",},},
     {"id":{"name":"OCharacter","path":"objects/OCharacter/OCharacter.yy",},},
     {"id":{"name":"BBMOD_SprGizmo","path":"sprites/BBMOD_SprGizmo/BBMOD_SprGizmo.yy",},},
+    {"id":{"name":"BBMOD_IDestructible","path":"scripts/BBMOD_IDestructible/BBMOD_IDestructible.yy",},},
     {"id":{"name":"BBMOD_SetRealModule","path":"scripts/BBMOD_SetRealModule/BBMOD_SetRealModule.yy",},},
     {"id":{"name":"ODirtEmitter","path":"objects/ODirtEmitter/ODirtEmitter.yy",},},
     {"id":{"name":"SprPlayer","path":"sprites/SprPlayer/SprPlayer.yy",},},
@@ -429,6 +429,6 @@
     {"roomId":{"name":"RmGameOver","path":"rooms/RmGameOver/RmGameOver.yy",},},
   ],
   "TextureGroups": [
-    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"Default","autocrop":true,"border":8,"compressFormat":"bz2","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"targets":-1,},
+    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"Default","autocrop":true,"border":8,"compressFormat":"bz2","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":-1,"targets":-1,},
   ],
 }

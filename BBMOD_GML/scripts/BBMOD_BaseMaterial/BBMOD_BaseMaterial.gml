@@ -15,8 +15,6 @@
 function BBMOD_BaseMaterial(_shader=undefined)
 	: BBMOD_Material(_shader) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static Material_copy = copy;
 	static Material_to_json = to_json;
 	static Material_from_json = from_json;

@@ -47,8 +47,6 @@
 
 /// @func BBMOD_DLL()
 ///
-/// @extends BBMOD_Class
-///
 /// @desc Loads a dynamic library which allows you to convert models into BBMOD.
 ///
 /// @throws {BBMOD_Exception} If the DLL file does not exist.
@@ -58,16 +56,10 @@
 /// var _dll = new BBMOD_DLL();
 /// _dll.set_gen_normal(BBMOD_NORMALS_FLAT);
 /// _dll.convert("House.fbx", "House.bbmod");
-/// _dll = _dll.destroy();
 /// modHouse = new BBMOD_Model("House.bbmod");
 /// ```
-function BBMOD_DLL()
-	: BBMOD_Class() constructor
+function BBMOD_DLL() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	if (!file_exists(BBMOD_DLL_PATH))
 	{
 		throw new BBMOD_Exception("File " + BBMOD_DLL_PATH + " does not exist!");
@@ -874,14 +866,6 @@ function BBMOD_DLL()
 			throw new BBMOD_Exception();
 		}
 		return self;
-	};
-
-	static destroy = function ()
-	{
-		Class_destroy();
-		// This is basically a singleton, so we shouldn't call free!
-		//external_free(BBMOD_DLL_PATH);
-		return undefined;
 	};
 }
 

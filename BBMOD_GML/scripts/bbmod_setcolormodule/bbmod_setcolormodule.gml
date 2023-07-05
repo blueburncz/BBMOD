@@ -16,8 +16,6 @@
 function BBMOD_SetColorModule(_property=undefined, _value=BBMOD_C_WHITE)
 	: BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Real} The first of the four properties that together form a color.
 	/// Use values from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;

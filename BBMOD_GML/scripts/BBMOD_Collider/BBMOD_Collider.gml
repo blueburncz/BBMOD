@@ -2,14 +2,9 @@
 
 /// @func BBMOD_Collider()
 ///
-/// @extends BBMOD_Class
-///
 /// @desc Base struct for colliders.
-function BBMOD_Collider()
-	: BBMOD_Class() constructor
+function BBMOD_Collider() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @func GetClosestPoint(_point)
 	///
 	/// @desc Retrieves a point on the surface of the collider that is closest

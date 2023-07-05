@@ -2,17 +2,12 @@
 
 /// @func BBMOD_ParticleModule()
 ///
-/// @extends BBMOD_Class
-///
 /// @desc Base struct for particle modules. These are composed into particle
 /// system to define behavior of their particles.
 ///
 /// @see BBMOD_ParticleSystem
-function BBMOD_ParticleModule()
-	: BBMOD_Class() constructor
+function BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Bool} If `true` then the module is enabled. Defaults value
 	/// is `true`.
 	Enabled = true;

@@ -46,9 +46,17 @@ global.__bbmodMaterialProps = undefined;
 /// @see bbmod_material_props_reset
 function BBMOD_MaterialPropertyBlock() constructor
 {
-	/// @var {Struct}
+	/// @var {Array<String>}
 	/// @private
-	__props = {};
+	__names = [];
+
+	/// @var {Array<Real>}
+	/// @private
+	__types = [];
+
+	/// @var {Array}
+	/// @private
+	__values = [];
 
 	/// @func copy(_dest)
 	///
@@ -80,19 +88,9 @@ function BBMOD_MaterialPropertyBlock() constructor
 	static copy = function (_dest)
 	{
 		gml_pragma("forceinline");
-
-		var _props = {};
-		var _names = variable_struct_get_names(__props);
-
-		var i = 0;
-		repeat (array_length(_names))
-		{
-			var _name = _names[i++];
-			_props[$ _name] = __props[$ _name];
-		}
-
-		_dest.__props = _props;
-
+		_dest.__names = bbmod_array_clone(__names);
+		_dest.__types = bbmod_array_clone(__types);
+		_dest.__values = bbmod_array_clone(__values);
 		return self;
 	};
 
@@ -147,7 +145,18 @@ function BBMOD_MaterialPropertyBlock() constructor
 	static set = function (_name, _type, _value)
 	{
 		gml_pragma("forceinline");
-		__props[$ _name] = { Type: _type, Value: _value };
+		for (var i = array_length(__names) - 1; i >= 0; --i)
+		{
+			if (__names[i] == _name)
+			{
+				__types[@ i] = _type;
+				__values[@ i] = _value;
+				return self;
+			}
+		}
+		array_push(__names, _name);
+		array_push(__types, _type);
+		array_push(__values, _value);
 		return self;
 	};
 
@@ -534,7 +543,14 @@ function BBMOD_MaterialPropertyBlock() constructor
 	static has = function (_name)
 	{
 		gml_pragma("forceinline");
-		return variable_struct_exists(__props, _name);
+		for (var i = array_length(__names) - 1; i >= 0; --i)
+		{
+			if (__names[i] == _name)
+			{
+				return true;
+			}
+		}
+		return false;
 	};
 
 	/// @func get(_name)
@@ -547,7 +563,14 @@ function BBMOD_MaterialPropertyBlock() constructor
 	static get = function (_name)
 	{
 		gml_pragma("forceinline");
-		return __props[$ _name];
+		for (var i = array_length(__names) - 1; i >= 0; --i)
+		{
+			if (__names[i] == _name)
+			{
+				return __values[i];
+			}
+		}
+		return undefined;
 	};
 
 	/// @func get_names()
@@ -559,7 +582,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 	static get_names = function ()
 	{
 		gml_pragma("forceinline");
-		return variable_struct_get_names(__props);
+		return __names;
 	};
 
 	/// @func remove(_name)
@@ -572,7 +595,16 @@ function BBMOD_MaterialPropertyBlock() constructor
 	static remove = function (_name)
 	{
 		gml_pragma("forceinline");
-		variable_struct_remove(__props, _name);
+		for (var i = array_length(__names) - 1; i >= 0; --i)
+		{
+			if (__names[i] == _name)
+			{
+				array_delete(__names, i, 1);
+				array_delete(__types, i, 1);
+				array_delete(__values, i, 1);
+				break;
+			}
+		}
 		return self;
 	};
 
@@ -584,7 +616,9 @@ function BBMOD_MaterialPropertyBlock() constructor
 	static clear = function ()
 	{
 		gml_pragma("forceinline");
-		__props = {};
+		__names = [];
+		__types = [];
+		__values = [];
 		return self;
 	};
 
@@ -599,15 +633,16 @@ function BBMOD_MaterialPropertyBlock() constructor
 	static apply = function (_shader=undefined)
 	{
 		_shader ??= shader_current();
-		var _names = variable_struct_get_names(__props);
+		var _names = __names;
+		var _types = __types;
+		var _values = __values;
 
 		var i = 0;
 		repeat (array_length(_names))
 		{
 			var _propName = _names[i];
-			var _prop = __props[$ _propName];
-			var _propType = _prop.Type;
-			var _propValue = _prop.Value;
+			var _propType = _types[i];
+			var _propValue = _values[i];
 
 			if (_propType == BBMOD_EShaderUniformType.Sampler)
 			{

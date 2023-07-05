@@ -17,8 +17,6 @@
 function BBMOD_OBJImporter()
 	: BBMOD_Importer() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static Importer_destroy = destroy;
 
 	/// @var {Bool} If `true`, then Y and Z axes are switched in imported

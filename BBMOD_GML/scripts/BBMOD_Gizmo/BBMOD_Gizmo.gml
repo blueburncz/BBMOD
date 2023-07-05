@@ -41,7 +41,7 @@ enum BBMOD_EEditAxis
 
 /// @func BBMOD_Gizmo([_size])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A gizmo for transforming instances.
 ///
@@ -50,13 +50,8 @@ enum BBMOD_EEditAxis
 /// @note This requries synchronnous loading of models, therefore it cannot
 /// be used on platforms like HTML5, which require asynchronnous loading.
 /// You also **must** use {@link BBMOD_Camera} for the gizmo to work properly!
-function BBMOD_Gizmo(_size=10.0)
-	: BBMOD_Class() constructor
+function BBMOD_Gizmo(_size=10.0) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Array<Struct.BBMOD_Model>} Gizmo models for individual edit modes.
 	/// @note Please note that these are not loaded asynchronnously, therefore
 	/// the gizmo cannot be used on platforms that require asynchronnous loading,
@@ -1269,7 +1264,6 @@ function BBMOD_Gizmo(_size=10.0)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		ds_list_destroy(Selected);
 		ds_list_destroy(__instanceData);
 		return undefined;

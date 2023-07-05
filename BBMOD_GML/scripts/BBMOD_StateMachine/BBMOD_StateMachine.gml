@@ -2,18 +2,11 @@
 
 /// @func BBMOD_StateMachine()
 ///
-/// @extends BBMOD_Class
-///
 /// @desc A state machine.
 ///
 /// @see BBMOD_State
-function BBMOD_StateMachine()
-	: BBMOD_Class() constructor
+function BBMOD_StateMachine() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Array<Struct.BBMOD_State>} An array of sates.
 	/// @private
 	__stateArray = [];
@@ -199,16 +192,5 @@ function BBMOD_StateMachine()
 		}
 
 		return self;
-	};
-
-	static destroy = function ()
-	{
-		Class_destroy();
-		for (var i = array_length(__stateArray) - 1; i >= 0; --i)
-		{
-			__stateArray[i].destroy();
-		}
-		__stateArray = [];
-		return undefined;
 	};
 }

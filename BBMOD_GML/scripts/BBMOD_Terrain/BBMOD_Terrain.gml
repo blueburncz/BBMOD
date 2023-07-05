@@ -2,7 +2,7 @@
 
 /// @func BBMOD_Terrain([_heightmap[, _subimage]])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A heightmap based terrain with five material layers controlled through
 /// a splatmap.
@@ -12,13 +12,8 @@
 /// later using the terrain's methods.
 /// @param {Real} [_subimage] The sprite subimage to use for the heightmap.
 /// Defaults to 0.
-function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
-	: BBMOD_Class() constructor
+function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
 	/// @readonly
 	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
@@ -169,7 +164,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
 
-		var _surface = surface_create(_spriteWidth, _spriteHeight);
+		var _surface = bbmod_surface_check(-1, _spriteWidth, _spriteHeight, surface_rgba8unorm, false);
 		surface_set_target(_surface);
 		draw_sprite(_sprite, _subimage, 0, 0);
 		surface_reset_target();
@@ -436,7 +431,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 		var _width = 1.0 / texture_get_texel_width(Splatmap);
 		var _height = 1.0 / texture_get_texel_height(Splatmap);
 		var _buffer = array_create(4);
-		var _surface = surface_create(_width, _height);
+		var _surface = bbmod_surface_check(-1, _width, _height, surface_rgba8unorm, false);
 
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
@@ -772,7 +767,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		ds_grid_destroy(__splatmapGrid);
 		ds_grid_destroy(__height);
 		ds_grid_destroy(__normalX);

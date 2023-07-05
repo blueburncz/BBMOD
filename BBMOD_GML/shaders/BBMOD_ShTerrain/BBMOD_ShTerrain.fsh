@@ -149,6 +149,25 @@ uniform float bbmod_ShadowCasterIndex;
 //
 // Includes
 //
+#define X_GAMMA 2.2
+
+/// @desc Converts gamma space color to linear space.
+vec3 xGammaToLinear(vec3 rgb)
+{
+	return pow(rgb, vec3(X_GAMMA));
+}
+
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
+{
+	return pow(rgb, vec3(1.0 / X_GAMMA));
+}
+
+/// @desc Gets color's luminance.
+float xLuminance(vec3 rgb)
+{
+	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
+}
 struct Material
 {
 	vec3 Base;
@@ -182,112 +201,6 @@ Material CreateMaterial(mat3 TBN)
 	m.Lightmap = vec3(0.0);
 	return m;
 }
-#define F0_DEFAULT vec3(0.04)
-#define X_GAMMA 2.2
-
-/// @desc Converts gamma space color to linear space.
-vec3 xGammaToLinear(vec3 rgb)
-{
-	return pow(rgb, vec3(X_GAMMA));
-}
-
-/// @desc Converts linear space color to gamma space.
-vec3 xLinearToGamma(vec3 rgb)
-{
-	return pow(rgb, vec3(1.0 / X_GAMMA));
-}
-
-/// @desc Gets color's luminance.
-float xLuminance(vec3 rgb)
-{
-	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
-}
-/// @note Input color should be in gamma space.
-/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
-vec4 xEncodeRGBM(vec3 color)
-{
-	vec4 rgbm;
-	color *= 1.0 / 6.0;
-	rgbm.a = clamp(max(max(color.r, color.g), max(color.b, 0.000001)), 0.0, 1.0);
-	rgbm.a = ceil(rgbm.a * 255.0) / 255.0;
-	rgbm.rgb = color / rgbm.a;
-	return rgbm;
-}
-
-/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
-vec3 xDecodeRGBM(vec4 rgbm)
-{
-	return 6.0 * rgbm.rgb * rgbm.a;
-}
-
-/// @desc Unpacks material from textures.
-/// @param texBaseOpacity RGB: base color, A: opacity
-/// @param isRoughness
-/// @param texNormalW
-/// @param isMetallic
-/// @param texMaterial
-/// @param texSubsurface  RGB: subsurface color, A: intensity
-/// @param texEmissive    RGBA: RGBM encoded emissive color
-/// @param texLightmap    RGBA: RGBM encoded lightmap
-/// @param uvLightmap     Lightmap texture coordinates
-/// @param TBN            Tangent-bitangent-normal matrix
-/// @param uv             Texture coordinates
-Material UnpackMaterial(
-	sampler2D texBaseOpacity,
-	float isRoughness,
-	sampler2D texNormalW,
-	float isMetallic,
-	sampler2D texMaterial,
-	mat3 TBN,
-	vec2 uv)
-{
-	Material m = CreateMaterial(TBN);
-
-	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity,
-		uv
-		);
-	m.Base = xGammaToLinear(baseOpacity.rgb);
-	m.Opacity = baseOpacity.a;
-
-	// Normal vector and smoothness/roughness
-	vec4 normalW = texture2D(texNormalW,
-		uv
-		);
-	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
-
-	if (isRoughness == 1.0)
-	{
-		m.Roughness = mix(0.1, 0.9, normalW.a);
-		m.Smoothness = 1.0 - m.Roughness;
-	}
-	else
-	{
-		m.Smoothness = mix(0.1, 0.9, normalW.a);
-		m.Roughness = 1.0 - m.Smoothness;
-	}
-
-	// Material properties
-	vec4 materialProps = texture2D(texMaterial,
-		uv
-		);
-
-	if (isMetallic == 1.0)
-	{
-		m.Metallic = materialProps.r;
-		m.AO = materialProps.g;
-		m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
-		m.Base *= (1.0 - m.Metallic);
-	}
-	else
-	{
-		m.Specular = materialProps.rgb;
-		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
-	}
-
-	return m;
-}
-
 #define X_PI   3.14159265359
 #define X_2_PI 6.28318530718
 
@@ -465,6 +378,7 @@ void Exposure()
 {
 	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
 }
+
 void Fog(float depth)
 {
 	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
@@ -507,6 +421,23 @@ vec3 xOctahedronUvToVec3Normalized(vec2 uv)
 		position.xy = sign(position.xy) * vec2(1.0 - absolute.y, 1.0 - absolute.x);
 	}
 	return position;
+}
+/// @note Input color should be in gamma space.
+/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
+vec4 xEncodeRGBM(vec3 color)
+{
+	vec4 rgbm;
+	color *= 1.0 / 6.0;
+	rgbm.a = clamp(max(max(color.r, color.g), max(color.b, 0.000001)), 0.0, 1.0);
+	rgbm.a = ceil(rgbm.a * 255.0) / 255.0;
+	rgbm.rgb = color / rgbm.a;
+	return rgbm;
+}
+
+/// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
+vec3 xDecodeRGBM(vec4 rgbm)
+{
+	return 6.0 * rgbm.rgb * rgbm.a;
 }
 
 vec3 xDiffuseIBL(sampler2D ibl, vec2 texel, vec3 N)
@@ -572,6 +503,75 @@ vec3 xSpecularIBL(sampler2D ibl, vec2 texel/*, sampler2D brdf*/, vec3 f0, float 
 	vec3 col1 = xGammaToLinear(xDecodeRGBM(texture2D(ibl, uv1))) * specular;
 
 	return mix(col0, col1, rDiff);
+}
+#define F0_DEFAULT vec3(0.04)
+
+/// @desc Unpacks material from textures.
+/// @param texBaseOpacity RGB: base color, A: opacity
+/// @param isRoughness
+/// @param texNormalW
+/// @param isMetallic
+/// @param texMaterial
+/// @param texSubsurface  RGB: subsurface color, A: intensity
+/// @param texEmissive    RGBA: RGBM encoded emissive color
+/// @param texLightmap    RGBA: RGBM encoded lightmap
+/// @param uvLightmap     Lightmap texture coordinates
+/// @param TBN            Tangent-bitangent-normal matrix
+/// @param uv             Texture coordinates
+Material UnpackMaterial(
+	sampler2D texBaseOpacity,
+	float isRoughness,
+	sampler2D texNormalW,
+	float isMetallic,
+	sampler2D texMaterial,
+	mat3 TBN,
+	vec2 uv)
+{
+	Material m = CreateMaterial(TBN);
+
+	// Base color and opacity
+	vec4 baseOpacity = texture2D(texBaseOpacity,
+		uv
+		);
+	m.Base = xGammaToLinear(baseOpacity.rgb);
+	m.Opacity = baseOpacity.a;
+
+	// Normal vector and smoothness/roughness
+	vec4 normalW = texture2D(texNormalW,
+		uv
+		);
+	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
+
+	if (isRoughness == 1.0)
+	{
+		m.Roughness = mix(0.1, 0.9, normalW.a);
+		m.Smoothness = 1.0 - m.Roughness;
+	}
+	else
+	{
+		m.Smoothness = mix(0.1, 0.9, normalW.a);
+		m.Roughness = 1.0 - m.Smoothness;
+	}
+
+	// Material properties
+	vec4 materialProps = texture2D(texMaterial,
+		uv
+		);
+
+	if (isMetallic == 1.0)
+	{
+		m.Metallic = materialProps.r;
+		m.AO = materialProps.g;
+		m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
+		m.Base *= (1.0 - m.Metallic);
+	}
+	else
+	{
+		m.Specular = materialProps.rgb;
+		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
+	}
+
+	return m;
 }
 /// @param tanAspect (tanFovY*(screenWidth/screenHeight),-tanFovY), where
 ///                  tanFovY = dtan(fov*0.5)

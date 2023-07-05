@@ -6,7 +6,7 @@
 
 /// @func BBMOD_ResourceManager()
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc Using this struct you can easily load, retrieve and free from memory
 /// any BBMOD resources.
@@ -45,13 +45,8 @@
 /// ```
 ///
 /// @see BBMOD_Resource
-function BBMOD_ResourceManager()
-	: BBMOD_Class() constructor
+function BBMOD_ResourceManager() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Id.DsMap<String, Struct.BBMOD_Resource>}
 	/// @private
 	__resources = ds_map_create();
@@ -496,7 +491,6 @@ function BBMOD_ResourceManager()
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		var _resources = __resources;
 		var _key = ds_map_find_first(_resources);
 		repeat (ds_map_size(_resources))

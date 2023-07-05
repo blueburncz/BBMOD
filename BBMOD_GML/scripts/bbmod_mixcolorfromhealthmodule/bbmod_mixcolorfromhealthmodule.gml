@@ -22,8 +22,6 @@ function BBMOD_MixColorFromHealthModule(
 	_to=_from.Clone()
 ) : BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Real} The first of the four consecutive properties that together
 	/// form a color. Use values from {@link BBMOD_EParticle}. Default value is
 	/// `undefined`.

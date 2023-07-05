@@ -10,7 +10,7 @@ global.__bbmodReflectionProbeTexture = pointer_null;
 
 /// @func BBMOD_ReflectionProbe([_position[, _sprite]])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc Used to capture surrounding scene at a specific position into a texture
 /// which is then used for reflections.
@@ -68,13 +68,8 @@ global.__bbmodReflectionProbeTexture = pointer_null;
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
-	: BBMOD_Class() constructor
+function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Bool} If `false` then the probe is disabled and unused. Default
 	/// value is `true`.
 	Enabled = true;
@@ -162,7 +157,6 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		if (Sprite != undefined)
 		{
 			sprite_delete(Sprite);

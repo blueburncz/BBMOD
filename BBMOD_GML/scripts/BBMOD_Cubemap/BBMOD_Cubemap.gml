@@ -22,8 +22,7 @@ enum BBMOD_ECubeSide
 
 /// @func BBMOD_Cubemap(_resolution)
 ///
-/// @extends BBMOD_Class
-///
+/// @implements {BBMOD_IDestructible}
 /// @implements {BBMOD_IRenderTarget}
 ///
 /// @desc Used for capturing surrounding scene at given position into a texture.
@@ -56,15 +55,8 @@ enum BBMOD_ECubeSide
 /// cubemap = cubemap.destroy();
 /// renderer = renderer.destroy();
 /// ```
-function BBMOD_Cubemap(_resolution)
-	: BBMOD_Class() constructor
+function BBMOD_Cubemap(_resolution) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	implement(BBMOD_IRenderTarget);
-
-	static Class_destroy = destroy;
-
 	/// @var {Array} The position of the cubemap in the world space.
 	/// @see BBMOD_Cubemap.get_view_matrix
 	Position = new BBMOD_Vec3();
@@ -163,7 +155,7 @@ function BBMOD_Cubemap(_resolution)
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
 		matrix_set(matrix_world, matrix_build_identity());
-		Surface = bbmod_surface_check(Surface, _width, _height, Format);
+		Surface = bbmod_surface_check(Surface, _width, _height, Format, false);
 		surface_set_target(Surface);
 		draw_clear_alpha(_clearColor, _clearAlpha);
 		camera_set_view_size(__camera2D, _width, _height);
@@ -238,7 +230,7 @@ function BBMOD_Cubemap(_resolution)
 		var _width = Resolution * 8;
 		var _height = Resolution;
 		var _world = matrix_get(matrix_world);
-		var _surface = surface_create(_width, _height);
+		var _surface = bbmod_surface_check(-1, _width, _height, Format,true);
 		surface_set_target(_surface);
 
 		matrix_set(matrix_world, matrix_build_identity());
@@ -414,7 +406,6 @@ function BBMOD_Cubemap(_resolution)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		var i = 0;
 		repeat (BBMOD_ECubeSide.SIZE)
 		{

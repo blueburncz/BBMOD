@@ -43,8 +43,6 @@
 function BBMOD_DefaultRenderer()
 	: BBMOD_BaseRenderer() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static BaseRenderer_destroy = destroy;
 
 	/// @var {Bool} Enables rendering scene depth into a depth buffer during the
@@ -150,7 +148,7 @@ function BBMOD_DefaultRenderer()
 			var _width = _renderWidth * GBufferScale;
 			var _height = _renderHeight * GBufferScale;
 
-			__surDepthBuffer = bbmod_surface_check(__surDepthBuffer, _width, _height);
+			__surDepthBuffer = bbmod_surface_check(__surDepthBuffer, _width, _height, surface_rgba8unorm, true);
 
 			surface_set_target(__surDepthBuffer);
 			draw_clear(c_white);
@@ -174,8 +172,8 @@ function BBMOD_DefaultRenderer()
 			var _width = _renderWidth * SSAOScale;
 			var _height = _renderHeight * SSAOScale;
 
-			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height);
-			__surWork = bbmod_surface_check(__surWork, _width, _height);
+			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height, surface_rgba8unorm, false);
+			__surWork = bbmod_surface_check(__surWork, _width, _height, surface_rgba8unorm, false);
 
 			bbmod_material_reset();
 

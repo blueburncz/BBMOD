@@ -21,8 +21,6 @@ function BBMOD_MixVec3FromHealthModule(
 	_to=_from.Clone()
 ) : BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {REal} The first of the three consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;

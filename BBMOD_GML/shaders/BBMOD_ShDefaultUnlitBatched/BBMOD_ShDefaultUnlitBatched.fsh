@@ -102,6 +102,44 @@ uniform vec4 bbmod_LightDirectionalColor;
 //
 // Includes
 //
+#define X_GAMMA 2.2
+
+/// @desc Converts gamma space color to linear space.
+vec3 xGammaToLinear(vec3 rgb)
+{
+	return pow(rgb, vec3(X_GAMMA));
+}
+
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
+{
+	return pow(rgb, vec3(1.0 / X_GAMMA));
+}
+
+/// @desc Gets color's luminance.
+float xLuminance(vec3 rgb)
+{
+	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
+}
+
+void Fog(float depth)
+{
+	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
+	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
+	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
+	vec3 fogColor = xGammaToLinear(bbmod_FogColor.rgb) * (ambientUp + ambientDown + directionalLightColor);
+	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0) * bbmod_FogColor.a;
+	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
+}
+void Exposure()
+{
+	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+}
+
+void GammaCorrect()
+{
+	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+}
 struct Material
 {
 	vec3 Base;
@@ -136,25 +174,6 @@ Material CreateMaterial(mat3 TBN)
 	return m;
 }
 #define F0_DEFAULT vec3(0.04)
-#define X_GAMMA 2.2
-
-/// @desc Converts gamma space color to linear space.
-vec3 xGammaToLinear(vec3 rgb)
-{
-	return pow(rgb, vec3(X_GAMMA));
-}
-
-/// @desc Converts linear space color to gamma space.
-vec3 xLinearToGamma(vec3 rgb)
-{
-	return pow(rgb, vec3(1.0 / X_GAMMA));
-}
-
-/// @desc Gets color's luminance.
-float xLuminance(vec3 rgb)
-{
-	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
-}
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -248,25 +267,6 @@ Material UnpackMaterial(
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
 
 	return m;
-}
-
-void Fog(float depth)
-{
-	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
-	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
-	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
-	vec3 fogColor = xGammaToLinear(bbmod_FogColor.rgb) * (ambientUp + ambientDown + directionalLightColor);
-	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0) * bbmod_FogColor.a;
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-}
-void Exposure()
-{
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
-}
-
-void GammaCorrect()
-{
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 }
 
 void UnlitShader(Material material, float depth)

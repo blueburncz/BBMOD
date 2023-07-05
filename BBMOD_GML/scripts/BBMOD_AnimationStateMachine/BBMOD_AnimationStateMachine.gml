@@ -64,8 +64,6 @@
 function BBMOD_AnimationStateMachine(_animationPlayer)
 	: BBMOD_StateMachine() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static StateMachine_update = update;
 
 	/// @var {Struct.BBMOD_AnimationPlayer} The state machine's animation player.

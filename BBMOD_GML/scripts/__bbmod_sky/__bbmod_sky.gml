@@ -17,7 +17,7 @@ function __bbmod_material_sky()
 		_material.Culling = cull_noculling;
 		_material.Mipmapping = mip_off;
 		_material.ZWrite = false;
-		_material.ZTest = false;
+		_material.ZTest = true;
 		_material.Filtering = true;
 		_material.RenderQueue = _skyRenderQueue;
 	}

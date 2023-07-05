@@ -8,5 +8,4 @@
 function BBMOD_Renderer()
 	: BBMOD_DefaultRenderer() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
 }

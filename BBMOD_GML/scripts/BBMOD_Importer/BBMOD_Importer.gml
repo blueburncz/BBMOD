@@ -2,14 +2,11 @@
 
 /// @func BBMOD_Importer()
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc Base class for model importers.
-function BBMOD_Importer()
-	: BBMOD_Class() constructor
+function BBMOD_Importer() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Bool} If true then UV texture coordinates of imported models
 	/// will be flipped horizontally. Defaults to `false`.
 	FlipUVHorizontally = false;
@@ -45,5 +42,10 @@ function BBMOD_Importer()
 	static import = function (_path)
 	{
 		throw new BBMOD_NotImplementedException();
+	};
+
+	static destroy = function ()
+	{
+		return undefined;
 	};
 }

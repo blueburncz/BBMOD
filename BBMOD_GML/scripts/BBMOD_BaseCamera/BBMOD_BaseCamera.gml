@@ -6,17 +6,12 @@ global.__bbmodCameraCurrent = undefined;
 
 /// @func BBMOD_BaseCamera()
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A camera with support for both orthographic and perspective
 /// projection.
-function BBMOD_BaseCamera()
-	: BBMOD_Class() constructor
+function BBMOD_BaseCamera() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {camera} An underlying GameMaker camera.
 	/// @readonly
 	Raw = camera_create();
@@ -371,7 +366,6 @@ function BBMOD_BaseCamera()
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		camera_destroy(Raw);
 		if (global.__bbmodCameraCurrent == self)
 		{

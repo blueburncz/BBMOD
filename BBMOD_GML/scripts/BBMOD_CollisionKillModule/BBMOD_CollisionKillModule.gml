@@ -13,8 +13,6 @@
 function BBMOD_CollisionKillModule()
 	: BBMOD_ParticleModule() constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static on_update = function (_emitter, _deltaTime)
 	{
 		var _y2 = _emitter.ParticlesAlive - 1;

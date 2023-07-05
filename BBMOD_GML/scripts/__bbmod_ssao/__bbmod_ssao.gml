@@ -30,7 +30,7 @@ function __bbmod_ssao_make_noise(_size)
 {
 	var _seed = random_get_seed();
 	randomize();
-	var _sur = surface_create(_size, _size);
+	var _sur = bbmod_surface_check(-1, _size, _size, surface_rgba8unorm, false);
 	surface_set_target(_sur);
 	draw_clear(0);
 	var _dir = 0;

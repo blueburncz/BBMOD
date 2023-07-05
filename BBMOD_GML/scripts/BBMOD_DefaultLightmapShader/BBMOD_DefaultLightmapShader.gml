@@ -14,8 +14,6 @@
 function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	static DefaultShader_on_set = on_set;
 	static DefaultShader_set_material = set_material;
 
@@ -164,7 +162,7 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 				_dataA[@ _indexA + 7] = _color.Alpha;
 				_indexA += 8;
 
-				if (_light.is_instance(BBMOD_SpotLight)) // Ugh, but works!
+				if (_light[$ "AngleInner"] != undefined) // Ugh, but works!
 				{
 					_dataB[@ _indexB] = 1.0; // Is spot light
 					_dataB[@ _indexB + 1] = dcos(_light.AngleInner);

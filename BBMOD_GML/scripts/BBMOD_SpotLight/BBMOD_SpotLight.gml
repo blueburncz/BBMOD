@@ -24,8 +24,6 @@ function BBMOD_SpotLight(
 	_angleOuter=20
 ) : BBMOD_PunctualLight(_color, _position, _range) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
 	/// @var {Struct.BBMOD_Vec3} The direction of the light. The default value is
 	/// `(1, 0, 0)`.
 	Direction = _direction ?? BBMOD_VEC3_FORWARD;

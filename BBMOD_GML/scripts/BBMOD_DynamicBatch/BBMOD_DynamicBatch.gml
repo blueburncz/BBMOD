@@ -6,7 +6,7 @@
 
 /// @func BBMOD_DynamicBatch([_model[, _size[, _slotsPerInstance]]])
 ///
-/// @extends BBMOD_Class
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A dynamic batch is a structure that allows you to render multiple
 /// instances of a single model at once, each with its own position, scale and
@@ -35,13 +35,8 @@
 /// ```
 ///
 /// @see BBMOD_StaticBatch
-function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
-	: BBMOD_Class() constructor
+function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) constructor
 {
-	BBMOD_CLASS_GENERATED_BODY;
-
-	static Class_destroy = destroy;
-
 	/// @var {Struct.BBMOD_Model} A model that is being batched.
 	/// @readonly
 	Model = _model;
@@ -581,7 +576,6 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12)
 
 	static destroy = function ()
 	{
-		Class_destroy();
 		if (Batch != undefined)
 		{
 			Batch = Batch.destroy();
