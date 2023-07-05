@@ -26,8 +26,6 @@
 
 /// @func BBMOD_AnimationPlayer(_model[, _paused])
 ///
-/// @extends BBMOD_Class
-///
 /// @implements {BBMOD_IEventListener}
 /// @implements {BBMOD_IRenderable}
 ///
