@@ -269,7 +269,13 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 			return self;
 		}
 
-		BBMOD_SHADER_CURRENT.set_material_index(_mesh.MaterialIndex);
+		var _shaderCurrent = shader_current();
+		var _uInstanceID = shader_get_uniform(_shaderCurrent, BBMOD_U_INSTANCE_ID);
+		var _uMaterialIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_MATERIAL_INDEX);
+		var _uBoneData = shader_get_uniform(_shaderCurrent, BBMOD_U_BONES);
+		var _uBatchData = shader_get_uniform(_shaderCurrent, BBMOD_U_BATCH_DATA);
+
+		shader_set_uniform_f(_uMaterialIndex, _mesh.MaterialIndex);
 
 		switch (_commandType)
 		{
@@ -288,12 +294,11 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 
 				if (_materialProps != undefined)
 				{
-					_materialProps.apply();
+					_materialProps.apply(_shaderCurrent);
 				}
 
-				BBMOD_SHADER_CURRENT.set_instance_id(_id);
-
 				matrix_set(matrix_world, _matrix);
+				shader_set_uniform_f(_uInstanceID, _id);
 				vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
 			}
 			break;
@@ -314,16 +319,12 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 
 				if (_materialProps != undefined)
 				{
-					_materialProps.apply();
-				}
-
-				with (BBMOD_SHADER_CURRENT)
-				{
-					set_instance_id(_id);
-					set_bones(_boneData);
+					_materialProps.apply(_shaderCurrent);
 				}
 
 				matrix_set(matrix_world, _matrix);
+				shader_set_uniform_f(_uInstanceID, _id);
+				shader_set_uniform_f_array(_uBoneData, _boneData);
 				vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
 			}
 			break;
@@ -447,12 +448,12 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 
 				if (_materialProps != undefined)
 				{
-					_materialProps.apply();
+					_materialProps.apply(_shaderCurrent);
 				}
 
 				if (is_real(_id))
 				{
-					BBMOD_SHADER_CURRENT.set_instance_id(_id);
+					shader_set_uniform_f(_uInstanceID, _id);
 				}
 
 				matrix_set(matrix_world, _matrix);
@@ -465,13 +466,13 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 					var _dataIndex = 0;
 					repeat (array_length(_batchData))
 					{
-						BBMOD_SHADER_CURRENT.set_batch_data(_batchData[_dataIndex++]);
+						shader_set_uniform_f_array(_uBatchData, _batchData[_dataIndex++]);
 						vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 					}
 				}
 				else
 				{
-					BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
+					shader_set_uniform_f_array(_uBatchData, _batchData);
 					vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 				}
 			}
