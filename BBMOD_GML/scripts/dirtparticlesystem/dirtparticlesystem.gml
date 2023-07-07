@@ -32,7 +32,7 @@ function DirtParticleSystem()
 				new BBMOD_GravityModule(),
 			);
 		_particleSystem.Loop = true;
-		//_particleSystem.Sort = true;
+		_particleSystem.Sort = true;
 	}
 	return _particleSystem;
 }

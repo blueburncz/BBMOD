@@ -266,6 +266,7 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 		if (!_material.apply(_mesh.VertexFormat))
 		{
 			global.__bbmodMaterialProps = _materialPropsOld;
+			return self;
 		}
 
 		switch (_commandType)
