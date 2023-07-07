@@ -23,7 +23,7 @@ function MatZombieMale()
 	if (_material == undefined)
 	{
 		_material = MatZombie().clone();
-		_material.RenderQueue = new BBMOD_RenderQueue("MaleZombies");
+		_material.RenderQueue = new BBMOD_MeshRenderQueue("MaleZombies");
 		_material.BaseOpacity = sprite_get_texture(SprZombie, 0);
 	}
 	return _material;
@@ -35,7 +35,7 @@ function MatZombieFemale()
 	if (_material == undefined)
 	{
 		_material = MatZombie().clone();
-		_material.RenderQueue = new BBMOD_RenderQueue("FemaleZombies");
+		_material.RenderQueue = new BBMOD_MeshRenderQueue("FemaleZombies");
 		_material.BaseOpacity = sprite_get_texture(SprZombie, 1);
 	}
 	return _material;

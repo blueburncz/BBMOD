@@ -4,7 +4,7 @@ function DirtParticleSystem()
 	if (!_particleSystem)
 	{
 		var _material = BBMOD_MATERIAL_PARTICLE_LIT.clone();
-		_material.RenderQueue = new BBMOD_RenderQueue("Dirt");
+		_material.RenderQueue = new BBMOD_MeshRenderQueue("Dirt");
 		_material.BaseOpacity = sprite_get_texture(SprDirtParticle, 0);
 		_material.NormalSmoothness = sprite_get_texture(SprDirtParticle, 1);
 		_material.SoftDistance = 2.0;
@@ -32,7 +32,7 @@ function DirtParticleSystem()
 				new BBMOD_GravityModule(),
 			);
 		_particleSystem.Loop = true;
-		_particleSystem.Sort = true;
+		//_particleSystem.Sort = true;
 	}
 	return _particleSystem;
 }

@@ -240,6 +240,7 @@
     {"name":"BBMOD_IDestructible","order":3,"path":"scripts/BBMOD_IDestructible/BBMOD_IDestructible.yy",},
     {"name":"BBMOD_SetRealModule","order":1,"path":"scripts/BBMOD_SetRealModule/BBMOD_SetRealModule.yy",},
     {"name":"ODirtEmitter","order":4,"path":"objects/ODirtEmitter/ODirtEmitter.yy",},
+    {"name":"BBMOD_MeshRenderQueue","order":20,"path":"scripts/BBMOD_MeshRenderQueue/BBMOD_MeshRenderQueue.yy",},
     {"name":"BBMOD_MixVec3OverTimeModule","order":4,"path":"scripts/BBMOD_MixVec3OverTimeModule/BBMOD_MixVec3OverTimeModule.yy",},
     {"name":"BBMOD_AddVec4OnCollisionModule","order":3,"path":"scripts/BBMOD_AddVec4OnCollisionModule/BBMOD_AddVec4OnCollisionModule.yy",},
     {"name":"__bbmod_render_pass","order":1,"path":"scripts/__bbmod_render_pass/__bbmod_render_pass.yy",},

@@ -359,6 +359,7 @@
     {"id":{"name":"BBMOD_IDestructible","path":"scripts/BBMOD_IDestructible/BBMOD_IDestructible.yy",},},
     {"id":{"name":"BBMOD_SetRealModule","path":"scripts/BBMOD_SetRealModule/BBMOD_SetRealModule.yy",},},
     {"id":{"name":"ODirtEmitter","path":"objects/ODirtEmitter/ODirtEmitter.yy",},},
+    {"id":{"name":"BBMOD_MeshRenderQueue","path":"scripts/BBMOD_MeshRenderQueue/BBMOD_MeshRenderQueue.yy",},},
     {"id":{"name":"SprPlayer","path":"sprites/SprPlayer/SprPlayer.yy",},},
     {"id":{"name":"BBMOD_MixVec3OverTimeModule","path":"scripts/BBMOD_MixVec3OverTimeModule/BBMOD_MixVec3OverTimeModule.yy",},},
     {"id":{"name":"OParticleEmitter","path":"objects/OParticleEmitter/OParticleEmitter.yy",},},

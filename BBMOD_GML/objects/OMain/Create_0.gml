@@ -19,10 +19,10 @@ score = 0;
 global.scoreBonus = 0;
 
 // Current wave of zombies.
-wave = 1;
+wave = 100;
 
 // Timeout till the next wave of zombies (in seconds).
-waveTimeout = 10.0;
+waveTimeout = 1.0;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Import OBJ models
