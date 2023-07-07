@@ -269,6 +269,8 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 			return self;
 		}
 
+		BBMOD_SHADER_CURRENT.set_material_index(_mesh.MaterialIndex);
+
 		switch (_commandType)
 		{
 		case BBMOD_ERenderCommand.DrawMesh:
@@ -289,13 +291,9 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 					_materialProps.apply();
 				}
 
-				with (BBMOD_SHADER_CURRENT)
-				{
-					set_instance_id(_id);
-					matrix_set(matrix_world, _matrix);
-					set_material_index(_mesh.MaterialIndex);
-				}
+				BBMOD_SHADER_CURRENT.set_instance_id(_id);
 
+				matrix_set(matrix_world, _matrix);
 				vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
 			}
 			break;
@@ -322,11 +320,10 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 				with (BBMOD_SHADER_CURRENT)
 				{
 					set_instance_id(_id);
-					matrix_set(matrix_world, _matrix);
-					set_material_index(_mesh.MaterialIndex);
 					set_bones(_boneData);
 				}
 
+				matrix_set(matrix_world, _matrix);
 				vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
 			}
 			break;

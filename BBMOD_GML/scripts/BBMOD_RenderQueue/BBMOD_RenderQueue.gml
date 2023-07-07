@@ -1995,6 +1995,7 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					if (is_real(_id))
 					{
 						BBMOD_SHADER_CURRENT.set_instance_id(_id);
+						set_material_index(_mesh.MaterialIndex);
 					}
 
 					matrix_set(matrix_world, _matrix);
