@@ -84,14 +84,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return _command;
 	};
 
-	/// @func set_priority(_p)
-	///
-	/// @desc Changes the priority of the render queue. Render queues with lower
-	/// priority come first in the array returned by {@link bbmod_render_queues_get}.
-	///
-	/// @param {Real} _p The new priority of the render queue.
-	///
-	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static set_priority = function (_p)
 	{
 		gml_pragma("forceinline");

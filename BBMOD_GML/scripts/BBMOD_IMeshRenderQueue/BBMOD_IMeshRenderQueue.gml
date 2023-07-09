@@ -9,6 +9,16 @@
 /// @desc An interface for render queues that can draw meshes.
 function BBMOD_IMeshRenderQueue()
 {
+	/// @func set_priority(_p)
+	///
+	/// @desc Changes the priority of the render queue. Render queues with lower
+	/// priority come first in the array returned by {@link bbmod_render_queues_get}.
+	///
+	/// @param {Real} _p The new priority of the render queue.
+	///
+	/// @return {Struct.BBMOD_IMeshRenderQueue} Returns `self`.
+	static set_priority = __bbmod_throw_not_implemented_exception;
+
 	/// @func DrawMesh(_mesh, _material, _matrix)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the
