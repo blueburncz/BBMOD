@@ -137,7 +137,7 @@ function BBMOD_DefaultRenderer()
 		//
 		__render_shadowmap();
 
-		bbmod_shader_set_global_f("bbmod_ZFar", bbmod_camera_get_zfar());
+		bbmod_shader_set_global_f(BBMOD_U_ZFAR, bbmod_camera_get_zfar());
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -182,19 +182,19 @@ function BBMOD_DefaultRenderer()
 				bbmod_camera_get_zfar(), SSAOSelfOcclusionBias, SSAOBlurDepthRange);
 
 			bbmod_shader_set_global_sampler(
-				"bbmod_SSAO", surface_get_texture(__surSSAO));
+				BBMOD_U_SSAO, surface_get_texture(__surSSAO));
 		}
 		else
 		{
 			bbmod_shader_set_global_sampler(
-				"bbmod_SSAO", sprite_get_texture(BBMOD_SprWhite, 0));
+				BBMOD_U_SSAO, sprite_get_texture(BBMOD_SprWhite, 0));
 		}
 
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Forward pass
 		//
-		bbmod_shader_set_global_sampler("bbmod_GBuffer", EnableGBuffer
+		bbmod_shader_set_global_sampler(BBMOD_U_GBUFFER, EnableGBuffer
 			? surface_get_texture(__surDepthBuffer)
 			: sprite_get_texture(BBMOD_SprWhite, 0));
 
@@ -229,9 +229,9 @@ function BBMOD_DefaultRenderer()
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
 		// Unset in case it gets destroyed when the room changes etc.
-		bbmod_shader_unset_global("bbmod_Shadowmap");
-		bbmod_shader_unset_global("bbmod_SSAO");
-		bbmod_shader_unset_global("bbmod_GBuffer");
+		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
+		bbmod_shader_unset_global(BBMOD_U_SSAO);
+		bbmod_shader_unset_global(BBMOD_U_GBUFFER);
 
 		bbmod_material_reset();
 
