@@ -17,7 +17,7 @@ function bbmod_render_queues_get()
 
 /// @func BBMOD_RenderQueue([_name[, _priority]])
 ///
-/// @implements {BBMOD_IDestructible}
+/// @implements {BBMOD_IMeshRenderQueue}
 ///
 /// @desc A cointainer of render commands.
 ///
@@ -178,16 +178,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return self;
 	};
 
-	/// @func DrawMesh(_mesh, _material, _matrix)
-	///
-	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMesh} command into the
-	/// queue.
-	///
-	/// @param {Struct.BBMOD_Mesh} _mesh The mesh to draw.
-	/// @param {Struct.BBMOD_Material} _material The material to use.
-	/// @param {Array<Real>} _matrix The world matrix.
-	///
-	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawMesh = function (_mesh, _material, _matrix)
 	{
 		gml_pragma("forceinline");
@@ -202,18 +192,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return self;
 	};
 
-	/// @func DrawMeshAnimated(_mesh_material, _matrix, _boneTransform)
-	///
-	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshAnimated} command into
-	/// the queue.
-	///
-	/// @param {Struct.BBMOD_Mesh} _mesh The mesh to draw.
-	/// @param {Struct.BBMOD_Material} _material The material to use.
-	/// @param {Array<Real>} _matrix The world matrix.
-	/// @param {Array<Real>} _boneTransform An array with bone transformation
-	/// data.
-	///
-	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawMeshAnimated = function (_mesh, _material, _matrix, _boneTransform)
 	{
 		gml_pragma("forceinline");
@@ -229,18 +207,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return self;
 	};
 
-	/// @func DrawMeshBatched(_mesh, _material, _matrix, _batchData)
-	///
-	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawMeshBatched} command into
-	/// the queue.
-	///
-	/// @param {Struct.BBMOD_Mesh} _mesh The mesh to draw.
-	/// @param {Struct.BBMOD_Material} _material The material to use.
-	/// @param {Array<Real>} _matrix The world matrix.
-	/// @param {Array<Real>, Array<Array<Real>>} _batchData Either a single array
-	/// of batch data or an array of arrays of batch data.
-	///
-	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawMeshBatched = function (_mesh, _material, _matrix, _batchData)
 	{
 		gml_pragma("forceinline");
@@ -1677,46 +1643,18 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return self;
 	};
 
-	/// @func is_empty()
-	///
-	/// @desc Checks whether the render queue is empty.
-	///
-	/// @return {Bool} Returns `true` if there are no commands in the render
-	/// queue.
 	static is_empty = function ()
 	{
 		gml_pragma("forceinline");
 		return (__index == 0);
 	};
 
-	/// @func has_commands(_renderPass)
-	///
-	/// @desc Checks whether the render queue has commands for given render pass.
-	///
-	/// @param {Real} _renderPass The render pass.
-	///
-	/// @return {Bool} Returns `true` if the render queue has commands for given
-	/// render pass.
-	///
-	/// @see BBMOD_ERenderPass
 	static has_commands = function (_renderPass)
 	{
 		gml_pragma("forceinline");
 		return (__renderPasses & (1 << _renderPass)) ? true : false;
 	};
 
-	/// @func submit([_instances])
-	///
-	/// @desc Submits render commands.
-	///
-	/// @param {Id.DsList<Id.Instance>} [_instances] If specified then only
-	/// meshes with an instance ID from the list are submitted. Defaults to
-	/// `undefined`.
-	///
-	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	///
-	/// @see BBMOD_RenderQueue.has_commands
-	/// @see BBMOD_RenderQueue.clear
 	static submit = function (_instances=undefined)
 	{
 		if (!has_commands(global.__bbmodRenderPass))
@@ -2512,11 +2450,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return self;
 	};
 
-	/// @func clear()
-	///
-	/// @desc Clears the render queue.
-	///
-	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static clear = function ()
 	{
 		gml_pragma("forceinline");

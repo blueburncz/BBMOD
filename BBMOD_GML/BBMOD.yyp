@@ -346,6 +346,7 @@
     {"id":{"name":"BBMOD_BaseShader","path":"scripts/BBMOD_BaseShader/BBMOD_BaseShader.yy",},},
     {"id":{"name":"BBMOD_DefaultSpriteShader","path":"scripts/BBMOD_DefaultSpriteShader/BBMOD_DefaultSpriteShader.yy",},},
     {"id":{"name":"BBMOD_MixRealOverTimeModule","path":"scripts/BBMOD_MixRealOverTimeModule/BBMOD_MixRealOverTimeModule.yy",},},
+    {"id":{"name":"BBMOD_IMeshRenderQueue","path":"scripts/BBMOD_IMeshRenderQueue/BBMOD_IMeshRenderQueue.yy",},},
     {"id":{"name":"BBMOD_SprParticle","path":"sprites/BBMOD_SprParticle/BBMOD_SprParticle.yy",},},
     {"id":{"name":"bbmod_get_calling_function_name","path":"scripts/bbmod_get_calling_function_name/bbmod_get_calling_function_name.yy",},},
     {"id":{"name":"SndGunshot3","path":"sounds/SndGunshot3/SndGunshot3.yy",},},
