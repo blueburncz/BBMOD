@@ -520,6 +520,66 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			_ids);
 	};
 
+	/// @var {Array} [nodeCount, nodeTransform, meshCount, meshes..., ...]
+	/// @private
+	__cacheData = undefined;
+
+	/// @var {Bool}
+	/// @private
+	__allMeshesSkinned = false;
+
+	static __build_draw_cache = function ()
+	{
+		if (__cacheData != undefined)
+		{
+			return;
+		}
+
+		var _cacheData = [0];
+		var _allMeshesSkinned = true;
+		var _renderStack = global.__bbmodRenderStack;
+
+		ds_stack_push(_renderStack, RootNode, matrix_build_identity());
+
+		while (!ds_stack_empty(_renderStack))
+		{
+			var _matrix = ds_stack_pop(_renderStack);
+			var _node = ds_stack_pop(_renderStack);
+
+			if (!_node.IsRenderable || !_node.Visible)
+			{
+				continue;
+			}
+
+			++_cacheData[@ 0];
+			var _nodeMatrix = matrix_multiply(_node.Transform.ToMatrix(), _matrix);
+
+			var _meshIndices = _node.Meshes;
+			array_push(_cacheData, _nodeMatrix, array_length(_meshIndices));
+
+			var i = 0;
+			repeat (array_length(_meshIndices))
+			{
+				var _mesh = Meshes[_meshIndices[i++]];
+				if (!_mesh.VertexFormat.Bones)
+				{
+					_allMeshesSkinned = false;
+				}
+				array_push(_cacheData, _mesh);
+			}
+
+			var _children = _node.Children;
+			i = 0;
+			repeat (array_length(_children))
+			{
+				ds_stack_push(_renderStack, _children[i++], _nodeMatrix);
+			}
+		}
+
+		__cacheData = _cacheData;
+		__allMeshesSkinned = _allMeshesSkinned;
+	};
+
 	/// @func submit([_materials[, _transform[, _batchData]]])
 	///
 	/// @desc Immediately submits the model for rendering.
@@ -557,6 +617,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	static submit = function (_materials=undefined, _transform=undefined, _batchData=undefined)
 	{
 		gml_pragma("forceinline");
+		// TODO: Use cache in BBMOD_Model.submit
 		if (RootNode != undefined)
 		{
 			_materials ??= Materials;
@@ -573,7 +634,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {Array<Real>} [_transform] An array of dual quaternions for
-	/// transforming animated models or `undefined`.
+	/// transforming animated models or `undefined`. Disables caching!
 	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
 	/// batching or `undefined`.
 	/// @param {Array<Real>} [_matrix] The world matrix. Defaults to
@@ -591,12 +652,54 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined, _matrix=undefined)
 	{
 		gml_pragma("forceinline");
-		if (RootNode != undefined)
+
+		if (RootNode == undefined)
 		{
-			_materials ??= Materials;
-			_matrix ??= matrix_get(matrix_world);
+			return self;
+		}
+
+		_materials ??= Materials;
+		_matrix ??= matrix_get(matrix_world);
+
+		__build_draw_cache();
+
+		var _cacheData = __cacheData;
+
+		if (_transform == undefined)
+		{
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				var _nodeTransform = matrix_multiply(_cacheData[i++], _matrix);
+				var _meshCount = _cacheData[i++];
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.render(_materials[_mesh.MaterialIndex], undefined, _batchData, _nodeTransform);
+				}
+			}
+		}
+		else if (__allMeshesSkinned)
+		{
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				++i; // Skip node transform
+				var _meshCount = _cacheData[i++];
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.render(_materials[_mesh.MaterialIndex], _transform, _batchData, _matrix);
+				}
+			}
+		}
+		else
+		{
 			RootNode.render(_materials, _transform, _batchData, _matrix);
 		}
+
 		return self;
 	};
 

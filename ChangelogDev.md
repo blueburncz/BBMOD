@@ -7,3 +7,4 @@
 * Struct `BBMOD_RenderQueue` now implements the `BBMOD_IMeshRenderQueue` interface.
 * Fixed methods `BBMOD_RenderQueue.DrawMeshBatched` not setting uniform `BBMOD_U_MATERIAL_INDEX`.
 * Added new struct `BBMOD_MeshRenderQueue`, which is a render queue specialized for rendering of multiple instances of a model, where all instances are using the same material. You can use this instead of `BBMOD_RenderQueue` to increase rendering performance.
+* Methods `submit` and `render` of `BBMOD_Model` now use caching to increase rendering performance of models that are either fully static or fully vertex-skinned. Models that consist from both static and vertex-skinned meshes cannot utilize this cache.
