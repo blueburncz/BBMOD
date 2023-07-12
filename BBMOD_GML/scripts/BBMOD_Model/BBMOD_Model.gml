@@ -617,12 +617,59 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	static submit = function (_materials=undefined, _transform=undefined, _batchData=undefined)
 	{
 		gml_pragma("forceinline");
-		// TODO: Use cache in BBMOD_Model.submit
-		if (RootNode != undefined)
+
+		if (RootNode == undefined)
 		{
-			_materials ??= Materials;
+			return self;
+		}
+
+		_materials ??= Materials;
+
+		__build_draw_cache();
+
+		var _cacheData = __cacheData;
+
+		if (_transform == undefined)
+		{
+			var _matrix = matrix_get(matrix_world);
+
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				var _nodeTransform = matrix_multiply(_cacheData[i++], _matrix);
+				var _meshCount = _cacheData[i++];
+
+				matrix_set(matrix_world, _nodeTransform);
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.submit(_materials[_mesh.MaterialIndex], undefined, _batchData);
+				}
+			}
+
+			matrix_set(matrix_world, _matrix);
+		}
+		else if (__allMeshesSkinned)
+		{
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				++i; // Skip node transform
+				var _meshCount = _cacheData[i++];
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.submit(_materials[_mesh.MaterialIndex], _transform, _batchData);
+				}
+			}
+		}
+		else
+		{
 			RootNode.submit(_materials, _transform, _batchData);
 		}
+
 		return self;
 	};
 
