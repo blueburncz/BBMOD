@@ -225,7 +225,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 				else
 				{
 					// Multiply node transform with parent's transform
-					__bbmod_dual_quaternion_array_multiply(
+					__bbmod_dquat_mul_array(
 						_frame, _nodeOffset, _nodeTransform, _parentIndex * 8,
 						_nodeTransform, _nodeOffset);
 				}
@@ -233,7 +233,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 
 			if (_node.IsBone)
 			{
-				__bbmod_dual_quaternion_array_multiply(
+				__bbmod_dquat_mul_array(
 					_offsetArray, _nodeOffset,
 					_nodeTransform, _nodeOffset,
 					_transformArray, _nodeOffset);
@@ -365,7 +365,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 					var _index = 0;
 					repeat (Model.BoneCount)
 					{
-						__bbmod_dual_quaternion_array_multiply(
+						__bbmod_dquat_mul_array(
 							_offsetArray, _index,
 							_frame, _index,
 							_transformArray, _index);

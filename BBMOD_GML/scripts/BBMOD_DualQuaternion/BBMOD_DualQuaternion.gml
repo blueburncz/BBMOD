@@ -671,7 +671,7 @@ function BBMOD_DualQuaternion(
 	};
 }
 
-/// @func __bbmod_dual_quaternion_array_multiply(_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
+/// @func __bbmod_dquat_mul_array(_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
 ///
 /// @desc Multiplies two dual quaternions stored in arrays and writes the result
 /// into the destination array.
@@ -688,8 +688,7 @@ function BBMOD_DualQuaternion(
 /// variables before the multiplication.
 ///
 /// @private
-function __bbmod_dual_quaternion_array_multiply(
-	_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
+function __bbmod_dquat_mul_array(_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destIndex)
 {
 	gml_pragma("forceinline");
 
@@ -710,7 +709,7 @@ function __bbmod_dual_quaternion_array_multiply(
 	var _dq2d2 = _dq2[_dq2Index + 6];
 	var _dq2d3 = _dq2[_dq2Index + 7];
 
-	_dest[@ _destIndex + 0] = (_dq2r3 * _dq1r0 + _dq2r0 * _dq1r3 + _dq2r1 * _dq1r2 - _dq2r2 * _dq1r1);
+	_dest[@ _destIndex]     = (_dq2r3 * _dq1r0 + _dq2r0 * _dq1r3 + _dq2r1 * _dq1r2 - _dq2r2 * _dq1r1);
 	_dest[@ _destIndex + 1] = (_dq2r3 * _dq1r1 + _dq2r1 * _dq1r3 + _dq2r2 * _dq1r0 - _dq2r0 * _dq1r2);
 	_dest[@ _destIndex + 2] = (_dq2r3 * _dq1r2 + _dq2r2 * _dq1r3 + _dq2r0 * _dq1r1 - _dq2r1 * _dq1r0);
 	_dest[@ _destIndex + 3] = (_dq2r3 * _dq1r3 - _dq2r0 * _dq1r0 - _dq2r1 * _dq1r1 - _dq2r2 * _dq1r2);
