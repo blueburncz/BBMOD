@@ -552,131 +552,49 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 				var _n4Y = __normalSmoothY[# _i, _j + 1];
 				var _n4Z = __normalSmoothZ[# _i, _j + 1];
 
-				//var _t1X = - _n1X * _n1Y;
-				//var _t1Y = _n1X * _n1X - (-_n1Z) * _n1Z;
-				//var _t1Z = (-_n1Z) * _n1Y;
-
-				//var _t2X = - _n2X * _n2Y;
-				//var _t2Y = _n2X * _n2X - (-_n2Z) * _n2Z;
-				//var _t2Z = (-_n2Z) * _n2Y;
-
-				//var _t3X = - _n3X * _n3Y;
-				//var _t3Y = _n3X * _n3X - (-_n3Z) * _n3Z;
-				//var _t3Z = (-_n3Z) * _n3Y;
-
-				//var _t4X = - _n4X * _n4Y;
-				//var _t4Y = _n4X * _n4X - (-_n4Z) * _n4Z;
-				//var _t4Z = (-_n4Z) * _n4Y;
-
 				// 1
 				// |\
 				// 4-3
-				var pos1x = _x1;
-				var pos1y = _y1;
-				var pos1z = _z1;
-				var pos2x = _x3;
-				var pos2y = _y3;
-				var pos2z = _z3;
-				var pos3x = _x4;
-				var pos3y = _y4;
-				var pos3z = _z4;
-				var uv1x = _u1;
-				var uv1y = _v1;
-				var uv2x = _u3;
-				var uv2y = _v3;
-				var uv3x = _u4;
-				var uv3y = _v4;
-				var edge1x = pos2x - pos1x;
-				var edge1y = pos2y - pos1y;
-				var edge1z = pos2z - pos1z;
-				var edge2x = pos3x - pos1x;
-				var edge2y = pos3y - pos1y;
-				var edge2z = pos3z - pos1z;
-				var deltaUV1x = uv2x - uv1x;
-				var deltaUV1y = uv2y - uv1y;
-				var deltaUV2x = uv3x - uv1x;
-				var deltaUV2y = uv3y - uv1y;
-				var f = 1.0 / (deltaUV1x * deltaUV2y - deltaUV2x * deltaUV1y);
-				var tangent1x = f * (deltaUV2y * edge1x - deltaUV1y * edge2x);
-				var tangent1y = f * (deltaUV2y * edge1y - deltaUV1y * edge2y);
-				var tangent1z = f * (deltaUV2y * edge1z - deltaUV1y * edge2z);
-				var bitangent1x = f * (-deltaUV2x * edge1x + deltaUV1x * edge2x);
-				var bitangent1y = f * (-deltaUV2x * edge1y + deltaUV1x * edge2y);
-				var bitangent1z = f * (-deltaUV2x * edge1z + deltaUV1x * edge2z);
-				var _dot = (new BBMOD_Vec3(_n1X, _n1Y, _n1Z))
-					.Cross(new BBMOD_Vec3(tangent1x, tangent1y, tangent1z))
-					.Dot(new BBMOD_Vec3(bitangent1x, bitangent1y, bitangent1z));
-				var _sign = (_dot < 0.0) ? -1.0 : 1.0;
+				var _tangent1z = _z3 - _z1;
+				var _tangentNorm = 1.0 / sqrt(1.0 + (_tangent1z * _tangent1z));
+				_tangent1z *= _tangentNorm;
 
 				vertex_position_3d(_vbuffer, _x1, _y1, _z1);
 				vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
 				vertex_texcoord(_vbuffer, _u1, _v1);
-				vertex_float4(_vbuffer, tangent1x, tangent1y, tangent1z, _sign);
+				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
 
 				vertex_position_3d(_vbuffer, _x3, _y3, _z3);
 				vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
 				vertex_texcoord(_vbuffer, _u3, _v3);
-				vertex_float4(_vbuffer, tangent1x, tangent1y, tangent1z, _sign);
+				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
 
 				vertex_position_3d(_vbuffer, _x4, _y4, _z4);
 				vertex_normal(_vbuffer, _n4X, _n4Y, _n4Z);
 				vertex_texcoord(_vbuffer, _u4, _v4);
-				vertex_float4(_vbuffer, tangent1x, tangent1y, tangent1z, _sign);
+				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
 
 				// 1-2
 				//  \|
 				//   3
-				pos1x = _x1;
-				pos1y = _y1;
-				pos1z = _z1;
-				pos2x = _x2;
-				pos2y = _y2;
-				pos2z = _z2;
-				pos3x = _x3;
-				pos3y = _y3;
-				pos3z = _z3;
-				uv1x = _u1;
-				uv1y = _v1;
-				uv2x = _u2;
-				uv2y = _v2;
-				uv3x = _u3;
-				uv3y = _v3;
-				edge1x = pos2x - pos1x;
-				edge1y = pos2y - pos1y;
-				edge1z = pos2z - pos1z;
-				edge2x = pos3x - pos1x;
-				edge2y = pos3y - pos1y;
-				edge2z = pos3z - pos1z;
-				deltaUV1x = uv2x - uv1x;
-				deltaUV1y = uv2y - uv1y;
-				deltaUV2x = uv3x - uv1x;
-				deltaUV2y = uv3y - uv1y;
-				f = 1.0 / (deltaUV1x * deltaUV2y - deltaUV2x * deltaUV1y);
-				tangent1x = f * (deltaUV2y * edge1x - deltaUV1y * edge2x);
-				tangent1y = f * (deltaUV2y * edge1y - deltaUV1y * edge2y);
-				tangent1z = f * (deltaUV2y * edge1z - deltaUV1y * edge2z);
-				bitangent1x = f * (-deltaUV2x * edge1x + deltaUV1x * edge2x);
-				bitangent1y = f * (-deltaUV2x * edge1y + deltaUV1x * edge2y);
-				bitangent1z = f * (-deltaUV2x * edge1z + deltaUV1x * edge2z);
-				_dot = (new BBMOD_Vec3(_n1X, _n1Y, _n1Z))
-					.Cross(new BBMOD_Vec3(tangent1x, tangent1y, tangent1z))
-					.Dot(new BBMOD_Vec3(bitangent1x, bitangent1y, bitangent1z));
-				_sign = (_dot < 0.0) ? -1.0 : 1.0;
+				_tangent1z = _z2 - _z1;
+				_tangentNorm = 1.0 / sqrt(1.0 + (_tangent1z * _tangent1z));
+				_tangent1z *= _tangentNorm;
 
 				vertex_position_3d(_vbuffer, _x1, _y1, _z1);
 				vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
 				vertex_texcoord(_vbuffer, _u1, _v1);
-				vertex_float4(_vbuffer, tangent1x, tangent1y, tangent1z, _sign);
+				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
 
 				vertex_position_3d(_vbuffer, _x2, _y2, _z2);
 				vertex_normal(_vbuffer, _n2X, _n2Y, _n2Z);
 				vertex_texcoord(_vbuffer, _u2, _v2);
-				vertex_float4(_vbuffer, tangent1x, tangent1y, tangent1z, _sign);
+				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
 
 				vertex_position_3d(_vbuffer, _x3, _y3, _z3);
 				vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
 				vertex_texcoord(_vbuffer, _u3, _v3);
-				vertex_float4(_vbuffer, tangent1x, tangent1y, tangent1z, _sign);
+				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
 
 				++_j;
 			}
@@ -751,10 +669,10 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 				RenderQueue
 					.SetGpuZWriteEnable(i == 0)
 					.SetGpuZFunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
-					.SetSampler("bbmod_Splatmap", Splatmap)
-					.SetUniformInt("bbmod_SplatmapIndex", i - 1)
-					.SetUniformFloat2("bbmod_TextureScale", TextureRepeat.X, TextureRepeat.Y)
-					.SetUniformMatrixArray("bbmod_NormalMatrix", _normalMatrix)
+					.SetSampler(BBMOD_U_SPLATMAP, Splatmap)
+					.SetUniformInt(BBMOD_U_SPLATMAP_INDEX, i - 1)
+					.SetUniformFloat2(BBMOD_U_TEXTURE_SCALE, TextureRepeat.X, TextureRepeat.Y)
+					.SetUniformMatrixArray(BBMOD_U_NORMAL_MATRIX, _normalMatrix)
 					.SetWorldMatrix(_matrix)
 					.SubmitVertexBuffer(VertexBuffer, pr_trianglelist, _mat.BaseOpacity)
 					.ResetMaterial()

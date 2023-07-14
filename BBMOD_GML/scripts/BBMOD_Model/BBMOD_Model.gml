@@ -520,6 +520,144 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			_ids);
 	};
 
+	/// @var {Array} [nodeCount, nodeIndex, nodeTransform, meshCount, meshes..., ...]
+	/// @private
+	__cacheData = undefined;
+
+	/// @var {Real} -1 = mixed, 0 = nodes only, 1 = vertex skinning only
+	/// @private
+	__animationKind = -1;
+
+	static __build_draw_cache = function ()
+	{
+		if (__cacheData != undefined)
+		{
+			return;
+		}
+
+		var _cacheData = [0];
+		var _animationKind = undefined;
+		var _renderStack = global.__bbmodRenderStack;
+
+		ds_stack_push(_renderStack, RootNode, matrix_build_identity());
+
+		while (!ds_stack_empty(_renderStack))
+		{
+			var _matrix = ds_stack_pop(_renderStack);
+			var _node = ds_stack_pop(_renderStack);
+
+			if (!_node.IsRenderable || !_node.Visible)
+			{
+				continue;
+			}
+
+			++_cacheData[@ 0];
+			var _nodeMatrix = matrix_multiply(_node.Transform.ToMatrix(), _matrix);
+
+			var _meshIndices = _node.Meshes;
+			array_push(_cacheData, _node.Index, _nodeMatrix, array_length(_meshIndices));
+
+			var i = 0;
+			repeat (array_length(_meshIndices))
+			{
+				var _mesh = Meshes[_meshIndices[i++]];
+				if (_animationKind == undefined)
+				{
+					_animationKind = (_mesh.VertexFormat.Bones ? 1 : 0);
+				}
+				else if (_animationKind != (_mesh.VertexFormat.Bones ? 1 : 0))
+				{
+					_animationKind = -1;
+				}
+				array_push(_cacheData, _mesh);
+			}
+
+			var _children = _node.Children;
+			i = 0;
+			repeat (array_length(_children))
+			{
+				ds_stack_push(_renderStack, _children[i++], _nodeMatrix);
+			}
+		}
+
+		__cacheData = _cacheData;
+		__animationKind = _animationKind;
+	};
+
+	static __transformArrayToMatrix = function (_array, _index, _dest)
+	{
+		gml_pragma("forceinline");
+
+		// Real = Real.FromArray(_array, 0);
+		var _realX = _array[_index];
+		var _realY = _array[_index + 1];
+		var _realZ = _array[_index + 2];
+		var _realW = _array[_index + 3];
+
+		// Dual = Dual.FromArray(_array, 4);
+		var _dualX = _array[_index + 4];
+		var _dualY = _array[_index + 5];
+		var _dualZ = _array[_index + 6];
+		var _dualW = _array[_index + 7];
+
+		// Rotation
+		// Real.ToMatrix(_dest, 0);
+		{
+			var _temp0, _temp1, _temp2;
+			var _q0 = _realX;
+			var _q1 = _realY;
+			var _q2 = _realZ;
+			var _q3 = _realW;
+
+			_temp0 = _q0 * _q0;
+			_temp1 = _q1 * _q1;
+			_temp2 = _q2 * _q2;
+			_dest[@ 0]  = 1.0 - 2.0 * (_temp1 + _temp2);
+			_dest[@ 5]  = 1.0 - 2.0 * (_temp0 + _temp2);
+			_dest[@ 10] = 1.0 - 2.0 * (_temp0 + _temp1);
+
+			_temp0 = _q0 * _q1;
+			_temp1 = _q3 * _q2;
+			_dest[@ 1] = 2.0 * (_temp0 + _temp1);
+			_dest[@ 4] = 2.0 * (_temp0 - _temp1);
+
+			_temp0 = _q0 * _q2
+			_temp1 = _q3 * _q1;
+			_dest[@ 2] = 2.0 * (_temp0 - _temp1);
+			_dest[@ 8] = 2.0 * (_temp0 + _temp1);
+
+			_temp0 = _q1 * _q2;
+			_temp1 = _q3 * _q0;
+			_dest[@ 6] = 2.0 * (_temp0 + _temp1);
+			_dest[@ 9] = 2.0 * (_temp0 - _temp1);
+		}
+		// _dest[@ 3] = 0.0;
+		// _dest[@ 7] = 0.0;
+		// _dest[@ 11] = 0.0;
+
+		// Translation
+		// var _translation = GetTranslation();
+		{
+			// Dual.Scale(2.0)
+			var _q10 = _dualX * 2.0;
+			var _q11 = _dualY * 2.0;
+			var _q12 = _dualZ * 2.0;
+			var _q13 = _dualW * 2.0;
+
+			// Real.Conjugate()
+			var _q20 = -_realX;
+			var _q21 = -_realY;
+			var _q22 = -_realZ;
+			var _q23 =  _realW;
+
+			//return Dual.Scale(2.0).Mul(Real.Conjugate());
+			_dest[@ 12] = _q13 * _q20 + _q10 * _q23 + _q11 * _q22 - _q12 * _q21;
+			_dest[@ 13] = _q13 * _q21 + _q11 * _q23 + _q12 * _q20 - _q10 * _q22;
+			_dest[@ 14] = _q13 * _q22 + _q12 * _q23 + _q10 * _q21 - _q11 * _q20;
+		}
+		// _dest[@ 15] = 1.0;
+	};
+
 	/// @func submit([_materials[, _transform[, _batchData]]])
 	///
 	/// @desc Immediately submits the model for rendering.
@@ -557,11 +695,86 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	static submit = function (_materials=undefined, _transform=undefined, _batchData=undefined)
 	{
 		gml_pragma("forceinline");
-		if (RootNode != undefined)
+
+		static _tempMatrix = matrix_build_identity();
+
+		if (RootNode == undefined)
 		{
-			_materials ??= Materials;
+			return self;
+		}
+
+		_materials ??= Materials;
+
+		__build_draw_cache();
+
+		var _cacheData = __cacheData;
+
+		if (_transform == undefined)
+		{
+			var _matrix = matrix_get(matrix_world);
+
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				++i; // Skip node index
+				var _nodeTransform = matrix_multiply(_cacheData[i++], _matrix);
+				var _meshCount = _cacheData[i++];
+
+				matrix_set(matrix_world, _nodeTransform);
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.submit(_materials[_mesh.MaterialIndex], undefined, _batchData);
+				}
+			}
+
+			matrix_set(matrix_world, _matrix);
+		}
+		else if (__animationKind == 0)
+		{
+			var _matrix = matrix_get(matrix_world);
+
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				var _nodeIndex = _cacheData[i++];
+				++i; // Skip node transform
+				__transformArrayToMatrix(_transform, _nodeIndex * 8, _tempMatrix);
+				var _nodeTransform = matrix_multiply(_tempMatrix, _matrix);
+				var _meshCount = _cacheData[i++];
+
+				matrix_set(matrix_world, _nodeTransform);
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.submit(_materials[_mesh.MaterialIndex], undefined, _batchData);
+				}
+			}
+
+			matrix_set(matrix_world, _matrix);
+		}
+		else if (__animationKind == 1)
+		{
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				i += 2; // Skip node index and transform
+				var _meshCount = _cacheData[i++];
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.submit(_materials[_mesh.MaterialIndex], _transform, _batchData);
+				}
+			}
+		}
+		else
+		{
 			RootNode.submit(_materials, _transform, _batchData);
 		}
+
 		return self;
 	};
 
@@ -573,7 +786,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {Array<Real>} [_transform] An array of dual quaternions for
-	/// transforming animated models or `undefined`.
+	/// transforming animated models or `undefined`. Disables caching!
 	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
 	/// batching or `undefined`.
 	/// @param {Array<Real>} [_matrix] The world matrix. Defaults to
@@ -591,12 +804,75 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined, _matrix=undefined)
 	{
 		gml_pragma("forceinline");
-		if (RootNode != undefined)
+
+		static _tempMatrix = matrix_build_identity();
+
+		if (RootNode == undefined)
 		{
-			_materials ??= Materials;
-			_matrix ??= matrix_get(matrix_world);
+			return self;
+		}
+
+		_materials ??= Materials;
+		_matrix ??= matrix_get(matrix_world);
+
+		__build_draw_cache();
+
+		var _cacheData = __cacheData;
+
+		if (_transform == undefined)
+		{
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				++i; // Skip node index
+				var _nodeTransform = matrix_multiply(_cacheData[i++], _matrix);
+				var _meshCount = _cacheData[i++];
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.render(_materials[_mesh.MaterialIndex], undefined, _batchData, _nodeTransform);
+				}
+			}
+		}
+		else if (__animationKind == 0)
+		{
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				var _nodeIndex = _cacheData[i++];
+				++i; // Skip node transform
+				__transformArrayToMatrix(_transform, _nodeIndex * 8, _tempMatrix);
+				var _nodeTransform = matrix_multiply(_tempMatrix, _matrix);
+				var _meshCount = _cacheData[i++];
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.render(_materials[_mesh.MaterialIndex], undefined, _batchData, _nodeTransform);
+				}
+			}
+		}
+		else if (__animationKind == 1)
+		{
+			var i = 0;
+			repeat (_cacheData[i++])
+			{
+				i += 2; // Skip node index and transform
+				var _meshCount = _cacheData[i++];
+
+				repeat (_meshCount)
+				{
+					var _mesh = _cacheData[i++];
+					_mesh.render(_materials[_mesh.MaterialIndex], _transform, _batchData, _matrix);
+				}
+			}
+		}
+		else
+		{
 			RootNode.render(_materials, _transform, _batchData, _matrix);
 		}
+
 		return self;
 	};
 
