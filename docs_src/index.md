@@ -7,13 +7,12 @@ converter (BBMOD CLI), a powerful and easy to use GML library, as well as PBR
 shaders using which you can render models textured in professional, industry
 standard software.
 
-If you are a new user, see the [Quickstart guide](./QuickstartGuide.html) for a
-quick overview of how to use BBMOD.
+If you are a new user, see the [Tutorials](/bbmod/tutorials) section on the
+official website for guides on how to use BBMOD.
 
 ## Contents
 * [Changelog](./Changelog_.html)
 * [Supported file formats](./SupportedFileFormats.html)
-* [Quickstart guide](./QuickstartGuide.html)
 * [Advanced topics](./AdvancedTopics.html)
 * [Modules](./Modules.html)
 * [Scripting API](./ScriptingAPI.html)

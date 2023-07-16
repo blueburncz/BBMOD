@@ -68,21 +68,6 @@
       }
     },
     "Supported file formats": "SupportedFileFormats.md",
-    "Quickstart guide": {
-      "file": "QuickstartGuide/QuickstartGuide.md",
-      "pages": {
-        "Installation": "QuickstartGuide/QuickstartInstallation.md",
-        "Converting models": "QuickstartGuide/QuickstartConvertingModels.md",
-        "Loading models": "QuickstartGuide/QuickstartLoadingModels.md",
-        "Materials": "QuickstartGuide/QuickstartMaterials.md",
-        "Rendering models": "QuickstartGuide/QuickstartRenderingModels.md",
-        "Animations": "QuickstartGuide/QuickstartAnimations.md",
-        "Animation events": "QuickstartGuide/QuickstartAnimationEvents.md",
-        "Bone attachments": "QuickstartGuide/QuickstartBoneAttachments.md",
-        "Transforming bones": "QuickstartGuide/QuickstartTransformingBones.md",
-        "Dynamic lights and fog": "QuickstartGuide/QuickstartDynamicLightsAndFog.md"
-      }
-    },
     "Advanced topics": {
       "file": "AdvancedTopics/AdvancedTopics.md",
       "pages": {
