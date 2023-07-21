@@ -1,6 +1,5 @@
 # Advanced topics
-In this section you can find guides on advanced topics of BBMOD which are not
-covered in the [Quickstart guide](./QuickstartGuide.html).
+In this section you can find guides on advanced topics of BBMOD.
 
 * [Rendering](./Rendering.html)
 * [Animation optimization levels](./AnimationOptimizationLevels.html)

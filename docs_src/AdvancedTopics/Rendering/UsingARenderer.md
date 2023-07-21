@@ -1,12 +1,11 @@
 # Using a renderer
-In the [Quickstart guide](./QuickstartGuide.html) you have learnt that you can
-quickly get models onto the screen using the [submit](BBMOD_Model.submit) method.
-While this works just fine, it is not the recommended approach, as it does not
-allow you to utilize the BBMOD library to its maximum potential. For this you
-should use the method `render` instead.
+While [submit](BBMOD_Model.submit.html) is the easier method to draw a model, BBMOD
+offers another method [render](./BBMOD_Model.render.html), which requires a
+little more to set up, but it allows you to utilize BBMOD to its maximum
+potential.
 
 ## Method render
-What [render](./BBMOD_Model.render.html) does is that it only puts
+What `render` does is that it only puts
 [render commands](./BBMOD_RenderCommand.html) into separate
 [render queues](./BBMOD_BaseMaterial.RenderCommands.html) (one for each used material),
 which can be then traversed and executed multiple times, using a different shader,
