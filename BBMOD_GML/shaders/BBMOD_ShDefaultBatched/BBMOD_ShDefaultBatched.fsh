@@ -800,7 +800,7 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
-	material.Base *= bbmod_BaseOpacityMultiplier.rgb;
+	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 
 	if (material.Opacity < bbmod_AlphaTest)

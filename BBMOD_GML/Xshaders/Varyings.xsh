@@ -1,6 +1,6 @@
 varying vec3 v_vVertex;
 
-#if defined(X_2D) || defined(X_PARTICLES)
+#if defined(X_COLOR) || defined(X_2D) || defined(X_PARTICLES)
 varying vec4 v_vColor;
 #endif
 

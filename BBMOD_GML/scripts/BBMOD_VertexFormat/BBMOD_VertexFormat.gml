@@ -16,6 +16,22 @@
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_VFORMAT_DEFAULT_BATCHED __bbmod_vformat_default_batched()
 
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static
+/// models with vertex colors.
+/// @see BBMOD_VertexFormat
+#macro BBMOD_VFORMAT_DEFAULT_COLOR __bbmod_vformat_default_color()
+
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for animated
+/// models with vertex colors.
+/// @see BBMOD_VertexFormat
+#macro BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED __bbmod_vformat_default_color_animated()
+
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for dynamically
+/// batched models with vertex colors.
+/// @see BBMOD_VertexFormat
+/// @see BBMOD_DynamicBatch
+#macro BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED __bbmod_vformat_default_color_batched()
+
 /// @func BBMOD_VertexFormat([_confOrVertices[, _normals[, _uvs[, _colors[, _tangentw[, _bones[, _ids]]]]]]])
 ///
 /// @desc A wrapper of a raw GameMaker vertex format.
@@ -307,5 +323,26 @@ function __bbmod_vformat_default_batched()
 {
 	static _vformat = new BBMOD_VertexFormat(
 		true, true, true, false, true, false, true);
+	return _vformat;
+}
+
+function __bbmod_vformat_default_color()
+{
+	static _vformat = new BBMOD_VertexFormat(
+		true, true, true, true, true, false, false);
+	return _vformat;
+}
+
+function __bbmod_vformat_default_color_animated()
+{
+	static _vformat = new BBMOD_VertexFormat(
+		true, true, true, true, true, true, false);
+	return _vformat;
+}
+
+function __bbmod_vformat_default_color_batched()
+{
+	static _vformat = new BBMOD_VertexFormat(
+		true, true, true, true, true, false, true);
 	return _vformat;
 }

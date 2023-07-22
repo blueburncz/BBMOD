@@ -76,18 +76,26 @@ function __bbmod_vformat_default_sprite()
 function __bbmod_shader_default()
 {
 	static _shader = new BBMOD_DefaultShader(
-		             BBMOD_ShDefault,         BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShDefaultAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShDefaultBatched,  BBMOD_VFORMAT_DEFAULT_BATCHED);
+		             BBMOD_ShDefault,              BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultAnimated,      BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShDefaultColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
+		.add_variant(BBMOD_ShDefaultColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
+		.add_variant(BBMOD_ShDefaultColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		;
 	return _shader;
 }
 
 function __bbmod_shader_default_unlit()
 {
 	static _shader = new BBMOD_DefaultShader(
-		             BBMOD_ShDefaultUnlit,         BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShDefaultUnlitAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShDefaultUnlitBatched,  BBMOD_VFORMAT_DEFAULT_BATCHED);
+		             BBMOD_ShDefaultUnlit,              BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultUnlitAnimated,      BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultUnlitBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShDefaultUnlitColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
+		.add_variant(BBMOD_ShDefaultUnlitColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
+		.add_variant(BBMOD_ShDefaultUnlitColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		;
 	return _shader;
 }
 
@@ -108,10 +116,14 @@ function __bbmod_shader_default_sprite()
 function __bbmod_shader_default_depth()
 {
 	static _shader = new BBMOD_BaseShader(
-		             BBMOD_ShDefaultDepth,         BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShDefaultDepthAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShDefaultDepthBatched,  BBMOD_VFORMAT_DEFAULT_BATCHED)
-		.add_variant(BBMOD_ShDefaultDepthLightmap, BBMOD_VFORMAT_DEFAULT_LIGHTMAP);
+		             BBMOD_ShDefaultDepth,              BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultDepthAnimated,      BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultDepthBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShDefaultDepthLightmap,      BBMOD_VFORMAT_DEFAULT_LIGHTMAP)
+		.add_variant(BBMOD_ShDefaultDepthColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
+		.add_variant(BBMOD_ShDefaultDepthColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
+		.add_variant(BBMOD_ShDefaultDepthColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		;
 	return _shader;
 }
 

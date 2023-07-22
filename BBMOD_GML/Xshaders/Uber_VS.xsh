@@ -26,7 +26,7 @@ attribute vec2 in_TextureCoord0;
 attribute vec2 in_TextureCoord1;
 #endif
 
-#if defined(X_2D)
+#if defined(X_COLOR) || defined(X_2D)
 attribute vec4 in_Color;
 #endif
 
@@ -87,7 +87,7 @@ uniform float bbmod_ShadowmapNormalOffset;
 #pragma include("Transform.xsh")
 #endif
 
-#if defined(X_2D) || defined(X_PARTICLES)
+#if defined(X_COLOR) || defined(X_2D) || defined(X_PARTICLES)
 #pragma include("Color.xsh")
 #endif
 
@@ -146,8 +146,8 @@ void main()
 
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;
-#if defined(X_2D)
-	v_vColor = in_Color;
+#if defined(X_COLOR) || defined(X_2D)
+	v_vColor = vec4(xGammaToLinear(in_Color.rgb), in_Color.a);
 #endif
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 #if defined(X_LIGHTMAP)

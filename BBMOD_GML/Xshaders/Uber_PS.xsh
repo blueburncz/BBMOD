@@ -295,7 +295,7 @@ void main()
 		v_mTBN,
 		v_vTexCoord);
 
-#if defined(X_2D) || defined(X_PARTICLES)
+#if defined(X_COLOR) || defined(X_2D) || defined(X_PARTICLES)
 	material.Base *= v_vColor.rgb;
 	material.Opacity *= v_vColor.a;
 #endif
@@ -313,7 +313,7 @@ void main()
 	}
 #endif
 
-	material.Base *= bbmod_BaseOpacityMultiplier.rgb;
+	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 
 #if defined(X_ZOMBIE)

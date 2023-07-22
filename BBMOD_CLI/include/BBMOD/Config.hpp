@@ -77,6 +77,12 @@ struct SConfig
 	/** Apply scale defined in the model. */
 	bool ApplyScale = false;
 
+	/** Export materials to BBMAT files. (experimental) */
+	bool ExportMaterials = false;
+
+	/** Convert model from Y-up to Z-up. (experimental)  */
+	bool ConvertToZUp = false;
+
 	/**
 	 * Configures generation of normal vectors.
 	 * 

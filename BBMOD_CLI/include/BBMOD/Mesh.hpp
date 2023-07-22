@@ -51,7 +51,7 @@ struct SVertex
 
 struct SMesh
 {
-	static SMesh* FromAssimp(struct aiMesh* mesh, struct SModel* model, const struct SConfig& config);
+	static SMesh* FromAssimp(const struct aiScene* scene, struct aiMesh* mesh, struct SModel* model, const struct SConfig& config);
 
 	bool Save(std::ofstream& file);
 

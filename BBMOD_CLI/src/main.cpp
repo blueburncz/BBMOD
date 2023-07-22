@@ -42,6 +42,8 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.DisableTextureCoords) << "." << std::endl
 		<< "  -duv2|--disable-uv2=true|false       Enable/disable saving of second texture coordinate layer." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.DisableTextureCoords2) << "." << std::endl
+		<< "  -em|--export-materials=true|false    Enable/disable export of materials to .bbmat files." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.ExportMaterials) << ". (experimental)" << std::endl
 		<< "  -fn|--flip-normal=true|false         Enable/disable flipping normal vectors." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.FlipNormals) << "." << std::endl
 		<< "  -fuvx|--flip-uv-x=true|false         Enable/disable flipping texture coordinates horizontally." << std::endl
@@ -72,6 +74,8 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.PreTransform) << "." << std::endl
 		<< "  -sr|--sampling-rate=fps              Configure the sampling rate (frames per second) of animations." << std::endl
 		<< "                                       Default is " << config.SamplingRate << "." << std::endl
+		<< "  -zup=true|false                      Convert model from Y-up to Z-up." << std::endl
+		<< "                                       Default is " << config.ConvertToZUp << ". (experimental)" << std::endl
 		<< std::endl;
 }
 
@@ -140,6 +144,10 @@ int main(int argc, const char* argv[])
 				{
 					config.DisableTextureCoords2 = bValue;
 				}
+				else if (o == "-em" || o == "--export-materials")
+				{
+					config.ExportMaterials = bValue;
+				}
 				else if (o == "-fuvx" || o == "--flip-uv-x")
 				{
 					config.FlipTextureHorizontally = bValue;
@@ -187,6 +195,10 @@ int main(int argc, const char* argv[])
 				else if (o == "-sr" || o == "--sampling-rate")
 				{
 					config.SamplingRate = (double)((iValue < 1) ? 1 : iValue);
+				}
+				else if (o == "-zup")
+				{
+					config.ConvertToZUp = bValue;
 				}
 				else
 				{

@@ -62,7 +62,7 @@ static inline void AssimpToVec3(aiVector3D& from, vec3_t to)
 	to[2] = from.z;
 }
 
-SMesh* SMesh::FromAssimp(aiMesh* aiMesh, SModel* model, const SConfig& config)
+SMesh* SMesh::FromAssimp(const aiScene* scene, aiMesh* aiMesh, SModel* model, const SConfig& config)
 {
 	SMesh* mesh = new SMesh();
 	mesh->Model = model;

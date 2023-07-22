@@ -114,7 +114,7 @@ function BBMOD_Collider() constructor
 		throw new BBMOD_NotImplementedException();
 	};
 
-	/// @func DrawDebug([_color])
+	/// @func DrawDebug([_color[, _alpha]])
 	///
 	/// @desc Draws a debug preview of the collider.
 	///

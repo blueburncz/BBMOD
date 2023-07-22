@@ -867,6 +867,90 @@ function BBMOD_DLL() constructor
 		}
 		return self;
 	};
+
+	/// @func get_export_materials()
+	///
+	/// @desc Checks whether export of materials is enabled.
+	///
+	/// @return {Bool} If `true` then export of materials is enabled.
+	///
+	/// @note This is an experimental feature!
+	///
+	/// @see BBMOD_DLL.set_export_materials
+	static get_export_materials = function () {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_get_export_materials", dll_cdecl, ty_real, 0);
+		return external_call(_fn);
+	};
+
+	/// @func set_export_materials(_enable)
+	///
+	/// @desc Enables/disables export of materials. This is by default
+	/// **disabled**.
+	///
+	/// @param {Bool} _enable `true` to enable material export.
+	///
+	/// @return {Struct.BBMOD_DLL} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If the operation fails.
+	///
+	/// @note This is an experimental feature!
+	///
+	/// @see BBMOD_DLL.get_export_materials
+	static set_export_materials = function (_enable) {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_set_export_materials", dll_cdecl, ty_real, 1, ty_real);
+		var _retval = external_call(_fn, _enable);
+		if (_retval != __BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Exception();
+		}
+		return self;
+	};
+
+	/// @func get_zup()
+	///
+	/// @desc Checks whether model is converted from Y-up to Z-up.
+	///
+	/// @return {Bool} If `true` then model is converted from Y-up to Z-up.
+	///
+	/// @note This is an experimental feature!
+	///
+	/// @see BBMOD_DLL.set_zup
+	static get_zup = function () {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_get_zup", dll_cdecl, ty_real, 0);
+		return external_call(_fn);
+	};
+
+	/// @func set_zup(_enable)
+	///
+	/// @desc Enables/disables conversion from Y-up to Z-up. This is by default
+	/// **disabled**.
+	///
+	/// @param {Bool} _enable `true` to enable conversion from Y-up to Z-up.
+	///
+	/// @return {Struct.BBMOD_DLL} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If the operation fails.
+	///
+	/// @note This is an experimental feature!
+	///
+	/// @see BBMOD_DLL.get_zup
+	static set_zup = function (_enable) {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_set_zup", dll_cdecl, ty_real, 1, ty_real);
+		var _retval = external_call(_fn, _enable);
+		if (_retval != __BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Exception();
+		}
+		return self;
+	};
 }
 
 /// @func __bbmod_dll_is_supported()
