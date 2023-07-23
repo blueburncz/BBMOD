@@ -183,7 +183,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 		if (!scene)
 		{
 			delete importer;
-			PRINT_ERROR("Failed to load the model!");
+			PRINT_ERROR("Failed to load model \"%s\"!", finCurrent);
 			return BBMOD_ERR_LOAD_FAILED;
 		}
 
@@ -203,17 +203,17 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 
 		if (!model)
 		{
-			PRINT_ERROR("Failed to convert the model to BBMOD!");
+			PRINT_ERROR("Failed to convert the model \"%s\" to BBMOD!", finCurrent);
 			return BBMOD_ERR_CONVERSION_FAILED;
 		}
 
 		if (!model->Save(foutCurrent))
 		{
-			PRINT_ERROR("Could not save the model to \"%s\"!", foutCurrent);
+			PRINT_ERROR("Could not save model \"%s\" to \"%s\"!", finCurrent, foutCurrent);
 			return BBMOD_ERR_SAVE_FAILED;
 		}
 
-		PRINT_SUCCESS("Model saved to \"%s\"!", foutCurrent);
+		PRINT_SUCCESS("Model \"%s\" saved to \"%s\"!", finCurrent, foutCurrent);
 
 		/*log << "Vertex format:" << std::endl;
 		log << "==============" << std::endl;
