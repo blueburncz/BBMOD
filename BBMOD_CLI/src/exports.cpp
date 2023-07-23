@@ -291,12 +291,12 @@ GM_EXPORT gmreal_t bbmod_dll_set_zup(gmreal_t enable)
 	return BBMOD_SUCCESS;
 }
 
-GM_EXPORT gmreal_t bbmod_dll_get_prefix()
+GM_EXPORT gmreal_t bbmod_dll_get_enable_prefix()
 {
 	return (gmreal_t)gConfig.Prefix;
 }
 
-GM_EXPORT gmreal_t bbmod_dll_set_prefix(gmreal_t enable)
+GM_EXPORT gmreal_t bbmod_dll_set_enable_prefix(gmreal_t enable)
 {
 	gConfig.Prefix = (bool)enable;
 	return BBMOD_SUCCESS;

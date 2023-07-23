@@ -44,6 +44,8 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.DisableTextureCoords2) << "." << std::endl
 		<< "  -em|--export-materials=true|false    Enable/disable export of materials to .bbmat files." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.ExportMaterials) << ". (experimental)" << std::endl
+		<< "  -ep|--enable-prefix=true|false       Prefix output files with model name." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.Prefix) << "." << std::endl
 		<< "  -fn|--flip-normal=true|false         Enable/disable flipping normal vectors." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.FlipNormals) << "." << std::endl
 		<< "  -fuvx|--flip-uv-x=true|false         Enable/disable flipping texture coordinates horizontally." << std::endl
@@ -72,8 +74,6 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.OptimizeMaterials) << "." << std::endl
 		<< "  -pt|--pre-transform=true|false       Pre-transform model and collapse all nodes into one if possible." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.PreTransform) << "." << std::endl
-		<< "  --prefix=true|false                  Prefix output files with model name." << std::endl
-		<< "                                       Default is " << PRINT_BOOL(config.Prefix) << "." << std::endl
 		<< "  -sr|--sampling-rate=fps              Configure the sampling rate (frames per second) of animations." << std::endl
 		<< "                                       Default is " << config.SamplingRate << "." << std::endl
 		<< "  -zup=true|false                      Convert model from Y-up to Z-up." << std::endl
@@ -202,7 +202,7 @@ int main(int argc, const char* argv[])
 				{
 					config.ConvertToZUp = bValue;
 				}
-				else if (o == "--prefix")
+				else if (o == "-ep" || o == "--enable-prefix")
 				{
 					config.Prefix = bValue;
 				}
