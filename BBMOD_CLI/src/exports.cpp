@@ -291,6 +291,17 @@ GM_EXPORT gmreal_t bbmod_dll_set_zup(gmreal_t enable)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_prefix()
+{
+	return (gmreal_t)gConfig.Prefix;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_prefix(gmreal_t enable)
+{
+	gConfig.Prefix = (bool)enable;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_convert(gmstring_t fin, gmstring_t fout)
 {
 	return ConvertToBBMOD(fin, fout, gConfig);

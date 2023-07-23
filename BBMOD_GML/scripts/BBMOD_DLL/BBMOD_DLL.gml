@@ -951,6 +951,47 @@ function BBMOD_DLL() constructor
 		}
 		return self;
 	};
+
+	/// @func get_prefix()
+	///
+	/// @desc Checks whether prefixing of output files with model name is
+	/// enabled.
+	///
+	/// @return {Bool} If `true` then prefixing of output files with model
+	/// name is enabled.
+	///
+	/// @see BBMOD_DLL.set_prefix
+	static get_prefix = function () {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_get_prefix", dll_cdecl, ty_real, 0);
+		return external_call(_fn);
+	};
+
+	/// @func set_prefix(_enable)
+	///
+	/// @desc Enables/disables prefixing of output files with model name. This
+	/// is by default **enabled**.
+	///
+	/// @param {Bool} _enable `true` to enable prefixing of output files with
+	/// model name.
+	///
+	/// @return {Struct.BBMOD_DLL} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If the operation fails.
+	///
+	/// @see BBMOD_DLL.get_prefix
+	static set_prefix = function (_enable) {
+		gml_pragma("forceinline");
+		static _fn = external_define(
+			BBMOD_DLL_PATH, "bbmod_dll_set_prefix", dll_cdecl, ty_real, 1, ty_real);
+		var _retval = external_call(_fn, _enable);
+		if (_retval != __BBMOD_DLL_SUCCESS)
+		{
+			throw new BBMOD_Exception();
+		}
+		return self;
+	};
 }
 
 /// @func __bbmod_dll_is_supported()

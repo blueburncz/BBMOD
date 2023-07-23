@@ -83,6 +83,9 @@ struct SConfig
 	/** Convert model from Y-up to Z-up. (experimental)  */
 	bool ConvertToZUp = false;
 
+	/** Prefix output files with model name. */
+	bool Prefix = true;
+
 	/**
 	 * Configures generation of normal vectors.
 	 * 

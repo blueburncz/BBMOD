@@ -27,16 +27,16 @@ static void StringReplaceUnsafe(std::string& str)
 	});
 }
 
-static std::string GetFilename(const char* out, const char* name, const char* extension)
+static std::string GetFilename(const char* out, const char* name, const char* extension, bool prefix)
 {
-	std::string fname = std::filesystem::path(out).stem().string() + "_";
+	std::string fname = prefix ? (std::filesystem::path(out).stem().string() + "_") : "";
 	fname.append(name);
 	StringReplaceUnsafe(fname);
 	return std::filesystem::path(out).parent_path().append(fname.append(extension)).string();
 	//return std::filesystem::path(out).replace_filename(fname.c_str()).replace_extension(extension).string();
 }
 
-static std::string GetAnimationFilename(SAnimation* animation, int index, const char* out)
+static std::string GetAnimationFilename(SAnimation* animation, int index, const char* out, bool prefix)
 {
 	std::string animationName = animation->Name;
 	std::regex pattern("\\|?(Armature|mixamo.com)\\|?");
@@ -48,7 +48,7 @@ static std::string GetAnimationFilename(SAnimation* animation, int index, const 
 		animationName.append(std::to_string(index));
 	}
 
-	return GetFilename(out, animationName.c_str(), ".bbanim");
+	return GetFilename(out, animationName.c_str(), ".bbanim", prefix);
 }
 
 static void LogNode(std::ofstream& log, SModel* model, SNode* node, uint32_t indent)
@@ -89,7 +89,19 @@ static void LogNode(std::ofstream& log, SModel* model, SNode* node, uint32_t ind
 
 int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 {
-	std::ofstream log(GetFilename(fout, "log", ".txt"), std::ios::out);
+	std::filesystem::path pathOut(fout);
+
+	if (std::filesystem::is_directory(pathOut))
+	{
+		std::filesystem::path pathIn(fin);
+		pathOut /= pathIn.filename();
+	}
+
+	pathOut = pathOut.replace_extension(".bbmod");
+	std::string pathOutStr = pathOut.string();
+	fout = pathOutStr.c_str();
+
+	std::ofstream log(GetFilename(fout, "log", ".txt", config.Prefix), std::ios::out);
 
 	Assimp::Importer* importer = new Assimp::Importer();
 	//importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
@@ -237,7 +249,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 					return BBMOD_ERR_CONVERSION_FAILED;
 				}
 
-				std::string fname = GetAnimationFilename(animation, i, fout);
+				std::string fname = GetAnimationFilename(animation, i, fout, config.Prefix);
 	
 				if (!animation->Save(fname, config))
 				{
@@ -257,7 +269,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 		{
 			aiMaterial* mat = scene->mMaterials[i];
 			const char* matName = mat->GetName().C_Str();
-			std::string matFout = GetFilename(fout, matName, ".bbmat");
+			std::string matFout = GetFilename(fout, matName, ".bbmat", config.Prefix);
 
 			aiColor3D matColor(1.0f, 1.0f, 1.0f);
 			mat->Get(AI_MATKEY_COLOR_DIFFUSE, matColor);

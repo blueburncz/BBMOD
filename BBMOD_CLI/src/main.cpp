@@ -72,6 +72,8 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.OptimizeMaterials) << "." << std::endl
 		<< "  -pt|--pre-transform=true|false       Pre-transform model and collapse all nodes into one if possible." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.PreTransform) << "." << std::endl
+		<< "  --prefix=true|false                  Prefix output files with model name." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.Prefix) << "." << std::endl
 		<< "  -sr|--sampling-rate=fps              Configure the sampling rate (frames per second) of animations." << std::endl
 		<< "                                       Default is " << config.SamplingRate << "." << std::endl
 		<< "  -zup=true|false                      Convert model from Y-up to Z-up." << std::endl
@@ -200,6 +202,10 @@ int main(int argc, const char* argv[])
 				{
 					config.ConvertToZUp = bValue;
 				}
+				else if (o == "--prefix")
+				{
+					config.Prefix = bValue;
+				}
 				else
 				{
 					PRINT_ERROR("Unrecognized option %s!", argv[i]);
@@ -238,11 +244,7 @@ int main(int argc, const char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	const char* foutArg = (fout) ? fout : fin;
-	std::string foutPath = std::filesystem::path(foutArg).replace_extension(".bbmod").string();
-	fout = foutPath.c_str();
-
-	int retval = ConvertToBBMOD(fin, fout, config);
+	int retval = ConvertToBBMOD(fin, fout ? fout : fin, config);
 
 	if (retval != BBMOD_SUCCESS)
 	{
