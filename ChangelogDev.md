@@ -19,3 +19,4 @@
 * Added shader variations for meshes with vertex colors.
 * Fixed property `BaseOpacityMultiplier` of `BBMOD_BaseMaterial` not being converted from gamma space to linear space in shaders.
 * Fixed docs for arguments of method `DrawDebug` of structs `BBMOD_Collider` and `BBMOD_Ray` (argument `_alpha` was missing).
+* Added new property `ImportMaterials` to struct `BBMOD_OBJImporter`. If it is set to `true`, the importer tries to import materials from `*.mtl` files. Default value is `false`.
