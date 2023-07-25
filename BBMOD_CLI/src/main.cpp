@@ -8,7 +8,7 @@
 
 // TODO: Implement class for argument parsing
 
-const char* gUsage = "Usage: BBMOD.exe [-h|-v] input_file [output_file] [args...]";
+const char* gUsage = "Usage: BBMOD.exe [-h|-v] input_path [output_path] [args...]";
 
 #define PRINT_BOOL(bValue) (bValue ? "true" : "false")
 
@@ -23,8 +23,8 @@ void PrintHelp()
 		<< std::endl
 		<< "  -h                                   Show this help message and exit." << std::endl
 		<< "  -v                                   Show version info and exit." << std::endl
-		<< "  input_file                           Path to the model to convert." << std::endl
-		<< "  output_file                          Where to save the converted model. If not specified, " << std::endl
+		<< "  input_path                           Path to the model or directory of models to convert." << std::endl
+		<< "  output_path                          Where to save the converted model(s). If not specified, " << std::endl
 		<< "                                       then the input file path is used. Extensions .bbmod" << std::endl
 		<< "                                       and .bbanim are added automatically." << std::endl
 		<< "  -as|--apply-scale=true|false         Apply global scaling factor defined in the model file." << std::endl
