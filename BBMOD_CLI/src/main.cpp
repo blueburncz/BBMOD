@@ -77,7 +77,7 @@ void PrintHelp()
 		<< "  -sr|--sampling-rate=fps              Configure the sampling rate (frames per second) of animations." << std::endl
 		<< "                                       Default is " << config.SamplingRate << "." << std::endl
 		<< "  -zup=true|false                      Convert model from Y-up to Z-up." << std::endl
-		<< "                                       Default is " << config.ConvertToZUp << ". (experimental)" << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.ConvertToZUp) << ". (experimental)" << std::endl
 		<< std::endl;
 }
 
@@ -117,26 +117,29 @@ int main(int argc, const char* argv[])
 				bool bValue = (match[2] == "true");
 				uint32_t iValue = (uint32_t)strtol(match[2].str().c_str(), (char**)NULL, 10);
 
-				if (o == "-lh" || o == "--left-handed")
+				if (false)
 				{
-					config.LeftHanded = bValue;
 				}
-				else if (o == "-iw" || o == "--invert-winding")
+				else if (o == "-as" || o == "--apply-scale")
 				{
-					config.InvertWinding = bValue;
+					config.ApplyScale = bValue;
+				}
+				else if (o == "-db" || o == "--disable-bone")
+				{
+					config.DisableBones = bValue;
+				}
+				else if (o == "-dc" || o == "--disable-color")
+				{
+					config.DisableVertexColors = bValue;
 				}
 				else if (o == "-dn" || o == "--disable-normal")
 				{
 					config.DisableNormals = bValue;
 					config.DisableTangentW = bValue;
 				}
-				else if (o == "-fn" || o == "--flip-normal")
+				else if (o == "-dt" || o == "--disable-tangent")
 				{
-					config.FlipNormals = bValue;
-				}
-				else if (o == "-gn" || o == "--gen-normal")
-				{
-					config.GenNormals = iValue;
+					config.DisableTangentW = bValue;
 				}
 				else if (o == "-duv"|| o == "--disable-uv")
 				{
@@ -150,6 +153,14 @@ int main(int argc, const char* argv[])
 				{
 					config.ExportMaterials = bValue;
 				}
+				else if (o == "-ep" || o == "--enable-prefix")
+				{
+					config.Prefix = bValue;
+				}
+				else if (o == "-fn" || o == "--flip-normal")
+				{
+					config.FlipNormals = bValue;
+				}
 				else if (o == "-fuvx" || o == "--flip-uv-x")
 				{
 					config.FlipTextureHorizontally = bValue;
@@ -158,17 +169,17 @@ int main(int argc, const char* argv[])
 				{
 					config.FlipTextureVertically = bValue;
 				}
-				else if (o == "-dc" || o == "--disable-color")
+				else if (o == "-gn" || o == "--gen-normal")
 				{
-					config.DisableVertexColors = bValue;
+					config.GenNormals = iValue;
 				}
-				else if (o == "-dt" || o == "--disable-tangent")
+				else if (o == "-iw" || o == "--invert-winding")
 				{
-					config.DisableTangentW = bValue;
+					config.InvertWinding = bValue;
 				}
-				else if (o == "-db" || o == "--disable-bone")
+				else if (o == "-lh" || o == "--left-handed")
 				{
-					config.DisableBones = bValue;
+					config.LeftHanded = bValue;
 				}
 				else if (o == "-oa" || o == "--optimize-animations")
 				{
@@ -190,10 +201,6 @@ int main(int argc, const char* argv[])
 				{
 					config.PreTransform = bValue;
 				}
-				else if (o == "-as" || o == "--apply-scale")
-				{
-					config.ApplyScale = bValue;
-				}
 				else if (o == "-sr" || o == "--sampling-rate")
 				{
 					config.SamplingRate = (double)((iValue < 1) ? 1 : iValue);
@@ -201,10 +208,6 @@ int main(int argc, const char* argv[])
 				else if (o == "-zup")
 				{
 					config.ConvertToZUp = bValue;
-				}
-				else if (o == "-ep" || o == "--enable-prefix")
-				{
-					config.Prefix = bValue;
 				}
 				else
 				{
