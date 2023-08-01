@@ -72,8 +72,9 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 		if (VertexBuffer)
 		{
 			var _buffer = buffer_create_from_vertex_buffer(VertexBuffer, buffer_fixed, 1);
-			_dest.VertexBuffer = vertex_create_buffer_from_buffer(_buffer,
-				(VertexFormat != undefined) ? VertexFormat.Raw : Model.VertexFormat.Raw);
+			_dest.VertexBuffer = vertex_create_buffer_from_buffer_ext(_buffer,
+				(VertexFormat != undefined) ? VertexFormat.Raw : Model.VertexFormat.Raw,
+				0, vertex_get_number(VertexBuffer));
 			buffer_delete(_buffer);
 		}
 		else
