@@ -32,6 +32,22 @@
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED __bbmod_vformat_default_color_batched()
 
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static
+/// models with vertex colors.
+/// @see BBMOD_VertexFormat
+#macro BBMOD_VFORMAT_DEFAULT_COLOR __bbmod_vformat_default_color()
+
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for animated
+/// models with vertex colors.
+/// @see BBMOD_VertexFormat
+#macro BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED __bbmod_vformat_default_color_animated()
+
+/// @macro {Struct.BBMOD_VertexFormat} The default vertex format for dynamically
+/// batched models with vertex colors.
+/// @see BBMOD_VertexFormat
+/// @see BBMOD_DynamicBatch
+#macro BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED __bbmod_vformat_default_color_batched()
+
 /// @func BBMOD_VertexFormat([_confOrVertices[, _normals[, _uvs[, _colors[, _tangentw[, _bones[, _ids]]]]]]])
 ///
 /// @desc A wrapper of a raw GameMaker vertex format.
@@ -81,59 +97,87 @@ function BBMOD_VertexFormat(
 	_bones=false,
 	_ids=false) constructor
 {
-	var _isConf = is_struct(_confOrVertices);
+	var _vertices = true;
+	var _uvs2 = false;
+
+	if (is_struct(_confOrVertices))
+	{
+		if (variable_struct_exists(_confOrVertices, "Vertices"))
+		{
+			_vertices = _confOrVertices.Vertices;
+		}
+
+		if (variable_struct_exists(_confOrVertices, "Normals"))
+		{
+			_normals = _confOrVertices.Normals;
+		}
+
+		if (variable_struct_exists(_confOrVertices, "TextureCoords"))
+		{
+			_uvs = _confOrVertices.TextureCoords;
+		}
+
+		if (variable_struct_exists(_confOrVertices, "TextureCoords2"))
+		{
+			_uvs2 = _confOrVertices.TextureCoords2;
+		}
+
+		if (variable_struct_exists(_confOrVertices, "Colors"))
+		{
+			_colors = _confOrVertices.Colors;
+		}
+
+		if (variable_struct_exists(_confOrVertices, "TangentW"))
+		{
+			_tangentw = _confOrVertices.TangentW;
+		}
+
+		if (variable_struct_exists(_confOrVertices, "Bones"))
+		{
+			_bones = _confOrVertices.Bones;
+		}
+
+		if (variable_struct_exists(_confOrVertices, "Ids"))
+		{
+			_ids = _confOrVertices.Ids;
+		}
+	}
 
 	/// @var {Bool} If `true` then the vertex format has vertices. Should always
 	/// be `true`!
 	/// @readonly
-	Vertices = _isConf
-		? (_confOrVertices[$ "Vertices"] ?? true)
-		: _confOrVertices;
+	Vertices = _vertices;
 
 	/// @var {Bool} If `true` then the vertex format has normal vectors.
 	/// @readonly
-	Normals = _isConf
-		? (_confOrVertices[$ "Normals"] ?? false)
-		: _normals;
+	Normals = _normals;
 
 	/// @var {Bool} If `true` then the vertex format has texture coordinates.
 	/// @readonly
-	TextureCoords = _isConf
-		? (_confOrVertices[$ "TextureCoords"] ?? false)
-		: _uvs;
+	TextureCoords = _uvs;
 
 	/// @var {Bool} If `true` then the vertex format has a second texture
 	/// coordinates layer.
 	/// @readonly
-	TextureCoords2 = _isConf
-		? (_confOrVertices[$ "TextureCoords2"] ?? false)
-		: false;
+	TextureCoords2 = _uvs2;
 
 	/// @var {Bool} If `true` then the vertex format has vertex colors.
 	/// @readonly
-	Colors = _isConf
-		? (_confOrVertices[$ "Colors"] ?? false)
-		: _colors;
+	Colors = _colors;
 
 	/// @var {Bool} If `true` then the vertex format has tangent vectors and
 	/// bitangent sign.
 	/// @readonly
-	TangentW = _isConf
-		? (_confOrVertices[$ "TangentW"] ?? false)
-		: _tangentw;
+	TangentW = _tangentw;
 
 	/// @var {Bool} If `true` then the vertex format has vertex weights and bone
 	/// indices.
-	Bones = _isConf
-		? (_confOrVertices[$ "Bones"] ?? false)
-		: _bones;
+	Bones = _bones;
 
 	/// @var {Bool} If `true` then the vertex format has ids for dynamic
 	/// batching.
 	/// @readonly
-	Ids = _isConf
-		? (_confOrVertices[$ "Ids"] ?? false)
-		: _ids;
+	Ids = _ids;
 
 	/// @var {Id.VertexFormat} The raw vertex format.
 	/// @readonly
@@ -153,14 +197,14 @@ function BBMOD_VertexFormat(
 	static get_hash = function ()
 	{
 		return (0
-			| (Vertices << 0)
-			| (Normals << 1)
-			| (TextureCoords << 2)
-			| (TextureCoords2 << 3)
-			| (Colors << 4)
-			| (TangentW << 5)
-			| (Bones << 6)
-			| (Ids << 7)
+			| ((Vertices ? 1 : 0) << 0)
+			| ((Normals ? 1 : 0) << 1)
+			| ((TextureCoords ? 1 : 0) << 2)
+			| ((TextureCoords2 ? 1 : 0) << 3)
+			| ((Colors ? 1 : 0) << 4)
+			| ((TangentW ? 1 : 0) << 5)
+			| ((Bones ? 1 : 0) << 6)
+			| ((Ids ? 1 : 0) << 7)
 			);
 	};
 
@@ -174,22 +218,22 @@ function BBMOD_VertexFormat(
 	{
 		gml_pragma("forceinline");
 		return (0
-			+ (buffer_sizeof(buffer_f32) * 3 * Vertices)
-			+ (buffer_sizeof(buffer_f32) * 3 * Normals)
-			+ (buffer_sizeof(buffer_f32) * 2 * TextureCoords)
-			+ (buffer_sizeof(buffer_f32) * 2 * TextureCoords2)
-			+ (buffer_sizeof(buffer_u32) * 1 * Colors)
-			+ (buffer_sizeof(buffer_f32) * 4 * TangentW)
-			+ (buffer_sizeof(buffer_f32) * 8 * Bones)
-			+ (buffer_sizeof(buffer_f32) * 1 * Ids)
+			+ (buffer_sizeof(buffer_f32) * 3 * (Vertices ? 1 : 0))
+			+ (buffer_sizeof(buffer_f32) * 3 * (Normals ? 1 : 0))
+			+ (buffer_sizeof(buffer_f32) * 2 * (TextureCoords ? 1 : 0))
+			+ (buffer_sizeof(buffer_f32) * 2 * (TextureCoords2 ? 1 : 0))
+			+ (buffer_sizeof(buffer_u32) * 1 * (Colors ? 1 : 0))
+			+ (buffer_sizeof(buffer_f32) * 4 * (TangentW ? 1 : 0))
+			+ (buffer_sizeof(buffer_f32) * 8 * (Bones ? 1 : 0))
+			+ (buffer_sizeof(buffer_f32) * 1 * (Ids ? 1 : 0))
 		);
 	};
 
-	var _hash = get_hash();
+	var _key = string(get_hash());
 
-	if (ds_map_exists(__formats, _hash))
+	if (ds_map_exists(__formats, _key))
 	{
-		Raw = __formats[? _hash];
+		Raw = __formats[? _key];
 	}
 	else
 	{
@@ -237,7 +281,7 @@ function BBMOD_VertexFormat(
 		}
 
 		Raw = vertex_format_end();
-		__formats[? _hash] = Raw;
+		__formats[? _key] = Raw;
 	}
 }
 
