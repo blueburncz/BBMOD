@@ -391,26 +391,6 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 				bbmat << "        \"Alpha\": " << matOpacity << "\n";
 				bbmat << "    }";
 
-				// bbmat << "    \"BlendMode\": \"bm_normal\",\n";
-				// bbmat << "    \"Culling\": \"cull_counterclockwise\",\n";
-				// bbmat << "    \"ZWrite\": " << "true" << ",\n";
-				// bbmat << "    \"ZTest\": " << "true" << ",\n";
-				// bbmat << "    \"ZFunc\": \"cmpfunc_lessequal\",\n";
-				// bbmat << "    \"AlphaTest\": " << 1.0f << ",\n";
-				// bbmat << "    \"AlphaBlend\": " << "false" << ",\n";
-				// bbmat << "    \"Filtering\": " << "true" << ",\n";
-				// bbmat << "    \"Mipmapping\": " << "mip_on" << ",\n"; // TODO: __bbmod_mipmapping
-				// bbmat << "    \"Repeat\": " << "false" << ",\n";
-				// bbmat << "    \"TextureOffset\": {\n";
-				// bbmat << "        \"X\": " << 0.0f << ",\n";
-				// bbmat << "        \"Y\": " << 0.0f << "\n";
-				// bbmat << "    },\n";
-				// bbmat << "    \"TextureScale\": {\n";
-				// bbmat << "        \"X\": " << 1.0f << ",\n";
-				// bbmat << "        \"Y\": " << 1.0f << "\n";
-				// bbmat << "    },\n";
-				// bbmat << "    \"ShadowmapBias\": " << 0.0f << ",\n";
-
 				bbmat << ",\n    \"Shaders\": {\n";
 				bbmat << "        \"Shadows\": \"BBMOD_SHADER_DEFAULT_DEPTH\",\n";
 				bbmat << "        \"DepthOnly\": \"BBMOD_SHADER_DEFAULT_DEPTH\",\n";

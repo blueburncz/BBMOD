@@ -7,7 +7,7 @@
 /// @param {Constant.ZFunction} _cmpfunc The cmpfunc to get the name of. Use one of the
 /// `cmpfunc_*` constants.
 ///
-/// @return {String} The name of the cmpfunc.
+/// @return {String} The name of the cmpfunc or an empty string on error.
 function bbmod_cmpfunc_to_string(_cmpfunc)
 {
 	switch (_cmpfunc)

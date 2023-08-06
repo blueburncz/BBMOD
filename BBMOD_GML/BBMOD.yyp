@@ -142,7 +142,7 @@
   "isEcma": false,
   "LibraryEmitters": [],
   "MetaData": {
-    "IDEVersion": "2023.800.0.377",
+    "IDEVersion": "2023.6.0.92",
   },
   "resources": [
     {"id":{"name":"BBMOD_ShDefaultColor","path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},},
@@ -234,6 +234,7 @@
     {"id":{"name":"__bbmod_debug","path":"scripts/__bbmod_debug/__bbmod_debug.yy",},},
     {"id":{"name":"SndGunshot0","path":"sounds/SndGunshot0/SndGunshot0.yy",},},
     {"id":{"name":"OInit","path":"objects/OInit/OInit.yy",},},
+    {"id":{"name":"__bbmod_texfilter","path":"scripts/__bbmod_texfilter/__bbmod_texfilter.yy",},},
     {"id":{"name":"SndFootstep7","path":"sounds/SndFootstep7/SndFootstep7.yy",},},
     {"id":{"name":"BBMOD_Light","path":"scripts/BBMOD_Light/BBMOD_Light.yy",},},
     {"id":{"name":"BBMOD_DefaultMaterial","path":"scripts/BBMOD_DefaultMaterial/BBMOD_DefaultMaterial.yy",},},
@@ -364,6 +365,7 @@
     {"id":{"name":"BBMOD_Mesh","path":"scripts/BBMOD_Mesh/BBMOD_Mesh.yy",},},
     {"id":{"name":"OGameOver","path":"objects/OGameOver/OGameOver.yy",},},
     {"id":{"name":"OCharacter","path":"objects/OCharacter/OCharacter.yy",},},
+    {"id":{"name":"__bbmod_mipmapping","path":"scripts/__bbmod_mipmapping/__bbmod_mipmapping.yy",},},
     {"id":{"name":"BBMOD_SprGizmo","path":"sprites/BBMOD_SprGizmo/BBMOD_SprGizmo.yy",},},
     {"id":{"name":"BBMOD_IDestructible","path":"scripts/BBMOD_IDestructible/BBMOD_IDestructible.yy",},},
     {"id":{"name":"BBMOD_ShDefaultDepthColorAnimated","path":"shaders/BBMOD_ShDefaultDepthColorAnimated/BBMOD_ShDefaultDepthColorAnimated.yy",},},

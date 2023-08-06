@@ -6,7 +6,6 @@
   "option_android_arch_arm64": true,
   "option_android_arch_armv7": true,
   "option_android_arch_x86_64": true,
-  "option_android_attribute_allow_backup": false,
   "option_android_build_tools": "",
   "option_android_compile_sdk": "30",
   "option_android_device_support": 0,

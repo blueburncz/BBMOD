@@ -20,3 +20,7 @@
 * Fixed property `BaseOpacityMultiplier` of `BBMOD_BaseMaterial` not being converted from gamma space to linear space in shaders.
 * Fixed docs for arguments of method `DrawDebug` of structs `BBMOD_Collider` and `BBMOD_Ray` (argument `_alpha` was missing).
 * Added new property `ImportMaterials` to struct `BBMOD_OBJImporter`. If it is set to `true`, the importer tries to import materials from `*.mtl` files. Default value is `false`.
+* Added new function `bbmod_mipenable_to_string`, which converts constants `mip_off`, `mip_on` and `mip_markedonly` to a string.
+* Added new function `bbmod_mipenable_from_string`, which converts strings "mip_off", "mip_on" and "mip_markedonly" to the respective constants.
+* Added new function `bbmod_texfilter_to_string`, which converts constants `tf_point`, `tf_linear` and `tf_anisotropic` to a string.
+* Added new function `bbmod_texfilter_from_string`, which converts strings "tf_point", "tf_linear" and "tf_anisotropic" to the respective constants.
