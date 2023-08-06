@@ -16,7 +16,7 @@
   "date": "2022-01-09T14:30:47.4419817+00:00",
   "description": "",
   "exportToGame": true,
-  "extensionVersion": "3.17.2",
+  "extensionVersion": "3.18.0",
   "files": [
     {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","constants":[],"copyToTargets":32,"filename":"BBMOD_CameraHTML5.js","final":"","functions":[
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"bbmod_html5_pointer_lock","argCount":0,"args":[],"documentation":"","externalName":"bbmod_html5_pointer_lock","help":"bbmod_html5_pointer_lock()","hidden":false,"kind":5,"returnType":2,},
