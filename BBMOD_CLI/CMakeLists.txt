@@ -24,14 +24,14 @@ function(configure_target target)
 
     target_link_libraries(${target} ${LIBASSIMP})
 
-    if(APPLE)
-        # Find shared libraries next to the executable
-        # Source: https://stackoverflow.com/a/69707790
-        # ($ORIGIN doesn't work but . does)
-        set_target_properties(${target} PROPERTIES
-            BUILD_WITH_INSTALL_RPATH FALSE
-            LINK_FLAGS "-Wl,-rpath,./")
-    endif()
+    # if(APPLE)
+    #     # Find shared libraries next to the executable
+    #     # Source: https://stackoverflow.com/a/69707790
+    #     # ($ORIGIN doesn't work but . does)
+    #     set_target_properties(${target} PROPERTIES
+    #         BUILD_WITH_INSTALL_RPATH FALSE
+    #         LINK_FLAGS "-Wl,-rpath,./")
+    # endif()
 endfunction()
 
 # BBMOD CLI
