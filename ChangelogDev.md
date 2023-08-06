@@ -24,3 +24,7 @@
 * Added new function `bbmod_mipenable_from_string`, which converts strings "mip_off", "mip_on" and "mip_markedonly" to the respective constants.
 * Added new function `bbmod_texfilter_to_string`, which converts constants `tf_point`, `tf_linear` and `tf_anisotropic` to a string.
 * Added new function `bbmod_texfilter_from_string`, which converts strings "tf_point", "tf_linear" and "tf_anisotropic" to the respective constants.
+* Added new macro `BBMOD_RELEASE_MAJOR`, which is the major version number of this BBMOD release.
+* Added new macro `BBMOD_RELEASE_MINOR`, which is the minor version number of this BBMOD release.
+* Added new macro `BBMOD_RELEASE_PATCH`, which is the patch version number of this BBMOD release.
+* Added new macro `BBMOD_RELEASE_STRING`, which is the version of this BBMOD release as a string ("major.minor.patch" format).
