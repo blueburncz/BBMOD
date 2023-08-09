@@ -598,7 +598,7 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_render_pass_set(BBMOD_ERenderPass.Shadows);
 
 		__surShadowmap = bbmod_surface_check(
-			__surShadowmap, _light.ShadowmapResolution, _light.ShadowmapResolution);
+			__surShadowmap, _light.ShadowmapResolution, _light.ShadowmapResolution, surface_rgba8unorm, true);
 
 		surface_set_target(__surShadowmap);
 		draw_clear(c_red);
@@ -734,7 +734,7 @@ function BBMOD_BaseRenderer() constructor
 			////////////////////////////////////////////////////////////////////
 			// Instance highlight
 			__surInstanceHighlight = bbmod_surface_check(
-				__surInstanceHighlight, _renderWidth, _renderHeight);
+				__surInstanceHighlight, _renderWidth, _renderHeight, surface_rgba8unorm, true);
 
 			surface_set_target(__surInstanceHighlight);
 			draw_clear_alpha(0, 0.0);

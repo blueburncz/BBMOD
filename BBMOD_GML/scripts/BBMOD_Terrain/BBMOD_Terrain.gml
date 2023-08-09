@@ -1,6 +1,10 @@
 /// @module Terrain
 
-/// @func BBMOD_Terrain([_heightmap[, _subimage]])
+/// @macro {Real}
+/// @private
+#macro __BBMOD_SAVE_TERRAIN_VERSION 0
+
+/// @func BBMOD_Terrain([_heightmap[, _subimage[, _chunkSize]]])
 ///
 /// @implements {BBMOD_IDestructible}
 ///
@@ -12,14 +16,20 @@
 /// later using the terrain's methods.
 /// @param {Real} [_subimage] The sprite subimage to use for the heightmap.
 /// Defaults to 0.
-function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
+/// @param {Real} [_chunkSize] The width and height of a single terrain chunk.
+/// Defaults to 128.
+function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constructor
 {
 	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
 	/// @readonly
 	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
 
-	/// @var {Array<Struct.BBMOD_Material>} Array of five material layers. Use
-	/// `undefined` instead of a material to disable certain layer.
+	/// @var {Struct.BBMOD_Material} The material used when rendering the terrain.
+	/// Default is {@link BBMOD_MATERIAL_TERRAIN}.
+	Material = BBMOD_MATERIAL_TERRAIN;
+
+	/// @var {Array<Struct.BBMOD_TerrainLayer>} Array of five terrain layers.
+	/// Use `undefined` to disable certain layer.
 	Layer = array_create(5, undefined);
 
 	/// @var {Pointer.Texture} A texture that controls visibility of individual
@@ -27,6 +37,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 	/// `undefined`), the red channel of the splatmap controls visibility of the
 	/// second layer, the green channel controls the third layer etc.
 	Splatmap = pointer_null;
+
+	/// @var {Pointer.Texture} A texture to multiply the terrain colors with.
+	Colormap = pointer_null;
 
 	/// @var {Id.DsGrid}
 	/// @private
@@ -90,8 +103,30 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 	/// @var {Id.VertexBuffer} The vertex buffer or `undefined` if the terrain
 	/// was not built yet.
 	/// @readonly
-	/// @see BBMOD_Terrain.build_mesh
+	/// @obsolete This property was replaced with {@link BBMOD_Terrain.Chunks}.
 	VertexBuffer = undefined;
+
+	/// @var {Real} The width and height of a single terrain chunk.
+	ChunkSize = _chunkSize;
+
+	/// @var {Id.DsGrid<Id.VertexBuffer>} Grid of vertex buffers, each representing
+	/// an individual terrain chunk.
+	Chunks = ds_grid_create(1, 1);
+
+	ds_grid_clear(Chunks, undefined);
+
+	/// @var {Id.DsGrid<Bool>} A grid of dirty state of individual terrain chunks.
+	/// When a chunk is marked as dirty, it means its vertex buffer should be rebuilt.
+	/// When a terrain is first created, all its chunks are marked as dirty.
+	ChunksDirty = ds_grid_create(1, 1);
+
+	ds_grid_clear(ChunksDirty, true);
+
+	/// @var {Real} The radius (in chunk size) within which terrain chunks are visible
+	/// around the camera. Zero means only the chunk that the camera is on is visible.
+	/// Use `infinity` to make all chunks visible. Default value is `infinity`.
+	/// @see bbmod_camera_set_position
+	ChunkRadius = infinity;
 
 	/// @func in_bounds(_x, _y)
 	///
@@ -190,6 +225,27 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 		}
 
 		buffer_delete(_buffer);
+
+		for (var i = ds_grid_width(Chunks) - 1; i >= 0; --i)
+		{
+			for (var j = ds_grid_height(Chunks) - 1; j >= 0; --j)
+			{
+				var _chunk = Chunks[# i, j];
+				if (_chunk != undefined)
+				{
+					vertex_delete_buffer(_chunk);
+				}
+			}
+		}
+
+		var _chunksX = max(ceil(_spriteWidth / ChunkSize), 1);
+		var _chunksY = max(ceil(_spriteHeight / ChunkSize), 1);
+
+		ds_grid_resize(Chunks, _chunksX, _chunksY);
+		ds_grid_clear(Chunks, undefined);
+
+		ds_grid_resize(ChunksDirty, _chunksX, _chunksY);
+		ds_grid_clear(ChunksDirty, true);
 
 		return self;
 	};
@@ -491,27 +547,37 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 		return self;
 	};
 
-	/// @func build_mesh()
+	/// @func build_chunk(_chunkI, _chunkJ)
 	///
-	/// @desc Rebuilds the terrain's mesh.
+	/// @desc Force-rebuilds a chunk mesh even if it's not dirty and clears
+	/// its dirty state.
+	///
+	/// @param {Real} _chunkI The X index of the chunk.
+	/// @param {Real} _chunkJ The Y index of the chunk.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static build_mesh = function ()
+	static build_chunk = function (_chunkI, _chunkJ)
 	{
-		if (VertexBuffer != undefined)
+		var _chunk = Chunks[# _chunkI, _chunkJ];
+		if (_chunk != undefined)
 		{
-			vertex_delete_buffer(VertexBuffer);
+			vertex_delete_buffer(_chunk);
 		}
+
 		var _height = __height;
-		var _rows = ds_grid_width(_height);
-		var _cols = ds_grid_height(_height);
+		var _terrainWidth = ds_grid_width(_height);
+		var _terrainHeight = ds_grid_height(_height);
+		var _rows = min(_terrainWidth - 1 - _chunkI * ChunkSize, ChunkSize);
+		var _cols = min(_terrainHeight - 1 - _chunkJ * ChunkSize, ChunkSize);
+	
 		var _vbuffer = vertex_create_buffer();
 		vertex_begin(_vbuffer, VertexFormat.Raw);
-		var _i = 0;
-		repeat (_rows - 1)
+
+		var _i = _chunkI * ChunkSize;
+		repeat (_rows)
 		{
-			var _j = 0;
-			repeat (_cols - 1)
+			var _j = _chunkJ * ChunkSize;
+			repeat (_cols)
 			{
 				var _z1 = _height[# _i, _j];
 				var _z2 = _height[# _i + 1, _j];
@@ -527,14 +593,14 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 				var _x4 = _i;
 				var _y4 = _j + 1;
 
-				var _u1 = _i / _rows;
-				var _v1 = _j / _cols;
-				var _u2 = (_i + 1) / _rows;
-				var _v2 = _j / _cols;
-				var _u3 = (_i + 1) / _rows;
-				var _v3 = (_j + 1) / _cols;
-				var _u4 = _i / _rows;
-				var _v4 = (_j + 1) / _cols;
+				var _u1 = _i / _terrainWidth;
+				var _v1 = _j / _terrainHeight;
+				var _u2 = (_i + 1) / _terrainWidth;
+				var _v2 = _j / _terrainHeight;
+				var _u3 = (_i + 1) / _terrainWidth;
+				var _v3 = (_j + 1) / _terrainHeight;
+				var _u4 = _i / _terrainWidth;
+				var _v4 = (_j + 1) / _terrainHeight;
 
 				var _n1X = __normalSmoothX[# _i, _j];
 				var _n1Y = __normalSmoothY[# _i, _j];
@@ -600,9 +666,40 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 			}
 			++_i;
 		}
+
 		vertex_end(_vbuffer);
 		vertex_freeze(_vbuffer);
-		VertexBuffer = _vbuffer;
+		Chunks[# _chunkI, _chunkJ] = _vbuffer;
+		ChunksDirty[# _chunkI, _chunkJ] = false;
+
+		return self;
+	};
+
+	/// @func build_mesh()
+	///
+	/// @desc Rebuilds all dirty chunks of the terrain mesh.
+	///
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
+	static build_mesh = function ()
+	{
+		var _chunksX = ds_grid_width(Chunks);
+		var _chunksY = ds_grid_height(Chunks);
+
+		var i = 0;
+		repeat (_chunksX)
+		{
+			var j = 0;
+			repeat (_chunksY)
+			{
+				if (ChunksDirty[# i, j])
+				{
+					build_chunk(i, j);
+				}
+				++j;
+			}
+			++i;
+		}
+
 		return self;
 	};
 
@@ -616,25 +713,46 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
 		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
 		matrix_set(matrix_world, _matrix);
-		var i = 0;
-		repeat (5)
+
+		var _chunksX = ds_grid_width(Chunks);
+		var _chunksY = ds_grid_height(Chunks);
+
+		var _i = 0;
+		repeat (_chunksX)
 		{
-			var _mat = Layer[i];
-			if (_mat != undefined && _mat.apply(VertexFormat))
+			var _j = 0;
+			repeat (_chunksY)
 			{
-				var _shaderCurrent = shader_current();
-				var _uSplatmap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_SPLATMAP);
-				var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_SPLATMAP_INDEX);
-				var _uTextureScale = shader_get_uniform(_shaderCurrent, BBMOD_U_TEXTURE_SCALE);
-				var _uNormalMatrix = shader_get_uniform(_shaderCurrent, BBMOD_U_NORMAL_MATRIX);
-				texture_set_stage(_uSplatmap, Splatmap);
-				shader_set_uniform_i(_uSplatmapIndex, i - 1);
-				shader_set_uniform_f(_uTextureScale, TextureRepeat.X, TextureRepeat.Y);
-				shader_set_uniform_matrix_array(_uNormalMatrix, _normalMatrix);
-				vertex_submit(VertexBuffer, pr_trianglelist, _mat.BaseOpacity);
+				var _chunk = Chunks[# _i, _j];
+				if (_chunk != undefined)
+				{
+					var _l = 0;
+					repeat (5)
+					{
+						var _mat = Layer[_l];
+						if (_mat != undefined && _mat.apply(VertexFormat))
+						{
+							var _shaderCurrent = shader_current();
+							var _uSplatmap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_SPLATMAP);
+							var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_SPLATMAP_INDEX);
+							var _uColormap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_COLORMAP);
+							var _uTextureScale = shader_get_uniform(_shaderCurrent, BBMOD_U_TEXTURE_SCALE);
+							var _uNormalMatrix = shader_get_uniform(_shaderCurrent, BBMOD_U_NORMAL_MATRIX);
+							texture_set_stage(_uSplatmap, Splatmap);
+							shader_set_uniform_i(_uSplatmapIndex, _l - 1);
+							texture_set_stage(_uColormap, Colormap);
+							shader_set_uniform_f(_uTextureScale, TextureRepeat.X, TextureRepeat.Y);
+							shader_set_uniform_matrix_array(_uNormalMatrix, _normalMatrix);
+							vertex_submit(_chunk, pr_trianglelist, _mat.BaseOpacity);
+						}
+						++_l;
+					}
+				}
+				++_j;
 			}
-			++i;
+			++_i;
 		}
+
 		return self;
 	};
 
@@ -647,39 +765,87 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 	{
 		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
 		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
-		var i = 0;
+		var _chunksX = ds_grid_width(Chunks);
+		var _chunksY = ds_grid_height(Chunks);
+
+		var _chunkFromX, _chunkFromY, _chunkToX, _chunkToY;
+
+		if (ChunkRadius == infinity)
+		{
+			_chunkFromX = 0;
+			_chunkFromY = 0;
+			_chunkToX = _chunksX;
+			_chunkToY = _chunksY;
+		}
+		else
+		{
+			var _camPos = bbmod_camera_get_position();
+			var _camI = clamp(((_camPos.X - Position.X) / Scale.X) / ChunkSize, 0, _chunksX);
+			var _camJ = clamp(((_camPos.Y - Position.Y) / Scale.Y) / ChunkSize, 0, _chunksY);
+			_chunkFromX = clamp(floor(_camI - ChunkRadius), 0, _chunksX);
+			_chunkFromY = clamp(floor(_camJ - ChunkRadius), 0, _chunksY);
+			_chunkToX = clamp(ceil(_camI + ChunkRadius), 0, _chunksX);
+			_chunkToY = clamp(ceil(_camJ + ChunkRadius), 0, _chunksY);
+		}
+
+		RenderQueue
+			.ApplyMaterial(Material, VertexFormat)
+			.BeginConditionalBlock()
+			.SetSampler(BBMOD_U_SPLATMAP, Splatmap)
+			.SetSampler(BBMOD_U_COLORMAP, Colormap)
+			.SetUniformFloat2(BBMOD_U_TEXTURE_SCALE, TextureRepeat.X, TextureRepeat.Y)
+			.SetUniformMatrixArray(BBMOD_U_NORMAL_MATRIX, _normalMatrix)
+			.SetWorldMatrix(_matrix);
+
+		var _l = 0;
 		repeat (5)
 		{
-			var _mat = Layer[i];
-			if (_mat != undefined)
+			var _layer = Layer[_l];
+			if (_layer != undefined)
 			{
-				RenderQueue
-					.ApplyMaterial(_mat, VertexFormat, (i == 0) ? ~0 : ((1 << BBMOD_ERenderPass.Forward) | (1 << BBMOD_ERenderPass.ReflectionCapture)))
-					.BeginConditionalBlock();
-
-				if (i == 0)
+				if (_l == 0)
 				{
-					RenderQueue.SetGpuBlendEnable(false);
+					RenderQueue
+						.SetGpuBlendEnable(false)
+						.SetGpuColorWriteEnable(true, true, true, true);
 				}
 				else
 				{
-					RenderQueue.SetGpuColorWriteEnable(true, true, true, false);
+					RenderQueue
+						.SetGpuBlendEnable(true)
+						.SetGpuColorWriteEnable(true, true, true, false);
 				}
 
 				RenderQueue
-					.SetGpuZWriteEnable(i == 0)
-					.SetGpuZFunc((i == 0) ? cmpfunc_lessequal : cmpfunc_equal)
-					.SetSampler(BBMOD_U_SPLATMAP, Splatmap)
-					.SetUniformInt(BBMOD_U_SPLATMAP_INDEX, i - 1)
-					.SetUniformFloat2(BBMOD_U_TEXTURE_SCALE, TextureRepeat.X, TextureRepeat.Y)
-					.SetUniformMatrixArray(BBMOD_U_NORMAL_MATRIX, _normalMatrix)
-					.SetWorldMatrix(_matrix)
-					.SubmitVertexBuffer(VertexBuffer, pr_trianglelist, _mat.BaseOpacity)
-					.ResetMaterial()
-					.EndConditionalBlock();
+					.SetGpuZWriteEnable(_l == 0)
+					.SetGpuZFunc((_l == 0) ? cmpfunc_lessequal : cmpfunc_equal)
+					.SetUniformInt(BBMOD_U_SPLATMAP_INDEX, _l - 1)
+					.SetSampler(BBMOD_U_NORMAL_W, _layer[$ "NormalRoughness"] ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)))
+					.SetUniformFloat(BBMOD_U_IS_ROUGHNESS, (_layer[$ "NormalRoughness"] != undefined) ? 1.0 : 0.0);
+
+				var _i = _chunkFromX;
+				repeat (_chunkToX - _chunkFromX)
+				{
+					var _j = _chunkFromY;
+					repeat (_chunkToY - _chunkFromY)
+					{
+						var _chunk = Chunks[# _i, _j];
+						if (_chunk != undefined)
+						{
+							RenderQueue.SubmitVertexBuffer(_chunk, pr_trianglelist, _layer.BaseOpacity);
+						}
+						++_j;
+					}
+					++_i;
+				}
 			}
-			++i;
+			++_l;
 		}
+
+		RenderQueue
+			.ResetMaterial()
+			.EndConditionalBlock();
+
 		return self;
 	};
 
@@ -693,10 +859,22 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0) constructor
 		ds_grid_destroy(__normalSmoothX);
 		ds_grid_destroy(__normalSmoothY);
 		ds_grid_destroy(__normalSmoothZ);
-		if (VertexBuffer != undefined)
+
+		for (var i = ds_grid_width(Chunks) - 1; i >= 0; --i)
 		{
-			vertex_delete_buffer(VertexBuffer);
+			for (var j = ds_grid_height(Chunks) - 1; j >= 0; --j)
+			{
+				var _chunk = Chunks[# i, j];
+				if (_chunk != undefined)
+				{
+					vertex_delete_buffer(_chunk);
+				}
+			}
 		}
+
+		ds_grid_destroy(Chunks);
+		ds_grid_destroy(ChunksDirty);
+
 		return undefined;
 	};
 

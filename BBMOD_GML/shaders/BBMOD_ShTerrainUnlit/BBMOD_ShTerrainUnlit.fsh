@@ -102,6 +102,8 @@ uniform vec4 bbmod_LightDirectionalColor;
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex;
+// Colormap texture
+uniform sampler2D bbmod_Colormap;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -301,6 +303,9 @@ void main()
 			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
 			: splatmap.a)));
 	}
+
+	// Colormap
+	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
 
 	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;

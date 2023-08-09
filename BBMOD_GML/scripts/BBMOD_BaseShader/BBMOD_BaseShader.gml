@@ -12,8 +12,6 @@
 /// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
 /// by the shader.
-///
-/// @see BBMOD_VertexFormat
 function BBMOD_BaseShader(_shader, _vertexFormat)
 	: BBMOD_Shader(_shader, _vertexFormat) constructor
 {

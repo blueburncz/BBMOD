@@ -313,6 +313,10 @@
 /// holds the shadowmap texture.
 #macro BBMOD_U_SHADOWMAP "bbmod_Shadowmap"
 
+/// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
+/// holds the colormap texture.
+#macro BBMOD_U_COLORMAP "bbmod_Colormap"
+
 /// @macro {String} Name of a fragment shader uniform of type `vec2` that holds
 /// the texel size of a shadowmap texture.
 #macro BBMOD_U_SHADOWMAP_TEXEL "bbmod_ShadowmapTexel"

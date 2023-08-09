@@ -128,6 +128,8 @@ uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex;
+// Colormap texture
+uniform sampler2D bbmod_Colormap;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
@@ -790,6 +792,9 @@ void main()
 			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
 			: splatmap.a)));
 	}
+
+	// Colormap
+	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
 
 	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
