@@ -105,7 +105,7 @@ void main()
 
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;
-	v_vColor = in_Color;
+	v_vColor = vec4(xGammaToLinear(in_Color.rgb), in_Color.a);
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 	v_vEye.xyz = normalize(-vec3(

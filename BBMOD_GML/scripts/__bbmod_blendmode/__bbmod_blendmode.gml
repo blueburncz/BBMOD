@@ -7,7 +7,7 @@
 /// @param {Constant.BlendMode} _blendmode The basic blend mode to get the name of.
 /// Use one of constants `bm_add`, `bm_max`, `bm_normal` or `bm_subtract`.
 ///
-/// @return {String} The name of the basic blend mode.
+/// @return {String} The name of the basic blend mode or an empty string on error.
 function bbmod_blendmode_to_string(_blendmode)
 {
 	switch (_blendmode)

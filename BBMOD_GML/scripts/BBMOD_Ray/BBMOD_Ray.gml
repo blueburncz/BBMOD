@@ -41,7 +41,7 @@ function BBMOD_Ray(_origin, _direction) constructor
 		return _collider.Raycast(self, _result);
 	};
 
-	/// @func DrawDebug([_length[, _color]])
+	/// @func DrawDebug([_length[, _color[, _alpha]]])
 	///
 	/// @desc Draws a debug preview of the ray.
 	///

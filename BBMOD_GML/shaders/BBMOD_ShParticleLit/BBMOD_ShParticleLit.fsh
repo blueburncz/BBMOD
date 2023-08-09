@@ -816,7 +816,7 @@ void main()
 	material.Base *= v_vColor.rgb;
 	material.Opacity *= v_vColor.a;
 
-	material.Base *= bbmod_BaseOpacityMultiplier.rgb;
+	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 
 	if (material.Opacity < bbmod_AlphaTest)

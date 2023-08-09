@@ -20,5 +20,5 @@
   "option_linux_start_fullscreen": false,
   "option_linux_sync": false,
   "option_linux_texture_page": "2048x2048",
-  "option_linux_version": "3.17.2",
+  "option_linux_version": "3.18.0",
 }

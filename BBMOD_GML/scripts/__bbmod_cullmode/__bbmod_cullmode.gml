@@ -7,7 +7,7 @@
 /// @param {Constant.CullMode} _cullmode The cull mode to get the name of. Use one of the
 /// `cull_*` constants.
 ///
-/// @return {String} The name of the cull mode.
+/// @return {String} The name of the cull mode or an empty string on error.
 function bbmod_cullmode_to_string(_cullmode)
 {
 	switch (_cullmode)

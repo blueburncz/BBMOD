@@ -415,7 +415,10 @@ function BBMOD_Material(_shader=undefined)
 
 		if (variable_struct_exists(_json, "Mipmapping"))
 		{
-			Mipmapping = _json.Mipmapping;
+			var _mipmapping = _json.Mipmapping;
+			Mipmapping = is_string(_mipmapping)
+				? bbmod_mipenable_from_string(_mipmapping)
+				: _mipmapping;
 		}
 
 		if (variable_struct_exists(_json, "MipBias"))
@@ -425,7 +428,10 @@ function BBMOD_Material(_shader=undefined)
 
 		if (variable_struct_exists(_json, "MipFilter"))
 		{
-			MipFilter = _json.MipFilter;
+			var _mipFilter = _json.MipFilter;
+			MipFilter = is_string(_mipFilter)
+				? bbmod_texfilter_from_string(_mipFilter)
+				: _mipFilter;
 		}
 
 		if (variable_struct_exists(_json, "MipMin"))

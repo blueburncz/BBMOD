@@ -269,6 +269,39 @@ GM_EXPORT gmreal_t bbmod_dll_set_sampling_rate(gmreal_t fps)
 	return BBMOD_SUCCESS;
 }
 
+GM_EXPORT gmreal_t bbmod_dll_get_export_materials()
+{
+	return (gmreal_t)gConfig.ExportMaterials;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_export_materials(gmreal_t enable)
+{
+	gConfig.ExportMaterials = (bool)enable;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_zup()
+{
+	return (gmreal_t)gConfig.ConvertToZUp;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_zup(gmreal_t enable)
+{
+	gConfig.ConvertToZUp = (bool)enable;
+	return BBMOD_SUCCESS;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_get_enable_prefix()
+{
+	return (gmreal_t)gConfig.Prefix;
+}
+
+GM_EXPORT gmreal_t bbmod_dll_set_enable_prefix(gmreal_t enable)
+{
+	gConfig.Prefix = (bool)enable;
+	return BBMOD_SUCCESS;
+}
+
 GM_EXPORT gmreal_t bbmod_dll_convert(gmstring_t fin, gmstring_t fout)
 {
 	return ConvertToBBMOD(fin, fout, gConfig);

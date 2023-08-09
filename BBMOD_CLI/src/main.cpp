@@ -8,7 +8,7 @@
 
 // TODO: Implement class for argument parsing
 
-const char* gUsage = "Usage: BBMOD.exe [-h|-v] input_file [output_file] [args...]";
+const char* gUsage = "Usage: BBMOD.exe [-h|-v] input_path [output_path] [args...]";
 
 #define PRINT_BOOL(bValue) (bValue ? "true" : "false")
 
@@ -23,8 +23,8 @@ void PrintHelp()
 		<< std::endl
 		<< "  -h                                   Show this help message and exit." << std::endl
 		<< "  -v                                   Show version info and exit." << std::endl
-		<< "  input_file                           Path to the model to convert." << std::endl
-		<< "  output_file                          Where to save the converted model. If not specified, " << std::endl
+		<< "  input_path                           Path to the model or directory of models to convert." << std::endl
+		<< "  output_path                          Where to save the converted model(s). If not specified, " << std::endl
 		<< "                                       then the input file path is used. Extensions .bbmod" << std::endl
 		<< "                                       and .bbanim are added automatically." << std::endl
 		<< "  -as|--apply-scale=true|false         Apply global scaling factor defined in the model file." << std::endl
@@ -42,6 +42,10 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.DisableTextureCoords) << "." << std::endl
 		<< "  -duv2|--disable-uv2=true|false       Enable/disable saving of second texture coordinate layer." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.DisableTextureCoords2) << "." << std::endl
+		<< "  -em|--export-materials=true|false    Enable/disable export of materials to .bbmat files." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.ExportMaterials) << ". (experimental)" << std::endl
+		<< "  -ep|--enable-prefix=true|false       Prefix output files with model name." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.Prefix) << "." << std::endl
 		<< "  -fn|--flip-normal=true|false         Enable/disable flipping normal vectors." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.FlipNormals) << "." << std::endl
 		<< "  -fuvx|--flip-uv-x=true|false         Enable/disable flipping texture coordinates horizontally." << std::endl
@@ -72,6 +76,8 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.PreTransform) << "." << std::endl
 		<< "  -sr|--sampling-rate=fps              Configure the sampling rate (frames per second) of animations." << std::endl
 		<< "                                       Default is " << config.SamplingRate << "." << std::endl
+		<< "  -zup=true|false                      Convert model from Y-up to Z-up." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.ConvertToZUp) << ". (experimental)" << std::endl
 		<< std::endl;
 }
 
@@ -111,26 +117,29 @@ int main(int argc, const char* argv[])
 				bool bValue = (match[2] == "true");
 				uint32_t iValue = (uint32_t)strtol(match[2].str().c_str(), (char**)NULL, 10);
 
-				if (o == "-lh" || o == "--left-handed")
+				if (false)
 				{
-					config.LeftHanded = bValue;
 				}
-				else if (o == "-iw" || o == "--invert-winding")
+				else if (o == "-as" || o == "--apply-scale")
 				{
-					config.InvertWinding = bValue;
+					config.ApplyScale = bValue;
+				}
+				else if (o == "-db" || o == "--disable-bone")
+				{
+					config.DisableBones = bValue;
+				}
+				else if (o == "-dc" || o == "--disable-color")
+				{
+					config.DisableVertexColors = bValue;
 				}
 				else if (o == "-dn" || o == "--disable-normal")
 				{
 					config.DisableNormals = bValue;
 					config.DisableTangentW = bValue;
 				}
-				else if (o == "-fn" || o == "--flip-normal")
+				else if (o == "-dt" || o == "--disable-tangent")
 				{
-					config.FlipNormals = bValue;
-				}
-				else if (o == "-gn" || o == "--gen-normal")
-				{
-					config.GenNormals = iValue;
+					config.DisableTangentW = bValue;
 				}
 				else if (o == "-duv"|| o == "--disable-uv")
 				{
@@ -140,6 +149,18 @@ int main(int argc, const char* argv[])
 				{
 					config.DisableTextureCoords2 = bValue;
 				}
+				else if (o == "-em" || o == "--export-materials")
+				{
+					config.ExportMaterials = bValue;
+				}
+				else if (o == "-ep" || o == "--enable-prefix")
+				{
+					config.Prefix = bValue;
+				}
+				else if (o == "-fn" || o == "--flip-normal")
+				{
+					config.FlipNormals = bValue;
+				}
 				else if (o == "-fuvx" || o == "--flip-uv-x")
 				{
 					config.FlipTextureHorizontally = bValue;
@@ -148,17 +169,17 @@ int main(int argc, const char* argv[])
 				{
 					config.FlipTextureVertically = bValue;
 				}
-				else if (o == "-dc" || o == "--disable-color")
+				else if (o == "-gn" || o == "--gen-normal")
 				{
-					config.DisableVertexColors = bValue;
+					config.GenNormals = iValue;
 				}
-				else if (o == "-dt" || o == "--disable-tangent")
+				else if (o == "-iw" || o == "--invert-winding")
 				{
-					config.DisableTangentW = bValue;
+					config.InvertWinding = bValue;
 				}
-				else if (o == "-db" || o == "--disable-bone")
+				else if (o == "-lh" || o == "--left-handed")
 				{
-					config.DisableBones = bValue;
+					config.LeftHanded = bValue;
 				}
 				else if (o == "-oa" || o == "--optimize-animations")
 				{
@@ -180,13 +201,13 @@ int main(int argc, const char* argv[])
 				{
 					config.PreTransform = bValue;
 				}
-				else if (o == "-as" || o == "--apply-scale")
-				{
-					config.ApplyScale = bValue;
-				}
 				else if (o == "-sr" || o == "--sampling-rate")
 				{
 					config.SamplingRate = (double)((iValue < 1) ? 1 : iValue);
+				}
+				else if (o == "-zup")
+				{
+					config.ConvertToZUp = bValue;
 				}
 				else
 				{
@@ -226,11 +247,7 @@ int main(int argc, const char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	const char* foutArg = (fout) ? fout : fin;
-	std::string foutPath = std::filesystem::path(foutArg).replace_extension(".bbmod").string();
-	fout = foutPath.c_str();
-
-	int retval = ConvertToBBMOD(fin, fout, config);
+	int retval = ConvertToBBMOD(fin, fout ? fout : fin, config);
 
 	if (retval != BBMOD_SUCCESS)
 	{

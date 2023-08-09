@@ -29,6 +29,6 @@
   "option_windows_steam_use_alternative_launcher": false,
   "option_windows_texture_page": "2048x2048",
   "option_windows_use_splash": false,
-  "option_windows_version": "3.17.2.0",
+  "option_windows_version": "3.18.0.0",
   "option_windows_vsync": false,
 }

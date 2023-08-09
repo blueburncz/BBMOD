@@ -109,7 +109,7 @@ SModel* SModel::FromAssimp(const aiScene* scene, const SConfig& config)
 	for (uint32_t i = 0; i < scene->mNumMeshes; ++i)
 	{
 		aiMesh* meshCurrent = scene->mMeshes[i];
-		model->Meshes.push_back(SMesh::FromAssimp(meshCurrent, model, config));
+		model->Meshes.push_back(SMesh::FromAssimp(scene, meshCurrent, model, config));
 	}
 
 	// Nodes
