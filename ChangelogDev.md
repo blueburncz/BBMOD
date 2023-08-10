@@ -22,3 +22,9 @@
 * Shaders `BBMOD_SHADER_TERRAIN` and `BBMOD_SHADER_TERRAIN_UNLIT` are now constructed from `BBMOD_TerrainShader`.
 * Added new struct `BBMOD_TerrainMaterial`, which is a material that can be used when rendering terrain.
 * Materials `BBMOD_MATERIAL_TERRAIN` and `BBMOD_MATERIAL_TERRAIN_UNLIT` are now constructed from `BBMOD_TerrainMaterial`.
+
+* Added new struct `BBMOD_TerrainEditor`, which is a terrain editor.
+* Added new enum `BBMOD_ETerrainEditMode`, which is an enumeration of terrain edit modes.
+* Added new property `TerrainEditor` to struct `BBMOD_BaseRenderer`, which is a terrain editor. Default is `undefined`.
+
+* Fixed method `screen_point_to_vec3` of `BBMOD_BaseCamera` normalizing the resulting vector when it should not be normalized.

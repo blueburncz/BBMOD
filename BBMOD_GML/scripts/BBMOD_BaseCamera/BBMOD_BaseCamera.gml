@@ -332,7 +332,7 @@ function BBMOD_BaseCamera() constructor
 		}
 		var _ray = _forward.Add(_up.Scale(_scaleUp).Add(
 			_right.Scale((_screenX / _screenWidth) * 2.0 - 1.0)));
-		return _ray.Normalize();
+		return _ray;
 	};
 
 	/// @func apply()

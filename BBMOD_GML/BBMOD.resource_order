@@ -221,6 +221,7 @@
     {"name":"BBMOD_ShDefaultLightmap","order":4,"path":"shaders/BBMOD_ShDefaultLightmap/BBMOD_ShDefaultLightmap.yy",},
     {"name":"bbmod_mrt_is_supported","order":12,"path":"scripts/bbmod_mrt_is_supported/bbmod_mrt_is_supported.yy",},
     {"name":"BBMOD_Collider","order":2,"path":"scripts/BBMOD_Collider/BBMOD_Collider.yy",},
+    {"name":"BBMOD_TerrainEditor","order":8,"path":"scripts/BBMOD_TerrainEditor/BBMOD_TerrainEditor.yy",},
     {"name":"SndFootstep2","order":2,"path":"sounds/SndFootstep2/SndFootstep2.yy",},
     {"name":"BBMOD_Quaternion","order":1,"path":"scripts/BBMOD_Quaternion/BBMOD_Quaternion.yy",},
     {"name":"BBMOD_ShDefaultUnlitAnimated","order":12,"path":"shaders/BBMOD_ShDefaultUnlitAnimated/BBMOD_ShDefaultUnlitAnimated.yy",},

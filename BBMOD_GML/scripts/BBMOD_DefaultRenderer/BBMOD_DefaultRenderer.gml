@@ -130,6 +130,7 @@ function BBMOD_DefaultRenderer()
 		// Edit mode
 		//
 		__render_gizmo_and_instance_ids();
+		__render_terrain_depth();
 
 		////////////////////////////////////////////////////////////////////////
 		//

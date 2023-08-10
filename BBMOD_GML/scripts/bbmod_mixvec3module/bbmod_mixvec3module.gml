@@ -11,7 +11,7 @@
 /// @param {Real} [_property] The first of the three consecutive properties. Use
 /// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec3} [_from] The value to mix from. Defaults to
-/// `(0.0, 0.0, 0.0)`.
+/// `(0, 0, 0)`.
 /// @param {Struct.BBMOD_Vec3} [_to] The value to mix to. Defaults to `_from`.
 /// @param {Bool} [_separate] If `true`, then each component is mixed
 /// independently on other components, otherwise all components are mixed using
@@ -30,7 +30,7 @@ function BBMOD_MixVec3Module(
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec3} The initial value to mix from. Default value is
-	/// `(0.0, 0.0, 0.0)`.
+	/// `(0, 0, 0)`.
 	From = _from;
 
 	/// @var {Struct.BBMOD_Vec3} The initial value to mix to. Default value is

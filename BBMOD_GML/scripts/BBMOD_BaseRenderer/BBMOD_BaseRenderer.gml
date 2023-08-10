@@ -78,6 +78,13 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	__surSelect = -1;
 
+	/// @var {Struct.BBMOD_TerrainEditor} A terrain editor or `undefined` (default).
+	TerrainEditor = undefined;
+
+	/// @var {Id.Surface} A surface with terrain depth. Required for terrain editing.
+	/// @private
+	__surTerrainDepth = -1;
+
 	/// @var {Array<Struct.BBMOD_IRenderable>} An array of renderable objects
 	/// and structs. These are automatically rendered in
 	/// {@link BBMOD_BaseRenderer.render}.
@@ -366,9 +373,37 @@ function BBMOD_BaseRenderer() constructor
 			bbmod_surface_check(application_surface, _surfaceWidth, _surfaceHeight, surface_rgba8unorm, true);
 		}
 
-		if (Gizmo && EditMode)
+		var _camera = global.__bbmodCameraCurrent;
+
+		if (_camera
+			&& TerrainEditor
+			&& TerrainEditor.Enabled)
 		{
-			Gizmo.update(delta_time);
+			if (surface_exists(__surTerrainDepth))
+			{
+				var _mouseX = window_mouse_get_x();
+				var _mouseY = window_mouse_get_y();
+				var _pixel = surface_getpixel(__surTerrainDepth, _mouseX, _mouseY);
+
+				static _decodeFloat24 = function (_pixel)
+				{
+					var _inv255 = 1.0 / 255.0;
+					return ((color_get_red(_pixel) * _inv255)
+						+ (color_get_green(_pixel) * _inv255 * _inv255)
+						+ (color_get_blue(_pixel) * _inv255 * _inv255 * _inv255));
+				};
+
+				var _terrainDepth = _decodeFloat24(_pixel) * _camera.ZFar;
+
+				_camera.Position
+					.Add(_camera.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), self).Scale(_terrainDepth))
+					.Copy(TerrainEditor.Position);
+			}
+			TerrainEditor.update(_deltaTime);
+		}
+		else if (Gizmo && EditMode)
+		{
+			Gizmo.update(_deltaTime);
 		}
 
 		return self;
@@ -385,8 +420,6 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static __render_reflection_probes = function ()
 	{
-		gml_pragma("forceinline");
-
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
 
@@ -536,8 +569,6 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static __render_shadowmap = function ()
 	{
-		gml_pragma("forceinline");
-
 		static _renderQueues = bbmod_render_queues_get();
 
 		var _shadowCaster = undefined;
@@ -772,6 +803,50 @@ function BBMOD_BaseRenderer() constructor
 		}
 	};
 
+	/// @func __render_terrain_depth()
+	///
+	/// @desc Renders terrain depth into a dedicated surface.
+	///
+	/// @private
+	static __render_terrain_depth = function ()
+	{
+		static _renderQueues = bbmod_render_queues_get();
+
+		if (!TerrainEditor || !TerrainEditor.Enabled)
+		{
+			if (surface_exists(__surTerrainDepth))
+			{
+				surface_free(__surTerrainDepth);
+				__surTerrainDepth = -1;
+			}
+			return;
+		}
+
+		var _view = matrix_get(matrix_view);
+		var _projection = matrix_get(matrix_projection);
+		var _width = get_width();
+		var _height = get_height();
+
+		bbmod_render_pass_set(BBMOD_ERenderPass.TerrainDepth);
+
+		__surTerrainDepth = bbmod_surface_check(
+			__surTerrainDepth, _width, _height, surface_rgba8unorm, true);
+
+		surface_set_target(__surTerrainDepth);
+		draw_clear(c_red);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
+		bbmod_shader_set_global_f(BBMOD_U_ZFAR, bbmod_camera_get_zfar());
+
+		var _rqi = 0;
+		repeat (array_length(_renderQueues))
+		{
+			_renderQueues[_rqi++].submit();
+		}
+
+		surface_reset_target();
+	};
+
 	/// @func render(_clearQueues=true)
 	///
 	/// @desc Renders all added [renderables](./BBMOD_BaseRenderer.Renderables.html)
@@ -813,6 +888,7 @@ function BBMOD_BaseRenderer() constructor
 		// Edit mode
 		//
 		__render_gizmo_and_instance_ids();
+		__render_terrain_depth();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -857,7 +933,7 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
 		// Unset in case it gets destroyed when the room changes etc.
-		bbmod_shader_unset_global(BBMOD_SHADOWMAP);
+		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 
 		bbmod_material_reset();
 
@@ -1040,6 +1116,11 @@ function BBMOD_BaseRenderer() constructor
 		if (surface_exists(__surProbe2))
 		{
 			surface_free(__surProbe2);
+		}
+
+		if (surface_exists(__surTerrainDepth))
+		{
+			surface_free(__surTerrainDepth);
 		}
 
 		if (UseAppSurface)

@@ -283,8 +283,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 	/// @param {Real} _j The Y coordinate in the terrain's height grid.
 	///
 	/// @return {Real} The terrain's height at given index.
-	///
-	/// @see BBMOD_Terrain.__height
 	static get_height_index = function (_i, _j)
 	{
 		gml_pragma("forceinline");
@@ -331,6 +329,46 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		return Position.Z + (_h2 + (_h1-_h2)*(1.0-_offsetX) + (_h3-_h2)*(_offsetY)) * Scale.Z;
 	};
 
+	/// @func add_height(_x, _y, _radius, _value)
+	///
+	/// @desc
+	///
+	/// @param {Real} _x
+	/// @param {Real} _y
+	/// @param {Real} _radius
+	/// @param {Real} _value
+	///
+	/// @return {Struct.BBMOD_Terrain} Returns `self`.
+	static add_height = function (_x, _y, _radius, _value)
+	{
+		var _xScaled = (_x - Position.X) / Scale.X;
+		var _yScaled = (_y - Position.Y) / Scale.Y;
+		var _i = floor(_xScaled);
+		var _j = floor(_yScaled);
+		var _minX = floor(_i - (_radius / Scale.X));
+		var _minY = floor(_j - (_radius / Scale.Y));
+		var _maxX = floor(_i + (_radius / Scale.X));
+		var _maxY = floor(_j + (_radius / Scale.Y));
+		var _chunksX = ds_grid_width(Chunks);
+		var _chunksY = ds_grid_height(Chunks);
+		var _chunkMinX = clamp(floor(_minX / ChunkSize), 0, _chunksX - 1);
+		var _chunkMinY = clamp(floor(_minY / ChunkSize), 0, _chunksY - 1);
+		var _chunkMaxX = clamp(floor(_maxX / ChunkSize), 0, _chunksX - 1);
+		var _chunkMaxY = clamp(floor(_maxY / ChunkSize), 0, _chunksY - 1);
+
+		ds_grid_add_disk(__height, _i, _j, _radius / Scale.X, _value);
+
+		for (var cx = _chunkMinX; cx <= _chunkMaxX; ++cx)
+		{
+			for (var cy = _chunkMinY; cy <= _chunkMaxY; ++cy)
+			{
+				build_chunk(cx, cy);
+			}
+		}
+
+		return self;
+	};
+
 	/// @func get_normal(_x, _y)
 	///
 	/// @desc Retrieves terrain's normal at given coordinate.
@@ -362,12 +400,12 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		if (frac(_xScaled) <= frac(_yScaled))
 		{
 			return (new BBMOD_Vec3(0.0, -Scale.Y, (_h1 - _h4) * Scale.Z))
-				.Cross(new BBMOD_Vec3(Scale.X, 0.0, (_h3 - _h4) * Scale.Z))
-				.Normalize();
+				.CrossSelf(new BBMOD_Vec3(Scale.X, 0.0, (_h3 - _h4) * Scale.Z))
+				.NormalizeSelf();
 		}
 		return (new BBMOD_Vec3(0.0, Scale.Y, (_h3 - _h2) * Scale.Z))
-			.Cross(new BBMOD_Vec3(-Scale.X, 0.0, (_h1 - _h2) * Scale.Z))
-			.Normalize();
+			.CrossSelf(new BBMOD_Vec3(-Scale.X, 0.0, (_h1 - _h2) * Scale.Z))
+			.NormalizeSelf();
 	};
 
 	/// @func get_layer(_x, _y[, _threshold])
