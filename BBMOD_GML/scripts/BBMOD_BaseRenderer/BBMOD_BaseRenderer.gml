@@ -873,10 +873,14 @@ function BBMOD_BaseRenderer() constructor
 	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
 	///
 	/// @note If {@link BBMOD_BaseRenderer.UseAppSurface} is `false`, then this only
-	/// draws the gizmo and selected instances.
+	/// draws the gizmo and selected instances. The world matrix is automatically
+	/// set to identity before drawing the surfaces and then reset back.
 	static present = function ()
 	{
 		global.__bbmodRendererCurrent = self;
+
+		var _world = matrix_get(matrix_world);
+		matrix_set(matrix_world, matrix_build_identity());
 
 		static _gpuState = undefined;
 		if (_gpuState == undefined)
@@ -948,15 +952,12 @@ function BBMOD_BaseRenderer() constructor
 			//
 			// Post-processing ENABLED
 			//
-			var _world = matrix_get(matrix_world);
-
 			__surFinal = bbmod_surface_check(__surFinal, _width, _height, surface_rgba8unorm, false);
 
 			gpu_push_state();
 			gpu_set_state(_gpuState);
 
 			surface_set_target(__surFinal);
-			matrix_set(matrix_world, matrix_build_identity());
 
 			draw_surface_stretched(application_surface, 0, 0, _width, _height);
 
@@ -989,11 +990,12 @@ function BBMOD_BaseRenderer() constructor
 			}
 
 			surface_reset_target();
-			matrix_set(matrix_world, _world);
 			gpu_pop_state();
 
 			PostProcessor.draw(__surFinal, X, Y);
 		}
+
+		matrix_set(matrix_world, _world);
 
 		return self;
 	};
