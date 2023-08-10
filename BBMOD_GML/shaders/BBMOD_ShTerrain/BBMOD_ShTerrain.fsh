@@ -47,12 +47,8 @@ uniform vec4 bbmod_BaseOpacityMultiplier;
 
 // If 1.0 then the material uses roughness
 uniform float bbmod_IsRoughness;
-// If 1.0 then the material uses metallic workflow
-uniform float bbmod_IsMetallic;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_NormalW;
-// RGB: specular color / R: Metallic, G: ambient occlusion
-uniform sampler2D bbmod_Material;
 
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
@@ -186,12 +182,12 @@ struct Material
 	vec3 Lightmap;
 };
 
-Material CreateMaterial(mat3 TBN)
+Material CreateMaterial()
 {
 	Material m;
 	m.Base = vec3(1.0);
 	m.Opacity = 1.0;
-	m.Normal = normalize(TBN * vec3(0.0, 0.0, 1.0));
+	m.Normal = vec3(0.0, 0.0, 1.0);
 	m.Metallic = 0.0;
 	m.Roughness = 1.0;
 	m.Specular = vec3(0.0);
@@ -528,12 +524,10 @@ Material UnpackMaterial(
 	sampler2D texBaseOpacity,
 	float isRoughness,
 	sampler2D texNormalW,
-	float isMetallic,
-	sampler2D texMaterial,
 	mat3 TBN,
 	vec2 uv)
 {
-	Material m = CreateMaterial(TBN);
+	Material m = CreateMaterial();
 
 	// Base color and opacity
 	vec4 baseOpacity = texture2D(texBaseOpacity,
@@ -560,22 +554,9 @@ Material UnpackMaterial(
 	}
 
 	// Material properties
-	vec4 materialProps = texture2D(texMaterial,
-		uv
-		);
-
-	if (isMetallic == 1.0)
-	{
-		m.Metallic = materialProps.r;
-		m.AO = materialProps.g;
-		m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
-		m.Base *= (1.0 - m.Metallic);
-	}
-	else
-	{
-		m.Specular = materialProps.rgb;
-		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
-	}
+	m.Metallic = 0.0;
+	m.AO = 1.0;
+	m.Specular = F0_DEFAULT;
 
 	return m;
 }
@@ -782,8 +763,6 @@ void main()
 		bbmod_BaseOpacity,
 		bbmod_IsRoughness,
 		bbmod_NormalW,
-		bbmod_IsMetallic,
-		bbmod_Material,
 		v_mTBN,
 		v_vTexCoord);
 

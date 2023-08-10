@@ -19,9 +19,9 @@ Material UnpackMaterial(
 	sampler2D texBaseOpacity,
 	float isRoughness,
 	sampler2D texNormalW,
+#if !defined(X_TERRAIN)
 	float isMetallic,
 	sampler2D texMaterial,
-#if !defined(X_TERRAIN)
 #if !defined(X_LIGHTMAP)
 	sampler2D texSubsurface,
 #endif
@@ -34,7 +34,7 @@ Material UnpackMaterial(
 	mat3 TBN,
 	vec2 uv)
 {
-	Material m = CreateMaterial(TBN);
+	Material m = CreateMaterial();
 
 	// Base color and opacity
 	vec4 baseOpacity = texture2D(texBaseOpacity,
@@ -69,6 +69,11 @@ Material UnpackMaterial(
 	}
 
 	// Material properties
+#if defined(X_TERRAIN)
+	m.Metallic = 0.0;
+	m.AO = 1.0;
+	m.Specular = F0_DEFAULT;
+#else
 	vec4 materialProps = texture2D(texMaterial,
 #if defined(X_2D)
 		mix(bbmod_MaterialUV.xy, bbmod_MaterialUV.zw, uv)
@@ -90,7 +95,6 @@ Material UnpackMaterial(
 		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 	}
 
-#if !defined(X_TERRAIN)
 #if !defined(X_LIGHTMAP)
 	// Subsurface (color and intensity)
 	vec4 subsurface = texture2D(texSubsurface, uv);

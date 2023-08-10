@@ -81,12 +81,14 @@ uniform vec4 bbmod_BaseOpacityMultiplier;
 
 // If 1.0 then the material uses roughness
 uniform float bbmod_IsRoughness;
-// If 1.0 then the material uses metallic workflow
-uniform float bbmod_IsMetallic;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_NormalW;
+#if !defined(X_TERRAIN)
+// If 1.0 then the material uses metallic workflow
+uniform float bbmod_IsMetallic;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
+#endif
 
 #if !defined(X_TERRAIN)
 #if !defined(X_LIGHTMAP)
@@ -282,9 +284,9 @@ void main()
 		bbmod_BaseOpacity,
 		bbmod_IsRoughness,
 		bbmod_NormalW,
+#if !defined(X_TERRAIN)
 		bbmod_IsMetallic,
 		bbmod_Material,
-#if !defined(X_TERRAIN)
 #if !defined(X_LIGHTMAP)
 		bbmod_Subsurface,
 #endif
