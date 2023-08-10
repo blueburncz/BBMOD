@@ -99,8 +99,10 @@ if (os_browser == browser_not_a_browser)
 }
 
 // Any object/struct that has a render method can be added to the renderer:
-renderer.add(batchShell)
-	.add(global.terrain);
+renderer
+	.add(batchShell)
+	.add(global.terrain)
+	;
 
 // Add a refleciton probe
 var _terrainWidth = global.terrain.Size.X * global.terrain.Scale.X;

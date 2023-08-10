@@ -24,8 +24,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 	/// @readonly
 	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
 
-	/// @var {Struct.BBMOD_Material} The material used when rendering the terrain.
-	/// Default is {@link BBMOD_MATERIAL_TERRAIN}.
+	/// @var {Struct.BBMOD_TerrainMaterial} The material used when rendering
+	/// the terrain. Default is {@link BBMOD_MATERIAL_TERRAIN}.
 	Material = BBMOD_MATERIAL_TERRAIN;
 
 	/// @var {Array<Struct.BBMOD_TerrainLayer>} Array of five terrain layers.
@@ -710,6 +710,11 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static submit = function ()
 	{
+		if (!Material.apply(VertexFormat))
+		{
+			return self;
+		}
+
 		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
 		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
 		matrix_set(matrix_world, _matrix);
@@ -717,41 +722,97 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		var _chunksX = ds_grid_width(Chunks);
 		var _chunksY = ds_grid_height(Chunks);
 
-		var _i = 0;
-		repeat (_chunksX)
+		var _chunkFromX, _chunkFromY, _chunkToX, _chunkToY;
+
+		if (ChunkRadius == infinity)
 		{
-			var _j = 0;
-			repeat (_chunksY)
-			{
-				var _chunk = Chunks[# _i, _j];
-				if (_chunk != undefined)
-				{
-					var _l = 0;
-					repeat (5)
-					{
-						var _mat = Layer[_l];
-						if (_mat != undefined && _mat.apply(VertexFormat))
-						{
-							var _shaderCurrent = shader_current();
-							var _uSplatmap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_SPLATMAP);
-							var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_SPLATMAP_INDEX);
-							var _uColormap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_COLORMAP);
-							var _uTextureScale = shader_get_uniform(_shaderCurrent, BBMOD_U_TEXTURE_SCALE);
-							var _uNormalMatrix = shader_get_uniform(_shaderCurrent, BBMOD_U_NORMAL_MATRIX);
-							texture_set_stage(_uSplatmap, Splatmap);
-							shader_set_uniform_i(_uSplatmapIndex, _l - 1);
-							texture_set_stage(_uColormap, Colormap);
-							shader_set_uniform_f(_uTextureScale, TextureRepeat.X, TextureRepeat.Y);
-							shader_set_uniform_matrix_array(_uNormalMatrix, _normalMatrix);
-							vertex_submit(_chunk, pr_trianglelist, _mat.BaseOpacity);
-						}
-						++_l;
-					}
-				}
-				++_j;
-			}
-			++_i;
+			_chunkFromX = 0;
+			_chunkFromY = 0;
+			_chunkToX = _chunksX;
+			_chunkToY = _chunksY;
 		}
+		else
+		{
+			var _camPos = bbmod_camera_get_position();
+			var _camI = clamp(((_camPos.X - Position.X) / Scale.X) / ChunkSize, 0, _chunksX);
+			var _camJ = clamp(((_camPos.Y - Position.Y) / Scale.Y) / ChunkSize, 0, _chunksY);
+			_chunkFromX = clamp(floor(_camI - ChunkRadius), 0, _chunksX);
+			_chunkFromY = clamp(floor(_camJ - ChunkRadius), 0, _chunksY);
+			_chunkToX = clamp(ceil(_camI + ChunkRadius), 0, _chunksX);
+			_chunkToY = clamp(ceil(_camJ + ChunkRadius), 0, _chunksY);
+		}
+
+		var _shaderCurrent = shader_current();
+		var _uSplatmap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_SPLATMAP);
+		var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_SPLATMAP_INDEX);
+		var _uColormap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_COLORMAP);
+		var _uTextureScale = shader_get_uniform(_shaderCurrent, BBMOD_U_TEXTURE_SCALE);
+		var _uNormalMatrix = shader_get_uniform(_shaderCurrent, BBMOD_U_NORMAL_MATRIX);
+		var _uNormalW = shader_get_sampler_index(_shaderCurrent, BBMOD_U_NORMAL_W);
+		var _uIsRoughness = shader_get_uniform(_shaderCurrent, BBMOD_U_IS_ROUGHNESS);
+
+		texture_set_stage(_uSplatmap, Splatmap);
+		texture_set_stage(_uColormap, Colormap);
+		shader_set_uniform_f(_uTextureScale, TextureRepeat.X, TextureRepeat.Y);
+		shader_set_uniform_matrix_array(_uNormalMatrix, _normalMatrix);
+
+		gpu_push_state();
+
+		var _isFirstLayer = true;
+		var _isSecondLayer = true;
+		var _renderPass = bbmod_render_pass_get();
+
+		var _l = 0;
+		repeat (5)
+		{
+			var _layer = Layer[_l];
+			if (_layer != undefined)
+			{
+				var _layerNormalRoughness = _layer[$ "NormalRoughness"];
+
+				if (_isFirstLayer)
+				{
+					gpu_set_blendenable(false);
+					gpu_set_colorwriteenable(true, true, true, true);
+					_isFirstLayer = false;
+				}
+				else if (_isSecondLayer)
+				{
+					gpu_set_blendenable(true);
+					gpu_set_colorwriteenable(true, true, true, false);
+					_isSecondLayer = false;
+				}
+
+				shader_set_uniform_i(_uSplatmapIndex, _l - 1);
+				texture_set_stage(_uNormalW, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)));
+				shader_set_uniform_f(_uIsRoughness, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
+
+				var _i = _chunkFromX;
+				repeat (_chunkToX - _chunkFromX)
+				{
+					var _j = _chunkFromY;
+					repeat (_chunkToY - _chunkFromY)
+					{
+						var _chunk = Chunks[# _i, _j];
+						if (_chunk != undefined)
+						{
+							vertex_submit(_chunk, pr_trianglelist, _layer.BaseOpacity);
+						}
+						++_j;
+					}
+					++_i;
+				}
+
+				if (_renderPass != BBMOD_ERenderPass.Forward
+					&& _renderPass != BBMOD_ERenderPass.ReflectionCapture)
+				{
+					break;
+				}
+			}
+			++_l;
+		}
+
+		gpu_pop_state();
 
 		return self;
 	};
@@ -797,31 +858,40 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			.SetUniformMatrixArray(BBMOD_U_NORMAL_MATRIX, _normalMatrix)
 			.SetWorldMatrix(_matrix);
 
+		var _isFirstLayer = true;
+		var _isSecondLayer = true;
+
 		var _l = 0;
 		repeat (5)
 		{
 			var _layer = Layer[_l];
 			if (_layer != undefined)
 			{
-				if (_l == 0)
+				var _layerNormalRoughness = _layer[$ "NormalRoughness"];
+
+				if (_isFirstLayer)
 				{
 					RenderQueue
 						.SetGpuBlendEnable(false)
 						.SetGpuColorWriteEnable(true, true, true, true);
+					_isFirstLayer = false;
 				}
-				else
+				else if (_isSecondLayer)
 				{
 					RenderQueue
+						.CheckRenderPass((1 << BBMOD_ERenderPass.Forward) | (1 << BBMOD_ERenderPass.ReflectionCapture))
+						.BeginConditionalBlock()
 						.SetGpuBlendEnable(true)
 						.SetGpuColorWriteEnable(true, true, true, false);
+					_isSecondLayer = false;
 				}
 
 				RenderQueue
 					.SetGpuZWriteEnable(_l == 0)
 					.SetGpuZFunc((_l == 0) ? cmpfunc_lessequal : cmpfunc_equal)
 					.SetUniformInt(BBMOD_U_SPLATMAP_INDEX, _l - 1)
-					.SetSampler(BBMOD_U_NORMAL_W, _layer[$ "NormalRoughness"] ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)))
-					.SetUniformFloat(BBMOD_U_IS_ROUGHNESS, (_layer[$ "NormalRoughness"] != undefined) ? 1.0 : 0.0);
+					.SetSampler(BBMOD_U_NORMAL_W, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)))
+					.SetUniformFloat(BBMOD_U_IS_ROUGHNESS, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
 
 				var _i = _chunkFromX;
 				repeat (_chunkToX - _chunkFromX)
@@ -837,6 +907,11 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 						++_j;
 					}
 					++_i;
+				}
+
+				if (!_isSecondLayer)
+				{
+					RenderQueue.EndConditionalBlock();
 				}
 			}
 			++_l;
