@@ -135,7 +135,11 @@ void Fog(float depth)
 }
 void Exposure()
 {
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+	gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
+}
+void TonemapReinhard()
+{
+	gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
 }
 
 void GammaCorrect()
@@ -279,6 +283,7 @@ void UnlitShader(Material material, float depth)
 	// Soft particles
 	Fog(depth);
 	Exposure();
+	TonemapReinhard();
 	GammaCorrect();
 }
 
