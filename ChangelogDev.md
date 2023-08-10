@@ -28,3 +28,5 @@
 * Added new property `TerrainEditor` to struct `BBMOD_BaseRenderer`, which is a terrain editor. Default is `undefined`.
 
 * Fixed method `screen_point_to_vec3` of `BBMOD_BaseCamera` normalizing the resulting vector when it should not be normalized.
+
+* Fixed crash after `BBMOD_Camera.set_mouselook(true)` in YYC.
