@@ -1,11 +1,10 @@
 # BBMOD
-Welcome to the official documentation of BBMOD 3.18.0!
+Welcome to the official documentation of BBMOD 3.18.1!
 
 BBMOD is an advanced 3D rendering solution for GameMaker. It consists of a
-custom model and animation file formats (`*.bbmod`, `*.bbanim`), a model
-converter (BBMOD CLI), a powerful and easy to use GML library, as well as PBR
-shaders using which you can render models textured in professional, industry
-standard software.
+custom model, animation and material formats, a model converter (BBMOD CLI),
+a powerful and easy to use GML library, as well as PBR shaders using which you
+can render models textured in professional, industry standard software.
 
 If you are a new user, see the [Tutorials](/bbmod/tutorials) section on the
 official website for guides on how to use BBMOD.
