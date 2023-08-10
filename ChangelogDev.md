@@ -20,3 +20,5 @@
 * Renderers `BBMOD_BaseRenderer` and `BBMOD_DefaultRenderer` now support the new `TerrainDepth` render pass.
 * Added new struct `BBMOD_TerrainShader`, which is the base class for BBMOD terrain shaders.
 * Shaders `BBMOD_SHADER_TERRAIN` and `BBMOD_SHADER_TERRAIN_UNLIT` are now constructed from `BBMOD_TerrainShader`.
+* Added new struct `BBMOD_TerrainMaterial`, which is a material that can be used when rendering terrain.
+* Materials `BBMOD_MATERIAL_TERRAIN` and `BBMOD_MATERIAL_TERRAIN_UNLIT` are now constructed from `BBMOD_TerrainMaterial`.

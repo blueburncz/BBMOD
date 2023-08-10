@@ -96,6 +96,7 @@
     {"name":"BBMOD_ImageBasedLight","order":3,"path":"scripts/BBMOD_ImageBasedLight/BBMOD_ImageBasedLight.yy",},
     {"name":"DrawTextShadow","order":2,"path":"scripts/DrawTextShadow/DrawTextShadow.yy",},
     {"name":"__bbmod_light_ambient","order":5,"path":"scripts/__bbmod_light_ambient/__bbmod_light_ambient.yy",},
+    {"name":"BBMOD_TerrainMaterial","order":7,"path":"scripts/BBMOD_TerrainMaterial/BBMOD_TerrainMaterial.yy",},
     {"name":"BBMOD_SetQuaternionModule","order":2,"path":"scripts/BBMOD_SetQuaternionModule/BBMOD_SetQuaternionModule.yy",},
     {"name":"BBMOD_ShDefaultUnlitColor","order":13,"path":"shaders/BBMOD_ShDefaultUnlitColor/BBMOD_ShDefaultUnlitColor.yy",},
     {"name":"SndShell2","order":2,"path":"sounds/SndShell2/SndShell2.yy",},

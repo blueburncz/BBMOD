@@ -1,3 +1,5 @@
+/// @module Terrain
+
 /// @func BBMOD_TerrainShader()
 ///
 /// @extends BBMOD_BaseShader

@@ -3,7 +3,7 @@
 /// @macro {Struct.BBMOD_TerrainShader} Shader for terrain materials.
 #macro BBMOD_SHADER_TERRAIN __bbmod_shader_terrain()
 
-/// @macro {Struct.BBMOD_BaseMaterial} Base terrain material.
+/// @macro {Struct.BBMOD_TerrainMaterial} Base terrain material.
 #macro BBMOD_MATERIAL_TERRAIN __bbmod_material_terrain()
 
 /// @macro {Struct.BBMOD_TerrainShader} Shader for unlit terrain materials.
@@ -31,7 +31,7 @@ function __bbmod_material_terrain()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		_material = new BBMOD_BaseMaterial(BBMOD_SHADER_TERRAIN);
+		_material = new BBMOD_TerrainMaterial(BBMOD_SHADER_TERRAIN);
 		_material.set_shader(BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_TERRAIN);
 		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 		_material.set_shader(BBMOD_ERenderPass.TerrainDepth, BBMOD_SHADER_DEFAULT_DEPTH);

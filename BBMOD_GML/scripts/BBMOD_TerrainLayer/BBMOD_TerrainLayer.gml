@@ -1,3 +1,5 @@
+/// @module Terrain
+
 /// @func BBMOD_TerrainLayer()
 ///
 /// @desc Describes a material of a single terrain layer.
