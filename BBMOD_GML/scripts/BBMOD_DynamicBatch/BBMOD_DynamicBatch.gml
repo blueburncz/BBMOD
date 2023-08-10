@@ -565,7 +565,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 				++_id;
 			}
 
-			_mesh.VertexBuffer = vertex_create_buffer_from_buffer_ext(_bufferNew, _meshVertexFormatNew.Raw, 0, _vertexCount);
+			_mesh.VertexBuffer = vertex_create_buffer_from_buffer_ext(_bufferNew, _meshVertexFormatNew.Raw, 0, Size * _vertexCount);
 			_mesh.VertexFormat = _meshVertexFormatNew;
 			buffer_delete(_bufferNew);
 
