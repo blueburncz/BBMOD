@@ -15,9 +15,6 @@ enum BBMOD_ERenderPass
 	/// @member Render pass where opaque objects are rendered into an off-screen
 	/// depth buffer.
 	DepthOnly = 2,
-	/// @member Render pass where only the terrain is rendered into an off-screen
-	/// depth buffer. Required for terrain editing tools.
-	TerrainDepth,
 	/// @member Render pass where opaque objects are rendered into a G-Buffer.
 	GBuffer,
 	/// @member Render pass where opaque objects are rendered into the frame

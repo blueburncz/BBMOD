@@ -114,11 +114,3 @@ var _probeZ = global.terrain.get_height(_probeX, _probeY) + 20;
 var _reflectionProbe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(_probeX, _probeY, _probeZ));
 _reflectionProbe.set_size(new BBMOD_Vec3(_terrainWidth / 2 + 100, _terrainHeight / 2 + 100, 1000));
 bbmod_reflection_probe_add(_reflectionProbe);
-
-// Terrain editor test
-terrainEditor = new BBMOD_TerrainEditor();
-terrainEditor.Target = global.terrain;
-terrainEditor.Enabled = true;
-terrainEditor.Radius = 50;
-terrainEditor.Strength = 0.5;
-renderer.TerrainEditor = terrainEditor;

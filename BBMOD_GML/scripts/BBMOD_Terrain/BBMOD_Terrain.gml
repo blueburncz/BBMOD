@@ -115,13 +115,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 
 	ds_grid_clear(Chunks, undefined);
 
-	/// @var {Id.DsGrid<Bool>} A grid of dirty state of individual terrain chunks.
-	/// When a chunk is marked as dirty, it means its vertex buffer should be rebuilt.
-	/// When a terrain is first created, all its chunks are marked as dirty.
-	ChunksDirty = ds_grid_create(1, 1);
-
-	ds_grid_clear(ChunksDirty, true);
-
 	/// @var {Real} The radius (in chunk size) within which terrain chunks are visible
 	/// around the camera. Zero means only the chunk that the camera is on is visible.
 	/// Use `infinity` to make all chunks visible. Default value is `infinity`.
@@ -244,9 +237,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		ds_grid_resize(Chunks, _chunksX, _chunksY);
 		ds_grid_clear(Chunks, undefined);
 
-		ds_grid_resize(ChunksDirty, _chunksX, _chunksY);
-		ds_grid_clear(ChunksDirty, true);
-
 		return self;
 	};
 
@@ -327,46 +317,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			return Position.Z + (_h4 + (_h1-_h4)*(1.0-_offsetY) + (_h3-_h4)*(_offsetX)) * Scale.Z;
 		}
 		return Position.Z + (_h2 + (_h1-_h2)*(1.0-_offsetX) + (_h3-_h2)*(_offsetY)) * Scale.Z;
-	};
-
-	/// @func add_height(_x, _y, _radius, _value)
-	///
-	/// @desc
-	///
-	/// @param {Real} _x
-	/// @param {Real} _y
-	/// @param {Real} _radius
-	/// @param {Real} _value
-	///
-	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static add_height = function (_x, _y, _radius, _value)
-	{
-		var _xScaled = (_x - Position.X) / Scale.X;
-		var _yScaled = (_y - Position.Y) / Scale.Y;
-		var _i = floor(_xScaled);
-		var _j = floor(_yScaled);
-		var _minX = floor(_i - (_radius / Scale.X));
-		var _minY = floor(_j - (_radius / Scale.Y));
-		var _maxX = floor(_i + (_radius / Scale.X));
-		var _maxY = floor(_j + (_radius / Scale.Y));
-		var _chunksX = ds_grid_width(Chunks);
-		var _chunksY = ds_grid_height(Chunks);
-		var _chunkMinX = clamp(floor(_minX / ChunkSize), 0, _chunksX - 1);
-		var _chunkMinY = clamp(floor(_minY / ChunkSize), 0, _chunksY - 1);
-		var _chunkMaxX = clamp(floor(_maxX / ChunkSize), 0, _chunksX - 1);
-		var _chunkMaxY = clamp(floor(_maxY / ChunkSize), 0, _chunksY - 1);
-
-		ds_grid_add_disk(__height, _i, _j, _radius / Scale.X, _value);
-
-		for (var cx = _chunkMinX; cx <= _chunkMaxX; ++cx)
-		{
-			for (var cy = _chunkMinY; cy <= _chunkMaxY; ++cy)
-			{
-				build_chunk(cx, cy);
-			}
-		}
-
-		return self;
 	};
 
 	/// @func get_normal(_x, _y)
@@ -708,7 +658,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		vertex_end(_vbuffer);
 		vertex_freeze(_vbuffer);
 		Chunks[# _chunkI, _chunkJ] = _vbuffer;
-		ChunksDirty[# _chunkI, _chunkJ] = false;
 
 		return self;
 	};
@@ -729,10 +678,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			var j = 0;
 			repeat (_chunksY)
 			{
-				if (ChunksDirty[# i, j])
-				{
-					build_chunk(i, j);
-				}
+				build_chunk(i, j);
 				++j;
 			}
 			++i;
@@ -986,7 +932,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		}
 
 		ds_grid_destroy(Chunks);
-		ds_grid_destroy(ChunksDirty);
 
 		return undefined;
 	};

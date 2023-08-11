@@ -34,7 +34,6 @@ function __bbmod_material_terrain()
 		_material = new BBMOD_TerrainMaterial(BBMOD_SHADER_TERRAIN);
 		_material.set_shader(BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_TERRAIN);
 		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
-		_material.set_shader(BBMOD_ERenderPass.TerrainDepth, BBMOD_SHADER_DEFAULT_DEPTH);
 		_material.Repeat = true;
 		_material.AlphaTest = 0.01;
 		_material.AlphaBlend = true;

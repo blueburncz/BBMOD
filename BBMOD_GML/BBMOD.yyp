@@ -332,7 +332,6 @@
     {"id":{"name":"bbmod_mrt_is_supported","path":"scripts/bbmod_mrt_is_supported/bbmod_mrt_is_supported.yy",},},
     {"id":{"name":"BBMOD_Collider","path":"scripts/BBMOD_Collider/BBMOD_Collider.yy",},},
     {"id":{"name":"BBMOD_AddRealOnCollisionModule","path":"scripts/BBMOD_AddRealOnCollisionModule/BBMOD_AddRealOnCollisionModule.yy",},},
-    {"id":{"name":"BBMOD_TerrainEditor","path":"scripts/BBMOD_TerrainEditor/BBMOD_TerrainEditor.yy",},},
     {"id":{"name":"SndFootstep2","path":"sounds/SndFootstep2/SndFootstep2.yy",},},
     {"id":{"name":"BBMOD_BaseMaterial","path":"scripts/BBMOD_BaseMaterial/BBMOD_BaseMaterial.yy",},},
     {"id":{"name":"BBMOD_Quaternion","path":"scripts/BBMOD_Quaternion/BBMOD_Quaternion.yy",},},
