@@ -14,12 +14,12 @@ struct Material
 	vec3 Lightmap;
 };
 
-Material CreateMaterial(mat3 TBN)
+Material CreateMaterial()
 {
 	Material m;
 	m.Base = vec3(1.0);
 	m.Opacity = 1.0;
-	m.Normal = normalize(TBN * vec3(0.0, 0.0, 1.0));
+	m.Normal = vec3(0.0, 0.0, 1.0);
 	m.Metallic = 0.0;
 	m.Roughness = 1.0;
 	m.Specular = vec3(0.0);

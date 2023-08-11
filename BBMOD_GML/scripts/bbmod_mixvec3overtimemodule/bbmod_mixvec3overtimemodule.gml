@@ -10,7 +10,7 @@
 /// @param {Real} [_property] The first of the three consecutive properties. Use
 /// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec3} [_from] The value when the particle has full health.
-/// Defaults to `(0.0, 0.0, 0.0)`.
+/// Defaults to `(0, 0, 0)`.
 /// @param {Struct.BBMOD_Vec3} [_to] The value when the particle has no health left.
 /// Defaults to `_from`.
 /// @param {Real} [_duration] How long in seconds it takes to mix between the
@@ -29,7 +29,7 @@ function BBMOD_MixVec3OverTimeModule(
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec3} The value when the particle has full health. Default
-	/// value is `(0.0, 0.0, 0.0)`.
+	/// value is `(0, 0, 0)`.
 	From = _from;
 
 	/// @var {Struct.BBMOD_Vec3} The value when the particle has no health left. Default

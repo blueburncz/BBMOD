@@ -3,6 +3,7 @@
 #pragma include("DoPointLightPS.xsh")
 #pragma include("DoSpotLightPS.xsh")
 #pragma include("Exposure.xsh")
+#pragma include("TonemapReinhard.xsh")
 #pragma include("Fog.xsh")
 #pragma include("GammaCorrect.xsh")
 #pragma include("IBL.xsh")
@@ -130,5 +131,6 @@ void PBRShader(Material material, float depth)
 	Fog(depth);
 
 	Exposure();
+	TonemapReinhard();
 	GammaCorrect();
 }

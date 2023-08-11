@@ -81,12 +81,14 @@ uniform vec4 bbmod_BaseOpacityMultiplier;
 
 // If 1.0 then the material uses roughness
 uniform float bbmod_IsRoughness;
-// If 1.0 then the material uses metallic workflow
-uniform float bbmod_IsMetallic;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_NormalW;
+#if !defined(X_TERRAIN)
+// If 1.0 then the material uses metallic workflow
+uniform float bbmod_IsMetallic;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
+#endif
 
 #if !defined(X_TERRAIN)
 #if !defined(X_LIGHTMAP)
@@ -205,6 +207,8 @@ uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex;
+// Colormap texture
+uniform sampler2D bbmod_Colormap;
 #endif // X_TERRAIN
 
 #if defined(X_PBR)
@@ -280,9 +284,9 @@ void main()
 		bbmod_BaseOpacity,
 		bbmod_IsRoughness,
 		bbmod_NormalW,
+#if !defined(X_TERRAIN)
 		bbmod_IsMetallic,
 		bbmod_Material,
-#if !defined(X_TERRAIN)
 #if !defined(X_LIGHTMAP)
 		bbmod_Subsurface,
 #endif
@@ -311,6 +315,9 @@ void main()
 			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
 			: splatmap.a)));
 	}
+
+	// Colormap
+	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
 #endif
 
 	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);

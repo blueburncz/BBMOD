@@ -45,10 +45,10 @@ uniform vec4 bbmod_BaseOpacityMultiplier;
 
 // If 1.0 then the material uses roughness
 uniform float bbmod_IsRoughness;
-// If 1.0 then the material uses metallic workflow
-uniform float bbmod_IsMetallic;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_NormalW;
+// If 1.0 then the material uses metallic workflow
+uniform float bbmod_IsMetallic;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
 
@@ -179,12 +179,12 @@ struct Material
 	vec3 Lightmap;
 };
 
-Material CreateMaterial(mat3 TBN)
+Material CreateMaterial()
 {
 	Material m;
 	m.Base = vec3(1.0);
 	m.Opacity = 1.0;
-	m.Normal = normalize(TBN * vec3(0.0, 0.0, 1.0));
+	m.Normal = vec3(0.0, 0.0, 1.0);
 	m.Metallic = 0.0;
 	m.Roughness = 1.0;
 	m.Specular = vec3(0.0);
@@ -385,7 +385,11 @@ void DoSpotLightPS(
 }
 void Exposure()
 {
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+	gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
+}
+void TonemapReinhard()
+{
+	gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
 }
 
 void Fog(float depth)
@@ -538,7 +542,7 @@ Material UnpackMaterial(
 	mat3 TBN,
 	vec2 uv)
 {
-	Material m = CreateMaterial(TBN);
+	Material m = CreateMaterial();
 
 	// Base color and opacity
 	vec4 baseOpacity = texture2D(texBaseOpacity,
@@ -780,6 +784,7 @@ void PBRShader(Material material, float depth)
 	Fog(depth);
 
 	Exposure();
+	TonemapReinhard();
 	GammaCorrect();
 }
 

@@ -47,12 +47,8 @@ uniform vec4 bbmod_BaseOpacityMultiplier;
 
 // If 1.0 then the material uses roughness
 uniform float bbmod_IsRoughness;
-// If 1.0 then the material uses metallic workflow
-uniform float bbmod_IsMetallic;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_NormalW;
-// RGB: specular color / R: Metallic, G: ambient occlusion
-uniform sampler2D bbmod_Material;
 
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
@@ -128,6 +124,8 @@ uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex;
+// Colormap texture
+uniform sampler2D bbmod_Colormap;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
@@ -184,12 +182,12 @@ struct Material
 	vec3 Lightmap;
 };
 
-Material CreateMaterial(mat3 TBN)
+Material CreateMaterial()
 {
 	Material m;
 	m.Base = vec3(1.0);
 	m.Opacity = 1.0;
-	m.Normal = normalize(TBN * vec3(0.0, 0.0, 1.0));
+	m.Normal = vec3(0.0, 0.0, 1.0);
 	m.Metallic = 0.0;
 	m.Roughness = 1.0;
 	m.Specular = vec3(0.0);
@@ -376,7 +374,11 @@ void DoSpotLightPS(
 }
 void Exposure()
 {
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+	gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
+}
+void TonemapReinhard()
+{
+	gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
 }
 
 void Fog(float depth)
@@ -522,12 +524,10 @@ Material UnpackMaterial(
 	sampler2D texBaseOpacity,
 	float isRoughness,
 	sampler2D texNormalW,
-	float isMetallic,
-	sampler2D texMaterial,
 	mat3 TBN,
 	vec2 uv)
 {
-	Material m = CreateMaterial(TBN);
+	Material m = CreateMaterial();
 
 	// Base color and opacity
 	vec4 baseOpacity = texture2D(texBaseOpacity,
@@ -554,22 +554,9 @@ Material UnpackMaterial(
 	}
 
 	// Material properties
-	vec4 materialProps = texture2D(texMaterial,
-		uv
-		);
-
-	if (isMetallic == 1.0)
-	{
-		m.Metallic = materialProps.r;
-		m.AO = materialProps.g;
-		m.Specular = mix(F0_DEFAULT, m.Base, m.Metallic);
-		m.Base *= (1.0 - m.Metallic);
-	}
-	else
-	{
-		m.Specular = materialProps.rgb;
-		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
-	}
+	m.Metallic = 0.0;
+	m.AO = 1.0;
+	m.Specular = F0_DEFAULT;
 
 	return m;
 }
@@ -762,6 +749,7 @@ void PBRShader(Material material, float depth)
 	Fog(depth);
 
 	Exposure();
+	TonemapReinhard();
 	GammaCorrect();
 }
 
@@ -775,8 +763,6 @@ void main()
 		bbmod_BaseOpacity,
 		bbmod_IsRoughness,
 		bbmod_NormalW,
-		bbmod_IsMetallic,
-		bbmod_Material,
 		v_mTBN,
 		v_vTexCoord);
 
@@ -790,6 +776,9 @@ void main()
 			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
 			: splatmap.a)));
 	}
+
+	// Colormap
+	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
 
 	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;

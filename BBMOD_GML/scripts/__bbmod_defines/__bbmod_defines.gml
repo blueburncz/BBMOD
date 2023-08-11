@@ -9,10 +9,10 @@
 #macro BBMOD_RELEASE_MAJOR 3
 
 /// @macro {Real} The minor version number of this BBMOD release.
-#macro BBMOD_RELEASE_MINOR 18
+#macro BBMOD_RELEASE_MINOR 19
 
 /// @macro {Real} The patch version number of this BBMOD release.
-#macro BBMOD_RELEASE_PATCH 1
+#macro BBMOD_RELEASE_PATCH 0
 
 /// @macro {String} The version of this BBMOD release as a string ("major.minor.patch" format).
 #macro BBMOD_RELEASE_STRING $"{BBMOD_RELEASE_MAJOR}.{BBMOD_RELEASE_MINOR}.{BBMOD_RELEASE_PATCH}"
@@ -312,6 +312,10 @@
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds the shadowmap texture.
 #macro BBMOD_U_SHADOWMAP "bbmod_Shadowmap"
+
+/// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
+/// holds the colormap texture.
+#macro BBMOD_U_COLORMAP "bbmod_Colormap"
 
 /// @macro {String} Name of a fragment shader uniform of type `vec2` that holds
 /// the texel size of a shadowmap texture.

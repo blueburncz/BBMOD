@@ -10,7 +10,7 @@
 /// @param {Real} [_property] The first of the four consecutive properties. Use
 /// values from {@link BBMOD_EParticle}. Defaults to `undefined`.
 /// @param {Struct.BBMOD_Vec4} [_from] The value when the particle has full health.
-/// Defaults to `(0.0, 0.0, 0.0, 0.0)`.
+/// Defaults to `(0, 0, 0, 0)`.
 /// @param {Struct.BBMOD_Vec4} [_to] The value when the particle has no health left.
 /// Defaults to `_from`.
 ///
@@ -26,7 +26,7 @@ function BBMOD_MixVec4FromHealthModule(
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Vec4} The value when the particle has full health.
-	/// Default value is `(0.0, 0.0, 0.0, 0.0)`.
+	/// Default value is `(0, 0, 0, 0)`.
 	From = _from;
 
 	/// @var {Struct.BBMOD_Vec4} The value when the particle has no health left.

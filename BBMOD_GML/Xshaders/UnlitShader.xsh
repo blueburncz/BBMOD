@@ -1,5 +1,6 @@
 #pragma include("Fog.xsh")
 #pragma include("Exposure.xsh")
+#pragma include("TonemapReinhard.xsh")
 #pragma include("GammaCorrect.xsh")
 #if defined(X_PARTICLES)
 #pragma include("Projecting.xsh")
@@ -23,5 +24,6 @@ void UnlitShader(Material material, float depth)
 #endif
 	Fog(depth);
 	Exposure();
+	TonemapReinhard();
 	GammaCorrect();
 }

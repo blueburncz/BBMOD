@@ -43,4 +43,4 @@ function bbmod_mrt_is_supported()
 	return _isSupported;
 }
 
-__bbmod_info("Multiple render targets " + (bbmod_mrt_is_supported() ? "ARE" : "NOT") + " supported!");
+__bbmod_info("MRT " + (!bbmod_mrt_is_supported() ? "not " : "") + "supported!");
