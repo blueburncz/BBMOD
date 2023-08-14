@@ -94,7 +94,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 {
 	std::vector<fs::path> files;
 
-	fs::path pathIn(fin);
+	fs::path pathIn; pathIn += fin;
 
 	if (fs::is_directory(pathIn))
 	{
@@ -113,7 +113,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 
 	for (const fs::path& file : files)
 	{
-		const char* finCurrent = file.string().c_str();
+		std::string finCurrent = file.string();
 		fs::path pathInCurrent(file);
 		fs::path pathOutCurrent(fout);
 
@@ -183,7 +183,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 		if (!scene)
 		{
 			delete importer;
-			PRINT_ERROR("Failed to load model \"%s\"!", finCurrent);
+			PRINT_ERROR("Failed to load model \"%s\"!", finCurrent.c_str());
 			return BBMOD_ERR_LOAD_FAILED;
 		}
 
@@ -203,17 +203,17 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 
 		if (!model)
 		{
-			PRINT_ERROR("Failed to convert the model \"%s\" to BBMOD!", finCurrent);
+			PRINT_ERROR("Failed to convert the model \"%s\" to BBMOD!", finCurrent.c_str());
 			return BBMOD_ERR_CONVERSION_FAILED;
 		}
 
 		if (!model->Save(foutCurrent))
 		{
-			PRINT_ERROR("Could not save model \"%s\" to \"%s\"!", finCurrent, foutCurrent);
+			PRINT_ERROR("Could not save model \"%s\" to \"%s\"!", finCurrent.c_str(), foutCurrent);
 			return BBMOD_ERR_SAVE_FAILED;
 		}
 
-		PRINT_SUCCESS("Model \"%s\" saved to \"%s\"!", finCurrent, foutCurrent);
+		PRINT_SUCCESS("Model \"%s\" saved to \"%s\"!", finCurrent.c_str(), foutCurrent);
 
 		/*log << "Vertex format:" << std::endl;
 		log << "==============" << std::endl;
