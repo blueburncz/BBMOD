@@ -374,158 +374,6 @@ function BBMOD_BaseRenderer() constructor
 		return self;
 	};
 
-	/// @func __render_reflection_probes()
-	///
-	/// @desc
-	///
-	/// @note This modifies render pass and view and projection matrices and
-	/// for optimization reasons it does not reset them back! Make sure to do
-	/// that yourself in the calling function if needed.
-	///
-	/// @private
-	static __render_reflection_probes = function ()
-	{
-		var _view = matrix_get(matrix_view);
-		var _projection = matrix_get(matrix_projection);
-		var _exposure = bbmod_camera_get_exposure();
-
-		global.__bbmodReflectionProbeTexture = pointer_null;
-		bbmod_camera_set_exposure(1.0);
-
-		static _renderQueues = bbmod_render_queues_get();
-
-		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
-		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 0.0);
-		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 0.0);
-
-		bbmod_render_pass_set(BBMOD_ERenderPass.ReflectionCapture);
-		var _cubemap = __cubemap;
-
-		var _reflectionProbes = global.__bbmodReflectionProbes;
-		var i = 0;
-		repeat (array_length(_reflectionProbes))
-		{
-			with (_reflectionProbes[i++])
-			{
-				if (!Enabled || !NeedsUpdate)
-				{
-					continue;
-				}
-
-				// Copy reflection probe settings to cubemap
-				Position.Copy(_cubemap.Position);
-				_cubemap.Resolution = Resolution;
-
-				// Fill cubemap
-				bbmod_material_reset();
-				while (_cubemap.set_target())
-				{
-					draw_clear(c_black);
-					var _rqi = 0;
-					repeat (array_length(_renderQueues))
-					{
-						_renderQueues[_rqi++].submit();
-					}
-					_cubemap.reset_target();
-				}
-				bbmod_material_reset();
-
-				// Prefilter and apply
-				_cubemap.to_single_surface();
-				_cubemap.to_octahedron();
-				var _sprite = _cubemap.prefilter_ibl();
-				set_sprite(_sprite);
-
-				NeedsUpdate = false;
-			}
-		}
-
-		var _to = (global.__bbmodImageBasedLight != undefined)
-			? global.__bbmodImageBasedLight.Texture
-			: sprite_get_texture(BBMOD_SprBlack, 0);
-
-		var _reflectionProbe = bbmod_reflection_probe_find(bbmod_camera_get_position());
-		if (_reflectionProbe != undefined)
-		{
-			_to = sprite_get_texture(_reflectionProbe.Sprite, 0);
-		}
-
-		var _world = matrix_get(matrix_world);
-		matrix_set(matrix_world, matrix_build_identity());
-		{
-			gpu_push_state();
-			gpu_set_state(bbmod_gpu_get_default_state());
-			gpu_set_blendenable(false);
-			gpu_set_tex_filter(false);
-			{
-				var _height = 128;
-				var _width = _height * 8;
-
-				var _surOld = __surProbe1;
-				__surProbe1 = bbmod_surface_check(__surProbe1, _width, _height, surface_rgba8unorm, false);
-				__surProbe2 = bbmod_surface_check(__surProbe2, _width, _height, surface_rgba8unorm, false);
-
-				if (__surProbe1 != _surOld)
-				{
-					surface_set_target(__surProbe1);
-					{
-						draw_clear_alpha(c_black, 0);
-
-						var _camera = camera_create();
-						camera_set_view_size(_camera, _width, _height);
-						camera_apply(_camera);
-
-						shader_set(__BBMOD_ShMixRGBM);
-						texture_set_stage(shader_get_sampler_index(__BBMOD_ShMixRGBM, "u_texTo"), _to);
-						shader_set_uniform_f(shader_get_uniform(__BBMOD_ShMixRGBM, "u_fFactor"), 1.0);
-						draw_surface(__surProbe2, 0, 0);
-						shader_reset();
-
-						camera_destroy(_camera);
-					}
-					surface_reset_target();
-				}
-
-				surface_set_target(__surProbe2);
-				{
-					draw_clear_alpha(c_black, 0);
-					var _camera = camera_create();
-					camera_set_view_size(_camera, _width, _height);
-					camera_apply(_camera);
-					draw_surface(__surProbe1, 0, 0);
-					camera_destroy(_camera);
-				}
-				surface_reset_target();
-
-				surface_set_target(__surProbe1);
-				{
-					draw_clear_alpha(c_black, 0);
-
-					var _camera = camera_create();
-					camera_set_view_size(_camera, _width, _height);
-					camera_apply(_camera);
-
-					shader_set(__BBMOD_ShMixRGBM);
-					texture_set_stage(shader_get_sampler_index(__BBMOD_ShMixRGBM, "u_texTo"), _to);
-					shader_set_uniform_f(shader_get_uniform(__BBMOD_ShMixRGBM, "u_fFactor"), 0.1);
-					draw_surface(__surProbe2, 0, 0);
-					shader_reset();
-
-					camera_destroy(_camera);
-				}
-				surface_reset_target();
-			}
-			gpu_pop_state();
-		}
-
-		matrix_set(matrix_world, _world);
-		matrix_set(matrix_view, _view);
-		matrix_set(matrix_projection, _projection);
-
-		global.__bbmodReflectionProbeTexture = surface_get_texture(__surProbe1);
-		bbmod_camera_set_exposure(_exposure);
-	};
-
 	/// @func __render_shadowmap()
 	///
 	/// @desc Renders a shadowmap.
@@ -627,6 +475,161 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET, ShadowmapNormalOffset);
 		bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _shadowmapMatrix);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, _shadowCasterIndex);
+	};
+
+	/// @func __render_reflection_probes()
+	///
+	/// @desc
+	///
+	/// @note This modifies render pass and view and projection matrices and
+	/// for optimization reasons it does not reset them back! Make sure to do
+	/// that yourself in the calling function if needed.
+	///
+	/// @private
+	static __render_reflection_probes = function ()
+	{
+		var _view = matrix_get(matrix_view);
+		var _projection = matrix_get(matrix_projection);
+		var _exposure = bbmod_camera_get_exposure();
+
+		global.__bbmodReflectionProbeTexture = pointer_null;
+		bbmod_camera_set_exposure(1.0);
+
+		static _renderQueues = bbmod_render_queues_get();
+
+		var _cubemap = __cubemap;
+		var _reflectionProbes = global.__bbmodReflectionProbes;
+
+		var i = 0;
+		repeat (array_length(_reflectionProbes))
+		{
+			with (_reflectionProbes[i++])
+			{
+				if (!Enabled || !NeedsUpdate)
+				{
+					continue;
+				}
+
+				// Copy reflection probe settings to cubemap
+				Position.Copy(_cubemap.Position);
+				_cubemap.Resolution = Resolution;
+
+				// Render shadows
+				with (other)
+				{
+					var _enableShadows = EnableShadows;
+					EnableShadows &= other.EnableShadows; // Temporarily modify renderer's EnableShadows
+					__render_shadowmap();
+					EnableShadows = _enableShadows;
+				}
+
+				// Fill cubemap
+				bbmod_render_pass_set(BBMOD_ERenderPass.ReflectionCapture);
+
+				bbmod_material_reset();
+				while (_cubemap.set_target())
+				{
+					draw_clear(c_black);
+					var _rqi = 0;
+					repeat (array_length(_renderQueues))
+					{
+						_renderQueues[_rqi++].submit();
+					}
+					_cubemap.reset_target();
+				}
+				bbmod_material_reset();
+
+				// Prefilter and apply
+				_cubemap.to_single_surface();
+				_cubemap.to_octahedron();
+				var _sprite = _cubemap.prefilter_ibl();
+				set_sprite(_sprite);
+
+				NeedsUpdate = false;
+			}
+		}
+
+		var _to = (global.__bbmodImageBasedLight != undefined)
+			? global.__bbmodImageBasedLight.Texture
+			: sprite_get_texture(BBMOD_SprBlack, 0);
+
+		var _reflectionProbe = bbmod_reflection_probe_find(bbmod_camera_get_position());
+		if (_reflectionProbe != undefined)
+		{
+			_to = sprite_get_texture(_reflectionProbe.Sprite, 0);
+		}
+
+		var _world = matrix_get(matrix_world);
+		matrix_set(matrix_world, matrix_build_identity());
+
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_blendenable(false);
+		gpu_set_tex_filter(false);
+
+		var _height = 128;
+		var _width = _height * 8;
+
+		var _surOld = __surProbe1;
+		__surProbe1 = bbmod_surface_check(__surProbe1, _width, _height, surface_rgba8unorm, false);
+		__surProbe2 = bbmod_surface_check(__surProbe2, _width, _height, surface_rgba8unorm, false);
+
+		if (__surProbe1 != _surOld)
+		{
+			surface_set_target(__surProbe1);
+			draw_clear_alpha(c_black, 0);
+
+			var _camera = camera_create();
+			camera_set_view_size(_camera, _width, _height);
+			camera_apply(_camera);
+
+			shader_set(__BBMOD_ShMixRGBM);
+			texture_set_stage(shader_get_sampler_index(__BBMOD_ShMixRGBM, "u_texTo"), _to);
+			shader_set_uniform_f(shader_get_uniform(__BBMOD_ShMixRGBM, "u_fFactor"), 1.0);
+			draw_surface(__surProbe2, 0, 0);
+			shader_reset();
+
+			surface_reset_target();
+			camera_destroy(_camera);
+		}
+
+		{
+			surface_set_target(__surProbe2);
+			draw_clear_alpha(c_black, 0);
+			var _camera = camera_create();
+			camera_set_view_size(_camera, _width, _height);
+			camera_apply(_camera);
+			draw_surface(__surProbe1, 0, 0);
+			surface_reset_target();
+			camera_destroy(_camera);
+		}
+
+		{
+			surface_set_target(__surProbe1);
+			draw_clear_alpha(c_black, 0);
+
+			var _camera = camera_create();
+			camera_set_view_size(_camera, _width, _height);
+			camera_apply(_camera);
+
+			shader_set(__BBMOD_ShMixRGBM);
+			texture_set_stage(shader_get_sampler_index(__BBMOD_ShMixRGBM, "u_texTo"), _to);
+			shader_set_uniform_f(shader_get_uniform(__BBMOD_ShMixRGBM, "u_fFactor"), 0.1);
+			draw_surface(__surProbe2, 0, 0);
+			shader_reset();
+
+			surface_reset_target();
+			camera_destroy(_camera);
+		}
+
+		gpu_pop_state();
+
+		matrix_set(matrix_world, _world);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
+
+		global.__bbmodReflectionProbeTexture = surface_get_texture(__surProbe1);
+		bbmod_camera_set_exposure(_exposure);
 	};
 
 	/// @func __render_gizmo_and_instance_ids()
