@@ -387,8 +387,10 @@ function BBMOD_BaseRenderer() constructor
 	{
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
+		var _exposure = bbmod_camera_get_exposure();
 
 		global.__bbmodReflectionProbeTexture = pointer_null;
+		bbmod_camera_set_exposure(1.0);
 
 		static _renderQueues = bbmod_render_queues_get();
 
@@ -521,6 +523,7 @@ function BBMOD_BaseRenderer() constructor
 		matrix_set(matrix_projection, _projection);
 
 		global.__bbmodReflectionProbeTexture = surface_get_texture(__surProbe1);
+		bbmod_camera_set_exposure(_exposure);
 	};
 
 	/// @func __render_shadowmap()
