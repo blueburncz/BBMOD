@@ -771,6 +771,16 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 				texture_set_stage(_uNormalW, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)));
 				shader_set_uniform_f(_uIsRoughness, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
 
+				var _baseOpacity = _layer.BaseOpacity;
+				if (global.__bbmodMaterialProps != undefined)
+				{
+					var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+					if (_baseOpacityProp != undefined)
+					{
+						_baseOpacity = _baseOpacityProp;
+					}
+				}
+
 				var _i = _chunkFromX;
 				repeat (_chunkToX - _chunkFromX)
 				{
@@ -780,7 +790,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 						var _chunk = Chunks[# _i, _j];
 						if (_chunk != undefined)
 						{
-							vertex_submit(_chunk, pr_trianglelist, _layer.BaseOpacity);
+							vertex_submit(_chunk, pr_trianglelist, _baseOpacity);
 						}
 						++_j;
 					}
@@ -834,6 +844,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		}
 
 		RenderQueue
+			.SetMaterialProps(global.__bbmodMaterialProps)
 			.ApplyMaterial(Material, VertexFormat)
 			.BeginConditionalBlock()
 			.SetSampler(BBMOD_U_SPLATMAP, Splatmap)
@@ -877,6 +888,16 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 					.SetSampler(BBMOD_U_NORMAL_W, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)))
 					.SetUniformFloat(BBMOD_U_IS_ROUGHNESS, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
 
+				var _baseOpacity = _layer.BaseOpacity;
+				if (global.__bbmodMaterialProps != undefined)
+				{
+					var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+					if (_baseOpacityProp != undefined)
+					{
+						_baseOpacity = _baseOpacityProp;
+					}
+				}
+
 				var _i = _chunkFromX;
 				repeat (_chunkToX - _chunkFromX)
 				{
@@ -886,7 +907,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 						var _chunk = Chunks[# _i, _j];
 						if (_chunk != undefined)
 						{
-							RenderQueue.SubmitVertexBuffer(_chunk, pr_trianglelist, _layer.BaseOpacity);
+							RenderQueue.SubmitVertexBuffer(_chunk, pr_trianglelist, _baseOpacity);
 						}
 						++_j;
 					}
@@ -903,7 +924,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 
 		RenderQueue
 			.ResetMaterial()
-			.EndConditionalBlock();
+			.EndConditionalBlock()
+			.ResetMaterialProps();
 
 		return self;
 	};

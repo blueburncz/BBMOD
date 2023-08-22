@@ -119,6 +119,10 @@
 /// the index of the current material within array {@link BBMOD_Model.Materials}.
 #macro BBMOD_U_MATERIAL_INDEX "bbmod_MaterialIndex"
 
+/// @var {String} Name of a fragment shader uniform of type `sampler2D` that
+/// holds a texture with base color in RGB channels and opacity in the A channel.
+#macro BBMOD_U_BASE_OPACITY "gm_BaseTexture"
+
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
 /// a multiplier for the base opacity texture (`gm_BaseTexture`).
 #macro BBMOD_U_BASE_OPACITY_MULTIPLIER "bbmod_BaseOpacityMultiplier"
