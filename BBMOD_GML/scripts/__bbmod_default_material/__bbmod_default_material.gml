@@ -13,7 +13,7 @@
 /// @macro {Struct.BBMOD_DefaultShader} The default shader for unlit objects.
 #macro BBMOD_SHADER_DEFAULT_UNLIT __bbmod_shader_default_unlit()
 
-/// @macro {Struct.BBMOD_BaseShader} Depth shader for static models.
+/// @macro {Struct.BBMOD_BaseShader} The default depth shader.
 ///
 /// @example
 /// Following code enables casting shadows for a custom material
