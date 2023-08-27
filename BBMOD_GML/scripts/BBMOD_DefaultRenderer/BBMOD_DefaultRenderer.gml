@@ -4,36 +4,38 @@
 ///
 /// @extends BBMOD_BaseRenderer
 ///
-/// @desc The default renderer.
+/// @desc A forward renderer. Implemented render passes are:
+/// {@link BBMOD_ERenderPass.ReflectionCapture},
+/// {@link BBMOD_ERenderPass.Id},
+/// {@link BBMOD_ERenderPass.Shadows},
+/// {@link BBMOD_ERenderPass.DepthOnly},
+/// {@link BBMOD_ERenderPass.Forward} and
+/// {@link BBMOD_ERenderPass.Alpha}.
 ///
 /// @example
 /// Following code is a typical use of the renderer.
 /// ```gml
-/// // Create event
-/// renderer = new BBMOD_DefaultRenderer()
-///     .add(OCharacter)
-///     .add(OTree)
-///     .add(OTerrain)
-///     .add(OSky);
+/// /// @desc Create event
+/// renderer = new BBMOD_DefaultRenderer();
 /// renderer.UseAppSurface = true;
 /// renderer.EnableShadows = true;
 ///
 /// camera = new BBMOD_Camera();
 /// camera.FollowObject = OPlayer;
 ///
-/// // Step event
+/// /// @desc Step event
 /// camera.set_mouselook(true);
 /// camera.update(delta_time);
 /// renderer.update(delta_time);
 ///
-/// // Draw event
+/// /// @desc Draw event
 /// camera.apply();
 /// renderer.render();
 ///
-/// // Post-Draw event
+/// /// @desc Post-Draw event
 /// renderer.present();
 ///
-/// // Clean Up event
+/// /// @desc Clean Up event
 /// renderer = renderer.destroy();
 /// ```
 ///

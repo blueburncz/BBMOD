@@ -75,13 +75,6 @@
     "Advanced topics": {
       "file": "AdvancedTopics/AdvancedTopics.md",
       "pages": {
-        "Rendering": {
-          "file": "AdvancedTopics/Rendering/Rendering.md",
-          "pages": {
-            "Using a renderer": "AdvancedTopics/Rendering/UsingARenderer.md",
-            "Render passes": "AdvancedTopics/Rendering/RenderPasses.md"
-          }
-        },
         "Animation optimization levels": "AdvancedTopics/AnimationOptimizationLevels.md"
       }
     },
