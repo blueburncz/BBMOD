@@ -99,8 +99,8 @@ function BBMOD_BaseRenderer() constructor
 
 	/// @var {Bool} Enables rendering into a shadowmap in the shadows render pass.
 	/// Defauls to `false`.
-	/// @see BBMOD_BaseRenderer.ShadowmapArea
-	/// @see BBMOD_BaseRenderer.ShadowmapResolution
+	/// @see BBMOD_DirectionalLight.ShadowmapArea
+	/// @see BBMOD_Light.ShadowmapResolution
 	EnableShadows = false;
 
 	/// @var {Id.Surface} The surface used for rendering the scene's depth from the
