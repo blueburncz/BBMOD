@@ -18,5 +18,8 @@ function BBMOD_TerrainShader(_shader, _vertexFormat)
 	LayersPerDrawCall = 1;
 
 	/// @var {Real} Maximum number of terrain layers that this shader supports.
-	MaxLayers = 5;
+	/// Default value is 1. Hard maximum is 3 because of limited number of
+	/// texture samplers.
+	/// @readonly
+	MaxLayers = 1;
 }
