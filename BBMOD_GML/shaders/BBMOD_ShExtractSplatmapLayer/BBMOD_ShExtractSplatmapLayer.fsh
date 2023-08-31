@@ -1,7 +1,7 @@
 varying vec2 v_vTexCoord;
 
 uniform sampler2D bbmod_Splatmap;
-uniform int bbmod_SplatmapIndex0;
+uniform int bbmod_SplatmapIndex;
 
 void main()
 {

@@ -14,15 +14,25 @@
 
 function __bbmod_shader_terrain()
 {
-	static _shader = new BBMOD_TerrainShader(
-		BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
+	static _shader = undefined;
+	if (_shader == undefined)
+	{
+		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
+		_shader.LayersPerDrawCall = 1;
+		_shader.MaxLayers = 5;
+	}
 	return _shader;
 }
 
 function __bbmod_shader_terrain_unlit()
 {
-	static _shader = new BBMOD_TerrainShader(
-		BBMOD_ShTerrainUnlit, BBMOD_VFORMAT_DEFAULT);
+	static _shader = undefined;
+	if (_shader == undefined)
+	{
+		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrainUnlit, BBMOD_VFORMAT_DEFAULT);
+		_shader.LayersPerDrawCall = 1;
+		_shader.MaxLayers = 5;
+	}
 	return _shader;
 }
 

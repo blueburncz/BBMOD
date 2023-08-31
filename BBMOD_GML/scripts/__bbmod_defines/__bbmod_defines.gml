@@ -301,9 +301,20 @@
 /// @see bbmod_light_punctual_add
 #macro BBMOD_U_LIGHT_PUNCTUAL_DATA_B "bbmod_LightPunctualDataB"
 
-#macro __BBMOD_U_TERRAIN_BASE_OPACITY_PREFIX "bbmod_TerrainBaseOpacity"
-#macro __BBMOD_U_TERRAIN_NORMAL_W_PREFIX "bbmod_TerrainNormalW"
-#macro __BBMOD_U_TERRAIN_IS_ROUGHNESS_PREFIX "bbmod_TerrainIsRoughness"
+/// @macro {String} Common part of uniform names {@link BBMOD_U_TERRAIN_BASE_OPACITY_0},
+/// {@link BBMOD_U_TERRAIN_BASE_OPACITY_1} and {@link BBMOD_U_TERRAIN_BASE_OPACITY_2},
+/// which only append a number to it.
+#macro BBMOD_U_TERRAIN_BASE_OPACITY "bbmod_TerrainBaseOpacity"
+
+/// @macro {String} Common part of uniform names {@link BBMOD_U_TERRAIN_NORMAL_W_0},
+/// {@link BBMOD_U_TERRAIN_NORMAL_W_1} and {@link BBMOD_U_TERRAIN_NORMAL_W_2},
+/// which only append a number to it.
+#macro BBMOD_U_TERRAIN_NORMAL_W "bbmod_TerrainNormalW"
+
+/// @macro {String} Common part of uniform names {@link BBMOD_U_TERRAIN_IS_ROUGHNESS_0},
+/// {@link BBMOD_U_TERRAIN_IS_ROUGHNESS_1} and {@link BBMOD_U_TERRAIN_IS_ROUGHNESS_2},
+/// which only append a number to it.
+#macro BBMOD_U_TERRAIN_IS_ROUGHNESS "bbmod_TerrainIsRoughness"
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds a texture with base color in RGB channels and opacity in the A channel
@@ -313,65 +324,63 @@
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds normal smoothness/roughness texture for the first terrain layer rendered
 /// in a single draw call.
-#macro BBMOD_U_TERRAIN_NORMAL_W_0     (__BBMOD_U_TERRAIN_NORMAL_W_PREFIX + "0")
+#macro BBMOD_U_TERRAIN_NORMAL_W_0     (BBMOD_U_TERRAIN_NORMAL_W + "0")
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// whether the first terrain material layer uses roughness workflow (1.0) or not (0.0).
-#macro BBMOD_U_TERRAIN_IS_ROUGHNESS_0 (__BBMOD_U_TERRAIN_IS_ROUGHNESS_PREFIX + "0")
+#macro BBMOD_U_TERRAIN_IS_ROUGHNESS_0 (BBMOD_U_TERRAIN_IS_ROUGHNESS + "0")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds a texture with base color in RGB channels and opacity in the A channel
 /// for the second terrain layer rendered in a single draw call.
-#macro BBMOD_U_TERRAIN_BASE_OPACITY_1 (__BBMOD_U_TERRAIN_BASE_OPACITY_PREFIX + "1")
+#macro BBMOD_U_TERRAIN_BASE_OPACITY_1 (BBMOD_U_TERRAIN_BASE_OPACITY + "1")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds normal smoothness/roughness texture for the second terrain layer rendered
 /// in a single draw call.
-#macro BBMOD_U_TERRAIN_NORMAL_W_1     (__BBMOD_U_TERRAIN_NORMAL_W_PREFIX + "1")
+#macro BBMOD_U_TERRAIN_NORMAL_W_1     (BBMOD_U_TERRAIN_NORMAL_W + "1")
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// whether the second terrain material layer uses roughness workflow (1.0) or not (0.0).
-#macro BBMOD_U_TERRAIN_IS_ROUGHNESS_1 (__BBMOD_U_TERRAIN_IS_ROUGHNESS_PREFIX + "1")
+#macro BBMOD_U_TERRAIN_IS_ROUGHNESS_1 (BBMOD_U_TERRAIN_IS_ROUGHNESS + "1")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds a texture with base color in RGB channels and opacity in the A channel
 /// for the third terrain layer rendered in a single draw call.
-#macro BBMOD_U_TERRAIN_BASE_OPACITY_2 (__BBMOD_U_TERRAIN_BASE_OPACITY_PREFIX + "2")
+#macro BBMOD_U_TERRAIN_BASE_OPACITY_2 (BBMOD_U_TERRAIN_BASE_OPACITY + "2")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds normal smoothness/roughness texture for the third terrain layer rendered
 /// in a single draw call.
-#macro BBMOD_U_TERRAIN_NORMAL_W_2     (__BBMOD_U_TERRAIN_NORMAL_W_PREFIX + "2")
+#macro BBMOD_U_TERRAIN_NORMAL_W_2     (BBMOD_U_TERRAIN_NORMAL_W + "2")
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// whether the third terrain material layer uses roughness workflow (1.0) or not (0.0).
-#macro BBMOD_U_TERRAIN_IS_ROUGHNESS_2 (__BBMOD_U_TERRAIN_IS_ROUGHNESS_PREFIX + "2")
+#macro BBMOD_U_TERRAIN_IS_ROUGHNESS_2 (BBMOD_U_TERRAIN_IS_ROUGHNESS + "2")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds the splatmap texture.
 #macro BBMOD_U_SPLATMAP "bbmod_Splatmap"
 
-#macro __BBMOD_U_SPLATMAP_INDEX_PREFIX "bbmod_SplatmapIndex"
-
-/// @macro {String} Name of a fragment shader uniform of type `int` that holds
-/// the index of a channel to read from the splatmap.
-/// @obsolete Please use {@link BBMOD_U_SPLATMAP_INDEX_0} instead.
-#macro BBMOD_U_SPLATMAP_INDEX __BBMOD_U_SPLATMAP_INDEX_PREFIX
+/// @macro {String} Common part of uniform names {@link BBMOD_U_SPLATMAP_INDEX_0},
+/// {@link BBMOD_U_SPLATMAP_INDEX_1} and {@link BBMOD_U_SPLATMAP_INDEX_2},
+/// which only append a number to it.
+#macro BBMOD_U_SPLATMAP_INDEX "bbmod_SplatmapIndex"
 
 /// @macro {String} Name of a fragment shader uniform of type `int` that holds
 /// the index of a channel to read from the splatmap for the first terrain layer
 /// rendered in a draw call.
-#macro BBMOD_U_SPLATMAP_INDEX_0 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "0")
+#macro BBMOD_U_SPLATMAP_INDEX_0 (BBMOD_U_SPLATMAP_INDEX + "0")
 
 /// @macro {String} Name of a fragment shader uniform of type `int` that holds
 /// the index of a channel to read from the splatmap for the second terrain layer
 /// rendered in a draw call.
-#macro BBMOD_U_SPLATMAP_INDEX_1 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "1")
+#macro BBMOD_U_SPLATMAP_INDEX_1 (BBMOD_U_SPLATMAP_INDEX + "1")
 
 /// @macro {String} Name of a fragment shader uniform of type `int` that holds
 /// the index of a channel to read from the splatmap for the third terrain layer
 /// rendered in a draw call.
-#macro BBMOD_U_SPLATMAP_INDEX_2 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "2")
+#macro BBMOD_U_SPLATMAP_INDEX_2 (BBMOD_U_SPLATMAP_INDEX + "2")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds the colormap texture.
