@@ -379,9 +379,37 @@
 /// holds the splatmap texture.
 #macro BBMOD_U_SPLATMAP "bbmod_Splatmap"
 
+#macro __BBMOD_U_SPLATMAP_INDEX_PREFIX "bbmod_SplatmapIndex"
+
 /// @macro {String} Name of a fragment shader uniform of type `int` that holds
 /// the index of a channel to read from the splatmap.
-#macro BBMOD_U_SPLATMAP_INDEX "bbmod_SplatmapIndex"
+/// @obsolete Please use {@link BBMOD_U_SPLATMAP_INDEX_0} instead.
+#macro BBMOD_U_SPLATMAP_INDEX __BBMOD_U_SPLATMAP_INDEX_PREFIX
+
+/// @macro {String} Name of a fragment shader uniform of type `int` that holds
+/// the index of a channel to read from the splatmap for the first terrain layer
+/// rendered in a draw call.
+#macro BBMOD_U_SPLATMAP_INDEX_0 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "0")
+
+/// @macro {String} Name of a fragment shader uniform of type `int` that holds
+/// the index of a channel to read from the splatmap for the second terrain layer
+/// rendered in a draw call.
+#macro BBMOD_U_SPLATMAP_INDEX_1 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "1")
+
+/// @macro {String} Name of a fragment shader uniform of type `int` that holds
+/// the index of a channel to read from the splatmap for the third terrain layer
+/// rendered in a draw call.
+#macro BBMOD_U_SPLATMAP_INDEX_2 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "2")
+
+/// @macro {String} Name of a fragment shader uniform of type `int` that holds
+/// the index of a channel to read from the splatmap for the fourth terrain layer
+/// rendered in a draw call.
+#macro BBMOD_U_SPLATMAP_INDEX_3 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "3")
+
+/// @macro {String} Name of a fragment shader uniform of type `int` that holds
+/// the index of a channel to read from the splatmap for the fifth terrain layer
+/// rendered in a draw call.
+#macro BBMOD_U_SPLATMAP_INDEX_4 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "4")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds the colormap texture.

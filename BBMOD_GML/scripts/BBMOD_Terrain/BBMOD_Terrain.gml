@@ -485,7 +485,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		{
 			shader_set(BBMOD_ShExtractSplatmapLayer);
 			texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP), Splatmap);
-			shader_set_uniform_i(shader_get_uniform(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP_INDEX), i);
+			shader_set_uniform_i(shader_get_uniform(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP_INDEX_0), i);
 
 			surface_set_target(_surface);
 			draw_clear_alpha(0, 0);
@@ -728,7 +728,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 
 		var _shaderCurrent = shader_current();
 		var _uSplatmap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_SPLATMAP);
-		var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_SPLATMAP_INDEX);
+		var _uSplatmapIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_SPLATMAP_INDEX_0);
 		var _uColormap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_COLORMAP);
 		var _uTextureScale = shader_get_uniform(_shaderCurrent, BBMOD_U_TEXTURE_SCALE);
 		var _uNormalMatrix = shader_get_uniform(_shaderCurrent, BBMOD_U_NORMAL_MATRIX);
@@ -884,7 +884,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 				RenderQueue
 					.SetGpuZWriteEnable(_l == 0)
 					.SetGpuZFunc((_l == 0) ? cmpfunc_lessequal : cmpfunc_equal)
-					.SetUniformInt(BBMOD_U_SPLATMAP_INDEX, _l - 1)
+					.SetUniformInt(BBMOD_U_SPLATMAP_INDEX_0, _l - 1)
 					.SetSampler(BBMOD_U_TERRAIN_NORMAL_W_0, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)))
 					.SetUniformFloat(BBMOD_U_TERRAIN_IS_ROUGHNESS_0, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
 

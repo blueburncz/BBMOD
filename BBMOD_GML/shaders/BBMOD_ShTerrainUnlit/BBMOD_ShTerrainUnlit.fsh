@@ -89,7 +89,7 @@ uniform sampler2D bbmod_TerrainNormalW0;
 // Splatmap texture
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
-uniform int bbmod_SplatmapIndex;
+uniform int bbmod_SplatmapIndex0;
 // Colormap texture
 uniform sampler2D bbmod_Colormap;
 
@@ -271,12 +271,12 @@ void main()
 
 	// Splatmap
 	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
-	if (bbmod_SplatmapIndex >= 0)
+	if (bbmod_SplatmapIndex0 >= 0)
 	{
-		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
-		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
-			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
-			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
+		// splatmap[index] does not work in HTML5
+		material.Opacity *= ((bbmod_SplatmapIndex0 == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex0 == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex0 == 2) ? splatmap.b
 			: splatmap.a)));
 	}
 
