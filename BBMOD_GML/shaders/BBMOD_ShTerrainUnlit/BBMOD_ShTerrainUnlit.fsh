@@ -314,71 +314,31 @@ void main()
 			: ((bbmod_SplatmapIndex1 == 1) ? splatmap.g
 			: ((bbmod_SplatmapIndex1 == 2) ? splatmap.b
 			: splatmap.a)));
+		float layerStrengthInv = 1.0 - layerStrength;
 
-		material.Base          *= (1.0 - layerStrength);
-		material.Opacity       *= (1.0 - layerStrength);
-		material.Normal        *= (1.0 - layerStrength);
-		material.Metallic      *= (1.0 - layerStrength);
-		material.Roughness     *= (1.0 - layerStrength);
-		material.Specular      *= (1.0 - layerStrength);
-		material.Smoothness    *= (1.0 - layerStrength);
-		material.SpecularPower *= (1.0 - layerStrength);
-		material.AO            *= (1.0 - layerStrength);
-		material.Emissive      *= (1.0 - layerStrength);
-		material.Subsurface    *= (1.0 - layerStrength);
-		material.Lightmap      *= (1.0 - layerStrength);
-
-		material.Base          += layerStrength * material1.Base;
-		material.Opacity       += layerStrength * material1.Opacity;
-		material.Normal        += layerStrength * material1.Normal;
-		material.Metallic      += layerStrength * material1.Metallic;
-		material.Roughness     += layerStrength * material1.Roughness;
-		material.Specular      += layerStrength * material1.Specular;
-		material.Smoothness    += layerStrength * material1.Smoothness;
-		material.SpecularPower += layerStrength * material1.SpecularPower;
-		material.AO            += layerStrength * material1.AO;
-		material.Emissive      += layerStrength * material1.Emissive;
-		material.Subsurface    += layerStrength * material1.Subsurface;
-		material.Lightmap      += layerStrength * material1.Lightmap;
+		material.Base    *= layerStrengthInv;
+		material.Opacity *= layerStrengthInv;
+		material.Base    += layerStrength * material1.Base;
+		material.Opacity += layerStrength * material1.Opacity;
 	}
 
 	if (bbmod_SplatmapIndex2 >= 0)
 	{
 		// splatmap[index] does not work in HTML5
-		float layerStrength = ((bbmod_SplatmapIndex2 == 0) ? splatmap.r
+		float layerStrength= ((bbmod_SplatmapIndex2 == 0) ? splatmap.r
 			: ((bbmod_SplatmapIndex2 == 1) ? splatmap.g
 			: ((bbmod_SplatmapIndex2 == 2) ? splatmap.b
 			: splatmap.a)));
+		float layerStrengthInv = 1.0 - layerStrength;
 
-		material.Base          *= (1.0 - layerStrength);
-		material.Opacity       *= (1.0 - layerStrength);
-		material.Normal        *= (1.0 - layerStrength);
-		material.Metallic      *= (1.0 - layerStrength);
-		material.Roughness     *= (1.0 - layerStrength);
-		material.Specular      *= (1.0 - layerStrength);
-		material.Smoothness    *= (1.0 - layerStrength);
-		material.SpecularPower *= (1.0 - layerStrength);
-		material.AO            *= (1.0 - layerStrength);
-		material.Emissive      *= (1.0 - layerStrength);
-		material.Subsurface    *= (1.0 - layerStrength);
-		material.Lightmap      *= (1.0 - layerStrength);
-
-		material.Base          += layerStrength * material2.Base;
-		material.Opacity       += layerStrength * material2.Opacity;
-		material.Normal        += layerStrength * material2.Normal;
-		material.Metallic      += layerStrength * material2.Metallic;
-		material.Roughness     += layerStrength * material2.Roughness;
-		material.Specular      += layerStrength * material2.Specular;
-		material.Smoothness    += layerStrength * material2.Smoothness;
-		material.SpecularPower += layerStrength * material2.SpecularPower;
-		material.AO            += layerStrength * material2.AO;
-		material.Emissive      += layerStrength * material2.Emissive;
-		material.Subsurface    += layerStrength * material2.Subsurface;
-		material.Lightmap      += layerStrength * material2.Lightmap;
+		material.Base    *= layerStrengthInv;
+		material.Opacity *= layerStrengthInv;
+		material.Base    += layerStrength * material2.Base;
+		material.Opacity += layerStrength * material2.Opacity;
 	}
 
 	// Normalize normal since it was blended
-	material.Normal = normalize(material.Normal);
+	// material.Normal = normalize(material.Normal);
 
 	// Colormap
 	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
