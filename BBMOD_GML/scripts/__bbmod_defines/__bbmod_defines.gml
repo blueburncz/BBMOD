@@ -348,34 +348,6 @@
 #macro BBMOD_U_TERRAIN_IS_ROUGHNESS_2 (__BBMOD_U_TERRAIN_IS_ROUGHNESS_PREFIX + "2")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
-/// holds a texture with base color in RGB channels and opacity in the A channel
-/// for the fourth terrain layer rendered in a single draw call.
-#macro BBMOD_U_TERRAIN_BASE_OPACITY_3 (__BBMOD_U_TERRAIN_BASE_OPACITY_PREFIX + "3")
-
-/// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
-/// holds normal smoothness/roughness texture for the fourth terrain layer rendered
-/// in a single draw call.
-#macro BBMOD_U_TERRAIN_NORMAL_W_3     (__BBMOD_U_TERRAIN_NORMAL_W_PREFIX + "3")
-
-/// @macro {String} Name of a fragment shader uniform of type `float` that holds
-/// whether the fourth terrain material layer uses roughness workflow (1.0) or not (0.0).
-#macro BBMOD_U_TERRAIN_IS_ROUGHNESS_3 (__BBMOD_U_TERRAIN_IS_ROUGHNESS_PREFIX + "3")
-
-/// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
-/// holds a texture with base color in RGB channels and opacity in the A channel
-/// for the fifth terrain layer rendered in a single draw call.
-#macro BBMOD_U_TERRAIN_BASE_OPACITY_4 (__BBMOD_U_TERRAIN_BASE_OPACITY_PREFIX + "4")
-
-/// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
-/// holds normal smoothness/roughness texture for the fifth terrain layer rendered
-/// in a single draw call.
-#macro BBMOD_U_TERRAIN_NORMAL_W_4     (__BBMOD_U_TERRAIN_NORMAL_W_PREFIX + "4")
-
-/// @macro {String} Name of a fragment shader uniform of type `float` that holds
-/// whether the fifth terrain material layer uses roughness workflow (1.0) or not (0.0).
-#macro BBMOD_U_TERRAIN_IS_ROUGHNESS_4 (__BBMOD_U_TERRAIN_IS_ROUGHNESS_PREFIX + "4")
-
-/// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds the splatmap texture.
 #macro BBMOD_U_SPLATMAP "bbmod_Splatmap"
 
@@ -400,16 +372,6 @@
 /// the index of a channel to read from the splatmap for the third terrain layer
 /// rendered in a draw call.
 #macro BBMOD_U_SPLATMAP_INDEX_2 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "2")
-
-/// @macro {String} Name of a fragment shader uniform of type `int` that holds
-/// the index of a channel to read from the splatmap for the fourth terrain layer
-/// rendered in a draw call.
-#macro BBMOD_U_SPLATMAP_INDEX_3 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "3")
-
-/// @macro {String} Name of a fragment shader uniform of type `int` that holds
-/// the index of a channel to read from the splatmap for the fifth terrain layer
-/// rendered in a draw call.
-#macro BBMOD_U_SPLATMAP_INDEX_4 (__BBMOD_U_SPLATMAP_INDEX_PREFIX + "4")
 
 /// @macro {String} Name of a fragment shader uniform of type `sampler2D` that
 /// holds the colormap texture.
