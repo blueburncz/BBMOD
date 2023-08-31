@@ -30,7 +30,7 @@ function __bbmod_shader_terrain_unlit()
 	if (_shader == undefined)
 	{
 		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrainUnlit, BBMOD_VFORMAT_DEFAULT);
-		_shader.LayersPerDrawCall = 1;
+		_shader.LayersPerDrawCall = 3;
 		_shader.MaxLayers = 5;
 	}
 	return _shader;
@@ -64,7 +64,7 @@ function __bbmod_material_terrain_unlit()
 }
 
 bbmod_shader_register("BBMOD_SHADER_TERRAIN",       BBMOD_SHADER_TERRAIN);
-bbmod_shader_register("BBMOD_SHADER_TERRAIN_UNLIT", BBMOD_SHADER_TERRAIN);
+bbmod_shader_register("BBMOD_SHADER_TERRAIN_UNLIT", BBMOD_SHADER_TERRAIN_UNLIT);
 
 bbmod_material_register("BBMOD_MATERIAL_TERRAIN",       BBMOD_MATERIAL_TERRAIN);
 bbmod_material_register("BBMOD_MATERIAL_TERRAIN_UNLIT", BBMOD_MATERIAL_TERRAIN_UNLIT);

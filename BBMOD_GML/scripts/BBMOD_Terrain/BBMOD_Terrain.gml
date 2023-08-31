@@ -912,7 +912,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 				{
 					var _layer = _layers[_layerCallIndex];
 					var _layerNormalRoughness = _layer[$ "NormalRoughness"];
-					var _baseOpacity = _layer.BaseOpacity
+					var _baseOpacity = _layer.BaseOpacity;
 
 					if (global.__bbmodMaterialProps != undefined)
 					{
@@ -926,6 +926,10 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 					if (i == 0)
 					{
 						_baseOpacityFirst = _baseOpacity;
+					}
+					else
+					{
+						RenderQueue.SetSampler(BBMOD_U_TERRAIN_BASE_OPACITY + _iStr, _baseOpacity);
 					}
 
 					RenderQueue

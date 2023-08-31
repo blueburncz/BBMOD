@@ -3,6 +3,8 @@ if (!renderer.UseAppSurface)
 	renderer.present();
 }
 
+//draw_surface(renderer.__surDepthBuffer, 0, 0);
+
 var _windowWidth = window_get_width();
 var _windowHeight = window_get_height();
 var _font = draw_get_font();

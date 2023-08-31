@@ -11,11 +11,11 @@ global.resourceManager = new BBMOD_ResourceManager();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Create terrain
-var _dirt = BBMOD_MATERIAL_TERRAIN.clone();
+var _dirt = new BBMOD_TerrainLayer()
 _dirt.BaseOpacity = sprite_get_texture(SprDirt, 0);
 _dirt.NormalSmoothness = sprite_get_texture(SprDirt, 1);
 
-var _sand = BBMOD_MATERIAL_TERRAIN.clone();
+var _sand = new BBMOD_TerrainLayer()
 _sand.BaseOpacity = sprite_get_texture(SprSand, 0);
 _sand.NormalSmoothness = sprite_get_texture(SprSand, 1);
 
