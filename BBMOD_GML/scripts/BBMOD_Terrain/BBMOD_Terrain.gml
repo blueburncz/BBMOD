@@ -732,8 +732,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		var _uColormap = shader_get_sampler_index(_shaderCurrent, BBMOD_U_COLORMAP);
 		var _uTextureScale = shader_get_uniform(_shaderCurrent, BBMOD_U_TEXTURE_SCALE);
 		var _uNormalMatrix = shader_get_uniform(_shaderCurrent, BBMOD_U_NORMAL_MATRIX);
-		var _uNormalW = shader_get_sampler_index(_shaderCurrent, BBMOD_U_NORMAL_W);
-		var _uIsRoughness = shader_get_uniform(_shaderCurrent, BBMOD_U_IS_ROUGHNESS);
+		var _uNormalW = shader_get_sampler_index(_shaderCurrent, BBMOD_U_TERRAIN_NORMAL_W_0);
+		var _uIsRoughness = shader_get_uniform(_shaderCurrent, BBMOD_U_TERRAIN_IS_ROUGHNESS_0);
 
 		texture_set_stage(_uSplatmap, Splatmap);
 		texture_set_stage(_uColormap, Colormap);
@@ -885,13 +885,13 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 					.SetGpuZWriteEnable(_l == 0)
 					.SetGpuZFunc((_l == 0) ? cmpfunc_lessequal : cmpfunc_equal)
 					.SetUniformInt(BBMOD_U_SPLATMAP_INDEX, _l - 1)
-					.SetSampler(BBMOD_U_NORMAL_W, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)))
-					.SetUniformFloat(BBMOD_U_IS_ROUGHNESS, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
+					.SetSampler(BBMOD_U_TERRAIN_NORMAL_W_0, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)))
+					.SetUniformFloat(BBMOD_U_TERRAIN_IS_ROUGHNESS_0, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
 
 				var _baseOpacity = _layer.BaseOpacity;
 				if (global.__bbmodMaterialProps != undefined)
 				{
-					var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+					var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_TERRAIN_BASE_OPACITY_0);
 					if (_baseOpacityProp != undefined)
 					{
 						_baseOpacity = _baseOpacityProp;

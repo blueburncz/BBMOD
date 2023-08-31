@@ -12,4 +12,11 @@
 function BBMOD_TerrainShader(_shader, _vertexFormat)
 	: BBMOD_BaseShader(_shader, _vertexFormat) constructor
 {
+	/// @var {Real} Number of terrain layers that this shader can render in
+	/// a single draw call. Default value is 1.
+	/// @readonly
+	LayersPerDrawCall = 1;
+
+	/// @var {Real} Maximum number of terrain layers that this shader supports.
+	MaxLayers = 5;
 }

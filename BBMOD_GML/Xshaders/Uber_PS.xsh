@@ -69,6 +69,7 @@ uniform vec4 bbmod_InstanceID;
 ////////////////////////////////////////////////////////////////////////////////
 // Material
 
+#if !defined(X_TERRAIN)
 // Material index
 // uniform float bbmod_MaterialIndex;
 
@@ -83,21 +84,17 @@ uniform vec4 bbmod_BaseOpacityMultiplier;
 uniform float bbmod_IsRoughness;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_NormalW;
-#if !defined(X_TERRAIN)
 // If 1.0 then the material uses metallic workflow
 uniform float bbmod_IsMetallic;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
-#endif
 
-#if !defined(X_TERRAIN)
 #if !defined(X_LIGHTMAP)
 // RGB: Subsurface color, A: Intensity
 uniform sampler2D bbmod_Subsurface;
 #endif
 // RGBA: RGBM encoded emissive color
 uniform sampler2D bbmod_Emissive;
-#endif
 
 #if defined(X_LIGHTMAP)
 // RGBA: RGBM encoded lightmap
@@ -113,6 +110,7 @@ uniform vec4 bbmod_NormalWUV;
 uniform vec4 bbmod_MaterialUV;
 #endif // X_2D
 
+#endif // !X_TERRAIN
 #endif // !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
 
 // Pixels with alpha less than this value will be discarded
@@ -203,6 +201,12 @@ uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
 
+// RGB: Base color, A: Opacity
+#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
+// If 1.0 then the material uses roughness
+uniform float bbmod_TerrainIsRoughness0;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_TerrainNormalW0;
 // Splatmap texture
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
@@ -280,24 +284,31 @@ void main()
 #endif
 
 #else
+#if defined(X_TERRAIN)
+	Material material = UnpackMaterial(
+		bbmod_TerrainBaseOpacity0,
+		bbmod_TerrainIsRoughness0,
+		bbmod_TerrainNormalW0,
+		v_mTBN,
+		v_vTexCoord);
+#else // X_TERRAIN
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
 		bbmod_IsRoughness,
 		bbmod_NormalW,
-#if !defined(X_TERRAIN)
 		bbmod_IsMetallic,
 		bbmod_Material,
 #if !defined(X_LIGHTMAP)
 		bbmod_Subsurface,
 #endif
 		bbmod_Emissive,
-#endif
 #if defined(X_LIGHTMAP)
 		bbmod_Lightmap,
 		v_vTexCoord2,
 #endif
 		v_mTBN,
 		v_vTexCoord);
+#endif // !X_TERRAIN
 
 #if defined(X_COLOR) || defined(X_2D) || defined(X_PARTICLES)
 	material.Base *= v_vColor.rgb;
@@ -318,10 +329,11 @@ void main()
 
 	// Colormap
 	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
-#endif
+#else
 
 	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
+#endif
 
 #if defined(X_ZOMBIE)
 	// Dissolve

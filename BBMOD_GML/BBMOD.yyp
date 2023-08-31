@@ -142,7 +142,7 @@
   "isEcma": false,
   "LibraryEmitters": [],
   "MetaData": {
-    "IDEVersion": "2023.800.0.402",
+    "IDEVersion": "2023.800.0.406",
   },
   "resources": [
     {"id":{"name":"BBMOD_ShDefaultColor","path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},},
