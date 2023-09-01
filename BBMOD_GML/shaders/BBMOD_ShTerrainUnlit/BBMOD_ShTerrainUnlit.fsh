@@ -296,6 +296,7 @@ void main()
 	// Splatmap
 	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
 
+	// Blend layers
 	if (bbmod_SplatmapIndex0 >= 0)
 	{
 		// splatmap[index] does not work in HTML5
@@ -336,9 +337,6 @@ void main()
 		material.Base    += layerStrength * material2.Base;
 		material.Opacity += layerStrength * material2.Opacity;
 	}
-
-	// Normalize normal since it was blended
-	// material.Normal = normalize(material.Normal);
 
 	// Colormap
 	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
