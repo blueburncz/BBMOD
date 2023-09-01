@@ -128,7 +128,7 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-#if !defined(X_OUTPUT_DEPTH)
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_OUTPUT_GBUFFER)
 #if defined(X_PARTICLES)
 ////////////////////////////////////////////////////////////////////////////////
 // Soft particles
@@ -197,6 +197,25 @@ uniform vec4 bbmod_LightPunctualDataA[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 #endif // X_PBR
 
+#if defined(X_PBR) && !defined(X_OUTPUT_GBUFFER)
+////////////////////////////////////////////////////////////////////////////////
+// Shadow mapping
+
+// 1.0 to enable shadows
+uniform float bbmod_ShadowmapEnablePS;
+// Shadowmap texture
+uniform sampler2D bbmod_Shadowmap;
+// (1.0/shadowmapWidth, 1.0/shadowmapHeight)
+uniform vec2 bbmod_ShadowmapTexel;
+// The area that the shadowmap captures
+uniform float bbmod_ShadowmapArea;
+// The range over which meshes smoothly transition into shadow.
+uniform float bbmod_ShadowmapBias;
+// The index of the light that casts shadows. Use -1 for the directional light.
+uniform float bbmod_ShadowCasterIndex;
+#endif // defined(X_PBR) && !defined(X_OUTPUT_GBUFFER)
+#endif // !defined(X_OUTPUT_DEPTH) && !defined(X_OUTPUT_GBUFFER)
+
 #if defined(X_TERRAIN)
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -214,7 +233,7 @@ uniform int bbmod_SplatmapIndex0;
 // Colormap texture
 uniform sampler2D bbmod_Colormap;
 
-#if !defined(X_PBR) && !(defined(X_OUTPUT_DEPTH) || defined(X_ID))
+#if (!defined(X_PBR) || defined(X_OUTPUT_GBUFFER)) && !(defined(X_OUTPUT_DEPTH) || defined(X_ID))
 uniform sampler2D bbmod_TerrainBaseOpacity1;
 uniform float bbmod_TerrainIsRoughness1;
 uniform sampler2D bbmod_TerrainNormalW1;
@@ -228,40 +247,21 @@ uniform int bbmod_SplatmapIndex2;
 
 #endif // X_TERRAIN
 
-#if defined(X_PBR)
-////////////////////////////////////////////////////////////////////////////////
-// Shadow mapping
-
-// 1.0 to enable shadows
-uniform float bbmod_ShadowmapEnablePS;
-// Shadowmap texture
-uniform sampler2D bbmod_Shadowmap;
-// (1.0/shadowmapWidth, 1.0/shadowmapHeight)
-uniform vec2 bbmod_ShadowmapTexel;
-// The area that the shadowmap captures
-uniform float bbmod_ShadowmapArea;
-// The range over which meshes smoothly transition into shadow.
-uniform float bbmod_ShadowmapBias;
-// The index of the light that casts shadows. Use -1 for the directional light.
-uniform float bbmod_ShadowCasterIndex;
-#endif // X_PBR
-#endif // !X_OUTPUT_DEPTH
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
-#if !defined(X_ID)
-#if defined(X_OUTPUT_DEPTH)
-#pragma include("DepthShader.xsh")
-#else // X_OUTPUT_DEPTH
-#if defined(X_PBR)
-#pragma include("PBRShader.xsh")
-#else // X_PBR
-#pragma include("UnlitShader.xsh")
-#endif // !X_PBR
-#endif // !X_OUTPUT_DEPTH
-#endif // !X_ID
+#if defined(X_ID)
+#elif defined(X_OUTPUT_DEPTH) || defined(X_OUTPUT_GBUFFER)
+#    pragma include("DepthShader.xsh")
+#    if defined(X_PBR)
+#        pragma include("MetallicMaterial.xsh")
+#    endif
+#elif defined(X_PBR)
+#    pragma include("PBRShader.xsh")
+#else
+#    pragma include("UnlitShader.xsh")
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -298,7 +298,7 @@ void main()
 
 #else
 #if defined(X_TERRAIN)
-#if defined(X_PBR)
+#if defined(X_PBR) && !defined(X_OUTPUT_GBUFFER)
 	Material material = UnpackMaterial(
 		bbmod_TerrainBaseOpacity0,
 		bbmod_TerrainIsRoughness0,
@@ -432,11 +432,16 @@ void main()
 		discard;
 	}
 
-#if defined(X_PBR)
+#if defined(X_OUTPUT_GBUFFER)
+	gl_FragData[0] = vec4(xLinearToGamma(mix(material.Base, material.Specular, material.Metallic)), material.AO);
+	gl_FragData[1] = vec4(material.Normal * 0.5 + 0.5, material.Roughness);
+	gl_FragData[2] = vec4(xEncodeDepth(v_vPosition.z / bbmod_ZFar), material.Metallic);
+	gl_FragData[3] = vec4(xLinearToGamma(material.Emissive), 1.0);
+#elif defined(X_PBR)
 	PBRShader(material, v_vPosition.z);
-#else // X_PBR
+#else
 	UnlitShader(material, v_vPosition.z);
-#endif // !X_PBR
+#endif
 
 #if defined(X_ZOMBIE)
 	// Dissolve

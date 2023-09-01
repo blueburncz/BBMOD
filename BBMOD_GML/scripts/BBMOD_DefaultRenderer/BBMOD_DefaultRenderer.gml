@@ -119,8 +119,6 @@ function BBMOD_DefaultRenderer()
 			}
 		}
 
-		bbmod_material_reset();
-
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Reflection probes
@@ -177,8 +175,6 @@ function BBMOD_DefaultRenderer()
 			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height, surface_rgba8unorm, false);
 			__surWork = bbmod_surface_check(__surWork, _width, _height, surface_rgba8unorm, false);
 
-			bbmod_material_reset();
-
 			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
 				SSAODepthRange, __surSSAO, __surWork, __surDepthBuffer, _projection,
 				bbmod_camera_get_zfar(), SSAOSelfOcclusionBias, SSAOBlurDepthRange);
@@ -234,8 +230,6 @@ function BBMOD_DefaultRenderer()
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 		bbmod_shader_unset_global(BBMOD_U_SSAO);
 		bbmod_shader_unset_global(BBMOD_U_GBUFFER);
-
-		bbmod_material_reset();
 
 		matrix_set(matrix_world, _world);
 		return self;

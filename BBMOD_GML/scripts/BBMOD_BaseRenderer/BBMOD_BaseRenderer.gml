@@ -526,7 +526,6 @@ function BBMOD_BaseRenderer() constructor
 				// Fill cubemap
 				bbmod_render_pass_set(BBMOD_ERenderPass.ReflectionCapture);
 
-				bbmod_material_reset();
 				while (_cubemap.set_target())
 				{
 					draw_clear(c_black);
@@ -537,7 +536,6 @@ function BBMOD_BaseRenderer() constructor
 					}
 					_cubemap.reset_target();
 				}
-				bbmod_material_reset();
 
 				// Prefilter and apply
 				_cubemap.to_single_surface();
@@ -802,8 +800,6 @@ function BBMOD_BaseRenderer() constructor
 			}
 		}
 
-		bbmod_material_reset();
-
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Reflection probes
@@ -860,8 +856,6 @@ function BBMOD_BaseRenderer() constructor
 
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
-
-		bbmod_material_reset();
 
 		matrix_set(matrix_world, _world);
 		return self;

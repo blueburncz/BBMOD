@@ -104,22 +104,6 @@ uniform vec4 bbmod_LightPunctualDataA[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
-// Terrain
-
-// RGB: Base color, A: Opacity
-#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
-// If 1.0 then the material uses roughness
-uniform float bbmod_TerrainIsRoughness0;
-// RGB: Tangent-space normal, A: Smoothness or roughness
-uniform sampler2D bbmod_TerrainNormalW0;
-// Splatmap texture
-uniform sampler2D bbmod_Splatmap;
-// Splatmap channel to read. Use -1 for none.
-uniform int bbmod_SplatmapIndex0;
-// Colormap texture
-uniform sampler2D bbmod_Colormap;
-
-////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
 
 // 1.0 to enable shadows
@@ -134,6 +118,22 @@ uniform float bbmod_ShadowmapArea;
 uniform float bbmod_ShadowmapBias;
 // The index of the light that casts shadows. Use -1 for the directional light.
 uniform float bbmod_ShadowCasterIndex;
+
+////////////////////////////////////////////////////////////////////////////////
+// Terrain
+
+// RGB: Base color, A: Opacity
+#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
+// If 1.0 then the material uses roughness
+uniform float bbmod_TerrainIsRoughness0;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_TerrainNormalW0;
+// Splatmap texture
+uniform sampler2D bbmod_Splatmap;
+// Splatmap channel to read. Use -1 for none.
+uniform int bbmod_SplatmapIndex0;
+// Colormap texture
+uniform sampler2D bbmod_Colormap;
 
 ////////////////////////////////////////////////////////////////////////////////
 //

@@ -616,7 +616,10 @@ function BBMOD_Material(_shader=undefined)
 		if (global.__bbmodMaterialCurrent != self)
 		{
 			// TODO: GPU settings override per render pass!
-			var _isShadows = (bbmod_render_pass_get() == BBMOD_ERenderPass.Shadows);
+			var _renderPass = bbmod_render_pass_get();
+			var _isGBuffer = (_renderPass == BBMOD_ERenderPass.Shadows
+				|| _renderPass == BBMOD_ERenderPass.DepthOnly
+				|| _renderPass == BBMOD_ERenderPass.GBuffer);
 
 			if (global.__bbmodMaterialCurrent != undefined)
 			{
@@ -635,11 +638,11 @@ function BBMOD_Material(_shader=undefined)
 				_shaderChanged = false;
 			}
 
-			gpu_set_blendmode(_isShadows ? bm_normal : BlendMode);
-			gpu_set_blendenable(_isShadows ? false : AlphaBlend);
+			gpu_set_blendmode(_isGBuffer ? bm_normal : BlendMode);
+			gpu_set_blendenable(_isGBuffer ? false : AlphaBlend);
 			gpu_set_cullmode(Culling);
-			gpu_set_zwriteenable(_isShadows ? true : ZWrite);
-			gpu_set_ztestenable(_isShadows ? true : ZTest);
+			gpu_set_zwriteenable(_isGBuffer ? true : ZWrite);
+			gpu_set_ztestenable(_isGBuffer ? true : ZTest);
 			gpu_set_zfunc(ZFunc);
 			gpu_set_tex_mip_enable(Mipmapping);
 			gpu_set_tex_mip_bias(MipBias);

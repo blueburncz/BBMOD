@@ -33,7 +33,7 @@ _objImporter.FlipUVVertically = true;
 modGun = _objImporter.import("Data/Assets/Pistol.obj");
 modGun.freeze();
 
-var _matGunBase = BBMOD_MATERIAL_DEFAULT.clone()
+var _matGunBase = BBMOD_MATERIAL_DEFERRED.clone()
 	.set_shader(
 		BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID) // Enable instance selecting
 	.set_shader(
@@ -74,7 +74,7 @@ _objImporter = _objImporter.destroy();
 gizmo = new BBMOD_Gizmo();
 gizmo.ButtonDrag = mb_right;
 
-renderer = new BBMOD_DefaultRenderer();
+renderer = new BBMOD_DeferredRenderer(); //new BBMOD_DefaultRenderer();
 renderer.Gizmo = gizmo;
 renderer.ButtonSelect = mb_right;
 renderer.UseAppSurface = true;
