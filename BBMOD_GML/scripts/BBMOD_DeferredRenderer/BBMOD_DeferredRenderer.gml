@@ -109,27 +109,27 @@ function BBMOD_DeferredRenderer()
 		//
 		camera_set_view_size(__camera2D, _renderWidth, _renderHeight);
 
-		//surface_set_target(__surLBuffer);
-		//draw_clear_alpha(c_black, 0);
+		surface_set_target(__surLBuffer);
+		draw_clear(c_black);
 
-		//camera_apply(__camera2D);
-		//matrix_set(matrix_world, matrix_build_identity());
+		camera_apply(__camera2D);
+		matrix_set(matrix_world, matrix_build_identity());
 
-		//var _shader = BBMOD_ShDeferredLighting;
-		//shader_set(_shader);
-		//texture_set_stage(
-		//	shader_get_sampler_index(_shader, "u_texGB1"),
-		//	surface_get_texture(__surGBuffer[1]));
-		//texture_set_stage(
-		//	shader_get_sampler_index(_shader, "u_texGB2"),
-		//	surface_get_texture(__surGBuffer[2]));
-		//shader_set_uniform_f(
-		//	shader_get_uniform(_shader, "u_vTexel"),
-		//	1.0 / _renderWidth, 1.0 / _renderHeight);
-		//draw_surface(__surGBuffer[0], 0, 0);
-		//shader_reset();
+		var _shader = BBMOD_ShDeferredFullscreen;
+		shader_set(_shader);
+		texture_set_stage(
+			shader_get_sampler_index(_shader, "u_texGB1"),
+			surface_get_texture(__surGBuffer[1]));
+		texture_set_stage(
+			shader_get_sampler_index(_shader, "u_texGB2"),
+			surface_get_texture(__surGBuffer[2]));
+		shader_set_uniform_f(
+			shader_get_uniform(_shader, "u_vTexel"),
+			1.0 / _renderWidth, 1.0 / _renderHeight);
+		draw_surface(__surGBuffer[0], 0, 0);
+		shader_reset();
 
-		//surface_reset_target();
+		surface_reset_target();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -137,16 +137,17 @@ function BBMOD_DeferredRenderer()
 		//
 		surface_set_target(__surGBuffer[0]);
 
-		//gpu_push_state();
-		//gpu_set_state(bbmod_gpu_get_default_state());
-		//gpu_set_zwriteenable(false);
-		//gpu_set_ztestenable(false);
-		//camera_apply(__camera2D);
-		//matrix_set(matrix_world, matrix_build_identity());
-		//draw_surface(__surLBuffer, 0, 0);
-		//gpu_pop_state();
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_zwriteenable(false);
+		gpu_set_ztestenable(false);
+		camera_apply(__camera2D);
+		matrix_set(matrix_world, matrix_build_identity());
+		draw_surface(__surLBuffer, 0, 0);
+		gpu_pop_state();
 
 		gpu_push_state();
+		gpu_set_colorwriteenable(true, true, true, false);
 		matrix_set(matrix_world, _world);
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
@@ -160,7 +161,6 @@ function BBMOD_DeferredRenderer()
 			_renderQueues[_rqi++].submit();
 		}
 
-		gpu_set_colorwriteenable(true, true, true, false);
 		bbmod_render_pass_set(BBMOD_ERenderPass.Alpha);
 		_rqi = 0;
 		repeat (array_length(_renderQueues))
