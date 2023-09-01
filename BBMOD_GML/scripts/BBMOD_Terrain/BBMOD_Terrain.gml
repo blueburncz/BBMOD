@@ -699,6 +699,32 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			return self;
 		}
 
+		var _shader = Material.get_shader(BBMOD_ERenderPass.Forward)
+			?? Material.get_shader(BBMOD_ERenderPass.GBuffer);
+		if (_shader == undefined)
+		{
+			return self;
+		}
+
+		var _layersPerDrawCall = _shader.LayersPerDrawCall;
+		var _layers = [];
+		var _layerIndices = [];
+		for (var i = 0; i < min(_shader.MaxLayers, 5); ++i)
+		{
+			var _layer = Layer[i];
+			if (_layer != undefined)
+			{
+				array_push(_layers, _layer);
+				array_push(_layerIndices, i);
+			}
+		}
+
+		var _layerCount = array_length(_layers);
+		if (_layerCount == 0)
+		{
+			return self;
+		}
+
 		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
 		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
 		matrix_set(matrix_world, _matrix);
@@ -728,12 +754,22 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 
 		var _shaderRaw = shader_current();
 		var _uSplatmap = shader_get_sampler_index(_shaderRaw, BBMOD_U_SPLATMAP);
-		var _uSplatmapIndex = shader_get_uniform(_shaderRaw, BBMOD_U_SPLATMAP_INDEX_0);
+		var _uSplatmapIndex = array_create(_layersPerDrawCall, -1);
 		var _uColormap = shader_get_sampler_index(_shaderRaw, BBMOD_U_COLORMAP);
 		var _uTextureScale = shader_get_uniform(_shaderRaw, BBMOD_U_TEXTURE_SCALE);
 		var _uNormalMatrix = shader_get_uniform(_shaderRaw, BBMOD_U_NORMAL_MATRIX);
-		var _uNormalW = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_NORMAL_W_0);
-		var _uIsRoughness = shader_get_uniform(_shaderRaw, BBMOD_U_TERRAIN_IS_ROUGHNESS_0);
+		var _uTerrainBaseOpacity = array_create(_layersPerDrawCall, -1);
+		var _uTerrainNormalW = array_create(_layersPerDrawCall, -1);
+		var _uTerrainIsRoughness = array_create(_layersPerDrawCall, -1);
+
+		for (var i = 0; i < _layersPerDrawCall; ++i)
+		{
+			var _iStr = string(i);
+			_uSplatmapIndex[@ i] = shader_get_uniform(_shaderRaw, BBMOD_U_SPLATMAP_INDEX + _iStr);
+			_uTerrainBaseOpacity[@ i] = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_BASE_OPACITY + _iStr);
+			_uTerrainNormalW[@ i] = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_NORMAL_W + _iStr);
+			_uTerrainIsRoughness[@ i] = shader_get_uniform(_shaderRaw, BBMOD_U_TERRAIN_IS_ROUGHNESS + _iStr);
+		}
 
 		texture_set_stage(_uSplatmap, Splatmap);
 		texture_set_stage(_uColormap, Colormap);
@@ -742,43 +778,63 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 
 		gpu_push_state();
 
-		var _isFirstLayer = true;
-		var _isSecondLayer = true;
+		var _baseOpacityFirst = -1;
+		var _normalWDefault = sprite_get_texture(BBMOD_SprDefaultNormalW, 0);
 		var _renderPass = bbmod_render_pass_get();
 
-		var _l = 0;
-		repeat (5)
+		for (var _call = 0; _call < _layerCount; _call += _layersPerDrawCall)
 		{
-			var _layer = Layer[_l];
-			if (_layer != undefined)
+			if (_call == 0)
 			{
-				var _layerNormalRoughness = _layer[$ "NormalRoughness"];
+				//gpu_set_blendenable(false);
+				//gpu_set_colorwriteenable(true, true, true, true);
+			}
+			else
+			{
+				//gpu_set_blendenable(true);
+				//gpu_set_colorwriteenable(true, true, true, false);
 
-				if (_isFirstLayer)
+				if (_renderPass != BBMOD_ERenderPass.Forward
+					&& _renderPass != BBMOD_ERenderPass.ReflectionCapture)
 				{
-					gpu_set_blendenable(false);
-					gpu_set_colorwriteenable(true, true, true, true);
-					_isFirstLayer = false;
+					break;
 				}
-				else if (_isSecondLayer)
-				{
-					gpu_set_blendenable(true);
-					gpu_set_colorwriteenable(true, true, true, false);
-					_isSecondLayer = false;
-				}
+			}
 
-				shader_set_uniform_i(_uSplatmapIndex, _l - 1);
-				texture_set_stage(_uNormalW, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? sprite_get_texture(BBMOD_SprDefaultNormalW, 0)));
-				shader_set_uniform_f(_uIsRoughness, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
-
-				var _baseOpacity = _layer.BaseOpacity;
-				if (global.__bbmodMaterialProps != undefined)
+			for (var i = 0; i < _layersPerDrawCall; ++i)
+			{
+				var _layerCallIndex = _call + i;
+				if (_layerCallIndex < _layerCount)
 				{
-					var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
-					if (_baseOpacityProp != undefined)
+					var _layer = _layers[_layerCallIndex];
+					var _layerNormalRoughness = _layer[$ "NormalRoughness"];
+					var _baseOpacity = _layer.BaseOpacity;
+
+					if (global.__bbmodMaterialProps != undefined)
 					{
-						_baseOpacity = _baseOpacityProp;
+						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+						if (_baseOpacityProp != undefined)
+						{
+							_baseOpacity = _baseOpacityProp;
+						}
 					}
+
+					if (i == 0)
+					{
+						_baseOpacityFirst = _baseOpacity;
+					}
+					else
+					{
+						texture_set_stage(_uTerrainBaseOpacity[i], _baseOpacity);
+					}
+
+					shader_set_uniform_i(_uSplatmapIndex[i], _layerIndices[_call + i] - 1);
+					texture_set_stage(_uTerrainNormalW[i], _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? _normalWDefault));
+					shader_set_uniform_f(_uTerrainIsRoughness[i], (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
+				}
+				else
+				{
+					shader_set_uniform_i(_uSplatmapIndex[i], -1);
 				}
 
 				var _i = _chunkFromX;
@@ -790,20 +846,13 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 						var _chunk = Chunks[# _i, _j];
 						if (_chunk != undefined)
 						{
-							vertex_submit(_chunk, pr_trianglelist, _baseOpacity);
+							vertex_submit(_chunk, pr_trianglelist, _baseOpacityFirst);
 						}
 						++_j;
 					}
 					++_i;
 				}
-
-				if (_renderPass != BBMOD_ERenderPass.Forward
-					&& _renderPass != BBMOD_ERenderPass.ReflectionCapture)
-				{
-					break;
-				}
 			}
-			++_l;
 		}
 
 		gpu_pop_state();
@@ -879,6 +928,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			.SetUniformMatrixArray(BBMOD_U_NORMAL_MATRIX, _normalMatrix)
 			.SetWorldMatrix(_matrix);
 
+		var _baseOpacityFirst = -1;
+		var _normalWDefault = sprite_get_texture(BBMOD_SprDefaultNormalW, 0);
+
 		for (var _call = 0; _call < _layerCount; _call += _layersPerDrawCall)
 		{
 			if (_call == 0)
@@ -900,9 +952,6 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			RenderQueue
 				.SetGpuZWriteEnable(_call == 0)
 				.SetGpuZFunc((_call == 0) ? cmpfunc_lessequal : cmpfunc_equal);
-
-			var _baseOpacityFirst = -1;
-			var _normalWDefault = sprite_get_texture(BBMOD_SprDefaultNormalW, 0);
 
 			for (var i = 0; i < _layersPerDrawCall; ++i)
 			{
