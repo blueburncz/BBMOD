@@ -1,5 +1,5 @@
 # Changelog 3.19.2
-This release mainly is the last step in preparations for a new deferred rendering pipeline - terrain now supports rendering of multiple material layers in a single draw call. Currently only the unlit terrain shader can benefit from this due to the limited amount of available texture samplers. Some new utilities and fixes are included in this release as well, like for example ability to sample directional light's shadow map from its position instead of from the camera's position, which is handy for certain styles of games.
+This release is the last step in preparations for a new deferred rendering pipeline - terrain now supports rendering of multiple material layers in a single draw call. Currently only the unlit terrain shader can benefit from this due to the limited amount of available texture samplers. Some new utilities and fixes are included in this release as well, like for example ability to sample directional light's shadow map from its position instead of from the camera's position, which is handy for certain styles of games.
 
 * Added new property `LayersPerDrawCall` to `BBMOD_TerrainShader`, which is the number of terrain layers that the terrain shader can render in a single draw call.
 * Added new property `MaxLayers` to `BBMOD_TerrainShader`, which is the maximum number of terrain layers that the terrain shader supports.
