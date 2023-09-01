@@ -644,7 +644,11 @@ function BBMOD_MaterialPropertyBlock() constructor
 			var _propType = _types[i];
 			var _propValue = _values[i];
 
-			if (_propType == BBMOD_EShaderUniformType.Sampler)
+			if (_propName == BBMOD_U_BASE_OPACITY)
+			{
+				// Do nothing...
+			}
+			else if (_propType == BBMOD_EShaderUniformType.Sampler)
 			{
 				var _propIndex = shader_get_sampler_index(_shader, _propName);
 				if (_propIndex != -1)

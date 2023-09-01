@@ -43,7 +43,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// @private
 	__vertexFormat = _vformat;
 
-	/// @var {Constant.__primitiveType} The primitive type of the batch.
+	/// @var {Constant.PrimitiveType} The primitive type of the batch.
 	/// @private
 	__primitiveType = undefined;
 
@@ -141,11 +141,24 @@ function BBMOD_StaticBatch(_vformat) constructor
 	static submit = function (_material)
 	{
 		gml_pragma("forceinline");
+
 		if (!_material.apply(__vertexFormat))
 		{
 			return self;
 		}
-		vertex_submit(__vertexBuffer, __primitiveType, _material.BaseOpacity);
+
+		var _baseOpacity = _material.BaseOpacity;
+		if (global.__bbmodMaterialProps != undefined)
+		{
+			var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+			if (_baseOpacityProp != undefined)
+			{
+				_baseOpacity = _baseOpacityProp;
+			}
+		}
+
+		vertex_submit(__vertexBuffer, __primitiveType, _baseOpacity);
+
 		return self;
 	};
 
@@ -162,8 +175,18 @@ function BBMOD_StaticBatch(_vformat) constructor
 	static render = function (_material)
 	{
 		gml_pragma("forceinline");
-		_material.RenderQueue.DrawMesh(
-			__vertexBuffer, __vertexFormat, __primitiveType, -1, _material, matrix_get(matrix_world));
+
+		_material.RenderQueue
+			.SetMaterialProps(global.__bbmodMaterialProps)
+			.ApplyMaterial(_material, _vertexFormat)
+			.BeginConditionalBlock()
+			.SetWorldMatrix(matrix_get(matrix_world))
+			.SubmitVertexBuffer(__vertexBuffer, __vertexFormat.Raw, _material.BaseOpacity)
+			.ResetMaterial()
+			.EndConditionalBlock()
+			.ResetMaterialProps()
+			;
+
 		return self;
 	};
 

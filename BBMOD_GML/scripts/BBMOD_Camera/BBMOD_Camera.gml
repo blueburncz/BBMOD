@@ -10,16 +10,16 @@
 ///
 /// @example
 /// ```gml
-/// // Create event
+/// /// @desc Create event
 /// camera = new BBMOD_Camera();
 /// camera.FollowObject = OPlayer;
 /// camera.Zoom = 0.0; // Use 0.0 for FPS, > 0.0 for TPS
 ///
-/// // End-Step event
+/// /// @desc End-Step event
 /// camera.set_mouselook(true);
 /// camera.update(delta_time);
 ///
-/// // Draw event
+/// /// @desc Draw event
 /// camera.apply();
 /// // Render scene here...
 /// ```

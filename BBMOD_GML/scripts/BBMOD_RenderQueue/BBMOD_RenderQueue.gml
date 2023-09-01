@@ -1751,7 +1751,17 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 						set_material_index(_mesh.MaterialIndex);
 					}
 
-					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
+					var _baseOpacity = _material.BaseOpacity;
+					if (global.__bbmodMaterialProps != undefined)
+					{
+						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+						if (_baseOpacityProp != undefined)
+						{
+							_baseOpacity = _baseOpacityProp;
+						}
+					}
+
+					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _baseOpacity);
 
 					global.__bbmodMaterialProps = _materialPropsOld;
 				}
@@ -1785,7 +1795,17 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 						set_bones(_boneData);
 					}
 
-					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
+					var _baseOpacity = _material.BaseOpacity;
+					if (global.__bbmodMaterialProps != undefined)
+					{
+						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+						if (_baseOpacityProp != undefined)
+						{
+							_baseOpacity = _baseOpacityProp;
+						}
+					}
+
+					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _baseOpacity);
 
 					global.__bbmodMaterialProps = _materialPropsOld;
 				}
@@ -1936,19 +1956,29 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _primitiveType = _mesh.PrimitiveType;
 					var _vertexBuffer = _mesh.VertexBuffer;
 
+					var _baseOpacity = _material.BaseOpacity;
+					if (global.__bbmodMaterialProps != undefined)
+					{
+						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+						if (_baseOpacityProp != undefined)
+						{
+							_baseOpacity = _baseOpacityProp;
+						}
+					}
+
 					if (is_array(_batchData[0]))
 					{
 						var _dataIndex = 0;
 						repeat (array_length(_batchData))
 						{
 							BBMOD_SHADER_CURRENT.set_batch_data(_batchData[_dataIndex++]);
-							vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
+							vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 						}
 					}
 					else
 					{
 						BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
-						vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
+						vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 					}
 
 					global.__bbmodMaterialProps = _materialPropsOld;
@@ -2433,7 +2463,17 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 				{
 					var _vertexBuffer = _command[i++];
 					var _prim = _command[i++];
+
 					var _texture = _command[i++];
+					if (global.__bbmodMaterialProps != undefined)
+					{
+						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
+						if (_baseOpacityProp != undefined)
+						{
+							_texture = _baseOpacityProp;
+						}
+					}
+
 					vertex_submit(_vertexBuffer, _prim, _texture);
 				}
 				break;

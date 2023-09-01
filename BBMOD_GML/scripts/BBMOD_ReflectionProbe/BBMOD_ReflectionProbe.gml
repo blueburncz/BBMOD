@@ -74,6 +74,12 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) construct
 	/// value is `true`.
 	Enabled = true;
 
+	/// @var {Bool} If `true` then shadows are enabled when capturing the
+	/// reflection probe, which takes longer to render. Default is `false`.
+	/// @note {@link BBMOD_BaseRenderer.EnableShadows} also needs to be enabled
+	/// for this to have effect!
+	EnableShadows = true;
+
 	/// @var {Struct.BBMOD_Vec3} The position in the world. Default value is
 	/// `(0, 0, 0)`.
 	/// @readonly
@@ -101,6 +107,8 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) construct
 	Sprite = _sprite;
 
 	/// @var {Real} The resolution of a cubemap used when capturing the probe.
+	/// Default is 128 or the height of the sprite from which was the reflection
+	/// probe created.
 	Resolution = (_sprite != undefined) ? sprite_get_height(_sprite) : 128;
 
 	/// @var {Bool} If `true` then the reflection probe needs to be re-captured.

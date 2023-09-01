@@ -28,6 +28,11 @@ function BBMOD_DirectionalLight(_color=undefined, _direction=undefined)
 	/// @var {Real} The area captured by the shadowmap. Defaults to 1024.
 	ShadowmapArea = 1024;
 
+	/// @var {Real} If `true` then the shadowmap is captured from the camera's
+	/// position instead of from the directional light's position. Default
+	/// value is `true` for backwards compatibility.
+	ShadowmapFollowsCamera = true;
+
 	__getZFar = __get_shadowmap_zfar;
 
 	__getViewMatrix = __get_shadowmap_view;
@@ -45,7 +50,9 @@ function BBMOD_DirectionalLight(_color=undefined, _direction=undefined)
 	static __get_shadowmap_view = function ()
 	{
 		gml_pragma("forceinline");
-		var _position = bbmod_camera_get_position();
+		var _position = ShadowmapFollowsCamera
+			? bbmod_camera_get_position()
+			: Position;
 		return matrix_build_lookat(
 			_position.X,
 			_position.Y,

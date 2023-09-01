@@ -61,12 +61,12 @@ function BBMOD_IEventListener()
 	///
 	/// var _button = new Button();
 	///
-	/// // This will be always executed, no matter the event type.
+	/// /// @desc This will be always executed, no matter the event type.
 	/// _button.on_event(function (_data, _eventName) {
 	///     show_debug_message("Got event " + string(_eventName) + "!");
 	/// });
 	///
-	/// // This will be executed only on event "click".
+	/// /// @desc This will be executed only on event "click".
 	/// _button.on_event("click", function () {
 	///     show_debug_message("The button was clicked!");
 	/// });

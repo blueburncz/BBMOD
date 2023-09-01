@@ -36,20 +36,6 @@ varying vec4 v_vEye;
 ////////////////////////////////////////////////////////////////////////////////
 // Material
 
-// Material index
-// uniform float bbmod_MaterialIndex;
-
-// RGB: Base color, A: Opacity
-#define bbmod_BaseOpacity gm_BaseTexture
-
-// RGBA
-uniform vec4 bbmod_BaseOpacityMultiplier;
-
-// If 1.0 then the material uses roughness
-uniform float bbmod_IsRoughness;
-// RGB: Tangent-space normal, A: Smoothness or roughness
-uniform sampler2D bbmod_NormalW;
-
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
 
@@ -120,10 +106,16 @@ uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
 
+// RGB: Base color, A: Opacity
+#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
+// If 1.0 then the material uses roughness
+uniform float bbmod_TerrainIsRoughness0;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_TerrainNormalW0;
 // Splatmap texture
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
-uniform int bbmod_SplatmapIndex;
+uniform int bbmod_SplatmapIndex0;
 // Colormap texture
 uniform sampler2D bbmod_Colormap;
 
@@ -760,28 +752,25 @@ void PBRShader(Material material, float depth)
 void main()
 {
 	Material material = UnpackMaterial(
-		bbmod_BaseOpacity,
-		bbmod_IsRoughness,
-		bbmod_NormalW,
+		bbmod_TerrainBaseOpacity0,
+		bbmod_TerrainIsRoughness0,
+		bbmod_TerrainNormalW0,
 		v_mTBN,
 		v_vTexCoord);
 
 	// Splatmap
 	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
-	if (bbmod_SplatmapIndex >= 0)
+	if (bbmod_SplatmapIndex0 >= 0)
 	{
-		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
-		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
-			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
-			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
+		// splatmap[index] does not work in HTML5
+		material.Opacity *= ((bbmod_SplatmapIndex0 == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex0 == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex0 == 2) ? splatmap.b
 			: splatmap.a)));
 	}
 
 	// Colormap
 	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
-
-	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
-	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{

@@ -16,7 +16,7 @@
 /// machine enters the final state and the instance is destroyed.
 ///
 /// ```gml
-/// // Create event
+/// /// @desc Create event
 /// destroy = false;
 /// animationPlayer = new BBMOD_AnimationPlayer(model);
 ///
@@ -45,14 +45,14 @@
 ///
 /// animationStateMachine.start();
 /// 
-/// // Step event
+/// /// @desc Step event
 /// animationStateMachine.update();
 /// if (destroy)
 /// {
 ///     instance_destroy();
 /// }
 /// 
-/// // Clean Up event
+/// /// @desc Clean Up event
 /// animationPlayer = animationPlayer.destroy();
 /// animationStateMachine = animationStateMachine.destroy();
 /// ```

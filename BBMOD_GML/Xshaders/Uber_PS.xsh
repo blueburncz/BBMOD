@@ -69,6 +69,7 @@ uniform vec4 bbmod_InstanceID;
 ////////////////////////////////////////////////////////////////////////////////
 // Material
 
+#if !defined(X_TERRAIN)
 // Material index
 // uniform float bbmod_MaterialIndex;
 
@@ -83,21 +84,17 @@ uniform vec4 bbmod_BaseOpacityMultiplier;
 uniform float bbmod_IsRoughness;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_NormalW;
-#if !defined(X_TERRAIN)
 // If 1.0 then the material uses metallic workflow
 uniform float bbmod_IsMetallic;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
-#endif
 
-#if !defined(X_TERRAIN)
 #if !defined(X_LIGHTMAP)
 // RGB: Subsurface color, A: Intensity
 uniform sampler2D bbmod_Subsurface;
 #endif
 // RGBA: RGBM encoded emissive color
 uniform sampler2D bbmod_Emissive;
-#endif
 
 #if defined(X_LIGHTMAP)
 // RGBA: RGBM encoded lightmap
@@ -113,6 +110,7 @@ uniform vec4 bbmod_NormalWUV;
 uniform vec4 bbmod_MaterialUV;
 #endif // X_2D
 
+#endif // !X_TERRAIN
 #endif // !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
 
 // Pixels with alpha less than this value will be discarded
@@ -203,12 +201,31 @@ uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
 
+// RGB: Base color, A: Opacity
+#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
+// If 1.0 then the material uses roughness
+uniform float bbmod_TerrainIsRoughness0;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_TerrainNormalW0;
 // Splatmap texture
 uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
-uniform int bbmod_SplatmapIndex;
+uniform int bbmod_SplatmapIndex0;
 // Colormap texture
 uniform sampler2D bbmod_Colormap;
+
+#if !defined(X_PBR) && !(defined(X_OUTPUT_DEPTH) || defined(X_ID))
+uniform sampler2D bbmod_TerrainBaseOpacity1;
+uniform float bbmod_TerrainIsRoughness1;
+uniform sampler2D bbmod_TerrainNormalW1;
+uniform int bbmod_SplatmapIndex1;
+
+uniform sampler2D bbmod_TerrainBaseOpacity2;
+uniform float bbmod_TerrainIsRoughness2;
+uniform sampler2D bbmod_TerrainNormalW2;
+uniform int bbmod_SplatmapIndex2;
+#endif
+
 #endif // X_TERRAIN
 
 #if defined(X_PBR)
@@ -280,48 +297,126 @@ void main()
 #endif
 
 #else
+#if defined(X_TERRAIN)
+#if defined(X_PBR)
+	Material material = UnpackMaterial(
+		bbmod_TerrainBaseOpacity0,
+		bbmod_TerrainIsRoughness0,
+		bbmod_TerrainNormalW0,
+		v_mTBN,
+		v_vTexCoord);
+
+	// Splatmap
+	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
+	if (bbmod_SplatmapIndex0 >= 0)
+	{
+		// splatmap[index] does not work in HTML5
+		material.Opacity *= ((bbmod_SplatmapIndex0 == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex0 == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex0 == 2) ? splatmap.b
+			: splatmap.a)));
+	}
+
+	// Colormap
+	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
+#else // X_PBR
+	Material material = UnpackMaterial(
+		bbmod_TerrainBaseOpacity0,
+		bbmod_TerrainIsRoughness0,
+		bbmod_TerrainNormalW0,
+		v_mTBN,
+		v_vTexCoord);
+
+	Material material1 = UnpackMaterial(
+		bbmod_TerrainBaseOpacity1,
+		bbmod_TerrainIsRoughness1,
+		bbmod_TerrainNormalW1,
+		v_mTBN,
+		v_vTexCoord);
+
+	Material material2 = UnpackMaterial(
+		bbmod_TerrainBaseOpacity2,
+		bbmod_TerrainIsRoughness2,
+		bbmod_TerrainNormalW2,
+		v_mTBN,
+		v_vTexCoord);
+
+	// Splatmap
+	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
+
+	// Blend layers
+	if (bbmod_SplatmapIndex0 >= 0)
+	{
+		// splatmap[index] does not work in HTML5
+		float layerStrength = ((bbmod_SplatmapIndex0 == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex0 == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex0 == 2) ? splatmap.b
+			: splatmap.a)));
+
+		material.Opacity *= layerStrength;
+	}
+
+	if (bbmod_SplatmapIndex1 >= 0)
+	{
+		// splatmap[index] does not work in HTML5
+		float layerStrength = ((bbmod_SplatmapIndex1 == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex1 == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex1 == 2) ? splatmap.b
+			: splatmap.a)));
+		float layerStrengthInv = 1.0 - layerStrength;
+
+		material.Base    *= layerStrengthInv;
+		material.Opacity *= layerStrengthInv;
+		material.Base    += layerStrength * material1.Base;
+		material.Opacity += layerStrength * material1.Opacity;
+	}
+
+	if (bbmod_SplatmapIndex2 >= 0)
+	{
+		// splatmap[index] does not work in HTML5
+		float layerStrength= ((bbmod_SplatmapIndex2 == 0) ? splatmap.r
+			: ((bbmod_SplatmapIndex2 == 1) ? splatmap.g
+			: ((bbmod_SplatmapIndex2 == 2) ? splatmap.b
+			: splatmap.a)));
+		float layerStrengthInv = 1.0 - layerStrength;
+
+		material.Base    *= layerStrengthInv;
+		material.Opacity *= layerStrengthInv;
+		material.Base    += layerStrength * material2.Base;
+		material.Opacity += layerStrength * material2.Opacity;
+	}
+
+	// Colormap
+	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
+#endif // !X_PBR
+#else // X_TERRAIN
 	Material material = UnpackMaterial(
 		bbmod_BaseOpacity,
 		bbmod_IsRoughness,
 		bbmod_NormalW,
-#if !defined(X_TERRAIN)
 		bbmod_IsMetallic,
 		bbmod_Material,
 #if !defined(X_LIGHTMAP)
 		bbmod_Subsurface,
 #endif
 		bbmod_Emissive,
-#endif
 #if defined(X_LIGHTMAP)
 		bbmod_Lightmap,
 		v_vTexCoord2,
 #endif
 		v_mTBN,
 		v_vTexCoord);
+#endif // !X_TERRAIN
 
 #if defined(X_COLOR) || defined(X_2D) || defined(X_PARTICLES)
 	material.Base *= v_vColor.rgb;
 	material.Opacity *= v_vColor.a;
 #endif
 
-#if defined(X_TERRAIN)
-	// Splatmap
-	vec4 splatmap = texture2D(bbmod_Splatmap, v_vSplatmapCoord);
-	if (bbmod_SplatmapIndex >= 0)
-	{
-		// splatmap[bbmod_SplatmapIndex] does not work in HTML5
-		material.Opacity *= ((bbmod_SplatmapIndex == 0) ? splatmap.r
-			: ((bbmod_SplatmapIndex == 1) ? splatmap.g
-			: ((bbmod_SplatmapIndex == 2) ? splatmap.b
-			: splatmap.a)));
-	}
-
-	// Colormap
-	material.Base *= xGammaToLinear(texture2D(bbmod_Colormap, v_vSplatmapCoord).xyz);
-#endif
-
+#if !defined(X_TERRAIN)
 	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
+#endif
 
 #if defined(X_ZOMBIE)
 	// Dissolve
