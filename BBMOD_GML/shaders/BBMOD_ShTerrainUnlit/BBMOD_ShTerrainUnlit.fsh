@@ -319,8 +319,10 @@ void main()
 
 		material.Base    *= layerStrengthInv;
 		material.Opacity *= layerStrengthInv;
+
 		material.Base    += layerStrength * material1.Base;
 		material.Opacity += layerStrength * material1.Opacity;
+
 	}
 
 	if (bbmod_SplatmapIndex2 >= 0)
@@ -334,8 +336,10 @@ void main()
 
 		material.Base    *= layerStrengthInv;
 		material.Opacity *= layerStrengthInv;
+
 		material.Base    += layerStrength * material2.Base;
 		material.Opacity += layerStrength * material2.Opacity;
+
 	}
 
 	// Colormap

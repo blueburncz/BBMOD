@@ -367,8 +367,33 @@ void main()
 
 		material.Base    *= layerStrengthInv;
 		material.Opacity *= layerStrengthInv;
+
 		material.Base    += layerStrength * material1.Base;
 		material.Opacity += layerStrength * material1.Opacity;
+
+		#if defined(X_PBR)
+		material.Normal        *= layerStrengthInv;
+		material.Metallic      *= layerStrengthInv;
+		material.Roughness     *= layerStrengthInv;
+		material.Specular      *= layerStrengthInv;
+		material.Smoothness    *= layerStrengthInv;
+		material.SpecularPower *= layerStrengthInv;
+		material.AO            *= layerStrengthInv;
+		material.Emissive      *= layerStrengthInv;
+		material.Subsurface    *= layerStrengthInv;
+		material.Lightmap      *= layerStrengthInv;
+
+		material.Normal        += layerStrength * material1.Normal;
+		material.Metallic      += layerStrength * material1.Metallic;
+		material.Roughness     += layerStrength * material1.Roughness;
+		material.Specular      += layerStrength * material1.Specular;
+		material.Smoothness    += layerStrength * material1.Smoothness;
+		material.SpecularPower += layerStrength * material1.SpecularPower;
+		material.AO            += layerStrength * material1.AO;
+		material.Emissive      += layerStrength * material1.Emissive;
+		material.Subsurface    += layerStrength * material1.Subsurface;
+		material.Lightmap      += layerStrength * material1.Lightmap;
+		#endif
 	}
 
 	if (bbmod_SplatmapIndex2 >= 0)
@@ -382,8 +407,33 @@ void main()
 
 		material.Base    *= layerStrengthInv;
 		material.Opacity *= layerStrengthInv;
+
 		material.Base    += layerStrength * material2.Base;
 		material.Opacity += layerStrength * material2.Opacity;
+
+		#if defined(X_PBR)
+		material.Normal        *= layerStrengthInv;
+		material.Metallic      *= layerStrengthInv;
+		material.Roughness     *= layerStrengthInv;
+		material.Specular      *= layerStrengthInv;
+		material.Smoothness    *= layerStrengthInv;
+		material.SpecularPower *= layerStrengthInv;
+		material.AO            *= layerStrengthInv;
+		material.Emissive      *= layerStrengthInv;
+		material.Subsurface    *= layerStrengthInv;
+		material.Lightmap      *= layerStrengthInv;
+
+		material.Normal        += layerStrength * material2.Normal;
+		material.Metallic      += layerStrength * material2.Metallic;
+		material.Roughness     += layerStrength * material2.Roughness;
+		material.Specular      += layerStrength * material2.Specular;
+		material.Smoothness    += layerStrength * material2.Smoothness;
+		material.SpecularPower += layerStrength * material2.SpecularPower;
+		material.AO            += layerStrength * material2.AO;
+		material.Emissive      += layerStrength * material2.Emissive;
+		material.Subsurface    += layerStrength * material2.Subsurface;
+		material.Lightmap      += layerStrength * material2.Lightmap;
+		#endif
 	}
 
 	// Colormap
