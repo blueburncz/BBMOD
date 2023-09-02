@@ -2,7 +2,7 @@ function BBMOD_DeferredRenderer()
 	: BBMOD_BaseRenderer() constructor
 {
 	static BaseRenderer_destroy = destroy;
-	//static BaseRenderer_present = present;
+	static BaseRenderer_present = present;
 
 	/// @var {Array<Id.Surface>}
 	/// @private
@@ -307,6 +307,19 @@ function BBMOD_DeferredRenderer()
 			}
 		}
 
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Blit
+		//
+		camera_apply(__camera2D);
+		matrix_set(matrix_world, matrix_build_identity());
+		draw_surface(__surGBuffer[0], 0, 0);
+		matrix_set(matrix_world, _world);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
+
+		////////////////////////////////////////////////////////////////////////
+
 		// Reset render pass back to Forward at the end!
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
@@ -318,13 +331,9 @@ function BBMOD_DeferredRenderer()
 		return self;
 	};
 
-	static present = function () {
-		//BaseRenderer_present();
-
-		var _width = get_width();
-		var _height = get_height();
-
-		draw_surface_stretched(__surGBuffer[0], X, Y, _width, _height);
+	static present = function ()
+	{
+		BaseRenderer_present();
 
 		//var _s = 1/4;
 		//var _w = _width * _s;
