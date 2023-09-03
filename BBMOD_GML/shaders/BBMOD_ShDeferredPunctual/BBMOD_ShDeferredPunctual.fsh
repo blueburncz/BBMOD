@@ -551,8 +551,9 @@ void main()
 		{
 			vec3 lightVec = bbmod_LightPosition - vertexWorld;
 			vec2 uv = xVec3ToOctahedronUv(-lightVec);
-			float depth = xDecodeDepth(texture2D(bbmod_Shadowmap, uv).rgb) * bbmod_ShadowmapArea;
-			shadow = (depth < (length(lightVec) - 1.0)) ? 1.0 : 0.0;
+			//float depth = xDecodeDepth(texture2D(bbmod_Shadowmap, uv).rgb) * bbmod_ShadowmapArea;
+			//shadow = (depth < (length(lightVec) - 1.0)) ? 1.0 : 0.0;
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - 1.0) / bbmod_ShadowmapArea);
 		}
 	}
 
