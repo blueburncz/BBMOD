@@ -297,7 +297,6 @@ function BBMOD_DeferredRenderer()
 		//
 		// Clear queues
 		//
-
 		if (_clearQueues)
 		{
 			_rqi = 0;

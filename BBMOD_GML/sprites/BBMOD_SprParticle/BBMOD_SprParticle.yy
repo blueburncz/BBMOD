@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "Particles",
-    "path": "folders/BBMOD/Particles.yy",
+    "name": "Sprites",
+    "path": "folders/BBMOD/Particles/Sprites.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

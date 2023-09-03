@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "BBMOD_ShGBuffer",
   "parent": {
-    "name": "Shader",
-    "path": "folders/BBMOD/DeferredRenderer/Shader.yy",
+    "name": "Shaders",
+    "path": "folders/BBMOD/DeferredRenderer/Shaders.yy",
   },
   "type": 1,
 }
