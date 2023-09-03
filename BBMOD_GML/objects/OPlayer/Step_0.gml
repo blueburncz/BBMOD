@@ -269,5 +269,6 @@ if (keyboard_check_pressed(vk_space))
 	_light.Color.Alpha = 0.5;
 	_light.Position = new BBMOD_Vec3(x, y, z + 30);
 	_light.Range = random_range(50, 100);
+	_light.CastShadows = true;
 	bbmod_light_punctual_add(_light);
 }

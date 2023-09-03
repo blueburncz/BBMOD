@@ -247,6 +247,10 @@ uniform int bbmod_SplatmapIndex2;
 
 #endif // X_TERRAIN
 
+#if defined(X_OUTPUT_DEPTH)
+uniform float u_fOutputDistance;
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
@@ -293,7 +297,7 @@ void main()
 		gl_FragColor = bbmod_InstanceID;
 	#endif
 #elif defined(X_OUTPUT_DEPTH)
-	DepthShader(v_vPosition.z);
+	DepthShader((u_fOutputDistance == 1.0) ? length(v_vPosition.xyz) : v_vPosition.z);
 #endif
 
 #else

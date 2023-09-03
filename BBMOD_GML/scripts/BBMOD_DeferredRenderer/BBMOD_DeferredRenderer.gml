@@ -31,6 +31,10 @@ function BBMOD_DeferredRenderer()
 	/// @private
 	__shadowmaps = ds_map_create();
 
+	/// @var {Id.DsMap}
+	/// @private
+	__cubemaps = ds_map_create();
+
 	/// @var {Struct.BBMOD_Model}
 	/// @private
 	static __sphere = new BBMOD_Model("Data/BBMOD/Models/Sphere.bbmod").freeze();
@@ -40,38 +44,74 @@ function BBMOD_DeferredRenderer()
 		static _renderQueues = bbmod_render_queues_get();
 
 		var _shadowCaster = _light;
-		var _shadowmapMatrix = _light.__getShadowmapMatrix();
+		var _shadowmapMatrix;
 		var _shadowmapZFar = _light.__getZFar();
+		var _surShadowmap = -1;
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Shadows);
 
-		var _surShadowmapOld = -1;
-		if (ds_map_exists(__shadowmaps, _light))
+		if (is_instanceof(_light, BBMOD_PointLight))
 		{
-			_surShadowmapOld = __shadowmaps[? _light];
+			var _cubemap;
+			if (ds_map_exists(__cubemaps, _light))
+			{
+				_cubemap = __cubemaps[? _light];
+			}
+			else
+			{
+				_cubemap = new BBMOD_Cubemap(_light.ShadowmapResolution);
+				__cubemaps[? _light] = _cubemap;
+			}
+
+			_light.Position.Copy(_cubemap.Position);
+			bbmod_shader_set_global_f(BBMOD_U_ZFAR, _shadowmapZFar);
+			bbmod_shader_set_global_f("u_fOutputDistance", 1.0);
+
+			while (_cubemap.set_target())
+			{
+				draw_clear(c_red);
+				var _rqi = 0;
+				repeat (array_length(_renderQueues))
+				{
+					_renderQueues[_rqi++].submit();
+				}
+				_cubemap.reset_target();
+			}
+
+			bbmod_shader_set_global_f("u_fOutputDistance", 0.0);
+
+			_cubemap.to_single_surface();
+			_cubemap.to_octahedron();
+			__shadowmaps[? _light] = _cubemap.SurfaceOctahedron;
 		}
-
-		var _surShadowmap = bbmod_surface_check(
-			_surShadowmapOld, _light.ShadowmapResolution, _light.ShadowmapResolution, surface_rgba8unorm, true);
-
-		if (_surShadowmap != _surShadowmapOld)
+		else
 		{
-			__shadowmaps[? _light] = _surShadowmap;
+			var _surShadowmapOld = -1;
+			if (ds_map_exists(__shadowmaps, _light))
+			{
+				_surShadowmapOld = __shadowmaps[? _light];
+			}
+
+			_surShadowmap = bbmod_surface_check(
+				_surShadowmapOld, _light.ShadowmapResolution, _light.ShadowmapResolution, surface_rgba8unorm, true);
+
+			if (_surShadowmap != _surShadowmapOld)
+			{
+				__shadowmaps[? _light] = _surShadowmap;
+			}
+
+			surface_set_target(_surShadowmap);
+			draw_clear(c_red);
+			matrix_set(matrix_view, _light.__getViewMatrix());
+			matrix_set(matrix_projection, _light.__getProjMatrix());
+			bbmod_shader_set_global_f(BBMOD_U_ZFAR, _shadowmapZFar);
+			var _rqi = 0;
+			repeat (array_length(_renderQueues))
+			{
+				_renderQueues[_rqi++].submit();
+			}
+			surface_reset_target();
 		}
-
-		surface_set_target(_surShadowmap);
-		draw_clear(c_red);
-		matrix_set(matrix_view, _light.__getViewMatrix());
-		matrix_set(matrix_projection, _light.__getProjMatrix());
-		bbmod_shader_set_global_f(BBMOD_U_ZFAR, _shadowmapZFar);
-
-		var _rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
-
-		surface_reset_target();
 
 		if (is_instanceof(_light, BBMOD_DirectionalLight))
 		{
@@ -87,7 +127,7 @@ function BBMOD_DeferredRenderer()
 				texture_get_texel_height(_shadowmapTexture));
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_AREA, _shadowmapZFar);
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET, ShadowmapNormalOffset);
-			bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _shadowmapMatrix);
+			bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _light.__getShadowmapMatrix());
 			bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, -1.0);
 		}
 	};
@@ -109,8 +149,9 @@ function BBMOD_DeferredRenderer()
 		_light = bbmod_light_directional_get();
 		if (_light != undefined
 			&& _light.CastShadows
-			&& _light.__getZFar != undefined
-			&& _light.__getShadowmapMatrix != undefined)
+			//&& _light.__getZFar != undefined
+			//&& _light.__getShadowmapMatrix != undefined
+			)
 		{
 			__render_shadowmap_impl(_light);
 		}
@@ -121,8 +162,9 @@ function BBMOD_DeferredRenderer()
 		{
 			_light = global.__bbmodPunctualLights[i];
 			if (_light.CastShadows
-				&& _light.__getZFar != undefined
-				&& _light.__getShadowmapMatrix != undefined)
+				//&& _light.__getZFar != undefined
+				//&& _light.__getShadowmapMatrix != undefined
+				)
 			{
 				__render_shadowmap_impl(_light);
 			}
@@ -577,7 +619,26 @@ function BBMOD_DeferredRenderer()
 				else
 				{
 					shader_set_uniform_f(_uLightIsSpot, 0.0);
-					shader_set_uniform_f(_uShadowmapEnablePS, 0.0);
+					if (CastShadows)
+					{
+						var _shadowmapZFar = __getZFar();
+						var _shadowmapTexture = surface_get_texture(other.__shadowmaps[? self]);
+						shader_set_uniform_f(_uShadowmapEnablePS, 1.0);
+						texture_set_stage(_uShadowmap, _shadowmapTexture);
+						gpu_set_tex_mip_enable_ext(_uShadowmap, true);
+						gpu_set_tex_filter_ext(_uShadowmap, true);
+						gpu_set_tex_repeat_ext(_uShadowmap, false);
+						shader_set_uniform_f(_uShadowmapTexel,
+							texture_get_texel_width(_shadowmapTexture),
+							texture_get_texel_height(_shadowmapTexture));
+						shader_set_uniform_f(_uShadowmapArea, _shadowmapZFar);
+						shader_set_uniform_f(_uShadowmapNormalOffset, other.ShadowmapNormalOffset);
+						shader_set_uniform_f(_uShadowmapBias, 0.0);
+					}
+					else
+					{
+						shader_set_uniform_f(_uShadowmapEnablePS, 0.0);
+					}
 				}
 				vertex_submit(_sphere, pr_trianglelist, _texGB0);
 			}
@@ -670,7 +731,26 @@ function BBMOD_DeferredRenderer()
 	{
 		BaseRenderer_present();
 
-		//draw_surface_stretched(__surShadowmap, 0, 0, 256, 256);
+		var _w = 128;
+		var _h = 128;
+		var _x = 0;
+		var _y = 0;
+
+		//var _key = ds_map_find_first(__shadowmaps);
+		//repeat (ds_map_size(__shadowmaps))
+		//{
+		//	var _surface = __shadowmaps[? _key];
+		//	draw_surface_stretched(_surface, _x, _y, _w, _h); _x += _w;
+		//	_key = ds_map_find_next(__shadowmaps, _key);
+		//}
+
+		//var _key = ds_map_find_first(__cubemaps);
+		//repeat (ds_map_size(__cubemaps))
+		//{
+		//	var _cubemap = __cubemaps[? _key];
+		//	draw_surface_stretched(_cubemap.Surface, _x, _y, _w * 8, _h); _y += _h;
+		//	_key = ds_map_find_next(__cubemaps, _key);
+		//}
 
 		//var _s = 1/4;
 		//var _w = _width * _s;
@@ -721,7 +801,7 @@ function BBMOD_DeferredRenderer()
 			surface_free(__surLBuffer);
 		}
 
-		// TODO: Free shadowmaps
+		// TODO: Free shadowmaps and cubemaps
 
 		camera_destroy(__camera2D);
 

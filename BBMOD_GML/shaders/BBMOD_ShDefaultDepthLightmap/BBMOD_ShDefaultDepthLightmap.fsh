@@ -50,6 +50,8 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
+uniform float u_fOutputDistance;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
@@ -100,6 +102,6 @@ void main()
 		discard;
 	}
 
-	DepthShader(v_vPosition.z);
+	DepthShader((u_fOutputDistance == 1.0) ? length(v_vPosition.xyz) : v_vPosition.z);
 
 }

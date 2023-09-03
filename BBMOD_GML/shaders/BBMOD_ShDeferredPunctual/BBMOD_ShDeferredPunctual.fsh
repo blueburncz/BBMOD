@@ -533,17 +533,27 @@ void main()
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		vec4 shadowmapPos = bbmod_ShadowmapMatrix * vec4(vertexWorld + N * bbmod_ShadowmapNormalOffset, 1.0);
-		shadowmapPos.xy /= shadowmapPos.w;
-		float shadowmapAtt = 1.0; //clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0);
-		shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
-	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-		shadowmapPos.y = 1.0 - shadowmapPos.y;
-	#endif
-		shadowmapPos.z /= bbmod_ShadowmapArea;
+		if (bbmod_LightIsSpot == 1.0)
+		{
+			vec4 shadowmapPos = bbmod_ShadowmapMatrix * vec4(vertexWorld + N * bbmod_ShadowmapNormalOffset, 1.0);
+			shadowmapPos.xy /= shadowmapPos.w;
+			float shadowmapAtt = 1.0; //clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0);
+			shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
+		#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+			shadowmapPos.y = 1.0 - shadowmapPos.y;
+		#endif
+			shadowmapPos.z /= bbmod_ShadowmapArea;
 
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
-			* shadowmapAtt;
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
+				* shadowmapAtt;
+		}
+		else
+		{
+			vec3 lightVec = bbmod_LightPosition - vertexWorld;
+			vec2 uv = xVec3ToOctahedronUv(-lightVec);
+			float depth = xDecodeDepth(texture2D(bbmod_Shadowmap, uv).rgb) * bbmod_ShadowmapArea;
+			shadow = (depth < (length(lightVec) - 1.0)) ? 1.0 : 0.0;
+		}
 	}
 
 	// Light
