@@ -73,7 +73,8 @@ float xLuminance(vec3 rgb)
 void main()
 {
 	gl_FragColor.rgb = xGammaToLinear(xDecodeRGBM(texture2D(gm_BaseTexture, xVec3ToEquirectangularUv(v_vNormal))));
-	gl_FragColor.rgb = vec3(1.0) - exp(-gl_FragColor.rgb * bbmod_Exposure);
+	gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
+	gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 	gl_FragColor.a = 1.0;
 }

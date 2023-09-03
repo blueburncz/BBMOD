@@ -27,6 +27,10 @@ function BBMOD_DeferredRenderer()
 	/// @private
 	__camera2D = camera_create();
 
+	/// @var {Struct.BBMOD_Model}
+	/// @private
+	static __sphere = new BBMOD_Model("Data/BBMOD/Models/Sphere.bbmod").freeze();
+
 	static render = function (_clearQueues=true)
 	{
 		global.__bbmodRendererCurrent = self;
@@ -66,7 +70,6 @@ function BBMOD_DeferredRenderer()
 		//
 		__render_shadowmap();
 
-		var _cameraCurrent = global.__bbmodCameraCurrent;
 		__gBufferZFar = bbmod_camera_get_zfar();
 		bbmod_shader_set_global_f(BBMOD_U_ZFAR, __gBufferZFar);
 
@@ -113,6 +116,8 @@ function BBMOD_DeferredRenderer()
 		surface_set_target(__surLBuffer);
 		draw_clear(c_black);
 
+		////////////////////////////////////////////////////////////////////////
+		// Fullscreen
 		camera_apply(__camera2D);
 		matrix_set(matrix_world, matrix_build_identity());
 
@@ -122,9 +127,10 @@ function BBMOD_DeferredRenderer()
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
-			(new BBMOD_Matrix(_cameraCurrent.get_view_mat())).InverseSelf().Raw);
-		shader_set_uniform_f(shader_get_uniform(_shader, "u_vTanAspect"),
-			dtan(_cameraCurrent.Fov * 0.5) * _cameraCurrent.AspectRatio, -dtan(_cameraCurrent.Fov * 0.5));
+			(new BBMOD_Matrix(_view)).Inverse().Raw);
+		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
+		_tanAspect[@ 1] *= -1; // FIXME
+		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
 
 		{
 			var _pos = global.__bbmodCameraPosition;
@@ -250,6 +256,191 @@ function BBMOD_DeferredRenderer()
 		//}
 
 		draw_surface(__surGBuffer[0], 0, 0);
+		shader_reset();
+
+		////////////////////////////////////////////////////////////////////////
+		// Point lights
+		camera_apply(__camera2D);
+		matrix_set(matrix_world, matrix_build_identity());
+
+		var _shader = BBMOD_ShDeferredPoint;
+		shader_set(_shader);
+		__bbmod_shader_set_globals(shader_current());
+		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
+		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
+			(new BBMOD_Matrix(_view)).Inverse().Raw);
+		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
+		_tanAspect[@ 1] *= -1; // FIXME
+		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
+
+		{
+			var _pos = global.__bbmodCameraPosition;
+			shader_set_uniform_f(shader_get_uniform(shader_current(), BBMOD_U_CAM_POS), _pos.X, _pos.Y, _pos.Z);
+		}
+
+		{
+			shader_set_uniform_f(shader_get_uniform(shader_current(), BBMOD_U_EXPOSURE), global.__bbmodCameraExposure);
+		}
+
+		{
+			var _texture = pointer_null;
+			var _texel;
+
+			var _ibl = global.__bbmodImageBasedLight;
+
+			if (_ibl != undefined
+				&& _ibl.Enabled)
+			{
+				_texture = _ibl.Texture;
+				_texel = _ibl.Texel;
+			}
+
+			if (global.__bbmodReflectionProbeTexture != pointer_null)
+			{
+				_texture = global.__bbmodReflectionProbeTexture;
+				_texel = texture_get_texel_height(_texture);
+			}
+
+			var _shaderCurrent = shader_current();
+
+			if (_texture != pointer_null)
+			{
+				var _uIBL = shader_get_sampler_index(_shaderCurrent, BBMOD_U_IBL);
+
+				texture_set_stage(_uIBL, _texture);
+				gpu_set_tex_mip_enable_ext(_uIBL, mip_off)
+				gpu_set_tex_filter_ext(_uIBL, true);
+				gpu_set_tex_repeat_ext(_uIBL, false);
+				shader_set_uniform_f(
+					shader_get_uniform(_shaderCurrent, BBMOD_U_IBL_TEXEL),
+					_texel, _texel);
+				shader_set_uniform_f(
+					shader_get_uniform(_shaderCurrent, BBMOD_U_IBL_ENABLE),
+					1.0);
+			}
+			else
+			{
+				shader_set_uniform_f(
+					shader_get_uniform(_shaderCurrent, BBMOD_U_IBL_ENABLE),
+					0.0);
+			}
+		}
+
+		{
+			var _up = global.__bbmodAmbientLightUp;
+			var _down = global.__bbmodAmbientLightDown;
+			var _dir = global.__bbmodAmbientLightDirUp;
+			var _shaderCurrent = shader_current();
+			shader_set_uniform_f(
+				shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_AMBIENT_UP),
+				_up.Red / 255.0, _up.Green / 255.0, _up.Blue / 255.0, _up.Alpha);
+			shader_set_uniform_f(
+				shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_AMBIENT_DOWN),
+				_down.Red / 255.0, _down.Green / 255.0, _down.Blue / 255.0, _down.Alpha);
+			shader_set_uniform_f(
+				shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_AMBIENT_DIR_UP),
+				_dir.X, _dir.Y, _dir.Z);
+		}
+
+		{
+			var _light = global.__bbmodDirectionalLight;
+			var _shaderCurrent = shader_current();
+			var _uLightDirectionalDir = shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_DIRECTIONAL_DIR);
+			var _uLightDirectionalColor = shader_get_uniform(_shaderCurrent, BBMOD_U_LIGHT_DIRECTIONAL_COLOR);
+			if (_light != undefined	&& _light.Enabled)
+			{
+				var _direction = _light.Direction;
+				shader_set_uniform_f(_uLightDirectionalDir,
+					_direction.X, _direction.Y, _direction.Z);
+				var _color = _light.Color;
+				shader_set_uniform_f(_uLightDirectionalColor,
+					_color.Red / 255.0,
+					_color.Green / 255.0,
+					_color.Blue / 255.0,
+					_color.Alpha);
+			}
+			else
+			{
+				shader_set_uniform_f(_uLightDirectionalDir, 0.0, 0.0, -1.0);
+				shader_set_uniform_f(_uLightDirectionalColor, 0.0, 0.0, 0.0, 0.0);
+			}
+		}
+
+		//{
+		//	var _color = global.__bbmodFogColor;
+		//	var _intensity = global.__bbmodFogIntensity;
+		//	var _start = global.__bbmodFogStart;
+		//	var _end = global.__bbmodFogEnd;
+		//	var _rcpFogRange = 1.0 / (_end - _start);
+		//	var _shaderCurrent = shader_current();
+		//	shader_set_uniform_f(
+		//		shader_get_uniform(_shaderCurrent, BBMOD_U_FOG_COLOR),
+		//		_color.Red / 255.0,
+		//		_color.Green / 255.0,
+		//		_color.Blue / 255.0,
+		//		_color.Alpha);
+		//	shader_set_uniform_f(
+		//		shader_get_uniform(_shaderCurrent, BBMOD_U_FOG_INTENSITY),
+		//		_intensity);
+		//	shader_set_uniform_f(
+		//		shader_get_uniform(_shaderCurrent, BBMOD_U_FOG_START),
+		//		_start);
+		//	shader_set_uniform_f(
+		//		shader_get_uniform(_shaderCurrent, BBMOD_U_FOG_RCP_RANGE),
+		//		_rcpFogRange);
+		//}
+
+		//{
+		//	texture_set_stage(
+		//		shader_get_sampler_index(shader_current(), BBMOD_U_SSAO),
+		//		sprite_get_texture(BBMOD_SprWhite, 0));
+		//}
+
+		var _uLightPointPosition = shader_get_uniform(shader_current(), "bbmod_LightPointPosition");
+		var _uLightPointRange = shader_get_uniform(shader_current(), "bbmod_LightPointRange");
+		var _uLightPointColor = shader_get_uniform(shader_current(), "bbmod_LightPointColor");
+		var _sphere = __sphere.Meshes[0].VertexBuffer;
+		var _texGB0 = surface_get_texture(__surGBuffer[0]);
+
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
+
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_blendmode(bm_add);
+		gpu_set_zwriteenable(false);
+		gpu_set_ztestenable(true);
+		gpu_set_cullmode(cull_clockwise);
+
+		for (var i = array_length(global.__bbmodPunctualLights) - 1; i >= 0; --i)
+		{
+			with (global.__bbmodPunctualLights[i])
+			{
+				if (!is_instanceof(self, BBMOD_PointLight))
+				{
+					continue;
+				}
+				matrix_set(matrix_world, matrix_build(
+					Position.X, Position.Y, Position.Z,
+					0, 0, 0,
+					Range, Range, Range
+				));
+				shader_set_uniform_f(_uLightPointPosition, Position.X, Position.Y, Position.Z);
+				shader_set_uniform_f(_uLightPointRange, Range);
+				shader_set_uniform_f(_uLightPointColor,
+					Color.Red / 255.0,
+					Color.Green / 255.0,
+					Color.Blue / 255.0,
+					Color.Alpha
+				);
+				vertex_submit(_sphere, pr_trianglelist, _texGB0);
+			}
+		}
+
+		matrix_set(matrix_world, _world);
+
+		gpu_pop_state();
 		shader_reset();
 		surface_reset_target();
 
