@@ -404,6 +404,13 @@ function BBMOD_DeferredRenderer()
 		var _uLightDirection = shader_get_uniform(shader_current(), "bbmod_LightDirection");
 		var _uLightInner = shader_get_uniform(shader_current(), "bbmod_LightInner");
 		var _uLightOuter = shader_get_uniform(shader_current(), "bbmod_LightOuter");
+		var _uShadowmapEnablePS = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_ENABLE_PS);
+		var _uShadowmap = shader_get_sampler_index(shader_current(), BBMOD_U_SHADOWMAP);
+		var _uShadowmapTexel = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_TEXEL);
+		var _uShadowmapArea = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_AREA);
+		var _uShadowmapNormalOffset = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_NORMAL_OFFSET);
+		var _uShadowmapMatrix = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_MATRIX);
+		var _uShadowmapBias = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_BIAS);
 		var _sphere = __sphere.Meshes[0].VertexBuffer;
 		var _texGB0 = surface_get_texture(__surGBuffer[0]);
 
@@ -421,6 +428,10 @@ function BBMOD_DeferredRenderer()
 		{
 			with (global.__bbmodPunctualLights[i])
 			{
+				if (!Enabled)
+				{
+					continue;
+				}
 				matrix_set(matrix_world, matrix_build(
 					Position.X, Position.Y, Position.Z,
 					0, 0, 0,
@@ -440,10 +451,34 @@ function BBMOD_DeferredRenderer()
 					shader_set_uniform_f(_uLightDirection, Direction.X, Direction.Y, Direction.Z);
 					shader_set_uniform_f(_uLightInner, dcos(AngleInner));
 					shader_set_uniform_f(_uLightOuter, dcos(AngleOuter));
+
+					if (CastShadows)
+					{
+						var _shadowmapMatrix = __getShadowmapMatrix();
+						var _shadowmapZFar = __getZFar();
+						var _shadowmapTexture = surface_get_texture(other.__surShadowmap);
+						shader_set_uniform_f(_uShadowmapEnablePS, 1.0);
+						texture_set_stage(_uShadowmap, _shadowmapTexture);
+						gpu_set_tex_mip_enable_ext(_uShadowmap, true);
+						gpu_set_tex_filter_ext(_uShadowmap, true);
+						gpu_set_tex_repeat_ext(_uShadowmap, false);
+						shader_set_uniform_f(_uShadowmapTexel,
+							texture_get_texel_width(_shadowmapTexture),
+							texture_get_texel_height(_shadowmapTexture));
+						shader_set_uniform_f(_uShadowmapArea, _shadowmapZFar);
+						shader_set_uniform_f(_uShadowmapNormalOffset, other.ShadowmapNormalOffset);
+						shader_set_uniform_f(_uShadowmapBias, 0.0);
+						shader_set_uniform_matrix_array(_uShadowmapMatrix, _shadowmapMatrix);
+					}
+					else
+					{
+						shader_set_uniform_f(_uShadowmapEnablePS, 0.0);
+					}
 				}
 				else
 				{
 					shader_set_uniform_f(_uLightIsSpot, 0.0);
+					shader_set_uniform_f(_uShadowmapEnablePS, 0.0);
 				}
 				vertex_submit(_sphere, pr_trianglelist, _texGB0);
 			}
@@ -535,6 +570,8 @@ function BBMOD_DeferredRenderer()
 	static present = function ()
 	{
 		BaseRenderer_present();
+
+		//draw_surface_stretched(__surShadowmap, 0, 0, 256, 256);
 
 		//var _s = 1/4;
 		//var _w = _width * _s;

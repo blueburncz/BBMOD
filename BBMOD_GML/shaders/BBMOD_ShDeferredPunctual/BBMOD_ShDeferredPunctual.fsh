@@ -18,18 +18,6 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-// Ambient light's up vector.
-uniform vec3 bbmod_LightAmbientDirUp;
-// Ambient light color on the upper hemisphere.
-uniform vec4 bbmod_LightAmbientUp;
-// Ambient light color on the lower hemisphere.
-uniform vec4 bbmod_LightAmbientDown;
-
-// Direction of the directional light
-uniform vec3 bbmod_LightDirectionalDir;
-// Color of the directional light
-uniform vec4 bbmod_LightDirectionalColor;
-
 // 1.0 to enable shadows
 uniform float bbmod_ShadowmapEnablePS;
 // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
@@ -44,13 +32,6 @@ uniform vec2 bbmod_ShadowmapTexel;
 uniform float bbmod_ShadowmapArea;
 // The range over which meshes smoothly transition into shadow.
 uniform float bbmod_ShadowmapBias;
-
-// 1.0 to enable IBL
-uniform float bbmod_IBLEnable;
-// Prefiltered octahedron env. map
-uniform sampler2D bbmod_IBL;
-// Texel size of one octahedron
-uniform vec2 bbmod_IBLTexel;
 
 uniform vec3 bbmod_LightPosition;
 uniform float bbmod_LightRange;
@@ -548,33 +529,22 @@ void main()
 	vec3 lightSpecular = vec3(0.0);
 	vec3 lightSubsurface = vec3(0.0);
 
-	// Ambient light
-	//vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
-	//vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
-	//lightDiffuse += mix(ambientDown, ambientUp, dot(N, bbmod_LightAmbientDirUp) * 0.5 + 0.5);
-
 	// Shadow mapping
 	float shadow = 0.0;
-	//if (bbmod_ShadowmapEnablePS == 1.0)
-	//{
-	//	vec3 shadowmapPos = (bbmod_ShadowmapMatrix * vec4(vertexWorld + N * bbmod_ShadowmapNormalOffset, 1.0)).xyz;
-	//	float shadowmapAtt = clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0);
-	//	shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
-	//#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-	//	shadowmapPos.y = 1.0 - shadowmapPos.y;
-	//#endif
-	//	shadowmapPos.z /= bbmod_ShadowmapArea;
+	if (bbmod_ShadowmapEnablePS == 1.0)
+	{
+		vec4 shadowmapPos = bbmod_ShadowmapMatrix * vec4(vertexWorld + N * bbmod_ShadowmapNormalOffset, 1.0);
+		shadowmapPos.xy /= shadowmapPos.w;
+		float shadowmapAtt = 1.0; //clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0);
+		shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
+	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+		shadowmapPos.y = 1.0 - shadowmapPos.y;
+	#endif
+		shadowmapPos.z /= bbmod_ShadowmapArea;
 
-	//	shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
-	//		* shadowmapAtt;
-	//}
-
-	// IBL
-	//if (bbmod_IBLEnable == 1.0)
-	//{
-	//	lightDiffuse += xDiffuseIBL(bbmod_IBL, bbmod_IBLTexel, N);
-	//	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
-	//}
+		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
+			* shadowmapAtt;
+	}
 
 	// Light
 	vec3 lightColor = xGammaToLinear(bbmod_LightColor.rgb) * bbmod_LightColor.a;
@@ -596,11 +566,6 @@ void main()
 			vertexWorld, N, V, material,
 			lightDiffuse, lightSpecular, lightSubsurface);
 	}
-
-	// SSAO
-	//float ssao = texture2D(bbmod_SSAO, xUnproject(v_vPosition)).r;
-	//lightDiffuse *= ssao;
-	//lightSpecular *= ssao;
 
 	gl_FragColor = vec4(((material.Base * lightDiffuse) + lightSpecular) * material.AO, 1.0);
 
