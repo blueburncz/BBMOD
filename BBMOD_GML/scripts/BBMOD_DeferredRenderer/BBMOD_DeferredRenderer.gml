@@ -263,7 +263,7 @@ function BBMOD_DeferredRenderer()
 		camera_apply(__camera2D);
 		matrix_set(matrix_world, matrix_build_identity());
 
-		var _shader = BBMOD_ShDeferredPoint;
+		var _shader = BBMOD_ShDeferredPunctual;
 		shader_set(_shader);
 		__bbmod_shader_set_globals(shader_current());
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
@@ -397,9 +397,13 @@ function BBMOD_DeferredRenderer()
 		//		sprite_get_texture(BBMOD_SprWhite, 0));
 		//}
 
-		var _uLightPointPosition = shader_get_uniform(shader_current(), "bbmod_LightPointPosition");
-		var _uLightPointRange = shader_get_uniform(shader_current(), "bbmod_LightPointRange");
-		var _uLightPointColor = shader_get_uniform(shader_current(), "bbmod_LightPointColor");
+		var _uLightPosition = shader_get_uniform(shader_current(), "bbmod_LightPosition");
+		var _uLightRange = shader_get_uniform(shader_current(), "bbmod_LightRange");
+		var _uLightColor = shader_get_uniform(shader_current(), "bbmod_LightColor");
+		var _uLightIsSpot = shader_get_uniform(shader_current(), "bbmod_LightIsSpot");
+		var _uLightDirection = shader_get_uniform(shader_current(), "bbmod_LightDirection");
+		var _uLightInner = shader_get_uniform(shader_current(), "bbmod_LightInner");
+		var _uLightOuter = shader_get_uniform(shader_current(), "bbmod_LightOuter");
 		var _sphere = __sphere.Meshes[0].VertexBuffer;
 		var _texGB0 = surface_get_texture(__surGBuffer[0]);
 
@@ -417,23 +421,30 @@ function BBMOD_DeferredRenderer()
 		{
 			with (global.__bbmodPunctualLights[i])
 			{
-				if (!is_instanceof(self, BBMOD_PointLight))
-				{
-					continue;
-				}
 				matrix_set(matrix_world, matrix_build(
 					Position.X, Position.Y, Position.Z,
 					0, 0, 0,
 					Range, Range, Range
 				));
-				shader_set_uniform_f(_uLightPointPosition, Position.X, Position.Y, Position.Z);
-				shader_set_uniform_f(_uLightPointRange, Range);
-				shader_set_uniform_f(_uLightPointColor,
+				shader_set_uniform_f(_uLightPosition, Position.X, Position.Y, Position.Z);
+				shader_set_uniform_f(_uLightRange, Range);
+				shader_set_uniform_f(_uLightColor,
 					Color.Red / 255.0,
 					Color.Green / 255.0,
 					Color.Blue / 255.0,
 					Color.Alpha
 				);
+				if (is_instanceof(self, BBMOD_SpotLight))
+				{
+					shader_set_uniform_f(_uLightIsSpot, 1.0);
+					shader_set_uniform_f(_uLightDirection, Direction.X, Direction.Y, Direction.Z);
+					shader_set_uniform_f(_uLightInner, dcos(AngleInner));
+					shader_set_uniform_f(_uLightOuter, dcos(AngleOuter));
+				}
+				else
+				{
+					shader_set_uniform_f(_uLightIsSpot, 0.0);
+				}
 				vertex_submit(_sphere, pr_trianglelist, _texGB0);
 			}
 		}

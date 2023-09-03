@@ -52,9 +52,13 @@ uniform sampler2D bbmod_IBL;
 // Texel size of one octahedron
 uniform vec2 bbmod_IBLTexel;
 
-uniform vec3 bbmod_LightPointPosition;
-uniform float bbmod_LightPointRange;
-uniform vec4 bbmod_LightPointColor;
+uniform vec3 bbmod_LightPosition;
+uniform float bbmod_LightRange;
+uniform vec4 bbmod_LightColor;
+uniform float bbmod_LightIsSpot;
+uniform vec3 bbmod_LightDirection;
+uniform float bbmod_LightInner;
+uniform float bbmod_LightOuter;
 
 #define F0_DEFAULT vec3(0.04)
 
@@ -572,13 +576,26 @@ void main()
 	//	lightSpecular += xSpecularIBL(bbmod_IBL, bbmod_IBLTexel, material.Specular, material.Roughness, N, V);
 	//}
 
-	// Point light
-	vec3 pointLightColor = xGammaToLinear(bbmod_LightPointColor.rgb) * bbmod_LightPointColor.a;
-	DoPointLightPS(
-		bbmod_LightPointPosition, bbmod_LightPointRange, pointLightColor,
-		shadow,
-		vertexWorld, N, V, material,
-		lightDiffuse, lightSpecular, lightSubsurface);
+	// Light
+	vec3 lightColor = xGammaToLinear(bbmod_LightColor.rgb) * bbmod_LightColor.a;
+
+	if (bbmod_LightIsSpot == 1.0)
+	{
+		DoSpotLightPS(
+			bbmod_LightPosition, bbmod_LightRange, lightColor,
+			shadow,
+			bbmod_LightDirection, bbmod_LightInner, bbmod_LightOuter,
+			vertexWorld, N, V, material,
+			lightDiffuse, lightSpecular, lightSubsurface);
+	}
+	else
+	{
+		DoPointLightPS(
+			bbmod_LightPosition, bbmod_LightRange, lightColor,
+			shadow,
+			vertexWorld, N, V, material,
+			lightDiffuse, lightSpecular, lightSubsurface);
+	}
 
 	// SSAO
 	//float ssao = texture2D(bbmod_SSAO, xUnproject(v_vPosition)).r;

@@ -130,7 +130,7 @@
     {"name":"BBMOD_MixQuaternionFromSpeedModule","order":1,"path":"scripts/BBMOD_MixQuaternionFromSpeedModule/BBMOD_MixQuaternionFromSpeedModule.yy",},
     {"name":"BBMOD_MixVec2OverTimeModule","order":3,"path":"scripts/BBMOD_MixVec2OverTimeModule/BBMOD_MixVec2OverTimeModule.yy",},
     {"name":"__bbmod_fog","order":11,"path":"scripts/__bbmod_fog/__bbmod_fog.yy",},
-    {"name":"BBMOD_ShDeferredPoint","order":11,"path":"shaders/BBMOD_ShDeferredPoint/BBMOD_ShDeferredPoint.yy",},
+    {"name":"BBMOD_ShDeferredPunctual","order":11,"path":"shaders/BBMOD_ShDeferredPunctual/BBMOD_ShDeferredPunctual.yy",},
     {"name":"BBMOD_ParticleSystem","order":6,"path":"scripts/BBMOD_ParticleSystem/BBMOD_ParticleSystem.yy",},
     {"name":"BBMOD_MaterialPropertyBlock","order":17,"path":"scripts/BBMOD_MaterialPropertyBlock/BBMOD_MaterialPropertyBlock.yy",},
     {"name":"BBMOD_ShDefaultUnlit","order":10,"path":"shaders/BBMOD_ShDefaultUnlit/BBMOD_ShDefaultUnlit.yy",},
