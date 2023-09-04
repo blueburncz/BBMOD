@@ -105,12 +105,6 @@ float xDecodeDepth(vec3 c)
 	const float inv255 = 1.0 / 255.0;
 	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
 }
-
-void DepthShader(float depth)
-{
-	gl_FragColor.rgb = xEncodeDepth(depth / bbmod_ZFar);
-	gl_FragColor.a = 1.0;
-}
 struct Material
 {
 	vec3 Base;

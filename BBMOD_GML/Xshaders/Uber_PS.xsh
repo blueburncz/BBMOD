@@ -256,8 +256,10 @@ uniform float u_fOutputDistance;
 // Includes
 //
 #if defined(X_ID)
-#elif defined(X_OUTPUT_DEPTH) || defined(X_OUTPUT_GBUFFER)
+#elif defined(X_OUTPUT_DEPTH)
 #    pragma include("DepthShader.xsh")
+#elif defined(X_OUTPUT_GBUFFER)
+#    pragma include("DepthEncoding.xsh")
 #    if defined(X_PBR)
 #        pragma include("MetallicMaterial.xsh")
 #    endif
