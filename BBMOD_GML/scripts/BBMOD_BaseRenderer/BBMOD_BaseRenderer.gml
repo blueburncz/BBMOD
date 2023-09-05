@@ -103,10 +103,13 @@ function BBMOD_BaseRenderer() constructor
 	/// @see BBMOD_Light.ShadowmapResolution
 	EnableShadows = false;
 
-	/// @var {Id.Surface} The surface used for rendering the scene's depth from the
-	/// directional light's view.
+	/// @var {Id.DsMap}
 	/// @private
-	__surShadowmap = -1;
+	__shadowmapSurfaces = ds_map_create();
+
+	/// @var {Id.DsMap}
+	/// @private
+	__shadowmapCubes = ds_map_create();
 
 	/// @var {Real} When rendering shadows, offsets vertex position by its normal
 	/// scaled by this value. Defaults to 1. Increasing the value can remove some
@@ -374,7 +377,120 @@ function BBMOD_BaseRenderer() constructor
 		return self;
 	};
 
-	/// @func __render_shadowmap()
+	/// @func __render_shadowmap_impl(_light)
+	///
+	/// @desc Re-captures light's shadowmap if required.
+	///
+	/// @param {Struct.BBMOD_Light} _light The light to capture shadowmap for.
+	///
+	/// @private
+	static __render_shadowmap_impl = function (_light)
+	{
+		static _renderQueues = bbmod_render_queues_get();
+
+		if ((!_light.Static || _light.NeedsUpdate)
+			&& _light.__frameskipCurrent == 0)
+		{
+			var _shadowCaster = _light;
+			var _shadowmapMatrix;
+			var _shadowmapZFar = _light.__getZFar();
+			var _surShadowmap = -1;
+
+			bbmod_render_pass_set(BBMOD_ERenderPass.Shadows);
+
+			if (is_instanceof(_light, BBMOD_PointLight))
+			{
+				var _cubemap;
+				if (ds_map_exists(__shadowmapCubes, _light))
+				{
+					_cubemap = __shadowmapCubes[? _light];
+				}
+				else
+				{
+					_cubemap = new BBMOD_Cubemap(_light.ShadowmapResolution);
+					__shadowmapCubes[? _light] = _cubemap;
+				}
+
+				_light.Position.Copy(_cubemap.Position);
+				bbmod_shader_set_global_f(BBMOD_U_ZFAR, _shadowmapZFar);
+				bbmod_shader_set_global_f("u_fOutputDistance", 1.0);
+
+				while (_cubemap.set_target())
+				{
+					draw_clear(c_red);
+					var _rqi = 0;
+					repeat (array_length(_renderQueues))
+					{
+						_renderQueues[_rqi++].submit();
+					}
+					_cubemap.reset_target();
+				}
+
+				bbmod_shader_set_global_f("u_fOutputDistance", 0.0);
+
+				_cubemap.to_single_surface();
+				_cubemap.to_octahedron();
+				__shadowmapSurfaces[? _light] = _cubemap.SurfaceOctahedron;
+			}
+			else
+			{
+				var _surShadowmapOld = -1;
+				if (ds_map_exists(__shadowmapSurfaces, _light))
+				{
+					_surShadowmapOld = __shadowmapSurfaces[? _light];
+				}
+
+				_surShadowmap = bbmod_surface_check(
+					_surShadowmapOld, _light.ShadowmapResolution, _light.ShadowmapResolution, surface_rgba8unorm, true);
+
+				if (_surShadowmap != _surShadowmapOld)
+				{
+					__shadowmapSurfaces[? _light] = _surShadowmap;
+				}
+
+				surface_set_target(_surShadowmap);
+				draw_clear(c_red);
+				matrix_set(matrix_view, _light.__getViewMatrix());
+				matrix_set(matrix_projection, _light.__getProjMatrix());
+				bbmod_shader_set_global_f(BBMOD_U_ZFAR, _shadowmapZFar);
+				var _rqi = 0;
+				repeat (array_length(_renderQueues))
+				{
+					_renderQueues[_rqi++].submit();
+				}
+				surface_reset_target();
+			}
+
+			// TODO: Handle point lights
+			var _shadowmapTexture = surface_get_texture(_surShadowmap);
+			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
+			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
+			bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
+			bbmod_shader_set_global_sampler_mip_enable(BBMOD_U_SHADOWMAP, true);
+			bbmod_shader_set_global_sampler_filter(BBMOD_U_SHADOWMAP, true);
+			bbmod_shader_set_global_sampler_repeat(BBMOD_U_SHADOWMAP, false);
+			bbmod_shader_set_global_f2(BBMOD_U_SHADOWMAP_TEXEL,
+				texture_get_texel_width(_shadowmapTexture),
+				texture_get_texel_height(_shadowmapTexture));
+			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_AREA, _shadowmapZFar);
+			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET, ShadowmapNormalOffset);
+			bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _light.__getShadowmapMatrix());
+			bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, -1.0);
+
+			_light.NeedsUpdate = false;
+		}
+
+		if (_light.Frameskip == infinity)
+		{
+			_light.__frameskipCurrent = -1;
+		}
+		else if (++_light.__frameskipCurrent > _light.Frameskip)
+		{
+			_light.__frameskipCurrent = 0;
+		}
+	};
+
+	/// @func __render_shadowmaps()
 	///
 	/// @desc Renders a shadowmap.
 	///
@@ -383,28 +499,20 @@ function BBMOD_BaseRenderer() constructor
 	/// that yourself in the calling function if needed.
 	///
 	/// @private
-	static __render_shadowmap = function ()
+	static __render_shadowmaps = function ()
 	{
 		static _renderQueues = bbmod_render_queues_get();
 
 		var _shadowCaster = undefined;
-		var _shadowCasterIndex = -1;
-		var _shadowmapMatrix;
-		var _shadowmapZFar;
-		var _light;
 
 		if (EnableShadows)
 		{
 			_light = bbmod_light_directional_get();
 			if (_light != undefined
-				&& _light.CastShadows
-				&& _light.__getZFar != undefined
-				&& _light.__getShadowmapMatrix != undefined)
+				&& _light.CastShadows)
 			{
 				// Directional light
 				_shadowCaster = _light;
-				_shadowmapMatrix = _light.__getShadowmapMatrix();
-				_shadowmapZFar = _light.__getZFar();
 			}
 			else
 			{
@@ -413,14 +521,9 @@ function BBMOD_BaseRenderer() constructor
 				repeat (array_length(global.__bbmodPunctualLights))
 				{
 					_light = global.__bbmodPunctualLights[i];
-					if (_light.CastShadows
-						&& _light.__getZFar != undefined
-						&& _light.__getShadowmapMatrix != undefined)
+					if (_light.CastShadows)
 					{
 						_shadowCaster = _light;
-						_shadowCasterIndex = i;
-						_shadowmapMatrix = _light.__getShadowmapMatrix();
-						_shadowmapZFar = _light.__getZFar();
 						break;
 					}
 					++i;
@@ -430,11 +533,6 @@ function BBMOD_BaseRenderer() constructor
 
 		if (_shadowCaster == undefined)
 		{
-			if (surface_exists(__surShadowmap))
-			{
-				surface_free(__surShadowmap);
-				__surShadowmap = -1;
-			}
 			// No shadow caster was found!!!
 			bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 0.0);
@@ -442,39 +540,7 @@ function BBMOD_BaseRenderer() constructor
 			return;
 		}
 
-		bbmod_render_pass_set(BBMOD_ERenderPass.Shadows);
-
-		__surShadowmap = bbmod_surface_check(
-			__surShadowmap, _light.ShadowmapResolution, _light.ShadowmapResolution, surface_rgba8unorm, true);
-
-		surface_set_target(__surShadowmap);
-		draw_clear(c_red);
-		matrix_set(matrix_view, _light.__getViewMatrix());
-		matrix_set(matrix_projection, _light.__getProjMatrix());
-		bbmod_shader_set_global_f(BBMOD_U_ZFAR, _light.__getZFar());
-
-		var _rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
-
-		surface_reset_target();
-
-		var _shadowmapTexture = surface_get_texture(__surShadowmap);
-		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
-		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
-		bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
-		bbmod_shader_set_global_sampler_mip_enable(BBMOD_U_SHADOWMAP, true);
-		bbmod_shader_set_global_sampler_filter(BBMOD_U_SHADOWMAP, true);
-		bbmod_shader_set_global_sampler_repeat(BBMOD_U_SHADOWMAP, false);
-		bbmod_shader_set_global_f2(BBMOD_U_SHADOWMAP_TEXEL,
-			texture_get_texel_width(_shadowmapTexture),
-			texture_get_texel_height(_shadowmapTexture));
-		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_AREA, _shadowmapZFar);
-		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET, ShadowmapNormalOffset);
-		bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _shadowmapMatrix);
-		bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, _shadowCasterIndex);
+		__render_shadowmap_impl(_shadowCaster);
 	};
 
 	/// @func __render_reflection_probes()
@@ -519,7 +585,7 @@ function BBMOD_BaseRenderer() constructor
 				{
 					var _enableShadows = EnableShadows;
 					EnableShadows &= other.EnableShadows; // Temporarily modify renderer's EnableShadows
-					__render_shadowmap();
+					__render_shadowmaps();
 					EnableShadows = _enableShadows;
 				}
 
@@ -816,7 +882,7 @@ function BBMOD_BaseRenderer() constructor
 		//
 		// Shadow map
 		//
-		__render_shadowmap();
+		__render_shadowmaps();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -1018,11 +1084,6 @@ function BBMOD_BaseRenderer() constructor
 			surface_free(__surGizmo);
 		}
 
-		if (surface_exists(__surShadowmap))
-		{
-			surface_free(__surShadowmap);
-		}
-
 		if (surface_exists(__surFinal))
 		{
 			surface_free(__surFinal);
@@ -1043,6 +1104,8 @@ function BBMOD_BaseRenderer() constructor
 			application_surface_enable(false);
 			application_surface_draw_enable(true);
 		}
+
+		// TODO: Free shadowmaps and cubemaps
 
 		return undefined;
 	};

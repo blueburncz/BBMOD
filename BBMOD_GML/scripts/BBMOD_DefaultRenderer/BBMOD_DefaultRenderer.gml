@@ -135,7 +135,7 @@ function BBMOD_DefaultRenderer()
 		//
 		// Shadow map
 		//
-		__render_shadowmap();
+		__render_shadowmaps();
 
 		bbmod_shader_set_global_f(BBMOD_U_ZFAR, bbmod_camera_get_zfar());
 
