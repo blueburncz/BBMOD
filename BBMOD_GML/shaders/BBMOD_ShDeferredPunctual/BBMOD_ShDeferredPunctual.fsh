@@ -8,7 +8,9 @@ varying vec4 v_vVertex;
 #define u_texGB0 gm_BaseTexture
 uniform sampler2D u_texGB1;
 uniform sampler2D u_texGB2;
+uniform mat4 u_mView;
 uniform mat4 u_mViewInverse;
+uniform mat4 u_mProjection;
 uniform vec2 u_vTanAspect;
 
 // Camera's position in world space
@@ -523,8 +525,16 @@ void main()
 	vec3 vertexView = xProject(u_vTanAspect, screenUV, depth);
 	vec3 vertexWorld = (u_mViewInverse * vec4(vertexView, 1.0)).xyz;
 
+	vec4 v_vEye;
+	v_vEye.xyz = normalize(-vec3(
+		u_mView[0][2],
+		u_mView[1][2],
+		u_mView[2][2]
+	));
+	v_vEye.w = (u_mProjection[2][3] == 0.0) ? 1.0 : 0.0;
+
 	vec3 N = material.Normal;
-	vec3 V = /*(v_vEye.w == 1.0) ? v_vEye.xyz :*/ normalize(bbmod_CamPos - vertexWorld);
+	vec3 V = (v_vEye.w == 1.0) ? v_vEye.xyz : normalize(bbmod_CamPos - vertexWorld);
 	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
 	vec3 lightSubsurface = vec3(0.0);
@@ -551,9 +561,7 @@ void main()
 		{
 			vec3 lightVec = bbmod_LightPosition - vertexWorld;
 			vec2 uv = xVec3ToOctahedronUv(-lightVec);
-			//float depth = xDecodeDepth(texture2D(bbmod_Shadowmap, uv).rgb) * bbmod_ShadowmapArea;
-			//shadow = (depth < (length(lightVec) - 1.0)) ? 1.0 : 0.0;
-			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - 1.0) / bbmod_ShadowmapArea);
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - bbmod_ShadowmapNormalOffset) / bbmod_ShadowmapArea);
 		}
 	}
 

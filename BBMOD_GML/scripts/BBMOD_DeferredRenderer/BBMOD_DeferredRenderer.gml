@@ -267,8 +267,10 @@ function BBMOD_DeferredRenderer()
 		__bbmod_shader_set_globals(shader_current());
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mView"), _view);
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
 			(new BBMOD_Matrix(_view)).Inverse().Raw);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mProjection"), _projection);
 		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
 		_tanAspect[@ 1] *= -1; // FIXME
 		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
