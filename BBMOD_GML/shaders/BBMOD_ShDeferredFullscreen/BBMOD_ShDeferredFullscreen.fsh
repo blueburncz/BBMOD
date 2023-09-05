@@ -52,6 +52,9 @@ uniform sampler2D bbmod_IBL;
 // Texel size of one octahedron
 uniform vec2 bbmod_IBLTexel;
 
+// SSAO texture
+uniform sampler2D bbmod_SSAO;
+
 #define F0_DEFAULT vec3(0.04)
 
 struct Material
@@ -575,9 +578,9 @@ void main()
 		vertexWorld, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
 
 	// SSAO
-	//float ssao = texture2D(bbmod_SSAO, xUnproject(v_vPosition)).r;
-	//lightDiffuse *= ssao;
-	//lightSpecular *= ssao;
+	float ssao = texture2D(bbmod_SSAO, v_vTexCoord).r;
+	lightDiffuse *= ssao;
+	lightSpecular *= ssao;
 
 	gl_FragColor = vec4(((material.Base * lightDiffuse) + lightSpecular) * material.AO, 1.0);
 

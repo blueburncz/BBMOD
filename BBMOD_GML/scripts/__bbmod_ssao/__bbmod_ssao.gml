@@ -138,6 +138,7 @@ function bbmod_ssao_draw(
 	var _height = surface_get_height(_surSsao);
 
 	gpu_push_state();
+	gpu_set_state(bbmod_gpu_get_default_state());
 	gpu_set_tex_repeat(false);
 
 	static _cam = camera_create();

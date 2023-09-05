@@ -139,6 +139,45 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	__surProbe2 = -1;
 
+	/// @var {Bool} Enables screen-space ambient occlusion. This requires
+	/// the depth buffer. Defaults to `false`. Enabling this requires the
+	/// [SSAO submodule](./SSAOSubmodule.html)!
+	/// @see BBMOD_DefaultRenderer.EnableGBuffer
+	EnableSSAO = false;
+
+	/// @var {Id.Surface} The SSAO surface.
+	/// @private
+	__surSSAO = -1;
+
+	/// @var {Id.Surface} Surface used for blurring SSAO.
+	/// @private
+	__surWork = -1;
+
+	/// @var {Real} Resolution multiplier for SSAO surface. Defaults to 1.
+	SSAOScale = 1.0;
+
+	/// @var {Real} Screen-space radius of SSAO. Default value is 16.
+	SSAORadius = 16.0;
+
+	/// @var {Real} Strength of the SSAO effect. Should be greater than 0.
+	/// Default value is 1.
+	SSAOPower = 1.0;
+
+	/// @var {Real} SSAO angle bias in radians. Default value is 0.03.
+	SSAOAngleBias = 0.03;
+
+	/// @var {Real} Maximum depth difference of SSAO samples. Samples farther
+	/// away from the origin than this will not contribute to the effect.
+	/// Default value is 10.
+	SSAODepthRange = 10.0;
+
+	/// @var {Real} Defaults to 0.01. Increase to fix self-occlusion.
+	SSAOSelfOcclusionBias = 0.01;
+
+	/// @var {Real} Maximum depth difference over which can be SSAO samples
+	/// blurred. Defaults to 2.
+	SSAOBlurDepthRange = 2.0;
+
 	/// @func get_width()
 	///
 	/// @desc Retrieves the width of the renderer on the screen.
@@ -462,20 +501,23 @@ function BBMOD_BaseRenderer() constructor
 			}
 
 			// TODO: Handle point lights
-			var _shadowmapTexture = surface_get_texture(_surShadowmap);
-			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
-			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
-			bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
-			bbmod_shader_set_global_sampler_mip_enable(BBMOD_U_SHADOWMAP, true);
-			bbmod_shader_set_global_sampler_filter(BBMOD_U_SHADOWMAP, true);
-			bbmod_shader_set_global_sampler_repeat(BBMOD_U_SHADOWMAP, false);
-			bbmod_shader_set_global_f2(BBMOD_U_SHADOWMAP_TEXEL,
-				texture_get_texel_width(_shadowmapTexture),
-				texture_get_texel_height(_shadowmapTexture));
-			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_AREA, _shadowmapZFar);
-			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET, ShadowmapNormalOffset);
-			bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _light.__getShadowmapMatrix());
-			bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, -1.0);
+			if (!is_instanceof(_light, BBMOD_PointLight))
+			{
+				var _shadowmapTexture = surface_get_texture(_surShadowmap);
+				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
+				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
+				bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
+				bbmod_shader_set_global_sampler_mip_enable(BBMOD_U_SHADOWMAP, true);
+				bbmod_shader_set_global_sampler_filter(BBMOD_U_SHADOWMAP, true);
+				bbmod_shader_set_global_sampler_repeat(BBMOD_U_SHADOWMAP, false);
+				bbmod_shader_set_global_f2(BBMOD_U_SHADOWMAP_TEXEL,
+					texture_get_texel_width(_shadowmapTexture),
+					texture_get_texel_height(_shadowmapTexture));
+				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_AREA, _shadowmapZFar);
+				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET, ShadowmapNormalOffset);
+				bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _light.__getShadowmapMatrix());
+				bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, -1.0);
+			}
 
 			_light.NeedsUpdate = false;
 		}
@@ -838,6 +880,30 @@ function BBMOD_BaseRenderer() constructor
 		}
 	};
 
+	static __render_ssao = function (_surDepth, _projection)
+	{
+		if (EnableSSAO)
+		{
+			var _width = get_render_width() * SSAOScale;
+			var _height = get_render_height() * SSAOScale;
+
+			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height, surface_rgba8unorm, false);
+			__surWork = bbmod_surface_check(__surWork, _width, _height, surface_rgba8unorm, false);
+
+			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
+				SSAODepthRange, __surSSAO, __surWork, _surDepth, _projection,
+				bbmod_camera_get_zfar(), SSAOSelfOcclusionBias, SSAOBlurDepthRange);
+
+			bbmod_shader_set_global_sampler(
+				BBMOD_U_SSAO, surface_get_texture(__surSSAO));
+		}
+		else
+		{
+			bbmod_shader_set_global_sampler(
+				BBMOD_U_SSAO, sprite_get_texture(BBMOD_SprWhite, 0));
+		}
+	};
+
 	/// @func render(_clearQueues=true)
 	///
 	/// @desc Renders all added [renderables](./BBMOD_BaseRenderer.Renderables.html)
@@ -1097,6 +1163,16 @@ function BBMOD_BaseRenderer() constructor
 		if (surface_exists(__surProbe2))
 		{
 			surface_free(__surProbe2);
+		}
+
+		if (surface_exists(__surSSAO))
+		{
+			surface_free(__surSSAO);
+		}
+
+		if (surface_exists(__surWork))
+		{
+			surface_free(__surWork);
 		}
 
 		if (UseAppSurface)

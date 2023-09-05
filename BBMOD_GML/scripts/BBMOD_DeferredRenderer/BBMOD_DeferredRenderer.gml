@@ -143,6 +143,12 @@ function BBMOD_DeferredRenderer()
 
 		////////////////////////////////////////////////////////////////////////
 		//
+		// SSAO
+		//
+		__render_ssao(__surGBuffer[2], _projection);
+
+		////////////////////////////////////////////////////////////////////////
+		//
 		// Lighting pass
 		//
 		camera_set_view_size(__camera2D, _renderWidth, _renderHeight);
@@ -632,6 +638,7 @@ function BBMOD_DeferredRenderer()
 
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
+		bbmod_shader_unset_global(BBMOD_U_SSAO);
 		bbmod_shader_unset_global(BBMOD_U_GBUFFER);
 
 		matrix_set(matrix_world, _world);

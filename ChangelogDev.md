@@ -1,6 +1,7 @@
 # Changelog dev
 > This file is used to accumulate changes before a changelog for a release is created.
 
+* Moved properties `EnableSSAO`, `SSAOScale`, `SSAORadius`, `SSAOPower`, `SSAOAngleBias`, `SSAODepthRange`, `SSAOSelfOcclusionBias` and `SSAOBlurDepthRange` from `BBMOD_DefaultRenderer` to `BBMOD_BaseRenderer`.
 * `BBMOD_PointLight` can now also cast shadows.
 * Added new property `Frameskip` to `BBMOD_Light`, which is the number of frames to skip between individual updates of the light's shadowmap.
 * Added new property `Static` to `BBMOD_Light`, which when set to `true`, the light's shadowmap is captured only once.

@@ -59,45 +59,6 @@ function BBMOD_DefaultRenderer()
 	/// @private
 	__surDepthBuffer = -1;
 
-	/// @var {Bool} Enables screen-space ambient occlusion. This requires
-	/// the depth buffer. Defaults to `false`. Enabling this requires the
-	/// [SSAO submodule](./SSAOSubmodule.html)!
-	/// @see BBMOD_DefaultRenderer.EnableGBuffer
-	EnableSSAO = false;
-
-	/// @var {Id.Surface} The SSAO surface.
-	/// @private
-	__surSSAO = -1;
-
-	/// @var {Id.Surface} Surface used for blurring SSAO.
-	/// @private
-	__surWork = -1;
-
-	/// @var {Real} Resolution multiplier for SSAO surface. Defaults to 1.
-	SSAOScale = 1.0;
-
-	/// @var {Real} Screen-space radius of SSAO. Default value is 16.
-	SSAORadius = 16.0;
-
-	/// @var {Real} Strength of the SSAO effect. Should be greater than 0.
-	/// Default value is 1.
-	SSAOPower = 1.0;
-
-	/// @var {Real} SSAO angle bias in radians. Default value is 0.03.
-	SSAOAngleBias = 0.03;
-
-	/// @var {Real} Maximum depth difference of SSAO samples. Samples farther
-	/// away from the origin than this will not contribute to the effect.
-	/// Default value is 10.
-	SSAODepthRange = 10.0;
-
-	/// @var {Real} Defaults to 0.01. Increase to fix self-occlusion.
-	SSAOSelfOcclusionBias = 0.01;
-
-	/// @var {Real} Maximum depth difference over which can be SSAO samples
-	/// blurred. Defaults to 2.
-	SSAOBlurDepthRange = 2.0;
-
 	static render = function (_clearQueues=true)
 	{
 		global.__bbmodRendererCurrent = self;
@@ -165,27 +126,11 @@ function BBMOD_DefaultRenderer()
 
 		////////////////////////////////////////////////////////////////////////
 		//
-		// Render SSAO
+		// SSAO
 		//
-		if (EnableGBuffer && EnableSSAO)
+		if (EnableGBuffer)
 		{
-			var _width = _renderWidth * SSAOScale;
-			var _height = _renderHeight * SSAOScale;
-
-			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height, surface_rgba8unorm, false);
-			__surWork = bbmod_surface_check(__surWork, _width, _height, surface_rgba8unorm, false);
-
-			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
-				SSAODepthRange, __surSSAO, __surWork, __surDepthBuffer, _projection,
-				bbmod_camera_get_zfar(), SSAOSelfOcclusionBias, SSAOBlurDepthRange);
-
-			bbmod_shader_set_global_sampler(
-				BBMOD_U_SSAO, surface_get_texture(__surSSAO));
-		}
-		else
-		{
-			bbmod_shader_set_global_sampler(
-				BBMOD_U_SSAO, sprite_get_texture(BBMOD_SprWhite, 0));
+			__render_ssao(__surDepthBuffer, _projection);
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -242,16 +187,6 @@ function BBMOD_DefaultRenderer()
 		if (surface_exists(__surDepthBuffer))
 		{
 			surface_free(__surDepthBuffer);
-		}
-
-		if (surface_exists(__surSSAO))
-		{
-			surface_free(__surSSAO);
-		}
-
-		if (surface_exists(__surWork))
-		{
-			surface_free(__surWork);
 		}
 
 		return undefined;
