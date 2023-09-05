@@ -41,6 +41,25 @@ function BBMOD_Light() constructor
 	/// Defaults to 512.
 	ShadowmapResolution = 512;
 
+	/// @var {Real} Number of frames to skip between individual updates of the
+	/// light's shadowmap. Default value is 0, which means no frame skipping.
+	Frameskip = 0;
+
+	/// @var {Real}
+	/// @private
+	__frameskipCurrent = 0;
+
+	/// @var {Bool} If `true` then the light's shadowmap is captured only once
+	/// or when requested via setting the {@link BBMOD_Light.NeedsUpdate} property
+	/// to `true`.
+	Static = false;
+
+	/// @var {Bool} If `true` and the light is static, its shadowmap needs to be
+	/// updated.
+	/// @note This is automatically reset to `false` when the shadowmap is updated.
+	/// @see BBMOD_Light.Static
+	NeedsUpdate = true;
+
 	/// @var {Function}
 	/// @private
 	__getZFar = undefined;

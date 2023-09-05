@@ -115,6 +115,8 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) construct
 	/// Equals `true` when `_sprite` is not passed to the constructor. **Setting
 	/// this to `true` every frame has severe impact on performance, even for a
 	/// single reflection probe!**
+	/// @note This is automatically reset to `false` when the reflection probe is
+	/// captured.
 	NeedsUpdate = (_sprite == undefined);
 
 	/// @func set_position(_position)
