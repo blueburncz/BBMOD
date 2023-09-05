@@ -171,7 +171,6 @@ function BBMOD_DeferredRenderer()
 			(new BBMOD_Matrix(_view)).Inverse().Raw);
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mProjection"), _projection);
 		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
-		_tanAspect[@ 1] *= -1; // FIXME
 		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
 
 		{
@@ -313,7 +312,6 @@ function BBMOD_DeferredRenderer()
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
 			(new BBMOD_Matrix(_view)).Inverse().Raw);
 		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
-		_tanAspect[@ 1] *= -1; // FIXME
 		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
 
 		{

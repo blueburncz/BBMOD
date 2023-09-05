@@ -501,7 +501,7 @@ function BBMOD_BaseRenderer() constructor
 			}
 
 			// TODO: Handle point lights
-			if (!is_instanceof(_light, BBMOD_PointLight))
+			if (is_instanceof(_light, BBMOD_DirectionalLight))
 			{
 				var _shadowmapTexture = surface_get_texture(_surShadowmap);
 				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
