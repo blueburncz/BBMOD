@@ -6,7 +6,7 @@ PATH_SELF = os.path.dirname(os.path.realpath(__file__))
 PATH_XSHADERS = os.path.join(PATH_SELF, "Xshaders")
 PATH_UBER_VS = os.path.join(PATH_XSHADERS, "Uber_VS.xsh")
 PATH_UBER_PS = os.path.join(PATH_XSHADERS, "Uber_PS.xsh")
-CMD_XPANDA = "python3 " + os.path.join(PATH_SELF, "Xpanda", "Xpanda.py")
+CMD_XPANDA = ("python.exe " if os.name == "nt" else "python3 ") + os.path.join(PATH_SELF, "Xpanda", "Xpanda.py")
 
 def dict_to_args_str(_dict: dict) -> str:
     _arg_str = ""
@@ -75,7 +75,7 @@ expand_shader("BBMOD_ShDefaultUnlitColorAnimated", combine(COLOR, ANIMATED))
 expand_shader("BBMOD_ShDefaultUnlitColorBatched", combine(COLOR, BATCHED))
 
 # Gizmo shaders
-expand_shader("BBMOD_ShInstanceID", combine(ID, COLOR))
+expand_shader("BBMOD_ShInstanceID", combine(ID))
 expand_shader("BBMOD_ShInstanceIDAnimated", combine(ID, ANIMATED))
 expand_shader("BBMOD_ShInstanceIDBatched", combine(ID, BATCHED))
 expand_shader("BBMOD_ShInstanceIDLightmap", combine(ID, LIGHTMAP))

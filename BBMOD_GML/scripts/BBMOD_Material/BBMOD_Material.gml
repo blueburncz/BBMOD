@@ -775,17 +775,15 @@ function BBMOD_Material(_shader=undefined)
 
 /// @func bbmod_material_reset()
 ///
-/// @desc Resets the current material to `undefined`. Every block of code
-/// rendering models must start and end with this function!
+/// @desc Resets the current material to `undefined`. Must be called after every
+/// block of code that submits models or render queues!
 ///
 /// @example
 /// ```gml
-/// bbmod_material_reset();
-///
-/// // Render static batch of trees
+/// // Submit static batch of trees
 /// treeBatch.submit(matTree);
 ///
-/// // Render characters
+/// // Submit characters
 /// var _world = matrix_get(matrix_world);
 /// with (OCharacter)
 /// {
@@ -794,8 +792,15 @@ function BBMOD_Material(_shader=undefined)
 /// }
 /// matrix_set(matrix_world, _world);
 ///
+/// // Reset materials after submits!
 /// bbmod_material_reset();
 /// ```
+///
+/// @see BBMOD_Model.submit
+/// @see BBMOD_AnimationPlayer.submit
+/// @see BBMOD_DynamicBatch.submit
+/// @see BBMOD_Terrain.submit
+/// @see BBMOD_RenderQueue.submit
 /// @see BBMOD_Material.reset
 function bbmod_material_reset()
 {

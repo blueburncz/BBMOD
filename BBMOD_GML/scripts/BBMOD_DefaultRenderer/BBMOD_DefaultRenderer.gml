@@ -119,8 +119,6 @@ function BBMOD_DefaultRenderer()
 			}
 		}
 
-		bbmod_material_reset();
-
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Reflection probes
@@ -164,6 +162,7 @@ function BBMOD_DefaultRenderer()
 			}
 			surface_reset_target();
 		}
+		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -176,8 +175,6 @@ function BBMOD_DefaultRenderer()
 
 			__surSSAO = bbmod_surface_check(__surSSAO, _width, _height, surface_rgba8unorm, false);
 			__surWork = bbmod_surface_check(__surWork, _width, _height, surface_rgba8unorm, false);
-
-			bbmod_material_reset();
 
 			bbmod_ssao_draw(SSAORadius * SSAOScale, SSAOPower, SSAOAngleBias,
 				SSAODepthRange, __surSSAO, __surWork, __surDepthBuffer, _projection,
@@ -210,6 +207,7 @@ function BBMOD_DefaultRenderer()
 		{
 			_renderQueues[_rqi++].submit();
 		}
+		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -226,6 +224,7 @@ function BBMOD_DefaultRenderer()
 				_queue.clear();
 			}
 		}
+		bbmod_material_reset();
 
 		// Reset render pass back to Forward at the end!
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
@@ -234,8 +233,6 @@ function BBMOD_DefaultRenderer()
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 		bbmod_shader_unset_global(BBMOD_U_SSAO);
 		bbmod_shader_unset_global(BBMOD_U_GBUFFER);
-
-		bbmod_material_reset();
 
 		matrix_set(matrix_world, _world);
 		return self;

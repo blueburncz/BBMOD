@@ -458,6 +458,7 @@ function BBMOD_BaseRenderer() constructor
 		{
 			_renderQueues[_rqi++].submit();
 		}
+		bbmod_material_reset();
 
 		surface_reset_target();
 
@@ -526,7 +527,6 @@ function BBMOD_BaseRenderer() constructor
 				// Fill cubemap
 				bbmod_render_pass_set(BBMOD_ERenderPass.ReflectionCapture);
 
-				bbmod_material_reset();
 				while (_cubemap.set_target())
 				{
 					draw_clear(c_black);
@@ -680,6 +680,7 @@ function BBMOD_BaseRenderer() constructor
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			Gizmo.submit(Gizmo.MaterialsSelect);
+			bbmod_material_reset();
 			surface_reset_target();
 
 			if (select_gizmo(_mouseX, _mouseY))
@@ -710,6 +711,7 @@ function BBMOD_BaseRenderer() constructor
 			{
 				_renderQueues[_rqi++].submit();
 			}
+			bbmod_material_reset();
 
 			surface_reset_target();
 
@@ -752,6 +754,7 @@ function BBMOD_BaseRenderer() constructor
 			{
 				_renderQueues[_rqi++].submit(_selectedInstances);
 			}
+			bbmod_material_reset();
 
 			surface_reset_target();
 
@@ -765,6 +768,7 @@ function BBMOD_BaseRenderer() constructor
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			Gizmo.submit();
+			bbmod_material_reset();
 			surface_reset_target();
 		}
 
@@ -802,8 +806,6 @@ function BBMOD_BaseRenderer() constructor
 			}
 		}
 
-		bbmod_material_reset();
-
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Reflection probes
@@ -838,6 +840,7 @@ function BBMOD_BaseRenderer() constructor
 		{
 			_renderQueues[_rqi++].submit();
 		}
+		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -854,14 +857,13 @@ function BBMOD_BaseRenderer() constructor
 				_queue.clear();
 			}
 		}
+		bbmod_material_reset();
 
 		// Reset render pass back to Forward at the end!
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
-
-		bbmod_material_reset();
 
 		matrix_set(matrix_world, _world);
 		return self;
