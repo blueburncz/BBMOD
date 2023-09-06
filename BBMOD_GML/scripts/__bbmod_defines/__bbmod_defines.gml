@@ -12,7 +12,7 @@
 #macro BBMOD_RELEASE_MINOR 19
 
 /// @macro {Real} The patch version number of this BBMOD release.
-#macro BBMOD_RELEASE_PATCH 2
+#macro BBMOD_RELEASE_PATCH 3
 
 /// @macro {String} The version of this BBMOD release as a string ("major.minor.patch" format).
 #macro BBMOD_RELEASE_STRING $"{BBMOD_RELEASE_MAJOR}.{BBMOD_RELEASE_MINOR}.{BBMOD_RELEASE_PATCH}"
