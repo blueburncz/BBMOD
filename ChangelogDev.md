@@ -8,3 +8,4 @@
 * Added new property `NeedsUpdate` to `BBMOD_Light`, which if `true`, then the light's shadowmap needs to be updated.
 * Fixed function `bbmod_mrt_is_supported` not working on Mac.
 * Fixed method `clone` of `BBMOD_TerrainMaterial`, which returned instances of `BBMOD_BaseMaterial`.
+* Fixed materials with `AlphaBlend` enabled not working in the `Id` render pass.
