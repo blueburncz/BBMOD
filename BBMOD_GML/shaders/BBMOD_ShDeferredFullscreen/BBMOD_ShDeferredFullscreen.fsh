@@ -55,6 +55,8 @@ uniform vec2 bbmod_IBLTexel;
 // SSAO texture
 uniform sampler2D bbmod_SSAO;
 
+uniform float bbmod_HDR;
+
 #define F0_DEFAULT vec3(0.04)
 
 struct Material
@@ -587,7 +589,10 @@ void main()
 
 	gl_FragColor = vec4(((material.Base * lightDiffuse) + lightSpecular) * material.AO, 1.0);
 
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }

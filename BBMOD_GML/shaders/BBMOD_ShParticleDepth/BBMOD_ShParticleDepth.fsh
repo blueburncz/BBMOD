@@ -53,6 +53,8 @@ uniform float bbmod_Exposure;
 
 uniform float u_fOutputDistance;
 
+uniform float bbmod_HDR;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes

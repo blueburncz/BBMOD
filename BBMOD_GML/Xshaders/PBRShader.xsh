@@ -130,7 +130,10 @@ void PBRShader(Material material, float depth)
 	// Fog
 	Fog(depth);
 
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }

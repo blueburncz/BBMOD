@@ -152,6 +152,8 @@ uniform float bbmod_ShadowmapBias;
 // The index of the light that casts shadows. Use -1 for the directional light.
 uniform float bbmod_ShadowCasterIndex;
 
+uniform float bbmod_HDR;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
@@ -796,9 +798,12 @@ void PBRShader(Material material, float depth)
 	// Fog
 	Fog(depth);
 
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

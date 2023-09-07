@@ -411,3 +411,8 @@
 /// the index of a punctual light that casts shadows or -1.0, if it's the
 /// directional light.
 #macro BBMOD_U_SHADOW_CASTER_INDEX "bbmod_ShadowCasterIndex"
+
+/// @macro {String} Name of a fragment shader uniform of type `float` that holds
+/// whether HDR rendering is enabled (1.0) or not (0.0).
+/// @see bbmod_hdr_is_supported
+#macro BBMOD_U_HDR "bbmod_HDR"

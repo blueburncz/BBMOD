@@ -3,6 +3,8 @@ varying vec3 v_vNormal;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
+uniform float bbmod_HDR;
+
 //#pragma include("EquirectangularMapping.xsh")
 #define X_PI   3.14159265359
 #define X_2_PI 6.28318530718
@@ -73,8 +75,11 @@ float xLuminance(vec3 rgb)
 void main()
 {
 	gl_FragColor.rgb = xGammaToLinear(xDecodeRGBM(texture2D(gm_BaseTexture, xVec3ToEquirectangularUv(v_vNormal))));
-	gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
-	gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	if (bbmod_HDR == 0.0)
+	{
+		gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
+		gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
+		gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	}
 	gl_FragColor.a = 1.0;
 }

@@ -251,6 +251,8 @@ uniform int bbmod_SplatmapIndex2;
 uniform float u_fOutputDistance;
 #endif
 
+uniform float bbmod_HDR;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
@@ -492,7 +494,11 @@ void main()
 	gl_FragData[0] = vec4(xLinearToGamma(mix(material.Base, material.Specular, material.Metallic)), material.AO);
 	gl_FragData[1] = vec4(material.Normal * 0.5 + 0.5, material.Roughness);
 	gl_FragData[2] = vec4(xEncodeDepth(v_vPosition.z / bbmod_ZFar), material.Metallic);
-	gl_FragData[3] = vec4(xLinearToGamma(material.Emissive), 1.0);
+	gl_FragData[3] = vec4(material.Emissive, 1.0);
+	if (bbmod_HDR == 0.0)
+	{
+		gl_FragData[3].rgb = xLinearToGamma(gl_FragData[3].rgb);
+	}
 #elif defined(X_PBR)
 	PBRShader(material, v_vPosition.z);
 #else

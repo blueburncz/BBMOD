@@ -98,6 +98,8 @@ uniform vec3 bbmod_LightDirectionalDir;
 // Color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
+uniform float bbmod_HDR;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
@@ -280,9 +282,13 @@ void UnlitShader(Material material, float depth)
 	gl_FragColor.a = material.Opacity;
 	// Soft particles
 	Fog(depth);
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

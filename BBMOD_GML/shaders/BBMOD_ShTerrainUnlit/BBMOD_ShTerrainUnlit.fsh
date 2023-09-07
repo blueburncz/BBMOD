@@ -103,6 +103,8 @@ uniform float bbmod_TerrainIsRoughness2;
 uniform sampler2D bbmod_TerrainNormalW2;
 uniform int bbmod_SplatmapIndex2;
 
+uniform float bbmod_HDR;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
@@ -261,9 +263,13 @@ void UnlitShader(Material material, float depth)
 	gl_FragColor.a = material.Opacity;
 	// Soft particles
 	Fog(depth);
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

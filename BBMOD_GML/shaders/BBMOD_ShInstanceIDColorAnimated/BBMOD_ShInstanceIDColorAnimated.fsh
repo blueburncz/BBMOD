@@ -89,6 +89,8 @@ uniform vec3 bbmod_LightDirectionalDir;
 // Color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
 
+uniform float bbmod_HDR;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes

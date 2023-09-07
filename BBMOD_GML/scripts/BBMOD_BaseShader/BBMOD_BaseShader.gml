@@ -451,9 +451,11 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		set_directional_light();
 		set_punctual_lights();
 		set_fog();
+		var _shaderCurrent = shader_current();
 		texture_set_stage(
-			shader_get_sampler_index(shader_current(), BBMOD_U_SSAO),
+			shader_get_sampler_index(_shaderCurrent, BBMOD_U_SSAO),
 			sprite_get_texture(BBMOD_SprWhite, 0));
+		shader_set_uniform_f(shader_get_uniform(_shaderCurrent, BBMOD_U_HDR), 0.0);
 	};
 
 	/// @func set_material(_material)

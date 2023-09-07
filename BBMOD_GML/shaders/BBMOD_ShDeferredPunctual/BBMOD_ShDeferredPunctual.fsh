@@ -43,6 +43,8 @@ uniform vec3 bbmod_LightDirection;
 uniform float bbmod_LightInner;
 uniform float bbmod_LightOuter;
 
+uniform float bbmod_HDR;
+
 #define F0_DEFAULT vec3(0.04)
 
 struct Material
@@ -591,7 +593,10 @@ void main()
 
 	gl_FragColor = vec4(((material.Base * lightDiffuse) + lightSpecular) * material.AO, 1.0);
 
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }

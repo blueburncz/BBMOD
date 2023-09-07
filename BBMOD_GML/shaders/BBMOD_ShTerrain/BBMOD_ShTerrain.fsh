@@ -135,6 +135,8 @@ uniform int bbmod_SplatmapIndex0;
 // Colormap texture
 uniform sampler2D bbmod_Colormap;
 
+uniform float bbmod_HDR;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
@@ -740,9 +742,12 @@ void PBRShader(Material material, float depth)
 	// Fog
 	Fog(depth);
 
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
