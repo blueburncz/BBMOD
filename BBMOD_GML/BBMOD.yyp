@@ -197,6 +197,7 @@
     {"id":{"name":"BBMOD_ShDefaultUnlitColor","path":"shaders/BBMOD_ShDefaultUnlitColor/BBMOD_ShDefaultUnlitColor.yy",},},
     {"id":{"name":"SndShell2","path":"sounds/SndShell2/SndShell2.yy",},},
     {"id":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},},
+    {"id":{"name":"bbmod_hdr_is_supported","path":"scripts/bbmod_hdr_is_supported/bbmod_hdr_is_supported.yy",},},
     {"id":{"name":"SndShell5","path":"sounds/SndShell5/SndShell5.yy",},},
     {"id":{"name":"BBMOD_ShInstanceIDColorBatched","path":"shaders/BBMOD_ShInstanceIDColorBatched/BBMOD_ShInstanceIDColorBatched.yy",},},
     {"id":{"name":"BBMOD_ShGBuffer","path":"shaders/BBMOD_ShGBuffer/BBMOD_ShGBuffer.yy",},},

@@ -42,4 +42,4 @@ function bbmod_vtf_is_supported()
 	return _isSupported;
 }
 
-__bbmod_info("VTF " + (!bbmod_vtf_is_supported() ? "not " : "") + "supported!");
+__bbmod_info("VTF is " + (!bbmod_vtf_is_supported() ? "NOT " : "") + "supported!");

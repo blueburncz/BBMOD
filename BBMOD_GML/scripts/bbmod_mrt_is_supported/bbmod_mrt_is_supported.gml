@@ -34,4 +34,4 @@ function bbmod_mrt_is_supported()
 	return _isSupported;
 }
 
-__bbmod_info("MRT " + (!bbmod_mrt_is_supported() ? "not " : "") + "supported!");
+__bbmod_info("MRT is " + (!bbmod_mrt_is_supported() ? "NOT " : "") + "supported!");

@@ -108,6 +108,7 @@
     {"name":"BBMOD_SetQuaternionModule","order":2,"path":"scripts/BBMOD_SetQuaternionModule/BBMOD_SetQuaternionModule.yy",},
     {"name":"BBMOD_ShDefaultUnlitColor","order":13,"path":"shaders/BBMOD_ShDefaultUnlitColor/BBMOD_ShDefaultUnlitColor.yy",},
     {"name":"SndShell2","order":2,"path":"sounds/SndShell2/SndShell2.yy",},
+    {"name":"bbmod_hdr_is_supported","order":20,"path":"scripts/bbmod_hdr_is_supported/bbmod_hdr_is_supported.yy",},
     {"name":"SndShell5","order":5,"path":"sounds/SndShell5/SndShell5.yy",},
     {"name":"BBMOD_ShInstanceIDColorBatched","order":8,"path":"shaders/BBMOD_ShInstanceIDColorBatched/BBMOD_ShInstanceIDColorBatched.yy",},
     {"name":"__bbmod_camera","order":12,"path":"scripts/__bbmod_camera/__bbmod_camera.yy",},
