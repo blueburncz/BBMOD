@@ -464,6 +464,7 @@ function BBMOD_BaseRenderer() constructor
 					}
 					_cubemap.reset_target();
 				}
+				bbmod_material_reset();
 
 				bbmod_shader_set_global_f("u_fOutputDistance", 0.0);
 
@@ -497,6 +498,7 @@ function BBMOD_BaseRenderer() constructor
 				{
 					_renderQueues[_rqi++].submit();
 				}
+				bbmod_material_reset();
 				surface_reset_target();
 			}
 
@@ -786,6 +788,7 @@ function BBMOD_BaseRenderer() constructor
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			Gizmo.submit(Gizmo.MaterialsSelect);
+			bbmod_material_reset();
 			surface_reset_target();
 
 			if (select_gizmo(_mouseX, _mouseY))
@@ -816,6 +819,7 @@ function BBMOD_BaseRenderer() constructor
 			{
 				_renderQueues[_rqi++].submit();
 			}
+			bbmod_material_reset();
 
 			surface_reset_target();
 
@@ -858,6 +862,7 @@ function BBMOD_BaseRenderer() constructor
 			{
 				_renderQueues[_rqi++].submit(_selectedInstances);
 			}
+			bbmod_material_reset();
 
 			surface_reset_target();
 
@@ -871,6 +876,7 @@ function BBMOD_BaseRenderer() constructor
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			Gizmo.submit();
+			bbmod_material_reset();
 			surface_reset_target();
 		}
 
@@ -966,6 +972,7 @@ function BBMOD_BaseRenderer() constructor
 		{
 			_renderQueues[_rqi++].submit();
 		}
+		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -982,6 +989,7 @@ function BBMOD_BaseRenderer() constructor
 				_queue.clear();
 			}
 		}
+		bbmod_material_reset();
 
 		// Reset render pass back to Forward at the end!
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);

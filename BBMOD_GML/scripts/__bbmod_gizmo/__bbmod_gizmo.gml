@@ -14,10 +14,14 @@
 function __bbmod_shader_id()
 {
 	static _shader = new BBMOD_BaseShader(
-		             BBMOD_ShInstanceID,         BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShInstanceIDAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShInstanceIDBatched,  BBMOD_VFORMAT_DEFAULT_BATCHED)
-		.add_variant(BBMOD_ShInstanceIDLightmap, BBMOD_VFORMAT_DEFAULT_LIGHTMAP);
+		             BBMOD_ShInstanceID,              BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShInstanceIDAnimated,      BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShInstanceIDBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShInstanceIDColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
+		.add_variant(BBMOD_ShInstanceIDColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
+		.add_variant(BBMOD_ShInstanceIDColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShInstanceIDLightmap,      BBMOD_VFORMAT_DEFAULT_LIGHTMAP)
+		;
 	return _shader;
 }
 

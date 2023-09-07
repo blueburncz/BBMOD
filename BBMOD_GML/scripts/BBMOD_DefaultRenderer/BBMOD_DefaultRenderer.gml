@@ -123,6 +123,7 @@ function BBMOD_DefaultRenderer()
 			}
 			surface_reset_target();
 		}
+		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -151,6 +152,7 @@ function BBMOD_DefaultRenderer()
 		{
 			_renderQueues[_rqi++].submit();
 		}
+		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -167,6 +169,7 @@ function BBMOD_DefaultRenderer()
 				_queue.clear();
 			}
 		}
+		bbmod_material_reset();
 
 		// Reset render pass back to Forward at the end!
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);

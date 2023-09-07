@@ -185,8 +185,6 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 			return self;
 		}
 
-		bbmod_material_reset();
-
 		var _commandIndex = 0;
 		var _renderCommands = __renderCommands;
 		var _mesh = __mesh;
@@ -449,8 +447,6 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 		}
 
 		global.__bbmodMaterialProps = _materialPropsOld;
-
-		bbmod_material_reset();
 
 		return self;
 	};

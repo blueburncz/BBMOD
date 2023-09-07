@@ -345,7 +345,6 @@ function BBMOD_BaseCamera() constructor
 	/// Following code renders a model from the camera's view.
 	/// ```gml
 	/// camera.apply();
-	/// bbmod_material_reset();
 	/// model.submit();
 	/// bbmod_material_reset();
 	/// ```

@@ -55,7 +55,6 @@
 /// animationPlayer.update(delta_time);
 ///
 /// /// @desc Draw event of OCharacter
-/// bbmod_material_reset();
 /// animationPlayer.render();
 /// bbmod_material_reset();
 /// ```

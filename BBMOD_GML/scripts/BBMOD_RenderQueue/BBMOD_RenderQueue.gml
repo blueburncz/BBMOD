@@ -1654,8 +1654,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 			return self;
 		}
 
-		bbmod_material_reset();
-
 		var _commandIndex = 0;
 		var _renderCommands = __renderCommands;
 		var _condition = false;
@@ -2483,8 +2481,6 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 
 			_condition = true;
 		}
-
-		bbmod_material_reset();
 
 		return self;
 	};

@@ -137,6 +137,7 @@ function BBMOD_DeferredRenderer()
 		{
 			_renderQueues[_rqi++].submit();
 		}
+		bbmod_material_reset();
 
 		gpu_pop_state();
 		surface_reset_target();
@@ -594,6 +595,7 @@ function BBMOD_DeferredRenderer()
 		{
 			_renderQueues[_rqi++].submit();
 		}
+		//bbmod_material_reset();
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Alpha);
 		_rqi = 0;
@@ -601,6 +603,7 @@ function BBMOD_DeferredRenderer()
 		{
 			_renderQueues[_rqi++].submit();
 		}
+		bbmod_material_reset();
 
 		gpu_pop_state();
 		surface_reset_target();
