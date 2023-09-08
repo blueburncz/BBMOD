@@ -24,14 +24,12 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// the RGB channels and smoothness in the A channel.
 	///
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
+	///
+	/// @obsolete Please use {@link bbmod_shader_set_normal_smoothness} instead.
 	static set_normal_smoothness = function (_texture)
 	{
 		gml_pragma("forceinline");
-		var _shaderCurrent = shader_current();
-		var _uIsRoughness = shader_get_uniform(_shaderCurrent, BBMOD_U_IS_ROUGHNESS);
-		var _uNormalW = shader_get_sampler_index(_shaderCurrent, BBMOD_U_NORMAL_W);
-		shader_set_uniform_f(_uIsRoughness, 0.0);
-		texture_set_stage(_uNormalW, _texture);
+		bbmod_shader_set_normal_smoothness(shader_current(), _texture);
 		return self;
 	};
 
@@ -43,14 +41,13 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// the RGB channels.
 	///
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
+	///
+	/// @obsolete Please use {@link bbmod_shader_set_specular_color} instead.
 	static set_specular_color = function (_texture)
 	{
 		gml_pragma("forceinline");
-		var _shaderCurrent = shader_current();
-		var _uIsMetallic = shader_get_uniform(_shaderCurrent, BBMOD_U_IS_METALLIC);
-		var _uMaterial = shader_get_sampler_index(_shaderCurrent, BBMOD_U_MATERIAL);
-		shader_set_uniform_f(_uIsMetallic, 0.0);
-		texture_set_stage(_uMaterial, _texture);
+		bbmod_shader_set_specular_color(shader_current(), _texture);
+		return self;
 	};
 
 	/// @func set_normal_roughness(_texture)
@@ -61,14 +58,12 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// the RGB channels and roughness in the A channel.
 	///
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
+	///
+	/// @obsolete Please use {@link bbmod_shader_set_normal_roughness} instead.
 	static set_normal_roughness = function (_texture)
 	{
 		gml_pragma("forceinline");
-		var _shaderCurrent = shader_current();
-		var _uIsRoughness = shader_get_uniform(_shaderCurrent, BBMOD_U_IS_ROUGHNESS);
-		var _uNormalW = shader_get_sampler_index(_shaderCurrent, BBMOD_U_NORMAL_W);
-		shader_set_uniform_f(_uIsRoughness, 1.0);
-		texture_set_stage(_uNormalW, _texture);
+		bbmod_shader_set_normal_roughness(shader_current(), _texture);
 		return self;
 	};
 
@@ -80,14 +75,12 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// R channel and ambient occlusion in the G channel.
 	///
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
+	///
+	/// @obsolete Please use {@link bbmod_shader_set_metallic_ao} instead.
 	static set_metallic_ao = function (_texture)
 	{
 		gml_pragma("forceinline");
-		var _shaderCurrent = shader_current();
-		var _uIsMetallic = shader_get_uniform(_shaderCurrent, BBMOD_U_IS_METALLIC);
-		var _uMaterial = shader_get_sampler_index(_shaderCurrent, BBMOD_U_MATERIAL);
-		shader_set_uniform_f(_uIsMetallic, 1.0);
-		texture_set_stage(_uMaterial, _texture);
+		bbmod_shader_set_metallic_ao(shader_current(), _texture);
 		return self;
 	};
 
@@ -99,11 +92,12 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// in the RGB channels and its intensity in the A channel.
 	///
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
+	///
+	/// @obsolete Please use {@link bbmod_shader_set_subsurface} instead.
 	static set_subsurface = function (_texture)
 	{
 		gml_pragma("forceinline");
-		var _uSubsurface = shader_get_sampler_index(shader_current(), BBMOD_U_SUBSURFACE);
-		texture_set_stage(_uSubsurface, _texture);
+		bbmod_shader_set_subsurface(shader_current(), _texture);
 		return self;
 	};
 
@@ -115,46 +109,50 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 	/// emissive color.
 	///
 	/// @return {Struct.BBMOD_DefaultShader} Returns `self`.
+	///
+	/// @obsolete Please use {@link bbmod_shader_set_emissive} instead.
 	static set_emissive = function (_texture)
 	{
 		gml_pragma("forceinline");
-		var _uEmissive = shader_get_sampler_index(shader_current(), BBMOD_U_EMISSIVE);
-		texture_set_stage(_uEmissive, _texture);
+		bbmod_shader_set_emissive(shader_current(), _texture);
 		return self;
 	};
 
 	static set_material = function (_material)
 	{
 		gml_pragma("forceinline");
+
 		BaseShader_set_material(_material);
+
+		var _shaderCurrent = shader_current();
 
 		// Normal smoothness/roughness
 		if (_material.NormalSmoothness != undefined)
 		{
-			set_normal_smoothness(_material.NormalSmoothness);
+			bbmod_shader_set_normal_smoothness(_shaderCurrent, _material.NormalSmoothness);
 		}
 
 		if (_material.NormalRoughness != undefined)
 		{
-			set_normal_roughness(_material.NormalRoughness);
+			bbmod_shader_set_normal_roughness(_shaderCurrent, _material.NormalRoughness);
 		}
 
 		// Specular color/Metallic and AO
 		if (_material.SpecularColor != undefined)
 		{
-			set_specular_color(_material.SpecularColor);
+			bbmod_shader_set_specular_color(_shaderCurrent, _material.SpecularColor);
 		}
 
 		if (_material.MetallicAO != undefined)
 		{
-			set_metallic_ao(_material.MetallicAO);
+			bbmod_shader_set_metallic_ao(_shaderCurrent, _material.MetallicAO);
 		}
 
 		// Subsurface
-		set_subsurface(_material.Subsurface);
+		bbmod_shader_set_subsurface(_shaderCurrent, _material.Subsurface);
 
 		// Emissive
-		set_emissive(_material.Emissive);
+		bbmod_shader_set_emissive(_shaderCurrent, _material.Emissive);
 
 		return self;
 	};

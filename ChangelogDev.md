@@ -11,3 +11,25 @@
 * Fixed function `bbmod_mrt_is_supported` not working on Mac.
 * Fixed method `clone` of `BBMOD_TerrainMaterial`, which returned instances of `BBMOD_BaseMaterial`.
 * Fixed materials with `AlphaBlend` enabled not working in the `Id` render pass.
+
+* Method `set_texture_offset` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_texture_offset` instead.
+* Method `set_texture_scale` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_texture_scale` instead.
+* Method `set_bones` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_bones` instead.
+* Method `set_batch_data` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_batch_data` instead.
+* Method `set_alpha_test` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_alpha_test` instead.
+* Method `set_cam_pos` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_cam_pos` instead.
+* Method `set_exposure` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_exposure` instead.
+* Method `set_set_instance_id` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_instance_id` instead.
+* Method `set_set_material_index` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_material_index` instead.
+* Method `set_set_ibl` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_ibl` instead.
+* Method `set_ambient_light` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_ambient_light` instead.
+* Method `set_directional_light` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_directional_light` instead.
+* Method `set_punctual_lights` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_punctual_lights` instead.
+* Method `set_fog` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_fog` instead.
+* Method `set_normal_smoothness` of `BBMOD_DefaultShader` is now deprecated. Please use the new function `bbmod_shader_set_normal_smoothness` instead.
+* Method `set_specular_color` of `BBMOD_DefaultShader` is now deprecated. Please use the new function `bbmod_shader_set_specular_color` instead.
+* Method `set_normal_roughness` of `BBMOD_DefaultShader` is now deprecated. Please use the new function `bbmod_shader_set_normal_roughness` instead.
+* Method `set_metallic_ao` of `BBMOD_DefaultShader` is now deprecated. Please use the new function `bbmod_shader_set_metallic_ao` instead.
+* Method `set_subsurface` of `BBMOD_DefaultShader` is now deprecated. Please use the new function `bbmod_shader_set_subsurface` instead.
+* Method `set_emissive` of `BBMOD_DefaultShader` is now deprecated. Please use the new function `bbmod_shader_set_emissive` instead.
+* Method `set_lightmap` of `BBMOD_DefaultLightmapShader` is now deprecated. Please use the new function `bbmod_shader_set_lightmap` instead.

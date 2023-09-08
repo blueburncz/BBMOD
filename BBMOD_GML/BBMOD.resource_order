@@ -275,6 +275,7 @@
     {"name":"BBMOD_AddVec4OnCollisionModule","order":3,"path":"scripts/BBMOD_AddVec4OnCollisionModule/BBMOD_AddVec4OnCollisionModule.yy",},
     {"name":"__bbmod_render_pass","order":1,"path":"scripts/__bbmod_render_pass/__bbmod_render_pass.yy",},
     {"name":"BBMOD_MixColorModule","order":4,"path":"scripts/BBMOD_MixColorModule/BBMOD_MixColorModule.yy",},
+    {"name":"__bbmod_shader_set","order":21,"path":"scripts/__bbmod_shader_set/__bbmod_shader_set.yy",},
     {"name":"MatZombie","order":1,"path":"scripts/MatZombie/MatZombie.yy",},
     {"name":"__bbmod_blendmode","order":14,"path":"scripts/__bbmod_blendmode/__bbmod_blendmode.yy",},
     {"name":"BBMOD_ParticleEmitter","order":4,"path":"scripts/BBMOD_ParticleEmitter/BBMOD_ParticleEmitter.yy",},

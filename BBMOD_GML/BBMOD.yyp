@@ -405,6 +405,7 @@
     {"id":{"name":"BBMOD_ShParticleDepth","path":"shaders/BBMOD_ShParticleDepth/BBMOD_ShParticleDepth.yy",},},
     {"id":{"name":"BBMOD_AttractorModule","path":"scripts/BBMOD_AttractorModule/BBMOD_AttractorModule.yy",},},
     {"id":{"name":"BBMOD_MixColorModule","path":"scripts/BBMOD_MixColorModule/BBMOD_MixColorModule.yy",},},
+    {"id":{"name":"__bbmod_shader_set","path":"scripts/__bbmod_shader_set/__bbmod_shader_set.yy",},},
     {"id":{"name":"MatZombie","path":"scripts/MatZombie/MatZombie.yy",},},
     {"id":{"name":"__bbmod_blendmode","path":"scripts/__bbmod_blendmode/__bbmod_blendmode.yy",},},
     {"id":{"name":"BBMOD_ParticleEmitter","path":"scripts/BBMOD_ParticleEmitter/BBMOD_ParticleEmitter.yy",},},
