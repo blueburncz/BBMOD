@@ -129,9 +129,17 @@ function BBMOD_DeferredRenderer()
 		surface_set_target_ext(0, __surFinal);
 		surface_set_target_ext(1, __surGBuffer[1]);
 		surface_set_target_ext(2, __surGBuffer[2]);
-		surface_set_target_ext(3, __surLBuffer);
-
 		draw_clear_alpha(c_black, 0.0);
+		surface_reset_target();
+
+		surface_set_target(__surLBuffer);
+		draw_clear(c_black);
+		surface_reset_target();
+
+		surface_set_target_ext(0, __surFinal);
+		surface_set_target_ext(1, __surGBuffer[1]);
+		surface_set_target_ext(2, __surGBuffer[2]);
+		surface_set_target_ext(3, __surLBuffer);
 
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
@@ -180,7 +188,8 @@ function BBMOD_DeferredRenderer()
 		camera_set_view_size(__camera2D, _renderWidth, _renderHeight);
 
 		surface_set_target(__surLBuffer);
-		draw_clear(c_black);
+		gpu_push_state();
+		gpu_set_blendmode(bm_add);
 
 		////////////////////////////////////////////////////////////////////////
 		// Fullscreen
@@ -324,6 +333,7 @@ function BBMOD_DeferredRenderer()
 
 		draw_surface(__surGBuffer[0], 0, 0);
 		shader_reset();
+		gpu_pop_state();
 
 		////////////////////////////////////////////////////////////////////////
 		// Point lights
@@ -599,6 +609,7 @@ function BBMOD_DeferredRenderer()
 
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_blendenable(false);
 		gpu_set_zwriteenable(false);
 		gpu_set_ztestenable(false);
 		camera_apply(__camera2D);
@@ -652,7 +663,16 @@ function BBMOD_DeferredRenderer()
 		//
 		camera_apply(__camera2D);
 		matrix_set(matrix_world, matrix_build_identity());
+		if (_hdr)
+		{
+			shader_set(BBMOD_ShHDRToSDR);
+			shader_set_uniform_f(shader_get_uniform(shader_current(), BBMOD_U_EXPOSURE), global.__bbmodCameraExposure);
+		}
 		draw_surface(__surFinal, 0, 0);
+		if (_hdr)
+		{
+			shader_reset();
+		}
 		matrix_set(matrix_world, _world);
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
@@ -677,22 +697,22 @@ function BBMOD_DeferredRenderer()
 	{
 		BaseRenderer_present();
 
-		var _s = 1/6;
-		var _w = get_width() * _s;
-		var _h = get_height() * _s;
-		var _x = X;
-		var _y = Y;
+		//var _s = 1/6;
+		//var _w = get_width() * _s;
+		//var _h = get_height() * _s;
+		//var _x = X;
+		//var _y = Y;
 
-		for (var i = 0; i < array_length(__surGBuffer); ++i)
-		{
-			shader_set(BBMOD_ShGBufferExtractRGB);
-			draw_surface_stretched(__surGBuffer[i], _x, _y, _w, _h); _y += _h;
-			shader_reset();
+		//for (var i = 0; i < array_length(__surGBuffer); ++i)
+		//{
+		//	shader_set(BBMOD_ShGBufferExtractRGB);
+		//	draw_surface_stretched(__surGBuffer[i], _x, _y, _w, _h); _y += _h;
+		//	shader_reset();
 
-			shader_set(BBMOD_ShGBufferExtractA);
-			draw_surface_stretched(__surGBuffer[i], _x, _y, _w, _h); _y += _h;
-			shader_reset();
-		}
+		//	shader_set(BBMOD_ShGBufferExtractA);
+		//	draw_surface_stretched(__surGBuffer[i], _x, _y, _w, _h); _y += _h;
+		//	shader_reset();
+		//}
 
 		return self;
 	};

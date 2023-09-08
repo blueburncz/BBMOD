@@ -319,6 +319,7 @@
     {"name":"BBMOD_ShInstanceIDLightmap","order":9,"path":"shaders/BBMOD_ShInstanceIDLightmap/BBMOD_ShInstanceIDLightmap.yy",},
     {"name":"SndGunshot4","order":4,"path":"sounds/SndGunshot4/SndGunshot4.yy",},
     {"name":"BBMOD_ShDefaultDepthBatched","order":9,"path":"shaders/BBMOD_ShDefaultDepthBatched/BBMOD_ShDefaultDepthBatched.yy",},
+    {"name":"BBMOD_ShHDRToSDR","order":12,"path":"shaders/BBMOD_ShHDRToSDR/BBMOD_ShHDRToSDR.yy",},
     {"name":"BBMOD_ReflectionProbe","order":18,"path":"scripts/BBMOD_ReflectionProbe/BBMOD_ReflectionProbe.yy",},
     {"name":"BBMOD_RaycastResult","order":5,"path":"scripts/BBMOD_RaycastResult/BBMOD_RaycastResult.yy",},
     {"name":"__bbmod_default_material","order":1,"path":"scripts/__bbmod_default_material/__bbmod_default_material.yy",},
