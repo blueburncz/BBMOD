@@ -41,7 +41,6 @@
 ///
 /// @see BBMOD_IRenderable
 /// @see BBMOD_Camera
-
 function BBMOD_DefaultRenderer()
 	: BBMOD_BaseRenderer() constructor
 {
