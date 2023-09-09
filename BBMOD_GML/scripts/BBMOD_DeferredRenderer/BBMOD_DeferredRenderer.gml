@@ -1,10 +1,53 @@
+/// @func BBMOD_DeferredRenderer()
+///
+/// @extends BBMOD_BaseRenderer
+///
+/// @desc A deferred renderer with support for unlimited number of lights and
+/// shadow casters. Implemented render passes are:
+/// {@link BBMOD_ERenderPass.ReflectionCapture},
+/// {@link BBMOD_ERenderPass.Id},
+/// {@link BBMOD_ERenderPass.Shadows},
+/// {@link BBMOD_ERenderPass.GBuffer},
+/// {@link BBMOD_ERenderPass.Forward} and
+/// {@link BBMOD_ERenderPass.Alpha}.
+///
+/// @example
+/// Following code is a typical use of the renderer.
+/// ```gml
+/// /// @desc Create event
+/// renderer = new BBMOD_DeferredRenderer();
+/// renderer.UseAppSurface = true;
+/// renderer.EnableShadows = true;
+///
+/// camera = new BBMOD_Camera();
+/// camera.FollowObject = OPlayer;
+///
+/// /// @desc Step event
+/// camera.set_mouselook(true);
+/// camera.update(delta_time);
+/// renderer.update(delta_time);
+///
+/// /// @desc Draw event
+/// camera.apply();
+/// renderer.render();
+///
+/// /// @desc Post-Draw event
+/// renderer.present();
+///
+/// /// @desc Clean Up event
+/// renderer = renderer.destroy();
+/// ```
+///
+/// @see BBMOD_IRenderable
+/// @see BBMOD_Camera
 function BBMOD_DeferredRenderer()
 	: BBMOD_BaseRenderer() constructor
 {
 	static BaseRenderer_destroy = destroy;
 	static BaseRenderer_present = present;
 
-	/// @var {Bool}
+	/// @var {Bool} Enables high dynamic range (HDR) rendering. Default value is
+	/// `true`.
 	EnableHDR = true;
 
 	/// @var {Array<Id.Surface>}
@@ -112,8 +155,9 @@ function BBMOD_DeferredRenderer()
 		__render_shadowmaps();
 
 		__gBufferZFar = bbmod_camera_get_zfar();
-		bbmod_shader_set_global_f(BBMOD_U_ZFAR, __gBufferZFar);
 		var _hdr = (EnableHDR && bbmod_hdr_is_supported());
+
+		bbmod_shader_set_global_f(BBMOD_U_ZFAR, __gBufferZFar);
 		bbmod_shader_set_global_f(BBMOD_U_HDR, _hdr ? 1.0 : 0.0);
 
 		////////////////////////////////////////////////////////////////////////
@@ -481,24 +525,22 @@ function BBMOD_DeferredRenderer()
 	{
 		BaseRenderer_destroy();
 
-		if (surface_exists(__surGBuffer[0]))
+		for (var i = array_length(__surGBuffer) - 1; i >= 0; --i)
 		{
-			surface_free(__surGBuffer[0]);
-		}
-
-		if (surface_exists(__surGBuffer[1]))
-		{
-			surface_free(__surGBuffer[1]);
-		}
-
-		if (surface_exists(__surGBuffer[2]))
-		{
-			surface_free(__surGBuffer[2]);
+			if (surface_exists(__surGBuffer[i]))
+			{
+				surface_free(__surGBuffer[i]);
+			}
 		}
 
 		if (surface_exists(__surLBuffer))
 		{
 			surface_free(__surLBuffer);
+		}
+
+		if (surface_exists(__surFinal))
+		{
+			surface_free(__surFinal);
 		}
 
 		camera_destroy(__camera2D);
