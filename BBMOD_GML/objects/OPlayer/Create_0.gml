@@ -20,7 +20,7 @@ punchRight = true;
 chainPunch = false;
 
 flashlight = new BBMOD_SpotLight();
-flashlight.RenderPass = (1 << BBMOD_ERenderPass.Forward);
+flashlight.RenderPass = ~(1 << BBMOD_ERenderPass.ReflectionCapture);
 flashlight.CastShadows = true;
 flashlight.Range = 300;
 flashlight.Color.Alpha = 0.5;

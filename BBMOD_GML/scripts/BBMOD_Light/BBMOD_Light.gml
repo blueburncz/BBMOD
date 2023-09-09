@@ -24,6 +24,7 @@ function BBMOD_Light() constructor
 	///
 	/// @see BBMOD_ERenderPass
 	RenderPass = (1 << BBMOD_ERenderPass.Forward)
+		| (1 << BBMOD_ERenderPass.Alpha)
 		| (1 << BBMOD_ERenderPass.ReflectionCapture);
 
 	/// @var {Struct.BBMOD_Vec3} The position of the light.

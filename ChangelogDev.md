@@ -19,6 +19,8 @@
 * Added new struct `BBMOD_DeferredRenderer`, which is a deferred renderer with support for unlimited number of lights and shadows.
 * Added new function `bbmod_deferred_renderer_is_supported`, which checks whether deferred renderer is supported on the current platform.
 
+* Fixed point lights not affecting particles by default.
+
 * Method `set_texture_offset` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_texture_offset` instead.
 * Method `set_texture_scale` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_texture_scale` instead.
 * Method `set_bones` of `BBMOD_BaseShader` is now deprecated. Please use the new function `bbmod_shader_set_bones` instead.
