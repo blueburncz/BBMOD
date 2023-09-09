@@ -1189,7 +1189,25 @@ function BBMOD_BaseRenderer() constructor
 			application_surface_draw_enable(true);
 		}
 
-		// TODO: Free shadowmaps and cubemaps
+		var _key = ds_map_find_first(__shadowmapSurfaces);
+		repeat (ds_map_size(__shadowmapSurfaces))
+		{
+			var _surface = __shadowmapSurfaces[? _key];
+			if (surface_exists(_surface))
+			{
+				surface_free(_surface);
+			}
+			_key = ds_map_find_next(__shadowmapSurfaces, _key);
+		}
+		ds_map_destroy(__shadowmapSurfaces);
+
+		_key = ds_map_find_first(__shadowmapCubes);
+		repeat (ds_map_size(__shadowmapCubes))
+		{
+			__shadowmapCubes[? _key].destroy();
+			_key = ds_map_find_next(__shadowmapCubes, _key);
+		}
+		ds_map_destroy(__shadowmapCubes);
 
 		return undefined;
 	};
