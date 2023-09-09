@@ -13,7 +13,7 @@ function bbmod_vtf_is_supported()
 
 	if (_isSupported == undefined)
 	{
-		var _shader = __BBMOD_ShCheckVTF;
+		var _shader = BBMOD_ShCheckVTF;
 
 		if (shader_is_compiled(_shader))
 		{

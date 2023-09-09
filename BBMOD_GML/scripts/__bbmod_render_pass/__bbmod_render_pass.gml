@@ -17,10 +17,11 @@ enum BBMOD_ERenderPass
 	DepthOnly = 2,
 	/// @member Render pass where opaque objects are rendered into a G-Buffer.
 	GBuffer,
-	/// @member Render pass where opaque objects are rendered into the frame
-	/// buffer.
+	/// @member Render pass for background objects (e.g. skydome).
+	Background,
+	/// @member Render pass for opaque objects.
 	Forward,
-	/// @member Render pass where alpha-blended objects are rendered.
+	/// @member Render pass for alpha-blended objects.
 	Alpha,
 	/// @member Render pass where instance IDs are rendered into an off-screen
 	/// buffer.

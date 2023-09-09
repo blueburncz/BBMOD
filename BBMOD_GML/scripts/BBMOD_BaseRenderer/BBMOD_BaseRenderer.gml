@@ -8,8 +8,8 @@ global.__bbmodRendererCurrent = undefined;
 ///
 /// @implements {BBMOD_IDestructible}
 ///
-/// @desc Base struct for renderers, which execute
-/// [render commands](./BBMOD_RenderCommand.html) created with method
+/// @desc Base struct for renderers. Renderers execute
+/// [render commands](./BBMOD_ERenderCommand.html) created with method
 /// [render](./BBMOD_Model.render.html).
 function BBMOD_BaseRenderer() constructor
 {
@@ -551,7 +551,7 @@ function BBMOD_BaseRenderer() constructor
 
 		if (EnableShadows)
 		{
-			_light = bbmod_light_directional_get();
+			var _light = bbmod_light_directional_get();
 			if (_light != undefined
 				&& _light.CastShadows)
 			{
@@ -691,9 +691,9 @@ function BBMOD_BaseRenderer() constructor
 			camera_set_view_size(_camera, _width, _height);
 			camera_apply(_camera);
 
-			shader_set(__BBMOD_ShMixRGBM);
-			texture_set_stage(shader_get_sampler_index(__BBMOD_ShMixRGBM, "u_texTo"), _to);
-			shader_set_uniform_f(shader_get_uniform(__BBMOD_ShMixRGBM, "u_fFactor"), 1.0);
+			shader_set(BBMOD_ShMixRGBM);
+			texture_set_stage(shader_get_sampler_index(BBMOD_ShMixRGBM, "u_texTo"), _to);
+			shader_set_uniform_f(shader_get_uniform(BBMOD_ShMixRGBM, "u_fFactor"), 1.0);
 			draw_surface(__surProbe2, 0, 0);
 			shader_reset();
 
@@ -720,9 +720,9 @@ function BBMOD_BaseRenderer() constructor
 			camera_set_view_size(_camera, _width, _height);
 			camera_apply(_camera);
 
-			shader_set(__BBMOD_ShMixRGBM);
-			texture_set_stage(shader_get_sampler_index(__BBMOD_ShMixRGBM, "u_texTo"), _to);
-			shader_set_uniform_f(shader_get_uniform(__BBMOD_ShMixRGBM, "u_fFactor"), 0.1);
+			shader_set(BBMOD_ShMixRGBM);
+			texture_set_stage(shader_get_sampler_index(BBMOD_ShMixRGBM, "u_texTo"), _to);
+			shader_set_uniform_f(shader_get_uniform(BBMOD_ShMixRGBM, "u_fFactor"), 0.1);
 			draw_surface(__surProbe2, 0, 0);
 			shader_reset();
 
@@ -958,16 +958,29 @@ function BBMOD_BaseRenderer() constructor
 
 		////////////////////////////////////////////////////////////////////////
 		//
-		// Forward pass
+		// Background
 		//
 		bbmod_shader_set_global_f(BBMOD_U_ZFAR, bbmod_camera_get_zfar());
 
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
 
-		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
+		bbmod_render_pass_set(BBMOD_ERenderPass.Background);
 
 		var _rqi = 0;
+		repeat (array_length(_renderQueues))
+		{
+			_renderQueues[_rqi++].submit();
+		}
+		bbmod_material_reset();
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Forward pass
+		//
+		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
+
+		_rqi = 0;
 		repeat (array_length(_renderQueues))
 		{
 			_renderQueues[_rqi++].submit();

@@ -13,7 +13,7 @@ function bbmod_mrt_is_supported()
 
 	if (_isSupported == undefined)
 	{
-		var _shader = __BBMOD_ShCheckMRT;
+		var _shader = BBMOD_ShCheckMRT;
 
 		if (shader_is_compiled(_shader))
 		{

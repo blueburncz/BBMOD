@@ -9,6 +9,7 @@
 /// {@link BBMOD_ERenderPass.Id},
 /// {@link BBMOD_ERenderPass.Shadows},
 /// {@link BBMOD_ERenderPass.DepthOnly},
+/// {@link BBMOD_ERenderPass.Background},
 /// {@link BBMOD_ERenderPass.Forward} and
 /// {@link BBMOD_ERenderPass.Alpha}.
 ///
@@ -135,7 +136,7 @@ function BBMOD_DefaultRenderer()
 
 		////////////////////////////////////////////////////////////////////////
 		//
-		// Forward pass
+		// Background
 		//
 		bbmod_shader_set_global_sampler(BBMOD_U_GBUFFER, EnableGBuffer
 			? surface_get_texture(__surDepthBuffer)
@@ -144,6 +145,19 @@ function BBMOD_DefaultRenderer()
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
 
+		bbmod_render_pass_set(BBMOD_ERenderPass.Background);
+
+		var _rqi = 0;
+		repeat (array_length(_renderQueues))
+		{
+			_renderQueues[_rqi++].submit();
+		}
+		bbmod_material_reset();
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Forward pass
+		//
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
 		var _rqi = 0;

@@ -127,6 +127,8 @@ function BBMOD_DeferredRenderer()
 		var _renderWidth = get_render_width();
 		var _renderHeight = get_render_height();
 
+		camera_set_view_size(__camera2D, _renderWidth, _renderHeight);
+
 		var i = 0;
 		repeat (array_length(Renderables))
 		{
@@ -229,14 +231,12 @@ function BBMOD_DeferredRenderer()
 		//
 		// Lighting pass
 		//
-		camera_set_view_size(__camera2D, _renderWidth, _renderHeight);
-
 		surface_set_target(__surLBuffer);
-		gpu_push_state();
-		gpu_set_blendmode(bm_add);
 
 		////////////////////////////////////////////////////////////////////////
 		// Fullscreen
+		gpu_push_state();
+		gpu_set_blendmode(bm_add);
 		camera_apply(__camera2D);
 		matrix_set(matrix_world, matrix_build_identity());
 		var _shader = BBMOD_ShDeferredFullscreen;
@@ -260,37 +260,37 @@ function BBMOD_DeferredRenderer()
 		gpu_pop_state();
 
 		////////////////////////////////////////////////////////////////////////
-		// Point lights
+		// Punctual lights
 		camera_apply(__camera2D);
 		matrix_set(matrix_world, matrix_build_identity());
 
-		var _shader = BBMOD_ShDeferredPunctual;
+		_shader = BBMOD_ShDeferredPunctual;
 		shader_set(_shader);
 		__bbmod_shader_set_globals(shader_current());
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
 			(new BBMOD_Matrix(_view)).Inverse().Raw);
-		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
+		_tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
 		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
 
 		bbmod_shader_set_cam_pos(_shader);
 		bbmod_shader_set_exposure(_shader);
 
-		var _uLightPosition = shader_get_uniform(shader_current(), "bbmod_LightPosition");
-		var _uLightRange = shader_get_uniform(shader_current(), "bbmod_LightRange");
-		var _uLightColor = shader_get_uniform(shader_current(), "bbmod_LightColor");
-		var _uLightIsSpot = shader_get_uniform(shader_current(), "bbmod_LightIsSpot");
-		var _uLightDirection = shader_get_uniform(shader_current(), "bbmod_LightDirection");
-		var _uLightInner = shader_get_uniform(shader_current(), "bbmod_LightInner");
-		var _uLightOuter = shader_get_uniform(shader_current(), "bbmod_LightOuter");
-		var _uShadowmapEnablePS = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_ENABLE_PS);
-		var _uShadowmap = shader_get_sampler_index(shader_current(), BBMOD_U_SHADOWMAP);
-		var _uShadowmapTexel = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_TEXEL);
-		var _uShadowmapArea = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_AREA);
-		var _uShadowmapNormalOffset = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_NORMAL_OFFSET);
-		var _uShadowmapMatrix = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_MATRIX);
-		var _uShadowmapBias = shader_get_uniform(shader_current(), BBMOD_U_SHADOWMAP_BIAS);
+		var _uLightPosition = shader_get_uniform(_shader, "bbmod_LightPosition");
+		var _uLightRange = shader_get_uniform(_shader, "bbmod_LightRange");
+		var _uLightColor = shader_get_uniform(_shader, "bbmod_LightColor");
+		var _uLightIsSpot = shader_get_uniform(_shader, "bbmod_LightIsSpot");
+		var _uLightDirection = shader_get_uniform(_shader, "bbmod_LightDirection");
+		var _uLightInner = shader_get_uniform(_shader, "bbmod_LightInner");
+		var _uLightOuter = shader_get_uniform(_shader, "bbmod_LightOuter");
+		var _uShadowmapEnablePS = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_ENABLE_PS);
+		var _uShadowmap = shader_get_sampler_index(_shader, BBMOD_U_SHADOWMAP);
+		var _uShadowmapTexel = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_TEXEL);
+		var _uShadowmapArea = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_AREA);
+		var _uShadowmapNormalOffset = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_NORMAL_OFFSET);
+		var _uShadowmapMatrix = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_MATRIX);
+		var _uShadowmapBias = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_BIAS);
 		var _sphere = __sphere.Meshes[0].VertexBuffer;
 		var _texGB0 = surface_get_texture(__surGBuffer[0]);
 
@@ -301,7 +301,7 @@ function BBMOD_DeferredRenderer()
 		gpu_set_state(bbmod_gpu_get_default_state());
 		gpu_set_blendmode(bm_add);
 		gpu_set_zwriteenable(false);
-		gpu_set_ztestenable(true);
+		gpu_set_ztestenable(false);
 		gpu_set_cullmode(cull_clockwise);
 
 		for (var i = array_length(global.__bbmodPunctualLights) - 1; i >= 0; --i)
@@ -411,14 +411,40 @@ function BBMOD_DeferredRenderer()
 		//
 		surface_set_target(__surFinal);
 
+		bbmod_shader_set_global_sampler(BBMOD_U_GBUFFER, surface_get_texture(__surGBuffer[2]));
+
 		gpu_push_state();
 		gpu_set_state(bbmod_gpu_get_default_state());
 		gpu_set_blendenable(false);
 		gpu_set_zwriteenable(false);
 		gpu_set_ztestenable(false);
-		camera_apply(__camera2D);
 		matrix_set(matrix_world, matrix_build_identity());
+		camera_apply(__camera2D);
+		draw_rectangle_color(0, 0, _renderWidth, _renderHeight, c_blue, c_blue, c_blue, c_blue, false);
+		gpu_pop_state();
+
+		bbmod_render_pass_set(BBMOD_ERenderPass.Background);
+		matrix_set(matrix_world, _world);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
+		_rqi = 0;
+		repeat (array_length(_renderQueues))
+		{
+			_renderQueues[_rqi++].submit();
+		}
+		bbmod_material_reset();
+
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_inv_src_alpha);
+		gpu_set_zwriteenable(false);
+		gpu_set_ztestenable(false);
+		matrix_set(matrix_world, matrix_build_identity());
+		camera_apply(__camera2D);
+		shader_set(BBMOD_ShDepthMask);
+		texture_set_stage(shader_get_sampler_index(BBMOD_ShDepthMask, "u_texDepth"), surface_get_texture(__surGBuffer[2]));
 		draw_surface(__surLBuffer, 0, 0);
+		shader_reset();
 		gpu_pop_state();
 
 		gpu_push_state();
@@ -426,8 +452,6 @@ function BBMOD_DeferredRenderer()
 		matrix_set(matrix_world, _world);
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
-
-		bbmod_shader_set_global_sampler(BBMOD_U_GBUFFER, surface_get_texture(__surGBuffer[2]));
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 		_rqi = 0;
@@ -470,7 +494,7 @@ function BBMOD_DeferredRenderer()
 		if (_hdr)
 		{
 			shader_set(BBMOD_ShHDRToSDR);
-			shader_set_uniform_f(shader_get_uniform(shader_current(), BBMOD_U_EXPOSURE), global.__bbmodCameraExposure);
+			shader_set_uniform_f(shader_get_uniform(BBMOD_ShHDRToSDR, BBMOD_U_EXPOSURE), global.__bbmodCameraExposure);
 		}
 		draw_surface(__surFinal, 0, 0);
 		if (_hdr)

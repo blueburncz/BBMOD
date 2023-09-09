@@ -1,7 +1,7 @@
 {
   "resourceType": "GMShader",
   "resourceVersion": "1.0",
-  "name": "__BBMOD_ShCheckVTF",
+  "name": "BBMOD_ShCheckMRT",
   "parent": {
     "name": "Utils",
     "path": "folders/BBMOD/Core/Utils.yy",
