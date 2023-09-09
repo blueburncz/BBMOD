@@ -250,7 +250,7 @@
     {"name":"BBMOD_DragModule","order":1,"path":"scripts/BBMOD_DragModule/BBMOD_DragModule.yy",},
     {"name":"BBMOD_MixVec4OverTimeModule","order":5,"path":"scripts/BBMOD_MixVec4OverTimeModule/BBMOD_MixVec4OverTimeModule.yy",},
     {"name":"BBMOD_AnimationPlayer","order":4,"path":"scripts/BBMOD_AnimationPlayer/BBMOD_AnimationPlayer.yy",},
-    {"name":"BBMOD_ShDepthMask","order":13,"path":"shaders/BBMOD_ShDepthMask/BBMOD_ShDepthMask.yy",},
+    {"name":"BBMOD_ShFogAndDepthMask","order":13,"path":"shaders/BBMOD_ShFogAndDepthMask/BBMOD_ShFogAndDepthMask.yy",},
     {"name":"__bbmod_logging","order":10,"path":"scripts/__bbmod_logging/__bbmod_logging.yy",},
     {"name":"OFloatingText","order":1,"path":"objects/OFloatingText/OFloatingText.yy",},
     {"name":"BBMOD_ShGBufferAnimated","order":1,"path":"shaders/BBMOD_ShGBufferAnimated/BBMOD_ShGBufferAnimated.yy",},

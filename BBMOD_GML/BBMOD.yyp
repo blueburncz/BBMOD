@@ -368,7 +368,7 @@
     {"id":{"name":"BBMOD_DragModule","path":"scripts/BBMOD_DragModule/BBMOD_DragModule.yy",},},
     {"id":{"name":"BBMOD_MixVec4OverTimeModule","path":"scripts/BBMOD_MixVec4OverTimeModule/BBMOD_MixVec4OverTimeModule.yy",},},
     {"id":{"name":"BBMOD_AnimationPlayer","path":"scripts/BBMOD_AnimationPlayer/BBMOD_AnimationPlayer.yy",},},
-    {"id":{"name":"BBMOD_ShDepthMask","path":"shaders/BBMOD_ShDepthMask/BBMOD_ShDepthMask.yy",},},
+    {"id":{"name":"BBMOD_ShFogAndDepthMask","path":"shaders/BBMOD_ShFogAndDepthMask/BBMOD_ShFogAndDepthMask.yy",},},
     {"id":{"name":"__bbmod_logging","path":"scripts/__bbmod_logging/__bbmod_logging.yy",},},
     {"id":{"name":"OFloatingText","path":"objects/OFloatingText/OFloatingText.yy",},},
     {"id":{"name":"BBMOD_ShGBufferAnimated","path":"shaders/BBMOD_ShGBufferAnimated/BBMOD_ShGBufferAnimated.yy",},},

@@ -3,7 +3,7 @@
 /// @extends BBMOD_BaseRenderer
 ///
 /// @desc A deferred renderer with support for unlimited number of lights and
-/// shadow casters. Implemented render passes are:
+/// shadows. Implemented render passes are:
 /// {@link BBMOD_ERenderPass.ReflectionCapture},
 /// {@link BBMOD_ERenderPass.Id},
 /// {@link BBMOD_ERenderPass.Shadows},
@@ -38,7 +38,11 @@
 /// renderer = renderer.destroy();
 /// ```
 ///
-/// @see BBMOD_IRenderable
+/// @note Deferred renderer requires multiple render targets and 16 bit floating
+/// point texture format! You can use function {@link bbmod_deferred_renderer_is_supported}
+/// to check whether the current platform meets all requirements.
+///
+/// @see bbmod_deferred_renderer_is_supported
 /// @see BBMOD_Camera
 function BBMOD_DeferredRenderer()
 	: BBMOD_BaseRenderer() constructor
@@ -46,9 +50,9 @@ function BBMOD_DeferredRenderer()
 	static BaseRenderer_destroy = destroy;
 	static BaseRenderer_present = present;
 
-	/// @var {Bool} Enables high dynamic range (HDR) rendering. Default value is
-	/// `true`.
-	EnableHDR = true;
+	/// @var {Bool}
+	/// @private
+	__enableHDR = true;
 
 	/// @var {Array<Id.Surface>}
 	/// @private
@@ -157,7 +161,7 @@ function BBMOD_DeferredRenderer()
 		__render_shadowmaps();
 
 		__gBufferZFar = bbmod_camera_get_zfar();
-		var _hdr = (EnableHDR && bbmod_hdr_is_supported());
+		var _hdr = (__enableHDR && bbmod_hdr_is_supported());
 
 		bbmod_shader_set_global_f(BBMOD_U_ZFAR, __gBufferZFar);
 		bbmod_shader_set_global_f(BBMOD_U_HDR, _hdr ? 1.0 : 0.0);
@@ -420,7 +424,7 @@ function BBMOD_DeferredRenderer()
 		gpu_set_ztestenable(false);
 		matrix_set(matrix_world, matrix_build_identity());
 		camera_apply(__camera2D);
-		draw_rectangle_color(0, 0, _renderWidth, _renderHeight, c_blue, c_blue, c_blue, c_blue, false);
+		draw_rectangle_color(0, 0, _renderWidth, _renderHeight, c_black, c_black, c_black, c_black, false);
 		gpu_pop_state();
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Background);
@@ -441,8 +445,12 @@ function BBMOD_DeferredRenderer()
 		gpu_set_ztestenable(false);
 		matrix_set(matrix_world, matrix_build_identity());
 		camera_apply(__camera2D);
-		shader_set(BBMOD_ShDepthMask);
-		texture_set_stage(shader_get_sampler_index(BBMOD_ShDepthMask, "u_texDepth"), surface_get_texture(__surGBuffer[2]));
+		shader_set(BBMOD_ShFogAndDepthMask);
+		shader_set_uniform_f(shader_get_uniform(BBMOD_ShFogAndDepthMask, BBMOD_U_ZFAR), __gBufferZFar);
+		bbmod_shader_set_fog(BBMOD_ShFogAndDepthMask);
+		bbmod_shader_set_ambient_light(BBMOD_ShFogAndDepthMask);
+		bbmod_shader_set_directional_light(BBMOD_ShFogAndDepthMask);
+		texture_set_stage(shader_get_sampler_index(BBMOD_ShFogAndDepthMask, "u_texDepth"), surface_get_texture(__surGBuffer[2]));
 		draw_surface(__surLBuffer, 0, 0);
 		shader_reset();
 		gpu_pop_state();
@@ -514,7 +522,6 @@ function BBMOD_DeferredRenderer()
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 		bbmod_shader_unset_global(BBMOD_U_SSAO);
 		bbmod_shader_unset_global(BBMOD_U_GBUFFER);
-
 		bbmod_shader_set_global_f(BBMOD_U_HDR, 0.0);
 
 		matrix_set(matrix_world, _world);
@@ -571,4 +578,18 @@ function BBMOD_DeferredRenderer()
 
 		return undefined;
 	};
+}
+
+/// @func bbmod_deferred_renderer_is_supported()
+///
+/// @desc Checks whether deferred renderer is supported.
+///
+/// @return {Bool} Returns `true` if deferred renderer is supported.
+///
+/// @see BBMOD_DeferredRenderer
+function bbmod_deferred_renderer_is_supported()
+{
+	gml_pragma("forceinline");
+	return (bbmod_mrt_is_supported()
+		&& bbmod_hdr_is_supported());
 }
