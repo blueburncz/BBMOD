@@ -8,7 +8,9 @@ varying vec2 v_vTexCoord;
 #define u_texGB0 gm_BaseTexture
 uniform sampler2D u_texGB1;
 uniform sampler2D u_texGB2;
+uniform mat4 u_mView;
 uniform mat4 u_mViewInverse;
+uniform mat4 u_mProjection;
 uniform vec2 u_vTanAspect;
 
 // Camera's position in world space
@@ -437,7 +439,7 @@ vec3 xSpecularIBL(sampler2D ibl, vec2 texel/*, sampler2D brdf*/, vec3 f0, float 
 vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
 {
 #if !(defined(_YY_HLSL11_) || defined(_YY_PSSL_))
-	tanAspect *= -1.0;
+	tanAspect.y *= -1.0;
 #endif
 	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
 }
@@ -540,8 +542,16 @@ void main()
 	vec3 vertexView = xProject(u_vTanAspect, v_vTexCoord, depth);
 	vec3 vertexWorld = (u_mViewInverse * vec4(vertexView, 1.0)).xyz;
 
+	vec4 v_vEye;
+	v_vEye.xyz = normalize(-vec3(
+		u_mView[0][2],
+		u_mView[1][2],
+		u_mView[2][2]
+	));
+	v_vEye.w = (u_mProjection[2][3] == 0.0) ? 1.0 : 0.0;
+
 	vec3 N = material.Normal;
-	vec3 V = /*(v_vEye.w == 1.0) ? v_vEye.xyz :*/ normalize(bbmod_CamPos - vertexWorld);
+	vec3 V = (v_vEye.w == 1.0) ? v_vEye.xyz : normalize(bbmod_CamPos - vertexWorld);
 	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
 	vec3 lightSubsurface = vec3(0.0);

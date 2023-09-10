@@ -262,6 +262,9 @@ function BBMOD_DeferredRenderer()
 		//
 		surface_set_target(__surLBuffer);
 
+		var _viewInverse = (new BBMOD_Matrix(_view)).Inverse().Raw;
+		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
+
 		////////////////////////////////////////////////////////////////////////
 		// Fullscreen
 		gpu_push_state();
@@ -270,14 +273,12 @@ function BBMOD_DeferredRenderer()
 		matrix_set(matrix_world, matrix_build_identity());
 		var _shader = BBMOD_ShDeferredFullscreen;
 		shader_set(_shader);
-		__bbmod_shader_set_globals(shader_current());
+		__bbmod_shader_set_globals(_shader);
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mView"), _view);
-		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
-			(new BBMOD_Matrix(_view)).Inverse().Raw);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"), _viewInverse);
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mProjection"), _projection);
-		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
 		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
 		bbmod_shader_set_cam_pos(_shader);
 		bbmod_shader_set_exposure(_shader);
@@ -295,12 +296,12 @@ function BBMOD_DeferredRenderer()
 
 		_shader = BBMOD_ShDeferredPunctual;
 		shader_set(_shader);
-		__bbmod_shader_set_globals(shader_current());
+		__bbmod_shader_set_globals(_shader);
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
-		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
-			(new BBMOD_Matrix(_view)).Inverse().Raw);
-		_tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mView"), _view);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"), _viewInverse);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mProjection"), _projection);
 		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
 
 		bbmod_shader_set_cam_pos(_shader);
