@@ -213,6 +213,8 @@ uniform float bbmod_ShadowmapArea;
 uniform float bbmod_ShadowmapBias;
 // The index of the light that casts shadows. Use -1 for the directional light.
 uniform float bbmod_ShadowCasterIndex;
+// Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapNormalOffsetPS;
 #endif // defined(X_PBR) && !defined(X_OUTPUT_GBUFFER)
 #endif // !defined(X_OUTPUT_DEPTH) && !defined(X_OUTPUT_GBUFFER)
 

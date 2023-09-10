@@ -14,6 +14,13 @@
 function BBMOD_PointLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1.0)
 	: BBMOD_PunctualLight(_color, _position, _range) constructor
 {
+	__getShadowmapMatrix = __get_shadowmap_matrix;
+
+	static __get_shadowmap_matrix = function ()
+	{
+		gml_pragma("forceinline");
+		return matrix_build_identity();
+	};
 }
 
 /// @func bbmod_light_point_add(_light)

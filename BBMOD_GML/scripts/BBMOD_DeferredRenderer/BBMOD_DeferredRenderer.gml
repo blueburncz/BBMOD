@@ -87,36 +87,61 @@ function BBMOD_DeferredRenderer()
 
 	static __render_shadowmaps = function ()
 	{
-		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
-		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 0.0);
-		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 0.0);
+		var _shadowCaster = undefined;
+		var _shadowCasterIndex = -1;
 
-		if (!EnableShadows)
+		if (EnableShadows)
 		{
+			// Directional light
+			var _light = bbmod_light_directional_get();
+			if (_light != undefined
+				&& _light.CastShadows)
+			{
+				__render_shadowmap_impl(_light);
+				_shadowCaster = _light;
+			}
+
+			// Punctual lights
+			var i = 0;
+			repeat (array_length(global.__bbmodPunctualLights))
+			{
+				_light = global.__bbmodPunctualLights[i];
+				if (_light.CastShadows)
+				{
+					__render_shadowmap_impl(_light);
+					if (_shadowCaster == undefined)
+					{
+						_shadowCaster = _light;
+						_shadowCasterIndex = i;
+					}
+				}
+				++i;
+			}
+		}
+
+		if (_shadowCaster == undefined)
+		{
+			bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
+			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 0.0);
+			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 0.0);
 			return;
 		}
 
-		var _light;
-
-		// Directional light
-		_light = bbmod_light_directional_get();
-		if (_light != undefined
-			&& _light.CastShadows)
-		{
-			__render_shadowmap_impl(_light);
-		}
-			
-		// Punctual lights
-		var i = 0;
-		repeat (array_length(global.__bbmodPunctualLights))
-		{
-			_light = global.__bbmodPunctualLights[i];
-			if (_light.CastShadows)
-			{
-				__render_shadowmap_impl(_light);
-			}
-			++i;
-		}
+		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[? _shadowCaster]);
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
+		bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
+		bbmod_shader_set_global_sampler_mip_enable(BBMOD_U_SHADOWMAP, true);
+		bbmod_shader_set_global_sampler_filter(BBMOD_U_SHADOWMAP, true);
+		bbmod_shader_set_global_sampler_repeat(BBMOD_U_SHADOWMAP, false);
+		bbmod_shader_set_global_f2(BBMOD_U_SHADOWMAP_TEXEL,
+			texture_get_texel_width(_shadowmapTexture),
+			texture_get_texel_height(_shadowmapTexture));
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_AREA, _shadowCaster.__getZFar());
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET_VS, ShadowmapNormalOffset);
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET_PS, ShadowmapNormalOffset);
+		bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _shadowCaster.__getShadowmapMatrix());
+		bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, _shadowCasterIndex);
 	};
 
 	static render = function (_clearQueues=true)
@@ -292,7 +317,7 @@ function BBMOD_DeferredRenderer()
 		var _uShadowmap = shader_get_sampler_index(_shader, BBMOD_U_SHADOWMAP);
 		var _uShadowmapTexel = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_TEXEL);
 		var _uShadowmapArea = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_AREA);
-		var _uShadowmapNormalOffset = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_NORMAL_OFFSET);
+		var _uShadowmapNormalOffsetPS = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_NORMAL_OFFSET_PS);
 		var _uShadowmapMatrix = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_MATRIX);
 		var _uShadowmapBias = shader_get_uniform(_shader, BBMOD_U_SHADOWMAP_BIAS);
 		var _sphere = __sphere.Meshes[0].VertexBuffer;
@@ -353,7 +378,7 @@ function BBMOD_DeferredRenderer()
 								texture_get_texel_width(_shadowmapTexture),
 								texture_get_texel_height(_shadowmapTexture));
 							shader_set_uniform_f(_uShadowmapArea, _shadowmapZFar);
-							shader_set_uniform_f(_uShadowmapNormalOffset, other.ShadowmapNormalOffset);
+							shader_set_uniform_f(_uShadowmapNormalOffsetPS, other.ShadowmapNormalOffset);
 							shader_set_uniform_f(_uShadowmapBias, 0.0);
 							shader_set_uniform_matrix_array(_uShadowmapMatrix, _shadowmapMatrix);
 						}
@@ -386,7 +411,7 @@ function BBMOD_DeferredRenderer()
 								texture_get_texel_width(_shadowmapTexture),
 								texture_get_texel_height(_shadowmapTexture));
 							shader_set_uniform_f(_uShadowmapArea, _shadowmapZFar);
-							shader_set_uniform_f(_uShadowmapNormalOffset, other.ShadowmapNormalOffset);
+							shader_set_uniform_f(_uShadowmapNormalOffsetPS, other.ShadowmapNormalOffset);
 							shader_set_uniform_f(_uShadowmapBias, 0.0);
 						}
 						else

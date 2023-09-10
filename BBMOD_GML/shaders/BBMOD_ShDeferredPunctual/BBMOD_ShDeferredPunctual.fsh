@@ -25,7 +25,7 @@ uniform float bbmod_ShadowmapEnablePS;
 // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
 uniform mat4 bbmod_ShadowmapMatrix;
 // Offsets vertex position by its normal scaled by this value
-uniform float bbmod_ShadowmapNormalOffset;
+uniform float bbmod_ShadowmapNormalOffsetPS;
 // Shadowmap texture
 uniform sampler2D bbmod_Shadowmap;
 // (1.0/shadowmapWidth, 1.0/shadowmapHeight)
@@ -550,9 +550,9 @@ void main()
 	{
 		if (bbmod_LightIsSpot == 1.0)
 		{
-			vec4 shadowmapPos = bbmod_ShadowmapMatrix * vec4(vertexWorld + N * bbmod_ShadowmapNormalOffset, 1.0);
+			vec4 shadowmapPos = bbmod_ShadowmapMatrix * vec4(vertexWorld + N * bbmod_ShadowmapNormalOffsetPS, 1.0);
 			shadowmapPos.xy /= shadowmapPos.w;
-			float shadowmapAtt = 1.0; //clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0);
+			float shadowmapAtt = 1.0;
 			shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
 		#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
 			shadowmapPos.y = 1.0 - shadowmapPos.y;
@@ -566,7 +566,7 @@ void main()
 		{
 			vec3 lightVec = bbmod_LightPosition - vertexWorld;
 			vec2 uv = xVec3ToOctahedronUv(-lightVec);
-			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - bbmod_ShadowmapNormalOffset) / bbmod_ShadowmapArea);
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - bbmod_ShadowmapNormalOffsetPS) / bbmod_ShadowmapArea);
 		}
 	}
 

@@ -4,7 +4,8 @@
 ///
 /// @extends BBMOD_BaseRenderer
 ///
-/// @desc A forward renderer. Implemented render passes are:
+/// @desc A forward renderer with support for a small number of lights and only
+/// a single shadow casting lights. Implemented render passes are:
 /// {@link BBMOD_ERenderPass.ReflectionCapture},
 /// {@link BBMOD_ERenderPass.Id},
 /// {@link BBMOD_ERenderPass.Shadows},

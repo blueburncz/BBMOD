@@ -118,6 +118,8 @@ uniform float bbmod_ShadowmapArea;
 uniform float bbmod_ShadowmapBias;
 // The index of the light that casts shadows. Use -1 for the directional light.
 uniform float bbmod_ShadowCasterIndex;
+// Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapNormalOffsetPS;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
@@ -660,19 +662,32 @@ void PBRShader(Material material, float depth)
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		vec4 shadowmapPos = v_vPosShadowmap;
-		shadowmapPos.xy /= shadowmapPos.w;
-		float shadowmapAtt = (bbmod_ShadowCasterIndex == -1.0)
-			? clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0)
-			: 1.0;
-		shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
-	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-		shadowmapPos.y = 1.0 - shadowmapPos.y;
-	#endif
-		shadowmapPos.z /= bbmod_ShadowmapArea;
+		int shadowCasterIndex = int(bbmod_ShadowCasterIndex);
+		bool isPoint = (shadowCasterIndex >= 0) && (bbmod_LightPunctualDataB[shadowCasterIndex * 2].x == 0.0);
 
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
-			* shadowmapAtt;
+		if (!isPoint)
+		{
+			vec4 shadowmapPos = v_vPosShadowmap;
+			shadowmapPos.xy /= shadowmapPos.w;
+			float shadowmapAtt = (bbmod_ShadowCasterIndex == -1.0)
+				? clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0)
+				: 1.0;
+			shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
+		#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+			shadowmapPos.y = 1.0 - shadowmapPos.y;
+		#endif
+			shadowmapPos.z /= bbmod_ShadowmapArea;
+
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
+				* shadowmapAtt;
+		}
+		else
+		{
+			vec3 position = bbmod_LightPunctualDataA[shadowCasterIndex * 2].xyz;
+			vec3 lightVec = position - v_vVertex;
+			vec2 uv = xVec3ToOctahedronUv(-lightVec);
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - bbmod_ShadowmapNormalOffsetPS) / bbmod_ShadowmapArea);
+		}
 	}
 
 	// IBL

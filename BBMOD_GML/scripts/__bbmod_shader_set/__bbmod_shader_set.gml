@@ -38,7 +38,13 @@
 /// @macro {String} Name of a vertex shader uniform of type `float` that holds
 /// how much are vertices offset by their normal before they are transformed into
 /// shadowmap-space, using formula `vertex + normal * normalOffset`.
+/// @obsolete Please use {@link BBMOD_U_SHADOWMAP_NORMAL_OFFSET_VS} instead.
 #macro BBMOD_U_SHADOWMAP_NORMAL_OFFSET "bbmod_ShadowmapNormalOffset"
+
+/// @macro {String} Name of a vertex shader uniform of type `float` that holds
+/// how much are vertices offset by their normal before they are transformed into
+/// shadowmap-space, using formula `vertex + normal * normalOffset`.
+#macro BBMOD_U_SHADOWMAP_NORMAL_OFFSET_VS "bbmod_ShadowmapNormalOffsetVS"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -357,6 +363,11 @@
 /// the index of a punctual light that casts shadows or -1.0, if it's the
 /// directional light.
 #macro BBMOD_U_SHADOW_CASTER_INDEX "bbmod_ShadowCasterIndex"
+
+/// @macro {String} Name of a fragment shader uniform of type `float` that holds
+/// how much are vertices offset by their normal before they are transformed into
+/// shadowmap-space, using formula `vertex + normal * normalOffset`.
+#macro BBMOD_U_SHADOWMAP_NORMAL_OFFSET_PS "bbmod_ShadowmapNormalOffsetPS"
 
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// whether HDR rendering is enabled (1.0) or not (0.0).
@@ -701,9 +712,9 @@ function bbmod_shader_set_punctual_lights(_shader, _lights=undefined, _isLightma
 			_dataA[@ _indexA + 7] = _color.Alpha;
 			_indexA += 8;
 
-			if (_light[$ "AngleInner"] != undefined) // Ugh, but works!
+			if (is_instanceof(_light, BBMOD_SpotLight))
 			{
-				_dataB[@ _indexB] = 1.0; // Is spot light
+				_dataB[@ _indexB] = 1.0;
 				_dataB[@ _indexB + 1] = dcos(_light.AngleInner);
 				_dataB[@ _indexB + 2] = dcos(_light.AngleOuter);
 				_light.Direction.ToArray(_dataB, _indexB + 3);

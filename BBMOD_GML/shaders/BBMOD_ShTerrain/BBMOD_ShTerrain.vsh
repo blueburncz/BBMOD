@@ -37,7 +37,7 @@ uniform float bbmod_ShadowmapEnableVS;
 // WORLD_VIEW_PROJECTION matrix used when rendering shadowmap
 uniform mat4 bbmod_ShadowmapMatrix;
 // Offsets vertex position by its normal scaled by this value
-uniform float bbmod_ShadowmapNormalOffset;
+uniform float bbmod_ShadowmapNormalOffsetVS;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -115,6 +115,6 @@ void main()
 	if (bbmod_ShadowmapEnableVS == 1.0)
 	{
 		v_vPosShadowmap = bbmod_ShadowmapMatrix
-			* vec4(v_vVertex + normal * bbmod_ShadowmapNormalOffset, 1.0);
+			* vec4(v_vVertex + normal * bbmod_ShadowmapNormalOffsetVS, 1.0);
 	}
 }

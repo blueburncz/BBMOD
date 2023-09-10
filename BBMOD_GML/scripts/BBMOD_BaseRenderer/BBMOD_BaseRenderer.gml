@@ -502,25 +502,6 @@ function BBMOD_BaseRenderer() constructor
 				surface_reset_target();
 			}
 
-			// TODO: Handle point lights
-			if (is_instanceof(_light, BBMOD_DirectionalLight))
-			{
-				var _shadowmapTexture = surface_get_texture(_surShadowmap);
-				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
-				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
-				bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
-				bbmod_shader_set_global_sampler_mip_enable(BBMOD_U_SHADOWMAP, true);
-				bbmod_shader_set_global_sampler_filter(BBMOD_U_SHADOWMAP, true);
-				bbmod_shader_set_global_sampler_repeat(BBMOD_U_SHADOWMAP, false);
-				bbmod_shader_set_global_f2(BBMOD_U_SHADOWMAP_TEXEL,
-					texture_get_texel_width(_shadowmapTexture),
-					texture_get_texel_height(_shadowmapTexture));
-				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_AREA, _shadowmapZFar);
-				bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET, ShadowmapNormalOffset);
-				bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _light.__getShadowmapMatrix());
-				bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, -1.0);
-			}
-
 			_light.NeedsUpdate = false;
 		}
 
@@ -545,9 +526,8 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static __render_shadowmaps = function ()
 	{
-		static _renderQueues = bbmod_render_queues_get();
-
 		var _shadowCaster = undefined;
+		var _shadowCasterIndex = -1;
 
 		if (EnableShadows)
 		{
@@ -568,6 +548,7 @@ function BBMOD_BaseRenderer() constructor
 					if (_light.CastShadows)
 					{
 						_shadowCaster = _light;
+						_shadowCasterIndex = i;
 						break;
 					}
 					++i;
@@ -577,7 +558,6 @@ function BBMOD_BaseRenderer() constructor
 
 		if (_shadowCaster == undefined)
 		{
-			// No shadow caster was found!!!
 			bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 0.0);
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 0.0);
@@ -585,6 +565,22 @@ function BBMOD_BaseRenderer() constructor
 		}
 
 		__render_shadowmap_impl(_shadowCaster);
+
+		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[? _shadowCaster]);
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
+		bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
+		bbmod_shader_set_global_sampler_mip_enable(BBMOD_U_SHADOWMAP, true);
+		bbmod_shader_set_global_sampler_filter(BBMOD_U_SHADOWMAP, true);
+		bbmod_shader_set_global_sampler_repeat(BBMOD_U_SHADOWMAP, false);
+		bbmod_shader_set_global_f2(BBMOD_U_SHADOWMAP_TEXEL,
+			texture_get_texel_width(_shadowmapTexture),
+			texture_get_texel_height(_shadowmapTexture));
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_AREA, _shadowCaster.__getZFar());
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET_VS, ShadowmapNormalOffset);
+		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET_PS, ShadowmapNormalOffset);
+		bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _shadowCaster.__getShadowmapMatrix());
+		bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, _shadowCasterIndex);
 	};
 
 	/// @func __render_reflection_probes()
