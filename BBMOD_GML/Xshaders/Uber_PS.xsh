@@ -483,6 +483,13 @@ void main()
 	{
 		discard;
 	}
+	material.Emissive = mix(
+		material.Emissive,
+		xGammaToLinear(u_vDissolveColor),
+		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
+
+	// Silhouette
+	material.Emissive = mix(material.Emissive, xGammaToLinear(u_vSilhouette.rgb), u_vSilhouette.a);
 #endif // X_ZOMBIE
 
 	if (material.Opacity < bbmod_AlphaTest)
@@ -504,16 +511,5 @@ void main()
 #else
 	UnlitShader(material, v_vPosition.z);
 #endif
-
-#if defined(X_ZOMBIE)
-	// Dissolve
-	gl_FragColor.rgb = mix(
-		gl_FragColor.rgb,
-		u_vDissolveColor,
-		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
-	// Silhouette
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
-#endif
-
 #endif
 }

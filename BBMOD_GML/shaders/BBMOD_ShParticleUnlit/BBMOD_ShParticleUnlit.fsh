@@ -380,5 +380,4 @@ void main()
 	}
 
 	UnlitShader(material, v_vPosition.z);
-
 }

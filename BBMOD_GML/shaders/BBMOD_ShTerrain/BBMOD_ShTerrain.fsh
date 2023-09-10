@@ -783,5 +783,4 @@ void main()
 	}
 
 	PBRShader(material, v_vPosition.z);
-
 }

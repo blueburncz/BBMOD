@@ -283,5 +283,4 @@ void main()
 	{
 		gl_FragData[3].rgb = xLinearToGamma(gl_FragData[3].rgb);
 	}
-
 }
