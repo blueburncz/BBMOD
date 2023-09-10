@@ -22,7 +22,7 @@ Material UnpackMaterial(
 #if !defined(X_TERRAIN)
 	float isMetallic,
 	sampler2D texMaterial,
-#if !defined(X_LIGHTMAP)
+#if !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
 	sampler2D texSubsurface,
 #endif
 	sampler2D texEmissive,
@@ -95,7 +95,7 @@ Material UnpackMaterial(
 		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 	}
 
-#if !defined(X_LIGHTMAP)
+#if !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
 	// Subsurface (color and intensity)
 	vec4 subsurface = texture2D(texSubsurface, uv);
 	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);

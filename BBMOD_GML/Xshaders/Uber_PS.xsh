@@ -454,7 +454,7 @@ void main()
 		bbmod_NormalW,
 		bbmod_IsMetallic,
 		bbmod_Material,
-#if !defined(X_LIGHTMAP)
+#if !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
 		bbmod_Subsurface,
 #endif
 		bbmod_Emissive,

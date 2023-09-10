@@ -276,7 +276,6 @@ Material UnpackMaterial(
 	sampler2D texNormalW,
 	float isMetallic,
 	sampler2D texMaterial,
-	sampler2D texSubsurface,
 	sampler2D texEmissive,
 	mat3 TBN,
 	vec2 uv)
@@ -325,10 +324,6 @@ Material UnpackMaterial(
 		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 	}
 
-	// Subsurface (color and intensity)
-	vec4 subsurface = texture2D(texSubsurface, uv);
-	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
-
 	// Emissive color
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
 
@@ -369,7 +364,6 @@ void main()
 		bbmod_NormalW,
 		bbmod_IsMetallic,
 		bbmod_Material,
-		bbmod_Subsurface,
 		bbmod_Emissive,
 		v_mTBN,
 		v_vTexCoord);
