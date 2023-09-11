@@ -103,6 +103,14 @@ function BBMOD_BaseRenderer() constructor
 	/// @see BBMOD_Light.ShadowmapResolution
 	EnableShadows = false;
 
+	/// @var {Id.DsList}
+	/// @private
+	__shadowmapLights = ds_list_create();
+
+	/// @var {Id.DsList}
+	/// @private
+	__shadowmapHealth = ds_list_create();
+
 	/// @var {Id.DsMap}
 	/// @private
 	__shadowmapSurfaces = ds_map_create();
@@ -416,9 +424,64 @@ function BBMOD_BaseRenderer() constructor
 		return self;
 	};
 
+	/// @func __incr_shadowmap_health(_light)
+	///
+	/// @desc Increments health of a light's shadowmap.
+	///
+	/// @param {Struct.BBMOD_Light} _light The light.
+	///
+	/// @private
+	static __incr_shadowmap_health = function (_light)
+	{
+		var _lightIndex = ds_list_find_index(__shadowmapLights, _light);
+		if (_lightIndex == -1)
+		{
+			_lightIndex = ds_list_size(__shadowmapLights);
+			ds_list_add(__shadowmapLights, _light);
+			ds_list_add(__shadowmapHealth, 1);
+		}
+		++__shadowmapHealth[| _lightIndex];
+	};
+
+	/// @func __gc_collect_shadowmaps()
+	///
+	/// @desc Decrements health of all shadowmaps and frees them from memory
+	/// when it reaches or drops below 0.
+	///
+	/// @private
+	static __gc_collect_shadowmaps = function ()
+	{
+		for (var i = ds_list_size(__shadowmapLights) - 1; i >= 0; --i)
+		{
+			var _light = __shadowmapLights[| i];
+			if (--__shadowmapHealth[| i] <= 0)
+			{
+				ds_list_delete(__shadowmapLights, i);
+				ds_list_delete(__shadowmapHealth, i);
+
+				if (ds_map_exists(__shadowmapSurfaces, _light))
+				{
+					var _surface = __shadowmapSurfaces[? _light];
+					if (surface_exists(_surface))
+					{
+						surface_free(_surface);
+					}
+					ds_map_delete(__shadowmapSurfaces, _light);
+				}
+
+				if (ds_map_exists(__shadowmapCubes, _light))
+				{
+					__shadowmapCubes[? _light].destroy();
+					ds_map_delete(__shadowmapCubes, _light);
+				}
+			}
+		}
+	};
+
 	/// @func __render_shadowmap_impl(_light)
 	///
-	/// @desc Re-captures light's shadowmap if required.
+	/// @desc Re-captures light's shadowmap if required and always increments
+	/// shadowmap health.
 	///
 	/// @param {Struct.BBMOD_Light} _light The light to capture shadowmap for.
 	///
@@ -426,6 +489,8 @@ function BBMOD_BaseRenderer() constructor
 	static __render_shadowmap_impl = function (_light)
 	{
 		static _renderQueues = bbmod_render_queues_get();
+
+		__incr_shadowmap_health(_light);
 
 		if ((!_light.Static || _light.NeedsUpdate)
 			&& _light.__frameskipCurrent == 0)
@@ -561,6 +626,7 @@ function BBMOD_BaseRenderer() constructor
 			bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 0.0);
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 0.0);
+			__gc_collect_shadowmaps();
 			return;
 		}
 
@@ -581,6 +647,7 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET_PS, ShadowmapNormalOffset);
 		bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _shadowCaster.__getShadowmapMatrix());
 		bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, _shadowCasterIndex);
+		__gc_collect_shadowmaps();
 	};
 
 	/// @func __render_reflection_probes()
@@ -1197,6 +1264,9 @@ function BBMOD_BaseRenderer() constructor
 			application_surface_enable(false);
 			application_surface_draw_enable(true);
 		}
+
+		ds_list_destroy(__shadowmapLights);
+		ds_list_destroy(__shadowmapHealth);
 
 		var _key = ds_map_find_first(__shadowmapSurfaces);
 		repeat (ds_map_size(__shadowmapSurfaces))

@@ -125,6 +125,7 @@ function BBMOD_DeferredRenderer()
 			bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 0.0);
 			bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 0.0);
+			__gc_collect_shadowmaps();
 			return;
 		}
 
@@ -143,6 +144,7 @@ function BBMOD_DeferredRenderer()
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_NORMAL_OFFSET_PS, ShadowmapNormalOffset);
 		bbmod_shader_set_global_matrix_array(BBMOD_U_SHADOWMAP_MATRIX, _shadowCaster.__getShadowmapMatrix());
 		bbmod_shader_set_global_f(BBMOD_U_SHADOW_CASTER_INDEX, _shadowCasterIndex);
+		__gc_collect_shadowmaps();
 	};
 
 	static render = function (_clearQueues=true)
