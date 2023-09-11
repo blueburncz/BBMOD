@@ -53,7 +53,8 @@ camera.MouseSensitivity = 0.75;
 ////////////////////////////////////////////////////////////////////////////////
 // Load resources
 matPlayer = global.resourceManager.get_or_add("matPlayer", function () {
-	var _material = BBMOD_MATERIAL_DEFERRED.clone()
+	var _deferred = bbmod_deferred_renderer_is_supported();
+	var _material = (_deferred ? BBMOD_MATERIAL_DEFERRED : BBMOD_MATERIAL_DEFAULT).clone()
 		.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID) // Enable instance selecting
 		.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH); // Enable casting shadows
 	_material.BaseOpacity = sprite_get_texture(SprPlayer, choose(0, 1));

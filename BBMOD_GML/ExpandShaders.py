@@ -106,5 +106,6 @@ expand_shader("BBMOD_ShGBufferTerrain", combine(TERRAIN, OUTPUT_GBUFFER))
 # Zombie shaders
 ZOMBIE = combine({ "X_ZOMBIE": 1 }, ANIMATED)
 
-expand_shader("ShZombie", combine(ZOMBIE, OUTPUT_GBUFFER))
+expand_shader("ShZombie", combine(ZOMBIE, PBR))
 expand_shader("ShZombieDepth", combine(ZOMBIE, OUTPUT_DEPTH))
+expand_shader("ShZombieGBuffer", combine(ZOMBIE, OUTPUT_GBUFFER))

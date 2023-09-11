@@ -17,8 +17,10 @@ var _sand = new BBMOD_TerrainLayer()
 _sand.BaseOpacity = sprite_get_texture(SprSand, 0);
 _sand.NormalSmoothness = sprite_get_texture(SprSand, 1);
 
+var _deferred = bbmod_deferred_renderer_is_supported();
+
 global.terrain = new BBMOD_Terrain(SprHeightmap);
-global.terrain.Material = BBMOD_MATERIAL_TERRAIN_DEFERRED.clone();
+global.terrain.Material = (_deferred ? BBMOD_MATERIAL_TERRAIN_DEFERRED : BBMOD_MATERIAL_TERRAIN).clone();
 global.terrain.Material.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
 global.terrain.Material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 global.terrain.Scale = new BBMOD_Vec3(4.0, 4.0, 1.0);

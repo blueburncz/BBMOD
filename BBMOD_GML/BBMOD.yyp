@@ -451,6 +451,7 @@
     {"id":{"name":"OGun","path":"objects/OGun/OGun.yy",},},
     {"id":{"name":"SndShell1","path":"sounds/SndShell1/SndShell1.yy",},},
     {"id":{"name":"BBMOD_SprCheckerboard","path":"sprites/BBMOD_SprCheckerboard/BBMOD_SprCheckerboard.yy",},},
+    {"id":{"name":"ShZombieGBuffer","path":"shaders/ShZombieGBuffer/ShZombieGBuffer.yy",},},
     {"id":{"name":"GunfireParticleSystem","path":"scripts/GunfireParticleSystem/GunfireParticleSystem.yy",},},
     {"id":{"name":"BBMOD_Shader","path":"scripts/BBMOD_Shader/BBMOD_Shader.yy",},},
     {"id":{"name":"BBMOD_ShDefaultDepthColorBatched","path":"shaders/BBMOD_ShDefaultDepthColorBatched/BBMOD_ShDefaultDepthColorBatched.yy",},},

@@ -313,6 +313,7 @@
     {"name":"BBMOD_BaseRenderer","order":14,"path":"scripts/BBMOD_BaseRenderer/BBMOD_BaseRenderer.yy",},
     {"name":"SndShell1","order":1,"path":"sounds/SndShell1/SndShell1.yy",},
     {"name":"BBMOD_SprCheckerboard","order":1,"path":"sprites/BBMOD_SprCheckerboard/BBMOD_SprCheckerboard.yy",},
+    {"name":"ShZombieGBuffer","order":2,"path":"shaders/ShZombieGBuffer/ShZombieGBuffer.yy",},
     {"name":"GunfireParticleSystem","order":2,"path":"scripts/GunfireParticleSystem/GunfireParticleSystem.yy",},
     {"name":"BBMOD_Shader","order":4,"path":"scripts/BBMOD_Shader/BBMOD_Shader.yy",},
     {"name":"BBMOD_ShDefaultDepthColorBatched","order":20,"path":"shaders/BBMOD_ShDefaultDepthColorBatched/BBMOD_ShDefaultDepthColorBatched.yy",},
