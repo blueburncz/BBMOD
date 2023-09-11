@@ -1,12 +1,14 @@
 /// @module Terrain
 
-/// @macro {Struct.BBMOD_TerrainShader} Shader for terrain materials.
+/// @macro {Struct.BBMOD_TerrainShader} Shader for terrain materials. Supports
+/// up to 5 terrain layers, each one being rendered in its own draw call.
 #macro BBMOD_SHADER_TERRAIN __bbmod_shader_terrain()
 
 /// @macro {Struct.BBMOD_TerrainMaterial} Base terrain material.
 #macro BBMOD_MATERIAL_TERRAIN __bbmod_material_terrain()
 
 /// @macro {Struct.BBMOD_TerrainShader} Shader for unlit terrain materials.
+/// Supports up to 5 material layers, rendering up to 3 in a single draw call.
 #macro BBMOD_SHADER_TERRAIN_UNLIT __bbmod_shader_terrain_unlit()
 
 /// @macro {Struct.BBMOD_BaseMaterial} Unlit terrain material.

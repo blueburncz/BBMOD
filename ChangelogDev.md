@@ -5,7 +5,7 @@
 * Added new function `bbmod_deferred_renderer_is_supported`, which checks whether deferred renderer is supported on the current platform.
 * Added new macro `BBMOD_SHADER_GBUFFER`, which is a shader for rendering models into the G-buffer.
 * Added new macro `BBMOD_MATERIAL_DEFERRED`, which is an opaque material that can be used with the new `BBMOD_DeferredRenderer`.
-* Added new macro `BBMOD_SHADER_TERRAIN_GBUFFER`, which is a shader for rendering terrain into the G-buffer.
+* Added new macro `BBMOD_SHADER_TERRAIN_GBUFFER`, which is a shader for rendering terrain into the G-buffer. Supports 3 terrain layers at most!
 * Added new macro `BBMOD_MATERIAL_TERRAIN_DEFERRED`, which is a terrain material that can be used with the new `BBMOD_DeferredRenderer`.
 * Moved properties `EnableSSAO`, `SSAOScale`, `SSAORadius`, `SSAOPower`, `SSAOAngleBias`, `SSAODepthRange`, `SSAOSelfOcclusionBias` and `SSAOBlurDepthRange` from `BBMOD_DefaultRenderer` to `BBMOD_BaseRenderer`.
 * `BBMOD_PointLight` can now also cast shadows.

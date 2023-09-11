@@ -7,7 +7,7 @@
 #macro BBMOD_MATERIAL_DEFERRED __bbmod_material_deferred()
 
 /// @macro {Struct.BBMOD_TerrainShader} A shader for rendering terrain into
-/// the G-buffer.
+/// the G-buffer. Supports 3 terrain layers at most!
 #macro BBMOD_SHADER_TERRAIN_GBUFFER __bbmod_shader_terrain_gbuffer()
 
 /// @macro {Struct.BBMOD_TerrainMaterial} A terrain material that can be used
