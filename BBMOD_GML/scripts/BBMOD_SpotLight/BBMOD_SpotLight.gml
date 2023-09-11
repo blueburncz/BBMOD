@@ -34,19 +34,11 @@ function BBMOD_SpotLight(
 	/// @var {Real} The inner cone angle in degrees. Default value is 20.
 	AngleOuter = _angleOuter;
 
-	__getZFar = __get_shadowmap_zfar;
-
 	__getViewMatrix = __get_shadowmap_view;
 
 	__getProjMatrix = __get_shadowmap_projection;
 
 	__getShadowmapMatrix = __get_shadowmap_matrix;
-
-	static __get_shadowmap_zfar = function ()
-	{
-		gml_pragma("forceinline");
-		return Range;
-	};
 
 	static __get_shadowmap_view = function ()
 	{

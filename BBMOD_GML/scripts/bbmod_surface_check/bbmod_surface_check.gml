@@ -2,14 +2,15 @@
 
 /// @func bbmod_surface_check(_surface, _width, _height[, _format[, _depthBuffer]])
 ///
-/// @desc Checks whether the surface exists and if it has correct size. Broken
-/// surfaces are recreated. Surfaces of wrong size are resized.
+/// @desc Assures a surface has the correct size and format. Reallocates the surface
+/// if it does not exist.
 ///
 /// @param {Id.Surface} _surface The surface to check.
 /// @param {Real} _width The desired width of the surface.
 /// @param {Real} _height The desired height of the surface.
-/// @param {Real} [_format] The surface format to use when the surface is created.
-/// Use one of the `surface_` constants. Defaults to `surface_rgba8unorm`.
+/// @param {Constant.SurfaceFormatType} [_format] The surface format to use when
+/// the surface is created. Use one of the `surface_` constants. Defaults to 
+/// `surface_rgba8unorm`.
 /// @param {Bool} [_depthBuffer] Whether to create a depth buffer for the surface.
 /// Defaults to `true`.
 ///
@@ -19,10 +20,15 @@ function bbmod_surface_check(_surface, _width, _height, _format=surface_rgba8uno
 	_width = max(round(_width), 1);
 	_height = max(round(_height), 1);
 
-	if (!surface_exists(_surface))
+	if (!surface_exists(_surface)
+		|| surface_get_format(_surface) != _format)
 	{
 		var _depthDisabled = surface_get_depth_disable();
 		surface_depth_disable(!_depthBuffer);
+		if (surface_exists(_surface))
+		{
+			surface_free(_surface);
+		}
 		_surface = surface_create(_width, _height, _format);
 		surface_depth_disable(_depthDisabled);
 	}

@@ -197,9 +197,9 @@ function BBMOD_Cubemap(_resolution) constructor
 		draw_clear_alpha(_clearColor, _clearAlpha);
 		camera_set_view_size(__camera2D, Resolution, Resolution);
 		camera_apply(__camera2D);
-		shader_set(__BBMOD_ShCubemapToOctahedron);
+		shader_set(BBMOD_ShCubemapToOctahedron);
 		shader_set_uniform_f(
-			shader_get_uniform(__BBMOD_ShCubemapToOctahedron, "u_vTexel"),
+			shader_get_uniform(BBMOD_ShCubemapToOctahedron, "u_vTexel"),
 			1 / Resolution,
 			1 / Resolution);
 		draw_surface_stretched(Surface, 0, 0, Resolution, Resolution);
@@ -237,8 +237,8 @@ function BBMOD_Cubemap(_resolution) constructor
 		camera_set_view_size(__camera2D, _width, _height);
 		camera_apply(__camera2D);
 
-		shader_set(__BBMOD_ShPrefilterSpecular);
-		var _uRoughness = shader_get_uniform(__BBMOD_ShPrefilterSpecular, "u_fRoughness");
+		shader_set(BBMOD_ShPrefilterSpecular);
+		var _uRoughness = shader_get_uniform(BBMOD_ShPrefilterSpecular, "u_fRoughness");
 		for (var i = 0; i <= 6; ++i)
 		{
 			shader_set_uniform_f(_uRoughness, i / 6);
@@ -247,7 +247,7 @@ function BBMOD_Cubemap(_resolution) constructor
 		}
 		shader_reset();
 
-		shader_set(__BBMOD_ShPrefilterDiffuse);
+		shader_set(BBMOD_ShPrefilterDiffuse);
 		draw_surface(SurfaceOctahedron, _x, 0);
 		_x += Resolution;
 		shader_reset();

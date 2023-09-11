@@ -80,28 +80,46 @@ uniform vec4 bbmod_LightDirectionalColor;
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
 
+// First layer:
 // RGB: Base color, A: Opacity
 #define bbmod_TerrainBaseOpacity0 gm_BaseTexture
 // If 1.0 then the material uses roughness
 uniform float bbmod_TerrainIsRoughness0;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_TerrainNormalW0;
-// Splatmap texture
-uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex0;
+
+// Splatmap texture
+uniform sampler2D bbmod_Splatmap;
 // Colormap texture
 uniform sampler2D bbmod_Colormap;
 
+// Second layer:
+// RGB: Base color, A: Opacity
 uniform sampler2D bbmod_TerrainBaseOpacity1;
+// If 1.0 then the material uses roughness
 uniform float bbmod_TerrainIsRoughness1;
+// RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_TerrainNormalW1;
+// Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex1;
 
+// Third layer:
+// RGB: Base color, A: Opacity
 uniform sampler2D bbmod_TerrainBaseOpacity2;
+// If 1.0 then the material uses roughness
 uniform float bbmod_TerrainIsRoughness2;
+// RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_TerrainNormalW2;
+// Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex2;
+
+////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
+uniform float bbmod_HDR;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -261,9 +279,13 @@ void UnlitShader(Material material, float depth)
 	gl_FragColor.a = material.Opacity;
 	// Soft particles
 	Fog(depth);
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -319,8 +341,10 @@ void main()
 
 		material.Base    *= layerStrengthInv;
 		material.Opacity *= layerStrengthInv;
+
 		material.Base    += layerStrength * material1.Base;
 		material.Opacity += layerStrength * material1.Opacity;
+
 	}
 
 	if (bbmod_SplatmapIndex2 >= 0)
@@ -334,8 +358,10 @@ void main()
 
 		material.Base    *= layerStrengthInv;
 		material.Opacity *= layerStrengthInv;
+
 		material.Base    += layerStrength * material2.Base;
 		material.Opacity += layerStrength * material2.Opacity;
+
 	}
 
 	// Colormap
@@ -347,5 +373,4 @@ void main()
 	}
 
 	UnlitShader(material, v_vPosition.z);
-
 }

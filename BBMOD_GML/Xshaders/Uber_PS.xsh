@@ -128,7 +128,7 @@ uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
-#if !defined(X_OUTPUT_DEPTH)
+#if !defined(X_OUTPUT_DEPTH) && !defined(X_OUTPUT_GBUFFER)
 #if defined(X_PARTICLES)
 ////////////////////////////////////////////////////////////////////////////////
 // Soft particles
@@ -197,38 +197,7 @@ uniform vec4 bbmod_LightPunctualDataA[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 #endif // X_PBR
 
-#if defined(X_TERRAIN)
-////////////////////////////////////////////////////////////////////////////////
-// Terrain
-
-// RGB: Base color, A: Opacity
-#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
-// If 1.0 then the material uses roughness
-uniform float bbmod_TerrainIsRoughness0;
-// RGB: Tangent-space normal, A: Smoothness or roughness
-uniform sampler2D bbmod_TerrainNormalW0;
-// Splatmap texture
-uniform sampler2D bbmod_Splatmap;
-// Splatmap channel to read. Use -1 for none.
-uniform int bbmod_SplatmapIndex0;
-// Colormap texture
-uniform sampler2D bbmod_Colormap;
-
-#if !defined(X_PBR) && !(defined(X_OUTPUT_DEPTH) || defined(X_ID))
-uniform sampler2D bbmod_TerrainBaseOpacity1;
-uniform float bbmod_TerrainIsRoughness1;
-uniform sampler2D bbmod_TerrainNormalW1;
-uniform int bbmod_SplatmapIndex1;
-
-uniform sampler2D bbmod_TerrainBaseOpacity2;
-uniform float bbmod_TerrainIsRoughness2;
-uniform sampler2D bbmod_TerrainNormalW2;
-uniform int bbmod_SplatmapIndex2;
-#endif
-
-#endif // X_TERRAIN
-
-#if defined(X_PBR)
+#if defined(X_PBR) && !defined(X_OUTPUT_GBUFFER)
 ////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
 
@@ -244,24 +213,94 @@ uniform float bbmod_ShadowmapArea;
 uniform float bbmod_ShadowmapBias;
 // The index of the light that casts shadows. Use -1 for the directional light.
 uniform float bbmod_ShadowCasterIndex;
-#endif // X_PBR
-#endif // !X_OUTPUT_DEPTH
+// Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapNormalOffsetPS;
+#endif // defined(X_PBR) && !defined(X_OUTPUT_GBUFFER)
+#endif // !defined(X_OUTPUT_DEPTH) && !defined(X_OUTPUT_GBUFFER)
+
+#if defined(X_TERRAIN)
+////////////////////////////////////////////////////////////////////////////////
+// Terrain
+
+// First layer:
+// RGB: Base color, A: Opacity
+#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
+// If 1.0 then the material uses roughness
+uniform float bbmod_TerrainIsRoughness0;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_TerrainNormalW0;
+// Splatmap channel to read. Use -1 for none.
+uniform int bbmod_SplatmapIndex0;
+
+// Splatmap texture
+uniform sampler2D bbmod_Splatmap;
+// Colormap texture
+uniform sampler2D bbmod_Colormap;
+
+#if (!defined(X_PBR) || defined(X_OUTPUT_GBUFFER)) && !(defined(X_OUTPUT_DEPTH) || defined(X_ID))
+// Second layer:
+// RGB: Base color, A: Opacity
+uniform sampler2D bbmod_TerrainBaseOpacity1;
+// If 1.0 then the material uses roughness
+uniform float bbmod_TerrainIsRoughness1;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_TerrainNormalW1;
+// Splatmap channel to read. Use -1 for none.
+uniform int bbmod_SplatmapIndex1;
+
+// Third layer:
+// RGB: Base color, A: Opacity
+uniform sampler2D bbmod_TerrainBaseOpacity2;
+// If 1.0 then the material uses roughness
+uniform float bbmod_TerrainIsRoughness2;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_TerrainNormalW2;
+// Splatmap channel to read. Use -1 for none.
+uniform int bbmod_SplatmapIndex2;
+#endif
+
+#endif // X_TERRAIN
+
+#if defined(X_OUTPUT_DEPTH)
+////////////////////////////////////////////////////////////////////////////////
+// Writing shadow maps
+
+// 0.0 = output depth, 1.0 = output distance from camera
+uniform float u_fOutputDistance;
+#endif
+
+#if defined(X_OUTPUT_GBUFFER) && !defined(X_TERRAIN)
+////////////////////////////////////////////////////////////////////////////////
+// G-Buffer
+
+// Lookup texture for best fit normal encoding
+uniform sampler2D u_texBestFitNormalLUT;
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
+uniform float bbmod_HDR;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
-#if !defined(X_ID)
-#if defined(X_OUTPUT_DEPTH)
-#pragma include("DepthShader.xsh")
-#else // X_OUTPUT_DEPTH
-#if defined(X_PBR)
-#pragma include("PBRShader.xsh")
-#else // X_PBR
-#pragma include("UnlitShader.xsh")
-#endif // !X_PBR
-#endif // !X_OUTPUT_DEPTH
-#endif // !X_ID
+#if defined(X_ID)
+#elif defined(X_OUTPUT_DEPTH)
+#    pragma include("DepthShader.xsh")
+#elif defined(X_OUTPUT_GBUFFER)
+#    pragma include("DepthEncoding.xsh")
+#    pragma include("BestFitNormals.xsh")
+#    if defined(X_PBR)
+#        pragma include("MetallicMaterial.xsh")
+#    endif
+#elif defined(X_PBR)
+#    pragma include("PBRShader.xsh")
+#else
+#    pragma include("UnlitShader.xsh")
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -293,12 +332,12 @@ void main()
 		gl_FragColor = bbmod_InstanceID;
 	#endif
 #elif defined(X_OUTPUT_DEPTH)
-	DepthShader(v_vPosition.z);
+	DepthShader((u_fOutputDistance == 1.0) ? length(v_vPosition.xyz) : v_vPosition.z);
 #endif
 
 #else
 #if defined(X_TERRAIN)
-#if defined(X_PBR)
+#if defined(X_PBR) && !defined(X_OUTPUT_GBUFFER)
 	Material material = UnpackMaterial(
 		bbmod_TerrainBaseOpacity0,
 		bbmod_TerrainIsRoughness0,
@@ -367,8 +406,33 @@ void main()
 
 		material.Base    *= layerStrengthInv;
 		material.Opacity *= layerStrengthInv;
+
 		material.Base    += layerStrength * material1.Base;
 		material.Opacity += layerStrength * material1.Opacity;
+
+		#if defined(X_PBR)
+		material.Normal        *= layerStrengthInv;
+		material.Metallic      *= layerStrengthInv;
+		material.Roughness     *= layerStrengthInv;
+		material.Specular      *= layerStrengthInv;
+		material.Smoothness    *= layerStrengthInv;
+		material.SpecularPower *= layerStrengthInv;
+		material.AO            *= layerStrengthInv;
+		material.Emissive      *= layerStrengthInv;
+		material.Subsurface    *= layerStrengthInv;
+		material.Lightmap      *= layerStrengthInv;
+
+		material.Normal        += layerStrength * material1.Normal;
+		material.Metallic      += layerStrength * material1.Metallic;
+		material.Roughness     += layerStrength * material1.Roughness;
+		material.Specular      += layerStrength * material1.Specular;
+		material.Smoothness    += layerStrength * material1.Smoothness;
+		material.SpecularPower += layerStrength * material1.SpecularPower;
+		material.AO            += layerStrength * material1.AO;
+		material.Emissive      += layerStrength * material1.Emissive;
+		material.Subsurface    += layerStrength * material1.Subsurface;
+		material.Lightmap      += layerStrength * material1.Lightmap;
+		#endif
 	}
 
 	if (bbmod_SplatmapIndex2 >= 0)
@@ -382,8 +446,33 @@ void main()
 
 		material.Base    *= layerStrengthInv;
 		material.Opacity *= layerStrengthInv;
+
 		material.Base    += layerStrength * material2.Base;
 		material.Opacity += layerStrength * material2.Opacity;
+
+		#if defined(X_PBR)
+		material.Normal        *= layerStrengthInv;
+		material.Metallic      *= layerStrengthInv;
+		material.Roughness     *= layerStrengthInv;
+		material.Specular      *= layerStrengthInv;
+		material.Smoothness    *= layerStrengthInv;
+		material.SpecularPower *= layerStrengthInv;
+		material.AO            *= layerStrengthInv;
+		material.Emissive      *= layerStrengthInv;
+		material.Subsurface    *= layerStrengthInv;
+		material.Lightmap      *= layerStrengthInv;
+
+		material.Normal        += layerStrength * material2.Normal;
+		material.Metallic      += layerStrength * material2.Metallic;
+		material.Roughness     += layerStrength * material2.Roughness;
+		material.Specular      += layerStrength * material2.Specular;
+		material.Smoothness    += layerStrength * material2.Smoothness;
+		material.SpecularPower += layerStrength * material2.SpecularPower;
+		material.AO            += layerStrength * material2.AO;
+		material.Emissive      += layerStrength * material2.Emissive;
+		material.Subsurface    += layerStrength * material2.Subsurface;
+		material.Lightmap      += layerStrength * material2.Lightmap;
+		#endif
 	}
 
 	// Colormap
@@ -396,7 +485,7 @@ void main()
 		bbmod_NormalW,
 		bbmod_IsMetallic,
 		bbmod_Material,
-#if !defined(X_LIGHTMAP)
+#if !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
 		bbmod_Subsurface,
 #endif
 		bbmod_Emissive,
@@ -425,6 +514,13 @@ void main()
 	{
 		discard;
 	}
+	material.Emissive = mix(
+		material.Emissive,
+		xGammaToLinear(u_vDissolveColor),
+		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
+
+	// Silhouette
+	material.Emissive = mix(material.Emissive, xGammaToLinear(u_vSilhouette.rgb), u_vSilhouette.a);
 #endif // X_ZOMBIE
 
 	if (material.Opacity < bbmod_AlphaTest)
@@ -432,21 +528,23 @@ void main()
 		discard;
 	}
 
-#if defined(X_PBR)
-	PBRShader(material, v_vPosition.z);
-#else // X_PBR
-	UnlitShader(material, v_vPosition.z);
-#endif // !X_PBR
-
-#if defined(X_ZOMBIE)
-	// Dissolve
-	gl_FragColor.rgb = mix(
-		gl_FragColor.rgb,
-		u_vDissolveColor,
-		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
-	// Silhouette
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
+#if defined(X_OUTPUT_GBUFFER)
+	gl_FragData[0] = vec4(xLinearToGamma(mix(material.Base, material.Specular, material.Metallic)), material.AO);
+#if defined(X_TERRAIN)
+	gl_FragData[1] = vec4(material.Normal * 0.5 + 0.5, material.Roughness);
+#else
+	gl_FragData[1] = vec4(xBestFitNormal(material.Normal, u_texBestFitNormalLUT) * 0.5 + 0.5, material.Roughness);
 #endif
-
+	gl_FragData[2] = vec4(xEncodeDepth(v_vPosition.z / bbmod_ZFar), material.Metallic);
+	gl_FragData[3] = vec4(material.Emissive, 1.0);
+	if (bbmod_HDR == 0.0)
+	{
+		gl_FragData[3].rgb = xLinearToGamma(gl_FragData[3].rgb);
+	}
+#elif defined(X_PBR)
+	PBRShader(material, v_vPosition.z);
+#else
+	UnlitShader(material, v_vPosition.z);
+#endif
 #endif
 }

@@ -674,7 +674,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @example
 	/// ```gml
-	/// bbmod_material_reset();
 	/// // Render a terrain model (does not have animation data)
 	/// modTerrain.submit([mat_grass]);
 	/// // Render a character model (animated by animationPlayer)

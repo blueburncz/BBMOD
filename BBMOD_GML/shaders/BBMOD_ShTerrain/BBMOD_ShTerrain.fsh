@@ -104,22 +104,6 @@ uniform vec4 bbmod_LightPunctualDataA[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
 
 ////////////////////////////////////////////////////////////////////////////////
-// Terrain
-
-// RGB: Base color, A: Opacity
-#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
-// If 1.0 then the material uses roughness
-uniform float bbmod_TerrainIsRoughness0;
-// RGB: Tangent-space normal, A: Smoothness or roughness
-uniform sampler2D bbmod_TerrainNormalW0;
-// Splatmap texture
-uniform sampler2D bbmod_Splatmap;
-// Splatmap channel to read. Use -1 for none.
-uniform int bbmod_SplatmapIndex0;
-// Colormap texture
-uniform sampler2D bbmod_Colormap;
-
-////////////////////////////////////////////////////////////////////////////////
 // Shadow mapping
 
 // 1.0 to enable shadows
@@ -134,6 +118,32 @@ uniform float bbmod_ShadowmapArea;
 uniform float bbmod_ShadowmapBias;
 // The index of the light that casts shadows. Use -1 for the directional light.
 uniform float bbmod_ShadowCasterIndex;
+// Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapNormalOffsetPS;
+
+////////////////////////////////////////////////////////////////////////////////
+// Terrain
+
+// First layer:
+// RGB: Base color, A: Opacity
+#define bbmod_TerrainBaseOpacity0 gm_BaseTexture
+// If 1.0 then the material uses roughness
+uniform float bbmod_TerrainIsRoughness0;
+// RGB: Tangent-space normal, A: Smoothness or roughness
+uniform sampler2D bbmod_TerrainNormalW0;
+// Splatmap channel to read. Use -1 for none.
+uniform int bbmod_SplatmapIndex0;
+
+// Splatmap texture
+uniform sampler2D bbmod_Splatmap;
+// Colormap texture
+uniform sampler2D bbmod_Colormap;
+
+////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
+uniform float bbmod_HDR;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -559,6 +569,9 @@ Material UnpackMaterial(
 /// @return Point projected to view-space.
 vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
 {
+#if !(defined(_YY_HLSL11_) || defined(_YY_PSSL_))
+	tanAspect.y *= -1.0;
+#endif
 	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
 }
 
@@ -658,19 +671,32 @@ void PBRShader(Material material, float depth)
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		vec4 shadowmapPos = v_vPosShadowmap;
-		shadowmapPos.xy /= shadowmapPos.w;
-		float shadowmapAtt = (bbmod_ShadowCasterIndex == -1.0)
-			? clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0)
-			: 1.0;
-		shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
-	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-		shadowmapPos.y = 1.0 - shadowmapPos.y;
-	#endif
-		shadowmapPos.z /= bbmod_ShadowmapArea;
+		int shadowCasterIndex = int(bbmod_ShadowCasterIndex);
+		bool isPoint = (shadowCasterIndex >= 0) && (bbmod_LightPunctualDataB[shadowCasterIndex * 2].x == 0.0);
 
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
-			* shadowmapAtt;
+		if (!isPoint)
+		{
+			vec4 shadowmapPos = v_vPosShadowmap;
+			shadowmapPos.xy /= shadowmapPos.w;
+			float shadowmapAtt = (bbmod_ShadowCasterIndex == -1.0)
+				? clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0)
+				: 1.0;
+			shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
+		#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+			shadowmapPos.y = 1.0 - shadowmapPos.y;
+		#endif
+			shadowmapPos.z /= bbmod_ShadowmapArea;
+
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
+				* shadowmapAtt;
+		}
+		else
+		{
+			vec3 position = bbmod_LightPunctualDataA[shadowCasterIndex * 2].xyz;
+			vec3 lightVec = position - v_vVertex;
+			vec2 uv = xVec3ToOctahedronUv(-lightVec);
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - bbmod_ShadowmapNormalOffsetPS) / bbmod_ShadowmapArea);
+		}
 	}
 
 	// IBL
@@ -740,9 +766,12 @@ void PBRShader(Material material, float depth)
 	// Fog
 	Fog(depth);
 
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -778,5 +807,4 @@ void main()
 	}
 
 	PBRShader(material, v_vPosition.z);
-
 }

@@ -257,3 +257,21 @@ if (hp <= 0.0)
 {
 	room_goto(RmGameOver);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Test: Create shadow casting point lights
+
+//if (keyboard_check_pressed(vk_enter))
+//{
+//	var _light = new BBMOD_PointLight();
+//	_light.Color = new BBMOD_Color().FromHSV(
+//		random(255),
+//		255,
+//		255
+//	);
+//	_light.Color.Alpha = 0.5;
+//	_light.Position = new BBMOD_Vec3(x, y, z + 30);
+//	_light.Range = random_range(50, 100);
+//	_light.CastShadows = true;
+//	bbmod_light_punctual_add(_light);
+//}

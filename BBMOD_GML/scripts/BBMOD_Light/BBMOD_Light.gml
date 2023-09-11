@@ -24,6 +24,7 @@ function BBMOD_Light() constructor
 	///
 	/// @see BBMOD_ERenderPass
 	RenderPass = (1 << BBMOD_ERenderPass.Forward)
+		| (1 << BBMOD_ERenderPass.Alpha)
 		| (1 << BBMOD_ERenderPass.ReflectionCapture);
 
 	/// @var {Struct.BBMOD_Vec3} The position of the light.
@@ -40,6 +41,25 @@ function BBMOD_Light() constructor
 	/// @var {Real} The resolution of the shadowmap surface. Must be power of 2.
 	/// Defaults to 512.
 	ShadowmapResolution = 512;
+
+	/// @var {Real} Number of frames to skip between individual updates of the
+	/// light's shadowmap. Default value is 0, which means no frame skipping.
+	Frameskip = 0;
+
+	/// @var {Real}
+	/// @private
+	__frameskipCurrent = 0;
+
+	/// @var {Bool} If `true` then the light's shadowmap is captured only once
+	/// or when requested via setting the {@link BBMOD_Light.NeedsUpdate} property
+	/// to `true`.
+	Static = false;
+
+	/// @var {Bool} If `true` and the light is static, its shadowmap needs to be
+	/// updated.
+	/// @note This is automatically reset to `false` when the shadowmap is updated.
+	/// @see BBMOD_Light.Static
+	NeedsUpdate = true;
 
 	/// @var {Function}
 	/// @private

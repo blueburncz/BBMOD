@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "Core",
-    "path": "folders/BBMOD/Core.yy",
+    "name": "Sprites",
+    "path": "folders/BBMOD/Core/Sprites.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

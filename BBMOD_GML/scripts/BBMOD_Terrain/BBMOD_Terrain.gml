@@ -699,8 +699,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			return self;
 		}
 
-		var _shader = Material.get_shader(BBMOD_ERenderPass.Forward)
-			?? Material.get_shader(BBMOD_ERenderPass.GBuffer);
+		var _shader = Material.get_shader(BBMOD_ERenderPass.GBuffer)
+			?? Material.get_shader(BBMOD_ERenderPass.Forward);
 		if (_shader == undefined)
 		{
 			return self;
@@ -795,7 +795,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 				//gpu_set_colorwriteenable(true, true, true, false);
 
 				if (_renderPass != BBMOD_ERenderPass.Forward
-					&& _renderPass != BBMOD_ERenderPass.ReflectionCapture)
+					&& _renderPass != BBMOD_ERenderPass.ReflectionCapture
+					&& _renderPass != BBMOD_ERenderPass.GBuffer)
 				{
 					break;
 				}
@@ -867,8 +868,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static render = function ()
 	{
-		var _shader = Material.get_shader(BBMOD_ERenderPass.Forward)
-			?? Material.get_shader(BBMOD_ERenderPass.GBuffer);
+		var _shader = Material.get_shader(BBMOD_ERenderPass.GBuffer)
+			?? Material.get_shader(BBMOD_ERenderPass.Forward);
 		if (_shader == undefined)
 		{
 			return self;
@@ -942,7 +943,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			else
 			{
 				RenderQueue
-					.CheckRenderPass((1 << BBMOD_ERenderPass.Forward) | (1 << BBMOD_ERenderPass.ReflectionCapture))
+					.CheckRenderPass((1 << BBMOD_ERenderPass.Forward)
+						| (1 << BBMOD_ERenderPass.ReflectionCapture)
+						| (1 << BBMOD_ERenderPass.GBuffer))
 					.BeginConditionalBlock()
 					//.SetGpuBlendEnable(true)
 					//.SetGpuColorWriteEnable(true, true, true, false)

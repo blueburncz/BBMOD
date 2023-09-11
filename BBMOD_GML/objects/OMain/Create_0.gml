@@ -1,5 +1,7 @@
 #macro DELTA_TIME (delta_time * global.gameSpeed)
 
+var _deferred = bbmod_deferred_renderer_is_supported();
+
 // Used to pause the game (with 0.0).
 global.gameSpeed = 1.0;
 
@@ -33,7 +35,7 @@ _objImporter.FlipUVVertically = true;
 modGun = _objImporter.import("Data/Assets/Pistol.obj");
 modGun.freeze();
 
-var _matGunBase = BBMOD_MATERIAL_DEFAULT.clone()
+var _matGunBase = (_deferred ? BBMOD_MATERIAL_DEFERRED : BBMOD_MATERIAL_DEFAULT).clone()
 	.set_shader(
 		BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID) // Enable instance selecting
 	.set_shader(
@@ -57,7 +59,7 @@ modGun.Materials[@ 2] = matGun2;
 // Dynamically batch shells
 modShell = _objImporter.import("Data/Assets/Shell.obj");
 
-matShell = BBMOD_MATERIAL_DEFAULT_BATCHED.clone()
+matShell = (_deferred ? BBMOD_MATERIAL_DEFERRED : BBMOD_MATERIAL_DEFAULT).clone()
 	.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID_BATCHED)
 	.set_base_opacity(new BBMOD_Color().FromHex($E8DA56))
 	.set_specular_color(new BBMOD_Color().FromConstant($E8DA56))
@@ -74,7 +76,7 @@ _objImporter = _objImporter.destroy();
 gizmo = new BBMOD_Gizmo();
 gizmo.ButtonDrag = mb_right;
 
-renderer = new BBMOD_DefaultRenderer();
+renderer = new (_deferred ? BBMOD_DeferredRenderer : BBMOD_DefaultRenderer)();
 renderer.Gizmo = gizmo;
 renderer.ButtonSelect = mb_right;
 renderer.UseAppSurface = true;

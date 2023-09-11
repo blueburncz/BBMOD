@@ -34,7 +34,6 @@ global.__bbmodMaterialProps = undefined;
 /// bbmod_material_props_reset();
 ///
 /// // Note: This works with method submit too, e.g.:
-/// //bbmod_material_reset();
 /// //bbmod_material_props_set(materialProps);
 /// //model.submit();
 /// //bbmod_material_props_reset();

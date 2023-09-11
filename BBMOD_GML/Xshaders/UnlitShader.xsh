@@ -23,7 +23,11 @@ void UnlitShader(Material material, float depth)
 	}
 #endif
 	Fog(depth);
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }

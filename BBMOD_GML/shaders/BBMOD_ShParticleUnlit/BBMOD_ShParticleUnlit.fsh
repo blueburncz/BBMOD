@@ -111,6 +111,12 @@ uniform vec3 bbmod_LightDirectionalDir;
 uniform vec4 bbmod_LightDirectionalColor;
 
 ////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
+uniform float bbmod_HDR;
+
+////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
@@ -163,6 +169,9 @@ void GammaCorrect()
 /// @return Point projected to view-space.
 vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
 {
+#if !(defined(_YY_HLSL11_) || defined(_YY_PSSL_))
+	tanAspect.y *= -1.0;
+#endif
 	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
 }
 
@@ -274,7 +283,6 @@ Material UnpackMaterial(
 	sampler2D texNormalW,
 	float isMetallic,
 	sampler2D texMaterial,
-	sampler2D texSubsurface,
 	sampler2D texEmissive,
 	mat3 TBN,
 	vec2 uv)
@@ -323,10 +331,6 @@ Material UnpackMaterial(
 		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 	}
 
-	// Subsurface (color and intensity)
-	vec4 subsurface = texture2D(texSubsurface, uv);
-	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
-
 	// Emissive color
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
 
@@ -346,9 +350,13 @@ void UnlitShader(Material material, float depth)
 		gl_FragColor.a *= softness;
 	}
 	Fog(depth);
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -363,7 +371,6 @@ void main()
 		bbmod_NormalW,
 		bbmod_IsMetallic,
 		bbmod_Material,
-		bbmod_Subsurface,
 		bbmod_Emissive,
 		v_mTBN,
 		v_vTexCoord);
@@ -380,5 +387,4 @@ void main()
 	}
 
 	UnlitShader(material, v_vPosition.z);
-
 }

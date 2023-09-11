@@ -133,13 +133,12 @@ function bbmod_ssao_draw(
 	static _uBlurClipFar       = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fClipFar");
 	static _uBlurDepthRange    = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fDepthRange");
 
-	var _tanAspect = (_matProj[11] == 0.0)
-		? [1.0, -1.0] // Ortho
-		: [1.0 / _matProj[0], -1.0 / _matProj[5]]; // Perspective
+	var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_matProj);
 	var _width  = surface_get_width(_surSsao);
 	var _height = surface_get_height(_surSsao);
 
 	gpu_push_state();
+	gpu_set_state(bbmod_gpu_get_default_state());
 	gpu_set_tex_repeat(false);
 
 	static _cam = camera_create();

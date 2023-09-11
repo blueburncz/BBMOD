@@ -170,6 +170,14 @@ uniform float bbmod_ShadowmapArea;
 uniform float bbmod_ShadowmapBias;
 // The index of the light that casts shadows. Use -1 for the directional light.
 uniform float bbmod_ShadowCasterIndex;
+// Offsets vertex position by its normal scaled by this value
+uniform float bbmod_ShadowmapNormalOffsetPS;
+
+////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
+uniform float bbmod_HDR;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -633,6 +641,9 @@ Material UnpackMaterial(
 /// @return Point projected to view-space.
 vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
 {
+#if !(defined(_YY_HLSL11_) || defined(_YY_PSSL_))
+	tanAspect.y *= -1.0;
+#endif
 	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
 }
 
@@ -732,19 +743,32 @@ void PBRShader(Material material, float depth)
 	float shadow = 0.0;
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
-		vec4 shadowmapPos = v_vPosShadowmap;
-		shadowmapPos.xy /= shadowmapPos.w;
-		float shadowmapAtt = (bbmod_ShadowCasterIndex == -1.0)
-			? clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0)
-			: 1.0;
-		shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
-	#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-		shadowmapPos.y = 1.0 - shadowmapPos.y;
-	#endif
-		shadowmapPos.z /= bbmod_ShadowmapArea;
+		int shadowCasterIndex = int(bbmod_ShadowCasterIndex);
+		bool isPoint = (shadowCasterIndex >= 0) && (bbmod_LightPunctualDataB[shadowCasterIndex * 2].x == 0.0);
 
-		shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
-			* shadowmapAtt;
+		if (!isPoint)
+		{
+			vec4 shadowmapPos = v_vPosShadowmap;
+			shadowmapPos.xy /= shadowmapPos.w;
+			float shadowmapAtt = (bbmod_ShadowCasterIndex == -1.0)
+				? clamp((1.0 - length(shadowmapPos.xy)) / 0.1, 0.0, 1.0)
+				: 1.0;
+			shadowmapPos.xy = shadowmapPos.xy * 0.5 + 0.5;
+		#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+			shadowmapPos.y = 1.0 - shadowmapPos.y;
+		#endif
+			shadowmapPos.z /= bbmod_ShadowmapArea;
+
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, shadowmapPos.xy, shadowmapPos.z)
+				* shadowmapAtt;
+		}
+		else
+		{
+			vec3 position = bbmod_LightPunctualDataA[shadowCasterIndex * 2].xyz;
+			vec3 lightVec = position - v_vVertex;
+			vec2 uv = xVec3ToOctahedronUv(-lightVec);
+			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - bbmod_ShadowmapNormalOffsetPS) / bbmod_ShadowmapArea);
+		}
 	}
 
 	// IBL
@@ -814,9 +838,12 @@ void PBRShader(Material material, float depth)
 	// Fog
 	Fog(depth);
 
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -845,6 +872,13 @@ void main()
 	{
 		discard;
 	}
+	material.Emissive = mix(
+		material.Emissive,
+		xGammaToLinear(u_vDissolveColor),
+		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
+
+	// Silhouette
+	material.Emissive = mix(material.Emissive, xGammaToLinear(u_vSilhouette.rgb), u_vSilhouette.a);
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{
@@ -852,13 +886,4 @@ void main()
 	}
 
 	PBRShader(material, v_vPosition.z);
-
-	// Dissolve
-	gl_FragColor.rgb = mix(
-		gl_FragColor.rgb,
-		u_vDissolveColor,
-		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
-	// Silhouette
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, u_vSilhouette.rgb, u_vSilhouette.a);
-
 }

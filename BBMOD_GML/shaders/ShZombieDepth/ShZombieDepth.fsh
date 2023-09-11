@@ -78,6 +78,18 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Writing shadow maps
+
+// 0.0 = output depth, 1.0 = output distance from camera
+uniform float u_fOutputDistance;
+
+////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
+uniform float bbmod_HDR;
+
+////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
@@ -134,6 +146,6 @@ void main()
 		discard;
 	}
 
-	DepthShader(v_vPosition.z);
+	DepthShader((u_fOutputDistance == 1.0) ? length(v_vPosition.xyz) : v_vPosition.z);
 
 }

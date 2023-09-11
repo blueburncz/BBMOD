@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "BBMOD_ShInstanceIDColor",
   "parent": {
-    "name": "Gizmo",
-    "path": "folders/BBMOD/Gizmo.yy",
+    "name": "Shaders",
+    "path": "folders/BBMOD/Gizmo/Shaders.yy",
   },
   "type": 1,
 }

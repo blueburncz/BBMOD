@@ -36,6 +36,14 @@ function BBMOD_PunctualLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1
 
 	/// @var {Real} The range of the light.
 	Range = _range;
+
+	__getZFar = __get_shadowmap_zfar;
+
+	static __get_shadowmap_zfar = function ()
+	{
+		gml_pragma("forceinline");
+		return Range;
+	};
 }
 
 /// @func bbmod_light_punctual_add(_light)

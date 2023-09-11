@@ -15,4 +15,10 @@
 function BBMOD_TerrainMaterial(_shader=undefined)
 	: BBMOD_BaseMaterial(_shader) constructor
 {
+	static clone = function ()
+	{
+		var _clone = new BBMOD_TerrainMaterial();
+		copy(_clone);
+		return _clone;
+	};
 }

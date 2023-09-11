@@ -42,6 +42,7 @@ PARTICLES = { "X_PARTICLES": 1 }
 PBR = { "X_PBR": 1 }
 TERRAIN = { "X_TERRAIN": 1 }
 OUTPUT_DEPTH = { "X_OUTPUT_DEPTH": 1 }
+OUTPUT_GBUFFER = combine({ "X_OUTPUT_GBUFFER": 1 }, PBR)
 ID = { "X_ID": 1 }
 
 # Default shaders
@@ -93,8 +94,18 @@ expand_shader("BBMOD_ShParticleDepth", combine(PARTICLES, OUTPUT_DEPTH))
 expand_shader("BBMOD_ShTerrainUnlit", combine(TERRAIN))
 expand_shader("BBMOD_ShTerrain", combine(TERRAIN, PBR))
 
+# G-buffer
+expand_shader("BBMOD_ShGBuffer", combine(OUTPUT_GBUFFER))
+expand_shader("BBMOD_ShGBufferAnimated", combine(OUTPUT_GBUFFER, ANIMATED))
+expand_shader("BBMOD_ShGBufferBatched", combine(OUTPUT_GBUFFER, BATCHED))
+expand_shader("BBMOD_ShGBufferColor", combine(OUTPUT_GBUFFER, COLOR))
+expand_shader("BBMOD_ShGBufferColorAnimated", combine(OUTPUT_GBUFFER, COLOR, ANIMATED))
+expand_shader("BBMOD_ShGBufferColorBatched", combine(OUTPUT_GBUFFER, COLOR, BATCHED))
+expand_shader("BBMOD_ShGBufferTerrain", combine(TERRAIN, OUTPUT_GBUFFER))
+
 # Zombie shaders
 ZOMBIE = combine({ "X_ZOMBIE": 1 }, ANIMATED)
 
 expand_shader("ShZombie", combine(ZOMBIE, PBR))
 expand_shader("ShZombieDepth", combine(ZOMBIE, OUTPUT_DEPTH))
+expand_shader("ShZombieGBuffer", combine(ZOMBIE, OUTPUT_GBUFFER))

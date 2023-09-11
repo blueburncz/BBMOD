@@ -26,8 +26,8 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "Gizmo",
-    "path": "folders/BBMOD/Gizmo.yy",
+    "name": "Sprites",
+    "path": "folders/BBMOD/Gizmo/Sprites.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

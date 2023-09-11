@@ -1,11 +1,11 @@
 #pragma include("Material.xsh")
-#if defined(X_PBR)
-#if !defined(X_TERRAIN)
-#pragma include("CheapSubsurface.xsh")
+#if defined(X_PBR) && !defined(X_TERRAIN) && !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
+#    pragma include("CheapSubsurface.xsh")
 #endif
-#pragma include("SpecularGGX.xsh")
+#if defined(X_PBR) && !defined(X_PARTICLES)
+#    pragma include("SpecularGGX.xsh")
 #else
-#pragma include("SpecularBlinnPhong.xsh")
+#    pragma include("SpecularBlinnPhong.xsh")
 #endif
 
 void DoDirectionalLightPS(
@@ -22,12 +22,12 @@ void DoDirectionalLightPS(
 {
 	vec3 L = normalize(-direction);
 	float NdotL = max(dot(N, L), 0.0);
-#if defined(X_PBR) && !defined(X_TERRAIN) && !defined(X_LIGHTMAP)
+#if defined(X_PBR) && !defined(X_TERRAIN) && !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
 	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 #endif
 	color *= (1.0 - shadow) * NdotL;
 	diffuse += color;
-#if defined(X_PBR)
+#if defined(X_PBR) && !defined(X_PARTICLES)
 	specular += color * SpecularGGX(m, N, V, L);
 #else
 	specular += color * SpecularBlinnPhong(m, N, V, L);
