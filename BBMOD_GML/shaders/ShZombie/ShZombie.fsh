@@ -102,6 +102,12 @@ uniform float bbmod_ZFar;
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
+// G-Buffer
+
+// Lookup texture for best fit normal encoding
+uniform sampler2D u_texBestFitNormalLUT;
+
+////////////////////////////////////////////////////////////////////////////////
 // HDR rendering
 
 // 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
@@ -136,6 +142,19 @@ float xDecodeDepth(vec3 c)
 {
 	const float inv255 = 1.0 / 255.0;
 	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
+}
+/// @source http://advances.realtimerendering.com/s2010/Kaplanyan-CryEngine3(SIGGRAPH%202010%20Advanced%20RealTime%20Rendering%20Course).pdf
+vec3 xBestFitNormal(vec3 normal, sampler2D tex)
+{
+	normal = normalize(normal);
+	vec3 normalUns = abs(normal);
+	float maxNAbs = max(max(normalUns.x, normalUns.y), normalUns.z);
+	vec2 texCoord = normalUns.z < maxNAbs ? (normalUns.y < maxNAbs ? normalUns.yz : normalUns.xz) : normalUns.xy;
+	texCoord = texCoord.x < texCoord.y ? texCoord.yx : texCoord.xy;
+	texCoord.y /= texCoord.x;
+	normal /= maxNAbs;
+	float fittingScale = texture2D(tex, texCoord).r;
+	return normal * fittingScale;
 }
 struct Material
 {
@@ -325,7 +344,7 @@ void main()
 	}
 
 	gl_FragData[0] = vec4(xLinearToGamma(mix(material.Base, material.Specular, material.Metallic)), material.AO);
-	gl_FragData[1] = vec4(material.Normal * 0.5 + 0.5, material.Roughness);
+	gl_FragData[1] = vec4(xBestFitNormal(material.Normal, u_texBestFitNormalLUT) * 0.5 + 0.5, material.Roughness);
 	gl_FragData[2] = vec4(xEncodeDepth(v_vPosition.z / bbmod_ZFar), material.Metallic);
 	gl_FragData[3] = vec4(material.Emissive, 1.0);
 	if (bbmod_HDR == 0.0)

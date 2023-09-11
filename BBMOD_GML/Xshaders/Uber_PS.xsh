@@ -269,6 +269,14 @@ uniform int bbmod_SplatmapIndex2;
 uniform float u_fOutputDistance;
 #endif
 
+#if defined(X_OUTPUT_GBUFFER) && !defined(X_TERRAIN)
+////////////////////////////////////////////////////////////////////////////////
+// G-Buffer
+
+// Lookup texture for best fit normal encoding
+uniform sampler2D u_texBestFitNormalLUT;
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 // HDR rendering
 
@@ -284,6 +292,7 @@ uniform float bbmod_HDR;
 #    pragma include("DepthShader.xsh")
 #elif defined(X_OUTPUT_GBUFFER)
 #    pragma include("DepthEncoding.xsh")
+#    pragma include("BestFitNormals.xsh")
 #    if defined(X_PBR)
 #        pragma include("MetallicMaterial.xsh")
 #    endif
@@ -521,7 +530,11 @@ void main()
 
 #if defined(X_OUTPUT_GBUFFER)
 	gl_FragData[0] = vec4(xLinearToGamma(mix(material.Base, material.Specular, material.Metallic)), material.AO);
+#if defined(X_TERRAIN)
 	gl_FragData[1] = vec4(material.Normal * 0.5 + 0.5, material.Roughness);
+#else
+	gl_FragData[1] = vec4(xBestFitNormal(material.Normal, u_texBestFitNormalLUT) * 0.5 + 0.5, material.Roughness);
+#endif
 	gl_FragData[2] = vec4(xEncodeDepth(v_vPosition.z / bbmod_ZFar), material.Metallic);
 	gl_FragData[3] = vec4(material.Emissive, 1.0);
 	if (bbmod_HDR == 0.0)

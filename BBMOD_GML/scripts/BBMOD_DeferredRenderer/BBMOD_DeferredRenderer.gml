@@ -198,6 +198,11 @@ function BBMOD_DeferredRenderer()
 		//
 		// G-buffer pass
 		//
+		bbmod_shader_set_global_sampler("u_texBestFitNormalLUT", sprite_get_texture(BBMOD_SprBestFitNormalLUT, 0));
+		bbmod_shader_set_global_sampler_filter("u_texBestFitNormalLUT", false);
+		bbmod_shader_set_global_sampler_mip_enable("u_texBestFitNormalLUT", false);
+		bbmod_shader_set_global_sampler_repeat("u_texBestFitNormalLUT", false);
+
 		__surGBuffer[@ 0] = bbmod_surface_check(__surGBuffer[0], _renderWidth, _renderHeight, surface_rgba8unorm, false);
 		__surGBuffer[@ 1] = bbmod_surface_check(__surGBuffer[1], _renderWidth, _renderHeight, surface_rgba8unorm, false);
 		__surGBuffer[@ 2] = bbmod_surface_check(__surGBuffer[2], _renderWidth, _renderHeight, surface_rgba8unorm, false);
@@ -237,6 +242,8 @@ function BBMOD_DeferredRenderer()
 
 		gpu_pop_state();
 		surface_reset_target();
+
+		bbmod_shader_unset_global("u_texBestFitNormalLUT");
 
 		////////////////////////////////////////////////////////////////////////
 		//

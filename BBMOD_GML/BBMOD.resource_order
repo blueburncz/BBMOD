@@ -69,6 +69,7 @@
     {"name":"Zombie","order":7,"path":"folders/Demo/Sounds/Zombie.yy",},
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
+    {"name":"Sprites","order":3,"path":"folders/BBMOD/DeferredRenderer/Sprites.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},

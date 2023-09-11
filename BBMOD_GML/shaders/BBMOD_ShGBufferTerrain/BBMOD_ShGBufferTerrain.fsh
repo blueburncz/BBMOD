@@ -123,6 +123,19 @@ float xDecodeDepth(vec3 c)
 	const float inv255 = 1.0 / 255.0;
 	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
 }
+/// @source http://advances.realtimerendering.com/s2010/Kaplanyan-CryEngine3(SIGGRAPH%202010%20Advanced%20RealTime%20Rendering%20Course).pdf
+vec3 xBestFitNormal(vec3 normal, sampler2D tex)
+{
+	normal = normalize(normal);
+	vec3 normalUns = abs(normal);
+	float maxNAbs = max(max(normalUns.x, normalUns.y), normalUns.z);
+	vec2 texCoord = normalUns.z < maxNAbs ? (normalUns.y < maxNAbs ? normalUns.yz : normalUns.xz) : normalUns.xy;
+	texCoord = texCoord.x < texCoord.y ? texCoord.yx : texCoord.xy;
+	texCoord.y /= texCoord.x;
+	normal /= maxNAbs;
+	float fittingScale = texture2D(tex, texCoord).r;
+	return normal * fittingScale;
+}
 struct Material
 {
 	vec3 Base;

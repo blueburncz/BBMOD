@@ -86,6 +86,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/BBMOD/DeferredRenderer/Sprites.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
@@ -228,6 +229,7 @@
     {"id":{"name":"BBMOD_ShDeferredPunctual","path":"shaders/BBMOD_ShDeferredPunctual/BBMOD_ShDeferredPunctual.yy",},},
     {"id":{"name":"BBMOD_ParticleSystem","path":"scripts/BBMOD_ParticleSystem/BBMOD_ParticleSystem.yy",},},
     {"id":{"name":"BBMOD_MaterialPropertyBlock","path":"scripts/BBMOD_MaterialPropertyBlock/BBMOD_MaterialPropertyBlock.yy",},},
+    {"id":{"name":"BBMOD_SprBestFitNormalLUT","path":"sprites/BBMOD_SprBestFitNormalLUT/BBMOD_SprBestFitNormalLUT.yy",},},
     {"id":{"name":"BBMOD_ShGizmo","path":"shaders/BBMOD_ShGizmo/BBMOD_ShGizmo.yy",},},
     {"id":{"name":"BBMOD_ShDefaultUnlit","path":"shaders/BBMOD_ShDefaultUnlit/BBMOD_ShDefaultUnlit.yy",},},
     {"id":{"name":"BBMOD_Animation","path":"scripts/BBMOD_Animation/BBMOD_Animation.yy",},},
