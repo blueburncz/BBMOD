@@ -124,19 +124,25 @@ uniform float bbmod_ShadowmapNormalOffsetPS;
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
 
+// First layer:
 // RGB: Base color, A: Opacity
 #define bbmod_TerrainBaseOpacity0 gm_BaseTexture
 // If 1.0 then the material uses roughness
 uniform float bbmod_TerrainIsRoughness0;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_TerrainNormalW0;
-// Splatmap texture
-uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex0;
+
+// Splatmap texture
+uniform sampler2D bbmod_Splatmap;
 // Colormap texture
 uniform sampler2D bbmod_Colormap;
 
+////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
 uniform float bbmod_HDR;
 
 ////////////////////////////////////////////////////////////////////////////////

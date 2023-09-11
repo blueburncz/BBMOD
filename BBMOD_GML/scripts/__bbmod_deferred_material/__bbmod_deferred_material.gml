@@ -1,9 +1,17 @@
+/// @macro {Struct.BBMOD_DefaultShader} A shader for rendering models into the
+/// G-buffer.
 #macro BBMOD_SHADER_GBUFFER __bbmod_shader_gbuffer()
 
+/// @macro {Struct.BBMOD_DefaultMaterial} An opaque material that can be used
+/// with {@link BBMOD_DeferredRenderer}.
 #macro BBMOD_MATERIAL_DEFERRED __bbmod_material_deferred()
 
+/// @macro {Struct.BBMOD_TerrainShader} A shader for rendering terrain into
+/// the G-buffer.
 #macro BBMOD_SHADER_TERRAIN_GBUFFER __bbmod_shader_terrain_gbuffer()
 
+/// @macro {Struct.BBMOD_TerrainMaterial} A terrain material that can be used
+/// with {@link BBMOD_DeferredRenderer}.
 #macro BBMOD_MATERIAL_TERRAIN_DEFERRED __bbmod_material_terrain_deferred()
 
 function __bbmod_shader_gbuffer()

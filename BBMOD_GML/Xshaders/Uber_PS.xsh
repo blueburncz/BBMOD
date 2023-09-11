@@ -222,37 +222,57 @@ uniform float bbmod_ShadowmapNormalOffsetPS;
 ////////////////////////////////////////////////////////////////////////////////
 // Terrain
 
+// First layer:
 // RGB: Base color, A: Opacity
 #define bbmod_TerrainBaseOpacity0 gm_BaseTexture
 // If 1.0 then the material uses roughness
 uniform float bbmod_TerrainIsRoughness0;
 // RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_TerrainNormalW0;
-// Splatmap texture
-uniform sampler2D bbmod_Splatmap;
 // Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex0;
+
+// Splatmap texture
+uniform sampler2D bbmod_Splatmap;
 // Colormap texture
 uniform sampler2D bbmod_Colormap;
 
 #if (!defined(X_PBR) || defined(X_OUTPUT_GBUFFER)) && !(defined(X_OUTPUT_DEPTH) || defined(X_ID))
+// Second layer:
+// RGB: Base color, A: Opacity
 uniform sampler2D bbmod_TerrainBaseOpacity1;
+// If 1.0 then the material uses roughness
 uniform float bbmod_TerrainIsRoughness1;
+// RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_TerrainNormalW1;
+// Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex1;
 
+// Third layer:
+// RGB: Base color, A: Opacity
 uniform sampler2D bbmod_TerrainBaseOpacity2;
+// If 1.0 then the material uses roughness
 uniform float bbmod_TerrainIsRoughness2;
+// RGB: Tangent-space normal, A: Smoothness or roughness
 uniform sampler2D bbmod_TerrainNormalW2;
+// Splatmap channel to read. Use -1 for none.
 uniform int bbmod_SplatmapIndex2;
 #endif
 
 #endif // X_TERRAIN
 
 #if defined(X_OUTPUT_DEPTH)
+////////////////////////////////////////////////////////////////////////////////
+// Writing shadow maps
+
+// 0.0 = output depth, 1.0 = output distance from camera
 uniform float u_fOutputDistance;
 #endif
 
+////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
 uniform float bbmod_HDR;
 
 ////////////////////////////////////////////////////////////////////////////////

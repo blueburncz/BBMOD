@@ -8,6 +8,7 @@
 /// {@link BBMOD_ERenderPass.Id},
 /// {@link BBMOD_ERenderPass.Shadows},
 /// {@link BBMOD_ERenderPass.GBuffer},
+/// {@link BBMOD_ERenderPass.Background},
 /// {@link BBMOD_ERenderPass.Forward} and
 /// {@link BBMOD_ERenderPass.Alpha}.
 ///

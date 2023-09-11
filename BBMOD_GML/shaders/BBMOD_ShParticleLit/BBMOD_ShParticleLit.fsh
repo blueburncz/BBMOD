@@ -154,6 +154,10 @@ uniform float bbmod_ShadowCasterIndex;
 // Offsets vertex position by its normal scaled by this value
 uniform float bbmod_ShadowmapNormalOffsetPS;
 
+////////////////////////////////////////////////////////////////////////////////
+// HDR rendering
+
+// 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
 uniform float bbmod_HDR;
 
 ////////////////////////////////////////////////////////////////////////////////
