@@ -33,6 +33,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Utils","folderPath":"folders/BBMOD/Core/Utils.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"DeferredRenderer","folderPath":"folders/BBMOD/DeferredRenderer.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Shaders","folderPath":"folders/BBMOD/DeferredRenderer/Shaders.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/BBMOD/DeferredRenderer/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Gizmo","folderPath":"folders/BBMOD/Gizmo.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Shaders","folderPath":"folders/BBMOD/Gizmo/Shaders.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/BBMOD/Gizmo/Sprites.yy",},
@@ -86,7 +87,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/BBMOD/DeferredRenderer/Sprites.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},

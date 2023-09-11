@@ -5,7 +5,7 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
-  "version": "3.19.3",
+  "version": "3.20.0",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
@@ -15,6 +15,7 @@
     "Changelog": {
       "file": "Changelog/Changelog_.md",
       "pages": {
+        "3.20.0": "Changelog/Changelog3.20.0.md",
         "3.19.3": "Changelog/Changelog3.19.3.md",
         "3.19.2": "Changelog/Changelog3.19.2.md",
         "3.19.1": "Changelog/Changelog3.19.1.md",
@@ -84,6 +85,7 @@
       "file": "Modules/Modules.md",
       "pages": {
         "Core module": "Modules/CoreModule.md",
+        "Deferred renderer module": "Modules/DeferredRendererModule.md",
         "Gizmo module": "Modules/GizmoModule.md",
         "OBJ importer module": "Modules/OBJImporterModule.md",
         "Particles module": "Modules/ParticlesModule.md",

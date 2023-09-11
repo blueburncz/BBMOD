@@ -1,9 +1,11 @@
+/// @module DeferredRenderer
+
 /// @func BBMOD_DeferredRenderer()
 ///
 /// @extends BBMOD_BaseRenderer
 ///
-/// @desc A deferred renderer with support for unlimited number of lights and
-/// shadows. Implemented render passes are:
+/// @desc A deferred renderer with support for unlimited number of shadow-casting
+/// lights. Implemented render passes are:
 /// {@link BBMOD_ERenderPass.ReflectionCapture},
 /// {@link BBMOD_ERenderPass.Id},
 /// {@link BBMOD_ERenderPass.Shadows},

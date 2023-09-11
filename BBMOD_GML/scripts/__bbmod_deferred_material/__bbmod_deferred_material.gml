@@ -1,3 +1,5 @@
+/// @module DeferredRenderer
+
 /// @macro {Struct.BBMOD_DefaultShader} A shader for rendering models into the
 /// G-buffer.
 #macro BBMOD_SHADER_GBUFFER __bbmod_shader_gbuffer()

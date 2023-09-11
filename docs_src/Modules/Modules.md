@@ -8,6 +8,7 @@ individual modules.
 
 ## Contents
 * [Core module](./CoreModule.html)
+* [Deferred renderer module](./DeferredRendererModule.html)
 * [Gizmo module](./GizmoModule.html)
 * [OBJ importer module](./OBJImporterModule.html)
 * [Particles module](./ParticlesModule.html)
