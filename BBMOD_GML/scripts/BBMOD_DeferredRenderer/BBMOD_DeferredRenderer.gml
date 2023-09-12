@@ -10,6 +10,7 @@
 /// {@link BBMOD_ERenderPass.Id},
 /// {@link BBMOD_ERenderPass.Shadows},
 /// {@link BBMOD_ERenderPass.GBuffer},
+/// {@link BBMOD_ERenderPass.DepthOnly},
 /// {@link BBMOD_ERenderPass.Background},
 /// {@link BBMOD_ERenderPass.Forward} and
 /// {@link BBMOD_ERenderPass.Alpha}.
@@ -264,6 +265,50 @@ function BBMOD_DeferredRenderer()
 
 		////////////////////////////////////////////////////////////////////////
 		//
+		// Depth-only pass
+		//
+
+		surface_set_target(__surFinal);
+
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_blendenable(false);
+		gpu_set_zwriteenable(false);
+		gpu_set_ztestenable(false);
+		matrix_set(matrix_world, matrix_build_identity());
+		camera_apply(__camera2D);
+		draw_sprite_stretched_ext(BBMOD_SprBlack, 0, 0, 0, _renderWidth, _renderHeight, c_black, 0.0);
+		gpu_pop_state();
+
+		bbmod_render_pass_set(BBMOD_ERenderPass.DepthOnly);
+		matrix_set(matrix_world, _world);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
+		_rqi = 0;
+		repeat (array_length(_renderQueues))
+		{
+			_renderQueues[_rqi++].submit();
+		}
+		bbmod_material_reset();
+
+		surface_reset_target();
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Merge DepthOnly into GBuffer depth
+		//
+		surface_set_target(__surGBuffer[2]);
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_colorwriteenable(true, true, true, false);
+		matrix_set(matrix_world, matrix_build_identity());
+		draw_surface(__surFinal, 0, 0);
+		matrix_set(matrix_world, _world);
+		gpu_pop_state();
+		surface_reset_target();
+
+		////////////////////////////////////////////////////////////////////////
+		//
 		// SSAO
 		//
 		__render_ssao(__surGBuffer[2], _projection);
@@ -462,7 +507,7 @@ function BBMOD_DeferredRenderer()
 		gpu_set_ztestenable(false);
 		matrix_set(matrix_world, matrix_build_identity());
 		camera_apply(__camera2D);
-		draw_rectangle_color(0, 0, _renderWidth, _renderHeight, c_black, c_black, c_black, c_black, false);
+		draw_sprite_stretched(BBMOD_SprBlack, 0, 0, 0, _renderWidth, _renderHeight);
 		gpu_pop_state();
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Background);
@@ -628,6 +673,6 @@ function BBMOD_DeferredRenderer()
 function bbmod_deferred_renderer_is_supported()
 {
 	gml_pragma("forceinline");
-	static _isSupported = (bbmod_mrt_is_supported() && bbmod_hdr_is_supported());
+	static _isSupported = true;//(bbmod_mrt_is_supported() && bbmod_hdr_is_supported());
 	return _isSupported;
 }

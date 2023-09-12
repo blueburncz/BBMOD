@@ -8,7 +8,7 @@ function MatZombie()
 		var _deferred = bbmod_deferred_renderer_is_supported();
 		_shader = new BBMOD_DefaultShader(_deferred ? ShZombieGBuffer : ShZombie, BBMOD_VFORMAT_DEFAULT_ANIMATED);
 		_shaderDepth = new BBMOD_BaseShader(ShZombieDepth, BBMOD_VFORMAT_DEFAULT_ANIMATED);
-		_material = BBMOD_MATERIAL_DEFERRED.clone()
+		_material = (_deferred ? BBMOD_MATERIAL_DEFERRED : BBMOD_MATERIAL_DEFAULT).clone()
 			.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID) // Enable instance selecting
 			.set_shader(BBMOD_ERenderPass.Shadows, _shaderDepth); // Enable casting shadows
 		if (_deferred)
