@@ -31,7 +31,7 @@ function BBMOD_SpotLight(
 	/// @var {Real} The inner cone angle in degrees. Default value is 10.
 	AngleInner = _angleInner;
 
-	/// @var {Real} The inner cone angle in degrees. Default value is 20.
+	/// @var {Real} The outer cone angle in degrees. Default value is 20.
 	AngleOuter = _angleOuter;
 
 	__getViewMatrix = __get_shadowmap_view;
