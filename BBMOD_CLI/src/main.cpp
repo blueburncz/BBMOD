@@ -76,6 +76,8 @@ void PrintHelp()
 		<< "                                       Default is " << PRINT_BOOL(config.PreTransform) << "." << std::endl
 		<< "  -sr|--sampling-rate=fps              Configure the sampling rate (frames per second) of animations." << std::endl
 		<< "                                       Default is " << config.SamplingRate << "." << std::endl
+		<< "  -su|--save-unused=true|false         Save unused material properties." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.SaveUnused) << "." << std::endl
 		<< "  -zup=true|false                      Convert model from Y-up to Z-up." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.ConvertToZUp) << ". (experimental)" << std::endl
 		<< std::endl;
@@ -204,6 +206,10 @@ int main(int argc, const char* argv[])
 				else if (o == "-sr" || o == "--sampling-rate")
 				{
 					config.SamplingRate = (double)((iValue < 1) ? 1 : iValue);
+				}
+				else if (o == "-su" || o == "--save-unused")
+				{
+					config.SaveUnused = bValue;
 				}
 				else if (o == "-zup")
 				{

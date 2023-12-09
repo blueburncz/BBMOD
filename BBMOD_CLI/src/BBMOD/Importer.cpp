@@ -90,6 +90,8 @@ static void LogNode(std::ofstream& log, SModel* model, SNode* node, uint32_t ind
 	}
 }
 
+std::vector<const aiMaterialProperty*> g_unusedProps;
+
 int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 {
 	std::vector<fs::path> files;
@@ -332,8 +334,10 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 				{
 					prop = mat->mProperties[j];
 
-					if (prop->mKey != aiString(_AI_MATKEY_TEXTURE_BASE))
+					if (prop->mKey != aiString(_AI_MATKEY_TEXTURE_BASE)
+						&& (prop->mSemantic != aiTextureType_DIFFUSE || prop->mIndex != 0))
 					{
+						g_unusedProps.push_back(prop);
 						continue;
 					}
 
@@ -375,6 +379,10 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 					else if (fname.rfind("lightmap") != std::string::npos)
 					{
 						matLightmap = str;
+					}
+					else
+					{
+						g_unusedProps.push_back(prop);
 					}
 				}
 
@@ -465,6 +473,38 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 					}
 
 					bbmat << "\n    }";
+				}
+
+				if (config.SaveUnused
+					&& !g_unusedProps.empty())
+				{
+					bbmat << ",\n    \"__Unused\": [";
+
+					bool hasPrev = false;
+					for (const aiMaterialProperty* prop : g_unusedProps)
+					{
+						if (prop->mType != aiPTI_String) continue;
+
+						if (hasPrev) { bbmat << ","; }
+
+						bbmat << "\n        {\"Key\": \"" << prop->mKey.C_Str() << "\""
+							<< ", \"Semantic\": " << prop->mSemantic
+							<< ", \"Index\": " << prop->mIndex
+							<< ", \"Value\": ";
+
+						aiString s;
+						aiGetMaterialString(mat, prop->mKey.data, prop->mSemantic, prop->mIndex, &s);
+						std::string ss(s.C_Str());
+						std::replace(ss.begin(), ss.end(), '\\', '/');
+						bbmat << "\"" << ss.c_str() << "\"";
+
+						bbmat << "}";
+
+						hasPrev = true;
+					}
+					g_unusedProps.clear();
+
+					bbmat << "\n    ]";
 				}
 
 				bbmat << "\n}\n";

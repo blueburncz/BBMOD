@@ -108,4 +108,7 @@ struct SConfig
 	 * 2 | No          | No          | No
 	 */
 	uint32_t AnimationOptimization = 0;
+
+	/** Save unused material properties. */
+	bool SaveUnused = false;
 };
