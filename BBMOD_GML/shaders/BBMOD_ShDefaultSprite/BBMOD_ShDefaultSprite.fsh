@@ -392,7 +392,7 @@ void DoSpotLightPS(
 	float epsilon = dcosInner - dcosOuter;
 	float intensity = clamp((theta - dcosOuter) / epsilon, 0.0, 1.0);
 	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
-	color *= (1.0 - shadow) * intensity * att;
+	color *= (1.0 - shadow) * intensity * att * max(dot(N, L), 0.0);
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
 }

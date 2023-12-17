@@ -5,3 +5,4 @@
 * Fixed normal mapping on terrain.
 * Fixed crash that happens in recent releases of GameMaker in function `bbmod_texture_set_stage_vs` when running on macOS and `libBBMOD.dylib` is missing.
 * Fixed materials `BBMOD_MATERIAL_DEFERRED` and `BBMOD_TERRAIN_DEFERRED` being registered under wrong names and hence being loaded incorrectly from BBMAT files.
+* Fixed spot lights affecting backsides of models.
