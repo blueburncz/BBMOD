@@ -68,5 +68,5 @@ function __bbmod_material_terrain_deferred()
 bbmod_shader_register("BBMOD_SHADER_GBUFFER",         BBMOD_SHADER_GBUFFER);
 bbmod_shader_register("BBMOD_SHADER_TERRAIN_GBUFFER", BBMOD_SHADER_TERRAIN_GBUFFER);
 
-bbmod_material_register("BBMOD_MATERIAL_DEFERRED",         BBMOD_MATERIAL_TERRAIN);
-bbmod_material_register("BBMOD_MATERIAL_TERRAIN_DEFERRED", BBMOD_MATERIAL_TERRAIN_UNLIT);
+bbmod_material_register("BBMOD_MATERIAL_DEFERRED",         BBMOD_MATERIAL_DEFERRED);
+bbmod_material_register("BBMOD_MATERIAL_TERRAIN_DEFERRED", BBMOD_MATERIAL_TERRAIN_DEFERRED);
