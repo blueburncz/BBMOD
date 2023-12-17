@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Model",
-    "path": "folders/BBMOD/Core/Model.yy",
+    "path": "folders/BBMOD/Core/Base/Model.yy",
   },
 }

@@ -18,7 +18,7 @@
   "exportToGame": true,
   "extensionVersion": "3.20.0",
   "files": [
-    {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","constants":[],"copyToTargets":32,"filename":"BBMOD_CameraHTML5.js","final":"","functions":[
+    {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"BBMOD_CameraHTML5.js","constants":[],"copyToTargets":32,"filename":"BBMOD_CameraHTML5.js","final":"","functions":[
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"bbmod_html5_pointer_lock","argCount":0,"args":[],"documentation":"","externalName":"bbmod_html5_pointer_lock","help":"bbmod_html5_pointer_lock()","hidden":false,"kind":5,"returnType":2,},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"bbmod_html5_init","argCount":0,"args":[],"documentation":"","externalName":"bbmod_html5_init","help":"bbmod_html5_init()","hidden":false,"kind":5,"returnType":2,},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"bbmod_html5_pointer_is_locked","argCount":0,"args":[],"documentation":"","externalName":"bbmod_html5_pointer_is_locked","help":"bbmod_html5_pointer_is_locked()","hidden":false,"kind":5,"returnType":2,},

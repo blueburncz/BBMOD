@@ -80,8 +80,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @readonly
 	MaterialNames = [];
 
-	/// @var {Array<Struct.BBMOD_BaseMaterial>} An array of materials. Each entry
-	/// defaults to {@link BBMOD_MATERIAL_DEFAULT}.
+	/// @var {Array<Struct.BBMOD_BaseMaterial>, Array<Pointer.Texture>} An array of
+	/// materials. Each entry can be either a full BBMOD material or just a texture
+	/// if you don't wish to use BBMOD's material system. Each entry defaults to
+	/// {@link BBMOD_MATERIAL_DEFAULT}.
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
@@ -442,7 +444,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @param {String} _name The name of the material.
 	///
-	/// @return {Struct.BBMOD_BaseMaterial} The material.
+	/// @return {Struct.BBMOD_BaseMaterial, Pointer.Texture} The material.
 	///
 	/// @throws {BBMOD_Exception} If the model does not have a material with
 	/// given name.
@@ -470,7 +472,9 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @desc Sets a material.
 	///
 	/// @param {String} _name The name of the material slot.
-	/// @param {Struct.BBMOD_BaseMaterial} _material The material.
+	/// @param {Struct.BBMOD_BaseMaterial, Pointer.Texture} _material Either a
+	/// full BBMOD material or just a texture if you don't wish to use BBMOD's
+	/// material system.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
@@ -662,9 +666,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @desc Immediately submits the model for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_BaseMaterial>} [_materials] An array of
-	/// materials, one for each material slot of the model. If not specified,
-	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @param {Array<Struct.BBMOD_BaseMaterial>, Array<Pointer.Texture>} [_materials]
+	/// An array of either full BBMOD materials or just textures if you don't wish to
+	/// use BBMOD's material system. If `undefined`, then {@link BBMOD_Model.Materials}
+	/// is used. Defaults to `undefined`.
 	/// @param {Array<Real>} [_transform] An array of dual quaternions for
 	/// transforming animated models or `undefined`.
 	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic

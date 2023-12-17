@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Math",
-    "path": "folders/BBMOD/Core/Math.yy",
+    "name": "Utils",
+    "path": "folders/BBMOD/Core/Utils.yy",
   },
 }

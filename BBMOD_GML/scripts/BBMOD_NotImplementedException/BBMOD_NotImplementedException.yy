@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Exceptions",
-    "path": "folders/BBMOD/Core/Exceptions.yy",
+    "path": "folders/BBMOD/Core/Base/Exceptions.yy",
   },
 }

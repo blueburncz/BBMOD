@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Model",
-    "path": "folders/BBMOD/Core/Model.yy",
+    "name": "MeshBuilder",
+    "path": "folders/BBMOD/Core/MeshBuilder.yy",
   },
 }

@@ -531,7 +531,7 @@ function BBMOD_DualQuaternion(
 	/// @param {Real} _s The value to scale the dual quaternion by.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
-	static Scale = function (_s)
+	static ScaleSelf = function (_s)
 	{
 		gml_pragma("forceinline");
 		Real.ScaleSelf(_s);

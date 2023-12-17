@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Interfaces",
-    "path": "folders/BBMOD/Core/Interfaces.yy",
+    "name": "Base",
+    "path": "folders/BBMOD/Core/Base.yy",
   },
 }

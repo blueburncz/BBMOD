@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Animation",
-    "path": "folders/BBMOD/Core/Animation.yy",
+    "path": "folders/BBMOD/Core/Base/Animation.yy",
   },
 }

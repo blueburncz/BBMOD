@@ -195,7 +195,9 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 	///
 	/// @desc Immediately submits the mesh for rendering.
 	///
-	/// @param {Struct.BBMOD_BaseMaterial} _material The material to use.
+	/// @param {Struct.BBMOD_BaseMaterial, Pointer.Texture} _material A full BBMOD
+	/// material to apply or just the base texture if you don't use BBMOD's material
+	/// system.
 	/// @param {Array<Real>} _transform An array of bone transform or `undefined`.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
 	/// batching or `undefined`.
@@ -203,46 +205,62 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	static submit = function (_material, _transform, _batchData)
 	{
-		if (!_material.apply(VertexFormat))
+		var _materialIsBBMOD = is_struct(_material);
+
+		if (_materialIsBBMOD && !_material.apply(VertexFormat))
 		{
 			return self;
 		}
 
 		var _vertexBuffer = VertexBuffer;
 		var _primitiveType = PrimitiveType;
-		var _baseOpacity = _material.BaseOpacity;
+		var _baseOpacity = is_struct(_material) ? _material.BaseOpacity : _material;
+		var _shader = shader_current();
 
-		with (BBMOD_SHADER_CURRENT)
+		if (_materialIsBBMOD)
 		{
-			set_instance_id();
-			set_material_index(other.MaterialIndex);
+			BBMOD_SHADER_CURRENT.set_instance_id();
+		}
 
-			if (_transform != undefined)
-			{
-				set_bones(_transform);
-			}
+		if (_shader != -1)
+		{
+			shader_set_uniform_f(shader_get_uniform(_shader, "bbmod_MaterialIndex"), MaterialIndex);
+		}
 
-			if (_batchData != undefined)
+		if (_transform != undefined && _shader != -1)
+		{
+			shader_set_uniform_f_array(shader_get_uniform(_shader, "bbmod_Bones"), _transform);
+		}
+
+		if (_batchData != undefined)
+		{
+			if (is_array(_batchData[0]))
 			{
-				if (is_array(_batchData[0]))
+				var _dataIndex = 0;
+				var _uBatchData = undefined;
+				repeat (array_length(_batchData))
 				{
-					var _dataIndex = 0;
-					repeat (array_length(_batchData))
+					if (_shader != -1)
 					{
-						set_batch_data(_batchData[_dataIndex++]);
-						vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+						_uBatchData ??= shader_get_uniform(_shader, "bbmod_BatchData");
+						shader_set_uniform_f_array(_uBatchData, _batchData[_dataIndex++]);
 					}
-				}
-				else
-				{
-					set_batch_data(_batchData);
 					vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 				}
 			}
 			else
 			{
+				if (_shader != -1)
+				{
+					shader_set_uniform_f_array(
+						shader_get_uniform(_shader, "bbmod_BatchData"), _batchData);
+				}
 				vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 			}
+		}
+		else
+		{
+			vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 		}
 
 		return self;

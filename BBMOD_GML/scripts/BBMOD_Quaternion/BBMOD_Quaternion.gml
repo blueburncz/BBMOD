@@ -599,7 +599,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// @param {Struct.BBMOD_Vec3} _v The vector to rotate.
 	///
 	/// @return {Struct.BBMOD_Vec3} Returns vector `_v`.
-	static Rotate = function (_v)
+	static RotateOther = function (_v)
 	{
 		gml_pragma("forceinline");
 		var _q = Normalize();

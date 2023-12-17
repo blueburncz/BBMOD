@@ -230,8 +230,9 @@ function BBMOD_Node(_model) constructor
 	///
 	/// @desc Immediately submits the node for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
-	/// one for each material slot of the model.
+	/// @param {Array<Struct.BBMOD_BaseMaterial>, Array<Pointer.Texture>} _materials
+	/// An array of either full BBMOD materials or just textures if you don't wish to
+	/// use BBMOD's material system.
 	/// @param {Array<Real>} _transform An array of dual quaternions for
 	/// transforming animated models or `undefined`.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
