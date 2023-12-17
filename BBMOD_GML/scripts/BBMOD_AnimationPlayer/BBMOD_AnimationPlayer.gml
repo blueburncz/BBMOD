@@ -573,9 +573,10 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 	///
 	/// @desc Immediately submits the animated model for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of materials,
-	/// one for each material slot of the model. If not specified, then
-	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
+	/// @param {Array<Struct.BBMOD_BaseMaterial>, Array<Pointer.Texture>} [_materials]
+	/// An array of either full BBMOD materials or just textures if you don't wish to
+	/// use BBMOD's material system. If `undefined`, then {@link BBMOD_Model.Materials}
+	/// is used. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	static submit = function (_materials=undefined)
