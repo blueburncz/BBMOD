@@ -45,9 +45,10 @@ function __bbmod_d3d11_init()
 function bbmod_texture_set_stage_vs(_slot, _texture)
 {
 	gml_pragma("forceinline");
-	if (__bbmod_d3d11_init())
+	static _fn = undefined;
+	if (_fn == undefined && __bbmod_d3d11_init())
 	{
-		static _fn = external_define(
+		_fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_d3d11_texture_set_stage_vs", dll_cdecl, ty_real,
 			1, ty_real);
 		texture_set_stage(0, _texture);
