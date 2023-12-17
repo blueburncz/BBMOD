@@ -606,6 +606,30 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 				var _n4Y = __normalSmoothY[# _i, _j + 1];
 				var _n4Z = __normalSmoothZ[# _i, _j + 1];
 
+				// TODO: Optimize
+				var _sign = -1.0;
+				var _axisX = new BBMOD_Vec3(1.0, 0.0, 0.0);
+
+				var _n1 = new BBMOD_Vec3(_n1X, _n1Y, _n1Z);
+				var _b1 = _n1.Cross(_axisX).NormalizeSelf();
+				var _t1 = _n1.Cross(_b1).NormalizeSelf();
+				var _s1 = (_n1.Dot(_t1) < 0.0) ? -_sign : _sign;
+
+				var _n2 = new BBMOD_Vec3(_n2X, _n2Y, _n2Z);
+				var _b2 = _n2.Cross(_axisX).NormalizeSelf();
+				var _t2 = _n2.Cross(_b2).NormalizeSelf();
+				var _s2 = (_n2.Dot(_t2) < 0.0) ? -_sign : _sign;
+
+				var _n3 = new BBMOD_Vec3(_n3X, _n3Y, _n3Z);
+				var _b3 = _n3.Cross(_axisX).NormalizeSelf();
+				var _t3 = _n3.Cross(_b3).NormalizeSelf();
+				var _s3 = (_n3.Dot(_t3) < 0.0) ? -_sign : _sign;
+
+				var _n4 = new BBMOD_Vec3(_n4X, _n4Y, _n4Z);
+				var _b4 = _n4.Cross(_axisX).NormalizeSelf();
+				var _t4 = _n4.Cross(_b4).NormalizeSelf();
+				var _s4 = (_n4.Dot(_t4) < 0.0) ? -_sign : _sign;
+
 				// 1
 				// |\
 				// 4-3
@@ -616,17 +640,17 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 				vertex_position_3d(_vbuffer, _x1, _y1, _z1);
 				vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
 				vertex_texcoord(_vbuffer, _u1, _v1);
-				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
+				vertex_float4(_vbuffer, _t1.X, _t1.Y, _t1.Z, _s1);
 
 				vertex_position_3d(_vbuffer, _x3, _y3, _z3);
 				vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
 				vertex_texcoord(_vbuffer, _u3, _v3);
-				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
+				vertex_float4(_vbuffer, _t3.X, _t3.Y, _t3.Z, _s3);
 
 				vertex_position_3d(_vbuffer, _x4, _y4, _z4);
 				vertex_normal(_vbuffer, _n4X, _n4Y, _n4Z);
 				vertex_texcoord(_vbuffer, _u4, _v4);
-				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
+				vertex_float4(_vbuffer, _t4.X, _t4.Y, _t4.Z, _s4);
 
 				// 1-2
 				//  \|
@@ -638,17 +662,17 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 				vertex_position_3d(_vbuffer, _x1, _y1, _z1);
 				vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
 				vertex_texcoord(_vbuffer, _u1, _v1);
-				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
+				vertex_float4(_vbuffer, _t1.X, _t1.Y, _t1.Z, _s1);
 
 				vertex_position_3d(_vbuffer, _x2, _y2, _z2);
 				vertex_normal(_vbuffer, _n2X, _n2Y, _n2Z);
 				vertex_texcoord(_vbuffer, _u2, _v2);
-				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
+				vertex_float4(_vbuffer, _t2.X, _t2.Y, _t2.Z, _s2);
 
 				vertex_position_3d(_vbuffer, _x3, _y3, _z3);
 				vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
 				vertex_texcoord(_vbuffer, _u3, _v3);
-				vertex_float4(_vbuffer, _tangentNorm, 0.0, _tangent1z, 1.0);
+				vertex_float4(_vbuffer, _t3.X, _t3.Y, _t3.Z, _s3);
 
 				++_j;
 			}
