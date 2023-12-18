@@ -9,4 +9,4 @@ This is a small patch release that fixes a few bugs in the library. As a little 
 * Fixed method `RotateOther` of `BBMOD_Quaternion`.
 * Fixed method `ScaleSelf` of `BBMOD_DualQuaternion`.
 * Property `Materials` of `BBMOD_Model` can now contain also `Pointer.Texture`s instead of `BBMOD_Material`s, but then the model can be rendered only using the `submit` method!
-* There is now a new folder `BBMOD/Core/Base`, which contains the absolute minimum required to use BBMOD's animation player in your GameMaker projects. The material system is not included in this folder, meaning you will need to write your own shaders to draw the models. Do not forget to add `#define BBMOD_MATERIAL_DEFAULT -1` to your project if you import only this folder!
+* There is now a new folder `BBMOD/Core/Base`, which contains the absolute minimum required to use BBMOD's animation player in your GameMaker projects. The material system is not included in this folder, meaning you will need to write your own shaders to draw the models. Do not forget to add `#macro BBMOD_MATERIAL_DEFAULT -1` to your project if you import only this folder!
