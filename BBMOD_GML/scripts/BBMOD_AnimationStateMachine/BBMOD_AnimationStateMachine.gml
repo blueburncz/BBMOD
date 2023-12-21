@@ -46,7 +46,7 @@
 /// animationStateMachine.start();
 /// 
 /// /// @desc Step event
-/// animationStateMachine.update();
+/// animationStateMachine.update(delta_time);
 /// if (destroy)
 /// {
 ///     instance_destroy();

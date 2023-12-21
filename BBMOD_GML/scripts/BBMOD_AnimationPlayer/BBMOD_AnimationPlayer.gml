@@ -137,7 +137,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 	/// @see BBMOD_AnimationPlayer.get_node_transform
 	/// @private
 	__nodeTransform = array_create(BBMOD_MAX_BONES * 8, 0.0);
-
+ 
 	/// @var {Array<Real>} An array containing transforms of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	/// @see BBMOD_AnimationPlayer.get_transform
@@ -573,8 +573,8 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 	///
 	/// @desc Immediately submits the animated model for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_BaseMaterial>, Array<Pointer.Texture>} [_materials]
-	/// An array of either full BBMOD materials or just textures if you don't wish to
+	/// @param {Array<Struct.BBMOD_IMaterial>, Array<Pointer.Texture>} [_materials]
+	/// An array of either material structs or just textures if you don't wish to
 	/// use BBMOD's material system. If `undefined`, then {@link BBMOD_Model.Materials}
 	/// is used. Defaults to `undefined`.
 	///

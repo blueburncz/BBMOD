@@ -69,7 +69,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	__offsetArray = [];
 
 	/// @var {Real} Number of materials that the model uses.
-	/// @see BBMOD_BaseMaterial
 	/// @readonly
 	MaterialCount = 0;
 
@@ -80,14 +79,13 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @readonly
 	MaterialNames = [];
 
-	/// @var {Array<Struct.BBMOD_BaseMaterial>, Array<Pointer.Texture>} An array of
-	/// materials. Each entry can be either a full BBMOD material or just a texture
+	/// @var {Array<Struct.BBMOD_IMaterial>, Array<Pointer.Texture>} An array of
+	/// materials. Each entry can be either a material struct or just a texture
 	/// if you don't wish to use BBMOD's material system. Each entry defaults to
 	/// {@link BBMOD_MATERIAL_DEFAULT}.
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
-	/// @see BBMOD_BaseMaterial
 	Materials = [];
 
 	/// @var {Bool} If `true` then the model is frozen.
@@ -444,7 +442,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @param {String} _name The name of the material.
 	///
-	/// @return {Struct.BBMOD_BaseMaterial, Pointer.Texture} The material.
+	/// @return {Struct.BBMOD_IMaterial, Pointer.Texture} The material.
 	///
 	/// @throws {BBMOD_Exception} If the model does not have a material with
 	/// given name.
@@ -452,7 +450,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.set_material
-	/// @see BBMOD_BaseMaterial
 	static get_material = function (_name)
 	{
 		var i = 0;
@@ -472,8 +469,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @desc Sets a material.
 	///
 	/// @param {String} _name The name of the material slot.
-	/// @param {Struct.BBMOD_BaseMaterial, Pointer.Texture} _material Either a
-	/// full BBMOD material or just a texture if you don't wish to use BBMOD's
+	/// @param {Struct.BBMOD_IMaterial, Pointer.Texture} _material Either a
+	/// material struct or just a texture if you don't wish to use BBMOD's
 	/// material system.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
@@ -484,7 +481,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
-	/// @see BBMOD_BaseMaterial
 	static set_material = function (_name, _material)
 	{
 		var i = 0;
@@ -666,8 +662,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @desc Immediately submits the model for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_BaseMaterial>, Array<Pointer.Texture>} [_materials]
-	/// An array of either full BBMOD materials or just textures if you don't wish to
+	/// @param {Array<Struct.BBMOD_IMaterial>, Array<Pointer.Texture>} [_materials]
+	/// An array of either material structs or just textures if you don't wish to
 	/// use BBMOD's material system. If `undefined`, then {@link BBMOD_Model.Materials}
 	/// is used. Defaults to `undefined`.
 	/// @param {Array<Real>} [_transform] An array of dual quaternions for
@@ -692,7 +688,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// This method does not do anything if the model has not been loaded yet.
 	///
 	/// @see BBMOD_Resource.IsLoaded
-	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	/// @see BBMOD_ERenderPass
@@ -802,7 +797,6 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// yet.
 	///
 	/// @see BBMOD_Resource.IsLoaded
-	/// @see BBMOD_BaseMaterial
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined, _matrix=undefined)

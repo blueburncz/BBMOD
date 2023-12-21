@@ -44,5 +44,5 @@
   "option_amazonfire_texture_page": "2048x2048",
   "option_amazonfire_tools_from_version": false,
   "option_amazonfire_tv_banner": "${base_options_dir}/amazonfire/tv_banner.png",
-  "option_amazonfire_version": "3.20.1",
+  "option_amazonfire_version": "3.20.2",
 }

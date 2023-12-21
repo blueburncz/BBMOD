@@ -66,6 +66,8 @@ global.__bbmodMaterialCurrent = undefined;
 ///
 /// @extends BBMOD_Resource
 ///
+/// @implements {BBMOD_IMaterial}
+///
 /// @desc Base class for materials.
 ///
 /// @param {Struct.BBMOD_Shader} [_shader] A shader that the material uses in

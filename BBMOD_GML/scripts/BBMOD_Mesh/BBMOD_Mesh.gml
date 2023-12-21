@@ -195,9 +195,8 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 	///
 	/// @desc Immediately submits the mesh for rendering.
 	///
-	/// @param {Struct.BBMOD_BaseMaterial, Pointer.Texture} _material A full BBMOD
-	/// material to apply or just the base texture if you don't use BBMOD's material
-	/// system.
+	/// @param {Struct.BBMOD_IMaterial, Pointer.Texture} _material A material struct
+	/// to apply or just the base texture if you don't use BBMOD's material system.
 	/// @param {Array<Real>} _transform An array of bone transform or `undefined`.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
 	/// batching or `undefined`.
@@ -205,31 +204,37 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	static submit = function (_material, _transform, _batchData)
 	{
-		var _materialIsBBMOD = is_struct(_material);
+		var _materialIsStruct = is_struct(_material);
 
-		if (_materialIsBBMOD && !_material.apply(VertexFormat))
+		if (_materialIsStruct && !_material.apply(VertexFormat))
 		{
 			return self;
 		}
 
 		var _vertexBuffer = VertexBuffer;
 		var _primitiveType = PrimitiveType;
-		var _baseOpacity = is_struct(_material) ? _material.BaseOpacity : _material;
+		var _baseOpacity = _materialIsStruct ? _material.BaseOpacity : _material;
 		var _shader = shader_current();
-
-		if (_materialIsBBMOD)
-		{
-			BBMOD_SHADER_CURRENT.set_instance_id();
-		}
 
 		if (_shader != -1)
 		{
-			shader_set_uniform_f(shader_get_uniform(_shader, "bbmod_MaterialIndex"), MaterialIndex);
-		}
+			if (variable_global_exists("__bbmodInstanceID"))
+			{
+				var _instanceId = variable_global_get("__bbmodInstanceID");
+				shader_set_uniform_f(
+					shader_get_uniform(_shader, "bbmod_InstanceID"),
+					((_instanceId & $000000FF) >> 0) / 255,
+					((_instanceId & $0000FF00) >> 8) / 255,
+					((_instanceId & $00FF0000) >> 16) / 255,
+					((_instanceId & $FF000000) >> 24) / 255);
+			}
 
-		if (_transform != undefined && _shader != -1)
-		{
-			shader_set_uniform_f_array(shader_get_uniform(_shader, "bbmod_Bones"), _transform);
+			shader_set_uniform_f(shader_get_uniform(_shader, "bbmod_MaterialIndex"), MaterialIndex);
+
+			if (_transform != undefined)
+			{
+				shader_set_uniform_f_array(shader_get_uniform(_shader, "bbmod_Bones"), _transform);
+			}
 		}
 
 		if (_batchData != undefined)

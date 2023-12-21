@@ -793,7 +793,7 @@ function BBMOD_DLL() constructor
 	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
-			BBMOD_DLL_PATH, "bbmod_dll_set_apply_scale", dll_cdecl, ty_real, 1, ty_real);
+			BBMOD_DLL_PATH, "bbmod_dll_set_pre_transform", dll_cdecl, ty_real, 1, ty_real);
 		var _retval = external_call(_fn, _enable);
 		if (_retval != __BBMOD_DLL_SUCCESS)
 		{
