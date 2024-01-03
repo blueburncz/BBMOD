@@ -716,6 +716,7 @@ function BBMOD_BaseRenderer() constructor
 					}
 					_cubemap.reset_target();
 				}
+				bbmod_material_reset();
 
 				bbmod_shader_unset_global(BBMOD_U_HDR);
 
