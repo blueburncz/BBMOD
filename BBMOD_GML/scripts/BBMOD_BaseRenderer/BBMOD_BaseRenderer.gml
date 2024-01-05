@@ -139,6 +139,11 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static __cubemap = new BBMOD_Cubemap(128);
 
+	if (bbmod_hdr_is_supported())
+	{
+		__cubemap.Format = surface_rgba16float;
+	}
+
 	/// @var {Id.Surface} For reflection probe capture.
 	/// @private
 	__surProbe1 = -1;
@@ -699,6 +704,8 @@ function BBMOD_BaseRenderer() constructor
 				// Fill cubemap
 				bbmod_render_pass_set(BBMOD_ERenderPass.ReflectionCapture);
 
+				bbmod_shader_set_global_f(BBMOD_U_HDR, bbmod_hdr_is_supported() ? 1.0 : 0.0);
+
 				while (_cubemap.set_target())
 				{
 					draw_clear(c_black);
@@ -709,6 +716,8 @@ function BBMOD_BaseRenderer() constructor
 					}
 					_cubemap.reset_target();
 				}
+
+				bbmod_shader_unset_global(BBMOD_U_HDR);
 
 				// Prefilter and apply
 				_cubemap.to_single_surface();

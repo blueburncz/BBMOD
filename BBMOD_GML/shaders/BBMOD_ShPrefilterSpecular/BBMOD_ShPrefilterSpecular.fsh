@@ -2,6 +2,9 @@ varying vec2 v_vTexCoord;
 
 uniform float u_fRoughness;
 
+// 1.0 = input is HDR (linear space), 0.0 = input is LDR (gamma space)
+uniform float bbmod_HDR;
+
 // Source: https://gamedev.stackexchange.com/questions/169508/octahedral-impostors-octahedral-mapping
 
 /// @param dir Sampling dir vector in world-space.
@@ -155,8 +158,17 @@ vec3 xDecodeRGBM(vec4 rgbm)
 	return 6.0 * rgbm.rgb * rgbm.a;
 }
 
+#define X_GAMMA 2.2
+
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
+{
+	return pow(rgb, vec3(1.0 / X_GAMMA));
+}
+
 void main()
 {
 	vec3 dir = xOctahedronUvToVec3Normalized(v_vTexCoord);
-	gl_FragColor = xEncodeRGBM(xPrefilterIBL_GGX(gm_BaseTexture, dir, u_fRoughness));
+	vec3 result = xPrefilterIBL_GGX(gm_BaseTexture, dir, u_fRoughness);
+	gl_FragColor = xEncodeRGBM((bbmod_HDR == 1.0) ? xLinearToGamma(result) : result);
 }
