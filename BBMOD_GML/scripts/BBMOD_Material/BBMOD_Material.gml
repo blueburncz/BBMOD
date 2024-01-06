@@ -636,7 +636,7 @@ function BBMOD_Material(_shader=undefined)
 				with (_shader)
 				{
 					on_set();
-					__bbmod_shader_set_globals(_shaderRaw);
+					bbmod_shader_set_globals(_shaderRaw);
 				}
 				_shaderChanged = false;
 			}
@@ -665,7 +665,7 @@ function BBMOD_Material(_shader=undefined)
 			with (_shader)
 			{
 				on_set();
-				__bbmod_shader_set_globals(_shaderRaw);
+				bbmod_shader_set_globals(_shaderRaw);
 			}
 			_shader.set_material(self);
 		}

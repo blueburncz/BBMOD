@@ -241,7 +241,7 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined) constructor
 		shader_set(_shaderRaw);
 		BBMOD_SHADER_CURRENT = self;
 		on_set();
-		__bbmod_shader_set_globals(_shaderRaw);
+		bbmod_shader_set_globals(_shaderRaw);
 
 		return self;
 	};
@@ -315,14 +315,12 @@ function __bbmod_shader_get_globals()
 	return _globals;
 }
 
-/// @func __bbmod_shader_set_globals(_shader)
+/// @func bbmod_shader_set_globals(_shader)
 ///
-/// @desc
+/// @desc Passes all global uniform to given shader.
 ///
-/// @param {Asset.GMShader} _shader
-///
-/// @private
-function __bbmod_shader_set_globals(_shader)
+/// @param {Asset.GMShader} _shader The shader to pass uniforms to.
+function bbmod_shader_set_globals(_shader)
 {
 	static _globals = __bbmod_shader_get_globals();
 	var i = 0;

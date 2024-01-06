@@ -330,7 +330,7 @@ function BBMOD_DeferredRenderer()
 		matrix_set(matrix_world, matrix_build_identity());
 		var _shader = BBMOD_ShDeferredFullscreen;
 		shader_set(_shader);
-		__bbmod_shader_set_globals(_shader);
+		bbmod_shader_set_globals(_shader);
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mView"), _view);
@@ -353,7 +353,7 @@ function BBMOD_DeferredRenderer()
 
 		_shader = BBMOD_ShDeferredPunctual;
 		shader_set(_shader);
-		__bbmod_shader_set_globals(_shader);
+		bbmod_shader_set_globals(_shader);
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
 		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
 		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mView"), _view);
