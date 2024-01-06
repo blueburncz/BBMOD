@@ -28,7 +28,7 @@
 /// batches of lit billboard particles.
 #macro BBMOD_MATERIAL_PARTICLE_LIT __bbmod_material_particle_lit()
 
-/// @var {Struct.BBMOD_Model} A billboard particle model.
+/// @macro {Struct.BBMOD_Model} A billboard particle model.
 #macro BBMOD_MODEL_PARTICLE __bbmod_model_particle()
 
 function __bbmod_vformat_particle()
