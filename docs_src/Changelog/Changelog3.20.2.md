@@ -8,3 +8,4 @@
 * Argument `_sha1` of method `BBMOD_ResourceManager.load` can now be skipped instead of set to `undefined` if you do not wish to do a SHA1 check.
 * Added new macro `BBMOD_MATRIX_IDENTITY`, which is a read-only globally allocated identity matrix.
 * Reflection probes are now captured in HDR if supported by the target platform.
+* Added new property `Infinite` to `BBMOD_ReflectionProbe`. When set to `true` then the reflection probe has infinite extents, otherwise they are defined by the `Size` property. Default value is `false`.

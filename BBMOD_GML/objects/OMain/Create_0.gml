@@ -114,5 +114,5 @@ var _probeY = _terrainHeight / 2;
 var _probeZ = global.terrain.get_height(_probeX, _probeY) + 20;
 
 var _reflectionProbe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(_probeX, _probeY, _probeZ));
-_reflectionProbe.set_size(new BBMOD_Vec3(_terrainWidth / 2 + 100, _terrainHeight / 2 + 100, 1000));
+_reflectionProbe.Infinite = true;
 bbmod_reflection_probe_add(_reflectionProbe);

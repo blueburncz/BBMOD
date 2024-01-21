@@ -86,6 +86,11 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) construct
 	/// @see BBMOD_ReflectionProbe.set_position
 	Position = _position ?? new BBMOD_Vec3();
 
+	/// @var {Bool} If `true` then the reflection probe has infinite extents,
+	/// otherwise they are defined by the {@link BBMOD_ReflectionProbe.Size}
+	/// property. Default value is `false`.
+	Infinite = false;
+
 	/// @var {Struct.BBMOD_Vec3} Size of AABB on each axis that marks the
 	/// probe's area of influence. The probe is active only when camera enters
 	/// this area. Default value is `(0.5, 0.5, 0.5)`, i.e. a 1x1x1 box.
@@ -264,6 +269,10 @@ function bbmod_reflection_probe_find(_position)
 			if (!Enabled)
 			{
 				continue;
+			}
+			if (Infinite)
+			{
+				return self;
 			}
 			var _min = Position.Sub(Size);
 			if (_position.X < _min.X
