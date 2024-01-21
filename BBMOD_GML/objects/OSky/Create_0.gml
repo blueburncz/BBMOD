@@ -4,7 +4,6 @@ global.day = !global.day;
 
 modSky = global.resourceManager.load(
 	"Data/BBMOD/Models/Sphere.bbmod",
-	undefined,
 	function (_err, _model) {
 		if (!_err)
 		{

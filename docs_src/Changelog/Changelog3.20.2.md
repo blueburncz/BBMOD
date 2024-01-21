@@ -5,3 +5,4 @@
 * Method `BBMOD_Material.from_json` now supports `undefined` and string "undefined" for shaders, in which case it removes a shader for given render pass.
 * Added new function `bbmod_shader_set_globals`, which passes all global uniforms to given shader.
 * Fixed disabling texture filtering via `BBMOD_Material.Filtering` not working.
+* Argument `_sha1` of method `BBMOD_ResourceManager.load` can now be skipped instead of set to `undefined` if you do not wish to do a SHA1 check.

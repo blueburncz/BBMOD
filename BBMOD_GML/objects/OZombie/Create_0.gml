@@ -67,7 +67,6 @@ animIdle = global.resourceManager.load("Data/Assets/Character/Zombie_Idle.bbanim
 
 animWalk = global.resourceManager.load(
 	"Data/Assets/Character/Zombie_Walk.bbanim",
-	undefined,
 	function (_err, _animation) {
 		if (!_err)
 		{
@@ -78,7 +77,6 @@ animWalk = global.resourceManager.load(
 
 animAttack = global.resourceManager.load(
 	"Data/Assets/Character/Zombie_Attack.bbanim",
-	undefined,
 	function (_err, _animation) {
 		if (!_err)
 		{

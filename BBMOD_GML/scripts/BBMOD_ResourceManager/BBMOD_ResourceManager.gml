@@ -157,7 +157,7 @@ function BBMOD_ResourceManager() constructor
 		return _res;
 	};
 
-	/// @func load(_path[, _sha1[, _onLoad]])
+	/// @func load(_path[, _sha1][, _onLoad])
 	///
 	/// @desc Asynchronnously loads a resource from a file or retrieves
 	/// a reference to it, if it is already loaded.
@@ -192,6 +192,12 @@ function BBMOD_ResourceManager() constructor
 	/// @see BBMOD_ResourceManager.LoadMaterials
 	static load = function (_path, _sha1=undefined, _onLoad=undefined)
 	{
+		if (is_method(_sha1))
+		{
+			_onLoad = _sha1;
+			_sha1 = undefined;
+		}
+
 		var _resources = __resources;
 
 		if (ds_map_exists(_resources, _path))

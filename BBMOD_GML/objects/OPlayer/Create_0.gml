@@ -69,7 +69,6 @@ animShoot = global.resourceManager.load(
 
 animPunchLeft = global.resourceManager.load(
 	"Data/Assets/Character/Character_PunchLeft.bbanim",
-	undefined,
 	function (_err, _animation) {
 		if (!_err)
 		{
@@ -80,7 +79,6 @@ animPunchLeft = global.resourceManager.load(
 
 animPunchRight = global.resourceManager.load(
 	"Data/Assets/Character/Character_PunchRight.bbanim",
-	undefined,
 	function (_err, _animation) {
 		if (!_err)
 		{
@@ -94,7 +92,6 @@ animIdle = global.resourceManager.load(
 
 animInteractGround = global.resourceManager.load(
 	"Data/Assets/Character/Character_Interact_ground.bbanim",
-	undefined,
 	function (_err, _animation) {
 		if (!_err)
 		{
@@ -107,7 +104,6 @@ animJump = global.resourceManager.load(
 
 animRun = global.resourceManager.load(
 	"Data/Assets/Character/Character_Run.bbanim",
-	undefined,
 	function (_err, _animation) {
 		if (!_err)
 		{
@@ -118,7 +114,6 @@ animRun = global.resourceManager.load(
 
 animWalk = global.resourceManager.load(
 	"Data/Assets/Character/Character_Walk.bbanim",
-	undefined,
 	function (_err, _animation) {
 		if (!_err)
 		{
