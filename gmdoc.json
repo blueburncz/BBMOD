@@ -77,12 +77,6 @@
       }
     },
     "Supported file formats": "SupportedFileFormats.md",
-    "Advanced topics": {
-      "file": "AdvancedTopics/AdvancedTopics.md",
-      "pages": {
-        "Animation optimization levels": "AdvancedTopics/AnimationOptimizationLevels.md"
-      }
-    },
     "Modules": {
       "file": "Modules/Modules.md",
       "pages": {

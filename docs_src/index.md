@@ -12,7 +12,6 @@ official website for guides on how to use BBMOD.
 ## Contents
 * [Changelog](./Changelog_.html)
 * [Supported file formats](./SupportedFileFormats.html)
-* [Advanced topics](./AdvancedTopics.html)
 * [Modules](./Modules.html)
 * [Scripting API](./ScriptingAPI.html)
 * [Links](./Links.html)
