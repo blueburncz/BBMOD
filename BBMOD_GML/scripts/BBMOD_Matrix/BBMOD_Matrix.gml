@@ -3,7 +3,7 @@
 /// @macro {Struct.BBMOD_Matrix} A read-only globally allocated identity matrix.
 #macro BBMOD_MATRIX_IDENTITY __bbmod_matrix_get_idenitity()
 
-/// __bbmod_matrix_get_idenitity()
+/// @func __bbmod_matrix_get_idenitity()
 ///
 /// @return {Struct.BBMOD_Matrix}
 ///
