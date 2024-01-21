@@ -1,5 +1,5 @@
 # Changelog 3.20.2
-This little release mainly adds a new interface `BBMOD_IMaterial` into the `Core/Base` module, which serves as a basis for custom material systems that can be used with the `apply` method. Few other new utility functions and bug fixes are also included in this release. Additionally, reflection probes can now have infinite extents and support HDR capture.
+This little release mainly adds a new interface `BBMOD_IMaterial` into the `Core/Base` module, which serves as a basis for custom material systems that can be used with the `submit` method. Few other new utility functions and bug fixes are also included in this release. Additionally, reflection probes can now have infinite extents and support HDR capture.
 
 * Added new interface `BBMOD_IMaterial`, which is an interface for the most basic BBMOD materials that can be used with the `BBMOD_Model.submit` method.
 * Added new function `bbmod_assert(_expr[, _error])`, which shows an error if given expression is false and quits the game.
