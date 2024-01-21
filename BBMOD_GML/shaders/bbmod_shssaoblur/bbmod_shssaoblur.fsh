@@ -41,7 +41,9 @@ void main()
 	gl_FragColor = vec4(0.0);
 	float depth = xDecodeDepth(texture2D(u_texDepth, v_vTexCoord).rgb) * u_fClipFar;
 	float weightSum = 0.001;
-	for (float i = 0.0; i < float(BBMOD_SSAO_NOISE_TEXTURE_SIZE); i += 1.0)
+	for (float i = -float(BBMOD_SSAO_NOISE_TEXTURE_SIZE) / 2.0;
+		i <= float(BBMOD_SSAO_NOISE_TEXTURE_SIZE) / 2.0;
+		i += 1.0)
 	{
 		vec2 uv = v_vTexCoord + u_vTexel * i;
 		float sampleDepth = xDecodeDepth(texture2D(u_texDepth, uv).rgb) * u_fClipFar;
