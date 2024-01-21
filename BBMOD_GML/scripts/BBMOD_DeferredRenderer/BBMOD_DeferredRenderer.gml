@@ -154,8 +154,6 @@ function BBMOD_DeferredRenderer()
 	{
 		global.__bbmodRendererCurrent = self;
 
-		static _renderQueues = bbmod_render_queues_get();
-
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
@@ -236,11 +234,7 @@ function BBMOD_DeferredRenderer()
 		matrix_set(matrix_projection, _projection);
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.GBuffer);
-		var _rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
+		bbmod_render_queues_submit();
 		bbmod_material_reset();
 
 		gpu_pop_state();
@@ -284,11 +278,7 @@ function BBMOD_DeferredRenderer()
 		matrix_set(matrix_world, _world);
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
-		_rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
+		bbmod_render_queues_submit();
 		bbmod_material_reset();
 
 		surface_reset_target();
@@ -514,11 +504,7 @@ function BBMOD_DeferredRenderer()
 		matrix_set(matrix_world, _world);
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
-		_rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
+		bbmod_render_queues_submit();
 		bbmod_material_reset();
 
 		gpu_push_state();
@@ -545,19 +531,11 @@ function BBMOD_DeferredRenderer()
 		matrix_set(matrix_projection, _projection);
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
-		_rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
+		bbmod_render_queues_submit();
 		//bbmod_material_reset();
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Alpha);
-		_rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
+		bbmod_render_queues_submit();
 		bbmod_material_reset();
 
 		gpu_pop_state();
@@ -569,11 +547,7 @@ function BBMOD_DeferredRenderer()
 		//
 		if (_clearQueues)
 		{
-			_rqi = 0;
-			repeat (array_length(_renderQueues))
-			{
-				_renderQueues[_rqi++].clear();
-			}
+			bbmod_render_queues_clear();
 		}
 
 		////////////////////////////////////////////////////////////////////////

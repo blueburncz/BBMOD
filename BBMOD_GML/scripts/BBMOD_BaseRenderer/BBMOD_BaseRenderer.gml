@@ -493,8 +493,6 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static __render_shadowmap_impl = function (_light)
 	{
-		static _renderQueues = bbmod_render_queues_get();
-
 		__incr_shadowmap_health(_light);
 
 		if ((!_light.Static || _light.NeedsUpdate)
@@ -527,11 +525,7 @@ function BBMOD_BaseRenderer() constructor
 				while (_cubemap.set_target())
 				{
 					draw_clear(c_red);
-					var _rqi = 0;
-					repeat (array_length(_renderQueues))
-					{
-						_renderQueues[_rqi++].submit();
-					}
+					bbmod_render_queues_submit();
 					_cubemap.reset_target();
 				}
 				bbmod_material_reset();
@@ -563,11 +557,7 @@ function BBMOD_BaseRenderer() constructor
 				matrix_set(matrix_view, _light.__getViewMatrix());
 				matrix_set(matrix_projection, _light.__getProjMatrix());
 				bbmod_shader_set_global_f(BBMOD_U_ZFAR, _shadowmapZFar);
-				var _rqi = 0;
-				repeat (array_length(_renderQueues))
-				{
-					_renderQueues[_rqi++].submit();
-				}
+				bbmod_render_queues_submit();
 				bbmod_material_reset();
 				surface_reset_target();
 			}
@@ -673,8 +663,6 @@ function BBMOD_BaseRenderer() constructor
 		global.__bbmodReflectionProbeTexture = pointer_null;
 		bbmod_camera_set_exposure(1.0);
 
-		static _renderQueues = bbmod_render_queues_get();
-
 		var _cubemap = __cubemap;
 		var _reflectionProbes = global.__bbmodReflectionProbes;
 
@@ -709,11 +697,7 @@ function BBMOD_BaseRenderer() constructor
 				while (_cubemap.set_target())
 				{
 					draw_clear(c_black);
-					var _rqi = 0;
-					repeat (array_length(_renderQueues))
-					{
-						_renderQueues[_rqi++].submit();
-					}
+					bbmod_render_queues_submit();
 					_cubemap.reset_target();
 				}
 				bbmod_material_reset();
@@ -820,8 +804,6 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static __render_gizmo_and_instance_ids = function ()
 	{
-		static _renderQueues = bbmod_render_queues_get();
-
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
 		var _renderWidth = get_render_width();
@@ -887,11 +869,7 @@ function BBMOD_BaseRenderer() constructor
 	
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
-			var _rqi = 0;
-			repeat (array_length(_renderQueues))
-			{
-				_renderQueues[_rqi++].submit();
-			}
+			bbmod_render_queues_submit();
 			bbmod_material_reset();
 
 			surface_reset_target();
@@ -929,12 +907,7 @@ function BBMOD_BaseRenderer() constructor
 	
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
-			var _selectedInstances = Gizmo.Selected;
-			var _rqi = 0;
-			repeat (array_length(_renderQueues))
-			{
-				_renderQueues[_rqi++].submit(_selectedInstances);
-			}
+			bbmod_render_queues_submit(Gizmo.Selected);
 			bbmod_material_reset();
 
 			surface_reset_target();
@@ -996,8 +969,6 @@ function BBMOD_BaseRenderer() constructor
 	{
 		global.__bbmodRendererCurrent = self;
 
-		static _renderQueues = bbmod_render_queues_get();
-
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
@@ -1040,11 +1011,7 @@ function BBMOD_BaseRenderer() constructor
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Background);
 
-		var _rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
+		bbmod_render_queues_submit();
 		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
@@ -1053,11 +1020,7 @@ function BBMOD_BaseRenderer() constructor
 		//
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
-		_rqi = 0;
-		repeat (array_length(_renderQueues))
-		{
-			_renderQueues[_rqi++].submit();
-		}
+		bbmod_render_queues_submit();
 		bbmod_material_reset();
 
 		////////////////////////////////////////////////////////////////////////
@@ -1066,14 +1029,10 @@ function BBMOD_BaseRenderer() constructor
 		//
 		bbmod_render_pass_set(BBMOD_ERenderPass.Alpha);
 
-		_rqi = 0;
-		repeat (array_length(_renderQueues))
+		bbmod_render_queues_submit();
+		if (_clearQueues)
 		{
-			var _queue = _renderQueues[_rqi++].submit();
-			if (_clearQueues)
-			{
-				_queue.clear();
-			}
+			bbmod_render_queues_clear();
 		}
 		bbmod_material_reset();
 

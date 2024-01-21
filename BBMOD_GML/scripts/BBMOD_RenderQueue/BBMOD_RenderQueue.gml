@@ -15,6 +15,42 @@ function bbmod_render_queues_get()
 	return _renderQueues;
 }
 
+/// @func bbmod_render_queues_submit([_instances])
+///
+/// @desc Submits all existing render queues.
+///
+/// @param {Id.DsList<Id.Instance>} [_instances] If specified then only
+/// meshes with an instance ID from the list are submitted. Defaults to
+/// `undefined`.
+///
+/// @see BBMOD_IMeshRenderQueue
+function bbmod_render_queues_submit(_instances=undefined)
+{
+	gml_pragma("forceinline");
+	static _renderQueues = bbmod_render_queues_get();
+	var i = 0;
+	repeat (array_length(_renderQueues))
+	{
+		_renderQueues[i++].submit(_instances);
+	}
+}
+
+/// @func bbmod_render_queues_clear()
+///
+/// @desc Clears all existing render queues.
+///
+/// @see BBMOD_IMeshRenderQueue
+function bbmod_render_queues_clear()
+{
+	gml_pragma("forceinline");
+	static _renderQueues = bbmod_render_queues_get();
+	var i = 0;
+	repeat (array_length(_renderQueues))
+	{
+		_renderQueues[i++].clear();
+	}
+}
+
 /// @func BBMOD_RenderQueue([_name[, _priority]])
 ///
 /// @implements {BBMOD_IMeshRenderQueue}
