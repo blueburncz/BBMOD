@@ -1,5 +1,20 @@
 /// @module Core
 
+/// @macro {Struct.BBMOD_Matrix} A read-only globally allocated identity matrix.
+#macro BBMOD_MATRIX_IDENTITY __bbmod_matrix_get_idenitity()
+
+/// __bbmod_matrix_get_idenitity()
+///
+/// @return {Struct.BBMOD_Matrix}
+///
+/// @private
+function __bbmod_matrix_get_idenitity()
+{
+	gml_pragma("forceinline");
+	static _matrix = new BBMOD_Matrix();
+	return _matrix;
+}
+
 /// @func BBMOD_Matrix([_raw])
 ///
 /// @desc A matrix.
