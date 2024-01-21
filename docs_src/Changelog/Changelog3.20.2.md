@@ -9,6 +9,6 @@
 * Added new macro `BBMOD_MATRIX_IDENTITY`, which is a read-only globally allocated identity matrix.
 * Reflection probes are now captured in HDR if supported by the target platform.
 * Added new property `Infinite` to `BBMOD_ReflectionProbe`. When set to `true` then the reflection probe has infinite extents, otherwise they are defined by the `Size` property. Default value is `false`.
+* Added new function `bbmod_assert(_expr[, _error])`, which shows an error if given expression is false and quits the game.
 * Added new function `bbmod_render_queues_submit([_instances])`, which submits all existing render queues.
 * Added new function `bbmod_render_queues_clear()`, which clears all existing render queues.
-  

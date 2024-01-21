@@ -243,6 +243,7 @@
     {"name":"bbmod_mrt_is_supported","order":12,"path":"scripts/bbmod_mrt_is_supported/bbmod_mrt_is_supported.yy",},
     {"name":"BBMOD_Collider","order":2,"path":"scripts/BBMOD_Collider/BBMOD_Collider.yy",},
     {"name":"SndFootstep2","order":2,"path":"sounds/SndFootstep2/SndFootstep2.yy",},
+    {"name":"bbmod_assert","order":22,"path":"scripts/bbmod_assert/bbmod_assert.yy",},
     {"name":"BBMOD_ShDefaultUnlitAnimated","order":12,"path":"shaders/BBMOD_ShDefaultUnlitAnimated/BBMOD_ShDefaultUnlitAnimated.yy",},
     {"name":"BBMOD_MixVec4Module","order":1,"path":"scripts/BBMOD_MixVec4Module/BBMOD_MixVec4Module.yy",},
     {"name":"BBMOD_ShDefaultDepthAnimated","order":8,"path":"shaders/BBMOD_ShDefaultDepthAnimated/BBMOD_ShDefaultDepthAnimated.yy",},
