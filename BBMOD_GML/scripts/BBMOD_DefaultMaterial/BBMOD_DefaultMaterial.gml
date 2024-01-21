@@ -439,26 +439,32 @@ function BBMOD_DefaultMaterial(_shader=undefined)
 		if (__normalSmoothnessSprite != undefined)
 		{
 			sprite_delete(__normalSmoothnessSprite);
+			__normalSmoothnessSprite = undefined;
 		}
 		if (__specularColorSprite != undefined)
 		{
 			sprite_delete(__specularColorSprite);
+			__specularColorSprite = undefined;
 		}
 		if (__normalRoughnessSprite != undefined)
 		{
 			sprite_delete(__normalRoughnessSprite);
+			__normalRoughnessSprite = undefined;
 		}
 		if (__metallicAOSprite != undefined)
 		{
 			sprite_delete(__metallicAOSprite);
+			__metallicAOSprite = undefined;
 		}
 		if (__subsurfaceSprite != undefined)
 		{
 			sprite_delete(__subsurfaceSprite);
+			__subsurfaceSprite = undefined;
 		}
 		if (__emissiveSprite != undefined)
 		{
 			sprite_delete(__emissiveSprite);
+			__emissiveSprite = undefined;
 		}
 		return undefined;
 	};
