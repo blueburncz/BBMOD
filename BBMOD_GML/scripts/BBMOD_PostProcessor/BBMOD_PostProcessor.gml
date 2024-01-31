@@ -10,56 +10,98 @@
 /// @see BBMOD_PostProcessEffect
 function BBMOD_PostProcessor() constructor
 {
-	/// @var {Id.Surface}
-	/// @private
-	__surPostProcess = -1;
-
 	/// @var {Bool} If `true` then the post-processor is enabled. Default value
 	/// is `true`.
 	Enabled = true;
 
+	/// @var {Array<Struct.BBMOD_PostProcessEffect>} An array of all effects
+	/// added to the post-processor.
+	/// @readonly
+	Effects = [];
+
 	/// @var {Pointer.Texture} The lookup table texture used for color grading.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
+	/// @deprecated Please use {@link BBMOD_ColorGradingEffect} instead.
 	ColorGradingLUT = sprite_get_texture(BBMOD_SprColorGradingLUT, 0);
 
 	/// @var {Real} The strength of the chromatic aberration effect. Use 0 to
 	/// disable the effect. Defaults to 0.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
+	/// @deprecated Please use {@link BBMOD_ChromaticAberrationEffect} instead.
 	ChromaticAberration = 0.0;
 
-	/// @var {Real} Chromatic aberration offsets for RGB channels. Defaults to
-	/// `(-1, 0, 1)`.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
+	/// @var {Struct.BBMOD_Vec3} Chromatic aberration offsets for RGB channels.
+	/// Defaults to `(-1, 0, 1)`.
+	/// @deprecated Please use {@link BBMOD_ChromaticAberrationEffect} instead.
 	ChromaticAberrationOffset = new BBMOD_Vec3(-1.0, 0.0, 1.0);
 
 	/// @var {Real} The strength of the grayscale effect. Use values in range
 	/// 0..1, where 0 means the original color and 1 means grayscale. Defaults
 	/// to 0.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
+	/// @deprecated Please use {@link BBMOD_GrayscaleEffect} instead.
 	Grayscale = 0.0;
 
 	/// @var {Real} The strength of the vignette effect. Defaults to 0.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
+	/// @deprecated Please use {@link BBMOD_VignetteEffect} instead.
 	Vignette = 0.0;
 
 	/// @var {Real} The color of the vignette effect. Defaults to `c_black`.
-	/// @note Post-processing must be enabled for this to have any effect!
-	/// @see BBMOD_Renderer.EnablePostProcessing
+	/// @deprecated Please use {@link BBMOD_VignetteEffect} instead.
 	VignetteColor = c_black;
 
 	/// @var {Real} Antialiasing technique to use. Use values from
 	/// {@link BBMOD_EAntialiasing}. Defaults to
 	/// {@link BBMOD_EAntialiasing.None}.
+	/// @deprecated Please use {@link BBMOD_FXAAEffect} instead.
 	Antialiasing = BBMOD_EAntialiasing.None;
 
-	/// @var {Array}
+	/// @var {Id.Surface}
 	/// @private
-	__effects = [];
+	__surPostProcess1 = -1;
+
+	/// @var {Id.Surface}
+	/// @private
+	__surPostProcess2 = -1;
+
+	/// @func add_effect(_effect)
+	///
+	/// @desc Adds an effect to the post-processor.
+	///
+	/// @param {Struct.BBMOD_PostProcessEffect} _effect The effect to add.
+	///
+	/// @return {Struct.BBMOD_PostProcessor} Returns `self`.
+	static add_effect = function (_effect)
+	{
+		gml_pragma("forceinline");
+		bbmod_assert(
+			_effect.PostProcessor == undefined,
+			"Effect is already added to a post-processor!");
+		array_push(Effects, _effect);
+		_effect.PostProcessor = self;
+		return self;
+	};
+
+	/// @func remove_effect(_effect)
+	///
+	/// @desc Removes an effect from the post-processor.
+	///
+	/// @param {Struct.BBMOD_PostProcessEffect} _effect The effect to add.
+	///
+	/// @return {Struct.BBMOD_PostProcessor} Returns `self`.
+	static remove_effect = function (_effect)
+	{
+		bbmod_assert(
+			_effect.PostProcessor == self,
+			"Effect is not added to this post-processor!");
+		for (var i = array_length(Effects) - 1; i >= 0; --i)
+		{
+			if (Effects == _effect)
+			{
+				_effect.PostProcessor = undefined;
+				array_delete(Effects, i, 1);
+				break;
+			}
+		}
+		return self;
+	};
 
 	/// @func draw(_surface, _x, _y[, _depth[, _normals]])
 	///
@@ -87,12 +129,18 @@ function BBMOD_PostProcessor() constructor
 			return self;
 		}
 
-		var _world = matrix_get(matrix_world);
 		var _width = surface_get_width(_surface);
 		var _height = surface_get_height(_surface);
-		var _texelWidth = 1.0 / _width;
-		var _texelHeight = 1.0 / _height;
-		var _surFinal = _surface;
+		var _world = matrix_get(matrix_world);
+		matrix_set(matrix_world, matrix_build_identity());
+
+		__surPostProcess1 = bbmod_surface_check(
+			__surPostProcess1, _width, _height, surface_rgba8unorm, false);
+		__surPostProcess2 = bbmod_surface_check(
+			__surPostProcess2, _width, _height, surface_rgba8unorm, false);
+
+		var _surSrc = _surface;
+		var _surDest = __surPostProcess1;
 
 		gpu_push_state();
 		gpu_set_tex_filter(true);
@@ -100,17 +148,16 @@ function BBMOD_PostProcessor() constructor
 		gpu_set_blendenable(false);
 
 		////////////////////////////////////////////////////////////////////////
-		// Do post-processing
-		if (Antialiasing != BBMOD_EAntialiasing.None)
-		{
-			// If anti-aliasing is enabled, we need to do post-processing in
-			// another surface...
-			__surPostProcess = bbmod_surface_check(
-				__surPostProcess, _width, _height, surface_rgba8unorm, false);
-			surface_set_target(__surPostProcess);
-			matrix_set(matrix_world, matrix_build_identity());
-		}
+		//
+		// Legacy
+		//
+		var _texelWidth = 1.0 / _width;
+		var _texelHeight = 1.0 / _height;
 
+		surface_set_target(_surDest);
+
+		////////////////////////////////////////////////////////////////////////
+		// Do post-processing
 		var _shader = BBMOD_ShPostProcess;
 		shader_set(_shader);
 		texture_set_stage(
@@ -138,24 +185,20 @@ function BBMOD_PostProcessor() constructor
 			color_get_red(VignetteColor) / 255.0,
 			color_get_green(VignetteColor) / 255.0,
 			color_get_blue(VignetteColor) / 255.0);
-		draw_surface(
-			_surface,
-			(Antialiasing == BBMOD_EAntialiasing.None) ? _x : 0,
-			(Antialiasing == BBMOD_EAntialiasing.None) ? _y : 0);
+		draw_surface(_surSrc, 0, 0);
 		shader_reset();
 
-		if (Antialiasing != BBMOD_EAntialiasing.None)
-		{
-			// Reset surface...
-			surface_reset_target();
-			matrix_set(matrix_world, _world);
-			_surFinal = __surPostProcess;
-		}
+		surface_reset_target();
+
+		_surSrc = _surDest;
+		_surDest = __surPostProcess2;
 
 		////////////////////////////////////////////////////////////////////////
 		// Apply anti-aliasing to the final surface
 		if (Antialiasing == BBMOD_EAntialiasing.FXAA)
 		{
+			surface_set_target(_surDest);
+
 			_shader = BBMOD_ShFXAA;
 			shader_set(_shader);
 			shader_set_uniform_f(
@@ -164,10 +207,40 @@ function BBMOD_PostProcessor() constructor
 			shader_set_uniform_f(
 				shader_get_uniform(_shader, "u_vTexelPS"),
 				_texelWidth, _texelHeight);
-			draw_surface(_surFinal, _x, _y);
+			draw_surface(_surSrc, 0, 0);
 			shader_reset();
+
+			surface_reset_target();
+
+			var _temp = _surSrc;
+			_surSrc = _surDest;
+			_surDest = _temp;
 		}
 
+		////////////////////////////////////////////////////////////////////////
+		//
+		// New post-processing chain
+		//
+		var _count = array_length(Effects);
+
+		for (var i = 0; i < _count; ++i)
+		{
+			var _effect = Effects[i];
+			if (_effect.Enabled)
+			{
+				_effect.draw(_surDest, _surSrc, _depth, _normals);
+
+				var _temp = _surSrc;
+				_surSrc = _surDest;
+				_surDest = _temp;
+			}
+		}
+
+		draw_surface(_surSrc, _x, _y);
+
+		////////////////////////////////////////////////////////////////////////
+
+		matrix_set(matrix_world, _world);
 		gpu_pop_state();
 
 		return self;
@@ -175,55 +248,22 @@ function BBMOD_PostProcessor() constructor
 
 	static destroy = function ()
 	{
-		if (surface_exists(__surPostProcess))
+		for (var i = array_length(Effects) - 1; i >= 0; --i)
 		{
-			surface_free(__surPostProcess);
+			Effects[i].destroy();
+		}
+		Effects = undefined;
+
+		if (surface_exists(__surPostProcess1))
+		{
+			surface_free(__surPostProcess1);
 		}
 
-		for (var i = array_length(__effects); i >= 0; --i)
+		if (surface_exists(__surPostProcess2))
 		{
-			__effects[i].destroy();
+			surface_free(__surPostProcess2);
 		}
-		__effects = undefined;
 
-		return undefined;
-	};
-}
-
-/// @func BBMOD_PostProcessEffect()
-///
-/// @implements {BBMOD_IDestructible}
-///
-/// @desc Base struct for all post-processing effects.
-/// 
-/// @see BBMOD_PostProcessor 
-function BBMOD_PostProcessEffect() constructor
-{
-	/// @var {Struct.BBMOD_PostProcessor} The post-processor to which is this
-	/// effect added or `undefined`.
-	/// @readonly
-	PostProcessor = undefined;
-
-	/// @func draw(_surface, _depth, _normals)
-	///
-	/// @desc Applies the effect to given surface.
-	///
-	/// @param {Id.Surface} _surface The surface to apply the post-processing
-	/// effect to.
-	/// @param {Id.Surface} _depth A surface containing the scene depth encoded
-	/// in the RGB channels or `undefined` if not available.
-	/// @param {Id.Surface} _normals A surface containing the scene's
-	/// world-space normals in the RGB channels or `undefined` if not available.
-	///
-	/// @return {Id.Surface} A surface with the post-processing effect applied
-	/// to it.
-	static draw = function (_surface, _depth, _normals)
-	{
-		return _surface;
-	};
-
-	static destroy = function ()
-	{
 		return undefined;
 	};
 }
