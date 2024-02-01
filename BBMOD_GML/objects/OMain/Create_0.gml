@@ -95,6 +95,7 @@ postProcessor.add_effect(new BBMOD_ColorGradingEffect(sprite_get_texture(SprColo
 monochrome = new BBMOD_MonochromeEffect(0.0);
 postProcessor.add_effect(monochrome);
 postProcessor.add_effect(new BBMOD_ChromaticAberrationEffect(3.0, new BBMOD_Vec3(-1.0, 1.0, -1.0)));
+postProcessor.add_effect(new BBMOD_FilmGrainEffect());
 vignette = new BBMOD_VignetteEffect(0.0, c_red);
 postProcessor.add_effect(vignette);
 postProcessor.add_effect(new BBMOD_VignetteEffect(0.8));

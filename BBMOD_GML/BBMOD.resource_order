@@ -80,6 +80,7 @@
     {"name":"Zombie","order":7,"path":"folders/Demo/Sounds/Zombie.yy",},
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
+    {"name":"FilmGrain","order":16,"path":"folders/BBMOD/PostProcessing/FilmGrain.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},
@@ -115,6 +116,7 @@
     {"name":"BBMOD_ImageBasedLight","order":3,"path":"scripts/BBMOD_ImageBasedLight/BBMOD_ImageBasedLight.yy",},
     {"name":"DrawTextShadow","order":2,"path":"scripts/DrawTextShadow/DrawTextShadow.yy",},
     {"name":"__bbmod_light_ambient","order":5,"path":"scripts/__bbmod_light_ambient/__bbmod_light_ambient.yy",},
+    {"name":"BBMOD_FilmGrainEffect","order":1,"path":"scripts/BBMOD_FilmGrainEffect/BBMOD_FilmGrainEffect.yy",},
     {"name":"BBMOD_TerrainMaterial","order":7,"path":"scripts/BBMOD_TerrainMaterial/BBMOD_TerrainMaterial.yy",},
     {"name":"BBMOD_SetQuaternionModule","order":2,"path":"scripts/BBMOD_SetQuaternionModule/BBMOD_SetQuaternionModule.yy",},
     {"name":"BBMOD_AnimationInstance","order":1,"path":"scripts/BBMOD_AnimationInstance/BBMOD_AnimationInstance.yy",},

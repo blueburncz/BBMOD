@@ -96,6 +96,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"FilmGrain","folderPath":"folders/BBMOD/PostProcessing/FilmGrain.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
@@ -203,6 +204,7 @@
     {"id":{"name":"__bbmod_ssao","path":"scripts/__bbmod_ssao/__bbmod_ssao.yy",},},
     {"id":{"name":"DrawTextShadow","path":"scripts/DrawTextShadow/DrawTextShadow.yy",},},
     {"id":{"name":"__bbmod_light_ambient","path":"scripts/__bbmod_light_ambient/__bbmod_light_ambient.yy",},},
+    {"id":{"name":"BBMOD_FilmGrainEffect","path":"scripts/BBMOD_FilmGrainEffect/BBMOD_FilmGrainEffect.yy",},},
     {"id":{"name":"BBMOD_TerrainMaterial","path":"scripts/BBMOD_TerrainMaterial/BBMOD_TerrainMaterial.yy",},},
     {"id":{"name":"BBMOD_SetQuaternionModule","path":"scripts/BBMOD_SetQuaternionModule/BBMOD_SetQuaternionModule.yy",},},
     {"id":{"name":"BBMOD_AnimationInstance","path":"scripts/BBMOD_AnimationInstance/BBMOD_AnimationInstance.yy",},},
@@ -470,6 +472,7 @@
     {"id":{"name":"OGunfireEmitter","path":"objects/OGunfireEmitter/OGunfireEmitter.yy",},},
     {"id":{"name":"BBMOD_ShInstanceIDBatched","path":"shaders/BBMOD_ShInstanceIDBatched/BBMOD_ShInstanceIDBatched.yy",},},
     {"id":{"name":"BBMOD_ShGBufferBatched","path":"shaders/BBMOD_ShGBufferBatched/BBMOD_ShGBufferBatched.yy",},},
+    {"id":{"name":"BBMOD_ShFilmGrain","path":"shaders/BBMOD_ShFilmGrain/BBMOD_ShFilmGrain.yy",},},
     {"id":{"name":"OSky","path":"objects/OSky/OSky.yy",},},
     {"id":{"name":"BBMOD_MixVec2Module","path":"scripts/BBMOD_MixVec2Module/BBMOD_MixVec2Module.yy",},},
     {"id":{"name":"BBMOD_BaseRenderer","path":"scripts/BBMOD_BaseRenderer/BBMOD_BaseRenderer.yy",},},
