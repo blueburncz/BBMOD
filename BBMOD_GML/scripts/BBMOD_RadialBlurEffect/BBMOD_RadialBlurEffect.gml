@@ -3,6 +3,14 @@
 /// @extends BBMOD_PostProcessEffect
 ///
 /// @desc Radial blur (post-processing effect).
+///
+/// @param {Struct.BBMOD_Vec2} [_origin] The origin of the blur. Defaults to
+/// `(0.5, 0.5)` if `undefined`.
+/// @param {Real} [_radius] The radius of area that is in focus. Use values in
+/// range 0..1. Defaults to 0.5.
+/// @param {Real} [_strength] The strength of the blur. Defaults to 1.
+/// @param {Real} [_step] Step size. Use values in range (0; 1]. Defaults to
+/// 1/8.
 function BBMOD_RadialBlurEffect(_origin=undefined, _radius=0.5, _strength=1.0, _step=0.125)
 	: BBMOD_PostProcessEffect() constructor
 {
@@ -10,10 +18,11 @@ function BBMOD_RadialBlurEffect(_origin=undefined, _radius=0.5, _strength=1.0, _
 	/// `(0.5, 0.5)` (the middle of the screen).
 	Origin = _origin ?? new BBMOD_Vec2(0.5);
 
-	/// @var {Real}
+	/// @var {Real} The radius of area that is in focus. Use values in range
+	/// 0..1. Default value is 0.5.
 	Radius = _radius;
 
-	/// @var {Real} The length of the blur. Default value is 1.
+	/// @var {Real} The strength of the blur. Default value is 1.
 	Strength = _strength;
 
 	/// @var {Real} Step size. Use values in range (0; 1]. Default value is
