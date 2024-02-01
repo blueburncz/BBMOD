@@ -22,9 +22,6 @@ function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
-		var _texelWidth = 1.0 / surface_get_width(_surfaceSrc);
-		var _texelHeight = 1.0 / surface_get_height(_surfaceSrc);
-
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShMonochrome);
 		shader_set_uniform_f(__uStrength, Strength);
