@@ -84,6 +84,7 @@ renderer.RenderScale = (os_browser == browser_not_a_browser) ? 1.0 : 0.8;
 renderer.EnableShadows = true;
 
 postProcessor = new BBMOD_PostProcessor();
+postProcessor.add_effect(new BBMOD_LensDistortionEffect());
 postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);

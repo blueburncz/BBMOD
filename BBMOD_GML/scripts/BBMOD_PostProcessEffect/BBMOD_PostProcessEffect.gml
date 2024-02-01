@@ -28,10 +28,11 @@ function BBMOD_PostProcessEffect() constructor
 	/// @param {Id.Surface} _normals A surface containing the scene's
 	/// world-space normals in the RGB channels or `undefined` if not available.
 	///
-	/// @return {Struct.BBMOD_PostProcessEffect} Returns `self`.
+	/// @return {Id.Surface} Returns a surface with the effect applied. Must be
+	/// either `_surfaceDest` or `_surfaceSrc`!
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
-		return self;
+		return _surfaceSrc;
 	};
 
 	static destroy = function ()

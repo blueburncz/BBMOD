@@ -34,6 +34,6 @@ function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 		shader_reset();
 		surface_reset_target();
 
-		return self;
+		return _surfaceDest;
 	};
 }

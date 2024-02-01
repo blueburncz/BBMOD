@@ -229,11 +229,9 @@ function BBMOD_PostProcessor() constructor
 			var _effect = Effects[i];
 			if (_effect.Enabled)
 			{
-				_effect.draw(_surDest, _surSrc, _depth, _normals);
-
-				var _temp = _surSrc;
-				_surSrc = _surDest;
-				_surDest = _temp;
+				_surSrc = _effect.draw(_surDest, _surSrc, _depth, _normals);
+				_surDest = (_surSrc == __surPostProcess1)
+					? __surPostProcess2 : __surPostProcess1;
 			}
 		}
 

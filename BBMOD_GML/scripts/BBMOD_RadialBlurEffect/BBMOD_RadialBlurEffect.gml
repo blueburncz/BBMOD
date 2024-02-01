@@ -51,6 +51,6 @@ function BBMOD_RadialBlurEffect(_origin=undefined, _radius=0.5, _strength=1.0, _
 		shader_reset();
 		surface_reset_target();
 
-		return self;
+		return _surfaceDest;
 	};
 }

@@ -39,6 +39,6 @@ function BBMOD_LumaSharpenEffect(_strength=1.0, _clamp=1.0, _offset=1.0)
 		shader_reset();
 		surface_reset_target();
 
-		return self;
+		return _surfaceDest;
 	};
 }

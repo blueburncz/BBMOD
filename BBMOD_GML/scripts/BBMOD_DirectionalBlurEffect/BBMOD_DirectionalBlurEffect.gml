@@ -35,6 +35,6 @@ function BBMOD_DirectionalBlurEffect(_vector=undefined, _step=0.125)
 		shader_reset();
 		surface_reset_target();
 
-		return self;
+		return _surfaceDest;
 	};
 }

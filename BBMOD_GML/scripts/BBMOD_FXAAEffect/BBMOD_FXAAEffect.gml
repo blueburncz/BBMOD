@@ -22,6 +22,6 @@ function BBMOD_FXAAEffect()
 		shader_reset();
 		surface_reset_target();
 
-		return self;
+		return _surfaceDest;
 	};
 }

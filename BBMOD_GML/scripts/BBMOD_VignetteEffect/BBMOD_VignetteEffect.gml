@@ -34,6 +34,6 @@ function BBMOD_VignetteEffect(_strength=1.0, _color=c_black)
 		shader_reset();
 		surface_reset_target();
 
-		return self;
+		return _surfaceDest;
 	};
 }

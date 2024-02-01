@@ -40,6 +40,6 @@ function BBMOD_ChromaticAberrationEffect(_strength=1.0, _offset=undefined)
 		shader_reset();
 		surface_reset_target();
 
-		return self;
+		return _surfaceDest;
 	};
 }

@@ -24,6 +24,6 @@ function BBMOD_FilmGrainEffect(_strength=0.1)
 		shader_reset();
 		surface_reset_target();
 
-		return self;
+		return _surfaceDest;
 	};
 }
