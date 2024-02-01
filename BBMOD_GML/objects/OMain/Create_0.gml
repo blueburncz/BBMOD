@@ -86,7 +86,9 @@ renderer.EnableShadows = true;
 postProcessor = new BBMOD_PostProcessor();
 postProcessor.add_effect(new BBMOD_ColorGradingEffect(sprite_get_texture(SprColorGrading, 0)));
 postProcessor.add_effect(new BBMOD_ChromaticAberrationEffect(3.0, new BBMOD_Vec3(-1.0, 1.0, -1.0)));
-postProcessor.add_effect(new BBMOD_FXAAEffect());
+vignette = new BBMOD_VignetteEffect(0.0, c_red);
+postProcessor.add_effect(vignette);
+postProcessor.add_effect(new BBMOD_VignetteEffect(0.8));
 renderer.PostProcessor = postProcessor;
 
 if (os_browser == browser_not_a_browser)
@@ -97,7 +99,7 @@ if (os_browser == browser_not_a_browser)
 	renderer.SSAODepthRange = 5.0;
 	renderer.SSAOPower = 2.0;
 
-	//postProcessor.Antialiasing = BBMOD_EAntialiasing.FXAA;
+	postProcessor.add_effect(new BBMOD_FXAAEffect());
 }
 
 // Any object/struct that has a render method can be added to the renderer:

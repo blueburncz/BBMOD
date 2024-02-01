@@ -43,7 +43,8 @@ function BBMOD_PostProcessor() constructor
 	/// @deprecated Please use {@link BBMOD_VignetteEffect} instead.
 	Vignette = 0.0;
 
-	/// @var {Real} The color of the vignette effect. Defaults to `c_black`.
+	/// @var {Constant.Color} The color of the vignette effect. Defaults to
+	/// `c_black`.
 	/// @deprecated Please use {@link BBMOD_VignetteEffect} instead.
 	VignetteColor = c_black;
 

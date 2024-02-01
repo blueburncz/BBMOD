@@ -51,6 +51,4 @@ var _grayscale = (OPlayer.hp <= ceil(OPlayer.hpMax / 3.0)) ? 0.75 : 0.0;
 postProcessor.Grayscale = bbmod_lerp_delta_time(
 	postProcessor.Grayscale, _grayscale, 0.1, DELTA_TIME);
 
-var _hurt = OPlayer.hurt;
-postProcessor.Vignette = lerp(0.8, 1.5, _hurt);
-postProcessor.VignetteColor = merge_color(c_black, c_red, _hurt);
+vignette.Strength = lerp(0.0, 1.5, OPlayer.hurt);
