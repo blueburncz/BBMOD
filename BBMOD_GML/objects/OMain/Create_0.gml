@@ -86,6 +86,7 @@ renderer.EnableShadows = true;
 postProcessor = new BBMOD_PostProcessor();
 postProcessor.add_effect(new BBMOD_LensDistortionEffect(-0.1));
 postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
+postProcessor.add_effect(new BBMOD_LightBloomEffect());
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
 radialBlur = new BBMOD_RadialBlurEffect();
