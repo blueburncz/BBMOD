@@ -36,7 +36,7 @@ function BBMOD_PostProcessor() constructor
 	/// @var {Real} The strength of the grayscale effect. Use values in range
 	/// 0..1, where 0 means the original color and 1 means grayscale. Defaults
 	/// to 0.
-	/// @deprecated Please use {@link BBMOD_GrayscaleEffect} instead.
+	/// @deprecated Please use {@link BBMOD_MonochromeEffect} instead.
 	Grayscale = 0.0;
 
 	/// @var {Real} The strength of the vignette effect. Defaults to 0.

@@ -48,7 +48,7 @@ if (!instance_exists(OZombie)
 ////////////////////////////////////////////////////////////////////////////////
 // Screen effects based on players health etc.
 var _grayscale = (OPlayer.hp <= ceil(OPlayer.hpMax / 3.0)) ? 0.75 : 0.0;
-postProcessor.Grayscale = bbmod_lerp_delta_time(
-	postProcessor.Grayscale, _grayscale, 0.1, DELTA_TIME);
+monochrome.Strength = bbmod_lerp_delta_time(
+	monochrome.Strength, _grayscale, 0.1, DELTA_TIME);
 
 vignette.Strength = lerp(0.0, 1.5, OPlayer.hurt);

@@ -1,24 +1,24 @@
-/// @func BBMOD_VignetteEffect([_strength[, _color]])
+/// @func BBMOD_MonochromeEffect([_strength[, _color]])
 ///
 /// @extends BBMOD_PostProcessEffect
 ///
-/// @desc Vignette (post-processing effect).
+/// @desc Monochrome (post-processing effect).
 ///
 /// @param {Real} [_strength] The strength of the effect. Defaults to 1.
 /// @param {Constant.Color} [_color] The color of the effect. Defaults to
-/// `c_black`.
-function BBMOD_VignetteEffect(_strength=1.0, _color=c_black)
+/// `c_white`.
+function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 	: BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Real} The strength of the effect. Default value is 1.
 	Strength = _strength;
 
 	/// @var {Constant.Color} The color of the effect. Default value is to
-	/// `c_black`.
+	/// `c_white`.
 	Color = _color;
 
-	__uStrength = shader_get_uniform(BBMOD_ShVignette, "u_fStrength");
-	__uColor = shader_get_uniform(BBMOD_ShVignette, "u_vColor");
+	__uStrength = shader_get_uniform(BBMOD_ShMonochrome, "u_fStrength");
+	__uColor = shader_get_uniform(BBMOD_ShMonochrome, "u_vColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -26,7 +26,7 @@ function BBMOD_VignetteEffect(_strength=1.0, _color=c_black)
 		var _texelHeight = 1.0 / surface_get_height(_surfaceSrc);
 
 		surface_set_target(_surfaceDest);
-		shader_set(BBMOD_ShVignette);
+		shader_set(BBMOD_ShMonochrome);
 		shader_set_uniform_f(__uStrength, Strength);
 		shader_set_uniform_f(
 			__uColor,

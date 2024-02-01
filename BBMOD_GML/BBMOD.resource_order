@@ -76,6 +76,7 @@
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
     {"name":"Vignette","order":9,"path":"folders/BBMOD/Rendering/PostProcessing/Vignette.yy",},
+    {"name":"Monochrome","order":11,"path":"folders/BBMOD/Rendering/PostProcessing/Monochrome.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},
@@ -183,6 +184,7 @@
     {"name":"BBMOD_Renderer","order":2,"path":"scripts/BBMOD_Renderer/BBMOD_Renderer.yy",},
     {"name":"__bbmod_cmpfunc","order":15,"path":"scripts/__bbmod_cmpfunc/__bbmod_cmpfunc.yy",},
     {"name":"BBMOD_ShDefaultDepthColor","order":19,"path":"shaders/BBMOD_ShDefaultDepthColor/BBMOD_ShDefaultDepthColor.yy",},
+    {"name":"BBMOD_MonochromeEffect","order":1,"path":"scripts/BBMOD_MonochromeEffect/BBMOD_MonochromeEffect.yy",},
     {"name":"SndFootstep6","order":6,"path":"sounds/SndFootstep6/SndFootstep6.yy",},
     {"name":"BBMOD_Vertex","order":1,"path":"scripts/BBMOD_Vertex/BBMOD_Vertex.yy",},
     {"name":"bbmod_vtf_is_supported","order":8,"path":"scripts/bbmod_vtf_is_supported/bbmod_vtf_is_supported.yy",},

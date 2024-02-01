@@ -92,6 +92,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Vignette","folderPath":"folders/BBMOD/Rendering/PostProcessing/Vignette.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Monochrome","folderPath":"folders/BBMOD/Rendering/PostProcessing/Monochrome.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
@@ -222,6 +223,7 @@
     {"id":{"name":"BBMOD_ShGBufferExtractA","path":"shaders/BBMOD_ShGBufferExtractA/BBMOD_ShGBufferExtractA.yy",},},
     {"id":{"name":"BBMOD_Vec3","path":"scripts/BBMOD_Vec3/BBMOD_Vec3.yy",},},
     {"id":{"name":"DissolveParticleSystem","path":"scripts/DissolveParticleSystem/DissolveParticleSystem.yy",},},
+    {"id":{"name":"BBMOD_ShMonochrome","path":"shaders/BBMOD_ShMonochrome/BBMOD_ShMonochrome.yy",},},
     {"id":{"name":"bbmod_set_instance_id","path":"scripts/bbmod_set_instance_id/bbmod_set_instance_id.yy",},},
     {"id":{"name":"BBMOD_ShInstanceIDAnimated","path":"shaders/BBMOD_ShInstanceIDAnimated/BBMOD_ShInstanceIDAnimated.yy",},},
     {"id":{"name":"BBMOD_LightmapShader","path":"scripts/BBMOD_LightmapShader/BBMOD_LightmapShader.yy",},},
@@ -289,6 +291,7 @@
     {"id":{"name":"__bbmod_cmpfunc","path":"scripts/__bbmod_cmpfunc/__bbmod_cmpfunc.yy",},},
     {"id":{"name":"BBMOD_ShDefaultDepthColor","path":"shaders/BBMOD_ShDefaultDepthColor/BBMOD_ShDefaultDepthColor.yy",},},
     {"id":{"name":"BBMOD_MeshBuilder","path":"scripts/BBMOD_MeshBuilder/BBMOD_MeshBuilder.yy",},},
+    {"id":{"name":"BBMOD_MonochromeEffect","path":"scripts/BBMOD_MonochromeEffect/BBMOD_MonochromeEffect.yy",},},
     {"id":{"name":"SndFootstep6","path":"sounds/SndFootstep6/SndFootstep6.yy",},},
     {"id":{"name":"BBMOD_Vertex","path":"scripts/BBMOD_Vertex/BBMOD_Vertex.yy",},},
     {"id":{"name":"bbmod_vtf_is_supported","path":"scripts/bbmod_vtf_is_supported/bbmod_vtf_is_supported.yy",},},

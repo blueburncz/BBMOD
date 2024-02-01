@@ -3,8 +3,8 @@ precision highp float;
 
 varying vec2 v_vTexCoord;
 
-uniform float u_fVignette;     // The strength of the vignette effect
-uniform vec3 u_vVignetteColor; // The color of the vignette effect
+uniform float u_fStrength;
+uniform vec3 u_vColor;
 
 void main()
 {
@@ -12,7 +12,7 @@ void main()
 	float vecLen = length(vec);
 	gl_FragColor.rgb = mix(
 		texture2D(gm_BaseTexture, v_vTexCoord).rgb,
-		u_vVignetteColor,
-		vecLen * vecLen * u_fVignette);
+		u_vColor,
+		vecLen * vecLen * u_fStrength);
 	gl_FragColor.a = 1.0;
 }
