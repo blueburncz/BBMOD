@@ -98,6 +98,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"KawaseBlur","folderPath":"folders/BBMOD/PostProcessing/KawaseBlur.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
@@ -309,6 +310,7 @@
     {"id":{"name":"BBMOD_ShDefaultUnlitColorAnimated","path":"shaders/BBMOD_ShDefaultUnlitColorAnimated/BBMOD_ShDefaultUnlitColorAnimated.yy",},},
     {"id":{"name":"BBMOD_ShSSAO","path":"shaders/BBMOD_ShSSAO/BBMOD_ShSSAO.yy",},},
     {"id":{"name":"BBMOD_ColorGradingEffect","path":"scripts/BBMOD_ColorGradingEffect/BBMOD_ColorGradingEffect.yy",},},
+    {"id":{"name":"BBMOD_KawaseBlurEffect","path":"scripts/BBMOD_KawaseBlurEffect/BBMOD_KawaseBlurEffect.yy",},},
     {"id":{"name":"DirtParticleSystem","path":"scripts/DirtParticleSystem/DirtParticleSystem.yy",},},
     {"id":{"name":"BBMOD_DLL","path":"scripts/BBMOD_DLL/BBMOD_DLL.yy",},},
     {"id":{"name":"SndFootstep8","path":"sounds/SndFootstep8/SndFootstep8.yy",},},
@@ -477,6 +479,7 @@
     {"id":{"name":"BBMOD_ShGBufferBatched","path":"shaders/BBMOD_ShGBufferBatched/BBMOD_ShGBufferBatched.yy",},},
     {"id":{"name":"BBMOD_ShFilmGrain","path":"shaders/BBMOD_ShFilmGrain/BBMOD_ShFilmGrain.yy",},},
     {"id":{"name":"OSky","path":"objects/OSky/OSky.yy",},},
+    {"id":{"name":"BBMOD_ShKawaseBlur","path":"shaders/BBMOD_ShKawaseBlur/BBMOD_ShKawaseBlur.yy",},},
     {"id":{"name":"BBMOD_MixVec2Module","path":"scripts/BBMOD_MixVec2Module/BBMOD_MixVec2Module.yy",},},
     {"id":{"name":"BBMOD_BaseRenderer","path":"scripts/BBMOD_BaseRenderer/BBMOD_BaseRenderer.yy",},},
     {"id":{"name":"OGun","path":"objects/OGun/OGun.yy",},},
