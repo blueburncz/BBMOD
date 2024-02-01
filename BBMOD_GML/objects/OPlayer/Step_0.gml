@@ -22,7 +22,22 @@ global.gameSpeed = camera.MouseLook ? 1.0 : 0.0;
 
 camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.2, DELTA_TIME);
 
+var _directionPrev = camera.Direction;
+var _directionUpPrev = camera.DirectionUp;
+
 camera.update(DELTA_TIME);
+
+if (DELTA_TIME > 0.0)
+{
+	var _blur = OMain.directionalBlur;
+	var _scale = 2.0;
+	_blur.Vector.Set(
+		angle_difference(camera.Direction, _directionPrev) * _scale,
+		angle_difference(camera.DirectionUp, _directionUpPrev) * _scale);
+	var _length = _blur.Vector.Length();
+	_length = (_length > 0.0) ? _length : 1.0;
+	_blur.Step = 2.0 / _length;
+}
 
 var _cameraHeight = (global.terrain.get_height(camera.Position.X, camera.Position.Y) ?? 0.0) + 1.0;
 if (camera.Position.Z < _cameraHeight)

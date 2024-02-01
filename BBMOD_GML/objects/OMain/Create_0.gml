@@ -84,7 +84,9 @@ renderer.RenderScale = (os_browser == browser_not_a_browser) ? 1.0 : 0.8;
 renderer.EnableShadows = true;
 
 postProcessor = new BBMOD_PostProcessor();
-postProcessor.add_effect(new BBMOD_LumaSharpenEffect(2.0, 1.0, 2.0));
+postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
+directionalBlur = new BBMOD_DirectionalBlurEffect();
+postProcessor.add_effect(directionalBlur);
 postProcessor.add_effect(new BBMOD_ColorGradingEffect(sprite_get_texture(SprColorGrading, 0)));
 monochrome = new BBMOD_MonochromeEffect(0.0);
 postProcessor.add_effect(monochrome);

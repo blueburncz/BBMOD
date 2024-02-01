@@ -1,6 +1,6 @@
 /// @func BBMOD_LumaSharpenEffect([_strength[, _clamp[, _offset]]])
 ///
-/// @extends
+/// @extends BBMOD_PostProcessEffect 
 ///
 /// @desc Luma sharpen (post-processing effect).
 ///

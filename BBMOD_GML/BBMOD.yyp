@@ -94,6 +94,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"DirectionalBlur","folderPath":"folders/BBMOD/Rendering/PostProcessing/DirectionalBlur.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
@@ -172,6 +173,7 @@
     {"id":{"name":"BBMOD_State","path":"scripts/BBMOD_State/BBMOD_State.yy",},},
     {"id":{"name":"BBMOD_ShSSAOBlur","path":"shaders/BBMOD_ShSSAOBlur/BBMOD_ShSSAOBlur.yy",},},
     {"id":{"name":"BBMOD_PointLight","path":"scripts/BBMOD_PointLight/BBMOD_PointLight.yy",},},
+    {"id":{"name":"BBMOD_DirectionalBlurEffect","path":"scripts/BBMOD_DirectionalBlurEffect/BBMOD_DirectionalBlurEffect.yy",},},
     {"id":{"name":"__bbmod_deferred_material","path":"scripts/__bbmod_deferred_material/__bbmod_deferred_material.yy",},},
     {"id":{"name":"BBMOD_ShDefaultAnimated","path":"shaders/BBMOD_ShDefaultAnimated/BBMOD_ShDefaultAnimated.yy",},},
     {"id":{"name":"BBMOD_ShDefaultSprite","path":"shaders/BBMOD_ShDefaultSprite/BBMOD_ShDefaultSprite.yy",},},
@@ -427,6 +429,7 @@
     {"id":{"name":"__bbmod_shader_set","path":"scripts/__bbmod_shader_set/__bbmod_shader_set.yy",},},
     {"id":{"name":"MatZombie","path":"scripts/MatZombie/MatZombie.yy",},},
     {"id":{"name":"__bbmod_blendmode","path":"scripts/__bbmod_blendmode/__bbmod_blendmode.yy",},},
+    {"id":{"name":"BBMOD_ShDirectionalBlur","path":"shaders/BBMOD_ShDirectionalBlur/BBMOD_ShDirectionalBlur.yy",},},
     {"id":{"name":"BBMOD_ParticleEmitter","path":"scripts/BBMOD_ParticleEmitter/BBMOD_ParticleEmitter.yy",},},
     {"id":{"name":"BBMOD_ShInstanceHighlight","path":"shaders/BBMOD_ShInstanceHighlight/BBMOD_ShInstanceHighlight.yy",},},
     {"id":{"name":"bbmod_cmp","path":"scripts/bbmod_cmp/bbmod_cmp.yy",},},

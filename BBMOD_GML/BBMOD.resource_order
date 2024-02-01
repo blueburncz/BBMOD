@@ -78,6 +78,7 @@
     {"name":"Zombie","order":7,"path":"folders/Demo/Sounds/Zombie.yy",},
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
+    {"name":"DirectionalBlur","order":14,"path":"folders/BBMOD/Rendering/PostProcessing/DirectionalBlur.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},
@@ -90,6 +91,7 @@
     {"name":"BBMOD_State","order":1,"path":"scripts/BBMOD_State/BBMOD_State.yy",},
     {"name":"BBMOD_ShSSAOBlur","order":2,"path":"shaders/BBMOD_ShSSAOBlur/BBMOD_ShSSAOBlur.yy",},
     {"name":"BBMOD_PointLight","order":1,"path":"scripts/BBMOD_PointLight/BBMOD_PointLight.yy",},
+    {"name":"BBMOD_DirectionalBlurEffect","order":1,"path":"scripts/BBMOD_DirectionalBlurEffect/BBMOD_DirectionalBlurEffect.yy",},
     {"name":"__bbmod_deferred_material","order":2,"path":"scripts/__bbmod_deferred_material/__bbmod_deferred_material.yy",},
     {"name":"BBMOD_ShDefaultAnimated","order":1,"path":"shaders/BBMOD_ShDefaultAnimated/BBMOD_ShDefaultAnimated.yy",},
     {"name":"BBMOD_ShDefaultSprite","order":3,"path":"shaders/BBMOD_ShDefaultSprite/BBMOD_ShDefaultSprite.yy",},
