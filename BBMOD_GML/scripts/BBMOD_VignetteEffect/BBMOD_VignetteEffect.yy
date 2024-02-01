@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Vignette",
-    "path": "folders/BBMOD/Rendering/PostProcessing/Vignette.yy",
+    "path": "folders/BBMOD/PostProcessing/Vignette.yy",
   },
 }

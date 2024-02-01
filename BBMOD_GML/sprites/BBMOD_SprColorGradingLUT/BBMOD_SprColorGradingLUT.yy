@@ -49,7 +49,7 @@
   "origin": 0,
   "parent": {
     "name": "ColorGrading",
-    "path": "folders/BBMOD/Rendering/PostProcessing/ColorGrading.yy",
+    "path": "folders/BBMOD/PostProcessing/ColorGrading.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

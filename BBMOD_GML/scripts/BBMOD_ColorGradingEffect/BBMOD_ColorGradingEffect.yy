@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "ColorGrading",
-    "path": "folders/BBMOD/Rendering/PostProcessing/ColorGrading.yy",
+    "path": "folders/BBMOD/PostProcessing/ColorGrading.yy",
   },
 }

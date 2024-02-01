@@ -4,7 +4,7 @@
   "name": "BBMOD_ShLumaSharpen",
   "parent": {
     "name": "LumaSharpen",
-    "path": "folders/BBMOD/Rendering/PostProcessing/LumaSharpen.yy",
+    "path": "folders/BBMOD/PostProcessing/LumaSharpen.yy",
   },
   "type": 1,
 }

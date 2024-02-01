@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "FXAA",
-    "path": "folders/BBMOD/Rendering/PostProcessing/FXAA.yy",
+    "path": "folders/BBMOD/PostProcessing/FXAA.yy",
   },
 }

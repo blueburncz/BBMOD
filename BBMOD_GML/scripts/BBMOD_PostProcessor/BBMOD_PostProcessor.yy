@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "PostProcessing",
-    "path": "folders/BBMOD/Rendering/PostProcessing.yy",
+    "path": "folders/BBMOD/PostProcessing.yy",
   },
 }

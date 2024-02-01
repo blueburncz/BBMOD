@@ -4,7 +4,7 @@
   "name": "BBMOD_ShFXAA",
   "parent": {
     "name": "FXAA",
-    "path": "folders/BBMOD/Rendering/PostProcessing/FXAA.yy",
+    "path": "folders/BBMOD/PostProcessing/FXAA.yy",
   },
   "type": 1,
 }

@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "DirectionalBlur",
-    "path": "folders/BBMOD/Rendering/PostProcessing/DirectionalBlur.yy",
+    "path": "folders/BBMOD/PostProcessing/DirectionalBlur.yy",
   },
 }

@@ -4,7 +4,7 @@
   "name": "BBMOD_ShColorGrading",
   "parent": {
     "name": "ColorGrading",
-    "path": "folders/BBMOD/Rendering/PostProcessing/ColorGrading.yy",
+    "path": "folders/BBMOD/PostProcessing/ColorGrading.yy",
   },
   "type": 1,
 }

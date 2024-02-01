@@ -52,3 +52,6 @@ monochrome.Strength = bbmod_lerp_delta_time(
 	monochrome.Strength, _grayscale, 0.1, DELTA_TIME);
 
 vignette.Strength = lerp(0.0, 1.5, OPlayer.hurt);
+
+radialBlur.Strength = bbmod_lerp_delta_time(
+	radialBlur.Strength, OPlayer.aiming ? 1.0 : 0.0, 0.1, DELTA_TIME);

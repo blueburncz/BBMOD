@@ -4,7 +4,7 @@
   "name": "BBMOD_ShPostProcess",
   "parent": {
     "name": "PostProcessing",
-    "path": "folders/BBMOD/Rendering/PostProcessing.yy",
+    "path": "folders/BBMOD/PostProcessing.yy",
   },
   "type": 1,
 }

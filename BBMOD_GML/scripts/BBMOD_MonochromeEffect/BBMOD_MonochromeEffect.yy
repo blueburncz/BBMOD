@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Monochrome",
-    "path": "folders/BBMOD/Rendering/PostProcessing/Monochrome.yy",
+    "path": "folders/BBMOD/PostProcessing/Monochrome.yy",
   },
 }

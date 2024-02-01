@@ -4,7 +4,7 @@
   "name": "BBMOD_ShChromaticAberration",
   "parent": {
     "name": "ChromaticAberration",
-    "path": "folders/BBMOD/Rendering/PostProcessing/ChromaticAberration.yy",
+    "path": "folders/BBMOD/PostProcessing/ChromaticAberration.yy",
   },
   "type": 1,
 }
