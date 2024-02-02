@@ -30,12 +30,10 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 		var _width = surface_get_width(_surfaceSrc);
 		var _height = surface_get_height(_surfaceSrc);
 
-		gpu_push_state();
-		gpu_set_blendenable(true);
-
 		// Threshold
-		__surfaces[@ 0] = bbmod_surface_check(__surfaces[0], _width / 2, _height / 2, surface_rgba8unorm, false);
-		surface_set_target(__surfaces[0]);
+		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _width / 2, _height / 2, surface_rgba8unorm, false);
+		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _width / 2, _height / 2, surface_rgba8unorm, false);
+		surface_set_target(__surfaces1[0]);
 		shader_set(BBMOD_ShThreshold);
 		shader_set_uniform_f(__uBias, Bias.X, Bias.Y, Bias.Z);
 		shader_set_uniform_f(__uScale, Scale.X, Scale.Y, Scale.Z);
@@ -43,44 +41,87 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 		shader_reset();
 		surface_reset_target();
 
-		// Blur
-		shader_set(BBMOD_ShKawaseBlur);
-		shader_set_uniform_f(__uOffset, 0.0);
-
-		var i = 1;
-		var _w = _width / 4;
-		var _h = _height / 4;
-		repeat (__levels - 1)
+		// Downsample + Kawase
 		{
-			__surfaces[@ i] = bbmod_surface_check(__surfaces[i], _w, _h, surface_rgba8unorm, false);
-			surface_set_target(__surfaces[i]);
-			shader_set_uniform_f(__uTexel, 1.0 / _w, 1.0 / _h);
-			draw_surface_stretched(__surfaces[i - 1], 0, 0, _w, _h);
-			surface_reset_target();
-			_w = _w >> 1;
-			_h = _h >> 1;
-			if (_w == 0 || _h == 0) break;
-			++i;
+			shader_set(BBMOD_ShKawaseBlur);
+			shader_set_uniform_f(__uOffset, 0.0);
+
+			var i = 1;
+			var _w = _width / 4;
+			var _h = _height / 4;
+			repeat (__levels - 1)
+			{
+				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, surface_rgba8unorm, false);
+				surface_set_target(__surfaces1[i]);
+				shader_set_uniform_f(__uTexel, 1.0 / _w, 1.0 / _h);
+				draw_surface_stretched(__surfaces1[i - 1], 0, 0, _w, _h);
+				surface_reset_target();
+				_w = _w >> 1;
+				_h = _h >> 1;
+				if (_w == 0 || _h == 0) break;
+				++i;
+			}
+
+			shader_reset();
 		}
 
-		shader_reset();
+		// Two-pass Gaussian
+		{
+			shader_set(BBMOD_ShGaussianBlur);
+
+			var _uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
+
+			var i = 0;
+			var _w = _width / 2;
+			var _h = _height / 2;
+			repeat (__levels)
+			{
+				__surfaces2[@ i] = bbmod_surface_check(__surfaces2[i], _w, _h, surface_rgba8unorm, false);
+
+				// Horizontal
+				shader_set_uniform_f(_uTexelGaussian, 1.0 / _w, 0.0);
+				surface_set_target(__surfaces2[i]);
+				draw_surface_stretched(__surfaces1[i], 0, 0, _w, _h);
+				surface_reset_target();
+
+				// Vertical
+				shader_set_uniform_f(_uTexelGaussian, 0.0, 1.0 / _h);
+				surface_set_target(__surfaces1[i]);
+				draw_surface_stretched(__surfaces2[i], 0, 0, _w, _h);
+				surface_reset_target();
+
+				_w = _w >> 1;
+				_h = _h >> 1;
+				if (_w == 0 || _h == 0) break;
+				++i;
+			}
+
+			shader_reset();
+		}
 
 		// Combine
 		surface_set_target(_surfaceDest);
-		draw_surface(_surfaceSrc, 0, 0);
-		gpu_set_blendmode(bm_add);
-
-		for (var i = 1; i < __levels; ++i)
+		if (keyboard_check(ord("Q")))
 		{
-			if (surface_exists(__surfaces[i]))
-			{
-				draw_surface_stretched(__surfaces[i], 0, 0, _width, _height);
-			}
+			draw_clear(c_black);
+		}
+		else
+		{
+			draw_surface(_surfaceSrc, 0, 0);
 		}
 
-		surface_reset_target();
-
+		gpu_push_state();
+		gpu_set_blendenable(true);
+		gpu_set_blendmode(bm_add);
+		for (var i = 0; i < __levels; ++i)
+		{
+			if (surface_exists(__surfaces1[i]))
+			{
+				draw_surface_stretched(__surfaces1[i], 0, 0, _width, _height);
+			}
+		}
 		gpu_pop_state();
+		surface_reset_target();
 
 		return _surfaceDest;
 	};

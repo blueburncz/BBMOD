@@ -68,6 +68,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"FXAA","folderPath":"folders/BBMOD/PostProcessing/FXAA.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"KawaseBlur","folderPath":"folders/BBMOD/PostProcessing/KawaseBlur.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LensDistortion","folderPath":"folders/BBMOD/PostProcessing/LensDistortion.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LightBloom","folderPath":"folders/BBMOD/PostProcessing/LightBloom.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LumaSharpen","folderPath":"folders/BBMOD/PostProcessing/LumaSharpen.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Monochrome","folderPath":"folders/BBMOD/PostProcessing/Monochrome.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"RadialBlur","folderPath":"folders/BBMOD/PostProcessing/RadialBlur.yy",},
@@ -99,7 +100,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LightBloom","folderPath":"folders/BBMOD/PostProcessing/LightBloom.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
@@ -211,6 +211,7 @@
     {"id":{"name":"BBMOD_TerrainMaterial","path":"scripts/BBMOD_TerrainMaterial/BBMOD_TerrainMaterial.yy",},},
     {"id":{"name":"BBMOD_SetQuaternionModule","path":"scripts/BBMOD_SetQuaternionModule/BBMOD_SetQuaternionModule.yy",},},
     {"id":{"name":"BBMOD_AnimationInstance","path":"scripts/BBMOD_AnimationInstance/BBMOD_AnimationInstance.yy",},},
+    {"id":{"name":"BBMOD_ShGaussianBlur","path":"shaders/BBMOD_ShGaussianBlur/BBMOD_ShGaussianBlur.yy",},},
     {"id":{"name":"BBMOD_ShDefaultUnlitColor","path":"shaders/BBMOD_ShDefaultUnlitColor/BBMOD_ShDefaultUnlitColor.yy",},},
     {"id":{"name":"SndShell2","path":"sounds/SndShell2/SndShell2.yy",},},
     {"id":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},},

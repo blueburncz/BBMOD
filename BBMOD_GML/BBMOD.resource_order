@@ -55,6 +55,7 @@
     {"name":"FXAA","order":4,"path":"folders/BBMOD/PostProcessing/FXAA.yy",},
     {"name":"KawaseBlur","order":18,"path":"folders/BBMOD/PostProcessing/KawaseBlur.yy",},
     {"name":"LensDistortion","order":17,"path":"folders/BBMOD/PostProcessing/LensDistortion.yy",},
+    {"name":"LightBloom","order":19,"path":"folders/BBMOD/PostProcessing/LightBloom.yy",},
     {"name":"LumaSharpen","order":12,"path":"folders/BBMOD/PostProcessing/LumaSharpen.yy",},
     {"name":"Monochrome","order":11,"path":"folders/BBMOD/PostProcessing/Monochrome.yy",},
     {"name":"RadialBlur","order":15,"path":"folders/BBMOD/PostProcessing/RadialBlur.yy",},
@@ -83,7 +84,6 @@
     {"name":"Zombie","order":7,"path":"folders/Demo/Sounds/Zombie.yy",},
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
-    {"name":"LightBloom","order":19,"path":"folders/BBMOD/PostProcessing/LightBloom.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},
@@ -123,6 +123,7 @@
     {"name":"BBMOD_TerrainMaterial","order":7,"path":"scripts/BBMOD_TerrainMaterial/BBMOD_TerrainMaterial.yy",},
     {"name":"BBMOD_SetQuaternionModule","order":2,"path":"scripts/BBMOD_SetQuaternionModule/BBMOD_SetQuaternionModule.yy",},
     {"name":"BBMOD_AnimationInstance","order":1,"path":"scripts/BBMOD_AnimationInstance/BBMOD_AnimationInstance.yy",},
+    {"name":"BBMOD_ShGaussianBlur","order":2,"path":"shaders/BBMOD_ShGaussianBlur/BBMOD_ShGaussianBlur.yy",},
     {"name":"BBMOD_ShDefaultUnlitColor","order":13,"path":"shaders/BBMOD_ShDefaultUnlitColor/BBMOD_ShDefaultUnlitColor.yy",},
     {"name":"SndShell2","order":2,"path":"sounds/SndShell2/SndShell2.yy",},
     {"name":"BBMOD_Vec4","order":5,"path":"scripts/BBMOD_Vec4/BBMOD_Vec4.yy",},
