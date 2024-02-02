@@ -100,6 +100,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"ReinhardTonemap","folderPath":"folders/BBMOD/PostProcessing/ReinhardTonemap.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
@@ -309,6 +310,7 @@
     {"id":{"name":"bbmod_vtf_is_supported","path":"scripts/bbmod_vtf_is_supported/bbmod_vtf_is_supported.yy",},},
     {"id":{"name":"BBMOD_Property","path":"scripts/BBMOD_Property/BBMOD_Property.yy",},},
     {"id":{"name":"BBMOD_ShDefaultBatched","path":"shaders/BBMOD_ShDefaultBatched/BBMOD_ShDefaultBatched.yy",},},
+    {"id":{"name":"BBMOD_ReinhardTonemapEffect","path":"scripts/BBMOD_ReinhardTonemapEffect/BBMOD_ReinhardTonemapEffect.yy",},},
     {"id":{"name":"BBMOD_Material","path":"scripts/BBMOD_Material/BBMOD_Material.yy",},},
     {"id":{"name":"BBMOD_ShDefaultUnlitColorAnimated","path":"shaders/BBMOD_ShDefaultUnlitColorAnimated/BBMOD_ShDefaultUnlitColorAnimated.yy",},},
     {"id":{"name":"BBMOD_ShSSAO","path":"shaders/BBMOD_ShSSAO/BBMOD_ShSSAO.yy",},},
@@ -408,6 +410,7 @@
     {"id":{"name":"BBMOD_AnimationStateMachine","path":"scripts/BBMOD_AnimationStateMachine/BBMOD_AnimationStateMachine.yy",},},
     {"id":{"name":"BBMOD_Camera","path":"scripts/BBMOD_Camera/BBMOD_Camera.yy",},},
     {"id":{"name":"BBMOD_SetVec2Module","path":"scripts/BBMOD_SetVec2Module/BBMOD_SetVec2Module.yy",},},
+    {"id":{"name":"BBMOD_ShReinhardTonemap","path":"shaders/BBMOD_ShReinhardTonemap/BBMOD_ShReinhardTonemap.yy",},},
     {"id":{"name":"BBMOD_Importer","path":"scripts/BBMOD_Importer/BBMOD_Importer.yy",},},
     {"id":{"name":"BBMOD_BaseShader","path":"scripts/BBMOD_BaseShader/BBMOD_BaseShader.yy",},},
     {"id":{"name":"BBMOD_DefaultSpriteShader","path":"scripts/BBMOD_DefaultSpriteShader/BBMOD_DefaultSpriteShader.yy",},},

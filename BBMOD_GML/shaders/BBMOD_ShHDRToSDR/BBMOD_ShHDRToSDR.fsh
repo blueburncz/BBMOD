@@ -10,25 +10,27 @@ vec3 xLinearToGamma(vec3 rgb)
 	return pow(rgb, vec3(1.0 / X_GAMMA));
 }
 
-void Exposure()
+vec3 Exposure(vec3 color)
 {
-	gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
+	return color * bbmod_Exposure * bbmod_Exposure;
 }
 
-void TonemapReinhard()
+vec3 TonemapReinhard(vec3 color)
 {
-	gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
+	return color.rgb / (vec3(1.0) + color.rgb);
 }
 
-void GammaCorrect()
+vec3 GammaCorrect(vec3 color)
 {
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	return xLinearToGamma(color.rgb);
 }
 
 void main()
 {
-	gl_FragColor = texture2D(gm_BaseTexture, v_vTexCoord);
-	Exposure();
-	TonemapReinhard();
-	GammaCorrect();
+	vec3 color = texture2D(gm_BaseTexture, v_vTexCoord).rgb;
+	color = Exposure(color);
+	color = TonemapReinhard(color);
+	color = GammaCorrect(color);
+	gl_FragColor.rgb = color.rgb;
+	gl_FragColor.a = 1.0;
 }

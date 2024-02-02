@@ -10,10 +10,10 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 	: BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Struct.BBMOD_Vec3}
-	Bias = _bias ?? new BBMOD_Vec3(0.7);
+	Bias = _bias ?? new BBMOD_Vec3(0.8);
 
 	/// @var {Struct.BBMOD_Vec3}
-	Scale = _scale ?? new BBMOD_Vec3(2.0);
+	Scale = _scale ?? new BBMOD_Vec3(1.0);
 
 	__levels = 8;
 	__surfaces1 = array_create(__levels, -1);
@@ -30,9 +30,12 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 		var _width = surface_get_width(_surfaceSrc);
 		var _height = surface_get_height(_surfaceSrc);
 
+		var _surfaceFormat = bbmod_hdr_is_supported()
+			? surface_rgba16float : surface_rgba8unorm;
+
 		// Threshold
-		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _width / 2, _height / 2, surface_rgba8unorm, false);
-		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _width / 2, _height / 2, surface_rgba8unorm, false);
+		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _width / 2, _height / 2, _surfaceFormat, false);
+		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _width / 2, _height / 2, _surfaceFormat, false);
 		surface_set_target(__surfaces1[0]);
 		shader_set(BBMOD_ShThreshold);
 		shader_set_uniform_f(__uBias, Bias.X, Bias.Y, Bias.Z);
@@ -51,7 +54,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 			var _h = _height / 4;
 			repeat (__levels - 1)
 			{
-				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, surface_rgba8unorm, false);
+				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, _surfaceFormat, false);
 				surface_set_target(__surfaces1[i]);
 				shader_set_uniform_f(__uTexel, 1.0 / _w, 1.0 / _h);
 				draw_surface_stretched(__surfaces1[i - 1], 0, 0, _w, _h);
@@ -76,7 +79,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 			var _h = _height / 2;
 			repeat (__levels)
 			{
-				__surfaces2[@ i] = bbmod_surface_check(__surfaces2[i], _w, _h, surface_rgba8unorm, false);
+				__surfaces2[@ i] = bbmod_surface_check(__surfaces2[i], _w, _h, _surfaceFormat, false);
 
 				// Horizontal
 				shader_set_uniform_f(_uTexelGaussian, 1.0 / _w, 0.0);
@@ -128,7 +131,19 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 
 	static destroy = function ()
 	{
-		// TODO: Free surfaces
+		for (var i = 0; i < __levels; ++i)
+		{
+			if (surface_exists(__surfaces1[i]))
+			{
+				surface_free(__surfaces1[i]);
+			}
+
+			if (surface_exists(__surfaces2[i]))
+			{
+				surface_free(__surfaces2[i]);
+			}
+		}
+
 		return undefined;
 	};
 }

@@ -84,6 +84,7 @@
     {"name":"Zombie","order":7,"path":"folders/Demo/Sounds/Zombie.yy",},
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
+    {"name":"ReinhardTonemap","order":20,"path":"folders/BBMOD/PostProcessing/ReinhardTonemap.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},
@@ -282,6 +283,7 @@
     {"name":"BBMOD_ShGBufferAnimated","order":1,"path":"shaders/BBMOD_ShGBufferAnimated/BBMOD_ShGBufferAnimated.yy",},
     {"name":"BBMOD_AnimationStateMachine","order":2,"path":"scripts/BBMOD_AnimationStateMachine/BBMOD_AnimationStateMachine.yy",},
     {"name":"BBMOD_SetVec2Module","order":3,"path":"scripts/BBMOD_SetVec2Module/BBMOD_SetVec2Module.yy",},
+    {"name":"BBMOD_ShReinhardTonemap","order":1,"path":"shaders/BBMOD_ShReinhardTonemap/BBMOD_ShReinhardTonemap.yy",},
     {"name":"BBMOD_Importer","order":20,"path":"scripts/BBMOD_Importer/BBMOD_Importer.yy",},
     {"name":"BBMOD_BaseShader","order":2,"path":"scripts/BBMOD_BaseShader/BBMOD_BaseShader.yy",},
     {"name":"BBMOD_DefaultSpriteShader","order":9,"path":"scripts/BBMOD_DefaultSpriteShader/BBMOD_DefaultSpriteShader.yy",},

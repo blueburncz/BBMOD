@@ -135,10 +135,13 @@ function BBMOD_PostProcessor() constructor
 		var _world = matrix_get(matrix_world);
 		matrix_set(matrix_world, matrix_build_identity());
 
+		var _surfaceFormat = bbmod_hdr_is_supported()
+			? surface_rgba16float : surface_rgba8unorm;
+
 		__surPostProcess1 = bbmod_surface_check(
-			__surPostProcess1, _width, _height, surface_rgba8unorm, false);
+			__surPostProcess1, _width, _height, _surfaceFormat, false);
 		__surPostProcess2 = bbmod_surface_check(
-			__surPostProcess2, _width, _height, surface_rgba8unorm, false);
+			__surPostProcess2, _width, _height, _surfaceFormat, false);
 
 		var _surSrc = _surface;
 		var _surDest = __surPostProcess1;
