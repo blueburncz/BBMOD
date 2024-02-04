@@ -86,36 +86,39 @@ renderer.EnableShadows = true;
 postProcessor = new BBMOD_PostProcessor();
 renderer.PostProcessor = postProcessor;
 
-//postProcessor.add_effect(new BBMOD_LensDistortionEffect(-0.1));
-//postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
-//postProcessor.add_effect(new BBMOD_LightBloomEffect());
+postProcessor.add_effect(new BBMOD_LensDistortionEffect(-0.1));
+postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
+postProcessor.add_effect(new BBMOD_LightBloomEffect());
 directionalBlur = new BBMOD_DirectionalBlurEffect();
-//postProcessor.add_effect(directionalBlur);
+postProcessor.add_effect(directionalBlur);
 radialBlur = new BBMOD_RadialBlurEffect();
 radialBlur.Strength = 0.0;
 radialBlur.Step = 1.0 / 16.0;
-//postProcessor.add_effect(radialBlur);
+postProcessor.add_effect(radialBlur);
 
+if (bbmod_hdr_is_supported())
+{
+	postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());
+}
 
-postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());
-//postProcessor.add_effect(
-//	new BBMOD_ColorGradingEffect(
-//		sprite_get_texture(SprColorGrading, 0)
-//	)
-//);
+postProcessor.add_effect(
+	new BBMOD_ColorGradingEffect(
+		sprite_get_texture(SprColorGrading, 0)
+	)
+);
 
 monochrome = new BBMOD_MonochromeEffect(0.0);
-//postProcessor.add_effect(monochrome);
-//postProcessor.add_effect(
-//	new BBMOD_ChromaticAberrationEffect(
-//		3.0,
-//		new BBMOD_Vec3(-1.0, 1.0, -1.0)
-//	)
-//);
-//postProcessor.add_effect(new BBMOD_FilmGrainEffect());
+postProcessor.add_effect(monochrome);
+postProcessor.add_effect(
+	new BBMOD_ChromaticAberrationEffect(
+		3.0,
+		new BBMOD_Vec3(-1.0, 1.0, -1.0)
+	)
+);
+postProcessor.add_effect(new BBMOD_FilmGrainEffect());
 vignette = new BBMOD_VignetteEffect(0.0, c_red);
-//postProcessor.add_effect(vignette);
-//postProcessor.add_effect(new BBMOD_VignetteEffect(0.8));
+postProcessor.add_effect(vignette);
+postProcessor.add_effect(new BBMOD_VignetteEffect(0.8));
 
 if (os_browser == browser_not_a_browser)
 {
