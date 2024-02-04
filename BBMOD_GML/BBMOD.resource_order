@@ -59,6 +59,7 @@
     {"name":"LumaSharpen","order":12,"path":"folders/BBMOD/PostProcessing/LumaSharpen.yy",},
     {"name":"Monochrome","order":11,"path":"folders/BBMOD/PostProcessing/Monochrome.yy",},
     {"name":"RadialBlur","order":15,"path":"folders/BBMOD/PostProcessing/RadialBlur.yy",},
+    {"name":"ReinhardTonemap","order":20,"path":"folders/BBMOD/PostProcessing/ReinhardTonemap.yy",},
     {"name":"Vignette","order":9,"path":"folders/BBMOD/PostProcessing/Vignette.yy",},
     {"name":"Raycasting","order":5,"path":"folders/BBMOD/Raycasting.yy",},
     {"name":"Rendering","order":3,"path":"folders/BBMOD/Rendering.yy",},
@@ -84,7 +85,6 @@
     {"name":"Zombie","order":7,"path":"folders/Demo/Sounds/Zombie.yy",},
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
-    {"name":"ReinhardTonemap","order":20,"path":"folders/BBMOD/PostProcessing/ReinhardTonemap.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},

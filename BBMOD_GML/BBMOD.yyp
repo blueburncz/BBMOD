@@ -72,6 +72,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LumaSharpen","folderPath":"folders/BBMOD/PostProcessing/LumaSharpen.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Monochrome","folderPath":"folders/BBMOD/PostProcessing/Monochrome.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"RadialBlur","folderPath":"folders/BBMOD/PostProcessing/RadialBlur.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"ReinhardTonemap","folderPath":"folders/BBMOD/PostProcessing/ReinhardTonemap.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Vignette","folderPath":"folders/BBMOD/PostProcessing/Vignette.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Raycasting","folderPath":"folders/BBMOD/Raycasting.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Rendering","folderPath":"folders/BBMOD/Rendering.yy",},
@@ -100,7 +101,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Zombie","folderPath":"folders/Demo/Sounds/Zombie.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"ReinhardTonemap","folderPath":"folders/BBMOD/PostProcessing/ReinhardTonemap.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
