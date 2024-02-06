@@ -25,4 +25,4 @@ if (emitter != undefined
 }
 
 materialProps.set_float("u_fDissolveThreshold", dissolve);
-materialProps.set_float4("u_vSilhouette", new BBMOD_Vec4(1.0, 1.0, 1.0, hurt));
+materialProps.set_float4("u_vSilhouette", new BBMOD_Vec4(1.0, 1.0, 1.0, hurt * 4.0));

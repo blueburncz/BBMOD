@@ -1,4 +1,4 @@
-/// @func BBMOD_LightBloomEffect([_bias[, _scale]])
+/// @func BBMOD_LightBloomEffect([_bias[, _scale[, _hdr]]])
 ///
 /// @extends BBMOD_PostProcessEffect
 ///
@@ -6,14 +6,18 @@
 ///
 /// @param {Struct.BBMOD_Vec3} [_bias]
 /// @param {Struct.BBMOD_Vec3} [_scale]
-function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
+/// @param {Bool} [_hdr]
+function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 	: BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Struct.BBMOD_Vec3}
-	Bias = _bias ?? new BBMOD_Vec3(0.8);
+	Bias = _bias ?? new BBMOD_Vec3(0.5);
 
 	/// @var {Struct.BBMOD_Vec3}
 	Scale = _scale ?? new BBMOD_Vec3(1.0);
+
+	/// @var {Bool}
+	HDR = _hdr;
 
 	__levels = 8;
 	__surfaces1 = array_create(__levels, -1);
@@ -25,17 +29,65 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 	__uTexel = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
 	__uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
 
-	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
+	static __draw_ldr = function (_surfaceDest, _surfaceSrc)
 	{
 		var _width = surface_get_width(_surfaceSrc);
 		var _height = surface_get_height(_surfaceSrc);
 
-		var _surfaceFormat = bbmod_hdr_is_supported()
-			? surface_rgba16float : surface_rgba8unorm;
+		// Threshold
+		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _width / 2, _height / 2, surface_rgba8unorm, false);
+		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _width / 2, _height / 2, surface_rgba8unorm, false);
+		surface_set_target(__surfaces1[0]);
+		shader_set(BBMOD_ShThreshold);
+		shader_set_uniform_f(__uBias, Bias.X, Bias.Y, Bias.Z);
+		shader_set_uniform_f(__uScale, Scale.X, Scale.Y, Scale.Z);
+		draw_surface_stretched(_surfaceSrc, 0, 0, _width / 2, _height / 2);
+		shader_reset();
+		surface_reset_target();
+
+		// Kawase
+		shader_set(BBMOD_ShKawaseBlur);
+		shader_set_uniform_f(__uTexel, 1.0 / (_width / 2.0), 1.0 / (_height / 2.0));
+
+		var _surSrc = __surfaces1[0];
+		var _surDest = __surfaces2[0];
+		var i = 0;
+		repeat (__levels)
+		{
+			surface_set_target(_surDest);
+			shader_set_uniform_f(__uOffset, i++);
+			draw_surface(_surSrc, 0, 0);
+			surface_reset_target();
+
+			var _temp = _surSrc;
+			_surSrc = _surDest;
+			_surDest = _temp;
+		}
+
+		shader_reset();
+
+		// Combine
+		surface_set_target(_surfaceDest);
+		draw_surface(_surfaceSrc, 0, 0);
+		if (keyboard_check(ord("Q"))) draw_clear(c_black);
+		gpu_push_state();
+		gpu_set_blendenable(true);
+		gpu_set_blendmode(bm_add);
+		draw_surface_stretched(_surSrc, 0, 0, _width, _height);
+		gpu_pop_state();
+		surface_reset_target();
+
+		return _surfaceDest;
+	};
+
+	static __draw_hdr = function (_surfaceDest, _surfaceSrc)
+	{
+		var _width = surface_get_width(_surfaceSrc);
+		var _height = surface_get_height(_surfaceSrc);
 
 		// Threshold
-		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _width / 2, _height / 2, _surfaceFormat, false);
-		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _width / 2, _height / 2, _surfaceFormat, false);
+		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _width / 2, _height / 2, surface_rgba16float, false);
+		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _width / 2, _height / 2, surface_rgba16float, false);
 		surface_set_target(__surfaces1[0]);
 		shader_set(BBMOD_ShThreshold);
 		shader_set_uniform_f(__uBias, Bias.X, Bias.Y, Bias.Z);
@@ -54,7 +106,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 			var _h = _height / 4;
 			repeat (__levels - 1)
 			{
-				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, _surfaceFormat, false);
+				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, surface_rgba16float, false);
 				surface_set_target(__surfaces1[i]);
 				shader_set_uniform_f(__uTexel, 1.0 / _w, 1.0 / _h);
 				draw_surface_stretched(__surfaces1[i - 1], 0, 0, _w, _h);
@@ -79,7 +131,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 			var _h = _height / 2;
 			repeat (__levels)
 			{
-				__surfaces2[@ i] = bbmod_surface_check(__surfaces2[i], _w, _h, _surfaceFormat, false);
+				__surfaces2[@ i] = bbmod_surface_check(__surfaces2[i], _w, _h, surface_rgba16float, false);
 
 				// Horizontal
 				shader_set_uniform_f(_uTexelGaussian, 1.0 / _w, 0.0);
@@ -104,15 +156,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 
 		// Combine
 		surface_set_target(_surfaceDest);
-		if (keyboard_check(ord("Q")))
-		{
-			draw_clear(c_black);
-		}
-		else
-		{
-			draw_surface(_surfaceSrc, 0, 0);
-		}
-
+		draw_surface(_surfaceSrc, 0, 0);
 		gpu_push_state();
 		gpu_set_blendenable(true);
 		gpu_set_blendmode(bm_add);
@@ -127,6 +171,15 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined)
 		surface_reset_target();
 
 		return _surfaceDest;
+	};
+
+	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
+	{
+		if (HDR && bbmod_hdr_is_supported())
+		{
+			return __draw_hdr(_surfaceDest, _surfaceSrc);
+		}
+		return __draw_ldr(_surfaceDest, _surfaceSrc);
 	};
 
 	static destroy = function ()
