@@ -20,38 +20,38 @@ function BBMOD_PostProcessor() constructor
 	Effects = [];
 
 	/// @var {Pointer.Texture} The lookup table texture used for color grading.
-	/// @deprecated Please use {@link BBMOD_ColorGradingEffect} instead.
+	/// @obsolete Please use {@link BBMOD_ColorGradingEffect} instead.
 	ColorGradingLUT = sprite_get_texture(BBMOD_SprColorGradingLUT, 0);
 
 	/// @var {Real} The strength of the chromatic aberration effect. Use 0 to
 	/// disable the effect. Defaults to 0.
-	/// @deprecated Please use {@link BBMOD_ChromaticAberrationEffect} instead.
+	/// @obsolete Please use {@link BBMOD_ChromaticAberrationEffect} instead.
 	ChromaticAberration = 0.0;
 
 	/// @var {Struct.BBMOD_Vec3} Chromatic aberration offsets for RGB channels.
 	/// Defaults to `(-1, 0, 1)`.
-	/// @deprecated Please use {@link BBMOD_ChromaticAberrationEffect} instead.
+	/// @obsolete Please use {@link BBMOD_ChromaticAberrationEffect} instead.
 	ChromaticAberrationOffset = new BBMOD_Vec3(-1.0, 0.0, 1.0);
 
 	/// @var {Real} The strength of the grayscale effect. Use values in range
 	/// 0..1, where 0 means the original color and 1 means grayscale. Defaults
 	/// to 0.
-	/// @deprecated Please use {@link BBMOD_MonochromeEffect} instead.
+	/// @obsolete Please use {@link BBMOD_MonochromeEffect} instead.
 	Grayscale = 0.0;
 
 	/// @var {Real} The strength of the vignette effect. Defaults to 0.
-	/// @deprecated Please use {@link BBMOD_VignetteEffect} instead.
+	/// @obsolete Please use {@link BBMOD_VignetteEffect} instead.
 	Vignette = 0.0;
 
 	/// @var {Constant.Color} The color of the vignette effect. Defaults to
 	/// `c_black`.
-	/// @deprecated Please use {@link BBMOD_VignetteEffect} instead.
+	/// @obsolete Please use {@link BBMOD_VignetteEffect} instead.
 	VignetteColor = c_black;
 
 	/// @var {Real} Antialiasing technique to use. Use values from
 	/// {@link BBMOD_EAntialiasing}. Defaults to
 	/// {@link BBMOD_EAntialiasing.None}.
-	/// @deprecated Please use {@link BBMOD_FXAAEffect} instead.
+	/// @obsolete Please use {@link BBMOD_FXAAEffect} instead.
 	Antialiasing = BBMOD_EAntialiasing.None;
 
 	/// @var {Id.Surface}
@@ -143,88 +143,13 @@ function BBMOD_PostProcessor() constructor
 		__surPostProcess2 = bbmod_surface_check(
 			__surPostProcess2, _width, _height, _surfaceFormat, false);
 
-		var _surSrc = _surface;
-		var _surDest = __surPostProcess1;
-
 		gpu_push_state();
 		gpu_set_tex_filter(true);
 		gpu_set_tex_repeat(false);
 		gpu_set_blendenable(false);
 
-		////////////////////////////////////////////////////////////////////////
-		//
-		// Legacy
-		//
-		var _texelWidth = 1.0 / _width;
-		var _texelHeight = 1.0 / _height;
-
-		surface_set_target(_surDest);
-
-		////////////////////////////////////////////////////////////////////////
-		// Do post-processing
-		var _shader = BBMOD_ShPostProcess;
-		shader_set(_shader);
-		texture_set_stage(
-			shader_get_sampler_index(_shader, "u_texLut"),
-			ColorGradingLUT);
-		shader_set_uniform_f(
-			shader_get_uniform(_shader, "u_vTexel"),
-			_texelWidth, _texelHeight);
-		shader_set_uniform_f(
-			shader_get_uniform(_shader, "u_vOffset"),
-			ChromaticAberrationOffset.X,
-			ChromaticAberrationOffset.Y,
-			ChromaticAberrationOffset.Z);
-		shader_set_uniform_f(
-			shader_get_uniform(_shader, "u_fDistortion"),
-			ChromaticAberration);
-		shader_set_uniform_f(
-			shader_get_uniform(_shader, "u_fGrayscale"),
-			Grayscale);
-		shader_set_uniform_f(
-			shader_get_uniform(_shader, "u_fVignette"),
-			Vignette);
-		shader_set_uniform_f(
-			shader_get_uniform(_shader, "u_vVignetteColor"),
-			color_get_red(VignetteColor) / 255.0,
-			color_get_green(VignetteColor) / 255.0,
-			color_get_blue(VignetteColor) / 255.0);
-		draw_surface(_surSrc, 0, 0);
-		shader_reset();
-
-		surface_reset_target();
-
-		_surSrc = _surDest;
-		_surDest = __surPostProcess2;
-
-		////////////////////////////////////////////////////////////////////////
-		// Apply anti-aliasing to the final surface
-		if (Antialiasing == BBMOD_EAntialiasing.FXAA)
-		{
-			surface_set_target(_surDest);
-
-			_shader = BBMOD_ShFXAA;
-			shader_set(_shader);
-			shader_set_uniform_f(
-				shader_get_uniform(_shader, "u_vTexelVS"),
-				_texelWidth, _texelHeight);
-			shader_set_uniform_f(
-				shader_get_uniform(_shader, "u_vTexelPS"),
-				_texelWidth, _texelHeight);
-			draw_surface(_surSrc, 0, 0);
-			shader_reset();
-
-			surface_reset_target();
-
-			var _temp = _surSrc;
-			_surSrc = _surDest;
-			_surDest = _temp;
-		}
-
-		////////////////////////////////////////////////////////////////////////
-		//
-		// New post-processing chain
-		//
+		var _surSrc = _surface;
+		var _surDest = __surPostProcess1;
 		var _count = array_length(Effects);
 
 		for (var i = 0; i < _count; ++i)
@@ -239,8 +164,6 @@ function BBMOD_PostProcessor() constructor
 		}
 
 		draw_surface(_surSrc, _x, _y);
-
-		////////////////////////////////////////////////////////////////////////
 
 		matrix_set(matrix_world, _world);
 		gpu_pop_state();

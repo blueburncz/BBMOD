@@ -1,3 +1,6 @@
+// FIXME: Temporary fix!
+precision highp float;
+
 varying vec3 v_vNormal;
 
 // Camera's exposure value

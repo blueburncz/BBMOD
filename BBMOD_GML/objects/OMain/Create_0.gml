@@ -88,7 +88,7 @@ renderer.PostProcessor = postProcessor;
 
 postProcessor.add_effect(new BBMOD_LensDistortionEffect(-0.1));
 postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
-postProcessor.add_effect(new BBMOD_LightBloomEffect());
+postProcessor.add_effect(new BBMOD_LightBloomEffect(new BBMOD_Vec3(0.75), new BBMOD_Vec3(2.0), true));
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
 radialBlur = new BBMOD_RadialBlurEffect();

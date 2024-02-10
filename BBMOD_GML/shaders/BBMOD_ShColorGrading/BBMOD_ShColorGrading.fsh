@@ -42,9 +42,9 @@ void main()
 {
 	vec3 color = texture2D(gm_BaseTexture, v_vTexCoord).rgb;
 
-#ifndef _YY_GLSLES_
-	color = ColorGrade(color, u_texLUT);
-#endif
+//#ifndef _YY_GLSLES_
+//	color = ColorGrade(color, u_texLUT);
+//#endif
 
 	gl_FragColor.rgb = color;
 	gl_FragColor.a = 1.0;
