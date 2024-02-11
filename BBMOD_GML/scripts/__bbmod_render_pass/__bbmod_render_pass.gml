@@ -28,6 +28,8 @@ enum BBMOD_ERenderPass
 	/// @member Render pass for translucent objects that use a blurred screen
 	/// surface as an input.
 	Translucent,
+	/// @member Render pass for screen distortion effects.
+	Distortion,
 	/// @member Render pass where instance IDs are rendered into an off-screen
 	/// buffer.
 	Id,
@@ -79,6 +81,9 @@ function bbmod_render_pass_to_string(_pass)
 	case BBMOD_ERenderPass.Translucent:
 		return "Translucent";
 
+	case BBMOD_ERenderPass.Distortion:
+		return "Distortion";
+
 	case BBMOD_ERenderPass.Id:
 		return "Id";
 
@@ -127,6 +132,9 @@ function bbmod_render_pass_from_string(_name)
 
 	case "Translucent":
 		return BBMOD_ERenderPass.Translucent;
+
+	case "Distortion":
+		return BBMOD_ERenderPass.Distortion;
 
 	case "Id":
 		return BBMOD_ERenderPass.Id;
