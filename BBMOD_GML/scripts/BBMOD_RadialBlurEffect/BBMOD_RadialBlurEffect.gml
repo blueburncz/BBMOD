@@ -29,11 +29,11 @@ function BBMOD_RadialBlurEffect(_origin=undefined, _radius=0.5, _strength=1.0, _
 	/// 1/8.
 	Step = _step;
 
-	__uTexel = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
-	__uOrigin = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
-	__uRadius = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
-	__uStrength = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStrength");
-	__uStep = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
+	static __uTexel = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
+	static __uOrigin = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
+	static __uRadius = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
+	static __uStrength = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStrength");
+	static __uStep = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

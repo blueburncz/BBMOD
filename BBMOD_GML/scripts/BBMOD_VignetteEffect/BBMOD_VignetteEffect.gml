@@ -17,8 +17,8 @@ function BBMOD_VignetteEffect(_strength=1.0, _color=c_black)
 	/// `c_black`.
 	Color = _color;
 
-	__uStrength = shader_get_uniform(BBMOD_ShVignette, "u_fStrength");
-	__uColor = shader_get_uniform(BBMOD_ShVignette, "u_vColor");
+	static __uStrength = shader_get_uniform(BBMOD_ShVignette, "u_fStrength");
+	static __uColor = shader_get_uniform(BBMOD_ShVignette, "u_vColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

@@ -19,10 +19,10 @@ function BBMOD_LumaSharpenEffect(_strength=1.0, _clamp=1.0, _offset=1.0)
 	/// @var {Real} High-pass offset (in pixels). Default value is 1.
 	Offset = _offset;
 
-	__uTexel = shader_get_uniform(BBMOD_ShLumaSharpen, "u_vTexel");
-	__uStrength = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fStrength");
-	__uClamp = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fClamp");
-	__uOffset = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fOffset");
+	static __uTexel = shader_get_uniform(BBMOD_ShLumaSharpen, "u_vTexel");
+	static __uStrength = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fStrength");
+	static __uClamp = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fClamp");
+	static __uOffset = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fOffset");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

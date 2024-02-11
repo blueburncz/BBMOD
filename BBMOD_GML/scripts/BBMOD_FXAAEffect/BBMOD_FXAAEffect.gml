@@ -6,8 +6,8 @@
 function BBMOD_FXAAEffect()
 	: BBMOD_PostProcessEffect() constructor
 {
-	__uTexelVS = shader_get_uniform(BBMOD_ShFXAA, "u_vTexelVS");
-	__uTexelPS = shader_get_uniform(BBMOD_ShFXAA, "u_vTexelPS");
+	static __uTexelVS = shader_get_uniform(BBMOD_ShFXAA, "u_vTexelVS");
+	static __uTexelPS = shader_get_uniform(BBMOD_ShFXAA, "u_vTexelPS");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

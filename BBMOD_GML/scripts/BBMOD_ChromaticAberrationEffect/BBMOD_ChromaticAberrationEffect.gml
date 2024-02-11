@@ -18,9 +18,9 @@ function BBMOD_ChromaticAberrationEffect(_strength=1.0, _offset=undefined)
 	/// `(-1, 0, 1)`.
 	Offset = _offset ?? new BBMOD_Vec3(-1.0, 0.0, 1.0);
 
-	__uTexel = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vTexel");
-	__uOffset = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vOffset");
-	__uDistortion = shader_get_uniform(BBMOD_ShChromaticAberration, "u_fDistortion");
+	static __uTexel = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vTexel");
+	static __uOffset = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vOffset");
+	static __uDistortion = shader_get_uniform(BBMOD_ShChromaticAberration, "u_fDistortion");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

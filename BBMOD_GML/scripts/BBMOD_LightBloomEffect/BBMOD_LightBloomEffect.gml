@@ -23,11 +23,13 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 	__surfaces1 = array_create(__levels, -1);
 	__surfaces2 = array_create(__levels, -1);
 
-	__uBias = shader_get_uniform(BBMOD_ShThreshold, "u_vBias");
-	__uScale = shader_get_uniform(BBMOD_ShThreshold, "u_vScale");
+	static __uBias = shader_get_uniform(BBMOD_ShThreshold, "u_vBias");
+	static __uScale = shader_get_uniform(BBMOD_ShThreshold, "u_vScale");
 
-	__uTexel = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
-	__uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
+	static __uTexelKawase = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
+	static __uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
+
+	static __uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
 
 	static __draw_ldr = function (_surfaceDest, _surfaceSrc)
 	{
@@ -47,7 +49,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 
 		// Kawase
 		shader_set(BBMOD_ShKawaseBlur);
-		shader_set_uniform_f(__uTexel, 1.0 / (_width / 2.0), 1.0 / (_height / 2.0));
+		shader_set_uniform_f(__uTexelKawase, 1.0 / (_width / 2.0), 1.0 / (_height / 2.0));
 
 		var _surSrc = __surfaces1[0];
 		var _surDest = __surfaces2[0];
@@ -107,7 +109,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 			{
 				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, surface_rgba16float, false);
 				surface_set_target(__surfaces1[i]);
-				shader_set_uniform_f(__uTexel, 1.0 / _w, 1.0 / _h);
+				shader_set_uniform_f(__uTexelKawase, 1.0 / _w, 1.0 / _h);
 				draw_surface_stretched(__surfaces1[i - 1], 0, 0, _w, _h);
 				surface_reset_target();
 				_w = _w >> 1;
@@ -123,8 +125,6 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 		{
 			shader_set(BBMOD_ShGaussianBlur);
 
-			var _uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
-
 			var i = 0;
 			var _w = _width / 2;
 			var _h = _height / 2;
@@ -133,13 +133,13 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 				__surfaces2[@ i] = bbmod_surface_check(__surfaces2[i], _w, _h, surface_rgba16float, false);
 
 				// Horizontal
-				shader_set_uniform_f(_uTexelGaussian, 1.0 / _w, 0.0);
+				shader_set_uniform_f(__uTexelGaussian, 1.0 / _w, 0.0);
 				surface_set_target(__surfaces2[i]);
 				draw_surface_stretched(__surfaces1[i], 0, 0, _w, _h);
 				surface_reset_target();
 
 				// Vertical
-				shader_set_uniform_f(_uTexelGaussian, 0.0, 1.0 / _h);
+				shader_set_uniform_f(__uTexelGaussian, 0.0, 1.0 / _h);
 				surface_set_target(__surfaces1[i]);
 				draw_surface_stretched(__surfaces2[i], 0, 0, _w, _h);
 				surface_reset_target();

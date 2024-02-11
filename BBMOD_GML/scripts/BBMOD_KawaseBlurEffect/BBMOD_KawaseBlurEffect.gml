@@ -13,8 +13,8 @@ function BBMOD_KawaseBlurEffect(_offsets=[])
 	///`[0, 1, 2, 3]`. Default value is an empty array.
 	Offsets = _offsets;
 
-	__uTexel = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
-	__uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
+	static __uTexel = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
+	static __uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

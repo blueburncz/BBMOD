@@ -17,8 +17,8 @@ function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 	/// `c_white`.
 	Color = _color;
 
-	__uStrength = shader_get_uniform(BBMOD_ShMonochrome, "u_fStrength");
-	__uColor = shader_get_uniform(BBMOD_ShMonochrome, "u_vColor");
+	static __uStrength = shader_get_uniform(BBMOD_ShMonochrome, "u_fStrength");
+	static __uColor = shader_get_uniform(BBMOD_ShMonochrome, "u_vColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

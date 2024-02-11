@@ -12,7 +12,7 @@ function BBMOD_ColorGradingEffect(_lut=undefined)
 	/// @var {Pointer.Texture} The lookup table texture used for color grading.
 	LUT = _lut ?? sprite_get_texture(BBMOD_SprColorGradingLUT, 0);
 
-	__uLUT = shader_get_sampler_index(BBMOD_ShColorGrading, "u_texLUT");
+	static __uLUT = shader_get_sampler_index(BBMOD_ShColorGrading, "u_texLUT");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

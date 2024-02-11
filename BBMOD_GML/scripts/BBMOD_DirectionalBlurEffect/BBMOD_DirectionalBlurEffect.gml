@@ -19,8 +19,8 @@ function BBMOD_DirectionalBlurEffect(_vector=undefined, _step=0.125)
 	/// 1/8.
 	Step = _step;
 
-	__uVector = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_vVector");
-	__uStep = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_fStep");
+	static __uVector = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_vVector");
+	static __uStep = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_fStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
