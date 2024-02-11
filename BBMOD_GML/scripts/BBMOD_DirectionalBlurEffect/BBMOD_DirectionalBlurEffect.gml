@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_DirectionalBlurEffect([_vector[, _step]])
 ///
 /// @extends BBMOD_PostProcessEffect

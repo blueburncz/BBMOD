@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_ChromaticAberrationEffect([_strength[, _offset]])
 ///
 /// @extends BBMOD_PostProcessEffect

@@ -1,4 +1,4 @@
-/// @module Rendering.PostProcessing
+/// @module PostProcessing
 
 /// @func BBMOD_PostProcessor()
 ///

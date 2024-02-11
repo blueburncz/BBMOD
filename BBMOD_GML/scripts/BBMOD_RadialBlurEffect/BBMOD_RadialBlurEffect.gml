@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_RadialBlurEffect([_origin[, _radius[, _strength[, _step]]]])
 ///
 /// @extends BBMOD_PostProcessEffect

@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_PostProcessEffect()
 ///
 /// @implements {BBMOD_IDestructible}

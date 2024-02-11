@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_FilmGrainEffect([_strength])
 ///
 /// @extends BBMOD_PostProcessEffect

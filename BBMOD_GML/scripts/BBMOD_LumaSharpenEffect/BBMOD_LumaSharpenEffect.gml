@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_LumaSharpenEffect([_strength[, _clamp[, _offset]]])
 ///
 /// @extends BBMOD_PostProcessEffect 

@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_LightBloomEffect([_bias[, _scale[, _hdr]]])
 ///
 /// @extends BBMOD_PostProcessEffect

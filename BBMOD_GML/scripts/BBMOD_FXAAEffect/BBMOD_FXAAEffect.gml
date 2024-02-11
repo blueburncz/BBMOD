@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_FXAAEffect()
 ///
 /// @extends BBMOD_PostProcessEffect

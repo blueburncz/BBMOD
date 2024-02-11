@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_MonochromeEffect([_strength[, _color]])
 ///
 /// @extends BBMOD_PostProcessEffect

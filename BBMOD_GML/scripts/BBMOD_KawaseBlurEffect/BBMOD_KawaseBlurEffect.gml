@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_KawaseBlurEffect([_offsets])
 ///
 /// @extends BBMOD_PostProcessEffect

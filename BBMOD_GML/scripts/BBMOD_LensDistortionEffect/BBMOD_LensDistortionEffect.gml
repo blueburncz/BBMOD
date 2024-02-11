@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_LensDistortionEffect([_strength[, _zoom]])
 ///
 /// @extends BBMOD_PostProcessEffect

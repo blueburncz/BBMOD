@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_ColorGradingEffect([_lut])
 ///
 /// @extends BBMOD_PostProcessEffect
