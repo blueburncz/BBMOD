@@ -1,3 +1,10 @@
+/// @module PostProcessing
+
+/// @func BBMOD_ReinhardTonemapEffect()
+///
+/// @extends BBMOD_PostProcessEffect
+///
+/// @desc Reinhard tonemapping (post-processing effect).
 function BBMOD_ReinhardTonemapEffect()
 	: BBMOD_PostProcessEffect() constructor
 {

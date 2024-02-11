@@ -41,10 +41,48 @@ bbmod_sprite_add_async(
 		}
 	}));
 
+lensFlare = undefined;
+
 if (global.day)
 {
 	sunLight.Color = BBMOD_C_WHITE;
 	sunLight.Direction.Set(0, 1, -1);
+
+	lensFlare = new BBMOD_LensFlare();
+
+	var _e;
+
+	_e = new BBMOD_LensFlareElement(new BBMOD_Vec2(0.0), Sprite2);
+	_e.Scale.Set(3.0);
+	lensFlare.add_element(_e);
+
+	for (var i = 0.1; i <= 1.0; i += 0.2)
+	{
+		if (i > 0.3)
+		{
+			_e = new BBMOD_LensFlareElement(new BBMOD_Vec2(i), Sprite1);
+			_e.Scale.Set((1.0 - i) * 0.5);
+			_e.Color = BBMOD_C_BLUE;
+			_e.FadeOut = true;
+			lensFlare.add_element(_e);
+		}
+
+		_e = new BBMOD_LensFlareElement(new BBMOD_Vec2(1.0 + i), Sprite1);
+		_e.Scale.Set(i * 0.7);
+		_e.Color = BBMOD_C_BLUE;
+		_e.FadeOut = true;
+		lensFlare.add_element(_e);
+	}
+
+	_e = new BBMOD_LensFlareElement(new BBMOD_Vec2(1.5), Sprite3);
+	_e.Scale.Set(10.0);
+	_e.FadeOut = true;
+	_e.FlareRays = true;
+	_e.AngleRelative = true;
+	_e.Color.Alpha = 0.5;
+	lensFlare.add_element(_e);
+
+	bbmod_lens_flare_add(lensFlare);
 }
 else
 {
