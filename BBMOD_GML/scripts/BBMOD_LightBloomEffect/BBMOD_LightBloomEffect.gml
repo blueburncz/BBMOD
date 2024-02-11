@@ -69,7 +69,6 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 		// Combine
 		surface_set_target(_surfaceDest);
 		draw_surface(_surfaceSrc, 0, 0);
-		if (keyboard_check(ord("Q"))) draw_clear(c_black);
 		gpu_push_state();
 		gpu_set_blendenable(true);
 		gpu_set_blendmode(bm_add);

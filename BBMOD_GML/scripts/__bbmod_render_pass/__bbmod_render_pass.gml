@@ -21,8 +21,13 @@ enum BBMOD_ERenderPass
 	Background,
 	/// @member Render pass for opaque objects.
 	Forward,
+	/// @member Render pass for model outlines.
+	Outline,
 	/// @member Render pass for alpha-blended objects.
 	Alpha,
+	/// @member Render pass for translucent objects that use a blurred screen
+	/// surface as an input.
+	Translucent,
 	/// @member Render pass where instance IDs are rendered into an off-screen
 	/// buffer.
 	Id,
@@ -52,14 +57,27 @@ function bbmod_render_pass_to_string(_pass)
 	case BBMOD_ERenderPass.Shadows:
 		return "Shadows";
 
+	//case BBMOD_ERenderPass.Deferred:
 	case BBMOD_ERenderPass.DepthOnly:
 		return "DepthOnly";
+
+	case BBMOD_ERenderPass.GBuffer:
+		return "GBuffer";
+
+	case BBMOD_ERenderPass.Background:
+		return "Background";
 
 	case BBMOD_ERenderPass.Forward:
 		return "Forward";
 
+	case BBMOD_ERenderPass.Outline:
+		return "Outline";
+
 	case BBMOD_ERenderPass.Alpha:
 		return "Alpha";
+
+	case BBMOD_ERenderPass.Translucent:
+		return "Translucent";
 
 	case BBMOD_ERenderPass.Id:
 		return "Id";
@@ -92,11 +110,23 @@ function bbmod_render_pass_from_string(_name)
 	case "DepthOnly":
 		return BBMOD_ERenderPass.DepthOnly;
 
+	case "GBuffer":
+		return BBMOD_ERenderPass.GBuffer;
+
+	case "Background":
+		return BBMOD_ERenderPass.Background;
+
 	case "Forward":
 		return BBMOD_ERenderPass.Forward;
 
+	case "Outline":
+		return BBMOD_ERenderPass.Outline;
+
 	case "Alpha":
 		return BBMOD_ERenderPass.Alpha;
+
+	case "Translucent":
+		return BBMOD_ERenderPass.Translucent;
 
 	case "Id":
 		return BBMOD_ERenderPass.Id;
