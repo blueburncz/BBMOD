@@ -16,6 +16,7 @@ global.__bbmodLensFlares = [];
 ///
 /// @see bbmod_lens_flare_add
 /// @see BBMOD_LensFlareElement
+/// @see BBMOD_LensFlareEffect
 function BBMOD_LensFlare(_position=undefined, _depthThreshold=1.0) constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The position in the world. Default value is
@@ -34,8 +35,6 @@ function BBMOD_LensFlare(_position=undefined, _depthThreshold=1.0) constructor
 	static __uLightPos = shader_get_uniform(BBMOD_ShLensFlare, "u_vLightPos");
 	static __uFlareRaysTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texFlareRays");
 	static __uFlareRays = shader_get_uniform(BBMOD_ShLensFlare, "u_fFlareRays")
-	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texLensDirt");
-	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensFlare, "u_vLensDirtUVs");
 	static __uInvRes = shader_get_uniform(BBMOD_ShLensFlare, "u_vInvRes");
 	static __uColor = shader_get_uniform(BBMOD_ShLensFlare, "u_vColor");
 	static __uFadeOut = shader_get_uniform(BBMOD_ShLensFlare, "u_fFadeOut");
@@ -98,10 +97,6 @@ function BBMOD_LensFlare(_position=undefined, _depthThreshold=1.0) constructor
 		gpu_set_tex_repeat(true);
 		shader_set(BBMOD_ShLensFlare);
 		shader_set_uniform_f(__uLightPos, _x, _y, _z);
-		var _texLensDirt = sprite_get_texture(BBMOD_SprLensDirt, 0);
-		var _lensDirtUVs = texture_get_uvs(_texLensDirt);
-		texture_set_stage(__uLensDirtTex, _texLensDirt);
-		shader_set_uniform_f(__uLensDirtUVs, _lensDirtUVs[0], _lensDirtUVs[1], _lensDirtUVs[2], _lensDirtUVs[3]);
 		texture_set_stage(__uFlareRaysTex, sprite_get_texture(BBMOD_SprFlareRays, 0));
 		shader_set_uniform_f(__uInvRes, 1.0 / _screenWidth, 1.0 / _screenHeight);
 		var _uColor = __uColor;

@@ -103,6 +103,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/Demo/Sprites.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Terrain","folderPath":"folders/Demo/Sprites/Terrain.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/BBMOD/PostProcessing/LensFlares/Sprites.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LensDirt","folderPath":"folders/BBMOD/PostProcessing/LensDirt.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Character_Aim.bbanim","CopyToMask":-1,"filePath":"datafiles/Data/Assets/Character",},
@@ -339,6 +340,7 @@
     {"id":{"name":"BBMOD_SetVec3Module","path":"scripts/BBMOD_SetVec3Module/BBMOD_SetVec3Module.yy",},},
     {"id":{"name":"BBMOD_ShVignette","path":"shaders/BBMOD_ShVignette/BBMOD_ShVignette.yy",},},
     {"id":{"name":"BBMOD_SprLensDirt","path":"sprites/BBMOD_SprLensDirt/BBMOD_SprLensDirt.yy",},},
+    {"id":{"name":"BBMOD_ShLensDirt","path":"shaders/BBMOD_ShLensDirt/BBMOD_ShLensDirt.yy",},},
     {"id":{"name":"BBMOD_ShTerrain","path":"shaders/BBMOD_ShTerrain/BBMOD_ShTerrain.yy",},},
     {"id":{"name":"BBMOD_PostProcessEffect","path":"scripts/BBMOD_PostProcessEffect/BBMOD_PostProcessEffect.yy",},},
     {"id":{"name":"BBMOD_ShDefaultColorAnimated","path":"shaders/BBMOD_ShDefaultColorAnimated/BBMOD_ShDefaultColorAnimated.yy",},},
@@ -369,6 +371,7 @@
     {"id":{"name":"BBMOD_ShSky","path":"shaders/BBMOD_ShSky/BBMOD_ShSky.yy",},},
     {"id":{"name":"BBMOD_Resource","path":"scripts/BBMOD_Resource/BBMOD_Resource.yy",},},
     {"id":{"name":"BBMOD_ShLensDistortion","path":"shaders/BBMOD_ShLensDistortion/BBMOD_ShLensDistortion.yy",},},
+    {"id":{"name":"BBMOD_LensDirtEffect","path":"scripts/BBMOD_LensDirtEffect/BBMOD_LensDirtEffect.yy",},},
     {"id":{"name":"BBMOD_Sprite","path":"scripts/BBMOD_Sprite/BBMOD_Sprite.yy",},},
     {"id":{"name":"BBMOD_SprColorGradingLUT","path":"sprites/BBMOD_SprColorGradingLUT/BBMOD_SprColorGradingLUT.yy",},},
     {"id":{"name":"BBMOD_IEventListener","path":"scripts/BBMOD_IEventListener/BBMOD_IEventListener.yy",},},

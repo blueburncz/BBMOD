@@ -96,6 +96,7 @@ radialBlur.Step = 1.0 / 16.0;
 postProcessor.add_effect(radialBlur);
 
 postProcessor.add_effect(new BBMOD_LensFlaresEffect());
+postProcessor.add_effect(new BBMOD_LensDirtEffect(undefined, 0.7, 4.0));
 
 if (bbmod_hdr_is_supported())
 {

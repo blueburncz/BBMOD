@@ -87,6 +87,7 @@
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
     {"name":"Sprites","order":8,"path":"folders/BBMOD/PostProcessing/LensFlares/Sprites.yy",},
+    {"name":"LensDirt","order":17,"path":"folders/BBMOD/PostProcessing/LensDirt.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},
@@ -252,6 +253,7 @@
     {"name":"BBMOD_Ray","order":4,"path":"scripts/BBMOD_Ray/BBMOD_Ray.yy",},
     {"name":"BBMOD_Resource","order":9,"path":"scripts/BBMOD_Resource/BBMOD_Resource.yy",},
     {"name":"BBMOD_ShLensDistortion","order":1,"path":"shaders/BBMOD_ShLensDistortion/BBMOD_ShLensDistortion.yy",},
+    {"name":"BBMOD_LensDirtEffect","order":1,"path":"scripts/BBMOD_LensDirtEffect/BBMOD_LensDirtEffect.yy",},
     {"name":"BBMOD_Sprite","order":5,"path":"scripts/BBMOD_Sprite/BBMOD_Sprite.yy",},
     {"name":"BBMOD_SprColorGradingLUT","order":2,"path":"sprites/BBMOD_SprColorGradingLUT/BBMOD_SprColorGradingLUT.yy",},
     {"name":"BBMOD_IEventListener","order":7,"path":"scripts/BBMOD_IEventListener/BBMOD_IEventListener.yy",},
