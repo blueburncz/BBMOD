@@ -1176,30 +1176,6 @@ function BBMOD_BaseRenderer() constructor
 			PostProcessor.draw(__surFinal, X, Y);
 		}
 
-		////////////////////////////////////////////////////////////////////////
-		//
-		// Lens-flares
-		//
-
-		gpu_push_state();
-		gpu_set_state(_gpuState);
-		gpu_set_tex_filter(true);
-
-		// FIXME: Ugh...
-		if (variable_global_exists("__bbmodLensFlares"))
-		{
-			var _lensFlares = global.__bbmodLensFlares;
-
-			for (var i = array_length(_lensFlares) - 1; i >= 0; --i)
-			{
-				_lensFlares[i].draw();
-			}
-		}
-
-		gpu_pop_state();
-
-		////////////////////////////////////////////////////////////////////////
-
 		matrix_set(matrix_world, _world);
 
 		return self;

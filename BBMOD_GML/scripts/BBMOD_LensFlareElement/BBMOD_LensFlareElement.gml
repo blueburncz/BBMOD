@@ -1,4 +1,4 @@
-/// @module LensFlares
+/// @module PostProcessing
 
 /// @func BBMOD_LensFlareElement(_offset, _sprite[, _subimage])
 ///

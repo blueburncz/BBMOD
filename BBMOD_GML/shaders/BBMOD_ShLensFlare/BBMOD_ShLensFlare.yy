@@ -4,7 +4,7 @@
   "name": "BBMOD_ShLensFlare",
   "parent": {
     "name": "LensFlares",
-    "path": "folders/BBMOD/LensFlares.yy",
+    "path": "folders/BBMOD/PostProcessing/LensFlares.yy",
   },
   "type": 1,
 }

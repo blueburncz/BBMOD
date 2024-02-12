@@ -1,4 +1,4 @@
-/// @module LensFlares
+/// @module PostProcessing
 
 /// @var {Array<Struct.BBMOD_LensFlare>}
 /// @private
@@ -97,11 +97,7 @@ function BBMOD_LensFlare(_position=undefined, _depthThreshold=1.0) constructor
 		gpu_push_state();
 		gpu_set_tex_repeat(true);
 		shader_set(BBMOD_ShLensFlare);
-		shader_set_uniform_f(
-			__uLightPos,
-			_x,
-			_screenHeight - _y, // FIXME: WTF is going on here?!
-			_z);
+		shader_set_uniform_f(__uLightPos, _x, _y, _z);
 		var _texLensDirt = sprite_get_texture(BBMOD_SprLensDirt, 0);
 		var _lensDirtUVs = texture_get_uvs(_texLensDirt);
 		texture_set_stage(__uLensDirtTex, _texLensDirt);

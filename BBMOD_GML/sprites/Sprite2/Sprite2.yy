@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 4,
   "parent": {
-    "name": "LensFlares",
-    "path": "folders/BBMOD/LensFlares.yy",
+    "name": "Sprites",
+    "path": "folders/BBMOD/PostProcessing/LensFlares/Sprites.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "BBMOD_LensFlare",
+  "name": "BBMOD_LensFlaresEffect",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

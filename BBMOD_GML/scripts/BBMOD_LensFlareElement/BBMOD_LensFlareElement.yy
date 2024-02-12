@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "LensFlares",
-    "path": "folders/BBMOD/LensFlares.yy",
+    "path": "folders/BBMOD/PostProcessing/LensFlares.yy",
   },
 }

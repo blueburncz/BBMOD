@@ -86,7 +86,6 @@ renderer.EnableShadows = true;
 postProcessor = new BBMOD_PostProcessor();
 renderer.PostProcessor = postProcessor;
 
-postProcessor.add_effect(new BBMOD_LensDistortionEffect(-0.1));
 postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
 postProcessor.add_effect(new BBMOD_LightBloomEffect(new BBMOD_Vec3(0.75), new BBMOD_Vec3(2.0), true));
 directionalBlur = new BBMOD_DirectionalBlurEffect();
@@ -95,6 +94,8 @@ radialBlur = new BBMOD_RadialBlurEffect();
 radialBlur.Strength = 0.0;
 radialBlur.Step = 1.0 / 16.0;
 postProcessor.add_effect(radialBlur);
+
+postProcessor.add_effect(new BBMOD_LensFlaresEffect());
 
 if (bbmod_hdr_is_supported())
 {
@@ -119,6 +120,8 @@ postProcessor.add_effect(new BBMOD_FilmGrainEffect());
 vignette = new BBMOD_VignetteEffect(0.0, c_red);
 postProcessor.add_effect(vignette);
 postProcessor.add_effect(new BBMOD_VignetteEffect(0.8));
+
+postProcessor.add_effect(new BBMOD_LensDistortionEffect(-0.1));
 
 if (os_browser == browser_not_a_browser)
 {
