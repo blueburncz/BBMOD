@@ -225,6 +225,7 @@
     {"name":"BBMOD_ParticleModule","order":5,"path":"scripts/BBMOD_ParticleModule/BBMOD_ParticleModule.yy",},
     {"name":"BBMOD_SetVec3Module","order":4,"path":"scripts/BBMOD_SetVec3Module/BBMOD_SetVec3Module.yy",},
     {"name":"BBMOD_ShVignette","order":1,"path":"shaders/BBMOD_ShVignette/BBMOD_ShVignette.yy",},
+    {"name":"BBMOD_SprLensDirt","order":2,"path":"sprites/BBMOD_SprLensDirt/BBMOD_SprLensDirt.yy",},
     {"name":"BBMOD_ShTerrain","order":1,"path":"shaders/BBMOD_ShTerrain/BBMOD_ShTerrain.yy",},
     {"name":"BBMOD_PostProcessEffect","order":3,"path":"scripts/BBMOD_PostProcessEffect/BBMOD_PostProcessEffect.yy",},
     {"name":"BBMOD_ShDefaultColorAnimated","order":18,"path":"shaders/BBMOD_ShDefaultColorAnimated/BBMOD_ShDefaultColorAnimated.yy",},

@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "Sprites",
-    "path": "folders/BBMOD/PostProcessing/LensFlares/Sprites.yy",
+    "name": "LensDirt",
+    "path": "folders/BBMOD/PostProcessing/LensDirt.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {
