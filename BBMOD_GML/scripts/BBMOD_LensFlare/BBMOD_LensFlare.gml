@@ -4,29 +4,33 @@
 /// @private
 global.__bbmodLensFlares = [];
 
-/// @func BBMOD_LensFlare([_position[, _depthThreshold]])
+/// @func BBMOD_LensFlare()
 ///
 /// @desc A lens flare.
-///
-/// @param {Struct.BBMOD_Vec3} [_position] The position in the world. Defaults
-/// to `(0, 0, 0)` if `undefined`.
-/// @param {Real} [_depthThreshold] The maximum allowed difference between the
-/// flare's depth and the depth in the depth buffer. When larger, the lens flare
-/// is not drawn. Defaults to 1.
 ///
 /// @see bbmod_lens_flare_add
 /// @see BBMOD_LensFlareElement
 /// @see BBMOD_LensFlareEffect
-function BBMOD_LensFlare(_position=undefined, _depthThreshold=1.0) constructor
+function BBMOD_LensFlare() constructor
 {
-	/// @var {Struct.BBMOD_Vec3} The position in the world. Default value is
-	/// `(0, 0, 0)`.
-	Position = _position ?? new BBMOD_Vec3();
+	/// @var {Struct.BBMOD_Vec3} The position in the world or `undefined`,
+	/// in which case the property {@link BBMOD_LensFlare.Direction} is used
+	/// instead. Default value is `undefined`.
+	Position = undefined
+
+	/// @var {Real} The maximum distance at which is the lens flare visible.
+	/// Used only in case {@link BBMOD_LensFlare.Position} is not `undefined`.
+	Range = 1.0;
 
 	/// @var {Real} The maximum allowed difference between the flare's depth and
 	/// the depth in the depth buffer. When larger, the lens flare is not drawn.
 	/// Default value is 1.
-	DepthThreshold = _depthThreshold;
+	DepthThreshold = 1.0;
+
+	/// @var {Struct.BBMOD_Vec3} The direction towards the light source placed
+	/// at an infinite distance. Used if {@link BBMOD_LensFlare.Position} is
+	/// `undefined`. Default value is `(1, 1, 1)`.
+	Direction = new BBMOD_Vec3(1.0);
 
 	/// @var {Array<Struct.BBMOD_LensFlareElement>}
 	/// @private
@@ -72,14 +76,19 @@ function BBMOD_LensFlare(_position=undefined, _depthThreshold=1.0) constructor
 	/// @return {Struct.BBMOD_LensFlare} Returns `self`.
 	static draw = function ()
 	{
-		if (global.__bbmodCameraCurrent == undefined)
+		var _camera = global.__bbmodCameraCurrent;
+
+		if (_camera == undefined)
 		{
 			return self;
 		}
 
 		var _screenWidth = window_get_width();
 		var _screenHeight = window_get_height();
-		var _screenPos = global.__bbmodCameraCurrent.world_to_screen(Position, _screenWidth, _screenHeight);
+
+		var _screenPos = _camera.world_to_screen(
+			Position ?? new BBMOD_Vec4(Direction.X, Direction.Y, Direction.Z, 0.0),
+			_screenWidth, _screenHeight);
 
 		if (_screenPos == undefined)
 		{

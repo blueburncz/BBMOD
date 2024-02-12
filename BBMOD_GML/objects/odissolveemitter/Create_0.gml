@@ -9,7 +9,9 @@ light.RenderPass = ~(1 << BBMOD_ERenderPass.ReflectionCapture);
 
 bbmod_light_punctual_add(light);
 
-lensFlare = new BBMOD_LensFlare(position.Add(new BBMOD_Vec3(0, 0, 30)));
+lensFlare = new BBMOD_LensFlare();
+lensFlare.Position = position.Add(new BBMOD_Vec3(0, 0, 30));
+lensFlare.Range = 100;
 
 var _e;
 

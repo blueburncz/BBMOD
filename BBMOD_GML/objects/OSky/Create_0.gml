@@ -46,9 +46,10 @@ lensFlare = undefined;
 if (global.day)
 {
 	sunLight.Color = BBMOD_C_WHITE;
-	sunLight.Direction.Set(0, 1, -1);
+	sunLight.Direction.Set(0.30, 0.30, -0.87);
 
 	lensFlare = new BBMOD_LensFlare();
+	lensFlare.Direction = sunLight.Direction.Scale(-1.0);
 
 	var _e;
 

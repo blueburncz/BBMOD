@@ -268,11 +268,12 @@ function BBMOD_BaseCamera() constructor
 		);
 	};
 
-	/// @func world_to_screen(_position[, _screenWidth[, _screenHeight]])
+	/// @func world_to_screen(_vector[, _screenWidth[, _screenHeight]])
 	///
-	/// @desc Computes screen-space position of a point in world-space.
+	/// @desc Computes screen-space position from a vector in world-space.
 	///
-	/// @param {Struct.BBMOD_Vec3} _position The world-space position.
+	/// @param {Struct.BBMOD_Vec3, Struct.BBMOD_Vec4} _vector The vector in
+	/// world-space.
 	/// @param {Real} [_screenWidth] The width of the screen. If `undefined`, it
 	/// is retrieved using `window_get_width`.
 	/// @param {Real} [_screenHeight] The height of the screen. If `undefined`,
@@ -284,12 +285,12 @@ function BBMOD_BaseCamera() constructor
 	/// @note This requires {@link BBMOD_BaseCamera.ViewProjectionMatrix}, so you
 	/// should use this *after* {@link BBMOD_BaseCamera.update_matrices} (or
 	/// {@link BBMOD_BaseCamera.update}) is called!
-	static world_to_screen = function (_position, _screenWidth=undefined, _screenHeight=undefined)
+	static world_to_screen = function (_vector, _screenWidth=undefined, _screenHeight=undefined)
 	{
 		gml_pragma("forceinline");
 		_screenWidth ??= window_get_width();
 		_screenHeight ??= window_get_height();
-		var _screenPos = new BBMOD_Vec4(_position.X, _position.Y, _position.Z, 1.0)
+		var _screenPos = new BBMOD_Vec4(_vector.X, _vector.Y, _vector.Z, _vector[$ "W"] ?? 1.0)
 			.Transform(ViewProjectionMatrix);
 		if (_screenPos.Z < 0.0)
 		{
