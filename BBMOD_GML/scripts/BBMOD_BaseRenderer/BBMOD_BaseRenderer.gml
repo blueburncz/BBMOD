@@ -1173,7 +1173,8 @@ function BBMOD_BaseRenderer() constructor
 			surface_reset_target();
 			gpu_pop_state();
 
-			PostProcessor.draw(__surFinal, X, Y);
+			// FIXME: Make this work for all renderers!
+			PostProcessor.draw(__surFinal, X, Y, self[$ "__surDepthBuffer"]);
 		}
 
 		matrix_set(matrix_world, _world);

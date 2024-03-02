@@ -6,9 +6,33 @@ uniform vec2 u_vInvRes;
 uniform float u_fFadeOut;
 uniform float u_fFlareRays;
 uniform sampler2D u_texFlareRays;
+uniform sampler2D u_texDepth;
+uniform float u_fClipFar;
+uniform float u_fDepthThreshold;
+
+/// @param c Encoded depth.
+/// @return Docoded linear depth.
+/// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
+float xDecodeDepth(vec3 c)
+{
+	const float inv255 = 1.0 / 255.0;
+	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
+}
 
 void main()
 {
+	vec2 lightUV = u_vLightPos.xy * u_vInvRes;
+	if (lightUV.x >= 0.0 && lightUV.x < 1.0
+		&& lightUV.y >= 0.0 && lightUV.y < 1.0)
+	{
+		float depth = xDecodeDepth(texture2D(u_texDepth, lightUV).rgb) * u_fClipFar;
+		if (depth < u_vLightPos.z - u_fDepthThreshold)
+		{
+			gl_FragColor = vec4(0.0);
+			return;
+		}
+	}
+
 	gl_FragColor = texture2D(gm_BaseTexture, v_vTexCoord) * u_vColor;
 
 	if (u_fFlareRays == 1.0)

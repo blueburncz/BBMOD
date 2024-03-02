@@ -12,6 +12,11 @@ function BBMOD_LensFlaresEffect()
 {
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		if (!_depth)
+		{
+			return _surfaceSrc;
+		}
+
 		surface_set_target(_surfaceDest);
 		draw_surface(_surfaceSrc, 0, 0);
 
@@ -21,7 +26,7 @@ function BBMOD_LensFlaresEffect()
 		var _lensFlares = global.__bbmodLensFlares;
 		for (var i = array_length(_lensFlares) - 1; i >= 0; --i)
 		{
-			_lensFlares[i].draw();
+			_lensFlares[i].draw(_depth);
 		}
 
 		gpu_pop_state();

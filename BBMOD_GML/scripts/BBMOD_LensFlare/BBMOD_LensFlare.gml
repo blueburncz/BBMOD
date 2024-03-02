@@ -16,7 +16,7 @@ function BBMOD_LensFlare() constructor
 	/// @var {Struct.BBMOD_Vec3} The position in the world or `undefined`,
 	/// in which case the property {@link BBMOD_LensFlare.Direction} is used
 	/// instead. Default value is `undefined`.
-	Position = undefined
+	Position = undefined;
 
 	/// @var {Real} The maximum distance at which is the lens flare visible.
 	/// Used only in case {@link BBMOD_LensFlare.Position} is not `undefined`.
@@ -42,6 +42,9 @@ function BBMOD_LensFlare() constructor
 	static __uInvRes = shader_get_uniform(BBMOD_ShLensFlare, "u_vInvRes");
 	static __uColor = shader_get_uniform(BBMOD_ShLensFlare, "u_vColor");
 	static __uFadeOut = shader_get_uniform(BBMOD_ShLensFlare, "u_fFadeOut");
+	static __uDepthTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texDepth");
+	static __uClipFar = shader_get_uniform(BBMOD_ShLensFlare, "u_fClipFar");
+	static __uDepthThreshold = shader_get_uniform(BBMOD_ShLensFlare, "u_fDepthThreshold");
 
 	/// @func add_element(_element)
 	///
@@ -69,12 +72,15 @@ function BBMOD_LensFlare() constructor
 		return __elements;
 	};
 
-	/// @func draw()
+	/// @func draw(_depth)
 	///
 	/// @desc Draws the lens flare.
 	///
+	/// @param {Id.Surface} _depth A surface containing scene depth encoded into
+	/// the RGB channels.
+	///
 	/// @return {Struct.BBMOD_LensFlare} Returns `self`.
-	static draw = function ()
+	static draw = function (_depth)
 	{
 		var _camera = global.__bbmodCameraCurrent;
 
@@ -95,6 +101,11 @@ function BBMOD_LensFlare() constructor
 			return self;
 		}
 
+		if (Position == undefined)
+		{
+			_screenPos.Z = _camera.ZFar;
+		}
+
 		var _x = _screenPos.X;
 		var _y = _screenPos.Y;
 		var _z = _screenPos.Z;
@@ -108,6 +119,10 @@ function BBMOD_LensFlare() constructor
 		shader_set_uniform_f(__uLightPos, _x, _y, _z);
 		texture_set_stage(__uFlareRaysTex, sprite_get_texture(BBMOD_SprFlareRays, 0));
 		shader_set_uniform_f(__uInvRes, 1.0 / _screenWidth, 1.0 / _screenHeight);
+		texture_set_stage(__uDepthTex, surface_get_texture(_depth));
+		gpu_set_tex_filter_ext(__uDepthTex, false);
+		shader_set_uniform_f(__uClipFar, _camera.ZFar);
+		shader_set_uniform_f(__uDepthThreshold, DepthThreshold);
 		var _uColor = __uColor;
 		var _uFadeOut = __uFadeOut;
 		var _uFlareRays = __uFlareRays;
