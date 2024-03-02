@@ -49,7 +49,7 @@ if (global.day)
 	sunLight.Direction.Set(0.30, 0.30, -0.87);
 
 	lensFlare = new BBMOD_LensFlare();
-	lensFlare.Direction = sunLight.Direction.Scale(-1.0);
+	lensFlare.Direction = sunLight.Direction;
 
 	var _e;
 

@@ -34,10 +34,17 @@ function BBMOD_LensFlare() constructor
 	/// Default value is 1.
 	DepthThreshold = 1.0;
 
-	/// @var {Struct.BBMOD_Vec3} The direction towards the light source placed
-	/// at an infinite distance. Used if {@link BBMOD_LensFlare.Position} is
-	/// `undefined`. Default value is `(1, 1, 1)`.
-	Direction = new BBMOD_Vec3(1.0);
+	/// @var {Struct.BBMOD_Vec3, Undefined} The source light's direction or
+	/// `undefined` (default).
+	Direction = undefined;
+
+	/// @var {Real, Undefined} The inner cone angle in degrees (for lens flares
+	/// produced by spot lights) or `undefined` (default).
+	AngleInner = undefined;
+
+	/// @var {Real, Undefined} The outer cone angle in degrees (for lens flares
+	/// produced by spot lights) or `undefined` (default).
+	AngleOuter = undefined;
 
 	/// @var {Array<Struct.BBMOD_LensFlareElement>}
 	/// @private
@@ -89,8 +96,12 @@ function BBMOD_LensFlare() constructor
 	/// @return {Struct.BBMOD_LensFlare} Returns `self`.
 	static draw = function (_depth)
 	{
-		var _camera = global.__bbmodCameraCurrent;
+		if (Position == undefined && Direction == undefined)
+		{
+			return self;
+		}
 
+		var _camera = global.__bbmodCameraCurrent;
 		if (_camera == undefined)
 		{
 			return self;
@@ -98,9 +109,8 @@ function BBMOD_LensFlare() constructor
 
 		var _screenWidth = window_get_width();
 		var _screenHeight = window_get_height();
-
 		var _screenPos = _camera.world_to_screen(
-			Position ?? new BBMOD_Vec4(Direction.X, Direction.Y, Direction.Z, 0.0),
+			Position ?? new BBMOD_Vec4(-Direction.X, -Direction.Y, -Direction.Z, 0.0),
 			_screenWidth, _screenHeight);
 
 		if (_screenPos == undefined)
@@ -109,22 +119,35 @@ function BBMOD_LensFlare() constructor
 		}
 
 		var _strength = 1.0;
-
 		if (Position != undefined)
 		{
+			var _vec = _camera.Position.Sub(Position);
+
 			if (Range != infinity)
 			{
-				var _dist = _camera.Position.Sub(Position).Length();
+				var _dist = _vec.Length();
 				_strength = 1.0 - min((_dist - (Range * Falloff)) / (Range * (1.0 - Falloff)), 1.0);
-				if (_strength <= 0.0)
-				{
-					return self;
-				}
+			}
+
+			if (Direction != undefined
+				&& AngleInner != undefined
+				&& AngleOuter != undefined)
+			{
+				var _dir = _vec.Normalize();
+				var _inner = dsin(AngleInner);
+				var _outer = dsin(AngleOuter);
+				var _dot = clamp(_dir.Dot(Direction.Normalize()), 0.0, 1.0);
+				_strength *= clamp((_dot - _inner) / (_outer - _inner), 0.0, 1.0);
 			}
 		}
 		else
 		{
 			_screenPos.Z = _camera.ZFar;
+		}
+
+		if (_strength <= 0.0)
+		{
+			return self;
 		}
 
 		var _x = _screenPos.X;
