@@ -20,7 +20,14 @@ function BBMOD_LensFlare() constructor
 
 	/// @var {Real} The maximum distance at which is the lens flare visible.
 	/// Used only in case {@link BBMOD_LensFlare.Position} is not `undefined`.
-	Range = 1.0;
+	/// Default value is `infinity`.
+	Range = infinity;
+
+	/// @var {Real} A multiplier for {@link BBMOD_LensFlare.Range} used to
+	/// compute the distance from the camera at which the lens flare starts
+	/// fading away. Use values in range 0..1. Default value is 0.8 (the lens
+	/// flare starts fading away at 80% of the `Range` property).
+	Falloff = 0.8;
 
 	/// @var {Real} The maximum allowed difference between the flare's depth and
 	/// the depth in the depth buffer. When larger, the lens flare is not drawn.
@@ -101,7 +108,21 @@ function BBMOD_LensFlare() constructor
 			return self;
 		}
 
-		if (Position == undefined)
+		var _strength = 1.0;
+
+		if (Position != undefined)
+		{
+			if (Range != infinity)
+			{
+				var _dist = _camera.Position.Sub(Position).Length();
+				_strength = 1.0 - min((_dist - (Range * Falloff)) / (Range * (1.0 - Falloff)), 1.0);
+				if (_strength <= 0.0)
+				{
+					return self;
+				}
+			}
+		}
+		else
 		{
 			_screenPos.Z = _camera.ZFar;
 		}
@@ -139,7 +160,7 @@ function BBMOD_LensFlare() constructor
 					Color.Red / 255.0,
 					Color.Green / 255.0,
 					Color.Blue / 255.0,
-					Color.Alpha);
+					Color.Alpha * _strength);
 				draw_sprite_ext(
 					Sprite, Subimage, _x + _vecX * Offset.X, _y + _vecY * Offset.Y,
 					Scale.X, Scale.Y, Angle + _direction * (AngleRelative ? 1.0 : 0.0),
