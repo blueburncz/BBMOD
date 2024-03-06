@@ -1,6 +1,6 @@
 event_inherited();
 
-global.day = !global.day;
+global.day = true;//!global.day;
 
 modSky = global.resourceManager.load(
 	"Data/BBMOD/Models/Sphere.bbmod",
@@ -52,11 +52,6 @@ if (global.day)
 	lensFlare.Direction = sunLight.Direction;
 
 	var _e;
-
-	_e = new BBMOD_LensFlareElement(new BBMOD_Vec2(0.0), Sprite2);
-	_e.Scale.Set(3.0);
-	lensFlare.add_element(_e);
-
 	for (var i = 0.1; i <= 1.0; i += 0.2)
 	{
 		if (i > 0.3)
@@ -84,6 +79,8 @@ if (global.day)
 	lensFlare.add_element(_e);
 
 	bbmod_lens_flare_add(lensFlare);
+
+	OMain.postProcessor.add_effect(new BBMOD_SunShaftsEffect(sunLight.Direction));
 }
 else
 {

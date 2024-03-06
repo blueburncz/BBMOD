@@ -95,13 +95,12 @@ radialBlur.Strength = 0.0;
 radialBlur.Step = 1.0 / 16.0;
 postProcessor.add_effect(radialBlur);
 
-postProcessor.add_effect(new BBMOD_LensFlaresEffect());
-postProcessor.add_effect(new BBMOD_LensDirtEffect(undefined, 0.7, 4.0));
-
 if (bbmod_hdr_is_supported())
 {
 	postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());
 }
+
+postProcessor.add_effect(new BBMOD_LensFlaresEffect());
 
 postProcessor.add_effect(
 	new BBMOD_ColorGradingEffect(
@@ -117,12 +116,10 @@ postProcessor.add_effect(
 		new BBMOD_Vec3(-1.0, 1.0, -1.0)
 	)
 );
-postProcessor.add_effect(new BBMOD_FilmGrainEffect());
+//postProcessor.add_effect(new BBMOD_FilmGrainEffect());
 vignette = new BBMOD_VignetteEffect(0.0, c_red);
 postProcessor.add_effect(vignette);
 postProcessor.add_effect(new BBMOD_VignetteEffect(0.8));
-
-postProcessor.add_effect(new BBMOD_LensDistortionEffect(-0.1));
 
 if (os_browser == browser_not_a_browser)
 {
