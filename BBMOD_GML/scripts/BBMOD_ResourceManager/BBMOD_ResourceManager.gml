@@ -287,6 +287,7 @@ function BBMOD_ResourceManager() constructor
 
 			// Create the material and apply props.
 			_res = bbmod_material_get(_materialName).clone().from_json(_json);
+			_res.__manager = self;
 			_resources[? _path] = _res;
 
 			if (_onLoad != undefined)
@@ -327,7 +328,7 @@ function BBMOD_ResourceManager() constructor
 			return undefined;
 		}
 
-		_res.Manager = self;
+		_res.__manager = self;
 		var _manager = self;
 		var _context = {
 			Path: _path,
