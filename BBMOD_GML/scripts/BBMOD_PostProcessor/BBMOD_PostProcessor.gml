@@ -62,6 +62,19 @@ function BBMOD_PostProcessor() constructor
 	/// @private
 	__surPostProcess2 = -1;
 
+	/// @var {Real} The width of the screen for which was the game designed.
+	/// Effects are scaled based on this and the current width of the screen.
+	DesignWidth = 1366;
+
+	/// @var {Real} The height of the screen for which was the game designed.
+	DesignHeight = 768;
+
+	/// @var {Struct.BBMOD_Rect} The screen size and position.
+	/// @note This is not initialized before {@link BBMOD_PostProcessor.draw} is
+	/// called!
+	/// @readonly
+	Rect = new BBMOD_Rect();
+
 	/// @func add_effect(_effect)
 	///
 	/// @desc Adds an effect to the post-processor.
@@ -124,6 +137,11 @@ function BBMOD_PostProcessor() constructor
 	static draw = function (
 		_surface, _x, _y, _depth=undefined, _normals=undefined)
 	{
+		Rect.X = _x;
+		Rect.Y = _y;
+		Rect.Width = surface_get_width(_surface);
+		Rect.Height = surface_get_height(_surface);
+
 		if (!Enabled)
 		{
 			draw_surface(_surface, _x, _y);

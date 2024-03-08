@@ -63,8 +63,9 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 			return _surfaceDest;
 		}
 
-		var _screenWidth = window_get_width();
-		var _screenHeight = window_get_height();
+		var _rect = PostProcessor.Rect;
+		var _screenWidth = _rect.Width;
+		var _screenHeight = _rect.Height;
 		var _screenPos = _camera.world_to_screen(
 			new BBMOD_Vec4(-LightDirection.X, -LightDirection.Y, -LightDirection.Z, 0.0),
 			_screenWidth, _screenHeight);

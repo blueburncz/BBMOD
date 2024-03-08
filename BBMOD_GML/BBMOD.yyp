@@ -308,6 +308,7 @@
     {"id":{"name":"Sprite3","path":"sprites/Sprite3/Sprite3.yy",},},
     {"id":{"name":"BBMOD_DirectionalLight","path":"scripts/BBMOD_DirectionalLight/BBMOD_DirectionalLight.yy",},},
     {"id":{"name":"BBMOD_Exception","path":"scripts/BBMOD_Exception/BBMOD_Exception.yy",},},
+    {"id":{"name":"BBMOD_Rect","path":"scripts/BBMOD_Rect/BBMOD_Rect.yy",},},
     {"id":{"name":"BBMOD_TerrainCollisionModule","path":"scripts/BBMOD_TerrainCollisionModule/BBMOD_TerrainCollisionModule.yy",},},
     {"id":{"name":"BBMOD_Renderer","path":"scripts/BBMOD_Renderer/BBMOD_Renderer.yy",},},
     {"id":{"name":"__bbmod_cmpfunc","path":"scripts/__bbmod_cmpfunc/__bbmod_cmpfunc.yy",},},

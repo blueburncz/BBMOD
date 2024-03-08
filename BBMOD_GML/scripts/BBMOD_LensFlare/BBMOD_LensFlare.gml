@@ -86,15 +86,17 @@ function BBMOD_LensFlare() constructor
 		return __elements;
 	};
 
-	/// @func draw(_depth)
+	/// @func draw(_rect, _scale, _depth)
 	///
 	/// @desc Draws the lens flare.
 	///
+	/// @param {Struct.BBMOD_Rect} _rect The screen position and size.
+	/// @param {Real} _scale Global scaling factor for lens flare sprites.
 	/// @param {Id.Surface} _depth A surface containing scene depth encoded into
 	/// the RGB channels.
 	///
 	/// @return {Struct.BBMOD_LensFlare} Returns `self`.
-	static draw = function (_depth)
+	static draw = function (_rect, _scale, _depth)
 	{
 		if (Position == undefined && Direction == undefined)
 		{
@@ -107,8 +109,8 @@ function BBMOD_LensFlare() constructor
 			return self;
 		}
 
-		var _screenWidth = window_get_width();
-		var _screenHeight = window_get_height();
+		var _screenWidth = _rect.Width;
+		var _screenHeight = _rect.Height;
 		var _screenPos = _camera.world_to_screen(
 			Position ?? new BBMOD_Vec4(-Direction.X, -Direction.Y, -Direction.Z, 0.0),
 			_screenWidth, _screenHeight);
@@ -153,8 +155,8 @@ function BBMOD_LensFlare() constructor
 		var _x = _screenPos.X;
 		var _y = _screenPos.Y;
 		var _z = _screenPos.Z;
-		var _vecX = _screenWidth * 0.5 - _x;
-		var _vecY = _screenHeight * 0.5 - _y;
+		var _vecX = (_screenWidth * 0.5) - _x;
+		var _vecY = (_screenHeight * 0.5) - _y;
 		var _direction = point_direction(0, 0, _vecX, _vecY);
 
 		gpu_push_state();
@@ -186,7 +188,7 @@ function BBMOD_LensFlare() constructor
 					Color.Alpha * _strength);
 				draw_sprite_ext(
 					Sprite, Subimage, _x + _vecX * Offset.X, _y + _vecY * Offset.Y,
-					Scale.X, Scale.Y, Angle + _direction * (AngleRelative ? 1.0 : 0.0),
+					Scale.X * _scale, Scale.Y * _scale, Angle + _direction * (AngleRelative ? 1.0 : 0.0),
 					c_white, 1.0);
 			}
 		}

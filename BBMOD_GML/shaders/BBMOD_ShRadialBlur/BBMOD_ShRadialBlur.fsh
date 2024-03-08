@@ -13,13 +13,12 @@ void main()
 {
 	vec3 color = vec3(0.0);
 	vec2 dist = v_vTexCoord - u_vOrigin;
-	for (float j = 0.0; j < 1.0; j += u_fStep)
+	for (float i = 0.0; i < 1.0; i += u_fStep)
 	{
-		float scale = 1.0 - u_fStrength * (j * u_fStep) * (clamp(length(dist) / u_fRadius, 0.0, 1.0));
-		color += texture2D(gm_BaseTexture, dist * scale + u_vOrigin).rgb;
+		float scale = 1.0 - u_fStrength * (i * u_fStep) * (clamp(length(dist) / u_fRadius, 0.0, 1.0));
+		color += texture2D(gm_BaseTexture, u_vOrigin + dist * scale).rgb;
 	}
 	color *= u_fStep;
-
 	gl_FragColor.rgb = color;
 	gl_FragColor.a = 1.0;
 }

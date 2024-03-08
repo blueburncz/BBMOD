@@ -199,6 +199,7 @@
     {"name":"bbmod_surface_check","order":2,"path":"scripts/bbmod_surface_check/bbmod_surface_check.yy",},
     {"name":"Sprite3","order":3,"path":"sprites/Sprite3/Sprite3.yy",},
     {"name":"BBMOD_DirectionalLight","order":2,"path":"scripts/BBMOD_DirectionalLight/BBMOD_DirectionalLight.yy",},
+    {"name":"BBMOD_Rect","order":23,"path":"scripts/BBMOD_Rect/BBMOD_Rect.yy",},
     {"name":"BBMOD_Renderer","order":2,"path":"scripts/BBMOD_Renderer/BBMOD_Renderer.yy",},
     {"name":"__bbmod_cmpfunc","order":15,"path":"scripts/__bbmod_cmpfunc/__bbmod_cmpfunc.yy",},
     {"name":"BBMOD_ShDefaultDepthColor","order":19,"path":"shaders/BBMOD_ShDefaultDepthColor/BBMOD_ShDefaultDepthColor.yy",},
