@@ -10,22 +10,29 @@
 function BBMOD_SunShaftsEffect(_lightDir=undefined)
 	: BBMOD_PostProcessEffect() constructor
 {
-	/// @var {Struct.BBMOD_Vec3}
+	/// @var {Struct.BBMOD_Vec3} The direction in which the light is coming.
 	LightDirection = _lightDir;
 
-	/// @var {Real}
-	Radius = 0.2;
+	/// @var {Real} The size of the sun, relative to the screen size (i.e. 1
+	/// is the full screen, 0.5 is the half of the screen etc.). Default value
+	/// is 0.1.
+	Radius = 0.1;
 
-	/// @var {Real}
-	Strength = 0.4;
+	/// @var {Struct.BBMOD_Color} Controls the color and the intensity (via
+	/// alpha) of the effect. Default value is {@link BBMOD_C_WHITE}.
+	Color = BBMOD_C_WHITE;
 
-	/// @var {Real}
+	/// @var {Real} The size of the blur. Default value is 100.
 	BlurSize = 100;
 
-	/// @var {Real}
+	/// @var {Real} Used to control the quality of the effect. Use values
+	/// greater than 0 and smaller than 1. The smaller the value, the higher the
+	/// quality. Default value is 0.01 (high quality).
 	BlurStep = 0.01;
 
-	/// @var {Constant.BlendMode}
+	/// @var {Constant.BlendMode} The blend mode used to combine the sun shafts
+	/// with the scene. Good options are for example `bm_add` (default) and
+	/// `bm_max`.
 	BlendMode = bm_add;
 
 	/// @var {Id.Surface}
@@ -41,7 +48,7 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 	static __uLightPos = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vLightPos");
 	static __uAspect = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vAspect");
 	static __uMaskRadius = shader_get_uniform(BBMOD_ShSunShaftMask, "u_fRadius");
-	static __uMaskStrength = shader_get_uniform(BBMOD_ShSunShaftMask, "u_fStrength");
+	static __uColor = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -67,20 +74,22 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 			return _surfaceDest;
 		}
 
-
-		var _width = surface_get_width(_surfaceSrc);
-		var _height = surface_get_height(_surfaceSrc);
+		_screenPos.X *= 0.5;
+		_screenPos.Y *= 0.5;
+		var _width = surface_get_width(_surfaceSrc) / 2;
+		var _height = surface_get_height(_surfaceSrc) / 2;
 		var _texelWidth = 1.0 / _width;
 		var _texelHeight = 1.0 / _height;
 
-		__surWork = bbmod_surface_check(__surWork, _width, _height, surface_rgba8unorm, false);
+		__surWork = bbmod_surface_check(__surWork, _width, _height,
+			bbmod_hdr_is_supported() ? surface_rgba16float : surface_rgba8unorm, false);
 		surface_set_target(__surWork);
 		shader_set(BBMOD_ShSunShaftMask);
 		shader_set_uniform_f(__uLightPos, _screenPos.X * _texelWidth, _screenPos.Y * _texelHeight);
 		shader_set_uniform_f(__uAspect, 1.0, _height / _width);
 		shader_set_uniform_f(__uMaskRadius, Radius);
-		shader_set_uniform_f(__uMaskStrength, Strength);
-		draw_surface(_depth, 0, 0);
+		shader_set_uniform_f(__uColor, Color.Red / 255.0, Color.Green / 255.0, Color.Blue / 255.0, Color.Alpha);
+		draw_surface_ext(_depth, 0, 0, 0.5, 0.5, 0, c_white, 1.0);
 		shader_reset();
 		surface_reset_target();
 
@@ -95,7 +104,7 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 		shader_set_uniform_f(__uRadius, 0.0);
 		shader_set_uniform_f(__uStrength, BlurSize);
 		shader_set_uniform_f(__uStep, BlurStep);
-		draw_surface(__surWork, 0, 0);
+		draw_surface_ext(__surWork, 0, 0, 2, 2, 0, c_white, 1.0);
 		shader_reset();
 		gpu_pop_state();
 		surface_reset_target();
