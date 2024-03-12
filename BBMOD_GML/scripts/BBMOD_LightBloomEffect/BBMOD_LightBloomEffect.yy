@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_LightBloomEffect",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "LightBloom",
-    "path": "folders/BBMOD/PostProcessing/LightBloom.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_LightBloomEffect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_LightBloomEffect",
+  "parent":{
+    "name":"LightBloom",
+    "path":"folders/BBMOD/PostProcessing/LightBloom.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

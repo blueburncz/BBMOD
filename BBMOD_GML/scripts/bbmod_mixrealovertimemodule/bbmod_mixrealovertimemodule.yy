@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_MixRealOverTimeModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "MixPropertyOverTime",
-    "path": "folders/BBMOD/Particles/Modules/Universal/MixPropertyOverTime.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_MixRealOverTimeModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_MixRealOverTimeModule",
+  "parent":{
+    "name":"MixPropertyOverTime",
+    "path":"folders/BBMOD/Particles/Modules/Universal/MixPropertyOverTime.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

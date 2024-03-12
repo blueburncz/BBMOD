@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_AnimationInstance",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Animation",
-    "path": "folders/BBMOD/Core/Base/Animation.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_AnimationInstance",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_AnimationInstance",
+  "parent":{
+    "name":"Animation",
+    "path":"folders/BBMOD/Core/Base/Animation.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

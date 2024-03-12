@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_MixEmissionModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Emission",
-    "path": "folders/BBMOD/Particles/Modules/Emission.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_MixEmissionModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_MixEmissionModule",
+  "parent":{
+    "name":"Emission",
+    "path":"folders/BBMOD/Particles/Modules/Emission.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

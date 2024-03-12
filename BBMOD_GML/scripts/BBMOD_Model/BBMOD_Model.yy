@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_Model",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Model",
-    "path": "folders/BBMOD/Core/Base/Model.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_Model",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_Model",
+  "parent":{
+    "name":"Model",
+    "path":"folders/BBMOD/Core/Base/Model.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

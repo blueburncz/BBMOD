@@ -1,5 +1,12 @@
+# Local
+.vscode
 /docs_build/
 /docs_src/ScriptingAPI/
 
-.vscode
+# macOS
 .DS_Store
+._*
+
+# Old font files
+*.old.png
+*.old.yy

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_PunctualLight",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Lights",
-    "path": "folders/BBMOD/Core/Lights.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_PunctualLight",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_PunctualLight",
+  "parent":{
+    "name":"Lights",
+    "path":"folders/BBMOD/Core/Lights.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

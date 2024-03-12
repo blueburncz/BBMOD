@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_PostProcessor",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "PostProcessing",
-    "path": "folders/BBMOD/PostProcessing.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_PostProcessor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_PostProcessor",
+  "parent":{
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/PostProcessing.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

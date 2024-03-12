@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShThreshold",
-  "parent": {
-    "name": "LightBloom",
-    "path": "folders/BBMOD/PostProcessing/LightBloom.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShThreshold",
+  "name":"BBMOD_ShThreshold",
+  "parent":{
+    "name":"LightBloom",
+    "path":"folders/BBMOD/PostProcessing/LightBloom.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

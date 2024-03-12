@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShSky",
-  "parent": {
-    "name": "Sky",
-    "path": "folders/BBMOD/Rendering/Sky.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShSky",
+  "name":"BBMOD_ShSky",
+  "parent":{
+    "name":"Sky",
+    "path":"folders/BBMOD/Rendering/Sky.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

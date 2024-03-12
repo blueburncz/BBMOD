@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_DefaultSpriteShader",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "DefaultRenderer",
-    "path": "folders/BBMOD/Core/DefaultRenderer.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_DefaultSpriteShader",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_DefaultSpriteShader",
+  "parent":{
+    "name":"DefaultRenderer",
+    "path":"folders/BBMOD/Core/DefaultRenderer.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

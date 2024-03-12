@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_OutOfRangeException",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Exceptions",
-    "path": "folders/BBMOD/Core/Base/Exceptions.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_OutOfRangeException",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_OutOfRangeException",
+  "parent":{
+    "name":"Exceptions",
+    "path":"folders/BBMOD/Core/Base/Exceptions.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShColorGrading",
-  "parent": {
-    "name": "ColorGrading",
-    "path": "folders/BBMOD/PostProcessing/ColorGrading.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShColorGrading",
+  "name":"BBMOD_ShColorGrading",
+  "parent":{
+    "name":"ColorGrading",
+    "path":"folders/BBMOD/PostProcessing/ColorGrading.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

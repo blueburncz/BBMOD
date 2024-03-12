@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_StateMachine",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "StateMachine",
-    "path": "folders/BBMOD/StateMachine.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_StateMachine",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_StateMachine",
+  "parent":{
+    "name":"StateMachine",
+    "path":"folders/BBMOD/StateMachine.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,5 +1,4 @@
 {
-  "resourceType": "GMExtensionConfigSet",
-  "configurables": null,
-  "resourceVersion": "1.0"
+  "$GMExtensionConfigSet": "GMExtensionConfigSet",
+  "configurables": null
 }

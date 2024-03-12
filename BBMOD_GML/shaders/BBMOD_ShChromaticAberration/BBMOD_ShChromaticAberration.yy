@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShChromaticAberration",
-  "parent": {
-    "name": "ChromaticAberration",
-    "path": "folders/BBMOD/PostProcessing/ChromaticAberration.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShChromaticAberration",
+  "name":"BBMOD_ShChromaticAberration",
+  "parent":{
+    "name":"ChromaticAberration",
+    "path":"folders/BBMOD/PostProcessing/ChromaticAberration.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

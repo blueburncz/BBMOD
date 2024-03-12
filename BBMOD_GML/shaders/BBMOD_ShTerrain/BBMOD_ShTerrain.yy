@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShTerrain",
-  "parent": {
-    "name": "Shaders",
-    "path": "folders/BBMOD/Terrain/Shaders.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShTerrain",
+  "name":"BBMOD_ShTerrain",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/Terrain/Shaders.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

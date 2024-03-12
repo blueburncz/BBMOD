@@ -29,3 +29,8 @@ if (flashlight.Enabled
 	flashlight.Direction = new BBMOD_Vec4(1.0, -0.25, 0.0, 0.0).Transform(_matrixFlashlight);
 	flashlight.Position.Set(_matrixFlashlight[12], _matrixFlashlight[13], _matrixFlashlight[14]);
 }
+
+if (keyboard_check_pressed(vk_space))
+{
+	show_debug_message(camera.get_forward().Scale(-1));
+}

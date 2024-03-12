@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "DirtParticleSystem",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "ParticleSystems",
-    "path": "folders/Demo/ParticleSystems.yy",
+  "$GMScript":"",
+  "%Name":"DirtParticleSystem",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DirtParticleSystem",
+  "parent":{
+    "name":"ParticleSystems",
+    "path":"folders/Demo/ParticleSystems.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

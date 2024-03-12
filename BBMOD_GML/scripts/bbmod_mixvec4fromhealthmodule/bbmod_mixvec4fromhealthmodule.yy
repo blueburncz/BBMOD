@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_MixVec4FromHealthModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "MixPropertyFromHealth",
-    "path": "folders/BBMOD/Particles/Modules/Universal/MixPropertyFromHealth.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_MixVec4FromHealthModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_MixVec4FromHealthModule",
+  "parent":{
+    "name":"MixPropertyFromHealth",
+    "path":"folders/BBMOD/Particles/Modules/Universal/MixPropertyFromHealth.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

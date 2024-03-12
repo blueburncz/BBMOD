@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_SphereEmissionModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Shape",
-    "path": "folders/BBMOD/Particles/Modules/Emission/Shape.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_SphereEmissionModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_SphereEmissionModule",
+  "parent":{
+    "name":"Shape",
+    "path":"folders/BBMOD/Particles/Modules/Emission/Shape.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

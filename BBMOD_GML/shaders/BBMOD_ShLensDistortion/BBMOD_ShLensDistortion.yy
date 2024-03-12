@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShLensDistortion",
-  "parent": {
-    "name": "LensDistortion",
-    "path": "folders/BBMOD/PostProcessing/LensDistortion.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShLensDistortion",
+  "name":"BBMOD_ShLensDistortion",
+  "parent":{
+    "name":"LensDistortion",
+    "path":"folders/BBMOD/PostProcessing/LensDistortion.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

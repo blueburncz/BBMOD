@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "ShZombieDepth",
-  "parent": {
-    "name": "Shaders",
-    "path": "folders/Demo/Shaders.yy",
+  "$GMShader":"",
+  "%Name":"ShZombieDepth",
+  "name":"ShZombieDepth",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/Demo/Shaders.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_MixColorModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "MixProperty",
-    "path": "folders/BBMOD/Particles/Modules/Universal/MixProperty.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_MixColorModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_MixColorModule",
+  "parent":{
+    "name":"MixProperty",
+    "path":"folders/BBMOD/Particles/Modules/Universal/MixProperty.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

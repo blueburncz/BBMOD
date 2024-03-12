@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "bbmod_set_instance_id",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Rendering",
-    "path": "folders/BBMOD/Core/Rendering.yy",
+  "$GMScript":"",
+  "%Name":"bbmod_set_instance_id",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"bbmod_set_instance_id",
+  "parent":{
+    "name":"Rendering",
+    "path":"folders/BBMOD/Core/Rendering.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -23,7 +23,7 @@ bbmod_light_directional_set(sunLight);
 
 // TODO: Fix memory leaks
 bbmod_sprite_add_async(
-	global.day ? "Data/BBMOD/Skies/Sky+60.png" : "Data/BBMOD/Skies/Sky-15.png",
+	global.day ? "Data/BBMOD/Skies/Sky+20.png" : "Data/BBMOD/Skies/Sky-15.png",
 	method(self, function (_err, _sprite) {
 		if (!_err)
 		{
@@ -32,7 +32,7 @@ bbmod_sprite_add_async(
 	}));
 
 bbmod_sprite_add_async(
-	global.day ? "Data/BBMOD/Skies/IBL+60.png" : "Data/BBMOD/Skies/IBL-15.png",
+	global.day ? "Data/BBMOD/Skies/IBL+20.png" : "Data/BBMOD/Skies/IBL-15.png",
 	method(self, function (_err, _sprite) {
 		if (!_err)
 		{
@@ -46,7 +46,8 @@ lensFlare = undefined;
 if (global.day)
 {
 	sunLight.Color = BBMOD_C_WHITE;
-	sunLight.Direction.Set(0.30, 0.30, -0.87);
+	//sunLight.Direction.Set(0.30, 0.30, -0.87);
+	sunLight.Direction.Set(0.54, 0.77, -0.34);
 
 	lensFlare = new BBMOD_LensFlare();
 	lensFlare.Direction = sunLight.Direction;

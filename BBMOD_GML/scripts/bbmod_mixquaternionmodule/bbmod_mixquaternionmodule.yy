@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_MixQuaternionModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "MixProperty",
-    "path": "folders/BBMOD/Particles/Modules/Universal/MixProperty.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_MixQuaternionModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_MixQuaternionModule",
+  "parent":{
+    "name":"MixProperty",
+    "path":"folders/BBMOD/Particles/Modules/Universal/MixProperty.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_Property",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Properties",
-    "path": "folders/BBMOD/Core/Properties.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_Property",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_Property",
+  "parent":{
+    "name":"Properties",
+    "path":"folders/BBMOD/Core/Properties.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

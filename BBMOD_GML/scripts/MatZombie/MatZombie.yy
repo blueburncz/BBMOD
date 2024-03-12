@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "MatZombie",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Materials",
-    "path": "folders/Demo/Materials.yy",
+  "$GMScript":"",
+  "%Name":"MatZombie",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"MatZombie",
+  "parent":{
+    "name":"Materials",
+    "path":"folders/Demo/Materials.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

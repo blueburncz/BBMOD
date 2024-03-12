@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_CollisionEventModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Event",
-    "path": "folders/BBMOD/Particles/Modules/Event.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_CollisionEventModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_CollisionEventModule",
+  "parent":{
+    "name":"Event",
+    "path":"folders/BBMOD/Particles/Modules/Event.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

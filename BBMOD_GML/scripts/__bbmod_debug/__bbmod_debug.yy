@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__bbmod_debug",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Debug",
-    "path": "folders/BBMOD/Core/Debug.yy",
+  "$GMScript":"",
+  "%Name":"__bbmod_debug",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bbmod_debug",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/BBMOD/Core/Debug.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

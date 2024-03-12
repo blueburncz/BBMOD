@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_MixQuaternionFromSpeedModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "MixPropertyFromSpeed",
-    "path": "folders/BBMOD/Particles/Modules/Universal/MixPropertyFromSpeed.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_MixQuaternionFromSpeedModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_MixQuaternionFromSpeedModule",
+  "parent":{
+    "name":"MixPropertyFromSpeed",
+    "path":"folders/BBMOD/Particles/Modules/Universal/MixPropertyFromSpeed.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

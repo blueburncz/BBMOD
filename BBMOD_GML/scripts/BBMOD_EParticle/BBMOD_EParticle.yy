@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_EParticle",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Particles",
-    "path": "folders/BBMOD/Particles.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_EParticle",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_EParticle",
+  "parent":{
+    "name":"Particles",
+    "path":"folders/BBMOD/Particles.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

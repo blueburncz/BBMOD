@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShLensFlare",
-  "parent": {
-    "name": "LensFlares",
-    "path": "folders/BBMOD/PostProcessing/LensFlares.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShLensFlare",
+  "name":"BBMOD_ShLensFlare",
+  "parent":{
+    "name":"LensFlares",
+    "path":"folders/BBMOD/PostProcessing/LensFlares.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

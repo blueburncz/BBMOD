@@ -1,5 +1,5 @@
 {
-  "FolderOrderSettings": [
+  "FolderOrderSettings":[
     {"name":"BBMOD","order":53,"path":"folders/BBMOD.yy",},
     {"name":"ColMesh","order":7,"path":"folders/BBMOD/ColMesh.yy",},
     {"name":"Base","order":25,"path":"folders/BBMOD/Core/Base.yy",},
@@ -90,7 +90,7 @@
     {"name":"Sprites","order":4,"path":"folders/Demo/Sprites.yy",},
     {"name":"Terrain","order":7,"path":"folders/Demo/Sprites/Terrain.yy",},
   ],
-  "ResourceOrderSettings": [
+  "ResourceOrderSettings":[
     {"name":"BBMOD_ShDefaultColor","order":16,"path":"shaders/BBMOD_ShDefaultColor/BBMOD_ShDefaultColor.yy",},
     {"name":"BBMOD_Cubemap","order":13,"path":"scripts/BBMOD_Cubemap/BBMOD_Cubemap.yy",},
     {"name":"SndZombie0","order":1,"path":"sounds/SndZombie0/SndZombie0.yy",},

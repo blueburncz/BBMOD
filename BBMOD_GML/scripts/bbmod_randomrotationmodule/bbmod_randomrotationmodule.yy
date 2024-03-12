@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_RandomRotationModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Rotation",
-    "path": "folders/BBMOD/Particles/Modules/Rotation.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_RandomRotationModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_RandomRotationModule",
+  "parent":{
+    "name":"Rotation",
+    "path":"folders/BBMOD/Particles/Modules/Rotation.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

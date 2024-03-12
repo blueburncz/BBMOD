@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_DirectionalBlurEffect",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "DirectionalBlur",
-    "path": "folders/BBMOD/PostProcessing/DirectionalBlur.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_DirectionalBlurEffect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_DirectionalBlurEffect",
+  "parent":{
+    "name":"DirectionalBlur",
+    "path":"folders/BBMOD/PostProcessing/DirectionalBlur.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

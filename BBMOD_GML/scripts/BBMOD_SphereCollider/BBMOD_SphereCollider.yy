@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_SphereCollider",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Raycasting",
-    "path": "folders/BBMOD/Raycasting.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_SphereCollider",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_SphereCollider",
+  "parent":{
+    "name":"Raycasting",
+    "path":"folders/BBMOD/Raycasting.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

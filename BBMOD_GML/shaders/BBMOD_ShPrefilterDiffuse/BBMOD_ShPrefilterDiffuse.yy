@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShPrefilterDiffuse",
-  "parent": {
-    "name": "Rendering",
-    "path": "folders/BBMOD/Core/Rendering.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShPrefilterDiffuse",
+  "name":"BBMOD_ShPrefilterDiffuse",
+  "parent":{
+    "name":"Rendering",
+    "path":"folders/BBMOD/Core/Rendering.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_RadialBlurEffect",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "RadialBlur",
-    "path": "folders/BBMOD/PostProcessing/RadialBlur.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_RadialBlurEffect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_RadialBlurEffect",
+  "parent":{
+    "name":"RadialBlur",
+    "path":"folders/BBMOD/PostProcessing/RadialBlur.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_LensDistortionEffect",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "LensDistortion",
-    "path": "folders/BBMOD/PostProcessing/LensDistortion.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_LensDistortionEffect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_LensDistortionEffect",
+  "parent":{
+    "name":"LensDistortion",
+    "path":"folders/BBMOD/PostProcessing/LensDistortion.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

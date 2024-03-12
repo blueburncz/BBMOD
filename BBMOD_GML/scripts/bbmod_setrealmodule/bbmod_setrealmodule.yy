@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_SetRealModule",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "SetProperty",
-    "path": "folders/BBMOD/Particles/Modules/Universal/SetProperty.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_SetRealModule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_SetRealModule",
+  "parent":{
+    "name":"SetProperty",
+    "path":"folders/BBMOD/Particles/Modules/Universal/SetProperty.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

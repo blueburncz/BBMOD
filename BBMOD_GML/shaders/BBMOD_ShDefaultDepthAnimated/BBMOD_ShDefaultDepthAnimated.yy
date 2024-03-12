@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShDefaultDepthAnimated",
-  "parent": {
-    "name": "Shaders",
-    "path": "folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShDefaultDepthAnimated",
+  "name":"BBMOD_ShDefaultDepthAnimated",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

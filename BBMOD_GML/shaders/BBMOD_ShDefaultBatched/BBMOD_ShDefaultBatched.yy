@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShDefaultBatched",
-  "parent": {
-    "name": "Shaders",
-    "path": "folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShDefaultBatched",
+  "name":"BBMOD_ShDefaultBatched",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

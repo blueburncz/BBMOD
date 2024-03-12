@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_FXAAEffect",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "FXAA",
-    "path": "folders/BBMOD/PostProcessing/FXAA.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_FXAAEffect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_FXAAEffect",
+  "parent":{
+    "name":"FXAA",
+    "path":"folders/BBMOD/PostProcessing/FXAA.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

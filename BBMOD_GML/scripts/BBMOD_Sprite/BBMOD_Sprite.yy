@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_Sprite",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "Rendering",
-    "path": "folders/BBMOD/Core/Rendering.yy",
+  "$GMScript":"",
+  "%Name":"BBMOD_Sprite",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_Sprite",
+  "parent":{
+    "name":"Rendering",
+    "path":"folders/BBMOD/Core/Rendering.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

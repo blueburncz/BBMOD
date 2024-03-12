@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShGBufferColorAnimated",
-  "parent": {
-    "name": "Shaders",
-    "path": "folders/BBMOD/DeferredRenderer/Shaders.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShGBufferColorAnimated",
+  "name":"BBMOD_ShGBufferColorAnimated",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }

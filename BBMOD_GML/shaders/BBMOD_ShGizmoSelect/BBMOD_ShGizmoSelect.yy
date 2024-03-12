@@ -1,10 +1,12 @@
 {
-  "resourceType": "GMShader",
-  "resourceVersion": "1.0",
-  "name": "BBMOD_ShGizmoSelect",
-  "parent": {
-    "name": "Shaders",
-    "path": "folders/BBMOD/Gizmo/Shaders.yy",
+  "$GMShader":"",
+  "%Name":"BBMOD_ShGizmoSelect",
+  "name":"BBMOD_ShGizmoSelect",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/Gizmo/Shaders.yy",
   },
-  "type": 1,
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
 }
