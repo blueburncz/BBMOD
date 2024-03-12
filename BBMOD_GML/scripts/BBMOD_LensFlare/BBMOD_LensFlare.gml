@@ -115,7 +115,9 @@ function BBMOD_LensFlare() constructor
 			Position ?? new BBMOD_Vec4(-Direction.X, -Direction.Y, -Direction.Z, 0.0),
 			_screenWidth, _screenHeight);
 
-		if (_screenPos == undefined)
+		if (_screenPos == undefined
+			|| _screenPos.X < 0.0 || _screenPos.X > _screenWidth
+			|| _screenPos.Y < 0.0 || _screenPos.Y > _screenHeight)
 		{
 			return self;
 		}
