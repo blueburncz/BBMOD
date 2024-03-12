@@ -10,6 +10,10 @@ uniform sampler2D u_texDepth;
 uniform float u_fClipFar;
 uniform float u_fDepthThreshold;
 
+uniform sampler2D u_texLensDirt;
+uniform vec4 u_vLensDirtUVs;
+uniform float u_fLensDirtStrength;
+
 /// @param c Encoded depth.
 /// @return Docoded linear depth.
 /// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
@@ -34,6 +38,9 @@ void main()
 	}
 
 	gl_FragColor = texture2D(gm_BaseTexture, v_vTexCoord) * u_vColor;
+
+	vec2 lensDirtUV = mix(u_vLensDirtUVs.xy, u_vLensDirtUVs.zw, gl_FragCoord.xy * u_vInvRes);
+	gl_FragColor.rgb += texture2D(u_texLensDirt, lensDirtUV).rgb * gl_FragColor.rgb * u_fLensDirtStrength;
 
 	if (u_fFlareRays == 1.0)
 	{

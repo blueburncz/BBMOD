@@ -75,6 +75,12 @@ function BBMOD_PostProcessor() constructor
 	/// @readonly
 	Rect = new BBMOD_Rect();
 
+	/// @var {Pointer.Texture}
+	LensDirt = sprite_get_texture(BBMOD_SprLensDirt, 0);
+
+	/// @var {Real}
+	LensDirtStrength = 1.0;
+
 	/// @func add_effect(_effect)
 	///
 	/// @desc Adds an effect to the post-processor.

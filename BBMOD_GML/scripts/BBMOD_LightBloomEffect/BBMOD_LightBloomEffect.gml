@@ -33,6 +33,10 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 
 	static __uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
 
+	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
+	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
+	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
+
 	static __draw_ldr = function (_surfaceDest, _surfaceSrc)
 	{
 		var _width = surface_get_width(_surfaceSrc);
@@ -155,21 +159,36 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 			shader_reset();
 		}
 
-		// Combine
-		surface_set_target(_surfaceDest);
-		draw_surface(_surfaceSrc, 0, 0);
 		gpu_push_state();
 		gpu_set_blendenable(true);
+
+		// Combine into one
 		gpu_set_blendmode(bm_add);
-		for (var i = 0; i < __levels; ++i)
+		surface_set_target(__surfaces1[0]);
+		for (var i = 1; i < __levels; ++i)
 		{
 			if (surface_exists(__surfaces1[i]))
 			{
 				draw_surface_stretched(__surfaces1[i], 0, 0, _width, _height);
 			}
 		}
-		gpu_pop_state();
 		surface_reset_target();
+
+		// Overlay
+		surface_set_target(_surfaceDest);
+		gpu_set_blendmode(bm_normal);
+		draw_surface(_surfaceSrc, 0, 0);
+		shader_set(BBMOD_ShLensDirt);
+		texture_set_stage(__uLensDirtTex, PostProcessor.LensDirt);
+		var _uvs = texture_get_uvs(PostProcessor.LensDirt)
+		shader_set_uniform_f(__uLensDirtUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
+		shader_set_uniform_f(__uLensDirtStrength, PostProcessor.LensDirtStrength);
+		gpu_set_blendmode(bm_add);
+		draw_surface_stretched(__surfaces1[0], 0, 0, _width, _height);
+		shader_reset();
+		surface_reset_target();
+
+		gpu_pop_state();
 
 		return _surfaceDest;
 	};

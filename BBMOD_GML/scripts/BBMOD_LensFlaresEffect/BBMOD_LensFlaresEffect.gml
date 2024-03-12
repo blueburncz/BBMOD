@@ -23,12 +23,10 @@ function BBMOD_LensFlaresEffect()
 		gpu_push_state();
 		gpu_set_blendenable(true);
 
-		var _rect = PostProcessor.Rect;
-		var _scale = _rect.Width / PostProcessor.DesignWidth;
 		var _lensFlares = global.__bbmodLensFlares;
 		for (var i = array_length(_lensFlares) - 1; i >= 0; --i)
 		{
-			_lensFlares[i].draw(_rect, _scale, _depth);
+			_lensFlares[i].draw(PostProcessor, _depth);
 		}
 
 		gpu_pop_state();

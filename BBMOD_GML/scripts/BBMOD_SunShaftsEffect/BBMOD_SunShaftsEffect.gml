@@ -37,7 +37,11 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 
 	/// @var {Id.Surface}
 	/// @private
-	__surWork = -1;
+	__surWork1 = -1;
+
+	/// @var {Id.Surface}
+	/// @private
+	__surWork2 = -1;
 
 	static __uTexel = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
 	static __uOrigin = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
@@ -49,6 +53,10 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 	static __uAspect = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vAspect");
 	static __uMaskRadius = shader_get_uniform(BBMOD_ShSunShaftMask, "u_fRadius");
 	static __uColor = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vColor");
+
+	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
+	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
+	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -82,9 +90,11 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 		var _texelWidth = 1.0 / _width;
 		var _texelHeight = 1.0 / _height;
 
-		__surWork = bbmod_surface_check(__surWork, _width, _height,
-			bbmod_hdr_is_supported() ? surface_rgba16float : surface_rgba8unorm, false);
-		surface_set_target(__surWork);
+		var _format = bbmod_hdr_is_supported() ? surface_rgba16float : surface_rgba8unorm;
+		__surWork1 = bbmod_surface_check(__surWork1, _width, _height, _format, false);
+		__surWork2 = bbmod_surface_check(__surWork2, _width, _height, _format, false);
+
+		surface_set_target(__surWork1);
 		shader_set(BBMOD_ShSunShaftMask);
 		shader_set_uniform_f(__uLightPos, _screenPos.X * _texelWidth, _screenPos.Y * _texelHeight);
 		shader_set_uniform_f(__uAspect, 1.0, _height / _width);
@@ -94,18 +104,28 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 		shader_reset();
 		surface_reset_target();
 
-		surface_set_target(_surfaceDest);
-		draw_surface(_surfaceSrc, 0, 0);
-		gpu_push_state();
-		gpu_set_blendenable(true);
-		gpu_set_blendmode(BlendMode);
+		surface_set_target(__surWork2);
 		shader_set(BBMOD_ShRadialBlur);
 		shader_set_uniform_f(__uTexel, _texelWidth, _texelHeight);
 		shader_set_uniform_f(__uOrigin, _screenPos.X * _texelWidth, _screenPos.Y * _texelHeight);
 		shader_set_uniform_f(__uRadius, 0.0);
 		shader_set_uniform_f(__uStrength, BlurSize);
 		shader_set_uniform_f(__uStep, BlurStep);
-		draw_surface_ext(__surWork, 0, 0, 2, 2, 0, c_white, 1.0);
+		draw_surface(__surWork1, 0, 0);
+		shader_reset();
+		surface_reset_target();
+
+		surface_set_target(_surfaceDest);
+		draw_surface(_surfaceSrc, 0, 0);
+		gpu_push_state();
+		gpu_set_blendenable(true);
+		gpu_set_blendmode(BlendMode);
+		shader_set(BBMOD_ShLensDirt);
+		texture_set_stage(__uLensDirtTex, PostProcessor.LensDirt);
+		var _uvs = texture_get_uvs(PostProcessor.LensDirt)
+		shader_set_uniform_f(__uLensDirtUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
+		shader_set_uniform_f(__uLensDirtStrength, PostProcessor.LensDirtStrength);
+		draw_surface_ext(__surWork2, 0, 0, 2, 2, 0, c_white, 1.0);
 		shader_reset();
 		gpu_pop_state();
 		surface_reset_target();
@@ -115,9 +135,13 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 
 	static destroy = function ()
 	{
-		if (surface_exists(__surWork))
+		if (surface_exists(__surWork1))
 		{
-			surface_free(__surWork);
+			surface_free(__surWork1);
+		}
+		if (surface_exists(__surWork2))
+		{
+			surface_free(__surWork2);
 		}
 		return undefined;
 	};

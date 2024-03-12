@@ -60,6 +60,10 @@ function BBMOD_LensFlare() constructor
 	static __uClipFar = shader_get_uniform(BBMOD_ShLensFlare, "u_fClipFar");
 	static __uDepthThreshold = shader_get_uniform(BBMOD_ShLensFlare, "u_fDepthThreshold");
 
+	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texLensDirt");
+	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensFlare, "u_vLensDirtUVs");
+	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensFlare, "u_fLensDirtStrength");
+
 	/// @func add_element(_element)
 	///
 	/// @desc Adds an element to the lens flare.
@@ -86,17 +90,17 @@ function BBMOD_LensFlare() constructor
 		return __elements;
 	};
 
-	/// @func draw(_rect, _scale, _depth)
+	/// @func draw(_postProcessor, _depth)
 	///
 	/// @desc Draws the lens flare.
 	///
-	/// @param {Struct.BBMOD_Rect} _rect The screen position and size.
-	/// @param {Real} _scale Global scaling factor for lens flare sprites.
+	/// @param {Struct.BBMOD_PostProcessor} _postProcessor The post-processor
+	/// that draws the lens flares.
 	/// @param {Id.Surface} _depth A surface containing scene depth encoded into
 	/// the RGB channels.
 	///
 	/// @return {Struct.BBMOD_LensFlare} Returns `self`.
-	static draw = function (_rect, _scale, _depth)
+	static draw = function (_postProcessor, _depth)
 	{
 		if (Position == undefined && Direction == undefined)
 		{
@@ -109,6 +113,8 @@ function BBMOD_LensFlare() constructor
 			return self;
 		}
 
+		var _rect = _postProcessor.Rect;
+		var _scale = _rect.Width / _postProcessor.DesignWidth;
 		var _screenWidth = _rect.Width;
 		var _screenHeight = _rect.Height;
 		var _screenPos = _camera.world_to_screen(
@@ -163,6 +169,7 @@ function BBMOD_LensFlare() constructor
 
 		gpu_push_state();
 		gpu_set_tex_repeat(true);
+
 		shader_set(BBMOD_ShLensFlare);
 		shader_set_uniform_f(__uLightPos, _x, _y, _z);
 		texture_set_stage(__uFlareRaysTex, sprite_get_texture(BBMOD_SprFlareRays, 0));
@@ -171,6 +178,12 @@ function BBMOD_LensFlare() constructor
 		gpu_set_tex_filter_ext(__uDepthTex, false);
 		shader_set_uniform_f(__uClipFar, _camera.ZFar);
 		shader_set_uniform_f(__uDepthThreshold, DepthThreshold);
+
+		texture_set_stage(__uLensDirtTex, _postProcessor.LensDirt);
+		var _uvs = texture_get_uvs(_postProcessor.LensDirt)
+		shader_set_uniform_f(__uLensDirtUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
+		shader_set_uniform_f(__uLensDirtStrength, _postProcessor.LensDirtStrength);
+
 		var _uColor = __uColor;
 		var _uFadeOut = __uFadeOut;
 		var _uFlareRays = __uFlareRays;
