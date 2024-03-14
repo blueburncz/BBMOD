@@ -53,7 +53,7 @@
     {"name":"DirectionalBlur","order":9,"path":"folders/BBMOD/PostProcessing/DirectionalBlur.yy",},
     {"name":"FilmGrain","order":11,"path":"folders/BBMOD/PostProcessing/FilmGrain.yy",},
     {"name":"FXAA","order":2,"path":"folders/BBMOD/PostProcessing/FXAA.yy",},
-    {"name":"Refraction","order":21,"path":"folders/BBMOD/PostProcessing/Refraction.yy",},
+    {"name":"NormalDistortion","order":21,"path":"folders/BBMOD/PostProcessing/NormalDistortion.yy",},
     {"name":"KawaseBlur","order":13,"path":"folders/BBMOD/PostProcessing/KawaseBlur.yy",},
     {"name":"LensDirt","order":20,"path":"folders/BBMOD/PostProcessing/LensDirt.yy",},
     {"name":"LensDistortion","order":12,"path":"folders/BBMOD/PostProcessing/LensDistortion.yy",},

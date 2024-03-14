@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_NormalDistortionEffect",
   "parent":{
-    "name":"Refraction",
-    "path":"folders/BBMOD/PostProcessing/Refraction.yy",
+    "name":"NormalDistortion",
+    "path":"folders/BBMOD/PostProcessing/NormalDistortion.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

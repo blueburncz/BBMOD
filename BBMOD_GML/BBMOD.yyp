@@ -65,7 +65,7 @@
     {"$GMFolder":"","%Name":"DirectionalBlur","folderPath":"folders/BBMOD/PostProcessing/DirectionalBlur.yy","name":"DirectionalBlur","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"FilmGrain","folderPath":"folders/BBMOD/PostProcessing/FilmGrain.yy","name":"FilmGrain","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"FXAA","folderPath":"folders/BBMOD/PostProcessing/FXAA.yy","name":"FXAA","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Refraction","folderPath":"folders/BBMOD/PostProcessing/Refraction.yy","name":"Refraction","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"NormalDistortion","folderPath":"folders/BBMOD/PostProcessing/NormalDistortion.yy","name":"NormalDistortion","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"KawaseBlur","folderPath":"folders/BBMOD/PostProcessing/KawaseBlur.yy","name":"KawaseBlur","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"LensDirt","folderPath":"folders/BBMOD/PostProcessing/LensDirt.yy","name":"LensDirt","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"LensDistortion","folderPath":"folders/BBMOD/PostProcessing/LensDistortion.yy","name":"LensDistortion","resourceType":"GMFolder","resourceVersion":"2.0",},

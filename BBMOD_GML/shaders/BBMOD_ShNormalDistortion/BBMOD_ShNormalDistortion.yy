@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShNormalDistortion",
   "name":"BBMOD_ShNormalDistortion",
   "parent":{
-    "name":"Refraction",
-    "path":"folders/BBMOD/PostProcessing/Refraction.yy",
+    "name":"NormalDistortion",
+    "path":"folders/BBMOD/PostProcessing/NormalDistortion.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
