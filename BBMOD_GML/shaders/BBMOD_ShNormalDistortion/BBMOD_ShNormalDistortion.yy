@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShNormalDistortion",
+  "name":"BBMOD_ShNormalDistortion",
+  "parent":{
+    "name":"Refraction",
+    "path":"folders/BBMOD/PostProcessing/Refraction.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

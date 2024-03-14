@@ -12,6 +12,7 @@ function BBMOD_ColorGradingEffect(_lut=undefined)
 	: BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Pointer.Texture} The lookup table texture used for color grading.
+	/// Default value is `BBMOD_SprColorGradingLUT`.
 	LUT = _lut ?? sprite_get_texture(BBMOD_SprColorGradingLUT, 0);
 
 	static __uLUT = shader_get_sampler_index(BBMOD_ShColorGrading, "u_texLUT");

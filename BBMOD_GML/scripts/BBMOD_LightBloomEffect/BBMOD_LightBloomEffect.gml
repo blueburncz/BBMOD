@@ -180,7 +180,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_set(BBMOD_ShLensDirt);
 		texture_set_stage(__uLensDirtTex, PostProcessor.LensDirt);
-		var _uvs = texture_get_uvs(PostProcessor.LensDirt)
+		var _uvs = texture_get_uvs(PostProcessor.LensDirt);
 		shader_set_uniform_f(__uLensDirtUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
 		shader_set_uniform_f(__uLensDirtStrength, PostProcessor.LensDirtStrength);
 		gpu_set_blendmode(bm_add);

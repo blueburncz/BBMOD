@@ -122,7 +122,7 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 		gpu_set_blendmode(BlendMode);
 		shader_set(BBMOD_ShLensDirt);
 		texture_set_stage(__uLensDirtTex, PostProcessor.LensDirt);
-		var _uvs = texture_get_uvs(PostProcessor.LensDirt)
+		var _uvs = texture_get_uvs(PostProcessor.LensDirt);
 		shader_set_uniform_f(__uLensDirtUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
 		shader_set_uniform_f(__uLensDirtStrength, PostProcessor.LensDirtStrength);
 		draw_surface_ext(__surWork2, 0, 0, 2, 2, 0, c_white, 1.0);

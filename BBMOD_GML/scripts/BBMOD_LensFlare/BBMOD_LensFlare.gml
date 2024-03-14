@@ -180,7 +180,7 @@ function BBMOD_LensFlare() constructor
 		shader_set_uniform_f(__uDepthThreshold, DepthThreshold);
 
 		texture_set_stage(__uLensDirtTex, _postProcessor.LensDirt);
-		var _uvs = texture_get_uvs(_postProcessor.LensDirt)
+		var _uvs = texture_get_uvs(_postProcessor.LensDirt);
 		shader_set_uniform_f(__uLensDirtUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
 		shader_set_uniform_f(__uLensDirtStrength, _postProcessor.LensDirtStrength);
 
