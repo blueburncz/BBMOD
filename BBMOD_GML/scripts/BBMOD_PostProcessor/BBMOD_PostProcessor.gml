@@ -75,10 +75,13 @@ function BBMOD_PostProcessor() constructor
 	/// @readonly
 	Rect = new BBMOD_Rect();
 
-	/// @var {Pointer.Texture}
+	/// @var {Pointer.Texture} The lens dirt texture. Default is
+	/// `BBMOD_SprLensDirt`.
 	LensDirt = sprite_get_texture(BBMOD_SprLensDirt, 0);
 
-	/// @var {Real}
+	/// @var {Real} The intensity of the lens dirt effect. Use values in range
+	/// 0..1, where 0 is disabled and 1 is the maximum intensity. Default value
+	/// is 1.
 	LensDirtStrength = 1.0;
 
 	/// @func add_effect(_effect)
