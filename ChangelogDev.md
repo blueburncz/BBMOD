@@ -7,3 +7,4 @@
 * Fixed a bug where `BBMOD_Resource` was not removed from a `BBMOD_ResourceManager` when destroyed.
 * Added new struct `BBMOD_Rect`, which is a rectangle structure.
 * Fixed depth in deferred rendering pipeline.
+* Added shadowmap stabilization for directional lights.
