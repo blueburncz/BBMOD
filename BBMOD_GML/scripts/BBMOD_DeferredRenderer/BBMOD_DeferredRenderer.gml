@@ -212,8 +212,11 @@ function BBMOD_DeferredRenderer()
 
 		surface_set_target_ext(0, __surFinal);
 		surface_set_target_ext(1, __surGBuffer[1]);
-		surface_set_target_ext(2, __surGBuffer[2]);
 		draw_clear_alpha(c_black, 0.0);
+		surface_reset_target();
+
+		surface_set_target(__surGBuffer[2]);
+		draw_clear_alpha(c_red, 0.0);
 		surface_reset_target();
 
 		surface_set_target(__surLBuffer);
@@ -706,7 +709,7 @@ function BBMOD_DeferredRenderer()
 			surface_reset_target();
 			gpu_pop_state();
 
-			PostProcessor.draw(__surFinal, X, Y);
+			PostProcessor.draw(__surFinal, X, Y, __surGBuffer[2], __surGBuffer[1]);
 		}
 
 		matrix_set(matrix_world, _world);

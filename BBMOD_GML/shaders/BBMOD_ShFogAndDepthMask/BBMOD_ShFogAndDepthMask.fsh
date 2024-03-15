@@ -63,6 +63,6 @@ void Fog(float depth)
 void main()
 {
 	float depth = xDecodeDepth(texture2D(u_texDepth, v_vTexCoord).rgb) * bbmod_ZFar;
-	gl_FragColor = vec4(texture2D(gm_BaseTexture, v_vTexCoord).rgb, (depth > 0.0) ? 1.0 : 0.0);
+	gl_FragColor = vec4(texture2D(gm_BaseTexture, v_vTexCoord).rgb, (depth < bbmod_ZFar) ? 1.0 : 0.0);
 	Fog(depth);
 }
