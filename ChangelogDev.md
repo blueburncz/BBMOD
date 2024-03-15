@@ -8,3 +8,4 @@
 * Added new struct `BBMOD_Rect`, which is a rectangle structure.
 * Fixed depth in deferred rendering pipeline.
 * Added shadowmap stabilization for directional lights.
+* Fixed normal vectors of polygon backfaces.

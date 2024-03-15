@@ -57,6 +57,11 @@ Material UnpackMaterial(
 		);
 	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
+	if (!gl_FrontFacing)
+	{
+		m.Normal *= -1.0;
+	}
+
 	if (isRoughness == 1.0)
 	{
 		m.Roughness = mix(0.1, 0.9, normalW.a);
