@@ -5,6 +5,16 @@ if (keyboard_check_pressed(vk_f1))
 	show_debug_overlay(debugOverlay);
 }
 
+if (keyboard_check_pressed(vk_enter))
+{
+	reflectionProbe.set_position(new BBMOD_Vec3(
+		OPlayer.x,
+		OPlayer.y,
+		OPlayer.z + 30,
+	));
+	reflectionProbe.NeedsUpdate = true;
+}
+
 // Enable editing mode when the game is paused
 renderer.EditMode = (global.gameSpeed == 0.0);
 

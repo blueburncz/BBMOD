@@ -1,0 +1,15 @@
+Nodes:
+======
+0: RootNode
+    1: Tree_bark002:
+        * Mesh 0 [V,N,UV,T,]
+
+    2: Branches002:
+        * Mesh 0 [V,N,UV,T,]
+
+
+Materials:
+==========
+0: Tree_bark
+1: Branches_lp
+

@@ -777,5 +777,5 @@ function bbmod_deferred_renderer_is_supported()
 {
 	gml_pragma("forceinline");
 	static _isSupported = (bbmod_mrt_is_supported() && bbmod_hdr_is_supported());
-	return _isSupported;
+	return true;//_isSupported;
 }

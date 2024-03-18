@@ -19,6 +19,7 @@ bbmod_light_ambient_set(BBMOD_C_BLACK);
 sunLight = new BBMOD_DirectionalLight();
 sunLight.CastShadows = bbmod_deferred_renderer_is_supported() || global.day;
 sunLight.ShadowmapResolution = 4096;
+sunLight.ShadowmapArea = 1500;
 bbmod_light_directional_set(sunLight);
 
 // TODO: Fix memory leaks
@@ -81,7 +82,10 @@ if (global.day)
 
 	bbmod_lens_flare_add(lensFlare);
 
-	OMain.postProcessor.add_effect(new BBMOD_SunShaftsEffect(sunLight.Direction));
+	var _sunshafts = new BBMOD_SunShaftsEffect(sunLight.Direction);
+	_sunshafts.Color = BBMOD_C_ORANGE.Mix(BBMOD_C_WHITE, 0.5);
+	_sunshafts.BlendMode = bm_max;
+	OMain.postProcessor.add_effect(_sunshafts);
 }
 else
 {
@@ -89,4 +93,4 @@ else
 	sunLight.Direction.Set(0, -1, -1);
 }
 
-bbmod_fog_set(BBMOD_C_SILVER, 0.8, 200.0, 1500.0);
+//bbmod_fog_set(BBMOD_C_SILVER, 0.8, 200.0, 1500.0);

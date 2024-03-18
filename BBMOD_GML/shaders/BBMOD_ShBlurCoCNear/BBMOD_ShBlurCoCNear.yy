@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShBlurCoCNear",
+  "name":"BBMOD_ShBlurCoCNear",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/PostProcessing/DepthOfField/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -86,7 +86,8 @@ renderer.EnableShadows = true;
 postProcessor = new BBMOD_PostProcessor();
 renderer.PostProcessor = postProcessor;
 
-postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
+//postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
+postProcessor.add_effect(new BBMOD_DepthOfFieldEffect());
 postProcessor.add_effect(new BBMOD_LightBloomEffect(new BBMOD_Vec3(0.75), new BBMOD_Vec3(2.0), true));
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
@@ -107,6 +108,8 @@ postProcessor.add_effect(
 		sprite_get_texture(SprColorGrading, 0)
 	)
 );
+
+//postProcessor.add_effect(new BBMOD_NormalDistortionEffect(sprite_get_texture(SprRaindrops, 0), 10));
 
 monochrome = new BBMOD_MonochromeEffect(0.0);
 postProcessor.add_effect(monochrome);
@@ -145,6 +148,23 @@ var _probeX = _terrainWidth / 2;
 var _probeY = _terrainHeight / 2;
 var _probeZ = global.terrain.get_height(_probeX, _probeY) + 20;
 
-var _reflectionProbe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(_probeX, _probeY, _probeZ));
-_reflectionProbe.Infinite = true;
-bbmod_reflection_probe_add(_reflectionProbe);
+reflectionProbe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(_probeX, _probeY, _probeZ));
+reflectionProbe.Infinite = true;
+bbmod_reflection_probe_add(reflectionProbe);
+
+// Trees
+modTree = global.resourceManager.load("Data/Assets/Tree/Tree.bbmod", method(self, function (_err, _model) {
+	if (!_err)
+	{
+		_model.Materials[0].RenderQueue = new BBMOD_MeshRenderQueue();
+		_model.Materials[1].RenderQueue = new BBMOD_MeshRenderQueue();
+		treeBatch = new BBMOD_DynamicBatch(modTree).freeze();
+
+		var _terrainWidth = global.terrain.Size.X * global.terrain.Scale.X;
+		var _terrainHeight = global.terrain.Size.Y * global.terrain.Scale.Y;
+		repeat (10)
+		{
+			instance_create_layer(random(_terrainWidth), random(_terrainHeight), layer, OTree);
+		}
+	}
+}));

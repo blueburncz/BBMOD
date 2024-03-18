@@ -30,13 +30,13 @@ camera.update(DELTA_TIME);
 if (DELTA_TIME > 0.0)
 {
 	var _blur = OMain.directionalBlur;
-	var _scale = 2.0;
+	var _scale = 5.0;
 	_blur.Vector.Set(
 		angle_difference(camera.Direction, _directionPrev) * _scale,
 		angle_difference(camera.DirectionUp, _directionUpPrev) * _scale);
 	var _length = _blur.Vector.Length();
 	_length = (_length > 0.0) ? _length : 1.0;
-	_blur.Step = 2.0 / _length;
+	_blur.Step = 2.0 / min(_length, 32.0);
 }
 
 var _cameraHeight = (global.terrain.get_height(camera.Position.X, camera.Position.Y) ?? 0.0) + 1.0;
