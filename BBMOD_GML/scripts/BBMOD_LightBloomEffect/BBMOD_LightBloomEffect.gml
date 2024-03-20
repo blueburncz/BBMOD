@@ -169,7 +169,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 		{
 			if (surface_exists(__surfaces1[i]))
 			{
-				draw_surface_stretched(__surfaces1[i], 0, 0, _width, _height);
+				draw_surface_stretched(__surfaces1[i], 0, 0, _width / 2, _height / 2);
 			}
 		}
 		surface_reset_target();
