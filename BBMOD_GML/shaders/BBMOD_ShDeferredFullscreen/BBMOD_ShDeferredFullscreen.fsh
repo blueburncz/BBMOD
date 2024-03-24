@@ -598,6 +598,7 @@ void main()
 	lightSpecular *= ssao;
 
 	gl_FragColor = vec4(((material.Base * lightDiffuse) + lightSpecular) * material.AO, 1.0);
+	gl_FragColor.rgb = max(gl_FragColor.rgb, vec3(0.0));
 
 	if (bbmod_HDR == 0.0)
 	{
