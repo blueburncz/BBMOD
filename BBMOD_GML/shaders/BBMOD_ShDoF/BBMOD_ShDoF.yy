@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"BBMOD_ShDoFNear",
-  "name":"BBMOD_ShDoFNear",
+  "%Name":"BBMOD_ShDoF",
+  "name":"BBMOD_ShDoF",
   "parent":{
     "name":"Shaders",
     "path":"folders/BBMOD/PostProcessing/DepthOfField/Shaders.yy",

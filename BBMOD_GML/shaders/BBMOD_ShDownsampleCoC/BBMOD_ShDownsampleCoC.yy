@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"BBMOD_ShDoFFar",
-  "name":"BBMOD_ShDoFFar",
+  "%Name":"BBMOD_ShDownsampleCoC",
+  "name":"BBMOD_ShDownsampleCoC",
   "parent":{
     "name":"Shaders",
     "path":"folders/BBMOD/PostProcessing/DepthOfField/Shaders.yy",

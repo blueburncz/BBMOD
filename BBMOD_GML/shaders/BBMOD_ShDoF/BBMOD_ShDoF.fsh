@@ -1,8 +1,11 @@
 varying vec2 v_vTexCoord;
 
-uniform sampler2D u_texCoC;
+uniform sampler2D u_texCoCNear;
+uniform sampler2D u_texCoCFar;
 uniform float u_fCoCScale;
 uniform vec2 u_vTexel;
+uniform float u_fBladeCount;
+uniform float u_fStep;
 
 // Source: https://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
 #define PI 3.14159265359
@@ -66,31 +69,29 @@ vec2 SquareToPolygonMapping(vec2 uv, float edgeCount, float shapeRotation)
 	return vec2(PolarCoord.x * cos(PolarCoord.y), PolarCoord.x * sin(PolarCoord.y));
 }
 
-float SampleCoC(sampler2D texCoC, vec2 uv, float scale)
+float SampleCoC(sampler2D texCoCNear, sampler2D texCoCFar, vec2 uv, float scale)
 {
-	vec3 coc = texture2D(texCoC, uv).rgb;
-	float cocFar = coc.r;
-	float cocNear = -coc.b;
-	return scale * ((abs(cocNear) > cocFar) ? cocNear : cocFar);
+	float cocNear = texture2D(texCoCNear, uv).g;
+	float cocFar = texture2D(texCoCFar, uv).r;
+	// Source: https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-28-practical-post-process-depth-field
+	return scale * ((2.0 * max(cocFar, cocNear)) - cocFar);
 }
 
 void main()
 {
-	float coc = SampleCoC(u_texCoC, v_vTexCoord, u_fCoCScale);
-	vec4 colorCenter = texture2D(gm_BaseTexture, v_vTexCoord);
-	vec4 color = colorCenter;
-	float weight = 1.0;
-	for (float i = -1.0; i <= 1.0; i += 2.0/8.0)
+	float coc = SampleCoC(u_texCoCNear, u_texCoCFar, v_vTexCoord, u_fCoCScale);
+	vec4 color = vec4(0.0);
+	float weight = 0.0;
+	for (float i = -1.0; i <= 1.0; i += u_fStep)
 	{
-		for (float j = -1.0; j <= 1.0; j += 2.0/8.0)
+		for (float j = -1.0; j <= 1.0; j += u_fStep)
 		{
-			vec2 sampleOffset = coc * SquareToPolygonMapping(vec2(i, j), 5.0, 0.0) * u_vTexel;
-			vec2 sampleUV = v_vTexCoord + sampleOffset;
-			float sampleCoC = SampleCoC(u_texCoC, sampleUV, u_fCoCScale);
-			vec4 sampleColor = texture2D(gm_BaseTexture, sampleUV);
-			float sampleWeight = 1.0;
-			if (coc > sampleCoC) sampleWeight = abs(min(coc, sampleCoC)) / u_fCoCScale;
-			color += mix(colorCenter, sampleColor, sampleWeight);
+			vec2 sampleOffset = coc
+				* ((u_fBladeCount >= 3.0)
+					? SquareToPolygonMapping(vec2(i, j), u_fBladeCount, 0.0)
+					: SquareToDiskMapping(vec2(i, j)))
+				* u_vTexel;
+			color += texture2D(gm_BaseTexture, v_vTexCoord + sampleOffset);
 			weight += 1.0;
 		}
 	}

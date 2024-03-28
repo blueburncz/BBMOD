@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShGaussianBlur",
   "name":"BBMOD_ShGaussianBlur",
   "parent":{
-    "name":"LightBloom",
-    "path":"folders/BBMOD/PostProcessing/LightBloom.yy",
+    "name":"Rendering",
+    "path":"folders/BBMOD/Core/Rendering.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
