@@ -559,16 +559,7 @@ function BBMOD_DeferredRenderer()
 		//
 		camera_apply(__camera2D);
 		matrix_set(matrix_world, matrix_build_identity());
-		if (_hdr)
-		{
-			shader_set(BBMOD_ShHDRToSDR);
-			shader_set_uniform_f(shader_get_uniform(BBMOD_ShHDRToSDR, BBMOD_U_EXPOSURE), global.__bbmodCameraExposure);
-		}
 		draw_surface(__surFinal, 0, 0);
-		if (_hdr)
-		{
-			shader_reset();
-		}
 		matrix_set(matrix_world, _world);
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);

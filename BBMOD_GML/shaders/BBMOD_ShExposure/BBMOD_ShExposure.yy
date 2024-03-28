@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShExposure",
+  "name":"BBMOD_ShExposure",
+  "parent":{
+    "name":"Exposure",
+    "path":"folders/BBMOD/PostProcessing/Exposure.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -11,8 +11,7 @@ function BBMOD_ReinhardTonemapEffect()
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
 		surface_set_target(_surfaceDest);
-		shader_set(BBMOD_ShHDRToSDR);
-		shader_set_uniform_f(shader_get_uniform(BBMOD_ShHDRToSDR, BBMOD_U_EXPOSURE), global.__bbmodCameraExposure);
+		shader_set(BBMOD_ShReinhardTonemap);
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();

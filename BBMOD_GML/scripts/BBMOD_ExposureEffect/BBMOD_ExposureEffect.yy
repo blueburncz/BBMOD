@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"BBMOD_ExposureEffect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_ExposureEffect",
+  "parent":{
+    "name":"Exposure",
+    "path":"folders/BBMOD/PostProcessing/Exposure.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

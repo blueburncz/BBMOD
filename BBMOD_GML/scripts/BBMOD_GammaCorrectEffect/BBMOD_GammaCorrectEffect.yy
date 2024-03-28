@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"BBMOD_GammaCorrectEffect",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_GammaCorrectEffect",
+  "parent":{
+    "name":"GammaCorrect",
+    "path":"folders/BBMOD/PostProcessing/GammaCorrect.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
