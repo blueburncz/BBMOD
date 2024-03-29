@@ -9,12 +9,12 @@ function BBMOD_DepthOfFieldEffect()
 	static PostProcessEffect_destroy = destroy;
 
 	/// @var {Real} Distance from the camera from which are objects completely
-	/// in focus. Ignored if `AutoFocus` is enabled.
+	/// in focus. Ignored if `AutoFocus` is enabled. Default value is 100.
 	/// @see BBMOD_DepthOfFieldEffect.AutoFocus
 	FocusStart = 100;
 
 	/// @var {Real} Distance from the camera to which are objects completely in
-	/// focus. Ignored if `AutoFocus` is enabled.
+	/// focus. Ignored if `AutoFocus` is enabled. Default value is 200.
 	/// @see BBMOD_DepthOfFieldEffect.AutoFocus
 	FocusEnd = 200;
 
@@ -122,7 +122,6 @@ function BBMOD_DepthOfFieldEffect()
 		{
 			var _focusPointX = round((_width - 1) * clamp(AutoFocusPoint.X, 0, 1));
 			var _focusPointY = round((_height - 1) * clamp(AutoFocusPoint.Y, 0, 1));
-
 			__surAutoFocus = bbmod_surface_check(__surAutoFocus, 1, 1, surface_rgba8unorm, false);
 			surface_copy_part(__surAutoFocus, 0, 0, _depth, _focusPointX, _focusPointY, 1, 1);
 			var _pixel = surface_getpixel(__surAutoFocus, 0, 0);
