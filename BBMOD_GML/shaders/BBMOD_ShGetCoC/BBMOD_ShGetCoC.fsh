@@ -1,6 +1,10 @@
 varying vec2 v_vTexCoord;
 
-uniform float u_fFocusDepth; // Divided by ZFar!
+// Note: These are divided by ZFar!
+uniform float u_fFocusStart;
+uniform float u_fFocusEnd;
+uniform float u_fBlurRangeNear;
+uniform float u_fBlurRangeFar;
 
 /// @param c Encoded depth.
 /// @return Docoded linear depth.
@@ -14,6 +18,7 @@ float xDecodeDepth(vec3 c)
 void main()
 {
 	float depth = xDecodeDepth(texture2D(gm_BaseTexture, v_vTexCoord).rgb);
-	float coc = clamp(1.0 - u_fFocusDepth / depth, -1.0, 1.0);
-	gl_FragColor = vec4(max(coc, 0.0), max(-coc, 0.0), 0.0, 1.0);
+	float cocFar = clamp((depth - u_fFocusEnd) / u_fBlurRangeFar, 0.0, 1.0);
+	float cocNear = clamp(-(depth - u_fFocusStart) / u_fBlurRangeNear, 0.0, 1.0);
+	gl_FragColor = vec4(cocFar, cocNear, 0.0, 1.0);
 }
