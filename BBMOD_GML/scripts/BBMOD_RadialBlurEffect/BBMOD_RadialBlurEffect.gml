@@ -31,17 +31,16 @@ function BBMOD_RadialBlurEffect(_origin=undefined, _radius=0.5, _strength=1.0, _
 	/// 1/8.
 	Step = _step;
 
-	static __uTexel = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
-	static __uOrigin = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
-	static __uRadius = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
+	static __uTexel    = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
+	static __uOrigin   = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
+	static __uRadius   = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
 	static __uStrength = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStrength");
-	static __uStep = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
+	static __uStep     = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
 		var _texelWidth = 1.0 / surface_get_width(_surfaceSrc)
 		var _texelHeight = 1.0 / surface_get_height(_surfaceSrc);
-
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShRadialBlur);
 		shader_set_uniform_f(__uTexel, _texelWidth, _texelHeight);
@@ -52,7 +51,6 @@ function BBMOD_RadialBlurEffect(_origin=undefined, _radius=0.5, _strength=1.0, _
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();
-
 		return _surfaceDest;
 	};
 }

@@ -50,18 +50,17 @@ function BBMOD_LensFlare() constructor
 	/// @private
 	__elements = [];
 
-	static __uLightPos = shader_get_uniform(BBMOD_ShLensFlare, "u_vLightPos");
-	static __uFlareRaysTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texFlareRays");
-	static __uFlareRays = shader_get_uniform(BBMOD_ShLensFlare, "u_fFlareRays")
-	static __uInvRes = shader_get_uniform(BBMOD_ShLensFlare, "u_vInvRes");
-	static __uColor = shader_get_uniform(BBMOD_ShLensFlare, "u_vColor");
-	static __uFadeOut = shader_get_uniform(BBMOD_ShLensFlare, "u_fFadeOut");
-	static __uDepthTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texDepth");
-	static __uClipFar = shader_get_uniform(BBMOD_ShLensFlare, "u_fClipFar");
-	static __uDepthThreshold = shader_get_uniform(BBMOD_ShLensFlare, "u_fDepthThreshold");
-
-	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texLensDirt");
-	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensFlare, "u_vLensDirtUVs");
+	static __uFlareRaysTex     = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texFlareRays");
+	static __uDepthTex         = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texDepth");
+	static __uLensDirtTex      = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texLensDirt");
+	static __uLightPos         = shader_get_uniform(BBMOD_ShLensFlare, "u_vLightPos");
+	static __uFlareRays        = shader_get_uniform(BBMOD_ShLensFlare, "u_fFlareRays")
+	static __uInvRes           = shader_get_uniform(BBMOD_ShLensFlare, "u_vInvRes");
+	static __uColor            = shader_get_uniform(BBMOD_ShLensFlare, "u_vColor");
+	static __uFadeOut          = shader_get_uniform(BBMOD_ShLensFlare, "u_fFadeOut");
+	static __uClipFar          = shader_get_uniform(BBMOD_ShLensFlare, "u_fClipFar");
+	static __uDepthThreshold   = shader_get_uniform(BBMOD_ShLensFlare, "u_fDepthThreshold");
+	static __uLensDirtUVs      = shader_get_uniform(BBMOD_ShLensFlare, "u_vLensDirtUVs");
 	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensFlare, "u_fLensDirtStrength");
 
 	/// @func add_element(_element)

@@ -15,7 +15,6 @@ function BBMOD_FXAAEffect()
 	{
 		var _texelWidth = 1.0 / surface_get_width(_surfaceSrc);
 		var _texelHeight = 1.0 / surface_get_height(_surfaceSrc);
-
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShFXAA);
 		shader_set_uniform_f(__uTexelVS, _texelWidth, _texelHeight);
@@ -23,7 +22,6 @@ function BBMOD_FXAAEffect()
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();
-
 		return _surfaceDest;
 	};
 }

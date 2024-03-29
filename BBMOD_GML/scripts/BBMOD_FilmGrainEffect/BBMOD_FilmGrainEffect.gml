@@ -14,7 +14,7 @@ function BBMOD_FilmGrainEffect(_strength=0.1)
 	Strength = _strength;
 
 	static __uStrength = shader_get_uniform(BBMOD_ShFilmGrain, "u_fStrength");
-	static __uTime = shader_get_uniform(BBMOD_ShFilmGrain, "u_fTime");
+	static __uTime     = shader_get_uniform(BBMOD_ShFilmGrain, "u_fTime");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -25,7 +25,6 @@ function BBMOD_FilmGrainEffect(_strength=0.1)
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();
-
 		return _surfaceDest;
 	};
 }

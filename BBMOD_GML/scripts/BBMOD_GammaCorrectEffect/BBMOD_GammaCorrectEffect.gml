@@ -23,7 +23,6 @@ function BBMOD_GammaCorrectEffect(_gamma=2.2)
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();
-
 		return _surfaceDest;
 	};
 }

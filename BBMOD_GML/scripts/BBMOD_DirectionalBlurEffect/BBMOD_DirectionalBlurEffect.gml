@@ -22,13 +22,12 @@ function BBMOD_DirectionalBlurEffect(_vector=undefined, _step=0.125)
 	Step = _step;
 
 	static __uVector = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_vVector");
-	static __uStep = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_fStep");
+	static __uStep   = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_fStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
 		var _texelWidth = 1.0 / surface_get_width(_surfaceSrc)
-		var _texelHeight = 1.0 / surface_get_height(_surfaceSrc);
-
+		var _texelHeight = 1.0 / surface_get_height(_surfaceSrc)
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShDirectionalBlur);
 		shader_set_uniform_f(__uVector, Vector.X * _texelWidth, Vector.Y * _texelHeight);
@@ -36,7 +35,6 @@ function BBMOD_DirectionalBlurEffect(_vector=undefined, _step=0.125)
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();
-
 		return _surfaceDest;
 	};
 }

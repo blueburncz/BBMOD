@@ -43,19 +43,19 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 	/// @private
 	__surWork2 = -1;
 
-	static __uTexel = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
-	static __uOrigin = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
-	static __uRadius = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
+	static __uTexel    = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
+	static __uOrigin   = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
+	static __uRadius   = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
 	static __uStrength = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStrength");
-	static __uStep = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
+	static __uStep     = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
 
-	static __uLightPos = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vLightPos");
-	static __uAspect = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vAspect");
+	static __uLightPos   = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vLightPos");
+	static __uAspect     = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vAspect");
 	static __uMaskRadius = shader_get_uniform(BBMOD_ShSunShaftMask, "u_fRadius");
-	static __uColor = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vColor");
+	static __uColor      = shader_get_uniform(BBMOD_ShSunShaftMask, "u_vColor");
 
-	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
-	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
+	static __uLensDirtTex      = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
+	static __uLensDirtUVs      = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
 	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)

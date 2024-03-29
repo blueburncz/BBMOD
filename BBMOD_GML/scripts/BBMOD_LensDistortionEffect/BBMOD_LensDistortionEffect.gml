@@ -24,7 +24,7 @@ function BBMOD_LensDistortionEffect(_strength=0.0, _zoom=1.0)
 	Zoom = _zoom;
 
 	static __uStrength = shader_get_uniform(BBMOD_ShLensDistortion, "u_fStrength");
-	static __uScale = shader_get_uniform(BBMOD_ShLensDistortion, "u_fScale");
+	static __uScale    = shader_get_uniform(BBMOD_ShLensDistortion, "u_fScale");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -35,7 +35,6 @@ function BBMOD_LensDistortionEffect(_strength=0.0, _zoom=1.0)
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();
-
 		return _surfaceDest;
 	};
 }

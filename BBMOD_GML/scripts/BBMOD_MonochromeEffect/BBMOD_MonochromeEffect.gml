@@ -20,7 +20,7 @@ function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 	Color = _color;
 
 	static __uStrength = shader_get_uniform(BBMOD_ShMonochrome, "u_fStrength");
-	static __uColor = shader_get_uniform(BBMOD_ShMonochrome, "u_vColor");
+	static __uColor    = shader_get_uniform(BBMOD_ShMonochrome, "u_vColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -35,7 +35,6 @@ function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();
-
 		return _surfaceDest;
 	};
 }

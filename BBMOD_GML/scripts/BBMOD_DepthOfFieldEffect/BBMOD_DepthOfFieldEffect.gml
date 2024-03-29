@@ -92,20 +92,20 @@ function BBMOD_DepthOfFieldEffect()
 	/// @private
 	__surAutoFocus = -1;
 
-	static __uGetCoCFocusStart = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusStart");
-	static __uGetCoCFocusEnd = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusEnd");
+	static __uGetCoCFocusStart    = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusStart");
+	static __uGetCoCFocusEnd      = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusEnd");
 	static __uGetCoCBlurRangeNear = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeNear");
-	static __uGetCoCBlurRangeFar = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeFar");
+	static __uGetCoCBlurRangeFar  = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeFar");
 
 	static __uDownsampleCoCTexel = shader_get_uniform(BBMOD_ShDownsampleCoC, "u_vTexel");
 
-	static __uDoFCoCNear = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCNear");
-	static __uDoFCoCFar = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCFar");
+	static __uDoFCoCNear      = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCNear");
+	static __uDoFCoCFar       = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCFar");
 	static __uDoFCoCScaleNear = shader_get_uniform(BBMOD_ShDoF, "u_fCoCScaleNear");
-	static __uDoFCoCScaleFar = shader_get_uniform(BBMOD_ShDoF, "u_fCoCScaleFar");
-	static __uDoFTexel = shader_get_uniform(BBMOD_ShDoF, "u_vTexel");
-	static __uDoFBokehShape = shader_get_uniform(BBMOD_ShDoF, "u_fBokehShape");
-	static __uDoFStep = shader_get_uniform(BBMOD_ShDoF, "u_fStep");
+	static __uDoFCoCScaleFar  = shader_get_uniform(BBMOD_ShDoF, "u_fCoCScaleFar");
+	static __uDoFTexel        = shader_get_uniform(BBMOD_ShDoF, "u_vTexel");
+	static __uDoFBokehShape   = shader_get_uniform(BBMOD_ShDoF, "u_fBokehShape");
+	static __uDoFStep         = shader_get_uniform(BBMOD_ShDoF, "u_fStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

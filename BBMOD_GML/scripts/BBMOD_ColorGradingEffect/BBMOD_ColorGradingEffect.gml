@@ -25,7 +25,6 @@ function BBMOD_ColorGradingEffect(_lut=undefined)
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();
-
 		return _surfaceDest;
 	};
 }
