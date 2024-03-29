@@ -13,7 +13,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 	: BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Struct.BBMOD_Vec3}
-	Bias = _bias ?? new BBMOD_Vec3(0.5);
+	Bias = _bias ?? new BBMOD_Vec3(-0.5);
 
 	/// @var {Struct.BBMOD_Vec3}
 	Scale = _scale ?? new BBMOD_Vec3(1.0);
@@ -25,16 +25,16 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _hdr=false)
 	__surfaces1 = array_create(__levels, -1);
 	__surfaces2 = array_create(__levels, -1);
 
-	static __uBias = shader_get_uniform(BBMOD_ShThreshold, "u_vBias");
+	static __uBias  = shader_get_uniform(BBMOD_ShThreshold, "u_vBias");
 	static __uScale = shader_get_uniform(BBMOD_ShThreshold, "u_vScale");
 
 	static __uTexelKawase = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
-	static __uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
+	static __uOffset      = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
 
 	static __uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
 
-	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
-	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
+	static __uLensDirtTex      = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
+	static __uLensDirtUVs      = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
 	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
 
 	static __draw_ldr = function (_surfaceDest, _surfaceSrc)

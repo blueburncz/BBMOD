@@ -91,7 +91,7 @@ var _dof = new BBMOD_DepthOfFieldEffect();
 _dof.BlurScaleNear = 0.0;
 _dof.AutoFocus = true;
 postProcessor.add_effect(_dof);
-postProcessor.add_effect(new BBMOD_LightBloomEffect(new BBMOD_Vec3(1.0), new BBMOD_Vec3(2.0), true));
+postProcessor.add_effect(new BBMOD_LightBloomEffect(new BBMOD_Vec3(-1.0), new BBMOD_Vec3(2.0), true));
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
 radialBlur = new BBMOD_RadialBlurEffect();
