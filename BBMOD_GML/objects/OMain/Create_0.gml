@@ -99,7 +99,7 @@ radialBlur.Strength = 0.0;
 radialBlur.Step = 1.0 / 16.0;
 postProcessor.add_effect(radialBlur);
 
-if (bbmod_hdr_is_supported())
+if (bbmod_deferred_renderer_is_supported())
 {
 	postProcessor.add_effect(new BBMOD_ExposureEffect());
 	postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());

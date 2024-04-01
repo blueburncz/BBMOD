@@ -72,8 +72,8 @@ function BBMOD_Gizmo(_size=10.0) constructor
 		_materialSelect.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 1);
 		MaterialsSelect = [_materialSelect];
 
-		var _shader = new BBMOD_BaseShader(BBMOD_ShGizmo, BBMOD_VFORMAT_DEFAULT);
-		var _material = new BBMOD_BaseMaterial(_shader);
+		var _shader = new BBMOD_DefaultShader(BBMOD_ShGizmo, BBMOD_VFORMAT_DEFAULT);
+		var _material = new BBMOD_DefaultMaterial(_shader);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 0);
 
 		var _modelMove = new BBMOD_Model("Data/BBMOD/Models/GizmoMove.bbmod")

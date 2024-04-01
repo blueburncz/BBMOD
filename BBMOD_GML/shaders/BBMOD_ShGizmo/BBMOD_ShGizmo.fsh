@@ -4,6 +4,9 @@ precision highp float;
 varying vec3 v_vNormal;
 varying vec2 v_vTexCoord;
 
+uniform float bbmod_HDR;
+uniform float bbmod_Exposure;
+
 #define X_GAMMA 2.2
 
 /// @desc Converts gamma space color to linear space.
@@ -24,6 +27,15 @@ float xLuminance(vec3 rgb)
 	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
 }
 
+void Exposure()
+{
+	gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
+}
+void TonemapReinhard()
+{
+	gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
+}
+
 void GammaCorrect()
 {
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
@@ -37,5 +49,11 @@ void main()
 	float light = mix(0.25, 1.0, max(dot(N, L), 0.0));
 	gl_FragColor.rgb = base * light;
 	gl_FragColor.a = 1.0;
-	GammaCorrect();
+
+	if (bbmod_HDR == 0.0)
+	{
+		Exposure();
+		TonemapReinhard();
+		GammaCorrect();
+	}
 }

@@ -88,7 +88,7 @@ function BBMOD_DefaultRenderer()
 		//
 		// Edit mode
 		//
-		__render_gizmo_and_instance_ids();
+		__render_gizmo_and_instance_ids(false);
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -169,12 +169,36 @@ function BBMOD_DefaultRenderer()
 		// Reset render pass back to Forward at the end!
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
+		matrix_set(matrix_world, _world);
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Draw gizmo and highlight selected instances
+		//
+		__overlay_gizmo_and_instance_highlight();
+
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 		bbmod_shader_unset_global(BBMOD_U_SSAO);
 		bbmod_shader_unset_global(BBMOD_U_GBUFFER);
 
-		matrix_set(matrix_world, _world);
+		return self;
+	};
+
+	static present = function ()
+	{
+		global.__bbmodRendererCurrent = self;
+
+		if (UseAppSurface
+			&& PostProcessor != undefined
+			&& PostProcessor.Enabled)
+		{
+			var _world = matrix_get(matrix_world);
+			matrix_set(matrix_world, matrix_build_identity());
+			PostProcessor.draw(application_surface, X, Y, __surDepthBuffer);
+			matrix_set(matrix_world, _world);
+		}
+
 		return self;
 	};
 

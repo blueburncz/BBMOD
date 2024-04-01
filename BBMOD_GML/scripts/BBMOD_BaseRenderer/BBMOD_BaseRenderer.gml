@@ -191,6 +191,10 @@ function BBMOD_BaseRenderer() constructor
 	/// blurred. Defaults to 2.
 	SSAOBlurDepthRange = 2.0;
 
+	/// @var {Id.Camera}
+	/// @private
+	__camera2D = camera_create();
+
 	/// @func get_width()
 	///
 	/// @desc Retrieves the width of the renderer on the screen.
@@ -797,12 +801,14 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_camera_set_exposure(_exposure);
 	};
 
-	/// @func __render_gizmo_and_instance_ids()
+	/// @func __render_gizmo_and_instance_ids(_hdr)
 	///
 	/// @desc Renders gizmo and instance IDs into dedicated surfaces.
 	///
+	/// @param {Bool} _hdr Whether HDR rendering is enabled.
+	///
 	/// @private
-	static __render_gizmo_and_instance_ids = function ()
+	static __render_gizmo_and_instance_ids = function (_hdr)
 	{
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
@@ -916,12 +922,28 @@ function BBMOD_BaseRenderer() constructor
 			// Gizmo
 			bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
-			__surGizmo = bbmod_surface_check(__surGizmo, _renderWidth, _renderHeight, surface_rgba8unorm, true);
+			__surGizmo = bbmod_surface_check(__surGizmo, _renderWidth, _renderHeight,
+				_hdr ? surface_rgba16float : surface_rgba8unorm, true);
+
 			surface_set_target(__surGizmo);
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
+
+			var _hdrPrev = bbmod_shader_get_global(BBMOD_U_HDR);
+			bbmod_shader_set_global_f(BBMOD_U_HDR, _hdr ? 1.0 : 0.0);
+
 			Gizmo.submit();
+
+			if (_hdrPrev != undefined)
+			{
+				bbmod_shader_set_global_f(BBMOD_U_HDR, _hdrPrev);
+			}
+			else
+			{
+				bbmod_shader_unset_global(BBMOD_U_HDR);
+			}
+
 			bbmod_material_reset();
 			surface_reset_target();
 		}
@@ -932,6 +954,62 @@ function BBMOD_BaseRenderer() constructor
 		}
 	};
 
+	/// @private
+	static __overlay_gizmo_and_instance_highlight = function ()
+	{
+		if (!EditMode || !Gizmo || ds_list_empty(Gizmo.Selected))
+		{
+			return;
+		}
+
+		gpu_push_state();
+		gpu_set_blendenable(true);
+
+		var _world = matrix_get(matrix_world);
+		var _view = matrix_get(matrix_view);
+		var _projection = matrix_get(matrix_projection);
+		var _width = get_render_width();
+		var _height = get_render_height();
+		var _texelWidth = 1.0 / _width;
+		var _texelHeight = 1.0 / _height;
+
+		camera_set_view_size(__camera2D, _width, _height);
+		camera_apply(__camera2D);
+
+		////////////////////////////////////////////////////////////////
+		// Highlighted instances
+		if (!ds_list_empty(Gizmo.Selected)
+			&& surface_exists(__surInstanceHighlight))
+		{
+			var _shader = BBMOD_ShInstanceHighlight;
+			shader_set(_shader);
+			bbmod_shader_set_globals(_shader);
+			shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
+				_texelWidth, _texelHeight);
+			shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
+				InstanceHighlightColor.Red / 255.0,
+				InstanceHighlightColor.Green / 255.0,
+				InstanceHighlightColor.Blue / 255.0,
+				InstanceHighlightColor.Alpha);
+			draw_surface_stretched(__surInstanceHighlight, 0, 0, _width, _height);
+			shader_reset();
+		}
+
+		////////////////////////////////////////////////////////////////
+		// Gizmo
+		if (surface_exists(__surGizmo))
+		{
+			draw_surface_stretched(__surGizmo, 0, 0, _width, _height);
+		}
+
+		matrix_set(matrix_world, _world);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
+
+		gpu_pop_state();
+	};
+
+	/// @private
 	static __render_ssao = function (_surDepth, _projection)
 	{
 		if (EnableSSAO)
@@ -992,7 +1070,7 @@ function BBMOD_BaseRenderer() constructor
 		//
 		// Edit mode
 		//
-		__render_gizmo_and_instance_ids();
+		__render_gizmo_and_instance_ids(false);
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -1039,10 +1117,17 @@ function BBMOD_BaseRenderer() constructor
 		// Reset render pass back to Forward at the end!
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
 
+		matrix_set(matrix_world, _world);
+
+		////////////////////////////////////////////////////////////////////////
+		//
+		// Draw gizmo and highlight selected instances
+		//
+		__overlay_gizmo_and_instance_highlight();
+
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 
-		matrix_set(matrix_world, _world);
 		return self;
 	};
 
@@ -1060,124 +1145,15 @@ function BBMOD_BaseRenderer() constructor
 	{
 		global.__bbmodRendererCurrent = self;
 
-		var _world = matrix_get(matrix_world);
-		matrix_set(matrix_world, matrix_build_identity());
-
-		static _gpuState = undefined;
-		if (_gpuState == undefined)
+		if (UseAppSurface
+			&& PostProcessor != undefined
+			&& PostProcessor.Enabled)
 		{
-			gpu_push_state();
-			gpu_set_state(bbmod_gpu_get_default_state());
-			gpu_set_tex_filter(true);
-			gpu_set_tex_repeat(false);
-			gpu_set_blendenable(true);
-			_gpuState = gpu_get_state();
-			gpu_pop_state();
+			var _world = matrix_get(matrix_world);
+			matrix_set(matrix_world, matrix_build_identity());
+			PostProcessor.draw(application_surface, X, Y);
+			matrix_set(matrix_world, _world);
 		}
-
-		var _width = get_width();
-		var _height = get_height();
-		var _texelWidth = 1.0 / _width;
-		var _texelHeight = 1.0 / _height;
-
-		if (!UseAppSurface // Can't use post-processing even if it was defined
-			|| (PostProcessor == undefined || !PostProcessor.Enabled))
-		{
-			////////////////////////////////////////////////////////////////////
-			//
-			// Post-processing DISABLED
-			//
-			gpu_push_state();
-			gpu_set_state(_gpuState);
-
-			if (UseAppSurface)
-			{
-				gpu_set_blendenable(false);
-				draw_surface_stretched(application_surface, X, Y, _width, _height);
-				gpu_set_blendenable(true);
-			}
-
-			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))
-			{
-				////////////////////////////////////////////////////////////////
-				// Highlighted instances
-				if (!ds_list_empty(Gizmo.Selected)
-					&& surface_exists(__surInstanceHighlight))
-				{
-					var _shader = BBMOD_ShInstanceHighlight;
-					shader_set(_shader);
-					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
-						_texelWidth, _texelHeight);
-					shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
-						InstanceHighlightColor.Red / 255.0,
-						InstanceHighlightColor.Green / 255.0,
-						InstanceHighlightColor.Blue / 255.0,
-						InstanceHighlightColor.Alpha);
-					draw_surface_stretched(__surInstanceHighlight, X, Y, _width, _height);
-					shader_reset();
-				}
-			
-				////////////////////////////////////////////////////////////////
-				// Gizmo
-				if (surface_exists(__surGizmo))
-				{
-					draw_surface_stretched(__surGizmo, X, Y, _width, _height);
-				}
-			}
-
-			gpu_pop_state();
-		}
-		else
-		{
-			////////////////////////////////////////////////////////////////////
-			//
-			// Post-processing ENABLED
-			//
-			__surFinal = bbmod_surface_check(__surFinal, _width, _height, surface_rgba8unorm, false);
-
-			gpu_push_state();
-			gpu_set_state(_gpuState);
-
-			surface_set_target(__surFinal);
-
-			draw_surface_stretched(application_surface, 0, 0, _width, _height);
-
-			if (EditMode && Gizmo && !ds_list_empty(Gizmo.Selected))
-			{
-				////////////////////////////////////////////////////////////////
-				// Highlighted instances
-				if (!ds_list_empty(Gizmo.Selected)
-					&& surface_exists(__surInstanceHighlight))
-				{
-					var _shader = BBMOD_ShInstanceHighlight;
-					shader_set(_shader);
-					shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
-						_texelWidth, _texelHeight);
-					shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
-						InstanceHighlightColor.Red / 255.0,
-						InstanceHighlightColor.Green / 255.0,
-						InstanceHighlightColor.Blue / 255.0,
-						InstanceHighlightColor.Alpha);
-					draw_surface_stretched(__surInstanceHighlight, 0, 0, _width, _height);
-					shader_reset();
-				}
-			
-				////////////////////////////////////////////////////////////////
-				// Gizmo
-				if (surface_exists(__surGizmo))
-				{
-					draw_surface_stretched(__surGizmo, 0, 0, _width, _height);
-				}
-			}
-
-			surface_reset_target();
-			gpu_pop_state();
-
-			// FIXME: Make this work for all renderers!
-			PostProcessor.draw(__surFinal, X, Y, self[$ "__surDepthBuffer"]);
-		}
-
-		matrix_set(matrix_world, _world);
 
 		return self;
 	};
@@ -1257,6 +1233,8 @@ function BBMOD_BaseRenderer() constructor
 			_key = ds_map_find_next(__shadowmapCubes, _key);
 		}
 		ds_map_destroy(__shadowmapCubes);
+
+		camera_destroy(__camera2D);
 
 		return undefined;
 	};
