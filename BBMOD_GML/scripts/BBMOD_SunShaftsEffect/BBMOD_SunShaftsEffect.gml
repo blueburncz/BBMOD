@@ -60,15 +60,14 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
-		if (LightDirection == undefined || _depth == undefined)
-		{
-			return _surfaceDest;
-		}
-
 		var _camera = global.__bbmodCameraCurrent;
-		if (_camera == undefined)
+
+		if (Color.Alpha <= 0.0
+			|| LightDirection == undefined
+			|| _camera == undefined
+			|| _depth == undefined)
 		{
-			return _surfaceDest;
+			return _surfaceSrc;
 		}
 
 		var _rect = PostProcessor.Rect;
@@ -80,7 +79,7 @@ function BBMOD_SunShaftsEffect(_lightDir=undefined)
 
 		if (_screenPos == undefined)
 		{
-			return _surfaceDest;
+			return _surfaceSrc;
 		}
 
 		_screenPos.X *= 0.5;

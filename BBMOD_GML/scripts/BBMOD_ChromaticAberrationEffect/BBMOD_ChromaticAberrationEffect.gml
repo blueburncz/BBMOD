@@ -6,8 +6,7 @@
 ///
 /// @desc Chromatic aberration (post-processing effect).
 ///
-/// @param {Real} _strength The strength of the effect. Defaults to 1 if
-/// `undefined`.
+/// @param {Real} _strength The strength of the effect. Defaults to 1.
 /// @param {Struct.BBMOD_Vec3} _offset Offsets for RGB channels. Defaults to
 /// `(-1, 0, 1)` if `undefined`.
 function BBMOD_ChromaticAberrationEffect(_strength=1.0, _offset=undefined)
@@ -26,6 +25,10 @@ function BBMOD_ChromaticAberrationEffect(_strength=1.0, _offset=undefined)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		if (Strength <= 0.0)
+		{
+			return _surfaceSrc;
+		}
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShChromaticAberration);
 		shader_set_uniform_f(

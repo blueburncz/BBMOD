@@ -14,9 +14,14 @@ function BBMOD_ExposureEffect()
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		var _exposure = bbmod_camera_get_exposure();
+		if (_exposure == 1.0)
+		{
+			return _surfaceSrc;
+		}
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShExposure);
-		shader_set_uniform_f(__uExposure, bbmod_camera_get_exposure());
+		shader_set_uniform_f(__uExposure, _exposure);
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();

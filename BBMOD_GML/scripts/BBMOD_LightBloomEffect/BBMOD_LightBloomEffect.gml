@@ -7,10 +7,10 @@
 /// @desc Light bloom (post-processing effect).
 ///
 /// @param {Struct.BBMOD_Vec3} [_bias] A value added to RGB channels before the
-/// light bloom effect is applied. Defaults to `(-1, -1, -1)`.
+/// light bloom effect is applied. Defaults to `(-1, -1, -1)` if `undefined`.
 /// @param {Struct.BBMOD_Vec3} [_scale] A value that the RGB channels are
 /// multiplied by before the light bloom effect is applied. Defaults to
-/// `(1, 1, 1)`.
+/// `(1, 1, 1)` if `undefined`.
 /// @param {Real} [_strength] The strength of the effect. Use values in range
 /// 0..1. Defaults to 1.
 function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _strength=1.0)

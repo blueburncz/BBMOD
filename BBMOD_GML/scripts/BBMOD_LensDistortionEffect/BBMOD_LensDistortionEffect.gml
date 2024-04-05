@@ -28,6 +28,10 @@ function BBMOD_LensDistortionEffect(_strength=0.0, _zoom=1.0)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		if (Strength <= 0.0)
+		{
+			return _surfaceSrc;
+		}
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShLensDistortion);
 		shader_set_uniform_f(__uStrength, Strength);

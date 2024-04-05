@@ -28,6 +28,10 @@ function BBMOD_LumaSharpenEffect(_strength=1.0, _clamp=1.0, _offset=1.0)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		if (Strength <= 0.0)
+		{
+			return _surfaceSrc;
+		}
 		var _texelWidth = 1.0 / surface_get_width(_surfaceSrc)
 		var _texelHeight = 1.0 / surface_get_height(_surfaceSrc);
 		surface_set_target(_surfaceDest);

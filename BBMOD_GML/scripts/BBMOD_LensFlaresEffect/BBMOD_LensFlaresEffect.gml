@@ -12,7 +12,7 @@ function BBMOD_LensFlaresEffect()
 {
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
-		if (!_depth)
+		if (_depth == undefined)
 		{
 			return _surfaceSrc;
 		}

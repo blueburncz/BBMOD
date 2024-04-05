@@ -18,6 +18,10 @@ function BBMOD_FilmGrainEffect(_strength=0.1)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		if (Strength <= 0.0)
+		{
+			return _surfaceSrc;
+		}
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShFilmGrain);
 		shader_set_uniform_f(__uStrength, Strength);

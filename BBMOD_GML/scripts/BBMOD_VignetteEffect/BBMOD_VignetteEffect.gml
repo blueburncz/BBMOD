@@ -24,6 +24,10 @@ function BBMOD_VignetteEffect(_strength=1.0, _color=c_black)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		if (Strength <= 0.0)
+		{
+			return _surfaceSrc;
+		}
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShVignette);
 		shader_set_uniform_f(__uStrength, Strength);

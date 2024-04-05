@@ -6,13 +6,15 @@
 ///
 /// @desc Monochrome (post-processing effect).
 ///
-/// @param {Real} [_strength] The strength of the effect. Defaults to 1.
+/// @param {Real} [_strength] The strength of the effect. Use values greater or
+/// equal to 0. Defaults to 1.
 /// @param {Constant.Color} [_color] The color of the effect. Defaults to
 /// `c_white`.
 function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 	: BBMOD_PostProcessEffect() constructor
 {
-	/// @var {Real} The strength of the effect. Default value is 1.
+	/// @var {Real} The strength of the effect. Use values greater or equal to
+	/// 0. Default value is 1.
 	Strength = _strength;
 
 	/// @var {Constant.Color} The color of the effect. Default value is to
@@ -24,6 +26,10 @@ function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		if (Strength <= 0.0)
+		{
+			return _surfaceSrc;
+		}
 		surface_set_target(_surfaceDest);
 		shader_set(BBMOD_ShMonochrome);
 		shader_set_uniform_f(__uStrength, Strength);

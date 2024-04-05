@@ -26,6 +26,10 @@ function BBMOD_DirectionalBlurEffect(_vector=undefined, _step=0.125)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
+		if (Vector.LengthSqr() == 0.0)
+		{
+			return _surfaceSrc;
+		}
 		var _texelWidth = 1.0 / surface_get_width(_surfaceSrc)
 		var _texelHeight = 1.0 / surface_get_height(_surfaceSrc)
 		surface_set_target(_surfaceDest);
