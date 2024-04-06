@@ -1,27 +1,89 @@
-/// @func BBMOD_DepthOfFieldEffect()
+/// @func BBMOD_DepthOfFieldEffect([_focusStart[, _focusEnd[, _autoFocus[, _autoFocusRange[, _autoFocusPoint[, _autoFocusFactor[, _blurRangeNear[, _blurRangeFar[, _blurScaleNear[, _blurScaleFar[, _bokehShape[, _sampleCount]]]]]]]]]]]])
 ///
 /// @extends BBMOD_PostProcessEffect
 ///
 /// @desc Depth of field (post-processing effect).
-function BBMOD_DepthOfFieldEffect()
-	: BBMOD_PostProcessEffect() constructor
+///
+/// @param {Real} [_focusStart] Distance from the camera from which are objects
+/// completely in focus. Ignored if `AutoFocus` is enabled. Defaults to 100.
+/// @param {Real} [_focusEnd] Distance from the camera to which are objects
+/// completely in focus. Ignored if `AutoFocus` is enabled. Defaults to 200.
+/// @param {Bool} [_autoFocus] If `true` then focus distance is automatically
+/// computed from the depth buffer. Defaults to `false`.
+/// @param {Real} [_autoFocusRange] When `AutoFocus` is enabled, `FocusStart` is
+/// computed as `focus distance - AutoFocusRange * 0.5` and `FocusEnd` as `focus
+/// distance + AutoFocusRange * 0.5`. Defaults to 100.
+/// @param {Struct.BBMOD_Vec2} [_autoFocusPoint] Screen coordiate to sample the
+/// depth buffer at when `AutoFocus` is enabled. Use values in range `(0, 0)`
+/// (top left corner) to `(1, 1)` (bottom right corner). Defaults to
+/// `(0.5, 0.5)` (screen center) if `undefined`.
+/// @param {Real} [_autoFocusFactor] Determines how fast the current focus
+/// distance lerps to the auto focus distance. Use values in range `(0; 1]`,
+/// where values closer to 0 mean slowly and 1 means immediately. Defaults to
+/// 0.1.
+/// @param {Real} [_blurRangeNear] Distance over which objects transition from
+/// completely in focus to competely out of focus in the near plane. Defaults to
+/// 50.
+/// @param {Real} [_blurRangeFar] Distance over which objects transition from
+/// completely in focus to completely out of focus in the far plane. Defaults to
+/// 50.
+/// @param {Real} [_blurScaleNear] The scale of the blur size in the near plane.
+/// Use values in range 0..1, where 0 is disabled and 1 is full blur. Using
+/// values greater than 1 is possible but can produce visual artifacts. Defaults
+/// to 1.
+/// @param {Real} [_blurScaleFar] The scale of the blur size in the far plane.
+/// Use values in range 0..1, where 0 is disabled and 1 is full blur. Using
+/// values greater than 1 is possible but can produce visual artifacts. Defaults
+/// to 1.
+/// @param {Real} [_bokehShape] Controls the shape of bokeh. Use values greater
+/// or equal to 3 for number of edges. Values lower than 3 result into a perfect
+/// circle. Defaults to 6 (hexagon).
+/// @param {Real} [_sampleCount] Number of samples taken when rendering the
+/// depth of field. Greater values produce better looking results but decrease
+/// performance. Defaults to 32.
+function BBMOD_DepthOfFieldEffect(
+	_focusStart=100,
+	_focusEnd=200,
+	_autoFocus=false,
+	_autoFocusRange=100,
+	_autoFocusPoint=undefined,
+	_autoFocusFactor=0.1,
+	_blurRangeNear=50,
+	_blurRangeFar=50,
+	_blurScaleNear=1.0,
+	_blurScaleFar=1.0,
+	_bokehShape=6.0,
+	_sampleCount=32
+) : BBMOD_PostProcessEffect() constructor
 {
 	static PostProcessEffect_destroy = destroy;
 
 	/// @var {Real} Distance from the camera from which are objects completely
 	/// in focus. Ignored if `AutoFocus` is enabled. Default value is 100.
 	/// @see BBMOD_DepthOfFieldEffect.AutoFocus
-	FocusStart = 100;
+	FocusStart = _focusStart;
 
 	/// @var {Real} Distance from the camera to which are objects completely in
 	/// focus. Ignored if `AutoFocus` is enabled. Default value is 200.
 	/// @see BBMOD_DepthOfFieldEffect.AutoFocus
-	FocusEnd = 200;
+	FocusEnd = _focusEnd;
 
 	/// @var {Bool} If `true` then focus distance is automatically computed from
 	/// the depth buffer. Default value is `false`.
 	/// @see BBMOD_DepthOfFieldEffect.AutoFocusPoint
-	AutoFocus = false;
+	AutoFocus = _autoFocus;
+
+	/// @var {Real}
+	/// @private
+	__autoFocusDistance = 0;
+
+	/// @var {Real} When `AutoFocus` is enabled, `FocusStart` is computed as
+	/// `focus distance - AutoFocusRange * 0.5` and `FocusEnd` as
+	/// `focus distance + AutoFocusRange * 0.5`. Default value is 100.
+	/// @see BBMOD_DepthOfFieldEffect.AutoFocus
+	/// @see BBMOD_DepthOfFieldEffect.FocusStart
+	/// @see BBMOD_DepthOfFieldEffect.FocusEnd
+	AutoFocusRange = _autoFocusRange;
 
 	/// @var {Struct.BBMOD_Vec2} Screen coordiate to sample the depth buffer at
 	/// when `AutoFocus` is enabled. Use values in range `(0, 0)` (top left
@@ -32,7 +94,7 @@ function BBMOD_DepthOfFieldEffect()
 	/// negatively affects performance!
 	///
 	/// @see BBMOD_DepthOfFieldEffect.AutoFocus
-	AutoFocusPoint = new BBMOD_Vec2(0.5);
+	AutoFocusPoint = _autoFocusPoint ?? new BBMOD_Vec2(0.5);
 
 	/// @var {Real} Determines how fast the current focus distance lerps to the
 	/// auto focus distance. Use values in range `(0; 1]`, where values closer
@@ -97,7 +159,9 @@ function BBMOD_DepthOfFieldEffect()
 	static __uGetCoCBlurRangeNear = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeNear");
 	static __uGetCoCBlurRangeFar  = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeFar");
 
-	static __uDownsampleCoCTexel = shader_get_uniform(BBMOD_ShDownsampleCoC, "u_vTexel");
+	static __uDownsampleTexel = shader_get_uniform(BBMOD_ShDownsampleCoC, "u_vTexel");
+
+	static __uBlurTexel = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
 
 	static __uDoFCoCNear      = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCNear");
 	static __uDoFCoCFar       = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCFar");
@@ -130,8 +194,9 @@ function BBMOD_DepthOfFieldEffect()
 			var _b = color_get_blue(_pixel) / 255.0;
 			var _inv255 = 1.0 / 255.0;
 			var _focusDepth = (_r + (_g * _inv255) + (_b * _inv255 * _inv255)) * _zfar;
-			FocusStart += (_focusDepth - FocusStart) * AutoFocusFactor;
-			FocusEnd = FocusStart;
+			__autoFocusDistance += (_focusDepth - __autoFocusDistance) * AutoFocusFactor;
+			FocusStart = __autoFocusDistance - AutoFocusRange * 0.5;
+			FocusEnd = __autoFocusDistance + AutoFocusRange * 0.5;
 		}
 
 		if (SampleCount < 1
@@ -167,7 +232,6 @@ function BBMOD_DepthOfFieldEffect()
 
 		// Downsample near CoC
 		shader_set(BBMOD_ShDownsampleCoC);
-		var __uDownsampleTexel = shader_get_uniform(BBMOD_ShDownsampleCoC, "u_vTexel");
 		surface_set_target(__surCoCDownsample1);
 		shader_set_uniform_f(__uDownsampleTexel, 2.0 / _width, 2.0 / _height);
 		draw_surface_stretched(__surCoC, 0, 0, _width / 2, _height / 2);
@@ -186,7 +250,6 @@ function BBMOD_DepthOfFieldEffect()
 
 		// Blur downsampled CoC
 		shader_set(BBMOD_ShGaussianBlur);
-		var __uBlurTexel = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
 		surface_set_target(__surCoCDownsample3);
 		shader_set_uniform_f(__uBlurTexel, 8.0 / _width, 0.0);
 		draw_surface(__surCoCNear, 0, 0);
