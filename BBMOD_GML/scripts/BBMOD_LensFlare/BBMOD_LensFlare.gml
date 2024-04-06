@@ -4,47 +4,76 @@
 /// @private
 global.__bbmodLensFlares = [];
 
-/// @func BBMOD_LensFlare()
+/// @func BBMOD_LensFlare([_position[, _range[, _falloff[, _depthThreshold[, _direction[, _angleInner[, _angleOuter]]]]]]])
 ///
 /// @desc A lens flare.
+///
+/// @param {Struct.BBMOD_Vec3, Undefined} [_position] The position in the world
+/// or `undefined`, in which case the property {@link BBMOD_LensFlare.Direction}
+/// is used instead. Defaults to `undefined`.
+/// @param {Real} [_range] The maximum distance at which is the lens flare
+/// visible. Used only in case {@link BBMOD_LensFlare.Position} is not
+/// `undefined`. Defaults to `infinity`.
+/// @param {Real} [_falloff] A multiplier for {@link BBMOD_LensFlare.Range} used
+/// to compute the distance from the camera at which the lens flare starts
+/// fading away. Use values in range 0..1. Defaults to 0.8 (the lens flare
+/// starts fading away at 80% of the `Range` property).
+/// @param {Real} [_depthThreshold] The maximum allowed difference between the
+/// flare's depth and the depth in the depth buffer. When larger, the lens flare
+/// is not drawn. Defaults to 1.
+/// @param {Struct.BBMOD_Vec3, Undefined} [_direction] The source light's
+/// direction or `undefined` (default).
+/// @param {Real, Undefined} [_angleInner] The inner cone angle in degrees (for
+/// lens flares produced by spot lights) or `undefined` (default).
+/// @param {Real, Undefined} [_angleOuter] The outer cone angle in degrees (for
+/// lens flares produced by spot lights) or `undefined` (default).
 ///
 /// @see bbmod_lens_flare_add
 /// @see BBMOD_LensFlareElement
 /// @see BBMOD_LensFlareEffect
-function BBMOD_LensFlare() constructor
+function BBMOD_LensFlare(
+	_position=undefined,
+	_range=infinity,
+	_falloff=0.8,
+	_depthThreshold=1.0,
+	_direction=undefined,
+	_angleInner=undefined,
+	_angleOuter=undefined
+) constructor
 {
-	/// @var {Struct.BBMOD_Vec3} The position in the world or `undefined`,
-	/// in which case the property {@link BBMOD_LensFlare.Direction} is used
-	/// instead. Default value is `undefined`.
-	Position = undefined;
+	/// @var {Struct.BBMOD_Vec3, Undefined} The position in the world or
+	/// `undefined`, in which case the property
+	/// {@link BBMOD_LensFlare.Direction} is used instead. Default value is
+	/// `undefined`.
+	Position = _position;
 
 	/// @var {Real} The maximum distance at which is the lens flare visible.
 	/// Used only in case {@link BBMOD_LensFlare.Position} is not `undefined`.
 	/// Default value is `infinity`.
-	Range = infinity;
+	Range = _range;
 
 	/// @var {Real} A multiplier for {@link BBMOD_LensFlare.Range} used to
 	/// compute the distance from the camera at which the lens flare starts
 	/// fading away. Use values in range 0..1. Default value is 0.8 (the lens
 	/// flare starts fading away at 80% of the `Range` property).
-	Falloff = 0.8;
+	Falloff = _falloff;
 
 	/// @var {Real} The maximum allowed difference between the flare's depth and
 	/// the depth in the depth buffer. When larger, the lens flare is not drawn.
 	/// Default value is 1.
-	DepthThreshold = 1.0;
+	DepthThreshold = _depthThreshold;
 
 	/// @var {Struct.BBMOD_Vec3, Undefined} The source light's direction or
 	/// `undefined` (default).
-	Direction = undefined;
+	Direction = _direction;
 
 	/// @var {Real, Undefined} The inner cone angle in degrees (for lens flares
 	/// produced by spot lights) or `undefined` (default).
-	AngleInner = undefined;
+	AngleInner = _angleInner;
 
 	/// @var {Real, Undefined} The outer cone angle in degrees (for lens flares
 	/// produced by spot lights) or `undefined` (default).
-	AngleOuter = undefined;
+	AngleOuter = _angleOuter;
 
 	/// @var {Array<Struct.BBMOD_LensFlareElement>}
 	/// @private
