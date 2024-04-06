@@ -1,39 +1,57 @@
 /// @module PostProcessing
 
-/// @func BBMOD_SunShaftsEffect([_lightDir[, _radius[, _strength[, _step]]]])
+/// @func BBMOD_SunShaftsEffect([_lightDir[, _radius[, _color[, _blurSize[, _blurStep[, _blendMode]]]]]])
 ///
 /// @extends BBMOD_PostProcessEffect
 ///
 /// @desc Sun shafts (post-processing effect).
 ///
-/// @param {Struct.BBMOD_Vec3} [_lightDir]
-function BBMOD_SunShaftsEffect(_lightDir=undefined)
-	: BBMOD_PostProcessEffect() constructor
+/// @param {Struct.BBMOD_Vec3} [_lightDir] The direction in which the light is
+/// coming. Defaults to `(-1, 0, -1)` if `undefined`.
+/// @param {Real} [_radius] The size of the sun, relative to the screen size
+/// (i.e. 1 is the full screen, 0.5 is the half of the screen etc.). Defaults to
+/// 0.1.
+/// @param {Struct.BBMOD_Color} [_color] Controls the color and the intensity
+/// (via alpha) of the effect. Defaults to {@link BBMOD_C_WHITE} if `undefined`.
+/// @param {Real} [_blurSize] The size of the blur. Defaults to 100.
+/// @param {Real} [_blurStep] Used to control the quality of the effect. Use
+/// values greater than 0 and smaller than 1. The smaller the value, the higher
+/// the quality. Defaults to 0.01 (high quality).0
+/// @param {Constant.BlendMode} [_blendMode] The blend mode used to combine the
+/// sun shafts with the scene. Good options are `bm_add` (default) and `bm_max`.
+function BBMOD_SunShaftsEffect(
+	_lightDir=undefined,
+	_radius=0.1,
+	_color=undefined,
+	_blurSize=100,
+	_blurStep=0.01,
+	_blendMode=bm_add
+) : BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The direction in which the light is coming.
-	LightDirection = _lightDir;
+	/// Default value is `(-1, 0, -1)`.
+	LightDirection = _lightDir ?? new BBMOD_Vec3(-1.0, 0.0, -1.0).Normalize();
 
 	/// @var {Real} The size of the sun, relative to the screen size (i.e. 1
 	/// is the full screen, 0.5 is the half of the screen etc.). Default value
 	/// is 0.1.
-	Radius = 0.1;
+	Radius = _radius;
 
 	/// @var {Struct.BBMOD_Color} Controls the color and the intensity (via
 	/// alpha) of the effect. Default value is {@link BBMOD_C_WHITE}.
-	Color = BBMOD_C_WHITE;
+	Color = _color ?? BBMOD_C_WHITE;
 
 	/// @var {Real} The size of the blur. Default value is 100.
-	BlurSize = 100;
+	BlurSize = _blurSize;
 
 	/// @var {Real} Used to control the quality of the effect. Use values
 	/// greater than 0 and smaller than 1. The smaller the value, the higher the
 	/// quality. Default value is 0.01 (high quality).
-	BlurStep = 0.01;
+	BlurStep = _blurStep;
 
 	/// @var {Constant.BlendMode} The blend mode used to combine the sun shafts
-	/// with the scene. Good options are for example `bm_add` (default) and
-	/// `bm_max`.
-	BlendMode = bm_add;
+	/// with the scene. Good options are `bm_add` (default) and `bm_max`.
+	BlendMode = _blendMode;
 
 	/// @var {Id.Surface}
 	/// @private
