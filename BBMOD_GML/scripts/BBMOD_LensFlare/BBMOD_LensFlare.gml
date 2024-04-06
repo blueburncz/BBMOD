@@ -171,7 +171,7 @@ function BBMOD_LensFlare() constructor
 
 		shader_set(BBMOD_ShLensFlare);
 		shader_set_uniform_f(__uLightPos, _x, _y, _z);
-		texture_set_stage(__uFlareRaysTex, sprite_get_texture(BBMOD_SprFlareRays, 0));
+		texture_set_stage(__uFlareRaysTex, sprite_get_texture(BBMOD_SprLensFlareRays, 0));
 		shader_set_uniform_f(__uInvRes, 1.0 / _screenWidth, 1.0 / _screenHeight);
 		texture_set_stage(__uDepthTex, surface_get_texture(_depth));
 		gpu_set_tex_filter_ext(__uDepthTex, false);
@@ -193,8 +193,8 @@ function BBMOD_LensFlare() constructor
 		{
 			with (__elements[i])
 			{
-				var _elementX = _x + _vecX * Offset.X;
-				var _elementY = _y + _vecY * Offset.Y;
+				var _elementX = _x + _vecX * Offset.X * 2.0;
+				var _elementY = _y + _vecY * Offset.Y * 2.0;
 				var _elementDistance = point_distance(
 					_elementX / _screenWidth, _elementY / _screenHeight,
 					_x / _screenWidth, _y / _screenHeight);

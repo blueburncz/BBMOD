@@ -1,46 +1,93 @@
 /// @module PostProcessing
 
-/// @func BBMOD_LensFlareElement(_offset, _sprite[, _subimage])
+/// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset]]])
 ///
 /// @desc A lens flare element.
 ///
-/// @param {Struct.BBMOD_Vec2} _offset
-/// @param {Asset.GMSprite} _sprite
-/// @param {Real} [_subimage]
+/// @param {Asset.GMSprite} [_sprite] The sprite of the lens flare element.
+/// Defaults to `BBMOD_SprLensFlareGhost`.
+/// @param {Real} [_subimage] The sprite subimage. Defaults to 0.
+/// @param {Struct.BBMOD_Vec2} [_offset] The offset from the lights position on
+/// the screen, where `(0, 0)` is the light's position, `(0.5, 0.5)` is the
+/// screen center and `(1, 1)` is the lights position inverted around the screen
+/// center. Defaults to `(0, 0)` if `undefined`.
+/// @param {Struct.BBMOD_Vec2} [_scale] The scale of the lens flare sprite.
+/// Defaults to `(1, 1)` if `undefined`.
+/// @param {Struct.BBMOD_Vec2} [_scaleByDistanceMin] Scale multiplier when the
+/// lens flare's normalized distance from the light's position on screen is 0.
+/// Defaults to `(1, 1)` if `undefined`.
+/// @param {Struct.BBMOD_Vec2} [_scaleByDistanceMax] Scale multiplier when the
+/// lens flare's normalized distance from the light's position on screen is 1.
+/// Defaults to `(1, 1)` if `undefined`.
+/// @param {Struct.BBMOD_Color} [_color] The color of the lens flare. Defaults
+/// to {@link BBMOD_C_WHITE} if `undefined`.
+/// @param {Real} [_angle] The rotation of the lens flare. Defaults to 0.
+/// @param {Bool} [_angleRelative] If `true` then the lens flare angle is
+/// relative to the direction to the light's position on screen. Defaults to
+/// `false`.
+/// @param {Bool} [_fadeOut] Whether to fade out the lens flare on screen edges.
+/// Defaults to `false`.
+/// @param {Bool} [_flareRays] Whether to apply rays to the lens flare's sprite.
+/// Defaults to `false`.
 ///
 /// @see BBMOD_LensFlare
-function BBMOD_LensFlareElement(_offset, _sprite, _subimage=0) constructor
+function BBMOD_LensFlareElement(
+	_sprite=BBMOD_SprLensFlareGhost,
+	_subimage=0,
+	_offset=undefined,
+	_scale=undefined,
+	_scaleByDistanceMin=undefined,
+	_scaleByDistanceMax=undefined,
+	_color=undefined,
+	_angle=0.0,
+	_angleRelative=false,
+	_fadeOut=false,
+	_flareRays=false
+) constructor
 {
-	/// @var {Struct.BBMOD_Vec2}
-	Offset = _offset;
-
-	/// @var {Asset.GMSprite}
+	/// @var {Asset.GMSprite} The sprite of the lens flare element. Default
+	/// value is `BBMOD_SprLensFlareGhost`.
 	Sprite = _sprite;
 
-	/// @var {Real} Default value is 0.
+	/// @var {Real} The sprite subimage. Default value is 0.
 	Subimage = _subimage;
 
-	/// @var {Struct.BBMOD_Vec2} Default value is `(1, 1)`.
-	Scale = new BBMOD_Vec2(1.0);
+	/// @var {Struct.BBMOD_Vec2} The offset from the lights position on the
+	/// screen, where `(0, 0)` is the light's position, `(0.5, 0.5)` is the
+	/// screen center and `(1, 1)` is the lights position inverted around the
+	/// screen center. Default value is `(0, 0)`.
+	Offset = _offset ?? new BBMOD_Vec2();
 
-	/// @var {Struct.BBMOD_Vec2} Default value is `(1, 1)`.
-	ScaleByDistanceMin = new BBMOD_Vec2(1.0);
+	/// @var {Struct.BBMOD_Vec2} The scale of the lens flare sprite. Default
+	/// value is to `(1, 1)`.
+	Scale = _scale ?? new BBMOD_Vec2(1.0);
 
-	/// @var {Struct.BBMOD_Vec2} Default value is `(1, 1)`.
-	ScaleByDistanceMax = new BBMOD_Vec2(1.0);
+	/// @var {Struct.BBMOD_Vec2} Scale multiplier when the lens flare's
+	/// normalized distance from the light's position on screen is 0. Default
+	/// value is `(1, 1)`.
+	ScaleByDistanceMin = _scaleByDistanceMin ?? new BBMOD_Vec2(1.0);
 
-	/// @var {Struct.BBMOD_Color} Default value is {@link BBMOD_C_WHITE}.
-	Color = BBMOD_C_WHITE;
+	/// @var {Struct.BBMOD_Vec2} Scale multiplier when the lens flare's
+	/// normalized distance from the light's position on screen is 1. Default
+	/// value is `(1, 1)`.
+	ScaleByDistanceMax = _scaleByDistanceMax ?? new BBMOD_Vec2(1.0);
 
-	/// @var {Real} Default value is 0.
-	Angle = 0.0;
+	/// @var {Struct.BBMOD_Color} The color of the lens flare. Default value is
+	/// {@link BBMOD_C_WHITE}.
+	Color = _color ?? BBMOD_C_WHITE;
 
-	/// @var {Bool} Default value is `false`.
-	AngleRelative = false;
+	/// @var {Real} The rotation of the lens flare. Default value is 0.
+	Angle = _angle;
 
-	/// @var {Bool} Default value is `false`.
-	FadeOut = false;
+	/// @var {Bool} If `true` then the lens flare angle is relative to the
+	/// direction to the light's position on screen. Default value is `false`.
+	AngleRelative = _angleRelative;
 
-	/// @var {Bool} Default value is `false`.
-	FlareRays = false;
+	/// @var {Bool} Whether to fade out the lens flare on screen edges. Default
+	/// value is `false`.
+	FadeOut = _fadeOut;
+
+	/// @var {Bool} Whether to apply rays to the lens flare's sprite. Default
+	/// value is `false`.
+	FlareRays = _flareRays;
 }
