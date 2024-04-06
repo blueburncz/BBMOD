@@ -10,4 +10,5 @@ void main()
 	gl_FragColor = v_vColor * texture2D(gm_BaseTexture, v_vTexCoord);
 	vec2 lensDirtUV = mix(u_vLensDirtUVs.xy, u_vLensDirtUVs.zw, v_vTexCoord);
 	gl_FragColor.rgb += texture2D(u_texLensDirt, lensDirtUV).rgb * gl_FragColor.rgb * u_fLensDirtStrength;
+	gl_FragColor.rgb = clamp(gl_FragColor.rgb, vec3(0.0), vec3(1.0));
 }

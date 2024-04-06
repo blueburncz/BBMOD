@@ -187,11 +187,20 @@ function BBMOD_LensFlare() constructor
 		var _uFadeOut = __uFadeOut;
 		var _uFlareRays = __uFlareRays;
 
+		gpu_set_blendmode(bm_add);
+
 		for (var i = array_length(__elements) - 1; i >= 0; --i)
 		{
 			with (__elements[i])
 			{
-				gpu_set_blendmode(BlendMode);
+				var _elementX = _x + _vecX * Offset.X;
+				var _elementY = _y + _vecY * Offset.Y;
+				var _elementDistance = point_distance(
+					_elementX / _screenWidth, _elementY / _screenHeight,
+					_x / _screenWidth, _y / _screenHeight);
+				var _elementScaleX = Scale.X * lerp(ScaleByDistanceMin.X, ScaleByDistanceMax.X, _elementDistance) * _scale;
+				var _elementScaleY = Scale.Y * lerp(ScaleByDistanceMin.Y, ScaleByDistanceMax.Y, _elementDistance) * _scale;
+
 				shader_set_uniform_f(_uFadeOut, FadeOut ? 1.0 : 0.0);
 				shader_set_uniform_f(_uFlareRays, FlareRays ? 1.0 : 0.0);
 				shader_set_uniform_f(
@@ -201,8 +210,10 @@ function BBMOD_LensFlare() constructor
 					Color.Blue / 255.0,
 					Color.Alpha * _strength);
 				draw_sprite_ext(
-					Sprite, Subimage, _x + _vecX * Offset.X, _y + _vecY * Offset.Y,
-					Scale.X * _scale, Scale.Y * _scale, Angle + _direction * (AngleRelative ? 1.0 : 0.0),
+					Sprite, Subimage,
+					_elementX, _elementY,
+					_elementScaleX, _elementScaleY,
+					Angle + _direction * (AngleRelative ? 1.0 : 0.0),
 					c_white, 1.0);
 			}
 		}

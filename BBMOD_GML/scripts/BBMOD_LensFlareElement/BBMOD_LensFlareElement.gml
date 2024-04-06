@@ -23,6 +23,12 @@ function BBMOD_LensFlareElement(_offset, _sprite, _subimage=0) constructor
 	/// @var {Struct.BBMOD_Vec2} Default value is `(1, 1)`.
 	Scale = new BBMOD_Vec2(1.0);
 
+	/// @var {Struct.BBMOD_Vec2} Default value is `(1, 1)`.
+	ScaleByDistanceMin = new BBMOD_Vec2(1.0);
+
+	/// @var {Struct.BBMOD_Vec2} Default value is `(1, 1)`.
+	ScaleByDistanceMax = new BBMOD_Vec2(1.0);
+
 	/// @var {Struct.BBMOD_Color} Default value is {@link BBMOD_C_WHITE}.
 	Color = BBMOD_C_WHITE;
 
@@ -31,9 +37,6 @@ function BBMOD_LensFlareElement(_offset, _sprite, _subimage=0) constructor
 
 	/// @var {Bool} Default value is `false`.
 	AngleRelative = false;
-
-	/// @var {Constant.BlendMode} Default value is `bm_add`.
-	BlendMode = bm_add;
 
 	/// @var {Bool} Default value is `false`.
 	FadeOut = false;
