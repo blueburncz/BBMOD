@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_DepthOfFieldEffect([_focusStart[, _focusEnd[, _autoFocus[, _autoFocusRange[, _autoFocusPoint[, _autoFocusFactor[, _blurRangeNear[, _blurRangeFar[, _blurScaleNear[, _blurScaleFar[, _bokehShape[, _sampleCount]]]]]]]]]]]])
 ///
 /// @extends BBMOD_PostProcessEffect

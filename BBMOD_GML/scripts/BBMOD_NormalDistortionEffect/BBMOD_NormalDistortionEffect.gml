@@ -1,3 +1,5 @@
+/// @module PostProcessing
+
 /// @func BBMOD_NormalDistortionEffect([_texture[, _strength]])
 ///
 /// @extends BBMOD_PostProcessEffect
