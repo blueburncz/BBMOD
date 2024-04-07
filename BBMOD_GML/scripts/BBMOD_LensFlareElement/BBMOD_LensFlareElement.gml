@@ -2,7 +2,7 @@
 
 /// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset]]])
 ///
-/// @desc A lens flare element.
+/// @desc A single lens flare element (sprite).
 ///
 /// @param {Asset.GMSprite} [_sprite] The sprite of the lens flare element.
 /// Defaults to `BBMOD_SprLensFlareGhost`.

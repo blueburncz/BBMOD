@@ -4,7 +4,7 @@
 ///
 /// @extends BBMOD_PostProcessEffect
 ///
-/// @desc Draws lens flares added with {@link bbmod_lens_flare_add}.
+/// @desc Draws all lens flares added with {@link bbmod_lens_flare_add}.
 ///
 /// @see BBMOD_LensFlare
 function BBMOD_LensFlaresEffect()

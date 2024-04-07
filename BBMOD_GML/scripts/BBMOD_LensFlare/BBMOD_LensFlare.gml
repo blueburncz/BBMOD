@@ -6,7 +6,8 @@ global.__bbmodLensFlares = [];
 
 /// @func BBMOD_LensFlare([_position[, _range[, _falloff[, _depthThreshold[, _direction[, _angleInner[, _angleOuter]]]]]]])
 ///
-/// @desc A lens flare.
+/// @desc A collection of {@link BBMOD_LensFlareElement}s that together define a
+/// single lens flare instance.
 ///
 /// @param {Struct.BBMOD_Vec3, Undefined} [_position] The position in the world
 /// or `undefined`, in which case the property {@link BBMOD_LensFlare.Direction}
@@ -141,8 +142,8 @@ function BBMOD_LensFlare(
 			return self;
 		}
 
+		var _scale = _postProcessor.get_effect_scale();
 		var _rect = _postProcessor.Rect;
-		var _scale = _rect.Width / _postProcessor.DesignWidth;
 		var _screenWidth = _rect.Width;
 		var _screenHeight = _rect.Height;
 		var _screenPos = _camera.world_to_screen(
@@ -257,7 +258,7 @@ function BBMOD_LensFlare(
 
 /// @func bbmod_lens_flare_add(_lensFlare)
 ///
-/// @desc Adds a lens flare to be drawn.
+/// @desc Adds a lens flare to be drawn with {@link BBMOD_LensFlaresEffect}.
 ///
 /// @param {Struct.BBMOD_LensFlare} _lensFlare The lens flare.
 ///

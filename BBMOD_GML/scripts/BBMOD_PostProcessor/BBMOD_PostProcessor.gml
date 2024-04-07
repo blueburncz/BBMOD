@@ -62,12 +62,26 @@ function BBMOD_PostProcessor() constructor
 	/// @private
 	__surPostProcess2 = -1;
 
-	/// @var {Real} The width of the screen for which was the game designed.
-	/// Effects are scaled based on this and the current width of the screen.
+	/// @var {Real, Undefined} The width of the screen for which was the game
+	/// designed or `undefined`. Effects are scaled based on this and the
+	/// current width of the screen if not `undefined`. Default value is 1366.
+	///
+	/// @note This has precedence before `DesignHeight`. If none of the two are
+	/// defined, then effect scale is 1.
+	///
+	/// @see BBMOD_PostProcessor.DesignHeight
 	DesignWidth = 1366;
 
-	/// @var {Real} The height of the screen for which was the game designed.
-	DesignHeight = 768;
+	/// @var {Real, Undefined} The height of the screen for which was the game
+	/// designed or `undefined`. Effects are scaled based on this and the
+	/// current height of the screen if not `undefined`. Default value is
+	/// `undefined`.
+	///
+	/// @note `DesignWidth` has precedence before this. If none of the two are
+	/// defined, then effect scale is 1.
+	///
+	/// @see BBMOD_PostProcessor.DesignWidth
+	DesignHeight = undefined;
 
 	/// @var {Struct.BBMOD_Rect} The screen size and position.
 	/// @note This is not initialized before {@link BBMOD_PostProcessor.draw} is
@@ -75,8 +89,8 @@ function BBMOD_PostProcessor() constructor
 	/// @readonly
 	Rect = new BBMOD_Rect();
 
-	/// @var {Pointer.Texture} The lens dirt texture. Default is
-	/// `BBMOD_SprLensDirt`.
+	/// @var {Pointer.Texture} A lens dirt texture applied to effects like light
+	/// bloom and lens flares. Default is `BBMOD_SprLensDirt`.
 	LensDirt = sprite_get_texture(BBMOD_SprLensDirt, 0);
 
 	/// @var {Real} The intensity of the lens dirt effect. Use values in range
@@ -124,6 +138,28 @@ function BBMOD_PostProcessor() constructor
 			}
 		}
 		return self;
+	};
+
+	/// @func get_effect_scale()
+	///
+	/// @desc Retrieves the current effect scale based on the current screen
+	/// size and properties `DesignWidth` and `DesignHeight`.
+	///
+	/// @return {Real} The current effect scale.
+	///
+	/// @see BBMOD_PostProcessor.DesignWidth
+	/// @see BBMOD_PostProcessor.DesignHeight
+	static get_effect_scale = function ()
+	{
+		if (DesignWidth != undefined)
+		{
+			return Rect.Width / DesignWidth;
+		}
+		if (DesignHeight != undefined)
+		{
+			return Rect.Height / DesignHeight;
+		}
+		return 1.0;
 	};
 
 	/// @func draw(_surface, _x, _y[, _depth[, _normals]])

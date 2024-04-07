@@ -166,16 +166,18 @@ function BBMOD_DefaultRenderer()
 		}
 		bbmod_material_reset();
 
-		// Reset render pass back to Forward at the end!
-		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
-
-		matrix_set(matrix_world, _world);
-
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Draw gizmo and highlight selected instances
 		//
 		__overlay_gizmo_and_instance_highlight();
+
+		////////////////////////////////////////////////////////////////////////
+
+		// Reset render pass back to Forward at the end!
+		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
+
+		matrix_set(matrix_world, _world);
 
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);

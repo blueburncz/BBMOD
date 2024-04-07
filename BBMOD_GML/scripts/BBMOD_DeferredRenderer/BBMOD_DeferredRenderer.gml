@@ -556,17 +556,6 @@ function BBMOD_DeferredRenderer()
 		}
 
 		////////////////////////////////////////////////////////////////////////
-		//
-		// Blit
-		//
-		camera_apply(__camera2D);
-		matrix_set(matrix_world, matrix_build_identity());
-		draw_surface(__surFinal, 0, 0);
-		matrix_set(matrix_world, _world);
-		matrix_set(matrix_view, _view);
-		matrix_set(matrix_projection, _projection);
-
-		////////////////////////////////////////////////////////////////////////
 
 		// Reset render pass back to Forward at the end!
 		bbmod_render_pass_set(BBMOD_ERenderPass.Forward);
