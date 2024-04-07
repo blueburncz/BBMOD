@@ -22,7 +22,7 @@
 /// @param {Struct.BBMOD_Color} [_color] The color of the lens flare. Defaults
 /// to {@link BBMOD_C_WHITE} if `undefined`.
 /// @param {Bool} [_applyTint] If `true` then {@link BBMOD_LensFlare.Tint} is
-/// applied to `Color`. Defaults to `false`.
+/// applied to `Color`. Defaults to `true`.
 /// @param {Real} [_angle] The rotation of the lens flare. Defaults to 0.
 /// @param {Bool} [_angleRelative] If `true` then the lens flare angle is
 /// relative to the direction to the light's position on screen. Defaults to
@@ -80,9 +80,9 @@ function BBMOD_LensFlareElement(
 	Color = _color ?? BBMOD_C_WHITE;
 
 	/// @var {Bool} If `true` then {@link BBMOD_LensFlare.Tint} is applied to
-	/// `Color`. Default value is `false`.
+	/// `Color`. Default value is `true`.
 	/// @see BBMOD_LensFlareElement.Color
-	ApplyTint = false;
+	ApplyTint = true;
 
 	/// @var {Real} The rotation of the lens flare. Default value is 0.
 	Angle = _angle;

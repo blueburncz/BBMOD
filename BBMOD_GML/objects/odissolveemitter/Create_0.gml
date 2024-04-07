@@ -17,7 +17,6 @@ var _e;
 
 _e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareShimmer, 0, new BBMOD_Vec2(0.0));
 _e.Scale.Set(2.0);
-_e.ApplyTint = true;
 lensFlare.add_element(_e);
 
 for (var i = 0.05; i <= 0.5; i += 0.1)
@@ -26,14 +25,12 @@ for (var i = 0.05; i <= 0.5; i += 0.1)
 	{
 		_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareGhost, 0, new BBMOD_Vec2(i));
 		_e.Scale.Set((0.5 - i) * 0.3);
-		_e.ApplyTint = true;
 		_e.FadeOut = true;
 		lensFlare.add_element(_e);
 	}
 
 	_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareGhost, 0, new BBMOD_Vec2(0.5 + i));
 	_e.Scale.Set(i * 2.0 * 0.5);
-	_e.ApplyTint = true;
 	_e.FadeOut = true;
 	lensFlare.add_element(_e);
 }
