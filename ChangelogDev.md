@@ -45,6 +45,7 @@
 * Properties `Vignette` and `VignetteColor` of `BBMOD_PostProcessor` are now **obsolete**! Please use the new `BBMOD_VignetteEffect` instead.
 * Property `Antialiasing` of `BBMOD_PostProcessor` is now **obsolete**! Please use the new `BBMOD_FXAAEffect` instead.
 * Enum `BBMOD_EAntialiasing` is now **obsolete**! Please use the new `BBMOD_FXAAEffect` instead.
+* Method `world_to_screen` of `BBMOD_BaseCamera` now also accepts `BBMOD_Vec4`s, using which you can project directions (`W` equal to 0) as well instead of just positions (`W` equal to 1).
 * Added shadowmap stabilization for directional lights to reduce flickering when the camera is moving.
 * Added new member `Outline` to enum `BBMOD_ERenderPass`, which is a render pass for model outlines. Please note that this is not yet used.
 * Added new member `Translucent` to enum `BBMOD_ERenderPass`, which is a render pass for translucent object that take a blurred screen surface as an input. Please note that this is not yet used.
