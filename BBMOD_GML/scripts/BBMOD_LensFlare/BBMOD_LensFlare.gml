@@ -4,11 +4,13 @@
 /// @private
 global.__bbmodLensFlares = [];
 
-/// @func BBMOD_LensFlare([_position[, _range[, _falloff[, _depthThreshold[, _direction[, _angleInner[, _angleOuter]]]]]]])
+/// @func BBMOD_LensFlare([_tint[, _position[, _range[, _falloff[, _depthThreshold[, _direction[, _angleInner[, _angleOuter]]]]]]]])
 ///
 /// @desc A collection of {@link BBMOD_LensFlareElement}s that together define a
 /// single lens flare instance.
 ///
+/// @param {Struct.BBMOD_Color, Undefined} [_tint] The color to multiply lens
+/// flare elements' color by. Defaults to {@link BBMOD_C_WHITE} if `undefined`.
 /// @param {Struct.BBMOD_Vec3, Undefined} [_position] The position in the world
 /// or `undefined`, in which case the property {@link BBMOD_LensFlare.Direction}
 /// is used instead. Defaults to `undefined`.
@@ -33,6 +35,7 @@ global.__bbmodLensFlares = [];
 /// @see BBMOD_LensFlareElement
 /// @see BBMOD_LensFlareEffect
 function BBMOD_LensFlare(
+	_tint=undefined,
 	_position=undefined,
 	_range=infinity,
 	_falloff=0.8,
@@ -42,6 +45,11 @@ function BBMOD_LensFlare(
 	_angleOuter=undefined
 ) constructor
 {
+	/// @var {Struct.BBMOD_Color} The color to multiply lens flare elements'
+	/// color by. Default value is {@link BBMOD_C_WHITE}.
+	/// @see BBMOD_LensFlareElement.ApplyTint
+	Tint = _tint ?? BBMOD_C_WHITE;
+
 	/// @var {Struct.BBMOD_Vec3, Undefined} The position in the world or
 	/// `undefined`, in which case the property
 	/// {@link BBMOD_LensFlare.Direction} is used instead. Default value is
@@ -195,6 +203,10 @@ function BBMOD_LensFlare(
 		var _vecX = (_screenWidth * 0.5) - _x;
 		var _vecY = (_screenHeight * 0.5) - _y;
 		var _direction = point_direction(0, 0, _vecX, _vecY);
+		var _tintR = Tint.Red / 255.0;
+		var _tintG = Tint.Green / 255.0;
+		var _tintB = Tint.Blue / 255.0;
+		var _tintA = Tint.Alpha;
 
 		gpu_push_state();
 		gpu_set_tex_repeat(true);
@@ -229,16 +241,28 @@ function BBMOD_LensFlare(
 					_elementX / _screenWidth, _elementY / _screenHeight,
 					_x / _screenWidth, _y / _screenHeight);
 				var _elementScaleX = Scale.X * lerp(ScaleByDistanceMin.X, ScaleByDistanceMax.X, _elementDistance) * _scale;
-				var _elementScaleY = Scale.Y * lerp(ScaleByDistanceMin.Y, ScaleByDistanceMax.Y, _elementDistance) * _scale;
+				var _elementScaleY = Scale.Y * lerp(ScaleByDistanceMin.Y, ScaleByDistanceMax.Y, _elementDistance) * _scale
+				var _elementColorR = Color.Red / 255.0;
+				var _elementColorG = Color.Green / 255.0;
+				var _elementColorB = Color.Blue / 255.0;
+				var _elementColorA = Color.Alpha * _strength;
+
+				if (ApplyTint)
+				{
+					_elementColorR *= _tintR;
+					_elementColorG *= _tintG;
+					_elementColorB *= _tintB;
+					_elementColorA *= _tintA;
+				}
 
 				shader_set_uniform_f(_uFadeOut, FadeOut ? 1.0 : 0.0);
 				shader_set_uniform_f(_uFlareRays, FlareRays ? 1.0 : 0.0);
 				shader_set_uniform_f(
 					_uColor,
-					Color.Red / 255.0,
-					Color.Green / 255.0,
-					Color.Blue / 255.0,
-					Color.Alpha * _strength);
+					_elementColorR,
+					_elementColorG,
+					_elementColorB,
+					_elementColorA);
 				draw_sprite_ext(
 					Sprite, Subimage,
 					_elementX, _elementY,

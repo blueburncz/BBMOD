@@ -1,6 +1,6 @@
 /// @module PostProcessing
 
-/// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset]]])
+/// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset[, _scale[, _scaleByDistanceMin[, _scaleByDistanceMax[, _color[, _applyTint[, _angle[, _angleRelative[, _fadeOut[, _flareRays]]]]]]]]]]]])
 ///
 /// @desc A single lens flare element (sprite).
 ///
@@ -21,6 +21,8 @@
 /// Defaults to `(1, 1)` if `undefined`.
 /// @param {Struct.BBMOD_Color} [_color] The color of the lens flare. Defaults
 /// to {@link BBMOD_C_WHITE} if `undefined`.
+/// @param {Bool} [_applyTint] If `true` then {@link BBMOD_LensFlare.Tint} is
+/// applied to `Color`. Defaults to `false`.
 /// @param {Real} [_angle] The rotation of the lens flare. Defaults to 0.
 /// @param {Bool} [_angleRelative] If `true` then the lens flare angle is
 /// relative to the direction to the light's position on screen. Defaults to
@@ -39,6 +41,7 @@ function BBMOD_LensFlareElement(
 	_scaleByDistanceMin=undefined,
 	_scaleByDistanceMax=undefined,
 	_color=undefined,
+	_applyTint=false,
 	_angle=0.0,
 	_angleRelative=false,
 	_fadeOut=false,
@@ -75,6 +78,11 @@ function BBMOD_LensFlareElement(
 	/// @var {Struct.BBMOD_Color} The color of the lens flare. Default value is
 	/// {@link BBMOD_C_WHITE}.
 	Color = _color ?? BBMOD_C_WHITE;
+
+	/// @var {Bool} If `true` then {@link BBMOD_LensFlare.Tint} is applied to
+	/// `Color`. Default value is `false`.
+	/// @see BBMOD_LensFlareElement.Color
+	ApplyTint = false;
 
 	/// @var {Real} The rotation of the lens flare. Default value is 0.
 	Angle = _angle;
