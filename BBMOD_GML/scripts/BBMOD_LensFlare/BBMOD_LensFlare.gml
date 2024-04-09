@@ -351,13 +351,13 @@ function bbmod_lens_flare_get(_index)
 function bbmod_lens_flare_remove(_lensFlare)
 {
 	gml_pragma("forceinline");
-	var _punctualLights = global.__bbmodLensFlares;
+	var _lensFlares = global.__bbmodLensFlares;
 	var i = 0;
-	repeat (array_length(_punctualLights))
+	repeat (array_length(_lensFlares))
 	{
-		if (_punctualLights[i] == _lensFlare)
+		if (_lensFlares[i] == _lensFlare)
 		{
-			array_delete(_punctualLights, i, 1);
+			array_delete(_lensFlares, i, 1);
 			return true;
 		}
 		++i;

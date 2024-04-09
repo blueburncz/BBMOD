@@ -46,7 +46,7 @@ void main()
 	{
 		vec2 centerVec = (u_vLightPos.xy - gl_FragCoord.xy) * u_vInvRes;
 		float d = length(centerVec);
-		float radial = acos(centerVec.x / d);
+		float radial = acos(centerVec.x / d) * 64.0;
 		float mask = texture2D(u_texFlareRays, vec2(radial, 0.0)).r;
 		mask = clamp(mask + (1.0 - smoothstep(0.0, 0.3, d)), 0.0, 1.0);
 		gl_FragColor.a *= mask;

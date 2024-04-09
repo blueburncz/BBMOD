@@ -538,7 +538,7 @@
     {"id":{"name":"BBMOD_SprDefaultSpecularColor","path":"sprites/BBMOD_SprDefaultSpecularColor/BBMOD_SprDefaultSpecularColor.yy",},},
     {"id":{"name":"BBMOD_SprGizmo","path":"sprites/BBMOD_SprGizmo/BBMOD_SprGizmo.yy",},},
     {"id":{"name":"BBMOD_SprLensDirt","path":"sprites/BBMOD_SprLensDirt/BBMOD_SprLensDirt.yy",},},
-    {"id":{"name":"BBMOD_SprLensFlareGhost","path":"sprites/BBMOD_SprLensFlareGhost/BBMOD_SprLensFlareGhost.yy",},},
+    {"id":{"name":"BBMOD_SprLensFlareHeptagon","path":"sprites/BBMOD_SprLensFlareHeptagon/BBMOD_SprLensFlareHeptagon.yy",},},
     {"id":{"name":"BBMOD_SprLensFlareHoop","path":"sprites/BBMOD_SprLensFlareHoop/BBMOD_SprLensFlareHoop.yy",},},
     {"id":{"name":"BBMOD_SprLensFlareRays","path":"sprites/BBMOD_SprLensFlareRays/BBMOD_SprLensFlareRays.yy",},},
     {"id":{"name":"BBMOD_SprLensFlareShimmer","path":"sprites/BBMOD_SprLensFlareShimmer/BBMOD_SprLensFlareShimmer.yy",},},
