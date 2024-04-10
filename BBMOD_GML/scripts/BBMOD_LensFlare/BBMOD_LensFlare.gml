@@ -99,6 +99,7 @@ function BBMOD_LensFlare(
 	static __uDepthThreshold    = shader_get_uniform(BBMOD_ShLensFlare, "u_fDepthThreshold");
 	static __uStarburstUVs      = shader_get_uniform(BBMOD_ShLensFlare, "u_vStarburstUVs");
 	static __uStarburstStrength = shader_get_uniform(BBMOD_ShLensFlare, "u_fStarburstStrength");
+	static __uStarburstRot      = shader_get_uniform(BBMOD_ShLensFlare, "u_fStarburstRot");
 	static __uLensDirtUVs       = shader_get_uniform(BBMOD_ShLensFlare, "u_vLensDirtUVs");
 	static __uLensDirtStrength  = shader_get_uniform(BBMOD_ShLensFlare, "u_fLensDirtStrength");
 
@@ -284,6 +285,8 @@ function BBMOD_LensFlare(
 		var _tintG = Tint.Green / 255.0;
 		var _tintB = Tint.Blue / 255.0;
 		var _tintA = Tint.Alpha;
+		var _camRot = _camera.get_right().Dot(new BBMOD_Vec3(0, 0, 1))
+			+ _camera.get_forward().Dot(new BBMOD_Vec3(0, 1, 0));
 
 		gpu_push_state();
 		gpu_set_tex_repeat(true);
@@ -299,6 +302,7 @@ function BBMOD_LensFlare(
 		texture_set_stage(__uStarburstTex, _postProcessor.Starburst);
 		var _starburstUVs = texture_get_uvs(_postProcessor.Starburst);
 		shader_set_uniform_f(__uStarburstUVs, _starburstUVs[0], _starburstUVs[1], _starburstUVs[2], _starburstUVs[3]);
+		shader_set_uniform_f(__uStarburstRot, _camRot);
 
 		texture_set_stage(__uLensDirtTex, _postProcessor.LensDirt);
 		var _lensDirtUVs = texture_get_uvs(_postProcessor.LensDirt);

@@ -11,6 +11,7 @@ uniform float u_fDepthThreshold;
 uniform sampler2D u_texStarburst;
 uniform vec4 u_vStarburstUVs;
 uniform float u_fStarburstStrength;
+uniform float u_fStarburstRot;
 
 uniform sampler2D u_texLensDirt;
 uniform vec4 u_vLensDirtUVs;
@@ -46,7 +47,13 @@ void main()
 
 	if (u_fStarburstStrength > 0.0)
 	{
-		vec2 starburstUV = mix(u_vStarburstUVs.xy, u_vStarburstUVs.zw, gl_FragCoord.xy * u_vInvRes);
+		vec2 starburstUV = (gl_FragCoord.xy * u_vInvRes * 2.0 - 1.0) * 0.7072;
+		mat2 matRot = mat2(
+			cos(u_fStarburstRot), -sin(u_fStarburstRot),
+			sin(u_fStarburstRot), cos(u_fStarburstRot));
+		starburstUV = matRot * starburstUV;
+		starburstUV = starburstUV * 0.5 + 0.5;
+		starburstUV = mix(u_vStarburstUVs.xy, u_vStarburstUVs.zw, starburstUV);
 		gl_FragColor.a *= mix(1.0, texture2D(u_texStarburst, starburstUV).r, u_fStarburstStrength);
 	}
 
