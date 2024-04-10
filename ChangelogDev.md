@@ -3,8 +3,8 @@
 
 * Added new struct `BBMOD_Rect`, which is a rectangle structure defined by position and size.
 * Added new struct `BBMOD_PostProcessEffect`, which is a base struct for all post-processing effects.
-* Added new method `add_effect` to `BBMOD_PostProcessor`, which adds an effect to the post-processor.
-* Added new method `remove_effect` to `BBMOD_PostProcessor`, which removes an effect from the post-processor.
+* Added new method `add_effect(_effect)` to `BBMOD_PostProcessor`, which adds an effect to the post-processor.
+* Added new method `remove_effect(_effect)` to `BBMOD_PostProcessor`, which removes an effect from the post-processor.
 * Method `draw` of `BBMOD_PostProcessor` now accepts optional arguments `_depth` and `_normals`, where `_depth` is a surface containing the scene depth encoded into RGB channels or `undefined` if not available, and `_normals` a surface containing the scene's world-space normals in the RGB channels or `undefined` if not available.
 * Added new property `DesignWidth` to `BBMOD_PostProcessor`, which is the width of the screen for which was the game designed or `undefined`. Effects are scaled based on this and the current width of the screen if not `undefined`. Default value is 1366.
 * Added new property `DesignHeight` to `BBMOD_PostProcessor`, which is the height of the screen for which was the game designed or `undefined`. Effects are scaled based on this and the current height of the screen if not `undefined`. Default value is `undefined`.
