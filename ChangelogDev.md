@@ -12,6 +12,8 @@
 * Added new read-only property `Rect` to `BBMOD_PostProcessor`, which is the screen size and position. This is not initialized before `BBMOD_PostProcessor.draw` is called!
 * Added new property `LensDirt` to `BBMOD_PostProcessor`, which is a lens dirt texture applied to effects like light bloom and lens flares.
 * Added new property `LensDirtStrength`, which is the intensity of the lens dirt effect.
+* Added new property `Starburst` to `BBMOD_PostProcessor`, which is a starburst texture applied to lens flares (when enabled).
+* Added new property `StarburstStrength`, which is the intensity of the starburst effect.
 * Added new struct `BBMOD_ChromaticAberrationEffect`, which is a chromatic aberration post-processing effect.
 * Added new struct `BBMOD_ColorGradingEffect`, which is a color grading post-processing effect.
 * Added new struct `BBMOD_DepthOfFieldEffect`, which is a depth of field post-processing effect.

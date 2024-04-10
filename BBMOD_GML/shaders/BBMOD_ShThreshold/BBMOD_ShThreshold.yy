@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShThreshold",
   "name":"BBMOD_ShThreshold",
   "parent":{
-    "name":"LightBloom",
-    "path":"folders/BBMOD/PostProcessing/LightBloom.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

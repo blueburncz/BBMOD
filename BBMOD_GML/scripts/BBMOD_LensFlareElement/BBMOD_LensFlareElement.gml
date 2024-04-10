@@ -1,6 +1,6 @@
 /// @module PostProcessing
 
-/// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset[, _scale[, _scaleByDistanceMin[, _scaleByDistanceMax[, _color[, _applyTint[, _angle[, _angleRelative[, _fadeOut[, _flareRays]]]]]]]]]]]])
+/// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset[, _scale[, _scaleByDistanceMin[, _scaleByDistanceMax[, _color[, _applyTint[, _angle[, _angleRelative[, _fadeOut[, _applyStarburst]]]]]]]]]]]])
 ///
 /// @desc A single lens flare element (sprite).
 ///
@@ -29,10 +29,11 @@
 /// `false`.
 /// @param {Bool} [_fadeOut] Whether to fade out the lens flare on screen edges.
 /// Defaults to `false`.
-/// @param {Bool} [_flareRays] Whether to apply rays to the lens flare's sprite.
-/// Defaults to `false`.
+/// @param {Bool} [_applyStarburst] Whether to apply starburst. Defaults to
+/// `false`.
 ///
 /// @see BBMOD_LensFlare
+/// @see BBMOD_PostProcessor.Starburst
 function BBMOD_LensFlareElement(
 	_sprite=BBMOD_SprLensFlareGhost,
 	_subimage=0,
@@ -45,7 +46,7 @@ function BBMOD_LensFlareElement(
 	_angle=0.0,
 	_angleRelative=false,
 	_fadeOut=false,
-	_flareRays=false
+	_applyStarburst=false
 ) constructor
 {
 	/// @var {Asset.GMSprite} The sprite of the lens flare element. Default
@@ -95,7 +96,6 @@ function BBMOD_LensFlareElement(
 	/// value is `false`.
 	FadeOut = _fadeOut;
 
-	/// @var {Bool} Whether to apply rays to the lens flare's sprite. Default
-	/// value is `false`.
-	FlareRays = _flareRays;
+	/// @var {Bool} Whether to apply starburst. Default value is `false`.
+	ApplyStarburst = _applyStarburst;
 }

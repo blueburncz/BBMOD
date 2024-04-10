@@ -52,26 +52,7 @@ if (global.day)
 
 	lensFlare = new BBMOD_LensFlare();
 	lensFlare.Direction = sunLight.Direction;
-
-	var _e;
-
-	for (var i = 0.05; i <= 0.5; i += 0.1)
-	{
-		if (i > 0.05)
-		{
-			_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareHeptagon, 0, new BBMOD_Vec2(i));
-			_e.Scale.Set((1.0 - i * 2.0) * 2.0);
-			_e.Color = BBMOD_C_BLUE;
-			_e.FadeOut = true;
-			lensFlare.add_element(_e);
-		}
-
-		_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareHeptagon, 0, new BBMOD_Vec2(0.5 + i));
-		_e.Scale.Set(i * 2.0 * 2.0);
-		_e.Color = BBMOD_C_BLUE;
-		_e.FadeOut = true;
-		lensFlare.add_element(_e);
-	}
+	lensFlare.add_ghosts(BBMOD_SprLensFlareHeptagon, 0, 8, 0.1, 1.0, 0.5, 0.1, 3.0, BBMOD_C_BLUE);
 
 	_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareStreak, 0, new BBMOD_Vec2(0.0));
 	_e.Scale.Set(2.0, 1.0);
@@ -83,38 +64,7 @@ if (global.day)
 	_e.Scale.Set(5.0);
 	_e.ScaleByDistanceMin.Set(0.0);
 	_e.ScaleByDistanceMax.Set(1.0);
-	_e.FadeOut = true;
-	_e.FlareRays = true;
-	_e.AngleRelative = true;
-	_e.Color.Alpha = 0.5;
-	lensFlare.add_element(_e);
-
-	_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareHoop, 0, new BBMOD_Vec2(0.75 * 2.0));
-	_e.Scale.Set(5.0);
-	_e.ScaleByDistanceMin.Set(0.0);
-	_e.ScaleByDistanceMax.Set(1.0);
-	_e.FadeOut = true;
-	_e.FlareRays = true;
-	_e.AngleRelative = true;
-	_e.Color.Alpha = 0.5;
-	lensFlare.add_element(_e);
-
-	_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareHoop, 0, new BBMOD_Vec2(0.75 * 3.0));
-	_e.Scale.Set(5.0);
-	_e.ScaleByDistanceMin.Set(0.0);
-	_e.ScaleByDistanceMax.Set(1.0);
-	_e.FadeOut = true;
-	_e.FlareRays = true;
-	_e.AngleRelative = true;
-	_e.Color.Alpha = 0.5;
-	lensFlare.add_element(_e);
-
-	_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareHoop, 0, new BBMOD_Vec2(0.75 * 4.0));
-	_e.Scale.Set(5.0);
-	_e.ScaleByDistanceMin.Set(0.0);
-	_e.ScaleByDistanceMax.Set(1.0);
-	_e.FadeOut = true;
-	_e.FlareRays = true;
+	_e.ApplyStarburst = true;
 	_e.AngleRelative = true;
 	_e.Color.Alpha = 0.5;
 	lensFlare.add_element(_e);

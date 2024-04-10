@@ -4,11 +4,13 @@ uniform vec3 u_vLightPos;
 uniform vec4 u_vColor;
 uniform vec2 u_vInvRes;
 uniform float u_fFadeOut;
-uniform float u_fFlareRays;
-uniform sampler2D u_texFlareRays;
 uniform sampler2D u_texDepth;
 uniform float u_fClipFar;
 uniform float u_fDepthThreshold;
+
+uniform sampler2D u_texStarburst;
+uniform vec4 u_vStarburstUVs;
+uniform float u_fStarburstStrength;
 
 uniform sampler2D u_texLensDirt;
 uniform vec4 u_vLensDirtUVs;
@@ -42,14 +44,10 @@ void main()
 	vec2 lensDirtUV = mix(u_vLensDirtUVs.xy, u_vLensDirtUVs.zw, gl_FragCoord.xy * u_vInvRes);
 	gl_FragColor.rgb += texture2D(u_texLensDirt, lensDirtUV).rgb * gl_FragColor.rgb * u_fLensDirtStrength;
 
-	if (u_fFlareRays == 1.0)
+	if (u_fStarburstStrength > 0.0)
 	{
-		vec2 centerVec = (u_vLightPos.xy - gl_FragCoord.xy) * u_vInvRes;
-		float d = length(centerVec);
-		float radial = acos(centerVec.x / d) * 64.0;
-		float mask = texture2D(u_texFlareRays, vec2(radial, 0.0)).r;
-		mask = clamp(mask + (1.0 - smoothstep(0.0, 0.3, d)), 0.0, 1.0);
-		gl_FragColor.a *= mask;
+		vec2 starburstUV = mix(u_vStarburstUVs.xy, u_vStarburstUVs.zw, gl_FragCoord.xy * u_vInvRes);
+		gl_FragColor.a *= mix(1.0, texture2D(u_texStarburst, starburstUV).r, u_fStarburstStrength);
 	}
 
 	if (u_fFadeOut == 1.0)

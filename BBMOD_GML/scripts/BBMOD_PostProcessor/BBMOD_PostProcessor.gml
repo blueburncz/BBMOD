@@ -98,6 +98,16 @@ function BBMOD_PostProcessor() constructor
 	/// is 1.
 	LensDirtStrength = 1.0;
 
+	/// @var {Pointer.Texture} A starburst texture applied to lens flares (when
+	/// enabled). Default is `BBMOD_SprLensFlareStarburst`.
+	/// @see BBMOD_LensFlareElement.ApplyStarburst
+	Starburst = sprite_get_texture(BBMOD_SprLensFlareStarburst, 0);
+
+	/// @var {Real} The intensity of the starburst effect. Use values in range
+	/// 0..1, where 0 is disabled and 1 is the maximum intensity. Default value
+	/// is 1.
+	StarburstStrength = 1.0;
+
 	/// @func add_effect(_effect)
 	///
 	/// @desc Adds an effect to the post-processor.
