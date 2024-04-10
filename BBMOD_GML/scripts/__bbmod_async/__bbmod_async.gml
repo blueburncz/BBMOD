@@ -161,10 +161,10 @@ function bbmod_sprite_add_async(_file, _callback)
 function bbmod_async_image_loaded_update(_asyncLoad)
 {
 	var _map = global.__bbmodSpriteCallback;
-	var _id = async_load[? "id"];
+	var _id = _asyncLoad[? "id"];
 	var _data = _map[? _id];
 
-	if (async_load[? "status"] == false)
+	if (_asyncLoad[? "status"] == false)
 	{
 		_data.Callback(new BBMOD_Exception("Async load failed!"));
 	}

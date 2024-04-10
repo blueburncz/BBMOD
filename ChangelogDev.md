@@ -53,5 +53,6 @@
 * Added new member `Translucent` to enum `BBMOD_ERenderPass`, which is a render pass for translucent object that take a blurred screen surface as an input. Please note that this is not yet used.
 * Added new member `Distortion` to enum `BBMOD_ERenderPass`, which is a render pass for screen distortion effects. Please note that this is not yet used.
 * Fixed a bug where `BBMOD_Resource` was not removed from a `BBMOD_ResourceManager` when destroyed.
+* Fixed method `load` of `BBMOD_ResourceManager` which executed callback multiple times when loading models with materials.
 * Fixed depth in deferred rendering pipeline being cleared to 0 instead of 1, which was inconsistent with the forward renderer and made particles invisible when not rendered over solid geometry (e.g. only a sky dome was behind).
 * Fixed shading of backfacing polygons.

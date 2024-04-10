@@ -158,12 +158,15 @@ reflectionProbe.Infinite = true;
 bbmod_reflection_probe_add(reflectionProbe);
 
 // Trees
+treeBatch = undefined;
+
 modTree = global.resourceManager.load("Data/Assets/Tree/Tree.bbmod", method(self, function (_err, _model) {
 	if (!_err)
 	{
 		_model.Materials[0].RenderQueue = new BBMOD_MeshRenderQueue();
 		_model.Materials[1].RenderQueue = new BBMOD_MeshRenderQueue();
 		treeBatch = new BBMOD_DynamicBatch(modTree).freeze();
+		renderer.add(treeBatch);
 
 		var _terrainWidth = global.terrain.Size.X * global.terrain.Scale.X;
 		var _terrainHeight = global.terrain.Size.Y * global.terrain.Scale.Y;
