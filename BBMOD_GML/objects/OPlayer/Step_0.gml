@@ -20,6 +20,28 @@ else if (keyboard_check_pressed(vk_escape))
 
 global.gameSpeed = camera.MouseLook ? 1.0 : 0.0;
 
+if (global.gameSpeed == 0.0)
+{
+	if (mouse_check_button(mb_middle))
+	{
+		camera.Direction -= window_mouse_get_delta_x() * 0.5;
+		camera.DirectionUp -= window_mouse_get_delta_y() * 0.5;
+	}
+
+	if (keyboard_check(vk_control))
+	{
+		OMain.dof.AutoFocusPoint.Set(
+			window_mouse_get_x() / window_get_width(),
+			window_mouse_get_y() / window_get_height());
+		OMain.dof.BlurScaleNear = 1.0;
+	}
+}
+else
+{
+	OMain.dof.AutoFocusPoint.Set(0.5);
+	OMain.dof.BlurScaleNear = aiming ? 1.0 : 0.0;
+}
+
 camera.Zoom = bbmod_lerp_delta_time(camera.Zoom, aiming ? zoomAim : zoomIdle, 0.2, DELTA_TIME);
 
 var _directionPrev = camera.Direction;

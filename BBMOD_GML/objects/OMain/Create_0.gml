@@ -87,10 +87,12 @@ postProcessor = new BBMOD_PostProcessor();
 renderer.PostProcessor = postProcessor;
 
 //postProcessor.add_effect(new BBMOD_LumaSharpenEffect(1.5, 1.0, 2.0));
-var _dof = new BBMOD_DepthOfFieldEffect();
-_dof.BlurScaleNear = 0.0;
-_dof.AutoFocus = true;
-postProcessor.add_effect(_dof);
+
+dof = new BBMOD_DepthOfFieldEffect();
+dof.BlurScaleNear = 0.0;
+dof.AutoFocus = true;
+postProcessor.add_effect(dof);
+
 postProcessor.add_effect(new BBMOD_LightBloomEffect());
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
