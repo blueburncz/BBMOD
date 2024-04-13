@@ -20,8 +20,13 @@
 /// ```gml
 /// /// @desc Create event
 /// renderer = new BBMOD_DeferredRenderer();
-/// renderer.UseAppSurface = true;
 /// renderer.EnableShadows = true;
+///
+/// postProcessor = new BBMOD_PostProcessor();
+/// postProcessor.add_effect(new BBMOD_ExposureEffect());
+/// postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());
+/// postProcessor.add_effect(new BBMOD_GammaCorrectEffect());
+/// renderer.PostProcessor = postProcessor;
 ///
 /// camera = new BBMOD_Camera();
 /// camera.FollowObject = OPlayer;

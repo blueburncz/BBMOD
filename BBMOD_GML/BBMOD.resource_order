@@ -383,7 +383,6 @@
     {"name":"SprGunfire","order":9,"path":"sprites/SprGunfire/SprGunfire.yy",},
     {"name":"SprHeightmap","order":2,"path":"sprites/SprHeightmap/SprHeightmap.yy",},
     {"name":"BBMOD_SprLensFlareStarburst","order":6,"path":"sprites/BBMOD_SprLensFlareStarburst/BBMOD_SprLensFlareStarburst.yy",},
-    {"name":"SprRaindrops","order":10,"path":"sprites/SprRaindrops/SprRaindrops.yy",},
     {"name":"SprSplatmap","order":3,"path":"sprites/SprSplatmap/SprSplatmap.yy",},
     {"name":"SprZombie","order":1,"path":"sprites/SprZombie/SprZombie.yy",},
   ],

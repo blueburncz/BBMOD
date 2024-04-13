@@ -552,7 +552,6 @@
     {"id":{"name":"SprHeightmap","path":"sprites/SprHeightmap/SprHeightmap.yy",},},
     {"id":{"name":"BBMOD_SprLensFlareStarburst","path":"sprites/BBMOD_SprLensFlareStarburst/BBMOD_SprLensFlareStarburst.yy",},},
     {"id":{"name":"SprPlayer","path":"sprites/SprPlayer/SprPlayer.yy",},},
-    {"id":{"name":"SprRaindrops","path":"sprites/SprRaindrops/SprRaindrops.yy",},},
     {"id":{"name":"SprSand","path":"sprites/SprSand/SprSand.yy",},},
     {"id":{"name":"SprSplatmap","path":"sprites/SprSplatmap/SprSplatmap.yy",},},
     {"id":{"name":"SprZombie","path":"sprites/SprZombie/SprZombie.yy",},},

@@ -26,7 +26,7 @@ function DissolveParticleSystem()
 				// Set particle speed to 10
 				new BBMOD_MixSpeedModule(10.0),
 				// Set partile color to green whey the are spawned
-				new BBMOD_SetColorModule(BBMOD_EParticle.ColorR, new BBMOD_Color(0, 255 * 2, 127 * 2)),
+				new BBMOD_SetColorModule(BBMOD_EParticle.ColorR, new BBMOD_Color(0, 255 * 1.2, 127 * 1.2)),
 				// Decrease particle health over time
 				new BBMOD_AddRealOverTimeModule(BBMOD_EParticle.HealthLeft, -1.0, 1.0),
 				// Scale particles based on their health
