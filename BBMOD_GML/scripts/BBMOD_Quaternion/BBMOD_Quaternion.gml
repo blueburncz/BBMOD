@@ -142,7 +142,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	{
 		gml_pragma("forceinline");
 		var _length = Length();
-		if (_length >= math_get_epsilon())
+		if (_length > math_get_epsilon())
 		{
 			var _sinc = Sinc(_length);
 			return new BBMOD_Quaternion(
@@ -165,7 +165,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	{
 		gml_pragma("forceinline");
 		var _length = Length();
-		if (_length >= math_get_epsilon())
+		if (_length > math_get_epsilon())
 		{
 			var _sinc = Sinc(_length);
 			X *= _sinc;
@@ -460,7 +460,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		var _length = Length();
 		var _w = logn(2.71828, _length);
 		var _a = arccos(W / _length);
-		if (_a >= math_get_epsilon())
+		if (_a > math_get_epsilon())
 		{
 			var _mag = 1.0 / _length / Sinc(_a);
 			return new BBMOD_Quaternion(
@@ -485,7 +485,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		var _length = Length();
 		var _w = logn(2.71828, _length);
 		var _a = arccos(W / _length);
-		if (_a >= math_get_epsilon())
+		if (_a > math_get_epsilon())
 		{
 			var _mag = 1.0 / _length / Sinc(_a);
 			X *= _mag;
@@ -551,7 +551,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	{
 		gml_pragma("forceinline");
 		var _lengthSqr = LengthSqr();
-		if (_lengthSqr >= math_get_epsilon())
+		if (_lengthSqr > math_get_epsilon())
 		{
 			return Scale(1.0 / sqrt(_lengthSqr));
 		}
@@ -567,7 +567,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	{
 		gml_pragma("forceinline");
 		var _lengthSqr = LengthSqr();
-		if (_lengthSqr >= math_get_epsilon())
+		if (_lengthSqr > math_get_epsilon())
 		{
 			return ScaleSelf(1.0 / sqrt(_lengthSqr));
 		}
@@ -651,7 +651,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	static Sinc = function (_x)
 	{
 		gml_pragma("forceinline");
-		return (_x >= math_get_epsilon()) ? (sin(_x) / _x) : 1.0;
+		return (_x > math_get_epsilon()) ? (sin(_x) / _x) : 1.0;
 	};
 
 	/// @func Slerp(_q, _s)
