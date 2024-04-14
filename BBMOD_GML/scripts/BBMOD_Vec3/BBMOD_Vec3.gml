@@ -779,7 +779,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			+ Y * Y
 			+ Z * Z
 		);
-		if (_lengthSqr >= math_get_epsilon())
+		if (_lengthSqr > math_get_epsilon())
 		{
 			var _n = 1.0 / sqrt(_lengthSqr);
 			return new BBMOD_Vec3(
@@ -808,7 +808,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 			+ Y * Y
 			+ Z * Z
 		);
-		if (_lengthSqr >= math_get_epsilon())
+		if (_lengthSqr > math_get_epsilon())
 		{
 			var _n = 1.0 / sqrt(_lengthSqr);
 			X *= _n;
