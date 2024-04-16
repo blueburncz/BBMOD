@@ -5,7 +5,7 @@
   "option_amazonfire_application_tag_inject":"",
   "option_amazonfire_build_tools":"",
   "option_amazonfire_compile_sdk":"",
-  "option_amazonfire_display_name":"BBMOD Demo",
+  "option_amazonfire_display_name":"BBMOD",
   "option_amazonfire_gamepad_support":true,
   "option_amazonfire_icon_hdpi":"${base_options_dir}/android/icons/hdpi.png",
   "option_amazonfire_icon_ldpi":"${base_options_dir}/android/icons/ldpi.png",
@@ -44,7 +44,7 @@
   "option_amazonfire_texture_page":"2048x2048",
   "option_amazonfire_tools_from_version":false,
   "option_amazonfire_tv_banner":"${base_options_dir}/amazonfire/tv_banner.png",
-  "option_amazonfire_version":"3.21.0",
+  "option_amazonfire_version":"3.21.1",
   "resourceType":"GMAmazonFireOptions",
   "resourceVersion":"2.0",
 }

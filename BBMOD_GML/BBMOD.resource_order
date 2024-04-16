@@ -81,6 +81,7 @@
   ],
   "ResourceOrderSettings":[
     {"name":"BBMOD_CameraHTML5","order":1,"path":"extensions/BBMOD_CameraHTML5/BBMOD_CameraHTML5.yy",},
+    {"name":"Room1","order":2,"path":"rooms/Room1/Room1.yy",},
     {"name":"__bbmod_array","order":5,"path":"scripts/__bbmod_array/__bbmod_array.yy",},
     {"name":"__bbmod_async","order":3,"path":"scripts/__bbmod_async/__bbmod_async.yy",},
     {"name":"__bbmod_blendmode","order":14,"path":"scripts/__bbmod_blendmode/__bbmod_blendmode.yy",},
@@ -311,8 +312,8 @@
     {"name":"BBMOD_SprLensDirt","order":1,"path":"sprites/BBMOD_SprLensDirt/BBMOD_SprLensDirt.yy",},
     {"name":"BBMOD_SprLensFlareHeptagon","order":1,"path":"sprites/BBMOD_SprLensFlareHeptagon/BBMOD_SprLensFlareHeptagon.yy",},
     {"name":"BBMOD_SprLensFlareHoop","order":3,"path":"sprites/BBMOD_SprLensFlareHoop/BBMOD_SprLensFlareHoop.yy",},
+    {"name":"BBMOD_SprLensFlareStarburst","order":6,"path":"sprites/BBMOD_SprLensFlareStarburst/BBMOD_SprLensFlareStarburst.yy",},
     {"name":"BBMOD_SprLensFlareStreak","order":5,"path":"sprites/BBMOD_SprLensFlareStreak/BBMOD_SprLensFlareStreak.yy",},
     {"name":"BBMOD_SprWhite","order":2,"path":"sprites/BBMOD_SprWhite/BBMOD_SprWhite.yy",},
-    {"name":"BBMOD_SprLensFlareStarburst","order":6,"path":"sprites/BBMOD_SprLensFlareStarburst/BBMOD_SprLensFlareStarburst.yy",},
   ],
 }

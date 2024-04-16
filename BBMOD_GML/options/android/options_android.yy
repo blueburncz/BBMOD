@@ -10,7 +10,7 @@
   "option_android_build_tools":"",
   "option_android_compile_sdk":"30",
   "option_android_device_support":0,
-  "option_android_display_name":"BBMOD Demo",
+  "option_android_display_name":"BBMOD",
   "option_android_facebook_app_display_name":"",
   "option_android_facebook_id":"",
   "option_android_gamepad_support":true,
@@ -75,7 +75,7 @@
   "option_android_tv_isgame":true,
   "option_android_tv_supports_leanback":true,
   "option_android_use_facebook":false,
-  "option_android_version":"3.21.0",
+  "option_android_version":"3.21.1",
   "resourceType":"GMAndroidOptions",
   "resourceVersion":"2.0",
 }

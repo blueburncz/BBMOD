@@ -6,7 +6,7 @@
   "option_tvos_bundle_name":"com.company.game",
   "option_tvos_cocoapods_checkbox":true,
   "option_tvos_display_cursor":false,
-  "option_tvos_display_name":"BBMOD Demo",
+  "option_tvos_display_name":"BBMOD",
   "option_tvos_enable_broadcast":false,
   "option_tvos_icon_1280":"${base_options_dir}/tvos/icons/1280.png",
   "option_tvos_icon_400":"${base_options_dir}/tvos/icons/400.png",
@@ -26,7 +26,7 @@
   "option_tvos_topshelf_2x":"${base_options_dir}/tvos/topshelf/topshelf_2x.png",
   "option_tvos_topshelf_wide":"${base_options_dir}/tvos/topshelf/topshelf_wide.png",
   "option_tvos_topshelf_wide_2x":"${base_options_dir}/tvos/topshelf/topshelf_wide_2x.png",
-  "option_tvos_version":"3.21.0",
+  "option_tvos_version":"3.21.1",
   "resourceType":"GMtvOSOptions",
   "resourceVersion":"2.0",
 }
