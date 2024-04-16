@@ -579,15 +579,19 @@ function BBMOD_DeferredRenderer()
 	static present = function ()
 	{
 		global.__bbmodRendererCurrent = self;
-
+		
+		var _world = matrix_get(matrix_world);
+		matrix_set(matrix_world, matrix_build_identity());
 		if (PostProcessor != undefined
 			&& PostProcessor.Enabled)
 		{
-			var _world = matrix_get(matrix_world);
-			matrix_set(matrix_world, matrix_build_identity());
 			PostProcessor.draw(__surFinal, X, Y, __surGBuffer[2], __surGBuffer[1]);
-			matrix_set(matrix_world, _world);
 		}
+		else
+		{
+			draw_surface(__surFinal, X, Y);
+		}
+		matrix_set(matrix_world, _world);
 
 		return self;
 	};
