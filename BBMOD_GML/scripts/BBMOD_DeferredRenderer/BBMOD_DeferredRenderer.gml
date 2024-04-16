@@ -589,7 +589,10 @@ function BBMOD_DeferredRenderer()
 		}
 		else
 		{
+			gpu_push_state();
+			gpu_set_blendenable(false);
 			draw_surface(__surFinal, X, Y);
+			gpu_pop_state();
 		}
 		matrix_set(matrix_world, _world);
 
