@@ -352,7 +352,6 @@ function BBMOD_Material(_shader=undefined)
 				{
 					set_shader(_pass, _shader);
 				}
-				set_shader(_pass, _shader);
 			}
 		}
 
