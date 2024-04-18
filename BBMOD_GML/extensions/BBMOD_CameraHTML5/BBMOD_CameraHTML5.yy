@@ -14,7 +14,7 @@
   "copyToTargets":32,
   "description":"",
   "exportToGame":true,
-  "extensionVersion":"3.21.1",
+  "extensionVersion":"3.21.2",
   "files":[
     {"$GMExtensionFile":"","%Name":"BBMOD_CameraHTML5.js","constants":[],"copyToTargets":32,"filename":"BBMOD_CameraHTML5.js","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"bbmod_html5_pointer_lock","argCount":0,"args":[],"documentation":"","externalName":"bbmod_html5_pointer_lock","help":"bbmod_html5_pointer_lock()","hidden":false,"kind":5,"name":"bbmod_html5_pointer_lock","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},

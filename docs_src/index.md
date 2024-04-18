@@ -1,5 +1,5 @@
 # BBMOD
-Welcome to the official documentation of BBMOD 3.21.1!
+Welcome to the official documentation of BBMOD 3.21.2!
 
 BBMOD is an advanced 3D rendering solution for GameMaker. It consists of a
 custom model, animation and material formats, a model converter (BBMOD CLI),

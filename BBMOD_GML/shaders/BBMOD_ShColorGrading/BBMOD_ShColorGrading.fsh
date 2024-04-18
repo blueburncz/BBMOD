@@ -40,12 +40,7 @@ vec3 ColorGrade(vec3 color, sampler2D lut)
 
 void main()
 {
-	vec3 color = texture2D(gm_BaseTexture, v_vTexCoord).rgb;
-
-//#ifndef _YY_GLSLES_
-//	color = ColorGrade(color, u_texLUT);
-//#endif
-
-	gl_FragColor.rgb = color;
+	vec3 color = clamp(texture2D(gm_BaseTexture, v_vTexCoord).rgb, vec3(0.0), vec3(1.0));
+	gl_FragColor.rgb = ColorGrade(color, u_texLUT);
 	gl_FragColor.a = 1.0;
 }

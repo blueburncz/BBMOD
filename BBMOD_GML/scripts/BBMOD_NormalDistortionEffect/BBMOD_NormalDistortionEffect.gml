@@ -29,7 +29,8 @@ function BBMOD_NormalDistortionEffect(_texture=pointer_null, _strength=1.0)
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
-		if (Texture == pointer_null)
+		if (Texture == pointer_null
+			|| Strength == 0.0)
 		{
 			return _surfaceSrc;
 		}
