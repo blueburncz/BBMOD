@@ -251,7 +251,7 @@ function BBMOD_LensFlare(
 			if (Range != infinity)
 			{
 				var _dist = _vec.Length();
-				_strength = 1.0 - min((_dist - (Range * Falloff)) / (Range * (1.0 - Falloff)), 1.0);
+				_strength = 1.0 - clamp((_dist - (Range * Falloff)) / (Range * (1.0 - Falloff)), 0.0, 1.0);
 			}
 
 			if (Direction != undefined
