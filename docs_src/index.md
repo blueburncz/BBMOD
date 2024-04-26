@@ -10,8 +10,6 @@ If you are a new user, see the [Tutorials](/bbmod/tutorials) section on the
 official website for guides on how to use BBMOD.
 
 ## Contents
-* [Changelog](./Changelog_.html)
 * [Supported file formats](./SupportedFileFormats.html)
 * [Modules](./Modules.html)
 * [Scripting API](./ScriptingAPI.html)
-* [Links](./Links.html)
