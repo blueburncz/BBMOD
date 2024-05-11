@@ -4,3 +4,4 @@
 * Fixed strength of lens flares exceeding 1 when property `Range` is not `infinity`.
 * Fixed macro `BBMOD_RELEASE_PATCH`, which we forgot to increase the last release.
 * Fixed macro `BBMOD_RELEASE_STRING`, which used invalid syntax.
+* Fixed method `set_material` of `BBMOD_DefaultSpriteShader`, which set material UVs incorrectly.

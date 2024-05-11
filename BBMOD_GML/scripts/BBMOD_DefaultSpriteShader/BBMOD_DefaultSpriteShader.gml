@@ -40,7 +40,7 @@ function BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
 		_texture = _material.SpecularColor ?? _material.MetallicAO;
 		if (_texture != undefined)
 		{
-			bbmod_shader_set_normal_w_uv(_shaderCurrent, texture_get_uvs(_texture));
+			bbmod_shader_set_material_uv(_shaderCurrent, texture_get_uvs(_texture));
 		}
 
 		return self;
