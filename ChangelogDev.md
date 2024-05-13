@@ -6,3 +6,4 @@
 * Fixed macro `BBMOD_RELEASE_STRING`, which used invalid syntax.
 * Fixed method `set_material` of `BBMOD_DefaultSpriteShader`, which set material UVs incorrectly.
 * Added more ready-to-use models of basic shapes.
+* Fixed method `clear` of `BBMOD_ResourceManager` not always removing destroyed resources, which could cause crashes for example when restarting rooms.

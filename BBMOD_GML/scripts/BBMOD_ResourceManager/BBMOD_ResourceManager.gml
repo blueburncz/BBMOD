@@ -473,7 +473,9 @@ function BBMOD_ResourceManager() constructor
 			var _res = _resources[? _key];
 			if (!_res.Persistent)
 			{
+				_res.__manager = undefined;
 				_res.destroy();
+				ds_map_delete(_resources, _key);
 			}
 			_key = _keyNext;
 		}
