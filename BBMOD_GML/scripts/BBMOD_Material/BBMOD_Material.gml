@@ -138,8 +138,8 @@ function BBMOD_Material(_shader=undefined)
 	ZFunc = cmpfunc_lessequal;
 
 	/// @var {Real} Discard pixels with alpha less than this value. Use values
-	/// in range 0..1.
-	AlphaTest = 1.0;
+	/// in range 0..1. Default value is 0.9.
+	AlphaTest = 0.9;
 
 	/// @var {Bool} Use `true` to enable alpha blending. This can have negative
 	/// effect on performance, therefore it should be used only when necessary.
