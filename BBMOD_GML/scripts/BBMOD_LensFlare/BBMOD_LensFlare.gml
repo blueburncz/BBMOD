@@ -364,7 +364,6 @@ function BBMOD_LensFlare(
 	};
 }
 
-
 /// @func bbmod_lens_flare_add(_lensFlare)
 ///
 /// @desc Adds a lens flare to be drawn with {@link BBMOD_LensFlaresEffect}.

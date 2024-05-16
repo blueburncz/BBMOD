@@ -25,7 +25,9 @@ function __bbmod_shader_gbuffer()
 		.add_variant(BBMOD_ShGBufferBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
 		.add_variant(BBMOD_ShGBufferColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
 		.add_variant(BBMOD_ShGBufferColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
-		.add_variant(BBMOD_ShGBufferColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED);
+		.add_variant(BBMOD_ShGBufferColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShGBufferSprite,        BBMOD_VFORMAT_DEFAULT_SPRITE)
+		;
 	return _shader;
 }
 

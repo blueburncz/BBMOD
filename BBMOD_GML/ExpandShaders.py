@@ -60,6 +60,7 @@ expand_shader("BBMOD_ShDefaultSprite", combine(PBR, SPRITE))
 expand_shader("BBMOD_ShDefaultDepth", combine(OUTPUT_DEPTH))
 expand_shader("BBMOD_ShDefaultDepthAnimated", combine(OUTPUT_DEPTH, ANIMATED))
 expand_shader("BBMOD_ShDefaultDepthBatched", combine(OUTPUT_DEPTH, BATCHED))
+expand_shader("BBMOD_ShDefaultDepthSprite", combine(OUTPUT_DEPTH, SPRITE))
 
 expand_shader("BBMOD_ShDefaultDepthColor", combine(OUTPUT_DEPTH, COLOR))
 expand_shader("BBMOD_ShDefaultDepthColorAnimated", combine(OUTPUT_DEPTH, COLOR, ANIMATED))
@@ -101,6 +102,7 @@ expand_shader("BBMOD_ShGBufferBatched", combine(OUTPUT_GBUFFER, BATCHED))
 expand_shader("BBMOD_ShGBufferColor", combine(OUTPUT_GBUFFER, COLOR))
 expand_shader("BBMOD_ShGBufferColorAnimated", combine(OUTPUT_GBUFFER, COLOR, ANIMATED))
 expand_shader("BBMOD_ShGBufferColorBatched", combine(OUTPUT_GBUFFER, COLOR, BATCHED))
+expand_shader("BBMOD_ShGBufferSprite", combine(SPRITE, OUTPUT_GBUFFER))
 expand_shader("BBMOD_ShGBufferTerrain", combine(TERRAIN, OUTPUT_GBUFFER))
 
 # Zombie shaders

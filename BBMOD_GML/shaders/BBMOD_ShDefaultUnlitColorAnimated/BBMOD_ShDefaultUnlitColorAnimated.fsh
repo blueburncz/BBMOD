@@ -277,11 +277,15 @@ Material UnpackMaterial(
 	}
 
 	// Subsurface (color and intensity)
-	vec4 subsurface = texture2D(texSubsurface, uv);
+	vec4 subsurface = texture2D(texSubsurface,
+	uv
+	);
 	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
 
 	// Emissive color
-	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive,
+	uv
+	)));
 
 	return m;
 }

@@ -24,7 +24,7 @@ varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
 
-varying vec4 v_vPosShadowmap;
+varying vec4 v_vEye;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -52,10 +52,17 @@ uniform float bbmod_IsMetallic;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
 
-// RGB: Subsurface color, A: Intensity
-uniform sampler2D bbmod_Subsurface;
 // RGBA: RGBM encoded emissive color
 uniform sampler2D bbmod_Emissive;
+
+// UVs of the BaseOpacity texture
+uniform vec4 bbmod_BaseOpacityUV;
+// UVs of the NormalW texture
+uniform vec4 bbmod_NormalWUV;
+// UVs of the Material texture
+uniform vec4 bbmod_MaterialUV;
+// UVs of the Emissive texture
+uniform vec4 bbmod_EmissiveUV;
 
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
@@ -63,52 +70,16 @@ uniform float bbmod_AlphaTest;
 ////////////////////////////////////////////////////////////////////////////////
 // Camera
 
-// Camera's position in world space
-uniform vec3 bbmod_CamPos;
 // Distance to the far clipping plane
 uniform float bbmod_ZFar;
 // Camera's exposure value
 uniform float bbmod_Exposure;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Soft particles
+// G-Buffer
 
-// G-buffer surface.
-uniform sampler2D bbmod_GBuffer;
-
-// Distance over which the particle smoothly dissappears when getting closer to
-// geometry rendered in the depth buffer.
-uniform float bbmod_SoftDistance;
-
-////////////////////////////////////////////////////////////////////////////////
-// Fog
-
-// The color of the fog
-uniform vec4 bbmod_FogColor;
-// Maximum fog intensity
-uniform float bbmod_FogIntensity;
-// Distance at which the fog starts
-uniform float bbmod_FogStart;
-// 1.0 / (fogEnd - fogStart)
-uniform float bbmod_FogRcpRange;
-
-////////////////////////////////////////////////////////////////////////////////
-// Ambient light
-
-// Ambient light's up vector.
-uniform vec3 bbmod_LightAmbientDirUp;
-// Ambient light color on the upper hemisphere.
-uniform vec4 bbmod_LightAmbientUp;
-// Ambient light color on the lower hemisphere.
-uniform vec4 bbmod_LightAmbientDown;
-
-////////////////////////////////////////////////////////////////////////////////
-// Directional light
-
-// Direction of the directional light
-uniform vec3 bbmod_LightDirectionalDir;
-// Color of the directional light
-uniform vec4 bbmod_LightDirectionalColor;
+// Lookup texture for best fit normal encoding
+uniform sampler2D u_texBestFitNormalLUT;
 
 ////////////////////////////////////////////////////////////////////////////////
 // HDR rendering
@@ -120,73 +91,6 @@ uniform float bbmod_HDR;
 //
 // Includes
 //
-#define X_GAMMA 2.2
-
-/// @desc Converts gamma space color to linear space.
-vec3 xGammaToLinear(vec3 rgb)
-{
-	return pow(rgb, vec3(X_GAMMA));
-}
-
-/// @desc Converts linear space color to gamma space.
-vec3 xLinearToGamma(vec3 rgb)
-{
-	return pow(rgb, vec3(1.0 / X_GAMMA));
-}
-
-/// @desc Gets color's luminance.
-float xLuminance(vec3 rgb)
-{
-	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
-}
-
-void Fog(float depth)
-{
-	vec3 ambientUp = xGammaToLinear(bbmod_LightAmbientUp.rgb) * bbmod_LightAmbientUp.a;
-	vec3 ambientDown = xGammaToLinear(bbmod_LightAmbientDown.rgb) * bbmod_LightAmbientDown.a;
-	vec3 directionalLightColor = xGammaToLinear(bbmod_LightDirectionalColor.rgb) * bbmod_LightDirectionalColor.a;
-	vec3 fogColor = xGammaToLinear(bbmod_FogColor.rgb) * (ambientUp + ambientDown + directionalLightColor);
-	float fogStrength = clamp((depth - bbmod_FogStart) * bbmod_FogRcpRange, 0.0, 1.0) * bbmod_FogColor.a;
-	gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogStrength * bbmod_FogIntensity);
-}
-void Exposure()
-{
-	gl_FragColor.rgb *= bbmod_Exposure * bbmod_Exposure;
-}
-void TonemapReinhard()
-{
-	gl_FragColor.rgb = gl_FragColor.rgb / (vec3(1.0) + gl_FragColor.rgb);
-}
-
-void GammaCorrect()
-{
-	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
-}
-/// @param tanAspect (tanFovY*(screenWidth/screenHeight),-tanFovY), where
-///                  tanFovY = dtan(fov*0.5)
-/// @param texCoord  Sceen-space UV.
-/// @param depth     Scene depth at texCoord.
-/// @return Point projected to view-space.
-vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
-{
-#if !(defined(_YY_HLSL11_) || defined(_YY_PSSL_))
-	tanAspect.y *= -1.0;
-#endif
-	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
-}
-
-/// @param p A point in clip space (transformed by projection matrix, but not
-///          normalized).
-/// @return P's UV coordinates on the screen.
-vec2 xUnproject(vec4 p)
-{
-	vec2 uv = p.xy / p.w;
-	uv = uv * 0.5 + 0.5;
-#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-	uv.y = 1.0 - uv.y;
-#endif
-	return uv;
-}
 /// @param d Linearized depth to encode.
 /// @return Encoded depth.
 /// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
@@ -212,6 +116,19 @@ float xDecodeDepth(vec3 c)
 {
 	const float inv255 = 1.0 / 255.0;
 	return c.x + (c.y * inv255) + (c.z * inv255 * inv255);
+}
+/// @source http://advances.realtimerendering.com/s2010/Kaplanyan-CryEngine3(SIGGRAPH%202010%20Advanced%20RealTime%20Rendering%20Course).pdf
+vec3 xBestFitNormal(vec3 normal, sampler2D tex)
+{
+	normal = normalize(normal);
+	vec3 normalUns = abs(normal);
+	float maxNAbs = max(max(normalUns.x, normalUns.y), normalUns.z);
+	vec2 texCoord = normalUns.z < maxNAbs ? (normalUns.y < maxNAbs ? normalUns.yz : normalUns.xz) : normalUns.xy;
+	texCoord = texCoord.x < texCoord.y ? texCoord.yx : texCoord.xy;
+	texCoord.y /= texCoord.x;
+	normal /= maxNAbs;
+	float fittingScale = texture2D(tex, texCoord).r;
+	return normal * fittingScale;
 }
 struct Material
 {
@@ -247,6 +164,25 @@ Material CreateMaterial()
 	return m;
 }
 #define F0_DEFAULT vec3(0.04)
+#define X_GAMMA 2.2
+
+/// @desc Converts gamma space color to linear space.
+vec3 xGammaToLinear(vec3 rgb)
+{
+	return pow(rgb, vec3(X_GAMMA));
+}
+
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
+{
+	return pow(rgb, vec3(1.0 / X_GAMMA));
+}
+
+/// @desc Gets color's luminance.
+float xLuminance(vec3 rgb)
+{
+	return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b);
+}
 /// @note Input color should be in gamma space.
 /// @source https://graphicrants.blogspot.cz/2009/04/rgbm-color-encoding.html
 vec4 xEncodeRGBM(vec3 color)
@@ -291,14 +227,14 @@ Material UnpackMaterial(
 
 	// Base color and opacity
 	vec4 baseOpacity = texture2D(texBaseOpacity,
-		uv
+		mix(bbmod_BaseOpacityUV.xy, bbmod_BaseOpacityUV.zw, uv)
 		);
 	m.Base = xGammaToLinear(baseOpacity.rgb);
 	m.Opacity = baseOpacity.a;
 
 	// Normal vector and smoothness/roughness
 	vec4 normalW = texture2D(texNormalW,
-		uv
+		mix(bbmod_NormalWUV.xy, bbmod_NormalWUV.zw, uv)
 		);
 	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
@@ -320,7 +256,7 @@ Material UnpackMaterial(
 
 	// Material properties
 	vec4 materialProps = texture2D(texMaterial,
-		uv
+		mix(bbmod_MaterialUV.xy, bbmod_MaterialUV.zw, uv)
 		);
 
 	if (isMetallic == 1.0)
@@ -338,32 +274,10 @@ Material UnpackMaterial(
 
 	// Emissive color
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive,
-	uv
+		mix(bbmod_EmissiveUV.xy, bbmod_EmissiveUV.zw, uv)
 	)));
 
 	return m;
-}
-
-void UnlitShader(Material material, float depth)
-{
-	gl_FragColor.rgb = material.Base;
-	gl_FragColor.rgb += material.Emissive;
-	gl_FragColor.a = material.Opacity;
-	// Soft particles
-	if (bbmod_SoftDistance > 0.0)
-	{
-		float sceneDepth = xDecodeDepth(texture2D(bbmod_GBuffer, xUnproject(v_vPosition)).rgb) * bbmod_ZFar;
-		float softness = clamp((sceneDepth - v_vPosition.z) / bbmod_SoftDistance, 0.0, 1.0);
-		gl_FragColor.a *= softness;
-	}
-	Fog(depth);
-
-	if (bbmod_HDR == 0.0)
-	{
-		Exposure();
-		TonemapReinhard();
-		GammaCorrect();
-	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -393,5 +307,12 @@ void main()
 		discard;
 	}
 
-	UnlitShader(material, v_vPosition.z);
+	gl_FragData[0] = vec4(xLinearToGamma(mix(material.Base, material.Specular, material.Metallic)), material.AO);
+	gl_FragData[1] = vec4(xBestFitNormal(material.Normal, u_texBestFitNormalLUT) * 0.5 + 0.5, material.Roughness);
+	gl_FragData[2] = vec4(xEncodeDepth(v_vPosition.z / bbmod_ZFar), material.Metallic);
+	gl_FragData[3] = vec4(material.Emissive, 1.0);
+	if (bbmod_HDR == 0.0)
+	{
+		gl_FragData[3].rgb = xLinearToGamma(gl_FragData[3].rgb);
+	}
 }

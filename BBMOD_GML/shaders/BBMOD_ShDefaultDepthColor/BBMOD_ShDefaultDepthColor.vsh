@@ -21,7 +21,7 @@ attribute vec3 in_Normal;
 
 attribute vec2 in_TextureCoord0;
 
-attribute vec4 in_Color;
+attribute vec4 in_Colour;
 
 attribute vec4 in_TangentW;
 
@@ -107,7 +107,7 @@ void main()
 
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;
-	v_vColor = vec4(xGammaToLinear(in_Color.rgb), in_Color.a);
+	v_vColor = vec4(xGammaToLinear(in_Colour.rgb), in_Colour.a);
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 
 	v_mTBN = mat3(tangent, bitangent, normal);

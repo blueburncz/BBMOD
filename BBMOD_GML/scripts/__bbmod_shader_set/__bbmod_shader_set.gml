@@ -60,7 +60,6 @@ function bbmod_shader_set_texture_scale(_shader, _scale)
 		_scale.X, _scale.Y);
 }
 
-
 /// @macro {String} Name of a vertex shader uniform of type
 /// `vec4[2 * BBMOD_MAX_BONES]` that holds bone transformation data.
 /// @see BBMOD_MAX_BONES
@@ -381,6 +380,13 @@ function bbmod_shader_set_base_opacity_uv(_shader, _uv)
 /// page.
 #macro BBMOD_U_NORMAL_W_UV "bbmod_NormalWUV"
 
+/// @func bbmod_shader_set_normal_w_uv(_shader, _uv)
+///
+/// @desc Sets the {@link BBMOD_U_NORMAL_W_UV} uniform to given values.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniforms for.
+/// @param {Array<Real>} _uv The new base opacity texture UVs as `[left, top, right bottom]`
+/// (same as function `texture_get_uvs` returns).
 function bbmod_shader_set_normal_w_uv(_shader, _uv)
 {
 	gml_pragma("forceinline");
@@ -389,17 +395,63 @@ function bbmod_shader_set_normal_w_uv(_shader, _uv)
 		_uv);
 }
 
-
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
 /// top left and bottom right coordinates of the material texture on its texture
 /// page.
 #macro BBMOD_U_MATERIAL_UV "bbmod_MaterialUV"
 
+/// @func bbmod_shader_set_material_uv(_shader, _uv)
+///
+/// @desc Sets the {@link BBMOD_U_MATERIAL_UV} uniform to given values.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniforms for.
+/// @param {Array<Real>} _uv The new base opacity texture UVs as `[left, top, right bottom]`
+/// (same as function `texture_get_uvs` returns).
 function bbmod_shader_set_material_uv(_shader, _uv)
 {
 	gml_pragma("forceinline");
 	shader_set_uniform_f_array(
 		shader_get_uniform(_shader, BBMOD_U_MATERIAL_UV),
+		_uv);
+}
+
+/// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
+/// top left and bottom right coordinates of the subsurface texture on its
+/// texture page.
+#macro BBMOD_U_SUBSURFACE_UV "bbmod_SubsurfaceUV"
+
+/// @func bbmod_shader_set_subsurface_uv(_shader, _uv)
+///
+/// @desc Sets the {@link BBMOD_U_SUBSURFACE_UV} uniform to given values.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniforms for.
+/// @param {Array<Real>} _uv The new base opacity texture UVs as `[left, top, right bottom]`
+/// (same as function `texture_get_uvs` returns).
+function bbmod_shader_set_subsurface_uv(_shader, _uv)
+{
+	gml_pragma("forceinline");
+	shader_set_uniform_f_array(
+		shader_get_uniform(_shader, BBMOD_U_SUBSURFACE_UV),
+		_uv);
+}
+
+/// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
+/// top left and bottom right coordinates of the emissive texture on its texture
+/// page.
+#macro BBMOD_U_EMISSIVE_UV "bbmod_EmissiveUV"
+
+/// @func bbmod_shader_set_emissive_uv(_shader, _uv)
+///
+/// @desc Sets the {@link BBMOD_U_EMISSIVE_UV} uniform to given values.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniforms for.
+/// @param {Array<Real>} _uv The new base opacity texture UVs as `[left, top, right bottom]`
+/// (same as function `texture_get_uvs` returns).
+function bbmod_shader_set_emissive_uv(_shader, _uv)
+{
+	gml_pragma("forceinline");
+	shader_set_uniform_f_array(
+		shader_get_uniform(_shader, BBMOD_U_EMISSIVE_UV),
 		_uv);
 }
 
@@ -421,7 +473,6 @@ function bbmod_shader_set_alpha_test(_shader, _value)
 		shader_get_uniform(_shader, BBMOD_U_ALPHA_TEST),
 		_value);
 }
-
 
 /// @macro {String} Name of a fragment shader uniform of type `vec3` that holds
 /// the world-space camera position.

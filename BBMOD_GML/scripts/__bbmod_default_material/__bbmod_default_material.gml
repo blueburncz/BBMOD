@@ -123,6 +123,7 @@ function __bbmod_shader_default_depth()
 		.add_variant(BBMOD_ShDefaultDepthColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
 		.add_variant(BBMOD_ShDefaultDepthColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
 		.add_variant(BBMOD_ShDefaultDepthColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShDefaultDepthSprite,        BBMOD_VFORMAT_DEFAULT_SPRITE)
 		;
 	return _shader;
 }

@@ -1,9 +1,9 @@
-if (mouse_check_button(mb_right))
+if (mouse_check_button_pressed(mb_right))
 {
 	camera.set_mouselook(true);
 	window_set_cursor(cr_none);
 }
-else
+else if (keyboard_check_pressed(vk_escape))
 {
 	camera.set_mouselook(false);
 	window_set_cursor(cr_default);

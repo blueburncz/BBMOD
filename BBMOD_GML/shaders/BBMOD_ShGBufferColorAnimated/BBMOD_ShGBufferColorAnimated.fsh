@@ -54,8 +54,6 @@ uniform float bbmod_IsMetallic;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
 
-// RGB: Subsurface color, A: Intensity
-uniform sampler2D bbmod_Subsurface;
 // RGBA: RGBM encoded emissive color
 uniform sampler2D bbmod_Emissive;
 
@@ -216,7 +214,6 @@ Material UnpackMaterial(
 	sampler2D texNormalW,
 	float isMetallic,
 	sampler2D texMaterial,
-	sampler2D texSubsurface,
 	sampler2D texEmissive,
 	mat3 TBN,
 	vec2 uv)
@@ -270,12 +267,10 @@ Material UnpackMaterial(
 		m.SpecularPower = exp2(1.0 + (m.Smoothness * 10.0));
 	}
 
-	// Subsurface (color and intensity)
-	vec4 subsurface = texture2D(texSubsurface, uv);
-	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
-
 	// Emissive color
-	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive,
+	uv
+	)));
 
 	return m;
 }
@@ -292,7 +287,6 @@ void main()
 		bbmod_NormalW,
 		bbmod_IsMetallic,
 		bbmod_Material,
-		bbmod_Subsurface,
 		bbmod_Emissive,
 		v_mTBN,
 		v_vTexCoord);

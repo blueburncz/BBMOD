@@ -509,7 +509,9 @@ Material UnpackMaterial(
 	}
 
 	// Emissive color
-	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive,
+	uv
+	)));
 
 	return m;
 }

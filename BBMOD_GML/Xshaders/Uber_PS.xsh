@@ -89,7 +89,7 @@ uniform float bbmod_IsMetallic;
 // RGB: specular color / R: Metallic, G: ambient occlusion
 uniform sampler2D bbmod_Material;
 
-#if !defined(X_LIGHTMAP)
+#if !defined(X_LIGHTMAP) && !defined(X_OUTPUT_GBUFFER)
 // RGB: Subsurface color, A: Intensity
 uniform sampler2D bbmod_Subsurface;
 #endif
@@ -108,6 +108,12 @@ uniform vec4 bbmod_BaseOpacityUV;
 uniform vec4 bbmod_NormalWUV;
 // UVs of the Material texture
 uniform vec4 bbmod_MaterialUV;
+#if !defined(X_OUTPUT_GBUFFER)
+// UVs of the Subsurface texture
+uniform vec4 bbmod_SubsurfaceUV;
+#endif
+// UVs of the Emissive texture
+uniform vec4 bbmod_EmissiveUV;
 #endif // X_2D
 
 #endif // !X_TERRAIN
@@ -485,7 +491,7 @@ void main()
 		bbmod_NormalW,
 		bbmod_IsMetallic,
 		bbmod_Material,
-#if !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
+#if !defined(X_LIGHTMAP) && !defined(X_PARTICLES) && !defined(X_OUTPUT_GBUFFER)
 		bbmod_Subsurface,
 #endif
 		bbmod_Emissive,

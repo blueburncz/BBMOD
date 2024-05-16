@@ -43,6 +43,18 @@ function BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
 			bbmod_shader_set_material_uv(_shaderCurrent, texture_get_uvs(_texture));
 		}
 
+		_texture = _material.Subsurface;
+		if (_texture != pointer_null)
+		{
+			bbmod_shader_set_subsurface_uv(_shaderCurrent, texture_get_uvs(_texture));
+		}
+
+		_texture = _material.Emissive;
+		if (_texture != pointer_null)
+		{
+			bbmod_shader_set_emissive_uv(_shaderCurrent, texture_get_uvs(_texture));
+		}
+
 		return self;
 	};
 }

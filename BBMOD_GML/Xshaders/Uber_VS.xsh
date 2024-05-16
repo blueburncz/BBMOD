@@ -21,13 +21,17 @@ attribute vec4 in_Position;
 attribute vec3 in_Normal;
 #endif
 
+#if defined(X_2D) && !defined(X_COLOR)
+attribute vec4 in_Colour;
+#endif
+
 attribute vec2 in_TextureCoord0;
 #if defined(X_LIGHTMAP)
 attribute vec2 in_TextureCoord1;
 #endif
 
-#if defined(X_COLOR) || defined(X_2D)
-attribute vec4 in_Color;
+#if defined(X_COLOR) && !defined(X_2D)
+attribute vec4 in_Colour;
 #endif
 
 #if !defined(X_2D) && !defined(X_PARTICLES)
@@ -147,7 +151,7 @@ void main()
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;
 #if defined(X_COLOR) || defined(X_2D)
-	v_vColor = vec4(xGammaToLinear(in_Color.rgb), in_Color.a);
+	v_vColor = vec4(xGammaToLinear(in_Colour.rgb), in_Colour.a);
 #endif
 	v_vTexCoord = bbmod_TextureOffset + in_TextureCoord0 * bbmod_TextureScale;
 #if defined(X_LIGHTMAP)

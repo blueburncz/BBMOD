@@ -44,7 +44,6 @@ static inline float quaternion_lengthsqr(const quat_t q)
 	return quaternion_dot(q, q);
 }
 
-
 static inline float quaternion_length(const quat_t q)
 {
 	return sqrtf(quaternion_lengthsqr(q));

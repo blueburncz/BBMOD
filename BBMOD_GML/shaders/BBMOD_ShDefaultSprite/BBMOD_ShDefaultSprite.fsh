@@ -63,6 +63,10 @@ uniform vec4 bbmod_BaseOpacityUV;
 uniform vec4 bbmod_NormalWUV;
 // UVs of the Material texture
 uniform vec4 bbmod_MaterialUV;
+// UVs of the Subsurface texture
+uniform vec4 bbmod_SubsurfaceUV;
+// UVs of the Emissive texture
+uniform vec4 bbmod_EmissiveUV;
 
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
@@ -605,11 +609,15 @@ Material UnpackMaterial(
 	}
 
 	// Subsurface (color and intensity)
-	vec4 subsurface = texture2D(texSubsurface, uv);
+	vec4 subsurface = texture2D(texSubsurface,
+		mix(bbmod_SubsurfaceUV.xy, bbmod_SubsurfaceUV.zw, uv)
+	);
 	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
 
 	// Emissive color
-	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive, uv)));
+	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive,
+		mix(bbmod_EmissiveUV.xy, bbmod_EmissiveUV.zw, uv)
+	)));
 
 	return m;
 }

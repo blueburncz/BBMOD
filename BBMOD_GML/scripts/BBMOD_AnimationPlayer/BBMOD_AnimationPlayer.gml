@@ -426,7 +426,6 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 		__animations = [];
 		var _animationLast = __animationInstanceLast;
 
-
 		if (EnableTransitions
 			&& _animationLast != undefined
 			&& _animationLast.Animation.TransitionOut + _animation.TransitionIn > 0)

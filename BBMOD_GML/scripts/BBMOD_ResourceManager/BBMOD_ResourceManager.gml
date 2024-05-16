@@ -536,7 +536,6 @@ function BBMOD_ResourceManager() constructor
 	};
 }
 
-
 /// @func __bbmod_resource_manager()
 ///
 /// @return {Struct.BBMOD_ResourceManager}
