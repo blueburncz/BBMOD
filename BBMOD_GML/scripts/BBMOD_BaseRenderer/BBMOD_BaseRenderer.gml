@@ -1154,13 +1154,14 @@ function BBMOD_BaseRenderer() constructor
 			if (PostProcessor != undefined
 				&& PostProcessor.Enabled)
 			{
+				PostProcessor.__renderScale = RenderScale;
 				PostProcessor.draw(application_surface, X, Y);
 			}
 			else
 			{
 				gpu_push_state();
 				gpu_set_blendenable(false);
-				draw_surface(application_surface, X, Y);
+				draw_surface_stretched(application_surface, X, Y, get_width(), get_height());
 				gpu_pop_state();
 			}
 			matrix_set(matrix_world, _world);

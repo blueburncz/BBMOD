@@ -12,3 +12,4 @@
 * Added new function `bbmod_shader_set_subsurface_uv`, which sets the `BBMOD_U_SUBSURFACE_UV` uniform to given values.
 * Added new macro `BBMOD_U_EMISSIVE_UV`, which is the name of a fragment shader uniform of type `vec4` that holds top left and bottom right coordinates of the emissive texture on its texture page.
 * Added new function `bbmod_shader_set_emissive_uv`, which sets the `BBMOD_U_EMISSIVE_UV` uniform to given values.
+* Fixed property `RenderScale` of renderers affecting the size of the final surface on screen.

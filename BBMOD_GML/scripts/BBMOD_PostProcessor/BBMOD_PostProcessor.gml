@@ -89,6 +89,10 @@ function BBMOD_PostProcessor() constructor
 	/// @readonly
 	Rect = new BBMOD_Rect();
 
+	/// @var {Real}
+	/// @private
+	__renderScale = 1.0;
+
 	/// @var {Pointer.Texture} A lens dirt texture applied to effects like light
 	/// bloom and lens flares. Default is `BBMOD_SprLensDirt`.
 	LensDirt = sprite_get_texture(BBMOD_SprLensDirt, 0);
@@ -236,7 +240,7 @@ function BBMOD_PostProcessor() constructor
 			}
 		}
 
-		draw_surface(_surSrc, _x, _y);
+		draw_surface_stretched(_surSrc, _x, _y, Rect.Width / __renderScale, Rect.Height / __renderScale);
 
 		matrix_set(matrix_world, _world);
 		gpu_pop_state();
