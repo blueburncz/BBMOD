@@ -319,5 +319,7 @@
     {"name":"BBMOD_SprWhite","order":2,"path":"sprites/BBMOD_SprWhite/BBMOD_SprWhite.yy",},
     {"name":"SprColormap","order":3,"path":"sprites/SprColormap/SprColormap.yy",},
     {"name":"SprHeightmap","order":2,"path":"sprites/SprHeightmap/SprHeightmap.yy",},
+    {"name":"Sprite17","order":4,"path":"sprites/Sprite17/Sprite17.yy",},
+    {"name":"Sprite18","order":5,"path":"sprites/Sprite18/Sprite18.yy",},
   ],
 }

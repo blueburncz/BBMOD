@@ -2027,6 +2027,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _subimg = _command[i++];
 					var _x = _command[i++];
 					var _y = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite(_sprite, _subimg, _x, _y);
 				}
 				break;
@@ -2042,6 +2047,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _rot = _command[i++];
 					var _col = _command[i++];
 					var _alpha = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_ext(_sprite, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha);
 				}
 				break;
@@ -2064,6 +2074,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _c3 = _command[i++];
 					var _c4 = _command[i++];
 					var _alpha = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_general(_sprite, _subimg, _left, _top, _width, _height, _x, _y,
 						_xscale, _yscale, _rot, _c1, _c2, _c3, _c4, _alpha);
 				}
@@ -2079,6 +2094,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _height = _command[i++];
 					var _x = _command[i++];
 					var _y = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_part(_sprite, _subimg, _left, _top, _width, _height, _x, _y);
 				}
 				break;
@@ -2097,6 +2117,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _yscale = _command[i++];
 					var _col = _command[i++];
 					var _alpha = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_part_ext(_sprite, _subimg, _left, _top, _width, _height, _x, _y,
 						_xscale, _yscale, _col, _alpha);
 				}
@@ -2115,6 +2140,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _x4 = _command[i++];
 					var _y4 = _command[i++];
 					var _alpha = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_pos(_sprite, _subimg, _x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4, _alpha);
 				}
 				break;
@@ -2127,6 +2157,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _y = _command[i++];
 					var _w = _command[i++];
 					var _h = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_stretched(_sprite, _subimg, _x, _y, _w, _h);
 				}
 				break;
@@ -2141,6 +2176,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _h = _command[i++];
 					var _col = _command[i++];
 					var _alpha = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_stretched_ext(_sprite, _subimg, _x, _y, _w, _h, _col, _alpha);
 				}
 				break;
@@ -2151,6 +2191,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _subimg = _command[i++];
 					var _x = _command[i++];
 					var _y = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_tiled(_sprite, _subimg, _x, _y);
 				}
 				break;
@@ -2165,6 +2210,11 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					var _yscale = _command[i++];
 					var _col = _command[i++];
 					var _alpha = _command[i++];
+					if (global.__bbmodMaterialProps == undefined
+						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					{
+						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+					}
 					draw_sprite_tiled_ext(_sprite, _subimg, _x, _y, _xscale, _yscale, _col, _alpha);
 				}
 				break;

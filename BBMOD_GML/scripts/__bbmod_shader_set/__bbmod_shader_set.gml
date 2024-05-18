@@ -370,9 +370,12 @@ function bbmod_shader_set_lightmap(_shader, _texture=global.__bbmodLightmap)
 function bbmod_shader_set_base_opacity_uv(_shader, _uv)
 {
 	gml_pragma("forceinline");
-	shader_set_uniform_f_array(
+	shader_set_uniform_f(
 		shader_get_uniform(_shader, BBMOD_U_BASE_OPACITY_UV),
-		_uv);
+		_uv[0],
+		_uv[1],
+		_uv[2],
+		_uv[3]);
 }
 
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds

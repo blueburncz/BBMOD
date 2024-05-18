@@ -16,3 +16,5 @@
 * Added new function `bbmod_shader_set_two_sided`, which sets the `BBMOD_U_TWO_SIDED` uniform.
 * Added new property `TwoSided` to `BBMOD_BaseMaterial`, which tells whether the material is two-sided. If the material is two-sided, normal vectors of backfaces are flipped before shading. Default value is `true`.
 * Fixed property `RenderScale` of renderers affecting the size of the final surface on screen.
+
+* Methods `DrawSprite`, `DrawSpriteExt`, `DrawSpriteGeneral`, `DrawSpritePart`, `DrawSpritePartExt`, `DrawSpritePos`, `DrawSpriteStretched`, `DrawSpriteStretchedExt`, `DrawSpriteTiled`, `DrawSpriteTiledExt` of `BBMOD_RenderQueue` now set uniform `BBMOD_U_BASE_OPACITY_UV` automatically and you do not need to assign the `BaseOpacity` property of used material to the sprite drawn.
