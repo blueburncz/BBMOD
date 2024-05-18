@@ -82,6 +82,8 @@ enum BBMOD_ERenderCommand
 	SetGpuColorWriteEnable,
 	/// @member Sets the culling mode.
 	SetGpuCullMode,
+	/// @member Sets the z coordinate at which are sprites and text drawn.
+	SetGpuDepth,
 	/// @member Configures fog.
 	SetGpuFog,
 	/// @member Sets the GPU state.

@@ -18,3 +18,6 @@
 * Fixed property `RenderScale` of renderers affecting the size of the final surface on screen.
 
 * Methods `DrawSprite`, `DrawSpriteExt`, `DrawSpriteGeneral`, `DrawSpritePart`, `DrawSpritePartExt`, `DrawSpritePos`, `DrawSpriteStretched`, `DrawSpriteStretchedExt`, `DrawSpriteTiled`, `DrawSpriteTiledExt` of `BBMOD_RenderQueue` now set uniform `BBMOD_U_BASE_OPACITY_UV` automatically and you do not need to assign the `BaseOpacity` property of used material to the sprite drawn.
+
+* Added new member `SetGpuDepth` to enum `BBMOD_ERenderCommand`, which is a render command that changes the z coordinate at which sprites and text are drawn.
+* Added new method `SetGpuDepth` to `BBMOD_RenderQueue`, which adds a `SetGpuDepth` command to the render queue.

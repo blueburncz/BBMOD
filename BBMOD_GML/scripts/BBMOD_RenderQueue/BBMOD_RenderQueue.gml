@@ -853,6 +853,24 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		return self;
 	};
 
+	/// @func SetGpuDepth(_depth)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuDepth} command into
+	/// the queue.
+	///
+	/// @param {Real} _depth The new z coordinate to draw sprites and text at.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static SetGpuDepth = function (_depth)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(2);
+		_command[@ 0] = BBMOD_ERenderCommand.SetGpuDepth;
+		_command[@ 1] = _depth;
+		return self;
+	};
+
 	/// @func SetGpuFog(_enable, _color, _start, _end)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.SetGpuFog} command into the
@@ -2292,6 +2310,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 
 			case BBMOD_ERenderCommand.SetGpuCullMode:
 				gpu_set_cullmode(_command[i++]);
+				break;
+
+			case BBMOD_ERenderCommand.SetGpuDepth:
+				gpu_set_depth(_command[i++]);
 				break;
 
 			case BBMOD_ERenderCommand.SetGpuFog:
