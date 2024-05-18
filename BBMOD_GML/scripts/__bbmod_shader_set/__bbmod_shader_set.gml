@@ -455,6 +455,25 @@ function bbmod_shader_set_emissive_uv(_shader, _uv)
 		_uv);
 }
 
+/// @macro {String} Name of a fragment shader uniform of type `float` that
+/// equals 1 when the material is two-sided or 0 when it is not. If a material
+/// is two-sided, normal vectors of backfaces are flipped before shading.
+#macro BBMOD_U_TWO_SIDED "bbmod_TwoSided"
+
+/// @func bbmod_shader_set_two_sided(_shader, _twoSided)
+///
+/// @desc Sets the {@link BBMOD_U_TWO_SIDED} uniform.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniform for.
+/// @param {Bool} _twoSided Whether the material is two-sided.
+function bbmod_shader_set_two_sided(_shader, _twoSided)
+{
+	gml_pragma("forceinline");
+	shader_set_uniform_f(
+		shader_get_uniform(_shader, BBMOD_U_TWO_SIDED),
+		_twoSided ? 1.0 : 0.0);
+}
+
 /// @macro {String} Name of a fragment shader uniform of type `float` that holds
 /// the alpha test threshold value. Fragments with alpha less than this value are
 /// discarded.

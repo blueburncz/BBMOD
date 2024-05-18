@@ -330,6 +330,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 		bbmod_shader_set_texture_offset(_shaderCurrent, _material.TextureOffset);
 		bbmod_shader_set_texture_scale(_shaderCurrent, _material.TextureScale);
 		bbmod_shader_set_shadowmap_bias(_shaderCurrent, _material.ShadowmapBias);
+		bbmod_shader_set_two_sided(_shaderCurrent, _material.TwoSided);
 		return self;
 	};
 }

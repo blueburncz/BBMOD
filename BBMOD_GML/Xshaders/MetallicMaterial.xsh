@@ -57,10 +57,12 @@ Material UnpackMaterial(
 		);
 	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
-	if (!gl_FrontFacing)
+#if !defined(X_TERRAIN)
+	if (bbmod_TwoSided == 1.0 && !gl_FrontFacing)
 	{
 		m.Normal *= -1.0;
 	}
+#endif
 
 	if (isRoughness == 1.0)
 	{

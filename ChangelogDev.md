@@ -12,4 +12,7 @@
 * Added new function `bbmod_shader_set_subsurface_uv`, which sets the `BBMOD_U_SUBSURFACE_UV` uniform to given values.
 * Added new macro `BBMOD_U_EMISSIVE_UV`, which is the name of a fragment shader uniform of type `vec4` that holds top left and bottom right coordinates of the emissive texture on its texture page.
 * Added new function `bbmod_shader_set_emissive_uv`, which sets the `BBMOD_U_EMISSIVE_UV` uniform to given values.
+* Added new macro `BBMOD_U_TWO_SIDED`, which is the name of a fragment shader uniform of type `float` that equals 1 when the material is two-sided or 0 when it is not. If a material is two-sided, normal vectors of backfaces are flipped before shading.
+* Added new function `bbmod_shader_set_two_sided`, which sets the `BBMOD_U_TWO_SIDED` uniform.
+* Added new property `TwoSided` to `BBMOD_BaseMaterial`, which tells whether the material is two-sided. If the material is two-sided, normal vectors of backfaces are flipped before shading. Default value is `true`.
 * Fixed property `RenderScale` of renderers affecting the size of the final surface on screen.

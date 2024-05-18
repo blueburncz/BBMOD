@@ -68,6 +68,9 @@ uniform vec4 bbmod_SubsurfaceUV;
 // UVs of the Emissive texture
 uniform vec4 bbmod_EmissiveUV;
 
+// If 1.0 then normal is flipped before shading of backfaces
+uniform float bbmod_TwoSided;
+
 // Pixels with alpha less than this value will be discarded
 uniform float bbmod_AlphaTest;
 
@@ -574,7 +577,7 @@ Material UnpackMaterial(
 		);
 	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
-	if (!gl_FrontFacing)
+	if (bbmod_TwoSided == 1.0 && !gl_FrontFacing)
 	{
 		m.Normal *= -1.0;
 	}

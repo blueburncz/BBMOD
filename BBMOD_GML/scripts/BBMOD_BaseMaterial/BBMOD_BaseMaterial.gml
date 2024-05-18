@@ -39,6 +39,11 @@ function BBMOD_BaseMaterial(_shader=undefined)
 	/// smooth transition.
 	ShadowmapBias = 0.0;
 
+	/// @var {Bool} Whether the material is two-sided. If the material is
+	/// two-sided, normal vectors of backfaces are flipped before shading.
+	/// Default value is `true`.
+	TwoSided = true;
+
 	static copy = function (_dest)
 	{
 		Material_copy(_dest);

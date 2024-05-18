@@ -116,6 +116,9 @@ uniform vec4 bbmod_SubsurfaceUV;
 uniform vec4 bbmod_EmissiveUV;
 #endif // X_2D
 
+// If 1.0 then normal is flipped before shading of backfaces
+uniform float bbmod_TwoSided;
+
 #endif // !X_TERRAIN
 #endif // !defined(X_OUTPUT_DEPTH) && !defined(X_ID)
 
