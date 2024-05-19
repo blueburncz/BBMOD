@@ -73,7 +73,8 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 	Name = _name ?? ("RenderQueue" + string(IdNext++));
 
 	/// @var {Real} The priority of the render queue. Render queues with lower
-	/// priority come first in the array returned by {@link bbmod_render_queues_get}.
+	/// priority come first in the array returned by
+	/// {@link bbmod_render_queues_get}.
 	/// @readonly
 	Priority = _priority;
 
@@ -185,6 +186,27 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		__renderPasses |= 0xFFFFFFFF;
 		var _command = __get_next(1);
 		_command[@ 0] = BBMOD_ERenderCommand.BeginConditionalBlock;
+		return self;
+	};
+
+	/// @func CallFunction(_function[, _arguments])
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.CallFunction} command into the
+	/// queue.
+	///
+	/// @param {Function} _function The function to execute.
+	/// @param {Array} [_arguments] Arguments to be passed to the function.
+	/// Defaults to an empty array.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static CallFunction  = function (_function, _arguments=[])
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(3);
+		_command[@ 0] = BBMOD_ERenderCommand.CallFunction;
+		_command[@ 1] = _function;
+		_command[@ 2] = _arguments;
 		return self;
 	};
 
@@ -598,6 +620,279 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 		_command[@ 6] = _yscale;
 		_command[@ 7] = _col;
 		_command[@ 8] = _alpha;
+		return self;
+	};
+
+	/// @func DrawText(_x, _y, _string)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawText} command into the
+	/// render queue.
+	///
+	/// @param {Real} _x The x coordinate of the drawn string.
+	/// @param {Real} _y The y coordinate of the drawn string.
+	/// @param {String} _string The string to draw.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawText = function (_x, _y, _string)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(4);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawText;
+		_command[@ 1] = _x;
+		_command[@ 2] = _y;
+		_command[@ 3] = _string;
+		return self;
+	};
+
+	/// @func DrawTextColor(_x, _y, _string, _c1, _c2, _c3, _c4, _alpha)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawTextColor} command into the
+	/// render queue.
+	///
+	/// @param {Real} _x The x coordinate of the drawn string.
+	/// @param {Real} _y The y coordinate of the drawn string.
+	/// @param {String} _string The string to draw.
+	/// @param {Constant.Color} _c1 The color for the top left of the drawn text.
+	/// @param {Constant.Color} _c2 The color for the top right of the drawn
+	/// text.
+	/// @param {Constant.Color} _c3 The color for the bottom right of the drawn
+	/// text.
+	/// @param {Constant.Color} _c4 The color for the bottom left of the drawn
+	/// text.
+	/// @param {Real} _alpha The alpha for the text.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawTextColor = function (_x, _y, _string, _c1, _c2, _c3, _c4, _alpha)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(9);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawTextColor;
+		_command[@ 1] = _x;
+		_command[@ 2] = _y;
+		_command[@ 3] = _string;
+		_command[@ 4] = _c1;
+		_command[@ 5] = _c2;
+		_command[@ 6] = _c3;
+		_command[@ 7] = _c4;
+		_command[@ 8] = _alpha;
+		return self;
+	};
+
+	/// @func DrawTextExt(_x, _y, _string, _sep, _w)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawTextExt} command into the
+	/// render queue.
+	///
+	/// @param {Real} _x The x coordinate of the drawn string.
+	/// @param {Real} _y The y coordinate of the drawn string.
+	/// @param {String} _string The string to draw.
+	/// @param {Real} _sep The distance in pixels between lines of text.
+	/// @param {Real} _w The maximum width in pixels of the string before a line
+	/// break.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawTextExt = function (_x, _y, _string, _sep, _w)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(6);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawTextExt;
+		_command[@ 1] = _x;
+		_command[@ 2] = _y;
+		_command[@ 3] = _string;
+		_command[@ 4] = _sep;
+		_command[@ 5] = _w;
+		return self;
+	};
+
+	/// @func DrawTextExtColor(_x, _y, _string, _sep, _w, _c1, _c2, _c3, _c4, _alpha)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawTextExtColor} command into
+	/// the render queue.
+	///
+	/// @param {Real} _x The x coordinate of the drawn string.
+	/// @param {Real} _y The y coordinate of the drawn string.
+	/// @param {String} _string The string to draw.
+	/// @param {Real} _sep The distance in pixels between lines of text.
+	/// @param {Real} _w The maximum width in pixels of the string before a line
+	/// break.
+	/// @param {Constant.Color} _c1 The color for the top left of the drawn text.
+	/// @param {Constant.Color} _c2 The color for the top right of the drawn
+	/// text.
+	/// @param {Constant.Color} _c3 The color for the bottom right of the drawn
+	/// text.
+	/// @param {Constant.Color} _c4 The color for the bottom left of the drawn
+	/// text.
+	/// @param {Real} _alpha The alpha for the text.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawTextExtColor = function (_x, _y, _string, _sep, _w, _c1, _c2, _c3, _c4, _alpha)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(11);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawTextExtColor;
+		_command[@ 1] = _x;
+		_command[@ 2] = _y;
+		_command[@ 3] = _string;
+		_command[@ 4] = _sep;
+		_command[@ 5] = _w;
+		_command[@ 6] = _c1;
+		_command[@ 7] = _c2;
+		_command[@ 8] = _c3;
+		_command[@ 9] = _c4;
+		_command[@ 10] = _alpha;
+		return self;
+	};
+
+	/// @func DrawTextExtTransformed(_x, _y, _string, _sep, _w, _xscale, _yscale, _angle)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawTextExtTransformed} command
+	/// into the render queue.
+	///
+	/// @param {Real} _x The x coordinate of the drawn string.
+	/// @param {Real} _y The y coordinate of the drawn string.
+	/// @param {String} _string The string to draw.
+	/// @param {Real} _sep The distance in pixels between lines of text.
+	/// @param {Real} _w The maximum width in pixels of the string before a line
+	/// break.
+	/// @param {Real} _xscale The horizontal scale.
+	/// @param {Real} _yscale The vertical scale.
+	/// @param {Real} _angle The angle of the text.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawTextExtTransformed = function (_x, _y, _string, _sep, _w, _xscale, _yscale, _angle)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(9);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawTextExtTransformed;
+		_command[@ 1] = _x;
+		_command[@ 2] = _y;
+		_command[@ 3] = _string;
+		_command[@ 4] = _sep;
+		_command[@ 5] = _w;
+		_command[@ 6] = _xscale;
+		_command[@ 7] = _yscale;
+		_command[@ 8] = _angle;
+		return self;
+	};
+
+	/// @func DrawTextExtTransformedColor(_x, _y, _string, _sep, _w, _xscale, _yscale, _angle, _c1, _c2, _c3, _c4, _alpha)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawTextExtTransformedColor}
+	/// command into the render queue.
+	///
+	/// @param {Real} _x The x coordinate of the drawn string.
+	/// @param {Real} _y The y coordinate of the drawn string.
+	/// @param {String} _string The string to draw.
+	/// @param {Real} _sep The distance in pixels between lines of text.
+	/// @param {Real} _w The maximum width in pixels of the string before a line
+	/// break.
+	/// @param {Real} _xscale The horizontal scale.
+	/// @param {Real} _yscale The vertical scale.
+	/// @param {Real} _angle The angle of the text.
+	/// @param {Constant.Color} _c1 The color for the top left of the drawn text.
+	/// @param {Constant.Color} _c2 The color for the top right of the drawn
+	/// text.
+	/// @param {Constant.Color} _c3 The color for the bottom right of the drawn
+	/// text.
+	/// @param {Constant.Color} _c4 The color for the bottom left of the drawn
+	/// text.
+	/// @param {Real} _alpha The alpha for the text.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawTextExtTransformedColor = function (
+		_x, _y, _string, _sep, _w, _xscale, _yscale, _angle, _c1, _c2, _c3, _c4, _alpha)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(14);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawTextExtTransformedColor;
+		_command[@ 1] = _x;
+		_command[@ 2] = _y;
+		_command[@ 3] = _string;
+		_command[@ 4] = _sep;
+		_command[@ 5] = _w;
+		_command[@ 6] = _xscale;
+		_command[@ 7] = _yscale;
+		_command[@ 8] = _angle;
+		_command[@ 9] = _c1;
+		_command[@ 10] = _c2;
+		_command[@ 11] = _c3;
+		_command[@ 12] = _c4;
+		_command[@ 13] = _alpha;
+		return self;
+	};
+
+	/// @func DrawTextTransformed(_x, _y, _string, _xscale, _yscale, _angle)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawTextTransformed} command into the render queue.
+	///
+	/// @param {Real} _x The x coordinate of the drawn string.
+	/// @param {Real} _y The y coordinate of the drawn string.
+	/// @param {String} _string The string to draw.
+	/// @param {Real} _xscale The horizontal scale.
+	/// @param {Real} _yscale The vertical scale.
+	/// @param {Real} _angle The angle of the text.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawTextTransformed = function (_x, _y, _string, _xscale, _yscale, _angle)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(7);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawTextTransformed;
+		_command[@ 1] = _x;
+		_command[@ 2] = _y;
+		_command[@ 3] = _string;
+		_command[@ 4] = _xscale;
+		_command[@ 5] = _yscale;
+		_command[@ 6] = _angle;
+		return self;
+	};
+
+	/// @func DrawTextTransformedColor(_x, _y, _string, _xscale, _yscale, _angle, _c1, _c2, _c3, _c4, _alpha)
+	///
+	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawTextTransformedColor}
+	/// command into the render queue.
+	///
+	/// @param {Real} _x The x coordinate of the drawn string.
+	/// @param {Real} _y The y coordinate of the drawn string.
+	/// @param {String} _string The string to draw.
+	/// @param {Real} _xscale The horizontal scale.
+	/// @param {Real} _yscale The vertical scale.
+	/// @param {Real} _angle The angle of the text.
+	/// @param {Constant.Color} _c1 The color for the top left of the drawn text.
+	/// @param {Constant.Color} _c2 The color for the top right of the drawn
+	/// text.
+	/// @param {Constant.Color} _c3 The color for the bottom right of the drawn
+	/// text.
+	/// @param {Constant.Color} _c4 The color for the bottom left of the drawn
+	/// text.
+	/// @param {Real} _alpha The alpha for the text.
+	///
+	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	static DrawTextTransformedColor = function (
+		_x, _y, _string, _xscale, _yscale, _angle, _c1, _c2, _c3, _c4, _alpha)
+	{
+		gml_pragma("forceinline");
+		__renderPasses |= 0xFFFFFFFF;
+		var _command = __get_next(12);
+		_command[@ 0] = BBMOD_ERenderCommand.DrawTextTransformedColor;
+		_command[@ 1] = _x;
+		_command[@ 2] = _y;
+		_command[@ 3] = _string;
+		_command[@ 4] = _xscale;
+		_command[@ 5] = _yscale;
+		_command[@ 6] = _angle;
+		_command[@ 7] = _c1;
+		_command[@ 8] = _c2;
+		_command[@ 9] = _c3;
+		_command[@ 10] = _c4;
+		_command[@ 11] = _alpha;
 		return self;
 	};
 
@@ -1771,6 +2066,10 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 				}
 				break;
 
+			case BBMOD_ERenderCommand.CallFunction:
+				_condition = script_execute_ext(_command[1], _command[2]) ? true : false;
+				break;
+
 			case BBMOD_ERenderCommand.CheckRenderPass:
 				if (((1 << bbmod_render_pass_get()) & _command[i++]) == 0)
 				{
@@ -2235,6 +2534,38 @@ function BBMOD_RenderQueue(_name=undefined, _priority=0) constructor
 					}
 					draw_sprite_tiled_ext(_sprite, _subimg, _x, _y, _xscale, _yscale, _col, _alpha);
 				}
+				break;
+
+			case BBMOD_ERenderCommand.DrawText:
+				script_execute_ext(draw_text, _command, 1);
+				break;
+
+			case BBMOD_ERenderCommand.DrawTextColor:
+				script_execute_ext(draw_text_color, _command, 1);
+				break;
+
+			case BBMOD_ERenderCommand.DrawTextExt:
+				script_execute_ext(draw_text_ext, _command, 1);
+				break;
+
+			case BBMOD_ERenderCommand.DrawTextExtColor:
+				script_execute_ext(draw_text_ext_color, _command, 1);
+				break;
+
+			case BBMOD_ERenderCommand.DrawTextExtTransformed:
+				script_execute_ext(draw_text_ext_transformed, _command, 1);
+				break;
+
+			case BBMOD_ERenderCommand.DrawTextExtTransformedColor:
+				script_execute_ext(draw_text_ext_transformed_color, _command, 1);
+				break;
+
+			case BBMOD_ERenderCommand.DrawTextTransformed:
+				script_execute_ext(draw_text_transformed, _command, 1);
+				break;
+
+			case BBMOD_ERenderCommand.DrawTextTransformedColor:
+				script_execute_ext(draw_text_transformed_color, _command, 1);
 				break;
 
 			case BBMOD_ERenderCommand.EndConditionalBlock:

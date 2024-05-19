@@ -13,13 +13,15 @@ enum BBMOD_ERenderCommand
 	/// block are executed only if the last command was successfully executed.
 	/// @example
 	/// ```gml
-	/// renderQueue.apply_material(material, vertexFormat)
-	///     .begin_conditional_block()
+	/// renderQueue.ApplyMaterial(material, vertexFormat)
+	///     .BeginConditionalBlock()
 	///     // Commands here will be executed only if the material was applied...
-	///     .end_conditional_block();
+	///     .EndConditionalBlock();
 	/// ```
 	/// @see BBMOD_ERenderCommand.EndConditionalBlock
 	BeginConditionalBlock,
+	/// @member Executes a custom function.
+	CallFunction,
 	/// @member Checks if the current render pass is one of specified passes.
 	CheckRenderPass,
 	/// @member Draws a mesh if its material can be used in the current render
@@ -51,6 +53,22 @@ enum BBMOD_ERenderCommand
 	DrawSpriteTiled,
 	/// @member Draws a sprite using the `draw_sprite_tiled_ext` function.
 	DrawSpriteTiledExt,
+	/// @member Draws text using the `draw_text` function.
+	DrawText,
+	/// @member Draws text using the `draw_text_color` function.
+	DrawTextColor,
+	/// @member Draws text using the `draw_text_ext` function.
+	DrawTextExt,
+	/// @member Draws text using the `draw_text_ext_color` function.
+	DrawTextExtColor,
+	/// @member Draws text using the `draw_text_ext_transformed` function.
+	DrawTextExtTransformed,
+	/// @member Draws text using the `draw_text_ext_transformed_color` function.
+	DrawTextExtTransformedColor,
+	/// @member Draws text using the `draw_text_transformed` function.
+	DrawTextTransformed,
+	/// @member Draws text using the `draw_text_transformed_color` function.
+	DrawTextTransformedColor,
 	/// @member Marks the end of a conditional block.
 	/// @see BBMOD_ERenderCommand.BeginConditionalBlock
 	EndConditionalBlock,

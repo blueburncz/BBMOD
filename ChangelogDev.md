@@ -21,3 +21,23 @@
 
 * Added new member `SetGpuDepth` to enum `BBMOD_ERenderCommand`, which is a render command that changes the z coordinate at which sprites and text are drawn.
 * Added new method `SetGpuDepth` to `BBMOD_RenderQueue`, which adds a `SetGpuDepth` command to the render queue.
+
+* Added new member `DrawText` to enum `BBMOD_ERenderCommand`, which is a render command that draws text using the `draw_text` function.
+* Added new member `DrawTextColor` to enum `BBMOD_ERenderCommand`, which is a render command that draws text using the `draw_text_color` function.
+* Added new member `DrawTextExt` to enum `BBMOD_ERenderCommand`, which is a render command that draws text using the `draw_text_ext` function.
+* Added new member `DrawTextExtColor` to enum `BBMOD_ERenderCommand`, which is a render command that draws text using the `draw_text_ext_color` function.
+* Added new member `DrawTextExtTransformed` to enum `BBMOD_ERenderCommand`, which is a render command that draws text using the `draw_text_ext_transformed` function.
+* Added new member `DrawTextExtTransformedColor` to enum `BBMOD_ERenderCommand`, which is a render command that draws text using the `draw_text_ext_transformed_color` function.
+* Added new member `DrawTextTransformed` to enum `BBMOD_ERenderCommand`, which is a render command that draws text using the `draw_text_transformed` function.
+* Added new member `DrawTextTransformedColor` to enum `BBMOD_ERenderCommand`, which is a render command that draws text using the `draw_text_transformed_color` function.
+* Added new method `DrawText` to `BBMOD_RenderQueue`, which adds a `DrawText` command to the render queue.
+* Added new method `DrawTextColor` to `BBMOD_RenderQueue`, which adds a `DrawTextColor` command to the render queue.
+* Added new method `DrawTextExt` to `BBMOD_RenderQueue`, which adds a `DrawTextExt` command to the render queue.
+* Added new method `DrawTextExtColor` to `BBMOD_RenderQueue`, which adds a `DrawTextExtColor` command to the render queue.
+* Added new method `DrawTextExtTransformed` to `BBMOD_RenderQueue`, which adds a `DrawTextExtTransformed` command to the render queue.
+* Added new method `DrawTextExtTransformedColor` to `BBMOD_RenderQueue`, which adds a `DrawTextExtTransformedColor` command to the render queue.
+* Added new method `DrawTextTransformed` to `BBMOD_RenderQueue`, which adds a `DrawTextTransformed` command to the render queue.
+* Added new method `DrawTextTransformedColor` to `BBMOD_RenderQueue`, which adds a `DrawTextTransformedColor` command to the render queue.
+
+* Added new member `CallFunction` to enum `BBMOD_ERenderCommand`, which is a render command that executes a custom function with given arguments.
+* Added new method `CallFunction` to `BBMOD_RenderQueue`, which adds a `CallFunction` command to the render queue.
