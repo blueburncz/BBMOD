@@ -532,9 +532,7 @@ Material UnpackMaterial(
 	Material m = CreateMaterial();
 
 	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity,
-		uv
-		);
+	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
 	m.Base = xGammaToLinear(baseOpacity.rgb);
 	m.Opacity = baseOpacity.a;
 

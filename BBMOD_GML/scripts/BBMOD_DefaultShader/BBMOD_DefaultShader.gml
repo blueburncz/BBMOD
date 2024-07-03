@@ -126,33 +126,52 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 
 		var _shaderCurrent = shader_current();
 
-		// Normal smoothness/roughness
-		if (_material.NormalSmoothness != undefined)
+		// Base opacity UVs
+		var _baseOpacity = _material.BaseOpacity;
+		if (_baseOpacity != pointer_null)
 		{
-			bbmod_shader_set_normal_smoothness(_shaderCurrent, _material.NormalSmoothness);
+			bbmod_shader_set_base_opacity_uv(_shaderCurrent, texture_get_uvs(_baseOpacity));
 		}
 
-		if (_material.NormalRoughness != undefined)
+		// Normal smoothness/roughness
+		var _normalSmoothness = _material.NormalSmoothness;
+		if (_normalSmoothness != undefined)
 		{
-			bbmod_shader_set_normal_roughness(_shaderCurrent, _material.NormalRoughness);
+			bbmod_shader_set_normal_smoothness(_shaderCurrent, _normalSmoothness);
+			bbmod_shader_set_normal_w_uv(_shaderCurrent, texture_get_uvs(_normalSmoothness));
+		}
+
+		var _normalRoughness = _material.NormalRoughness;
+		if (_normalRoughness != undefined)
+		{
+			bbmod_shader_set_normal_roughness(_shaderCurrent, _normalRoughness);
+			bbmod_shader_set_normal_w_uv(_shaderCurrent, texture_get_uvs(_normalSmoothness));
 		}
 
 		// Specular color/Metallic and AO
-		if (_material.SpecularColor != undefined)
+		var _specularColor = _material.SpecularColor;
+		if (_specularColor != undefined)
 		{
-			bbmod_shader_set_specular_color(_shaderCurrent, _material.SpecularColor);
+			bbmod_shader_set_specular_color(_shaderCurrent, _specularColor);
+			bbmod_shader_set_material_uv(_shaderCurrent, texture_get_uvs(_specularColor));
 		}
 
-		if (_material.MetallicAO != undefined)
+		var _metallicAO = _material.MetallicAO;
+		if (_metallicAO != undefined)
 		{
-			bbmod_shader_set_metallic_ao(_shaderCurrent, _material.MetallicAO);
+			bbmod_shader_set_metallic_ao(_shaderCurrent, _metallicAO);
+			bbmod_shader_set_material_uv(_shaderCurrent, texture_get_uvs(_metallicAO));
 		}
 
 		// Subsurface
-		bbmod_shader_set_subsurface(_shaderCurrent, _material.Subsurface);
+		var _subsurface = _material.Subsurface;
+		bbmod_shader_set_subsurface(_shaderCurrent, _subsurface);
+		bbmod_shader_set_subsurface_uv(_shaderCurrent, texture_get_uvs(_subsurface));
 
 		// Emissive
-		bbmod_shader_set_emissive(_shaderCurrent, _material.Emissive);
+		var _emissive = _material.Emissive;
+		bbmod_shader_set_emissive(_shaderCurrent, _emissive);
+		bbmod_shader_set_emissive_uv(_shaderCurrent, texture_get_uvs(_emissive));
 
 		return self;
 	};

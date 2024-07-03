@@ -31,9 +31,6 @@
 /// @note This shader does not support subsurface scattering!
 #macro BBMOD_SHADER_DEFAULT_LIGHTMAP __bbmod_shader_default_lightmap()
 
-/// @macro {Struct.BBMOD_DefaultSpriteShader} Shader for 2D sprites.
-#macro BBMOD_SHADER_DEFAULT_SPRITE __bbmod_shader_default_sprite()
-
 /// @macro {Struct.BBMOD_DefaultMaterial} The default material.
 #macro BBMOD_MATERIAL_DEFAULT __bbmod_material_default()
 
@@ -44,9 +41,6 @@
 /// two UV channels.
 /// @macro This material does not support subsurface scattering!
 #macro BBMOD_MATERIAL_DEFAULT_LIGHTMAP __bbmod_material_default_lightmap()
-
-/// @macro {Struct.BBMOD_DefaultMaterial} Material for 2D sprites.
-#macro BBMOD_MATERIAL_DEFAULT_SPRITE __bbmod_material_default_sprite()
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex formats
@@ -82,6 +76,7 @@ function __bbmod_shader_default()
 		.add_variant(BBMOD_ShDefaultColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
 		.add_variant(BBMOD_ShDefaultColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
 		.add_variant(BBMOD_ShDefaultColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShDefaultSprite,        BBMOD_VFORMAT_DEFAULT_SPRITE)
 		;
 	return _shader;
 }
@@ -103,13 +98,6 @@ function __bbmod_shader_default_lightmap()
 {
 	static _shader = new BBMOD_DefaultLightmapShader(
 		BBMOD_ShDefaultLightmap, BBMOD_VFORMAT_DEFAULT_LIGHTMAP);
-	return _shader;
-}
-
-function __bbmod_shader_default_sprite()
-{
-	static _shader = new BBMOD_DefaultSpriteShader(
-		BBMOD_ShDefaultSprite, BBMOD_VFORMAT_DEFAULT_SPRITE)
 	return _shader;
 }
 
@@ -181,6 +169,14 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 
 ////////////////////////////////////////////////////////////////////////////////
 // DEPRECATED!!!
+
+/// @macro {Struct.BBMOD_DefaultSpriteShader} Shader for 2D sprites.
+/// @deprecated Please use {@link BBMOD_SHADER_DEFAULT} instead.
+#macro BBMOD_SHADER_DEFAULT_SPRITE BBMOD_SHADER_DEFAULT
+
+/// @macro {Struct.BBMOD_DefaultMaterial} Material for 2D sprites.
+/// @deprecated Please use {@link BBMOD_MATERIAL_DEFAULT} instead.
+#macro BBMOD_MATERIAL_DEFAULT_SPRITE BBMOD_MATERIAL_DEFAULT
 
 /// @macro {Struct.BBMOD_VertexFormat} Vertex format of 2D sprites.
 /// @deprecated Please use {@link BBMOD_VFORMAT_DEFAULT_SPRITE} instead.

@@ -233,9 +233,7 @@ Material UnpackMaterial(
 	Material m = CreateMaterial();
 
 	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity,
-		uv
-		);
+	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
 	m.Base = xGammaToLinear(baseOpacity.rgb);
 	m.Opacity = baseOpacity.a;
 
@@ -281,13 +279,13 @@ Material UnpackMaterial(
 
 	// Subsurface (color and intensity)
 	vec4 subsurface = texture2D(texSubsurface,
-	uv
+		uv
 	);
 	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
 
 	// Emissive color
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive,
-	uv
+		uv
 	)));
 
 	return m;

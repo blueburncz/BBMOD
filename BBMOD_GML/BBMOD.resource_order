@@ -127,7 +127,7 @@
     {"name":"BBMOD_DefaultMaterial","order":17,"path":"scripts/BBMOD_DefaultMaterial/BBMOD_DefaultMaterial.yy",},
     {"name":"BBMOD_DefaultRenderer","order":18,"path":"scripts/BBMOD_DefaultRenderer/BBMOD_DefaultRenderer.yy",},
     {"name":"BBMOD_DefaultShader","order":19,"path":"scripts/BBMOD_DefaultShader/BBMOD_DefaultShader.yy",},
-    {"name":"BBMOD_DefaultSpriteShader","order":20,"path":"scripts/BBMOD_DefaultSpriteShader/BBMOD_DefaultSpriteShader.yy",},
+    {"name":"BBMOD_DefaultSpriteShader","order":3,"path":"scripts/BBMOD_DefaultSpriteShader/BBMOD_DefaultSpriteShader.yy",},
     {"name":"BBMOD_DeferredRenderer","order":5,"path":"scripts/BBMOD_DeferredRenderer/BBMOD_DeferredRenderer.yy",},
     {"name":"BBMOD_DepthOfFieldEffect","order":2,"path":"scripts/BBMOD_DepthOfFieldEffect/BBMOD_DepthOfFieldEffect.yy",},
     {"name":"BBMOD_DirectionalLight","order":1,"path":"scripts/BBMOD_DirectionalLight/BBMOD_DirectionalLight.yy",},

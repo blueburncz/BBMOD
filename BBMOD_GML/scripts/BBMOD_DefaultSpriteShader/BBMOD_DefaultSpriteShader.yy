@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_DefaultSpriteShader",
   "parent":{
-    "name":"DefaultRenderer",
-    "path":"folders/BBMOD/Core/DefaultRenderer.yy",
+    "name":"Deprecated",
+    "path":"folders/BBMOD/Core/DefaultRenderer/Deprecated.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

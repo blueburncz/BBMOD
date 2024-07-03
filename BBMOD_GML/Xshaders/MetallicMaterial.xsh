@@ -36,21 +36,19 @@ Material UnpackMaterial(
 {
 	Material m = CreateMaterial();
 
-	// Base color and opacity
-	vec4 baseOpacity = texture2D(texBaseOpacity,
 #if defined(X_2D)
-		mix(bbmod_BaseOpacityUV.xy, bbmod_BaseOpacityUV.zw, uv)
-#else
-		uv
+	vec2 spriteUv = (uv - bbmod_BaseOpacityUV.xy) / (bbmod_BaseOpacityUV.zw - bbmod_BaseOpacityUV.xy);
 #endif
-		);
+
+	// Base color and opacity
+	vec4 baseOpacity = texture2D(texBaseOpacity, uv);
 	m.Base = xGammaToLinear(baseOpacity.rgb);
 	m.Opacity = baseOpacity.a;
 
 	// Normal vector and smoothness/roughness
 	vec4 normalW = texture2D(texNormalW,
 #if defined(X_2D)
-		mix(bbmod_NormalWUV.xy, bbmod_NormalWUV.zw, uv)
+		mix(bbmod_NormalWUV.xy, bbmod_NormalWUV.zw, spriteUv)
 #else
 		uv
 #endif
@@ -83,7 +81,7 @@ Material UnpackMaterial(
 #else
 	vec4 materialProps = texture2D(texMaterial,
 #if defined(X_2D)
-		mix(bbmod_MaterialUV.xy, bbmod_MaterialUV.zw, uv)
+		mix(bbmod_MaterialUV.xy, bbmod_MaterialUV.zw, spriteUv)
 #else
 		uv
 #endif
@@ -106,9 +104,9 @@ Material UnpackMaterial(
 	// Subsurface (color and intensity)
 	vec4 subsurface = texture2D(texSubsurface,
 #if defined(X_2D)
-		mix(bbmod_SubsurfaceUV.xy, bbmod_SubsurfaceUV.zw, uv)
+		mix(bbmod_SubsurfaceUV.xy, bbmod_SubsurfaceUV.zw, spriteUv)
 #else
-	uv
+		uv
 #endif
 	);
 	m.Subsurface = vec4(xGammaToLinear(subsurface.rgb).rgb, subsurface.a);
@@ -117,9 +115,9 @@ Material UnpackMaterial(
 	// Emissive color
 	m.Emissive = xGammaToLinear(xDecodeRGBM(texture2D(texEmissive,
 #if defined(X_2D)
-		mix(bbmod_EmissiveUV.xy, bbmod_EmissiveUV.zw, uv)
+		mix(bbmod_EmissiveUV.xy, bbmod_EmissiveUV.zw, spriteUv)
 #else
-	uv
+		uv
 #endif
 	)));
 #endif
