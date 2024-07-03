@@ -23,12 +23,6 @@ _queue.BeginConditionalBlock();
 	_queue.ResetMaterial();
 _queue.EndConditionalBlock();
 
-_queue.CheckRenderPass(1 << BBMOD_ERenderPass.Forward);
-_queue.BeginConditionalBlock();
-	_queue.SetWorldMatrix(matrix_build(-2, 0, 5, 90, 0, 0, 0.05, 0.05, 0.05));
-	_queue.DrawTextColor(0, 0, "Some text", c_yellow, c_yellow, c_orange, c_orange, 1.0);
-_queue.EndConditionalBlock();
-
 BBMOD_MATRIX_IDENTITY.ApplyWorld();
 camera.apply();
 renderer.render();

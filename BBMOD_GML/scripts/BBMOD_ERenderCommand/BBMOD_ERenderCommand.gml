@@ -53,22 +53,6 @@ enum BBMOD_ERenderCommand
 	DrawSpriteTiled,
 	/// @member Draws a sprite using the `draw_sprite_tiled_ext` function.
 	DrawSpriteTiledExt,
-	/// @member Draws text using the `draw_text` function.
-	DrawText,
-	/// @member Draws text using the `draw_text_color` function.
-	DrawTextColor,
-	/// @member Draws text using the `draw_text_ext` function.
-	DrawTextExt,
-	/// @member Draws text using the `draw_text_ext_color` function.
-	DrawTextExtColor,
-	/// @member Draws text using the `draw_text_ext_transformed` function.
-	DrawTextExtTransformed,
-	/// @member Draws text using the `draw_text_ext_transformed_color` function.
-	DrawTextExtTransformedColor,
-	/// @member Draws text using the `draw_text_transformed` function.
-	DrawTextTransformed,
-	/// @member Draws text using the `draw_text_transformed_color` function.
-	DrawTextTransformedColor,
 	/// @member Marks the end of a conditional block.
 	/// @see BBMOD_ERenderCommand.BeginConditionalBlock
 	EndConditionalBlock,
