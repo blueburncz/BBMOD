@@ -5,7 +5,7 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
-  "version": "3.21.2",
+  "version": "3.21.3",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
