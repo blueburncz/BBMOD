@@ -237,6 +237,7 @@ Material UnpackMaterial(
 	vec4 normalW = texture2D(texNormalW,
 		uv
 		);
+
 	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
 	if (isRoughness == 1.0)

@@ -575,12 +575,13 @@ Material UnpackMaterial(
 	vec4 normalW = texture2D(texNormalW,
 		mix(bbmod_NormalWUV.xy, bbmod_NormalWUV.zw, spriteUv)
 		);
-	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
 	if (bbmod_TwoSided == 1.0 && !gl_FrontFacing)
 	{
-		m.Normal *= -1.0;
+		TBN[2] *= -1.0;
 	}
+
+	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
 
 	if (isRoughness == 1.0)
 	{
