@@ -145,7 +145,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat)
 		if (_normalRoughness != undefined)
 		{
 			bbmod_shader_set_normal_roughness(_shaderCurrent, _normalRoughness);
-			bbmod_shader_set_normal_w_uv(_shaderCurrent, texture_get_uvs(_normalSmoothness));
+			bbmod_shader_set_normal_w_uv(_shaderCurrent, texture_get_uvs(_normalRoughness));
 		}
 
 		// Specular color/Metallic and AO
