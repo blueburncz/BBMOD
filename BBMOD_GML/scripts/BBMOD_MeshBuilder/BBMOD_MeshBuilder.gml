@@ -26,8 +26,8 @@
 /// var _v4 = new BBMOD_Vertex(_vertexFormat);
 /// _v4.Position = new BBMOD_Vec3(0.0, 1.0, 0.0);
 /// var _v4Ind = _meshBuilder.add_vertex(_v4);
-/// _meshBuilder.add_face(_v1, _v2, _v4);
-/// _meshBuilder.add_face(_v2, _v3, _v4);
+/// _meshBuilder.add_face(_v1Ind, _v2Ind, _v4Ind);
+/// _meshBuilder.add_face(_v2Ind, _v3Ind, _v4Ind);
 /// var _mesh = _meshBuilder.build();
 /// _meshBuilder = _meshBuilder.destroy();
 /// ```
