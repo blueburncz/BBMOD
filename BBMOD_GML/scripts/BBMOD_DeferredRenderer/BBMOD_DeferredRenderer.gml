@@ -58,6 +58,10 @@ function BBMOD_DeferredRenderer()
 {
 	static BaseRenderer_destroy = destroy;
 
+	/// @var {Constant.Color} The color to clear the background with. Default
+	/// value is `c_black`.
+	ClearColor = c_black;
+
 	/// @var {Bool}
 	/// @private
 	__enableHDR = true;
@@ -265,7 +269,6 @@ function BBMOD_DeferredRenderer()
 		//
 		// Depth-only pass
 		//
-
 		surface_set_target(__surFinal);
 
 		gpu_push_state();
@@ -501,7 +504,7 @@ function BBMOD_DeferredRenderer()
 		gpu_set_ztestenable(false);
 		matrix_set(matrix_world, matrix_build_identity());
 		camera_apply(__camera2D);
-		draw_sprite_stretched(BBMOD_SprBlack, 0, 0, 0, _renderWidth, _renderHeight);
+		draw_sprite_stretched_ext(BBMOD_SprWhite, 0, 0, 0, _renderWidth, _renderHeight, ClearColor, 1.0);
 		gpu_pop_state();
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Background);
