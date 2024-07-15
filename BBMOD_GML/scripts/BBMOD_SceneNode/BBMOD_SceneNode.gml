@@ -55,13 +55,76 @@ function BBMOD_SceneNode(_name=undefined) constructor
 	__transform = new BBMOD_Matrix();
 
 	/// @var {Bool} If `true` then the transform matrix needs to be updated
-	/// before using,
+	/// before using.
 	/// @private
 	__transformDirty = true;
+
+	/// @var {Struct.BBMOD_Matrix} The absolute transform matrix of the node.
+	/// @private
+	__transformAbsolute = new BBMOD_Matrix();
+
+	/// @var {Bool} If `true` then the absolute transform matrix needs to be
+	/// updated before using.
+	/// @private
+	__transformAbsoluteDirty = true;
 
 	/// @var {Bool} Whether the node's position, rotation and scale is final and
 	/// renders only non-animated models. Defaults to `false`.
 	IsStatic = false;
+
+	/// @func set_position(_position)
+	///
+	/// @desc Changes the node's position relative to its parent.
+	///
+	/// @param {Struct.BBMOD_Vec3} _position The new position of the node.
+	///
+	/// @return {Struct.BBMOD_SceneNode} Returns `self`.
+	static set_position = function (_position)
+	{
+		gml_pragma("forceinline");
+		if (!_position.Equals(Position))
+		{
+			_position.Copy(Position);
+			__transformDirty = true;
+		}
+		return self;
+	};
+
+	/// @func set_rotation(_rotation)
+	///
+	/// @desc Changes the node's rotation relative to its parent.
+	///
+	/// @param {Struct.BBMOD_Quaternion} _rotation The new rotation of the node.
+	///
+	/// @return {Struct.BBMOD_SceneNode} Returns `self`.
+	static set_rotation = function (_rotation)
+	{
+		gml_pragma("forceinline");
+		if (!_rotation.Equals(Rotation))
+		{
+			_rotation.Copy(Rotation);
+			__transformDirty = true;
+		}
+		return self;
+	};
+
+	/// @func set_scale(_scale)
+	///
+	/// @desc Changes the node's scale relative to its parent.
+	///
+	/// @param {Struct.BBMOD_Vec3} _scale The new scale of the node.
+	///
+	/// @return {Struct.BBMOD_SceneNode} Returns `self`.
+	static set_scale = function (_scale)
+	{
+		gml_pragma("forceinline");
+		if (!_scale.Equals(Scale))
+		{
+			_scale.Copy(Scale);
+			__transformDirty = true;
+		}
+		return self;
+	};
 
 	/// @func get_transform()
 	///
@@ -92,6 +155,44 @@ function BBMOD_SceneNode(_name=undefined) constructor
 			__transformDirty = false;
 		}
 		return __transform;
+	};
+
+	/// @func __mark_absolute_transform_dirty()
+	///
+	/// @desc Recursively marks absolute transform as dirty.
+	///
+	/// @private
+	static __mark_absolute_transform_dirty = function ()
+	{
+		__transformAbsoluteDirty = true;
+		for (var i = array_length(Children) - 1; i >= 0; --i)
+		{
+			Children[i].__mark_absolute_transform_dirty();
+		}
+	};
+
+	/// @func get_transform_absolute()
+	///
+	/// @desc Retrieves a read-only absolute transformation matrix of the node.
+	/// The order of transforms in the matrix is scale, rotate, translate.
+	///
+	/// @return {Struct.BBMOD_Matrix} The read-only absolute transformation
+	/// matrix of the node.
+	static get_transform_absolute = function ()
+	{
+		if (__transformAbsoluteDirty)
+		{
+			if (Parent != undefined)
+			{
+				__transformAbsolute.Raw = matrix_multiply(Parent.get_transform_absolute().Raw, get_transform().Raw);
+			}
+			else
+			{
+				array_copy(__transformAbsolute.Raw, 0, get_transform().Raw, 0, 16);
+			}
+			__transformAbsoluteDirty = false;
+		}
+		return __transformAbsolute;
 	};
 
 	/// @func is_root()
@@ -166,6 +267,7 @@ function BBMOD_SceneNode(_name=undefined) constructor
 		array_push(Children, _node);
 		_node.Parent = self;
 		_node.__scene = __scene;
+		_node.__mark_absolute_transform_dirty();
 		return self;
 	};
 
@@ -186,6 +288,7 @@ function BBMOD_SceneNode(_name=undefined) constructor
 				array_delete(Children, i, 1);
 				_node.Parent = undefined;
 				_node.__unset_scene();
+				_node.__mark_absolute_transform_dirty();
 				break;
 			}
 		}
@@ -205,6 +308,7 @@ function BBMOD_SceneNode(_name=undefined) constructor
 			{
 				Parent = undefined;
 				__unset_scene();
+				__mark_absolute_transform_dirty();
 			}
 		}
 		Children = [];
@@ -226,6 +330,31 @@ function BBMOD_SceneNode(_name=undefined) constructor
 		return self;
 	};
 
+	/// @func find_node(_name)
+	///
+	/// @desc Tries to find a node by its name.
+	///
+	/// @param {String} _name The name of the node to find.
+	///
+	/// @return {Struct.BBMOD_SceneNode, Undefined} Returns the found node or
+	/// `undefined`.
+	static find_node = function (_name)
+	{
+		if (Name == _name)
+		{
+			return self;
+		}
+		for (var i = array_length(Children) - 1; i >= 0; --i)
+		{
+			var _found = Children[i].find_node(_name);
+			if (_found != undefined)
+			{
+				return _found;
+			}
+		}
+		return undefined;
+	};
+
 	/// @func update(_deltaTime)
 	///
 	/// @desc Updates the node.
@@ -234,11 +363,21 @@ function BBMOD_SceneNode(_name=undefined) constructor
 	/// (in microseconds).
 	///
 	/// @return {Struct.BBMOD_SceneNode} Returns `self`.
+	///
+	/// @note The transformation matrices of the node are updated during this
+	/// function. If you would like to change its position, rotation or scale,
+	/// you should do it **before** this function is called!
 	static update = function (_deltaTime)
 	{
+		var _transform = get_transform_absolute().Raw;
 		for (var i = array_length(Children) - 1; i >= 0; --i)
 		{
-			Children[i].update(_deltaTime);
+			with (Children[i])
+			{
+				__transformAbsolute = matrix_multiply(_transform, get_transform().Raw);
+				__transformAbsoluteDirty = false;
+				update(_deltaTime);
+			}
 		}
 		return self;
 	};
