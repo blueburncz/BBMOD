@@ -605,10 +605,11 @@ function BBMOD_BaseRenderer() constructor
 			else
 			{
 				// Punctual lights
+				var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 				var i = 0;
-				repeat (array_length(global.__bbmodPunctualLights))
+				repeat (array_length(_punctualLights))
 				{
-					_light = global.__bbmodPunctualLights[i];
+					_light = _punctualLights[i];
 					if (_light.CastShadows)
 					{
 						_shadowCaster = _light;
@@ -668,7 +669,7 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_camera_set_exposure(1.0);
 
 		var _cubemap = __cubemap;
-		var _reflectionProbes = global.__bbmodReflectionProbes;
+		var _reflectionProbes = bbmod_scene_get_default().ReflectionProbes;
 
 		var i = 0;
 		repeat (array_length(_reflectionProbes))
@@ -718,8 +719,8 @@ function BBMOD_BaseRenderer() constructor
 			}
 		}
 
-		var _to = (global.__bbmodImageBasedLight != undefined)
-			? global.__bbmodImageBasedLight.Texture
+		var _to = (bbmod_ibl_get() != undefined)
+			? bbmod_ibl_get().Texture
 			: sprite_get_texture(BBMOD_SprBlack, 0);
 
 		var _reflectionProbe = bbmod_reflection_probe_find(bbmod_camera_get_position());

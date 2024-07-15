@@ -1,52 +1,44 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_Vec3}
-/// @private
-global.__bbmodAmbientLightDirUp = BBMOD_VEC3_UP;
-
-/// @var {Struct.BBMOD_Color}
-/// @private
-global.__bbmodAmbientLightUp = BBMOD_C_WHITE;
-
-/// @var {Struct.BBMOD_Color}
-/// @private
-global.__bbmodAmbientLightDown = BBMOD_C_GRAY;
-
-/// @var {Bool}
-/// @private
-global.__bbmodAmbientAffectLightmap = true;
-
 /// @func bbmod_light_ambient_set_dir(_dir)
 ///
-/// @desc Defines the direction towards the ambient light's upper hemisphere.
+/// @desc Changes the direction towards the ambient light's upper hemisphere in
+/// the current scene.
 ///
 /// @param {Struct.BBMOD_Vec3} _dir The direction towards the upper hemisphere.
 /// Should be normalized!
 ///
 /// @see bbmod_light_ambient_get_dir
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightDirection} instead.
 function bbmod_light_ambient_set_dir(_dir)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientLightDirUp = _dir;
+	bbmod_scene_get_current().AmbientLightDirection = _dir;
 }
 
 /// @func bbmod_light_ambient_get_dir()
 ///
-/// @desc Retrieves the direction towards the ambient light's upper hemisphere.
+/// @desc Retrieves the direction towards the ambient light's upper hemisphere
+/// in the current scene.
 ///
 /// @return {Struct.BBMOD_Vec3} The direction towards the upper hemisphere.
 /// The default value is {@link BBMOD_VEC3_UP}.
 ///
 /// @see bbmod_light_ambient_set_dir
-function bbmod_light_ambient_get_dir(_dir)
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightDirection} instead.
+function bbmod_light_ambient_get_dir()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodAmbientLightDirUp;
+	return bbmod_scene_get_current().AmbientLightDirection;
 }
 
 /// @func bbmod_light_ambient_set(_color)
 ///
-/// @desc Defines color of the ambient light passed to shaders.
+/// @desc Changes color of the ambient light in the current scene.
 ///
 /// @param {Struct.BBMOD_Color} _color The new color of the ambient light (both
 /// upper and lower hemisphere).
@@ -56,17 +48,21 @@ function bbmod_light_ambient_get_dir(_dir)
 /// @see bbmod_light_ambient_get_down
 /// @see bbmod_light_ambient_set_down
 /// @see BBMOD_Color
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorUp} and
+/// {@link BBMOD_Scene.AmbientLightColorDown} instead.
 function bbmod_light_ambient_set(_color)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientLightUp = _color;
-	global.__bbmodAmbientLightDown = _color;
+	bbmod_scene_get_current().AmbientLightColorUp = _color;
+	bbmod_scene_get_current().AmbientLightColorDown = _color;
 }
 
 /// @func bbmod_light_ambient_get_up()
 ///
-/// @desc Retrieves color of the upper hemisphere of the ambient light passed
-/// to shaders.
+/// @desc Retrieves color of the upper hemisphere of the ambient light in the
+/// current scene.
 ///
 /// @return {Struct.BBMOD_Color} The color of the upper hemisphere of the
 /// ambient light.
@@ -76,16 +72,19 @@ function bbmod_light_ambient_set(_color)
 /// @see bbmod_light_ambient_get_down
 /// @see bbmod_light_ambient_set_down
 /// @see BBMOD_Color
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorUp} instead.
 function bbmod_light_ambient_get_up()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodAmbientLightUp;
+	return bbmod_scene_get_current().AmbientLightColorUp;
 }
 
 /// @func bbmod_light_ambient_set_up(_color)
 ///
-/// @desc Defines color of the upper hemisphere of the ambient light passed to
-/// shaders.
+/// @desc Changes color of the upper hemisphere of the ambient light in the
+/// current scene.
 ///
 /// @param {Struct.BBMOD_Color} _color The new color of the upper hemisphere of
 /// the ambient light.
@@ -95,16 +94,19 @@ function bbmod_light_ambient_get_up()
 /// @see bbmod_light_ambient_get_down
 /// @see bbmod_light_ambient_set_down
 /// @see BBMOD_Color
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorUp} instead.
 function bbmod_light_ambient_set_up(_color)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientLightUp = _color;
+	bbmod_scene_get_current().AmbientLightColorUp = _color;
 }
 
 /// @func bbmod_light_ambient_get_down()
 ///
-/// @desc Retrieves color of the lower hemisphere of the ambient light passed
-/// to shaders.
+/// @desc Retrieves color of the lower hemisphere of the ambient light in the
+/// current scene.
 ///
 /// @return {Struct.BBMOD_Color} The color of the lower hemisphere of the
 /// ambient light.
@@ -114,16 +116,19 @@ function bbmod_light_ambient_set_up(_color)
 /// @see bbmod_light_ambient_set_up
 /// @see bbmod_light_ambient_set_down
 /// @see BBMOD_Color
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorDown} instead.
 function bbmod_light_ambient_get_down()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodAmbientLightDown;
+	return bbmod_scene_get_current().AmbientLightColorDown;
 }
 
 /// @func bbmod_light_ambient_set_down(_color)
 ///
-/// @desc Defines color of the lower hemisphere of the ambient light passed to
-/// shaders.
+/// @desc Changes color of the lower hemisphere of the ambient light in the
+/// current scene.
 ///
 /// @param {Struct.BBMOD_Color} _color The new color of the lower hemisphere of
 /// the ambient light.
@@ -133,34 +138,45 @@ function bbmod_light_ambient_get_down()
 /// @see bbmod_light_ambient_set_up
 /// @see bbmod_light_ambient_get_down
 /// @see BBMOD_Color
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorDown} instead.
 function bbmod_light_ambient_set_down(_color)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientLightDown = _color;
+	bbmod_scene_get_current().AmbientLightColorDown = _color;
 }
 
 /// @func bbmod_light_ambient_get_affect_lightmaps()
 ///
-/// @desc Checks whether ambient light affects materials that use baked
-/// lightmaps.
+/// @desc Checks whether ambient light in the current scene affects materials
+/// that use baked lightmaps.
 ///
 /// @return {Bool} Returns `true` if ambient light affects materials that
 /// use lightmaps.
+///
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightAffectLightmaps} instead.
 function bbmod_light_ambient_get_affect_lightmaps()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodAmbientAffectLightmap;
+	return bbmod_scene_get_current().AmbientLightAffectLightmaps;
 }
 
 /// @func bbmod_light_ambient_set_affect_lightmaps(_enable)
 ///
-/// @desc Configures whether ambient light affects materials that use baked
-/// lightmaps.
+/// @desc Changes whether ambient light in the current scene affects materials
+/// that use baked lightmaps.
 ///
 /// @param {Bool} _enable Use `true` to enable ambient light affecting materials
 /// that use baked lightmaps.
+///
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightAffectLightmaps} instead.
 function bbmod_light_ambient_set_affect_lightmaps(_enable)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientAffectLightmap = _enable;
+	bbmod_scene_get_current().AmbientLightAffectLightmaps = _enable;
 }

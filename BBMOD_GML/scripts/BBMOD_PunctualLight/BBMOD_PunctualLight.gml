@@ -1,9 +1,5 @@
 /// @module Core
 
-/// @var {Array<Struct.BBMOD_PunctualLight>}
-/// @private
-global.__bbmodPunctualLights = [];
-
 /// @func BBMOD_PunctualLight([_color[, _position[, _range]]])
 ///
 /// @extends BBMOD_Light
@@ -48,7 +44,7 @@ function BBMOD_PunctualLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1
 
 /// @func bbmod_light_punctual_add(_light)
 ///
-/// @desc Adds a punctual light to be sent to shaders.
+/// @desc Adds a punctual light to the current scene.
 ///
 /// @param {Struct.BBMOD_PunctualLight} _light The punctual light.
 ///
@@ -58,15 +54,18 @@ function BBMOD_PunctualLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.add_punctual_light} instead.
 function bbmod_light_punctual_add(_light)
 {
 	gml_pragma("forceinline");
-	array_push(global.__bbmodPunctualLights, _light);
+	bbmod_scene_get_current().add_punctual_light(_light);
 }
 
 /// @func bbmod_light_punctual_count()
 ///
-/// @desc Retrieves number of punctual lights added to be sent to shaders.
+/// @desc Retrieves number of punctual lights added to the current scene.
 ///
 /// @return {Real} The number of punctual lights added to be sent to shaders.
 ///
@@ -75,15 +74,18 @@ function bbmod_light_punctual_add(_light)
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.get_punctual_light_count} instead.
 function bbmod_light_punctual_count()
 {
 	gml_pragma("forceinline");
-	return array_length(global.__bbmodPunctualLights);
+	return bbmod_scene_get_current().get_punctual_light_count();
 }
 
 /// @func bbmod_light_punctual_get(_index)
 ///
-/// @desc Retrieves a punctual light at given index.
+/// @desc Retrieves a punctual light at given index from the current scene.
 ///
 /// @param {Real} _index The index of the punctual light.
 ///
@@ -94,15 +96,18 @@ function bbmod_light_punctual_count()
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.get_punctual_light} instead.
 function bbmod_light_punctual_get(_index)
 {
 	gml_pragma("forceinline");
-	return global.__bbmodPunctualLights[_index];
+	return bbmod_scene_get_current().get_punctual_light(_index);
 }
 
 /// @func bbmod_light_punctual_remove(_light)
 ///
-/// @desc Removes a punctual light so it is not sent to shaders anymore.
+/// @desc Removes a punctual light from the current scene.
 ///
 /// @param {Struct.BBMOD_PunctualLight} _light The punctual light to remove.
 ///
@@ -114,26 +119,18 @@ function bbmod_light_punctual_get(_index)
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.remove_punctual_light} instead.
 function bbmod_light_punctual_remove(_light)
 {
 	gml_pragma("forceinline");
-	var _punctualLights = global.__bbmodPunctualLights;
-	var i = 0;
-	repeat (array_length(_punctualLights))
-	{
-		if (_punctualLights[i] == _light)
-		{
-			array_delete(_punctualLights, i, 1);
-			return true;
-		}
-		++i;
-	}
-	return false;
+	return bbmod_scene_get_current().remove_punctual_light(_light);
 }
 
 /// @func bbmod_light_punctual_remove_index(_index)
 ///
-/// @desc Removes a punctual light so it is not sent to shaders anymore.
+/// @desc Removes a punctual light at given index from the current scene.
 ///
 /// @param {Real} _index The index to remove the punctual light at.
 ///
@@ -144,24 +141,31 @@ function bbmod_light_punctual_remove(_light)
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.remove_punctual_light_index}
+/// instead.
 function bbmod_light_punctual_remove_index(_index)
 {
 	gml_pragma("forceinline");
-	array_delete(global.__bbmodPunctualLights, _index, 1);
+	bbmod_scene_get_current().remove_punctual_light_index(_index);
 	return true;
 }
 
 /// @func bbmod_light_punctual_clear()
 ///
-/// @desc Removes all punctual lights sent to shaders.
+/// @desc Removes all punctual lights added to the current scene.
 ///
 /// @see bbmod_light_punctual_add
 /// @see bbmod_light_punctual_count
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.clear_punctual_lights} instead.
 function bbmod_light_punctual_clear()
 {
 	gml_pragma("forceinline");
-	global.__bbmodPunctualLights = [];
+	bbmod_scene_get_current().clear_punctual_lights();
 }

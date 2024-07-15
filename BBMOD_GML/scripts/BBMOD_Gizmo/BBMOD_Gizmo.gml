@@ -689,7 +689,8 @@ function BBMOD_Gizmo(_size=10.0) constructor
 	/// not been called yet!
 	static update = function (_deltaTime)
 	{
-		if (!global.__bbmodCameraCurrent)
+		var _camera = global.__bbmodCameraCurrent;
+		if (_camera == undefined)
 		{
 			return self;
 		}
@@ -838,36 +839,36 @@ function BBMOD_Gizmo(_size=10.0) constructor
 			{
 			case BBMOD_EEditAxis.X:
 				{
-					var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-					var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					var _dot1 = _rightGizmo.Dot(_camera.get_forward());
+					var _dot2 = _upGizmo.Dot(_camera.get_forward());
 					_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
 				}
 				break;
 
 			case BBMOD_EEditAxis.Y:
 				{
-					var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-					var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					var _dot1 = _forwardGizmo.Dot(_camera.get_forward());
+					var _dot2 = _upGizmo.Dot(_camera.get_forward());
 					_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
 				}
 				break;
 
 			case BBMOD_EEditAxis.Z:
 				{
-					var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-					var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+					var _dot1 = _forwardGizmo.Dot(_camera.get_forward());
+					var _dot2 = _rightGizmo.Dot(_camera.get_forward());
 					_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
 				}
 				break;
 
 			case BBMOD_EEditAxis.All:
-				_planeNormal = global.__bbmodCameraCurrent.get_forward();
+				_planeNormal = _camera.get_forward();
 				break;
 			}
 
 			var _mouseWorld = intersect_ray_plane(
-				global.__bbmodCameraCurrent.Position,
-				global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+				_camera.Position,
+				_camera.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 				__positionBackup,
 				_planeNormal);
 
@@ -974,8 +975,8 @@ function BBMOD_Gizmo(_size=10.0) constructor
 					: _upGizmo));
 
 				_mouseWorld = intersect_ray_plane(
-					global.__bbmodCameraCurrent.Position,
-					global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+					_camera.Position,
+					_camera.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 					Position,
 					_planeNormal);
 
@@ -1014,36 +1015,36 @@ function BBMOD_Gizmo(_size=10.0) constructor
 				{
 				case BBMOD_EEditAxis.X:
 					{
-						var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _rightGizmo.Dot(_camera.get_forward());
+						var _dot2 = _upGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
 					}
 					break;
 
 				case BBMOD_EEditAxis.Y:
 					{
-						var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _forwardGizmo.Dot(_camera.get_forward());
+						var _dot2 = _upGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
 					}
 					break;
 
 				case BBMOD_EEditAxis.Z:
 					{
-						var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _forwardGizmo.Dot(_camera.get_forward());
+						var _dot2 = _rightGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
 					}
 					break;
 
 				case BBMOD_EEditAxis.All:
-					_planeNormal = global.__bbmodCameraCurrent.get_forward();
+					_planeNormal = _camera.get_forward();
 					break;
 				}
 
 				_mouseWorld = intersect_ray_plane(
-					global.__bbmodCameraCurrent.Position,
-					global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
+					_camera.Position,
+					_camera.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global.__bbmodRendererCurrent),
 					Position,
 					_planeNormal);
 

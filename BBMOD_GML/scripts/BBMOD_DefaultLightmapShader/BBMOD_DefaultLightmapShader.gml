@@ -56,7 +56,7 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_DefaultLightmapShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_lightmap} instead.
-	static set_lightmap = function (_texture=global.__bbmodLightmap)
+	static set_lightmap = function (_texture=bbmod_lightmap_get())
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_lightmap(shader_current(), _texture);
@@ -82,31 +82,31 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
 	};
 }
 
-/// @var {Pointer.Texture}
-/// @private
-global.__bbmodLightmap = sprite_get_texture(BBMOD_SprBlack, 0);
-
 /// @func bbmod_lightmap_get()
 ///
 /// @desc Retrieves the default lightmap texture used by all lightmapped
-/// materials.
+/// materials in the current scene.
 ///
 /// @return {Pointer.Texture} The default RGBM encoded lightmap texture.
+///
+/// @deprecated Please use {@link BBMOD_Scene.Lightmap} instead.
 function bbmod_lightmap_get()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodLightmap;
+	return bbmod_scene_get_current().Lightmap;
 }
 
 /// @func bbmod_lightmap_set(_texture)
 ///
 /// @desc Changes the default lightmap texture used by all lightmapped
-/// materials.
+/// materials in the current scene.
 ///
 /// @param {Pointer.Texture} _texture The new default RGBM encoded lightmap
 /// texture.
+///
+/// @deprecated Please use {@link BBMOD_Scene.Lightmap} instead.
 function bbmod_lightmap_set(_texture)
 {
 	gml_pragma("forceinline");
-	global.__bbmodLightmap = _texture;
+	bbmod_scene_get_current().Lightmap = _texture;
 }

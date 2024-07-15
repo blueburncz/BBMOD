@@ -110,10 +110,11 @@ function BBMOD_DeferredRenderer()
 			}
 
 			// Punctual lights
+			var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 			var i = 0;
-			repeat (array_length(global.__bbmodPunctualLights))
+			repeat (array_length(_punctualLights))
 			{
-				_light = global.__bbmodPunctualLights[i];
+				_light = _punctualLights[i];
 				if (_light.CastShadows)
 				{
 					__render_shadowmap_impl(_light);
@@ -388,9 +389,10 @@ function BBMOD_DeferredRenderer()
 		gpu_set_ztestenable(false);
 		gpu_set_cullmode(cull_clockwise);
 
-		for (var i = array_length(global.__bbmodPunctualLights) - 1; i >= 0; --i)
+		var _punctualLights = bbmod_scene_get_current().LightsPunctual;
+		for (var i = array_length(_punctualLights) - 1; i >= 0; --i)
 		{
-			with (global.__bbmodPunctualLights[i])
+			with (_punctualLights[i])
 			{
 				if (!Enabled)
 				{

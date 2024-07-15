@@ -1,9 +1,5 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_ImageBasedLight}
-/// @private
-global.__bbmodImageBasedLight = undefined;
-
 /// @func BBMOD_ImageBasedLight(_texture)
 ///
 /// @extends BBMOD_Light
@@ -27,27 +23,33 @@ function BBMOD_ImageBasedLight(_texture)
 
 /// @func bbmod_ibl_get()
 ///
-/// @desc Retrieves the image based light passed to shaders.
+/// @desc Retrieves the image based light used in the current scene.
 ///
 /// @return {Struct.BBMOD_ImageBasedLight} The image based light or `undefined`.
 ///
 /// @see bbmod_ibl_set
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.ImageBasedLight} instead.
 function bbmod_ibl_get()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodImageBasedLight;
+	return bbmod_scene_get_current().ImageBasedLight;
 }
 
 /// @func bbmod_ibl_set(_ibl)
 ///
-/// @desc Defines the image based light passed to shaders.
+/// @desc Changes the image based light used in the current scene.
 ///
 /// @param {Struct.BBMOD_ImageBasedLight} _ibl The new image based light or
 /// `undefined`.
 ///
 /// @see bbmod_ibl_get
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.ImageBasedLight} instead.
 function bbmod_ibl_set(_ibl)
 {
 	gml_pragma("forceinline");
-	global.__bbmodImageBasedLight = _ibl;
+	bbmod_scene_get_current().ImageBasedLight = _ibl;
 }

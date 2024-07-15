@@ -346,7 +346,7 @@ function bbmod_shader_set_emissive(_shader, _texture)
 /// @param {Pointer.Texture} [_texture] The new RGBM encoded lightmap
 /// texture. If not specified, defaults to the one configured using
 /// {@link bbmod_lightmap_set}.
-function bbmod_shader_set_lightmap(_shader, _texture=global.__bbmodLightmap)
+function bbmod_shader_set_lightmap(_shader, _texture=bbmod_lightmap_get())
 {
 	gml_pragma("forceinline");
 	var _uLightmap = shader_get_sampler_index(_shader, BBMOD_U_LIGHTMAP);
@@ -640,10 +640,10 @@ function bbmod_shader_set_soft_distance(_shader, _value)
 function bbmod_shader_set_fog(_shader, _color=undefined, _intensity=undefined, _start=undefined, _end=undefined)
 {
 	gml_pragma("forceinline");
-	_color ??= global.__bbmodFogColor;
-	_intensity ??= global.__bbmodFogIntensity;
-	_start ??= global.__bbmodFogStart;
-	_end ??= global.__bbmodFogEnd;
+	_color ??= bbmod_fog_get_color();
+	_intensity ??= bbmod_fog_get_intensity();
+	_start ??= bbmod_fog_get_start();
+	_end ??= bbmod_fog_get_end();
 	var _rcpFogRange = 1.0 / (_end - _start);
 	shader_set_uniform_f(
 		shader_get_uniform(_shader, BBMOD_U_FOG_COLOR),
@@ -700,11 +700,11 @@ function bbmod_shader_set_fog(_shader, _color=undefined, _intensity=undefined, _
 function bbmod_shader_set_ambient_light(_shader, _up=undefined, _down=undefined, _dir=undefined, _isLightmapped=false)
 {
 	gml_pragma("forceinline");
-	if (!_isLightmapped || global.__bbmodAmbientAffectLightmap)
+	if (!_isLightmapped || bbmod_light_ambient_get_affect_lightmaps())
 	{
-		_up ??= global.__bbmodAmbientLightUp;
-		_down ??= global.__bbmodAmbientLightDown;
-		_dir ??= global.__bbmodAmbientLightDirUp;
+		_up ??= bbmod_light_ambient_get_up();
+		_down ??= bbmod_light_ambient_get_down();
+		_dir ??= bbmod_light_ambient_get_dir();
 		shader_set_uniform_f(
 			shader_get_uniform(_shader, BBMOD_U_LIGHT_AMBIENT_UP),
 			_up.Red / 255.0,
@@ -759,7 +759,7 @@ function bbmod_shader_set_ambient_light(_shader, _up=undefined, _down=undefined,
 function bbmod_shader_set_directional_light(_shader, _light=undefined, _isLightmapped=false)
 {
 	gml_pragma("forceinline");
-	_light ??= global.__bbmodDirectionalLight;
+	_light ??= bbmod_light_directional_get();
 	if (_light != undefined
 		&& _light.Enabled
 		&& (!_isLightmapped || _light.AffectLightmaps))
@@ -840,7 +840,7 @@ function bbmod_shader_set_ibl(_shader, _ibl=undefined, _isLightmapped=false)
 		var _texture = pointer_null;
 		var _texel;
 
-		_ibl ??= global.__bbmodImageBasedLight;
+		_ibl ??= bbmod_ibl_get();
 
 		if (_ibl != undefined
 			&& _ibl.Enabled
@@ -909,7 +909,7 @@ function bbmod_shader_set_punctual_lights(_shader, _lights=undefined, _isLightma
 {
 	gml_pragma("forceinline");
 
-	_lights ??= global.__bbmodPunctualLights;
+	_lights ??= bbmod_scene_get_current().LightsPunctual;
 
 	var _renderPassMask = (1 << bbmod_render_pass_get());
 

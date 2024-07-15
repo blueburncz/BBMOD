@@ -1,9 +1,5 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_DirectionalLight}
-/// @private
-global.__bbmodDirectionalLight = undefined;
-
 /// @func BBMOD_DirectionalLight([_color[, _direction]])
 ///
 /// @extends BBMOD_Light
@@ -100,29 +96,36 @@ function BBMOD_DirectionalLight(_color=undefined, _direction=undefined)
 
 /// @func bbmod_light_directional_get()
 ///
-/// @desc Retrieves the directional light passed to shaders.
+/// @desc Retrieves a directional light from the current scene.
 ///
-/// @return {Struct.BBMOD_DirectionalLight} The directional light or `undefined`.
+/// @return {Struct.BBMOD_DirectionalLight, Undefined} The directional light or
+/// `undefined`.
 ///
 /// @see bbmod_light_directional_set
 /// @see BBMOD_DirectionalLight
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.LightDirectional} instead.
 function bbmod_light_directional_get()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodDirectionalLight;
+	return bbmod_scene_get_current().LightDirectional;
 }
 
 /// @func bbmod_light_directional_set(_light)
 ///
-/// @desc Defines the directional light passed to shaders.
+/// @desc Changes the directional light of the current scene.
 ///
 /// @param {Struct.BBMOD_DirectionalLight} _light The new directional light or
 /// `undefined`.
 ///
 /// @see bbmod_light_directional_get
 /// @see BBMOD_DirectionalLight
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.LightDirectional} instead.
 function bbmod_light_directional_set(_light)
 {
 	gml_pragma("forceinline");
-	global.__bbmodDirectionalLight = _light;
+	bbmod_scene_get_current().LightDirectional = _light;
 }

@@ -1,9 +1,5 @@
 /// @module Core
 
-/// @var {Array<Struct.BBMOD_ReflectionProbe>}
-/// @private
-global.__bbmodReflectionProbes = [];
-
 /// @var {Pointer.Texture}
 /// @private
 global.__bbmodReflectionProbeTexture = pointer_null;
@@ -182,7 +178,7 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) construct
 
 /// @func bbmod_reflection_probe_add(_reflectionProbe)
 ///
-/// @desc Adds a reflection probe to be sent to shaders.
+/// @desc Adds a reflection probe to the current scene.
 ///
 /// @param {Struct.BBMOD_ReflectionProbe} _reflectionProbe The reflection probe.
 ///
@@ -192,16 +188,18 @@ function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) construct
 /// @see bbmod_reflection_probe_find
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
-/// @see bbmod_reflection_probe_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.add_reflection_probe} instead.
 function bbmod_reflection_probe_add(_reflectionProbe)
 {
 	gml_pragma("forceinline");
-	array_push(global.__bbmodReflectionProbes, _reflectionProbe);
+	bbmod_scene_get_current().add_reflection_probe(_reflectionProbe);
 }
 
 /// @func bbmod_reflection_probe_count()
 ///
-/// @desc Retrieves number of reflection probes added to be sent to shaders.
+/// @desc Retrieves number of reflection probes added to the current scene.
 ///
 /// @return {Real} The number of reflection probes added to be sent to shaders.
 ///
@@ -211,15 +209,19 @@ function bbmod_reflection_probe_add(_reflectionProbe)
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.get_reflection_probe_count}
+/// instead.
 function bbmod_reflection_probe_count()
 {
 	gml_pragma("forceinline");
-	return array_length(global.__bbmodReflectionProbes);
+	return bbmod_scene_get_current().get_reflection_probe_count();
 }
 
 /// @func bbmod_reflection_probe_get(_index)
 ///
-/// @desc Retrieves a reflection probe at given index.
+/// @desc Retrieves a reflection probe at given index from the current scene.
 ///
 /// @param {Real} _index The index of the reflection probe.
 ///
@@ -231,20 +233,23 @@ function bbmod_reflection_probe_count()
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.get_reflection_probe} instead.
 function bbmod_reflection_probe_get(_index)
 {
 	gml_pragma("forceinline");
-	return global.__bbmodReflectionProbes[_index];
+	return bbmod_scene_get_current().get_reflection_probe(_index);
 }
 
 /// @func bbmod_reflection_probe_find(_position)
 ///
-/// @desc Finds a reflection probe that influences given position.
+/// @desc Finds a reflection probe in the current scene that influences given position.
 ///
 /// @param {Struct.BBMOD_Vec3} _position The position to find a reflection probe
 /// at.
 ///
-/// @return {Struct.BBMOD_ReflectionProbe, undefined} The found reflection probe
+/// @return {Struct.BBMOD_ReflectionProbe, Undefined} The found reflection probe
 /// or `undefined` if none was found.
 ///
 /// @see BBMOD_ReflectionProbe.Enabled
@@ -254,53 +259,18 @@ function bbmod_reflection_probe_get(_index)
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.find_reflection_probe} instead.
 function bbmod_reflection_probe_find(_position)
 {
-	// TODO: Use spatial index for reflection probes
 	gml_pragma("forceinline");
-	var _reflectionProbes = global.__bbmodReflectionProbes;
-	var _probe = undefined;
-	var _probeVolume = infinity;
-	var i = 0;
-	repeat (array_length(_reflectionProbes))
-	{
-		with (_reflectionProbes[i++])
-		{
-			if (!Enabled)
-			{
-				continue;
-			}
-			if (Infinite)
-			{
-				return self;
-			}
-			var _min = Position.Sub(Size);
-			if (_position.X < _min.X
-				|| _position.Y < _min.Y
-				|| _position.Z < _min.Z)
-			{
-				continue;
-			}
-			var _max = Position.Add(Size);
-			if (_position.X > _max.X
-				|| _position.Y > _max.Y
-				|| _position.Z > _max.Z)
-			{
-				continue;
-			}
-			if (__volume < _probeVolume)
-			{
-				_probe = self;
-				_probeVolume = __volume;
-			}
-		}
-	}
-	return _probe;
+	return bbmod_scene_get_current().find_reflection_probe(_position);
 }
 
 /// @func bbmod_reflection_probe_remove(_reflectionProbe)
 ///
-/// @desc Removes a reflection probe so it is not sent to shaders anymore.
+/// @desc Removes a reflection probe from the current scene.
 ///
 /// @param {Struct.BBMOD_ReflectionProbe} _reflectionProbe The reflection probe to remove.
 ///
@@ -312,26 +282,18 @@ function bbmod_reflection_probe_find(_position)
 /// @see bbmod_reflection_probe_find
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.remove_reflection_probe} instead.
 function bbmod_reflection_probe_remove(_reflectionProbe)
 {
 	gml_pragma("forceinline");
-	var _reflectionProbes = global.__bbmodReflectionProbes;
-	var i = 0;
-	repeat (array_length(_reflectionProbes))
-	{
-		if (_reflectionProbes[i] == _reflectionProbe)
-		{
-			array_delete(_reflectionProbes, i, 1);
-			return true;
-		}
-		++i;
-	}
-	return false;
+	return bbmod_scene_get_current().remove_reflection_probe(_reflectionProbe);
 }
 
 /// @func bbmod_reflection_probe_remove_index(_index)
 ///
-/// @desc Removes a reflection probe so it is not sent to shaders anymore.
+/// @desc Removes a reflection probe at given index from the current scene.
 ///
 /// @param {Real} _index The index to remove the reflection probe at.
 ///
@@ -343,16 +305,20 @@ function bbmod_reflection_probe_remove(_reflectionProbe)
 /// @see bbmod_reflection_probe_find
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_clear
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.remove_reflection_probe_index}
+/// instead.
 function bbmod_reflection_probe_remove_index(_index)
 {
 	gml_pragma("forceinline");
-	array_delete(global.__bbmodReflectionProbes, _index, 1);
+	bbmod_scene_get_current().remove_reflection_probe_index(_index);
 	return true;
 }
 
 /// @func bbmod_reflection_probe_clear()
 ///
-/// @desc Removes all reflection probes sent to shaders.
+/// @desc Removes all reflection probes from the current scene.
 ///
 /// @see bbmod_reflection_probe_add
 /// @see bbmod_reflection_probe_count
@@ -360,8 +326,11 @@ function bbmod_reflection_probe_remove_index(_index)
 /// @see bbmod_reflection_probe_find
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
+/// @see bbmod_scene_get_current
+///
+/// @deprecated Please use {@link BBMOD_Scene.clear_reflection_probes} instead.
 function bbmod_reflection_probe_clear()
 {
 	gml_pragma("forceinline");
-	global.__bbmodReflectionProbes = [];
+	bbmod_scene_get_current().clear_reflection_probes();
 }
