@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_AttractorModule",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"bbmod_surface_check",
   "isCompatibility":false,
   "isDnD":false,

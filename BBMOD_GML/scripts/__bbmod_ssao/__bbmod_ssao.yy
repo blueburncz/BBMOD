@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__bbmod_ssao",
   "isCompatibility":false,
   "isDnD":false,

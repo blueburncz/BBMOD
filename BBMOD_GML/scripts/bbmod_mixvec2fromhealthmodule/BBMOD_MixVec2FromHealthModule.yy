@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_MixVec2FromHealthModule",
   "isCompatibility":false,
   "isDnD":false,

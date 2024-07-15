@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_AddVec2OverTimeModule",
   "isCompatibility":false,
   "isDnD":false,

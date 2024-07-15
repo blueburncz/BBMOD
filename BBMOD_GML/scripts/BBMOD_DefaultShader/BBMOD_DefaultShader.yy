@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_DefaultShader",
   "isCompatibility":false,
   "isDnD":false,

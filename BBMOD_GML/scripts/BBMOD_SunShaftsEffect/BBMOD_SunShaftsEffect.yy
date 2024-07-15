@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_SunShaftsEffect",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_MixVec2FromSpeedModule",
   "isCompatibility":false,
   "isDnD":false,

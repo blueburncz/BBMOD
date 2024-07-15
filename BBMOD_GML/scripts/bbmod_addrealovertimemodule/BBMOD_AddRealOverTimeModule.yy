@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_AddRealOverTimeModule",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_ExposureEffect",
   "isCompatibility":false,
   "isDnD":false,

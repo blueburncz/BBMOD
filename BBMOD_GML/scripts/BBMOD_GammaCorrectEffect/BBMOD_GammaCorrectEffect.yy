@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_GammaCorrectEffect",
   "isCompatibility":false,
   "isDnD":false,

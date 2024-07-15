@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_RaycastResult",
   "isCompatibility":false,
   "isDnD":false,

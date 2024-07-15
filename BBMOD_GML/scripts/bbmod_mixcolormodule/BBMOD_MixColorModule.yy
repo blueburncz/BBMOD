@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_MixColorModule",
   "isCompatibility":false,
   "isDnD":false,

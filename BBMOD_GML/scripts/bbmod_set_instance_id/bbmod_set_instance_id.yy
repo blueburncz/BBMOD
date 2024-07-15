@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"bbmod_set_instance_id",
   "isCompatibility":false,
   "isDnD":false,

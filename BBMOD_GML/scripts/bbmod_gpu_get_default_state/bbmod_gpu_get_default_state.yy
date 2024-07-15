@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"bbmod_gpu_get_default_state",
   "isCompatibility":false,
   "isDnD":false,

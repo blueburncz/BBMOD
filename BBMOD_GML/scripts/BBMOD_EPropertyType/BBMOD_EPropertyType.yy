@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_EPropertyType",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_Renderer",
   "isCompatibility":false,
   "isDnD":false,

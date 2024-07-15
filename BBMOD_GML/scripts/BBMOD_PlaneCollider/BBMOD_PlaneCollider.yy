@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_PlaneCollider",
   "isCompatibility":false,
   "isDnD":false,

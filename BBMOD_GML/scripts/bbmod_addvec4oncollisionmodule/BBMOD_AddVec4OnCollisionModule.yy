@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_AddVec4OnCollisionModule",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_PunctualLight",
   "isCompatibility":false,
   "isDnD":false,

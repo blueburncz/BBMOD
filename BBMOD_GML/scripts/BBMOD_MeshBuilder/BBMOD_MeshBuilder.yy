@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_MeshBuilder",
   "isCompatibility":false,
   "isDnD":false,

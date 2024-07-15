@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_DefaultLightmapMaterial",
   "isCompatibility":false,
   "isDnD":false,

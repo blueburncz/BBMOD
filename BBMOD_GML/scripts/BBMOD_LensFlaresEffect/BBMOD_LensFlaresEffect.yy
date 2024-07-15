@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_LensFlaresEffect",
   "isCompatibility":false,
   "isDnD":false,

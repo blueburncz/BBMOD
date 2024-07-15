@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"bbmod_json_load",
   "isCompatibility":false,
   "isDnD":false,

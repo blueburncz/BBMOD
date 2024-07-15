@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_SpotLight",
   "isCompatibility":false,
   "isDnD":false,

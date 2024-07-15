@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_EParticle",
   "isCompatibility":false,
   "isDnD":false,

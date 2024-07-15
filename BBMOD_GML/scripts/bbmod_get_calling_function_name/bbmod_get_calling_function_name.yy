@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"bbmod_get_calling_function_name",
   "isCompatibility":false,
   "isDnD":false,

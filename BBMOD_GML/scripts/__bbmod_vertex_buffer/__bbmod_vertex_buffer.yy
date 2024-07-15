@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__bbmod_vertex_buffer",
   "isCompatibility":false,
   "isDnD":false,

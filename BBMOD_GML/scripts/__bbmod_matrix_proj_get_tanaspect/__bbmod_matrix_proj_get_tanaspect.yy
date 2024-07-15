@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__bbmod_matrix_proj_get_tanaspect",
   "isCompatibility":false,
   "isDnD":false,

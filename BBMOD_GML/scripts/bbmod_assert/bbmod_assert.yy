@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"bbmod_assert",
   "isCompatibility":false,
   "isDnD":false,

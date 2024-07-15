@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"bbmod_hdr_is_supported",
   "isCompatibility":false,
   "isDnD":false,

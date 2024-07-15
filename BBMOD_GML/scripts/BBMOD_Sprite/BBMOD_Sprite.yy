@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_Sprite",
   "isCompatibility":false,
   "isDnD":false,

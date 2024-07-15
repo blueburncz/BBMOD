@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"BBMOD_MonochromeEffect",
   "isCompatibility":false,
   "isDnD":false,
