@@ -30,7 +30,7 @@
 * Function `bbmod_light_punctual_remove_index` is now **deprecated**! Please use method `BBMOD_Scene.remove_punctual_light_index` instead.
 * Function `bbmod_light_punctual_clear` is now **deprecated**! Please use method `BBMOD_Scene.clear_punctual_lights` instead.
 * Function `bbmod_ibl_get` is now **deprecated**! Please use property `BBMOD_Scene.ImageBasedLight` instead.
-* Function `bbmod_ibl_get` is now **deprecated**! Please use property method `BBMOD_Scene.ImageBasedLight` instead.
+* Function `bbmod_ibl_get` is now **deprecated**! Please use property `BBMOD_Scene.ImageBasedLight` instead.
 * Function `bbmod_reflection_probe_add` is now **deprecated**! Please use method `BBMOD_Scene.add_reflection_probe` instead.
 * Function `bbmod_reflection_probe_count` is now **deprecated**! Please use method `BBMOD_Scene.get_reflection_probe_count` instead.
 * Function `bbmod_reflection_probe_get` is now **deprecated**! Please use method `BBMOD_Scene.get_reflection_probe` instead.
