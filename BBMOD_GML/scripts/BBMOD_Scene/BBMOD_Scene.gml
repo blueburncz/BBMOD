@@ -29,8 +29,7 @@ enum BBMOD_ESceneNodeFlags
 	/// its ancestor is not visible or the node is culled away (e.g. by frustum
 	/// culling).
 	IsVisible = 0x2,
-	/// @member The node never changes its transformation matrix and does not
-	/// draw an animated model.
+	/// @member The node never changes its transformation matrix and does not.
 	IsStatic = 0x4,
 	/// @member The node's transformation matrix is outdated and needs to be
 	/// recomputed.
@@ -119,6 +118,9 @@ enum BBMOD_ESceneNode
 	/// @member An array of materials that override the ones used by the node's
 	/// model or `undefined` (default).
 	Materials,
+	/// @member A {@link BBMOD_MaterialPropertyBlock} associated with the node
+	/// or `undefined` (default).
+	MaterialProps,
 	/// @member The node's animation player or `undefined` (default).
 	AnimationPlayer,
 	/// @member The path to the currently played animation or `undefined`
@@ -174,6 +176,10 @@ function BBMOD_SceneNodeDescriptor() constructor
 	/// model. Defaults to `undefined`.
 	Materials = undefined;
 
+	/// @var {Struct.BBMOD_MaterialPropertyBlock, Undefined} A material property
+	/// block associated with the node to be created or `undefined` (default).
+	MaterialProps = undefined;
+
 	/// @var {String, Undefined} The path to the animation which the node will
 	/// start playing on creation. Defaults to `undefined`.
 	Animation = undefined;
@@ -192,8 +198,7 @@ function BBMOD_SceneNodeDescriptor() constructor
 	IsVisible = true;
 
 	/// @var {Bool} Whether the node to be created is static, i.e. it never
-	/// changes its transformation matrix and does not draw an animated model.
-	/// Defaults to `false`.
+	/// changes its transformation matrix. Defaults to `false`.
 	IsStatic = false;
 }
 
@@ -428,15 +433,13 @@ function BBMOD_Scene(_name=undefined) constructor
 
 		Nodes[# BBMOD_ESceneNode.Transform, _index] = new BBMOD_Matrix();
 		Nodes[# BBMOD_ESceneNode.TransfromAbsolute, _index] = new BBMOD_Matrix();
-
 		Nodes[# BBMOD_ESceneNode.Model, _index] =
 			_descriptor ? _descriptor[$ "Model"] : undefined;
-
 		Nodes[# BBMOD_ESceneNode.Materials, _index] =
 			_descriptor ? _descriptor[$ "Materials"] : undefined;
-
+		Nodes[# BBMOD_ESceneNode.MaterialProps, _index] =
+			_descriptor ? _descriptor[$ "MaterialProps"] : undefined;
 		Nodes[# BBMOD_ESceneNode.AnimationPlayer, _index] = undefined;
-
 		Nodes[# BBMOD_ESceneNode.Animation, _index] =
 			_descriptor ? _descriptor[$ "Animation"] : undefined;
 
@@ -930,6 +933,47 @@ function BBMOD_Scene(_name=undefined) constructor
 		return self;
 	};
 
+	/// @func get_node_model_path(_id)
+	///
+	/// @desc Retrieves path to a model that a node with given ID draws.
+	///
+	/// @param {Real} _id The ID of the node.
+	///
+	/// @return {String, Undefined} The path to the model or `undefined` if
+	/// given node does not have any.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	static get_node_model_path = function (_id)
+	{
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		return Nodes[# BBMOD_ESceneNode.Model, _index & 0xFFFFFF];
+	};
+
+	/// @func set_node_model_path(_id, _path)
+	///
+	/// @desc Changes path to a model that a node with given ID draws.
+	///
+	/// @param {Real} _id The ID of the node.
+	/// @param {String, Undefined} _path The path to a new model or `undefined`,
+	/// in which case the current model is removed from the node.
+	///
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	static set_node_model_path = function (_id, _path)
+	{
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		var _model = Nodes[# BBMOD_ESceneNode.Model, _index & 0xFFFFFF];
+		if (_model != undefined && ResourceManager.has(_model))
+		{
+			ResourceManager.free(_model);
+		}
+		Nodes[# BBMOD_ESceneNode.Model, _index & 0xFFFFFF] = _path;
+		return self;
+	};
+
 	/// @func get_node_model(_id)
 	///
 	/// @desc Retrieves a model that a node with given ID draws.
@@ -954,6 +998,111 @@ function BBMOD_Scene(_name=undefined) constructor
 				_model.freeze();
 			}
 		});
+	};
+
+	/// @func get_node_material(_id, _index)
+	///
+	/// @desc Retrieves a material at a specified index that a node with given
+	/// ID uses to override a material defined in its model.
+	///
+	/// @param {Real} _id The ID of the node.
+	/// @param {Real} _index The index of the material.
+	///
+	/// @return {Struct.BBMOD_Material, Undefined} The material or `undefined`
+	/// if the node does not have a material specified for given index.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	static get_node_material = function (_id, _index)
+	{
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		var _nodeIndex = _id & 0xFFFFFF;
+		var _materials = Nodes[# BBMOD_ESceneNode.Model, _nodeIndex];
+		if (_materials == undefined
+			|| _index < 0
+			|| _index >= array_length(_materials))
+		{
+			return undefined;
+		}
+		return _materials[_index];
+	};
+
+	/// @func set_node_material(_id, _index, _material)
+	///
+	/// @desc Changes a material at a specified index that a node with given ID
+	/// uses to override a material defined in its model.
+	///
+	/// @param {Real} _id The ID of the node.
+	/// @param {Real} _index The index of the material.
+	/// @param {Struct.BBMOD_Model, Undefined} _material The new material or
+	/// `undefined` to remove the current one.
+	///
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	///
+	/// @note The material is automatically destroyed when no longer needed!
+	static set_node_material = function (_id, _index, _material)
+	{
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		var _nodeIndex = _id & 0xFFFFFF;
+		var _materials = Nodes[# BBMOD_ESceneNode.Materials, _nodeIndex];
+		if (_materials == undefined)
+		{
+			_materials = array_create(_index + 1);
+			Nodes[# BBMOD_ESceneNode.Materials, _nodeIndex] = _materials;
+		}
+		else if (array_length(_materials) < _index + 1)
+		{
+			array_resize(_materials, _index + 1);
+		}
+		var _materialOld = _materials[_index];
+		if (_materialOld != undefined)
+		{
+			_materialOld.free();
+		}
+		_materials[@ _index] = _material.ref();
+		return self;
+	};
+
+	/// @func get_node_material_props(_id)
+	///
+	/// @desc Retrieves a material property block associated with a node with
+	/// given ID.
+	///
+	/// @param {Real} _id The ID of the node.
+	///
+	/// @return {Struct.BBMOD_MaterialPropertyBlock, Undefined} The material
+	/// property block associated with the node or `undefined` if the node has
+	/// none.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	static get_node_material_props = function (_id)
+	{
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		return Nodes[# BBMOD_ESceneNode.MaterialProps, _id & 0xFFFFFF];
+	};
+
+	/// @func set_node_material_props(_id, _props)
+	///
+	/// @desc Changes a material property block associated with a node with
+	/// given ID.
+	///
+	/// @param {Real} _id The ID of the node.
+	/// @param {Struct.BBMOD_MaterialPropertyBlock, Undefined} _props The new
+	/// material property block or `undefined` to remove the current one.
+	///
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	static set_node_material_props = function (_id, _props)
+	{
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		Nodes[# BBMOD_ESceneNode.MaterialProps, _id & 0xFFFFFF] = _props;
+		return self;
 	};
 
 	/// @func get_node_animation_player(_id)
@@ -1377,11 +1526,12 @@ function BBMOD_Scene(_name=undefined) constructor
 			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
 			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0)
 			{
-				var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index]
 				var _animationPlayer = get_node_animation_player(_id);
 				if (_animationPlayer != undefined)
 				{
 					matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+					bbmod_material_props_set(get_node_material_props(_id));
+					var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index];
 					_animationPlayer.submit(_materials);
 				}
 				else
@@ -1390,6 +1540,8 @@ function BBMOD_Scene(_name=undefined) constructor
 					if (_model != undefined)
 					{
 						matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+						bbmod_material_props_set(get_node_material_props(_id));
+						var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index];
 						_model.submit(_materials);
 					}
 				}
@@ -1429,11 +1581,12 @@ function BBMOD_Scene(_name=undefined) constructor
 			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
 			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0)
 			{
-				var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index]
 				var _animationPlayer = get_node_animation_player(_id);
 				if (_animationPlayer != undefined)
 				{
 					matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+					bbmod_material_props_set(get_node_material_props(_id));
+					var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index];
 					_animationPlayer.render(_materials);
 				}
 				else
@@ -1442,6 +1595,8 @@ function BBMOD_Scene(_name=undefined) constructor
 					if (_model != undefined)
 					{
 						matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+						bbmod_material_props_set(get_node_material_props(_id));
+						var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index];
 						_model.render(_materials);
 					}
 				}

@@ -46,6 +46,7 @@ var _nodeDesc = new BBMOD_SceneNodeDescriptor();
 _nodeDesc.Model = "Data/BBMOD/Models/Sphere.bbmod";
 _nodeDesc.Materials = [matSphere];
 _nodeDesc.Position = new BBMOD_Vec3(0, 0, 1);
+_nodeDesc.IsStatic = true;
 
 scene.create_node(_nodeDesc);
 
