@@ -669,7 +669,7 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_camera_set_exposure(1.0);
 
 		var _cubemap = __cubemap;
-		var _reflectionProbes = bbmod_scene_get_default().ReflectionProbes;
+		var _reflectionProbes = bbmod_scene_get_current().ReflectionProbes;
 
 		var i = 0;
 		repeat (array_length(_reflectionProbes))
