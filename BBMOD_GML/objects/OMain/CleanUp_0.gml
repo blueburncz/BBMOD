@@ -11,11 +11,6 @@ sprite_delete(sprSky);
 
 matSky = matSky.destroy();
 
-bbmod_ibl_set(undefined);
-bbmod_light_directional_set(undefined);
-bbmod_reflection_probe_clear();
-
-terrain = terrain.destroy();
 terrainMaterial = terrainMaterial.destroy();
 
-BBMOD_RESOURCE_MANAGER.clear();
+scene = scene.destroy();

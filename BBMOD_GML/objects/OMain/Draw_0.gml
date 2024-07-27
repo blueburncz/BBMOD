@@ -4,12 +4,8 @@ new BBMOD_Matrix()
 	.ApplyWorld();
 modSphere.render([matSky]);
 
-new BBMOD_Matrix()
-	.Translate(0, 0, 1)
-	.ApplyWorld();
-modSphere.render([matSphere]);
-
-terrain.render();
+// Enqueue scene rendering commands
+scene.render();
 
 // Create sprite material
 var _matSprite = BBMOD_MATERIAL_DEFERRED.clone();
@@ -29,8 +25,7 @@ _queue.EndConditionalBlock();
 // Reset world matrix to identity
 BBMOD_MATRIX_IDENTITY.ApplyWorld();
 
-// Render world from camera's perspective
-camera.apply();
+// Actually render scene
 renderer.render();
 
 // Destroy temporary sprite material

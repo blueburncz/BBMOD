@@ -1326,7 +1326,7 @@ function BBMOD_Scene(_name=undefined) constructor
 		var _index = 0;
 		repeat (__nodeIndexNext)
 		{
-			var _id = (Nodes[# BBMOD_ESceneNode.Flags, _index] << 24) | _index;
+			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
 			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0)
 			{
 				get_node_transform_absolute(_id);
@@ -1358,25 +1358,37 @@ function BBMOD_Scene(_name=undefined) constructor
 			CameraCurrent.apply();
 		}
 
+		if (Terrain != undefined)
+		{
+			Terrain.submit();
+		}
+
 		var _index = 0;
 		repeat (__nodeIndexNext)
 		{
-			var _id = (Nodes[# BBMOD_ESceneNode.Flags, _index] << 24) | _index;
+			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
 			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0)
 			{
 				var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index]
 				var _animationPlayer = get_node_animation_player(_id);
 				if (_animationPlayer != undefined)
 				{
+					matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
 					_animationPlayer.submit(_materials);
 				}
 				else
 				{
-					get_node_model(_id).submit(_materials);
+					var _model = get_node_model(_id);
+					if (_model != undefined)
+					{
+						matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+						_model.submit(_materials);
+					}
 				}
 			}
 			++_index;
 		}
+		matrix_set(matrix_world, matrix_build_identity());
 		bbmod_material_reset();
 
 		return self;
@@ -1398,25 +1410,37 @@ function BBMOD_Scene(_name=undefined) constructor
 			CameraCurrent.apply();
 		}
 
+		if (Terrain != undefined)
+		{
+			Terrain.render();
+		}
+
 		var _index = 0;
 		repeat (__nodeIndexNext)
 		{
-			var _id = (Nodes[# BBMOD_ESceneNode.Flags, _index] << 24) | _index;
+			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
 			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0)
 			{
 				var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index]
 				var _animationPlayer = get_node_animation_player(_id);
 				if (_animationPlayer != undefined)
 				{
+					matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
 					_animationPlayer.render(_materials);
 				}
 				else
 				{
-					get_node_model(_id).render(_materials);
+					var _model = get_node_model(_id);
+					if (_model != undefined)
+					{
+						matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+						_model.render(_materials);
+					}
 				}
 			}
 			++_index;
 		}
+		matrix_set(matrix_world, matrix_build_identity());
 
 		return self;
 	};
@@ -1514,9 +1538,3 @@ function bbmod_scene_get_current()
 	gml_pragma("forceinline");
 	return (global.__bbmodSceneCurrent ?? bbmod_scene_get_default());
 }
-
-var _scene = new BBMOD_Scene();
-var _a = _scene.create_node();
-var _b = _scene.create_node({ Parent: _a });
-//var _c = _scene.create_node({ Parent: 0xdead });
-_scene.destroy();

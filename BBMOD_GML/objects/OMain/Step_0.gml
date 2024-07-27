@@ -19,6 +19,6 @@ x += lengthdir_x(_forward, camera.Direction) + lengthdir_x(_right, camera.Direct
 y += lengthdir_y(_forward, camera.Direction) + lengthdir_y(_right, camera.Direction - 90);
 z += _up;
 
-camera.update(delta_time);
+scene.update(delta_time);
 
 renderer.update(delta_time);
