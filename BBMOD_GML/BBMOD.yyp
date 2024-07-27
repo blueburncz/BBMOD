@@ -163,7 +163,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.6.1.160",
+    "IDEVersion":"2024.6.2.162",
   },
   "name":"BBMOD",
   "resources":[
@@ -344,7 +344,6 @@
     {"id":{"name":"BBMOD_Resource","path":"scripts/BBMOD_Resource/BBMOD_Resource.yy",},},
     {"id":{"name":"BBMOD_ResourceManager","path":"scripts/BBMOD_ResourceManager/BBMOD_ResourceManager.yy",},},
     {"id":{"name":"BBMOD_Scene","path":"scripts/BBMOD_Scene/BBMOD_Scene.yy",},},
-    {"id":{"name":"BBMOD_SceneNode","path":"scripts/BBMOD_SceneNode/BBMOD_SceneNode.yy",},},
     {"id":{"name":"bbmod_set_instance_id","path":"scripts/bbmod_set_instance_id/bbmod_set_instance_id.yy",},},
     {"id":{"name":"BBMOD_SetColorModule","path":"scripts/BBMOD_SetColorModule/BBMOD_SetColorModule.yy",},},
     {"id":{"name":"BBMOD_SetQuaternionModule","path":"scripts/BBMOD_SetQuaternionModule/BBMOD_SetQuaternionModule.yy",},},

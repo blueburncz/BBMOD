@@ -209,7 +209,6 @@
     {"name":"BBMOD_RenderQueue","order":15,"path":"scripts/BBMOD_RenderQueue/BBMOD_RenderQueue.yy",},
     {"name":"BBMOD_Resource","order":9,"path":"scripts/BBMOD_Resource/BBMOD_Resource.yy",},
     {"name":"BBMOD_ResourceManager","order":28,"path":"scripts/BBMOD_ResourceManager/BBMOD_ResourceManager.yy",},
-    {"name":"BBMOD_SceneNode","order":1,"path":"scripts/BBMOD_SceneNode/BBMOD_SceneNode.yy",},
     {"name":"bbmod_set_instance_id","order":16,"path":"scripts/bbmod_set_instance_id/bbmod_set_instance_id.yy",},
     {"name":"BBMOD_SetQuaternionModule","order":1,"path":"scripts/BBMOD_SetQuaternionModule/BBMOD_SetQuaternionModule.yy",},
     {"name":"BBMOD_SetRealModule","order":2,"path":"scripts/BBMOD_SetRealModule/BBMOD_SetRealModule.yy",},
