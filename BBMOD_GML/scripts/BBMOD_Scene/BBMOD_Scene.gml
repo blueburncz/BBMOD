@@ -29,14 +29,17 @@ enum BBMOD_ESceneNodeFlags
 	/// its ancestor is not visible or the node is culled away (e.g. by frustum
 	/// culling).
 	IsVisible = 0x2,
+	/// @member The node never changes its transformation matrix and does not
+	/// draw an animated model.
+	IsStatic = 0x4,
 	/// @member The node's transformation matrix is outdated and needs to be
 	/// recomputed.
-	IsTransformDirty = 0x4,
+	IsTransformDirty = 0x8,
 	/// @member The node's absolute transformation matrix is outdated and needs
 	/// to be recomputed.
-	IsAbsoluteTransformDirty = 0x8,
+	IsAbsoluteTransformDirty = 0x10,
 	/// @member Whether the node plays a looping animation.
-	IsAnimationLooping = 0x10,
+	IsAnimationLooping = 0x20,
 };
 
 /// @enum Enumeration of scene node properties.
@@ -187,6 +190,11 @@ function BBMOD_SceneNodeDescriptor() constructor
 	/// @var {Bool} Whether the node to be created is visible or not. Defaults
 	/// to `true`.
 	IsVisible = true;
+
+	/// @var {Bool} Whether the node to be created is static, i.e. it never
+	/// changes its transformation matrix and does not draw an animated model.
+	/// Defaults to `false`.
+	IsStatic = false;
 }
 
 /// @var {Struct.BBMOD_Scene} The scene that's currently being updated or
