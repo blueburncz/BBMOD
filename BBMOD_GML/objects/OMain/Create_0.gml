@@ -6,8 +6,7 @@ camera = new BBMOD_Camera();
 camera.Exposure = 2;
 camera.MouseSensitivity = 0.5;
 camera.FollowObject = self;
-scene.add_camera(camera);
-scene.CameraCurrent = camera;
+scene.Camera = camera;
 
 renderer = new BBMOD_DeferredRenderer();
 renderer.UseAppSurface = true;

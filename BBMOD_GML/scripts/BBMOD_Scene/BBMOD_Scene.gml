@@ -207,8 +207,7 @@ global.__bbmodSceneCurrent = undefined;
 ///
 /// @implements {BBMOD_IDestructible}
 ///
-/// @desc Used to compose models, terrain, lights, particle effects, cameras
-/// etc. into a single scene.
+/// @desc Used to compose models, terrain, lights etc. into a single scene.
 ///
 /// @param {String, Undefined} [_name] The name of the scene or `undefined`, in
 /// which case its generated.
@@ -303,14 +302,9 @@ function BBMOD_Scene(_name=undefined) constructor
 	/// @see BBMOD_Scene.FogIntensity
 	FogEnd = 1.0;
 
-	/// @var {Array<Struct.BBMOD_BaseCamera>} An array of cameras added to the
-	/// scene.
-	/// @readonly
-	Cameras = [];
-
 	/// @var {Struct.BBMOD_BaseCamera, Undefined} The currently active camera.
 	/// Defaults to `undefined` (no camera).
-	CameraCurrent = undefined;
+	Camera = undefined;
 
 	/// @var {Struct.BBMOD_ResourceManager} The resource manager used by the
 	/// scene for loading resources. Defaults to {@link BBMOD_RESOURCE_MANAGER}.
@@ -1353,96 +1347,6 @@ function BBMOD_Scene(_name=undefined) constructor
 		return self;
 	};
 
-	/// @func add_camera(_camera)
-	///
-	/// @desc Adds a camera to the scene.
-	///
-	/// @param {Struct.BBMOD_BaseCamera} _camera The camera to add.
-	///
-	/// @return {Struct.BBMOD_Scene} Returns `self`.
-	static add_camera = function (_camera)
-	{
-		gml_pragma("forceinline");
-		array_push(Cameras, _camera);
-		return self;
-	};
-
-	/// @func get_camera_count()
-	///
-	/// @desc Retrieves number of cameras added to the scene.
-	///
-	/// @return {Real} The number of cameras added to the scene.
-	static get_camera_count = function ()
-	{
-		gml_pragma("forceinline");
-		return array_length(Cameras);
-	};
-
-	/// @func get_camera(_index)
-	///
-	/// @desc Retrieves a camera at given index.
-	///
-	/// @param {Real} _index The index of the camera.
-	///
-	/// @return {Struct.BBMOD_BaseCamera} The camera at given
-	/// index.
-	static get_camera = function (_index)
-	{
-		gml_pragma("forceinline");
-		return Cameras[_index];
-	};
-
-	/// @func remove_camera(_camera)
-	///
-	/// @desc Removes a camera at given index from the scene.
-	///
-	/// @param {Struct.BBMOD_BaseCamera} _camera The camera to remove.
-	///
-	/// @return {Bool} Returns `true` if the camera was removed of `false` if
-	/// the camera was not found in the scene.
-	static remove_camera = function (_camera)
-	{
-		gml_pragma("forceinline");
-		var _cameras = Cameras;
-		var i = 0;
-		repeat (array_length(_cameras))
-		{
-			if (_cameras[i] == _camera)
-			{
-				array_delete(_cameras, i, 1);
-				return true;
-			}
-			++i;
-		}
-		return false;
-	};
-
-	/// @func remove_camera_index(_index)
-	///
-	/// @desc Removes a camera at given index from the scene.
-	///
-	/// @param {Real} _index The index to remove the camera at.
-	///
-	/// @return {Struct.BBMOD_Scene} Returns `self`.
-	static remove_camera_index = function (_index)
-	{
-		gml_pragma("forceinline");
-		array_delete(Cameras, _index, 1);
-		return self;
-	};
-
-	/// @func clear_cameras()
-	///
-	/// @desc Removes all cameras added to the scene.
-	///
-	/// @return {Struct.BBMOD_Scene} Returns `self`.
-	static clear_cameras = function ()
-	{
-		gml_pragma("forceinline");
-		Cameras = [];
-		return self;
-	};
-
 	/// @func update_node_transform_chain(_id)
 	///
 	/// @desc Recursively updates node transformation matrices, starting at the
@@ -1489,9 +1393,9 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		global.__bbmodSceneCurrent = self;
 
-		if (CameraCurrent != undefined)
+		if (Camera != undefined)
 		{
-			CameraCurrent.update(delta_time);
+			Camera.update(delta_time);
 		}
 
 		var _index = 0;
@@ -1530,9 +1434,9 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		global.__bbmodSceneCurrent = self;
 
-		if (CameraCurrent != undefined)
+		if (Camera != undefined)
 		{
-			CameraCurrent.apply();
+			Camera.apply();
 		}
 
 		if (Terrain != undefined)
@@ -1585,9 +1489,9 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		global.__bbmodSceneCurrent = self;
 
-		if (CameraCurrent != undefined)
+		if (Camera != undefined)
 		{
-			CameraCurrent.apply();
+			Camera.apply();
 		}
 
 		if (Terrain != undefined)
@@ -1663,12 +1567,10 @@ function BBMOD_Scene(_name=undefined) constructor
 		FogStart = 0.0;
 		FogEnd = 1.0;
 
-		for (var i = array_length(Cameras) - 1; i >= 0; --i)
+		if (Camera != undefined)
 		{
-			Cameras[i].destroy();
+			Camera = Camera.destroy();
 		}
-		Cameras = [];
-		CameraCurrent = undefined;
 
 		ResourceManager.clear();
 		ResourceManager = BBMOD_RESOURCE_MANAGER;
