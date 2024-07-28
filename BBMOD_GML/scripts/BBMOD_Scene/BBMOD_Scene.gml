@@ -34,11 +34,8 @@ enum BBMOD_ESceneNodeFlags
 	/// @member The node's transformation matrix is outdated and needs to be
 	/// recomputed.
 	IsTransformDirty = 0x8,
-	/// @member The node's absolute transformation matrix is outdated and needs
-	/// to be recomputed.
-	IsAbsoluteTransformDirty = 0x10,
 	/// @member Whether the node plays a looping animation.
-	IsAnimationLooping = 0x20,
+	IsAnimationLooping = 0x10,
 };
 
 /// @enum Enumeration of scene node properties.
@@ -130,9 +127,8 @@ enum BBMOD_ESceneNode
 	/// is rendered. Defaults to `infinity`.
 	RenderDistance,
 	/// @member Node flags. Defaults to {@link BBMOD_ESceneNodeFlags.IsAlive},
-	/// {@link BBMOD_ESceneNodeFlags.IsVisible},
-	/// {@link BBMOD_ESceneNodeFlags.IsTransformDirty} and
-	/// {@link BBMOD_ESceneNodeFlags.IsAbsoluteTransformDirty}.
+	/// {@link BBMOD_ESceneNodeFlags.IsVisible} and
+	/// {@link BBMOD_ESceneNodeFlags.IsTransformDirty}.
 	Flags,
 	/// @member Total number of members of this enum.
 	SIZE
@@ -359,8 +355,7 @@ function BBMOD_Scene(_name=undefined) constructor
 
 		var _id = ((Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index);
 		var _flags = (BBMOD_ESceneNodeFlags.IsAlive
-			| BBMOD_ESceneNodeFlags.IsTransformDirty
-			| BBMOD_ESceneNodeFlags.IsAbsoluteTransformDirty);
+			| BBMOD_ESceneNodeFlags.IsTransformDirty);
 
 		Nodes[# BBMOD_ESceneNode.Name, _index] = 
 			(_descriptor ? _descriptor[$ "Name"] : undefined) ?? $"Node {__nodeCounter++}";
@@ -890,29 +885,15 @@ function BBMOD_Scene(_name=undefined) constructor
 	/// @return {Struct.BBMOD_Matrix} The transformation matrix.
 	///
 	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	///
+	/// @note This should be called after {@link BBMOD_Scene.update}, otherwise
+	/// the transformation matrix might not be up to date!
 	static get_node_transform_absolute = function (_id)
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
 		var _index = _id & 0xFFFFFF;
-		var _transform = Nodes[# BBMOD_ESceneNode.TransfromAbsolute, _index];
-		var _flags = (BBMOD_ESceneNodeFlags.IsTransformDirty
-			| BBMOD_ESceneNodeFlags.IsAbsoluteTransformDirty);
-		if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & _flags) != 0)
-		{
-			var _parent = Nodes[# BBMOD_ESceneNode.Parent, _index];
-			if (node_exists(_parent))
-			{
-				_transform.Raw = matrix_multiply(
-					get_node_transform_absolute(_parent).Raw, get_node_transform(_id).Raw);
-			}
-			else
-			{
-				array_copy(_transform.Raw, 0, get_node_transform(_id).Raw, 0, 16);
-			}
-			Nodes[# BBMOD_ESceneNode.Flags, _index] ^= BBMOD_ESceneNodeFlags.IsAbsoluteTransformDirty;
-		}
-		return _transform;
+		return Nodes[# BBMOD_ESceneNode.TransfromAbsolute, _index];
 	};
 
 	/// @func set_node_transform_absolute(_id, _transform)
@@ -1062,6 +1043,7 @@ function BBMOD_Scene(_name=undefined) constructor
 		{
 			_materialOld.free();
 		}
+		// TODO: Add material to ResourceManager
 		_materials[@ _index] = _material.ref();
 		return self;
 	};
@@ -1461,6 +1443,38 @@ function BBMOD_Scene(_name=undefined) constructor
 		return self;
 	};
 
+	/// @func update_node_transform_chain(_id)
+	///
+	/// @desc Recursively updates node transformation matrices, starting at the
+	/// node with given ID, then its children, grandchildren etc.
+	///
+	/// @param {Real} _id The ID of of the node to start updating transforms
+	/// from.
+	///
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	static update_node_transform_chain = function (_id)
+	{
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		var _index = _id & 0xFFFFFF;
+		var _transform = get_node_transform(_id);
+		var _children = Nodes[# BBMOD_ESceneNode.Children, _index];
+		if (_children != undefined)
+		{
+			var i = 0;
+			repeat (array_length(_children))
+			{
+				var _child = _children[i++];
+				var _childTransform = get_node_transform(_child);
+				Nodes[# BBMOD_ESceneNode.TransfromAbsolute, _child & 0xFFFFFF].Raw =
+					matrix_multiply(_childTransform.Raw, _transform.Raw);
+				update_node_transform_chain(_child);
+			}
+		}
+		return self;
+	};
+
 	/// @func update(_deltaTime)
 	///
 	/// @desc Updates the whole scene.
@@ -1486,7 +1500,13 @@ function BBMOD_Scene(_name=undefined) constructor
 			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
 			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0)
 			{
-				get_node_transform_absolute(_id);
+				if (!node_exists(Nodes[# BBMOD_ESceneNode.Parent, _index]))
+				{
+					update_node_transform_chain(_id);
+					array_copy(
+						Nodes[# BBMOD_ESceneNode.TransfromAbsolute, _index].Raw, 0,
+						Nodes[# BBMOD_ESceneNode.Transform, _index].Raw, 0, 16);
+				}
 				var _animationPlayer = get_node_animation_player(_id);
 				if (_animationPlayer != undefined)
 				{
