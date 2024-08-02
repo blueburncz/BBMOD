@@ -9,6 +9,12 @@
 /// @see BBMOD_ResourceManager
 function BBMOD_Resource() constructor
 {
+	static __resourceCounter = 0;
+
+	/// @var {String}
+	/// @private
+	__resourceId = $"Resource{__resourceCounter++}";
+
 	/// @var {Bool} If `false` then the resource has not been loaded yet.
 	/// @readonly
 	IsLoaded = false;
@@ -285,7 +291,7 @@ function BBMOD_Resource() constructor
 	{
 		if (__manager != undefined)
 		{
-			ds_map_delete(__manager.__resources, Path);
+			__manager.remove(self);
 			__manager = undefined;
 		}
 		return undefined;

@@ -432,6 +432,58 @@ function BBMOD_ResourceManager() constructor
 		return _res;
 	};
 
+	/// @func remove(_resourceOrPath)
+	///
+	/// @desc Removes a resource from the manager, keeping its reference count.
+	///
+	/// @param {Struct.BBMOD_Resource, String} _resourceOrPath Either a resource
+	/// or a path (string).
+	///
+	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If the resource is not added to this resource
+	/// manager.
+	static remove = function (_resourceOrPath)
+	{
+		gml_pragma("forceinline");
+		var _resource = is_struct(_resourceOrPath)
+			? _resourceOrPath : _resources[? _resourceOrPath];
+		if (_resource == undefined || _resource.__manager != self)
+		{
+			throw new BBMOD_Exception("Resource not added to this resource manager!");
+		}
+		if (_resource.Path != undefined && ds_map_exists(__resources, _resource.Path))
+		{
+			ds_map_delete(__resources, _resource.Path);
+		}
+		else if (ds_map_exists(__resources, _resource.__resourceId))
+		{
+			ds_map_delete(__resources, _resource.__resourceId);
+		}
+		else
+		{
+			var _found = false;
+			var _key = ds_map_find_first(__resources);
+			repeat (ds_map_size(__resources))
+			{
+				if (__resources[? _key] == _resource)
+				{
+					ds_map_delete(__resources, _key);
+					_found = true;
+					break;
+				}
+				_key = ds_map_find_next(__resources, _key);
+			}
+			if (!_found)
+			{
+				// This should never happen!
+				throw new BBMOD_Exception("Resource not found in the resource manager!");
+			}
+		}
+		_resource.__manager = undefined;
+		return self;
+	};
+
 	/// @func free(_resourceOrPath)
 	///
 	/// @desc Frees a reference to the resource. When there are no other no other
@@ -443,7 +495,8 @@ function BBMOD_ResourceManager() constructor
 	/// @return {Struct.BBMOD_ResourceManager} Returns `self`.
 	static free = function (_resourceOrPath)
 	{
-		// Note: Resource removes itself from the map
+		gml_pragma("forceinline");
+		// Note: Resource removes itself from the map when destroyed
 		var _resources = __resources;
 		if (is_struct(_resourceOrPath))
 		{

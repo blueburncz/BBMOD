@@ -5,6 +5,7 @@
 * Added new function `bbmod_scene_get_default`, which retrieves the default scene.
 * Added new function `bbmod_scene_get_current`, which retrieves the scene that is currently being updated or rendered. If there is no such scene, the default scene is returned.
 * Added new enum `BBMOD_ESceneNode`, which is an enumeration of scene node properties.
+* Added new enum `BBMOD_ESceneNodeType`, which is an numeration of all possible scene node types.
 * Added new enum `BBMOD_ESceneNodeFlags`, which is an enumeration of all possible flags that a scene node can have.
 * Added new macro `BBMOD_SCENE_NODE_ID_INVALID`, which is the ID used to tell that a scene node does not exist.
 * Added new struct `BBMOD_SceneNodeDescriptor`, which is used in `BBMOD_Scene.create_node` to create a new scene node.
@@ -46,4 +47,5 @@
 * Function `bbmod_lightmap_get` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Function `bbmod_lightmap_set` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Added new property `ClearColor` to `BBMOD_DeferredRenderer`, which is the color to clear the background with. Default value is `c_black`.
+* Added new method `remove` to `BBMOD_ResourceManager`, which removes a resource from the manager, keeping its reference count.
 * Fixed normal vectors of backfaces being flipped incorrectly.
