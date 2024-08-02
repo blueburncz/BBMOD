@@ -1036,6 +1036,9 @@ function BBMOD_Scene(_name=undefined) constructor
 
 		var _index = _id & 0xFFFFFF;
 
+		// Remove current animation player
+		Nodes[# BBMOD_ESceneNode.AnimationPlayer, _index] = undefined;
+
 		// Free current model if there is one
 		var _model = Nodes[# BBMOD_ESceneNode.Model, _index];
 		if (is_struct(_model))
