@@ -1161,6 +1161,58 @@ function BBMOD_Scene(_name=undefined) constructor
 		return undefined;
 	};
 
+	/// @func __gc_material_paths_array(_nodeIndex)
+	///
+	/// @desc Frees material paths array for node at given index if all values
+	/// it contains are `undefined`.
+	///
+	/// @param {Real} _nodeIndex The index of the node.
+	///
+	/// @private
+	static __gc_material_paths_array = function (_nodeIndex)
+	{
+		var _materialPaths = Nodes[# BBMOD_ESceneNode.MaterialPaths, _nodeIndex];
+		var _allUndefined = true;
+		for (var i = array_length(_materialPaths) - 1; i >= 0; --i)
+		{
+			if (_materialPaths[i] != undefined)
+			{
+				_allUndefined = false;
+				break;
+			}
+		}
+		if (_allUndefined)
+		{
+			Nodes[# BBMOD_ESceneNode.MaterialPaths, _nodeIndex] = undefined;
+		}
+	};
+
+	/// @func __gc_materials_array(_nodeIndex)
+	///
+	/// @desc Frees materials array for node at given index if all values it
+	/// contains are `undefined`.
+	///
+	/// @param {Real} _nodeIndex The index of the node.
+	///
+	/// @private
+	static __gc_materials_array = function (_nodeIndex)
+	{
+		var _materials = Nodes[# BBMOD_ESceneNode.Materials, _nodeIndex];
+		var _allUndefined = true;
+		for (var i = array_length(_materials) - 1; i >= 0; --i)
+		{
+			if (_materials[i] != undefined)
+			{
+				_allUndefined = false;
+				break;
+			}
+		}
+		if (_allUndefined)
+		{
+			Nodes[# BBMOD_ESceneNode.Materials, _nodeIndex] = undefined;
+		}
+	};
+
 	/// @func set_node_material(_id, _index, _materialOrPath)
 	///
 	/// @desc Changes a material at a specified index that a node with given ID
@@ -1214,21 +1266,7 @@ function BBMOD_Scene(_name=undefined) constructor
 				&& _index < array_length(_materialPaths))
 			{
 				_materialPaths[@ _index] = undefined;
-
-				// Remove the paths array if it becomes empty
-				var _allUndefined = true;
-				for (var i = array_length(_materialPaths) - 1; i >= 0; --i)
-				{
-					if (_materialPaths[i] != undefined)
-					{
-						_allUndefined = false;
-						break;
-					}
-				}
-				if (_allUndefined)
-				{
-					Nodes[# BBMOD_ESceneNode.MaterialPaths, _nodeIndex] = undefined;
-				}
+				__gc_material_paths_array(_nodeIndex);
 			}
 		}
 		else if (is_string(_materialOrPath))
@@ -1256,21 +1294,7 @@ function BBMOD_Scene(_name=undefined) constructor
 					_material.free();
 				}
 				_materials[@ _index] = undefined;
-
-				// Remove the materials array if it becomes empty
-				var _allUndefined = true;
-				for (var i = array_length(_materials) - 1; i >= 0; --i)
-				{
-					if (_materials[i] != undefined)
-					{
-						_allUndefined = false;
-						break;
-					}
-				}
-				if (_allUndefined)
-				{
-					Nodes[# BBMOD_ESceneNode.Materials, _nodeIndex] = undefined;
-				}
+				__gc_materials_array(_nodeIndex);
 			}
 
 			// Since we're changing material paths, mark materials array as dirty
@@ -1285,21 +1309,7 @@ function BBMOD_Scene(_name=undefined) constructor
 				&& _index < array_length(_materialPaths))
 			{
 				_materialPaths[@ _index] = undefined;
-
-				// Remove the paths array if it becomes empty
-				var _allUndefined = true;
-				for (var i = array_length(_materialPaths) - 1; i >= 0; --i)
-				{
-					if (_materialPaths[i] != undefined)
-					{
-						_allUndefined = false;
-						break;
-					}
-				}
-				if (_allUndefined)
-				{
-					Nodes[# BBMOD_ESceneNode.MaterialPaths, _nodeIndex] = undefined;
-				}
+				__gc_material_paths_array(_nodeIndex);
 			}
 
 			var _materials = Nodes[# BBMOD_ESceneNode.Materials, _nodeIndex];
@@ -1308,21 +1318,7 @@ function BBMOD_Scene(_name=undefined) constructor
 				&& _index < array_length(_materials))
 			{
 				_materials[@ _index] = undefined;
-
-				// Remove the materials array if it becomes empty
-				var _allUndefined = true;
-				for (var i = array_length(_materials) - 1; i >= 0; --i)
-				{
-					if (_materials[i] != undefined)
-					{
-						_allUndefined = false;
-						break;
-					}
-				}
-				if (_allUndefined)
-				{
-					Nodes[# BBMOD_ESceneNode.Materials, _nodeIndex] = undefined;
-				}
+				__gc_materials_array(_nodeIndex);
 			}
 		}
 
