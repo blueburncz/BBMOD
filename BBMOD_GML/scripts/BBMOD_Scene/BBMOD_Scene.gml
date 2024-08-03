@@ -1434,6 +1434,42 @@ function BBMOD_Scene(_name=undefined) constructor
 		return _animationPlayer;
 	};
 
+	/// @func get_node_render_distance(_id)
+	///
+	/// @desc Retrieves the maximum distance from a camera at which a node with
+	/// given ID is visible.
+	///
+	/// @param {Real} _id The ID of the node.
+	///
+	/// @return {Real} The node's render distance.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	static get_node_render_distance = function (_id)
+	{
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		return Nodes[# BBMOD_ESceneNode.RenderDistance, _id & 0xFFFFFF];
+	};
+
+	/// @func set_node_render_distance(_id, _renderDistance)
+	///
+	/// @desc Changes the maximum distance from a camera at which a node with
+	/// given ID is visible.
+	///
+	/// @param {Real} _id The ID of the node.
+	/// @param {Real} _renderDistance The new render distance of the node.
+	///
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	static set_node_render_distance = function (_id, _renderDistance)
+	{
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		Nodes[# BBMOD_ESceneNode.RenderDistance, _id & 0xFFFFFF] = _renderDistance;
+		return self;
+	};
+
 	/// @func add_punctual_light(_light)
 	///
 	/// @desc Adds a punctual light to the scene.
