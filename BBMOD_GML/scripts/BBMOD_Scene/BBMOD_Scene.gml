@@ -525,12 +525,48 @@ function BBMOD_Scene(_name=undefined) constructor
 	static destroy_node = function (_id)
 	{
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+
 		var _index = _id & 0xFFFFFF;
+
+		// Increase generation
 		Nodes[# BBMOD_ESceneNode.Generation, _index] =
 			(Nodes[# BBMOD_ESceneNode.Generation, _index] + 1) & 0xFF;
-		Nodes[# BBMOD_ESceneNode.AnimationPlayer, _index] = undefined;
+
+		// Reset flags
 		Nodes[# BBMOD_ESceneNode.Flags, _index] = BBMOD_ESceneNodeFlags.None;
-		// TODO: Destroy child nodes
+
+		// TODO: Free resources used by the node here
+		Nodes[# BBMOD_ESceneNode.AnimationPlayer, _index] = undefined;
+
+		// Remove self from parent
+		var _parentId = Nodes[# BBMOD_ESceneNode.Parent, _index];
+		if (_parentId != BBMOD_SCENE_NODE_ID_INVALID)
+		{
+			var _parentChildren = Nodes[# BBMOD_ESceneNode.Parent, _parentId & 0xFFFFFF];
+			for (var i = array_length(_parentChildren) - 1; i >= 0; --i)
+			{
+				if (_parentChildren[i] == _id)
+				{
+					array_delete(_parentChildren, i, 1);
+					break;
+				}
+			}
+			Nodes[# BBMOD_ESceneNode.Parent, _index] = BBMOD_SCENE_NODE_ID_INVALID;
+		}
+
+		// Destroy child nodes
+		var _children = Nodes[# BBMOD_ESceneNode.Children, _index];
+		if (_children != undefined)
+		{
+			for (var i = array_length(_children) - 1; i >= 0; --i)
+			{
+				var _childId = _children[i];
+				Nodes[# BBMOD_ESceneNode.Parent, _childId & 0xFFFFFF] = BBMOD_SCENE_NODE_ID_INVALID;
+				destroy_node(_childId);
+			}
+		}
+		Nodes[# BBMOD_ESceneNode.Children, _index] = undefined;
+
 		return self;
 	};
 
@@ -544,6 +580,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	/// should not use them anymore!
 	static clear_nodes = function ()
 	{
+		// TODO: Should this free models/materials/animations used by the nodes?
 		ds_grid_resize(Nodes, BBMOD_ESceneNode.SIZE, __nodeSpaceInitial);
 		ds_grid_set_region(
 			Nodes,
