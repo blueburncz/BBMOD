@@ -1841,14 +1841,34 @@ function BBMOD_Scene(_name=undefined) constructor
 		var _index = 0;
 		repeat (__nodeIndexNext)
 		{
-			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
-			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0
-				&& Nodes[# BBMOD_ESceneNode.Type, _index] == BBMOD_ESceneNodeType.Model)
+			var _nodeIndex = _index++;
+			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _nodeIndex] << 24) | _nodeIndex;
+
+			if ((Nodes[# BBMOD_ESceneNode.Flags, _nodeIndex] & BBMOD_ESceneNodeFlags.IsAlive) != 0
+				&& Nodes[# BBMOD_ESceneNode.Type, _nodeIndex] == BBMOD_ESceneNodeType.Model)
 			{
+				var _nodeTransform = get_node_transform_absolute(_id).Raw;
+
+				var _renderDistance = Nodes[# BBMOD_ESceneNode.RenderDistance, _nodeIndex];
+				if (_renderDistance != infinity)
+				{
+					var _distanceFromCamera = point_distance_3d(
+						_nodeTransform[12],
+						_nodeTransform[13],
+						_nodeTransform[14],
+						global.__bbmodCameraPosition.X,
+						global.__bbmodCameraPosition.Y,
+						global.__bbmodCameraPosition.Z);
+					if (_distanceFromCamera > _renderDistance)
+					{
+						continue;
+					}
+				}
+
 				var _animationPlayer = get_node_animation_player(_id);
 				if (_animationPlayer != undefined)
 				{
-					matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+					matrix_set(matrix_world, _nodeTransform);
 					bbmod_material_props_set(get_node_material_props(_id));
 					_animationPlayer.submit(get_node_materials(_id));
 				}
@@ -1857,13 +1877,12 @@ function BBMOD_Scene(_name=undefined) constructor
 					var _model = get_node_model(_id);
 					if (_model != undefined)
 					{
-						matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+						matrix_set(matrix_world, _nodeTransform);
 						bbmod_material_props_set(get_node_material_props(_id));
 						_model.submit(get_node_materials(_id));
 					}
 				}
 			}
-			++_index;
 		}
 		matrix_set(matrix_world, matrix_build_identity());
 		bbmod_material_reset();
@@ -1895,14 +1914,34 @@ function BBMOD_Scene(_name=undefined) constructor
 		var _index = 0;
 		repeat (__nodeIndexNext)
 		{
-			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
-			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0
-				&& Nodes[# BBMOD_ESceneNode.Type, _index] == BBMOD_ESceneNodeType.Model)
+			var _nodeIndex = _index++;
+			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _nodeIndex] << 24) | _nodeIndex;
+
+			if ((Nodes[# BBMOD_ESceneNode.Flags, _nodeIndex] & BBMOD_ESceneNodeFlags.IsAlive) != 0
+				&& Nodes[# BBMOD_ESceneNode.Type, _nodeIndex] == BBMOD_ESceneNodeType.Model)
 			{
+				var _nodeTransform = get_node_transform_absolute(_id).Raw;
+
+				var _renderDistance = Nodes[# BBMOD_ESceneNode.RenderDistance, _nodeIndex];
+				if (_renderDistance != infinity)
+				{
+					var _distanceFromCamera = point_distance_3d(
+						_nodeTransform[12],
+						_nodeTransform[13],
+						_nodeTransform[14],
+						global.__bbmodCameraPosition.X,
+						global.__bbmodCameraPosition.Y,
+						global.__bbmodCameraPosition.Z);
+					if (_distanceFromCamera > _renderDistance)
+					{
+						continue;
+					}
+				}
+
 				var _animationPlayer = get_node_animation_player(_id);
 				if (_animationPlayer != undefined)
 				{
-					matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+					matrix_set(matrix_world, _nodeTransform);
 					bbmod_material_props_set(get_node_material_props(_id));
 					_animationPlayer.render(get_node_materials(_id));
 				}
@@ -1911,13 +1950,12 @@ function BBMOD_Scene(_name=undefined) constructor
 					var _model = get_node_model(_id);
 					if (_model != undefined)
 					{
-						matrix_set(matrix_world, get_node_transform_absolute(_id).Raw);
+						matrix_set(matrix_world, _nodeTransform);
 						bbmod_material_props_set(get_node_material_props(_id));
 						_model.render(get_node_materials(_id));
 					}
 				}
 			}
-			++_index;
 		}
 		matrix_set(matrix_world, matrix_build_identity());
 
