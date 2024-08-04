@@ -23,12 +23,21 @@
 /// @private
 #macro __BBMOD_SCENE_NODE_ID_REUSE_THRESHOLD 1024
 
-/// @macro {Code} Throws an exception if node with id `_id` does not exist.
+/// @macro {Code} Throws an exception if node with ID `_id` does not exist.
 /// @private
 #macro __BBMOD_CHECK_SCENE_NODE_EXISTS \
 	if (!node_exists(_id)) \
 	{ \
 		throw new BBMOD_Exception($"Node with ID {_id} does not exist!"); \
+	}
+
+/// @macro {Code} Throws an exception if node with ID `_id` has flag
+/// {@link BBMOD_ESceneNodeFlags.IsStatic}.
+/// @private
+#macro __BBMOD_CHECK_SCENE_NODE_NOT_STATIC \
+	if ((Nodes[# BBMOD_ESceneNode.Flags, _id & __BBMOD_SCENE_NODE_INDEX_MASK] & BBMOD_ESceneNodeFlags.IsStatic) != 0) \
+	{ \
+		throw new BBMOD_Exception($"Node with ID {_id} is static!"); \
 	}
 
 /// @enum Enumeration of all possible scene node types.
@@ -364,6 +373,10 @@ function BBMOD_Scene(_name=undefined) constructor
 	/// @var {Struct.BBMOD_ResourceManager} The resource manager used by the
 	/// scene for loading resources. Defaults to {@link BBMOD_RESOURCE_MANAGER}.
 	ResourceManager = BBMOD_RESOURCE_MANAGER;
+
+	/// @var {Array<Struct.BBMOD_DynamicBatch>} An array of dynamic batches.
+	/// @private
+	__dynamicBatches = [];
 
 	/// @func create_node([_descriptor])
 	///
@@ -826,11 +839,13 @@ function BBMOD_Scene(_name=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	///
-	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist or if
+	/// it has flag {@link BBMOD_ESceneNodeFlags.IsStatic}.
 	static set_node_position = function (_id, _position)
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		__BBMOD_CHECK_SCENE_NODE_NOT_STATIC;
 		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		Nodes[# BBMOD_ESceneNode.PositionX, _index] = _position.X;
 		Nodes[# BBMOD_ESceneNode.PositionY, _index] = _position.Y;
@@ -872,11 +887,13 @@ function BBMOD_Scene(_name=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	///
-	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist or if
+	/// it has flag {@link BBMOD_ESceneNodeFlags.IsStatic}.
 	static set_node_rotation = function (_id, _rotation)
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		__BBMOD_CHECK_SCENE_NODE_NOT_STATIC;
 		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		Nodes[# BBMOD_ESceneNode.RotationX, _index] = _rotation.X;
 		Nodes[# BBMOD_ESceneNode.RotationY, _index] = _rotation.Y;
@@ -918,11 +935,13 @@ function BBMOD_Scene(_name=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	///
-	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist or if
+	/// it has flag {@link BBMOD_ESceneNodeFlags.IsStatic}.
 	static set_node_scale = function (_id, _scale)
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		__BBMOD_CHECK_SCENE_NODE_NOT_STATIC;
 		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		Nodes[# BBMOD_ESceneNode.ScaleX, _index] = _scale.X;
 		Nodes[# BBMOD_ESceneNode.ScaleY, _index] = _scale.Y;
@@ -986,11 +1005,13 @@ function BBMOD_Scene(_name=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	///
-	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist or if
+	/// it has flag {@link BBMOD_ESceneNodeFlags.IsStatic}.
 	static set_node_transform = function (_id, _transform)
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		__BBMOD_CHECK_SCENE_NODE_NOT_STATIC;
 		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		_transform.Copy(Nodes[# BBMOD_ESceneNode.Transform, _index]);
 		// TODO: Decompose local-space transform into position, rotation and scale
@@ -1030,10 +1051,14 @@ function BBMOD_Scene(_name=undefined) constructor
 	///
 	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	///
-	/// @throws {BBMOD_Exception} If a node with given ID does not exist.
+	/// @throws {BBMOD_Exception} If a node with given ID does not exist or if
+	/// it has flag {@link BBMOD_ESceneNodeFlags.IsStatic}.
 	static set_node_transform_absolute = function (_id, _transform)
 	{
 		// TODO: Implement set_node_transform_absolute
+		gml_pragma("forceinline");
+		__BBMOD_CHECK_SCENE_NODE_EXISTS;
+		__BBMOD_CHECK_SCENE_NODE_NOT_STATIC;
 		return self;
 	};
 
@@ -1081,12 +1106,13 @@ function BBMOD_Scene(_name=undefined) constructor
 		var _modelPath = Nodes[# BBMOD_ESceneNode.ModelPath, _index];
 		if (_modelPath != undefined)
 		{
-			_model = ResourceManager.load(_modelPath, function (_error, _model) {
+			_model = ResourceManager.load(_modelPath, method(self, function (_error, _model) {
 				if (_model != undefined)
 				{
+					array_push(__dynamicBatches, new BBMOD_DynamicBatch(_model));
 					_model.freeze();
 				}
-			});
+			}));
 			Nodes[# BBMOD_ESceneNode.Model, _index] = _model;
 			return _model;
 		}
@@ -2034,6 +2060,12 @@ function BBMOD_Scene(_name=undefined) constructor
 		{
 			Camera = Camera.destroy();
 		}
+
+		for (var i = array_length(__dynamicBatches) - 1; i >= 0; --i)
+		{
+			__dynamicBatches[i].destroy();
+		}
+		__dynamicBatches = [];
 
 		ResourceManager.clear();
 		ResourceManager = BBMOD_RESOURCE_MANAGER;
