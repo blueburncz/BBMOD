@@ -56,14 +56,18 @@ enum BBMOD_ESceneNodeFlags
 	IsVisible = 0x2,
 	/// @member The node never changes its transformation matrix and does not.
 	IsStatic = 0x4,
+	/// @member The node's model is rendered using a {@link BBMOD_DynamicBatch}.
+	/// When enabled, {@link BBMOD_MaterialPropertyBlock}s and non-uniform
+	/// scaling are not allowed for the node.
+	IsBatched = 0x8,
 	/// @member The node's transformation matrix is outdated and needs to be
 	/// recomputed.
-	IsTransformDirty = 0x8,
+	IsTransformDirty = 0x10,
 	/// @member The node's material paths have changed, making the materials
 	/// array outdated.
-	IsMaterialsArrayDirty = 0x10,
+	IsMaterialsArrayDirty = 0x20,
 	/// @member Whether the node plays a looping animation.
-	IsAnimationLooping = 0x20,
+	IsAnimationLooping = 0x40,
 };
 
 /// @enum Enumeration of scene node properties.
@@ -241,6 +245,12 @@ function BBMOD_SceneNodeDescriptor() constructor
 	/// @var {Bool} Whether the node to be created is static, i.e. it never
 	/// changes its transformation matrix. Defaults to `false`.
 	IsStatic = false;
+
+	/// @var {Bool} Whether the model of the node to be created should be drawn
+	/// using a {@link BBMOD_DynamicBatch}. When enabled,
+	/// {@link BBMOD_MaterialPropertyBlock}s and non-uniform scaling are not
+	/// allowed for the node. Defaults to `false`.
+	IsBatched = false;
 }
 
 /// @var {Struct.BBMOD_Scene} The scene that's currently being updated or
@@ -405,6 +415,14 @@ function BBMOD_Scene(_name=undefined) constructor
 		if (!_descriptor || _descriptor[$ "IsVisible"] ?? true)
 		{
 			_flags |= BBMOD_ESceneNodeFlags.IsVisible;
+		}
+		if (_descriptor[$ "IsStatic"] ?? false)
+		{
+			_flags |= BBMOD_ESceneNodeFlags.IsStatic;
+		}
+		if (_descriptor[$ "IsBatched"] ?? false)
+		{
+			_flags |= BBMOD_ESceneNodeFlags.IsBatched;
 		}
 		Nodes[# BBMOD_ESceneNode.Flags, _index] = _flags;
 
