@@ -4,6 +4,20 @@
 /// @see BBMOD_Scene.Nodes
 #macro BBMOD_SCENE_NODE_ID_INVALID 0xFFFFFFFF
 
+/// @macro {Real} A mask used to retrieve an index of a node from its ID.
+/// @private
+#macro __BBMOD_SCENE_NODE_INDEX_MASK 0xFFFFFF
+
+/// @macro {Real} Number of bits shifted to read a generation of a node from
+/// its ID.
+/// @private
+#macro __BBMOD_SCENE_NODE_GENERATION_SHIFT 24
+
+/// @macro {Real} A mask used to retrieve a generation of a node from its ID,
+/// after its shifter using {@link __BBMOD_SCENE_NODE_GENERATION_SHIFT}.
+/// @private
+#macro __BBMOD_SCENE_NODE_GENERATION_MASK 0xFF
+
 /// @macro {Real} The minimum number of node IDs available for reuse until they
 /// are actually used again.
 /// @private
@@ -378,7 +392,7 @@ function BBMOD_Scene(_name=undefined) constructor
 			array_delete(__nodeIndicesAvailable, 0, 1);
 		}
 
-		var _id = ((Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index);
+		var _id = ((Nodes[# BBMOD_ESceneNode.Generation, _index] << __BBMOD_SCENE_NODE_GENERATION_SHIFT) | _index);
 
 		// Do flags first, they're required by setters!
 		var _flags = (BBMOD_ESceneNodeFlags.IsAlive
@@ -409,11 +423,11 @@ function BBMOD_Scene(_name=undefined) constructor
 			{
 				throw new BBMOD_Exception($"Invalid parent with ID {_parent} - node does not exist!");
 			}
-			var _children = Nodes[# BBMOD_ESceneNode.Children, _parent & 0xFFFFFF];
+			var _children = Nodes[# BBMOD_ESceneNode.Children, _parent & __BBMOD_SCENE_NODE_INDEX_MASK];
 			if (_children == undefined)
 			{
 				_children = [];
-				Nodes[# BBMOD_ESceneNode.Children, _parent & 0xFFFFFF] = _children;
+				Nodes[# BBMOD_ESceneNode.Children, _parent & __BBMOD_SCENE_NODE_INDEX_MASK] = _children;
 			}
 			array_push(_children, _id);
 		}
@@ -505,8 +519,8 @@ function BBMOD_Scene(_name=undefined) constructor
 	static node_exists = function (_id)
 	{
 		gml_pragma("forceinline");
-		var _index = _id & 0xFFFFFF;
-		var _generation = (_id >> 24) & 0xFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
+		var _generation = (_id >> __BBMOD_SCENE_NODE_GENERATION_SHIFT) & __BBMOD_SCENE_NODE_GENERATION_MASK;
 		return (_id != BBMOD_SCENE_NODE_ID_INVALID
 			&& _index >= 0 && _index < __nodeIndexNext
 			&& Nodes[# BBMOD_ESceneNode.Generation, _index] == _generation
@@ -526,7 +540,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
 
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 
 		// Increase generation
 		Nodes[# BBMOD_ESceneNode.Generation, _index] =
@@ -542,7 +556,7 @@ function BBMOD_Scene(_name=undefined) constructor
 		var _parentId = Nodes[# BBMOD_ESceneNode.Parent, _index];
 		if (_parentId != BBMOD_SCENE_NODE_ID_INVALID)
 		{
-			var _parentChildren = Nodes[# BBMOD_ESceneNode.Parent, _parentId & 0xFFFFFF];
+			var _parentChildren = Nodes[# BBMOD_ESceneNode.Parent, _parentId & __BBMOD_SCENE_NODE_INDEX_MASK];
 			for (var i = array_length(_parentChildren) - 1; i >= 0; --i)
 			{
 				if (_parentChildren[i] == _id)
@@ -561,7 +575,8 @@ function BBMOD_Scene(_name=undefined) constructor
 			for (var i = array_length(_children) - 1; i >= 0; --i)
 			{
 				var _childId = _children[i];
-				Nodes[# BBMOD_ESceneNode.Parent, _childId & 0xFFFFFF] = BBMOD_SCENE_NODE_ID_INVALID;
+				Nodes[# BBMOD_ESceneNode.Parent, _childId & __BBMOD_SCENE_NODE_INDEX_MASK] =
+					BBMOD_SCENE_NODE_ID_INVALID;
 				destroy_node(_childId);
 			}
 		}
@@ -608,7 +623,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		return Nodes[# BBMOD_ESceneNode.Type, _id & 0xFFFFFF];
+		return Nodes[# BBMOD_ESceneNode.Type, _id & __BBMOD_SCENE_NODE_INDEX_MASK];
 	};
 
 	/// @func get_node_name(_id)
@@ -622,7 +637,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		return Nodes[# BBMOD_ESceneNode.Name, _id & 0xFFFFFF];
+		return Nodes[# BBMOD_ESceneNode.Name, _id & __BBMOD_SCENE_NODE_INDEX_MASK];
 	};
 
 	/// @func set_node_name(_id, _name)
@@ -639,7 +654,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		Nodes[# BBMOD_ESceneNode.Name, _id & 0xFFFFFF] = _name;
+		Nodes[# BBMOD_ESceneNode.Name, _id & __BBMOD_SCENE_NODE_INDEX_MASK] = _name;
 		return self;
 	};
 
@@ -657,7 +672,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		return Nodes[# BBMOD_ESceneNode.Parent, _id & 0xFFFFFF];
+		return Nodes[# BBMOD_ESceneNode.Parent, _id & __BBMOD_SCENE_NODE_INDEX_MASK];
 	};
 
 	/// @func add_child_node(_parent, _child)
@@ -682,12 +697,12 @@ function BBMOD_Scene(_name=undefined) constructor
 		{
 			throw new BBMOD_Exception($"Invalid child {_child} - node does not exist!");
 		}
-		Nodes[# BBMOD_ESceneNode.Parent, _child & 0xFFFFFF] = _parent;
-		var _children = Nodes[# BBMOD_ESceneNode.Children, _parent & 0xFFFFFF];
+		Nodes[# BBMOD_ESceneNode.Parent, _child & __BBMOD_SCENE_NODE_INDEX_MASK] = _parent;
+		var _children = Nodes[# BBMOD_ESceneNode.Children, _parent & __BBMOD_SCENE_NODE_INDEX_MASK];
 		if (_children == undefined)
 		{
 			_children = [];
-			Nodes[# BBMOD_ESceneNode.Children, _parent & 0xFFFFFF] = _children;
+			Nodes[# BBMOD_ESceneNode.Children, _parent & __BBMOD_SCENE_NODE_INDEX_MASK] = _children;
 		}
 		array_push(_children, _child);
 		return self;
@@ -706,7 +721,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _children = Nodes[# BBMOD_ESceneNode.Children, _id & 0xFFFFFF];
+		var _children = Nodes[# BBMOD_ESceneNode.Children, _id & __BBMOD_SCENE_NODE_INDEX_MASK];
 		if (_children == undefined)
 		{
 			return 0;
@@ -734,7 +749,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _children = Nodes[# BBMOD_ESceneNode.Children, _id & 0xFFFFFF];
+		var _children = Nodes[# BBMOD_ESceneNode.Children, _id & __BBMOD_SCENE_NODE_INDEX_MASK];
 		if (_children == undefined
 			|| _index < 0
 			|| _index >= array_length(_children))
@@ -758,7 +773,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		return Nodes[# BBMOD_ESceneNode.Children, _id & 0xFFFFFF] ?? [];
+		return Nodes[# BBMOD_ESceneNode.Children, _id & __BBMOD_SCENE_NODE_INDEX_MASK] ?? [];
 	};
 
 	/// @func get_node_position(_id[, _dest])
@@ -776,7 +791,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		_dest ??= new BBMOD_Vec3();
 		_dest.X = Nodes[# BBMOD_ESceneNode.PositionX, _index];
 		_dest.Y = Nodes[# BBMOD_ESceneNode.PositionY, _index];
@@ -798,7 +813,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		Nodes[# BBMOD_ESceneNode.PositionX, _index] = _position.X;
 		Nodes[# BBMOD_ESceneNode.PositionY, _index] = _position.Y;
 		Nodes[# BBMOD_ESceneNode.PositionZ, _index] = _position.Z;
@@ -821,7 +836,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		_dest ??= new BBMOD_Vec3();
 		_dest.X = Nodes[# BBMOD_ESceneNode.RotationX, _index];
 		_dest.Y = Nodes[# BBMOD_ESceneNode.RotationY, _index];
@@ -844,7 +859,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		Nodes[# BBMOD_ESceneNode.RotationX, _index] = _rotation.X;
 		Nodes[# BBMOD_ESceneNode.RotationY, _index] = _rotation.Y;
 		Nodes[# BBMOD_ESceneNode.RotationZ, _index] = _rotation.Z;
@@ -868,7 +883,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		_dest ??= new BBMOD_Vec3();
 		_dest.X = Nodes[# BBMOD_ESceneNode.ScaleX, _index];
 		_dest.Y = Nodes[# BBMOD_ESceneNode.ScaleY, _index];
@@ -890,7 +905,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		Nodes[# BBMOD_ESceneNode.ScaleX, _index] = _scale.X;
 		Nodes[# BBMOD_ESceneNode.ScaleY, _index] = _scale.Y;
 		Nodes[# BBMOD_ESceneNode.ScaleZ, _index] = _scale.Z;
@@ -912,7 +927,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsTransformDirty) != 0)
 		{
 			static _matPosition = matrix_build_identity();
@@ -958,7 +973,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		_transform.Copy(Nodes[# BBMOD_ESceneNode.Transform, _index]);
 		// TODO: Decompose local-space transform into position, rotation and scale
 		Nodes[# BBMOD_ESceneNode.Flags, _index] ^= BBMOD_ESceneNodeFlags.IsTransformDirty;
@@ -982,7 +997,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		return Nodes[# BBMOD_ESceneNode.TransfromAbsolute, _index];
 	};
 
@@ -1018,7 +1033,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		return Nodes[# BBMOD_ESceneNode.ModelPath, _index & 0xFFFFFF];
+		return Nodes[# BBMOD_ESceneNode.ModelPath, _index & __BBMOD_SCENE_NODE_INDEX_MASK];
 	};
 
 	/// @func get_node_model(_id)
@@ -1037,7 +1052,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	static get_node_model = function (_id)
 	{
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		// Have a loaded model:
 		var _model = Nodes[# BBMOD_ESceneNode.Model, _index];
 		if (_model != undefined)
@@ -1080,7 +1095,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
 
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 
 		// Remove current animation player
 		Nodes[# BBMOD_ESceneNode.AnimationPlayer, _index] = undefined;
@@ -1146,7 +1161,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _nodeIndex = _id & 0xFFFFFF;
+		var _nodeIndex = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		var _materialPaths = Nodes[# BBMOD_ESceneNode.MaterialPaths, _nodeIndex];
 		if (_materialPaths == undefined
 			|| _index < 0
@@ -1255,7 +1270,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
 
-		var _nodeIndex = _id & 0xFFFFFF;
+		var _nodeIndex = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 
 		if (is_struct(_materialOrPath))
 		{
@@ -1362,7 +1377,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
 
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		var _materials = Nodes[# BBMOD_ESceneNode.Materials, _index];
 
 		if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsMaterialsArrayDirty) != 0)
@@ -1416,7 +1431,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		return Nodes[# BBMOD_ESceneNode.MaterialProps, _id & 0xFFFFFF];
+		return Nodes[# BBMOD_ESceneNode.MaterialProps, _id & __BBMOD_SCENE_NODE_INDEX_MASK];
 	};
 
 	/// @func set_node_material_props(_id, _props)
@@ -1435,7 +1450,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		Nodes[# BBMOD_ESceneNode.MaterialProps, _id & 0xFFFFFF] = _props;
+		Nodes[# BBMOD_ESceneNode.MaterialProps, _id & __BBMOD_SCENE_NODE_INDEX_MASK] = _props;
 		return self;
 	};
 
@@ -1454,7 +1469,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		var _animationPlayer = Nodes[# BBMOD_ESceneNode.AnimationPlayer, _index];
 		if (_animationPlayer == undefined)
 		{
@@ -1485,7 +1500,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		return Nodes[# BBMOD_ESceneNode.RenderDistance, _id & 0xFFFFFF];
+		return Nodes[# BBMOD_ESceneNode.RenderDistance, _id & __BBMOD_SCENE_NODE_INDEX_MASK];
 	};
 
 	/// @func set_node_render_distance(_id, _renderDistance)
@@ -1503,7 +1518,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		Nodes[# BBMOD_ESceneNode.RenderDistance, _id & 0xFFFFFF] = _renderDistance;
+		Nodes[# BBMOD_ESceneNode.RenderDistance, _id & __BBMOD_SCENE_NODE_INDEX_MASK] = _renderDistance;
 		return self;
 	};
 
@@ -1755,7 +1770,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	static update_node_transform_chain = function (_id)
 	{
 		__BBMOD_CHECK_SCENE_NODE_EXISTS;
-		var _index = _id & 0xFFFFFF;
+		var _index = _id & __BBMOD_SCENE_NODE_INDEX_MASK;
 		var _transform = get_node_transform(_id);
 		var _children = Nodes[# BBMOD_ESceneNode.Children, _index];
 		if (_children != undefined)
@@ -1765,7 +1780,7 @@ function BBMOD_Scene(_name=undefined) constructor
 			{
 				var _child = _children[i++];
 				var _childTransform = get_node_transform(_child);
-				Nodes[# BBMOD_ESceneNode.TransfromAbsolute, _child & 0xFFFFFF].Raw =
+				Nodes[# BBMOD_ESceneNode.TransfromAbsolute, _child & __BBMOD_SCENE_NODE_INDEX_MASK].Raw =
 					matrix_multiply(_childTransform.Raw, _transform.Raw);
 				update_node_transform_chain(_child);
 			}
@@ -1795,7 +1810,7 @@ function BBMOD_Scene(_name=undefined) constructor
 		var _index = 0;
 		repeat (__nodeIndexNext)
 		{
-			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << 24) | _index;
+			var _id = (Nodes[# BBMOD_ESceneNode.Generation, _index] << __BBMOD_SCENE_NODE_GENERATION_SHIFT) | _index;
 			if ((Nodes[# BBMOD_ESceneNode.Flags, _index] & BBMOD_ESceneNodeFlags.IsAlive) != 0)
 			{
 				if (!node_exists(Nodes[# BBMOD_ESceneNode.Parent, _index]))
