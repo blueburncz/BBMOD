@@ -81,7 +81,6 @@
     {"name":"Test","order":3,"path":"folders/Test.yy",},
   ],
   "ResourceOrderSettings":[
-    {"name":"BBMOD_CameraHTML5","order":2,"path":"extensions/BBMOD_CameraHTML5/BBMOD_CameraHTML5.yy",},
     {"name":"OMain","order":1,"path":"objects/OMain/OMain.yy",},
     {"name":"__bbmod_array","order":5,"path":"scripts/__bbmod_array/__bbmod_array.yy",},
     {"name":"__bbmod_blendmode","order":1,"path":"scripts/__bbmod_blendmode/__bbmod_blendmode.yy",},

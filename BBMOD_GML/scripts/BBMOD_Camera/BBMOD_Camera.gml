@@ -5,8 +5,7 @@
 /// @extends BBMOD_BaseCamera
 ///
 /// @desc A camera driven by angles and an object to follor, rather than raw
-/// vectors. Supports both first-person and third-person view and comes with
-/// a mouselook implementation that also works in HTML5.
+/// vectors. Supports mouselook and both first-person and third-person views.
 ///
 /// @example
 /// ```gml
@@ -157,7 +156,7 @@ function BBMOD_Camera()
 		{
 			if (os_browser != browser_not_a_browser)
 			{
-				bbmod_html5_pointer_lock();
+				window_mouse_set_locked(true);
 			}
 
 			__mouseLockAt ??= new BBMOD_Vec2(
@@ -166,6 +165,11 @@ function BBMOD_Camera()
 		}
 		else
 		{
+			if (os_browser != browser_not_a_browser)
+			{
+				window_mouse_set_locked(false);
+			}
+
 			__mouseLockAt = undefined;
 		}
 		MouseLook = _enable;
@@ -188,15 +192,15 @@ function BBMOD_Camera()
 	{
 		if (os_browser != browser_not_a_browser)
 		{
-			set_mouselook(bbmod_html5_pointer_is_locked());
+			MouseLook = window_mouse_get_locked();
 		}
 
 		if (MouseLook)
 		{
 			if (os_browser != browser_not_a_browser)
 			{
-				Direction -= bbmod_html5_pointer_get_movement_x() * MouseSensitivity;
-				DirectionUp -= bbmod_html5_pointer_get_movement_y() * MouseSensitivity;
+				Direction -= window_mouse_get_delta_x() * MouseSensitivity;
+				DirectionUp -= window_mouse_get_delta_y() * MouseSensitivity;
 			}
 			else
 			{

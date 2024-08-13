@@ -166,7 +166,6 @@
   },
   "name":"BBMOD",
   "resources":[
-    {"id":{"name":"BBMOD_CameraHTML5","path":"extensions/BBMOD_CameraHTML5/BBMOD_CameraHTML5.yy",},},
     {"id":{"name":"OMain","path":"objects/OMain/OMain.yy",},},
     {"id":{"name":"RmTest","path":"rooms/RmTest/RmTest.yy",},},
     {"id":{"name":"__bbmod_array","path":"scripts/__bbmod_array/__bbmod_array.yy",},},
