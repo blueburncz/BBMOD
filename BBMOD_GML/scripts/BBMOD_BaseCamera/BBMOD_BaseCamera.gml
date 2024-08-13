@@ -521,7 +521,7 @@ function bbmod_camera_get_aspect_flip()
 ///
 /// @param {Bool} _flip Use `true` (default) to enable flipped aspect ratio.
 ///
-/// @see bbmod_camera_get_fov_flip
+/// @see bbmod_camera_get_aspect_flip
 function bbmod_camera_set_aspect_flip(_flip)
 {
 	gml_pragma("forceinline");
