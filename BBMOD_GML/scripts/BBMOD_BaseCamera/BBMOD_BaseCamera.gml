@@ -4,6 +4,26 @@
 /// @private
 global.__bbmodCameraCurrent = undefined;
 
+/// @var {Struct.BBMOD_Vec3}
+/// @private
+global.__bbmodCameraPosition = new BBMOD_Vec3();
+
+/// @var {Real} Distance to the far clipping plane.
+/// @private
+global.__bbmodZFar = 1.0;
+
+/// @var {Real}
+/// @private
+global.__bbmodCameraExposure = 1.0;
+
+/// @var {Real}
+/// @private
+global.__bbmodCameraFovFlip = -1.0;
+
+/// @var {Real}
+/// @private
+global.__bbmodCameraAspectFlip = -1.0;
+
 /// @func BBMOD_BaseCamera()
 ///
 /// @implements {BBMOD_IDestructible}
@@ -93,12 +113,12 @@ function BBMOD_BaseCamera() constructor
 		{
 			var _width = (Width != undefined) ? Width : (Height * AspectRatio);
 			var _height = (Height != undefined) ? Height : (Width / AspectRatio);
-			_proj = matrix_build_projection_ortho(_width, -_height, ZNear, ZFar);
+			_proj = matrix_build_projection_ortho(_width, _height * global.__bbmodCameraAspectFlip, ZNear, ZFar);
 		}
 		else
 		{
 			_proj = matrix_build_projection_perspective_fov(
-				-Fov, -AspectRatio, ZNear, ZFar);
+				Fov * global.__bbmodCameraFovFlip, AspectRatio * global.__bbmodCameraAspectFlip, ZNear, ZFar);
 		}
 		return _proj;
 	};
@@ -374,4 +394,136 @@ function BBMOD_BaseCamera() constructor
 		}
 		return undefined;
 	};
+}
+
+/// @func bbmod_camera_get_position()
+///
+/// @desc Retrieves the position of the camera that is passed to shaders.
+///
+/// @return {Struct.BBMOD_Vec3} The camera position.
+///
+/// @see bbmod_camera_set_position
+function bbmod_camera_get_position()
+{
+	gml_pragma("forceinline");
+	return global.__bbmodCameraPosition;
+}
+
+/// @func bbmod_camera_set_position(_position)
+///
+/// @desc Defines position of the camera passed to shaders.
+///
+/// @param {Struct.BBMOD_Vec3} _position The new camera position.
+///
+/// @see bbmod_camera_get_position
+function bbmod_camera_set_position(_position)
+{
+	gml_pragma("forceinline");
+	global.__bbmodCameraPosition = _position;
+}
+
+/// @func bbmod_camera_get_zfar()
+///
+/// @desc Retrieves distance to the far clipping plane passed to shaders.
+///
+/// @return {Real} The distance to the far clipping plane.
+///
+/// @see bbmod_camera_set_zfar
+function bbmod_camera_get_zfar()
+{
+	gml_pragma("forceinline");
+	return global.__bbmodZFar;
+}
+
+/// @func bbmod_camera_set_zfar(_value)
+///
+/// @desc Defines distance to the far clipping plane passed to shaders.
+///
+/// @param {Real} _value The new distance to the far clipping plane.
+///
+/// @see bbmod_camera_get_zfar
+function bbmod_camera_set_zfar(_value)
+{
+	gml_pragma("forceinline");
+	global.__bbmodZFar = _value;
+}
+
+/// @func bbmod_camera_get_exposure()
+///
+/// @desc Retrieves camera exposure value passed to shaders.
+///
+/// @return {Real} The camera exposure value.
+///
+/// @see bbmod_camera_set_exposure
+function bbmod_camera_get_exposure()
+{
+	gml_pragma("forceinline");
+	return global.__bbmodCameraExposure;
+}
+
+/// @func bbmod_camera_set_exposure(_exposure)
+///
+/// @desc Defines camera exposure value passed to shaders.
+///
+/// @param {Real} _exposure The new camera exposure value.
+///
+/// @see bbmod_camera_get_exposure
+function bbmod_camera_set_exposure(_exposure)
+{
+	gml_pragma("forceinline");
+	global.__bbmodCameraExposure = _exposure;
+}
+
+/// @func bbmod_camera_get_fov_flip()
+///
+/// @desc Returns whether {@link BBMOD_BaseCamera} uses a flipped field of view.
+///
+/// @return {Bool} Returns `true` (default) if flipped field of view is used.
+///
+/// @see bbmod_camera_set_fov_flip
+function bbmod_camera_get_fov_flip()
+{
+	gml_pragma("forceinline");
+	return (global.__bbmodCameraFovFlip == -1.0);
+}
+
+/// @func bbmod_camera_set_fov_flip(_flip)
+///
+/// @desc Changes whether {@link BBMOD_BaseCamera} should use a flipped field of
+/// view.
+///
+/// @param {Bool} _flip Use `true` (default) to enable flipped field of view.
+///
+/// @see bbmod_camera_get_fov_flip
+function bbmod_camera_set_fov_flip(_flip)
+{
+	gml_pragma("forceinline");
+	global.__bbmodCameraFovFlip = _flip ? -1.0 : 1.0;
+}
+
+/// @func bbmod_camera_get_aspect_flip()
+///
+/// @desc Returns whether {@link BBMOD_BaseCamera} uses a flipped aspect ratio.
+///
+/// @return {Bool} Returns `true` (default) if flipped aspect ratio is used.
+///
+/// @see bbmod_camera_set_aspect_flip
+function bbmod_camera_get_aspect_flip()
+{
+	gml_pragma("forceinline");
+	return (global.__bbmodCameraAspectFlip == -1.0);
+}
+
+/// @func bbmod_camera_set_aspect_flip(_flip)
+///
+/// @desc Changes whether {@link BBMOD_BaseCamera} should use a flipped aspect
+/// ratio.
+///
+/// @param {Bool} _flip Use `true` (default) to enable flipped aspect ratio.
+///
+/// @see bbmod_camera_get_fov_flip
+function bbmod_camera_set_aspect_flip(_flip)
+{
+	gml_pragma("forceinline");
+	global.__bbmodCameraAspectFlip = _flip ? -1.0 : 1.0;
 }

@@ -162,7 +162,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.4.1.152",
+    "IDEVersion":"2024.6.2.162",
   },
   "name":"BBMOD",
   "resources":[
@@ -172,7 +172,6 @@
     {"id":{"name":"__bbmod_array","path":"scripts/__bbmod_array/__bbmod_array.yy",},},
     {"id":{"name":"__bbmod_async","path":"scripts/__bbmod_async/__bbmod_async.yy",},},
     {"id":{"name":"__bbmod_blendmode","path":"scripts/__bbmod_blendmode/__bbmod_blendmode.yy",},},
-    {"id":{"name":"__bbmod_camera","path":"scripts/__bbmod_camera/__bbmod_camera.yy",},},
     {"id":{"name":"__bbmod_cmpfunc","path":"scripts/__bbmod_cmpfunc/__bbmod_cmpfunc.yy",},},
     {"id":{"name":"__bbmod_colmesh","path":"scripts/__bbmod_colmesh/__bbmod_colmesh.yy",},},
     {"id":{"name":"__bbmod_cullmode","path":"scripts/__bbmod_cullmode/__bbmod_cullmode.yy",},},

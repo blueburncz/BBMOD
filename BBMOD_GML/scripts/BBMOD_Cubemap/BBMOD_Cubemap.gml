@@ -339,7 +339,8 @@ function BBMOD_Cubemap(_resolution) constructor
 	static get_projection_matrix = function ()
 	{
 		gml_pragma("forceinline");
-		camera_set_proj_mat(__camera, matrix_build_projection_perspective_fov(-90.0, -1.0, ZNear, ZFar));
+		camera_set_proj_mat(__camera, matrix_build_projection_perspective_fov(
+			90.0 * global.__bbmodCameraFovFlip, 1.0 * global.__bbmodCameraAspectFlip, ZNear, ZFar));
 		return camera_get_proj_mat(__camera);
 	};
 
