@@ -7,3 +7,4 @@
 * Added new function `bbmod_camera_set_aspect_flip(_flip)`, using which you can change whether BBMOD cameras should use a flipped aspect ratio. By default this is **enabled** for backwards compatibility.
 * Added new property `ClearColor` to `BBMOD_DeferredRenderer`, which is the color to clear the background with. Default value is `c_black`.
 * Fixed normal vectors of backfaces being flipped incorrectly.
+* Fixed lens dirt post-processing effect on OpenGL platforms.
