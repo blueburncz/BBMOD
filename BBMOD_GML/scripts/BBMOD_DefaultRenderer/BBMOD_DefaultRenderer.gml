@@ -48,7 +48,7 @@ function BBMOD_DefaultRenderer()
 	static BaseRenderer_destroy = destroy;
 
 	/// @var {Bool} Enables rendering scene depth into a depth buffer during the
-	/// {@link BBMOD_ERenderPass.DepthOnly} render pass pass. Defaults to `false`.
+	/// {@link BBMOD_ERenderPass.DepthOnly} render pass. Defaults to `false`.
 	EnableGBuffer = false;
 
 	/// @var {Real} Resolution multiplier for the depth buffer surface. Defaults

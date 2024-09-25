@@ -39,7 +39,7 @@ function BBMOD_Camera()
 	/// @private
 	__mouseLockAt = undefined;
 
-	/// @var {Id.Instance} An id of an instance to follow or `undefined`. The
+	/// @var {Id.Instance} An ID of an instance to follow or `undefined`. The
 	/// object must have a `z` variable (position on the z axis) defined!
 	/// Defaults to `undefined`.
 	FollowObject = undefined;

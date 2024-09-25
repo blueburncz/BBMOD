@@ -162,7 +162,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.6.2.162",
+    "IDEVersion":"2024.8.1.171",
   },
   "name":"BBMOD",
   "resources":[
@@ -468,8 +468,6 @@
     {"id":{"name":"BBMOD_SprWhite","path":"sprites/BBMOD_SprWhite/BBMOD_SprWhite.yy",},},
     {"id":{"name":"SprColormap","path":"sprites/SprColormap/SprColormap.yy",},},
     {"id":{"name":"SprHeightmap","path":"sprites/SprHeightmap/SprHeightmap.yy",},},
-    {"id":{"name":"Sprite17","path":"sprites/Sprite17/Sprite17.yy",},},
-    {"id":{"name":"Sprite18","path":"sprites/Sprite18/Sprite18.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

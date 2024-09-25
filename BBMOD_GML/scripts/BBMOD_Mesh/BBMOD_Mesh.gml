@@ -4,37 +4,38 @@
 ///
 /// @implements {BBMOD_IDestructible}
 ///
-/// @desc A mesh struct.
+/// @desc A mesh defined by vertex data, its format and the primitive type to
+/// use when it's drawn.
 ///
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format of the
-/// or `undefined`.
+/// mesh or `undefined`.
 /// @param {Struct.BBMOD_Model} [_model] The model to which the mesh belongs or
 /// `undefined`.
-///
-/// @see BBMOD_Model
-/// @see BBMOD_VertexFormat
 function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 {
 	/// @var {Struct.BBMOD_Model} The model to which the mesh belongs or
-	/// `undefined`.
+	/// `undefined` (default).
 	/// @readonly
 	Model = _model;
 
-	/// @var {Real} An index of a material that the mesh uses.
-	/// @see BBMOD_Model.MaterialCount
-	/// @see BBMOD_Model.MaterialNames
+	/// @var {Real} An index of a material to use when drawing the mesh (if
+	/// {@link BBMOD_Mesh.Model} is not `undefined`). Default value is 0.
+	/// @see BBMOD_Model.Materials
 	/// @readonly
 	MaterialIndex = 0;
 
 	/// @var {Struct.BBMOD_Vec3} The minimum coordinate of the mesh's bounding
-	/// box. Available since model version 3.1. Can be `undefined`.
+	/// box. Available since model version 3.1. Can be `undefined` (default).
+	/// @see BBMOD_Mesh.update_bbox
 	BboxMin = undefined;
 
 	/// @var {Struct.BBMOD_Vec3} The maximum coordinate of the mesh's bounding
-	/// box. Available since model version 3.1. Can be `undefined`.
+	/// box. Available since model version 3.1. Can be `undefined` (default).
+	/// @see BBMOD_Mesh.update_bbox
 	BboxMax = undefined;
 
-	/// @var {Id.VertexBuffer} A vertex buffer.
+	/// @var {Id.VertexBuffer} A vertex buffer containing the raw mesh data or
+	/// `undefined` (default).
 	/// @readonly
 	VertexBuffer = undefined;
 
@@ -42,12 +43,15 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 	/// @readonly
 	VertexFormat = _vertexFormat;
 
-	/// @var {Constant.PrimitiveType} The primitive type of the mesh.
+	/// @var {Constant.PrimitiveType} The primitive type of the mesh. Default is
+	/// `pr_trianglelist`.
 	/// @readonly
 	PrimitiveType = pr_trianglelist;
 
-	/// @var {Bool} If `true` then the mesh is frozen.
+	/// @var {Bool} If `true` then the mesh is "frozen", which means it resides
+	/// in the GPU memory, making it faster to draw, but also unmodifiable.
 	/// @readonly
+	/// @see BBMOD_Mesh.freeze
 	Frozen = false;
 
 	/// @func copy(_dest)
@@ -102,13 +106,21 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 
 	/// @func from_buffer(_buffer)
 	///
-	/// @desc Loads mesh data from a bufffer.
+	/// @desc Loads mesh data from a buffer following the BBMOD file format.
 	///
-	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	/// @param {Id.Buffer} _buffer The buffer to load the data from. Its seek
+	/// position must point to a beginning of a BBMOD mesh.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If {@link BBMOD_Mesh.Model} is `undefined`.
 	static from_buffer = function (_buffer)
 	{
+		if (Model == undefined)
+		{
+			throw new BBMOD_Exception("Cannot load a mesh from a buffer if Model is undefined!");
+		}
+
 		MaterialIndex = buffer_read(_buffer, buffer_u32);
 
 		if (Model.VersionMinor >= 1)
@@ -140,13 +152,24 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 
 	/// @func to_buffer(_buffer)
 	///
-	/// @desc Writes mesh data to a buffer.
+	/// @desc Writes mesh data to a buffer following the current version of the
+	/// BBMOD file format.
 	///
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
+	///
+	/// @throws {BBMOD_Exception} If {@link BBMOD_Mesh.Model} is `undefined`.
+	///
+	/// @see BBMOD_VERSION_MAJOR
+	/// @see BBMOD_VERSION_MINOR
 	static to_buffer = function (_buffer)
 	{
+		if (Model == undefined)
+		{
+			throw new BBMOD_Exception("Cannot write a mesh to a buffer if Model is undefined!");
+		}
+
 		buffer_write(_buffer, buffer_u32, MaterialIndex);
 
 		var _versionMinor = Model.VersionMinor;
@@ -175,11 +198,65 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 		return self;
 	};
 
+	/// @func update_bbox()
+	///
+	/// @desc Updates the mesh's bounding box using data from its vertex buffer,
+	/// which must not be frozen!
+	///
+	/// @throws {BBMOD_Exception} If {@link BBMOD_Mesh.VertexBuffer} is `undefined`
+	/// or frozen!
+	///
+	/// @see BBMOD_Mesh.BboxMin
+	/// @see BBMOD_Mesh.BboxMax
+	/// @see BBMOD_Mesh.Frozen
+	static update_bbox = function ()
+	{
+		if (VertexBuffer == undefined)
+		{
+			throw new BBMOD_Exception("Cannot update bounding box of a mesh whose vertex buffer is undefined!");
+		}
+
+		if (Frozen)
+		{
+			throw new BBMOD_Exception("Cannot update bounding box of a mesh when it's frozen!");
+		}
+
+		var _buffer = buffer_create_from_vertex_buffer(VertexBuffer, buffer_fixed, 1);
+		var _stride = VertexFormat.get_byte_size();
+		var _offset = 0;
+		BboxMin = new BBMOD_Vec3(infinity);
+		BboxMax = new BBMOD_Vec3(-infinity);
+
+		buffer_seek(_buffer, buffer_seek_start, 0);
+		repeat (vertex_get_number(VertexBuffer))
+		{
+			var _x = buffer_peek(_buffer, _offset, buffer_f32);
+			var _y = buffer_peek(_buffer, _offset + 4, buffer_f32);
+			var _z = buffer_peek(_buffer, _offset + 8, buffer_f32);
+
+			BboxMin.X = min(BboxMin.X, _x);
+			BboxMin.Y = min(BboxMin.Y, _y);
+			BboxMin.Z = min(BboxMin.Z, _z);
+
+			BboxMax.X = max(BboxMax.X, _x);
+			BboxMax.Y = max(BboxMax.Y, _y);
+			BboxMax.Z = max(BboxMax.Z, _z);
+
+			_offset += _stride;
+		}
+		buffer_delete(_buffer);
+
+		return self;
+	};
+
 	/// @func freeze()
 	///
-	/// @desc Freezes the mesh. This makes it render faster.
+	/// @desc "Freezes" the mesh. This uploads its data to the GPU memory, which
+	/// makes it draw faster but also makes it unmodifiable.
 	///
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
+	///
+	/// @see BBMOD_Mesh.Frozen
 	static freeze = function ()
 	{
 		gml_pragma("forceinline");

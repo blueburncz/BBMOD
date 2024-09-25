@@ -62,7 +62,7 @@ float Noise(in vec2 st)
 ////////////////////////////////////////////////////////////////////////////////
 // Instance IDs
 
-// The id of the instance that draws the mesh.
+// The ID of the instance that draws the mesh.
 uniform vec4 bbmod_InstanceID;
 #endif
 

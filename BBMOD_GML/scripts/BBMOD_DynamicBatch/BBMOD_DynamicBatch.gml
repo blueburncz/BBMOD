@@ -206,12 +206,12 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 
 				// Get last used index
 				_indexLast = InstanceCount;
-				// Find the exact array that stores the id
+				// Find the exact array that stores the ID
 				var _idsLast = __ids[_indexLast div Size];
 				// Get starting index within that array
 				i = _indexLast mod Size;
 
-				// Copy id of the last instance over the id of the removed instance
+				// Copy ID of the last instance over the ID of the removed instance
 				__ids[_indexIdDeleted div Size][@ _indexIdDeleted mod Size] = _idsLast[i];
 
 				// Clear slots

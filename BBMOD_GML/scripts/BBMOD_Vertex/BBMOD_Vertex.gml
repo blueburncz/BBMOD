@@ -51,7 +51,7 @@ function BBMOD_Vertex(_vertexFormat) constructor
 		? new BBMOD_Vec4(1.0, 0.0, 0.0, 1.0)
 		: undefined;
 
-	/// @var {Struct.BBMOD_Vec4} The bone ids of the vertex or `undefined` if
+	/// @var {Struct.BBMOD_Vec4} The bone IDs of the vertex or `undefined` if
 	/// the vertex format does not have bones.
 	/// @see BBMOD_VertexFormat.Bones
 	Bones = VertexFormat.Bones ? new BBMOD_Vec4() : undefined;
@@ -61,8 +61,8 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	/// @see BBMOD_VertexFormat.Bones
 	Weights = VertexFormat.Bones ? new BBMOD_Vec4() : undefined;
 
-	/// @var {Real} The id of the model in a dynamic batch or `undefined` if the
-	/// vertex format does not have ids.
+	/// @var {Real} The ID of the model in a dynamic batch or `undefined` if the
+	/// vertex format does not have IDs.
 	/// @see BBMOD_VertexFormat.Ids
 	/// @see BBMOD_DynamicBatch
 	Id = VertexFormat.Ids ? 0 : undefined;
