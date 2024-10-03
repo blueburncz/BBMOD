@@ -504,7 +504,9 @@ function BBMOD_DeferredRenderer()
 		gpu_set_ztestenable(false);
 		matrix_set(matrix_world, matrix_build_identity());
 		camera_apply(__camera2D);
+		shader_set(BBMOD_ShGammaToLinear);
 		draw_sprite_stretched_ext(BBMOD_SprWhite, 0, 0, 0, _renderWidth, _renderHeight, ClearColor, 1.0);
+		shader_reset();
 		gpu_pop_state();
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Background);

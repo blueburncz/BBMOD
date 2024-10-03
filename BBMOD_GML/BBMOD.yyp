@@ -407,6 +407,7 @@
     {"id":{"name":"BBMOD_ShFogAndDepthMask","path":"shaders/BBMOD_ShFogAndDepthMask/BBMOD_ShFogAndDepthMask.yy",},},
     {"id":{"name":"BBMOD_ShFXAA","path":"shaders/BBMOD_ShFXAA/BBMOD_ShFXAA.yy",},},
     {"id":{"name":"BBMOD_ShGammaCorrect","path":"shaders/BBMOD_ShGammaCorrect/BBMOD_ShGammaCorrect.yy",},},
+    {"id":{"name":"BBMOD_ShGammaToLinear","path":"shaders/BBMOD_ShGammaToLinear/BBMOD_ShGammaToLinear.yy",},},
     {"id":{"name":"BBMOD_ShGaussianBlur","path":"shaders/BBMOD_ShGaussianBlur/BBMOD_ShGaussianBlur.yy",},},
     {"id":{"name":"BBMOD_ShGBuffer","path":"shaders/BBMOD_ShGBuffer/BBMOD_ShGBuffer.yy",},},
     {"id":{"name":"BBMOD_ShGBufferAnimated","path":"shaders/BBMOD_ShGBufferAnimated/BBMOD_ShGBufferAnimated.yy",},},
