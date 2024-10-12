@@ -9,8 +9,7 @@
 /// @param {Real} [_strength] The strength of the effect. Defaults to 1.
 /// @param {Real} [_clamp] Clamping of the effect. Defaults to 1.
 /// @param {Real} [_offset] High-pass offset (in pixels). Defaults to 1.
-function BBMOD_LumaSharpenEffect(_strength=1.0, _clamp=1.0, _offset=1.0)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_LumaSharpenEffect(_strength = 1.0, _clamp = 1.0, _offset = 1.0): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Real} The strength of the effect. Default value is 1.
 	Strength = _strength;
@@ -21,10 +20,10 @@ function BBMOD_LumaSharpenEffect(_strength=1.0, _clamp=1.0, _offset=1.0)
 	/// @var {Real} High-pass offset (in pixels). Default value is 1.
 	Offset = _offset;
 
-	static __uTexel    = shader_get_uniform(BBMOD_ShLumaSharpen, "u_vTexel");
+	static __uTexel = shader_get_uniform(BBMOD_ShLumaSharpen, "u_vTexel");
 	static __uStrength = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fStrength");
-	static __uClamp    = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fClamp");
-	static __uOffset   = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fOffset");
+	static __uClamp = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fClamp");
+	static __uOffset = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fOffset");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

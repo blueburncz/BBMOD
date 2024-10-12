@@ -10,8 +10,7 @@
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required by the shader.
 ///
 /// @see BBMOD_ParticleMaterial
-function BBMOD_ParticleShader(_shader, _vertexFormat)
-	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
+function BBMOD_ParticleShader(_shader, _vertexFormat): BBMOD_DefaultShader(_shader, _vertexFormat) constructor
 {
 	static DefaultShader_set_material = set_material;
 

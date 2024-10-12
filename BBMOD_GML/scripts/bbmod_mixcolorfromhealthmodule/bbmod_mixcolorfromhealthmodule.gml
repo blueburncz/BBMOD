@@ -17,10 +17,10 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixColorFromHealthModule(
-	_property=undefined,
-	_from=BBMOD_C_WHITE,
-	_to=_from.Clone()
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = BBMOD_C_WHITE,
+	_to = _from.Clone()
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the four consecutive properties that together
 	/// form a color. Use values from {@link BBMOD_EParticle}. Default value is
@@ -53,11 +53,11 @@ function BBMOD_MixColorFromHealthModule(
 			var _toA = _to.Alpha;
 
 			var _particleIndex = 0;
-			repeat (_emitter.ParticlesAlive)
+			repeat(_emitter.ParticlesAlive)
 			{
 				var _factor = clamp(_particles[# BBMOD_EParticle.HealthLeft, _particleIndex]
 					/ _particles[# BBMOD_EParticle.Health, _particleIndex], 0.0, 1.0);
-				_particles[# _property, _particleIndex]     = lerp(_toR, _fromR, _factor);
+				_particles[# _property, _particleIndex] = lerp(_toR, _fromR, _factor);
 				_particles[# _property + 1, _particleIndex] = lerp(_toG, _fromG, _factor);
 				_particles[# _property + 2, _particleIndex] = lerp(_toB, _fromB, _factor);
 				_particles[# _property + 3, _particleIndex] = lerp(_toA, _fromA, _factor);

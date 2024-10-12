@@ -12,8 +12,7 @@
 /// specific render passes.
 ///
 /// @see BBMOD_ParticleShader
-function BBMOD_ParticleMaterial(_shader=undefined)
-	: BBMOD_DefaultMaterial(_shader) constructor
+function BBMOD_ParticleMaterial(_shader = undefined): BBMOD_DefaultMaterial(_shader) constructor
 {
 	static DefaultMaterial_copy = copy;
 

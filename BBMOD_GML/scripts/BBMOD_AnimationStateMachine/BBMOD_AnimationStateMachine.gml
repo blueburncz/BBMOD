@@ -61,8 +61,7 @@
 /// @see BBMOD_AnimationInstance
 /// @see BBMOD_AnimationPlayer
 /// @see BBMOD_AnimationState
-function BBMOD_AnimationStateMachine(_animationPlayer)
-	: BBMOD_StateMachine() constructor
+function BBMOD_AnimationStateMachine(_animationPlayer): BBMOD_StateMachine() constructor
 {
 	static StateMachine_update = update;
 
@@ -70,7 +69,8 @@ function BBMOD_AnimationStateMachine(_animationPlayer)
 	/// @readonly
 	AnimationPlayer = _animationPlayer;
 
-	AnimationPlayer.on_event(method(self, function (_data, _event) {
+	AnimationPlayer.on_event(method(self, function (_data, _event)
+	{
 		if (State != undefined)
 		{
 			State.trigger_event(_event, _data);

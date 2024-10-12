@@ -14,9 +14,9 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_SetQuaternionModule(
-	_property=undefined,
-	_value=new BBMOD_Quaternion()
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_value = new BBMOD_Quaternion()
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the four properties that together form a
 	/// quaternion. Use values from {@link BBMOD_EParticle}. Defaults to `undefined`.
@@ -31,7 +31,7 @@ function BBMOD_SetQuaternionModule(
 		if (Property != undefined)
 		{
 			var _value = Value;
-			_emitter.Particles[# Property, _particleIndex]     = _value.X;
+			_emitter.Particles[# Property, _particleIndex] = _value.X;
 			_emitter.Particles[# Property + 1, _particleIndex] = _value.Y;
 			_emitter.Particles[# Property + 2, _particleIndex] = _value.Z;
 			_emitter.Particles[# Property + 3, _particleIndex] = _value.W;

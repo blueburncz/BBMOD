@@ -21,12 +21,12 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixQuaternionFromSpeedModule(
-	_property=undefined,
-	_from=new BBMOD_Quaternion(),
-	_to=_from.Clone(),
-	_min=0.0,
-	_max=1.0
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = new BBMOD_Quaternion(),
+	_to = _from.Clone(),
+	_min = 0.0,
+	_max = 1.0
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the four consecutive properties that together
 	/// form a quaternion. Use values from {@link BBMOD_EParticle}. Default
@@ -63,7 +63,7 @@ function BBMOD_MixQuaternionFromSpeedModule(
 			var _div = _max - _min;
 
 			var _particleIndex = 0;
-			repeat (_emitter.ParticlesAlive)
+			repeat(_emitter.ParticlesAlive)
 			{
 				var _velX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 				var _velY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];
@@ -71,7 +71,7 @@ function BBMOD_MixQuaternionFromSpeedModule(
 				var _speed = sqrt((_velX * _velX) + (_velY + _velY) + (_velZ * _velZ));
 				var _factor = clamp((_speed - _min) / _div, 0.0, 1.0);
 				var _quat = _to.Slerp(_from, _factor);
-				_particles[# _property, _particleIndex]     = _quat.X;
+				_particles[# _property, _particleIndex] = _quat.X;
 				_particles[# _property + 1, _particleIndex] = _quat.Y;
 				_particles[# _property + 2, _particleIndex] = _quat.Z;
 				_particles[# _property + 3, _particleIndex] = _quat.W;

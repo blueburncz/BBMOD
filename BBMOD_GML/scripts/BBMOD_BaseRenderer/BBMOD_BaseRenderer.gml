@@ -332,7 +332,7 @@ function BBMOD_BaseRenderer() constructor
 
 		Gizmo.EditType = ((_value == 255) ? BBMOD_EEditType.Position
 			: ((_value == 128) ? BBMOD_EEditType.Rotation
-			: BBMOD_EEditType.Scale));
+				: BBMOD_EEditType.Scale));
 
 		return true;
 	};
@@ -449,7 +449,7 @@ function BBMOD_BaseRenderer() constructor
 			ds_list_add(__shadowmapLights, _light);
 			ds_list_add(__shadowmapHealth, 1);
 		}
-		++__shadowmapHealth[| _lightIndex];
+		++__shadowmapHealth[|  _lightIndex];
 	};
 
 	/// @func __gc_collect_shadowmaps()
@@ -462,15 +462,15 @@ function BBMOD_BaseRenderer() constructor
 	{
 		for (var i = ds_list_size(__shadowmapLights) - 1; i >= 0; --i)
 		{
-			var _light = __shadowmapLights[| i];
-			if (--__shadowmapHealth[| i] <= 0)
+			var _light = __shadowmapLights[|  i];
+			if (--__shadowmapHealth[|  i] <= 0)
 			{
 				ds_list_delete(__shadowmapLights, i);
 				ds_list_delete(__shadowmapHealth, i);
 
 				if (ds_map_exists(__shadowmapSurfaces, _light))
 				{
-					var _surface = __shadowmapSurfaces[? _light];
+					var _surface = __shadowmapSurfaces[?  _light];
 					if (surface_exists(_surface))
 					{
 						surface_free(_surface);
@@ -480,7 +480,7 @@ function BBMOD_BaseRenderer() constructor
 
 				if (ds_map_exists(__shadowmapCubes, _light))
 				{
-					__shadowmapCubes[? _light].destroy();
+					__shadowmapCubes[?  _light].destroy();
 					ds_map_delete(__shadowmapCubes, _light);
 				}
 			}
@@ -514,12 +514,12 @@ function BBMOD_BaseRenderer() constructor
 				var _cubemap;
 				if (ds_map_exists(__shadowmapCubes, _light))
 				{
-					_cubemap = __shadowmapCubes[? _light];
+					_cubemap = __shadowmapCubes[?  _light];
 				}
 				else
 				{
 					_cubemap = new BBMOD_Cubemap(_light.ShadowmapResolution);
-					__shadowmapCubes[? _light] = _cubemap;
+					__shadowmapCubes[?  _light] = _cubemap;
 				}
 
 				_light.Position.Copy(_cubemap.Position);
@@ -538,22 +538,23 @@ function BBMOD_BaseRenderer() constructor
 
 				_cubemap.to_single_surface();
 				_cubemap.to_octahedron();
-				__shadowmapSurfaces[? _light] = _cubemap.SurfaceOctahedron;
+				__shadowmapSurfaces[?  _light] = _cubemap.SurfaceOctahedron;
 			}
 			else
 			{
 				var _surShadowmapOld = -1;
 				if (ds_map_exists(__shadowmapSurfaces, _light))
 				{
-					_surShadowmapOld = __shadowmapSurfaces[? _light];
+					_surShadowmapOld = __shadowmapSurfaces[?  _light];
 				}
 
 				_surShadowmap = bbmod_surface_check(
-					_surShadowmapOld, _light.ShadowmapResolution, _light.ShadowmapResolution, surface_rgba8unorm, true);
+					_surShadowmapOld, _light.ShadowmapResolution, _light.ShadowmapResolution,
+					surface_rgba8unorm, true);
 
 				if (_surShadowmap != _surShadowmapOld)
 				{
-					__shadowmapSurfaces[? _light] = _surShadowmap;
+					__shadowmapSurfaces[?  _light] = _surShadowmap;
 				}
 
 				surface_set_target(_surShadowmap);
@@ -606,7 +607,7 @@ function BBMOD_BaseRenderer() constructor
 			{
 				// Punctual lights
 				var i = 0;
-				repeat (array_length(global.__bbmodPunctualLights))
+				repeat(array_length(global.__bbmodPunctualLights))
 				{
 					_light = global.__bbmodPunctualLights[i];
 					if (_light.CastShadows)
@@ -631,7 +632,7 @@ function BBMOD_BaseRenderer() constructor
 
 		__render_shadowmap_impl(_shadowCaster);
 
-		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[? _shadowCaster]);
+		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[?  _shadowCaster]);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
 		bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
@@ -671,9 +672,9 @@ function BBMOD_BaseRenderer() constructor
 		var _reflectionProbes = global.__bbmodReflectionProbes;
 
 		var i = 0;
-		repeat (array_length(_reflectionProbes))
+		repeat(array_length(_reflectionProbes))
 		{
-			with (_reflectionProbes[i++])
+			with(_reflectionProbes[i++])
 			{
 				if (!Enabled || !NeedsUpdate)
 				{
@@ -685,7 +686,7 @@ function BBMOD_BaseRenderer() constructor
 				_cubemap.Resolution = Resolution;
 
 				// Render shadows
-				with (other)
+				with(other)
 				{
 					var _enableShadows = EnableShadows;
 					EnableShadows &= other.EnableShadows; // Temporarily modify renderer's EnableShadows
@@ -872,7 +873,7 @@ function BBMOD_BaseRenderer() constructor
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
-	
+
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
 			bbmod_render_queues_submit();
@@ -910,7 +911,7 @@ function BBMOD_BaseRenderer() constructor
 
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
-	
+
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
 			bbmod_render_queues_submit(Gizmo.Selected);
@@ -1043,7 +1044,7 @@ function BBMOD_BaseRenderer() constructor
 	/// at the end of this method. Default value is `true`.
 	///
 	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
-	static render = function (_clearQueues=true)
+	static render = function (_clearQueues = true)
 	{
 		global.__bbmodRendererCurrent = self;
 
@@ -1052,9 +1053,9 @@ function BBMOD_BaseRenderer() constructor
 		var _projection = matrix_get(matrix_projection);
 
 		var i = 0;
-		repeat (array_length(Renderables))
+		repeat(array_length(Renderables))
 		{
-			with (Renderables[i++])
+			with(Renderables[i++])
 			{
 				render();
 			}
@@ -1227,9 +1228,9 @@ function BBMOD_BaseRenderer() constructor
 		ds_list_destroy(__shadowmapHealth);
 
 		var _key = ds_map_find_first(__shadowmapSurfaces);
-		repeat (ds_map_size(__shadowmapSurfaces))
+		repeat(ds_map_size(__shadowmapSurfaces))
 		{
-			var _surface = __shadowmapSurfaces[? _key];
+			var _surface = __shadowmapSurfaces[?  _key];
 			if (surface_exists(_surface))
 			{
 				surface_free(_surface);
@@ -1239,9 +1240,9 @@ function BBMOD_BaseRenderer() constructor
 		ds_map_destroy(__shadowmapSurfaces);
 
 		_key = ds_map_find_first(__shadowmapCubes);
-		repeat (ds_map_size(__shadowmapCubes))
+		repeat(ds_map_size(__shadowmapCubes))
 		{
-			__shadowmapCubes[? _key].destroy();
+			__shadowmapCubes[?  _key].destroy();
 			_key = ds_map_find_next(__shadowmapCubes, _key);
 		}
 		ds_map_destroy(__shadowmapCubes);

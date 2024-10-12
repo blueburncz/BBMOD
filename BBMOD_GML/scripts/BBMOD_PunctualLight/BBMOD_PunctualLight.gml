@@ -22,8 +22,7 @@ global.__bbmodPunctualLights = [];
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-function BBMOD_PunctualLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1.0)
-	: BBMOD_Light() constructor
+function BBMOD_PunctualLight(_color = BBMOD_C_WHITE, _position = undefined, _range = 1.0): BBMOD_Light() constructor
 {
 	/// @var {Struct.BBMOD_Color} The color of the light. Default value is
 	/// {@link BBMOD_C_WHITE}.
@@ -119,7 +118,7 @@ function bbmod_light_punctual_remove(_light)
 	gml_pragma("forceinline");
 	var _punctualLights = global.__bbmodPunctualLights;
 	var i = 0;
-	repeat (array_length(_punctualLights))
+	repeat(array_length(_punctualLights))
 	{
 		if (_punctualLights[i] == _light)
 		{

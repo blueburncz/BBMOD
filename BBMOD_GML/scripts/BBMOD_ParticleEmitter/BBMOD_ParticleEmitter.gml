@@ -49,8 +49,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	// Initialize particle index
 	ds_grid_clear(Particles, 0.0);
 
-	for (var _particleIndex = 0;
-		_particleIndex < System.ParticleCount;
+	for (var _particleIndex = 0; _particleIndex < System.ParticleCount;
 		++_particleIndex)
 	{
 		Particles[# BBMOD_EParticle.Id, _particleIndex] = _particleIndex;
@@ -67,14 +66,14 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	/// at. Defaults to the emitter's position.
 	///
 	/// @return {Bool} Returns `true` if a particle was spawned.
-	static spawn_particle = function (_position=undefined)
+	static spawn_particle = function (_position = undefined)
 	{
 		gml_pragma("forceinline");
 		if (__time >= System.Duration && !System.Loop)
 		{
 			return false;
 		}
-		
+
 		var _particleIndex;
 
 		if (System.ParticleCount - ParticlesAlive > 0)
@@ -126,7 +125,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		var _modules = System.Modules;
 		var m = 0;
-		repeat (array_length(_modules))
+		repeat(array_length(_modules))
 		{
 			var _module = _modules[m++];
 			if (_module.Enabled && _module.on_particle_start)
@@ -169,14 +168,13 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		////////////////////////////////////////////////////////////////////////
 		// Kill particles
-		for (var _particleIndex = 0;
-			_particleIndex < ParticlesAlive;
+		for (var _particleIndex = 0; _particleIndex < ParticlesAlive;
 			++_particleIndex)
 		{
 			if (Particles[# BBMOD_EParticle.HealthLeft, _particleIndex] <= 0.0)
 			{
 				var m = 0;
-				repeat (array_length(_modules))
+				repeat(array_length(_modules))
 				{
 					var _module = _modules[m++];
 					if (_module.Enabled && _module.on_particle_finish)
@@ -278,7 +276,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		////////////////////////////////////////////////////////////////////////
 		// Execute modules
 		var m = 0;
-		repeat (array_length(_modules))
+		repeat(array_length(_modules))
 		{
 			var _module = _modules[m++];
 			if (_module.Enabled)
@@ -357,7 +355,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	/// @return {Bool} Returns `true` if the emitter cycle has finished
 	/// (and there are no particles alive). Aalways returns `false` if the
 	/// emitted particle system is looping.
-	static finished = function (_particlesDead=false)
+	static finished = function (_particlesDead = false)
 	{
 		gml_pragma("forceinline");
 		if (System.Loop)
@@ -374,7 +372,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		return false;
 	};
 
-	static _draw = function (_method, _material=undefined)
+	static _draw = function (_method, _material = undefined)
 	{
 		gml_pragma("forceinline");
 
@@ -389,13 +387,14 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		{
 			_particlesSorted = array_create(_particleCount);
 			var i = 0;
-			repeat (_particleCount)
+			repeat(_particleCount)
 			{
 				_particlesSorted[@ i] = i;
 				++i;
 			}
 
-			array_sort(_particlesSorted, method(self, function (_p1, _p2) {
+			array_sort(_particlesSorted, method(self, function (_p1, _p2)
+			{
 				var _camPos = global.__bbmodCameraPosition;
 				var _particles = Particles;
 				var _d1 = point_distance_3d(
@@ -425,11 +424,11 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		var _batchData = array_create(_batchCount);
 		var _batchIndex = 0;
 
-		repeat (_batchCount)
+		repeat(_batchCount)
 		{
 			var _data = array_create(_batchSize * 16, 0);
 			var d = 0;
-			repeat (min(_particleCount, _batchSize))
+			repeat(min(_particleCount, _batchSize))
 			{
 				var i = System.Sort
 					? _particlesSorted[_particleIndex++]
@@ -444,8 +443,8 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 				_data[d + 6] = _particles[# BBMOD_EParticle.RotationZ, i];
 				_data[d + 7] = _particles[# BBMOD_EParticle.RotationW, i];
 
-				_data[d + 8]  = _particles[# BBMOD_EParticle.ScaleX, i];
-				_data[d + 9]  = _particles[# BBMOD_EParticle.ScaleY, i];
+				_data[d + 8] = _particles[# BBMOD_EParticle.ScaleX, i];
+				_data[d + 9] = _particles[# BBMOD_EParticle.ScaleY, i];
 				_data[d + 10] = _particles[# BBMOD_EParticle.ScaleZ, i];
 
 				_data[d + 12] = _particles[# BBMOD_EParticle.ColorR, i] / 255.0;
@@ -473,7 +472,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	/// of the one defined in the particle system or `undefined`.
 	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
-	static submit = function (_material=undefined)
+	static submit = function (_material = undefined)
 	{
 		var _dynamicBatch = System.__dynamicBatch;
 		_draw(method(_dynamicBatch, _dynamicBatch.submit), _material);
@@ -488,7 +487,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	/// of the one defined in the particle system or `undefined`.
 	///
 	/// @return {Struct.BBMOD_ParticleEmitter} Returns `self`.
-	static render = function (_material=undefined)
+	static render = function (_material = undefined)
 	{
 		var _dynamicBatch = System.__dynamicBatch;
 		_draw(method(_dynamicBatch, _dynamicBatch.render), _material);

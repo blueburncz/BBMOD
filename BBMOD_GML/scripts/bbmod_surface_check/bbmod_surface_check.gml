@@ -15,7 +15,7 @@
 /// Defaults to `true`.
 ///
 /// @return {Id.Surface} The surface.
-function bbmod_surface_check(_surface, _width, _height, _format=surface_rgba8unorm, _depthBuffer=true)
+function bbmod_surface_check(_surface, _width, _height, _format = surface_rgba8unorm, _depthBuffer = true)
 {
 	_width = max(round(_width), 1);
 	_height = max(round(_height), 1);

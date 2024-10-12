@@ -13,8 +13,7 @@ global.__bbmodImageBasedLight = undefined;
 /// @param {Pointer.Texture} _texture A texture containing 8 prefiltered
 /// RGBM-encoded octahedrons, where the first 7 are for specular reflections
 /// with increasing roughness and the last one is for diffuse lighting.
-function BBMOD_ImageBasedLight(_texture)
-	: BBMOD_Light() constructor
+function BBMOD_ImageBasedLight(_texture): BBMOD_Light() constructor
 {
 	/// @var {Pointer.Texture} The texture of the IBL.
 	/// @readonly

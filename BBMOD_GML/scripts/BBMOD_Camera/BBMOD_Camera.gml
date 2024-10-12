@@ -22,8 +22,7 @@
 /// camera.apply();
 /// // Render scene here...
 /// ```
-function BBMOD_Camera()
-	: BBMOD_BaseCamera() constructor
+function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 {
 	/// @var {Bool} If `true` then mouselook is enabled. Defaults to `false`.
 	/// @readonly
@@ -188,7 +187,7 @@ function BBMOD_Camera()
 	/// to `undefined`.
 	///
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
-	static update = function (_deltaTime, _positionHandler=undefined)
+	static update = function (_deltaTime, _positionHandler = undefined)
 	{
 		if (os_browser != browser_not_a_browser)
 		{

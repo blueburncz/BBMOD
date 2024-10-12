@@ -35,7 +35,7 @@
 /// ```
 ///
 /// @see BBMOD_StaticBatch
-function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) constructor
+function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 12) constructor
 {
 	/// @var {Struct.BBMOD_Model} A model that is being batched.
 	/// @readonly
@@ -116,7 +116,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 		}
 		else if (_currentArrayCount < _requiredArrayCount)
 		{
-			repeat (_requiredArrayCount - _currentArrayCount)
+			repeat(_requiredArrayCount - _currentArrayCount)
 			{
 				array_push(__data, array_create(BatchLength, 0.0));
 				array_push(__ids, array_create(Size, 0.0));
@@ -135,8 +135,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 	{
 		var _indexIds = InstanceCount;
 		var _indexData = _indexIds * SlotsPerInstance;
-		__instanceToIndex[? _instance] = _indexData;
-		__indexToInstance[? _indexData] = _instance;
+		__instanceToIndex[?  _instance] = _indexData;
+		__indexToInstance[?  _indexData] = _instance;
 		++InstanceCount;
 		__resize_data();
 		method(_instance, DataWriter)(__data[_indexData div BatchLength], _indexData mod BatchLength);
@@ -156,7 +156,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 	static update_instance = function (_instance)
 	{
 		gml_pragma("forceinline");
-		var _index = __instanceToIndex[? _instance];
+		var _index = __instanceToIndex[?  _instance];
 		method(_instance, DataWriter)(__data[_index div BatchLength], _index mod BatchLength);
 		return self;
 	};
@@ -170,7 +170,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	static remove_instance = function (_instance)
 	{
-		var _indexDataDeleted = __instanceToIndex[? _instance];
+		var _indexDataDeleted = __instanceToIndex[?  _instance];
 		if (_indexDataDeleted != undefined)
 		{
 			var _indexIdDeleted = _indexDataDeleted / SlotsPerInstance;
@@ -184,7 +184,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 				// Get last used index
 				var _indexLast = InstanceCount * SlotsPerInstance;
 				// Get instance that is stored on that index
-				var _instanceLast = __indexToInstance[? _indexLast];
+				var _instanceLast = __indexToInstance[?  _indexLast];
 				// Find the exact array that stores the data
 				var _dataLast = __data[_indexLast div BatchLength];
 				// Get starting index within that array
@@ -196,7 +196,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 					_dataLast, i, SlotsPerInstance);
 
 				// Clear slots
-				repeat (SlotsPerInstance)
+				repeat(SlotsPerInstance)
 				{
 					_dataLast[i++] = 0.0;
 				}
@@ -220,8 +220,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 				////////////////////////////////////////////////////////////////
 
 				// Last instance is now stored instead of the deleted one
-				__instanceToIndex[? _instanceLast] = _indexDataDeleted;
-				__indexToInstance[? _indexDataDeleted] = _instanceLast;
+				__instanceToIndex[?  _instanceLast] = _indexDataDeleted;
+				__indexToInstance[?  _indexDataDeleted] = _instanceLast;
 				ds_map_delete(__indexToInstance, _indexLast);
 			}
 			__resize_data();
@@ -244,7 +244,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
 	/// @see BBMOD_ERenderPass
-	static submit = function (_materials=undefined, _batchData=undefined)
+	static submit = function (_materials = undefined, _batchData = undefined)
 	{
 		gml_pragma("forceinline");
 		_batchData ??= __data;
@@ -280,7 +280,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
-	static render = function (_materials=undefined, _batchData=undefined, _ids=undefined)
+	static render = function (_materials = undefined, _batchData = undefined, _ids = undefined)
 	{
 		gml_pragma("forceinline");
 
@@ -340,7 +340,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 		_data[@ _index + 11] = ((id & $FF000000) >> 24) / 255;
 	};
 
-	static __draw_object = function (_method, _object, _materials, _fn=undefined)
+	static __draw_object = function (_method, _object, _materials, _fn = undefined)
 	{
 		if (!instance_exists(_object))
 		{
@@ -359,7 +359,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 		var _batchData = [_data];
 		var _batchIds = [_ids];
 
-		with (_object)
+		with(_object)
 		{
 			method(self, _fn)(_data, _indexData);
 			_indexData += _slotsPerInstance;
@@ -377,7 +377,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 				array_push(_batchIds, _ids);
 			}
 		}
-	
+
 		_method(_material, _batchData, _batchIds);
 	};
 
@@ -423,7 +423,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_DynamicBatch.DataWriter
-	static submit_object = function (_object, _materials=undefined, _fn=undefined)
+	static submit_object = function (_object, _materials = undefined, _fn = undefined)
 	{
 		gml_pragma("forceinline");
 		__draw_object(method(self, submit), _object, _materials, _fn);
@@ -472,7 +472,7 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render
 	/// @see BBMOD_DynamicBatch.DataWriter
-	static render_object = function (_object, _materials=undefined, _fn=undefined)
+	static render_object = function (_object, _materials = undefined, _fn = undefined)
 	{
 		gml_pragma("forceinline");
 		__draw_object(method(self, render), _object, _materials, _fn);
@@ -504,7 +504,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 
 		if (_vertexFormatOld != undefined)
 		{
-			_vertexFormatNew = new BBMOD_VertexFormat({
+			_vertexFormatNew = new BBMOD_VertexFormat(
+			{
 				Vertices: _vertexFormatOld.Vertices,
 				Normals: _vertexFormatOld.Normals,
 				TextureCoords: _vertexFormatOld.TextureCoords,
@@ -526,7 +527,8 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 			var _meshVertexFormatNew;
 			if (_mesh.VertexFormat)
 			{
-				_meshVertexFormatNew = new BBMOD_VertexFormat({
+				_meshVertexFormatNew = new BBMOD_VertexFormat(
+				{
 					Vertices: _meshVertexFormatOld.Vertices,
 					Normals: _meshVertexFormatOld.Normals,
 					TextureCoords: _meshVertexFormatOld.TextureCoords,
@@ -551,21 +553,22 @@ function BBMOD_DynamicBatch(_model=undefined, _size=32, _slotsPerInstance=12) co
 			var _sizeOfF32 = buffer_sizeof(buffer_f32);
 
 			var _id = 0;
-			repeat (Size)
+			repeat(Size)
 			{
 				var _offsetOld = 0;
-				repeat (_vertexCount)
-				{
-					buffer_copy(_bufferOld, _offsetOld, _byteSizeOld, _bufferNew, _offsetNew);
-					_offsetOld += _byteSizeOld;
-					_offsetNew += _byteSizeOld;
-					buffer_poke(_bufferNew, _offsetNew, buffer_f32, _id);
-					_offsetNew += _sizeOfF32;
-				}
-				++_id;
+				repeat(_vertexCount)
+					{
+						buffer_copy(_bufferOld, _offsetOld, _byteSizeOld, _bufferNew, _offsetNew);
+						_offsetOld += _byteSizeOld;
+						_offsetNew += _byteSizeOld;
+						buffer_poke(_bufferNew, _offsetNew, buffer_f32, _id);
+						_offsetNew += _sizeOfF32;
+					}
+					++_id;
 			}
 
-			_mesh.VertexBuffer = vertex_create_buffer_from_buffer_ext(_bufferNew, _meshVertexFormatNew.Raw, 0, Size * _vertexCount);
+			_mesh.VertexBuffer = vertex_create_buffer_from_buffer_ext(_bufferNew, _meshVertexFormatNew.Raw, 0, Size
+				* _vertexCount);
 			_mesh.VertexFormat = _meshVertexFormatNew;
 			buffer_delete(_bufferNew);
 

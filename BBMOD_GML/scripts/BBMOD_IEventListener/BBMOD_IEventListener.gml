@@ -23,7 +23,7 @@ function BBMOD_IEventListener()
 	/// @private
 	__listeners = {};
 
-	static _onEvent = function (_event, _listener=undefined)
+	static _onEvent = function (_event, _listener = undefined)
 	{
 		gml_pragma("forceinline");
 		if (is_method(_event))
@@ -34,9 +34,9 @@ function BBMOD_IEventListener()
 		__listeners ??= {};
 		if (!variable_struct_exists(__listeners, _event))
 		{
-			__listeners[$ _event] = [];
+			__listeners[$  _event] = [];
 		}
-		array_push(__listeners[$ _event], _listener);
+		array_push(__listeners[$  _event], _listener);
 		return self;
 	};
 
@@ -75,7 +75,7 @@ function BBMOD_IEventListener()
 	/// @see BBMOD_IEventListener.off_event
 	on_event = _onEvent;
 
-	static _offEvent = function (_event=undefined)
+	static _offEvent = function (_event = undefined)
 	{
 		gml_pragma("forceinline");
 		if (__listeners == undefined)
@@ -118,9 +118,9 @@ function BBMOD_IEventListener()
 
 		if (variable_struct_exists(__listeners, _event))
 		{
-			_events = __listeners[$ _event];
+			_events = __listeners[$  _event];
 			i = 0;
-			repeat (array_length(_events))
+			repeat(array_length(_events))
 			{
 				_events[i++](_data, _event);
 			}
@@ -128,9 +128,9 @@ function BBMOD_IEventListener()
 
 		if (variable_struct_exists(__listeners, __BBMOD_EV_ALL))
 		{
-			_events = __listeners[$ __BBMOD_EV_ALL];
+			_events = __listeners[$  __BBMOD_EV_ALL];
 			i = 0;
-			repeat (array_length(_events))
+			repeat(array_length(_events))
 			{
 				_events[i++](_data, _event);
 			}

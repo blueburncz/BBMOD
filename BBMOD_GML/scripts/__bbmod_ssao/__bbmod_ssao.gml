@@ -114,27 +114,27 @@ function bbmod_ssao_draw(
 	_surDepth,
 	_matProj,
 	_clipFar,
-	_selfOcclusionBias=0.01,
-	_blurDepthRange=2.0)
+	_selfOcclusionBias = 0.01,
+	_blurDepthRange = 2.0)
 {
-	static _uTexNoise          = shader_get_sampler_index(BBMOD_ShSSAO, "u_texNoise");
-	static _uTexel             = shader_get_uniform(BBMOD_ShSSAO, "u_vTexel");
-	static _uClipFar           = shader_get_uniform(BBMOD_ShSSAO, "u_fClipFar");
-	static _uTanAspect         = shader_get_uniform(BBMOD_ShSSAO, "u_vTanAspect");
-	static _uSampleKernel      = shader_get_uniform(BBMOD_ShSSAO, "u_vSampleKernel");
-	static _uRadius            = shader_get_uniform(BBMOD_ShSSAO, "u_fRadius");
-	static _uPower             = shader_get_uniform(BBMOD_ShSSAO, "u_fPower");
-	static _uNoiseScale        = shader_get_uniform(BBMOD_ShSSAO, "u_vNoiseScale");
-	static _uAngleBias         = shader_get_uniform(BBMOD_ShSSAO, "u_fAngleBias");
-	static _uDepthRange        = shader_get_uniform(BBMOD_ShSSAO, "u_fDepthRange");
+	static _uTexNoise = shader_get_sampler_index(BBMOD_ShSSAO, "u_texNoise");
+	static _uTexel = shader_get_uniform(BBMOD_ShSSAO, "u_vTexel");
+	static _uClipFar = shader_get_uniform(BBMOD_ShSSAO, "u_fClipFar");
+	static _uTanAspect = shader_get_uniform(BBMOD_ShSSAO, "u_vTanAspect");
+	static _uSampleKernel = shader_get_uniform(BBMOD_ShSSAO, "u_vSampleKernel");
+	static _uRadius = shader_get_uniform(BBMOD_ShSSAO, "u_fRadius");
+	static _uPower = shader_get_uniform(BBMOD_ShSSAO, "u_fPower");
+	static _uNoiseScale = shader_get_uniform(BBMOD_ShSSAO, "u_vNoiseScale");
+	static _uAngleBias = shader_get_uniform(BBMOD_ShSSAO, "u_fAngleBias");
+	static _uDepthRange = shader_get_uniform(BBMOD_ShSSAO, "u_fDepthRange");
 	static _uSelfOcclusionBias = shader_get_uniform(BBMOD_ShSSAO, "u_fSelfOcclusionBias");
-	static _uBlurTexel         = shader_get_uniform(BBMOD_ShSSAOBlur, "u_vTexel");
-	static _uBlurTexDepth      = shader_get_sampler_index(BBMOD_ShSSAOBlur, "u_texDepth");
-	static _uBlurClipFar       = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fClipFar");
-	static _uBlurDepthRange    = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fDepthRange");
+	static _uBlurTexel = shader_get_uniform(BBMOD_ShSSAOBlur, "u_vTexel");
+	static _uBlurTexDepth = shader_get_sampler_index(BBMOD_ShSSAOBlur, "u_texDepth");
+	static _uBlurClipFar = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fClipFar");
+	static _uBlurDepthRange = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fDepthRange");
 
 	var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_matProj);
-	var _width  = surface_get_width(_surSsao);
+	var _width = surface_get_width(_surSsao);
 	var _height = surface_get_height(_surSsao);
 
 	gpu_push_state();

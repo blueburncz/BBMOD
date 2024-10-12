@@ -15,9 +15,7 @@ global.__bbmodSpriteCallback = ds_map_create();
 /// @param {Struct.BBMOD_Exception} _err An error or `undefined`.
 /// @param {Any} [_res] A return value. Should be `undefined` if there is an
 /// error.
-function bbmod_empty_callback(_err, _res=undefined)
-{
-}
+function bbmod_empty_callback(_err, _res = undefined) {}
 
 /// @func bbmod_buffer_load_async(_file, _callback)
 ///
@@ -47,7 +45,7 @@ function bbmod_buffer_load_async(_file, _callback)
 {
 	var _buffer = buffer_create(1, buffer_grow, 1);
 	var _id = buffer_load_async(_buffer, _file, 0, -1);
-	global.__bbmodAsyncCallback[? _id] = {
+	global.__bbmodAsyncCallback[?  _id] = {
 		Buffer: _buffer,
 		Callback: _callback,
 	};
@@ -78,10 +76,10 @@ function bbmod_buffer_load_async(_file, _callback)
 function bbmod_async_save_load_update(_asyncLoad)
 {
 	var _map = global.__bbmodAsyncCallback;
-	var _id = _asyncLoad[? "id"];
-	var _data = _map[? _id];
+	var _id = _asyncLoad[?  "id"];
+	var _data = _map[?  _id];
 
-	if (_asyncLoad[? "status"] == false)
+	if (_asyncLoad[?  "status"] == false)
 	{
 		buffer_delete(_data.Buffer);
 		_data.Callback(new BBMOD_Exception("Async load failed!"));
@@ -130,7 +128,7 @@ function bbmod_sprite_add_async(_file, _callback)
 	}
 	else
 	{
-		global.__bbmodSpriteCallback[? _id] = {
+		global.__bbmodSpriteCallback[?  _id] = {
 			Callback: _callback,
 		};
 	}
@@ -161,10 +159,10 @@ function bbmod_sprite_add_async(_file, _callback)
 function bbmod_async_image_loaded_update(_asyncLoad)
 {
 	var _map = global.__bbmodSpriteCallback;
-	var _id = _asyncLoad[? "id"];
-	var _data = _map[? _id];
+	var _id = _asyncLoad[?  "id"];
+	var _data = _map[?  _id];
 
-	if (_asyncLoad[? "status"] == false)
+	if (_asyncLoad[?  "status"] == false)
 	{
 		_data.Callback(new BBMOD_Exception("Async load failed!"));
 	}

@@ -12,17 +12,17 @@ function bbmod_mipenable_to_string(_setting)
 {
 	switch (_setting)
 	{
-	case mip_off:
-		return "mip_off";
+		case mip_off:
+			return "mip_off";
 
-	case mip_on:
-		return "mip_on";
+		case mip_on:
+			return "mip_on";
 
-	case mip_markedonly:
-		return "mip_markedonly";
+		case mip_markedonly:
+			return "mip_markedonly";
 
-	default:
-		return "";
+		default:
+			return "";
 	}
 }
 
@@ -40,16 +40,16 @@ function bbmod_mipenable_from_string(_name)
 {
 	switch (_name)
 	{
-	case "mip_off":
-		return mip_off;
+		case "mip_off":
+			return mip_off;
 
-	case "mip_on":
-		return mip_on;
+		case "mip_on":
+			return mip_on;
 
-	case "mip_markedonly":
-		return mip_markedonly;
+		case "mip_markedonly":
+			return mip_markedonly;
 
-	default:
-		throw new BBMOD_Exception("Invalid mip-enable setting \"" + _name + "\"!");
+		default:
+			throw new BBMOD_Exception("Invalid mip-enable setting \"" + _name + "\"!");
 	}
 }

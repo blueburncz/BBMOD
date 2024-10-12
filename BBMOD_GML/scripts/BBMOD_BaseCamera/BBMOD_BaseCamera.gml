@@ -305,7 +305,7 @@ function BBMOD_BaseCamera() constructor
 	/// @note This requires {@link BBMOD_BaseCamera.ViewProjectionMatrix}, so you
 	/// should use this *after* {@link BBMOD_BaseCamera.update_matrices} (or
 	/// {@link BBMOD_BaseCamera.update}) is called!
-	static world_to_screen = function (_vector, _screenWidth=undefined, _screenHeight=undefined)
+	static world_to_screen = function (_vector, _screenWidth = undefined, _screenHeight = undefined)
 	{
 		gml_pragma("forceinline");
 		_screenWidth ??= window_get_width();
@@ -335,7 +335,7 @@ function BBMOD_BaseCamera() constructor
 	/// @param {Struct.BBMOD_Renderer} [_renderer] A renderer or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Vec3} The world-space direction.
-	static screen_point_to_vec3 = function (_vector, _renderer=undefined)
+	static screen_point_to_vec3 = function (_vector, _renderer = undefined)
 	{
 		var _forward = get_forward();
 		var _up = get_up();

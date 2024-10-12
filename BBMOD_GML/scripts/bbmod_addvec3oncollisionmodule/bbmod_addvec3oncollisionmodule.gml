@@ -14,8 +14,8 @@
 ///
 /// @see BBMOD_EParticle.HasCollided
 function BBMOD_AddVec3OnCollisionModule(
-	_property=undefined,
-	_change=new BBMOD_Vec3(1.0)
+	_property = undefined,
+	_change = new BBMOD_Vec3(1.0)
 ): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the three consecutive properties. Use values

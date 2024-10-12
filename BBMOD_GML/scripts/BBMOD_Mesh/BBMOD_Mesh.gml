@@ -11,7 +11,7 @@
 /// mesh or `undefined`.
 /// @param {Struct.BBMOD_Model} [_model] The model to which the mesh belongs or
 /// `undefined`.
-function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
+function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 {
 	/// @var {Struct.BBMOD_Model} The model to which the mesh belongs or
 	/// `undefined` (default).
@@ -228,7 +228,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 		BboxMax = new BBMOD_Vec3(-infinity);
 
 		buffer_seek(_buffer, buffer_seek_start, 0);
-		repeat (vertex_get_number(VertexBuffer))
+		repeat(vertex_get_number(VertexBuffer))
 		{
 			var _x = buffer_peek(_buffer, _offset, buffer_f32);
 			var _y = buffer_peek(_buffer, _offset + 4, buffer_f32);
@@ -320,7 +320,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 			{
 				var _dataIndex = 0;
 				var _uBatchData = undefined;
-				repeat (array_length(_batchData))
+				repeat(array_length(_batchData))
 				{
 					if (_shader != -1)
 					{
@@ -412,81 +412,81 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 			_meshVertexBuffer, buffer_fixed, 1);
 		var _id = 0;
 
-		repeat (_dynamicBatch.Size)
+		repeat(_dynamicBatch.Size)
 		{
 			buffer_seek(_buffer, buffer_seek_start, 0);
 
-			repeat (_vertexCount)
-			{
-				if (_hasVertices)
+			repeat(_vertexCount)
 				{
-					var _x = buffer_read(_buffer, buffer_f32);
-					var _y = buffer_read(_buffer, buffer_f32);
-					var _z = buffer_read(_buffer, buffer_f32);
+					if (_hasVertices)
+					{
+						var _x = buffer_read(_buffer, buffer_f32);
+						var _y = buffer_read(_buffer, buffer_f32);
+						var _z = buffer_read(_buffer, buffer_f32);
 
-					vertex_position_3d(_vertexBuffer, _x, _y, _z);
-				}
+						vertex_position_3d(_vertexBuffer, _x, _y, _z);
+					}
 
-				if (_hasNormals)
-				{
-					var _x = buffer_read(_buffer, buffer_f32);
-					var _y = buffer_read(_buffer, buffer_f32);
-					var _z = buffer_read(_buffer, buffer_f32);
+					if (_hasNormals)
+					{
+						var _x = buffer_read(_buffer, buffer_f32);
+						var _y = buffer_read(_buffer, buffer_f32);
+						var _z = buffer_read(_buffer, buffer_f32);
 
-					vertex_normal(_vertexBuffer, _x, _y, _z);
-				}
+						vertex_normal(_vertexBuffer, _x, _y, _z);
+					}
 
-				if (_hasUvs)
-				{
-					var _u = buffer_read(_buffer, buffer_f32);
-					var _v = buffer_read(_buffer, buffer_f32);
+					if (_hasUvs)
+					{
+						var _u = buffer_read(_buffer, buffer_f32);
+						var _v = buffer_read(_buffer, buffer_f32);
 
-					vertex_texcoord(_vertexBuffer, _u, _v);
-				}
+						vertex_texcoord(_vertexBuffer, _u, _v);
+					}
 
-				if (_hasUvs2)
-				{
-					buffer_read(_buffer, buffer_f32);
-					buffer_read(_buffer, buffer_f32);
-				}
+					if (_hasUvs2)
+					{
+						buffer_read(_buffer, buffer_f32);
+						buffer_read(_buffer, buffer_f32);
+					}
 
-				if (_hasColors)
-				{
-					var _a = buffer_read(_buffer, buffer_u8);
-					var _b = buffer_read(_buffer, buffer_u8);
-					var _g = buffer_read(_buffer, buffer_u8);
-					var _r = buffer_read(_buffer, buffer_u8);
+					if (_hasColors)
+					{
+						var _a = buffer_read(_buffer, buffer_u8);
+						var _b = buffer_read(_buffer, buffer_u8);
+						var _g = buffer_read(_buffer, buffer_u8);
+						var _r = buffer_read(_buffer, buffer_u8);
 
-					vertex_color(_vertexBuffer, make_color_rgb(_r, _g, _b), _a);
-				}
+						vertex_color(_vertexBuffer, make_color_rgb(_r, _g, _b), _a);
+					}
 
-				if (_hasTangentW)
-				{
-					var _x = buffer_read(_buffer, buffer_f32);
-					var _y = buffer_read(_buffer, buffer_f32);
-					var _z = buffer_read(_buffer, buffer_f32);
-					var _w = buffer_read(_buffer, buffer_f32);
+					if (_hasTangentW)
+					{
+						var _x = buffer_read(_buffer, buffer_f32);
+						var _y = buffer_read(_buffer, buffer_f32);
+						var _z = buffer_read(_buffer, buffer_f32);
+						var _w = buffer_read(_buffer, buffer_f32);
 
-					vertex_float4(_vertexBuffer, _x, _y, _z, _w);
-				}
+						vertex_float4(_vertexBuffer, _x, _y, _z, _w);
+					}
 
-				if (_hasBones)
-				{
-					repeat (8)
+					if (_hasBones)
+					{
+						repeat(8)
+						{
+							buffer_read(_buffer, buffer_f32);
+						}
+					}
+
+					if (_hasIds)
 					{
 						buffer_read(_buffer, buffer_f32);
 					}
+
+					vertex_float1(_vertexBuffer, _id);
 				}
 
-				if (_hasIds)
-				{
-					buffer_read(_buffer, buffer_f32);
-				}
-
-				vertex_float1(_vertexBuffer, _id);
-			}
-
-			++_id;
+				++_id;
 		}
 
 		buffer_delete(_buffer);
@@ -531,7 +531,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 
 		buffer_seek(_buffer, buffer_seek_start, 0);
 
-		repeat (vertex_get_number(_meshVertexBuffer))
+		repeat(vertex_get_number(_meshVertexBuffer))
 		{
 			if (_hasVertices)
 			{
@@ -589,7 +589,7 @@ function BBMOD_Mesh(_vertexFormat, _model=undefined) constructor
 
 			if (_hasBones)
 			{
-				repeat (8)
+				repeat(8)
 				{
 					buffer_read(_buffer, buffer_f32);
 				}

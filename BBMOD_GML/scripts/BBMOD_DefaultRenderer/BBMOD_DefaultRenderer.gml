@@ -42,8 +42,7 @@
 /// ```
 ///
 /// @see BBMOD_Camera
-function BBMOD_DefaultRenderer()
-	: BBMOD_BaseRenderer() constructor
+function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 {
 	static BaseRenderer_destroy = destroy;
 
@@ -59,7 +58,7 @@ function BBMOD_DefaultRenderer()
 	/// @private
 	__surDepthBuffer = -1;
 
-	static render = function (_clearQueues=true)
+	static render = function (_clearQueues = true)
 	{
 		global.__bbmodRendererCurrent = self;
 
@@ -70,9 +69,9 @@ function BBMOD_DefaultRenderer()
 		var _renderHeight = get_render_height();
 
 		var i = 0;
-		repeat (array_length(Renderables))
+		repeat(array_length(Renderables))
 		{
-			with (Renderables[i++])
+			with(Renderables[i++])
 			{
 				render();
 			}

@@ -10,8 +10,7 @@
 /// to 1.
 /// @param {Real} [_interval] Number of seconds to wait before spawning
 /// next particles. Defaults to 1.0.
-function BBMOD_EmissionOverTimeModule(_count=1, _interval=1.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_EmissionOverTimeModule(_count = 1, _interval = 1.0): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} Number of particles to spawn each time. Default
 	/// value is 1.
@@ -30,7 +29,7 @@ function BBMOD_EmissionOverTimeModule(_count=1, _interval=1.0)
 		__timer += _deltaTime * 0.000001;
 		if (__timer >= Interval)
 		{
-			repeat (Count)
+			repeat(Count)
 			{
 				_emitter.spawn_particle();
 			}

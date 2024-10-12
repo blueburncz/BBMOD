@@ -63,7 +63,7 @@
 /// @see BBMOD_AnimationInstance
 /// @see BBMOD_AnimationState
 /// @see BBMOD_AnimationStateMachine
-function BBMOD_AnimationPlayer(_model, _paused=false) constructor
+function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 {
 	BBMOD_IEventListener();
 
@@ -137,7 +137,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 	/// @see BBMOD_AnimationPlayer.get_node_transform
 	/// @private
 	__nodeTransform = array_create(BBMOD_MAX_BONES * 8, 0.0);
- 
+
 	/// @var {Array<Real>} An array containing transforms of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
 	/// @see BBMOD_AnimationPlayer.get_transform
@@ -171,7 +171,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 		_animStack[@ 0] = _model.RootNode;
 		var _stackNext = 1;
 
-		repeat (_model.NodeCount)
+		repeat(_model.NodeCount)
 		{
 			if (_stackNext == 0)
 			{
@@ -240,7 +240,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 
 			var _children = _node.Children;
 			var i = 0;
-			repeat (array_length(_children))
+			repeat(array_length(_children))
 			{
 				_animStack[_stackNext++] = _children[i++];
 			}
@@ -270,7 +270,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 
 		Time += _deltaTime * 0.000001 * PlaybackSpeed;
 
-		repeat (array_length(__animations))
+		repeat(array_length(__animations))
 		{
 			var _animInst = __animations[0];
 			var _animation = _animInst.Animation;
@@ -322,7 +322,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 			var _eventIndex = 0;
 			var _eventExecuted = _animInst.__eventExecuted;
 
-			repeat (array_length(_animEvents) / 2)
+			repeat(array_length(_animEvents) / 2)
 			{
 				var _eventFrame = _animEvents[_eventIndex];
 				if (_eventFrame <= _animationTime && _eventExecuted < _eventFrame)
@@ -362,7 +362,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 					array_copy(_transformArray, 0, _frame, 0, _boneSize);
 
 					var _index = 0;
-					repeat (Model.BoneCount)
+					repeat(Model.BoneCount)
 					{
 						__bbmod_dquat_mul_array(
 							_offsetArray, _index,
@@ -410,7 +410,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 	/// Defaults to `false`.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static play = function (_animation, _loop=false)
+	static play = function (_animation, _loop = false)
 	{
 		Animation = _animation;
 		AnimationLoops = _loop;
@@ -460,7 +460,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
 	///
 	/// @see BBMOD_AnimationPlayer.Animation
-	static change = function (_animation, _loop=false)
+	static change = function (_animation, _loop = false)
 	{
 		gml_pragma("forceinline");
 		if (Animation != _animation)
@@ -578,7 +578,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 	/// is used. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static submit = function (_materials=undefined)
+	static submit = function (_materials = undefined)
 	{
 		gml_pragma("forceinline");
 		Model.submit(_materials, get_transform());
@@ -594,7 +594,7 @@ function BBMOD_AnimationPlayer(_model, _paused=false) constructor
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_AnimationPlayer} Returns `self`.
-	static render = function (_materials=undefined)
+	static render = function (_materials = undefined)
 	{
 		gml_pragma("forceinline");
 		Model.render(_materials, get_transform());

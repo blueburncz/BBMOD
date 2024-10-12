@@ -194,7 +194,7 @@ function BBMOD_PostProcessor() constructor
 	///
 	/// @see BBMOD_PostProcessor.Enabled
 	static draw = function (
-		_surface, _x, _y, _depth=undefined, _normals=undefined)
+		_surface, _x, _y, _depth = undefined, _normals = undefined)
 	{
 		Rect.X = _x;
 		Rect.Y = _y;

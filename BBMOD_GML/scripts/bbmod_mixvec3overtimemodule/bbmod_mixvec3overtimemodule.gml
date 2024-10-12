@@ -18,11 +18,11 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixVec3OverTimeModule(
-	_property=undefined,
-	_from=new BBMOD_Vec3(),
-	_to=_from.Clone(),
-	_duration=1.0
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = new BBMOD_Vec3(),
+	_to = _from.Clone(),
+	_duration = 1.0
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the three consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
@@ -57,10 +57,11 @@ function BBMOD_MixVec3OverTimeModule(
 			var _duration = Duration;
 
 			var _particleIndex = 0;
-			repeat (_emitter.ParticlesAlive)
+			repeat(_emitter.ParticlesAlive)
 			{
-				var _factor = clamp(_particles[# BBMOD_EParticle.TimeAlive, _particleIndex] / _duration, 0.0, 1.0);
-				_particles[# _property, _particleIndex]     = lerp(_toX, _fromX, _factor);
+				var _factor = clamp(_particles[# BBMOD_EParticle.TimeAlive, _particleIndex] / _duration,
+					0.0, 1.0);
+				_particles[# _property, _particleIndex] = lerp(_toX, _fromX, _factor);
 				_particles[# _property + 1, _particleIndex] = lerp(_toY, _fromY, _factor);
 				_particles[# _property + 2, _particleIndex] = lerp(_toZ, _fromZ, _factor);
 				++_particleIndex;

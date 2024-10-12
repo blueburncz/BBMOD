@@ -12,7 +12,7 @@
 /// "RenderQueue" + number of created render queues - 1 (e.g. "RenderQueue0",
 /// "RenderQueue1" etc.) if `undefined`.
 /// @param {Real} [_priority] The priority of the render queue. Defaults to 0.
-function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
+function BBMOD_MeshRenderQueue(_name = undefined, _priority = 0) constructor
 {
 	static IdNext = 0;
 
@@ -178,7 +178,7 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 		return (__renderPasses & (1 << _renderPass)) ? true : false;
 	};
 
-	static submit = function (_instances=undefined)
+	static submit = function (_instances = undefined)
 	{
 		if (!has_commands(global.__bbmodRenderPass))
 		{
@@ -213,9 +213,9 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 
 		switch (_commandType)
 		{
-		case BBMOD_ERenderCommand.DrawMesh:
+			case BBMOD_ERenderCommand.DrawMesh:
 			{
-				repeat (_index / 4)
+				repeat(_index / 4)
 				{
 					var _id = _renderCommands[_commandIndex];
 					var _materialProps = _renderCommands[_commandIndex + 1];
@@ -249,9 +249,9 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 			}
 			break;
 
-		case BBMOD_ERenderCommand.DrawMeshAnimated:
+			case BBMOD_ERenderCommand.DrawMeshAnimated:
 			{
-				repeat (__index / 4)
+				repeat(__index / 4)
 				{
 					var _id = _renderCommands[_commandIndex];
 					var _materialProps = _renderCommands[_commandIndex + 1];
@@ -287,9 +287,9 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 			}
 			break;
 
-		case BBMOD_ERenderCommand.DrawMeshBatched:
+			case BBMOD_ERenderCommand.DrawMeshBatched:
 			{
-				repeat (__index / 4)
+				repeat(__index / 4)
 				{
 					var _id = _renderCommands[_commandIndex];
 					var _materialProps = _renderCommands[_commandIndex + 1];
@@ -314,7 +314,7 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 								_batchData = bbmod_array_clone(_batchData);
 
 								var j = 0;
-								repeat (array_length(_id))
+								repeat(array_length(_id))
 								{
 									var _idsCurrent = _id[j];
 									var _idsCount = array_length(_idsCurrent);
@@ -324,14 +324,14 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 									var _hasData = false;
 
 									var k = 0;
-									repeat (_idsCount)
+									repeat(_idsCount)
 									{
 										if (ds_list_find_index(_instances, _idsCurrent[k]) == -1)
 										{
 											var l = 0;
-											repeat (_slotsPerInstance)
+											repeat(_slotsPerInstance)
 											{
-												_dataCurrent[@ (k * _slotsPerInstance) + l] = 0.0;
+												_dataCurrent[@(k * _slotsPerInstance) + l] = 0.0;
 												++l;
 											}
 										}
@@ -368,14 +368,14 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 								var _slotsPerInstance = array_length(_dataCurrent) / _idsCount;
 
 								var k = 0;
-								repeat (_idsCount)
+								repeat(_idsCount)
 								{
 									if (ds_list_find_index(_instances, _idsCurrent[k]) == -1)
 									{
 										var l = 0;
-										repeat (_slotsPerInstance)
+										repeat(_slotsPerInstance)
 										{
-											_dataCurrent[@ (k * _slotsPerInstance) + l] = 0.0;
+											_dataCurrent[@(k * _slotsPerInstance) + l] = 0.0;
 											++l;
 										}
 									}
@@ -430,7 +430,7 @@ function BBMOD_MeshRenderQueue(_name=undefined, _priority=0) constructor
 					if (is_array(_batchData[0]))
 					{
 						var _dataIndex = 0;
-						repeat (array_length(_batchData))
+						repeat(array_length(_batchData))
 						{
 							shader_set_uniform_f_array(_uBatchData, _batchData[_dataIndex++]);
 							vertex_submit(_vertexBuffer, _primitiveType, _texture);

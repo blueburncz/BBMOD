@@ -12,17 +12,17 @@ function bbmod_texfilter_to_string(_setting)
 {
 	switch (_setting)
 	{
-	case tf_point:
-		return "tf_point";
+		case tf_point:
+			return "tf_point";
 
-	case tf_linear:
-		return "tf_linear";
+		case tf_linear:
+			return "tf_linear";
 
-	case tf_anisotropic:
-		return "tf_anisotropic";
+		case tf_anisotropic:
+			return "tf_anisotropic";
 
-	default:
-		return "";
+		default:
+			return "";
 	}
 }
 
@@ -40,16 +40,16 @@ function bbmod_texfilter_from_string(_name)
 {
 	switch (_name)
 	{
-	case "tf_point":
-		return tf_point;
+		case "tf_point":
+			return tf_point;
 
-	case "tf_linear":
-		return tf_linear;
+		case "tf_linear":
+			return tf_linear;
 
-	case "tf_anisotropic":
-		return tf_anisotropic;
+		case "tf_anisotropic":
+			return tf_anisotropic;
 
-	default:
-		throw new BBMOD_Exception("Invalid texture filtering setting \"" + _name + "\"!");
+		default:
+			throw new BBMOD_Exception("Invalid texture filtering setting \"" + _name + "\"!");
 	}
 }

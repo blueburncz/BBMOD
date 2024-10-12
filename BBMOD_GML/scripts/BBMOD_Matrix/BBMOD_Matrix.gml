@@ -21,7 +21,7 @@ function __bbmod_matrix_get_idenitity()
 ///
 /// @param {Array<Real>} [_raw] A raw GameMaker matrix. If `undefined`, then an
 /// identity matrix is created.
-function BBMOD_Matrix(_raw=undefined) constructor
+function BBMOD_Matrix(_raw = undefined) constructor
 {
 	/// @var {Array<Real>} The underlying GameMaker matrix.
 	Raw = _raw ?? matrix_build_identity();
@@ -76,7 +76,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @param {Real} [_index] The index to start reading at. Defaults to 0.
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
-	static FromArray = function (_array, _index=0)
+	static FromArray = function (_array, _index = 0)
 	{
 		gml_pragma("forceinline");
 		array_copy(Raw, 0, _array, _index, 16);
@@ -92,7 +92,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @param {Real} [_index] The index to start writing at. Defaults to 0.
 	///
 	/// @return {Array<Real>} The destination array.
-	static ToArray = function (_array=undefined, _index=0)
+	static ToArray = function (_array = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 		_array ??= array_create(16, 0.0);
@@ -113,7 +113,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		var _index = 0;
-		repeat (16)
+		repeat(16)
 		{
 			Raw[_index++] = buffer_read(_buffer, _type);
 		}
@@ -132,7 +132,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	{
 		gml_pragma("forceinline");
 		var _index = 0;
-		repeat (16)
+		repeat(16)
 		{
 			buffer_write(_buffer, _type, Raw[_index++]);
 		}
@@ -299,7 +299,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @param {Real} [_index] The index to start writing at.
 	///
 	/// @return {Array<Real>} The destination array.
-	static ToEuler = function (_array=undefined, _index=0)
+	static ToEuler = function (_array = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 
@@ -331,7 +331,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 			_thetaZ = 0.0;
 		}
 
-		_array[@ _index]     = (360.0 + radtodeg(_thetaX)) mod 360.0;
+		_array[@ _index] = (360.0 + radtodeg(_thetaX)) mod 360.0;
 		_array[@ _index + 1] = (360.0 + radtodeg(_thetaY)) mod 360.0;
 		_array[@ _index + 2] = (360.0 + radtodeg(_thetaZ)) mod 360.0;
 
@@ -346,17 +346,17 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	static Determinant = function ()
 	{
 		gml_pragma("forceinline");
-		var _m   = Raw;
-		var _m0  = _m[ 0];
-		var _m1  = _m[ 1];
-		var _m2  = _m[ 2];
-		var _m3  = _m[ 3];
-		var _m4  = _m[ 4];
-		var _m5  = _m[ 5];
-		var _m6  = _m[ 6];
-		var _m7  = _m[ 7];
-		var _m8  = _m[ 8];
-		var _m9  = _m[ 9];
+		var _m = Raw;
+		var _m0 = _m[0];
+		var _m1 = _m[1];
+		var _m2 = _m[2];
+		var _m3 = _m[3];
+		var _m4 = _m[4];
+		var _m5 = _m[5];
+		var _m6 = _m[6];
+		var _m7 = _m[7];
+		var _m8 = _m[8];
+		var _m9 = _m[9];
 		var _m10 = _m[10];
 		var _m11 = _m[11];
 		var _m12 = _m[12];
@@ -364,12 +364,18 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _m14 = _m[14];
 		var _m15 = _m[15];
 		return (0.0
-			+ (_m3 * _m6 *  _m9 * _m12) - (_m2 * _m7 *  _m9 * _m12) - (_m3 * _m5 * _m10 * _m12) + (_m1 * _m7 * _m10 * _m12)
-			+ (_m2 * _m5 * _m11 * _m12) - (_m1 * _m6 * _m11 * _m12) - (_m3 * _m6 *  _m8 * _m13) + (_m2 * _m7 *  _m8 * _m13)
-			+ (_m3 * _m4 * _m10 * _m13) - (_m0 * _m7 * _m10 * _m13) - (_m2 * _m4 * _m11 * _m13) + (_m0 * _m6 * _m11 * _m13)
-			+ (_m3 * _m5 *  _m8 * _m14) - (_m1 * _m7 *  _m8 * _m14) - (_m3 * _m4 *  _m9 * _m14) + (_m0 * _m7 *  _m9 * _m14)
-			+ (_m1 * _m4 * _m11 * _m14) - (_m0 * _m5 * _m11 * _m14) - (_m2 * _m5 *  _m8 * _m15) + (_m1 * _m6 *  _m8 * _m15)
-			+ (_m2 * _m4 *  _m9 * _m15) - (_m0 * _m6 *  _m9 * _m15) - (_m1 * _m4 * _m10 * _m15) + (_m0 * _m5 * _m10 * _m15));
+			+ (_m3 * _m6 * _m9 * _m12) - (_m2 * _m7 * _m9 * _m12) - (_m3 * _m5 * _m10 * _m12) + (_m1 * _m7
+				* _m10 * _m12)
+			+ (_m2 * _m5 * _m11 * _m12) - (_m1 * _m6 * _m11 * _m12) - (_m3 * _m6 * _m8 * _m13) + (_m2 * _m7
+				* _m8 * _m13)
+			+ (_m3 * _m4 * _m10 * _m13) - (_m0 * _m7 * _m10 * _m13) - (_m2 * _m4 * _m11 * _m13) + (_m0 * _m6
+				* _m11 * _m13)
+			+ (_m3 * _m5 * _m8 * _m14) - (_m1 * _m7 * _m8 * _m14) - (_m3 * _m4 * _m9 * _m14) + (_m0 * _m7 * _m9
+				* _m14)
+			+ (_m1 * _m4 * _m11 * _m14) - (_m0 * _m5 * _m11 * _m14) - (_m2 * _m5 * _m8 * _m15) + (_m1 * _m6
+				* _m8 * _m15)
+			+ (_m2 * _m4 * _m9 * _m15) - (_m0 * _m6 * _m9 * _m15) - (_m1 * _m4 * _m10 * _m15) + (_m0 * _m5
+				* _m10 * _m15));
 	};
 
 	/// @func Inverse()
@@ -393,17 +399,17 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	{
 		gml_pragma("forceinline");
 
-		var _m   = Raw;
-		var _m0  = _m[ 0];
-		var _m1  = _m[ 1];
-		var _m2  = _m[ 2];
-		var _m3  = _m[ 3];
-		var _m4  = _m[ 4];
-		var _m5  = _m[ 5];
-		var _m6  = _m[ 6];
-		var _m7  = _m[ 7];
-		var _m8  = _m[ 8];
-		var _m9  = _m[ 9];
+		var _m = Raw;
+		var _m0 = _m[0];
+		var _m1 = _m[1];
+		var _m2 = _m[2];
+		var _m3 = _m[3];
+		var _m4 = _m[4];
+		var _m5 = _m[5];
+		var _m6 = _m[6];
+		var _m7 = _m[7];
+		var _m8 = _m[8];
+		var _m9 = _m[9];
 		var _m10 = _m[10];
 		var _m11 = _m[11];
 		var _m12 = _m[12];
@@ -412,32 +418,54 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _m15 = _m[15];
 
 		var _determinant = (0.0
-			+ (_m3 * _m6 *  _m9 * _m12) - (_m2 * _m7 *  _m9 * _m12) - (_m3 * _m5 * _m10 * _m12) + (_m1 * _m7 * _m10 * _m12)
-			+ (_m2 * _m5 * _m11 * _m12) - (_m1 * _m6 * _m11 * _m12) - (_m3 * _m6 *  _m8 * _m13) + (_m2 * _m7 *  _m8 * _m13)
-			+ (_m3 * _m4 * _m10 * _m13) - (_m0 * _m7 * _m10 * _m13) - (_m2 * _m4 * _m11 * _m13) + (_m0 * _m6 * _m11 * _m13)
-			+ (_m3 * _m5 *  _m8 * _m14) - (_m1 * _m7 *  _m8 * _m14) - (_m3 * _m4 *  _m9 * _m14) + (_m0 * _m7 *  _m9 * _m14)
-			+ (_m1 * _m4 * _m11 * _m14) - (_m0 * _m5 * _m11 * _m14) - (_m2 * _m5 *  _m8 * _m15) + (_m1 * _m6 *  _m8 * _m15)
-			+ (_m2 * _m4 *  _m9 * _m15) - (_m0 * _m6 *  _m9 * _m15) - (_m1 * _m4 * _m10 * _m15) + (_m0 * _m5 * _m10 * _m15));
+			+ (_m3 * _m6 * _m9 * _m12) - (_m2 * _m7 * _m9 * _m12) - (_m3 * _m5 * _m10 * _m12) + (_m1 * _m7
+				* _m10 * _m12)
+			+ (_m2 * _m5 * _m11 * _m12) - (_m1 * _m6 * _m11 * _m12) - (_m3 * _m6 * _m8 * _m13) + (_m2 * _m7
+				* _m8 * _m13)
+			+ (_m3 * _m4 * _m10 * _m13) - (_m0 * _m7 * _m10 * _m13) - (_m2 * _m4 * _m11 * _m13) + (_m0 * _m6
+				* _m11 * _m13)
+			+ (_m3 * _m5 * _m8 * _m14) - (_m1 * _m7 * _m8 * _m14) - (_m3 * _m4 * _m9 * _m14) + (_m0 * _m7 * _m9
+				* _m14)
+			+ (_m1 * _m4 * _m11 * _m14) - (_m0 * _m5 * _m11 * _m14) - (_m2 * _m5 * _m8 * _m15) + (_m1 * _m6
+				* _m8 * _m15)
+			+ (_m2 * _m4 * _m9 * _m15) - (_m0 * _m6 * _m9 * _m15) - (_m1 * _m4 * _m10 * _m15) + (_m0 * _m5
+				* _m10 * _m15));
 
 		var _s = 1.0 / _determinant;
 
 		Raw = [
-			_s * ((_m6 * _m11 * _m13) - (_m7 * _m10 * _m13) + (_m7 * _m9 * _m14) - (_m5 * _m11 * _m14) - (_m6 * _m9 * _m15) + (_m5 * _m10 * _m15)),
-			_s * ((_m3 * _m10 * _m13) - (_m2 * _m11 * _m13) - (_m3 * _m9 * _m14) + (_m1 * _m11 * _m14) + (_m2 * _m9 * _m15) - (_m1 * _m10 * _m15)),
-			_s * ((_m2 *  _m7 * _m13) - (_m3 *  _m6 * _m13) + (_m3 * _m5 * _m14) - (_m1 *  _m7 * _m14) - (_m2 * _m5 * _m15) + (_m1 *  _m6 * _m15)),
-			_s * ((_m3 *  _m6 *  _m9) - (_m2 *  _m7 *  _m9) - (_m3 * _m5 * _m10) + (_m1 *  _m7 * _m10) + (_m2 * _m5 * _m11) - (_m1 *  _m6 * _m11)),
-			_s * ((_m7 * _m10 * _m12) - (_m6 * _m11 * _m12) - (_m7 * _m8 * _m14) + (_m4 * _m11 * _m14) + (_m6 * _m8 * _m15) - (_m4 * _m10 * _m15)),
-			_s * ((_m2 * _m11 * _m12) - (_m3 * _m10 * _m12) + (_m3 * _m8 * _m14) - (_m0 * _m11 * _m14) - (_m2 * _m8 * _m15) + (_m0 * _m10 * _m15)),
-			_s * ((_m3 *  _m6 * _m12) - (_m2 *  _m7 * _m12) - (_m3 * _m4 * _m14) + (_m0 *  _m7 * _m14) + (_m2 * _m4 * _m15) - (_m0 *  _m6 * _m15)),
-			_s * ((_m2 *  _m7 *  _m8) - (_m3 *  _m6 *  _m8) + (_m3 * _m4 * _m10) - (_m0 *  _m7 * _m10) - (_m2 * _m4 * _m11) + (_m0 *  _m6 * _m11)),
-			_s * ((_m5 * _m11 * _m12) - (_m7 *  _m9 * _m12) + (_m7 * _m8 * _m13) - (_m4 * _m11 * _m13) - (_m5 * _m8 * _m15) + (_m4 *  _m9 * _m15)),
-			_s * ((_m3 *  _m9 * _m12) - (_m1 * _m11 * _m12) - (_m3 * _m8 * _m13) + (_m0 * _m11 * _m13) + (_m1 * _m8 * _m15) - (_m0 *  _m9 * _m15)),
-			_s * ((_m1 *  _m7 * _m12) - (_m3 *  _m5 * _m12) + (_m3 * _m4 * _m13) - (_m0 *  _m7 * _m13) - (_m1 * _m4 * _m15) + (_m0 *  _m5 * _m15)),
-			_s * ((_m3 *  _m5 *  _m8) - (_m1 *  _m7 *  _m8) - (_m3 * _m4 *  _m9) + (_m0 *  _m7 *  _m9) + (_m1 * _m4 * _m11) - (_m0 *  _m5 * _m11)),
-			_s * ((_m6 *  _m9 * _m12) - (_m5 * _m10 * _m12) - (_m6 * _m8 * _m13) + (_m4 * _m10 * _m13) + (_m5 * _m8 * _m14) - (_m4 *  _m9 * _m14)),
-			_s * ((_m1 * _m10 * _m12) - (_m2 *  _m9 * _m12) + (_m2 * _m8 * _m13) - (_m0 * _m10 * _m13) - (_m1 * _m8 * _m14) + (_m0 *  _m9 * _m14)),
-			_s * ((_m2 *  _m5 * _m12) - (_m1 *  _m6 * _m12) - (_m2 * _m4 * _m13) + (_m0 *  _m6 * _m13) + (_m1 * _m4 * _m14) - (_m0 *  _m5 * _m14)),
-			_s * ((_m1 *  _m6 *  _m8) - (_m2 *  _m5 *  _m8) + (_m2 * _m4 *  _m9) - (_m0 *  _m6 *  _m9) - (_m1 * _m4 * _m10) + (_m0 *  _m5 * _m10)),
+			_s * ((_m6 * _m11 * _m13) - (_m7 * _m10 * _m13) + (_m7 * _m9 * _m14) - (_m5 * _m11 * _m14) - (_m6
+				* _m9 * _m15) + (_m5 * _m10 * _m15)),
+			_s * ((_m3 * _m10 * _m13) - (_m2 * _m11 * _m13) - (_m3 * _m9 * _m14) + (_m1 * _m11 * _m14) + (_m2
+				* _m9 * _m15) - (_m1 * _m10 * _m15)),
+			_s * ((_m2 * _m7 * _m13) - (_m3 * _m6 * _m13) + (_m3 * _m5 * _m14) - (_m1 * _m7 * _m14) - (_m2 * _m5
+				* _m15) + (_m1 * _m6 * _m15)),
+			_s * ((_m3 * _m6 * _m9) - (_m2 * _m7 * _m9) - (_m3 * _m5 * _m10) + (_m1 * _m7 * _m10) + (_m2 * _m5
+				* _m11) - (_m1 * _m6 * _m11)),
+			_s * ((_m7 * _m10 * _m12) - (_m6 * _m11 * _m12) - (_m7 * _m8 * _m14) + (_m4 * _m11 * _m14) + (_m6
+				* _m8 * _m15) - (_m4 * _m10 * _m15)),
+			_s * ((_m2 * _m11 * _m12) - (_m3 * _m10 * _m12) + (_m3 * _m8 * _m14) - (_m0 * _m11 * _m14) - (_m2
+				* _m8 * _m15) + (_m0 * _m10 * _m15)),
+			_s * ((_m3 * _m6 * _m12) - (_m2 * _m7 * _m12) - (_m3 * _m4 * _m14) + (_m0 * _m7 * _m14) + (_m2 * _m4
+				* _m15) - (_m0 * _m6 * _m15)),
+			_s * ((_m2 * _m7 * _m8) - (_m3 * _m6 * _m8) + (_m3 * _m4 * _m10) - (_m0 * _m7 * _m10) - (_m2 * _m4
+				* _m11) + (_m0 * _m6 * _m11)),
+			_s * ((_m5 * _m11 * _m12) - (_m7 * _m9 * _m12) + (_m7 * _m8 * _m13) - (_m4 * _m11 * _m13) - (_m5
+				* _m8 * _m15) + (_m4 * _m9 * _m15)),
+			_s * ((_m3 * _m9 * _m12) - (_m1 * _m11 * _m12) - (_m3 * _m8 * _m13) + (_m0 * _m11 * _m13) + (_m1
+				* _m8 * _m15) - (_m0 * _m9 * _m15)),
+			_s * ((_m1 * _m7 * _m12) - (_m3 * _m5 * _m12) + (_m3 * _m4 * _m13) - (_m0 * _m7 * _m13) - (_m1 * _m4
+				* _m15) + (_m0 * _m5 * _m15)),
+			_s * ((_m3 * _m5 * _m8) - (_m1 * _m7 * _m8) - (_m3 * _m4 * _m9) + (_m0 * _m7 * _m9) + (_m1 * _m4
+				* _m11) - (_m0 * _m5 * _m11)),
+			_s * ((_m6 * _m9 * _m12) - (_m5 * _m10 * _m12) - (_m6 * _m8 * _m13) + (_m4 * _m10 * _m13) + (_m5
+				* _m8 * _m14) - (_m4 * _m9 * _m14)),
+			_s * ((_m1 * _m10 * _m12) - (_m2 * _m9 * _m12) + (_m2 * _m8 * _m13) - (_m0 * _m10 * _m13) - (_m1
+				* _m8 * _m14) + (_m0 * _m9 * _m14)),
+			_s * ((_m2 * _m5 * _m12) - (_m1 * _m6 * _m12) - (_m2 * _m4 * _m13) + (_m0 * _m6 * _m13) + (_m1 * _m4
+				* _m14) - (_m0 * _m5 * _m14)),
+			_s * ((_m1 * _m6 * _m8) - (_m2 * _m5 * _m8) + (_m2 * _m4 * _m9) - (_m0 * _m6 * _m9) - (_m1 * _m4
+				* _m10) + (_m0 * _m5 * _m10)),
 		];
 
 		return self;
@@ -468,7 +496,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _res = new BBMOD_Matrix();
 		var _raw = matrix_multiply(Raw, _matrix.Raw);
 		var _index = 1;
-		repeat (argument_count - 1)
+		repeat(argument_count - 1)
 		{
 			_raw = matrix_multiply(_raw, argument[_index++]);
 		}
@@ -500,7 +528,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		gml_pragma("forceinline");
 		var _raw = matrix_multiply(Raw, _matrix.Raw);
 		var _index = 1;
-		repeat (argument_count - 1)
+		repeat(argument_count - 1)
 		{
 			_raw = matrix_multiply(_raw, argument[_index++]);
 		}
@@ -538,7 +566,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
 		var _index = 0;
-		repeat (16)
+		repeat(16)
 		{
 			_selfRaw[@ _index] *= _otherRaw[_index];
 			++_index;
@@ -574,7 +602,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
 		var _index = 0;
-		repeat (16)
+		repeat(16)
 		{
 			_selfRaw[@ _index] += _otherRaw[_index];
 			++_index;
@@ -612,7 +640,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _selfRaw = Raw;
 		var _otherRaw = _matrix.Raw;
 		var _index = 0;
-		repeat (16)
+		repeat(16)
 		{
 			_selfRaw[@ _index] -= _otherRaw[_index];
 			++_index;
@@ -669,8 +697,8 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		gml_pragma("forceinline");
 		var _m = Raw;
 		Raw = [
-			_m[0], _m[4], _m[ 8], _m[12],
-			_m[1], _m[5], _m[ 9], _m[13],
+			_m[0], _m[4], _m[8], _m[12],
+			_m[1], _m[5], _m[9], _m[13],
 			_m[2], _m[6], _m[10], _m[14],
 			_m[3], _m[7], _m[11], _m[15],
 		];
@@ -689,7 +717,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// a vector. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
-	static Translate = function (_x, _y=undefined, _z=undefined)
+	static Translate = function (_x, _y = undefined, _z = undefined)
 	{
 		gml_pragma("forceinline");
 		return Clone().TranslateSelf(_x, _y, _z);
@@ -707,13 +735,13 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// a vector. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
-	static TranslateSelf = function (_x, _y=undefined, _z=undefined)
+	static TranslateSelf = function (_x, _y = undefined, _z = undefined)
 	{
 		gml_pragma("forceinline");
 		Raw = matrix_multiply(Raw,
 			is_struct(_x)
-				? matrix_build(_x.X, _x.Y, _x.Z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
-				: matrix_build(_x, _y, _z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
+			? matrix_build(_x.X, _x.Y, _x.Z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
+			: matrix_build(_x, _y, _z, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
 		return self;
 	};
 
@@ -766,7 +794,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 			matrix_build(0.0, _y, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0));
 		return _res;
 	};
-	
+
 	/// @func TranslateYSelf(_y)
 	///
 	/// @desc Translates the matrix on the Y axis and stores the result into
@@ -831,14 +859,14 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
 	///
 	/// @note The order of rotations is YXZ, same as in `matrix_build`.
-	static RotateEuler = function (_x, _y=undefined, _z=undefined)
+	static RotateEuler = function (_x, _y = undefined, _z = undefined)
 	{
 		gml_pragma("forceinline");
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			is_struct(_x)
-				? matrix_build(0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z, 1.0, 1.0, 1.0)
-				: matrix_build(0.0, 0.0, 0.0, _x, _y, _z, 1.0, 1.0, 1.0));
+			? matrix_build(0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z, 1.0, 1.0, 1.0)
+			: matrix_build(0.0, 0.0, 0.0, _x, _y, _z, 1.0, 1.0, 1.0));
 		return _res;
 	};
 
@@ -857,13 +885,13 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	///
 	/// @note The order of rotations is YXZ, same as in `matrix_build`.
-	static RotateEulerSelf = function (_x, _y=undefined, _z=undefined)
+	static RotateEulerSelf = function (_x, _y = undefined, _z = undefined)
 	{
 		gml_pragma("forceinline");
 		Raw = matrix_multiply(Raw,
 			is_struct(_x)
-				? matrix_build(0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z, 1.0, 1.0, 1.0)
-				: matrix_build(0.0, 0.0, 0.0, _x, _y, _z, 1.0, 1.0, 1.0));
+			? matrix_build(0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z, 1.0, 1.0, 1.0)
+			: matrix_build(0.0, 0.0, 0.0, _x, _y, _z, 1.0, 1.0, 1.0));
 		return self;
 	};
 
@@ -1008,14 +1036,14 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// vector. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_Matrix} The resulting matrix.
-	static Scale = function (_x, _y=undefined, _z=undefined)
+	static Scale = function (_x, _y = undefined, _z = undefined)
 	{
 		gml_pragma("forceinline");
 		var _res = new BBMOD_Matrix();
 		_res.Raw = matrix_multiply(Raw,
 			is_struct(_x)
-				? matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z)
-				: matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x, _y, _z));
+			? matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z)
+			: matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x, _y, _z));
 		return _res;
 	};
 
@@ -1031,13 +1059,13 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// vector. Defaults to `undefined`.
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
-	static ScaleSelf = function (_x, _y=undefined, _z=undefined)
+	static ScaleSelf = function (_x, _y = undefined, _z = undefined)
 	{
 		gml_pragma("forceinline");
 		Raw = matrix_multiply(Raw,
 			is_struct(_x)
-				? matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z)
-				: matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x, _y, _z));
+			? matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x.X, _x.Y, _x.Z)
+			: matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _x, _y, _z));
 		return self;
 	};
 
@@ -1055,7 +1083,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		var _res = new BBMOD_Matrix();
 		var _selfRaw = Raw;
 		var _index = 0;
-		repeat (16)
+		repeat(16)
 		{
 			_res.Raw[@ _index] = _selfRaw[_index] * _s;
 			++_index;
@@ -1076,7 +1104,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		gml_pragma("forceinline");
 		var _selfRaw = Raw;
 		var _index = 0;
-		repeat (16)
+		repeat(16)
 		{
 			_selfRaw[@ _index] *= _s;
 			++_index;
@@ -1192,37 +1220,37 @@ function BBMOD_Matrix(_raw=undefined) constructor
 /// 0.
 ///
 /// @return {Array} The destination array.
-function bbmod_matrix_build_normalmatrix(_m, _dest=[], _index=0)
+function bbmod_matrix_build_normalmatrix(_m, _dest = [], _index = 0)
 {
 	gml_pragma("forceinline");
 
-	var _m0  = _m[ 0];
-	var _m1  = _m[ 1];
-	var _m2  = _m[ 2];
-	var _m4  = _m[ 4];
-	var _m5  = _m[ 5];
-	var _m6  = _m[ 6];
-	var _m8  = _m[ 8];
-	var _m9  = _m[ 9];
+	var _m0 = _m[0];
+	var _m1 = _m[1];
+	var _m2 = _m[2];
+	var _m4 = _m[4];
+	var _m5 = _m[5];
+	var _m6 = _m[6];
+	var _m8 = _m[8];
+	var _m9 = _m[9];
 	var _m10 = _m[10];
 
 	var _determinant = (0.0
-		+ _m0 * ((_m5 * _m10) - (_m6 *  _m9))
-		+ _m4 * ((_m9 *  _m2) - (_m1 * _m10))
-		+ _m8 * ((_m1 *  _m6) - (_m5 *  _m2)));
+		+ _m0 * ((_m5 * _m10) - (_m6 * _m9))
+		+ _m4 * ((_m9 * _m2) - (_m1 * _m10))
+		+ _m8 * ((_m1 * _m6) - (_m5 * _m2)));
 
 	var _s = 1.0 / _determinant;
 
-	_dest[@ _index + 0]  = _s * ((_m5 * _m10) - (_m6 *  _m9));
-	_dest[@ _index + 1]  = _s * ((_m8 *  _m6) - (_m4 * _m10));
-	_dest[@ _index + 2]  = _s * ((_m4 *  _m9) - (_m8 *  _m5));
-	_dest[@ _index + 3]  = 0.0;
-	_dest[@ _index + 4]  = _s * ((_m9 *  _m2) - (_m1 * _m10));
-	_dest[@ _index + 5]  = _s * ((_m0 * _m10) - (_m8 *  _m2));
-	_dest[@ _index + 6]  = _s * ((_m1 *  _m8) - (_m0 *  _m9));
-	_dest[@ _index + 7]  = 0.0;
-	_dest[@ _index + 8]  = _s * ((_m1 * _m6) - (_m2 * _m5));
-	_dest[@ _index + 9]  = _s * ((_m2 * _m4) - (_m0 * _m6));
+	_dest[@ _index + 0] = _s * ((_m5 * _m10) - (_m6 * _m9));
+	_dest[@ _index + 1] = _s * ((_m8 * _m6) - (_m4 * _m10));
+	_dest[@ _index + 2] = _s * ((_m4 * _m9) - (_m8 * _m5));
+	_dest[@ _index + 3] = 0.0;
+	_dest[@ _index + 4] = _s * ((_m9 * _m2) - (_m1 * _m10));
+	_dest[@ _index + 5] = _s * ((_m0 * _m10) - (_m8 * _m2));
+	_dest[@ _index + 6] = _s * ((_m1 * _m8) - (_m0 * _m9));
+	_dest[@ _index + 7] = 0.0;
+	_dest[@ _index + 8] = _s * ((_m1 * _m6) - (_m2 * _m5));
+	_dest[@ _index + 9] = _s * ((_m2 * _m4) - (_m0 * _m6));
 	_dest[@ _index + 10] = _s * ((_m0 * _m5) - (_m1 * _m4));
 	_dest[@ _index + 11] = 0.0;
 	_dest[@ _index + 12] = 0.0;

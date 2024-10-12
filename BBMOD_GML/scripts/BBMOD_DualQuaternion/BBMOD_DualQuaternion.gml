@@ -24,8 +24,8 @@
 /// @note If you leave all the arguments to their default values, an identity
 /// dual quaternion is created.
 function BBMOD_DualQuaternion(
-	_x=0.0, _y=0.0, _z=0.0, _w=1.0,
-	_dx=0.0, _dy=0.0, _dz=0.0, _dw=0.0) constructor
+	_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0,
+	_dx = 0.0, _dy = 0.0, _dz = 0.0, _dw = 0.0) constructor
 {
 	/// @var {Struct.BBMOD_Quaternion} The real part of the dual quaternion.
 	Real = new BBMOD_Quaternion(_x, _y, _z, _w);
@@ -166,7 +166,7 @@ function BBMOD_DualQuaternion(
 	/// components from. Defaults to 0.
 	///
 	/// @return {Struct.BBMOD_DualQuaternion} Returns `self`.
-	static FromArray = function (_array, _index=0)
+	static FromArray = function (_array, _index = 0)
 	{
 		gml_pragma("forceinline");
 		Real = Real.FromArray(_array, _index);
@@ -239,12 +239,15 @@ function BBMOD_DualQuaternion(
 		// var _tW = 0;
 
 		Dual.X = (_tY * _realZ - _tZ * _realY
-			/*+ _tW * _realX*/ + _tX * _realW) * 0.5;
+			/*+ _tW * _realX*/
+			+ _tX * _realW) * 0.5;
 		Dual.Y = (_tZ * _realX - _tX * _realZ
-			/*+ _tW * _realY*/ + _tY * _realW) * 0.5;
+			/*+ _tW * _realY*/
+			+ _tY * _realW) * 0.5;
 		Dual.Z = (_tX * _realY - _tY * _realX
-			/*+ _tW * _realZ*/ + _tZ * _realW) * 0.5;
-		Dual.W = (/*_tW * _realW*/ - _tX * _realX
+			/*+ _tW * _realZ*/
+			+ _tZ * _realW) * 0.5;
+		Dual.W = ( /*_tW * _realW*/ -_tX * _realX
 			- _tY * _realY - _tZ * _realZ) * 0.5;
 
 		return self;
@@ -280,7 +283,7 @@ function BBMOD_DualQuaternion(
 		var _q20 = -Real.X;
 		var _q21 = -Real.Y;
 		var _q22 = -Real.Z;
-		var _q23 =  Real.W;
+		var _q23 = Real.W;
 
 		//return Dual.Scale(2.0).Mul(Real.Conjugate());
 		return new BBMOD_Vec3(
@@ -583,7 +586,7 @@ function BBMOD_DualQuaternion(
 	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
 	///
 	/// @return {Array<Real>} Returns the destination array.
-	static ToArray = function (_array=undefined, _index=0)
+	static ToArray = function (_array = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 		_array ??= array_create(8, 0.0);
@@ -619,7 +622,7 @@ function BBMOD_DualQuaternion(
 	/// Defaults to 0.
 	///
 	/// @return {Array<Real>} Returns the destination array.
-	static ToMatrix = function (_dest=undefined, _index=0)
+	static ToMatrix = function (_dest = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 
@@ -709,7 +712,7 @@ function __bbmod_dquat_mul_array(_dq1, _dq1Index, _dq2, _dq2Index, _dest, _destI
 	var _dq2d2 = _dq2[_dq2Index + 6];
 	var _dq2d3 = _dq2[_dq2Index + 7];
 
-	_dest[@ _destIndex]     = (_dq2r3 * _dq1r0 + _dq2r0 * _dq1r3 + _dq2r1 * _dq1r2 - _dq2r2 * _dq1r1);
+	_dest[@ _destIndex] = (_dq2r3 * _dq1r0 + _dq2r0 * _dq1r3 + _dq2r1 * _dq1r2 - _dq2r2 * _dq1r1);
 	_dest[@ _destIndex + 1] = (_dq2r3 * _dq1r1 + _dq2r1 * _dq1r3 + _dq2r2 * _dq1r0 - _dq2r0 * _dq1r2);
 	_dest[@ _destIndex + 2] = (_dq2r3 * _dq1r2 + _dq2r2 * _dq1r3 + _dq2r0 * _dq1r1 - _dq2r1 * _dq1r0);
 	_dest[@ _destIndex + 3] = (_dq2r3 * _dq1r3 - _dq2r0 * _dq1r0 - _dq2r1 * _dq1r1 - _dq2r2 * _dq1r2);

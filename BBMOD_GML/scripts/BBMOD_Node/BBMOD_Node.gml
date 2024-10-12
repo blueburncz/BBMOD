@@ -91,7 +91,7 @@ function BBMOD_Node(_model) constructor
 		_dest.Children = [];
 
 		var i = 0;
-		repeat (array_length(Children))
+		repeat(array_length(Children))
 		{
 			_dest.add_child(Children[i++].clone());
 		}
@@ -176,7 +176,7 @@ function BBMOD_Node(_model) constructor
 		}
 
 		i = 0;
-		repeat (_meshCount)
+		repeat(_meshCount)
 		{
 			_meshes[@ i++] = buffer_read(_buffer, buffer_u32);
 		}
@@ -185,7 +185,7 @@ function BBMOD_Node(_model) constructor
 		var _childCount = buffer_read(_buffer, buffer_u32);
 		Children = [];
 
-		repeat (_childCount)
+		repeat(_childCount)
 		{
 			var _child = new BBMOD_Node(Model);
 			add_child(_child);
@@ -220,9 +220,9 @@ function BBMOD_Node(_model) constructor
 		buffer_write(_buffer, buffer_u32, _meshCount)
 
 		i = 0;
-		repeat (_meshCount)
+		repeat(_meshCount)
 		{
-			 buffer_write(_buffer, buffer_u32, Meshes[i++]);
+			buffer_write(_buffer, buffer_u32, Meshes[i++]);
 		}
 
 		// Child nodes
@@ -230,7 +230,7 @@ function BBMOD_Node(_model) constructor
 		buffer_write(_buffer, buffer_u32, _childCount);
 
 		i = 0;
-		repeat (_childCount)
+		repeat(_childCount)
 		{
 			Children[i++].to_buffer(_buffer);
 		}
@@ -276,7 +276,7 @@ function BBMOD_Node(_model) constructor
 			var _children = _node.Children;
 			var i = 0;
 
-			repeat (array_length(_meshIndices))
+			repeat(array_length(_meshIndices))
 			{
 				var _mesh = _meshes[_meshIndices[i++]];
 				var _material = _materials[_mesh.MaterialIndex];
@@ -308,7 +308,7 @@ function BBMOD_Node(_model) constructor
 			}
 
 			i = 0;
-			repeat (array_length(_children))
+			repeat(array_length(_children))
 			{
 				ds_stack_push(_renderStack, _children[i++]);
 			}
@@ -356,7 +356,7 @@ function BBMOD_Node(_model) constructor
 			var _children = _node.Children;
 			var i = 0;
 
-			repeat (array_length(_meshIndices))
+			repeat(array_length(_meshIndices))
 			{
 				var _mesh = _meshes[_meshIndices[i++]];
 				var _material = _materials[_mesh.MaterialIndex];
@@ -390,7 +390,7 @@ function BBMOD_Node(_model) constructor
 			}
 
 			i = 0;
-			repeat (array_length(_children))
+			repeat(array_length(_children))
 			{
 				ds_stack_push(_renderStack, _children[i++]);
 			}

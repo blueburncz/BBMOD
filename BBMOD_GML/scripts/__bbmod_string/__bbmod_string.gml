@@ -26,7 +26,7 @@ function bbmod_string_starts_with(_string, _substr)
 /// @return {Array<String>} An array containing `[firstHalf, secondHalf]`. If
 /// the delimiter is not found in the string, then `secondHalf` equals an empty
 /// string and `firstHalf` is the original string.
-function bbmod_string_split_on_first(_string, _delimiter, _dest=[])
+function bbmod_string_split_on_first(_string, _delimiter, _dest = [])
 {
 	var i = string_pos(_delimiter, _string);
 	if (i == 0)
@@ -56,13 +56,12 @@ function bbmod_string_explode(_string, _char, _dest)
 {
 	static _temp = array_create(2);
 	var i = 0;
-	do
-	{
+	do {
 		bbmod_string_split_on_first(_string, _char, _temp);
 		_dest[@ i++] = _temp[0];
 		_string = _temp[1];
 	}
-	until (_temp[1] == "");
+	until(_temp[1] == "");
 	return i;
 }
 
@@ -79,7 +78,7 @@ function bbmod_string_join_array(_separator, _array)
 {
 	var _string = "";
 	var i = 0;
-	repeat (array_length(_array) - 1)
+	repeat(array_length(_array) - 1)
 	{
 		_string += string(_array[i++]) + _separator;
 	}

@@ -19,11 +19,11 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixVec3Module(
-	_property=undefined,
-	_from=new BBMOD_Vec3(),
-	_to=_from.Clone(),
-	_separate=true
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = new BBMOD_Vec3(),
+	_to = _from.Clone(),
+	_separate = true
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the three consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.

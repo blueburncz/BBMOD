@@ -68,7 +68,7 @@ global.__bbmodReflectionProbeTexture = pointer_null;
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) constructor
+function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) constructor
 {
 	/// @var {Bool} If `false` then the probe is disabled and unused. Default
 	/// value is `true`.
@@ -262,9 +262,9 @@ function bbmod_reflection_probe_find(_position)
 	var _probe = undefined;
 	var _probeVolume = infinity;
 	var i = 0;
-	repeat (array_length(_reflectionProbes))
+	repeat(array_length(_reflectionProbes))
 	{
-		with (_reflectionProbes[i++])
+		with(_reflectionProbes[i++])
 		{
 			if (!Enabled)
 			{
@@ -317,7 +317,7 @@ function bbmod_reflection_probe_remove(_reflectionProbe)
 	gml_pragma("forceinline");
 	var _reflectionProbes = global.__bbmodReflectionProbes;
 	var i = 0;
-	repeat (array_length(_reflectionProbes))
+	repeat(array_length(_reflectionProbes))
 	{
 		if (_reflectionProbes[i] == _reflectionProbe)
 		{

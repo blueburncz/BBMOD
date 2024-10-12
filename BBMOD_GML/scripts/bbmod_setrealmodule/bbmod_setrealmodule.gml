@@ -12,8 +12,7 @@
 /// @param {Real} [_value] The initial value of the property. Defaults to 0.0.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_SetRealModule(_property=undefined, _value=0.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_SetRealModule(_property = undefined, _value = 0.0): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The property to set initial value of. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.

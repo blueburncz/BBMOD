@@ -11,7 +11,7 @@
 ///
 /// @note If you leave the arguments to their default values, then an identity
 /// quaternion is created.
-function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
+function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 {
 	/// @var {Real} The first component of the quaternion.
 	X = _x;
@@ -125,7 +125,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	{
 		gml_pragma("forceinline");
 		return (
-			  X * _q.X
+			X * _q.X
 			+ Y * _q.Y
 			+ Z * _q.Z
 			+ W * _q.W
@@ -191,7 +191,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// components from. Defaults to 0.
 	///
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
-	static FromArray = function (_array, _index=0)
+	static FromArray = function (_array, _index = 0)
 	{
 		gml_pragma("forceinline");
 		X = _array[_index];
@@ -386,7 +386,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	{
 		gml_pragma("forceinline");
 		return sqrt(
-			  X * X
+			X * X
 			+ Y * Y
 			+ Z * Z
 			+ W * W
@@ -402,7 +402,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	{
 		gml_pragma("forceinline");
 		return (
-			  X * X
+			X * X
 			+ Y * Y
 			+ Z * Z
 			+ W * W
@@ -829,11 +829,11 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// @param {Real} [_index] The index to start writing to. Defaults to 0.
 	///
 	/// @return {Array<Real>} Returns the destination array.
-	static ToArray = function (_array=undefined, _index=0)
+	static ToArray = function (_array = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 		_array ??= array_create(4, 0.0);
-		_array[@ _index]     = X;
+		_array[@ _index] = X;
 		_array[@ _index + 1] = Y;
 		_array[@ _index + 2] = Z;
 		_array[@ _index + 3] = W;
@@ -868,7 +868,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// Defaults to 0.
 	///
 	/// @return {Array<Real>} Returns the destination array.
-	static ToMatrix = function (_dest=undefined, _index=0)
+	static ToMatrix = function (_dest = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 
@@ -883,8 +883,8 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		_temp0 = _q0 * _q0;
 		_temp1 = _q1 * _q1;
 		_temp2 = _q2 * _q2;
-		_dest[@ _index]      = 1.0 - 2.0 * (_temp1 + _temp2);
-		_dest[@ _index + 5]  = 1.0 - 2.0 * (_temp0 + _temp2);
+		_dest[@ _index] = 1.0 - 2.0 * (_temp1 + _temp2);
+		_dest[@ _index + 5] = 1.0 - 2.0 * (_temp0 + _temp2);
 		_dest[@ _index + 10] = 1.0 - 2.0 * (_temp0 + _temp1);
 
 		_temp0 = _q0 * _q1;

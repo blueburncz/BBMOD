@@ -25,7 +25,7 @@
 ///
 /// @see BBMOD_Vec2
 /// @see BBMOD_Vec4
-function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
+function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 {
 	/// @var {Real} The first component of the vector.
 	X = _x;
@@ -210,7 +210,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _length = sqrt(
-			  X * X
+			X * X
 			+ Y * Y
 			+ Z * Z
 		);
@@ -245,7 +245,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _length = sqrt(
-			  X * X
+			X * X
 			+ Y * Y
 			+ Z * Z
 		);
@@ -345,7 +345,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		return (
-			  X * _v.X
+			X * _v.X
 			+ Y * _v.Y
 			+ Z * _v.Z
 		);
@@ -362,7 +362,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		return (
-			   X == _v.X
+			X == _v.X
 			&& Y == _v.Y
 			&& Z == _v.Z
 		);
@@ -459,7 +459,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	/// from. Defaults to 0.
 	///
 	/// @return {Struct.BBMOD_Vec3} Returns `self`.
-	static FromArray = function (_array, _index=0)
+	static FromArray = function (_array, _index = 0)
 	{
 		gml_pragma("forceinline");
 		X = _array[_index];
@@ -518,7 +518,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		return sqrt(
-			  X * X
+			X * X
 			+ Y * Y
 			+ Z * Z
 		);
@@ -533,7 +533,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		return (
-			  X * X
+			X * X
 			+ Y * Y
 			+ Z * Z
 		);
@@ -775,7 +775,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _lengthSqr = (
-			  X * X
+			X * X
 			+ Y * Y
 			+ Z * Z
 		);
@@ -804,7 +804,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _lengthSqr = (
-			  X * X
+			X * X
 			+ Y * Y
 			+ Z * Z
 		);
@@ -856,7 +856,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _dot2 = (
-			  X * _v.X
+			X * _v.X
 			+ Y * _v.Y
 			+ Z * _v.Z
 		) * 2.0;
@@ -879,7 +879,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _dot2 = (
-			  X * _v.X
+			X * _v.X
 			+ Y * _v.Y
 			+ Z * _v.Z
 		) * 2.0;
@@ -989,14 +989,14 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		gml_pragma("forceinline");
 		switch (_index)
 		{
-		case 0:
-			return X;
+			case 0:
+				return X;
 
-		case 1:
-			return Y;
+			case 1:
+				return Y;
 
-		case 2:
-			return Z;
+			case 2:
+				return Z;
 		}
 		throw new BBMOD_OutOfRangeException();
 	};
@@ -1010,7 +1010,7 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	/// @param {Real} [_z] The new value of the third component. Defaults to `_x`.
 	///
 	/// @return {Struct.BBMOD_Vec3} Returns `self`.
-	static Set = function (_x=0.0, _y=_x, _z=_x)
+	static Set = function (_x = 0.0, _y = _x, _z = _x)
 	{
 		gml_pragma("forceinline");
 		X = _x;
@@ -1035,21 +1035,21 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 		gml_pragma("forceinline");
 		switch (_index)
 		{
-		case 0:
-			X = _value;
-			break;
+			case 0:
+				X = _value;
+				break;
 
-		case 1:
-			Y = _value;
-			break;
+			case 1:
+				Y = _value;
+				break;
 
-		case 2:
-			Z = _value;
-			break;
+			case 2:
+				Z = _value;
+				break;
 
-		default:
-			throw new BBMOD_OutOfRangeException();
-			break;
+			default:
+				throw new BBMOD_OutOfRangeException();
+				break;
 		}
 		return self;
 	};
@@ -1114,11 +1114,11 @@ function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
 	/// Defaults to 0.
 	///
 	/// @return {Array<Real>} The target array.
-	static ToArray = function (_array=undefined, _index=0)
+	static ToArray = function (_array = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 		_array ??= array_create(3, 0.0);
-		_array[@ _index]     = X;
+		_array[@ _index] = X;
 		_array[@ _index + 1] = Y;
 		_array[@ _index + 2] = Z;
 		return _array;

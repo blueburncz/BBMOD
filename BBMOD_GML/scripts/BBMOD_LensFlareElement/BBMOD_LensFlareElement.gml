@@ -35,18 +35,18 @@
 /// @see BBMOD_LensFlare
 /// @see BBMOD_PostProcessor.Starburst
 function BBMOD_LensFlareElement(
-	_sprite=BBMOD_SprLensFlareGhost,
-	_subimage=0,
-	_offset=undefined,
-	_scale=undefined,
-	_scaleByDistanceMin=undefined,
-	_scaleByDistanceMax=undefined,
-	_color=undefined,
-	_applyTint=false,
-	_angle=0.0,
-	_angleRelative=false,
-	_fadeOut=false,
-	_applyStarburst=false
+	_sprite = BBMOD_SprLensFlareGhost,
+	_subimage = 0,
+	_offset = undefined,
+	_scale = undefined,
+	_scaleByDistanceMin = undefined,
+	_scaleByDistanceMax = undefined,
+	_color = undefined,
+	_applyTint = false,
+	_angle = 0.0,
+	_angleRelative = false,
+	_fadeOut = false,
+	_applyStarburst = false
 ) constructor
 {
 	/// @var {Asset.GMSprite} The sprite of the lens flare element. Default

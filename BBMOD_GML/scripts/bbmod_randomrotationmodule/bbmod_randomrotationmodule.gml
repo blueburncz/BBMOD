@@ -15,8 +15,7 @@
 /// @see BBMOD_EParticle.RotationY
 /// @see BBMOD_EParticle.RotationZ
 /// @see BBMOD_EParticle.RotationW
-function BBMOD_RandomRotationModule(_axis=BBMOD_VEC3_UP, _from=0.0, _to=360.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_RandomRotationModule(_axis = BBMOD_VEC3_UP, _from = 0.0, _to = 360.0): BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The axis of rotation. Default value is
 	/// {@link BBMOD_VEC3_UP}.

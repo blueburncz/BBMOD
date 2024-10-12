@@ -12,17 +12,17 @@ function bbmod_cullmode_to_string(_cullmode)
 {
 	switch (_cullmode)
 	{
-	case cull_clockwise:
-		return "cull_clockwise";
+		case cull_clockwise:
+			return "cull_clockwise";
 
-	case cull_counterclockwise:
-		return "cull_counterclockwise";
+		case cull_counterclockwise:
+			return "cull_counterclockwise";
 
-	case cull_noculling:
-		return "cull_noculling";
+		case cull_noculling:
+			return "cull_noculling";
 
-	default:
-		return "";
+		default:
+			return "";
 	}
 }
 
@@ -39,16 +39,16 @@ function bbmod_cullmode_from_string(_name)
 {
 	switch (_name)
 	{
-	case "cull_clockwise":
-		return cull_clockwise;
+		case "cull_clockwise":
+			return cull_clockwise;
 
-	case "cull_counterclockwise":
-		return cull_counterclockwise;
+		case "cull_counterclockwise":
+			return cull_counterclockwise;
 
-	case "cull_noculling":
-		return cull_noculling;
+		case "cull_noculling":
+			return cull_noculling;
 
-	default:
-		throw new BBMOD_Exception("Invalid cull mode \"" + _name + "\"!");
+		default:
+			throw new BBMOD_Exception("Invalid cull mode \"" + _name + "\"!");
 	}
 }

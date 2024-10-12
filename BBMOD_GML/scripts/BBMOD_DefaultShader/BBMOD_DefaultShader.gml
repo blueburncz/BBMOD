@@ -11,8 +11,7 @@
 /// by the shader.
 ///
 /// @see BBMOD_DefaultMaterial
-function BBMOD_DefaultShader(_shader, _vertexFormat)
-	: BBMOD_BaseShader(_shader, _vertexFormat) constructor
+function BBMOD_DefaultShader(_shader, _vertexFormat): BBMOD_BaseShader(_shader, _vertexFormat) constructor
 {
 	static BaseShader_set_material = set_material;
 

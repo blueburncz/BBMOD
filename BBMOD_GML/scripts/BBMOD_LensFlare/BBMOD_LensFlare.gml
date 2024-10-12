@@ -35,14 +35,14 @@ global.__bbmodLensFlares = [];
 /// @see BBMOD_LensFlareElement
 /// @see BBMOD_LensFlareEffect
 function BBMOD_LensFlare(
-	_tint=undefined,
-	_position=undefined,
-	_range=infinity,
-	_falloff=0.8,
-	_depthThreshold=1.0,
-	_direction=undefined,
-	_angleInner=undefined,
-	_angleOuter=undefined
+	_tint = undefined,
+	_position = undefined,
+	_range = infinity,
+	_falloff = 0.8,
+	_depthThreshold = 1.0,
+	_direction = undefined,
+	_angleInner = undefined,
+	_angleOuter = undefined
 ) constructor
 {
 	/// @var {Struct.BBMOD_Color} The color to multiply lens flare elements'
@@ -88,20 +88,20 @@ function BBMOD_LensFlare(
 	/// @private
 	__elements = [];
 
-	static __uDepthTex          = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texDepth");
-	static __uStarburstTex      = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texStarburst");
-	static __uLensDirtTex       = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texLensDirt");
-	static __uLightPos          = shader_get_uniform(BBMOD_ShLensFlare, "u_vLightPos");
-	static __uInvRes            = shader_get_uniform(BBMOD_ShLensFlare, "u_vInvRes");
-	static __uColor             = shader_get_uniform(BBMOD_ShLensFlare, "u_vColor");
-	static __uFadeOut           = shader_get_uniform(BBMOD_ShLensFlare, "u_fFadeOut");
-	static __uClipFar           = shader_get_uniform(BBMOD_ShLensFlare, "u_fClipFar");
-	static __uDepthThreshold    = shader_get_uniform(BBMOD_ShLensFlare, "u_fDepthThreshold");
-	static __uStarburstUVs      = shader_get_uniform(BBMOD_ShLensFlare, "u_vStarburstUVs");
+	static __uDepthTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texDepth");
+	static __uStarburstTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texStarburst");
+	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texLensDirt");
+	static __uLightPos = shader_get_uniform(BBMOD_ShLensFlare, "u_vLightPos");
+	static __uInvRes = shader_get_uniform(BBMOD_ShLensFlare, "u_vInvRes");
+	static __uColor = shader_get_uniform(BBMOD_ShLensFlare, "u_vColor");
+	static __uFadeOut = shader_get_uniform(BBMOD_ShLensFlare, "u_fFadeOut");
+	static __uClipFar = shader_get_uniform(BBMOD_ShLensFlare, "u_fClipFar");
+	static __uDepthThreshold = shader_get_uniform(BBMOD_ShLensFlare, "u_fDepthThreshold");
+	static __uStarburstUVs = shader_get_uniform(BBMOD_ShLensFlare, "u_vStarburstUVs");
 	static __uStarburstStrength = shader_get_uniform(BBMOD_ShLensFlare, "u_fStarburstStrength");
-	static __uStarburstRot      = shader_get_uniform(BBMOD_ShLensFlare, "u_fStarburstRot");
-	static __uLensDirtUVs       = shader_get_uniform(BBMOD_ShLensFlare, "u_vLensDirtUVs");
-	static __uLensDirtStrength  = shader_get_uniform(BBMOD_ShLensFlare, "u_fLensDirtStrength");
+	static __uStarburstRot = shader_get_uniform(BBMOD_ShLensFlare, "u_fStarburstRot");
+	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensFlare, "u_vLensDirtUVs");
+	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensFlare, "u_fLensDirtStrength");
 
 	/// @func add_element(_element)
 	///
@@ -168,13 +168,13 @@ function BBMOD_LensFlare(
 		_scaleMid,
 		_scaleTo,
 		_colorFrom,
-		_colorTo=undefined,
-		_randomColor=false,
-		_applyTint=false,
-		_angle=0.0,
-		_angleRelative=false,
-		_fadeOut=true,
-		_applyStarburst=false)
+		_colorTo = undefined,
+		_randomColor = false,
+		_applyTint = false,
+		_angle = 0.0,
+		_angleRelative = false,
+		_fadeOut = true,
+		_applyStarburst = false)
 	{
 		_colorTo ??= _colorFrom;
 
@@ -184,7 +184,7 @@ function BBMOD_LensFlare(
 			var _dist = (_index - 0.5) * 2.0;
 			var _offset = new BBMOD_Vec2(lerp(_offsetFrom, _offsetTo, _index));
 			var _scale = (_dist < 0.0)
- 				? new BBMOD_Vec2(lerp(_scaleMid, _scaleFrom, -_dist))
+				? new BBMOD_Vec2(lerp(_scaleMid, _scaleFrom, -_dist))
 				: new BBMOD_Vec2(lerp(_scaleMid, _scaleTo, _dist));
 			var _color = _colorFrom.Mix(_colorTo, _randomColor ? random(1.0) : _index);
 			var _element = new BBMOD_LensFlareElement(
@@ -301,7 +301,8 @@ function BBMOD_LensFlare(
 
 		texture_set_stage(__uStarburstTex, _postProcessor.Starburst);
 		var _starburstUVs = texture_get_uvs(_postProcessor.Starburst);
-		shader_set_uniform_f(__uStarburstUVs, _starburstUVs[0], _starburstUVs[1], _starburstUVs[2], _starburstUVs[3]);
+		shader_set_uniform_f(__uStarburstUVs, _starburstUVs[0], _starburstUVs[1], _starburstUVs[2], _starburstUVs[
+			3]);
 		shader_set_uniform_f(__uStarburstRot, _camRot);
 
 		texture_set_stage(__uLensDirtTex, _postProcessor.LensDirt);
@@ -318,15 +319,17 @@ function BBMOD_LensFlare(
 
 		for (var i = array_length(__elements) - 1; i >= 0; --i)
 		{
-			with (__elements[i])
+			with(__elements[i])
 			{
 				var _elementX = _x + _vecX * Offset.X * 2.0;
 				var _elementY = _y + _vecY * Offset.Y * 2.0;
 				var _elementDistance = point_distance(
 					_elementX / _screenWidth, _elementY / _screenHeight,
 					_x / _screenWidth, _y / _screenHeight);
-				var _elementScaleX = Scale.X * lerp(ScaleByDistanceMin.X, ScaleByDistanceMax.X, _elementDistance) * _scale;
-				var _elementScaleY = Scale.Y * lerp(ScaleByDistanceMin.Y, ScaleByDistanceMax.Y, _elementDistance) * _scale
+				var _elementScaleX = Scale.X * lerp(ScaleByDistanceMin.X, ScaleByDistanceMax.X,
+					_elementDistance) * _scale;
+				var _elementScaleY = Scale.Y * lerp(ScaleByDistanceMin.Y, ScaleByDistanceMax.Y,
+					_elementDistance) * _scale
 				var _elementColorR = Color.Red / 255.0;
 				var _elementColorG = Color.Green / 255.0;
 				var _elementColorB = Color.Blue / 255.0;
@@ -437,7 +440,7 @@ function bbmod_lens_flare_remove(_lensFlare)
 	gml_pragma("forceinline");
 	var _lensFlares = global.__bbmodLensFlares;
 	var i = 0;
-	repeat (array_length(_lensFlares))
+	repeat(array_length(_lensFlares))
 	{
 		if (_lensFlares[i] == _lensFlare)
 		{

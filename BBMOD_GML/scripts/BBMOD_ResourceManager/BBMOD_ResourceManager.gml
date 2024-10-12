@@ -78,7 +78,7 @@ function BBMOD_ResourceManager() constructor
 		{
 			throw new BBMOD_Exception("Resource is already added to a manager!");
 		}
-		__resources[? _uniqueName] = _resource;
+		__resources[?  _uniqueName] = _resource;
 		_resource.__manager = self;
 		return self;
 	};
@@ -117,7 +117,7 @@ function BBMOD_ResourceManager() constructor
 		{
 			throw new BBMOD_Exception("Resource not found!");
 		}
-		return __resources[? _pathOrUniqueName].ref();
+		return __resources[?  _pathOrUniqueName].ref();
 	};
 
 	/// @func get_or_add(_uniqueName, _onAdd)
@@ -150,7 +150,7 @@ function BBMOD_ResourceManager() constructor
 		gml_pragma("forceinline");
 		if (ds_map_exists(__resources, _uniqueName))
 		{
-			return __resources[? _uniqueName].ref();
+			return __resources[?  _uniqueName].ref();
 		}
 		var _res = _onAdd();
 		add(_uniqueName, _res);
@@ -190,7 +190,7 @@ function BBMOD_ResourceManager() constructor
 	/// loaded!
 	///
 	/// @see BBMOD_ResourceManager.LoadMaterials
-	static load = function (_path, _sha1=undefined, _onLoad=undefined)
+	static load = function (_path, _sha1 = undefined, _onLoad = undefined)
 	{
 		if (is_method(_sha1))
 		{
@@ -202,7 +202,7 @@ function BBMOD_ResourceManager() constructor
 
 		if (ds_map_exists(_resources, _path))
 		{
-			return _resources[? _path].ref();
+			return _resources[?  _path].ref();
 		}
 
 		var _ext = filename_ext(_path);
@@ -250,10 +250,10 @@ function BBMOD_ResourceManager() constructor
 				var _propertyNames = variable_struct_get_names(_textures);
 				var _index = 0;
 
-				repeat (array_length(_propertyNames))
+				repeat(array_length(_propertyNames))
 				{
 					var _property = _propertyNames[_index++];
-					var _propertyValue = _textures[$ _property];
+					var _propertyValue = _textures[$  _property];
 
 					var _texturePath;
 					var _textureSha1 = undefined;
@@ -281,14 +281,14 @@ function BBMOD_ResourceManager() constructor
 						add(_texturePath, _sprite);
 					}
 
-					_json[$ _property] = _sprite.get_texture();
+					_json[$  _property] = _sprite.get_texture();
 				}
 			}
 
 			// Create the material and apply props.
 			_res = bbmod_material_get(_materialName).clone().from_json(_json);
 			_res.__manager = self;
-			_resources[? _path] = _res;
+			_resources[?  _path] = _res;
 
 			if (_onLoad != undefined)
 			{
@@ -304,28 +304,28 @@ function BBMOD_ResourceManager() constructor
 
 		switch (_ext)
 		{
-		case ".bbmod":
-			_res = new BBMOD_Model();
-			_isModel = true;
-			break;
+			case ".bbmod":
+				_res = new BBMOD_Model();
+				_isModel = true;
+				break;
 
-		case ".bbanim":
-			_res = new BBMOD_Animation();
-			break;
+			case ".bbanim":
+				_res = new BBMOD_Animation();
+				break;
 
-		case ".png":
-		case ".gif":
-		case ".jpg":
-		case ".jpeg":
-			_res = new BBMOD_Sprite();
-			break;
+			case ".png":
+			case ".gif":
+			case ".jpg":
+			case ".jpeg":
+				_res = new BBMOD_Sprite();
+				break;
 
-		default:
-			if (_onLoad != undefined)
-			{
-				_onLoad(new BBMOD_Exception("Invalid file extension '" + _ext + "'!"));
-			}
-			return undefined;
+			default:
+				if (_onLoad != undefined)
+				{
+					_onLoad(new BBMOD_Exception("Invalid file extension '" + _ext + "'!"));
+				}
+				return undefined;
 		}
 
 		_res.__manager = self;
@@ -339,14 +339,17 @@ function BBMOD_ResourceManager() constructor
 
 		++Loading;
 
-		_res.from_file_async(_path, _sha1, method(_context, function (_err, _res) {
+		_res.from_file_async(_path, _sha1, method(_context, function (_err, _res)
+		{
 			--Manager.Loading;
 
 			if (_err == undefined && LoadMaterials)
 			{
 				// Try to load its materials
 				var _modelName = filename_change_ext(filename_name(Path), "");
-				var _counter = { Value: 0 };
+				var _counter = {
+					Value: 0
+				};
 				var _args = [];
 
 				for (var i = array_length(_res.MaterialNames) - 1; i >= 0; --i)
@@ -354,13 +357,15 @@ function BBMOD_ResourceManager() constructor
 					var _matDir = filename_dir(Path) + "/";
 					var _matFilename = _res.MaterialNames[i] + ".bbmat";
 					var _matPath = _matDir + _modelName + "_" + _matFilename;
-					var _callback = method({
+					var _callback = method(
+						{
 							Model: _res,
 							Index: i,
 							Counter: _counter,
 							Callback: Callback,
 						},
-						function (_err, _res) {
+						function (_err, _res)
+						{
 							if (_err == undefined)
 							{
 								Model.Materials[@ Index] = _res;
@@ -407,7 +412,7 @@ function BBMOD_ResourceManager() constructor
 				}
 
 				var a = 0;
-				repeat (array_length(_args) / 2)
+				repeat(array_length(_args) / 2)
 				{
 					Manager.load(_args[a], undefined, _args[a + 1]);
 					a += 2;
@@ -427,7 +432,7 @@ function BBMOD_ResourceManager() constructor
 			}
 		}));
 
-		_resources[? _path] = _res;
+		_resources[?  _path] = _res;
 
 		return _res;
 	};
@@ -451,7 +456,7 @@ function BBMOD_ResourceManager() constructor
 		}
 		else
 		{
-			_resources[? _resourceOrPath].free();
+			_resources[?  _resourceOrPath].free();
 		}
 		return self;
 	};
@@ -467,10 +472,10 @@ function BBMOD_ResourceManager() constructor
 	{
 		var _resources = __resources;
 		var _key = ds_map_find_first(_resources);
-		repeat (ds_map_size(_resources))
+		repeat(ds_map_size(_resources))
 		{
 			var _keyNext = ds_map_find_next(_resources, _key);
-			var _res = _resources[? _key];
+			var _res = _resources[?  _key];
 			if (!_res.Persistent)
 			{
 				_res.__manager = undefined;
@@ -524,9 +529,9 @@ function BBMOD_ResourceManager() constructor
 	{
 		var _resources = __resources;
 		var _key = ds_map_find_first(_resources);
-		repeat (ds_map_size(_resources))
+		repeat(ds_map_size(_resources))
 		{
-			var _res = _resources[? _key];
+			var _res = _resources[?  _key];
 			_res.__manager = undefined; // To not remove from the map, we destroy it anyways...
 			_res.destroy();
 			_key = ds_map_find_next(_resources, _key);

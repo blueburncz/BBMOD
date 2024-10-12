@@ -9,7 +9,7 @@
 ///
 /// @see BBMOD_Vec3
 /// @see BBMOD_Vec4
-function BBMOD_Vec2(_x=0.0, _y=_x) constructor
+function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 {
 	/// @var {Real} The first component of the vector.
 	X = _x;
@@ -180,7 +180,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _length = sqrt(
-			  X * X
+			X * X
 			+ Y * Y
 		);
 		var _newLength = clamp(_length, _min, _max);
@@ -210,7 +210,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _length = sqrt(
-			  X * X
+			X * X
 			+ Y * Y
 		);
 		var _newLength = clamp(_length, _min, _max);
@@ -268,7 +268,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		return (
-			  X * _v.X
+			X * _v.X
 			+ Y * _v.Y
 		);
 	};
@@ -284,7 +284,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		return (
-			   X == _v.X
+			X == _v.X
 			&& Y == _v.Y
 		);
 	};
@@ -376,7 +376,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// from. Defaults to 0.
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
-	static FromArray = function (_array, _index=0)
+	static FromArray = function (_array, _index = 0)
 	{
 		gml_pragma("forceinline");
 		X = _array[_index];
@@ -431,7 +431,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		return sqrt(
-			  X * X
+			X * X
 			+ Y * Y
 		);
 	};
@@ -445,7 +445,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		return (
-			  X * X
+			X * X
 			+ Y * Y
 		);
 	};
@@ -676,7 +676,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _lengthSqr = (
-			  X * X
+			X * X
 			+ Y * Y
 		);
 		if (_lengthSqr > math_get_epsilon())
@@ -702,7 +702,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _lengthSqr = (
-			  X * X
+			X * X
 			+ Y * Y
 		);
 		if (_lengthSqr > math_get_epsilon())
@@ -726,7 +726,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _dot2 = (
-			  X * _v.X
+			X * _v.X
 			+ Y * _v.Y
 		) * 2.0;
 		return new BBMOD_Vec2(
@@ -747,7 +747,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	{
 		gml_pragma("forceinline");
 		var _dot2 = (
-			  X * _v.X
+			X * _v.X
 			+ Y * _v.Y
 		) * 2.0;
 		X -= (_dot2 * _v.X);
@@ -851,11 +851,11 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		switch (_index)
 		{
-		case 0:
-			return X;
+			case 0:
+				return X;
 
-		case 1:
-			return Y;
+			case 1:
+				return Y;
 		}
 		throw new BBMOD_OutOfRangeException();
 	};
@@ -868,7 +868,7 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// @param {Real} [_y] The new value of the second component. Defaults to `_x`.
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
-	static Set = function (_x=0.0, _y=undefined)
+	static Set = function (_x = 0.0, _y = undefined)
 	{
 		gml_pragma("forceinline");
 		X = _x;
@@ -892,17 +892,17 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 		gml_pragma("forceinline");
 		switch (_index)
 		{
-		case 0:
-			X = _value;
-			break;
+			case 0:
+				X = _value;
+				break;
 
-		case 1:
-			Y = _value;
-			break;
+			case 1:
+				Y = _value;
+				break;
 
-		default:
-			throw new BBMOD_OutOfRangeException();
-			break;
+			default:
+				throw new BBMOD_OutOfRangeException();
+				break;
 		}
 		return self;
 	};
@@ -964,11 +964,11 @@ function BBMOD_Vec2(_x=0.0, _y=_x) constructor
 	/// Defaults to 0.
 	///
 	/// @return {Array<Real>} The target array.
-	static ToArray = function (_array=undefined, _index=0)
+	static ToArray = function (_array = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 		_array ??= array_create(2, 0.0);
-		_array[@ _index]     = X;
+		_array[@ _index] = X;
 		_array[@ _index + 1] = Y;
 		return _array;
 	};

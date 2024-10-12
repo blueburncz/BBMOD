@@ -147,7 +147,7 @@ function BBMOD_Cubemap(_resolution) constructor
 	/// before the cubemap is rendered into it. Defaults to 1.
 	///
 	/// @see BBMOD_Cubemap.Surface
-	static to_single_surface = function (_clearColor=c_black, _clearAlpha=1)
+	static to_single_surface = function (_clearColor = c_black, _clearAlpha = 1)
 	{
 		var _width = Resolution * 8;
 		var _height = Resolution;
@@ -162,7 +162,7 @@ function BBMOD_Cubemap(_resolution) constructor
 		camera_apply(__camera2D);
 		var _x = 0;
 		var i = 0;
-		repeat (BBMOD_ECubeSide.SIZE)
+		repeat(BBMOD_ECubeSide.SIZE)
 		{
 			draw_surface(Sides[i++], _x, 0);
 			_x += Resolution;
@@ -185,7 +185,7 @@ function BBMOD_Cubemap(_resolution) constructor
 	/// this method to work!
 	///
 	/// @see BBMOD_Cubemap.SurfaceOctahedron
-	static to_octahedron = function (_clearColor=c_black, _clearAlpha=1)
+	static to_octahedron = function (_clearColor = c_black, _clearAlpha = 1)
 	{
 		var _world = matrix_get(matrix_world);
 		SurfaceOctahedron = bbmod_surface_check(SurfaceOctahedron, Resolution, Resolution, Format, false);
@@ -285,41 +285,41 @@ function BBMOD_Cubemap(_resolution) constructor
 
 		switch (_side)
 		{
-		case BBMOD_ECubeSide.PosX:
-			_x = new BBMOD_Vec3(0.0, +1.0, 0.0);
-			_y = new BBMOD_Vec3(0.0, 0.0, +1.0);
-			_z = new BBMOD_Vec3(+1.0, 0.0, 0.0);
-			break;
+			case BBMOD_ECubeSide.PosX:
+				_x = new BBMOD_Vec3(0.0, +1.0, 0.0);
+				_y = new BBMOD_Vec3(0.0, 0.0, +1.0);
+				_z = new BBMOD_Vec3(+1.0, 0.0, 0.0);
+				break;
 
-		case BBMOD_ECubeSide.NegX:
-			_x = new BBMOD_Vec3(0.0, -1.0, 0.0);
-			_y = new BBMOD_Vec3(0.0, 0.0, +1.0);
-			_z = new BBMOD_Vec3(-1.0, 0.0, 0.0);
-			break;
+			case BBMOD_ECubeSide.NegX:
+				_x = new BBMOD_Vec3(0.0, -1.0, 0.0);
+				_y = new BBMOD_Vec3(0.0, 0.0, +1.0);
+				_z = new BBMOD_Vec3(-1.0, 0.0, 0.0);
+				break;
 
-		case BBMOD_ECubeSide.PosY:
-			_x = new BBMOD_Vec3(-1.0, 0.0, 0.0);
-			_y = new BBMOD_Vec3(0.0, 0.0, +1.0);
-			_z = new BBMOD_Vec3(0.0, +1.0, 0.0);
-			break;
+			case BBMOD_ECubeSide.PosY:
+				_x = new BBMOD_Vec3(-1.0, 0.0, 0.0);
+				_y = new BBMOD_Vec3(0.0, 0.0, +1.0);
+				_z = new BBMOD_Vec3(0.0, +1.0, 0.0);
+				break;
 
-		case BBMOD_ECubeSide.NegY:
-			_x = new BBMOD_Vec3(+1.0, 0.0, 0.0);
-			_y = new BBMOD_Vec3(0.0, 0.0, +1.0);
-			_z = new BBMOD_Vec3(0.0, -1.0, 0.0);
-			break;
+			case BBMOD_ECubeSide.NegY:
+				_x = new BBMOD_Vec3(+1.0, 0.0, 0.0);
+				_y = new BBMOD_Vec3(0.0, 0.0, +1.0);
+				_z = new BBMOD_Vec3(0.0, -1.0, 0.0);
+				break;
 
-		case BBMOD_ECubeSide.PosZ:
-			_x = new BBMOD_Vec3(0.0, +1.0, 0.0);
-			_y = new BBMOD_Vec3(-1.0, 0.0, 0.0);
-			_z = new BBMOD_Vec3(0.0, 0.0, +1.0);
-			break;
+			case BBMOD_ECubeSide.PosZ:
+				_x = new BBMOD_Vec3(0.0, +1.0, 0.0);
+				_y = new BBMOD_Vec3(-1.0, 0.0, 0.0);
+				_z = new BBMOD_Vec3(0.0, 0.0, +1.0);
+				break;
 
-		case BBMOD_ECubeSide.NegZ:
-			_x = new BBMOD_Vec3(0.0, +1.0, 0.0);
-			_y = new BBMOD_Vec3(+1.0, 0.0, 0.0);
-			_z = new BBMOD_Vec3(0.0, 0.0, -1.0);
-			break;
+			case BBMOD_ECubeSide.NegZ:
+				_x = new BBMOD_Vec3(0.0, +1.0, 0.0);
+				_y = new BBMOD_Vec3(+1.0, 0.0, 0.0);
+				_z = new BBMOD_Vec3(0.0, 0.0, -1.0);
+				break;
 		}
 
 		camera_set_view_mat(__camera, [
@@ -400,23 +400,27 @@ function BBMOD_Cubemap(_resolution) constructor
 	/// @param {Real} [_scale] The scale of the cubemap. Default value is 1.
 	///
 	/// @return {Struct.BBMOD_Cubemap} Returns `self`.
-	static draw_cross = function (_x, _y, _scale=1.0)
+	static draw_cross = function (_x, _y, _scale = 1.0)
 	{
 		var _s = Resolution * _scale;
 		_y += _s;
-		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegX), _x, _y, _s, _s); _x += _s;
-		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegY), _x, _y, _s, _s); _x += _s;
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegX), _x, _y, _s, _s);
+		_x += _s;
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegY), _x, _y, _s, _s);
+		_x += _s;
 		draw_surface_stretched(get_surface(BBMOD_ECubeSide.PosZ), _x, _y - _s, _s, _s);
 		draw_surface_stretched(get_surface(BBMOD_ECubeSide.NegZ), _x, _y + _s, _s, _s);
-		draw_surface_stretched(get_surface(BBMOD_ECubeSide.PosX), _x, _y, _s, _s); _x += _s;
-		draw_surface_stretched(get_surface(BBMOD_ECubeSide.PosY), _x, _y, _s, _s); _x += _s;
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.PosX), _x, _y, _s, _s);
+		_x += _s;
+		draw_surface_stretched(get_surface(BBMOD_ECubeSide.PosY), _x, _y, _s, _s);
+		_x += _s;
 		return self;
 	};
 
 	static destroy = function ()
 	{
 		var i = 0;
-		repeat (BBMOD_ECubeSide.SIZE)
+		repeat(BBMOD_ECubeSide.SIZE)
 		{
 			var _surface = Sides[i++];
 			if (surface_exists(_surface))

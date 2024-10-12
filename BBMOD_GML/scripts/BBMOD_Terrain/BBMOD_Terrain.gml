@@ -18,7 +18,7 @@
 /// Defaults to 0.
 /// @param {Real} [_chunkSize] The width and height of a single terrain chunk.
 /// Defaults to 128.
-function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constructor
+function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) constructor
 {
 	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
 	/// @readonly
@@ -160,7 +160,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 	/// Defaults to 0.
 	///
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
-	static from_heightmap = function (_sprite, _subimage=0)
+	static from_heightmap = function (_sprite, _subimage = 0)
 	{
 		var _spriteWidth = sprite_get_width(_sprite);
 		var _spriteHeight = sprite_get_height(_sprite);
@@ -206,15 +206,15 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		buffer_seek(_buffer, buffer_seek_start, 1);
 
 		var _j = 0;
-		repeat (_spriteHeight)
+		repeat(_spriteHeight)
 		{
 			var _i = 0;
-			repeat (_spriteWidth)
-			{
-				__height[# _i++, _j] = buffer_read(_buffer, buffer_u8);
-				buffer_seek(_buffer, buffer_seek_relative, 3);
-			}
-			++_j;
+			repeat(_spriteWidth)
+				{
+					__height[# _i++, _j] = buffer_read(_buffer, buffer_u8);
+					buffer_seek(_buffer, buffer_seek_relative, 3);
+				}
+				++_j;
 		}
 
 		buffer_delete(_buffer);
@@ -276,8 +276,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 	static get_height_index = function (_i, _j)
 	{
 		gml_pragma("forceinline");
-		return __height[#
-			clamp(_i, 0, ds_grid_width(__height) - 1),
+		return __height[# clamp(_i, 0, ds_grid_width(__height) - 1),
 			clamp(_j, 0, ds_grid_height(__height) - 1)
 		];
 	};
@@ -314,9 +313,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		// TODO: Optimize retrieving terrain height
 		if (_offsetX <= _offsetY)
 		{
-			return Position.Z + (_h4 + (_h1-_h4)*(1.0-_offsetY) + (_h3-_h4)*(_offsetX)) * Scale.Z;
+			return Position.Z + (_h4 + (_h1 - _h4) * (1.0 - _offsetY) + (_h3 - _h4) * (_offsetX)) * Scale.Z;
 		}
-		return Position.Z + (_h2 + (_h1-_h2)*(1.0-_offsetX) + (_h3-_h2)*(_offsetY)) * Scale.Z;
+		return Position.Z + (_h2 + (_h1 - _h2) * (1.0 - _offsetX) + (_h3 - _h2) * (_offsetY)) * Scale.Z;
 	};
 
 	/// @func get_normal(_x, _y)
@@ -372,7 +371,7 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 	///
 	/// @note Method {@link BBMOD_Terrain.build_layer_index} needs to be called
 	/// first!
-	static get_layer = function (_x, _y, _threshold=0.5)
+	static get_layer = function (_x, _y, _threshold = 0.5)
 	{
 		gml_pragma("forceinline");
 		var _xScaled = (_x - Position.X) / Scale.X;
@@ -413,24 +412,24 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 	static build_normals = function ()
 	{
 		var _i = 0;
-		repeat (ds_grid_width(__height))
+		repeat(ds_grid_width(__height))
 		{
 			var _j = 0;
-			repeat (ds_grid_height(__height))
-			{
-				var _nx = get_height_index(_i - 1, _j) - get_height_index(_i + 1, _j);
-				var _ny = get_height_index(_i, _j - 1) - get_height_index(_i, _j + 1);
-				var _nz = 2.0;
-				var _r = sqrt((_nx * _nx) + (_ny * _ny) + (_nz * _nz));
-				_nx /= _r;
-				_ny /= _r;
-				_nz /= _r;
-				__normalX[# _i, _j] = _nx;
-				__normalY[# _i, _j] = _ny;
-				__normalZ[# _i, _j] = _nz;
-				++_j;
-			}
-			++_i;
+			repeat(ds_grid_height(__height))
+				{
+					var _nx = get_height_index(_i - 1, _j) - get_height_index(_i + 1, _j);
+					var _ny = get_height_index(_i, _j - 1) - get_height_index(_i, _j + 1);
+					var _nz = 2.0;
+					var _r = sqrt((_nx * _nx) + (_ny * _ny) + (_nz * _nz));
+					_nx /= _r;
+					_ny /= _r;
+					_nz /= _r;
+					__normalX[# _i, _j] = _nx;
+					__normalY[# _i, _j] = _ny;
+					__normalZ[# _i, _j] = _nz;
+					++_j;
+				}
+				++_i;
 		}
 		return self;
 	};
@@ -508,23 +507,23 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		ds_grid_clear(__splatmapGrid, 0);
 
 		var _j = 0;
-		repeat (_height)
+		repeat(_height)
 		{
 			var _i = 0;
-			repeat (_width)
-			{
-				__splatmapGrid[# _i, _j] = (0
-					| (buffer_read(_buffer[0], buffer_u8) << 24)
-					| (buffer_read(_buffer[1], buffer_u8) << 16)
-					| (buffer_read(_buffer[2], buffer_u8) << 8)
-					| buffer_read(_buffer[3], buffer_u8));
-				buffer_seek(_buffer[0], buffer_seek_relative, 3);
-				buffer_seek(_buffer[1], buffer_seek_relative, 3);
-				buffer_seek(_buffer[2], buffer_seek_relative, 3);
-				buffer_seek(_buffer[3], buffer_seek_relative, 3);
-				++_i;
-			}
-			++_j;
+			repeat(_width)
+				{
+					__splatmapGrid[# _i, _j] = (0
+						| (buffer_read(_buffer[0], buffer_u8) << 24)
+						| (buffer_read(_buffer[1], buffer_u8) << 16)
+						| (buffer_read(_buffer[2], buffer_u8) << 8)
+						| buffer_read(_buffer[3], buffer_u8));
+					buffer_seek(_buffer[0], buffer_seek_relative, 3);
+					buffer_seek(_buffer[1], buffer_seek_relative, 3);
+					buffer_seek(_buffer[2], buffer_seek_relative, 3);
+					buffer_seek(_buffer[3], buffer_seek_relative, 3);
+					++_i;
+				}
+				++_j;
 		}
 
 		buffer_delete(_buffer[0]);
@@ -557,126 +556,126 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		var _terrainHeight = ds_grid_height(_height);
 		var _rows = min(_terrainWidth - 1 - _chunkI * ChunkSize, ChunkSize);
 		var _cols = min(_terrainHeight - 1 - _chunkJ * ChunkSize, ChunkSize);
-	
+
 		var _vbuffer = vertex_create_buffer();
 		vertex_begin(_vbuffer, VertexFormat.Raw);
 
 		var _i = _chunkI * ChunkSize;
-		repeat (_rows)
+		repeat(_rows)
 		{
 			var _j = _chunkJ * ChunkSize;
-			repeat (_cols)
-			{
-				var _z1 = _height[# _i, _j];
-				var _z2 = _height[# _i + 1, _j];
-				var _z3 = _height[# _i + 1, _j + 1];
-				var _z4 = _height[# _i, _j + 1];
+			repeat(_cols)
+				{
+					var _z1 = _height[# _i, _j];
+					var _z2 = _height[# _i + 1, _j];
+					var _z3 = _height[# _i + 1, _j + 1];
+					var _z4 = _height[# _i, _j + 1];
 
-				var _x1 = _i;
-				var _y1 = _j;
-				var _x2 = _i + 1;
-				var _y2 = _j;
-				var _x3 = _i + 1;
-				var _y3 = _j + 1;
-				var _x4 = _i;
-				var _y4 = _j + 1;
+					var _x1 = _i;
+					var _y1 = _j;
+					var _x2 = _i + 1;
+					var _y2 = _j;
+					var _x3 = _i + 1;
+					var _y3 = _j + 1;
+					var _x4 = _i;
+					var _y4 = _j + 1;
 
-				var _u1 = _i / _terrainWidth;
-				var _v1 = _j / _terrainHeight;
-				var _u2 = (_i + 1) / _terrainWidth;
-				var _v2 = _j / _terrainHeight;
-				var _u3 = (_i + 1) / _terrainWidth;
-				var _v3 = (_j + 1) / _terrainHeight;
-				var _u4 = _i / _terrainWidth;
-				var _v4 = (_j + 1) / _terrainHeight;
+					var _u1 = _i / _terrainWidth;
+					var _v1 = _j / _terrainHeight;
+					var _u2 = (_i + 1) / _terrainWidth;
+					var _v2 = _j / _terrainHeight;
+					var _u3 = (_i + 1) / _terrainWidth;
+					var _v3 = (_j + 1) / _terrainHeight;
+					var _u4 = _i / _terrainWidth;
+					var _v4 = (_j + 1) / _terrainHeight;
 
-				var _n1X = __normalSmoothX[# _i, _j];
-				var _n1Y = __normalSmoothY[# _i, _j];
-				var _n1Z = __normalSmoothZ[# _i, _j];
+					var _n1X = __normalSmoothX[# _i, _j];
+					var _n1Y = __normalSmoothY[# _i, _j];
+					var _n1Z = __normalSmoothZ[# _i, _j];
 
-				var _n2X = __normalSmoothX[# _i + 1, _j];
-				var _n2Y = __normalSmoothY[# _i + 1, _j];
-				var _n2Z = __normalSmoothZ[# _i + 1, _j];
+					var _n2X = __normalSmoothX[# _i + 1, _j];
+					var _n2Y = __normalSmoothY[# _i + 1, _j];
+					var _n2Z = __normalSmoothZ[# _i + 1, _j];
 
-				var _n3X = __normalSmoothX[# _i + 1, _j + 1];
-				var _n3Y = __normalSmoothY[# _i + 1, _j + 1];
-				var _n3Z = __normalSmoothZ[# _i + 1, _j + 1];
+					var _n3X = __normalSmoothX[# _i + 1, _j + 1];
+					var _n3Y = __normalSmoothY[# _i + 1, _j + 1];
+					var _n3Z = __normalSmoothZ[# _i + 1, _j + 1];
 
-				var _n4X = __normalSmoothX[# _i, _j + 1];
-				var _n4Y = __normalSmoothY[# _i, _j + 1];
-				var _n4Z = __normalSmoothZ[# _i, _j + 1];
+					var _n4X = __normalSmoothX[# _i, _j + 1];
+					var _n4Y = __normalSmoothY[# _i, _j + 1];
+					var _n4Z = __normalSmoothZ[# _i, _j + 1];
 
-				// TODO: Optimize
-				var _sign = -1.0;
-				var _axisX = new BBMOD_Vec3(1.0, 0.0, 0.0);
+					// TODO: Optimize
+					var _sign = -1.0;
+					var _axisX = new BBMOD_Vec3(1.0, 0.0, 0.0);
 
-				var _n1 = new BBMOD_Vec3(_n1X, _n1Y, _n1Z);
-				var _b1 = _n1.Cross(_axisX).NormalizeSelf();
-				var _t1 = _n1.Cross(_b1).NormalizeSelf();
-				var _s1 = (_n1.Dot(_t1) < 0.0) ? -_sign : _sign;
+					var _n1 = new BBMOD_Vec3(_n1X, _n1Y, _n1Z);
+					var _b1 = _n1.Cross(_axisX).NormalizeSelf();
+					var _t1 = _n1.Cross(_b1).NormalizeSelf();
+					var _s1 = (_n1.Dot(_t1) < 0.0) ? -_sign : _sign;
 
-				var _n2 = new BBMOD_Vec3(_n2X, _n2Y, _n2Z);
-				var _b2 = _n2.Cross(_axisX).NormalizeSelf();
-				var _t2 = _n2.Cross(_b2).NormalizeSelf();
-				var _s2 = (_n2.Dot(_t2) < 0.0) ? -_sign : _sign;
+					var _n2 = new BBMOD_Vec3(_n2X, _n2Y, _n2Z);
+					var _b2 = _n2.Cross(_axisX).NormalizeSelf();
+					var _t2 = _n2.Cross(_b2).NormalizeSelf();
+					var _s2 = (_n2.Dot(_t2) < 0.0) ? -_sign : _sign;
 
-				var _n3 = new BBMOD_Vec3(_n3X, _n3Y, _n3Z);
-				var _b3 = _n3.Cross(_axisX).NormalizeSelf();
-				var _t3 = _n3.Cross(_b3).NormalizeSelf();
-				var _s3 = (_n3.Dot(_t3) < 0.0) ? -_sign : _sign;
+					var _n3 = new BBMOD_Vec3(_n3X, _n3Y, _n3Z);
+					var _b3 = _n3.Cross(_axisX).NormalizeSelf();
+					var _t3 = _n3.Cross(_b3).NormalizeSelf();
+					var _s3 = (_n3.Dot(_t3) < 0.0) ? -_sign : _sign;
 
-				var _n4 = new BBMOD_Vec3(_n4X, _n4Y, _n4Z);
-				var _b4 = _n4.Cross(_axisX).NormalizeSelf();
-				var _t4 = _n4.Cross(_b4).NormalizeSelf();
-				var _s4 = (_n4.Dot(_t4) < 0.0) ? -_sign : _sign;
+					var _n4 = new BBMOD_Vec3(_n4X, _n4Y, _n4Z);
+					var _b4 = _n4.Cross(_axisX).NormalizeSelf();
+					var _t4 = _n4.Cross(_b4).NormalizeSelf();
+					var _s4 = (_n4.Dot(_t4) < 0.0) ? -_sign : _sign;
 
-				// 1
-				// |\
-				// 4-3
-				var _tangent1z = _z3 - _z1;
-				var _tangentNorm = 1.0 / sqrt(1.0 + (_tangent1z * _tangent1z));
-				_tangent1z *= _tangentNorm;
+					// 1
+					// |\
+					// 4-3
+					var _tangent1z = _z3 - _z1;
+					var _tangentNorm = 1.0 / sqrt(1.0 + (_tangent1z * _tangent1z));
+					_tangent1z *= _tangentNorm;
 
-				vertex_position_3d(_vbuffer, _x1, _y1, _z1);
-				vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
-				vertex_texcoord(_vbuffer, _u1, _v1);
-				vertex_float4(_vbuffer, _t1.X, _t1.Y, _t1.Z, _s1);
+					vertex_position_3d(_vbuffer, _x1, _y1, _z1);
+					vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
+					vertex_texcoord(_vbuffer, _u1, _v1);
+					vertex_float4(_vbuffer, _t1.X, _t1.Y, _t1.Z, _s1);
 
-				vertex_position_3d(_vbuffer, _x3, _y3, _z3);
-				vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
-				vertex_texcoord(_vbuffer, _u3, _v3);
-				vertex_float4(_vbuffer, _t3.X, _t3.Y, _t3.Z, _s3);
+					vertex_position_3d(_vbuffer, _x3, _y3, _z3);
+					vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
+					vertex_texcoord(_vbuffer, _u3, _v3);
+					vertex_float4(_vbuffer, _t3.X, _t3.Y, _t3.Z, _s3);
 
-				vertex_position_3d(_vbuffer, _x4, _y4, _z4);
-				vertex_normal(_vbuffer, _n4X, _n4Y, _n4Z);
-				vertex_texcoord(_vbuffer, _u4, _v4);
-				vertex_float4(_vbuffer, _t4.X, _t4.Y, _t4.Z, _s4);
+					vertex_position_3d(_vbuffer, _x4, _y4, _z4);
+					vertex_normal(_vbuffer, _n4X, _n4Y, _n4Z);
+					vertex_texcoord(_vbuffer, _u4, _v4);
+					vertex_float4(_vbuffer, _t4.X, _t4.Y, _t4.Z, _s4);
 
-				// 1-2
-				//  \|
-				//   3
-				_tangent1z = _z2 - _z1;
-				_tangentNorm = 1.0 / sqrt(1.0 + (_tangent1z * _tangent1z));
-				_tangent1z *= _tangentNorm;
+					// 1-2
+					//  \|
+					//   3
+					_tangent1z = _z2 - _z1;
+					_tangentNorm = 1.0 / sqrt(1.0 + (_tangent1z * _tangent1z));
+					_tangent1z *= _tangentNorm;
 
-				vertex_position_3d(_vbuffer, _x1, _y1, _z1);
-				vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
-				vertex_texcoord(_vbuffer, _u1, _v1);
-				vertex_float4(_vbuffer, _t1.X, _t1.Y, _t1.Z, _s1);
+					vertex_position_3d(_vbuffer, _x1, _y1, _z1);
+					vertex_normal(_vbuffer, _n1X, _n1Y, _n1Z);
+					vertex_texcoord(_vbuffer, _u1, _v1);
+					vertex_float4(_vbuffer, _t1.X, _t1.Y, _t1.Z, _s1);
 
-				vertex_position_3d(_vbuffer, _x2, _y2, _z2);
-				vertex_normal(_vbuffer, _n2X, _n2Y, _n2Z);
-				vertex_texcoord(_vbuffer, _u2, _v2);
-				vertex_float4(_vbuffer, _t2.X, _t2.Y, _t2.Z, _s2);
+					vertex_position_3d(_vbuffer, _x2, _y2, _z2);
+					vertex_normal(_vbuffer, _n2X, _n2Y, _n2Z);
+					vertex_texcoord(_vbuffer, _u2, _v2);
+					vertex_float4(_vbuffer, _t2.X, _t2.Y, _t2.Z, _s2);
 
-				vertex_position_3d(_vbuffer, _x3, _y3, _z3);
-				vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
-				vertex_texcoord(_vbuffer, _u3, _v3);
-				vertex_float4(_vbuffer, _t3.X, _t3.Y, _t3.Z, _s3);
+					vertex_position_3d(_vbuffer, _x3, _y3, _z3);
+					vertex_normal(_vbuffer, _n3X, _n3Y, _n3Z);
+					vertex_texcoord(_vbuffer, _u3, _v3);
+					vertex_float4(_vbuffer, _t3.X, _t3.Y, _t3.Z, _s3);
 
-				++_j;
-			}
-			++_i;
+					++_j;
+				}
+				++_i;
 		}
 
 		vertex_end(_vbuffer);
@@ -697,15 +696,15 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 		var _chunksY = ds_grid_height(Chunks);
 
 		var i = 0;
-		repeat (_chunksX)
+		repeat(_chunksX)
 		{
 			var j = 0;
-			repeat (_chunksY)
-			{
-				build_chunk(i, j);
-				++j;
-			}
-			++i;
+			repeat(_chunksY)
+				{
+					build_chunk(i, j);
+					++j;
+				}
+				++i;
 		}
 
 		return self;
@@ -854,7 +853,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 					}
 
 					shader_set_uniform_i(_uSplatmapIndex[i], _layerIndices[_call + i] - 1);
-					texture_set_stage(_uTerrainNormalW[i], _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? _normalWDefault));
+					texture_set_stage(_uTerrainNormalW[i], _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"]
+						?? _normalWDefault));
 					shader_set_uniform_f(_uTerrainIsRoughness[i], (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
 				}
 				else
@@ -863,19 +863,19 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 				}
 
 				var _i = _chunkFromX;
-				repeat (_chunkToX - _chunkFromX)
+				repeat(_chunkToX - _chunkFromX)
 				{
 					var _j = _chunkFromY;
-					repeat (_chunkToY - _chunkFromY)
-					{
-						var _chunk = Chunks[# _i, _j];
-						if (_chunk != undefined)
+					repeat(_chunkToY - _chunkFromY)
 						{
-							vertex_submit(_chunk, pr_trianglelist, _baseOpacityFirst);
+							var _chunk = Chunks[# _i, _j];
+							if (_chunk != undefined)
+							{
+								vertex_submit(_chunk, pr_trianglelist, _baseOpacityFirst);
+							}
+							++_j;
 						}
-						++_j;
-					}
-					++_i;
+						++_i;
 				}
 			}
 		}
@@ -971,9 +971,9 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 						| (1 << BBMOD_ERenderPass.ReflectionCapture)
 						| (1 << BBMOD_ERenderPass.GBuffer))
 					.BeginConditionalBlock()
-					//.SetGpuBlendEnable(true)
-					//.SetGpuColorWriteEnable(true, true, true, false)
-					;
+				//.SetGpuBlendEnable(true)
+				//.SetGpuColorWriteEnable(true, true, true, false)
+				;
 			}
 
 			RenderQueue
@@ -992,7 +992,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 
 					if (global.__bbmodMaterialProps != undefined)
 					{
-						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_TERRAIN_BASE_OPACITY + _iStr);
+						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_TERRAIN_BASE_OPACITY
+							+ _iStr);
 						if (_baseOpacityProp != undefined)
 						{
 							_baseOpacity = _baseOpacityProp;
@@ -1011,7 +1012,8 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 					RenderQueue
 						.SetUniformInt(BBMOD_U_SPLATMAP_INDEX + _iStr, _layerIndices[_call + i] - 1)
 						.SetSampler(BBMOD_U_TERRAIN_NORMAL_W + _iStr, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? _normalWDefault))
-						.SetUniformFloat(BBMOD_U_TERRAIN_IS_ROUGHNESS + _iStr, (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
+						.SetUniformFloat(BBMOD_U_TERRAIN_IS_ROUGHNESS + _iStr, (_layerNormalRoughness != undefined)
+							? 1.0 : 0.0);
 				}
 				else
 				{
@@ -1021,19 +1023,19 @@ function BBMOD_Terrain(_heightmap=undefined, _subimage=0, _chunkSize=128) constr
 			}
 
 			var _i = _chunkFromX;
-			repeat (_chunkToX - _chunkFromX)
+			repeat(_chunkToX - _chunkFromX)
 			{
 				var _j = _chunkFromY;
-				repeat (_chunkToY - _chunkFromY)
-				{
-					var _chunk = Chunks[# _i, _j];
-					if (_chunk != undefined)
+				repeat(_chunkToY - _chunkFromY)
 					{
-						RenderQueue.SubmitVertexBuffer(_chunk, pr_trianglelist, _baseOpacityFirst);
+						var _chunk = Chunks[# _i, _j];
+						if (_chunk != undefined)
+						{
+							RenderQueue.SubmitVertexBuffer(_chunk, pr_trianglelist, _baseOpacityFirst);
+						}
+						++_j;
 					}
-					++_j;
-				}
-				++_i;
+					++_i;
 			}
 
 			if (_call != 0)

@@ -7,8 +7,7 @@
 /// @desc Applies gamma correction (post-processing effect).
 ///
 /// @param {Real} [_gamma] Gamma value. Defaults to 2.2.
-function BBMOD_GammaCorrectEffect(_gamma=2.2)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_GammaCorrectEffect(_gamma = 2.2): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Real} Gamma value. Default value is 2.2.
 	Gamma = _gamma;

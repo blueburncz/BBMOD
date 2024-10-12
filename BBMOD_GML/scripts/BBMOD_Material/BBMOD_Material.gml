@@ -23,8 +23,8 @@ function __bbmod_material_get_map()
 function bbmod_material_register(_name, _material)
 {
 	gml_pragma("forceinline");
-	static _map =__bbmod_material_get_map();
-	_map[? _name] = _material;
+	static _map = __bbmod_material_get_map();
+	_map[?  _name] = _material;
 	_material.__name = _name;
 }
 
@@ -39,7 +39,7 @@ function bbmod_material_register(_name, _material)
 function bbmod_material_exists(_name)
 {
 	gml_pragma("forceinline");
-	static _map =__bbmod_material_get_map();
+	static _map = __bbmod_material_get_map();
 	return ds_map_exists(_map, _name);
 }
 
@@ -54,8 +54,8 @@ function bbmod_material_exists(_name)
 function bbmod_material_get(_name)
 {
 	gml_pragma("forceinline");
-	static _map =__bbmod_material_get_map();
-	return _map[? _name];
+	static _map = __bbmod_material_get_map();
+	return _map[?  _name];
 }
 
 /// @var {Struct.BBMOD_Material} The currently applied material or `undefined`.
@@ -77,8 +77,7 @@ global.__bbmodMaterialCurrent = undefined;
 ///
 /// @see BBMOD_MaterialPropertyBlock
 /// @see BBMOD_Shader
-function BBMOD_Material(_shader=undefined)
-	: BBMOD_Resource() constructor
+function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 {
 	static Resource_destroy = destroy;
 
@@ -262,7 +261,7 @@ function BBMOD_Material(_shader=undefined)
 	{
 		var _shaders = {};
 		var _pass = 0;
-		repeat (BBMOD_ERenderPass.SIZE)
+		repeat(BBMOD_ERenderPass.SIZE)
 		{
 			var _shader = Shaders[_pass];
 			if (_shader != undefined)
@@ -276,7 +275,7 @@ function BBMOD_Material(_shader=undefined)
 				}
 				else
 				{
-					_shaders[$ _passName] = _shader.__name;
+					_shaders[$  _passName] = _shader.__name;
 				}
 			}
 			++_pass;
@@ -327,11 +326,11 @@ function BBMOD_Material(_shader=undefined)
 			var _shaders = _json.Shaders;
 			var _keys = variable_struct_get_names(_shaders);
 			var _index = 0;
-			repeat (array_length(_keys))
+			repeat(array_length(_keys))
 			{
 				var _passName = _keys[_index++];
 				var _pass = bbmod_render_pass_from_string(_passName);
-				var _shader = _shaders[$ _passName];
+				var _shader = _shaders[$  _passName];
 				if (is_string(_shader))
 				{
 					if (_shader == "undefined")
@@ -362,9 +361,9 @@ function BBMOD_Material(_shader=undefined)
 			{
 				var _renderQueues = bbmod_render_queues_get();
 				var _index = 0;
-				repeat (array_length(_renderQueues))
+				repeat(array_length(_renderQueues))
 				{
-					with (_renderQueues[_index++])
+					with(_renderQueues[_index++])
 					{
 						if (Name == _renderQueue)
 						{
@@ -508,7 +507,7 @@ function BBMOD_Material(_shader=undefined)
 		return self;
 	};
 
-	static from_file = function (_file, _sha1=undefined)
+	static from_file = function (_file, _sha1 = undefined)
 	{
 		Path = _file;
 		check_file(_file, _sha1);
@@ -517,7 +516,7 @@ function BBMOD_Material(_shader=undefined)
 		return self;
 	};
 
-	static from_file_async = function (_file, _sha1=undefined, _callback=undefined)
+	static from_file_async = function (_file, _sha1 = undefined, _callback = undefined)
 	{
 		Path = _file;
 
@@ -648,7 +647,7 @@ function BBMOD_Material(_shader=undefined)
 
 			if (_shaderChanged)
 			{
-				with (_shader)
+				with(_shader)
 				{
 					on_set();
 					bbmod_shader_set_globals(_shaderRaw);
@@ -659,8 +658,8 @@ function BBMOD_Material(_shader=undefined)
 			gpu_set_blendmode(_disableBlending ? bm_normal : BlendMode);
 			gpu_set_blendenable(_disableBlending ? false : AlphaBlend);
 			gpu_set_cullmode(Culling);
-			gpu_set_zwriteenable(/*_disableBlending ? true : */ZWrite);
-			gpu_set_ztestenable(/*_disableBlending ? true : */ZTest);
+			gpu_set_zwriteenable( /*_disableBlending ? true : */ ZWrite);
+			gpu_set_ztestenable( /*_disableBlending ? true : */ ZTest);
 			gpu_set_zfunc(ZFunc);
 			gpu_set_tex_mip_enable(Mipmapping);
 			if (Mipmapping)
@@ -680,7 +679,7 @@ function BBMOD_Material(_shader=undefined)
 
 		if (_shaderChanged)
 		{
-			with (_shader)
+			with(_shader)
 			{
 				on_set();
 				bbmod_shader_set_globals(_shaderRaw);

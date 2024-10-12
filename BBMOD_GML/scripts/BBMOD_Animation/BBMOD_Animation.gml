@@ -1,8 +1,10 @@
 /// @module Core
 
+/* beautify ignore:start */
 #macro __BBMOD_BONE_SPACE_PARENT (1 << 0)
-#macro __BBMOD_BONE_SPACE_WORLD  (1 << 1)
-#macro __BBMOD_BONE_SPACE_BONE   (1 << 2)
+#macro __BBMOD_BONE_SPACE_WORLD (1 << 1)
+#macro __BBMOD_BONE_SPACE_BONE (1 << 2)
+/* beautify ignore:end */
 
 /// @func BBMOD_Animation([_file[, _sha1]])
 ///
@@ -50,8 +52,7 @@
 /// @see BBMOD_AnimationPlayer
 /// @see BBMOD_AnimationState
 /// @see BBMOD_AnimationStateMachine
-function BBMOD_Animation(_file=undefined, _sha1=undefined)
-	: BBMOD_Resource() constructor
+function BBMOD_Animation(_file = undefined, _sha1 = undefined): BBMOD_Resource() constructor
 {
 	/// @var {Real} The major version of the animation file.
 	VersionMajor = BBMOD_VERSION_MAJOR;
@@ -194,9 +195,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		var _hasMinorVersion = false;
 
 		var _type = buffer_read(_buffer, buffer_string);
-		if (_type == "bbanim")
-		{
-		}
+		if (_type == "bbanim") {}
 		else if (_type == "BBANIM")
 		{
 			_hasMinorVersion = true;
@@ -240,7 +239,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		__framesWorld = (__spaces & __BBMOD_BONE_SPACE_WORLD) ? [] : undefined;
 		__framesBone = (__spaces & __BBMOD_BONE_SPACE_BONE) ? [] : undefined;
 
-		repeat (Duration)
+		repeat(Duration)
 		{
 			if (__spaces & __BBMOD_BONE_SPACE_PARENT)
 			{
@@ -264,7 +263,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		if (VersionMinor >= 4)
 		{
 			var _eventCount = buffer_read(_buffer, buffer_u32);
-			repeat (_eventCount)
+			repeat(_eventCount)
 			{
 				array_push(__events, buffer_read(_buffer, buffer_f64)); // Frame
 				array_push(__events, buffer_read(_buffer, buffer_string)); // Event name
@@ -297,7 +296,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		buffer_write(_buffer, buffer_u32, __modelBoneCount);
 
 		var d = 0;
-		repeat (Duration)
+		repeat(Duration)
 		{
 			if (__spaces & __BBMOD_BONE_SPACE_PARENT)
 			{
@@ -321,7 +320,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		buffer_write(_buffer, buffer_u32, _eventCount);
 
 		var i = 0;
-		repeat (_eventCount)
+		repeat(_eventCount)
 		{
 			buffer_write(_buffer, buffer_f64, __events[i]);
 			buffer_write(_buffer, buffer_string, __events[i + 1]);
@@ -384,13 +383,13 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 		}
 
 		var _time = 0;
-		repeat (_transition.Duration)
+		repeat(_transition.Duration)
 		{
 			var _frameSize = array_length(_frameFrom);
 			var _frame = array_create(_frameSize);
 
 			var i = 0;
-			repeat (_frameSize / 8)
+			repeat(_frameSize / 8)
 			{
 				var _factor = _time / _transition.Duration;
 
@@ -496,7 +495,7 @@ function BBMOD_Animation(_file=undefined, _sha1=undefined)
 
 				// Create new dual quaternion from translation and rotation and
 				// write it into the frame
-				_frame[@ i]     = _dq10;
+				_frame[@ i] = _dq10;
 				_frame[@ i + 1] = _dq11;
 				_frame[@ i + 2] = _dq12;
 				_frame[@ i + 3] = _dq13;

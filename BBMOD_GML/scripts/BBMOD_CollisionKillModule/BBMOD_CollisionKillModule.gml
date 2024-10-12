@@ -10,8 +10,7 @@
 /// collision will be detected!
 ///
 /// @see BBMOD_EParticle.HasCollided
-function BBMOD_CollisionKillModule()
-	: BBMOD_ParticleModule() constructor
+function BBMOD_CollisionKillModule(): BBMOD_ParticleModule() constructor
 {
 	static on_update = function (_emitter, _deltaTime)
 	{

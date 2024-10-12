@@ -14,9 +14,9 @@
 ///
 /// @see BBMOD_EParticle.HasCollided
 function BBMOD_AddVec4OnCollisionModule(
-	_property=undefined,
-	_change=new BBMOD_Vec4(1.0)
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_change = new BBMOD_Vec4(1.0)
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the four consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.

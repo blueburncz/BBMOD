@@ -79,7 +79,7 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	///
 	/// @throws {BBMOD_Exception} If the format of the vertex and the format of
 	/// the buffer are not compatible.
-	static to_vertex_buffer = function (_vbuffer, _vformat=undefined)
+	static to_vertex_buffer = function (_vbuffer, _vformat = undefined)
 	{
 		var _checkFormat = (_vformat == undefined);
 
@@ -87,12 +87,12 @@ function BBMOD_Vertex(_vertexFormat) constructor
 
 		if (_checkFormat
 			&& ((_vformat.Vertices && !VertexFormat.Vertices)
-			|| (_vformat.Normals && !VertexFormat.Normals)
-			|| (_vformat.TextureCoords && !VertexFormat.TextureCoords)
-			|| (_vformat.Colors && !VertexFormat.Colors)
-			|| (_vformat.TangentW && !VertexFormat.TangentW)
-			|| (_vformat.Bones && !VertexFormat.Bones)
-			|| (_vformat.Ids && !VertexFormat.Ids)))
+				|| (_vformat.Normals && !VertexFormat.Normals)
+				|| (_vformat.TextureCoords && !VertexFormat.TextureCoords)
+				|| (_vformat.Colors && !VertexFormat.Colors)
+				|| (_vformat.TangentW && !VertexFormat.TangentW)
+				|| (_vformat.Bones && !VertexFormat.Bones)
+				|| (_vformat.Ids && !VertexFormat.Ids)))
 		{
 			throw new BBMOD_Exception("Vertex formats are not compatible!");
 		}

@@ -35,7 +35,7 @@
 /// @see BBMOD_Mesh
 /// @see BBMOD_Vertex
 /// @see BBMOD_VertexFormat
-function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist) constructor
+function BBMOD_MeshBuilder(_primitiveType = pr_trianglelist) constructor
 {
 	/// @var {Constant.PrimitiveType} The primitive type of built meshes.
 	/// @readonly
@@ -103,7 +103,7 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist) constructor
 		gml_pragma("forceinline");
 		var _ind = ds_list_size(Faces);
 		var i = 0;
-		repeat (argument_count)
+		repeat(argument_count)
 		{
 			ds_list_add(Faces, argument[i++]);
 		}
@@ -136,24 +136,24 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist) constructor
 
 		for (var i = 0; i < _vertexCount; ++i)
 		{
-			Vertices[| i].TangentW = new BBMOD_Vec4(0.0);
+			Vertices[|  i].TangentW = new BBMOD_Vec4(0.0);
 			_tan2[@ i] = new BBMOD_Vec3(0.0);
 		}
 
 		for (var i = 0; i < _faceCount; i += 3)
 		{
-			var _i1 = Faces[| i];
-			var _i2 = Faces[| i + 1];
-			var _i3 = Faces[| i + 2];
+			var _i1 = Faces[|  i];
+			var _i2 = Faces[|  i + 1];
+			var _i3 = Faces[|  i + 2];
 
-			var _f1 = Vertices[| _i1];
-			var _f2 = Vertices[| _i2];
-			var _f3 = Vertices[| _i3];
+			var _f1 = Vertices[|  _i1];
+			var _f2 = Vertices[|  _i2];
+			var _f3 = Vertices[|  _i3];
 
 			// Check if their vertex formats have the required data
 			if (!(_f1.VertexFormat.Vertices && _f1.VertexFormat.Normals && _f1.VertexFormat.TextureCoords
-				&& _f2.VertexFormat.Vertices && _f2.VertexFormat.Normals && _f2.VertexFormat.TextureCoords
-				&& _f3.VertexFormat.Vertices && _f3.VertexFormat.Normals && _f3.VertexFormat.TextureCoords))
+					&& _f2.VertexFormat.Vertices && _f2.VertexFormat.Normals && _f2.VertexFormat.TextureCoords
+					&& _f3.VertexFormat.Vertices && _f3.VertexFormat.Normals && _f3.VertexFormat.TextureCoords))
 			{
 				throw new BBMOD_Exception(
 					"Vertices, normals and texture coords are required to build tangents!");
@@ -233,7 +233,7 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist) constructor
 
 		for (var i = 0; i < _vertexCount; ++i)
 		{
-			var _v = Vertices[| i];
+			var _v = Vertices[|  i];
 			var _n = _v.Normal;
 			var _t = _v.TangentW;
 
@@ -282,9 +282,9 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist) constructor
 	///
 	/// @see BBMOD_Mesh
 	/// @see BBMOD_VertexFormat
-	static build = function (_vertexFormat=undefined)
+	static build = function (_vertexFormat = undefined)
 	{
-		_vertexFormat ??= Vertices[| 0].VertexFormat;
+		_vertexFormat ??= Vertices[|  0].VertexFormat;
 
 		var _vbuffer = vertex_create_buffer();
 		var _faceCount = ds_list_size(Faces);
@@ -292,8 +292,8 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist) constructor
 		vertex_begin(_vbuffer, _vertexFormat.Raw);
 		for (var i = 0; i < _faceCount; ++i)
 		{
-			var _ind = Faces[| i];
-			var _vertex = Vertices[| _ind];
+			var _ind = Faces[|  i];
+			var _vertex = Vertices[|  _ind];
 			try
 			{
 				_vertex.to_vertex_buffer(_vbuffer, _vertexFormat);
@@ -307,8 +307,14 @@ function BBMOD_MeshBuilder(_primitiveType=pr_trianglelist) constructor
 		vertex_end(_vbuffer);
 
 		var _mesh = new BBMOD_Mesh(_vertexFormat);
-		if (__bboxMin != undefined) { _mesh.BboxMin = __bboxMin.Clone(); }
-		if (__bboxMax != undefined) { _mesh.BboxMax = __bboxMax.Clone(); }
+		if (__bboxMin != undefined)
+		{
+			_mesh.BboxMin = __bboxMin.Clone();
+		}
+		if (__bboxMax != undefined)
+		{
+			_mesh.BboxMax = __bboxMax.Clone();
+		}
 		_mesh.VertexBuffer = _vbuffer;
 		_mesh.PrimitiveType = PrimitiveType;
 		return _mesh;

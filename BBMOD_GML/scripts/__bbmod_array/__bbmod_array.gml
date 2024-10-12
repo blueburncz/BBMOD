@@ -26,7 +26,7 @@ function bbmod_array_clone(_array)
 function bbmod_array_to_buffer(_array, _buffer, _type)
 {
 	var i = 0;
-	repeat (array_length(_array))
+	repeat(array_length(_array))
 	{
 		buffer_write(_buffer, _type, _array[i++]);
 	}
@@ -45,7 +45,7 @@ function bbmod_array_from_buffer(_buffer, _type, _size)
 {
 	var _array = array_create(_size, 0);
 	var i = 0;
-	repeat (_size)
+	repeat(_size)
 	{
 		_array[@ i++] = buffer_read(_buffer, _type);
 	}

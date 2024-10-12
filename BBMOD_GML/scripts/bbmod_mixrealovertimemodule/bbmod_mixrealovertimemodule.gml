@@ -18,11 +18,11 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixRealOverTimeModule(
-	_property=undefined,
-	_from=0.0,
-	_to=_from,
-	_duration=1.0
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = 0.0,
+	_to = _from,
+	_duration = 1.0
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The property to set initial value of. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.
@@ -51,9 +51,10 @@ function BBMOD_MixRealOverTimeModule(
 			var _duration = Duration;
 
 			var _particleIndex = 0;
-			repeat (_emitter.ParticlesAlive)
+			repeat(_emitter.ParticlesAlive)
 			{
-				var _factor = clamp(_particles[# BBMOD_EParticle.TimeAlive, _particleIndex] / _duration, 0.0, 1.0);
+				var _factor = clamp(_particles[# BBMOD_EParticle.TimeAlive, _particleIndex] / _duration,
+					0.0, 1.0);
 				_particles[# _property, _particleIndex] = lerp(_to, _from, _factor);
 				++_particleIndex;
 			}

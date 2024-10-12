@@ -61,8 +61,8 @@ function __bbmod_shader_get_map()
 function bbmod_shader_register(_name, _shader)
 {
 	gml_pragma("forceinline");
-	static _map =__bbmod_shader_get_map();
-	_map[? _name] = _shader;
+	static _map = __bbmod_shader_get_map();
+	_map[?  _name] = _shader;
 	_shader.__name = _name;
 }
 
@@ -77,7 +77,7 @@ function bbmod_shader_register(_name, _shader)
 function bbmod_shader_exists(_name)
 {
 	gml_pragma("forceinline");
-	static _map =__bbmod_shader_get_map();
+	static _map = __bbmod_shader_get_map();
 	return ds_map_exists(_map, _name);
 }
 
@@ -92,8 +92,8 @@ function bbmod_shader_exists(_name)
 function bbmod_shader_get(_name)
 {
 	gml_pragma("forceinline");
-	static _map =__bbmod_shader_get_map();
-	return _map[? _name];
+	static _map = __bbmod_shader_get_map();
+	return _map[?  _name];
 }
 
 /// @var {Struct.BBMOD_Shader}
@@ -115,7 +115,7 @@ global.__bbmodShaderCurrent = undefined;
 ///
 /// @note You can use method {@link BBMOD_Shader.add_variant} to add different
 /// variants of the shader to be used with different vertex formats.
-function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined) constructor
+function BBMOD_Shader(_shader = undefined, _vertexFormat = undefined) constructor
 {
 	/// @var {String} The name under which is the shader registered or
 	/// `undefined`.
@@ -144,7 +144,7 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined) constructor
 	static add_variant = function (_shader, _vertexFormat)
 	{
 		gml_pragma("forceinline");
-		__raw[$ _vertexFormat.get_hash()] = _shader;
+		__raw[$  _vertexFormat.get_hash()] = _shader;
 		return self;
 	};
 
@@ -159,7 +159,7 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined) constructor
 	static get_variant = function (_vertexFormat)
 	{
 		gml_pragma("forceinline");
-		return __raw[$ _vertexFormat.get_hash()];
+		return __raw[$  _vertexFormat.get_hash()];
 	};
 
 	/// @func has_variant(_vertexFormat)
@@ -186,9 +186,9 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined) constructor
 		gml_pragma("forceinline");
 		var _keys = variable_struct_get_names(__raw);
 		var i = 0;
-		repeat (array_length(_keys))
+		repeat(array_length(_keys))
 		{
-			if (!shader_is_compiled(__raw[$ _keys[i++]]))
+			if (!shader_is_compiled(__raw[$  _keys[i++]]))
 			{
 				return false;
 			}
@@ -199,9 +199,7 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined) constructor
 	/// @func on_set()
 	///
 	/// @desc A function executed when the shader is set.
-	static on_set = function ()
-	{
-	};
+	static on_set = function () {};
 
 	/// @func set(_vertexFormat)
 	///
@@ -277,9 +275,7 @@ function BBMOD_Shader(_shader=undefined, _vertexFormat=undefined) constructor
 	/// @func on_reset()
 	///
 	/// @desc A function executed when the shader is reset.
-	static on_reset = function ()
-	{
-	};
+	static on_reset = function () {};
 
 	/// @func reset()
 	///
@@ -324,62 +320,64 @@ function bbmod_shader_set_globals(_shader)
 {
 	static _globals = __bbmod_shader_get_globals();
 	var i = 0;
-	repeat (array_length(_globals) / 3)
+	repeat(array_length(_globals) / 3)
 	{
 		var _value = _globals[i + 2];
 		if (_value != undefined)
 		{
 			switch (_globals[i + 1])
 			{
-			case BBMOD_EShaderUniformType.Float:
-				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value);
-				break;
+				case BBMOD_EShaderUniformType.Float:
+					shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value);
+					break;
 
-			case BBMOD_EShaderUniformType.Float2:
-				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1]);
-				break;
+				case BBMOD_EShaderUniformType.Float2:
+					shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1]);
+					break;
 
-			case BBMOD_EShaderUniformType.Float3:
-				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2]);
-				break;
+				case BBMOD_EShaderUniformType.Float3:
+					shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2]);
+					break;
 
-			case BBMOD_EShaderUniformType.Float4:
-				shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2], _value[3]);
-				break;
+				case BBMOD_EShaderUniformType.Float4:
+					shader_set_uniform_f(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2],
+						_value[3]);
+					break;
 
-			case BBMOD_EShaderUniformType.FloatArray:
-				shader_set_uniform_f_array(shader_get_uniform(_shader, _globals[i]), _value);
-				break;
+				case BBMOD_EShaderUniformType.FloatArray:
+					shader_set_uniform_f_array(shader_get_uniform(_shader, _globals[i]), _value);
+					break;
 
-			case BBMOD_EShaderUniformType.Int:
-				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value);
-				break;
+				case BBMOD_EShaderUniformType.Int:
+					shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value);
+					break;
 
-			case BBMOD_EShaderUniformType.Int2:
-				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1]);
-				break;
+				case BBMOD_EShaderUniformType.Int2:
+					shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1]);
+					break;
 
-			case BBMOD_EShaderUniformType.Int3:
-				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2]);
-				break;
+				case BBMOD_EShaderUniformType.Int3:
+					shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2]);
+					break;
 
-			case BBMOD_EShaderUniformType.Int4:
-				shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2], _value[3]);
-				break;
+				case BBMOD_EShaderUniformType.Int4:
+					shader_set_uniform_i(shader_get_uniform(_shader, _globals[i]), _value[0], _value[1], _value[2],
+						_value[3]);
+					break;
 
-			case BBMOD_EShaderUniformType.IntArray:
-				shader_set_uniform_i_array(shader_get_uniform(_shader, _globals[i]), _value);
-				break;
+				case BBMOD_EShaderUniformType.IntArray:
+					shader_set_uniform_i_array(shader_get_uniform(_shader, _globals[i]), _value);
+					break;
 
-			case BBMOD_EShaderUniformType.Matrix:
-				shader_set_uniform_matrix(shader_get_uniform(_shader, _globals[i]));
-				break;
+				case BBMOD_EShaderUniformType.Matrix:
+					shader_set_uniform_matrix(shader_get_uniform(_shader, _globals[i]));
+					break;
 
-			case BBMOD_EShaderUniformType.MatrixArray:
-				shader_set_uniform_matrix_array(shader_get_uniform(_shader, _globals[i]), _value);
-				break;
+				case BBMOD_EShaderUniformType.MatrixArray:
+					shader_set_uniform_matrix_array(shader_get_uniform(_shader, _globals[i]), _value);
+					break;
 
-			case BBMOD_EShaderUniformType.Sampler:
+				case BBMOD_EShaderUniformType.Sampler:
 				{
 					var _index = shader_get_sampler_index(_shader, _globals[i]);
 
@@ -467,7 +465,7 @@ function bbmod_shader_get_global(_name)
 	gml_pragma("forceinline");
 	static _globals = __bbmod_shader_get_globals();
 	var i = 0;
-	repeat (array_length(_globals) / 3)
+	repeat(array_length(_globals) / 3)
 	{
 		if (_globals[i] == _name)
 		{
@@ -492,7 +490,7 @@ function __bbmod_shader_set_global_impl(_name, _type, _value)
 	gml_pragma("forceinline");
 	static _globals = __bbmod_shader_get_globals();
 	var i = 0;
-	repeat (array_length(_globals) / 3)
+	repeat(array_length(_globals) / 3)
 	{
 		if (_globals[i] == _name)
 		{
@@ -670,17 +668,17 @@ function bbmod_shader_set_global_sampler(_name, _texture)
 {
 	gml_pragma("forceinline");
 	__bbmod_shader_set_global_impl(_name, BBMOD_EShaderUniformType.Sampler,
-		{
-			__texture: _texture,
-			__filter: undefined,
-			__maxAniso: undefined,
-			__maxMip: undefined,
-			__minMip: undefined,
-			__mipBias: undefined,
-			__mipEnable: undefined,
-			__mipFilter: undefined,
-			__repeat: undefined,
-		});
+	{
+		__texture: _texture,
+		__filter: undefined,
+		__maxAniso: undefined,
+		__maxMip: undefined,
+		__minMip: undefined,
+		__mipBias: undefined,
+		__mipEnable: undefined,
+		__mipFilter: undefined,
+		__repeat: undefined,
+	});
 }
 
 /// @func bbmod_shader_set_global_sampler_filter(_name, _filter)
@@ -818,7 +816,7 @@ function bbmod_shader_unset_global(_name)
 	gml_pragma("forceinline");
 	static _globals = __bbmod_shader_get_globals();
 	var i = 0;
-	repeat (array_length(_globals) / 3)
+	repeat(array_length(_globals) / 3)
 	{
 		if (_globals[i] == _name)
 		{

@@ -20,7 +20,7 @@
 /// @see BBMOD_MODEL_PARTICLE
 /// @see BBMOD_MATERIAL_PARTICLE_LIT
 /// @see BBMOD_MATERIAL_PARTICLE_UNLIT
-function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32) constructor
+function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize = 32) constructor
 {
 	/// @var {Struct.BBMOD_Material} _material The material used by the particle
 	/// system.
@@ -64,7 +64,7 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize=32) 
 	{
 		gml_pragma("forceinline");
 		var i = 0;
-		repeat (argument_count)
+		repeat(argument_count)
 		{
 			array_push(Modules, argument[i++]);
 		}

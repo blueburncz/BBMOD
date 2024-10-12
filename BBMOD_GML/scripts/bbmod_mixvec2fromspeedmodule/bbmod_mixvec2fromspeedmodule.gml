@@ -21,12 +21,12 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixVec2FromSpeedModule(
-	_property=undefined,
-	_from=new BBMOD_Vec2(),
-	_to=_from.Clone(),
-	_min=0.0,
-	_max=1.0
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = new BBMOD_Vec2(),
+	_to = _from.Clone(),
+	_min = 0.0,
+	_max = 1.0
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the two consecutive properties. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.
@@ -65,14 +65,14 @@ function BBMOD_MixVec2FromSpeedModule(
 			var _div = _max - _min;
 
 			var _particleIndex = 0;
-			repeat (_emitter.ParticlesAlive)
+			repeat(_emitter.ParticlesAlive)
 			{
 				var _velX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 				var _velY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];
 				var _velZ = _particles[# BBMOD_EParticle.VelocityZ, _particleIndex];
 				var _speed = sqrt((_velX * _velX) + (_velY + _velY) + (_velZ * _velZ));
 				var _factor = clamp((_speed - _min) / _div, 0.0, 1.0);
-				_particles[# _property, _particleIndex]     = lerp(_toX, _fromX, _factor);
+				_particles[# _property, _particleIndex] = lerp(_toX, _fromX, _factor);
 				_particles[# _property + 1, _particleIndex] = lerp(_toY, _fromY, _factor);
 				++_particleIndex;
 			}

@@ -13,8 +13,7 @@
 /// @see BBMOD_EParticle.HasCollided
 /// @see BBMOD_ParticleEmitter
 /// @see BBMOD_ParticleEmitter.Particles
-function BBMOD_CollisionEventModule(_callback=undefined)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_CollisionEventModule(_callback = undefined): BBMOD_ParticleModule() constructor
 {
 	/// @var {Function} The function to execute on particle collision. Must take
 	/// the emitter as the first argument and the particle's index as the second
@@ -32,7 +31,7 @@ function BBMOD_CollisionEventModule(_callback=undefined)
 		}
 		var _particles = _emitter.Particles;
 		var _particleIndex = 0;
-		repeat (_emitter.ParticlesAlive)
+		repeat(_emitter.ParticlesAlive)
 		{
 			if (_particles[# BBMOD_EParticle.HasCollided, _particleIndex])
 			{

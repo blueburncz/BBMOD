@@ -14,8 +14,7 @@
 /// modFence = _objImporter.import("Data/Assets/Fence.obj");
 /// _objImporter = _objImporter.destroy();
 /// ```
-function BBMOD_OBJImporter()
-	: BBMOD_Importer() constructor
+function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 {
 	static Importer_destroy = destroy;
 
@@ -86,8 +85,8 @@ function BBMOD_OBJImporter()
 
 			switch (_keyword)
 			{
-			// New material
-			case "newmtl":
+				// New material
+				case "newmtl":
 				{
 					_material = BBMOD_MATERIAL_DEFAULT.clone();
 					_material.Repeat = true;
@@ -96,8 +95,8 @@ function BBMOD_OBJImporter()
 				}
 				break;
 
-			// Difuse color
-			case "Kd":
+				// Difuse color
+				case "Kd":
 				{
 					bbmod_string_split_on_first(_line, " ", _split);
 					var _r = real(_split[0]) * 255.0;
@@ -112,12 +111,16 @@ function BBMOD_OBJImporter()
 				}
 				break;
 
-			// Diffuse texture
-			case "map_Kd":
+				// Diffuse texture
+				case "map_Kd":
 				{
 					var _spritePath = filename_path(_path) + _line;
-					var _scope = { Material: _material, SpritePath: _spritePath };
-					BBMOD_RESOURCE_MANAGER.load(_spritePath, undefined, method(_scope, function (_err, _res) {
+					var _scope = {
+						Material: _material,
+						SpritePath: _spritePath
+					};
+					BBMOD_RESOURCE_MANAGER.load(_spritePath, undefined, method(_scope, function (_err, _res)
+					{
 						if (_err != undefined)
 						{
 							__bbmod_warning("Could not open file \"{0}\"!", [SpritePath]);
@@ -134,7 +137,8 @@ function BBMOD_OBJImporter()
 		file_text_close(_file);
 	};
 
-	static import = function (_path)
+	static
+	import = function (_path)
 	{
 		ds_list_clear(__vertices);
 		ds_list_clear(__normals);
@@ -204,8 +208,8 @@ function BBMOD_OBJImporter()
 
 			switch (_keyword)
 			{
-			// Import materials
-			case "mtllib":
+				// Import materials
+				case "mtllib":
 				{
 					if (ImportMaterials)
 					{
@@ -214,8 +218,8 @@ function BBMOD_OBJImporter()
 				}
 				break;
 
-			// Object
-			case "o":
+				// Object
+				case "o":
 				{
 					_node = new BBMOD_Node(_model);
 					_root.add_child(_node);
@@ -225,11 +229,11 @@ function BBMOD_OBJImporter()
 				}
 				break;
 
-			// Use material
-			case "usemtl":
+				// Use material
+				case "usemtl":
 				{
 					var _ind = array_length(_model.MaterialNames) - 1;
-					for (/**/; _ind >= 0; --_ind)
+					for ( /**/ ; _ind >= 0; --_ind)
 					{
 						if (_model.MaterialNames[_ind] == _line)
 						{
@@ -247,8 +251,8 @@ function BBMOD_OBJImporter()
 				}
 				break;
 
-			// Vertex
-			case "v":
+				// Vertex
+				case "v":
 				{
 					bbmod_string_split_on_first(_line, " ", _split);
 					var _vx = real(_split[0]);
@@ -270,8 +274,8 @@ function BBMOD_OBJImporter()
 				}
 				break;
 
-			// Normal
-			case "vn":
+				// Normal
+				case "vn":
 				{
 					bbmod_string_split_on_first(_line, " ", _split);
 					var _nx = real(_split[0]);
@@ -293,8 +297,8 @@ function BBMOD_OBJImporter()
 				}
 				break;
 
-			// Texture
-			case "vt":
+				// Texture
+				case "vt":
 				{
 					bbmod_string_split_on_first(_line, " ", _split);
 					var _tx = real(_split[0]);
@@ -314,8 +318,8 @@ function BBMOD_OBJImporter()
 				}
 				break;
 
-			// Face
-			case "f":
+				// Face
+				case "f":
 				{
 					_meshBuilder ??= new BBMOD_MeshBuilder();
 
@@ -340,18 +344,18 @@ function BBMOD_OBJImporter()
 						var _n = (real(_split[0]) - 1) * 3;
 
 						var _vertex = new BBMOD_Vertex(_vformat);
-						_vertex.Position.X = __vertices[| _v];
-						_vertex.Position.Y = __vertices[| _v + 1];
-						_vertex.Position.Z = __vertices[| _v + 2];
+						_vertex.Position.X = __vertices[|  _v];
+						_vertex.Position.Y = __vertices[|  _v + 1];
+						_vertex.Position.Z = __vertices[|  _v + 2];
 
-						_vertex.Normal.X = __normals[| _n];
-						_vertex.Normal.Y = __normals[| _n + 1];
-						_vertex.Normal.Z = __normals[| _n + 2];
+						_vertex.Normal.X = __normals[|  _n];
+						_vertex.Normal.Y = __normals[|  _n + 1];
+						_vertex.Normal.Z = __normals[|  _n + 2];
 
 						if (_t != -1)
 						{
-							_vertex.TextureCoord.X = __textureCoords[| _t];
-							_vertex.TextureCoord.Y = __textureCoords[| _t + 1];
+							_vertex.TextureCoord.X = __textureCoords[|  _t];
+							_vertex.TextureCoord.Y = __textureCoords[|  _t + 1];
 						}
 
 						_vertexInd[@ i] = _meshBuilder.add_vertex(_vertex);

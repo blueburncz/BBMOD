@@ -80,13 +80,13 @@
 /// });
 /// ```
 function BBMOD_VertexFormat(
-	_confOrVertices=true,
-	_normals=false,
-	_uvs=false,
-	_colors=false,
-	_tangentw=false,
-	_bones=false,
-	_ids=false) constructor
+	_confOrVertices = true,
+	_normals = false,
+	_uvs = false,
+	_colors = false,
+	_tangentw = false,
+	_bones = false,
+	_ids = false) constructor
 {
 	var _vertices = true;
 	var _uvs2 = false;
@@ -196,7 +196,7 @@ function BBMOD_VertexFormat(
 			| ((TangentW ? 1 : 0) << 5)
 			| ((Bones ? 1 : 0) << 6)
 			| ((Ids ? 1 : 0) << 7)
-			);
+		);
 	};
 
 	/// @func get_byte_size()
@@ -224,7 +224,7 @@ function BBMOD_VertexFormat(
 
 	if (ds_map_exists(__formats, _key))
 	{
-		Raw = __formats[? _key];
+		Raw = __formats[?  _key];
 	}
 	else
 	{
@@ -272,7 +272,7 @@ function BBMOD_VertexFormat(
 		}
 
 		Raw = vertex_format_end();
-		__formats[? _key] = Raw;
+		__formats[?  _key] = Raw;
 	}
 }
 
@@ -286,9 +286,9 @@ function BBMOD_VertexFormat(
 /// Defaults to {@link BBMOD_VERSION_MINOR}.
 ///
 /// @private
-function __bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_VERSION_MINOR)
+function __bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor = BBMOD_VERSION_MINOR)
 {
-	with (_vertexFormat)
+	with(_vertexFormat)
 	{
 		buffer_write(_buffer, buffer_bool, Vertices);
 		buffer_write(_buffer, buffer_bool, Normals);
@@ -316,7 +316,7 @@ function __bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_
 /// @return {Struct.BBMOD_VertexFormat} The loaded vetex format.
 ///
 /// @private
-function __bbmod_vertex_format_load(_buffer, _versionMinor=BBMOD_VERSION_MINOR)
+function __bbmod_vertex_format_load(_buffer, _versionMinor = BBMOD_VERSION_MINOR)
 {
 	var _vertices = buffer_read(_buffer, buffer_bool);
 	var _normals = buffer_read(_buffer, buffer_bool);
@@ -329,7 +329,8 @@ function __bbmod_vertex_format_load(_buffer, _versionMinor=BBMOD_VERSION_MINOR)
 	var _bones = buffer_read(_buffer, buffer_bool);
 	var _ids = buffer_read(_buffer, buffer_bool);
 
-	return new BBMOD_VertexFormat({
+	return new BBMOD_VertexFormat(
+	{
 		"Vertices": _vertices,
 		"Normals": _normals,
 		"TextureCoords": _textureCoords,

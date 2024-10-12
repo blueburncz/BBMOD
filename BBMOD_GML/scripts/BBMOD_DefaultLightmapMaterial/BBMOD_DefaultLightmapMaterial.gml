@@ -13,8 +13,7 @@
 /// used in specific render passes.
 ///
 /// @see BBMOD_LightmapShader
-function BBMOD_DefaultLightmapMaterial(_shader=undefined)
-	: BBMOD_DefaultMaterial(_shader) constructor
+function BBMOD_DefaultLightmapMaterial(_shader = undefined): BBMOD_DefaultMaterial(_shader) constructor
 {
 	static DefaultMaterial_copy = copy;
 

@@ -9,8 +9,7 @@
 /// @param {Real} [_strength] The strength of the effect. Defaults to 1.
 /// @param {Constant.Color} [_color] The color of the effect. Defaults to
 /// `c_black`.
-function BBMOD_VignetteEffect(_strength=1.0, _color=c_black)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_VignetteEffect(_strength = 1.0, _color = c_black): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Real} The strength of the effect. Default value is 1.
 	Strength = _strength;
@@ -20,7 +19,7 @@ function BBMOD_VignetteEffect(_strength=1.0, _color=c_black)
 	Color = _color;
 
 	static __uStrength = shader_get_uniform(BBMOD_ShVignette, "u_fStrength");
-	static __uColor    = shader_get_uniform(BBMOD_ShVignette, "u_vColor");
+	static __uColor = shader_get_uniform(BBMOD_ShVignette, "u_vColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

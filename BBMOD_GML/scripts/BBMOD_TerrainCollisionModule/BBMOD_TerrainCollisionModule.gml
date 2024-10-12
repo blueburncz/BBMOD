@@ -8,8 +8,7 @@
 ///
 /// @param {Struct.BBMOD_Terrain} [_terrain] The terrain to collide with.
 /// Defaults to `undefined`.
-function BBMOD_TerrainCollisionModule(_terrain=undefined)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_TerrainCollisionModule(_terrain = undefined): BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Terrain} The terrain to collide with. Default value
 	/// is `undefined`.
@@ -24,7 +23,7 @@ function BBMOD_TerrainCollisionModule(_terrain=undefined)
 		}
 		var _particles = _emitter.Particles;
 		var _particleIndex = 0;
-		repeat (_emitter.ParticlesAlive)
+		repeat(_emitter.ParticlesAlive)
 		{
 			var _positionX = _particles[# BBMOD_EParticle.PositionX, _particleIndex];
 			var _positionY = _particles[# BBMOD_EParticle.PositionY, _particleIndex];
@@ -40,7 +39,7 @@ function BBMOD_TerrainCollisionModule(_terrain=undefined)
 					var _velocityY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];
 					var _velocityZ = _particles[# BBMOD_EParticle.VelocityZ, _particleIndex];
 					var _dot2 = (
-						  _velocityX * _normal.X
+						_velocityX * _normal.X
 						+ _velocityY * _normal.Y
 						+ _velocityZ * _normal.Z
 					) * 2.0;
