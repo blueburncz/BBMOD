@@ -131,7 +131,7 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 		std::ofstream log(GetFilename(foutCurrent, "log", ".txt", config.Prefix), std::ios::out);
 
 		Assimp::Importer* importer = new Assimp::Importer();
-		//importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
+		importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 
 		int flags = (0
 			| aiProcess_PopulateArmatureData
