@@ -22,3 +22,20 @@ z += _up;
 camera.update(delta_time);
 
 renderer.update(delta_time);
+
+if (keyboard_check_pressed(vk_left))
+{
+	--renderer.DebugMode;
+	if (renderer.DebugMode < 0)
+	{
+		renderer.DebugMode = BBMOD_ERenderDebug.SIZE - 1;
+	}
+}
+else if (keyboard_check_pressed(vk_right))
+{
+	++renderer.DebugMode;
+	if (renderer.DebugMode >= BBMOD_ERenderDebug.SIZE)
+	{
+		renderer.DebugMode = 0;
+	}
+}

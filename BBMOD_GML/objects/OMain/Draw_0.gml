@@ -9,6 +9,16 @@ new BBMOD_Matrix()
 	.ApplyWorld();
 modSphere.render([matSphere]);
 
+new BBMOD_Matrix()
+	.Translate(4, 0, 1)
+	.ApplyWorld();
+modSphere.render([matSphereMetallic]);
+
+new BBMOD_Matrix()
+	.Translate(8, 0, 1)
+	.ApplyWorld();
+modSphere.render([matSphereEmissive]);
+
 terrain.render();
 
 BBMOD_MATRIX_IDENTITY.ApplyWorld();

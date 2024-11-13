@@ -38,6 +38,17 @@ modSphere = BBMOD_RESOURCE_MANAGER.load("Data/BBMOD/Models/Sphere.bbmod", functi
 matSphere = BBMOD_MATERIAL_DEFERRED.clone();
 matSphere.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 matSphere.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
+matSphere.set_normal_roughness(BBMOD_VEC3_UP, 0.2);
+
+matSphereMetallic = BBMOD_MATERIAL_DEFERRED.clone();
+matSphereMetallic.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+matSphereMetallic.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
+matSphereMetallic.set_metallic_ao(1, 1);
+
+matSphereEmissive = BBMOD_MATERIAL_DEFERRED.clone();
+matSphereEmissive.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+matSphereEmissive.BaseOpacity = sprite_get_texture(BBMOD_SprBlack, 0);
+matSphereEmissive.set_emissive(new BBMOD_Color(0, 127, 255));
 
 ////////////////////////////////////////////////////////////////////////////////
 //
