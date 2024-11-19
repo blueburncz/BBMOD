@@ -1,3 +1,5 @@
+var _useDeferredRenderer = bbmod_deferred_renderer_is_supported();
+
 z = 1;
 
 camera = new BBMOD_Camera();
@@ -5,10 +7,18 @@ camera.Exposure = 2;
 camera.MouseSensitivity = 0.5;
 camera.FollowObject = self;
 
-renderer = new BBMOD_DeferredRenderer();
+if (_useDeferredRenderer)
+{
+	renderer = new BBMOD_DeferredRenderer();
+}
+else
+{
+	renderer = new BBMOD_DefaultRenderer();
+	renderer.EnableGBuffer = true;
+}
 renderer.UseAppSurface = true;
 renderer.EnableShadows = true;
-renderer.ShadowmapNormalOffset = 0.1;
+renderer.ShadowmapNormalOffset = 0.01;
 renderer.EnableSSAO = true;
 renderer.SSAODepthRange = 1.5;
 renderer.SSAORadius = 64;
@@ -18,11 +28,31 @@ gizmo = new BBMOD_Gizmo();
 renderer.Gizmo = gizmo;
 
 postProcessor = new BBMOD_PostProcessor();
-postProcessor.add_effect(new BBMOD_ExposureEffect());
-postProcessor.add_effect(new BBMOD_GammaCorrectEffect());
-postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());
+postProcessor.LensDirtStrength = 0.0;
+
+//var _dof = new BBMOD_DepthOfFieldEffect();
+//_dof.AutoFocus = true;
+//postProcessor.add_effect(_dof);
+
+postProcessor.add_effect(new BBMOD_LightBloomEffect());
+
+directionalBlur = new BBMOD_DirectionalBlurEffect();
+postProcessor.add_effect(directionalBlur);
+
+if (_useDeferredRenderer)
+{
+	postProcessor.add_effect(new BBMOD_ExposureEffect());
+	postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());
+	postProcessor.add_effect(new BBMOD_GammaCorrectEffect());
+}
+
+sunshafts = new BBMOD_SunShaftsEffect();
+sunshafts.Color.Alpha = 0.1;
+postProcessor.add_effect(sunshafts);
+
 postProcessor.add_effect(new BBMOD_ChromaticAberrationEffect(2));
 postProcessor.add_effect(new BBMOD_FXAAEffect());
+postProcessor.add_effect(new BBMOD_LensFlaresEffect());
 postProcessor.add_effect(new BBMOD_VignetteEffect(0.5));
 renderer.PostProcessor = postProcessor;
 
@@ -35,18 +65,27 @@ modSphere = BBMOD_RESOURCE_MANAGER.load("Data/BBMOD/Models/Sphere.bbmod", functi
 	modSphere.freeze();
 });
 
-matSphere = BBMOD_MATERIAL_DEFERRED.clone();
-matSphere.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+var _baseMaterial = undefined;
+if (_useDeferredRenderer)
+{
+	_baseMaterial = BBMOD_MATERIAL_DEFERRED.clone();
+}
+else
+{
+	_baseMaterial = BBMOD_MATERIAL_DEFAULT.clone();
+	_baseMaterial.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
+}
+_baseMaterial.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+
+matSphere = _baseMaterial.clone();
 matSphere.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
 matSphere.set_normal_roughness(BBMOD_VEC3_UP, 0.2);
 
-matSphereMetallic = BBMOD_MATERIAL_DEFERRED.clone();
-matSphereMetallic.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+matSphereMetallic = _baseMaterial.clone();
 matSphereMetallic.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
 matSphereMetallic.set_metallic_ao(1, 1);
 
-matSphereEmissive = BBMOD_MATERIAL_DEFERRED.clone();
-matSphereEmissive.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+matSphereEmissive = _baseMaterial.clone();
 matSphereEmissive.BaseOpacity = sprite_get_texture(BBMOD_SprBlack, 0);
 matSphereEmissive.set_emissive(new BBMOD_Color(0, 127, 255));
 
@@ -77,6 +116,31 @@ probe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(0, 0, 1));
 probe.Infinite = true;
 bbmod_reflection_probe_add(probe);
 
+sunshafts.LightDirection = sun.Direction;
+
+lensFlare = new BBMOD_LensFlare();
+lensFlare.Direction = sun.Direction;
+lensFlare.add_ghosts(BBMOD_SprLensFlareHeptagon, 0, 8, 0.1, 1.0, 0.5, 0.1, 3.0, BBMOD_C_BLUE);
+
+var _e;
+
+//_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareStreak, 0, new BBMOD_Vec2(0.0));
+//_e.Scale.Set(2.0, 1.0);
+//_e.Color = BBMOD_C_ORANGE;
+//_e.Color.Alpha = 0.5;
+//lensFlare.add_element(_e);
+
+_e = new BBMOD_LensFlareElement(BBMOD_SprLensFlareHoop, 0, new BBMOD_Vec2(0.75));
+_e.Scale.Set(5.0);
+_e.ScaleByDistanceMin.Set(0.0);
+_e.ScaleByDistanceMax.Set(1.0);
+_e.ApplyStarburst = true;
+_e.AngleRelative = true;
+_e.Color.Alpha = 0.5;
+lensFlare.add_element(_e);
+
+bbmod_lens_flare_add(lensFlare);
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Terrain
@@ -90,7 +154,11 @@ terrain.Position.Set(
 	0);
 terrain.TextureRepeat.Set(32);
 
-terrainMaterial = BBMOD_MATERIAL_TERRAIN_DEFERRED.clone();
+terrainMaterial = _useDeferredRenderer ? BBMOD_MATERIAL_TERRAIN_DEFERRED.clone() : BBMOD_MATERIAL_TERRAIN.clone();
+if (!_useDeferredRenderer)
+{
+	terrainMaterial.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
+}
 terrain.Material = terrainMaterial;
 
 terrain.Colormap = sprite_get_texture(SprColormap, 0);
