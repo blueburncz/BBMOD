@@ -109,7 +109,7 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 			__surDepthBuffer = bbmod_surface_check(__surDepthBuffer, _width, _height, surface_rgba8unorm, true);
 
 			surface_set_target(__surDepthBuffer);
-			draw_clear(c_white);
+			draw_clear(c_red);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			bbmod_render_pass_set(BBMOD_ERenderPass.DepthOnly);
