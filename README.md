@@ -28,9 +28,6 @@ Support us in developing BBMOD, get priority assistance and more of our amazing 
 ![BBMOD GUI](screenshots/GUI.png)
 *[BBMOD GUI](https://blueburn.cz/index.php?menu=bbmod_gui) - Model converter with live preview, material editor and more*
 
-![PushEd 2](https://blueburn.cz/images/ped_1.png)
-*[PushEd 2](https://blueburn.cz/index.php?menu=pushed2) - 2D & 3D level editor for GameMaker*
-
 ## License
 BBMOD is available under the MIT license. Full text is available [here](LICENSE).
 
@@ -45,7 +42,6 @@ BBMOD logo is property of [BlueBurn](https://blueburn.cz) and you're not allowed
 * [Samples](https://blueburn.cz/bbmod/samples)
 * [Official website](https://blueburn.cz/index.php?menu=bbmod)
 * [Patreon](https://www.patreon.com/blueburn)
-* [PushEd 2](https://blueburn.cz/index.php?menu=pushed2)
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
 # Special thanks
