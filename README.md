@@ -7,7 +7,8 @@
 [![License](https://img.shields.io/github/license/blueburncz/BBMOD)](LICENSE)
 [![Discord](https://img.shields.io/discord/298884075585011713?label=Discord)](https://discord.gg/ep2BGPm)
 
-# Table of Contents
+## Table of Contents
+
 * [About](#about)
 * [Documentation, tutorials, samples and help](#documentation-tutorials-samples-and-help)
 * [Screenshots](#screenshots)
@@ -17,13 +18,14 @@
 * [Links](Links)
 * [Special thanks](#special-thanks)
 
-# About
+## About
+
 BBMOD is the most powerful 3D rendering solution for GameMaker! For more info, please see its official website https://blueburn.cz/bbmod/.
 
-# Documentation, tutorials, samples and help
+## Documentation, tutorials, samples and help
 An online documentation for the latest release of BBMOD is always available at https://blueburn.cz/bbmod/docs/3. Tutorials for BBMOD can be found on its homepage at https://blueburn.cz/bbmod/tutorials and sample projects at https://blueburn.cz/bbmod/samples. If you need any additional help, you can join our [Discord server](https://discord.gg/ep2BGPm).
 
-# Screenshots
+## Screenshots
 
 ![Sponza](screenshots/Sponza.png)
 *[Sponza](https://github.com/kraifpatrik/Sponza-BBMOD)*
@@ -41,12 +43,15 @@ Support us in developing BBMOD, get priority assistance and more of our amazing 
 *[BBMOD GUI](https://blueburn.cz/index.php?menu=bbmod_gui) - Model converter with live preview, material editor and more*
 
 ## License
+
 BBMOD is available under the MIT license. Full text is available [here](LICENSE).
 
 ## Logo terms of use
+
 BBMOD logo is property of [BlueBurn](https://blueburn.cz) and you're not allowed to do any modifications to it! **Only uniform scaling is allowed, to change the logo size as required.**
 
-# Links
+## Links
+
 * [BBMOD GUI](https://blueburn.cz/index.php?menu=bbmod_gui)
 * [Discord](https://discord.gg/ep2BGPm)
 * [Documentation](https://blueburn.cz/bbmod/docs/3)
@@ -56,7 +61,8 @@ BBMOD logo is property of [BlueBurn](https://blueburn.cz) and you're not allowed
 * [Patreon](https://www.patreon.com/blueburn)
 * [YoYo Games Marketplace](https://marketplace.yoyogames.com/assets/10210/bbmod-3)
 
-# Special thanks
+## Special thanks
+
 * To [Assimp](https://github.com/assimp/assimp) for making BBMOD CLI possible!
 * To [Bane-Me Please](https://vk.com/banemeplease) for extensive testing of BBMOD on Android devices.
 * To Gabor Szauer and their [Game Physics Cookbook](https://github.com/gszauer/GamePhysicsCookbook) for making the Raycasting module possible!
