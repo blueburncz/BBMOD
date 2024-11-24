@@ -1,4 +1,7 @@
-# BBMOD
+<p align="center">
+  <img src="BBMOD3Light.svg" height="200px" alt="Logo"/>
+</p>
+
 > The most powerful 3D rendering solution for GameMaker
 
 [![License](https://img.shields.io/github/license/blueburncz/BBMOD)](LICENSE)
@@ -8,6 +11,8 @@
 * [About](#about)
 * [Documentation, tutorials, samples and help](#documentation-tutorials-samples-and-help)
 * [Support the development](#support-the-development)
+* [License](#license)
+* [Logo terms of use](#logo-terms-of-use)
 * [Links](Links)
 * [Special thanks](#special-thanks)
 
@@ -25,6 +30,12 @@ Support us in developing BBMOD, get priority assistance and more of our amazing 
 
 ![PushEd 2](https://blueburn.cz/images/ped_1.png)
 *[PushEd 2](https://blueburn.cz/index.php?menu=pushed2) - 2D & 3D level editor for GameMaker*
+
+## License
+BBMOD is available under the MIT license. Full text is available [here](LICENSE).
+
+## Logo terms of use
+BBMOD logo is property of [BlueBurn](https://blueburn.cz) and you're not allowed to do any modifications to it! **Only uniform scaling is allowed, to change the logo size as required.**
 
 # Links
 * [BBMOD GUI](https://blueburn.cz/index.php?menu=bbmod_gui)
