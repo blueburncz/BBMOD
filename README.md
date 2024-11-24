@@ -10,8 +10,8 @@
 ## Table of Contents
 
 * [About](#about)
-* [Documentation, tutorials, samples and help](#documentation-tutorials-samples-and-help)
 * [Screenshots](#screenshots)
+* [Documentation, tutorials, samples and help](#documentation-tutorials-samples-and-help)
 * [Support the development](#support-the-development)
 * [License](#license)
 * [Logo terms of use](#logo-terms-of-use)
@@ -21,9 +21,6 @@
 ## About
 
 BBMOD is the most powerful 3D rendering solution for GameMaker! For more info, please see its official website https://blueburn.cz/bbmod/.
-
-## Documentation, tutorials, samples and help
-An online documentation for the latest release of BBMOD is always available at https://blueburn.cz/bbmod/docs/3. Tutorials for BBMOD can be found on its homepage at https://blueburn.cz/bbmod/tutorials and sample projects at https://blueburn.cz/bbmod/samples. If you need any additional help, you can join our [Discord server](https://discord.gg/ep2BGPm).
 
 ## Screenshots
 
@@ -35,6 +32,10 @@ An online documentation for the latest release of BBMOD is always available at h
 
 ![Zombie demo](screenshots/ZombieDemo.png)
 *[Zombie demo](https://github.com/blueburncz/BBMOD-Zombie-Demo)*
+
+## Documentation, tutorials, samples and help
+
+An online documentation for the latest release of BBMOD is always available at https://blueburn.cz/bbmod/docs/3. Tutorials for BBMOD can be found on its homepage at https://blueburn.cz/bbmod/tutorials and sample projects at https://blueburn.cz/bbmod/samples. If you need any additional help, you can join our [Discord server](https://discord.gg/ep2BGPm).
 
 ## Support the development
 Support us in developing BBMOD, get priority assistance and more of our amazing tools as a reward! [Become our Patron](https://www.patreon.com/blueburn).
