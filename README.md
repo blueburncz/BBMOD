@@ -36,7 +36,7 @@ An online documentation for the latest release of BBMOD is always available at h
 ![Zombie demo](screenshots/ZombieDemo.png)
 *[Zombie demo](https://github.com/blueburncz/BBMOD-Zombie-Demo)*
 
-# Support the development
+## Support the development
 Support us in developing BBMOD, get priority assistance and more of our amazing tools as a reward! [Become our Patron](https://www.patreon.com/blueburn).
 
 ![BBMOD GUI](screenshots/GUI.png)
