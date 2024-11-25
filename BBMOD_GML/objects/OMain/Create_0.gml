@@ -79,6 +79,7 @@ _baseMaterial.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 
 matSphere = _baseMaterial.clone();
 matSphere.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
+matSphere.BaseOpacityMultiplier = BBMOD_C_SILVER;
 matSphere.set_normal_roughness(BBMOD_VEC3_UP, 0.2);
 
 matSphereMetallic = _baseMaterial.clone();
@@ -87,7 +88,8 @@ matSphereMetallic.set_metallic_ao(1, 1);
 
 matSphereEmissive = _baseMaterial.clone();
 matSphereEmissive.BaseOpacity = sprite_get_texture(BBMOD_SprBlack, 0);
-matSphereEmissive.set_emissive(new BBMOD_Color(0, 127, 255));
+matSphereEmissive.set_normal_roughness(BBMOD_VEC3_UP, 1.0);
+matSphereEmissive.set_emissive(new BBMOD_Color(0, 127 * 1.2, 255 * 1.2));
 
 ////////////////////////////////////////////////////////////////////////////////
 //
