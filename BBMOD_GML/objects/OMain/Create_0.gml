@@ -89,7 +89,7 @@ matSphereMetallic.set_metallic_ao(1, 1);
 matSphereEmissive = _baseMaterial.clone();
 matSphereEmissive.BaseOpacity = sprite_get_texture(BBMOD_SprBlack, 0);
 matSphereEmissive.set_normal_roughness(BBMOD_VEC3_UP, 1.0);
-matSphereEmissive.set_emissive(new BBMOD_Color(0, 127 * 1.2, 255 * 1.2));
+matSphereEmissive.set_emissive(new BBMOD_Color(255 * 1.1, 127 * 1.1, 0));
 
 ////////////////////////////////////////////////////////////////////////////////
 //
