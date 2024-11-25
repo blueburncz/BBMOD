@@ -535,7 +535,7 @@ void main()
 	material.Normal = normalize(GB1.rgb * 2.0 - 1.0);
 	material.Roughness = GB1.a;
 	material.Metallic = GB2.a;
-	material.Specular = material.Base * material.Metallic;
+	material.Specular = mix(F0_DEFAULT, material.Base, material.Metallic);
 	material.Base *= 1.0 - material.Metallic;
 
 	float depth = xDecodeDepth(GB2.rgb) * bbmod_ZFar;
