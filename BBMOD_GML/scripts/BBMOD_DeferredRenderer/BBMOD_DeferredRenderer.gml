@@ -1,5 +1,23 @@
 /// @module DeferredRenderer
 
+/// @enum TODO: Add docs
+enum BBMOD_ERenderDebug
+{
+	None,
+	Depth,
+	BaseColor,
+	Metallic,
+	Normal,
+	Roughness,
+	Emissive,
+	BakedAO,
+	SSAO,
+	Lighting,
+	Reflections,
+	LightingComplexity,
+	SIZE,
+};
+
 /// @func BBMOD_DeferredRenderer()
 ///
 /// @extends BBMOD_BaseRenderer
@@ -60,6 +78,9 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 	/// @var {Constant.Color} The color to clear the background with. Default
 	/// value is `c_black`.
 	ClearColor = c_black;
+
+	/// @var {Real} TODO: Add docs
+	DebugMode = BBMOD_ERenderDebug.None;
 
 	/// @var {Bool}
 	/// @private

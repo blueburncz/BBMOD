@@ -1,23 +1,5 @@
 /// @module Core
 
-/// @enum TODO: Add docs
-enum BBMOD_ERenderDebug
-{
-	None,
-	Depth,
-	BaseColor,
-	Metallic,
-	Normal,
-	Roughness,
-	Emissive,
-	BakedAO,
-	SSAO,
-	Lighting,
-	Reflections,
-	LightingComplexity,
-	SIZE,
-};
-
 /// @var {Struct.BBMOD_Renderer} The last used renderer. Can be `undefined`.
 /// @private
 global.__bbmodRendererCurrent = undefined;
@@ -31,9 +13,6 @@ global.__bbmodRendererCurrent = undefined;
 /// [render](./BBMOD_Model.render.html).
 function BBMOD_BaseRenderer() constructor
 {
-	/// @var {Real} TODO: Add docs
-	DebugMode = BBMOD_ERenderDebug.None;
-
 	/// @var {Real} The X position of the renderer on the screen. Default value
 	/// is 0.
 	X = 0;
