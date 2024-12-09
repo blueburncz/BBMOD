@@ -32,20 +32,3 @@ directionalBlur.Vector.Set(
 var _length = directionalBlur.Vector.Length();
 _length = (_length > 0.0) ? _length : 1.0;
 directionalBlur.Step = 2.0 / min(_length, 32.0);
-
-if (keyboard_check_pressed(vk_left))
-{
-	--renderer.DebugMode;
-	if (renderer.DebugMode < 0)
-	{
-		renderer.DebugMode = BBMOD_ERenderDebug.SIZE - 1;
-	}
-}
-else if (keyboard_check_pressed(vk_right))
-{
-	++renderer.DebugMode;
-	if (renderer.DebugMode >= BBMOD_ERenderDebug.SIZE)
-	{
-		renderer.DebugMode = 0;
-	}
-}

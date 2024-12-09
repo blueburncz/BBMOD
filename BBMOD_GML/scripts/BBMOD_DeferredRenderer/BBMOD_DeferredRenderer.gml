@@ -1,23 +1,5 @@
 /// @module DeferredRenderer
 
-/// @enum TODO: Add docs
-enum BBMOD_ERenderDebug
-{
-	None,
-	Depth,
-	BaseColor,
-	Metallic,
-	Normal,
-	Roughness,
-	Emissive,
-	BakedAO,
-	SSAO,
-	Lighting,
-	Reflections,
-	LightingComplexity,
-	SIZE,
-};
-
 /// @func BBMOD_DeferredRenderer()
 ///
 /// @extends BBMOD_BaseRenderer
@@ -78,9 +60,6 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 	/// @var {Constant.Color} The color to clear the background with. Default
 	/// value is `c_black`.
 	ClearColor = c_black;
-
-	/// @var {Real} TODO: Add docs
-	DebugMode = BBMOD_ERenderDebug.None;
 
 	/// @var {Bool}
 	/// @private
@@ -614,96 +593,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 
 		var _world = matrix_get(matrix_world);
 		matrix_set(matrix_world, matrix_build_identity());
-
-		if (DebugMode != BBMOD_ERenderDebug.None)
-		{
-			var _debugName = "";
-
-			gpu_push_state();
-			gpu_set_blendenable(false);
-
-			switch (DebugMode)
-			{
-				case BBMOD_ERenderDebug.Depth:
-					_debugName = "Depth";
-					shader_set(BBMOD_ShGBufferExtractRGB);
-					draw_surface_stretched(__surGBuffer[2], X, Y, get_width(), get_height());
-					shader_reset();
-					break;
-
-				case BBMOD_ERenderDebug.BaseColor:
-					_debugName = "BaseColor";
-					shader_set(BBMOD_ShGBufferExtractRGB);
-					draw_surface_stretched(__surGBuffer[0], X, Y, get_width(), get_height());
-					shader_reset();
-					break;
-
-				case BBMOD_ERenderDebug.Metallic:
-					_debugName = "Metallic";
-					shader_set(BBMOD_ShGBufferExtractA);
-					draw_surface_stretched(__surGBuffer[2], X, Y, get_width(), get_height());
-					shader_reset();
-					break;
-
-				case BBMOD_ERenderDebug.Normal:
-					_debugName = "Normal";
-					shader_set(BBMOD_ShGBufferExtractRGB);
-					draw_surface_stretched(__surGBuffer[1], X, Y, get_width(), get_height());
-					shader_reset();
-					break;
-
-				case BBMOD_ERenderDebug.Roughness:
-					_debugName = "Roughness";
-					shader_set(BBMOD_ShGBufferExtractA);
-					draw_surface_stretched(__surGBuffer[1], X, Y, get_width(), get_height());
-					shader_reset();
-					break;
-
-				case BBMOD_ERenderDebug.Emissive:
-					_debugName = "Emissive";
-					// TODO: Implement emissive render debug
-					break;
-
-				case BBMOD_ERenderDebug.BakedAO:
-					_debugName = "BakedAO";
-					shader_set(BBMOD_ShGBufferExtractA);
-					draw_surface_stretched(__surGBuffer[0], X, Y, get_width(), get_height());
-					shader_reset();
-					break;
-
-				case BBMOD_ERenderDebug.SSAO:
-					_debugName = "SSAO";
-					draw_surface_stretched(__surSSAO, X, Y, get_width(), get_height());
-					break;
-
-				case BBMOD_ERenderDebug.Lighting:
-					_debugName = "Lighting";
-					// TODO: Implement lighting render debug
-					break;
-
-				case BBMOD_ERenderDebug.Reflections:
-					_debugName = "Reflections";
-					// TODO: Implement reflections render debug
-					break;
-
-				case BBMOD_ERenderDebug.LightingComplexity:
-					_debugName = "LightingComplexity";
-					// TODO: Implement lighting complexity render debug
-					break;
-
-				default:
-					break;
-			}
-
-			gpu_pop_state();
-
-			if (_debugName != "")
-			{
-				draw_text_color(X + 9, Y + 9, _debugName, 0, 0, 0, 0, 1.0);
-				draw_text(X + 8, Y + 8, _debugName);
-			}
-		}
-		else if (PostProcessor != undefined
+		if (PostProcessor != undefined
 			&& PostProcessor.Enabled)
 		{
 			PostProcessor.__renderScale = RenderScale;
@@ -716,7 +606,6 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 			draw_surface_stretched(__surFinal, X, Y, get_width(), get_height());
 			gpu_pop_state();
 		}
-
 		matrix_set(matrix_world, _world);
 
 		return self;
