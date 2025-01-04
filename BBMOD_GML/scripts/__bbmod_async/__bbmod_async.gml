@@ -76,8 +76,18 @@ function bbmod_buffer_load_async(_file, _callback)
 function bbmod_async_save_load_update(_asyncLoad)
 {
 	var _map = global.__bbmodAsyncCallback;
+
 	var _id = _asyncLoad[?  "id"];
+	if (_id == undefined)
+	{
+		return;
+	}
+
 	var _data = _map[?  _id];
+	if (_data == undefined)
+	{
+		return;
+	}
 
 	if (_asyncLoad[?  "status"] == false)
 	{
