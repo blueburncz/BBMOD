@@ -102,35 +102,35 @@ function BBMOD_DepthOfFieldEffect(
 	/// auto focus distance. Use values in range `(0; 1]`, where values closer
 	/// to 0 mean slowly and 1 means immediately. Default value is 0.1.
 	/// @see BBMOD_DepthOfFieldEffect.AutoFocus
-	AutoFocusFactor = 0.1;
+	AutoFocusFactor = _autoFocusFactor;
 
 	/// @var {Real} Distance over which objects transition from completely in
 	/// focus to competely out of focus in the near plane. Default value is 50.
-	BlurRangeNear = 50;
+	BlurRangeNear = _blurRangeNear;
 
 	/// @var {Real} Distance over which objects transition from completely in
 	/// focus to completely out of focus in the far plane. Default value is 50.
-	BlurRangeFar = 50;
+	BlurRangeFar = _blurRangeFar;
 
 	/// @var {Real} The scale of the blur size in the near plane. Use values in
 	/// range 0..1, where 0 is disabled and 1 is full blur. Using values greater
 	/// than 1 is possible but can produce visual artifacts. Default value is 1.
-	BlurScaleNear = 1.0;
+	BlurScaleNear = _blurScaleNear;
 
 	/// @var {Real} The scale of the blur size in the far plane. Use values in
 	/// range 0..1, where 0 is disabled and 1 is full blur. Using values greater
 	/// than 1 is possible but can produce visual artifacts. Default value is 1.
-	BlurScaleFar = 1.0;
+	BlurScaleFar = _blurScaleFar;
 
 	/// @var {Real} Controls the shape of bokeh. Use values greater or equal to
 	/// 3 for number of edges. Values lower than 3 result into a perfect circle.
 	/// Default value is 6 (hexagon).
-	BokehShape = 6.0;
+	BokehShape = _bokehShape;
 
 	/// @var {Real} Number of samples taken when rendering the depth of field.
 	/// Greater values produce better looking results but decrease performance.
 	/// Default value is 32.
-	SampleCount = 32;
+	SampleCount = _sampleCount;
 
 	/// @var {Id.Surface}
 	/// @private
