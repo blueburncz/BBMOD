@@ -124,7 +124,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// ```
 	///
 	/// @note You cannot have multiple properties with the same name but
-	/// a different type! The property type and value is overriden each time you
+	/// a different type! The property type and value is overridden each time you
 	/// use this method!
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set_color
@@ -574,7 +574,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 
 	/// @func get_names()
 	///
-	/// @desc Retreives an array of names of properties that the material
+	/// @desc Retrieves an array of names of properties that the material
 	/// property block has.
 	///
 	/// @return {Array<String>} The array of property names.
@@ -755,7 +755,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 ///
 /// @note The current material property block is applied automatically every
 /// time {@link BBMOD_Material.apply} is called. If the applied material has an
-/// [OnApply](./BBMOD_Material.OnApply.html) property, it is executed *afer* the
+/// [OnApply](./BBMOD_Material.OnApply.html) property, it is executed *after* the
 /// material property block is applied.
 ///
 /// @see bbmod_material_props_get

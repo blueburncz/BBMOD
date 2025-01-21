@@ -205,7 +205,7 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	///
 	/// @desc Initializes the quaternion using an axis and an angle.
 	///
-	/// @param {Struct.BBMOD_Vec3} _axis The axis of rotaiton.
+	/// @param {Struct.BBMOD_Vec3} _axis The axis of rotation.
 	///
 	/// @param {Real} _angle The rotation angle.
 	///

@@ -17,7 +17,7 @@
 /// `undefined`.
 ///
 /// @example
-/// The following code loads a model from file "Model.bbmod", assings a
+/// The following code loads a model from file "Model.bbmod", assigns a
 /// texture to material slot 0 (meaning it won't use BBMOD's material system)
 /// and then draws the model at the x, y, z position of given instance. The
 /// model is then destroyed in the Clean Up event to avoid memory leaks.

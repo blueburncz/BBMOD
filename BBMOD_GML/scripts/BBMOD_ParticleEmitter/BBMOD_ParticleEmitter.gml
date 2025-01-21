@@ -481,7 +481,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 	/// @func render([_material])
 	///
-	/// @desc Enqueus particles for rendering.
+	/// @desc Enqueues particles for rendering.
 	///
 	/// @param {Struct.BBMOD_Material} [_material] The material to use instead
 	/// of the one defined in the particle system or `undefined`.

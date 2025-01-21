@@ -49,7 +49,7 @@ function bbmod_object_add_bool(_object, _name)
 
 /// @func bbmod_object_add_color(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.Color} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.Color} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -71,7 +71,7 @@ function bbmod_object_add_color(_object, _name)
 
 /// @func bbmod_object_add_gmfont(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMFont} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMFont} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -93,7 +93,7 @@ function bbmod_object_add_gmfont(_object, _name)
 
 /// @func bbmod_object_add_gmobject(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMObject} property to
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMObject} property to
 /// an object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -115,7 +115,7 @@ function bbmod_object_add_gmobject(_object, _name)
 
 /// @func bbmod_object_add_gmpath(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMPath} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMPath} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -137,7 +137,7 @@ function bbmod_object_add_gmpath(_object, _name)
 
 /// @func bbmod_object_add_gmroom(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMRoom} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMRoom} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -159,7 +159,7 @@ function bbmod_object_add_gmroom(_object, _name)
 
 /// @func bbmod_object_add_gmscript(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMScript} property to
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMScript} property to
 /// an object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -181,7 +181,7 @@ function bbmod_object_add_gmscript(_object, _name)
 
 /// @func bbmod_object_add_gmshader(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMShader} property to
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMShader} property to
 /// an object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -203,7 +203,7 @@ function bbmod_object_add_gmshader(_object, _name)
 
 /// @func bbmod_object_add_gmsound(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMSound} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMSound} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -225,7 +225,7 @@ function bbmod_object_add_gmsound(_object, _name)
 
 /// @func bbmod_object_add_gmsprite(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMSprite} property to
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMSprite} property to
 /// an object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -247,7 +247,7 @@ function bbmod_object_add_gmsprite(_object, _name)
 
 /// @func bbmod_object_add_gmtileset(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMTileSet} property to
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMTileSet} property to
 /// an object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -269,7 +269,7 @@ function bbmod_object_add_gmtileset(_object, _name)
 
 /// @func bbmod_object_add_gmtimeline(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.GMTimeline} property to
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.GMTimeline} property to
 /// an object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -291,7 +291,7 @@ function bbmod_object_add_gmtimeline(_object, _name)
 
 /// @func bbmod_object_add_matrix(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.Matrix} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.Matrix} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -313,7 +313,7 @@ function bbmod_object_add_matrix(_object, _name)
 
 /// @func bbmod_object_add_path(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.Path} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.Path} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -335,7 +335,7 @@ function bbmod_object_add_path(_object, _name)
 
 /// @func bbmod_object_add_quaternion(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.Quaternion} property to
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.Quaternion} property to
 /// an object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -357,7 +357,7 @@ function bbmod_object_add_quaternion(_object, _name)
 
 /// @func bbmod_object_add_real(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.Real} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.Real} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -379,7 +379,7 @@ function bbmod_object_add_real(_object, _name)
 
 /// @func bbmod_object_add_real_array(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.RealArray} property to
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.RealArray} property to
 /// an object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -401,7 +401,7 @@ function bbmod_object_add_real_array(_object, _name)
 
 /// @func bbmod_object_add_string(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.String} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.String} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -423,7 +423,7 @@ function bbmod_object_add_string(_object, _name)
 
 /// @func bbmod_object_add_vec2(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.Vec2} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.Vec2} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -445,7 +445,7 @@ function bbmod_object_add_vec2(_object, _name)
 
 /// @func bbmod_object_add_vec3(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.Vec3} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.Vec3} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -467,7 +467,7 @@ function bbmod_object_add_vec3(_object, _name)
 
 /// @func bbmod_object_add_vec4(_object, _name)
 ///
-/// @desc Adds a serialiazble {@link BBMOD_EPropertyType.Vec4} property to an
+/// @desc Adds a serializable {@link BBMOD_EPropertyType.Vec4} property to an
 /// object.
 ///
 /// @param {Asset.GMObject} _object The object to add the property to.
@@ -740,7 +740,7 @@ function bbmod_instance_to_buffer(_instance, _buffer, _properties)
 /// @param {Id.DsMap<String, Array<Struct.BBMOD_Property>>} _properties A mapping
 /// from object name to an array of properties of the object.
 ///
-/// @return {Id.Instance} The created instnace.
+/// @return {Id.Instance} The created instance.
 ///
 /// @throws {BBMOD_Exception} If an error occurs.
 function bbmod_instance_from_buffer(_buffer, _properties)

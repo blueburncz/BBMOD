@@ -55,7 +55,7 @@ function bbmod_render_queues_clear()
 ///
 /// @implements {BBMOD_IMeshRenderQueue}
 ///
-/// @desc A cointainer of render commands.
+/// @desc A container of render commands.
 ///
 /// @param {String} [_name] The name of the render queue. Defaults to
 /// "RenderQueue" + number of created render queues - 1 (e.g. "RenderQueue0",
@@ -93,7 +93,7 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 
 	/// @func __get_next(_size)
 	///
-	/// @desc Retreives next render command available to reuse.
+	/// @desc Retrieves next render command available to reuse.
 	///
 	/// @param {Real} _size The size of the render command.
 	///

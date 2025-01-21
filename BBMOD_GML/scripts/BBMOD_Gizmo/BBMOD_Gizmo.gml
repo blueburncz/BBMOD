@@ -47,14 +47,14 @@ enum BBMOD_EEditAxis
 ///
 /// @param {Real} [_size] The size of the gizmo. Default value is 10 units.
 ///
-/// @note This requries synchronnous loading of models, therefore it cannot
-/// be used on platforms like HTML5, which require asynchronnous loading.
+/// @note This requires synchronous loading of models, therefore it cannot
+/// be used on platforms like HTML5, which require asynchronous loading.
 /// You also **must** use {@link BBMOD_Camera} for the gizmo to work properly!
 function BBMOD_Gizmo(_size = 10.0) constructor
 {
 	/// @var {Array<Struct.BBMOD_Model>} Gizmo models for individual edit modes.
-	/// @note Please note that these are not loaded asynchronnously, therefore
-	/// the gizmo cannot be used on platforms that require asynchronnous loading,
+	/// @note Please note that these are not loaded asynchronously, therefore
+	/// the gizmo cannot be used on platforms that require asynchronous loading,
 	/// like HTML5!
 	/// @see BBMOD_EEditType
 	/// @readonly
@@ -246,7 +246,7 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// @var {Function} A function that the gizmo uses to change an instance's
 	/// position on the X axis. Must take the instance as the first argument and
 	/// its new position on the X axis as the second argument. Defaults to a
-	/// function that assings the new position to the instance's `x` variable.
+	/// function that assigns the new position to the instance's `x` variable.
 	SetInstancePositionX = function (_instance, _x)
 	{
 		gml_pragma("forceinline");
@@ -266,7 +266,7 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// @var {Function} A function that the gizmo uses to change an instance's
 	/// position on the Y axis. Must take the instance as the first argument and
 	/// its new position on the Y axis as the second argument. Defaults to a
-	/// function that assings the new position to the instance's `y` variable.
+	/// function that assigns the new position to the instance's `y` variable.
 	SetInstancePositionY = function (_instance, _y)
 	{
 		gml_pragma("forceinline");
@@ -286,7 +286,7 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// @var {Function} A function that the gizmo uses to change an instance's
 	/// position on the Z axis. Must take the instance as the first argument and
 	/// its new position on the Z axis as the second argument. Defaults to a
-	/// function that assings the new position to the instance's `Z` variable.
+	/// function that assigns the new position to the instance's `Z` variable.
 	SetInstancePositionZ = function (_instance, _z)
 	{
 		gml_pragma("forceinline");
@@ -342,7 +342,7 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// @var {Function} A function that the gizmo uses to change an instance's
 	/// rotation on the Z axis. Must take the instance as the first argument and
 	/// its new rotation on the Z axis as the second argument. Defaults to a
-	/// function that assings the new rotation to the instance's `image_angle`
+	/// function that assigns the new rotation to the instance's `image_angle`
 	/// variable.
 	SetInstanceRotationZ = function (_instance, _z)
 	{
@@ -363,7 +363,7 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// @var {Function} A function that the gizmo uses to change an instance's
 	/// scale on the X axis. Must take the instance as the first argument and
 	/// its new scale on the X axis as the second argument. Defaults to a
-	/// function that assings the new scale to the instance's `image_xscale`
+	/// function that assigns the new scale to the instance's `image_xscale`
 	/// variable.
 	SetInstanceScaleX = function (_instance, _x)
 	{
@@ -384,7 +384,7 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// @var {Function} A function that the gizmo uses to change an instance's
 	/// scale on the Y axis. Must take the instance as the first argument and
 	/// its new scale on the Y axis as the second argument. Defaults to a
-	/// function that assings the new scale to the instance's `image_yscale`
+	/// function that assigns the new scale to the instance's `image_yscale`
 	/// variable.
 	SetInstanceScaleY = function (_instance, _y)
 	{

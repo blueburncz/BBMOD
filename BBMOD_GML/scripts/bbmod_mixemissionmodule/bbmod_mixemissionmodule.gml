@@ -8,7 +8,7 @@
 /// of a particle emitter's life.
 ///
 /// @param {Real} [_from] The minimum number of particles to spawn. Defaults to 1.
-/// @param {Real} [_to] The maxmimum particles to spawn. Defaults to `_from`.
+/// @param {Real} [_to] The maximum particles to spawn. Defaults to `_from`.
 function BBMOD_MixEmissionModule(_from = 1, _to = _from): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The minimum number of particles to spawn. Default value is 1.

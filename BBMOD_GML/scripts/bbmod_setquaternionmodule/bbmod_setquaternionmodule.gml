@@ -23,7 +23,7 @@ function BBMOD_SetQuaternionModule(
 	Property = _property;
 
 	/// @var {Struct.BBMOD_Quaternion} The initial value of the quaternion property.
-	/// Default value is an idenitity quaternion.
+	/// Default value is an identity quaternion.
 	Value = _value;
 
 	static on_particle_start = function (_emitter, _particleIndex)

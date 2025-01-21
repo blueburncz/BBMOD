@@ -502,7 +502,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	///
 	/// @desc Returns a transformation (dual quaternion) of a node from the last
 	/// animation frame. This is useful if you want to add additional
-	/// transformations onto an animated bone, instead of competely replacing it.
+	/// transformations onto an animated bone, instead of completely replacing it.
 	///
 	/// @param {Real} _nodeIndex An index of a node.
 	///

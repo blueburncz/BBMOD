@@ -717,7 +717,7 @@ function bbmod_shader_set_global_sampler_max_aniso(_name, _value)
 /// @desc Sets maximum mipmap level of a global texture sampler.
 ///
 /// @param {String} _name The name of the sampler.
-/// @param {Real} _value The new maxmimum mipmap level or `undefined` to unset.
+/// @param {Real} _value The new maximum mipmap level or `undefined` to unset.
 ///
 /// @note The sampler must be first set using
 /// {@link bbmod_shader_set_global_sampler}!

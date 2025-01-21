@@ -506,7 +506,7 @@ function BBMOD_DualQuaternion(
 	static RotateOther = function (_v)
 	{
 		gml_pragma("forceinline");
-		return Real.RotateOter(_v);
+		return Real.RotateOther(_v);
 	};
 
 	/// @func Scale(_s)

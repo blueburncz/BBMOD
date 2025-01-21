@@ -24,7 +24,7 @@
 /// where values closer to 0 mean slowly and 1 means immediately. Defaults to
 /// 0.1.
 /// @param {Real} [_blurRangeNear] Distance over which objects transition from
-/// completely in focus to competely out of focus in the near plane. Defaults to
+/// completely in focus to completely out of focus in the near plane. Defaults to
 /// 50.
 /// @param {Real} [_blurRangeFar] Distance over which objects transition from
 /// completely in focus to completely out of focus in the far plane. Defaults to
@@ -105,7 +105,7 @@ function BBMOD_DepthOfFieldEffect(
 	AutoFocusFactor = _autoFocusFactor;
 
 	/// @var {Real} Distance over which objects transition from completely in
-	/// focus to competely out of focus in the near plane. Default value is 50.
+	/// focus to completely out of focus in the near plane. Default value is 50.
 	BlurRangeNear = _blurRangeNear;
 
 	/// @var {Real} Distance over which objects transition from completely in

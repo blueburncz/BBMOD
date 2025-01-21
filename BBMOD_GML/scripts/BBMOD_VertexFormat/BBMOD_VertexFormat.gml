@@ -182,7 +182,7 @@ function BBMOD_VertexFormat(
 	/// @func get_hash()
 	///
 	/// @desc Makes a hash based on the vertex format properties. Vertex buffers
-	/// with same propereties will have the same hash.
+	/// with same properties will have the same hash.
 	///
 	/// @return {Real} The hash.
 	static get_hash = function ()

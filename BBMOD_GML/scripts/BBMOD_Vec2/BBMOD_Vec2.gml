@@ -223,7 +223,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	///
 	/// @desc Creates a clone of the vector.
 	///
-	/// @return {Struct.BBMOD_Vec2} The creted vector.
+	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Clone = function ()
 	{
 		gml_pragma("forceinline");
@@ -489,7 +489,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	///
 	/// @desc Computes the greatest component of the vector.
 	///
-	/// @return {Real} The greates component of the vector.
+	/// @return {Real} The greatest component of the vector.
 	static MaxComponent = function ()
 	{
 		gml_pragma("forceinline");

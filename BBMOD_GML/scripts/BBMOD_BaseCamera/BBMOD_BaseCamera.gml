@@ -39,7 +39,7 @@ function BBMOD_BaseCamera() constructor
 	/// @var {Real} The camera's exposure value. Defaults to `1`.
 	Exposure = 1.0;
 
-	/// @var {Struct.BBMOD_Vec3} The camera's positon. Defaults to `(0, 0, 0)`.
+	/// @var {Struct.BBMOD_Vec3} The camera's position. Defaults to `(0, 0, 0)`.
 	Position = new BBMOD_Vec3(0.0);
 
 	/// @var {Struct.BBMOD_Vec3} A position where the camera is looking at.

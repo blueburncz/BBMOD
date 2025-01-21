@@ -1,14 +1,14 @@
 /// @module Core
 
 /// @macro {Struct.BBMOD_Matrix} A read-only globally allocated identity matrix.
-#macro BBMOD_MATRIX_IDENTITY __bbmod_matrix_get_idenitity()
+#macro BBMOD_MATRIX_IDENTITY __bbmod_matrix_get_identity()
 
-/// @func __bbmod_matrix_get_idenitity()
+/// @func __bbmod_matrix_get_identity()
 ///
 /// @return {Struct.BBMOD_Matrix}
 ///
 /// @private
-function __bbmod_matrix_get_idenitity()
+function __bbmod_matrix_get_identity()
 {
 	gml_pragma("forceinline");
 	static _matrix = new BBMOD_Matrix();
@@ -279,7 +279,7 @@ function BBMOD_Matrix(_raw = undefined) constructor
 
 	/// @func ApplyProjection()
 	///
-	/// @desc Changes the current projeciton matrix to this one.
+	/// @desc Changes the current projection matrix to this one.
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static ApplyProjection = function ()
@@ -655,7 +655,7 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	///
 	/// @param {Struct.BBMOD_Vec4} _vector The vector to transform.
 	///
-	/// @return {Struct.BBMOD_Vec4} The tranformed vector.
+	/// @return {Struct.BBMOD_Vec4} The transformed vector.
 	static Transform = function (_vector)
 	{
 		gml_pragma("forceinline");

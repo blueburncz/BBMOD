@@ -1,7 +1,7 @@
 /// @module Core
 
 /// @macro {Struct.BBMOD_ResourceManager} The default resource manager.
-/// @note This resoure manager should never be destroyed!
+/// @note This resource manager should never be destroyed!
 #macro BBMOD_RESOURCE_MANAGER __bbmod_resource_manager()
 
 /// @func BBMOD_ResourceManager()
@@ -131,7 +131,7 @@ function BBMOD_ResourceManager() constructor
 	/// resource.
 	///
 	/// @example
-	/// Following code shows Create event of an object, where it assings its
+	/// Following code shows Create event of an object, where it assigns its
 	/// material using this method. When the first instance is created, it
 	/// creates the material and adds it to the resource manager. When other
 	/// instances are created, the material already exists and so they only
@@ -159,7 +159,7 @@ function BBMOD_ResourceManager() constructor
 
 	/// @func load(_path[, _sha1][, _onLoad])
 	///
-	/// @desc Asynchronnously loads a resource from a file or retrieves
+	/// @desc Asynchronously loads a resource from a file or retrieves
 	/// a reference to it, if it is already loaded.
 	///
 	/// @param {String} _path The path to the resource.
