@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"freeze_on_load",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"freeze_on_load",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Test/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

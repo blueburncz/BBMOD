@@ -1,4 +1,4 @@
-var _useDeferredRenderer = bbmod_deferred_renderer_is_supported();
+useDeferredRenderer = bbmod_deferred_renderer_is_supported();
 
 z = 1;
 
@@ -7,7 +7,7 @@ camera.Exposure = 2;
 camera.MouseSensitivity = 0.5;
 camera.FollowObject = self;
 
-if (_useDeferredRenderer)
+if (useDeferredRenderer)
 {
 	renderer = new BBMOD_DeferredRenderer();
 }
@@ -39,7 +39,7 @@ postProcessor.add_effect(new BBMOD_LightBloomEffect());
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
 
-if (_useDeferredRenderer)
+if (useDeferredRenderer)
 {
 	postProcessor.add_effect(new BBMOD_ExposureEffect());
 	postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());
@@ -66,7 +66,7 @@ modSphere = BBMOD_RESOURCE_MANAGER.load("Data/BBMOD/Models/Sphere.bbmod", functi
 });
 
 var _baseMaterial = undefined;
-if (_useDeferredRenderer)
+if (useDeferredRenderer)
 {
 	_baseMaterial = BBMOD_MATERIAL_DEFERRED.clone();
 }
@@ -156,8 +156,8 @@ terrain.Position.Set(
 	0);
 terrain.TextureRepeat.Set(32);
 
-terrainMaterial = _useDeferredRenderer ? BBMOD_MATERIAL_TERRAIN_DEFERRED.clone() : BBMOD_MATERIAL_TERRAIN.clone();
-if (!_useDeferredRenderer)
+terrainMaterial = useDeferredRenderer ? BBMOD_MATERIAL_TERRAIN_DEFERRED.clone() : BBMOD_MATERIAL_TERRAIN.clone();
+if (!useDeferredRenderer)
 {
 	terrainMaterial.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
 }

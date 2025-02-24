@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_SkeletonMask",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_SkeletonMask",
+  "parent":{
+    "name":"Animation",
+    "path":"folders/BBMOD/Core/Base/Animation.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

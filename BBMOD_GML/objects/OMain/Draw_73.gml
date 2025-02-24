@@ -1,3 +1,5 @@
+camera.apply();
+
 new BBMOD_Matrix()
 	.Scale(1000, 1000, 1000)
 	.Translate(camera.Position)
@@ -23,5 +25,4 @@ terrain.render();
 
 BBMOD_MATRIX_IDENTITY.ApplyWorld();
 
-camera.apply();
 renderer.render();
