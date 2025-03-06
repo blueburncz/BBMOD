@@ -2,7 +2,7 @@
   <img src="BBMOD3Light.svg" height="200px" alt="Logo"/>
 </p>
 
-> The most powerful 3D rendering solution for GameMaker
+> Make 3D games in GameMaker!
 
 [![License](https://img.shields.io/github/license/blueburncz/BBMOD)](LICENSE)
 [![Discord](https://img.shields.io/discord/298884075585011713?label=Discord)](https://discord.gg/ep2BGPm)
@@ -19,7 +19,9 @@
 
 ## About
 
-BBMOD is the most powerful 3D rendering solution for GameMaker! For more info, please see its homepage https://blueburn.cz/bbmod/.
+BBMOD is a library that makes creating 3D games in GameMaker easier! Whether you just need to draw 3D models in 2D games
+or you are building fully immersive 3D worlds, BBMOD helps you bring your vision to life! For more info, please see its
+homepage https://blueburn.cz/bbmod/.
 
 ## Screenshots
 
