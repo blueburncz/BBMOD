@@ -269,6 +269,7 @@
     {"id":{"name":"BBMOD_Importer","path":"scripts/BBMOD_Importer/BBMOD_Importer.yy",},},
     {"id":{"name":"BBMOD_IRenderable","path":"scripts/BBMOD_IRenderable/BBMOD_IRenderable.yy",},},
     {"id":{"name":"BBMOD_IRenderTarget","path":"scripts/BBMOD_IRenderTarget/BBMOD_IRenderTarget.yy",},},
+    {"id":{"name":"bbmod_is_browser","path":"scripts/bbmod_is_browser/bbmod_is_browser.yy",},},
     {"id":{"name":"bbmod_json_load","path":"scripts/bbmod_json_load/bbmod_json_load.yy",},},
     {"id":{"name":"BBMOD_KawaseBlurEffect","path":"scripts/BBMOD_KawaseBlurEffect/BBMOD_KawaseBlurEffect.yy",},},
     {"id":{"name":"BBMOD_LensDistortionEffect","path":"scripts/BBMOD_LensDistortionEffect/BBMOD_LensDistortionEffect.yy",},},

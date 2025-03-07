@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"bbmod_is_browser",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"bbmod_is_browser",
+  "parent":{
+    "name":"Utils",
+    "path":"folders/BBMOD/Core/Utils.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

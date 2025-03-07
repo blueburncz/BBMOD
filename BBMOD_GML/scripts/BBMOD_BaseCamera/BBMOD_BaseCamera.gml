@@ -32,6 +32,8 @@ global.__bbmodCameraAspectFlip = -1.0;
 /// projection.
 function BBMOD_BaseCamera() constructor
 {
+	static __isBrowser = bbmod_is_browser();
+
 	/// @var {camera} An underlying GameMaker camera.
 	/// @readonly
 	Raw = camera_create();
@@ -199,7 +201,7 @@ function BBMOD_BaseCamera() constructor
 	{
 		gml_pragma("forceinline");
 
-		if (os_browser == browser_not_a_browser)
+		if (__isBrowser)
 		{
 			// This returns a struct in HTML5 for some reason...
 			return camera_get_view_mat(Raw);
@@ -223,7 +225,7 @@ function BBMOD_BaseCamera() constructor
 	{
 		gml_pragma("forceinline");
 
-		if (os_browser == browser_not_a_browser)
+		if (__isBrowser)
 		{
 			// This returns a struct in HTML5 for some reason...
 			return camera_get_proj_mat(Raw);

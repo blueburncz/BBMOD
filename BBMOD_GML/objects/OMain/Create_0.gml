@@ -16,7 +16,7 @@ else
 	renderer = new BBMOD_DefaultRenderer();
 	renderer.EnableGBuffer = true;
 }
-renderer.UseAppSurface = true;
+renderer.UseAppSurface = !bbmod_is_browser();
 renderer.EnableShadows = true;
 renderer.ShadowmapNormalOffset = 0.01;
 renderer.EnableSSAO = true;
