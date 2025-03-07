@@ -24,6 +24,8 @@
 /// ```
 function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 {
+	static __isBrower = (os_type == os_gxgames || os_browser != browser_not_a_browser);
+
 	/// @var {Bool} If `true` then mouselook is enabled. Defaults to `false`.
 	/// @readonly
 	/// @see BBMOD_Camera.set_mouselook
@@ -153,7 +155,7 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 	{
 		if (_enable)
 		{
-			if (os_browser != browser_not_a_browser)
+			if (__isBrower)
 			{
 				window_mouse_set_locked(true);
 			}
@@ -164,7 +166,7 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 		}
 		else
 		{
-			if (os_browser != browser_not_a_browser)
+			if (__isBrower)
 			{
 				window_mouse_set_locked(false);
 			}
@@ -189,14 +191,14 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
 	static update = function (_deltaTime, _positionHandler = undefined)
 	{
-		if (os_browser != browser_not_a_browser)
+		if (__isBrower)
 		{
 			MouseLook = window_mouse_get_locked();
 		}
 
 		if (MouseLook)
 		{
-			if (os_browser != browser_not_a_browser)
+			if (__isBrower)
 			{
 				Direction -= window_mouse_get_delta_x() * MouseSensitivity;
 				DirectionUp -= window_mouse_get_delta_y() * MouseSensitivity;
