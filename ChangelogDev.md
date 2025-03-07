@@ -7,3 +7,4 @@
 * Added new utility function `bbmod_is_browser()`, which returns `true` if the game is running in a browser.
 * Fixed `BBMOD_Camera`'s mouselook not working on GX.games platform.
 * Fixed default shaders not compiling on GX.games platform.
+* Fixed post-processing effects `BBMOD_DepthOfFieldEffect`, `BBMOD_DirectionalBlurEffect` and `BBMOD_RadialBlurEffect` not working on GX.games platform.
