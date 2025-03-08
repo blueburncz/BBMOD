@@ -13,6 +13,30 @@
   "toc": {
     "BBMOD Docs": "index.md",
     "Supported file formats": "SupportedFileFormats.md",
+    "Modules": {
+      "file": "Modules/Modules.md",
+      "pages": {
+        "Core module": "Modules/CoreModule.md",
+        "Deferred renderer module": "Modules/DeferredRendererModule.md",
+        "Gizmo module": "Modules/GizmoModule.md",
+        "OBJ importer module": "Modules/OBJImporterModule.md",
+        "Particles module": "Modules/ParticlesModule.md",
+        "Raycasting module": "Modules/RaycastingModule.md",
+        "Rendering module": {
+          "file": "Modules/Rendering/RenderingModule.md",
+          "pages": {
+            "FXAA submodule": "Modules/Rendering/FXAASubmodule.md",
+            "Post-processing submodule": "Modules/Rendering/PostProcessingSubmodule.md",
+            "Sky submodule": "Modules/Rendering/SkySubmodule.md",
+            "SSAO submodule": "Modules/Rendering/SSAOSubmodule.md"
+          }
+        },
+        "Save module": "Modules/SaveModule.md",
+        "State machine module": "Modules/StateMachineModule.md",
+        "Terrain module": "Modules/TerrainModule.md",
+        "ColMesh module": "Modules/ColMeshModule.md"
+      }
+    },
     "Scripting API": {}
   }
 }
