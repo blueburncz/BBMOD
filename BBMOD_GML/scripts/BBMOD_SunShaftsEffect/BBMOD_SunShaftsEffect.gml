@@ -127,7 +127,7 @@ function BBMOD_SunShaftsEffect(
 		shader_set_uniform_f(__uAspect, 1.0, _height / _width);
 		shader_set_uniform_f(__uMaskRadius, Radius);
 		shader_set_uniform_f(__uColor, Color.Red / 255.0, Color.Green / 255.0, Color.Blue / 255.0, Color.Alpha);
-		draw_surface_ext(_depth, 0, 0, 0.5, 0.5, 0, c_white, 1.0);
+		draw_surface_stretched(_depth, 0, 0, _width, _height);
 		shader_reset();
 		surface_reset_target();
 

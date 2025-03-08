@@ -56,8 +56,8 @@ function BBMOD_BaseCamera() constructor
 	Fov = 60.0;
 
 	/// @var {Real} The camera's aspect ratio. Defaults to
-	/// `window_get_width() / window_get_height()`.
-	AspectRatio = window_get_width() / window_get_height();
+	/// `bbmod_window_get_width() / bbmod_window_get_height()`.
+	AspectRatio = bbmod_window_get_width() / bbmod_window_get_height();
 
 	/// @var {Real} Distance to the near clipping plane. Anything closer to the
 	/// camera than this will not be visible. Defaults to `0.1`.
@@ -77,7 +77,7 @@ function BBMOD_BaseCamera() constructor
 	/// then it is computed from {@link BBMOD_BaseCamera.Height} using
 	/// {@link BBMOD_BaseCamera.AspectRatio}. Defaults to the window's width.
 	/// @see BBMOD_BaseCamera.Orthographic
-	Width = window_get_width();
+	Width = bbmod_window_get_width();
 
 	/// @var {Real} The height of the orthographic projection. If `undefined`,
 	/// then it is computed from {@link BBMOD_BaseCamera.Width} using
@@ -297,9 +297,9 @@ function BBMOD_BaseCamera() constructor
 	/// @param {Struct.BBMOD_Vec3, Struct.BBMOD_Vec4} _vector The vector in
 	/// world-space.
 	/// @param {Real} [_screenWidth] The width of the screen. If `undefined`, it
-	/// is retrieved using `window_get_width`.
+	/// is retrieved using {@link bbmod_window_get_width}.
 	/// @param {Real} [_screenHeight] The height of the screen. If `undefined`,
-	/// it is retrieved using `window_get_height`.
+	/// it is retrieved using {@link bbmod_window_get_height}.
 	///
 	/// @return {Struct.BBMOD_Vec4} The screen-space position or `undefined` if
 	/// the point is outside of the screen.
@@ -310,8 +310,8 @@ function BBMOD_BaseCamera() constructor
 	static world_to_screen = function (_vector, _screenWidth = undefined, _screenHeight = undefined)
 	{
 		gml_pragma("forceinline");
-		_screenWidth ??= window_get_width();
-		_screenHeight ??= window_get_height();
+		_screenWidth ??= bbmod_window_get_width();
+		_screenHeight ??= bbmod_window_get_height();
 		var _screenPos = new BBMOD_Vec4(_vector.X, _vector.Y, _vector.Z, _vector[$ "W"] ?? 1.0)
 			.Transform(ViewProjectionMatrix);
 		if (_screenPos.Z < 0.0)
@@ -345,8 +345,8 @@ function BBMOD_BaseCamera() constructor
 		var _tFov = dtan(Fov * 0.5);
 		_up = _up.Scale(_tFov);
 		_right = _right.Scale(_tFov * AspectRatio);
-		var _screenWidth = _renderer ? _renderer.get_width() : window_get_width();
-		var _screenHeight = _renderer ? _renderer.get_height() : window_get_height();
+		var _screenWidth = _renderer ? _renderer.get_width() : bbmod_window_get_width();
+		var _screenHeight = _renderer ? _renderer.get_height() : bbmod_window_get_height();
 		var _screenX = _vector.X - (_renderer ? _renderer.X : 0);
 		var _screenY = _vector.Y - (_renderer ? _renderer.Y : 0);
 		var _scaleUp = (_screenY / _screenHeight) * 2.0 - 1.0;

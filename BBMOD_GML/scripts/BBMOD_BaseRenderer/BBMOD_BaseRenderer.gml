@@ -95,6 +95,8 @@ function BBMOD_BaseRenderer() constructor
 	/// @var {Real} Resolution multiplier for the `application_surface`.
 	/// {@link BBMOD_BaseRenderer.UseAppSurface} must be enabled for this to
 	/// have any effect. Defaults to 1. Use lower values to improve framerate.
+	/// @note Not supported on platforms GX.games and HTML5!
+	/// @see bbmod_is_browser
 	RenderScale = 1.0;
 
 	/// @var {Bool} Enables rendering into a shadowmap in the shadows render pass.
@@ -203,7 +205,7 @@ function BBMOD_BaseRenderer() constructor
 	static get_width = function ()
 	{
 		gml_pragma("forceinline");
-		return max((Width == undefined) ? window_get_width() : Width, 1);
+		return ((Width != undefined) ? max(Width, 1) : bbmod_window_get_width());
 	};
 
 	/// @func get_height()
@@ -214,7 +216,7 @@ function BBMOD_BaseRenderer() constructor
 	static get_height = function ()
 	{
 		gml_pragma("forceinline");
-		return max((Height == undefined) ? window_get_height() : Height, 1);
+		return ((Height != undefined) ? max(Height, 1) : bbmod_window_get_height());
 	};
 
 	/// @func get_render_width()
@@ -227,6 +229,10 @@ function BBMOD_BaseRenderer() constructor
 	static get_render_width = function ()
 	{
 		gml_pragma("forceinline");
+		if (bbmod_is_browser())
+		{
+			return get_width();
+		}
 		return max(get_width() * RenderScale, 1);
 	};
 
@@ -239,6 +245,10 @@ function BBMOD_BaseRenderer() constructor
 	static get_render_height = function ()
 	{
 		gml_pragma("forceinline");
+		if (bbmod_is_browser())
+		{
+			return get_height();
+		}
 		return max(get_height() * RenderScale, 1);
 	};
 
@@ -309,8 +319,10 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static select_gizmo = function (_screenX, _screenY)
 	{
-		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
-		_screenY = clamp(_screenY - Y, 0, get_height()) * RenderScale;
+		var _renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
+
+		_screenX = clamp(_screenX - X, 0, get_width()) * _renderScale;
+		_screenY = clamp(_screenY - Y, 0, get_height()) * _renderScale;
 
 		Gizmo.EditAxis = BBMOD_EEditAxis.None;
 
@@ -355,8 +367,9 @@ function BBMOD_BaseRenderer() constructor
 		{
 			return 0;
 		}
-		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
-		_screenY = clamp(_screenY - Y, 0, get_height()) * RenderScale;
+		var _renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
+		_screenX = clamp(_screenX - X, 0, get_width()) * _renderScale;
+		_screenY = clamp(_screenY - Y, 0, get_height()) * _renderScale;
 		return surface_getpixel_ext(__surSelect, _screenX, _screenY);
 	};
 
@@ -419,10 +432,12 @@ function BBMOD_BaseRenderer() constructor
 			application_surface_enable(true);
 			application_surface_draw_enable(false);
 
-			var _surfaceWidth = get_render_width();
-			var _surfaceHeight = get_render_height();
-
-			bbmod_surface_check(application_surface, _surfaceWidth, _surfaceHeight, surface_rgba8unorm, true);
+			if (!bbmod_is_browser())
+			{
+				var _surfaceWidth = get_render_width();
+				var _surfaceHeight = get_render_height();
+				bbmod_surface_check(application_surface, _surfaceWidth, _surfaceHeight, surface_rgba8unorm, true);
+			}
 		}
 
 		if (Gizmo && EditMode)
@@ -1155,7 +1170,7 @@ function BBMOD_BaseRenderer() constructor
 			if (PostProcessor != undefined
 				&& PostProcessor.Enabled)
 			{
-				PostProcessor.__renderScale = RenderScale;
+				PostProcessor.__renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
 				PostProcessor.draw(application_surface, X, Y);
 			}
 			else
