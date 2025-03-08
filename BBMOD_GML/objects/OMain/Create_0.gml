@@ -94,21 +94,6 @@ matSphereEmissive.BaseOpacity = sprite_get_texture(BBMOD_SprBlack, 0);
 matSphereEmissive.set_normal_roughness(BBMOD_VEC3_UP, 1.0);
 matSphereEmissive.set_emissive(new BBMOD_Color(255 * 1.1, 127 * 1.1, 0));
 
-var _nodeDesc = new BBMOD_SceneNodeDescriptor();
-_nodeDesc.Model = "Data/BBMOD/Models/Sphere.bbmod";
-_nodeDesc.Materials = [matSphere];
-_nodeDesc.Position = new BBMOD_Vec3(0, 0, 4);
-node1 = scene.create_node(_nodeDesc);
-
-_nodeDesc = new BBMOD_SceneNodeDescriptor();
-_nodeDesc.Model = "Data/BBMOD/Models/Sphere.bbmod";
-_nodeDesc.Materials = [matSphere];
-_nodeDesc.Position = new BBMOD_Vec3(0, 0, 2);
-_nodeDesc.IsStatic = true;
-_nodeDesc.Parent = node1;
-_nodeDesc.RenderDistance = 10;
-scene.create_node(_nodeDesc);
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Lighting
