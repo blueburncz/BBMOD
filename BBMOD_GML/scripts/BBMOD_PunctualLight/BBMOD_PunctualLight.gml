@@ -18,8 +18,7 @@
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-function BBMOD_PunctualLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1.0)
-	: BBMOD_Light() constructor
+function BBMOD_PunctualLight(_color = BBMOD_C_WHITE, _position = undefined, _range = 1.0): BBMOD_Light() constructor
 {
 	/// @var {Struct.BBMOD_Color} The color of the light. Default value is
 	/// {@link BBMOD_C_WHITE}.

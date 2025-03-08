@@ -15,11 +15,11 @@
 /// @param {Real} [_force] The strength of the force. Use negative to repel the
 /// particles. Defaults to 1.0.
 function BBMOD_AttractorModule(
-	_position=new BBMOD_Vec3(),
-	_relative=true,
-	_radius=1.0,
-	_force=1.0
-) : BBMOD_ParticleModule() constructor
+	_position = new BBMOD_Vec3(),
+	_relative = true,
+	_radius = 1.0,
+	_force = 1.0
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The position to attract/repel particles to/from.
 	/// Default value is `(0, 0, 0)`.
@@ -52,7 +52,7 @@ function BBMOD_AttractorModule(
 		var _force = Force;
 
 		var _particleIndex = 0;
-		repeat (_emitter.ParticlesAlive)
+		repeat(_emitter.ParticlesAlive)
 		{
 			var _mass = _particles[# BBMOD_EParticle.Mass, _particleIndex];
 			if (_mass != 0.0)

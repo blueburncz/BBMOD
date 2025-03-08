@@ -46,6 +46,4 @@
 * Function `bbmod_reflection_probe_clear` is now **deprecated**! Please use method `BBMOD_Scene.clear_reflection_probes` instead.
 * Function `bbmod_lightmap_get` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Function `bbmod_lightmap_set` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
-* Added new property `ClearColor` to `BBMOD_DeferredRenderer`, which is the color to clear the background with. Default value is `c_black`.
 * Added new method `remove` to `BBMOD_ResourceManager`, which removes a resource from the manager, keeping its reference count.
-* Fixed normal vectors of backfaces being flipped incorrectly.

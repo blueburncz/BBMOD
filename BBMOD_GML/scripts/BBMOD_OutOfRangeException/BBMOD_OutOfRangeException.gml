@@ -9,7 +9,4 @@
 ///
 /// @param {string} [_msg] The exception message. Defaults to "Index out of
 /// range!".
-function BBMOD_OutOfRangeException(_msg="Index out of range!")
-	: BBMOD_Exception(_msg) constructor
-{
-}
+function BBMOD_OutOfRangeException(_msg = "Index out of range!"): BBMOD_Exception(_msg) constructor {}

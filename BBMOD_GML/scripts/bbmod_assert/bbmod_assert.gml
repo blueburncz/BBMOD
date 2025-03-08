@@ -4,7 +4,7 @@
 ///
 /// @param {Bool} _expr The expression to check.
 /// @param {String} _error The error message to show.
-function bbmod_assert(_expr, _error="")
+function bbmod_assert(_expr, _error = "")
 {
 	gml_pragma("forceinline");
 	if (!_expr)

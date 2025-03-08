@@ -1,5 +1,7 @@
 /// @module Core
 
+/* beautify ignore:start */
+
 /// @macro {Real}
 /// @private
 #macro __BBMOD_RGBM_RANGE 6.0
@@ -65,6 +67,8 @@
 ///@macro {Struct.BBMOD_Color} Shorthand for `new BBMOD_Color().FromConstant(c_yellow)`.
 #macro BBMOD_C_YELLOW (new BBMOD_Color().FromConstant(c_yellow))
 
+/* beautify ignore:end */
+
 /// @func BBMOD_Color([_red[, _green[, _blue[, _alpha]]]])
 ///
 /// @desc A color struct with support for high dynamic range.
@@ -96,10 +100,10 @@
 /// @see BBMOD_C_YELLOW
 /// @see BBMOD_RGBM_VALUE_MAX
 function BBMOD_Color(
-	_red=255.0,
-	_green=255.0,
-	_blue=255.0,
-	_alpha=1.0) constructor
+	_red = 255.0,
+	_green = 255.0,
+	_blue = 255.0,
+	_alpha = 1.0) constructor
 {
 	/// @var {Real} The value of the red color channel.
 	Red = _red;
@@ -176,7 +180,7 @@ function BBMOD_Color(
 	/// @param {Real} [_alpha] The value of the alpha channel. Defaults to 1.
 	///
 	/// @return {Struct.BBMOD_Color} Returns `self`.
-	static FromRGBA = function (_red, _green, _blue, _alpha=1.0)
+	static FromRGBA = function (_red, _green, _blue, _alpha = 1.0)
 	{
 		gml_pragma("forceinline");
 		Red = _red;
@@ -302,7 +306,7 @@ function BBMOD_Color(
 	/// Defaults to 0.
 	///
 	/// @return {Array<Real>} Returns the array with RGBM values.
-	static ToRGBM = function (_array=undefined, _index=0)
+	static ToRGBM = function (_array = undefined, _index = 0)
 	{
 		gml_pragma("forceinline");
 		_array ??= array_create(4, 0);

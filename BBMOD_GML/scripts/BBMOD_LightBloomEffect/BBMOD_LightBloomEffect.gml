@@ -13,8 +13,9 @@
 /// `(1, 1, 1)` if `undefined`.
 /// @param {Real} [_strength] The strength of the effect. Use values in range
 /// 0..1. Defaults to 1.
-function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _strength=1.0)
-	: BBMOD_PostProcessEffect() constructor
+/* beautify ignore:start */
+function BBMOD_LightBloomEffect(_bias = undefined, _scale = undefined, _strength = 1.0): BBMOD_PostProcessEffect() constructor
+/* beautify ignore:end */
 {
 	/// @var {Struct.BBMOD_Vec3} A value added to RGB channels before the light
 	/// bloom effect is applied. Default value is `(-1, -1, -1)`.
@@ -39,16 +40,16 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _strength=1.0
 	/// @private
 	__surfaces2 = array_create(__levels, -1);
 
-	static __uBias  = shader_get_uniform(BBMOD_ShThreshold, "u_vBias");
+	static __uBias = shader_get_uniform(BBMOD_ShThreshold, "u_vBias");
 	static __uScale = shader_get_uniform(BBMOD_ShThreshold, "u_vScale");
 
 	static __uTexelKawase = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
-	static __uOffset      = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
+	static __uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
 
 	static __uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
 
-	static __uLensDirtTex      = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
-	static __uLensDirtUVs      = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
+	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
+	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
 	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
@@ -81,7 +82,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _strength=1.0
 			var i = 1;
 			var _w = _width / 4;
 			var _h = _height / 4;
-			repeat (__levels - 1)
+			repeat(__levels - 1)
 			{
 				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, _format, false);
 				surface_set_target(__surfaces1[i]);
@@ -104,7 +105,7 @@ function BBMOD_LightBloomEffect(_bias=undefined, _scale=undefined, _strength=1.0
 			var i = 0;
 			var _w = _width / 2;
 			var _h = _height / 2;
-			repeat (__levels)
+			repeat(__levels)
 			{
 				__surfaces2[@ i] = bbmod_surface_check(__surfaces2[i], _w, _h, _format, false);
 

@@ -12,8 +12,7 @@
 /// you do not want to check the SHA1 of the file.
 ///
 /// @throws {BBMOD_Exception} When the sprite fails to load.
-function BBMOD_Sprite(_file=undefined, _sha1=undefined)
-	: BBMOD_Resource() constructor
+function BBMOD_Sprite(_file = undefined, _sha1 = undefined): BBMOD_Resource() constructor
 {
 	static Resource_destroy = destroy;
 
@@ -30,7 +29,7 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 	/// @readonly
 	Height = 0;
 
-	static from_file = function (_file, _sha1=undefined)
+	static from_file = function (_file, _sha1 = undefined)
 	{
 		Path = _file;
 		check_file(_file, _sha1);
@@ -41,7 +40,7 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 		return self;
 	};
 
-	static from_file_async = function (_file, _sha1=undefined, _callback=undefined)
+	static from_file_async = function (_file, _sha1 = undefined, _callback = undefined)
 	{
 		Path = _file;
 
@@ -55,7 +54,8 @@ function BBMOD_Sprite(_file=undefined, _sha1=undefined)
 			Sprite: _sprite,
 			Callback: _callback,
 		};
-		bbmod_sprite_add_async(_file, method(_struct, function (_err, _res) {
+		bbmod_sprite_add_async(_file, method(_struct, function (_err, _res)
+		{
 			if (_err == undefined)
 			{
 				Sprite.Raw = _res;

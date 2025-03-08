@@ -6,7 +6,8 @@
 ///
 /// @implements {BBMOD_IRenderable}
 ///
-/// @desc A model.
+/// @desc A model, defined by a hierarchy of nodes that draw meshes with given
+/// material and transform.
 ///
 /// @param {String} [_file] The "*.bbmod" model file to load or `undefined`.
 /// Defaults to `undefined`.
@@ -16,51 +17,63 @@
 /// `undefined`.
 ///
 /// @example
+/// The following code loads a model from file "Model.bbmod", assigns a
+/// texture to material slot 0 (meaning it won't use BBMOD's material system)
+/// and then draws the model at the x, y, z position of given instance. The
+/// model is then destroyed in the Clean Up event to avoid memory leaks.
+/// 
+///
 /// ```gml
-/// try
-/// {
-///     modCharacter = new BBMOD_Model("Character.bbmod");
-/// }
-/// catch (_error)
-/// {
-///     // The model failed to load!
-/// }
+/// /// @desc Create event
+/// model = new BBMOD_Model("Model.bbmod");
+/// model.Materials[0] = sprite_get_texture(SprTexture, 0);
+///
+/// /// @desc Draw event
+/// new BBMOD_Matrix().Translate(x, y, z).ApplyWorld();
+/// model.submit();
+/// bbmod_material_reset();
+/// BBMOD_MATRIX_IDENTITY.ApplyWorld();
+///
+/// /// @desc Clean Up event
+/// model = model.destroy();
 /// ```
 ///
 /// @throws {BBMOD_Exception} When the model fails to load.
-function BBMOD_Model(_file=undefined, _sha1=undefined)
-	: BBMOD_Resource() constructor
+function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() constructor
 {
 	static Resource_destroy = destroy;
 
-	/// @var {Real} The major version of the model file.
+	/// @var {Real} The major version of the BBMOD file from which was the model
+	/// loaded. Defaults to {@link BBMOD_VERSION_MAJOR}.
 	VersionMajor = BBMOD_VERSION_MAJOR;
 
-	/// @var {Real} The minor version of the model file.
+	/// @var {Real} The minor version of the BBMOD file from which was the model
+	/// loaded. Defaults to {@link BBMOD_VERSION_MINOR}.
 	VersionMinor = BBMOD_VERSION_MINOR;
 
 	/// @var {Struct.BBMOD_VertexFormat} The vertex format of the model.
-	/// @see BBMOD_VertexFormat
+	/// @readonly
 	/// @obsolete Since version 3.2 of the BBMOD file format each mesh has
 	/// its own vertex format!
 	/// @see BBMOD_Mesh.VertexFormat
-	/// @readonly
 	VertexFormat = undefined;
 
-	/// @var {Array<Struct.BBMOD_Mesh>} Array of meshes.
+	/// @var {Array<Struct.BBMOD_Mesh>} An array of meshes that the model consists of.
 	/// @readonly
 	Meshes = [];
 
-	/// @var {Real} Number of nodes.
+	/// @var {Real} A total number of nodes that the model consists of. Defaults
+	/// to 0.
 	/// @readonly
 	NodeCount = 0;
 
-	/// @var {Struct.BBMOD_Node} The root node.
-	/// @see BBMOD_Node
+	/// @var {Struct.BBMOD_Node} The root node of the model or `undefined`
+	/// (default).
 	/// @readonly
 	RootNode = undefined;
 
-	/// @var {Real} Number of bones.
+	/// @var {Real} Defines a number of nodes that are bones.
+	/// @see BBMOD_Model.NodeCount
 	/// @readonly
 	BoneCount = 0;
 
@@ -68,11 +81,14 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @private
 	__offsetArray = [];
 
-	/// @var {Real} Number of materials that the model uses.
+	/// @var {Real} Number of materials that the model uses. Defaults to 0.
 	/// @readonly
+	/// @note This is the same as the length of the {@link BBMOD_Model.Materials}
+	/// and {@link BBMOD_Model.MaterialNames} array.
 	MaterialCount = 0;
 
-	/// @var {Array<String>} An array of material names.
+	/// @var {Array<String>} An array of material names. Its length must be equal
+	/// to {@link BBMOD_Model.MaterialCount}.
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
@@ -82,13 +98,16 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @var {Array<Struct.BBMOD_IMaterial>, Array<Pointer.Texture>} An array of
 	/// materials. Each entry can be either a material struct or just a texture
 	/// if you don't wish to use BBMOD's material system. Each entry defaults to
-	/// {@link BBMOD_MATERIAL_DEFAULT}.
+	/// {@link BBMOD_MATERIAL_DEFAULT}. The length of the array must be equal to
+	/// {@link BBMOD_Model.MaterialCount}.
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
 	/// @see BBMOD_Model.set_material
 	Materials = [];
 
-	/// @var {Bool} If `true` then the model is frozen.
+	/// @var {Bool} If `true` then the model is "frozen", which means all its
+	/// meshes reside in the GPU memory, which makes them faster to draw, but
+	/// unmodifiable.
 	/// @readonly
 	/// @see BBMOD_Model.freeze
 	Frozen = false;
@@ -170,7 +189,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @param {Struct.BBMOD_Node} [_node]
 	///
 	/// @private
-	static __pass_self_to_nodes = function (_node=undefined)
+	static __pass_self_to_nodes = function (_node = undefined)
 	{
 		_node ??= RootNode;
 		_node.Model = self;
@@ -183,9 +202,10 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func from_buffer(_buffer)
 	///
-	/// @desc Loads model data from a buffer.
+	/// @desc Loads model data from a buffer that follows the BBMOD file format.
 	///
-	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	/// @param {Id.Buffer} _buffer The buffer to load the data from. Its seek
+	/// position must point to a beginning of a BBMOD model!
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
@@ -195,9 +215,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		var _hasMinorVersion = false;
 
 		var _type = buffer_read(_buffer, buffer_string);
-		if (_type == "bbmod")
-		{
-		}
+		if (_type == "bbmod") {}
 		else if (_type == "BBMOD")
 		{
 			_hasMinorVersion = true;
@@ -227,7 +245,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		{
 			VersionMinor = 0;
 		}
-	
+
 		// Vertex format
 		if (VersionMinor < 2)
 		{
@@ -239,7 +257,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		Meshes = array_create(_meshCount, undefined);
 
 		var i = 0;
-		repeat (_meshCount)
+		repeat(_meshCount)
 		{
 			Meshes[@ i++] = new BBMOD_Mesh(VertexFormat, self).from_buffer(_buffer);
 		}
@@ -255,7 +273,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		{
 			__offsetArray = array_create(BoneCount * 8, 0);
 
-			repeat (BoneCount)
+			repeat(BoneCount)
 			{
 				var _index = buffer_read(_buffer, buffer_f32) * 8; // Bone index
 				__offsetArray[@ _index + 0] = buffer_read(_buffer, buffer_f32);
@@ -279,7 +297,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			var _materialNames = array_create(MaterialCount, undefined);
 
 			i = 0;
-			repeat (MaterialCount)
+			repeat(MaterialCount)
 			{
 				_materialNames[@ i++] = buffer_read(_buffer, buffer_string);
 			}
@@ -294,11 +312,15 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func to_buffer(_buffer)
 	///
-	/// @desc Writes model data to a buffer.
+	/// @desc Writes model data to a buffer following the current version of the
+	/// BBMOD file format.
 	///
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
+	///
+	/// @see BBMOD_VERSION_MAJOR
+	/// @see BBMOD_VERSION_MINOR
 	static to_buffer = function (_buffer)
 	{
 		buffer_write(_buffer, buffer_string, "BBMOD");
@@ -316,7 +338,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		buffer_write(_buffer, buffer_u32, _meshCount)
 
 		var i = 0;
-		repeat (_meshCount)
+		repeat(_meshCount)
 		{
 			Meshes[i++].to_buffer(_buffer);
 		}
@@ -331,7 +353,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		if (BoneCount > 0)
 		{
 			var _index = 0;
-			repeat (BoneCount)
+			repeat(BoneCount)
 			{
 				buffer_write(_buffer, buffer_f32, _index / 8); // Bone index
 				buffer_write(_buffer, buffer_f32, __offsetArray[_index + 0]);
@@ -350,7 +372,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		buffer_write(_buffer, buffer_u32, MaterialCount);
 
 		i = 0;
-		repeat (MaterialCount)
+		repeat(MaterialCount)
 		{
 			buffer_write(_buffer, buffer_string, MaterialNames[i++]);
 		}
@@ -370,7 +392,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		if (!Frozen)
 		{
 			var i = 0;
-			repeat (array_length(Meshes))
+			repeat(array_length(Meshes))
 			{
 				Meshes[i++].freeze();
 			}
@@ -381,15 +403,16 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func find_node(_idOrName[, _node])
 	///
-	/// @desc Finds a node by its name or id.
+	/// @desc Recursively traverses nodes that the model consists of until it
+	/// finds and returns a node with specified ID or name.
 	///
-	/// @param {Real, String} _idOrName The id (real) or the name (string) of
+	/// @param {Real, String} _idOrName The ID (real) or the name (string) of
 	/// the node.
 	/// @param {Struct.BBMOD_Node} [_node] The node to start searching from.
 	/// Defaults to the root node.
 	///
 	/// @return {Struct.BBMOD_Node} Returns the found node or `undefined`.
-	static find_node = function (_idOrName, _node=RootNode)
+	static find_node = function (_idOrName, _node = RootNode)
 	{
 		var _isName = is_string(_idOrName);
 		if (_isName && _node.Name == _idOrName)
@@ -402,7 +425,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		}
 		var _children = _node.Children;
 		var i = 0;
-		repeat (array_length(_children))
+		repeat(array_length(_children))
 		{
 			var _found = find_node(_idOrName, _children[i++]);
 			if (_found != undefined)
@@ -415,15 +438,17 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 	/// @func find_node_id(_nodeName)
 	///
-	/// @desc Finds id of the model's node by its name.
+	/// @desc Recursively traverses nodes that the model consists of, starting
+	/// from the root node, until it finds a node with specified name and returns
+	/// its ID.
 	///
 	/// @param {String} _nodeName The name of the node.
 	///
-	/// @return {Real} The id of the node or `undefined` when it is not found.
+	/// @return {Real} The ID of the node or `undefined` when it is not found.
 	///
 	/// @note It is not recommended to use this method in release builds, because
 	/// having many of these lookups can slow down your game! You should instead
-	/// use the ids available from the `_log.txt` files, which are created during
+	/// use the IDs available from the `_log.txt` files, which are created during
 	/// model conversion.
 	static find_node_id = function (_nodeName)
 	{
@@ -453,7 +478,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	static get_material = function (_name)
 	{
 		var i = 0;
-		repeat (MaterialCount)
+		repeat(MaterialCount)
 		{
 			if (MaterialNames[i] == _name)
 			{
@@ -484,7 +509,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	static set_material = function (_name, _material)
 	{
 		var i = 0;
-		repeat (MaterialCount)
+		repeat(MaterialCount)
 		{
 			if (MaterialNames[i] == _name)
 			{
@@ -502,11 +527,11 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	///
 	/// @param {Bool} [_bones] Use `true` to include bone data in the vertex
 	/// format. Defaults to `true`.
-	/// @param {Bool} [_ids] Use `true` to include model instance ids in the
+	/// @param {Bool} [_ids] Use `true` to include model instance IDs in the
 	/// vertex format. Defaults to `false`.
 	///
 	/// @deprecated Each {@link BBMOD_Mesh} now has its own vertex format!
-	static get_vertex_format = function (_bones=true, _ids=false)
+	static get_vertex_format = function (_bones = true, _ids = false)
 	{
 		gml_pragma("forceinline");
 		var _vertexFormat = VertexFormat ? VertexFormat : Meshes[0].VertexFormat;
@@ -558,7 +583,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			array_push(_cacheData, _node.Index, _nodeMatrix, array_length(_meshIndices));
 
 			var i = 0;
-			repeat (array_length(_meshIndices))
+			repeat(array_length(_meshIndices))
 			{
 				var _mesh = Meshes[_meshIndices[i++]];
 				if (_animationKind == undefined)
@@ -574,7 +599,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 			var _children = _node.Children;
 			i = 0;
-			repeat (array_length(_children))
+			repeat(array_length(_children))
 			{
 				ds_stack_push(_renderStack, _children[i++], _nodeMatrix);
 			}
@@ -612,8 +637,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			_temp0 = _q0 * _q0;
 			_temp1 = _q1 * _q1;
 			_temp2 = _q2 * _q2;
-			_dest[@ 0]  = 1.0 - 2.0 * (_temp1 + _temp2);
-			_dest[@ 5]  = 1.0 - 2.0 * (_temp0 + _temp2);
+			_dest[@ 0] = 1.0 - 2.0 * (_temp1 + _temp2);
+			_dest[@ 5] = 1.0 - 2.0 * (_temp0 + _temp2);
 			_dest[@ 10] = 1.0 - 2.0 * (_temp0 + _temp1);
 
 			_temp0 = _q0 * _q1;
@@ -648,7 +673,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			var _q20 = -_realX;
 			var _q21 = -_realY;
 			var _q22 = -_realZ;
-			var _q23 =  _realW;
+			var _q23 = _realW;
 
 			//return Dual.Scale(2.0).Mul(Real.Conjugate());
 			_dest[@ 12] = _q13 * _q20 + _q10 * _q23 + _q11 * _q22 - _q12 * _q21;
@@ -691,7 +716,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
 	/// @see BBMOD_ERenderPass
-	static submit = function (_materials=undefined, _transform=undefined, _batchData=undefined)
+	static submit = function (_materials = undefined, _transform = undefined, _batchData = undefined)
 	{
 		gml_pragma("forceinline");
 
@@ -713,7 +738,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			var _matrix = matrix_get(matrix_world);
 
 			var i = 0;
-			repeat (_cacheData[i++])
+			repeat(_cacheData[i++])
 			{
 				++i; // Skip node index
 				var _nodeTransform = matrix_multiply(_cacheData[i++], _matrix);
@@ -721,7 +746,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 				matrix_set(matrix_world, _nodeTransform);
 
-				repeat (_meshCount)
+				repeat(_meshCount)
 				{
 					var _mesh = _cacheData[i++];
 					_mesh.submit(_materials[_mesh.MaterialIndex], undefined, _batchData);
@@ -735,7 +760,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 			var _matrix = matrix_get(matrix_world);
 
 			var i = 0;
-			repeat (_cacheData[i++])
+			repeat(_cacheData[i++])
 			{
 				var _nodeIndex = _cacheData[i++];
 				++i; // Skip node transform
@@ -745,7 +770,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 
 				matrix_set(matrix_world, _nodeTransform);
 
-				repeat (_meshCount)
+				repeat(_meshCount)
 				{
 					var _mesh = _cacheData[i++];
 					_mesh.submit(_materials[_mesh.MaterialIndex], undefined, _batchData);
@@ -757,12 +782,12 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		else if (__animationKind == 1)
 		{
 			var i = 0;
-			repeat (_cacheData[i++])
+			repeat(_cacheData[i++])
 			{
 				i += 2; // Skip node index and transform
 				var _meshCount = _cacheData[i++];
 
-				repeat (_meshCount)
+				repeat(_meshCount)
 				{
 					var _mesh = _cacheData[i++];
 					_mesh.submit(_materials[_mesh.MaterialIndex], _transform, _batchData);
@@ -799,7 +824,8 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	/// @see BBMOD_Resource.IsLoaded
 	/// @see BBMOD_AnimationPlayer.get_transform
 	/// @see bbmod_material_reset
-	static render = function (_materials=undefined, _transform=undefined, _batchData=undefined, _matrix=undefined)
+	static render = function (_materials = undefined, _transform = undefined, _batchData = undefined, _matrix =
+		undefined)
 	{
 		gml_pragma("forceinline");
 
@@ -820,23 +846,24 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 		if (_transform == undefined)
 		{
 			var i = 0;
-			repeat (_cacheData[i++])
+			repeat(_cacheData[i++])
 			{
 				++i; // Skip node index
 				var _nodeTransform = matrix_multiply(_cacheData[i++], _matrix);
 				var _meshCount = _cacheData[i++];
 
-				repeat (_meshCount)
+				repeat(_meshCount)
 				{
 					var _mesh = _cacheData[i++];
-					_mesh.render(_materials[_mesh.MaterialIndex], undefined, _batchData, _nodeTransform);
+					_mesh.render(_materials[_mesh.MaterialIndex], undefined, _batchData,
+						_nodeTransform);
 				}
 			}
 		}
 		else if (__animationKind == 0)
 		{
 			var i = 0;
-			repeat (_cacheData[i++])
+			repeat(_cacheData[i++])
 			{
 				var _nodeIndex = _cacheData[i++];
 				++i; // Skip node transform
@@ -844,22 +871,23 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 				var _nodeTransform = matrix_multiply(_tempMatrix, _matrix);
 				var _meshCount = _cacheData[i++];
 
-				repeat (_meshCount)
+				repeat(_meshCount)
 				{
 					var _mesh = _cacheData[i++];
-					_mesh.render(_materials[_mesh.MaterialIndex], undefined, _batchData, _nodeTransform);
+					_mesh.render(_materials[_mesh.MaterialIndex], undefined, _batchData,
+						_nodeTransform);
 				}
 			}
 		}
 		else if (__animationKind == 1)
 		{
 			var i = 0;
-			repeat (_cacheData[i++])
+			repeat(_cacheData[i++])
 			{
 				i += 2; // Skip node index and transform
 				var _meshCount = _cacheData[i++];
 
-				repeat (_meshCount)
+				repeat(_meshCount)
 				{
 					var _mesh = _cacheData[i++];
 					_mesh.render(_materials[_mesh.MaterialIndex], _transform, _batchData, _matrix);
@@ -885,7 +913,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	{
 		gml_pragma("forceinline");
 		var i = 0;
-		repeat (array_length(Meshes))
+		repeat(array_length(Meshes))
 		{
 			Meshes[i++].__to_dynamic_batch(_dynamicBatch);
 		}
@@ -904,7 +932,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	{
 		gml_pragma("forceinline");
 		var i = 0;
-		repeat (array_length(Meshes))
+		repeat(array_length(Meshes))
 		{
 			Meshes[i++].__to_static_batch(self, _staticBatch, _transform);
 		}
@@ -915,7 +943,7 @@ function BBMOD_Model(_file=undefined, _sha1=undefined)
 	{
 		Resource_destroy();
 		var i = 0;
-		repeat (array_length(Meshes))
+		repeat(array_length(Meshes))
 		{
 			Meshes[i++].destroy();
 		}

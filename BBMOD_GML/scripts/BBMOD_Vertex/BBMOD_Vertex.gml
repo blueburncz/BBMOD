@@ -51,7 +51,7 @@ function BBMOD_Vertex(_vertexFormat) constructor
 		? new BBMOD_Vec4(1.0, 0.0, 0.0, 1.0)
 		: undefined;
 
-	/// @var {Struct.BBMOD_Vec4} The bone ids of the vertex or `undefined` if
+	/// @var {Struct.BBMOD_Vec4} The bone IDs of the vertex or `undefined` if
 	/// the vertex format does not have bones.
 	/// @see BBMOD_VertexFormat.Bones
 	Bones = VertexFormat.Bones ? new BBMOD_Vec4() : undefined;
@@ -61,8 +61,8 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	/// @see BBMOD_VertexFormat.Bones
 	Weights = VertexFormat.Bones ? new BBMOD_Vec4() : undefined;
 
-	/// @var {Real} The id of the model in a dynamic batch or `undefined` if the
-	/// vertex format does not have ids.
+	/// @var {Real} The ID of the model in a dynamic batch or `undefined` if the
+	/// vertex format does not have IDs.
 	/// @see BBMOD_VertexFormat.Ids
 	/// @see BBMOD_DynamicBatch
 	Id = VertexFormat.Ids ? 0 : undefined;
@@ -79,7 +79,7 @@ function BBMOD_Vertex(_vertexFormat) constructor
 	///
 	/// @throws {BBMOD_Exception} If the format of the vertex and the format of
 	/// the buffer are not compatible.
-	static to_vertex_buffer = function (_vbuffer, _vformat=undefined)
+	static to_vertex_buffer = function (_vbuffer, _vformat = undefined)
 	{
 		var _checkFormat = (_vformat == undefined);
 
@@ -87,12 +87,12 @@ function BBMOD_Vertex(_vertexFormat) constructor
 
 		if (_checkFormat
 			&& ((_vformat.Vertices && !VertexFormat.Vertices)
-			|| (_vformat.Normals && !VertexFormat.Normals)
-			|| (_vformat.TextureCoords && !VertexFormat.TextureCoords)
-			|| (_vformat.Colors && !VertexFormat.Colors)
-			|| (_vformat.TangentW && !VertexFormat.TangentW)
-			|| (_vformat.Bones && !VertexFormat.Bones)
-			|| (_vformat.Ids && !VertexFormat.Ids)))
+				|| (_vformat.Normals && !VertexFormat.Normals)
+				|| (_vformat.TextureCoords && !VertexFormat.TextureCoords)
+				|| (_vformat.Colors && !VertexFormat.Colors)
+				|| (_vformat.TangentW && !VertexFormat.TangentW)
+				|| (_vformat.Bones && !VertexFormat.Bones)
+				|| (_vformat.Ids && !VertexFormat.Ids)))
 		{
 			throw new BBMOD_Exception("Vertex formats are not compatible!");
 		}

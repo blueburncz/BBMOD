@@ -83,7 +83,7 @@ function BBMOD_Resource() constructor
 	/// @throws {BBMOD_Exception}
 	///
 	/// @private
-	static check_file = function (_file, _sha1=undefined, _callback=undefined)
+	static check_file = function (_file, _sha1 = undefined, _callback = undefined)
 	{
 		var _err = undefined;
 
@@ -127,7 +127,7 @@ function BBMOD_Resource() constructor
 	/// @return {Struct.BBMOD_Resource} Returns `self`.
 	///
 	/// @throws {BBMOD_Exception} If loading fails.
-	static from_file = function (_file, _sha1=undefined)
+	static from_file = function (_file, _sha1 = undefined)
 	{
 		Path = _file;
 
@@ -186,7 +186,7 @@ function BBMOD_Resource() constructor
 
 	/// @func from_file_async(_file[, _sha1[, _callback]])
 	///
-	/// @desc Asynchronnously loads the resource from a file.
+	/// @desc Asynchronously loads the resource from a file.
 	///
 	/// @param {String} _file The path to the file.
 	/// @param {String} [_sha1] Expected SHA1 of the file. If the actual
@@ -201,9 +201,9 @@ function BBMOD_Resource() constructor
 	///
 	/// @note Do not forget to call {@link bbmod_async_save_load_update} and
 	/// {@link bbmod_async_image_loaded_update} in appropriate events when using
-	/// asynchronnous loading! You can also use {@link BBMOD_ResourceManager} for
-	/// unified asynchronnous loading of resources.
-	static from_file_async = function (_file, _sha1=undefined, _callback=undefined)
+	/// asynchronous loading! You can also use {@link BBMOD_ResourceManager} for
+	/// unified asynchronous loading of resources.
+	static from_file_async = function (_file, _sha1 = undefined, _callback = undefined)
 	{
 		Path = _file;
 
@@ -218,7 +218,8 @@ function BBMOD_Resource() constructor
 			Callback: _callback,
 		};
 
-		bbmod_buffer_load_async(_file, method(_struct, function (_err, _buffer) {
+		bbmod_buffer_load_async(_file, method(_struct, function (_err, _buffer)
+		{
 			var _callback = Callback;
 			if (_err)
 			{

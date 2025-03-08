@@ -8,7 +8,7 @@
 function bbmod_get_calling_function_name()
 {
 	gml_pragma("forceinline");
-	var _name = debug_get_callstack(/*2*/)[1]; // TODO: Check if this argument works in YYC already
+	var _name = debug_get_callstack( /*2*/ )[1]; // TODO: Check if this argument works in YYC already
 	_name = string_replace(_name, "gml_Script_", "");
 	var _pos = string_pos(":", _name);
 	if (_pos > 0)

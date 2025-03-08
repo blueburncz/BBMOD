@@ -13,8 +13,7 @@
 /// Defaults to `(0, 0, 0, 0)`.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_SetVec4Module(_property=undefined, _value=new BBMOD_Vec4())
-	: BBMOD_ParticleModule() constructor
+function BBMOD_SetVec4Module(_property = undefined, _value = new BBMOD_Vec4()): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first property. Use values from {@link BBMOD_EParticle}.
 	/// Default value is `undefined`.
@@ -29,7 +28,7 @@ function BBMOD_SetVec4Module(_property=undefined, _value=new BBMOD_Vec4())
 		if (Property != undefined)
 		{
 			var _value = Value;
-			_emitter.Particles[# Property, _particleIndex]     = _value.X;
+			_emitter.Particles[# Property, _particleIndex] = _value.X;
 			_emitter.Particles[# Property + 1, _particleIndex] = _value.Y;
 			_emitter.Particles[# Property + 2, _particleIndex] = _value.Z;
 			_emitter.Particles[# Property + 3, _particleIndex] = _value.W;

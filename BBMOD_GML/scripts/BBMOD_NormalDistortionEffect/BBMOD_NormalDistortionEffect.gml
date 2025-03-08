@@ -11,8 +11,7 @@
 /// @param {Real} [_strength] The strength of the effect. Both positive and
 /// negative values can be used. Use 0 to disable the effect. Default value is
 /// 1.
-function BBMOD_NormalDistortionEffect(_texture=pointer_null, _strength=1.0)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_NormalDistortionEffect(_texture = pointer_null, _strength = 1.0): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Pointer.Texture} A normal map texture. Default value is
 	/// `pointer_null` (and the effect is not applied).
@@ -22,10 +21,10 @@ function BBMOD_NormalDistortionEffect(_texture=pointer_null, _strength=1.0)
 	/// can be used. Use 0 to disable the effect. Default value is 1.
 	Strength = _strength;
 
-	static __uNormal    = shader_get_sampler_index(BBMOD_ShNormalDistortion, "u_texNormal");
+	static __uNormal = shader_get_sampler_index(BBMOD_ShNormalDistortion, "u_texNormal");
 	static __uNormalUVs = shader_get_uniform(BBMOD_ShNormalDistortion, "u_vNormalUVs");
-	static __uStrength  = shader_get_uniform(BBMOD_ShNormalDistortion, "u_fStrength");
-	static __uTexel     = shader_get_uniform(BBMOD_ShNormalDistortion, "u_vTexel");
+	static __uStrength = shader_get_uniform(BBMOD_ShNormalDistortion, "u_fStrength");
+	static __uTexel = shader_get_uniform(BBMOD_ShNormalDistortion, "u_vTexel");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -40,7 +39,8 @@ function BBMOD_NormalDistortionEffect(_texture=pointer_null, _strength=1.0)
 		var _uvs = texture_get_uvs(Texture);
 		shader_set_uniform_f(__uNormalUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
 		shader_set_uniform_f(__uStrength, Strength);
-		shader_set_uniform_f(__uTexel, 1.0 / surface_get_width(_surfaceDest), 1.0 / surface_get_height(_surfaceDest));
+		shader_set_uniform_f(__uTexel, 1.0 / surface_get_width(_surfaceDest), 1.0 / surface_get_height(
+			_surfaceDest));
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_reset();
 		surface_reset_target();

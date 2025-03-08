@@ -42,13 +42,13 @@ function __bbmod_log_level_to_string(_logLevel)
 /// @param {Array} [_values]
 ///
 /// @private
-function __bbmod_log(_level, _format, _values=[])
+function __bbmod_log(_level, _format, _values = [])
 {
 	gml_pragma("forceinline");
 	show_debug_message_ext(
 		"[" + date_time_string(date_current_datetime()) + "]"
-			+ "[" + __bbmod_log_level_to_string(_level) + "]"
-			+ " BBMOD: " + _format,
+		+ "[" + __bbmod_log_level_to_string(_level) + "]"
+		+ " BBMOD: " + _format,
 		_values);
 }
 
@@ -58,7 +58,7 @@ function __bbmod_log(_level, _format, _values=[])
 /// @param {Array} [_values]
 ///
 /// @private
-function __bbmod_debug(_format, _values=[])
+function __bbmod_debug(_format, _values = [])
 {
 	gml_pragma("forceinline");
 	__bbmod_log(__BBMOD_ELogLevel.Debug, _format, _values);
@@ -70,7 +70,7 @@ function __bbmod_debug(_format, _values=[])
 /// @param {Array} [_values]
 ///
 /// @private
-function __bbmod_info(_format, _values=[])
+function __bbmod_info(_format, _values = [])
 {
 	gml_pragma("forceinline");
 	__bbmod_log(__BBMOD_ELogLevel.Info, _format, _values);
@@ -82,7 +82,7 @@ function __bbmod_info(_format, _values=[])
 /// @param {Array} [_values]
 ///
 /// @private
-function __bbmod_warning(_format, _values=[])
+function __bbmod_warning(_format, _values = [])
 {
 	gml_pragma("forceinline");
 	__bbmod_log(__BBMOD_ELogLevel.Warning, _format, _values);
@@ -94,7 +94,7 @@ function __bbmod_warning(_format, _values=[])
 /// @param {Array} [_values]
 ///
 /// @private
-function __bbmod_error(_format, _values=[])
+function __bbmod_error(_format, _values = [])
 {
 	gml_pragma("forceinline");
 	__bbmod_log(__BBMOD_ELogLevel.Error, _format, _values);

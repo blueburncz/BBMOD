@@ -19,10 +19,20 @@ x += lengthdir_x(_forward, camera.Direction) + lengthdir_x(_right, camera.Direct
 y += lengthdir_y(_forward, camera.Direction) + lengthdir_y(_right, camera.Direction - 90);
 z += _up;
 
-scene.set_node_rotation(
-	node1,
-	new BBMOD_Quaternion().FromAxisAngle(BBMOD_VEC3_FORWARD, current_time * 0.1));
-
 scene.update(delta_time);
 
+var _directionPrev = camera.Direction;
+var _directionUpPrev = camera.DirectionUp;
+
 renderer.update(delta_time);
+
+camera.AspectRatio = surface_get_width(application_surface) / surface_get_height(application_surface);
+camera.update(delta_time);
+
+var _scale = 20.0;
+directionalBlur.Vector.Set(
+	angle_difference(camera.Direction, _directionPrev) * _scale,
+	angle_difference(camera.DirectionUp, _directionUpPrev) * _scale);
+var _length = directionalBlur.Vector.Length();
+_length = (_length > 0.0) ? _length : 1.0;
+directionalBlur.Step = 2.0 / min(_length, 32.0);

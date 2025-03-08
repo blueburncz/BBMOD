@@ -79,7 +79,7 @@ uniform float bbmod_Exposure;
 // G-buffer surface.
 uniform sampler2D bbmod_GBuffer;
 
-// Distance over which the particle smoothly dissappears when getting closer to
+// Distance over which the particle smoothly disappears when getting closer to
 // geometry rendered in the depth buffer.
 uniform float bbmod_SoftDistance;
 

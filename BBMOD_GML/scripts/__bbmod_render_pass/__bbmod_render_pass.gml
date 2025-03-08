@@ -5,36 +5,36 @@ enum BBMOD_ERenderPass
 {
 	/// @member Render pass where objects are rendered into reflection probes.
 	ReflectionCapture = 0,
-	/// @member Render pass where shadow-casting are objects rendered into
-	/// shadow maps.
-	Shadows = 1,
-	/// @member Render pass where opaque are rendered into an off-screen depth
-	/// buffer when using {@link BBMOD_DefaultRenderer}.
-	/// @deprecated Please use {@link BBMOD_ERenderPass.DepthOnly} instead.
-	Deferred = 2,
-	/// @member Render pass where opaque objects are rendered into an off-screen
-	/// depth buffer.
-	DepthOnly = 2,
-	/// @member Render pass where opaque objects are rendered into a G-Buffer.
-	GBuffer,
-	/// @member Render pass for background objects (e.g. skydome).
-	Background,
-	/// @member Render pass for opaque objects.
-	Forward,
-	/// @member Render pass for model outlines.
-	Outline,
-	/// @member Render pass for alpha-blended objects.
-	Alpha,
-	/// @member Render pass for translucent objects that use a blurred screen
-	/// surface as an input.
-	Translucent,
-	/// @member Render pass for screen distortion effects.
-	Distortion,
-	/// @member Render pass where instance IDs are rendered into an off-screen
-	/// buffer.
-	Id,
-	/// @member Total number of members of this enum.
-	SIZE,
+		/// @member Render pass where shadow-casting are objects rendered into
+		/// shadow maps.
+		Shadows = 1,
+		/// @member Render pass where opaque are rendered into an off-screen depth
+		/// buffer when using {@link BBMOD_DefaultRenderer}.
+		/// @deprecated Please use {@link BBMOD_ERenderPass.DepthOnly} instead.
+		Deferred = 2,
+		/// @member Render pass where opaque objects are rendered into an off-screen
+		/// depth buffer.
+		DepthOnly = 2,
+		/// @member Render pass where opaque objects are rendered into a G-Buffer.
+		GBuffer,
+		/// @member Render pass for background objects (e.g. skydome).
+		Background,
+		/// @member Render pass for opaque objects.
+		Forward,
+		/// @member Render pass for model outlines.
+		Outline,
+		/// @member Render pass for alpha-blended objects.
+		Alpha,
+		/// @member Render pass for translucent objects that use a blurred screen
+		/// surface as an input.
+		Translucent,
+		/// @member Render pass for screen distortion effects.
+		Distortion,
+		/// @member Render pass where instance IDs are rendered into an off-screen
+		/// buffer.
+		Id,
+		/// @member Total number of members of this enum.
+		SIZE,
 };
 
 /// @var {Real}
@@ -53,42 +53,42 @@ function bbmod_render_pass_to_string(_pass)
 {
 	switch (_pass)
 	{
-	case BBMOD_ERenderPass.ReflectionCapture:
-		return "ReflectionCapture";
+		case BBMOD_ERenderPass.ReflectionCapture:
+			return "ReflectionCapture";
 
-	case BBMOD_ERenderPass.Shadows:
-		return "Shadows";
+		case BBMOD_ERenderPass.Shadows:
+			return "Shadows";
 
-	//case BBMOD_ERenderPass.Deferred:
-	case BBMOD_ERenderPass.DepthOnly:
-		return "DepthOnly";
+			//case BBMOD_ERenderPass.Deferred:
+		case BBMOD_ERenderPass.DepthOnly:
+			return "DepthOnly";
 
-	case BBMOD_ERenderPass.GBuffer:
-		return "GBuffer";
+		case BBMOD_ERenderPass.GBuffer:
+			return "GBuffer";
 
-	case BBMOD_ERenderPass.Background:
-		return "Background";
+		case BBMOD_ERenderPass.Background:
+			return "Background";
 
-	case BBMOD_ERenderPass.Forward:
-		return "Forward";
+		case BBMOD_ERenderPass.Forward:
+			return "Forward";
 
-	case BBMOD_ERenderPass.Outline:
-		return "Outline";
+		case BBMOD_ERenderPass.Outline:
+			return "Outline";
 
-	case BBMOD_ERenderPass.Alpha:
-		return "Alpha";
+		case BBMOD_ERenderPass.Alpha:
+			return "Alpha";
 
-	case BBMOD_ERenderPass.Translucent:
-		return "Translucent";
+		case BBMOD_ERenderPass.Translucent:
+			return "Translucent";
 
-	case BBMOD_ERenderPass.Distortion:
-		return "Distortion";
+		case BBMOD_ERenderPass.Distortion:
+			return "Distortion";
 
-	case BBMOD_ERenderPass.Id:
-		return "Id";
+		case BBMOD_ERenderPass.Id:
+			return "Id";
 
-	default:
-		return "";
+		default:
+			return "";
 	}
 }
 
@@ -105,42 +105,42 @@ function bbmod_render_pass_from_string(_name)
 {
 	switch (_name)
 	{
-	case "ReflectionCapture":
-		return BBMOD_ERenderPass.ReflectionCapture;
+		case "ReflectionCapture":
+			return BBMOD_ERenderPass.ReflectionCapture;
 
-	case "Shadows":
-		return BBMOD_ERenderPass.Shadows;
+		case "Shadows":
+			return BBMOD_ERenderPass.Shadows;
 
-	case "Deferred":
-	case "DepthOnly":
-		return BBMOD_ERenderPass.DepthOnly;
+		case "Deferred":
+		case "DepthOnly":
+			return BBMOD_ERenderPass.DepthOnly;
 
-	case "GBuffer":
-		return BBMOD_ERenderPass.GBuffer;
+		case "GBuffer":
+			return BBMOD_ERenderPass.GBuffer;
 
-	case "Background":
-		return BBMOD_ERenderPass.Background;
+		case "Background":
+			return BBMOD_ERenderPass.Background;
 
-	case "Forward":
-		return BBMOD_ERenderPass.Forward;
+		case "Forward":
+			return BBMOD_ERenderPass.Forward;
 
-	case "Outline":
-		return BBMOD_ERenderPass.Outline;
+		case "Outline":
+			return BBMOD_ERenderPass.Outline;
 
-	case "Alpha":
-		return BBMOD_ERenderPass.Alpha;
+		case "Alpha":
+			return BBMOD_ERenderPass.Alpha;
 
-	case "Translucent":
-		return BBMOD_ERenderPass.Translucent;
+		case "Translucent":
+			return BBMOD_ERenderPass.Translucent;
 
-	case "Distortion":
-		return BBMOD_ERenderPass.Distortion;
+		case "Distortion":
+			return BBMOD_ERenderPass.Distortion;
 
-	case "Id":
-		return BBMOD_ERenderPass.Id;
+		case "Id":
+			return BBMOD_ERenderPass.Id;
 
-	default:
-		throw new BBMOD_Exception("Invalid render pass \"" + _name + "\"!");
+		default:
+			throw new BBMOD_Exception("Invalid render pass \"" + _name + "\"!");
 	}
 }
 

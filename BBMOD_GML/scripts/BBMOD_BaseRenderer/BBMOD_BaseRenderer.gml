@@ -95,6 +95,8 @@ function BBMOD_BaseRenderer() constructor
 	/// @var {Real} Resolution multiplier for the `application_surface`.
 	/// {@link BBMOD_BaseRenderer.UseAppSurface} must be enabled for this to
 	/// have any effect. Defaults to 1. Use lower values to improve framerate.
+	/// @note Not supported on platforms GX.games and HTML5!
+	/// @see bbmod_is_browser
 	RenderScale = 1.0;
 
 	/// @var {Bool} Enables rendering into a shadowmap in the shadows render pass.
@@ -203,7 +205,7 @@ function BBMOD_BaseRenderer() constructor
 	static get_width = function ()
 	{
 		gml_pragma("forceinline");
-		return max((Width == undefined) ? window_get_width() : Width, 1);
+		return ((Width != undefined) ? max(Width, 1) : bbmod_window_get_width());
 	};
 
 	/// @func get_height()
@@ -214,7 +216,7 @@ function BBMOD_BaseRenderer() constructor
 	static get_height = function ()
 	{
 		gml_pragma("forceinline");
-		return max((Height == undefined) ? window_get_height() : Height, 1);
+		return ((Height != undefined) ? max(Height, 1) : bbmod_window_get_height());
 	};
 
 	/// @func get_render_width()
@@ -227,6 +229,10 @@ function BBMOD_BaseRenderer() constructor
 	static get_render_width = function ()
 	{
 		gml_pragma("forceinline");
+		if (bbmod_is_browser())
+		{
+			return get_width();
+		}
 		return max(get_width() * RenderScale, 1);
 	};
 
@@ -239,6 +245,10 @@ function BBMOD_BaseRenderer() constructor
 	static get_render_height = function ()
 	{
 		gml_pragma("forceinline");
+		if (bbmod_is_browser())
+		{
+			return get_height();
+		}
 		return max(get_height() * RenderScale, 1);
 	};
 
@@ -309,8 +319,10 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static select_gizmo = function (_screenX, _screenY)
 	{
-		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
-		_screenY = clamp(_screenY - Y, 0, get_height()) * RenderScale;
+		var _renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
+
+		_screenX = clamp(_screenX - X, 0, get_width()) * _renderScale;
+		_screenY = clamp(_screenY - Y, 0, get_height()) * _renderScale;
 
 		Gizmo.EditAxis = BBMOD_EEditAxis.None;
 
@@ -332,7 +344,7 @@ function BBMOD_BaseRenderer() constructor
 
 		Gizmo.EditType = ((_value == 255) ? BBMOD_EEditType.Position
 			: ((_value == 128) ? BBMOD_EEditType.Rotation
-			: BBMOD_EEditType.Scale));
+				: BBMOD_EEditType.Scale));
 
 		return true;
 	};
@@ -355,8 +367,9 @@ function BBMOD_BaseRenderer() constructor
 		{
 			return 0;
 		}
-		_screenX = clamp(_screenX - X, 0, get_width()) * RenderScale;
-		_screenY = clamp(_screenY - Y, 0, get_height()) * RenderScale;
+		var _renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
+		_screenX = clamp(_screenX - X, 0, get_width()) * _renderScale;
+		_screenY = clamp(_screenY - Y, 0, get_height()) * _renderScale;
 		return surface_getpixel_ext(__surSelect, _screenX, _screenY);
 	};
 
@@ -419,10 +432,12 @@ function BBMOD_BaseRenderer() constructor
 			application_surface_enable(true);
 			application_surface_draw_enable(false);
 
-			var _surfaceWidth = get_render_width();
-			var _surfaceHeight = get_render_height();
-
-			bbmod_surface_check(application_surface, _surfaceWidth, _surfaceHeight, surface_rgba8unorm, true);
+			if (!bbmod_is_browser())
+			{
+				var _surfaceWidth = get_render_width();
+				var _surfaceHeight = get_render_height();
+				bbmod_surface_check(application_surface, _surfaceWidth, _surfaceHeight, surface_rgba8unorm, true);
+			}
 		}
 
 		if (Gizmo && EditMode)
@@ -449,7 +464,7 @@ function BBMOD_BaseRenderer() constructor
 			ds_list_add(__shadowmapLights, _light);
 			ds_list_add(__shadowmapHealth, 1);
 		}
-		++__shadowmapHealth[| _lightIndex];
+		++__shadowmapHealth[|  _lightIndex];
 	};
 
 	/// @func __gc_collect_shadowmaps()
@@ -462,15 +477,15 @@ function BBMOD_BaseRenderer() constructor
 	{
 		for (var i = ds_list_size(__shadowmapLights) - 1; i >= 0; --i)
 		{
-			var _light = __shadowmapLights[| i];
-			if (--__shadowmapHealth[| i] <= 0)
+			var _light = __shadowmapLights[|  i];
+			if (--__shadowmapHealth[|  i] <= 0)
 			{
 				ds_list_delete(__shadowmapLights, i);
 				ds_list_delete(__shadowmapHealth, i);
 
 				if (ds_map_exists(__shadowmapSurfaces, _light))
 				{
-					var _surface = __shadowmapSurfaces[? _light];
+					var _surface = __shadowmapSurfaces[?  _light];
 					if (surface_exists(_surface))
 					{
 						surface_free(_surface);
@@ -480,7 +495,7 @@ function BBMOD_BaseRenderer() constructor
 
 				if (ds_map_exists(__shadowmapCubes, _light))
 				{
-					__shadowmapCubes[? _light].destroy();
+					__shadowmapCubes[?  _light].destroy();
 					ds_map_delete(__shadowmapCubes, _light);
 				}
 			}
@@ -514,12 +529,12 @@ function BBMOD_BaseRenderer() constructor
 				var _cubemap;
 				if (ds_map_exists(__shadowmapCubes, _light))
 				{
-					_cubemap = __shadowmapCubes[? _light];
+					_cubemap = __shadowmapCubes[?  _light];
 				}
 				else
 				{
 					_cubemap = new BBMOD_Cubemap(_light.ShadowmapResolution);
-					__shadowmapCubes[? _light] = _cubemap;
+					__shadowmapCubes[?  _light] = _cubemap;
 				}
 
 				_light.Position.Copy(_cubemap.Position);
@@ -538,22 +553,23 @@ function BBMOD_BaseRenderer() constructor
 
 				_cubemap.to_single_surface();
 				_cubemap.to_octahedron();
-				__shadowmapSurfaces[? _light] = _cubemap.SurfaceOctahedron;
+				__shadowmapSurfaces[?  _light] = _cubemap.SurfaceOctahedron;
 			}
 			else
 			{
 				var _surShadowmapOld = -1;
 				if (ds_map_exists(__shadowmapSurfaces, _light))
 				{
-					_surShadowmapOld = __shadowmapSurfaces[? _light];
+					_surShadowmapOld = __shadowmapSurfaces[?  _light];
 				}
 
 				_surShadowmap = bbmod_surface_check(
-					_surShadowmapOld, _light.ShadowmapResolution, _light.ShadowmapResolution, surface_rgba8unorm, true);
+					_surShadowmapOld, _light.ShadowmapResolution, _light.ShadowmapResolution,
+					surface_rgba8unorm, true);
 
 				if (_surShadowmap != _surShadowmapOld)
 				{
-					__shadowmapSurfaces[? _light] = _surShadowmap;
+					__shadowmapSurfaces[?  _light] = _surShadowmap;
 				}
 
 				surface_set_target(_surShadowmap);
@@ -632,7 +648,7 @@ function BBMOD_BaseRenderer() constructor
 
 		__render_shadowmap_impl(_shadowCaster);
 
-		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[? _shadowCaster]);
+		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[?  _shadowCaster]);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
 		bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
@@ -672,9 +688,9 @@ function BBMOD_BaseRenderer() constructor
 		var _reflectionProbes = bbmod_scene_get_current().ReflectionProbes;
 
 		var i = 0;
-		repeat (array_length(_reflectionProbes))
+		repeat(array_length(_reflectionProbes))
 		{
-			with (_reflectionProbes[i++])
+			with(_reflectionProbes[i++])
 			{
 				if (!Enabled || !NeedsUpdate)
 				{
@@ -686,7 +702,7 @@ function BBMOD_BaseRenderer() constructor
 				_cubemap.Resolution = Resolution;
 
 				// Render shadows
-				with (other)
+				with(other)
 				{
 					var _enableShadows = EnableShadows;
 					EnableShadows &= other.EnableShadows; // Temporarily modify renderer's EnableShadows
@@ -873,7 +889,7 @@ function BBMOD_BaseRenderer() constructor
 			draw_clear_alpha(0, 0.0);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
-	
+
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
 			bbmod_render_queues_submit();
@@ -911,7 +927,7 @@ function BBMOD_BaseRenderer() constructor
 
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
-	
+
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
 			bbmod_render_queues_submit(Gizmo.Selected);
@@ -1044,7 +1060,7 @@ function BBMOD_BaseRenderer() constructor
 	/// at the end of this method. Default value is `true`.
 	///
 	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
-	static render = function (_clearQueues=true)
+	static render = function (_clearQueues = true)
 	{
 		global.__bbmodRendererCurrent = self;
 
@@ -1053,9 +1069,9 @@ function BBMOD_BaseRenderer() constructor
 		var _projection = matrix_get(matrix_projection);
 
 		var i = 0;
-		repeat (array_length(Renderables))
+		repeat(array_length(Renderables))
 		{
-			with (Renderables[i++])
+			with(Renderables[i++])
 			{
 				render();
 			}
@@ -1155,7 +1171,7 @@ function BBMOD_BaseRenderer() constructor
 			if (PostProcessor != undefined
 				&& PostProcessor.Enabled)
 			{
-				PostProcessor.__renderScale = RenderScale;
+				PostProcessor.__renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
 				PostProcessor.draw(application_surface, X, Y);
 			}
 			else
@@ -1228,9 +1244,9 @@ function BBMOD_BaseRenderer() constructor
 		ds_list_destroy(__shadowmapHealth);
 
 		var _key = ds_map_find_first(__shadowmapSurfaces);
-		repeat (ds_map_size(__shadowmapSurfaces))
+		repeat(ds_map_size(__shadowmapSurfaces))
 		{
-			var _surface = __shadowmapSurfaces[? _key];
+			var _surface = __shadowmapSurfaces[?  _key];
 			if (surface_exists(_surface))
 			{
 				surface_free(_surface);
@@ -1240,9 +1256,9 @@ function BBMOD_BaseRenderer() constructor
 		ds_map_destroy(__shadowmapSurfaces);
 
 		_key = ds_map_find_first(__shadowmapCubes);
-		repeat (ds_map_size(__shadowmapCubes))
+		repeat(ds_map_size(__shadowmapCubes))
 		{
-			__shadowmapCubes[? _key].destroy();
+			__shadowmapCubes[?  _key].destroy();
 			_key = ds_map_find_next(__shadowmapCubes, _key);
 		}
 		ds_map_destroy(__shadowmapCubes);

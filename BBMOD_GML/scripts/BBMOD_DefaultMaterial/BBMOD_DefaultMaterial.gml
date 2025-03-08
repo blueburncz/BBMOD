@@ -12,8 +12,7 @@
 /// in specific render passes.
 ///
 /// @see BBMOD_DefaultShader
-function BBMOD_DefaultMaterial(_shader=undefined)
-	: BBMOD_BaseMaterial(_shader) constructor
+function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader) constructor
 {
 	static BaseMaterial_copy = copy;
 	static BaseMaterial_from_json = from_json;

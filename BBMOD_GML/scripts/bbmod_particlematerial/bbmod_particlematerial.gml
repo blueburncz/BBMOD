@@ -12,12 +12,11 @@
 /// specific render passes.
 ///
 /// @see BBMOD_ParticleShader
-function BBMOD_ParticleMaterial(_shader=undefined)
-	: BBMOD_DefaultMaterial(_shader) constructor
+function BBMOD_ParticleMaterial(_shader = undefined): BBMOD_DefaultMaterial(_shader) constructor
 {
 	static DefaultMaterial_copy = copy;
 
-	/// @var {Real} Distance over which the particle smoothly dissappears when
+	/// @var {Real} Distance over which the particle smoothly disappears when
 	/// getting closer to geometry rendered in the depth buffer. Use values less
 	/// or equal to 0 to disable the effect. Default value is 0.
 	SoftDistance = 0.0;

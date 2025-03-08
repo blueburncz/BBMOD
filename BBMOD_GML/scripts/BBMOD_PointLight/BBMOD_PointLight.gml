@@ -11,8 +11,8 @@
 /// @param {Struct.BBMOD_Vec3} [_position] The light's position.
 /// Defaults to `(0, 0, 0)`.
 /// @param {Real} [_range] The light's range. Defaults to 1.
-function BBMOD_PointLight(_color=BBMOD_C_WHITE, _position=undefined, _range=1.0)
-	: BBMOD_PunctualLight(_color, _position, _range) constructor
+function BBMOD_PointLight(_color = BBMOD_C_WHITE, _position = undefined, _range = 1.0): BBMOD_PunctualLight(_color,
+	_position, _range) constructor
 {
 	__getShadowmapMatrix = __get_shadowmap_matrix;
 

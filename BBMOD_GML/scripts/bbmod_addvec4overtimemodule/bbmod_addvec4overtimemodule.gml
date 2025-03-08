@@ -16,10 +16,10 @@
 ///
 /// @see BBMOD_EParticle.HealthLeft
 function BBMOD_AddVec4OverTimeModule(
-	_property=undefined,
-	_change=new BBMOD_Vec4(1.0),
-	_period=1.0
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_change = new BBMOD_Vec4(1.0),
+	_period = 1.0
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the four consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
@@ -48,7 +48,7 @@ function BBMOD_AddVec4OverTimeModule(
 				var _changeY = _change.Y * _factor;
 				var _changeZ = _change.Z * _factor;
 				var _changeW = _change.W * _factor;
-				ds_grid_add_region(_emitter.Particles, _property,     0, _property,     _y2, _changeX);
+				ds_grid_add_region(_emitter.Particles, _property, 0, _property, _y2, _changeX);
 				ds_grid_add_region(_emitter.Particles, _property + 1, 0, _property + 1, _y2, _changeY);
 				ds_grid_add_region(_emitter.Particles, _property + 2, 0, _property + 2, _y2, _changeZ);
 				ds_grid_add_region(_emitter.Particles, _property + 3, 0, _property + 3, _y2, _changeW);

@@ -109,7 +109,7 @@ function BBMOD_Collider() constructor
 	///
 	/// @see BBMOD_RaycastResult
 	/// @see BBMOD_Ray.Raycast
-	static Raycast = function (_ray, _result=undefined)
+	static Raycast = function (_ray, _result = undefined)
 	{
 		throw new BBMOD_NotImplementedException();
 	};
@@ -125,7 +125,7 @@ function BBMOD_Collider() constructor
 	/// @return {Struct.BBMOD_Collider} Returns `self`.
 	///
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static DrawDebug = function (_color=c_white, _alpha=1.0)
+	static DrawDebug = function (_color = c_white, _alpha = 1.0)
 	{
 		throw new BBMOD_NotImplementedException();
 	};

@@ -8,7 +8,9 @@ global.__bbmodRenderStack = ds_stack_create();
 ///
 /// @implements {BBMOD_IRenderable}
 ///
-/// @desc A node struct.
+/// @desc A node, defined by its transformation, an array of indices of
+/// meshes that it draws from the model it belongs to and an array of child
+/// nodes.
 ///
 /// @param {Struct.BBMOD_Model} _model The model which contains this node.
 ///
@@ -19,41 +21,46 @@ function BBMOD_Node(_model) constructor
 	/// @readonly
 	Model = _model;
 
-	/// @var {String} The name of the node.
+	/// @var {String} The name of the node. Defaults to an empty string.
 	/// @readonly
 	Name = "";
 
-	/// @var {Real} The node index.
+	/// @var {Real} The unique index of the node. If the node is a bone,
+	/// its index must be less than the index of the first node that isn't
+	/// a bone!
 	/// @readonly
+	/// @see BBMOD_Node.IsBone
 	Index = 0;
 
-	/// @var {Struct.BBMOD_Node} The parent of this node or `undefined` if it is
-	/// the root node.
+	/// @var {Struct.BBMOD_Node} The parent of this node or `undefined` (default)
+	/// if it's the root node of a model.
 	/// @readonly
 	Parent = undefined;
 
-	/// @var {Bool} If `true` then the node is a bone.
+	/// @var {Bool} If `true` then the node is a bone. Defaults to `false`.
 	/// @readonly
 	IsBone = false;
 
 	/// @var {Bool} Set to `false` to disable rendering of the node and its
-	/// child nodes.
+	/// child nodes. Defaults to `true`.
 	Visible = true;
 
 	/// @var {Struct.BBMOD_DualQuaternion} The transformation of the node.
 	/// @readonly
 	Transform = new BBMOD_DualQuaternion();
 
-	/// @var {Array<Real>} An array of mesh indices.
+	/// @var {Array<Real>} An array of mesh indices that the node draws from the
+	/// model it belongs to.
 	/// @readonly
+	/// @see BBMOD_Model.Meshes
 	Meshes = [];
 
-	/// @var {Bool} If true then the node or a node down the chain has a mesh.
+	/// @var {Bool} If `true` then the node or a node down the chain has a mesh.
+	/// Defaults to `false`.
 	/// @readonly
 	IsRenderable = false;
 
 	/// @var {Array<Struct.BBMOD_Node>} An array of child nodes.
-	/// @see BBMOD_Node
 	/// @readonly
 	Children = [];
 
@@ -84,7 +91,7 @@ function BBMOD_Node(_model) constructor
 		_dest.Children = [];
 
 		var i = 0;
-		repeat (array_length(Children))
+		repeat(array_length(Children))
 		{
 			_dest.add_child(Children[i++].clone());
 		}
@@ -142,9 +149,10 @@ function BBMOD_Node(_model) constructor
 
 	/// @func from_buffer(_buffer)
 	///
-	/// @desc Loads node data from a buffer.
+	/// @desc Loads node data from a buffer following the BBMOD file format.
 	///
-	/// @param {Id.Buffer} _buffer The buffer to load the data from.
+	/// @param {Id.Buffer} _buffer The buffer to load the data from. Its seek
+	/// position must point to a beginning of a BBMOD node!
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
 	static from_buffer = function (_buffer)
@@ -168,7 +176,7 @@ function BBMOD_Node(_model) constructor
 		}
 
 		i = 0;
-		repeat (_meshCount)
+		repeat(_meshCount)
 		{
 			_meshes[@ i++] = buffer_read(_buffer, buffer_u32);
 		}
@@ -177,7 +185,7 @@ function BBMOD_Node(_model) constructor
 		var _childCount = buffer_read(_buffer, buffer_u32);
 		Children = [];
 
-		repeat (_childCount)
+		repeat(_childCount)
 		{
 			var _child = new BBMOD_Node(Model);
 			add_child(_child);
@@ -189,11 +197,15 @@ function BBMOD_Node(_model) constructor
 
 	/// @func to_buffer(_buffer)
 	///
-	/// @desc Writes node data to a buffer.
+	/// @desc Writes node data to a buffer following the current version of the
+	/// BBMOD file format.
 	///
 	/// @param {Id.Buffer} _buffer The buffer to write the data to.
 	///
 	/// @return {Struct.BBMOD_Node} Returns `self`.
+	///
+	/// @see BBMOD_VERSION_MAJOR
+	/// @see BBMOD_VERSION_MINOR
 	static to_buffer = function (_buffer)
 	{
 		var i;
@@ -208,9 +220,9 @@ function BBMOD_Node(_model) constructor
 		buffer_write(_buffer, buffer_u32, _meshCount)
 
 		i = 0;
-		repeat (_meshCount)
+		repeat(_meshCount)
 		{
-			 buffer_write(_buffer, buffer_u32, Meshes[i++]);
+			buffer_write(_buffer, buffer_u32, Meshes[i++]);
 		}
 
 		// Child nodes
@@ -218,7 +230,7 @@ function BBMOD_Node(_model) constructor
 		buffer_write(_buffer, buffer_u32, _childCount);
 
 		i = 0;
-		repeat (_childCount)
+		repeat(_childCount)
 		{
 			Children[i++].to_buffer(_buffer);
 		}
@@ -264,7 +276,7 @@ function BBMOD_Node(_model) constructor
 			var _children = _node.Children;
 			var i = 0;
 
-			repeat (array_length(_meshIndices))
+			repeat(array_length(_meshIndices))
 			{
 				var _mesh = _meshes[_meshIndices[i++]];
 				var _material = _materials[_mesh.MaterialIndex];
@@ -296,7 +308,7 @@ function BBMOD_Node(_model) constructor
 			}
 
 			i = 0;
-			repeat (array_length(_children))
+			repeat(array_length(_children))
 			{
 				ds_stack_push(_renderStack, _children[i++]);
 			}
@@ -344,7 +356,7 @@ function BBMOD_Node(_model) constructor
 			var _children = _node.Children;
 			var i = 0;
 
-			repeat (array_length(_meshIndices))
+			repeat(array_length(_meshIndices))
 			{
 				var _mesh = _meshes[_meshIndices[i++]];
 				var _material = _materials[_mesh.MaterialIndex];
@@ -378,7 +390,7 @@ function BBMOD_Node(_model) constructor
 			}
 
 			i = 0;
-			repeat (array_length(_children))
+			repeat(array_length(_children))
 			{
 				ds_stack_push(_renderStack, _children[i++]);
 			}

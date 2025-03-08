@@ -16,10 +16,10 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixRealFromHealthModule(
-	_property=undefined,
-	_from=0.0,
-	_to=_from
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = 0.0,
+	_to = _from
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The property to set initial value of. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.
@@ -43,7 +43,7 @@ function BBMOD_MixRealFromHealthModule(
 			var _particles = _emitter.Particles;
 
 			var _particleIndex = 0;
-			repeat (_emitter.ParticlesAlive)
+			repeat(_emitter.ParticlesAlive)
 			{
 				var _factor = clamp(_particles[# BBMOD_EParticle.HealthLeft, _particleIndex]
 					/ _particles[# BBMOD_EParticle.Health, _particleIndex], 0.0, 1.0);

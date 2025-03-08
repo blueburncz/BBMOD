@@ -5,8 +5,7 @@
 /// @extends BBMOD_BaseCamera
 ///
 /// @desc A camera driven by angles and an object to follor, rather than raw
-/// vectors. Supports both first-person and third-person view and comes with
-/// a mouselook implementation that also works in HTML5.
+/// vectors. Supports mouselook and both first-person and third-person views.
 ///
 /// @example
 /// ```gml
@@ -23,8 +22,7 @@
 /// camera.apply();
 /// // Render scene here...
 /// ```
-function BBMOD_Camera()
-	: BBMOD_BaseCamera() constructor
+function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 {
 	/// @var {Bool} If `true` then mouselook is enabled. Defaults to `false`.
 	/// @readonly
@@ -40,7 +38,7 @@ function BBMOD_Camera()
 	/// @private
 	__mouseLockAt = undefined;
 
-	/// @var {Id.Instance} An id of an instance to follow or `undefined`. The
+	/// @var {Id.Instance} An ID of an instance to follow or `undefined`. The
 	/// object must have a `z` variable (position on the z axis) defined!
 	/// Defaults to `undefined`.
 	FollowObject = undefined;
@@ -155,9 +153,9 @@ function BBMOD_Camera()
 	{
 		if (_enable)
 		{
-			if (os_browser != browser_not_a_browser)
+			if (__isBrowser)
 			{
-				bbmod_html5_pointer_lock();
+				window_mouse_set_locked(true);
 			}
 
 			__mouseLockAt ??= new BBMOD_Vec2(
@@ -166,6 +164,11 @@ function BBMOD_Camera()
 		}
 		else
 		{
+			if (__isBrowser)
+			{
+				window_mouse_set_locked(false);
+			}
+
 			__mouseLockAt = undefined;
 		}
 		MouseLook = _enable;
@@ -184,19 +187,19 @@ function BBMOD_Camera()
 	/// to `undefined`.
 	///
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
-	static update = function (_deltaTime, _positionHandler=undefined)
+	static update = function (_deltaTime, _positionHandler = undefined)
 	{
-		if (os_browser != browser_not_a_browser)
+		if (__isBrowser)
 		{
-			set_mouselook(bbmod_html5_pointer_is_locked());
+			MouseLook = window_mouse_get_locked();
 		}
 
 		if (MouseLook)
 		{
-			if (os_browser != browser_not_a_browser)
+			if (__isBrowser)
 			{
-				Direction -= bbmod_html5_pointer_get_movement_x() * MouseSensitivity;
-				DirectionUp -= bbmod_html5_pointer_get_movement_y() * MouseSensitivity;
+				Direction -= window_mouse_get_delta_x() * MouseSensitivity;
+				DirectionUp -= window_mouse_get_delta_y() * MouseSensitivity;
 			}
 			else
 			{

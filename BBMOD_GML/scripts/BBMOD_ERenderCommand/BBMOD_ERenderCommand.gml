@@ -102,9 +102,9 @@ enum BBMOD_ERenderCommand
 	SetGpuTexMaxMip,
 	/// @member Sets maximum mipmap level for a specific sampler.
 	SetGpuTexMaxMipExt,
-	/// @member Sets miminum mipmap level.
+	/// @member Sets minimum mipmap level.
 	SetGpuTexMinMip,
-	/// @member Sets miminum mipmap level for a specific sampler.
+	/// @member Sets minimum mipmap level for a specific sampler.
 	SetGpuTexMinMipExt,
 	/// @member Sets mipmapping bias.
 	SetGpuTexMipBias,

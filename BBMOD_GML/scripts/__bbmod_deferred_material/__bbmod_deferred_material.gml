@@ -19,15 +19,13 @@
 function __bbmod_shader_gbuffer()
 {
 	gml_pragma("forceinline");
-	static _shader = new BBMOD_DefaultShader(
-		             BBMOD_ShGBuffer,              BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShGBufferAnimated,      BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShGBufferBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
-		.add_variant(BBMOD_ShGBufferColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
+	static _shader = new BBMOD_DefaultShader(BBMOD_ShGBuffer, BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShGBufferAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShGBufferBatched, BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShGBufferColor, BBMOD_VFORMAT_DEFAULT_COLOR)
 		.add_variant(BBMOD_ShGBufferColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
-		.add_variant(BBMOD_ShGBufferColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
-		.add_variant(BBMOD_ShGBufferSprite,        BBMOD_VFORMAT_DEFAULT_SPRITE)
-		;
+		.add_variant(BBMOD_ShGBufferColorBatched, BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShGBufferSprite, BBMOD_VFORMAT_DEFAULT_SPRITE);
 	return _shader;
 }
 
@@ -67,8 +65,8 @@ function __bbmod_material_terrain_deferred()
 	return _material;
 }
 
-bbmod_shader_register("BBMOD_SHADER_GBUFFER",         BBMOD_SHADER_GBUFFER);
+bbmod_shader_register("BBMOD_SHADER_GBUFFER", BBMOD_SHADER_GBUFFER);
 bbmod_shader_register("BBMOD_SHADER_TERRAIN_GBUFFER", BBMOD_SHADER_TERRAIN_GBUFFER);
 
-bbmod_material_register("BBMOD_MATERIAL_DEFERRED",         BBMOD_MATERIAL_DEFERRED);
+bbmod_material_register("BBMOD_MATERIAL_DEFERRED", BBMOD_MATERIAL_DEFERRED);
 bbmod_material_register("BBMOD_MATERIAL_TERRAIN_DEFERRED", BBMOD_MATERIAL_TERRAIN_DEFERRED);

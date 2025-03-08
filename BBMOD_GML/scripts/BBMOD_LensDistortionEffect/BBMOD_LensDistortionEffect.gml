@@ -4,17 +4,16 @@
 ///
 /// @extends BBMOD_PostProcessEffect
 ///
-/// @desc Barell and pincushion lens distortion (post-processing effect).
+/// @desc Barrel and pincushion lens distortion (post-processing effect).
 ///
 /// @param {Real} [_strength] The strength of the effect. Use positive values
-/// for barell distortion and negative for pincushion distortion. Defaults to
+/// for barrel distortion and negative for pincushion distortion. Defaults to
 /// 0 (no distortion).
 /// @param {Real} [_zoom] Zoom in into the surface. Must be greater than 0!
 /// Defaults to 1 (no zoom).
-function BBMOD_LensDistortionEffect(_strength=0.0, _zoom=1.0)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_LensDistortionEffect(_strength = 0.0, _zoom = 1.0): BBMOD_PostProcessEffect() constructor
 {
-	/// @var {Real} The strength of the effect. Use positive values for barell
+	/// @var {Real} The strength of the effect. Use positive values for barrel
 	/// distortion and negative for pincushion distortion. Default value is 0
 	/// (no distortion).
 	Strength = _strength;
@@ -24,7 +23,7 @@ function BBMOD_LensDistortionEffect(_strength=0.0, _zoom=1.0)
 	Zoom = _zoom;
 
 	static __uStrength = shader_get_uniform(BBMOD_ShLensDistortion, "u_fStrength");
-	static __uScale    = shader_get_uniform(BBMOD_ShLensDistortion, "u_fScale");
+	static __uScale = shader_get_uniform(BBMOD_ShLensDistortion, "u_fScale");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

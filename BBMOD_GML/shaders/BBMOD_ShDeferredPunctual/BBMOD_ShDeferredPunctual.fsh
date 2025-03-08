@@ -223,7 +223,7 @@ void DoDirectionalLightPS(
 {
 	vec3 L = normalize(-direction);
 	float NdotL = max(dot(N, L), 0.0);
-	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
+	//subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 	color *= (1.0 - shadow) * NdotL;
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
@@ -249,7 +249,7 @@ void DoPointLightPS(
 	att *= att;
 	//float att = xPow2(clamp(1.0 - xPow4(dist / range), 0.0, 1.0)) / (xPow2(dist) + 1.0);
 	float NdotL = max(dot(N, L), 0.0);
-	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
+	//subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 	color *= (1.0 - shadow) * NdotL * att;
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
@@ -278,7 +278,7 @@ void DoSpotLightPS(
 	float theta = dot(L, normalize(-direction));
 	float epsilon = dcosInner - dcosOuter;
 	float intensity = clamp((theta - dcosOuter) / epsilon, 0.0, 1.0);
-	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
+	//subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
 	color *= (1.0 - shadow) * intensity * att * max(dot(N, L), 0.0);
 	diffuse += color;
 	specular += color * SpecularGGX(m, N, V, L);
@@ -523,7 +523,7 @@ void main()
 	material.Normal = normalize(GB1.rgb * 2.0 - 1.0);
 	material.Roughness = GB1.a;
 	material.Metallic = GB2.a;
-	material.Specular = material.Base * material.Metallic;
+	material.Specular = mix(F0_DEFAULT, material.Base, material.Metallic);
 	material.Base *= 1.0 - material.Metallic;
 
 	float depth = xDecodeDepth(GB2.rgb) * bbmod_ZFar;

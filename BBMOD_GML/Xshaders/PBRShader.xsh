@@ -35,7 +35,7 @@ void PBRShader(Material material, float depth)
 	if (bbmod_ShadowmapEnablePS == 1.0)
 	{
 		int shadowCasterIndex = int(bbmod_ShadowCasterIndex);
-		bool isPoint = (shadowCasterIndex >= 0) && (bbmod_LightPunctualDataB[shadowCasterIndex * 2].x == 0.0);
+		bool isPoint = (shadowCasterIndex >= 0) && (BBMOD_GetPunctualLightDataB(shadowCasterIndex * 2).x == 0.0);
 
 		if (!isPoint)
 		{
@@ -55,7 +55,7 @@ void PBRShader(Material material, float depth)
 		}
 		else
 		{
-			vec3 position = bbmod_LightPunctualDataA[shadowCasterIndex * 2].xyz;
+			vec3 position = BBMOD_GetPunctualLightDataA(shadowCasterIndex * 2).xyz;
 			vec3 lightVec = position - v_vVertex;
 			vec2 uv = xVec3ToOctahedronUv(-lightVec);
 			shadow = ShadowMap(bbmod_Shadowmap, bbmod_ShadowmapTexel, uv, (length(lightVec) - bbmod_ShadowmapNormalOffsetPS) / bbmod_ShadowmapArea);
@@ -87,32 +87,32 @@ void PBRShader(Material material, float depth)
 #endif
 
 	// Punctual lights
-	for (int i = 0; i < BBMOD_MAX_PUNCTUAL_LIGHTS; ++i)
-	{
-		vec4 positionRange = bbmod_LightPunctualDataA[i * 2];
-		vec4 colorAlpha = bbmod_LightPunctualDataA[(i * 2) + 1];
-		vec3 isSpotInnerOuter = bbmod_LightPunctualDataB[i * 2];
-		vec3 direction = bbmod_LightPunctualDataB[(i * 2) + 1];
-		vec3 color = xGammaToLinear(colorAlpha.rgb) * colorAlpha.a;
+	// for (int i = 0; i < BBMOD_MAX_PUNCTUAL_LIGHTS; ++i)
+	// {
+	// 	vec4 positionRange = bbmod_LightPunctualDataA[i * 2];
+	// 	vec4 colorAlpha = bbmod_LightPunctualDataA[(i * 2) + 1];
+	// 	vec3 isSpotInnerOuter = bbmod_LightPunctualDataB[i * 2];
+	// 	vec3 direction = bbmod_LightPunctualDataB[(i * 2) + 1];
+	// 	vec3 color = xGammaToLinear(colorAlpha.rgb) * colorAlpha.a;
 
-		if (isSpotInnerOuter.x == 1.0)
-		{
-			DoSpotLightPS(
-				positionRange.xyz, positionRange.w, color,
-				(bbmod_ShadowCasterIndex == float(i)) ? shadow : 0.0,
-				direction, isSpotInnerOuter.y, isSpotInnerOuter.z,
-				v_vVertex, N, V, material,
-				lightDiffuse, lightSpecular, lightSubsurface);
-		}
-		else
-		{
-			DoPointLightPS(
-				positionRange.xyz, positionRange.w, color,
-				(bbmod_ShadowCasterIndex == float(i)) ? shadow : 0.0,
-				v_vVertex, N, V, material,
-				lightDiffuse, lightSpecular, lightSubsurface);
-		}
-	}
+	// 	if (isSpotInnerOuter.x == 1.0)
+	// 	{
+	// 		DoSpotLightPS(
+	// 			positionRange.xyz, positionRange.w, color,
+	// 			(bbmod_ShadowCasterIndex == float(i)) ? shadow : 0.0,
+	// 			direction, isSpotInnerOuter.y, isSpotInnerOuter.z,
+	// 			v_vVertex, N, V, material,
+	// 			lightDiffuse, lightSpecular, lightSubsurface);
+	// 	}
+	// 	else
+	// 	{
+	// 		DoPointLightPS(
+	// 			positionRange.xyz, positionRange.w, color,
+	// 			(bbmod_ShadowCasterIndex == float(i)) ? shadow : 0.0,
+	// 			v_vVertex, N, V, material,
+	// 			lightDiffuse, lightSpecular, lightSubsurface);
+	// 	}
+	// }
 
 	// Lightmap
 #if defined(X_LIGHTMAP)

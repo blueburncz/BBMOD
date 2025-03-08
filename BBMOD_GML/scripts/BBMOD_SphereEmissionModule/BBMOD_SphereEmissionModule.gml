@@ -15,8 +15,7 @@
 /// @see BBMOD_EParticle.PositionX
 /// @see BBMOD_EParticle.PositionY
 /// @see BBMOD_EParticle.PositionZ
-function BBMOD_SphereEmissionModule(_radius=0.5, _inside=true)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_SphereEmissionModule(_radius = 0.5, _inside = true): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The radius of the sphere. Default value is 0.5.
 	Radius = _radius;

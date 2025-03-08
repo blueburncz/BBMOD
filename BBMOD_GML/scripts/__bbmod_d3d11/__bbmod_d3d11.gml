@@ -17,8 +17,8 @@ function __bbmod_d3d11_init()
 			var _init = external_define(
 				BBMOD_DLL_PATH, "bbmod_d3d11_init", dll_cdecl, ty_real, 2, ty_string, ty_string);
 			var _osInfo = os_get_info();
-			var _device = _osInfo[? "video_d3d11_device"];
-			var _context = _osInfo[? "video_d3d11_context"];
+			var _device = _osInfo[?  "video_d3d11_device"];
+			var _context = _osInfo[?  "video_d3d11_context"];
 			_isSupported = external_call(_init, _device, _context);
 		}
 		else
@@ -32,7 +32,7 @@ function __bbmod_d3d11_init()
 /// @func bbmod_texture_set_stage_vs(_slot, _texture)
 ///
 /// @desc Passes a texture to a vertex shader. On Windows this uses BBMOD.dll
-/// (if available), oterwise GameMaker's built-in `texture_set_stage` is used,
+/// (if available), otherwise GameMaker's built-in `texture_set_stage` is used,
 /// which should work on OpenGL-based platforms.
 ///
 /// @param {Real} _slot The vertex texture slot index. Must be in range 0..7.

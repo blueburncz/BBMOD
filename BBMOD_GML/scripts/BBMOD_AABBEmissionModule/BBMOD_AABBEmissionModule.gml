@@ -17,10 +17,10 @@
 /// @see BBMOD_EParticle.PositionY
 /// @see BBMOD_EParticle.PositionZ
 function BBMOD_AABBEmissionModule(
-	_min=new BBMOD_Vec3(-0.5),
-	_max=new BBMOD_Vec3(0.5),
-	_inside=true
-) : BBMOD_ParticleModule() constructor
+	_min = new BBMOD_Vec3(-0.5),
+	_max = new BBMOD_Vec3(0.5),
+	_inside = true
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The minimum coordinate of the AABB. Default value is
 	/// to `(-0.5, -0.5, -0.5)`.

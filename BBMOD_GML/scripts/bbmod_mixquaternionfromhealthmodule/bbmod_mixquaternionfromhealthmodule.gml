@@ -17,10 +17,10 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixQuaternionFromHealthModule(
-	_property=undefined,
-	_from=new BBMOD_Quaternion(),
-	_to=_from.Clone()
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = new BBMOD_Quaternion(),
+	_to = _from.Clone()
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the four consecutive properties that together
 	/// form a quaternion. Use values from {@link BBMOD_EParticle}. Default
@@ -46,12 +46,12 @@ function BBMOD_MixQuaternionFromHealthModule(
 			var _particles = _emitter.Particles;
 
 			var _particleIndex = 0;
-			repeat (_emitter.ParticlesAlive)
+			repeat(_emitter.ParticlesAlive)
 			{
 				var _factor = clamp(_particles[# BBMOD_EParticle.HealthLeft, _particleIndex]
 					/ _particles[# BBMOD_EParticle.Health, _particleIndex], 0.0, 1.0);
 				var _quat = _to.Slerp(_from, _factor);
-				_particles[# _property, _particleIndex]     = _quat.X;
+				_particles[# _property, _particleIndex] = _quat.X;
 				_particles[# _property + 1, _particleIndex] = _quat.Y;
 				_particles[# _property + 2, _particleIndex] = _quat.Z;
 				_particles[# _property + 3, _particleIndex] = _quat.W;

@@ -10,8 +10,7 @@
 /// apply the current camera's exposure value. Defaults to `undefined`.
 ///
 /// @see BBMOD_BaseCamera.Exposure
-function BBMOD_ExposureEffect(_exposure=undefined)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_ExposureEffect(_exposure = undefined): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Real, Undefined} The exposure value or `undefined` to apply the
 	/// current camera's exposure value. Default value is `undefined`.

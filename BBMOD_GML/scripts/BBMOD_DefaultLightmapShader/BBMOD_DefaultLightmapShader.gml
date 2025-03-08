@@ -11,34 +11,33 @@
 /// by the shader.
 ///
 /// @see BBMOD_LightmapMaterial
-function BBMOD_DefaultLightmapShader(_shader, _vertexFormat)
-	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
+function BBMOD_DefaultLightmapShader(_shader, _vertexFormat): BBMOD_DefaultShader(_shader, _vertexFormat) constructor
 {
 	static DefaultShader_on_set = on_set;
 	static DefaultShader_set_material = set_material;
 
-	static set_ibl = function (_ibl=undefined)
+	static set_ibl = function (_ibl = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_ibl(shader_current(), _ibl, true);
 		return self;
 	};
 
-	static set_ambient_light = function (_up=undefined, _down=undefined, _dir=undefined)
+	static set_ambient_light = function (_up = undefined, _down = undefined, _dir = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_ambient_light(shader_current(), _up, _down, _dir, true);
 		return self;
 	};
 
-	static set_directional_light = function (_light=undefined)
+	static set_directional_light = function (_light = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_directional_light(shader_current(), _light, true);
 		return self;
 	};
 
-	static set_punctual_lights = function (_lights=undefined)
+	static set_punctual_lights = function (_lights = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_punctual_lights(shader_current(), _lights, true);

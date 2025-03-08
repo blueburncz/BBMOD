@@ -13,8 +13,7 @@
 /// @see BBMOD_AABBCollider
 /// @see BBMOD_FrustumCollider
 /// @see BBMOD_SphereCollider
-function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
-	: BBMOD_Collider() constructor
+function BBMOD_PlaneCollider(_normal = undefined, _distance = 0.0): BBMOD_Collider() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The plane's normal vector.
 	Normal = _normal ?? BBMOD_VEC3_UP;
@@ -70,7 +69,7 @@ function BBMOD_PlaneCollider(_normal=undefined, _distance=0.0)
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L769
-	static Raycast = function (_ray, _result=undefined)
+	static Raycast = function (_ray, _result = undefined)
 	{
 		if (_result != undefined)
 		{

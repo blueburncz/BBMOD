@@ -11,7 +11,7 @@
 /// the mesh.
 ///
 /// @see https://marketplace.yoyogames.com/assets/8130/colmesh
-function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform=undefined)
+function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform = undefined)
 {
 	var _buffer = buffer_create_from_vertex_buffer(_mesh.VertexBuffer, buffer_fixed, 1);
 	var _bufferSize = buffer_get_size(_buffer);
@@ -23,7 +23,7 @@ function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform=undefined)
 	buffer_copy_from_vertex_buffer(_mesh.VertexBuffer, 0, _vertexCount, _buffer, 0);
 	buffer_seek(_buffer, buffer_seek_start, 0);
 
-	repeat (_vertexCount / 3)
+	repeat(_vertexCount / 3)
 	{
 		_vertex[@ 0] = buffer_read(_buffer, buffer_f32);
 		_vertex[@ 1] = buffer_read(_buffer, buffer_f32);
@@ -42,9 +42,12 @@ function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform=undefined)
 
 		if (_transform != undefined)
 		{
-			array_copy(_vertex, 0, colmesh_matrix_transform_vertex(_transform, _vertex[0], _vertex[1], _vertex[2]), 0, 3);
-			array_copy(_vertex, 3, colmesh_matrix_transform_vertex(_transform, _vertex[3], _vertex[4], _vertex[5]), 0, 3);
-			array_copy(_vertex, 6, colmesh_matrix_transform_vertex(_transform, _vertex[6], _vertex[7], _vertex[8]), 0, 3);
+			array_copy(_vertex, 0, colmesh_matrix_transform_vertex(_transform, _vertex[0], _vertex[1], _vertex[2]),
+				0, 3);
+			array_copy(_vertex, 3, colmesh_matrix_transform_vertex(_transform, _vertex[3], _vertex[4], _vertex[5]),
+				0, 3);
+			array_copy(_vertex, 6, colmesh_matrix_transform_vertex(_transform, _vertex[6], _vertex[7], _vertex[8]),
+				0, 3);
 		}
 
 		_colmesh.addTriangle(_vertex);
@@ -64,7 +67,7 @@ function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform=undefined)
 /// transform the model.
 ///
 /// @see https://marketplace.yoyogames.com/assets/8130/colmesh
-function bbmod_model_to_colmesh(_model, _colmesh, _transform=undefined)
+function bbmod_model_to_colmesh(_model, _colmesh, _transform = undefined)
 {
 	static _stack = ds_stack_create();
 
@@ -85,14 +88,14 @@ function bbmod_model_to_colmesh(_model, _colmesh, _transform=undefined)
 		var _children = _node.Children;
 		var i = 0;
 
-		repeat (array_length(_meshIndices))
+		repeat(array_length(_meshIndices))
 		{
 			var _mesh = _meshes[_meshIndices[i++]];
 			bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform);
 		}
 
 		i = 0;
-		repeat (array_length(_children))
+		repeat(array_length(_children))
 		{
 			ds_stack_push(_stack, _children[i++]);
 		}

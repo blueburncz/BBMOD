@@ -7,8 +7,7 @@
 /// @desc Draws all lens flares added with {@link bbmod_lens_flare_add}.
 ///
 /// @see BBMOD_LensFlare
-function BBMOD_LensFlaresEffect()
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_LensFlaresEffect(): BBMOD_PostProcessEffect() constructor
 {
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

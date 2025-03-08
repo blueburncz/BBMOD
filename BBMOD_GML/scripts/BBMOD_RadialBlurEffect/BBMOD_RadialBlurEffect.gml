@@ -14,8 +14,8 @@
 /// equal to 0. Defaults to 1.
 /// @param {Real} [_step] Step size. Use values in range (0; 1]. Defaults to
 /// 1/8.
-function BBMOD_RadialBlurEffect(_origin=undefined, _radius=0.5, _strength=1.0, _step=0.125)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_RadialBlurEffect(_origin = undefined, _radius = 0.5, _strength = 1.0, _step = 0.125):
+BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Struct.BBMOD_Vec2} The origin of the blur. Default value is
 	/// `(0.5, 0.5)` (the middle of the screen).
@@ -33,11 +33,11 @@ function BBMOD_RadialBlurEffect(_origin=undefined, _radius=0.5, _strength=1.0, _
 	/// 1/8.
 	Step = _step;
 
-	static __uTexel    = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
-	static __uOrigin   = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
-	static __uRadius   = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
+	static __uTexel = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
+	static __uOrigin = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
+	static __uRadius = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
 	static __uStrength = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStrength");
-	static __uStep     = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
+	static __uStep = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

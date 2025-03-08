@@ -5,7 +5,7 @@
 /// @desc A single lens flare element (sprite).
 ///
 /// @param {Asset.GMSprite} [_sprite] The sprite of the lens flare element.
-/// Defaults to `BBMOD_SprLensFlareGhost`.
+/// Defaults to `BBMOD_SprLensFlareHeptagon`.
 /// @param {Real} [_subimage] The sprite subimage. Defaults to 0.
 /// @param {Struct.BBMOD_Vec2} [_offset] The offset from the lights position on
 /// the screen, where `(0, 0)` is the light's position, `(0.5, 0.5)` is the
@@ -35,22 +35,22 @@
 /// @see BBMOD_LensFlare
 /// @see BBMOD_PostProcessor.Starburst
 function BBMOD_LensFlareElement(
-	_sprite=BBMOD_SprLensFlareGhost,
-	_subimage=0,
-	_offset=undefined,
-	_scale=undefined,
-	_scaleByDistanceMin=undefined,
-	_scaleByDistanceMax=undefined,
-	_color=undefined,
-	_applyTint=false,
-	_angle=0.0,
-	_angleRelative=false,
-	_fadeOut=false,
-	_applyStarburst=false
+	_sprite = BBMOD_SprLensFlareHeptagon,
+	_subimage = 0,
+	_offset = undefined,
+	_scale = undefined,
+	_scaleByDistanceMin = undefined,
+	_scaleByDistanceMax = undefined,
+	_color = undefined,
+	_applyTint = false,
+	_angle = 0.0,
+	_angleRelative = false,
+	_fadeOut = false,
+	_applyStarburst = false
 ) constructor
 {
 	/// @var {Asset.GMSprite} The sprite of the lens flare element. Default
-	/// value is `BBMOD_SprLensFlareGhost`.
+	/// value is `BBMOD_SprLensFlareHeptagon`.
 	Sprite = _sprite;
 
 	/// @var {Real} The sprite subimage. Default value is 0.

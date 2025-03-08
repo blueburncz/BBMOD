@@ -5,8 +5,7 @@
 /// @extends BBMOD_PostProcessEffect
 ///
 /// @desc Reinhard tonemapping (post-processing effect).
-function BBMOD_ReinhardTonemapEffect()
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_ReinhardTonemapEffect(): BBMOD_PostProcessEffect() constructor
 {
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

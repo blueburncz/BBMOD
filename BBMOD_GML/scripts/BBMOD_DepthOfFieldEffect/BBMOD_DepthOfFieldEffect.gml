@@ -24,7 +24,7 @@
 /// where values closer to 0 mean slowly and 1 means immediately. Defaults to
 /// 0.1.
 /// @param {Real} [_blurRangeNear] Distance over which objects transition from
-/// completely in focus to competely out of focus in the near plane. Defaults to
+/// completely in focus to completely out of focus in the near plane. Defaults to
 /// 50.
 /// @param {Real} [_blurRangeFar] Distance over which objects transition from
 /// completely in focus to completely out of focus in the far plane. Defaults to
@@ -44,19 +44,19 @@
 /// depth of field. Greater values produce better looking results but decrease
 /// performance. Defaults to 32.
 function BBMOD_DepthOfFieldEffect(
-	_focusStart=100,
-	_focusEnd=200,
-	_autoFocus=false,
-	_autoFocusRange=100,
-	_autoFocusPoint=undefined,
-	_autoFocusFactor=0.1,
-	_blurRangeNear=50,
-	_blurRangeFar=50,
-	_blurScaleNear=1.0,
-	_blurScaleFar=1.0,
-	_bokehShape=6.0,
-	_sampleCount=32
-) : BBMOD_PostProcessEffect() constructor
+	_focusStart = 100,
+	_focusEnd = 200,
+	_autoFocus = false,
+	_autoFocusRange = 100,
+	_autoFocusPoint = undefined,
+	_autoFocusFactor = 0.1,
+	_blurRangeNear = 50,
+	_blurRangeFar = 50,
+	_blurScaleNear = 1.0,
+	_blurScaleFar = 1.0,
+	_bokehShape = 6.0,
+	_sampleCount = 32
+): BBMOD_PostProcessEffect() constructor
 {
 	static PostProcessEffect_destroy = destroy;
 
@@ -102,35 +102,35 @@ function BBMOD_DepthOfFieldEffect(
 	/// auto focus distance. Use values in range `(0; 1]`, where values closer
 	/// to 0 mean slowly and 1 means immediately. Default value is 0.1.
 	/// @see BBMOD_DepthOfFieldEffect.AutoFocus
-	AutoFocusFactor = 0.1;
+	AutoFocusFactor = _autoFocusFactor;
 
 	/// @var {Real} Distance over which objects transition from completely in
-	/// focus to competely out of focus in the near plane. Default value is 50.
-	BlurRangeNear = 50;
+	/// focus to completely out of focus in the near plane. Default value is 50.
+	BlurRangeNear = _blurRangeNear;
 
 	/// @var {Real} Distance over which objects transition from completely in
 	/// focus to completely out of focus in the far plane. Default value is 50.
-	BlurRangeFar = 50;
+	BlurRangeFar = _blurRangeFar;
 
 	/// @var {Real} The scale of the blur size in the near plane. Use values in
 	/// range 0..1, where 0 is disabled and 1 is full blur. Using values greater
 	/// than 1 is possible but can produce visual artifacts. Default value is 1.
-	BlurScaleNear = 1.0;
+	BlurScaleNear = _blurScaleNear;
 
 	/// @var {Real} The scale of the blur size in the far plane. Use values in
 	/// range 0..1, where 0 is disabled and 1 is full blur. Using values greater
 	/// than 1 is possible but can produce visual artifacts. Default value is 1.
-	BlurScaleFar = 1.0;
+	BlurScaleFar = _blurScaleFar;
 
 	/// @var {Real} Controls the shape of bokeh. Use values greater or equal to
 	/// 3 for number of edges. Values lower than 3 result into a perfect circle.
 	/// Default value is 6 (hexagon).
-	BokehShape = 6.0;
+	BokehShape = _bokehShape;
 
 	/// @var {Real} Number of samples taken when rendering the depth of field.
 	/// Greater values produce better looking results but decrease performance.
 	/// Default value is 32.
-	SampleCount = 32;
+	SampleCount = _sampleCount;
 
 	/// @var {Id.Surface}
 	/// @private
@@ -156,22 +156,22 @@ function BBMOD_DepthOfFieldEffect(
 	/// @private
 	__surAutoFocus = -1;
 
-	static __uGetCoCFocusStart    = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusStart");
-	static __uGetCoCFocusEnd      = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusEnd");
+	static __uGetCoCFocusStart = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusStart");
+	static __uGetCoCFocusEnd = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusEnd");
 	static __uGetCoCBlurRangeNear = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeNear");
-	static __uGetCoCBlurRangeFar  = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeFar");
+	static __uGetCoCBlurRangeFar = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeFar");
 
 	static __uDownsampleTexel = shader_get_uniform(BBMOD_ShDownsampleCoC, "u_vTexel");
 
 	static __uBlurTexel = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
 
-	static __uDoFCoCNear      = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCNear");
-	static __uDoFCoCFar       = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCFar");
+	static __uDoFCoCNear = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCNear");
+	static __uDoFCoCFar = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCFar");
 	static __uDoFCoCScaleNear = shader_get_uniform(BBMOD_ShDoF, "u_fCoCScaleNear");
-	static __uDoFCoCScaleFar  = shader_get_uniform(BBMOD_ShDoF, "u_fCoCScaleFar");
-	static __uDoFTexel        = shader_get_uniform(BBMOD_ShDoF, "u_vTexel");
-	static __uDoFBokehShape   = shader_get_uniform(BBMOD_ShDoF, "u_fBokehShape");
-	static __uDoFStep         = shader_get_uniform(BBMOD_ShDoF, "u_fStep");
+	static __uDoFCoCScaleFar = shader_get_uniform(BBMOD_ShDoF, "u_fCoCScaleFar");
+	static __uDoFTexel = shader_get_uniform(BBMOD_ShDoF, "u_vTexel");
+	static __uDoFBokehShape = shader_get_uniform(BBMOD_ShDoF, "u_fBokehShape");
+	static __uDoFStep = shader_get_uniform(BBMOD_ShDoF, "u_fStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -212,11 +212,14 @@ function BBMOD_DepthOfFieldEffect(
 		var _texelWidth = 1.0 / _width;
 		var _texelHeight = 1.0 / _height;
 
-		__surCoC            = bbmod_surface_check(__surCoC,            _width, _height,         surface_rgba8unorm, false);
-		__surCoCDownsample1 = bbmod_surface_check(__surCoCDownsample1, _width / 2, _height / 2, surface_rgba8unorm, false);
-		__surCoCDownsample2 = bbmod_surface_check(__surCoCDownsample2, _width / 4, _height / 4, surface_rgba8unorm, false);
-		__surCoCDownsample3 = bbmod_surface_check(__surCoCDownsample3, _width / 8, _height / 8, surface_rgba8unorm, false);
-		__surCoCNear        = bbmod_surface_check(__surCoCNear,        _width / 8, _height / 8, surface_rgba8unorm, false);
+		__surCoC = bbmod_surface_check(__surCoC, _width, _height, surface_rgba8unorm, false);
+		__surCoCDownsample1 = bbmod_surface_check(__surCoCDownsample1, _width / 2, _height / 2,
+			surface_rgba8unorm, false);
+		__surCoCDownsample2 = bbmod_surface_check(__surCoCDownsample2, _width / 4, _height / 4,
+			surface_rgba8unorm, false);
+		__surCoCDownsample3 = bbmod_surface_check(__surCoCDownsample3, _width / 8, _height / 8,
+			surface_rgba8unorm, false);
+		__surCoCNear = bbmod_surface_check(__surCoCNear, _width / 8, _height / 8, surface_rgba8unorm, false);
 
 		// Get CoC
 		surface_set_target(__surCoC);

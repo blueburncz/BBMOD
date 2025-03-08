@@ -1,5 +1,7 @@
 /// @module Core
 
+/* beautify ignore:start */
+
 /// @macro {Bool} Evaluates to `true` if BBMOD DLL is supported on the current
 /// platform and the BBMOD dynamic library exists.
 ///
@@ -62,6 +64,8 @@
 /// @see BBMOD_NORMALS_NONE
 /// @see BBMOD_NORMALS_FLAT
 #macro BBMOD_NORMALS_SMOOTH 2
+
+/* beautify ignore:end */
 
 /// @func BBMOD_DLL()
 ///
@@ -895,7 +899,8 @@ function BBMOD_DLL() constructor
 	/// @note This is an experimental feature!
 	///
 	/// @see BBMOD_DLL.set_export_materials
-	static get_export_materials = function () {
+	static get_export_materials = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_export_materials", dll_cdecl, ty_real, 0);
@@ -916,7 +921,8 @@ function BBMOD_DLL() constructor
 	/// @note This is an experimental feature!
 	///
 	/// @see BBMOD_DLL.get_export_materials
-	static set_export_materials = function (_enable) {
+	static set_export_materials = function (_enable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_export_materials", dll_cdecl, ty_real, 1, ty_real);
@@ -937,7 +943,8 @@ function BBMOD_DLL() constructor
 	/// @note This is an experimental feature!
 	///
 	/// @see BBMOD_DLL.set_zup
-	static get_zup = function () {
+	static get_zup = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_zup", dll_cdecl, ty_real, 0);
@@ -958,7 +965,8 @@ function BBMOD_DLL() constructor
 	/// @note This is an experimental feature!
 	///
 	/// @see BBMOD_DLL.get_zup
-	static set_zup = function (_enable) {
+	static set_zup = function (_enable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_zup", dll_cdecl, ty_real, 1, ty_real);
@@ -979,7 +987,8 @@ function BBMOD_DLL() constructor
 	/// name is enabled.
 	///
 	/// @see BBMOD_DLL.set_enable_prefix
-	static get_enable_prefix = function () {
+	static get_enable_prefix = function ()
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_get_enable_prefix", dll_cdecl, ty_real, 0);
@@ -999,7 +1008,8 @@ function BBMOD_DLL() constructor
 	/// @throws {BBMOD_Exception} If the operation fails.
 	///
 	/// @see BBMOD_DLL.get_enable_prefix
-	static set_enable_prefix = function (_enable) {
+	static set_enable_prefix = function (_enable)
+	{
 		gml_pragma("forceinline");
 		static _fn = external_define(
 			BBMOD_DLL_PATH, "bbmod_dll_set_enable_prefix", dll_cdecl, ty_real, 1, ty_real);

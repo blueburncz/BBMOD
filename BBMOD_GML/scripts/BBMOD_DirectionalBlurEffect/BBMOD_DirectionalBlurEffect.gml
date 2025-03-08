@@ -10,8 +10,7 @@
 /// `(0, 0)` if `undefined`.
 /// @param {Real} [_step] Step size. Use values in range (0; 1]. Defaults to
 /// 1/8.
-function BBMOD_DirectionalBlurEffect(_vector=undefined, _step=0.125)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_DirectionalBlurEffect(_vector = undefined, _step = 0.125): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Struct.BBMOD_Vec2} The vector to blur along. Default value is
 	/// `(0, 0)`.
@@ -22,7 +21,7 @@ function BBMOD_DirectionalBlurEffect(_vector=undefined, _step=0.125)
 	Step = _step;
 
 	static __uVector = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_vVector");
-	static __uStep   = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_fStep");
+	static __uStep = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_fStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

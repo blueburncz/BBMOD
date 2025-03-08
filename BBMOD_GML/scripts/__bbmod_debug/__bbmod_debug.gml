@@ -10,7 +10,8 @@ global.__bbmodVBufferDebug = vertex_create_buffer();
 
 function __bbmod_vformat_debug()
 {
-	static _vformat = new BBMOD_VertexFormat({
+	static _vformat = new BBMOD_VertexFormat(
+	{
 		Colors: true,
 	});
 	return _vformat;

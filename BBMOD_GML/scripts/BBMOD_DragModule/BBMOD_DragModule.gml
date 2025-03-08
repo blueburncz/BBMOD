@@ -7,14 +7,13 @@
 /// @desc A particle module that applies drag force to particles.
 ///
 /// @see BBMOD_EParticle.Drag
-function BBMOD_DragModule()
-	: BBMOD_ParticleModule() constructor
+function BBMOD_DragModule(): BBMOD_ParticleModule() constructor
 {
 	static on_update = function (_emitter, _deltaTime)
 	{
 		var _particles = _emitter.Particles;
 		var _particleIndex = 0;
-		repeat (_emitter.ParticlesAlive)
+		repeat(_emitter.ParticlesAlive)
 		{
 			var _mass = _particles[# BBMOD_EParticle.Mass, _particleIndex];
 			if (_mass != 0.0)

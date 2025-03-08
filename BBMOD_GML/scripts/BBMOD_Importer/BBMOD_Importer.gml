@@ -39,7 +39,8 @@ function BBMOD_Importer() constructor
 	///
 	/// @throws {BBMOD_Exception} If the file could not be imported.
 	/// @throws {BBMOD_NotImplementedException} If the method is not implemented.
-	static import = function (_path)
+	static
+	import = function (_path)
 	{
 		throw new BBMOD_NotImplementedException();
 	};

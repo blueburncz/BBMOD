@@ -53,8 +53,7 @@
 ///
 /// @see bbmod_deferred_renderer_is_supported
 /// @see BBMOD_Camera
-function BBMOD_DeferredRenderer()
-	: BBMOD_BaseRenderer() constructor
+function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 {
 	static BaseRenderer_destroy = destroy;
 
@@ -69,12 +68,12 @@ function BBMOD_DeferredRenderer()
 	/// @var {Array<Id.Surface>}
 	/// @private
 	__surGBuffer = [
-		    // R  | G  | B  | A
-		    // -- | -- | -- | --
+		// R  | G  | B  | A
+		// -- | -- | -- | --
 		-1, //  Albedo.rgb  | AO
 		-1, //  Normal.xyz  | Roughness
 		-1, //  Depth 24bit | Metallic
-		    //  Emissive (using the L-buffer)
+		//  Emissive (using the L-buffer)
 	];
 
 	/// @var {Id.Surface}
@@ -137,7 +136,7 @@ function BBMOD_DeferredRenderer()
 			return;
 		}
 
-		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[? _shadowCaster]);
+		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[?  _shadowCaster]);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
 		bbmod_shader_set_global_sampler(BBMOD_U_SHADOWMAP, _shadowmapTexture);
@@ -155,7 +154,7 @@ function BBMOD_DeferredRenderer()
 		__gc_collect_shadowmaps();
 	};
 
-	static render = function (_clearQueues=true)
+	static render = function (_clearQueues = true)
 	{
 		global.__bbmodRendererCurrent = self;
 
@@ -168,9 +167,9 @@ function BBMOD_DeferredRenderer()
 		camera_set_view_size(__camera2D, _renderWidth, _renderHeight);
 
 		var i = 0;
-		repeat (array_length(Renderables))
+		repeat(array_length(Renderables))
 		{
-			with (Renderables[i++])
+			with(Renderables[i++])
 			{
 				render();
 			}
@@ -205,16 +204,22 @@ function BBMOD_DeferredRenderer()
 		//
 		// G-buffer pass
 		//
-		bbmod_shader_set_global_sampler("u_texBestFitNormalLUT", sprite_get_texture(BBMOD_SprBestFitNormalLUT, 0));
+		bbmod_shader_set_global_sampler("u_texBestFitNormalLUT", sprite_get_texture(BBMOD_SprBestFitNormalLUT,
+			0));
 		bbmod_shader_set_global_sampler_filter("u_texBestFitNormalLUT", false);
 		bbmod_shader_set_global_sampler_mip_enable("u_texBestFitNormalLUT", false);
 		bbmod_shader_set_global_sampler_repeat("u_texBestFitNormalLUT", false);
 
-		__surGBuffer[@ 0] = bbmod_surface_check(__surGBuffer[0], _renderWidth, _renderHeight, surface_rgba8unorm, false);
-		__surGBuffer[@ 1] = bbmod_surface_check(__surGBuffer[1], _renderWidth, _renderHeight, surface_rgba8unorm, false);
-		__surGBuffer[@ 2] = bbmod_surface_check(__surGBuffer[2], _renderWidth, _renderHeight, surface_rgba8unorm, false);
-		__surLBuffer      = bbmod_surface_check(__surLBuffer,    _renderWidth, _renderHeight, _hdr ? surface_rgba16float : surface_rgba8unorm, false);
-		__surFinal        = bbmod_surface_check(__surFinal,      _renderWidth, _renderHeight, _hdr ? surface_rgba16float : surface_rgba8unorm, true);
+		__surGBuffer[@ 0] = bbmod_surface_check(__surGBuffer[0], _renderWidth, _renderHeight,
+			surface_rgba8unorm, false);
+		__surGBuffer[@ 1] = bbmod_surface_check(__surGBuffer[1], _renderWidth, _renderHeight,
+			surface_rgba8unorm, false);
+		__surGBuffer[@ 2] = bbmod_surface_check(__surGBuffer[2], _renderWidth, _renderHeight,
+			surface_rgba8unorm, false);
+		__surLBuffer = bbmod_surface_check(__surLBuffer, _renderWidth, _renderHeight, _hdr ? surface_rgba16float
+			: surface_rgba8unorm, false);
+		__surFinal = bbmod_surface_check(__surFinal, _renderWidth, _renderHeight, _hdr ? surface_rgba16float
+			: surface_rgba8unorm, true);
 
 		surface_set_target_ext(0, __surFinal);
 		surface_set_target_ext(1, __surGBuffer[1]);
@@ -422,7 +427,7 @@ function BBMOD_DeferredRenderer()
 					{
 						var _shadowmapMatrix = __getShadowmapMatrix();
 						var _shadowmapZFar = __getZFar();
-						var _shadowmapSurface = other.__shadowmapSurfaces[? self];
+						var _shadowmapSurface = other.__shadowmapSurfaces[?  self];
 						if (surface_exists(_shadowmapSurface))
 						{
 							var _shadowmapTexture = surface_get_texture(_shadowmapSurface);
@@ -455,7 +460,7 @@ function BBMOD_DeferredRenderer()
 					if (CastShadows)
 					{
 						var _shadowmapZFar = __getZFar();
-						var _shadowmapSurface = other.__shadowmapSurfaces[? self];
+						var _shadowmapSurface = other.__shadowmapSurfaces[?  self];
 						if (surface_exists(_shadowmapSurface))
 						{
 							var _shadowmapTexture = surface_get_texture(_shadowmapSurface);
@@ -506,7 +511,9 @@ function BBMOD_DeferredRenderer()
 		gpu_set_ztestenable(false);
 		matrix_set(matrix_world, matrix_build_identity());
 		camera_apply(__camera2D);
+		shader_set(BBMOD_ShGammaToLinear);
 		draw_sprite_stretched_ext(BBMOD_SprWhite, 0, 0, 0, _renderWidth, _renderHeight, ClearColor, 1.0);
+		shader_reset();
 		gpu_pop_state();
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.Background);
@@ -528,7 +535,8 @@ function BBMOD_DeferredRenderer()
 		bbmod_shader_set_fog(BBMOD_ShFogAndDepthMask);
 		bbmod_shader_set_ambient_light(BBMOD_ShFogAndDepthMask);
 		bbmod_shader_set_directional_light(BBMOD_ShFogAndDepthMask);
-		texture_set_stage(shader_get_sampler_index(BBMOD_ShFogAndDepthMask, "u_texDepth"), surface_get_texture(__surGBuffer[2]));
+		texture_set_stage(shader_get_sampler_index(BBMOD_ShFogAndDepthMask, "u_texDepth"), surface_get_texture(
+			__surGBuffer[2]));
 		draw_surface(__surLBuffer, 0, 0);
 		shader_reset();
 		gpu_pop_state();
@@ -584,13 +592,13 @@ function BBMOD_DeferredRenderer()
 	static present = function ()
 	{
 		global.__bbmodRendererCurrent = self;
-		
+
 		var _world = matrix_get(matrix_world);
 		matrix_set(matrix_world, matrix_build_identity());
 		if (PostProcessor != undefined
 			&& PostProcessor.Enabled)
 		{
-			PostProcessor.__renderScale = RenderScale;
+			PostProcessor.__renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
 			PostProcessor.draw(__surFinal, X, Y, __surGBuffer[2], __surGBuffer[1]);
 		}
 		else

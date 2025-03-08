@@ -14,8 +14,7 @@
 /// @see BBMOD_AABBCollider
 /// @see BBMOD_FrustumCollider
 /// @see BBMOD_PlaneCollider
-function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
-	: BBMOD_Collider() constructor
+function BBMOD_SphereCollider(_position = new BBMOD_Vec3(), _radius = 1.0): BBMOD_Collider() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The position of the sphere.
 	Position = _position;
@@ -66,7 +65,7 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L552
-	static Raycast = function (_ray, _result=undefined)
+	static Raycast = function (_ray, _result = undefined)
 	{
 		if (_result != undefined)
 		{
@@ -103,7 +102,7 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 		return true;
 	};
 
-	static DrawDebug = function (_color=c_white, _alpha=1.0)
+	static DrawDebug = function (_color = c_white, _alpha = 1.0)
 	{
 		var _vbuffer = global.__bbmodVBufferDebug;
 
@@ -119,7 +118,7 @@ function BBMOD_SphereCollider(_position=new BBMOD_Vec3(), _radius=1.0)
 		var _ldirx1 = lengthdir_x(_radius, _angle);
 		var _ldiry1 = lengthdir_y(_radius, _angle);
 
-		repeat (_steps)
+		repeat(_steps)
 		{
 			var _ldirx2 = lengthdir_x(_radius, _angle + _inc);
 			var _ldiry2 = lengthdir_y(_radius, _angle + _inc);

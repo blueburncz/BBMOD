@@ -10,8 +10,7 @@
 /// equal to 0. Defaults to 1.
 /// @param {Constant.Color} [_color] The color of the effect. Defaults to
 /// `c_white`.
-function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_MonochromeEffect(_strength = 1.0, _color = c_white): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Real} The strength of the effect. Use values greater or equal to
 	/// 0. Default value is 1.
@@ -22,7 +21,7 @@ function BBMOD_MonochromeEffect(_strength=1.0, _color=c_white)
 	Color = _color;
 
 	static __uStrength = shader_get_uniform(BBMOD_ShMonochrome, "u_fStrength");
-	static __uColor    = shader_get_uniform(BBMOD_ShMonochrome, "u_vColor");
+	static __uColor = shader_get_uniform(BBMOD_ShMonochrome, "u_vColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

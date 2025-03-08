@@ -13,8 +13,7 @@
 /// @param {Real} [_to] The value to mix to. Defaults to `_from`.
 ///
 /// @see BBMOD_EParticle
-function BBMOD_MixRealModule(_property=undefined, _from=0.0, _to=_from)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixRealModule(_property = undefined, _from = 0.0, _to = _from): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The property to set initial value of. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.

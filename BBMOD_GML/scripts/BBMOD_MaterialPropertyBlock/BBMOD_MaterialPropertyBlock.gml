@@ -124,7 +124,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// ```
 	///
 	/// @note You cannot have multiple properties with the same name but
-	/// a different type! The property type and value is overriden each time you
+	/// a different type! The property type and value is overridden each time you
 	/// use this method!
 	///
 	/// @see BBMOD_MaterialPropertyBlock.set_color
@@ -574,7 +574,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 
 	/// @func get_names()
 	///
-	/// @desc Retreives an array of names of properties that the material
+	/// @desc Retrieves an array of names of properties that the material
 	/// property block has.
 	///
 	/// @return {Array<String>} The array of property names.
@@ -629,7 +629,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// Defaults to the current shader if `undefined`.
 	///
 	/// @return {Struct.BBMOD_MaterialPropertyBlock} Returns `self`.
-	static apply = function (_shader=undefined)
+	static apply = function (_shader = undefined)
 	{
 		_shader ??= shader_current();
 		var _names = __names;
@@ -637,7 +637,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 		var _values = __values;
 
 		var i = 0;
-		repeat (array_length(_names))
+		repeat(array_length(_names))
 		{
 			var _propName = _names[i];
 			var _propType = _types[i];
@@ -662,65 +662,67 @@ function BBMOD_MaterialPropertyBlock() constructor
 				{
 					switch (_propType)
 					{
-					case BBMOD_EShaderUniformType.Color:
-						shader_set_uniform_f(
-							_propIndex,
-							_propValue.Red / 255.0,
-							_propValue.Green / 255.0,
-							_propValue.Blue / 255.0,
-							_propValue.Alpha);
-						break;
+						case BBMOD_EShaderUniformType.Color:
+							shader_set_uniform_f(
+								_propIndex,
+								_propValue.Red / 255.0,
+								_propValue.Green / 255.0,
+								_propValue.Blue / 255.0,
+								_propValue.Alpha);
+							break;
 
-					case BBMOD_EShaderUniformType.Float:
-						shader_set_uniform_f(_propIndex, _propValue);
-						break;
+						case BBMOD_EShaderUniformType.Float:
+							shader_set_uniform_f(_propIndex, _propValue);
+							break;
 
-					case BBMOD_EShaderUniformType.Float2:
-						shader_set_uniform_f(_propIndex, _propValue.X, _propValue.Y);
-						break;
+						case BBMOD_EShaderUniformType.Float2:
+							shader_set_uniform_f(_propIndex, _propValue.X, _propValue.Y);
+							break;
 
-					case BBMOD_EShaderUniformType.Float3:
-						shader_set_uniform_f(_propIndex, _propValue.X, _propValue.Y, _propValue.Z);
-						break;
+						case BBMOD_EShaderUniformType.Float3:
+							shader_set_uniform_f(_propIndex, _propValue.X, _propValue.Y, _propValue.Z);
+							break;
 
-					case BBMOD_EShaderUniformType.Float4:
-						shader_set_uniform_f(_propIndex, _propValue.X, _propValue.Y, _propValue.Z, _propValue.W);
-						break;
+						case BBMOD_EShaderUniformType.Float4:
+							shader_set_uniform_f(_propIndex, _propValue.X, _propValue.Y, _propValue.Z,
+								_propValue.W);
+							break;
 
-					case BBMOD_EShaderUniformType.FloatArray:
-						shader_set_uniform_f_array(_propIndex, _propValue);
-						break;
+						case BBMOD_EShaderUniformType.FloatArray:
+							shader_set_uniform_f_array(_propIndex, _propValue);
+							break;
 
-					case BBMOD_EShaderUniformType.Int:
-						shader_set_uniform_i(_propIndex, _propValue);
-						break;
+						case BBMOD_EShaderUniformType.Int:
+							shader_set_uniform_i(_propIndex, _propValue);
+							break;
 
-					case BBMOD_EShaderUniformType.Int2:
-						shader_set_uniform_i(_propIndex, _propValue.X, _propValue.Y);
-						break;
+						case BBMOD_EShaderUniformType.Int2:
+							shader_set_uniform_i(_propIndex, _propValue.X, _propValue.Y);
+							break;
 
-					case BBMOD_EShaderUniformType.Int3:
-						shader_set_uniform_i(_propIndex, _propValue.X, _propValue.Y, _propValue.Z);
-						break;
+						case BBMOD_EShaderUniformType.Int3:
+							shader_set_uniform_i(_propIndex, _propValue.X, _propValue.Y, _propValue.Z);
+							break;
 
-					case BBMOD_EShaderUniformType.Int4:
-						shader_set_uniform_i(_propIndex, _propValue.X, _propValue.Y, _propValue.Z, _propValue.W);
-						break;
+						case BBMOD_EShaderUniformType.Int4:
+							shader_set_uniform_i(_propIndex, _propValue.X, _propValue.Y, _propValue.Z,
+								_propValue.W);
+							break;
 
-					case BBMOD_EShaderUniformType.IntArray:
-						shader_set_uniform_i_array(_propIndex, _propValue);
-						break;
+						case BBMOD_EShaderUniformType.IntArray:
+							shader_set_uniform_i_array(_propIndex, _propValue);
+							break;
 
-					case BBMOD_EShaderUniformType.Matrix:
-						shader_set_uniform_matrix(_propIndex);
-						break;
+						case BBMOD_EShaderUniformType.Matrix:
+							shader_set_uniform_matrix(_propIndex);
+							break;
 
-					case BBMOD_EShaderUniformType.MatrixArray:
-						shader_set_uniform_matrix_array(_propIndex, _propValue);
-						break;
+						case BBMOD_EShaderUniformType.MatrixArray:
+							shader_set_uniform_matrix_array(_propIndex, _propValue);
+							break;
 
-					default:
-						break;
+						default:
+							break;
 					}
 				}
 			}
@@ -753,7 +755,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 ///
 /// @note The current material property block is applied automatically every
 /// time {@link BBMOD_Material.apply} is called. If the applied material has an
-/// [OnApply](./BBMOD_Material.OnApply.html) property, it is executed *afer* the
+/// [OnApply](./BBMOD_Material.OnApply.html) property, it is executed *after* the
 /// material property block is applied.
 ///
 /// @see bbmod_material_props_get

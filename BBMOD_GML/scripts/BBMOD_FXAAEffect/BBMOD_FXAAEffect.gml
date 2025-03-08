@@ -5,8 +5,7 @@
 /// @extends BBMOD_PostProcessEffect
 ///
 /// @desc Fast approximate anti-aliasing (post-processing effect).
-function BBMOD_FXAAEffect()
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_FXAAEffect(): BBMOD_PostProcessEffect() constructor
 {
 	static __uTexelVS = shader_get_uniform(BBMOD_ShFXAA, "u_vTexelVS");
 	static __uTexelPS = shader_get_uniform(BBMOD_ShFXAA, "u_vTexelPS");

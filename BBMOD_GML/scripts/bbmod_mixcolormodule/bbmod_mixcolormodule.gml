@@ -16,10 +16,10 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixColorModule(
-	_property=undefined,
-	_from=BBMOD_C_WHITE,
-	_to=_from.Clone()
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = BBMOD_C_WHITE,
+	_to = _from.Clone()
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the four consecutive properties that together
 	/// form a color. Use values from {@link BBMOD_EParticle}. Default value is
@@ -41,7 +41,7 @@ function BBMOD_MixColorModule(
 			var _from = From;
 			var _to = To;
 			var _factor = random(1.0);
-			_emitter.Particles[# Property, _particleIndex]     = lerp(_from.Red, _to.Red, _factor);
+			_emitter.Particles[# Property, _particleIndex] = lerp(_from.Red, _to.Red, _factor);
 			_emitter.Particles[# Property + 1, _particleIndex] = lerp(_from.Green, _to.Green, _factor);
 			_emitter.Particles[# Property + 2, _particleIndex] = lerp(_from.Blue, _to.Blue, _factor);
 			_emitter.Particles[# Property + 3, _particleIndex] = lerp(_from.Alpha, _to.Alpha, _factor);

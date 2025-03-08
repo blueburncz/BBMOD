@@ -14,7 +14,4 @@
 /// @see BBMOD_DefaultMaterial
 ///
 /// @deprecated Please use {@link BBMOD_DefaultShader} instead.
-function BBMOD_DefaultSpriteShader(_shader, _vertexFormat)
-	: BBMOD_DefaultShader(_shader, _vertexFormat) constructor
-{
-}
+function BBMOD_DefaultSpriteShader(_shader, _vertexFormat): BBMOD_DefaultShader(_shader, _vertexFormat) constructor {}

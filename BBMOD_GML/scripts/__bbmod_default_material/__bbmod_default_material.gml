@@ -47,7 +47,8 @@
 
 function __bbmod_vformat_default_lightmap()
 {
-	static _vformat = new BBMOD_VertexFormat({
+	static _vformat = new BBMOD_VertexFormat(
+	{
 		"Vertices": true,
 		"Normals": true,
 		"TextureCoords": true,
@@ -69,28 +70,24 @@ function __bbmod_vformat_default_sprite()
 
 function __bbmod_shader_default()
 {
-	static _shader = new BBMOD_DefaultShader(
-		             BBMOD_ShDefault,              BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShDefaultAnimated,      BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShDefaultBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
-		.add_variant(BBMOD_ShDefaultColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
+	static _shader = new BBMOD_DefaultShader(BBMOD_ShDefault, BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultBatched, BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShDefaultColor, BBMOD_VFORMAT_DEFAULT_COLOR)
 		.add_variant(BBMOD_ShDefaultColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
-		.add_variant(BBMOD_ShDefaultColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
-		.add_variant(BBMOD_ShDefaultSprite,        BBMOD_VFORMAT_DEFAULT_SPRITE)
-		;
+		.add_variant(BBMOD_ShDefaultColorBatched, BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShDefaultSprite, BBMOD_VFORMAT_DEFAULT_SPRITE);
 	return _shader;
 }
 
 function __bbmod_shader_default_unlit()
 {
-	static _shader = new BBMOD_DefaultShader(
-		             BBMOD_ShDefaultUnlit,              BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShDefaultUnlitAnimated,      BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShDefaultUnlitBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
-		.add_variant(BBMOD_ShDefaultUnlitColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
+	static _shader = new BBMOD_DefaultShader(BBMOD_ShDefaultUnlit, BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultUnlitAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultUnlitBatched, BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShDefaultUnlitColor, BBMOD_VFORMAT_DEFAULT_COLOR)
 		.add_variant(BBMOD_ShDefaultUnlitColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
-		.add_variant(BBMOD_ShDefaultUnlitColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
-		;
+		.add_variant(BBMOD_ShDefaultUnlitColorBatched, BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED);
 	return _shader;
 }
 
@@ -103,16 +100,14 @@ function __bbmod_shader_default_lightmap()
 
 function __bbmod_shader_default_depth()
 {
-	static _shader = new BBMOD_BaseShader(
-		             BBMOD_ShDefaultDepth,              BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShDefaultDepthAnimated,      BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShDefaultDepthBatched,       BBMOD_VFORMAT_DEFAULT_BATCHED)
-		.add_variant(BBMOD_ShDefaultDepthLightmap,      BBMOD_VFORMAT_DEFAULT_LIGHTMAP)
-		.add_variant(BBMOD_ShDefaultDepthColor,         BBMOD_VFORMAT_DEFAULT_COLOR)
+	static _shader = new BBMOD_BaseShader(BBMOD_ShDefaultDepth, BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShDefaultDepthAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShDefaultDepthBatched, BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShDefaultDepthLightmap, BBMOD_VFORMAT_DEFAULT_LIGHTMAP)
+		.add_variant(BBMOD_ShDefaultDepthColor, BBMOD_VFORMAT_DEFAULT_COLOR)
 		.add_variant(BBMOD_ShDefaultDepthColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
-		.add_variant(BBMOD_ShDefaultDepthColorBatched,  BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
-		.add_variant(BBMOD_ShDefaultDepthSprite,        BBMOD_VFORMAT_DEFAULT_SPRITE)
-		;
+		.add_variant(BBMOD_ShDefaultDepthColorBatched, BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShDefaultDepthSprite, BBMOD_VFORMAT_DEFAULT_SPRITE);
 	return _shader;
 }
 
@@ -156,16 +151,16 @@ function __bbmod_material_default_sprite()
 ////////////////////////////////////////////////////////////////////////////////
 // Register
 
-bbmod_shader_register("BBMOD_SHADER_DEFAULT",          BBMOD_SHADER_DEFAULT);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_UNLIT",    BBMOD_SHADER_DEFAULT_UNLIT);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_DEPTH",    BBMOD_SHADER_DEFAULT_DEPTH);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT", BBMOD_SHADER_DEFAULT);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_UNLIT", BBMOD_SHADER_DEFAULT_UNLIT);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_DEPTH", BBMOD_SHADER_DEFAULT_DEPTH);
 bbmod_shader_register("BBMOD_SHADER_DEFAULT_LIGHTMAP", BBMOD_SHADER_DEFAULT_LIGHTMAP);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_SPRITE",   BBMOD_SHADER_DEFAULT_SPRITE);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_SPRITE", BBMOD_SHADER_DEFAULT_SPRITE);
 
-bbmod_material_register("BBMOD_MATERIAL_DEFAULT",          BBMOD_MATERIAL_DEFAULT);
-bbmod_material_register("BBMOD_MATERIAL_DEFAULT_UNLIT",    BBMOD_MATERIAL_DEFAULT_UNLIT);
+bbmod_material_register("BBMOD_MATERIAL_DEFAULT", BBMOD_MATERIAL_DEFAULT);
+bbmod_material_register("BBMOD_MATERIAL_DEFAULT_UNLIT", BBMOD_MATERIAL_DEFAULT_UNLIT);
 bbmod_material_register("BBMOD_MATERIAL_DEFAULT_LIGHTMAP", BBMOD_MATERIAL_DEFAULT_LIGHTMAP);
-bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAULT_SPRITE);
+bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE", BBMOD_MATERIAL_DEFAULT_SPRITE);
 
 ////////////////////////////////////////////////////////////////////////////////
 // DEPRECATED!!!
@@ -243,16 +238,16 @@ bbmod_material_register("BBMOD_MATERIAL_DEFAULT_SPRITE",   BBMOD_MATERIAL_DEFAUL
 /// @deprecated Please use {@link BBMOD_MATERIAL_DEFAULT_SPRITE} instead.
 #macro BBMOD_MATERIAL_SPRITE BBMOD_MATERIAL_DEFAULT_SPRITE
 
-bbmod_shader_register("BBMOD_SHADER_DEPTH",            BBMOD_SHADER_DEPTH);
-bbmod_shader_register("BBMOD_SHADER_DEPTH_ANIMATED",   BBMOD_SHADER_DEPTH_ANIMATED);
-bbmod_shader_register("BBMOD_SHADER_DEPTH_BATCHED",    BBMOD_SHADER_DEPTH_BATCHED);
-bbmod_shader_register("BBMOD_SHADER_LIGHTMAP",         BBMOD_SHADER_LIGHTMAP);
-bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_DEPTH",   BBMOD_SHADER_LIGHTMAP_DEPTH);
-bbmod_shader_register("BBMOD_SHADER_SPRITE",           BBMOD_SHADER_SPRITE);
+bbmod_shader_register("BBMOD_SHADER_DEPTH", BBMOD_SHADER_DEPTH);
+bbmod_shader_register("BBMOD_SHADER_DEPTH_ANIMATED", BBMOD_SHADER_DEPTH_ANIMATED);
+bbmod_shader_register("BBMOD_SHADER_DEPTH_BATCHED", BBMOD_SHADER_DEPTH_BATCHED);
+bbmod_shader_register("BBMOD_SHADER_LIGHTMAP", BBMOD_SHADER_LIGHTMAP);
+bbmod_shader_register("BBMOD_SHADER_LIGHTMAP_DEPTH", BBMOD_SHADER_LIGHTMAP_DEPTH);
+bbmod_shader_register("BBMOD_SHADER_SPRITE", BBMOD_SHADER_SPRITE);
 bbmod_shader_register("BBMOD_SHADER_DEFAULT_ANIMATED", BBMOD_SHADER_DEFAULT_ANIMATED);
-bbmod_shader_register("BBMOD_SHADER_DEFAULT_BATCHED",  BBMOD_SHADER_DEFAULT_BATCHED);
+bbmod_shader_register("BBMOD_SHADER_DEFAULT_BATCHED", BBMOD_SHADER_DEFAULT_BATCHED);
 
 bbmod_material_register("BBMOD_MATERIAL_DEFAULT_ANIMATED", BBMOD_MATERIAL_DEFAULT_ANIMATED);
-bbmod_material_register("BBMOD_MATERIAL_DEFAULT_BATCHED",  BBMOD_MATERIAL_DEFAULT_BATCHED);
-bbmod_material_register("BBMOD_MATERIAL_LIGHTMAP",         BBMOD_MATERIAL_LIGHTMAP);
-bbmod_material_register("BBMOD_MATERIAL_SPRITE",           BBMOD_MATERIAL_SPRITE);
+bbmod_material_register("BBMOD_MATERIAL_DEFAULT_BATCHED", BBMOD_MATERIAL_DEFAULT_BATCHED);
+bbmod_material_register("BBMOD_MATERIAL_LIGHTMAP", BBMOD_MATERIAL_LIGHTMAP);
+bbmod_material_register("BBMOD_MATERIAL_SPRITE", BBMOD_MATERIAL_SPRITE);

@@ -9,8 +9,7 @@
 /// @param {Real} _strength The strength of the effect. Defaults to 1.
 /// @param {Struct.BBMOD_Vec3} _offset Offsets for RGB channels. Defaults to
 /// `(-1, 0, 1)` if `undefined`.
-function BBMOD_ChromaticAberrationEffect(_strength=1.0, _offset=undefined)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_ChromaticAberrationEffect(_strength = 1.0, _offset = undefined): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Real} The strength of the effect. Default value is 1.
 	Strength = _strength;
@@ -19,8 +18,8 @@ function BBMOD_ChromaticAberrationEffect(_strength=1.0, _offset=undefined)
 	/// `(-1, 0, 1)`.
 	Offset = _offset ?? new BBMOD_Vec3(-1.0, 0.0, 1.0);
 
-	static __uTexel      = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vTexel");
-	static __uOffset     = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vOffset");
+	static __uTexel = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vTexel");
+	static __uOffset = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vOffset");
 	static __uDistortion = shader_get_uniform(BBMOD_ShChromaticAberration, "u_fDistortion");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)

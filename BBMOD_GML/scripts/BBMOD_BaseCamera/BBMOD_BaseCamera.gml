@@ -4,6 +4,26 @@
 /// @private
 global.__bbmodCameraCurrent = undefined;
 
+/// @var {Struct.BBMOD_Vec3}
+/// @private
+global.__bbmodCameraPosition = new BBMOD_Vec3();
+
+/// @var {Real} Distance to the far clipping plane.
+/// @private
+global.__bbmodZFar = 1.0;
+
+/// @var {Real}
+/// @private
+global.__bbmodCameraExposure = 1.0;
+
+/// @var {Real}
+/// @private
+global.__bbmodCameraFovFlip = -1.0;
+
+/// @var {Real}
+/// @private
+global.__bbmodCameraAspectFlip = -1.0;
+
 /// @func BBMOD_BaseCamera()
 ///
 /// @implements {BBMOD_IDestructible}
@@ -12,6 +32,8 @@ global.__bbmodCameraCurrent = undefined;
 /// projection.
 function BBMOD_BaseCamera() constructor
 {
+	static __isBrowser = bbmod_is_browser();
+
 	/// @var {camera} An underlying GameMaker camera.
 	/// @readonly
 	Raw = camera_create();
@@ -19,7 +41,7 @@ function BBMOD_BaseCamera() constructor
 	/// @var {Real} The camera's exposure value. Defaults to `1`.
 	Exposure = 1.0;
 
-	/// @var {Struct.BBMOD_Vec3} The camera's positon. Defaults to `(0, 0, 0)`.
+	/// @var {Struct.BBMOD_Vec3} The camera's position. Defaults to `(0, 0, 0)`.
 	Position = new BBMOD_Vec3(0.0);
 
 	/// @var {Struct.BBMOD_Vec3} A position where the camera is looking at.
@@ -34,8 +56,8 @@ function BBMOD_BaseCamera() constructor
 	Fov = 60.0;
 
 	/// @var {Real} The camera's aspect ratio. Defaults to
-	/// `window_get_width() / window_get_height()`.
-	AspectRatio = window_get_width() / window_get_height();
+	/// `bbmod_window_get_width() / bbmod_window_get_height()`.
+	AspectRatio = bbmod_window_get_width() / bbmod_window_get_height();
 
 	/// @var {Real} Distance to the near clipping plane. Anything closer to the
 	/// camera than this will not be visible. Defaults to `0.1`.
@@ -55,7 +77,7 @@ function BBMOD_BaseCamera() constructor
 	/// then it is computed from {@link BBMOD_BaseCamera.Height} using
 	/// {@link BBMOD_BaseCamera.AspectRatio}. Defaults to the window's width.
 	/// @see BBMOD_BaseCamera.Orthographic
-	Width = window_get_width();
+	Width = bbmod_window_get_width();
 
 	/// @var {Real} The height of the orthographic projection. If `undefined`,
 	/// then it is computed from {@link BBMOD_BaseCamera.Width} using
@@ -93,12 +115,12 @@ function BBMOD_BaseCamera() constructor
 		{
 			var _width = (Width != undefined) ? Width : (Height * AspectRatio);
 			var _height = (Height != undefined) ? Height : (Width / AspectRatio);
-			_proj = matrix_build_projection_ortho(_width, -_height, ZNear, ZFar);
+			_proj = matrix_build_projection_ortho(_width, _height * global.__bbmodCameraAspectFlip, ZNear, ZFar);
 		}
 		else
 		{
 			_proj = matrix_build_projection_perspective_fov(
-				-Fov, -AspectRatio, ZNear, ZFar);
+				Fov * global.__bbmodCameraFovFlip, AspectRatio * global.__bbmodCameraAspectFlip, ZNear, ZFar);
 		}
 		return _proj;
 	};
@@ -179,7 +201,7 @@ function BBMOD_BaseCamera() constructor
 	{
 		gml_pragma("forceinline");
 
-		if (os_browser == browser_not_a_browser)
+		if (__isBrowser)
 		{
 			// This returns a struct in HTML5 for some reason...
 			return camera_get_view_mat(Raw);
@@ -203,7 +225,7 @@ function BBMOD_BaseCamera() constructor
 	{
 		gml_pragma("forceinline");
 
-		if (os_browser == browser_not_a_browser)
+		if (__isBrowser)
 		{
 			// This returns a struct in HTML5 for some reason...
 			return camera_get_proj_mat(Raw);
@@ -275,9 +297,9 @@ function BBMOD_BaseCamera() constructor
 	/// @param {Struct.BBMOD_Vec3, Struct.BBMOD_Vec4} _vector The vector in
 	/// world-space.
 	/// @param {Real} [_screenWidth] The width of the screen. If `undefined`, it
-	/// is retrieved using `window_get_width`.
+	/// is retrieved using {@link bbmod_window_get_width}.
 	/// @param {Real} [_screenHeight] The height of the screen. If `undefined`,
-	/// it is retrieved using `window_get_height`.
+	/// it is retrieved using {@link bbmod_window_get_height}.
 	///
 	/// @return {Struct.BBMOD_Vec4} The screen-space position or `undefined` if
 	/// the point is outside of the screen.
@@ -285,11 +307,11 @@ function BBMOD_BaseCamera() constructor
 	/// @note This requires {@link BBMOD_BaseCamera.ViewProjectionMatrix}, so you
 	/// should use this *after* {@link BBMOD_BaseCamera.update_matrices} (or
 	/// {@link BBMOD_BaseCamera.update}) is called!
-	static world_to_screen = function (_vector, _screenWidth=undefined, _screenHeight=undefined)
+	static world_to_screen = function (_vector, _screenWidth = undefined, _screenHeight = undefined)
 	{
 		gml_pragma("forceinline");
-		_screenWidth ??= window_get_width();
-		_screenHeight ??= window_get_height();
+		_screenWidth ??= bbmod_window_get_width();
+		_screenHeight ??= bbmod_window_get_height();
 		var _screenPos = new BBMOD_Vec4(_vector.X, _vector.Y, _vector.Z, _vector[$ "W"] ?? 1.0)
 			.Transform(ViewProjectionMatrix);
 		if (_screenPos.Z < 0.0)
@@ -315,7 +337,7 @@ function BBMOD_BaseCamera() constructor
 	/// @param {Struct.BBMOD_Renderer} [_renderer] A renderer or `undefined`.
 	///
 	/// @return {Struct.BBMOD_Vec3} The world-space direction.
-	static screen_point_to_vec3 = function (_vector, _renderer=undefined)
+	static screen_point_to_vec3 = function (_vector, _renderer = undefined)
 	{
 		var _forward = get_forward();
 		var _up = get_up();
@@ -323,8 +345,8 @@ function BBMOD_BaseCamera() constructor
 		var _tFov = dtan(Fov * 0.5);
 		_up = _up.Scale(_tFov);
 		_right = _right.Scale(_tFov * AspectRatio);
-		var _screenWidth = _renderer ? _renderer.get_width() : window_get_width();
-		var _screenHeight = _renderer ? _renderer.get_height() : window_get_height();
+		var _screenWidth = _renderer ? _renderer.get_width() : bbmod_window_get_width();
+		var _screenHeight = _renderer ? _renderer.get_height() : bbmod_window_get_height();
 		var _screenX = _vector.X - (_renderer ? _renderer.X : 0);
 		var _screenY = _vector.Y - (_renderer ? _renderer.Y : 0);
 		var _scaleUp = (_screenY / _screenHeight) * 2.0 - 1.0;
@@ -374,4 +396,136 @@ function BBMOD_BaseCamera() constructor
 		}
 		return undefined;
 	};
+}
+
+/// @func bbmod_camera_get_position()
+///
+/// @desc Retrieves the position of the camera that is passed to shaders.
+///
+/// @return {Struct.BBMOD_Vec3} The camera position.
+///
+/// @see bbmod_camera_set_position
+function bbmod_camera_get_position()
+{
+	gml_pragma("forceinline");
+	return global.__bbmodCameraPosition;
+}
+
+/// @func bbmod_camera_set_position(_position)
+///
+/// @desc Defines position of the camera passed to shaders.
+///
+/// @param {Struct.BBMOD_Vec3} _position The new camera position.
+///
+/// @see bbmod_camera_get_position
+function bbmod_camera_set_position(_position)
+{
+	gml_pragma("forceinline");
+	global.__bbmodCameraPosition = _position;
+}
+
+/// @func bbmod_camera_get_zfar()
+///
+/// @desc Retrieves distance to the far clipping plane passed to shaders.
+///
+/// @return {Real} The distance to the far clipping plane.
+///
+/// @see bbmod_camera_set_zfar
+function bbmod_camera_get_zfar()
+{
+	gml_pragma("forceinline");
+	return global.__bbmodZFar;
+}
+
+/// @func bbmod_camera_set_zfar(_value)
+///
+/// @desc Defines distance to the far clipping plane passed to shaders.
+///
+/// @param {Real} _value The new distance to the far clipping plane.
+///
+/// @see bbmod_camera_get_zfar
+function bbmod_camera_set_zfar(_value)
+{
+	gml_pragma("forceinline");
+	global.__bbmodZFar = _value;
+}
+
+/// @func bbmod_camera_get_exposure()
+///
+/// @desc Retrieves camera exposure value passed to shaders.
+///
+/// @return {Real} The camera exposure value.
+///
+/// @see bbmod_camera_set_exposure
+function bbmod_camera_get_exposure()
+{
+	gml_pragma("forceinline");
+	return global.__bbmodCameraExposure;
+}
+
+/// @func bbmod_camera_set_exposure(_exposure)
+///
+/// @desc Defines camera exposure value passed to shaders.
+///
+/// @param {Real} _exposure The new camera exposure value.
+///
+/// @see bbmod_camera_get_exposure
+function bbmod_camera_set_exposure(_exposure)
+{
+	gml_pragma("forceinline");
+	global.__bbmodCameraExposure = _exposure;
+}
+
+/// @func bbmod_camera_get_fov_flip()
+///
+/// @desc Returns whether {@link BBMOD_BaseCamera} uses a flipped field of view.
+///
+/// @return {Bool} Returns `true` (default) if flipped field of view is used.
+///
+/// @see bbmod_camera_set_fov_flip
+function bbmod_camera_get_fov_flip()
+{
+	gml_pragma("forceinline");
+	return (global.__bbmodCameraFovFlip == -1.0);
+}
+
+/// @func bbmod_camera_set_fov_flip(_flip)
+///
+/// @desc Changes whether {@link BBMOD_BaseCamera} should use a flipped field of
+/// view.
+///
+/// @param {Bool} _flip Use `true` (default) to enable flipped field of view.
+///
+/// @see bbmod_camera_get_fov_flip
+function bbmod_camera_set_fov_flip(_flip)
+{
+	gml_pragma("forceinline");
+	global.__bbmodCameraFovFlip = _flip ? -1.0 : 1.0;
+}
+
+/// @func bbmod_camera_get_aspect_flip()
+///
+/// @desc Returns whether {@link BBMOD_BaseCamera} uses a flipped aspect ratio.
+///
+/// @return {Bool} Returns `true` (default) if flipped aspect ratio is used.
+///
+/// @see bbmod_camera_set_aspect_flip
+function bbmod_camera_get_aspect_flip()
+{
+	gml_pragma("forceinline");
+	return (global.__bbmodCameraAspectFlip == -1.0);
+}
+
+/// @func bbmod_camera_set_aspect_flip(_flip)
+///
+/// @desc Changes whether {@link BBMOD_BaseCamera} should use a flipped aspect
+/// ratio.
+///
+/// @param {Bool} _flip Use `true` (default) to enable flipped aspect ratio.
+///
+/// @see bbmod_camera_get_aspect_flip
+function bbmod_camera_set_aspect_flip(_flip)
+{
+	gml_pragma("forceinline");
+	global.__bbmodCameraAspectFlip = _flip ? -1.0 : 1.0;
 }

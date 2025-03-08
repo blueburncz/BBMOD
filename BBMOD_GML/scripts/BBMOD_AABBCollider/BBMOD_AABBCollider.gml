@@ -16,9 +16,9 @@
 /// @see BBMOD_PlaneCollider
 /// @see BBMOD_SphereCollider
 function BBMOD_AABBCollider(
-	_position=new BBMOD_Vec3(),
-	_size=new BBMOD_Vec3(0.5)
-) : BBMOD_Collider() constructor
+	_position = new BBMOD_Vec3(),
+	_size = new BBMOD_Vec3(0.5)
+): BBMOD_Collider() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The center position of the AABB.
 	Position = _position;
@@ -104,7 +104,7 @@ function BBMOD_AABBCollider(
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L108
-	static TestPoint = function (_point) 
+	static TestPoint = function (_point)
 	{
 		gml_pragma("forceinline");
 		var _min = GetMin();
@@ -127,7 +127,7 @@ function BBMOD_AABBCollider(
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L707
-	static Raycast = function (_ray, _result=undefined)
+	static Raycast = function (_ray, _result = undefined)
 	{
 		if (_result != undefined)
 		{
@@ -176,58 +176,58 @@ function BBMOD_AABBCollider(
 
 				switch (i)
 				{
-				case 0:
-					_ti = _t1;
-					break;
+					case 0:
+						_ti = _t1;
+						break;
 
-				case 1:
-					_ti = _t2;
-					break;
+					case 1:
+						_ti = _t2;
+						break;
 
-				case 2:
-					_ti = _t3;
-					break;
+					case 2:
+						_ti = _t3;
+						break;
 
-				case 3:
-					_ti = _t4;
-					break;
+					case 3:
+						_ti = _t4;
+						break;
 
-				case 4:
-					_ti = _t5;
-					break;
+					case 4:
+						_ti = _t5;
+						break;
 
-				case 5:
-					_ti = _t6;
-					break;
+					case 5:
+						_ti = _t6;
+						break;
 				}
 
 				if (bbmod_cmp(_tResult, _ti))
 				{
 					switch (i)
 					{
-					case 0:
-						_result.Normal = new BBMOD_Vec3(-1.0, 0.0, 0.0);
-						break;
+						case 0:
+							_result.Normal = new BBMOD_Vec3(-1.0, 0.0, 0.0);
+							break;
 
-					case 1:
-						_result.Normal = new BBMOD_Vec3(1.0, 0.0, 0.0);
-						break;
+						case 1:
+							_result.Normal = new BBMOD_Vec3(1.0, 0.0, 0.0);
+							break;
 
-					case 2:
-						_result.Normal = new BBMOD_Vec3(0.0, -1.0, 0.0);
-						break;
+						case 2:
+							_result.Normal = new BBMOD_Vec3(0.0, -1.0, 0.0);
+							break;
 
-					case 3:
-						_result.Normal = new BBMOD_Vec3(0.0, 1.0, 0.0);
-						break;
+						case 3:
+							_result.Normal = new BBMOD_Vec3(0.0, 1.0, 0.0);
+							break;
 
-					case 4:
-						_result.Normal = new BBMOD_Vec3(0.0, 0.0, -1.0);
-						break;
+						case 4:
+							_result.Normal = new BBMOD_Vec3(0.0, 0.0, -1.0);
+							break;
 
-					case 5:
-						_result.Normal = new BBMOD_Vec3(0.0, 0.0, 1.0);
-						break;
+						case 5:
+							_result.Normal = new BBMOD_Vec3(0.0, 0.0, 1.0);
+							break;
 					}
 				}
 			}
@@ -236,7 +236,7 @@ function BBMOD_AABBCollider(
 		return true;
 	};
 
-	static DrawDebug = function (_color=c_white, _alpha=1.0)
+	static DrawDebug = function (_color = c_white, _alpha = 1.0)
 	{
 		var _vbuffer = global.__bbmodVBufferDebug;
 
@@ -253,49 +253,73 @@ function BBMOD_AABBCollider(
 		// 1--2
 		// |  |
 		// 4--3
-		vertex_position_3d(_vbuffer, _x1, _y1, _z1); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x2, _y1, _z1); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x2, _y1, _z1); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x2, _y2, _z1); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x2, _y2, _z1); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x1, _y2, _z1); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x1, _y2, _z1); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x1, _y1, _z1); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
 
 		// Top
 		// 1--2
 		// |  |
 		// 4--3
-		vertex_position_3d(_vbuffer, _x1, _y1, _z2); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x2, _y1, _z2); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x2, _y1, _z2); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x2, _y2, _z2); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x2, _y2, _z2); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x1, _y2, _z2); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x1, _y2, _z2); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x1, _y1, _z2); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
 
 		// Sides
 		// 1--2
 		// |  |
 		// 4--3
-		vertex_position_3d(_vbuffer, _x1, _y1, _z1); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x1, _y1, _z2); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y1, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x2, _y1, _z1); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x2, _y1, _z2); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y1, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x2, _y2, _z1); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x2, _y2, _z2); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x2, _y2, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
 
-		vertex_position_3d(_vbuffer, _x1, _y2, _z1); vertex_color(_vbuffer, _color, _alpha);
-		vertex_position_3d(_vbuffer, _x1, _y2, _z2); vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z1);
+		vertex_color(_vbuffer, _color, _alpha);
+		vertex_position_3d(_vbuffer, _x1, _y2, _z2);
+		vertex_color(_vbuffer, _color, _alpha);
 
 		vertex_end(_vbuffer);
 

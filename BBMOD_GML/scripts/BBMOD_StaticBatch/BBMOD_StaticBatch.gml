@@ -184,8 +184,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 			.SubmitVertexBuffer(__vertexBuffer, __vertexFormat.Raw, _material.BaseOpacity)
 			.ResetMaterial()
 			.EndConditionalBlock()
-			.ResetMaterialProps()
-			;
+			.ResetMaterialProps();
 
 		return self;
 	};

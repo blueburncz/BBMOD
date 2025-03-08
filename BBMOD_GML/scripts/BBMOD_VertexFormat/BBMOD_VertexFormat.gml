@@ -1,33 +1,40 @@
 /// @module Core
 
 /// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static
-/// models.
+/// models. Consists of vertex 3D positions, normals, texture coordinates,
+/// tangents and bitangent signs.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_DEFAULT __bbmod_vformat_default()
 
 /// @macro {Struct.BBMOD_VertexFormat} The default vertex format for animated
-/// models.
+/// models. Consists of vertex 3D positions, normals, texture coordinates,
+/// tangents and bitangent signs, bone indices and weights.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_DEFAULT_ANIMATED __bbmod_vformat_default_animated()
 
 /// @macro {Struct.BBMOD_VertexFormat} The default vertex format for dynamically
-/// batched models.
+/// batched models. Consists of vertex 3D positions, normals, texture coordinates,
+/// tangents and bitangent signs, instance IDs.
 /// @see BBMOD_VertexFormat
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_VFORMAT_DEFAULT_BATCHED __bbmod_vformat_default_batched()
 
 /// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static
-/// models with vertex colors.
+/// models with vertex colors. Consists of vertex 3D positions, normals,
+/// texture coordinates, vertex colors, tangents and bitangent signs.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_DEFAULT_COLOR __bbmod_vformat_default_color()
 
 /// @macro {Struct.BBMOD_VertexFormat} The default vertex format for animated
-/// models with vertex colors.
+/// models with vertex colors. Consists of vertex 3D positions, normals, texture
+/// coordinates, vertex colors, tangents and bitangent signs, bone indices and
+/// weights.
 /// @see BBMOD_VertexFormat
 #macro BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED __bbmod_vformat_default_color_animated()
 
 /// @macro {Struct.BBMOD_VertexFormat} The default vertex format for dynamically
-/// batched models with vertex colors.
+/// batched models with vertex colors. Consists of vertex 3D positions, normals,
+/// texture coordinates, vertex colors, tangents and bitangent signs, instance IDs.
 /// @see BBMOD_VertexFormat
 /// @see BBMOD_DynamicBatch
 #macro BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED __bbmod_vformat_default_color_batched()
@@ -55,7 +62,7 @@
 /// @param {Bool} [_bones] If `true` then the vertex format must have vertex
 /// weights and bone indices. Defaults to `false`. Used only if the first
 /// argument is not a struct.
-/// @param {Bool} [_ids] If `true` then the vertex format must have ids for
+/// @param {Bool} [_ids] If `true` then the vertex format must have IDs for
 /// dynamic batching. Defaults to `false`. Used only if the first argument
 /// is not a struct.
 ///
@@ -73,13 +80,13 @@
 /// });
 /// ```
 function BBMOD_VertexFormat(
-	_confOrVertices=true,
-	_normals=false,
-	_uvs=false,
-	_colors=false,
-	_tangentw=false,
-	_bones=false,
-	_ids=false) constructor
+	_confOrVertices = true,
+	_normals = false,
+	_uvs = false,
+	_colors = false,
+	_tangentw = false,
+	_bones = false,
+	_ids = false) constructor
 {
 	var _vertices = true;
 	var _uvs2 = false;
@@ -158,7 +165,7 @@ function BBMOD_VertexFormat(
 	/// indices.
 	Bones = _bones;
 
-	/// @var {Bool} If `true` then the vertex format has ids for dynamic
+	/// @var {Bool} If `true` then the vertex format has IDs for dynamic
 	/// batching.
 	/// @readonly
 	Ids = _ids;
@@ -175,7 +182,7 @@ function BBMOD_VertexFormat(
 	/// @func get_hash()
 	///
 	/// @desc Makes a hash based on the vertex format properties. Vertex buffers
-	/// with same propereties will have the same hash.
+	/// with same properties will have the same hash.
 	///
 	/// @return {Real} The hash.
 	static get_hash = function ()
@@ -189,7 +196,7 @@ function BBMOD_VertexFormat(
 			| ((TangentW ? 1 : 0) << 5)
 			| ((Bones ? 1 : 0) << 6)
 			| ((Ids ? 1 : 0) << 7)
-			);
+		);
 	};
 
 	/// @func get_byte_size()
@@ -217,7 +224,7 @@ function BBMOD_VertexFormat(
 
 	if (ds_map_exists(__formats, _key))
 	{
-		Raw = __formats[? _key];
+		Raw = __formats[?  _key];
 	}
 	else
 	{
@@ -265,13 +272,13 @@ function BBMOD_VertexFormat(
 		}
 
 		Raw = vertex_format_end();
-		__formats[? _key] = Raw;
+		__formats[?  _key] = Raw;
 	}
 }
 
 /// @func __bbmod_vertex_format_save(_vertexFormat, _buffer[, _versionMinor])
 ///
-/// @desc Saves a vertex format to a buffer.
+/// @desc Saves a vertex format to a buffer following the BBMOD file format.
 ///
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format to save.
 /// @param {Id.Buffer} _buffer The buffer to save the vertex format to.
@@ -279,9 +286,9 @@ function BBMOD_VertexFormat(
 /// Defaults to {@link BBMOD_VERSION_MINOR}.
 ///
 /// @private
-function __bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_VERSION_MINOR)
+function __bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor = BBMOD_VERSION_MINOR)
 {
-	with (_vertexFormat)
+	with(_vertexFormat)
 	{
 		buffer_write(_buffer, buffer_bool, Vertices);
 		buffer_write(_buffer, buffer_bool, Normals);
@@ -299,16 +306,17 @@ function __bbmod_vertex_format_save(_vertexFormat, _buffer, _versionMinor=BBMOD_
 
 /// @func __bbmod_vertex_format_load(_buffer[, _versionMinor])
 ///
-/// @desc Loads a vertex format from a buffer.
+/// @desc Loads a vertex format from a buffer following the BBMOD file format.
 ///
-/// @param {Id.Buffer} _buffer The buffer to load the vertex format from.
+/// @param {Id.Buffer} _buffer The buffer to load the vertex format from. Its
+/// seek position must point to a beginning of a BBMOD vertex format!
 /// @param {Real} _versionMinor The minor version of the BBMOD file format.
 /// Defaults to {@link BBMOD_VERSION_MINOR}.
 ///
 /// @return {Struct.BBMOD_VertexFormat} The loaded vetex format.
 ///
 /// @private
-function __bbmod_vertex_format_load(_buffer, _versionMinor=BBMOD_VERSION_MINOR)
+function __bbmod_vertex_format_load(_buffer, _versionMinor = BBMOD_VERSION_MINOR)
 {
 	var _vertices = buffer_read(_buffer, buffer_bool);
 	var _normals = buffer_read(_buffer, buffer_bool);
@@ -321,7 +329,8 @@ function __bbmod_vertex_format_load(_buffer, _versionMinor=BBMOD_VERSION_MINOR)
 	var _bones = buffer_read(_buffer, buffer_bool);
 	var _ids = buffer_read(_buffer, buffer_bool);
 
-	return new BBMOD_VertexFormat({
+	return new BBMOD_VertexFormat(
+	{
 		"Vertices": _vertices,
 		"Normals": _normals,
 		"TextureCoords": _textureCoords,

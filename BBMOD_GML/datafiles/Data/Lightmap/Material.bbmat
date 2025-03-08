@@ -1,0 +1,37 @@
+{
+    "AlphaBlend": false,
+    "Culling": 2.0,
+    "Mipmapping": 2.0,
+    "ZTest": true,
+    "__MaterialName": "BBMOD_MATERIAL_DEFAULT_LIGHTMAP",
+    "Filtering": true,
+    "RenderQueue": "Default",
+    "BaseOpacityMultiplier": {
+        "Red": 255.0,
+        "Green": 255.0,
+        "Blue": 255.0,
+        "Alpha": 1.0
+    },
+    "__Textures": {
+        "Lightmap": ".\\Material_Lightmap.png"
+    },
+    "TextureOffset": {
+        "X": 0.0,
+        "Y": 0.0
+    },
+    "TextureScale": {
+        "X": 1.0,
+        "Y": 1.0
+    },
+    "ZWrite": true,
+    "ShadowmapBias": 0.0,
+    "Shaders": {
+        "Shadows": "BBMOD_SHADER_DEFAULT_DEPTH",
+        "Id": "BBMOD_SHADER_INSTANCE_ID",
+        "Deferred": "BBMOD_SHADER_DEFAULT_DEPTH"
+    },
+    "BlendMode": 0.0,
+    "ZFunc": 4.0,
+    "Repeat": false,
+    "AlphaTest": 0.90000000000000002
+}

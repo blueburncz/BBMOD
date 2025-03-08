@@ -14,7 +14,6 @@
 function BBMOD_AnimationInstance(_animation) constructor
 {
 	/// @var {Struct.BBMOD_Animation} The animation to be played.
-	/// @see BBMOD_Animation
 	/// @readonly
 	Animation = _animation;
 

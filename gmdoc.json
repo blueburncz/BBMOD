@@ -5,7 +5,7 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
-  "version": "3.21.4",
+  "version": "3.22.2",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
@@ -25,8 +25,6 @@
         "Rendering module": {
           "file": "Modules/Rendering/RenderingModule.md",
           "pages": {
-            "FXAA submodule": "Modules/Rendering/FXAASubmodule.md",
-            "Post-processing submodule": "Modules/Rendering/PostProcessingSubmodule.md",
             "Sky submodule": "Modules/Rendering/SkySubmodule.md",
             "SSAO submodule": "Modules/Rendering/SSAOSubmodule.md"
           }

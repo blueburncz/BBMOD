@@ -13,8 +13,7 @@
 /// to 1.0.
 ///
 /// @see BBMOD_EParticle.HasCollided
-function BBMOD_AddRealOnCollisionModule(_property=undefined, _change=1.0)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_AddRealOnCollisionModule(_property = undefined, _change = 1.0): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The property to add the value to. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.

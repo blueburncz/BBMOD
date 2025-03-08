@@ -8,8 +8,7 @@
 /// 
 /// @param {Struct.BBMOD_Vec3} [_gravity] The gravity vector. Defaults to
 /// `(0, 0, -9.8)`.
-function BBMOD_GravityModule(_gravity=BBMOD_VEC3_UP.Scale(-9.8))
-	: BBMOD_ParticleModule() constructor
+function BBMOD_GravityModule(_gravity = BBMOD_VEC3_UP.Scale(-9.8)): BBMOD_ParticleModule() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The gravity vector. Default value is
 	/// `(0, 0, -9.8)`.

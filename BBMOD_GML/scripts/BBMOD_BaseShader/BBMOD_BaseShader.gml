@@ -12,8 +12,7 @@
 /// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
 /// by the shader.
-function BBMOD_BaseShader(_shader, _vertexFormat)
-	: BBMOD_Shader(_shader, _vertexFormat) constructor
+function BBMOD_BaseShader(_shader, _vertexFormat): BBMOD_Shader(_shader, _vertexFormat) constructor
 {
 	/// @var {Real} Maximum number of punctual lights in the shader.
 	/// @deprecated Please use {@link BBMOD_MAX_PUNCTUAL_LIGHTS} instead.
@@ -112,7 +111,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_cam_pos} instead.
-	static set_cam_pos = function (_pos=undefined)
+	static set_cam_pos = function (_pos = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_cam_pos(shader_current(), _pos);
@@ -129,7 +128,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_exposure} instead.
-	static set_exposure = function (_value=undefined)
+	static set_exposure = function (_value = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_exposure(shader_current(), _value);
@@ -146,7 +145,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_instance_id} instead.
-	static set_instance_id = function (_id=undefined)
+	static set_instance_id = function (_id = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_instance_id(shader_current(), _id);
@@ -182,7 +181,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_ibl} instead.
-	static set_ibl = function (_ibl=undefined)
+	static set_ibl = function (_ibl = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_ibl(shader_current(), _ibl);
@@ -207,7 +206,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_ambient_light} instead.
-	static set_ambient_light = function (_up=undefined, _down=undefined, _dir=undefined)
+	static set_ambient_light = function (_up = undefined, _down = undefined, _dir = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_ambient_light(shader_current(), _up, _down, _dir);
@@ -228,7 +227,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @see BBMOD_DirectionalLight
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_directional_light} instead.
-	static set_directional_light = function (_light=undefined)
+	static set_directional_light = function (_light = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_directional_light(shader_current(), _light);
@@ -247,7 +246,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_punctual_lights} instead.
-	static set_point_lights = function (_lights=undefined)
+	static set_point_lights = function (_lights = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_punctual_lights(shader_current(), _lights);
@@ -266,7 +265,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_punctual_lights} instead.
-	static set_punctual_lights = function (_lights=undefined)
+	static set_punctual_lights = function (_lights = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_punctual_lights(shader_current(), _lights);
@@ -290,7 +289,7 @@ function BBMOD_BaseShader(_shader, _vertexFormat)
 	/// @return {Struct.BBMOD_BaseShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_fog} instead.
-	static set_fog = function (_color=undefined, _intensity=undefined, _start=undefined, _end=undefined)
+	static set_fog = function (_color = undefined, _intensity = undefined, _start = undefined, _end = undefined)
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_fog(shader_current(), _color, _intensity, _start, _end);

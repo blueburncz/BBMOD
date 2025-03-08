@@ -19,11 +19,11 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixVec4Module(
-	_property=undefined,
-	_from=new BBMOD_Vec4(),
-	_to=_from.Clone(),
-	_separate=true
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = new BBMOD_Vec4(),
+	_to = _from.Clone(),
+	_separate = true
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The first of the four consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
@@ -47,10 +47,13 @@ function BBMOD_MixVec4Module(
 		{
 			var _separate = Separate;
 			var _factor = random(1.0);
-			_emitter.Particles[# Property, _particleIndex]     = lerp(From.X, To.X, _factor);
-			_emitter.Particles[# Property + 1, _particleIndex] = lerp(From.Y, To.Y, _separate ? random(1.0) : _factor);
-			_emitter.Particles[# Property + 2, _particleIndex] = lerp(From.Z, To.Z, _separate ? random(1.0) : _factor);
-			_emitter.Particles[# Property + 3, _particleIndex] = lerp(From.W, To.W, _separate ? random(1.0) : _factor);
+			_emitter.Particles[# Property, _particleIndex] = lerp(From.X, To.X, _factor);
+			_emitter.Particles[# Property + 1, _particleIndex] = lerp(From.Y, To.Y, _separate ? random(1.0)
+				: _factor);
+			_emitter.Particles[# Property + 2, _particleIndex] = lerp(From.Z, To.Z, _separate ? random(1.0)
+				: _factor);
+			_emitter.Particles[# Property + 3, _particleIndex] = lerp(From.W, To.W, _separate ? random(1.0)
+				: _factor);
 		}
 	};
 }

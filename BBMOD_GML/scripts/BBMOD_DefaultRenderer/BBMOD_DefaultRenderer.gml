@@ -42,13 +42,12 @@
 /// ```
 ///
 /// @see BBMOD_Camera
-function BBMOD_DefaultRenderer()
-	: BBMOD_BaseRenderer() constructor
+function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 {
 	static BaseRenderer_destroy = destroy;
 
 	/// @var {Bool} Enables rendering scene depth into a depth buffer during the
-	/// {@link BBMOD_ERenderPass.DepthOnly} render pass pass. Defaults to `false`.
+	/// {@link BBMOD_ERenderPass.DepthOnly} render pass. Defaults to `false`.
 	EnableGBuffer = false;
 
 	/// @var {Real} Resolution multiplier for the depth buffer surface. Defaults
@@ -59,7 +58,7 @@ function BBMOD_DefaultRenderer()
 	/// @private
 	__surDepthBuffer = -1;
 
-	static render = function (_clearQueues=true)
+	static render = function (_clearQueues = true)
 	{
 		global.__bbmodRendererCurrent = self;
 
@@ -70,9 +69,9 @@ function BBMOD_DefaultRenderer()
 		var _renderHeight = get_render_height();
 
 		var i = 0;
-		repeat (array_length(Renderables))
+		repeat(array_length(Renderables))
 		{
-			with (Renderables[i++])
+			with(Renderables[i++])
 			{
 				render();
 			}
@@ -110,7 +109,7 @@ function BBMOD_DefaultRenderer()
 			__surDepthBuffer = bbmod_surface_check(__surDepthBuffer, _width, _height, surface_rgba8unorm, true);
 
 			surface_set_target(__surDepthBuffer);
-			draw_clear(c_white);
+			draw_clear(c_red);
 			matrix_set(matrix_view, _view);
 			matrix_set(matrix_projection, _projection);
 			bbmod_render_pass_set(BBMOD_ERenderPass.DepthOnly);
@@ -198,7 +197,7 @@ function BBMOD_DefaultRenderer()
 			if (PostProcessor != undefined
 				&& PostProcessor.Enabled)
 			{
-				PostProcessor.__renderScale = RenderScale;
+				PostProcessor.__renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
 				PostProcessor.draw(application_surface, X, Y, __surDepthBuffer);
 			}
 			else

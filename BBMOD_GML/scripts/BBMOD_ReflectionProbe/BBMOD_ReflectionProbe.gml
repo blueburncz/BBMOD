@@ -64,7 +64,7 @@ global.__bbmodReflectionProbeTexture = pointer_null;
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-function BBMOD_ReflectionProbe(_position=undefined, _sprite=undefined) constructor
+function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) constructor
 {
 	/// @var {Bool} If `false` then the probe is disabled and unused. Default
 	/// value is `true`.

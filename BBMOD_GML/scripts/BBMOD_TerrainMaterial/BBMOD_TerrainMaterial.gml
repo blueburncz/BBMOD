@@ -12,8 +12,7 @@
 /// specific render passes.
 ///
 /// @see BBMOD_Shader
-function BBMOD_TerrainMaterial(_shader=undefined)
-	: BBMOD_BaseMaterial(_shader) constructor
+function BBMOD_TerrainMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader) constructor
 {
 	static clone = function ()
 	{

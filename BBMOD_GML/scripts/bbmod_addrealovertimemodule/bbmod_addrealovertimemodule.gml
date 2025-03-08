@@ -16,10 +16,10 @@
 ///
 /// @see BBMOD_EParticle.HealthLeft
 function BBMOD_AddRealOverTimeModule(
-	_property=undefined,
-	_change=1.0,
-	_period=1.0
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_change = 1.0,
+	_period = 1.0
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The property to add the value to. Use values from
 	/// {@link BBMOD_EParticle} Default value is `undefined`.

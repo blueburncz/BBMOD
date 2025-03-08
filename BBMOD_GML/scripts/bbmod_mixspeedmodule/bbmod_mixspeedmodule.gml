@@ -13,8 +13,7 @@
 /// @see BBMOD_EParticle.VelocityX
 /// @see BBMOD_EParticle.VelocityY
 /// @see BBMOD_EParticle.VelocityZ
-function BBMOD_MixSpeedModule(_from=1.0, _to=_from)
-	: BBMOD_ParticleModule() constructor
+function BBMOD_MixSpeedModule(_from = 1.0, _to = _from): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The minimum velocity vector magnitude. Default value is 1.0.
 	From = _from;

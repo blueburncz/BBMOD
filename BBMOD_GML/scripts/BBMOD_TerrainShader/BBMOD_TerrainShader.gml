@@ -9,8 +9,7 @@
 /// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required
 /// by the shader.
-function BBMOD_TerrainShader(_shader, _vertexFormat)
-	: BBMOD_BaseShader(_shader, _vertexFormat) constructor
+function BBMOD_TerrainShader(_shader, _vertexFormat): BBMOD_BaseShader(_shader, _vertexFormat) constructor
 {
 	/// @var {Real} Number of terrain layers that this shader can render in
 	/// a single draw call. Default value is 1. Hard maximum is 3 because of

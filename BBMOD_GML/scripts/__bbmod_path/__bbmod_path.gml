@@ -1,5 +1,7 @@
 /// @module Core
 
+/* beautify ignore:start */
+
 /// @macro {String} Directory separator.
 /// @private
 #macro __BBMOD_PATH_SEPARATOR ((os_type == os_windows) ? "\\" : "/")
@@ -11,6 +13,8 @@
 /// @macro {String} The parent directory in relative paths.
 /// @private
 #macro __BBMOD_PATH_PARENT ".."
+
+/* beautify ignore:end */
 
 /// @func bbmod_path_normalize(_path)
 ///
@@ -67,7 +71,7 @@ function bbmod_path_is_relative(_path)
 ///
 /// @note If given paths are not on the same drive then an unmodified path is
 /// returned!
-function bbmod_path_get_relative(_path, _start=working_directory)
+function bbmod_path_get_relative(_path, _start = working_directory)
 {
 	_path = bbmod_path_normalize(_path);
 
@@ -85,7 +89,7 @@ function bbmod_path_get_relative(_path, _start=working_directory)
 
 	var _pathRelative = [];
 	var _levelStart = 0;
-	repeat (min(_startExplodedSize, _pathExplodedSize))
+	repeat(min(_startExplodedSize, _pathExplodedSize))
 	{
 		if (_startExploded[_levelStart] != _pathExploded[_levelStart])
 		{
@@ -129,7 +133,7 @@ function bbmod_path_get_relative(_path, _start=working_directory)
 /// @return {String} The absolute path.
 ///
 /// @note If the path is already absolute then an unmodified path is returned.
-function bbmod_path_get_absolute(_path, _start=working_directory)
+function bbmod_path_get_absolute(_path, _start = working_directory)
 {
 	_path = bbmod_path_normalize(_path);
 
@@ -150,22 +154,22 @@ function bbmod_path_get_absolute(_path, _start=working_directory)
 	var i = _startExplodedSize - 1;
 	var j = 0;
 
-	repeat (_pathExplodedSize)
+	repeat(_pathExplodedSize)
 	{
 		var _str = _pathExploded[j++];
 
 		switch (_str)
 		{
-		case __BBMOD_PATH_CURRENT:
-			break;
+			case __BBMOD_PATH_CURRENT:
+				break;
 
-		case __BBMOD_PATH_PARENT:
-			array_delete(_pathRelative, i--, 1);
-			break;
+			case __BBMOD_PATH_PARENT:
+				array_delete(_pathRelative, i--, 1);
+				break;
 
-		default:
-			array_push(_pathRelative, _str);
-			break;
+			default:
+				array_push(_pathRelative, _str);
+				break;
 		}
 	}
 

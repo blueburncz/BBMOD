@@ -12,20 +12,20 @@ function bbmod_blendmode_to_string(_blendmode)
 {
 	switch (_blendmode)
 	{
-	case bm_add:
-		return "bm_add";
+		case bm_add:
+			return "bm_add";
 
-	case bm_max:
-		return "bm_max";
+		case bm_max:
+			return "bm_max";
 
-	case bm_normal:
-		return "bm_normal";
+		case bm_normal:
+			return "bm_normal";
 
-	case bm_subtract:
-		return "bm_subtract";
+		case bm_subtract:
+			return "bm_subtract";
 
-	default:
-		return "";
+		default:
+			return "";
 	}
 }
 
@@ -43,19 +43,19 @@ function bbmod_blendmode_from_string(_name)
 {
 	switch (_name)
 	{
-	case "bm_add":
-		return bm_add;
+		case "bm_add":
+			return bm_add;
 
-	case "bm_max":
-		return bm_max;
+		case "bm_max":
+			return bm_max;
 
-	case "bm_normal":
-		return bm_normal;
+		case "bm_normal":
+			return bm_normal;
 
-	case "bm_subtract":
-		return bm_subtract;
+		case "bm_subtract":
+			return bm_subtract;
 
-	default:
-		throw new BBMOD_Exception("Invalid basic blend mode \"" + _name + "\"!");
+		default:
+			throw new BBMOD_Exception("Invalid basic blend mode \"" + _name + "\"!");
 	}
 }

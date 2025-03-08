@@ -20,12 +20,12 @@
 ///
 /// @see BBMOD_EParticle
 function BBMOD_MixRealFromSpeedModule(
-	_property=undefined,
-	_from=0.0,
-	_to=_from,
-	_min=0.0,
-	_max=1.0
-) : BBMOD_ParticleModule() constructor
+	_property = undefined,
+	_from = 0.0,
+	_to = _from,
+	_min = 0.0,
+	_max = 1.0
+): BBMOD_ParticleModule() constructor
 {
 	/// @var {Real} The property to set initial value of. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.
@@ -60,7 +60,7 @@ function BBMOD_MixRealFromSpeedModule(
 			var _div = _max - _min;
 
 			var _particleIndex = 0;
-			repeat (_emitter.ParticlesAlive)
+			repeat(_emitter.ParticlesAlive)
 			{
 				var _velX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 				var _velY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];

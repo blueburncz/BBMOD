@@ -8,8 +8,7 @@
 ///
 /// @param {Pointer.Texture} [_lut] The lookup table texture used for color
 /// grading. Defaults to `BBMOD_SprColorGradingLUT` if `undefined`.
-function BBMOD_ColorGradingEffect(_lut=undefined)
-	: BBMOD_PostProcessEffect() constructor
+function BBMOD_ColorGradingEffect(_lut = undefined): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Pointer.Texture} The lookup table texture used for color grading.
 	/// Default value is `BBMOD_SprColorGradingLUT`.

@@ -1,0 +1,27 @@
+new BBMOD_Matrix()
+	.Scale(1000, 1000, 1000)
+	.Translate(camera.Position)
+	.ApplyWorld();
+modSphere.render([matSky]);
+
+new BBMOD_Matrix()
+	.Translate(0, 0, 1)
+	.ApplyWorld();
+modSphere.render([matSphere]);
+
+new BBMOD_Matrix()
+	.Translate(4, 0, 1)
+	.ApplyWorld();
+modSphere.render([matSphereMetallic]);
+
+new BBMOD_Matrix()
+	.Translate(8, 0, 1)
+	.ApplyWorld();
+modSphere.render([matSphereEmissive]);
+
+terrain.render();
+
+BBMOD_MATRIX_IDENTITY.ApplyWorld();
+
+camera.apply();
+renderer.render();
