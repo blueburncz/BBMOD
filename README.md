@@ -63,7 +63,7 @@ When finished, copy
 
 Up-to-date license text of Assimp (from its `LICENSE` file) should be kept in `/BBMOD_CLI/bin/LICENSE-Assimp`‼️
 
-1. **Build BBMOD CLI and DLL**
+2. **Build BBMOD CLI and DLL**
 
 ```sh
 cd BBMOD_CLI
