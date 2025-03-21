@@ -91,8 +91,6 @@ install_name_tool -delete_rpath "/Volumes/KINGSTON/Git/BBMOD/BBMOD_CLI/lib" libB
 
 * Add rpaths:
 
-## Add development rpaths:
-
 ```sh
 install_name_tool -add_rpath "@executable_path/data/bbmod" libBBMOD.dylib
 install_name_tool -add_rpath "@loader_path/" libBBMOD.dylib
