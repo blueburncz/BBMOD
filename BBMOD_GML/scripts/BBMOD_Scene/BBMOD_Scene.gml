@@ -13,8 +13,6 @@ global.__bbmodSceneCurrent = undefined;
 ///
 /// @param {String, Undefined} [_name] The name of the scene or `undefined`, in
 /// which case its generated.
-///
-/// @see BBMOD_SceneNode
 function BBMOD_Scene(_name=undefined) constructor
 {
 	static __sceneCounter = 0;
