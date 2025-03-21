@@ -104,6 +104,8 @@ install_name_tool -add_rpath "@executable_path/../Resources/Data/BBMOD" libassim
 * Codesign:
 
 ```sh
+codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" BBMOD
+
 codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libBBMOD.dylib
 
 codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libassimp.5.dylib
