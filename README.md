@@ -43,7 +43,7 @@ An online documentation for the latest release of BBMOD is always available at h
 
 Requires [CMake](https://cmake.org) version 3.23 or newer!
 
-1. **Build Assimp**
+### 1. Build Assimp
 
 Normally this can be omitted, since Assimp binaries are included in this repo, but in case of need, here's how to build them from scratch:
 
@@ -63,7 +63,7 @@ When finished, copy
 
 Up-to-date license text of Assimp (from its `LICENSE` file) should be kept in `/BBMOD_CLI/bin/LICENSE-Assimp`‼️
 
-2. **Build BBMOD CLI and DLL**
+### 2. Build BBMOD CLI and DLL
 
 ```sh
 cd BBMOD_CLI
@@ -73,7 +73,7 @@ cmake --build build --config=Release
 
 This builds both BBMOD CLI and DLL into `/BBMOD_CLI/build/`. **Do not forget to copy the files to `/BBMOD_GML/Datafiles/Data/BBMOD/` on release!** On Windows, these are `BBMOD.exe`, `assimp-vc143-mt.dll` and `LICENSE-Assimp`. On macOS it's `BBMOD`, `libassimp.5.dylib`, `libBBMOD.dylib` and `LICENSE-Assimp`.
 
-3. **Fix rpaths and codesign (for macOS)**
+### 3. Fix rpaths and codesign (for macOS)
 
 * Check rpaths:
 
