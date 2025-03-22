@@ -79,8 +79,6 @@ This builds both BBMOD CLI and DLL into `/BBMOD_CLI/build/`. **Do not forget to 
 
 ```sh
 otool -l libBBMOD.dylib | grep -B 1 -A 2 LC_RPATH
-
-otool -l libassimp.5.dylib | grep -B 1 -A 2 LC_RPATH
 ```
 
 * Remove bad rpaths:
@@ -105,9 +103,7 @@ install_name_tool -add_rpath "@executable_path/../Resources/Data/BBMOD" libassim
 
 ```sh
 codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" BBMOD
-
 codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libBBMOD.dylib
-
 codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libassimp.5.dylib
 ```
 
