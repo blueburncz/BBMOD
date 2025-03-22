@@ -71,7 +71,7 @@ cmake -S . -B build
 cmake --build build --config=Release
 ```
 
-This builds both BBMOD CLI and DLL into `/BBMOD_CLI/build/`. **Do not forget to copy the files to `/BBMOD_GML/Datafiles/Data/BBMOD/` on release!** On Windows, these are `BBMOD.exe`, `assimp-vc143-mt.dll` and `LICENSE-Assimp`. On macOS it's `BBMOD`, `libassimp.5.dylib`, `libBBMOD.dylib` and `LICENSE-Assimp`.
+This builds both BBMOD CLI and DLL into `/BBMOD_CLI/build/`. **Do not forget to copy the files to `/BBMOD_GML/datafiles/Data/BBMOD/` on release!** On Windows, these are `BBMOD.exe`, `assimp-vc143-mt.dll` and `LICENSE-Assimp`. On macOS it's `BBMOD`, `libassimp.5.dylib`, `libBBMOD.dylib` and `LICENSE-Assimp`.
 
 ### 3. Fix rpaths and codesign (for macOS)
 
