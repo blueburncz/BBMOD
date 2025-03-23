@@ -52,7 +52,7 @@ git clone https://github.com/assimp/assimp.git
 cd assimp
 git checkout v5.4.3
 cmake -S . -B build # Use -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" on macOS!
-cmake --build build
+cmake --build build --config=Release
 ```
 
 When finished, copy
