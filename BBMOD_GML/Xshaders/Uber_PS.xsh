@@ -1,41 +1,6 @@
 // FIXME: Temporary fix!
 precision highp float;
 
-#if defined(X_ZOMBIE)
-// Dissolve effect
-uniform vec3 u_vDissolveColor;
-uniform float u_fDissolveThreshold;
-uniform float u_fDissolveRange;
-uniform vec2 u_vDissolveScale;
-
-#if !defined(X_OUTPUT_DEPTH)
-// Silhouette effect
-uniform vec4 u_vSilhouette;
-#endif
-
-float Random(in vec2 st)
-{
-	return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453);
-}
-
-// Based on Morgan McGuire @morgan3d
-// https://www.shadertoy.com/view/4dS3Wd
-float Noise(in vec2 st)
-{
-	vec2 i = floor(st);
-	vec2 f = fract(st);
-	float a = Random(i);
-	float b = Random(i + vec2(1.0, 0.0));
-	float c = Random(i + vec2(0.0, 1.0));
-	float d = Random(i + vec2(1.0, 1.0));
-	vec2 u = smoothstep(0.0, 1.0, f);
-	return mix(
-		mix(a, b, u.x),
-		mix(c, d, u.x),
-		u.y);
-}
-#endif // X_ZOMBIE
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Defines
@@ -201,9 +166,60 @@ uniform vec2 bbmod_IBLTexel;
 // Punctual lights
 
 // [(x, y, z, range), (r, g, b, m), ...]
-uniform vec4 bbmod_LightPunctualDataA[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
+uniform vec4 bbmod_LightPunctualDataA[(BBMOD_MAX_PUNCTUAL_LIGHTS + BBMOD_MAX_PUNCTUAL_LIGHTS)];
 // [(isSpotLight, dcosInner, dcosOuter), (dX, dY, dZ), ...]
-uniform vec3 bbmod_LightPunctualDataB[2 * BBMOD_MAX_PUNCTUAL_LIGHTS];
+uniform vec3 bbmod_LightPunctualDataB[(BBMOD_MAX_PUNCTUAL_LIGHTS + BBMOD_MAX_PUNCTUAL_LIGHTS)];
+
+vec4 BBMOD_GetPunctualLightDataA(int index)
+{
+#if defined(_YY_GLSL_) || defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+	return bbmod_LightPunctualDataA[index];
+#else
+	if (index == 0)       return bbmod_LightPunctualDataA[0];
+	else if (index == 1)  return bbmod_LightPunctualDataA[1];
+	else if (index == 2)  return bbmod_LightPunctualDataA[2];
+	else if (index == 3)  return bbmod_LightPunctualDataA[3];
+	else if (index == 4)  return bbmod_LightPunctualDataA[4];
+	else if (index == 5)  return bbmod_LightPunctualDataA[5];
+	else if (index == 6)  return bbmod_LightPunctualDataA[6];
+	else if (index == 7)  return bbmod_LightPunctualDataA[7];
+	else if (index == 8)  return bbmod_LightPunctualDataA[8];
+	else if (index == 9)  return bbmod_LightPunctualDataA[9];
+	else if (index == 10) return bbmod_LightPunctualDataA[10];
+	else if (index == 11) return bbmod_LightPunctualDataA[11];
+	else if (index == 12) return bbmod_LightPunctualDataA[12];
+	else if (index == 13) return bbmod_LightPunctualDataA[13];
+	else if (index == 14) return bbmod_LightPunctualDataA[14];
+	else if (index == 15) return bbmod_LightPunctualDataA[15];
+	else                  return vec4(0.0);
+#endif
+}
+
+vec3 BBMOD_GetPunctualLightDataB(int index)
+{
+#if defined(_YY_GLSL_) || defined(_YY_HLSL11_) || defined(_YY_PSSL_)
+	return bbmod_LightPunctualDataB[index];
+#else
+	if (index == 0)       return bbmod_LightPunctualDataB[0];
+	else if (index == 1)  return bbmod_LightPunctualDataB[1];
+	else if (index == 2)  return bbmod_LightPunctualDataB[2];
+	else if (index == 3)  return bbmod_LightPunctualDataB[3];
+	else if (index == 4)  return bbmod_LightPunctualDataB[4];
+	else if (index == 5)  return bbmod_LightPunctualDataB[5];
+	else if (index == 6)  return bbmod_LightPunctualDataB[6];
+	else if (index == 7)  return bbmod_LightPunctualDataB[7];
+	else if (index == 8)  return bbmod_LightPunctualDataB[8];
+	else if (index == 9)  return bbmod_LightPunctualDataB[9];
+	else if (index == 10) return bbmod_LightPunctualDataB[10];
+	else if (index == 11) return bbmod_LightPunctualDataB[11];
+	else if (index == 12) return bbmod_LightPunctualDataB[12];
+	else if (index == 13) return bbmod_LightPunctualDataB[13];
+	else if (index == 14) return bbmod_LightPunctualDataB[14];
+	else if (index == 15) return bbmod_LightPunctualDataB[15];
+	else                  return vec3(0.0);
+#endif
+}
+
 #endif // X_PBR
 
 #if defined(X_PBR) && !defined(X_OUTPUT_GBUFFER)
@@ -319,15 +335,6 @@ void main()
 {
 #if defined(X_OUTPUT_DEPTH) || defined(X_ID)
 	float opacity = texture2D(gm_BaseTexture, v_vTexCoord).a;
-
-#if defined(X_ZOMBIE)
-	// Dissolve
-	float noise = Noise(v_vTexCoord * u_vDissolveScale);
-	if (noise < u_fDissolveThreshold)
-	{
-		discard;
-	}
-#endif // X_ZOMBIE
 
 	if (opacity < bbmod_AlphaTest)
 	{
@@ -515,22 +522,6 @@ void main()
 	material.Base *= xGammaToLinear(bbmod_BaseOpacityMultiplier.rgb);
 	material.Opacity *= bbmod_BaseOpacityMultiplier.a;
 #endif
-
-#if defined(X_ZOMBIE)
-	// Dissolve
-	float noise = Noise(v_vTexCoord * u_vDissolveScale);
-	if (noise < u_fDissolveThreshold)
-	{
-		discard;
-	}
-	material.Emissive = mix(
-		material.Emissive,
-		xGammaToLinear(u_vDissolveColor),
-		(1.0 - clamp((noise - u_fDissolveThreshold) / u_fDissolveRange, 0.0, 1.0)) * u_fDissolveThreshold);
-
-	// Silhouette
-	material.Emissive = mix(material.Emissive, xGammaToLinear(u_vSilhouette.rgb), u_vSilhouette.a);
-#endif // X_ZOMBIE
 
 	if (material.Opacity < bbmod_AlphaTest)
 	{

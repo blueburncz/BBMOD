@@ -153,7 +153,7 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 	{
 		if (_enable)
 		{
-			if (os_browser != browser_not_a_browser)
+			if (__isBrowser)
 			{
 				window_mouse_set_locked(true);
 			}
@@ -164,7 +164,7 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 		}
 		else
 		{
-			if (os_browser != browser_not_a_browser)
+			if (__isBrowser)
 			{
 				window_mouse_set_locked(false);
 			}
@@ -189,14 +189,14 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 	/// @return {Struct.BBMOD_Camera} Returns `self`.
 	static update = function (_deltaTime, _positionHandler = undefined)
 	{
-		if (os_browser != browser_not_a_browser)
+		if (__isBrowser)
 		{
 			MouseLook = window_mouse_get_locked();
 		}
 
 		if (MouseLook)
 		{
-			if (os_browser != browser_not_a_browser)
+			if (__isBrowser)
 			{
 				Direction -= window_mouse_get_delta_x() * MouseSensitivity;
 				DirectionUp -= window_mouse_get_delta_y() * MouseSensitivity;

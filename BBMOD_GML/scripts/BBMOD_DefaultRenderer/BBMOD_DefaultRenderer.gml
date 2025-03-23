@@ -197,7 +197,7 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 			if (PostProcessor != undefined
 				&& PostProcessor.Enabled)
 			{
-				PostProcessor.__renderScale = RenderScale;
+				PostProcessor.__renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
 				PostProcessor.draw(application_surface, X, Y, __surDepthBuffer);
 			}
 			else

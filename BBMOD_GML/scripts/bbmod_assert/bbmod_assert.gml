@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func bbmod_assert(_expr[, _error])
 ///
 /// @desc Show an error if given expression is false and quits the game.

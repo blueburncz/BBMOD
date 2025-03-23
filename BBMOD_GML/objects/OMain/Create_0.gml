@@ -28,7 +28,7 @@ gizmo = new BBMOD_Gizmo();
 renderer.Gizmo = gizmo;
 
 postProcessor = new BBMOD_PostProcessor();
-postProcessor.LensDirtStrength = 0.0;
+postProcessor.LensDirtStrength = 0.1;
 
 //var _dof = new BBMOD_DepthOfFieldEffect();
 //_dof.AutoFocus = true;
@@ -47,7 +47,7 @@ if (useDeferredRenderer)
 }
 
 sunshafts = new BBMOD_SunShaftsEffect();
-sunshafts.Color.Alpha = 0.1;
+sunshafts.Color.Alpha = 0.3;
 postProcessor.add_effect(sunshafts);
 
 postProcessor.add_effect(new BBMOD_ChromaticAberrationEffect(2));

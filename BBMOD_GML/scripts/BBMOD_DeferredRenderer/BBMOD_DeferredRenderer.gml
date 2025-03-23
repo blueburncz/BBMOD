@@ -596,7 +596,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		if (PostProcessor != undefined
 			&& PostProcessor.Enabled)
 		{
-			PostProcessor.__renderScale = RenderScale;
+			PostProcessor.__renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
 			PostProcessor.draw(__surFinal, X, Y, __surGBuffer[2], __surGBuffer[1]);
 		}
 		else

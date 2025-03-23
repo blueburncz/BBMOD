@@ -84,9 +84,11 @@
     {"name":"Sprites","order":5,"path":"folders/Test/Sprites.yy",},
   ],
   "ResourceOrderSettings":[
+    {"name":"OLightmapTest","order":4,"path":"objects/OLightmapTest/OLightmapTest.yy",},
     {"name":"OMain","order":1,"path":"objects/OMain/OMain.yy",},
     {"name":"__bbmod_array","order":5,"path":"scripts/__bbmod_array/__bbmod_array.yy",},
     {"name":"__bbmod_blendmode","order":1,"path":"scripts/__bbmod_blendmode/__bbmod_blendmode.yy",},
+    {"name":"__bbmod_browser","order":24,"path":"scripts/__bbmod_browser/__bbmod_browser.yy",},
     {"name":"__bbmod_cmpfunc","order":2,"path":"scripts/__bbmod_cmpfunc/__bbmod_cmpfunc.yy",},
     {"name":"__bbmod_cullmode","order":3,"path":"scripts/__bbmod_cullmode/__bbmod_cullmode.yy",},
     {"name":"__bbmod_d3d11","order":4,"path":"scripts/__bbmod_d3d11/__bbmod_d3d11.yy",},

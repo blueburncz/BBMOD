@@ -87,17 +87,29 @@ void main()
 	}
 	vec4 color = vec4(0.0);
 	float weight = 0.0;
-	for (float i = -1.0; i <= 1.0; i += u_fStep)
+	float stepSumI = -1.0;
+	for (float i = -1.0; i <= 1.0; i += 0.01)
 	{
-		for (float j = -1.0; j <= 1.0; j += u_fStep)
+		float stepSumJ = -1.0;
+		for (float j = -1.0; j <= 1.0; j += 0.01)
 		{
 			vec2 sampleOffset = coc
 				* ((u_fBokehShape >= 3.0)
-					? SquareToPolygonMapping(vec2(i, j), u_fBokehShape, 0.0)
-					: SquareToDiskMapping(vec2(i, j)))
+					? SquareToPolygonMapping(vec2(stepSumI, stepSumJ), u_fBokehShape, 0.0)
+					: SquareToDiskMapping(vec2(stepSumI, stepSumJ)))
 				* u_vTexel;
 			color += texture2D(gm_BaseTexture, v_vTexCoord + sampleOffset);
 			weight += 1.0;
+			stepSumJ += u_fStep;
+			if (stepSumJ > 1.0)
+			{
+				break;
+			}
+		}
+		stepSumI += u_fStep;
+		if (stepSumI > 1.0)
+		{
+			break;
 		}
 	}
 	gl_FragColor = color / max(weight, EPSILON);
