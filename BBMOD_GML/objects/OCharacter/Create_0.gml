@@ -10,21 +10,35 @@ model = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character.bbmod", undefined,
 	_material.BaseOpacity = sprite_get_texture(SprCyborgFemaleA, 0);
 	_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 	_model.Materials[@ 0] = _material;
+
+	var _upperBodyMask = new BBMOD_SkeletonMask(_model);
+	_upperBodyMask.set_node_mask_recursive("Spine", 1.0);
+	show_debug_message(_upperBodyMask.MaskArray);
+	layerShoot.Mask = _upperBodyMask;
 });
 
 animIdle = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Idle.bbanim");
 animWalk = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Walk.bbanim");
 animShoot = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Shoot.bbanim");
+animJump = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Jump.bbanim");
 
-//animationPlayer = new BBMOD_AnimationPlayer2(model);
+animationPlayer = new BBMOD_LayeredAnimationPlayer(model);
 
-//var _layer2 = new BBMOD_AnimationLayer("Layer2");
-//_layer2.Additive = true;
-//_layer2.Weight = 0.5;
-//animationPlayer.add_layer(_layer2);
+layerIdle = animationPlayer.get_layer("Default");
+layerIdle.Weight = 1;
+layerIdle.play(animIdle, true);
 
-//animationPlayer.play("Default", animWalk, true);
-//animationPlayer.play("Layer2", animShoot, true);
+layerWalk = new BBMOD_AnimationLayer("Walk");
+layerWalk.Weight = 0;
+animationPlayer.add_layer(layerWalk);
+layerWalk.play(animWalk, true);
 
-animationPlayer = new BBMOD_AnimationPlayer(model);
-animationPlayer.play(animIdle, true);
+layerShoot = new BBMOD_AnimationLayer("Shoot");
+layerShoot.Weight = 0;
+animationPlayer.add_layer(layerShoot);
+layerShoot.play(animShoot, true);
+
+layerJump = new BBMOD_AnimationLayer("Jump");
+layerJump.Weight = 0;
+animationPlayer.add_layer(layerJump);
+layerJump.play(animJump, true);

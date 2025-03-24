@@ -8,7 +8,7 @@
 ///
 /// @param {String} _name The name of the animation layer.
 ///
-/// @see BBMOD_AnimationPlayer2
+/// @see BBMOD_LayeredAnimationPlayer
 function BBMOD_AnimationLayer(_name) constructor
 {
 	BBMOD_IEventListener();
@@ -16,7 +16,7 @@ function BBMOD_AnimationLayer(_name) constructor
 	/// @desc {String} The name of the animation layer.
 	Name = _name;
 
-	/// @var {Struct.BBMOD_AnimationPlayer2} The animation player to which this
+	/// @var {Struct.BBMOD_LayeredAnimationPlayer} The animation player to which this
 	/// layer belongs or `undefined` (default).
 	/// @readonly
 	AnimationPlayer = undefined;
@@ -84,7 +84,7 @@ function BBMOD_AnimationLayer(_name) constructor
 
 	/// @var {Array<Real>} An array of node transforms in world space.
 	/// Useful for attachments.
-	/// @see BBMOD_AnimationPlayer2.get_node_transform
+	/// @see BBMOD_LayeredAnimationPlayer.get_node_transform
 	/// @private
 	__nodeTransform = array_create(BBMOD_MAX_BONES * 8, 0.0);
 
@@ -108,7 +108,7 @@ function BBMOD_AnimationLayer(_name) constructor
 		return self;
 	};
 
-	static __animate = function (_animationInstance, _animationTime)
+	static __animate = function (_animationInstance, _animationTime, _layerPrev, _isLastLayer)
 	{
 		var _model = AnimationPlayer.Model;
 		var _animation = _animationInstance.Animation;
@@ -141,9 +141,10 @@ function BBMOD_AnimationLayer(_name) constructor
 			var _nodeParent = _node.Parent;
 			var _parentIndex = (_nodeParent != undefined) ? _nodeParent.Index : -1;
 
-			if (_nodePositionOverride != undefined
-				|| _nodeRotationOverride != undefined)
-			{
+			//if (_nodePositionOverride != undefined
+			//	|| _nodeRotationOverride != undefined)
+			//{
+				// Current layer
 				var _dq = new BBMOD_DualQuaternion().FromArray(_frame, _nodeOffset);
 				var _position = (_nodePositionOverride != undefined)
 					? _nodePositionOverride
@@ -151,29 +152,30 @@ function BBMOD_AnimationLayer(_name) constructor
 				var _rotation = (_nodeRotationOverride != undefined)
 					? _nodeRotationOverride
 					: _dq.GetRotation();
+
+				// Blend with previous layer
+				if (_layerPrev != undefined)
+				{
+					var _dqPrev = new BBMOD_DualQuaternion().FromArray(_layerPrev.__nodeTransform, _nodeOffset);
+					var _positionPrev = _dqPrev.GetTranslation();
+					var _rotationPrev = _dqPrev.GetRotation();
+					// TODO: Make masking work also for the first animation layer!!!
+					var _weight = Weight * ((Mask != undefined) ? Mask.MaskArray[_nodeIndex] : 1.0);
+					_position = _positionPrev.Lerp(_position, _weight);
+					_rotation = _rotationPrev.Slerp(_rotation, _weight);
+				}
+
 				_dq.FromTranslationRotation(_position, _rotation);
-				if (_parentIndex != -1)
+
+				// Transform with parent bone if this is the last layer
+				if (_isLastLayer && _parentIndex != -1)
 				{
 					_dq.MulSelf(new BBMOD_DualQuaternion()
 						.FromArray(_nodeTransform, _parentIndex * 8));
 				}
+
 				_dq.ToArray(_nodeTransform, _nodeOffset);
-			}
-			else
-			{
-				if (_parentIndex == -1)
-				{
-					// No parent transform -> just copy the node transform
-					array_copy(_nodeTransform, _nodeOffset, _frame, _nodeOffset, 8);
-				}
-				else
-				{
-					// Multiply node transform with parent's transform
-					__bbmod_dquat_mul_array(
-						_frame, _nodeOffset, _nodeTransform, _parentIndex * 8,
-						_nodeTransform, _nodeOffset);
-				}
-			}
+			//}
 
 			var _children = _node.Children;
 			var i = 0;
@@ -184,7 +186,7 @@ function BBMOD_AnimationLayer(_name) constructor
 		}
 	};
 
-	/// @func update(_deltaTime, _frameskipCurrent)
+	/// @func update(_deltaTime, _frameskipCurrent, _layerPrev, _isLastLayer)
 	///
 	/// @desc Updates the animation layer. This should be called every frame in
 	/// the step event.
@@ -192,9 +194,11 @@ function BBMOD_AnimationLayer(_name) constructor
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
 	/// @param {Real} _frameskipCurrent
+	/// @param {Struct.BBMOD_AnimationLayer} _layerPrev
+	/// @param {Bool} _isLastLayer
 	///
 	/// @return {Struct.BBMOD_AnimationLayer} Returns `self`.
-	static update = function (_deltaTime, _frameskipCurrent)
+	static update = function (_deltaTime, _frameskipCurrent, _layerPrev, _isLastLayer)
 	{
 		var _model = AnimationPlayer.Model;
 
@@ -260,18 +264,13 @@ function BBMOD_AnimationLayer(_name) constructor
 
 			if (_frameskipCurrent == 0)
 			{
-				if (_animation.__spaces & __BBMOD_BONE_SPACE_WORLD)
+				if (_animation.__spaces & __BBMOD_BONE_SPACE_PARENT)
 				{
-					var _frame = _animation.__framesWorld[_animationTime];
-					array_copy(__nodeTransform, 0, _frame, 0, _nodeSize);
-				}
-				else if (_animation.__spaces & __BBMOD_BONE_SPACE_PARENT)
-				{
-					__animate(_animInst, _animationTime);
+					__animate(_animInst, _animationTime, _layerPrev, _isLastLayer);
 				}
 				else
 				{
-					bbmod_assert(false, "Only animations with optimization level 0 and 1 are supported!");
+					bbmod_assert(false, "Only animations with optimization level 0 are supported!");
 				}
 			}
 

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BBMOD_AnimationPlayer2",
+  "%Name":"BBMOD_LayeredAnimationPlayer",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BBMOD_AnimationPlayer2",
+  "name":"BBMOD_LayeredAnimationPlayer",
   "parent":{
     "name":"Animation",
     "path":"folders/BBMOD/Core/Base/Animation.yy",

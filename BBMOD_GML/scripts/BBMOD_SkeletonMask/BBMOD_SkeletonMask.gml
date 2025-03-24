@@ -11,9 +11,9 @@ function BBMOD_SkeletonMask(_model) constructor
 	/// @readonly
 	Model = _model;
 
-	/// @var {Array<Bool>}
+	/// @var {Array<Real>}
 	/// @readonly
-	MaskArray = array_create(_model.NodeCount, true);
+	MaskArray = array_create(_model.NodeCount, 0.0);
 
 	/// @func get_node_mask(_idOrName)
 	///
@@ -21,55 +21,55 @@ function BBMOD_SkeletonMask(_model) constructor
 	///
 	/// @param {Real, String} _idOrName
 	///
-	/// @return {Bool}
+	/// @return {Real}
 	static get_node_mask = function (_idOrName)
 	{
 		gml_pragma("forceinline");
 		return MaskArray[Model.find_node(_idOrName).Index];
 	};
 
-	/// @func set_node_mask(_idOrName, _enable)
+	/// @func set_node_mask(_idOrName, _weight)
 	///
 	/// @desc
 	///
 	/// @param {Real, String} _idOrName
-	/// @param {Bool} _enable
+	/// @param {Real} _weight
 	///
 	/// @return {Struct.BBMOD_SkeletonMask} Returns `self`.
-	static set_node_mask = function (_idOrName, _enable)
+	static set_node_mask = function (_idOrName, _weight)
 	{
 		gml_pragma("forceinline");
 		var _index = is_string(_idOrName) ? Model.find_node(_idOrName).Index : _idOrName;
-		MaskArray[@ _index] = _enable;
+		MaskArray[@ _index] = _weight;
 		return self;
 	};
 
-	static __set_node_mask_recursive_impl = function (_node, _enable, _excludeSelf)
+	static __set_node_mask_recursive_impl = function (_node, _weight, _excludeSelf)
 	{
 		if (!_excludeSelf)
 		{
-			MaskArray[@ _node.Index] = _enable;
+			MaskArray[@ _node.Index] = _weight;
 		}
 		var _index = 0;
 		repeat(array_length(_node.Children))
 		{
-			__set_node_mask_recursive_impl(_node.Children[_index++], _enable, false);
+			__set_node_mask_recursive_impl(_node.Children[_index++], _weight, false);
 		}
 	};
 
-	/// @func set_node_mask_recursive(_idOrName, _enable[, _excludeSelf])
+	/// @func set_node_mask_recursive(_idOrName, _weight[, _excludeSelf])
 	///
 	/// @desc
 	///
 	/// @param {Real, String} _idOrName
-	/// @param {Bool} _enable
+	/// @param {Real} _weight
 	/// @param {Bool} [_excludeSelf] Defaults to `false`.
 	///
 	/// @return {Struct.BBMOD_SkeletonMask} Returns `self`.
-	static set_node_mask_recursive = function (_idOrName, _enable, _excludeSelf = false)
+	static set_node_mask_recursive = function (_idOrName, _weight, _excludeSelf = false)
 	{
 		gml_pragma("forceinline");
-		__set_node_mask_recursive_impl(Model.find_node(_idOrName), _enable, _excludeSelf);
+		__set_node_mask_recursive_impl(Model.find_node(_idOrName), _weight, _excludeSelf);
 		return self;
 	};
 }

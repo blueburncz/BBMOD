@@ -59,7 +59,7 @@
 /// bbmod_material_reset();
 /// ```
 ///
-/// @see BBMOD_AnimationPlayer2
+/// @see BBMOD_LayeredAnimationPlayer
 function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 {
 	BBMOD_IEventListener();

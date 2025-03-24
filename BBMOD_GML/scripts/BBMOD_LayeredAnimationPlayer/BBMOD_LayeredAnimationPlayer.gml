@@ -1,6 +1,6 @@
 /// @module Core
 
-/// @func BBMOD_AnimationPlayer2(_model[, _paused])
+/// @func BBMOD_LayeredAnimationPlayer(_model[, _paused])
 ///
 /// @implements {BBMOD_IRenderable}
 ///
@@ -24,7 +24,7 @@
 ///
 /// /// @desc Create event of OCharacter
 /// model = OResourceManager.modCharacter;
-/// animationPlayer = new BBMOD_AnimationPlayer2(model);
+/// animationPlayer = new BBMOD_LayeredAnimationPlayer(model);
 /// animationPlayer.play("Default", OResourceManager.animIdle, true);
 ///
 /// /// @desc Step event of OCharacter
@@ -36,7 +36,7 @@
 /// ```
 ///
 /// @see BBMOD_AnimationPlayer
-function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
+function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 {
 	/// @var {Struct.BBMOD_Model} A model that the animation player animates.
 	/// @readonly
@@ -52,7 +52,7 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 	/// @var {Bool} If `true`, then the animation playback is paused.
 	Paused = _paused;
 
-	/// @var {Real} Number of frames (calls to {@link BBMOD_AnimationPlayer2.update})
+	/// @var {Real} Number of frames (calls to {@link BBMOD_LayeredAnimationPlayer.update})
 	/// to skip. Defaults to 0 (frame skipping is disabled). Increasing the
 	/// value increases performance. Use `infinity` to disable computing
 	/// animation frames entirely.
@@ -70,13 +70,13 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 
 	/// @var {Array<Real>} An array of node transforms in world space.
 	/// Useful for attachments.
-	/// @see BBMOD_AnimationPlayer2.get_node_transform
+	/// @see BBMOD_LayeredAnimationPlayer.get_node_transform
 	/// @private
 	__nodeTransform = array_create(BBMOD_MAX_BONES * 8, 0.0);
 
 	/// @var {Array<Real>} An array containing transforms of all bones.
 	/// Used to pass current model pose as a uniform to a vertex shader.
-	/// @see BBMOD_AnimationPlayer2.get_transform
+	/// @see BBMOD_LayeredAnimationPlayer.get_transform
 	/// @private
 	__transformArray = array_create(BBMOD_MAX_BONES * 8, 0.0);
 
@@ -92,7 +92,7 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 	/// @param {Struct.BBMOD_AnimationLayer} _layer The layer to add. Must not
 	/// already belong to an animation player!
 	///
-	/// @return {Struct.BBMOD_AnimationPlayer2} Returns `self`.
+	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	static add_layer = function (_layer)
 	{
 		gml_pragma("forceinline");
@@ -219,7 +219,7 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
 	///
-	/// @return {Struct.BBMOD_AnimationPlayer2} Returns `self`.
+	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	static update = function (_deltaTime)
 	{
 		if (!Model.IsLoaded)
@@ -233,30 +233,20 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 		}
 
 		var _layerIndex = 0;
+		var _layerIndexLast = array_length(Layers) - 1; // This should be the last one ENABLED!
+		var _layerPrev = undefined;
 		repeat(array_length(Layers))
 		{
 			var _layer = Layers[_layerIndex];
+			var _isLastLayer = (_layerIndex == _layerIndexLast);
 			if (_layer.Enabled)
 			{
-				_layer.update(delta_time, __frameskipCurrent);
-				if (!_layer.Additive || _layerIndex == 0)
+				_layer.update(delta_time, __frameskipCurrent, _layerPrev, _isLastLayer);
+				if (_isLastLayer)
 				{
-					// TODO: Masking
-					// TODO: Weight of the first layer?
 					array_copy(__nodeTransform, 0, _layer.__nodeTransform, 0, array_length(_layer.__nodeTransform));
 				}
-				else
-				{
-					var _boneIndex = 0;
-					repeat(Model.BoneCount)
-					{
-						var _dq1 = new BBMOD_DualQuaternion().FromArray(__nodeTransform, _boneIndex);
-						var _dq2 = new BBMOD_DualQuaternion().FromArray(_layer.__nodeTransform, _boneIndex);
-						var _dq3 = _dq1.Sclerp(_dq2, _layer.Weight).Normalize();
-						_dq3.ToArray(__nodeTransform, _boneIndex);
-						_boneIndex += 8;
-					}
-				}
+				_layerPrev = _layer;
 			}
 			++_layerIndex;
 		}
@@ -293,7 +283,7 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 	/// @param {Bool} [_loop] If `true` then the animation will be looped.
 	/// Defaults to `false`.
 	///
-	/// @return {Struct.BBMOD_AnimationPlayer2} Returns `self`.
+	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	static play = function (_layer, _animation, _loop = false)
 	{
 		gml_pragma("forceinline");
@@ -316,9 +306,9 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 	/// @param {Bool} [_loop] If `true` then the animation will be looped.
 	/// Defaults to `false`.
 	///
-	/// @return {Struct.BBMOD_AnimationPlayer2} Returns `self`.
+	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	///
-	/// @see BBMOD_AnimationPlayer2.Animation
+	/// @see BBMOD_LayeredAnimationPlayer.Animation
 	static change = function (_layer, _animation, _loop = false)
 	{
 		gml_pragma("forceinline");
@@ -367,7 +357,7 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 	/// use BBMOD's material system. If `undefined`, then {@link BBMOD_Model.Materials}
 	/// is used. Defaults to `undefined`.
 	///
-	/// @return {Struct.BBMOD_AnimationPlayer2} Returns `self`.
+	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	static submit = function (_materials = undefined)
 	{
 		gml_pragma("forceinline");
@@ -383,7 +373,7 @@ function BBMOD_AnimationPlayer2(_model, _paused = false) constructor
 	/// one for each material slot of the model. If not specified, then
 	/// {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	///
-	/// @return {Struct.BBMOD_AnimationPlayer2} Returns `self`.
+	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	static render = function (_materials = undefined)
 	{
 		gml_pragma("forceinline");
