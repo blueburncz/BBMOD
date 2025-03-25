@@ -272,7 +272,8 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 				break;
 			}
 
-			var _animationTime = _animation.get_animation_time(Time);
+			var _time = _animation.__isTransition ? abs(Time) : Time;
+			var _animationTime = _animation.get_animation_time(_time);
 
 			if (_animationTime >= _animation.Duration)
 			{
