@@ -125,8 +125,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	/// @private
 	__frameskipCurrent = 0;
 
-	/// @var {Real} Controls animation playback speed. Must be a positive
-	/// number!
+	/// @var {Real} Controls animation playback speed.
 	PlaybackSpeed = 1;
 
 	/// @var {Array<Real>} An array of node transforms in world space.

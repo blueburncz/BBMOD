@@ -18,7 +18,11 @@ model = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character.bbmod", undefined,
 });
 
 animIdle = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Idle.bbanim");
-animWalk = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Walk.bbanim");
+animWalk = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Walk.bbanim", undefined, function (_err, _anim)
+{
+	bbmod_assert(_err == undefined);
+	_anim.add_event(10, "MyEvent");
+});
 animShoot = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Shoot.bbanim");
 animJump = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Jump.bbanim");
 
@@ -29,7 +33,12 @@ layerIdle.Weight = 1;
 layerIdle.play(animIdle, true);
 
 layerWalk = new BBMOD_AnimationLayer("Walk");
-layerWalk.Weight = 0;
+layerWalk.Weight = 1;
+layerWalk.SpeedMultiplier = -1;
+layerWalk.on_event("MyEvent", function ()
+{
+	show_debug_message("MyEvent!!!");
+});
 animationPlayer.add_layer(layerWalk);
 layerWalk.play(animWalk, true);
 

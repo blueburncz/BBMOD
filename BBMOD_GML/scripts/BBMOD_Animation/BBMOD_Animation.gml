@@ -174,11 +174,14 @@ function BBMOD_Animation(_file = undefined, _sha1 = undefined): BBMOD_Resource()
 	///
 	/// @param {Real} _timeInSeconds The current time in seconds.
 	///
-	/// @return {Real} The animation time.
+	/// @return {Real} The animation time, wrapped to range
+	/// 0...{@link BBMOD_Animation.Duration} (inclusive).
 	static get_animation_time = function (_timeInSeconds)
 	{
 		gml_pragma("forceinline");
-		return round(_timeInSeconds * TicsPerSecond);
+		var _range = Duration + 1;
+		var _value = _timeInSeconds * TicsPerSecond;
+		return ((_value % _range) + _range) % _range;
 	};
 
 	/// @func from_buffer(_buffer)
