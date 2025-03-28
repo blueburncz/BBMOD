@@ -206,7 +206,7 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 		gml_pragma("forceinline");
 		array_sort(Layers, function (_layer1, _layer2)
 		{
-			return (_layer1.Order - _layer2.Order);
+			return (_layer1.Order < _layer2.Order) ? -1 : 1;
 		});
 	};
 
@@ -240,7 +240,7 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 			var _isLastLayer = (_layerIndex == _layerIndexLast);
 			if (_layer.Enabled)
 			{
-				_layer.update(delta_time, __frameskipCurrent, _layerPrev, _isLastLayer);
+				_layer.update(_deltaTime, __frameskipCurrent, _layerPrev, _isLastLayer);
 				if (_isLastLayer)
 				{
 					array_copy(__nodeTransform, 0, _layer.__nodeTransform, 0, array_length(_layer.__nodeTransform));
