@@ -101,7 +101,6 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 
 		array_push(Layers, _layer);
 		_layer.AnimationPlayer = self;
-		__update_layer_order();
 
 		return self;
 	};
@@ -199,15 +198,6 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 		}
 
 		return self;
-	};
-
-	static __update_layer_order = function ()
-	{
-		gml_pragma("forceinline");
-		array_sort(Layers, function (_layer1, _layer2)
-		{
-			return (_layer1.Order < _layer2.Order) ? -1 : 1;
-		});
 	};
 
 	/// @func update(_deltaTime)

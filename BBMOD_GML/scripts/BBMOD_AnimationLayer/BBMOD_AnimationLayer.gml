@@ -40,12 +40,6 @@ function BBMOD_AnimationLayer(_name) constructor
 	/// @see BBMOD_AnimationPlayer.PlaybackSpeed
 	SpeedMultiplier = 1.0;
 
-	/// @var {Real} Used to define order of layers inside of an animation player.
-	/// Defaults to 0.
-	/// @readonly
-	/// @see set_order()
-	Order = 0;
-
 	////////////////////////////////////////////////////////////////////////////
 
 	/// @var {Real} The current animation playback time (in seconds).
@@ -89,24 +83,6 @@ function BBMOD_AnimationLayer(_name) constructor
 	__nodeTransform = array_create(BBMOD_MAX_BONES * 8, 0.0);
 
 	////////////////////////////////////////////////////////////////////////////
-
-	/// @func set_order(_value)
-	///
-	/// @desc
-	///
-	/// @param {Real} _value
-	///
-	/// @return {Struct.BBMOD_AnimationLayer} Returns `self`.
-	static set_order = function (_value)
-	{
-		gml_pragma("forceinline");
-		Order = _value;
-		if (AnimationPlayer != undefined)
-		{
-			AnimationPlayer.__update_layer_order();
-		}
-		return self;
-	};
 
 	static __animate = function (_animationInstance, _animationTime, _layerPrev, _isLastLayer)
 	{
