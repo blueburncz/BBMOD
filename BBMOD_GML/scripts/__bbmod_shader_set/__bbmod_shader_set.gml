@@ -346,7 +346,7 @@ function bbmod_shader_set_emissive(_shader, _texture)
 /// @param {Pointer.Texture} [_texture] The new RGBM encoded lightmap
 /// texture. If not specified, defaults to the one configured using
 /// {@link bbmod_lightmap_set}.
-function bbmod_shader_set_lightmap(_shader, _texture=bbmod_lightmap_get())
+function bbmod_shader_set_lightmap(_shader, _texture = bbmod_lightmap_get())
 {
 	gml_pragma("forceinline");
 	var _uLightmap = shader_get_sampler_index(_shader, BBMOD_U_LIGHTMAP);
@@ -841,7 +841,7 @@ function bbmod_shader_set_ibl(_shader, _ibl = undefined, _isLightmapped = false)
 	var _texture = pointer_null;
 	var _texel;
 
-		_ibl ??= bbmod_ibl_get();
+	_ibl ??= bbmod_ibl_get();
 
 	if (_ibl != undefined
 		&& _ibl.Enabled

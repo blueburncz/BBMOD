@@ -13,7 +13,7 @@ global.__bbmodSceneCurrent = undefined;
 ///
 /// @param {String, Undefined} [_name] The name of the scene or `undefined`, in
 /// which case its generated.
-function BBMOD_Scene(_name=undefined) constructor
+function BBMOD_Scene(_name = undefined) constructor
 {
 	static __sceneCounter = 0;
 
@@ -138,7 +138,7 @@ function BBMOD_Scene(_name=undefined) constructor
 	{
 		var _punctualLights = LightsPunctual;
 		var i = 0;
-		repeat (array_length(_punctualLights))
+		repeat(array_length(_punctualLights))
 		{
 			if (_punctualLights[i] == _light)
 			{
@@ -234,9 +234,9 @@ function BBMOD_Scene(_name=undefined) constructor
 		var _probe = undefined;
 		var _probeVolume = infinity;
 		var i = 0;
-		repeat (array_length(_reflectionProbes))
+		repeat(array_length(_reflectionProbes))
 		{
-			with (_reflectionProbes[i++])
+			with(_reflectionProbes[i++])
 			{
 				if (!Enabled)
 				{
@@ -284,7 +284,7 @@ function BBMOD_Scene(_name=undefined) constructor
 		gml_pragma("forceinline");
 		var _reflectionProbes = ReflectionProbes;
 		var i = 0;
-		repeat (array_length(_reflectionProbes))
+		repeat(array_length(_reflectionProbes))
 		{
 			if (_reflectionProbes[i] == _reflectionProbe)
 			{

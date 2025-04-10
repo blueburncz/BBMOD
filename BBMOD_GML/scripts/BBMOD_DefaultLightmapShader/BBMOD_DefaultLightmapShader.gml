@@ -55,7 +55,7 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat): BBMOD_DefaultShade
 	/// @return {Struct.BBMOD_DefaultLightmapShader} Returns `self`.
 	///
 	/// @deprecated Please use {@link bbmod_shader_set_lightmap} instead.
-	static set_lightmap = function (_texture=bbmod_lightmap_get())
+	static set_lightmap = function (_texture = bbmod_lightmap_get())
 	{
 		gml_pragma("forceinline");
 		bbmod_shader_set_lightmap(shader_current(), _texture);

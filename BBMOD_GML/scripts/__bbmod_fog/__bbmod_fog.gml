@@ -29,7 +29,7 @@
 function bbmod_fog_set(_color, _intensity, _start, _end)
 {
 	gml_pragma("forceinline");
-	with (bbmod_scene_get_current())
+	with(bbmod_scene_get_current())
 	{
 		FogColor = _color;
 		FogIntensity = _intensity;

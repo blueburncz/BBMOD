@@ -111,7 +111,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 			// Punctual lights
 			var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 			var i = 0;
-			repeat (array_length(_punctualLights))
+			repeat(array_length(_punctualLights))
 			{
 				_light = _punctualLights[i];
 				if (_light.CastShadows)
@@ -397,7 +397,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 		for (var i = array_length(_punctualLights) - 1; i >= 0; --i)
 		{
-			with (_punctualLights[i])
+			with(_punctualLights[i])
 			{
 				if (!Enabled)
 				{

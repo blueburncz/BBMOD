@@ -623,7 +623,7 @@ function BBMOD_BaseRenderer() constructor
 				// Punctual lights
 				var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 				var i = 0;
-				repeat (array_length(_punctualLights))
+				repeat(array_length(_punctualLights))
 				{
 					_light = _punctualLights[i];
 					if (_light.CastShadows)

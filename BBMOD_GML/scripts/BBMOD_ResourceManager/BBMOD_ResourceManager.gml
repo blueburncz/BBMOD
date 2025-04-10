@@ -452,7 +452,7 @@ function BBMOD_ResourceManager() constructor
 	{
 		gml_pragma("forceinline");
 		var _resource = is_struct(_resourceOrPath)
-			? _resourceOrPath : _resources[? _resourceOrPath];
+			? _resourceOrPath : _resources[?  _resourceOrPath];
 		if (_resource == undefined || _resource.__manager != self)
 		{
 			throw new BBMOD_Exception("Resource not added to this resource manager!");
@@ -469,9 +469,9 @@ function BBMOD_ResourceManager() constructor
 		{
 			var _found = false;
 			var _key = ds_map_find_first(__resources);
-			repeat (ds_map_size(__resources))
+			repeat(ds_map_size(__resources))
 			{
-				if (__resources[? _key] == _resource)
+				if (__resources[?  _key] == _resource)
 				{
 					ds_map_delete(__resources, _key);
 					_found = true;
