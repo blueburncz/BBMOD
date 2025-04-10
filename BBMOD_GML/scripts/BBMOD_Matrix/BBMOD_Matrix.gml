@@ -684,7 +684,7 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	static Transpose = function ()
 	{
 		gml_pragma("forceinline");
-		return Clone().Transpose();
+		return Clone().TransposeSelf();
 	};
 
 	/// @func TransposeSelf()
