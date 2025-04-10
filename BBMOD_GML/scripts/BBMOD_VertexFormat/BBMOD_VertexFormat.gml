@@ -331,14 +331,14 @@ function __bbmod_vertex_format_load(_buffer, _versionMinor = BBMOD_VERSION_MINOR
 
 	return new BBMOD_VertexFormat(
 	{
-		"Vertices": _vertices,
-		"Normals": _normals,
-		"TextureCoords": _textureCoords,
-		"TextureCoords2": _textureCoords2,
-		"Colors": _colors,
-		"TangentW": _tangentW,
-		"Bones": _bones,
-		"Ids": _ids,
+		Vertices: _vertices,
+		Normals: _normals,
+		TextureCoords: _textureCoords,
+		TextureCoords2: _textureCoords2,
+		Colors: _colors,
+		TangentW: _tangentW,
+		Bones: _bones,
+		Ids: _ids,
 	});
 }
 

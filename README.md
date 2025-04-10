@@ -12,6 +12,7 @@
 * [About](#about)
 * [Screenshots](#screenshots)
 * [Documentation, tutorials, samples and help](#documentation-tutorials-samples-and-help)
+* [Building BBMOD CLI and DLL](#building-bbmod-cli-and-dll)
 * [License](#license)
 * [Logo terms of use](#logo-terms-of-use)
 * [Links](Links)
@@ -37,6 +38,74 @@ homepage https://blueburn.cz/bbmod/.
 ## Documentation, tutorials, samples and help
 
 An online documentation for the latest release of BBMOD is always available at https://blueburn.cz/bbmod/docs/3. Tutorials for BBMOD can be found on its homepage at https://blueburn.cz/bbmod/tutorials and sample projects at https://blueburn.cz/bbmod/samples. If you need any additional help, you can join our [Discord server](https://discord.gg/ep2BGPm).
+
+## Building BBMOD CLI and DLL
+
+Requires [CMake](https://cmake.org) version 3.23 or newer!
+
+### 1. Build Assimp
+
+Normally this can be omitted, since Assimp binaries are included in this repo, but in case of need, here's how to build them from scratch:
+
+```sh
+git clone https://github.com/assimp/assimp.git
+cd assimp
+git checkout v5.4.3
+cmake -S . -B build # Use -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" on macOS!
+cmake --build build --config=Release
+```
+
+When finished, copy
+
+* `assimp-vc143-mt.dll` into `/BBMOD_CLI/bin/` on Windows,
+* `assimp-vc143-mt.lib` into `/BBMOD_CLI/lib/`
+* and `libassimp.5.4.3.dylib` into `/BBMOD_CLI/lib/libassimp.5.dylib` on macOS.
+
+Up-to-date license text of Assimp (from its `LICENSE` file) should be kept in `/BBMOD_CLI/bin/LICENSE-Assimp`‼️
+
+### 2. Build BBMOD CLI and DLL
+
+```sh
+cd BBMOD_CLI
+cmake -S . -B build
+cmake --build build --config=Release
+```
+
+This builds both BBMOD CLI and DLL into `/BBMOD_CLI/build/`. **Do not forget to copy the files to `/BBMOD_GML/datafiles/Data/BBMOD/` on release!** On Windows, these are `BBMOD.exe`, `assimp-vc143-mt.dll` and `LICENSE-Assimp`. On macOS it's `BBMOD`, `libassimp.5.dylib`, `libBBMOD.dylib` and `LICENSE-Assimp`.
+
+### 3. Fix rpaths and codesign (for macOS)
+
+* Check rpaths:
+
+```sh
+otool -l libBBMOD.dylib | grep -B 1 -A 2 LC_RPATH
+```
+
+* Remove bad rpaths:
+
+```sh
+install_name_tool -delete_rpath "/Volumes/KINGSTON/Git/BBMOD/BBMOD_CLI/lib" libBBMOD.dylib # Replace with the path you got from the previous command
+```
+
+* Add rpaths:
+
+```sh
+install_name_tool -add_rpath "@executable_path/data/bbmod" libBBMOD.dylib
+install_name_tool -add_rpath "@loader_path/" libBBMOD.dylib
+install_name_tool -add_rpath "@executable_path/../Resources/Data/BBMOD" libBBMOD.dylib
+
+install_name_tool -add_rpath "@executable_path/data/bbmod" libassimp.5.dylib
+install_name_tool -add_rpath "@loader_path/" libassimp.5.dylib
+install_name_tool -add_rpath "@executable_path/../Resources/Data/BBMOD" libassimp.5.dylib
+```
+
+* Codesign:
+
+```sh
+codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" BBMOD
+codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libBBMOD.dylib
+codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libassimp.5.dylib
+```
 
 ## License
 

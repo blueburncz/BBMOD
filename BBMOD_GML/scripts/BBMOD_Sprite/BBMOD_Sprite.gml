@@ -32,7 +32,7 @@ function BBMOD_Sprite(_file = undefined, _sha1 = undefined): BBMOD_Resource() co
 	static from_file = function (_file, _sha1 = undefined)
 	{
 		Path = _file;
-		check_file(_file, _sha1);
+		__check_file(_file, _sha1);
 		Raw = sprite_add(_file, 1, false, false, 0, 0);
 		Width = sprite_get_width(Raw);
 		Height = sprite_get_height(Raw);
@@ -44,7 +44,7 @@ function BBMOD_Sprite(_file = undefined, _sha1 = undefined): BBMOD_Resource() co
 	{
 		Path = _file;
 
-		if (!check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
+		if (!__check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
 		{
 			return self;
 		}

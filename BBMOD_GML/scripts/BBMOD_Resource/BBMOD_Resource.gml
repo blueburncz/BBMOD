@@ -72,18 +72,7 @@ function BBMOD_Resource() constructor
 		//return self;
 	};
 
-	/// @func check_file(_file[, _sha1[, _callback]])
-	///
-	/// @param {String} _file
-	/// @param {String} [_sha1]
-	/// @param {Function} [_callback]
-	///
-	/// @return {Bool}
-	///
-	/// @throws {BBMOD_Exception}
-	///
-	/// @private
-	static check_file = function (_file, _sha1 = undefined, _callback = undefined)
+	static __check_file = function (_file, _sha1 = undefined, _callback = undefined)
 	{
 		var _err = undefined;
 
@@ -131,7 +120,7 @@ function BBMOD_Resource() constructor
 	{
 		Path = _file;
 
-		check_file(_file, _sha1);
+		__check_file(_file, _sha1);
 
 		var _buffer = buffer_load(_file);
 		buffer_seek(_buffer, buffer_seek_start, 0);
@@ -207,7 +196,7 @@ function BBMOD_Resource() constructor
 	{
 		Path = _file;
 
-		if (!check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
+		if (!__check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
 		{
 			return self;
 		}

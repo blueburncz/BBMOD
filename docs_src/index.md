@@ -1,5 +1,5 @@
 # BBMOD
-Welcome to the official documentation of BBMOD 3.22.2!
+Welcome to the official scripting API documentation of BBMOD 3.22.4!
 
 BBMOD is a library that makes creating 3D games in GameMaker easier! Whether you just need to draw 3D models in 2D games
 or you are building fully immersive 3D worlds, BBMOD helps you bring your vision to life!
@@ -9,5 +9,4 @@ BBMOD.
 
 ## Contents
 * [Supported file formats](./SupportedFileFormats.html)
-* [Modules](./Modules.html)
 * [Scripting API](./ScriptingAPI.html)

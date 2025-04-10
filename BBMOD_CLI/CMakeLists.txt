@@ -4,6 +4,10 @@ project(BBMOD)
 
 set(CMAKE_CXX_STANDARD 17)
 
+if(APPLE)
+    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for macOS" FORCE)
+endif()
+
 set(SOURCES
     src/BBMOD/Animation.cpp
     src/BBMOD/Bone.cpp

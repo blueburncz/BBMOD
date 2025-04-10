@@ -76,6 +76,7 @@
  * [bbmod_array_clone](./bbmod_array_clone.html)
  * [bbmod_array_from_buffer](./bbmod_array_from_buffer.html)
  * [bbmod_array_to_buffer](./bbmod_array_to_buffer.html)
+ * [bbmod_assert](./bbmod_assert.html)
  * [bbmod_async_image_loaded_update](./bbmod_async_image_loaded_update.html)
  * [bbmod_async_save_load_update](./bbmod_async_save_load_update.html)
  * [bbmod_blendmode_from_string](./bbmod_blendmode_from_string.html)
@@ -110,6 +111,7 @@
  * [bbmod_hdr_is_supported](./bbmod_hdr_is_supported.html)
  * [bbmod_ibl_get](./bbmod_ibl_get.html)
  * [bbmod_ibl_set](./bbmod_ibl_set.html)
+ * [bbmod_is_browser](./bbmod_is_browser.html)
  * [bbmod_json_load](./bbmod_json_load.html)
  * [bbmod_lerp_delta_time](./bbmod_lerp_delta_time.html)
  * [bbmod_light_ambient_get_affect_lightmaps](./bbmod_light_ambient_get_affect_lightmaps.html)
@@ -208,6 +210,8 @@
  * [bbmod_texture_set_stage_vs](./bbmod_texture_set_stage_vs.html)
  * [bbmod_vertex_buffer_load](./bbmod_vertex_buffer_load.html)
  * [bbmod_vtf_is_supported](./bbmod_vtf_is_supported.html)
+ * [bbmod_window_get_height](./bbmod_window_get_height.html)
+ * [bbmod_window_get_width](./bbmod_window_get_width.html)
 <h3 id="CoreEnums">Enums</h3>
 
  * [BBMOD_ECubeSide](./BBMOD_ECubeSide.html)
