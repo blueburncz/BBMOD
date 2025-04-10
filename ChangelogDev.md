@@ -11,3 +11,4 @@
 * Added new function `bbmod_matrix_set_scale(_matrix, _x, _y, _z)`, which writes scale into an identity matrix.
 * Fixed infinite loop in method `Transpose` of struct `BBMOD_Matrix`.
 * Added new method `SetIdentity()` to struct `BBMOD_Matrix`, which turns the matrix into an identity matrix.
+* Fixed light bloom threshold shader modifying the original color.
