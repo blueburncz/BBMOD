@@ -12,3 +12,4 @@
 * Fixed infinite loop in method `Transpose` of struct `BBMOD_Matrix`.
 * Added new method `SetIdentity()` to struct `BBMOD_Matrix`, which turns the matrix into an identity matrix.
 * Fixed light bloom threshold shader modifying the original color.
+* Added new method `clear_draw_cache()` to struct `BBMOD_Model`, which clears cached data that speeds up rendering of the model. This should be used when properties like `BBMOD_Node.Visible` change!
