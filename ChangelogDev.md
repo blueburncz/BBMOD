@@ -42,3 +42,4 @@
 * Function `bbmod_lightmap_get` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Function `bbmod_lightmap_set` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Added new method `remove` to `BBMOD_ResourceManager`, which removes a resource from the manager, keeping its reference count.
+* Fixed infinite loop in method `Transpose` of struct `BBMOD_Matrix`.
