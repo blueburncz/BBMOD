@@ -215,7 +215,7 @@ function BBMOD_MeshRenderQueue(_name = undefined, _priority = 0) constructor
 		{
 			case BBMOD_ERenderCommand.DrawMesh:
 			{
-				repeat(_index / 4)
+				repeat(__index / 4)
 				{
 					var _id = _renderCommands[_commandIndex];
 					var _materialProps = _renderCommands[_commandIndex + 1];
