@@ -1136,8 +1136,8 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 			var _upInstance = _quaternionInstance.Rotate(BBMOD_VEC3_UP);
 
 			// Apply rotation
-			var _matGlobal = GetInstanceGlobalMatrix(_instance);
-			var _matGlobalInv = _matGlobal.Inverse();
+			var _matGlobal = GetInstanceGlobalMatrix(_instance).Raw;
+			var _matGlobalInv = matrix_inverse(_matGlobal);
 			var _rotateByX = __rotateBy.X;
 			var _rotateByY = __rotateBy.Y;
 			var _rotateByZ = __rotateBy.Z;
@@ -1151,12 +1151,11 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				_rotateByZ = floor(__rotateBy.Z / AngleSnap) * AngleSnap;
 			}
 
-			var _temp = new BBMOD_Vec4(_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0).Transform(
-				_matGlobalInv.Raw);
+			var _temp = new BBMOD_Vec4(_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0).Transform(_matGlobalInv);
 			var _forwardGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
-			_temp = new BBMOD_Vec4(_rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
+			_temp = new BBMOD_Vec4(_rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z, 0.0).Transform(_matGlobalInv);
 			var _rightGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
-			_temp = new BBMOD_Vec4(_upGizmo.X, _upGizmo.Y, _upGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
+			_temp = new BBMOD_Vec4(_upGizmo.X, _upGizmo.Y, _upGizmo.Z, 0.0).Transform(_matGlobalInv);
 			var _upGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
 
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
