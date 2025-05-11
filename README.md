@@ -41,7 +41,7 @@ homepage https://blueburn.cz/bbmod/.
 
 ## Documentation, tutorials, samples and help
 
-An online documentation for the latest release of BBMOD is always available at https://blueburn.cz/bbmod/docs/3. Tutorials for BBMOD can be found on its homepage at https://blueburn.cz/bbmod/tutorials and sample projects at https://blueburn.cz/bbmod/samples. If you need any additional help, you can join our [Discord server](https://discord.gg/ep2BGPm).
+An online documentation for the latest release of BBMOD is always available at https://blueburn.cz/bbmod/docs/3. Tutorials for BBMOD can be found on its homepage at https://blueburn.cz/bbmod/tutorials. There are also some sample projects available in the showcase section https://blueburn.cz/bbmod/showcase. If you need any additional help, you can join our [Discord server](https://discord.gg/ep2BGPm).
 
 ## Building BBMOD CLI and DLL
 
