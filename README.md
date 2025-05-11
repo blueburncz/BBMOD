@@ -26,8 +26,7 @@ homepage https://blueburn.cz/bbmod/.
 
 > [!TIP]
 > **BBMOD 4 is currently in development!** See the design document [here](https://github.com/blueburncz/BBMOD/issues/105)
-> and its branch [here](https://github.com/blueburncz/BBMOD/tree/bbmod4). It is not recommended for new users to start
-> learning BBMOD 3 now, as it is going to be replaced with BBMOD 4, which is not backwards compatible!
+> and its branch [here](https://github.com/blueburncz/BBMOD/tree/bbmod4).
 
 ## Screenshots
 
