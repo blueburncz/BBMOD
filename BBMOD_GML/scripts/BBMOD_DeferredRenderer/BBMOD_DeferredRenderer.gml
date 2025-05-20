@@ -321,7 +321,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		//
 		surface_set_target(__surLBuffer);
 
-		var _viewInverse = (new BBMOD_Matrix(_view)).Inverse().Raw;
+		var _viewInverse = matrix_inverse(_view);
 		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
 
 		////////////////////////////////////////////////////////////////////////

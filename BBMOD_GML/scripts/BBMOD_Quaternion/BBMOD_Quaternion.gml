@@ -132,6 +132,24 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		);
 	};
 
+	/// @func Equals(_q)
+	///
+	/// @desc Checks whether this quaternion equals to quaternion `_q`.
+	///
+	/// @param {Struct.BBMOD_Quaternion} _q The quaternion to compare to.
+	///
+	/// @return {Bool} Returns `true` if the two quaternions are equal.
+	static Equals = function (_q)
+	{
+		gml_pragma("forceinline");
+		return (
+			X == _q.X
+			&& Y == _q.Y
+			&& Z == _q.Z
+			&& W == _q.W
+		);
+	};
+
 	/// @func Exp()
 	///
 	/// @desc Computes an exponential map of the quaternion and returns

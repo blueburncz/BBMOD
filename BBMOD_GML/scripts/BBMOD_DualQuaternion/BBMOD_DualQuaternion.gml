@@ -124,6 +124,20 @@ function BBMOD_DualQuaternion(
 		return Real.Dot(_dq.Real);
 	};
 
+	/// @func Equals(_dq)
+	///
+	/// @desc Checks whether this dual quaternion equals to dual quaternion `_dq`.
+	///
+	/// @param {Struct.BBMOD_DualQuaternion} _dq The dual quaternion to compare
+	/// to.
+	///
+	/// @return {Bool} Returns `true` if the two dual quaternions are equal.
+	static Equals = function (_dq)
+	{
+		gml_pragma("forceinline");
+		return (Real.Equals(_dq.Real) && Dual.Equals(_dq.Dual));
+	};
+
 	/// @func Exp()
 	///
 	/// @desc Computes an exponential map of the dual quaternion and returns

@@ -96,7 +96,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// @private
 	/// @see BBMOD_Material.set_shader
 	/// @see BBMOD_Material.get_shader
-	Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
+	__shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
 
 	/// @var {Struct.BBMOD_RenderQueue} The render queue used by this material.
 	/// Defaults to the default BBMOD render queue.
@@ -197,8 +197,8 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	{
 		_dest.__name = __name;
 		_dest.RenderPass = RenderPass;
-		_dest.Shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
-		array_copy(_dest.Shaders, 0, Shaders, 0, BBMOD_ERenderPass.SIZE);
+		_dest.__shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
+		array_copy(_dest.__shaders, 0, __shaders, 0, BBMOD_ERenderPass.SIZE);
 		_dest.RenderQueue = RenderQueue;
 		_dest.OnApply = OnApply;
 		_dest.BlendMode = BlendMode;
@@ -263,7 +263,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		var _pass = 0;
 		repeat(BBMOD_ERenderPass.SIZE)
 		{
-			var _shader = Shaders[_pass];
+			var _shader = __shaders[_pass];
 			if (_shader != undefined)
 			{
 				var _passName = bbmod_render_pass_to_string(_pass);
@@ -280,7 +280,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			}
 			++_pass;
 		}
-		_json.Shaders = _shaders;
+		_json.__shaders = _shaders;
 
 		if (RenderQueue.Name != undefined)
 		{
@@ -510,7 +510,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	static from_file = function (_file, _sha1 = undefined)
 	{
 		Path = _file;
-		check_file(_file, _sha1);
+		__check_file(_file, _sha1);
 		from_json(bbmod_json_load(_file));
 		IsLoaded = true;
 		return self;
@@ -520,7 +520,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	{
 		Path = _file;
 
-		if (!check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
+		if (!__check_file(_file, _sha1, _callback ?? bbmod_empty_callback))
 		{
 			return self;
 		}
@@ -604,7 +604,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			return false;
 		}
 
-		var _shader = Shaders[bbmod_render_pass_get()];
+		var _shader = __shaders[bbmod_render_pass_get()];
 		var _shaderRaw = _shader.get_variant(_vertexFormat);
 
 		if (_shaderRaw == undefined)
@@ -716,7 +716,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	{
 		gml_pragma("forceinline");
 		RenderPass |= (1 << _pass);
-		Shaders[@ _pass] = _shader;
+		__shaders[@ _pass] = _shader;
 		return self;
 	};
 
@@ -747,7 +747,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	static get_shader = function (_pass)
 	{
 		gml_pragma("forceinline");
-		return Shaders[_pass];
+		return __shaders[_pass];
 	};
 
 	/// @func remove_shader(_pass)
@@ -761,7 +761,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	{
 		gml_pragma("forceinline");
 		RenderPass &= ~(1 << _pass);
-		Shaders[@ _pass] = undefined;
+		__shaders[@ _pass] = undefined;
 		return self;
 	};
 
