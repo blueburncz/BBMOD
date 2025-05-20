@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_SkeletonMask",
   "parent":{
-    "name":"Animation",
-    "path":"folders/BBMOD/Core/Base/Animation.yy",
+    "name":"LayeredAnimationPlayer",
+    "path":"folders/BBMOD/LayeredAnimationPlayer.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

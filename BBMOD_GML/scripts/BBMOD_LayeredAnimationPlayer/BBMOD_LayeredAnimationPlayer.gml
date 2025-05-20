@@ -1,4 +1,4 @@
-/// @module Core
+/// @module LayeredAnimationPlayer
 
 /// @func BBMOD_LayeredAnimationPlayer(_model[, _paused])
 ///

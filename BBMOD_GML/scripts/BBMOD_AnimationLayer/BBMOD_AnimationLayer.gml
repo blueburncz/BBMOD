@@ -1,4 +1,4 @@
-/// @module Core
+/// @module LayeredAnimationPlayer
 
 /// @func BBMOD_AnimationLayer(_name)
 ///
