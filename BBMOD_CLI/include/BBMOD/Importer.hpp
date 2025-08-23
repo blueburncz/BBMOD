@@ -22,18 +22,4 @@
 /// An error code returned when converted model is not saved.
 #define BBMOD_ERR_SAVE_FAILED 3
 
-struct SImportResult
-{
-	SModel* Model = nullptr;
-
-	std::vector<SAnimation*> Animations;
-};
-
-struct SImporter
-{
-	int Import(const char* file, SImportResult& result);
-
-	SConfig config;
-};
-
 int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config);
