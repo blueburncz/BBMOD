@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.23)
 project(BBMOD)
 
 set(CMAKE_CXX_STANDARD 17)
+set(DIST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../BBMOD_GML/datafiles/Data/BBMOD)
 
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for macOS" FORCE)
@@ -15,62 +16,49 @@ set(SOURCES
     src/BBMOD/Mesh.cpp
     src/BBMOD/Model.cpp
     src/BBMOD/Node.cpp
-    src/BBMOD/VertexFormat.cpp)
+    src/BBMOD/VertexFormat.cpp
+)
 
-find_library(LIBASSIMP
-    NAMES assimp-vc143-mt assimp.5
-    PATHS lib/)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+add_subdirectory(external/assimp)
 
 function(configure_target target)
     set_target_properties(${target} PROPERTIES OUTPUT_NAME BBMOD)
-
     target_include_directories(${target} PRIVATE include/)
-
-    target_link_libraries(${target} ${LIBASSIMP})
-
-    # if(APPLE)
-    #     # Find shared libraries next to the executable
-    #     # Source: https://stackoverflow.com/a/69707790
-    #     # ($ORIGIN doesn't work but . does)
-    #     set_target_properties(${target} PROPERTIES
-    #         BUILD_WITH_INSTALL_RPATH FALSE
-    #         LINK_FLAGS "-Wl,-rpath,./")
-    # endif()
+    target_link_libraries(${target} PRIVATE assimp)
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${target}> ${DIST_DIR}
+    )
 endfunction()
 
-# BBMOD CLI
 add_executable(BBMOD_CLI
     src/main.cpp
     src/terminal.cpp
-    ${SOURCES})
-
+    ${SOURCES}
+)
 configure_target(BBMOD_CLI)
 
-# BBMOD DLL
 add_library(BBMOD_DLL SHARED
     src/exports.cpp
-    ${SOURCES})
-
+    ${SOURCES}
+)
 configure_target(BBMOD_DLL)
 
-# Copy Assimp dynamic library
 if(WIN32)
-    add_custom_command(
-        TARGET BBMOD_CLI POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_CURRENT_SOURCE_DIR}/bin/assimp-vc143-mt.dll
-            $<TARGET_FILE_DIR:BBMOD_CLI>)
-elseif(APPLE)
-    add_custom_command(
-        TARGET BBMOD_CLI POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimp.5.dylib
-            $<TARGET_FILE_DIR:BBMOD_CLI>)
+    set(ASSIMP_DLL "${CMAKE_CURRENT_BINARY_DIR}/external/assimp/bin/Release/assimp-vc143-mt.dll")
+    add_custom_command(TARGET BBMOD_CLI POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ASSIMP_DLL} ${DIST_DIR}
+    )
+elseif(APPLE OR UNIX)
+    add_custom_command(TARGET BBMOD_CLI POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:assimp> ${DIST_DIR}
+    )
 endif()
 
-# Copy Assimp license
-add_custom_command(
-    TARGET BBMOD_CLI POST_BUILD
+add_custom_command(TARGET BBMOD_CLI POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_CURRENT_SOURCE_DIR}/bin/LICENSE-Assimp
-        $<TARGET_FILE_DIR:BBMOD_CLI>)
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/assimp/LICENSE
+        ${DIST_DIR}/LICENSE-Assimp
+)

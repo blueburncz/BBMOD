@@ -110,7 +110,7 @@ int main(int argc, const char* argv[])
 			else if (strcmp(argv[i], "-v") == 0)
 			{
 				std::cout << "File format version: " << BBMOD_VERSION_MAJOR << "." << BBMOD_VERSION_MINOR << std::endl
-					<< "Assimp version: 5.2.4" << std::endl;
+					<< "Assimp version: 6.0.2" << std::endl;
 				return EXIT_SUCCESS;
 			}
 			else if (std::regex_match(argv[i], match, options_regex))
