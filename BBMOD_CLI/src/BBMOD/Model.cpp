@@ -318,8 +318,3 @@ SModel* SModel::Load(std::string path)
 	file.close();
 	return model;
 }
-
-bool SModel::NodeIsImportant(std::string name) const
-{
-	return true;
-}
