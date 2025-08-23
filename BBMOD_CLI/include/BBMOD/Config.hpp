@@ -98,11 +98,7 @@ struct SConfig
 
 	/// Animation optimization level.
 	///
-	///   | Transitions | Attachments | IK
-	/// - | ----------- | ----------- | ---
-	/// 0 | Yes         | Yes         | Yes
-	/// 1 | Yes         | Yes         | No
-	/// 2 | No          | No          | No
+	/// @see https://blueburn.cz/bbmod/tutorials/about-animation-optimization-levels
 	uint32_t AnimationOptimization = 0;
 
 	/// Save unused material properties.
