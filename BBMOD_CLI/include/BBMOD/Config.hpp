@@ -2,8 +2,6 @@
 
 #include <BBMOD/common.hpp>
 
-#include <assimp/matrix4x4.h>
-
 /// A value used to tell that no normals should be generated if the model
 /// doesn't have any.
 #define BBMOD_NORMALS_NONE 0
