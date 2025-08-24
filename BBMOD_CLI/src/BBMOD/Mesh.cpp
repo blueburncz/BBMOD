@@ -10,7 +10,7 @@
 #include <string>
 #include <iostream>
 
-/** Encodes color into a single integer as ARGB. */
+/// Encodes color into a single integer as ARGB.
 static inline uint32_t EncodeColor(const aiColor4D& color)
 {
 	return (uint32_t)(
@@ -20,7 +20,7 @@ static inline uint32_t EncodeColor(const aiColor4D& color)
 		((uint32_t)(color.r * 255.0f)));
 }
 
-/** Returns cross product of vectors v1 and v2. */
+/// Returns cross product of vectors v1 and v2.
 static inline aiVector3D Vec3Cross(const aiVector3D& v1, const aiVector3D& v2)
 {
 	aiVector3D res;
@@ -30,7 +30,7 @@ static inline aiVector3D Vec3Cross(const aiVector3D& v1, const aiVector3D& v2)
 	return res;
 }
 
-/** Returns dot product of vectors v1 and v2. */
+/// Returns dot product of vectors v1 and v2.
 static inline float Vec3Dot(const aiVector3D& v1, const aiVector3D& v2)
 {
 	return (v1.x * v2.x
@@ -38,7 +38,7 @@ static inline float Vec3Dot(const aiVector3D& v1, const aiVector3D& v2)
 		+ v1.z * v2.z);
 }
 
-/** Returns bitangent sign. */
+/// Returns bitangent sign.
 static inline float GetBitangentSign(
 	const aiVector3D& normal,
 	const aiVector3D& tangent,
@@ -98,8 +98,8 @@ SMesh* SMesh::FromAssimp(const aiScene* scene, aiMesh* aiMesh, SModel* model, co
 
 	mesh->MaterialIndex = aiMesh->mMaterialIndex;
 
-	/*AssimpToVec3(aiMesh->mAABB.mMin, mesh->BboxMin);
-	AssimpToVec3(aiMesh->mAABB.mMax, mesh->BboxMax);*/
+	// AssimpToVec3(aiMesh->mAABB.mMin, mesh->BboxMin);
+	// AssimpToVec3(aiMesh->mAABB.mMax, mesh->BboxMax);
 
 	uint32_t faceCount = aiMesh->mNumFaces;
 	aiColor4D cWhite(1.0f, 1.0f, 1.0f, 1.0f);

@@ -876,6 +876,23 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		return self;
 	};
 
+	/// @func ToEuler([_array[, _index]])
+	///
+	/// @desc Retrieves euler angles from the quaternion.
+	///
+	/// @param {Array<Real>} [_array] An array to write the X,Y,Z angles to.
+	/// If `undefined`, a new one is created.
+	///
+	/// @param {Real} [_index] The index to start writing at.
+	///
+	/// @return {Array<Real>} The destination array.
+	static ToEuler = function (_array = undefined, _index = 0)
+	{
+		// TODO: Don't be lazy and implement this the proper way...
+		gml_pragma("forceinline");
+		return new BBMOD_Matrix(ToMatrix()).ToEuler(_array, _index);
+	};
+
 	/// @func ToMatrix([_dest[, _index]])
 	///
 	/// @desc Converts quaternion into a matrix.

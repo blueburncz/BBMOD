@@ -42,9 +42,4 @@ struct SModel
 	std::vector<SBone*> Skeleton;
 
 	std::vector<std::string> MaterialNames;
-
-private:
-	bool NodeIsImportant(std::string name) const;
-
-	std::map<std::string, bool> NodeImportanceMap;
 };

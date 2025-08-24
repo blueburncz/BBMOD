@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"SprCyborgFemaleA",
   "bboxMode":0,
   "bbox_bottom":1023,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":true,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"8dd4f9a9-a1f5-4b97-b545-5cd55b8eacd1","name":"8dd4f9a9-a1f5-4b97-b545-5cd55b8eacd1","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"8dd4f9a9-a1f5-4b97-b545-5cd55b8eacd1","name":"8dd4f9a9-a1f5-4b97-b545-5cd55b8eacd1","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

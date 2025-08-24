@@ -217,17 +217,17 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 
 		PRINT_SUCCESS("Model \"%s\" saved to \"%s\"!", finCurrent.c_str(), foutCurrent);
 
-		/*log << "Vertex format:" << std::endl;
-		log << "==============" << std::endl;
-		SVertexFormat* vformat = model->VertexFormat;
-		if (vformat->Vertices) { log << "Position 3D" << std::endl; }
-		if (vformat->Normals) { log << "Normal" << std::endl; }
-		if (vformat->TextureCoords) { log << "Texture coords" << std::endl; }
-		if (vformat->Colors) { log << "Color" << std::endl; }
-		if (vformat->TangentW) { log << "Tangent & bitangent sign" << std::endl; }
-		if (vformat->Bones) { log << "Bone indices and weights" << std::endl; }
-		if (vformat->Ids) { log << "Ids" << std::endl; }
-		log << std::endl;*/
+		// log << "Vertex format:" << std::endl;
+		// log << "==============" << std::endl;
+		// SVertexFormat* vformat = model->VertexFormat;
+		// if (vformat->Vertices) { log << "Position 3D" << std::endl; }
+		// if (vformat->Normals) { log << "Normal" << std::endl; }
+		// if (vformat->TextureCoords) { log << "Texture coords" << std::endl; }
+		// if (vformat->Colors) { log << "Color" << std::endl; }
+		// if (vformat->TangentW) { log << "Tangent & bitangent sign" << std::endl; }
+		// if (vformat->Bones) { log << "Bone indices and weights" << std::endl; }
+		// if (vformat->Ids) { log << "Ids" << std::endl; }
+		// log << std::endl;
 
 		log << "Nodes:" << std::endl;
 		log << "======" << std::endl;
