@@ -609,6 +609,20 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		__animationKind = _animationKind;
 	};
 
+	/// @func clear_draw_cache()
+	///
+	/// @desc Clears cached data that speeds up rendering of the model. This
+	/// should be used when properties like {@link BBMOD_Node.Visible} change!
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static clear_draw_cache = function ()
+	{
+		gml_pragma("forceinline");
+		__cacheData = undefined;
+		__animationKind = -1;
+		return self;
+	};
+
 	static __transformArrayToMatrix = function (_array, _index, _dest)
 	{
 		gml_pragma("forceinline");

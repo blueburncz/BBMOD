@@ -178,10 +178,10 @@ bool SModel::Save(std::string path)
 	FILE_WRITE_DATA(file, VersionMajor);
 	FILE_WRITE_DATA(file, VersionMinor);
 
-	/*if (!VertexFormat->Save(file))
-	{
-		return false;
-	}*/
+	// if (!VertexFormat->Save(file))
+	// {
+	// 	return false;
+	// }
 
 	uint32_t meshCount = (uint32_t)Meshes.size();
 	FILE_WRITE_DATA(file, meshCount);
@@ -317,9 +317,4 @@ SModel* SModel::Load(std::string path)
 
 	file.close();
 	return model;
-}
-
-bool SModel::NodeIsImportant(std::string name) const
-{
-	return true;
 }

@@ -37,7 +37,7 @@ postProcessor.LensDirtStrength = 0.1;
 //_dof.AutoFocus = true;
 //postProcessor.add_effect(_dof);
 
-postProcessor.add_effect(new BBMOD_LightBloomEffect());
+postProcessor.add_effect(new BBMOD_LightBloomEffect(undefined, new BBMOD_Vec3(0.2)));
 
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);

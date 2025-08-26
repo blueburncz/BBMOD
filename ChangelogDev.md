@@ -1,4 +1,5 @@
 # Changelog dev
+
 > This file is used to accumulate changes before a changelog for a release is created.
 
 * Added new struct `BBMOD_Scene`, which is used to compose models, terrain, lights, particle effects, cameras etc. into a single scene.
@@ -42,4 +43,7 @@
 * Function `bbmod_lightmap_get` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Function `bbmod_lightmap_set` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Added new method `remove` to `BBMOD_ResourceManager`, which removes a resource from the manager, keeping its reference count.
-* Fixed infinite loop in method `Transpose` of struct `BBMOD_Matrix`.
+
+* Using GameMaker's new function `matrix_inverse` in method `InverseSelf` of struct `BBMOD_Matrix`.
+* Added new method `ToEuler` to `BBMOD_Quaternion`, which retrieves euler angles from the quaternion.
+* Updated Assimp to [v6.0.2](https://github.com/assimp/assimp/releases/tag/v6.0.2).

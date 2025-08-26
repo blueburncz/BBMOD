@@ -1,23 +1,24 @@
 scene.render();
 
-new BBMOD_Matrix()
-	.Scale(1000, 1000, 1000)
-	.Translate(camera.Position)
+var _matrix = new BBMOD_Matrix();
+
+_matrix.ScaleSelf(1000, 1000, 1000)
+	.TranslateSelf(camera.Position)
 	.ApplyWorld();
 modSphere.render([matSky]);
 
-new BBMOD_Matrix()
-	.Translate(0, 0, 1)
+_matrix.SetIdentity()
+	.TranslateSelf(0, 0, 1)
 	.ApplyWorld();
 modSphere.render([matSphere]);
 
-new BBMOD_Matrix()
-	.Translate(4, 0, 1)
+_matrix.SetIdentity()
+	.TranslateSelf(4, 0, 1)
 	.ApplyWorld();
 modSphere.render([matSphereMetallic]);
 
-new BBMOD_Matrix()
-	.Translate(8, 0, 1)
+_matrix.SetIdentity()
+	.TranslateSelf(8, 0, 1)
 	.ApplyWorld();
 modSphere.render([matSphereEmissive]);
 

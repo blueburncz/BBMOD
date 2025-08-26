@@ -36,7 +36,7 @@ function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBM
 
 	__getShadowmapMatrix = __get_shadowmap_matrix;
 
-	__shadowmapMatrixPrev = new BBMOD_Matrix();
+	__shadowmapMatrixPrev = matrix_build_identity();
 
 	static __get_shadowmap_zfar = function ()
 	{
@@ -62,7 +62,7 @@ function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBM
 		var _y = floor((_projectedCenter.Y / _w) * _invTexelScale) * _texelScale;
 		var _z = _projectedCenter.Z / _w;
 		var _correctedCenter = new BBMOD_Vec4(_x, _y, _z, 1.0)
-			.TransformSelf(__shadowmapMatrixPrev.Inverse());
+			.TransformSelf(matrix_inverse(__shadowmapMatrixPrev));
 		var _center = _correctedCenter.Scale(1.0 / _correctedCenter.W);
 
 		return matrix_build_lookat(
@@ -85,11 +85,8 @@ function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBM
 	static __get_shadowmap_matrix = function ()
 	{
 		gml_pragma("forceinline");
-		var _matrix = matrix_multiply(
-			__getViewMatrix(),
-			__getProjMatrix());
-		__shadowmapMatrixPrev = new BBMOD_Matrix(_matrix);
-		return _matrix;
+		__shadowmapMatrixPrev = matrix_multiply(__getViewMatrix(), __getProjMatrix());
+		return __shadowmapMatrixPrev;
 	};
 }
 

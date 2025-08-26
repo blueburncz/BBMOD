@@ -1,5 +1,5 @@
 {
-  "$GMProject":"",
+  "$GMProject":"v1",
   "%Name":"BBMOD",
   "AudioGroups":[
     {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
@@ -93,6 +93,7 @@
     {"$GMFolder":"","%Name":"Shaders","folderPath":"folders/BBMOD/Terrain/Shaders.yy","name":"Shaders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Test","folderPath":"folders/Test.yy","name":"Test","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
+  "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
     {"$GMIncludedFile":"","%Name":"assimp-vc143-mt.dll","CopyToMask":64,"filePath":"datafiles/Data/BBMOD","name":"assimp-vc143-mt.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"BBMOD","CopyToMask":0,"filePath":"datafiles/Data/BBMOD","name":"BBMOD","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -166,7 +167,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.8.1.171",
+    "IDEVersion":"2024.13.1.193",
   },
   "name":"BBMOD",
   "resources":[

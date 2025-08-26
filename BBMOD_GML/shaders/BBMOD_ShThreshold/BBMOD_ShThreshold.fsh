@@ -8,6 +8,7 @@ uniform vec3 u_vScale;
 
 void main()
 {
-	gl_FragColor.rgb = max(texture2D(gm_BaseTexture, v_vTexCoord).rgb + u_vBias, vec3(0.0)) * u_vScale;
+	vec3 color = texture2D(gm_BaseTexture, v_vTexCoord).rgb;
+	gl_FragColor.rgb = any(greaterThan(color + u_vBias, vec3(0.0))) ? (color * u_vScale) : vec3(0.0);
 	gl_FragColor.a = 1.0;
 }
