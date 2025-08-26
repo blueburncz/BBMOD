@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"BBMOD_SprLensFlareHeptagon",
   "bboxMode":0,
   "bbox_bottom":127,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"05f74315-7188-46ef-97f9-79d5e9f72694","name":"05f74315-7188-46ef-97f9-79d5e9f72694","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"05f74315-7188-46ef-97f9-79d5e9f72694","name":"05f74315-7188-46ef-97f9-79d5e9f72694","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

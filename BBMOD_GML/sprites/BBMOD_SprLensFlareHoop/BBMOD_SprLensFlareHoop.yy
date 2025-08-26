@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"BBMOD_SprLensFlareHoop",
   "bboxMode":0,
   "bbox_bottom":511,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"b96bc2e2-32e9-4783-9b2a-f8569dee2561","name":"b96bc2e2-32e9-4783-9b2a-f8569dee2561","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"b96bc2e2-32e9-4783-9b2a-f8569dee2561","name":"b96bc2e2-32e9-4783-9b2a-f8569dee2561","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

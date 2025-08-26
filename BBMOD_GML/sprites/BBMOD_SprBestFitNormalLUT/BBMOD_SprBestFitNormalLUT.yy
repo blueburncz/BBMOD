@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"BBMOD_SprBestFitNormalLUT",
   "bboxMode":0,
   "bbox_bottom":1023,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":true,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"5e52c852-96b0-44bd-a39b-919074af4aec","name":"5e52c852-96b0-44bd-a39b-919074af4aec","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"5e52c852-96b0-44bd-a39b-919074af4aec","name":"5e52c852-96b0-44bd-a39b-919074af4aec","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
