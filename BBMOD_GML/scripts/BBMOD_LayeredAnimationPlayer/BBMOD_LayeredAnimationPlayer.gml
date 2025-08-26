@@ -6,7 +6,7 @@
 ///
 /// @desc An animation player with support for multiple layers, blending and
 /// masking. By default there is only a single layer called "Default". Compatible
-/// only with animations with optimization level 0 and 1!
+/// only with animations with optimization level 0!
 ///
 /// @param {Struct.BBMOD_Model} _model A model that the animation player
 /// animates.

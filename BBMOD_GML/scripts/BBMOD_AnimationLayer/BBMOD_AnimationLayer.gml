@@ -4,7 +4,9 @@
 ///
 /// @implements {BBMOD_IEventListener}
 ///
-/// @desc
+/// @desc A single layer of a layered animation player. Each layer plays its own
+/// animation and can affect a selected portion of the skeleton. Individual
+/// layers mixed or additively blended together.
 ///
 /// @param {String} _name The name of the animation layer.
 ///
@@ -16,19 +18,21 @@ function BBMOD_AnimationLayer(_name) constructor
 	/// @desc {String} The name of the animation layer.
 	Name = _name;
 
-	/// @var {Struct.BBMOD_LayeredAnimationPlayer} The animation player to which this
-	/// layer belongs or `undefined` (default).
+	/// @var {Struct.BBMOD_LayeredAnimationPlayer} The animation player to which
+	/// this layer belongs or `undefined` (default).
 	/// @readonly
 	AnimationPlayer = undefined;
 
 	/// @var {Bool} Whether the layer is enabled. Defaults to `true`.
 	Enabled = true;
 
-	/// @var {Real} Whether this animation layer uses additive blending. Defaults
-	/// to `false`.
+	/// @var {Real} Whether this animation layer is additively blended on top of
+	/// the layer that comes before it. Defaults to `false`.
 	Additive = false;
 
-	/// @var {Real} The blend weight of this animation layer. Defaults to 1.
+	/// @var {Real} The blend weight of this animation layer. Use values in
+	/// range 0..1, where 0 means the layer has no effect and 1 (default) means
+	/// the layer has full effect.
 	Weight = 1.0;
 
 	/// @var {Struct.BBMOD_SkeletonMask} A mask defining which nodes this
@@ -37,7 +41,7 @@ function BBMOD_AnimationLayer(_name) constructor
 
 	/// @var {Real} Used to play animation in this layer at a faster/slower rate.
 	/// Defaults to 1.
-	/// @see BBMOD_AnimationPlayer.PlaybackSpeed
+	/// @see BBMOD_LayeredAnimationPlayer.PlaybackSpeed
 	SpeedMultiplier = 1.0;
 
 	////////////////////////////////////////////////////////////////////////////
@@ -87,8 +91,8 @@ function BBMOD_AnimationLayer(_name) constructor
 	static __animate = function (_animationInstance, _animationTime, _layerPrev, _isLastLayer)
 	{
 		var _model = AnimationPlayer.Model;
-		var _animation = _animationInstance.Animation;
-		var _frame = _animation.__framesParent[_animationTime];
+		var _animation = _animationInstance ? _animationInstance.Animation : undefined;
+		var _frame = _animation ? _animation.__framesParent[_animationTime] : undefined;
 		var _nodeTransform = __nodeTransform;
 		var _positionOverrides = __nodePositionOverride;
 		var _rotationOverrides = __nodeRotationOverride;
@@ -117,41 +121,50 @@ function BBMOD_AnimationLayer(_name) constructor
 			var _nodeParent = _node.Parent;
 			var _parentIndex = (_nodeParent != undefined) ? _nodeParent.Index : -1;
 
-			//if (_nodePositionOverride != undefined
-			//	|| _nodeRotationOverride != undefined)
-			//{
-				// Current layer
-				var _dq = new BBMOD_DualQuaternion().FromArray(_frame, _nodeOffset);
-				var _position = (_nodePositionOverride != undefined)
-					? _nodePositionOverride
-					: _dq.GetTranslation();
-				var _rotation = (_nodeRotationOverride != undefined)
-					? _nodeRotationOverride
-					: _dq.GetRotation();
+			// Current layer
+			var _dqBase = AnimationPlayer.Model.find_node(_nodeIndex).Transform;
+			var _dq = (_frame != undefined) ? new BBMOD_DualQuaternion().FromArray(_frame, _nodeOffset) : _dqBase;
+			var _position = (_nodePositionOverride != undefined)
+				? _nodePositionOverride
+				: _dq.GetTranslation();
+			var _rotation = (_nodeRotationOverride != undefined)
+				? _nodeRotationOverride
+				: _dq.GetRotation();
 
-				// Blend with previous layer
-				if (_layerPrev != undefined)
-				{
-					var _dqPrev = new BBMOD_DualQuaternion().FromArray(_layerPrev.__nodeTransform, _nodeOffset);
-					var _positionPrev = _dqPrev.GetTranslation();
-					var _rotationPrev = _dqPrev.GetRotation();
-					// TODO: Make masking work also for the first animation layer!!!
-					var _weight = Weight * ((Mask != undefined) ? Mask.MaskArray[_nodeIndex] : 1.0);
-					_position = _positionPrev.Lerp(_position, _weight);
-					_rotation = _rotationPrev.Slerp(_rotation, _weight);
-				}
+			// Blend with previous layer
+			var _dqPrev = (_layerPrev != undefined)
+				? new BBMOD_DualQuaternion().FromArray(_layerPrev.__nodeTransform, _nodeOffset)
+				: _dqBase;
+			var _weight = Weight * ((Mask != undefined) ? Mask.MaskArray[_nodeIndex] : 1.0);
+			var _positionPrev = _dqPrev.GetTranslation();
+			var _rotationPrev = _dqPrev.GetRotation();
 
-				_dq.FromTranslationRotation(_position, _rotation);
+			if (Additive)
+			{
+				var _positionBase = _dqBase.GetTranslation();
+				var _rotationBase = _dqBase.GetRotation();
+				var _positionDelta = _position.Sub(_positionBase);
+				var _rotationDelta = _rotation.Mul(_rotationBase.Conjugate());
+				_position = _positionPrev.Add(_positionDelta.Scale(_weight));
+				var _rotScaled = new BBMOD_Quaternion().Slerp(_rotationDelta, _weight);
+				_rotation = _rotScaled.Mul(_rotationPrev).Normalize();
+			}
+			else
+			{
+				_position = _positionPrev.Lerp(_position, _weight);
+				_rotation = _rotationPrev.Slerp(_rotation, _weight);
+			}
 
-				// Transform with parent bone if this is the last layer
-				if (_isLastLayer && _parentIndex != -1)
-				{
-					_dq.MulSelf(new BBMOD_DualQuaternion()
-						.FromArray(_nodeTransform, _parentIndex * 8));
-				}
+			_dq.FromTranslationRotation(_position, _rotation);
 
-				_dq.ToArray(_nodeTransform, _nodeOffset);
-			//}
+			// Transform with parent bone if this is the last layer
+			if (_isLastLayer && _parentIndex != -1)
+			{
+				_dq.MulSelf(new BBMOD_DualQuaternion()
+					.FromArray(_nodeTransform, _parentIndex * 8));
+			}
+
+			_dq.ToArray(_nodeTransform, _nodeOffset);
 
 			var _children = _node.Children;
 			var i = 0;
@@ -180,7 +193,15 @@ function BBMOD_AnimationLayer(_name) constructor
 
 		Time += _deltaTime * 0.000001 * AnimationPlayer.PlaybackSpeed * SpeedMultiplier;
 
-		repeat(array_length(__animations))
+		var _animationCount = array_length(__animations);
+
+		if (_animationCount == 0)
+		{
+			__animate(undefined, Time, _layerPrev, _isLastLayer);
+			return self;
+		}
+
+		repeat(_animationCount)
 		{
 			var _animInst = __animations[0];
 			var _animation = _animInst.Animation;
