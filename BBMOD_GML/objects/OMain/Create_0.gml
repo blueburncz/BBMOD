@@ -18,7 +18,7 @@ else
 }
 renderer.UseAppSurface = true;
 renderer.EnableShadows = true;
-renderer.ShadowmapNormalOffset = 0.01;
+//renderer.ShadowmapNormalOffset = 0.01;
 renderer.EnableSSAO = true;
 renderer.SSAODepthRange = 1.5;
 renderer.SSAORadius = 64;
