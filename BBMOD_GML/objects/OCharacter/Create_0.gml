@@ -16,9 +16,9 @@ model = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character.bbmod", undefined,
 	show_debug_message(_upperBodyMask.MaskArray);
 	layerShoot.Mask = _upperBodyMask;
 
-	//var _torsoMask = new BBMOD_SkeletonMask(_model);
-	//_torsoMask.set_node_mask("Spine", 1.0);
-	//layerTorso.Mask = _torsoMask;
+	var _torsoMask = new BBMOD_SkeletonMask(_model);
+	_torsoMask.set_node_mask(2, 1.0);
+	layerTorso.Mask = _torsoMask;
 });
 
 animIdle = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Idle.bbanim");
@@ -52,12 +52,12 @@ layerShoot.Weight = 1;
 animationPlayer.add_layer(layerShoot);
 layerShoot.play(animShoot, true);
 
+layerTorso = new BBMOD_AnimationLayer("Torso");
+layerTorso.Additive = true;
+layerTorso.set_node_rotation(2, new BBMOD_Quaternion().FromAxisAngle(BBMOD_VEC3_RIGHT, 60));
+animationPlayer.add_layer(layerTorso);
+
 layerJump = new BBMOD_AnimationLayer("Jump");
 layerJump.Weight = 0;
 animationPlayer.add_layer(layerJump);
 layerJump.play(animJump, true);
-
-//layerTorso = new BBMOD_AnimationLayer("Torso");
-//layerTorso.Additive = true;
-//layerTorso.set_node_rotation(1, new BBMOD_Quaternion().FromAxisAngle(BBMOD_VEC3_RIGHT, 60));
-//animationPlayer.add_layer(layerTorso);

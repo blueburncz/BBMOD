@@ -117,7 +117,7 @@ function BBMOD_AnimationLayer(_name) constructor
 
 			// Current layer
 			var _dqBase = AnimationPlayer.Model.find_node(_nodeIndex).Transform;
-			var _dq = (_frame != undefined) ? new BBMOD_DualQuaternion().FromArray(_frame, _nodeOffset) : _dqBase;
+			var _dq = (_frame != undefined) ? new BBMOD_DualQuaternion().FromArray(_frame, _nodeOffset) : _dqBase.Clone();
 			var _position = (_nodePositionOverride != undefined)
 				? _nodePositionOverride
 				: _dq.GetTranslation();
