@@ -231,10 +231,6 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 			if (_layer.Enabled)
 			{
 				_layer.update(_deltaTime, __frameskipCurrent, _layerPrev, _isLastLayer);
-				if (_isLastLayer)
-				{
-					array_copy(__nodeTransform, 0, _layer.__nodeTransform, 0, array_length(_layer.__nodeTransform));
-				}
 				_layerPrev = _layer;
 			}
 			++_layerIndex;

@@ -80,12 +80,6 @@ function BBMOD_AnimationLayer(_name) constructor
 	/// @private
 	__nodeRotationOverride = array_create(BBMOD_MAX_BONES, undefined);
 
-	/// @var {Array<Real>} An array of node transforms in world space.
-	/// Useful for attachments.
-	/// @see BBMOD_LayeredAnimationPlayer.get_node_transform
-	/// @private
-	__nodeTransform = array_create(BBMOD_MAX_BONES * 8, 0.0);
-
 	////////////////////////////////////////////////////////////////////////////
 
 	static __animate = function (_animationInstance, _animationTime, _layerPrev, _isLastLayer)
@@ -93,7 +87,7 @@ function BBMOD_AnimationLayer(_name) constructor
 		var _model = AnimationPlayer.Model;
 		var _animation = _animationInstance ? _animationInstance.Animation : undefined;
 		var _frame = _animation ? _animation.__framesParent[_animationTime] : undefined;
-		var _nodeTransform = __nodeTransform;
+		var _nodeTransform = AnimationPlayer.__nodeTransform;
 		var _positionOverrides = __nodePositionOverride;
 		var _rotationOverrides = __nodeRotationOverride;
 
@@ -133,7 +127,7 @@ function BBMOD_AnimationLayer(_name) constructor
 
 			// Blend with previous layer
 			var _dqPrev = (_layerPrev != undefined)
-				? new BBMOD_DualQuaternion().FromArray(_layerPrev.__nodeTransform, _nodeOffset)
+				? new BBMOD_DualQuaternion().FromArray(AnimationPlayer.__nodeTransform, _nodeOffset)
 				: _dqBase;
 			var _weight = Weight * ((Mask != undefined) ? Mask.MaskArray[_nodeIndex] : 1.0);
 			var _positionPrev = _dqPrev.GetTranslation();
@@ -239,9 +233,9 @@ function BBMOD_AnimationLayer(_name) constructor
 			_animInst.__animationTime = _animationTime;
 
 			var _nodeSize = _model.NodeCount * 8;
-			if (array_length(__nodeTransform) < _nodeSize)
+			if (array_length(AnimationPlayer.__nodeTransform) < _nodeSize)
 			{
-				array_resize(__nodeTransform, _nodeSize);
+				array_resize(AnimationPlayer.__nodeTransform, _nodeSize);
 			}
 
 			var _animEvents = _animation.__events;
