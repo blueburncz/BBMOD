@@ -211,6 +211,8 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	static update = function (_deltaTime)
 	{
+		var _t = get_timer();
+
 		if (!Model.IsLoaded)
 		{
 			return self;
@@ -221,10 +223,23 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 			return self;
 		}
 
-		var _layerIndex = 0;
-		var _layerIndexLast = array_length(Layers) - 1; // This should be the last one ENABLED!
 		var _layerPrev = undefined;
-		repeat(array_length(Layers))
+		var _layerCount = array_length(Layers);
+		var _layerIndexLast = 0;
+
+		var _layerIndex = 0;
+		repeat(_layerCount)
+		{
+			var _layer = Layers[_layerIndex];
+			if (_layer.Enabled)
+			{
+				_layerIndexLast = _layerIndex;
+			}
+			++_layerIndex;
+		}
+
+		_layerIndex = 0;
+		repeat(_layerCount)
 		{
 			var _layer = Layers[_layerIndex];
 			var _isLastLayer = (_layerIndex == _layerIndexLast);
@@ -254,6 +269,8 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 		{
 			__frameskipCurrent = 0;
 		}
+
+		show_debug_message($"{(get_timer() - _t) * 0.001} ms");
 
 		return self;
 	};
