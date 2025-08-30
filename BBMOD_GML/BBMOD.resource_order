@@ -242,6 +242,7 @@
     {"name":"BBMOD_VertexFormat","order":3,"path":"scripts/BBMOD_VertexFormat/BBMOD_VertexFormat.yy",},
     {"name":"BBMOD_VignetteEffect","order":1,"path":"scripts/BBMOD_VignetteEffect/BBMOD_VignetteEffect.yy",},
     {"name":"bbmod_vtf_is_supported","order":22,"path":"scripts/bbmod_vtf_is_supported/bbmod_vtf_is_supported.yy",},
+    {"name":"CGUI","order":1,"path":"scripts/CGUI/CGUI.yy",},
     {"name":"BBMOD_ShCheckMRT","order":19,"path":"shaders/BBMOD_ShCheckMRT/BBMOD_ShCheckMRT.yy",},
     {"name":"BBMOD_ShCheckVTF","order":20,"path":"shaders/BBMOD_ShCheckVTF/BBMOD_ShCheckVTF.yy",},
     {"name":"BBMOD_ShChromaticAberration","order":1,"path":"shaders/BBMOD_ShChromaticAberration/BBMOD_ShChromaticAberration.yy",},
@@ -327,5 +328,6 @@
     {"name":"BBMOD_SprWhite","order":2,"path":"sprites/BBMOD_SprWhite/BBMOD_SprWhite.yy",},
     {"name":"SprCyborgFemaleA","order":1,"path":"sprites/SprCyborgFemaleA/SprCyborgFemaleA.yy",},
     {"name":"SprHeightmap","order":2,"path":"sprites/SprHeightmap/SprHeightmap.yy",},
+    {"name":"SprRoundRect4","order":3,"path":"sprites/SprRoundRect4/SprRoundRect4.yy",},
   ],
 }

@@ -1,12 +1,33 @@
-var _wheel = (mouse_wheel_up() - mouse_wheel_down()) * 0.1;
-if (keyboard_check(ord("Z"))) layerWalk.Weight = clamp(layerWalk.Weight + _wheel, 0.0, 1.0);
-if (keyboard_check(ord("X"))) layerWalk.SpeedMultiplier = clamp(layerWalk.SpeedMultiplier + _wheel, -2.0, 2.0);
-if (keyboard_check(ord("C"))) layerShoot.Weight = clamp(layerShoot.Weight + _wheel, 0.0, 1.0);
-if (keyboard_check(ord("V"))) layerJump.Weight = clamp(layerJump.Weight + _wheel, 0.0, 1.0);
-
-var _text = ""
-	+ $"Walk: {layerWalk.Weight}\n"
-	+ $"WalkSpeed: {layerWalk.SpeedMultiplier}\n"
-	+ $"Shoot: {layerShoot.Weight}\n"
-	+ $"Jump: {layerJump.Weight}\n";
-draw_text(bbmod_window_get_width() / 2, bbmod_window_get_height() / 2, _text);
+ui.SetPosition(8, 8)
+	.Slider("slider-walk-weight", layerWalk.Weight, {
+		Label: "Walk Weight",
+		OnChange: method(layerWalk, function (_value) { Weight = _value; }),
+	})
+	.Newline()
+	.Slider("slider-walk-speed", layerWalk.SpeedMultiplier, {
+		Label: "Walk Speed",
+		OnChange: method(layerWalk, function (_value) { SpeedMultiplier = _value; }),
+		Min: -2,
+		Max: 2,
+	})
+	.Newline()
+	.Slider("slider-shoot-weight", layerShoot.Weight, {
+		Label: "Shoot Weight",
+		OnChange: method(layerShoot, function (_value) { Weight = _value; }),
+	})
+	.Newline()
+	.Slider("slider-jump-weight", layerJump.Weight, {
+		Label: "Jump Weight",
+		OnChange: method(layerJump, function (_value) { Weight = _value; }),
+	})
+	.Newline()
+	.Slider("slider-torso-angle", torsoAngle, {
+		Label: "Torso Angle",
+		OnChange: method(self, function (_value) {
+			torsoAngle = _value;
+			layerTorso.set_node_rotation(1, new BBMOD_Quaternion().FromAxisAngle(BBMOD_VEC3_RIGHT, torsoAngle));
+		}),
+		Min: -60,
+		Max: +60,
+	})
+	;

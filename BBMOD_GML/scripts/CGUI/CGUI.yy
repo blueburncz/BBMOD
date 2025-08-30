@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"CGUI",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"CGUI",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Test/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
