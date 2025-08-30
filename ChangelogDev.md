@@ -2,6 +2,7 @@
 
 > This file is used to accumulate changes before a changelog for a release is created.
 
+* Added new method `get_node_array` to `BBMOD_Model`, which returns an array of all nodes of the model.
 * Added new struct `BBMOD_LayeredAnimationPlayer`.
 * Added new struct `BBMOD_AnimationLayer`.
 * Added new struct `BBMOD_SkeletonMask`.

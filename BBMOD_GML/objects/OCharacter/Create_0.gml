@@ -27,31 +27,36 @@ animWalk = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Walk.bbanim", u
 	bbmod_assert(_err == undefined);
 	_anim.add_event(10, "MyEvent");
 });
+animRun = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Run.bbanim");
 animShoot = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Shoot.bbanim");
 animJump = BBMOD_RESOURCE_MANAGER.load("Data/Character/Character_Jump.bbanim");
 
 animationPlayer = new BBMOD_LayeredAnimationPlayer(model);
 
 layerIdle = animationPlayer.get_layer("Default");
+//layerIdle.Enabled = false;
 layerIdle.play(animIdle, true);
 
 layerWalk = new BBMOD_AnimationLayer("Walk");
 layerWalk.Weight = 1;
+//layerWalk.Enabled = false;
 layerWalk.SpeedMultiplier = -2;
 layerWalk.on_event("MyEvent", function ()
 {
-	show_debug_message("MyEvent!!!");
+	show_debug_message($"MyEvent ({current_time})");
 });
 animationPlayer.add_layer(layerWalk);
 layerWalk.play(animWalk, true);
 
 layerShoot = new BBMOD_AnimationLayer("Shoot");
 layerShoot.Weight = 1;
+//layerShoot.Enabled = false;
 animationPlayer.add_layer(layerShoot);
 layerShoot.play(animShoot, true);
 
 layerJump = new BBMOD_AnimationLayer("Jump");
 layerJump.Weight = 0;
+//layerJump.Enabled = false;
 animationPlayer.add_layer(layerJump);
 layerJump.play(animJump, true);
 
@@ -60,6 +65,7 @@ torsoAngle = 60;
 layerTorso = new BBMOD_AnimationLayer("Torso");
 layerTorso.Additive = true;
 layerTorso.set_node_rotation(1, new BBMOD_Quaternion().FromAxisAngle(BBMOD_VEC3_RIGHT, torsoAngle));
+//layerTorso.Enabled = false;
 animationPlayer.add_layer(layerTorso);
 
 ui = new CGUI();

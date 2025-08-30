@@ -211,8 +211,6 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	static update = function (_deltaTime)
 	{
-		var _t = get_timer();
-
 		if (!Model.IsLoaded)
 		{
 			return self;
@@ -223,34 +221,42 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 			return self;
 		}
 
-		var _layerPrev = undefined;
 		var _layerCount = array_length(Layers);
-		var _layerIndexLast = 0;
+
+		// Find last enabled animation layer
+		var _layerIndexLast = -1;
 
 		var _layerIndex = 0;
 		repeat(_layerCount)
 		{
 			var _layer = Layers[_layerIndex];
-			if (_layer.Enabled)
+			if (_layer.Enabled && _layer.Weight > 0.0)
 			{
 				_layerIndexLast = _layerIndex;
 			}
 			++_layerIndex;
 		}
 
-		_layerIndex = 0;
-		repeat(_layerCount)
+		// Update animation layers, if there are some enabled...
+		if (_layerIndexLast != -1)
 		{
-			var _layer = Layers[_layerIndex];
-			var _isLastLayer = (_layerIndex == _layerIndexLast);
-			if (_layer.Enabled)
+			var _layerPrev = undefined;
+
+			_layerIndex = 0;
+			repeat(_layerCount)
 			{
-				_layer.update(_deltaTime, __frameskipCurrent, _layerPrev, _isLastLayer);
-				_layerPrev = _layer;
+				var _layer = Layers[_layerIndex];
+				var _isLastLayer = (_layerIndex == _layerIndexLast);
+				if (_layer.Enabled && _layer.Weight > 0.0)
+				{
+					_layer.update(_deltaTime, __frameskipCurrent, _layerPrev, _isLastLayer);
+					_layerPrev = _layer;
+				}
+				++_layerIndex;
 			}
-			++_layerIndex;
 		}
 
+		// Get the transform array for shaders
 		var _boneIndex = 0;
 		repeat(Model.BoneCount)
 		{
@@ -269,8 +275,6 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 		{
 			__frameskipCurrent = 0;
 		}
-
-		show_debug_message($"{(get_timer() - _t) * 0.001} ms");
 
 		return self;
 	};
