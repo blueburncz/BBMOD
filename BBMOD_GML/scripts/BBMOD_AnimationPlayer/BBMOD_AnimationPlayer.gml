@@ -126,7 +126,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	__frameskipCurrent = 0;
 
 	/// @var {Real} Controls animation playback speed.
-	PlaybackSpeed = 1;
+	PlaybackSpeed = 1.0;
 
 	/// @var {Array<Real>} An array of node transforms in world space.
 	/// Useful for attachments.
@@ -260,12 +260,13 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			return self;
 		}
 
-		Time += _deltaTime * 0.000001 * PlaybackSpeed;
+		var _animation = __animations[0].Animation;
+		Time += _deltaTime * 0.000001 * PlaybackSpeed * _animation.PlaybackSpeed;
 
 		repeat(array_length(__animations))
 		{
 			var _animInst = __animations[0];
-			var _animation = _animInst.Animation;
+			_animation = _animInst.Animation;
 
 			if (!_animation.IsLoaded)
 			{

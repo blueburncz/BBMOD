@@ -42,7 +42,7 @@ function BBMOD_AnimationLayer(_name) constructor
 	/// @var {Real} Used to play animation in this layer at a faster/slower rate.
 	/// Defaults to 1.
 	/// @see BBMOD_LayeredAnimationPlayer.PlaybackSpeed
-	SpeedMultiplier = 1.0;
+	PlaybackSpeed = 1.0;
 
 	////////////////////////////////////////////////////////////////////////////
 
@@ -589,20 +589,20 @@ function BBMOD_AnimationLayer(_name) constructor
 	{
 		var _model = AnimationPlayer.Model;
 
-		Time += _deltaTime * 0.000001 * AnimationPlayer.PlaybackSpeed * SpeedMultiplier;
-
 		var _animationCount = array_length(__animations);
-
 		if (_animationCount == 0)
 		{
 			__animate(undefined, Time, _layerPrev, _isLastLayer);
 			return self;
 		}
 
+		var _animation = __animations[0].Animation;
+		Time += _deltaTime * 0.000001 * AnimationPlayer.PlaybackSpeed * PlaybackSpeed * _animation.PlaybackSpeed;
+
 		repeat(_animationCount)
 		{
 			var _animInst = __animations[0];
-			var _animation = _animInst.Animation;
+			_animation = _animInst.Animation;
 
 			if (!_animation.IsLoaded)
 			{

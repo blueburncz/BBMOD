@@ -65,7 +65,7 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 	__frameskipCurrent = 0;
 
 	/// @var {Real} Controls animation playback speed.
-	PlaybackSpeed = 1;
+	PlaybackSpeed = 1.0;
 
 	/// @var {Array<Real>} An array of node transforms in world space.
 	/// Useful for attachments.

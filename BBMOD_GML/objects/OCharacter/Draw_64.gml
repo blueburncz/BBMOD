@@ -4,9 +4,9 @@ ui.SetPosition(8, 8)
 		OnChange: method(layerWalk, function (_value) { Weight = _value; }),
 	})
 	.Newline()
-	.Slider("slider-walk-speed", layerWalk.SpeedMultiplier, {
+	.Slider("slider-walk-speed", layerWalk.PlaybackSpeed, {
 		Label: "Walk Speed",
-		OnChange: method(layerWalk, function (_value) { SpeedMultiplier = _value; }),
+		OnChange: method(layerWalk, function (_value) { PlaybackSpeed = _value; }),
 		Min: -2,
 		Max: 2,
 	})

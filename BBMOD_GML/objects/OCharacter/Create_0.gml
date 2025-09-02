@@ -22,7 +22,7 @@ layerIdle.play(animIdle, true);
 layerWalk = new BBMOD_AnimationLayer("Walk");
 layerWalk.Weight = 1;
 //layerWalk.Enabled = false;
-layerWalk.SpeedMultiplier = -2;
+layerWalk.PlaybackSpeed = -2;
 layerWalk.on_event("MyEvent", function ()
 {
 	show_debug_message($"MyEvent ({current_time})");
