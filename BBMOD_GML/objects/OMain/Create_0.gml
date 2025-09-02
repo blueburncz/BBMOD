@@ -64,12 +64,10 @@ renderer.PostProcessor = postProcessor;
 
 batchSphere = undefined;
 
-modSphere = BBMOD_RESOURCE_MANAGER.load("Data/BBMOD/Models/Sphere.bbmod", function (_err, _model)
-{
-	bbmod_assert(_err == undefined, "Failed to load Sphere model!");
-	batchSphere = new BBMOD_DynamicBatch(modSphere);
-	modSphere.freeze();
-});
+modSphere = BBMOD_RESOURCE_MANAGER.load_sync("Data/BBMOD/Models/Sphere.bbmod");
+
+batchSphere = new BBMOD_DynamicBatch(modSphere);
+modSphere.freeze();
 
 var _baseMaterial = undefined;
 if (useDeferredRenderer)
