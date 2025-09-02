@@ -260,10 +260,16 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			return self;
 		}
 
+		var _animationCount = array_length(__animations);
+		if (_animationCount == 0)
+		{
+			return self;
+		}
+
 		var _animation = __animations[0].Animation;
 		Time += _deltaTime * 0.000001 * PlaybackSpeed * _animation.PlaybackSpeed;
 
-		repeat(array_length(__animations))
+		repeat(_animationCount)
 		{
 			var _animInst = __animations[0];
 			_animation = _animInst.Animation;
