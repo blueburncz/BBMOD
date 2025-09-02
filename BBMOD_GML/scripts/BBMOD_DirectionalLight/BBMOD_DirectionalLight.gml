@@ -99,13 +99,13 @@ function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBM
 ///
 /// @see bbmod_light_directional_set
 /// @see BBMOD_DirectionalLight
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.LightDirectional} instead.
+/// @deprecated Please use {@link BBMOD_Environment.LightDirectional} instead.
 function bbmod_light_directional_get()
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().LightDirectional;
+	return bbmod_environment_get_current().LightDirectional;
 }
 
 /// @func bbmod_light_directional_set(_light)
@@ -117,11 +117,11 @@ function bbmod_light_directional_get()
 ///
 /// @see bbmod_light_directional_get
 /// @see BBMOD_DirectionalLight
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.LightDirectional} instead.
+/// @deprecated Please use {@link BBMOD_Environment.LightDirectional} instead.
 function bbmod_light_directional_set(_light)
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().LightDirectional = _light;
+	bbmod_environment_get_current().LightDirectional = _light;
 }

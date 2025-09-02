@@ -568,7 +568,8 @@ function BBMOD_DualQuaternion(
 	static Sclerp = function (_dq, _s)
 	{
 		gml_pragma("forceinline");
-		return _dq.Clone().MulSelf(Conjugate()).PowSelf(_s).MulSelf(self)
+		var _self = Clone();
+		return _dq.Clone().MulSelf(Conjugate()).PowSelf(_s).MulSelf(_self)
 			.NormalizeSelf();
 	};
 
@@ -584,7 +585,8 @@ function BBMOD_DualQuaternion(
 	static SclerpSelf = function (_dq, _s)
 	{
 		gml_pragma("forceinline");
-		_dq.Clone().MulSelf(Conjugate()).PowSelf(_s).MulSelf(self)
+		var _self = Clone();
+		_dq.Clone().MulSelf(Conjugate()).PowSelf(_s).MulSelf(_self)
 			.NormalizeSelf().Copy(self);
 		return self;
 	};

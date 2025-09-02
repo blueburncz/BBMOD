@@ -1,16 +1,19 @@
-var _useDeferredRenderer = bbmod_deferred_renderer_is_supported();
+useDeferredRenderer = bbmod_deferred_renderer_is_supported();
 
 z = 1;
-
-scene = new BBMOD_Scene();
 
 camera = new BBMOD_Camera();
 camera.Exposure = 2;
 camera.MouseSensitivity = 0.5;
 camera.FollowObject = self;
-scene.Camera = camera;
 
-if (_useDeferredRenderer)
+x = 19.55;
+y = -4.31;
+z = 4.5;
+camera.Direction = -134;
+camera.DirectionUp = -23.5;
+
+if (useDeferredRenderer)
 {
 	renderer = new BBMOD_DeferredRenderer();
 }
@@ -21,7 +24,7 @@ else
 }
 renderer.UseAppSurface = true;
 renderer.EnableShadows = true;
-renderer.ShadowmapNormalOffset = 0.01;
+//renderer.ShadowmapNormalOffset = 0.01;
 renderer.EnableSSAO = true;
 renderer.SSAODepthRange = 1.5;
 renderer.SSAORadius = 64;
@@ -42,7 +45,7 @@ postProcessor.add_effect(new BBMOD_LightBloomEffect(undefined, new BBMOD_Vec3(0.
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
 
-if (_useDeferredRenderer)
+if (useDeferredRenderer)
 {
 	postProcessor.add_effect(new BBMOD_ExposureEffect());
 	postProcessor.add_effect(new BBMOD_ReinhardTonemapEffect());
@@ -69,7 +72,7 @@ modSphere = BBMOD_RESOURCE_MANAGER.load("Data/BBMOD/Models/Sphere.bbmod", functi
 });
 
 var _baseMaterial = undefined;
-if (_useDeferredRenderer)
+if (useDeferredRenderer)
 {
 	_baseMaterial = BBMOD_MATERIAL_DEFERRED.clone();
 }
@@ -99,8 +102,10 @@ matSphereEmissive.set_emissive(new BBMOD_Color(255 * 1.1, 127 * 1.1, 0));
 // Lighting
 //
 
-scene.AmbientLightColorUp = BBMOD_C_BLACK;
-scene.AmbientLightColorDown = BBMOD_C_BLACK;
+var _env = bbmod_environment_get_current();
+
+_env.AmbientLightColorUp = BBMOD_C_BLACK;
+_env.AmbientLightColorDown = BBMOD_C_BLACK;
 
 sprIBL = sprite_add("Data/BBMOD/Skies/IBL+40.png", 1, false, false, 0, 0);
 sprSky = sprite_add("Data/BBMOD/Skies/Sky+40.png", 1, false, false, 0, 0);
@@ -108,18 +113,18 @@ sprSky = sprite_add("Data/BBMOD/Skies/Sky+40.png", 1, false, false, 0, 0);
 matSky = BBMOD_MATERIAL_SKY.clone();
 matSky.BaseOpacity = sprite_get_texture(sprSky, 0);
 
-scene.ImageBasedLight = new BBMOD_ImageBasedLight(sprite_get_texture(sprIBL, 0));
+_env.ImageBasedLight = new BBMOD_ImageBasedLight(sprite_get_texture(sprIBL, 0));
 
 sun = new BBMOD_DirectionalLight();
 sun.Direction.Set(0.44, 0.63, -0.64);
 sun.CastShadows = true;
 sun.ShadowmapArea = 100;
 sun.ShadowmapResolution = 2048;
-scene.LightDirectional = sun;
+_env.LightDirectional = sun;
 
 probe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(0, 0, 1));
 probe.Infinite = true;
-scene.add_reflection_probe(probe);
+_env.add_reflection_probe(probe);
 
 sunshafts.LightDirection = sun.Direction;
 
@@ -159,8 +164,8 @@ terrain.Position.Set(
 	0);
 terrain.TextureRepeat.Set(32);
 
-terrainMaterial = _useDeferredRenderer ? BBMOD_MATERIAL_TERRAIN_DEFERRED.clone() : BBMOD_MATERIAL_TERRAIN.clone();
-if (!_useDeferredRenderer)
+terrainMaterial = useDeferredRenderer ? BBMOD_MATERIAL_TERRAIN_DEFERRED.clone() : BBMOD_MATERIAL_TERRAIN.clone();
+if (!useDeferredRenderer)
 {
 	terrainMaterial.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
 }
@@ -172,5 +177,3 @@ terrainLayer = new BBMOD_TerrainLayer();
 terrainLayer.BaseOpacity = sprite_get_texture(BBMOD_SprCheckerboard, 0);
 
 terrain.Layer[@ 0] = terrainLayer;
-
-scene.Terrain = terrain;

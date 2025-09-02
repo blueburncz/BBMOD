@@ -29,8 +29,8 @@
 /// @implements {BBMOD_IEventListener}
 /// @implements {BBMOD_IRenderable}
 ///
-/// @desc An animation player. Each instance of an animated model should have
-/// its own animation player.
+/// @desc A basic animation player. Supports all animation optimization levels,
+/// but no blending and masking.
 ///
 /// @param {Struct.BBMOD_Model} _model A model that the animation player
 /// animates.
@@ -59,10 +59,7 @@
 /// bbmod_material_reset();
 /// ```
 ///
-/// @see BBMOD_Animation
-/// @see BBMOD_AnimationInstance
-/// @see BBMOD_AnimationState
-/// @see BBMOD_AnimationStateMachine
+/// @see BBMOD_LayeredAnimationPlayer
 function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 {
 	BBMOD_IEventListener();
@@ -128,8 +125,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	/// @private
 	__frameskipCurrent = 0;
 
-	/// @var {Real} Controls animation playback speed. Must be a positive
-	/// number!
+	/// @var {Real} Controls animation playback speed.
 	PlaybackSpeed = 1;
 
 	/// @var {Array<Real>} An array of node transforms in world space.
@@ -149,7 +145,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	/// @see BBMOD_Animation.create_transition
 	EnableTransitions = true;
 
-	static animate = function (_animationInstance, _animationTime)
+	static __animate = function (_animationInstance, _animationTime)
 	{
 		var _model = Model;
 		var _animation = _animationInstance.Animation;
@@ -179,10 +175,6 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			}
 
 			var _node = _animStack[--_stackNext];
-
-			// TODO: Separate skeleton from the rest of the nodes to save on
-			// iterations here.
-
 			var _nodeIndex = _node.Index;
 			var _nodeOffset = _nodeIndex * 8;
 			var _nodePositionOverride = _positionOverrides[_nodeIndex];
@@ -209,7 +201,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 				_dq.FromTranslationRotation(_position, _rotation);
 				if (_parentIndex != -1)
 				{
-					_dq = _dq.Mul(new BBMOD_DualQuaternion()
+					_dq.MulSelf(new BBMOD_DualQuaternion()
 						.FromArray(_nodeTransform, _parentIndex * 8));
 				}
 				_dq.ToArray(_nodeTransform, _nodeOffset);
@@ -245,7 +237,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 				_animStack[_stackNext++] = _children[i++];
 			}
 		}
-	}
+	};
 
 	/// @func update(_deltaTime)
 	///
@@ -280,14 +272,17 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 				break;
 			}
 
-			var _animationTime = _animation.get_animation_time(Time);
+			var _time = _animation.__isTransition ? abs(Time) : Time;
+			var _animationTime = _animation.get_animation_time(_time);
+			var _animationDuration = _animation.Duration;
+			var _animationTimeWrapped = bbmod_wrap_value(_animationTime, _animationDuration);
 
-			if (_animationTime >= _animation.Duration)
+			if (_animationTime < 0 || _animationTime >= _animationDuration)
 			{
 				if (_animInst.Loop)
 				{
-					Time %= (_animation.Duration / _animation.TicsPerSecond);
-					_animationTime %= _animation.Duration;
+					Time = bbmod_wrap_value(Time, _animationDuration / _animation.TicsPerSecond);
+					_animationTime = _animationTimeWrapped;
 					_animInst.__eventExecuted = -1;
 					trigger_event(BBMOD_EV_ANIMATION_LOOP, _animation);
 				}
@@ -373,7 +368,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 				}
 				else if (_animation.__spaces & __BBMOD_BONE_SPACE_PARENT)
 				{
-					animate(_animInst, _animationTime);
+					__animate(_animInst, _animationTime);
 				}
 
 				array_copy(__transformArray, _boneSize, __nodeTransform, _boneSize,

@@ -27,13 +27,13 @@ function BBMOD_ImageBasedLight(_texture): BBMOD_Light() constructor
 /// @return {Struct.BBMOD_ImageBasedLight} The image based light or `undefined`.
 ///
 /// @see bbmod_ibl_set
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.ImageBasedLight} instead.
+/// @deprecated Please use {@link BBMOD_Environment.ImageBasedLight} instead.
 function bbmod_ibl_get()
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().ImageBasedLight;
+	return bbmod_environment_get_current().ImageBasedLight;
 }
 
 /// @func bbmod_ibl_set(_ibl)
@@ -44,11 +44,11 @@ function bbmod_ibl_get()
 /// `undefined`.
 ///
 /// @see bbmod_ibl_get
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.ImageBasedLight} instead.
+/// @deprecated Please use {@link BBMOD_Environment.ImageBasedLight} instead.
 function bbmod_ibl_set(_ibl)
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().ImageBasedLight = _ibl;
+	bbmod_environment_get_current().ImageBasedLight = _ibl;
 }

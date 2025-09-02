@@ -15,4 +15,4 @@ matSky = matSky.destroy();
 
 terrainMaterial = terrainMaterial.destroy();
 
-scene = scene.destroy();
+bbmod_environment_get_current().clear();

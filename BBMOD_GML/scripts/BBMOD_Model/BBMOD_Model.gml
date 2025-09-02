@@ -160,6 +160,8 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 			_dest.RootNode = undefined;
 		}
 
+		_dest.__nodeArray = undefined;
+
 		_dest.BoneCount = BoneCount;
 		_dest.__offsetArray = bbmod_array_clone(__offsetArray);
 		_dest.MaterialCount = MaterialCount;
@@ -545,6 +547,45 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 			_ids);
 	};
 
+	/// @var {Array<Struct.BBMOD_Node>} An array of nodes in the order they have
+	/// to be traversed through in animations.
+	/// @private
+	__nodeArray = undefined;
+
+	static __get_node_array_impl = function (_node)
+	{
+		// Add self
+		array_push(__nodeArray, _node);
+
+		// Add children
+		var _children = _node.Children;
+		var i = 0;
+		repeat(array_length(_children))
+		{
+			__get_node_array_impl(_children[i++]);
+		}
+	};
+
+	/// @func get_node_array()
+	///
+	/// @desc Retrieves an array of all nodes of the model.
+	///
+	/// @return {Array<Struct.BBMOD_Node>} The array of nodes.
+	///
+	/// @note The model needs to be loaded, otherwise ends with an error!
+	///
+	/// @see BBMOD_Resource.IsLoaded
+	static get_node_array = function ()
+	{
+		bbmod_assert(IsLoaded);
+		if (__nodeArray == undefined)
+		{
+			__nodeArray = [];
+			__get_node_array_impl(RootNode);
+		}
+		return __nodeArray;
+	};
+
 	/// @var {Array} [nodeCount, nodeIndex, nodeTransform, meshCount, meshes..., ...]
 	/// @private
 	__cacheData = undefined;
@@ -623,7 +664,7 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		return self;
 	};
 
-	static __transformArrayToMatrix = function (_array, _index, _dest)
+	static __transform_array_to_matrix = function (_array, _index, _dest)
 	{
 		gml_pragma("forceinline");
 
@@ -778,7 +819,7 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 			{
 				var _nodeIndex = _cacheData[i++];
 				++i; // Skip node transform
-				__transformArrayToMatrix(_transform, _nodeIndex * 8, _tempMatrix);
+				__transform_array_to_matrix(_transform, _nodeIndex * 8, _tempMatrix);
 				var _nodeTransform = matrix_multiply(_tempMatrix, _matrix);
 				var _meshCount = _cacheData[i++];
 
@@ -881,7 +922,7 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 			{
 				var _nodeIndex = _cacheData[i++];
 				++i; // Skip node transform
-				__transformArrayToMatrix(_transform, _nodeIndex * 8, _tempMatrix);
+				__transform_array_to_matrix(_transform, _nodeIndex * 8, _tempMatrix);
 				var _nodeTransform = matrix_multiply(_tempMatrix, _matrix);
 				var _meshCount = _cacheData[i++];
 
@@ -962,6 +1003,7 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 			Meshes[i++].destroy();
 		}
 		Meshes = undefined;
+		__nodeArray = undefined;
 		return undefined;
 	};
 

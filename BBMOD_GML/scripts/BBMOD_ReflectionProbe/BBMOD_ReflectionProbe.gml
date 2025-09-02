@@ -188,13 +188,13 @@ function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) const
 /// @see bbmod_reflection_probe_find
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.add_reflection_probe} instead.
+/// @deprecated Please use {@link BBMOD_Environment.add_reflection_probe} instead.
 function bbmod_reflection_probe_add(_reflectionProbe)
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().add_reflection_probe(_reflectionProbe);
+	bbmod_environment_get_current().add_reflection_probe(_reflectionProbe);
 }
 
 /// @func bbmod_reflection_probe_count()
@@ -209,14 +209,14 @@ function bbmod_reflection_probe_add(_reflectionProbe)
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.get_reflection_probe_count}
+/// @deprecated Please use {@link BBMOD_Environment.get_reflection_probe_count}
 /// instead.
 function bbmod_reflection_probe_count()
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().get_reflection_probe_count();
+	return bbmod_environment_get_current().get_reflection_probe_count();
 }
 
 /// @func bbmod_reflection_probe_get(_index)
@@ -233,13 +233,13 @@ function bbmod_reflection_probe_count()
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.get_reflection_probe} instead.
+/// @deprecated Please use {@link BBMOD_Environment.get_reflection_probe} instead.
 function bbmod_reflection_probe_get(_index)
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().get_reflection_probe(_index);
+	return bbmod_environment_get_current().get_reflection_probe(_index);
 }
 
 /// @func bbmod_reflection_probe_find(_position)
@@ -259,13 +259,13 @@ function bbmod_reflection_probe_get(_index)
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.find_reflection_probe} instead.
+/// @deprecated Please use {@link BBMOD_Environment.find_reflection_probe} instead.
 function bbmod_reflection_probe_find(_position)
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().find_reflection_probe(_position);
+	return bbmod_environment_get_current().find_reflection_probe(_position);
 }
 
 /// @func bbmod_reflection_probe_remove(_reflectionProbe)
@@ -282,13 +282,13 @@ function bbmod_reflection_probe_find(_position)
 /// @see bbmod_reflection_probe_find
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.remove_reflection_probe} instead.
+/// @deprecated Please use {@link BBMOD_Environment.remove_reflection_probe} instead.
 function bbmod_reflection_probe_remove(_reflectionProbe)
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().remove_reflection_probe(_reflectionProbe);
+	return bbmod_environment_get_current().remove_reflection_probe(_reflectionProbe);
 }
 
 /// @func bbmod_reflection_probe_remove_index(_index)
@@ -305,14 +305,14 @@ function bbmod_reflection_probe_remove(_reflectionProbe)
 /// @see bbmod_reflection_probe_find
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_clear
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.remove_reflection_probe_index}
+/// @deprecated Please use {@link BBMOD_Environment.remove_reflection_probe_index}
 /// instead.
 function bbmod_reflection_probe_remove_index(_index)
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().remove_reflection_probe_index(_index);
+	bbmod_environment_get_current().remove_reflection_probe_index(_index);
 	return true;
 }
 
@@ -326,11 +326,11 @@ function bbmod_reflection_probe_remove_index(_index)
 /// @see bbmod_reflection_probe_find
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.clear_reflection_probes} instead.
+/// @deprecated Please use {@link BBMOD_Environment.clear_reflection_probes} instead.
 function bbmod_reflection_probe_clear()
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().clear_reflection_probes();
+	bbmod_environment_get_current().clear_reflection_probes();
 }

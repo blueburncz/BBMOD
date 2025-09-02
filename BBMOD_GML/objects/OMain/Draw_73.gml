@@ -1,4 +1,4 @@
-scene.render();
+camera.apply();
 
 var _matrix = new BBMOD_Matrix();
 
@@ -23,5 +23,7 @@ _matrix.SetIdentity()
 modSphere.render([matSphereEmissive]);
 
 BBMOD_MATRIX_IDENTITY.ApplyWorld();
+
+terrain.render();
 
 renderer.render();

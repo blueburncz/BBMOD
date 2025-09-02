@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_SkeletonMask",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_SkeletonMask",
+  "parent":{
+    "name":"LayeredAnimationPlayer",
+    "path":"folders/BBMOD/LayeredAnimationPlayer.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

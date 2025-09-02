@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"BBMOD_Scene",
+  "%Name":"CGUI",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BBMOD_Scene",
+  "name":"CGUI",
   "parent":{
-    "name":"Scene",
-    "path":"folders/BBMOD/Core/Scene.yy",
+    "name":"Scripts",
+    "path":"folders/Test/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

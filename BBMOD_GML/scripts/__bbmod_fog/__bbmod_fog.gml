@@ -21,15 +21,15 @@
 /// @see bbmod_fog_set_start
 /// @see bbmod_fog_get_end
 /// @see bbmod_fog_set_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogColor},
-/// {@link BBMOD_Scene.FogIntensity}, {@link BBMOD_Scene.FogStart} and
-/// {@link BBMOD_Scene.FogEnd} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogColor},
+/// {@link BBMOD_Environment.FogIntensity}, {@link BBMOD_Environment.FogStart} and
+/// {@link BBMOD_Environment.FogEnd} instead.
 function bbmod_fog_set(_color, _intensity, _start, _end)
 {
 	gml_pragma("forceinline");
-	with(bbmod_scene_get_current())
+	with(bbmod_environment_get_current())
 	{
 		FogColor = _color;
 		FogIntensity = _intensity;
@@ -52,13 +52,13 @@ function bbmod_fog_set(_color, _intensity, _start, _end)
 /// @see bbmod_fog_set_start
 /// @see bbmod_fog_get_end
 /// @see bbmod_fog_set_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogColor} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogColor} instead.
 function bbmod_fog_get_color()
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().FogColor;
+	return bbmod_environment_get_current().FogColor;
 }
 
 /// @func bbmod_fog_set_color(_color)
@@ -76,13 +76,13 @@ function bbmod_fog_get_color()
 /// @see bbmod_fog_set_start
 /// @see bbmod_fog_get_end
 /// @see bbmod_fog_set_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogColor} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogColor} instead.
 function bbmod_fog_set_color(_color)
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().FogColor = _color;
+	bbmod_environment_get_current().FogColor = _color;
 }
 
 /// @func bbmod_fog_get_intensity()
@@ -99,13 +99,13 @@ function bbmod_fog_set_color(_color)
 /// @see bbmod_fog_set_start
 /// @see bbmod_fog_get_end
 /// @see bbmod_fog_set_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogIntensity} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogIntensity} instead.
 function bbmod_fog_get_intensity()
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().FogIntensity;
+	return bbmod_environment_get_current().FogIntensity;
 }
 
 /// @func bbmod_fog_set_intensity(_intensity)
@@ -123,13 +123,13 @@ function bbmod_fog_get_intensity()
 /// @see bbmod_fog_set_start
 /// @see bbmod_fog_get_end
 /// @see bbmod_fog_set_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogIntensity} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogIntensity} instead.
 function bbmod_fog_set_intensity(_intensity)
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().FogIntensity = _intensity;
+	bbmod_environment_get_current().FogIntensity = _intensity;
 }
 
 /// @func bbmod_fog_get_start()
@@ -146,13 +146,13 @@ function bbmod_fog_set_intensity(_intensity)
 /// @see bbmod_fog_set_start
 /// @see bbmod_fog_get_end
 /// @see bbmod_fog_set_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogStart} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogStart} instead.
 function bbmod_fog_get_start()
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().FogStart;
+	return bbmod_environment_get_current().FogStart;
 }
 
 /// @func bbmod_fog_set_start(_start)
@@ -170,13 +170,13 @@ function bbmod_fog_get_start()
 /// @see bbmod_fog_get_start
 /// @see bbmod_fog_get_end
 /// @see bbmod_fog_set_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogStart} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogStart} instead.
 function bbmod_fog_set_start(_start)
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().FogStart = _start;
+	bbmod_environment_get_current().FogStart = _start;
 }
 
 /// @func bbmod_fog_get_end()
@@ -194,13 +194,13 @@ function bbmod_fog_set_start(_start)
 /// @see bbmod_fog_get_start
 /// @see bbmod_fog_set_start
 /// @see bbmod_fog_set_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogEnd} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogEnd} instead.
 function bbmod_fog_get_end()
 {
 	gml_pragma("forceinline");
-	return bbmod_scene_get_current().FogEnd;
+	return bbmod_environment_get_current().FogEnd;
 }
 
 /// @func bbmod_fog_set_end(_end)
@@ -218,11 +218,11 @@ function bbmod_fog_get_end()
 /// @see bbmod_fog_get_start
 /// @see bbmod_fog_set_start
 /// @see bbmod_fog_get_end
-/// @see bbmod_scene_get_current
+/// @see bbmod_environment_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Scene.FogEnd} instead.
+/// @deprecated Please use {@link BBMOD_Environment.FogEnd} instead.
 function bbmod_fog_set_end(_end)
 {
 	gml_pragma("forceinline");
-	bbmod_scene_get_current().FogEnd = _end;
+	bbmod_environment_get_current().FogEnd = _end;
 }

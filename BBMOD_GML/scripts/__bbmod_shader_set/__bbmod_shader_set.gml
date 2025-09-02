@@ -910,7 +910,7 @@ function bbmod_shader_set_punctual_lights(_shader, _lights = undefined, _isLight
 {
 	gml_pragma("forceinline");
 
-	_lights ??= bbmod_scene_get_current().LightsPunctual;
+	_lights ??= bbmod_environment_get_current().LightsPunctual;
 
 	var _renderPassMask = (1 << bbmod_render_pass_get());
 

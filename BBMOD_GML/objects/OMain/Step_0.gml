@@ -19,8 +19,6 @@ x += lengthdir_x(_forward, camera.Direction) + lengthdir_x(_right, camera.Direct
 y += lengthdir_y(_forward, camera.Direction) + lengthdir_y(_right, camera.Direction - 90);
 z += _up;
 
-scene.update(delta_time);
-
 var _directionPrev = camera.Direction;
 var _directionUpPrev = camera.DirectionUp;
 
