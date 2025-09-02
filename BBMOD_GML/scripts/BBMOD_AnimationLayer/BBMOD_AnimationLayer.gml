@@ -6,7 +6,7 @@
 ///
 /// @desc A single layer of a layered animation player. Each layer plays its own
 /// animation and can affect a selected portion of the skeleton. Individual
-/// layers mixed or additively blended together.
+/// layers can be mixed or additively blended together.
 ///
 /// @param {String} _name The name of the animation layer.
 ///
@@ -611,13 +611,15 @@ function BBMOD_AnimationLayer(_name) constructor
 
 			var _time = _animation.__isTransition ? abs(Time) : Time;
 			var _animationTime = _animation.get_animation_time(_time);
+			var _animationDuration = _animation.Duration;
+			var _animationTimeWrapped = bbmod_wrap_value(_animationTime, _animationDuration);
 
-			if (_animationTime >= _animation.Duration)
+			if (_animationTime < 0 || _animationTime >= _animationDuration)
 			{
 				if (_animInst.Loop)
 				{
-					Time %= (_animation.Duration / _animation.TicsPerSecond);
-					_animationTime %= _animation.Duration;
+					Time = bbmod_wrap_value(Time, _animationDuration / _animation.TicsPerSecond);
+					_animationTime = _animationTimeWrapped;
 					_animInst.__eventExecuted = -1;
 					trigger_event(BBMOD_EV_ANIMATION_LOOP, _animation);
 				}

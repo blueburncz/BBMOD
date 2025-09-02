@@ -222,6 +222,7 @@
     {"id":{"name":"__bbmod_terrain","path":"scripts/__bbmod_terrain/__bbmod_terrain.yy",},},
     {"id":{"name":"__bbmod_texfilter","path":"scripts/__bbmod_texfilter/__bbmod_texfilter.yy",},},
     {"id":{"name":"__bbmod_vertex_buffer","path":"scripts/__bbmod_vertex_buffer/__bbmod_vertex_buffer.yy",},},
+    {"id":{"name":"__bbmod_wrap_value","path":"scripts/__bbmod_wrap_value/__bbmod_wrap_value.yy",},},
     {"id":{"name":"BBMOD_AABBCollider","path":"scripts/BBMOD_AABBCollider/BBMOD_AABBCollider.yy",},},
     {"id":{"name":"BBMOD_AABBEmissionModule","path":"scripts/BBMOD_AABBEmissionModule/BBMOD_AABBEmissionModule.yy",},},
     {"id":{"name":"BBMOD_AddRealOnCollisionModule","path":"scripts/BBMOD_AddRealOnCollisionModule/BBMOD_AddRealOnCollisionModule.yy",},},

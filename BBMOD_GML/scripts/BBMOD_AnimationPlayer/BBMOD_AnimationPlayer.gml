@@ -274,13 +274,15 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 
 			var _time = _animation.__isTransition ? abs(Time) : Time;
 			var _animationTime = _animation.get_animation_time(_time);
+			var _animationDuration = _animation.Duration;
+			var _animationTimeWrapped = bbmod_wrap_value(_animationTime, _animationDuration);
 
-			if (_animationTime >= _animation.Duration)
+			if (_animationTime < 0 || _animationTime >= _animationDuration)
 			{
 				if (_animInst.Loop)
 				{
-					Time %= (_animation.Duration / _animation.TicsPerSecond);
-					_animationTime %= _animation.Duration;
+					Time = bbmod_wrap_value(Time, _animationDuration / _animation.TicsPerSecond);
+					_animationTime = _animationTimeWrapped;
 					_animInst.__eventExecuted = -1;
 					trigger_event(BBMOD_EV_ANIMATION_LOOP, _animation);
 				}
