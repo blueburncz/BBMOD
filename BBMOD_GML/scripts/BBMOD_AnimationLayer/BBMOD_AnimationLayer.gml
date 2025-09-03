@@ -592,7 +592,10 @@ function BBMOD_AnimationLayer(_name) constructor
 		var _animationCount = array_length(__animations);
 		if (_animationCount == 0)
 		{
-			__animate(undefined, Time, _layerPrev, _isLastLayer);
+			if (_frameskipCurrent == 0)
+			{
+				__animate(undefined, Time, _layerPrev, _isLastLayer);
+			}
 			return self;
 		}
 

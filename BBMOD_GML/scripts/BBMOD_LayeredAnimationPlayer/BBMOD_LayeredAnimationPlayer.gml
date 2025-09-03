@@ -257,14 +257,17 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 		}
 
 		// Get the transform array for shaders
-		var _boneIndex = 0;
-		repeat(Model.BoneCount)
+		if (__frameskipCurrent == 0)
 		{
-			__bbmod_dquat_mul_array(
-				Model.__offsetArray, _boneIndex,
-				__nodeTransform, _boneIndex,
-				__transformArray, _boneIndex);
-			_boneIndex += 8;
+			var _boneIndex = 0;
+			repeat(Model.BoneCount)
+			{
+				__bbmod_dquat_mul_array(
+					Model.__offsetArray, _boneIndex,
+					__nodeTransform, _boneIndex,
+					__transformArray, _boneIndex);
+				_boneIndex += 8;
+			}
 		}
 
 		if (Frameskip == infinity)
