@@ -29,6 +29,7 @@
  * [BBMOD_DLL](./BBMOD_DLL.html)
  * [BBMOD_DualQuaternion](./BBMOD_DualQuaternion.html)
  * [BBMOD_DynamicBatch](./BBMOD_DynamicBatch.html)
+ * [BBMOD_Environment](./BBMOD_Environment.html)
  * [BBMOD_Exception](./BBMOD_Exception.html)
  * [BBMOD_ImageBasedLight](./BBMOD_ImageBasedLight.html)
  * [BBMOD_Importer](./BBMOD_Importer.html)
@@ -97,48 +98,51 @@
  * [bbmod_cullmode_from_string](./bbmod_cullmode_from_string.html)
  * [bbmod_cullmode_to_string](./bbmod_cullmode_to_string.html)
  * [bbmod_empty_callback](./bbmod_empty_callback.html)
- * [bbmod_fog_get_color](./bbmod_fog_get_color.html)
- * [bbmod_fog_get_end](./bbmod_fog_get_end.html)
- * [bbmod_fog_get_intensity](./bbmod_fog_get_intensity.html)
- * [bbmod_fog_get_start](./bbmod_fog_get_start.html)
- * [bbmod_fog_set](./bbmod_fog_set.html)
- * [bbmod_fog_set_color](./bbmod_fog_set_color.html)
- * [bbmod_fog_set_end](./bbmod_fog_set_end.html)
- * [bbmod_fog_set_intensity](./bbmod_fog_set_intensity.html)
- * [bbmod_fog_set_start](./bbmod_fog_set_start.html)
+ * [bbmod_environment_get_current](./bbmod_environment_get_current.html)
+ * [bbmod_environment_get_default](./bbmod_environment_get_default.html)
+ * [bbmod_environment_set_current](./bbmod_environment_set_current.html)
+ * [bbmod_fog_get_color](./bbmod_fog_get_color.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_fog_get_end](./bbmod_fog_get_end.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_fog_get_intensity](./bbmod_fog_get_intensity.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_fog_get_start](./bbmod_fog_get_start.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_fog_set](./bbmod_fog_set.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_fog_set_color](./bbmod_fog_set_color.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_fog_set_end](./bbmod_fog_set_end.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_fog_set_intensity](./bbmod_fog_set_intensity.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_fog_set_start](./bbmod_fog_set_start.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_get_calling_function_name](./bbmod_get_calling_function_name.html)
  * [bbmod_gpu_get_default_state](./bbmod_gpu_get_default_state.html)
  * [bbmod_hdr_is_supported](./bbmod_hdr_is_supported.html)
- * [bbmod_ibl_get](./bbmod_ibl_get.html)
- * [bbmod_ibl_set](./bbmod_ibl_set.html)
+ * [bbmod_ibl_get](./bbmod_ibl_get.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_ibl_set](./bbmod_ibl_set.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_is_browser](./bbmod_is_browser.html)
  * [bbmod_json_load](./bbmod_json_load.html)
  * [bbmod_lerp_delta_time](./bbmod_lerp_delta_time.html)
- * [bbmod_light_ambient_get_affect_lightmaps](./bbmod_light_ambient_get_affect_lightmaps.html)
- * [bbmod_light_ambient_get_dir](./bbmod_light_ambient_get_dir.html)
- * [bbmod_light_ambient_get_down](./bbmod_light_ambient_get_down.html)
- * [bbmod_light_ambient_get_up](./bbmod_light_ambient_get_up.html)
- * [bbmod_light_ambient_set](./bbmod_light_ambient_set.html)
- * [bbmod_light_ambient_set_affect_lightmaps](./bbmod_light_ambient_set_affect_lightmaps.html)
- * [bbmod_light_ambient_set_dir](./bbmod_light_ambient_set_dir.html)
- * [bbmod_light_ambient_set_down](./bbmod_light_ambient_set_down.html)
- * [bbmod_light_ambient_set_up](./bbmod_light_ambient_set_up.html)
- * [bbmod_light_directional_get](./bbmod_light_directional_get.html)
- * [bbmod_light_directional_set](./bbmod_light_directional_set.html)
+ * [bbmod_light_ambient_get_affect_lightmaps](./bbmod_light_ambient_get_affect_lightmaps.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_ambient_get_dir](./bbmod_light_ambient_get_dir.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_ambient_get_down](./bbmod_light_ambient_get_down.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_ambient_get_up](./bbmod_light_ambient_get_up.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_ambient_set](./bbmod_light_ambient_set.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_ambient_set_affect_lightmaps](./bbmod_light_ambient_set_affect_lightmaps.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_ambient_set_dir](./bbmod_light_ambient_set_dir.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_ambient_set_down](./bbmod_light_ambient_set_down.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_ambient_set_up](./bbmod_light_ambient_set_up.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_directional_get](./bbmod_light_directional_get.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_directional_set](./bbmod_light_directional_set.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_light_point_add](./bbmod_light_point_add.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_light_point_clear](./bbmod_light_point_clear.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_light_point_count](./bbmod_light_point_count.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_light_point_get](./bbmod_light_point_get.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_light_point_remove](./bbmod_light_point_remove.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_light_point_remove_index](./bbmod_light_point_remove_index.html) <span class="badge badge-warning">DEPRECATED</span>
- * [bbmod_light_punctual_add](./bbmod_light_punctual_add.html)
- * [bbmod_light_punctual_clear](./bbmod_light_punctual_clear.html)
- * [bbmod_light_punctual_count](./bbmod_light_punctual_count.html)
- * [bbmod_light_punctual_get](./bbmod_light_punctual_get.html)
- * [bbmod_light_punctual_remove](./bbmod_light_punctual_remove.html)
- * [bbmod_light_punctual_remove_index](./bbmod_light_punctual_remove_index.html)
- * [bbmod_lightmap_get](./bbmod_lightmap_get.html)
- * [bbmod_lightmap_set](./bbmod_lightmap_set.html)
+ * [bbmod_light_punctual_add](./bbmod_light_punctual_add.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_punctual_clear](./bbmod_light_punctual_clear.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_punctual_count](./bbmod_light_punctual_count.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_punctual_get](./bbmod_light_punctual_get.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_punctual_remove](./bbmod_light_punctual_remove.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_light_punctual_remove_index](./bbmod_light_punctual_remove_index.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_lightmap_get](./bbmod_lightmap_get.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_lightmap_set](./bbmod_lightmap_set.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_material_exists](./bbmod_material_exists.html)
  * [bbmod_material_get](./bbmod_material_get.html)
  * [bbmod_material_props_get](./bbmod_material_props_get.html)
@@ -162,13 +166,13 @@
  * [bbmod_path_is_absolute](./bbmod_path_is_absolute.html)
  * [bbmod_path_is_relative](./bbmod_path_is_relative.html)
  * [bbmod_path_normalize](./bbmod_path_normalize.html)
- * [bbmod_reflection_probe_add](./bbmod_reflection_probe_add.html)
- * [bbmod_reflection_probe_clear](./bbmod_reflection_probe_clear.html)
- * [bbmod_reflection_probe_count](./bbmod_reflection_probe_count.html)
- * [bbmod_reflection_probe_find](./bbmod_reflection_probe_find.html)
- * [bbmod_reflection_probe_get](./bbmod_reflection_probe_get.html)
- * [bbmod_reflection_probe_remove](./bbmod_reflection_probe_remove.html)
- * [bbmod_reflection_probe_remove_index](./bbmod_reflection_probe_remove_index.html)
+ * [bbmod_reflection_probe_add](./bbmod_reflection_probe_add.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_reflection_probe_clear](./bbmod_reflection_probe_clear.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_reflection_probe_count](./bbmod_reflection_probe_count.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_reflection_probe_find](./bbmod_reflection_probe_find.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_reflection_probe_get](./bbmod_reflection_probe_get.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_reflection_probe_remove](./bbmod_reflection_probe_remove.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [bbmod_reflection_probe_remove_index](./bbmod_reflection_probe_remove_index.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_render_pass_from_string](./bbmod_render_pass_from_string.html)
  * [bbmod_render_pass_get](./bbmod_render_pass_get.html)
  * [bbmod_render_pass_set](./bbmod_render_pass_set.html)
@@ -219,6 +223,7 @@
  * [bbmod_vtf_is_supported](./bbmod_vtf_is_supported.html)
  * [bbmod_window_get_height](./bbmod_window_get_height.html)
  * [bbmod_window_get_width](./bbmod_window_get_width.html)
+ * [bbmod_wrap_value](./bbmod_wrap_value.html)
 <h3 id="CoreEnums">Enums</h3>
 
  * [BBMOD_ECubeSide](./BBMOD_ECubeSide.html)
@@ -333,6 +338,13 @@
  * [BBMOD_SHADER_INSTANCE_ID_ANIMATED](./BBMOD_SHADER_INSTANCE_ID_ANIMATED.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_SHADER_INSTANCE_ID_BATCHED](./BBMOD_SHADER_INSTANCE_ID_BATCHED.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_SHADER_LIGHTMAP_INSTANCE_ID](./BBMOD_SHADER_LIGHTMAP_INSTANCE_ID.html) <span class="badge badge-warning">DEPRECATED</span>
+<hr/><h2 id="LayeredAnimationPlayer">LayeredAnimationPlayer</h2>
+
+<h3 id="LayeredAnimationPlayerConstructors">Constructors</h3>
+
+ * [BBMOD_AnimationLayer](./BBMOD_AnimationLayer.html)
+ * [BBMOD_LayeredAnimationPlayer](./BBMOD_LayeredAnimationPlayer.html)
+ * [BBMOD_SkeletonMask](./BBMOD_SkeletonMask.html)
 <hr/><h2 id="OBJImporter">OBJImporter</h2>
 
 <h3 id="OBJImporterConstructors">Constructors</h3>
