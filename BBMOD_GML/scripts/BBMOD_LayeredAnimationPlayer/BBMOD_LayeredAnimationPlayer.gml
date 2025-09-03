@@ -311,7 +311,7 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 	/// that layer.
 	///
 	/// @param {String} _layer The name of the animation layer.
-	/// @param {Struct.BBMOD_Animation} _animation The animation to change to,
+	/// @param {Struct.BBMOD_Animation} _animation The animation to change to.
 	/// @param {Bool} [_loop] If `true` then the animation will be looped.
 	/// Defaults to `false`.
 	///

@@ -575,14 +575,17 @@ function BBMOD_AnimationLayer(_name) constructor
 
 	/// @func update(_deltaTime, _frameskipCurrent, _layerPrev, _isLastLayer)
 	///
-	/// @desc Updates the animation layer. This should be called every frame in
-	/// the step event.
+	/// @desc Updates the animation layer. This is called automatically by the
+	/// animation player that the layer belongs to!
 	///
 	/// @param {Real} _deltaTime How much time has passed since the last frame
 	/// (in microseconds).
-	/// @param {Real} _frameskipCurrent
-	/// @param {Struct.BBMOD_AnimationLayer} _layerPrev
-	/// @param {Bool} _isLastLayer
+	/// @param {Real} _frameskipCurrent The current frameskip value. Animation
+	/// is actually updated only when frameskip equals 0.
+	/// @param {Struct.BBMOD_AnimationLayer} _layerPrev The previous layer or
+	/// `undefined`.
+	/// @param {Bool} _isLastLayer Whether this layer is the last enabled layer
+	/// inside of the animation player.
 	///
 	/// @return {Struct.BBMOD_AnimationLayer} Returns `self`.
 	static update = function (_deltaTime, _frameskipCurrent, _layerPrev, _isLastLayer)
