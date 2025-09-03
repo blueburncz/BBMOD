@@ -382,7 +382,6 @@ function bbmod_environment_get_current()
 	return (global.__bbmodEnvCurrent ?? bbmod_environment_get_default());
 }
 
-
 /// @func bbmod_environment_set_current(_env)
 ///
 /// @desc Changes the current environment.

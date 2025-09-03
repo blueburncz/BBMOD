@@ -299,10 +299,14 @@ function BBMOD_AnimationLayer(_name) constructor
 
 				//var _rotationDelta = _rotation.Mul(_rotationBase.Conjugate());
 
-				var _rotationDeltaX = _rotationW * (-_rotationBaseX) + _rotationX * _rotationBaseW + _rotationY * (-_rotationBaseZ) - _rotationZ * (-_rotationBaseY);
-				var _rotationDeltaY = _rotationW * (-_rotationBaseY) + _rotationY * _rotationBaseW + _rotationZ * (-_rotationBaseX) - _rotationX * (-_rotationBaseZ);
-				var _rotationDeltaZ = _rotationW * (-_rotationBaseZ) + _rotationZ * _rotationBaseW + _rotationX * (-_rotationBaseY) - _rotationY * (-_rotationBaseX);
-				var _rotationDeltaW = _rotationW * _rotationBaseW - _rotationX * (-_rotationBaseX) - _rotationY * (-_rotationBaseY) - _rotationZ * (-_rotationBaseZ);
+				var _rotationDeltaX = _rotationW * (-_rotationBaseX) + _rotationX * _rotationBaseW + _rotationY
+					* (-_rotationBaseZ) - _rotationZ * (-_rotationBaseY);
+				var _rotationDeltaY = _rotationW * (-_rotationBaseY) + _rotationY * _rotationBaseW + _rotationZ
+					* (-_rotationBaseX) - _rotationX * (-_rotationBaseZ);
+				var _rotationDeltaZ = _rotationW * (-_rotationBaseZ) + _rotationZ * _rotationBaseW + _rotationX
+					* (-_rotationBaseY) - _rotationY * (-_rotationBaseX);
+				var _rotationDeltaW = _rotationW * _rotationBaseW - _rotationX * (-_rotationBaseX) - _rotationY
+					* (-_rotationBaseY) - _rotationZ * (-_rotationBaseZ);
 
 				//_position = _positionPrev.Add(_positionDelta.Scale(_weight));
 
@@ -386,10 +390,14 @@ function BBMOD_AnimationLayer(_name) constructor
 
 				//_rotation = _rotScaled.Mul(_rotationPrev).Normalize();
 
-				_rotationX = _rotScaledW * _rotationPrevX + _rotScaledX * _rotationPrevW + _rotScaledY * _rotationPrevZ - _rotScaledZ * _rotationPrevY;
-				_rotationY = _rotScaledW * _rotationPrevY + _rotScaledY * _rotationPrevW + _rotScaledZ * _rotationPrevX - _rotScaledX * _rotationPrevZ;
-				_rotationZ = _rotScaledW * _rotationPrevZ + _rotScaledZ * _rotationPrevW + _rotScaledX * _rotationPrevY - _rotScaledY * _rotationPrevX;
-				_rotationW = _rotScaledW * _rotationPrevW - _rotScaledX * _rotationPrevX - _rotScaledY * _rotationPrevY - _rotScaledZ * _rotationPrevZ;
+				_rotationX = _rotScaledW * _rotationPrevX + _rotScaledX * _rotationPrevW + _rotScaledY
+					* _rotationPrevZ - _rotScaledZ * _rotationPrevY;
+				_rotationY = _rotScaledW * _rotationPrevY + _rotScaledY * _rotationPrevW + _rotScaledZ
+					* _rotationPrevX - _rotScaledX * _rotationPrevZ;
+				_rotationZ = _rotScaledW * _rotationPrevZ + _rotScaledZ * _rotationPrevW + _rotScaledX
+					* _rotationPrevY - _rotScaledY * _rotationPrevX;
+				_rotationW = _rotScaledW * _rotationPrevW - _rotScaledX * _rotationPrevX - _rotScaledY
+					* _rotationPrevY - _rotScaledZ * _rotationPrevZ;
 
 				{
 					var _lengthSqr = (
@@ -398,7 +406,7 @@ function BBMOD_AnimationLayer(_name) constructor
 						+ _rotationZ * _rotationZ
 						+ _rotationW * _rotationW
 					);
-	
+
 					if (_lengthSqr > math_get_epsilon())
 					{
 						var _n = 1.0 / sqrt(_lengthSqr);

@@ -1152,7 +1152,8 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				_rotateByZ = floor(__rotateBy.Z / AngleSnap) * AngleSnap;
 			}
 
-			var _temp = new BBMOD_Vec4(_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0).Transform(_matGlobalInv);
+			var _temp = new BBMOD_Vec4(_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0).Transform(
+				_matGlobalInv);
 			var _forwardGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
 			_temp = new BBMOD_Vec4(_rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z, 0.0).Transform(_matGlobalInv);
 			var _rightGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);

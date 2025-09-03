@@ -394,8 +394,8 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			//var _current = get_timer() - _t;
 			//_sum += _current;
 			//++_iters;
-			//show_debug_message("Current: " + string(_current) + "μs");
-			//show_debug_message("Average: " + string(_sum / _iters) + "μs");
+			//show_debug_message("Current: " + string(_current) + "us");
+			//show_debug_message("Average: " + string(_sum / _iters) + "us");
 
 			__animationInstanceLast = _animInst;
 		}

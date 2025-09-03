@@ -820,7 +820,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 
 	/// @func Orthonormalize(_v)
 	///
-	/// @desc Orthonormalizes the vectors in-place using the Gram–Schmidt process.
+	/// @desc Orthonormalizes the vectors in-place using the Gram-Schmidt process.
 	///
 	/// @param {Struct.BBMOD_Vec3} _v The other vector.
 	///
