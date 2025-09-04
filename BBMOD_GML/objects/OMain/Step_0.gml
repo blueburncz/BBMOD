@@ -27,7 +27,7 @@ renderer.update(delta_time);
 camera.AspectRatio = surface_get_width(application_surface) / surface_get_height(application_surface);
 camera.update(delta_time);
 
-var _scale = 20.0;
+var _scale = 8.0;
 directionalBlur.Vector.Set(
 	angle_difference(camera.Direction, _directionPrev) * _scale,
 	angle_difference(camera.DirectionUp, _directionUpPrev) * _scale);

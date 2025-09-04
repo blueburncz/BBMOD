@@ -2,6 +2,8 @@
 
 > This file is used to accumulate changes before a changelog for a release is created.
 
+* Fixed rendering of gizmo on the screen when there are instances selected.
+
 * Added new struct `BBMOD_Environment`, which stores environment settings like lights, reflection probes and fog.
 * Added new function `bbmod_environment_get_default()`, which retrieves the default environment.
 * Added new function `bbmod_environment_get_current()`, which retrieves the current environment.

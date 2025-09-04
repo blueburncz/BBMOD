@@ -32,12 +32,18 @@ renderer.SSAOPower = 2;
 
 gizmo = new BBMOD_Gizmo();
 renderer.Gizmo = gizmo;
+renderer.EditMode = true;
 
 postProcessor = new BBMOD_PostProcessor();
 postProcessor.LensDirtStrength = 0.1;
 
 //var _dof = new BBMOD_DepthOfFieldEffect();
 //_dof.AutoFocus = true;
+//_dof.AutoFocusRange = 3;
+//_dof.BlurRangeNear = 1;
+//_dof.BlurRangeFar = 1;
+//_dof.BlurScaleNear = 0.5;
+//_dof.BlurScaleFar = 0.5;
 //postProcessor.add_effect(_dof);
 
 postProcessor.add_effect(new BBMOD_LightBloomEffect(undefined, new BBMOD_Vec3(0.2)));
@@ -148,6 +154,18 @@ _e.Color.Alpha = 0.5;
 lensFlare.add_element(_e);
 
 bbmod_lens_flare_add(lensFlare);
+
+var _light = new BBMOD_PointLight();
+_light.Color = BBMOD_C_AQUA;
+_light.Position = new BBMOD_Vec3(22, 22, 2.5);
+_light.Range = 10;
+_env.add_punctual_light(_light);
+
+var _lensFlare = new BBMOD_LensFlare();
+_lensFlare.Range = 20;
+_lensFlare.Position = _light.Position;
+_lensFlare.add_ghosts(BBMOD_SprLensFlareHeptagon, 0, 8, 0.1, 1.0, 0.25, 0.1, 1.5, BBMOD_C_AQUA.Mix(BBMOD_C_BLACK, 0.8));
+bbmod_lens_flare_add(_lensFlare);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
