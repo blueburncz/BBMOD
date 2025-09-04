@@ -97,6 +97,13 @@ function BBMOD_AnimationLayer(_name) constructor
 		{
 			var _node = _nodes[_index++];
 			var _nodeIndex = _node.Index;
+
+			var _weight = Weight * ((Mask != undefined) ? Mask.MaskArray[_nodeIndex] : 1.0);
+			if (_weight <= 0.0 && !_isLastLayer)
+			{
+				continue;
+			}
+
 			var _nodeOffset = _nodeIndex * 8;
 			var _nodePositionOverride = _positionOverrides[_nodeIndex];
 			var _nodeRotationOverride = _rotationOverrides[_nodeIndex];
@@ -228,8 +235,6 @@ function BBMOD_AnimationLayer(_name) constructor
 				_dqPrevDualZ = _dqBaseDualZ;
 				_dqPrevDualW = _dqBaseDualW;
 			}
-
-			var _weight = Weight * ((Mask != undefined) ? Mask.MaskArray[_nodeIndex] : 1.0);
 
 			//var _positionPrev = _dqPrev.GetTranslation();
 			//var _rotationPrev = _dqPrev.GetRotation();
