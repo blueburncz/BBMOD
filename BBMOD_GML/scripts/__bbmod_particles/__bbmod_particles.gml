@@ -72,6 +72,7 @@ function __bbmod_material_particle_unlit()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_ParticleMaterial();
+		_material.Persistent = true;
 		_material.set_shader(BBMOD_ERenderPass.Alpha, BBMOD_SHADER_PARTICLE_UNLIT);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprParticle, 0);
 		_material.AlphaTest = 0.01;
@@ -87,6 +88,7 @@ function __bbmod_material_particle_lit()
 	if (_material == undefined)
 	{
 		_material = BBMOD_MATERIAL_PARTICLE_UNLIT.clone();
+		_material.Persistent = true;
 		_material.set_shader(BBMOD_ERenderPass.Alpha, BBMOD_SHADER_PARTICLE_LIT);
 		//_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_PARTICLE_DEPTH);
 		_material.ShadowmapBias = 0.01;

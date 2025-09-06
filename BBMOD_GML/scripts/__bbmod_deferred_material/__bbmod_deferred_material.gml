@@ -32,8 +32,13 @@ function __bbmod_shader_gbuffer()
 function __bbmod_material_deferred()
 {
 	gml_pragma("forceinline");
-	static _material = new BBMOD_DefaultMaterial()
-		.set_shader(BBMOD_ERenderPass.GBuffer, BBMOD_SHADER_GBUFFER);
+	static _material = undefined;
+	if (_material == undefined)
+	{
+		_material = new BBMOD_DefaultMaterial();
+		_material.Persistent = true;
+		_material.set_shader(BBMOD_ERenderPass.GBuffer, BBMOD_SHADER_GBUFFER);
+	}
 	return _material;
 }
 
@@ -55,6 +60,7 @@ function __bbmod_material_terrain_deferred()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_TerrainMaterial();
+		_material.Persistent = true;
 		_material.set_shader(BBMOD_ERenderPass.GBuffer, BBMOD_SHADER_TERRAIN_GBUFFER);
 		_material.set_shader(BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_TERRAIN);
 		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);

@@ -120,6 +120,7 @@ function __bbmod_material_default()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT);
+		_material.Persistent = true;
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
 	}
 	return _material;
@@ -131,6 +132,7 @@ function __bbmod_material_default_unlit()
 	if (_material == undefined)
 	{
 		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_UNLIT);
+		_material.Persistent = true;
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
 	}
 	return _material;
@@ -138,13 +140,23 @@ function __bbmod_material_default_unlit()
 
 function __bbmod_material_default_lightmap()
 {
-	static _material = new BBMOD_DefaultLightmapMaterial(BBMOD_SHADER_DEFAULT_LIGHTMAP);
+	static _material = undefined;
+	if (_material == undefined)
+	{
+		_material = new BBMOD_DefaultLightmapMaterial(BBMOD_SHADER_DEFAULT_LIGHTMAP);
+		_material.Persistent = true;
+	}
 	return _material;
 }
 
 function __bbmod_material_default_sprite()
 {
-	static _material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_SPRITE);
+	static _material = undefined;
+	if (_material == undefined)
+	{
+		_material = new BBMOD_DefaultMaterial(BBMOD_SHADER_DEFAULT_SPRITE);
+		_material.Persistent = true;
+	}
 	return _material;
 }
 
