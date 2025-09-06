@@ -85,13 +85,16 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 	/// @private
 	__indexToInstance = ds_map_create();
 
-	// @func from_model(_model)
+	/// @func from_model(_model)
 	///
-	/// @desc
+	/// @desc Creates a dynamic batch from given model.
 	///
-	/// @param {Struct.BBMOD_Model} _model
+	/// @param {Struct.BBMOD_Model} _model The model to create a dynamic batch
+	/// of. Must not be frozen!
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
+	///
+	/// @see BBMOD_Model.Frozen
 	static from_model = function (_model)
 	{
 		Model = _model;
