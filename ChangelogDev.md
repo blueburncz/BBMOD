@@ -16,6 +16,7 @@
 * Method `import` of `BBMOD_OBJImporter` now uses `BBMOD_ResourceManager.load_sync` instead of `load`.
 
 * Added new method `get_node_array()` to `BBMOD_Model`, which returns an array of all nodes of the model.
+* Methods `get_material` and `set_material` of struct `BBMOD_Model` can now also accept the material index instead of the name of the slot.
 
 * Added new function `bbmod_wrap_value(_value, _rangeMax)`, which wraps given value to range 0..max-1.
 

@@ -463,63 +463,83 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		return undefined;
 	};
 
-	/// @func get_material(_name)
+	/// @func get_material(_nameOrIndex)
 	///
-	/// @desc Retrieves a material by its name.
+	/// @desc Retrieves a material by its name or index.
 	///
-	/// @param {String} _name The name of the material.
+	/// @param {String, Real} _nameOrIndex The name of the material or its index
+	/// in the material array.
 	///
 	/// @return {Struct.BBMOD_IMaterial, Pointer.Texture} The material.
 	///
-	/// @throws {BBMOD_Exception} If the model does not have a material with
-	/// given name.
+	/// @throws {BBMOD_Exception} If the model does not have such material.
 	///
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.set_material
-	static get_material = function (_name)
+	static get_material = function (_nameOrIndex)
 	{
+		if (is_real(_nameOrIndex))
+		{
+			if (_nameOrIndex < 0 || _nameOrIndex >= MaterialCount)
+			{
+				throw new BBMOD_OutOfRangeException("Material index out of range!");
+			}
+			return Materials[_nameOrIndex];
+		}
+
 		var i = 0;
 		repeat(MaterialCount)
 		{
-			if (MaterialNames[i] == _name)
+			if (MaterialNames[i] == _nameOrIndex)
 			{
 				return Materials[i];
 			}
 			++i;
 		}
+
 		throw new BBMOD_Exception("No such material found!");
 	};
 
-	/// @func set_material(_name, _material)
+	/// @func set_material(_nameOrIndex, _material)
 	///
-	/// @desc Sets a material.
+	/// @desc Sets a material for given slot.
 	///
-	/// @param {String} _name The name of the material slot.
+	/// @param {String, Real} _nameOrIndex The name or index of the material
+	/// slot.
 	/// @param {Struct.BBMOD_IMaterial, Pointer.Texture} _material Either a
 	/// material struct or just a texture if you don't wish to use BBMOD's
 	/// material system.
 	///
 	/// @return {Struct.BBMOD_Model} Returns `self`.
 	///
-	/// @throws {BBMOD_Exception} If the model does not have a material with
-	/// given name.
+	/// @throws {BBMOD_Exception} If the model does not have such material slot.
 	///
 	/// @see BBMOD_Model.Materials
 	/// @see BBMOD_Model.MaterialNames
 	/// @see BBMOD_Model.get_material
-	static set_material = function (_name, _material)
+	static set_material = function (_nameOrIndex, _material)
 	{
+		if (is_real(_nameOrIndex))
+		{
+			if (_nameOrIndex < 0 || _nameOrIndex >= MaterialCount)
+			{
+				throw new BBMOD_OutOfRangeException("Material index out of range!");
+			}
+			return Materials[@ _nameOrIndex] = _material;
+		}
+
 		var i = 0;
 		repeat(MaterialCount)
 		{
-			if (MaterialNames[i] == _name)
+			if (MaterialNames[i] == _nameOrIndex)
 			{
 				Materials[@ i] = _material;
 				return self;
 			}
 			++i;
 		}
+
 		throw new BBMOD_Exception("No such material found!");
 	};
 
