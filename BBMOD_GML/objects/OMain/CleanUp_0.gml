@@ -4,15 +4,8 @@ postProcessor = postProcessor.destroy();
 
 batchSphere = batchSphere.destroy();
 
-matSphere = matSphere.destroy();
-matSphereMetallic = matSphereMetallic.destroy();
-matSphereEmissive = matSphereEmissive.destroy();
-
-sprite_delete(sprIBL);
-sprite_delete(sprSky);
-
-matSky = matSky.destroy();
-
-terrainMaterial = terrainMaterial.destroy();
-
+// Resets all environment settings (lights, fog, reflection probes, ...)
 bbmod_environment_get_current().clear();
+
+// Destroys all resources that aren't persistent
+BBMOD_RESOURCE_MANAGER.clear();
