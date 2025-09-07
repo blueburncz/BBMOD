@@ -24,10 +24,6 @@ BBMOD is a library that makes creating 3D games in GameMaker easier! Whether you
 or you are building fully immersive 3D worlds, BBMOD helps you bring your vision to life! For more info, please see its
 homepage <https://blueburn.cz/bbmod/>.
 
-> [!TIP]
-> **BBMOD 4 is currently in development!** See the design document [here](https://github.com/blueburncz/BBMOD/issues/105)
-> and its branch [here](https://github.com/blueburncz/BBMOD/tree/bbmod4).
-
 ## Screenshots
 
 ![Sponza](screenshots/Sponza.png)
