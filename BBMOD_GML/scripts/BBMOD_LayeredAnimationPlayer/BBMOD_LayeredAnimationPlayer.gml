@@ -223,8 +223,8 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 
 		var _layerCount = array_length(Layers);
 
-		// Find last enabled animation layer
-		var _layerIndexLast = -1;
+		// Update animation layers
+		var _layerPrev = undefined;
 
 		var _layerIndex = 0;
 		repeat(_layerCount)
@@ -232,33 +232,90 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 			var _layer = Layers[_layerIndex];
 			if (_layer.Enabled && _layer.Weight > 0.0)
 			{
-				_layerIndexLast = _layerIndex;
+				_layer.update(_deltaTime, __frameskipCurrent, _layerPrev);
+				_layerPrev = _layer;
 			}
 			++_layerIndex;
 		}
 
-		// Update animation layers, if there are some enabled...
-		if (_layerIndexLast != -1)
-		{
-			var _layerPrev = undefined;
-
-			_layerIndex = 0;
-			repeat(_layerCount)
-			{
-				var _layer = Layers[_layerIndex];
-				var _isLastLayer = (_layerIndex == _layerIndexLast);
-				if (_layer.Enabled && _layer.Weight > 0.0)
-				{
-					_layer.update(_deltaTime, __frameskipCurrent, _layerPrev, _isLastLayer);
-					_layerPrev = _layer;
-				}
-				++_layerIndex;
-			}
-		}
-
-		// Get the transform array for shaders
 		if (__frameskipCurrent == 0)
 		{
+			// Transform nodes with parent node
+			var _nodes = Model.get_node_array();
+			var _index = 0;
+			repeat(array_length(_nodes))
+			{
+				var _node = _nodes[_index++];
+				var _nodeIndex = _node.Index;
+				var _nodeOffset = _nodeIndex * 8;
+				var _nodeParent = _node.Parent;
+
+				if (_nodeParent == undefined)
+				{
+					continue;
+				}
+
+				var _parentIndex = _nodeParent.Index;
+
+				//_dq.MulSelf(new BBMOD_DualQuaternion()
+				//	.FromArray(__nodeTransform, _parentIndex * 8));
+
+				var _dqRealX = __nodeTransform[_nodeOffset + 0];
+				var _dqRealY = __nodeTransform[_nodeOffset + 1];
+				var _dqRealZ = __nodeTransform[_nodeOffset + 2];
+				var _dqRealW = __nodeTransform[_nodeOffset + 3];
+				var _dqDualX = __nodeTransform[_nodeOffset + 4];
+				var _dqDualY = __nodeTransform[_nodeOffset + 5];
+				var _dqDualZ = __nodeTransform[_nodeOffset + 6];
+				var _dqDualW = __nodeTransform[_nodeOffset + 7];
+
+				var _dq1r0 = _dqRealX;
+				var _dq1r1 = _dqRealY;
+				var _dq1r2 = _dqRealZ;
+				var _dq1r3 = _dqRealW;
+				var _dq1d0 = _dqDualX;
+				var _dq1d1 = _dqDualY;
+				var _dq1d2 = _dqDualZ;
+				var _dq1d3 = _dqDualW;
+
+				var _parentOffset = _parentIndex * 8;
+
+				var _dq2r0 = __nodeTransform[_parentOffset + 0];
+				var _dq2r1 = __nodeTransform[_parentOffset + 1];
+				var _dq2r2 = __nodeTransform[_parentOffset + 2];
+				var _dq2r3 = __nodeTransform[_parentOffset + 3];
+				var _dq2d0 = __nodeTransform[_parentOffset + 4];
+				var _dq2d1 = __nodeTransform[_parentOffset + 5];
+				var _dq2d2 = __nodeTransform[_parentOffset + 6];
+				var _dq2d3 = __nodeTransform[_parentOffset + 7];
+
+				_dqRealX = (_dq2r3 * _dq1r0 + _dq2r0 * _dq1r3 + _dq2r1 * _dq1r2 - _dq2r2 * _dq1r1);
+				_dqRealY = (_dq2r3 * _dq1r1 + _dq2r1 * _dq1r3 + _dq2r2 * _dq1r0 - _dq2r0 * _dq1r2);
+				_dqRealZ = (_dq2r3 * _dq1r2 + _dq2r2 * _dq1r3 + _dq2r0 * _dq1r1 - _dq2r1 * _dq1r0);
+				_dqRealW = (_dq2r3 * _dq1r3 - _dq2r0 * _dq1r0 - _dq2r1 * _dq1r1 - _dq2r2 * _dq1r2);
+
+				_dqDualX = (_dq2d3 * _dq1r0 + _dq2d0 * _dq1r3 + _dq2d1 * _dq1r2 - _dq2d2 * _dq1r1)
+					+ (_dq2r3 * _dq1d0 + _dq2r0 * _dq1d3 + _dq2r1 * _dq1d2 - _dq2r2 * _dq1d1);
+				_dqDualY = (_dq2d3 * _dq1r1 + _dq2d1 * _dq1r3 + _dq2d2 * _dq1r0 - _dq2d0 * _dq1r2)
+					+ (_dq2r3 * _dq1d1 + _dq2r1 * _dq1d3 + _dq2r2 * _dq1d0 - _dq2r0 * _dq1d2);
+				_dqDualZ = (_dq2d3 * _dq1r2 + _dq2d2 * _dq1r3 + _dq2d0 * _dq1r1 - _dq2d1 * _dq1r0)
+					+ (_dq2r3 * _dq1d2 + _dq2r2 * _dq1d3 + _dq2r0 * _dq1d1 - _dq2r1 * _dq1d0);
+				_dqDualW = (_dq2d3 * _dq1r3 - _dq2d0 * _dq1r0 - _dq2d1 * _dq1r1 - _dq2d2 * _dq1r2)
+					+ (_dq2r3 * _dq1d3 - _dq2r0 * _dq1d0 - _dq2r1 * _dq1d1 - _dq2r2 * _dq1d2);
+
+				//_dq.ToArray(__nodeTransform, _nodeOffset);
+
+				__nodeTransform[@ _nodeOffset + 0] = _dqRealX;
+				__nodeTransform[@ _nodeOffset + 1] = _dqRealY;
+				__nodeTransform[@ _nodeOffset + 2] = _dqRealZ;
+				__nodeTransform[@ _nodeOffset + 3] = _dqRealW;
+				__nodeTransform[@ _nodeOffset + 4] = _dqDualX;
+				__nodeTransform[@ _nodeOffset + 5] = _dqDualY;
+				__nodeTransform[@ _nodeOffset + 6] = _dqDualZ;
+				__nodeTransform[@ _nodeOffset + 7] = _dqDualW;
+			}
+
+			// Get the transform array for shaders
 			var _boneIndex = 0;
 			repeat(Model.BoneCount)
 			{

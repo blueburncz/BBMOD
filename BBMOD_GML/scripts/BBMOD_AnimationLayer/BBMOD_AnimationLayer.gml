@@ -82,7 +82,7 @@ function BBMOD_AnimationLayer(_name) constructor
 
 	////////////////////////////////////////////////////////////////////////////
 
-	static __animate = function (_animationInstance, _animationTime, _layerPrev, _isLastLayer)
+	static __animate = function (_animationInstance, _animationTime, _layerPrev)
 	{
 		var _model = AnimationPlayer.Model;
 		var _animation = _animationInstance ? _animationInstance.Animation : undefined;
@@ -99,7 +99,7 @@ function BBMOD_AnimationLayer(_name) constructor
 			var _nodeIndex = _node.Index;
 
 			var _weight = Weight * ((Mask != undefined) ? Mask.MaskArray[_nodeIndex] : 1.0);
-			if (_weight <= 0.0 && !_isLastLayer)
+			if (_weight <= 0.0)
 			{
 				continue;
 			}
@@ -532,47 +532,6 @@ function BBMOD_AnimationLayer(_name) constructor
 					- _tY * _dqRealY - _tZ * _dqRealZ) * 0.5;
 			}
 
-			// Transform with parent bone if this is the last layer
-			if (_isLastLayer && _parentIndex != -1)
-			{
-				//_dq.MulSelf(new BBMOD_DualQuaternion()
-				//	.FromArray(_animationPlayerNodeTransform, _parentIndex * 8));
-
-				var _dq1r0 = _dqRealX;
-				var _dq1r1 = _dqRealY;
-				var _dq1r2 = _dqRealZ;
-				var _dq1r3 = _dqRealW;
-				var _dq1d0 = _dqDualX;
-				var _dq1d1 = _dqDualY;
-				var _dq1d2 = _dqDualZ;
-				var _dq1d3 = _dqDualW;
-
-				var _parentOffset = _parentIndex * 8;
-
-				var _dq2r0 = _animationPlayerNodeTransform[_parentOffset + 0];
-				var _dq2r1 = _animationPlayerNodeTransform[_parentOffset + 1];
-				var _dq2r2 = _animationPlayerNodeTransform[_parentOffset + 2];
-				var _dq2r3 = _animationPlayerNodeTransform[_parentOffset + 3];
-				var _dq2d0 = _animationPlayerNodeTransform[_parentOffset + 4];
-				var _dq2d1 = _animationPlayerNodeTransform[_parentOffset + 5];
-				var _dq2d2 = _animationPlayerNodeTransform[_parentOffset + 6];
-				var _dq2d3 = _animationPlayerNodeTransform[_parentOffset + 7];
-
-				_dqRealX = (_dq2r3 * _dq1r0 + _dq2r0 * _dq1r3 + _dq2r1 * _dq1r2 - _dq2r2 * _dq1r1);
-				_dqRealY = (_dq2r3 * _dq1r1 + _dq2r1 * _dq1r3 + _dq2r2 * _dq1r0 - _dq2r0 * _dq1r2);
-				_dqRealZ = (_dq2r3 * _dq1r2 + _dq2r2 * _dq1r3 + _dq2r0 * _dq1r1 - _dq2r1 * _dq1r0);
-				_dqRealW = (_dq2r3 * _dq1r3 - _dq2r0 * _dq1r0 - _dq2r1 * _dq1r1 - _dq2r2 * _dq1r2);
-
-				_dqDualX = (_dq2d3 * _dq1r0 + _dq2d0 * _dq1r3 + _dq2d1 * _dq1r2 - _dq2d2 * _dq1r1)
-					+ (_dq2r3 * _dq1d0 + _dq2r0 * _dq1d3 + _dq2r1 * _dq1d2 - _dq2r2 * _dq1d1);
-				_dqDualY = (_dq2d3 * _dq1r1 + _dq2d1 * _dq1r3 + _dq2d2 * _dq1r0 - _dq2d0 * _dq1r2)
-					+ (_dq2r3 * _dq1d1 + _dq2r1 * _dq1d3 + _dq2r2 * _dq1d0 - _dq2r0 * _dq1d2);
-				_dqDualZ = (_dq2d3 * _dq1r2 + _dq2d2 * _dq1r3 + _dq2d0 * _dq1r1 - _dq2d1 * _dq1r0)
-					+ (_dq2r3 * _dq1d2 + _dq2r2 * _dq1d3 + _dq2r0 * _dq1d1 - _dq2r1 * _dq1d0);
-				_dqDualW = (_dq2d3 * _dq1r3 - _dq2d0 * _dq1r0 - _dq2d1 * _dq1r1 - _dq2d2 * _dq1r2)
-					+ (_dq2r3 * _dq1d3 - _dq2r0 * _dq1d0 - _dq2r1 * _dq1d1 - _dq2r2 * _dq1d2);
-			}
-
 			//_dq.ToArray(_animationPlayerNodeTransform, _nodeOffset);
 
 			_animationPlayerNodeTransform[@ _nodeOffset + 0] = _dqRealX;
@@ -586,7 +545,7 @@ function BBMOD_AnimationLayer(_name) constructor
 		}
 	};
 
-	/// @func update(_deltaTime, _frameskipCurrent, _layerPrev, _isLastLayer)
+	/// @func update(_deltaTime, _frameskipCurrent, _layerPrev)
 	///
 	/// @desc Updates the animation layer. This is called automatically by the
 	/// animation player that the layer belongs to!
@@ -597,11 +556,9 @@ function BBMOD_AnimationLayer(_name) constructor
 	/// is actually updated only when frameskip equals 0.
 	/// @param {Struct.BBMOD_AnimationLayer} _layerPrev The previous layer or
 	/// `undefined`.
-	/// @param {Bool} _isLastLayer Whether this layer is the last enabled layer
-	/// inside of the animation player.
 	///
 	/// @return {Struct.BBMOD_AnimationLayer} Returns `self`.
-	static update = function (_deltaTime, _frameskipCurrent, _layerPrev, _isLastLayer)
+	static update = function (_deltaTime, _frameskipCurrent, _layerPrev)
 	{
 		var _model = AnimationPlayer.Model;
 
@@ -610,7 +567,7 @@ function BBMOD_AnimationLayer(_name) constructor
 		{
 			if (_frameskipCurrent == 0)
 			{
-				__animate(undefined, Time, _layerPrev, _isLastLayer);
+				__animate(undefined, Time, _layerPrev);
 			}
 			return self;
 		}
@@ -683,7 +640,7 @@ function BBMOD_AnimationLayer(_name) constructor
 			{
 				if (_animation.__spaces & __BBMOD_BONE_SPACE_PARENT)
 				{
-					__animate(_animInst, _animationTime, _layerPrev, _isLastLayer);
+					__animate(_animInst, _animationTime, _layerPrev);
 				}
 				else
 				{
