@@ -27,7 +27,7 @@ renderer.EnableShadows = true;
 //renderer.ShadowmapNormalOffset = 0.01;
 renderer.EnableSSAO = true;
 renderer.SSAODepthRange = 1.5;
-renderer.SSAORadius = 64;
+renderer.SSAORadius = 128;
 renderer.SSAOPower = 2;
 
 gizmo = new BBMOD_Gizmo();
@@ -46,7 +46,7 @@ postProcessor.LensDirtStrength = 0.1;
 //_dof.BlurScaleFar = 0.5;
 //postProcessor.add_effect(_dof);
 
-postProcessor.add_effect(new BBMOD_LightBloomEffect(undefined, new BBMOD_Vec3(0.2)));
+postProcessor.add_effect(new BBMOD_LightBloomEffect(new BBMOD_Vec3(-1.1), new BBMOD_Vec3(0.1)));
 
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
@@ -174,12 +174,12 @@ bbmod_lens_flare_add(_lensFlare);
 //
 
 terrain = new BBMOD_Terrain(SprHeightmap);
-terrain.Scale.Set(16);
+terrain.Scale.Set(16, 16, 1);
 terrain.Position.Set(
 	-terrain.Size.X * terrain.Scale.X * 0.5,
 	-terrain.Size.Y * terrain.Scale.Y * 0.5,
 	0);
-terrain.TextureRepeat.Set(32);
+terrain.TextureRepeat.Set(64);
 
 var _matTerrain = useDeferredRenderer ? BBMOD_MATERIAL_TERRAIN_DEFERRED.clone() : BBMOD_MATERIAL_TERRAIN.clone();
 if (!useDeferredRenderer)
@@ -189,8 +189,7 @@ if (!useDeferredRenderer)
 terrain.Material = _matTerrain;
 BBMOD_RESOURCE_MANAGER.add("MatTerrain", _matTerrain);
 
-terrain.Colormap = sprite_get_texture(SprColormap, 0);
-
 var _layer = new BBMOD_TerrainLayer();
-_layer.BaseOpacity = sprite_get_texture(BBMOD_SprCheckerboard, 0);
+_layer.BaseOpacity = sprite_get_texture(SprGrass, 0);
+_layer.NormalRoughness = sprite_get_texture(SprGrass, 1);
 terrain.Layer[@ 0] = _layer;

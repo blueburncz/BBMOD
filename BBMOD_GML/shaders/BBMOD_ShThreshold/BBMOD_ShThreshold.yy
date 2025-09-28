@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShThreshold",
   "name":"BBMOD_ShThreshold",
   "parent":{
-    "name":"PostProcessing",
-    "path":"folders/BBMOD/PostProcessing.yy",
+    "name":"Shaders",
+    "path":"folders/BBMOD/Core/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShCheckVTF",
   "name":"BBMOD_ShCheckVTF",
   "parent":{
-    "name":"Utils",
-    "path":"folders/BBMOD/Core/Utils.yy",
+    "name":"Shaders",
+    "path":"folders/BBMOD/Core/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

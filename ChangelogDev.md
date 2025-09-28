@@ -3,6 +3,8 @@
 > This file is used to accumulate changes before a changelog for a release is created.
 
 * Fixed rendering of gizmo on the screen when there are instances selected.
+* Fixed SSAO sampling kernel not scaling with depth. You will need to increase `SSAORadius` to get the same look as before!
+* Fixed energy conservation between diffuse and specular lighting in PBR shaders.
 
 * Added new struct `BBMOD_Environment`, which stores environment settings like lights, reflection probes and fog.
 * Added new function `bbmod_environment_get_default()`, which retrieves the default environment.

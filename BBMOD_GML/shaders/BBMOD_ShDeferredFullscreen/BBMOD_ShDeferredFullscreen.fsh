@@ -213,14 +213,34 @@ vec3 xBRDF(vec3 f0, float roughness, float NdotL, float NdotV, float NdotH, floa
 	return specular / ((4.0 * NdotL * NdotV) + 0.1);
 }
 
-vec3 SpecularGGX(Material m, vec3 N, vec3 V, vec3 L)
+void DoCommonLightPS(
+	vec3 color,
+	float shadow,
+	float att,
+	vec3 N,
+	vec3 V,
+	vec3 L,
+	Material m,
+	inout vec3 diffuse,
+	inout vec3 specular,
+	inout vec3 subsurface)
 {
-	vec3 H = normalize(L + V);
 	float NdotL = max(dot(N, L), 0.0);
+	vec3 H = normalize(L + V);
 	float NdotV = max(dot(N, V), 0.0);
 	float NdotH = max(dot(N, H), 0.0);
 	float VdotH = max(dot(V, H), 0.0);
-	return xBRDF(m.Specular, m.Roughness, NdotL, NdotV, NdotH, VdotH);
+
+	//subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
+
+	color *= (1.0 - shadow) * NdotL * att;
+
+	float D = xSpecularD_GGX(m.Roughness, NdotH);
+	vec3 F = xSpecularF_Schlick(m.Specular, VdotH);
+	float G = xSpecularG_Schlick(xK_Analytic(m.Roughness), NdotL, NdotH);
+	specular += color * ((D * F * G) / ((4.0 * NdotL * NdotV) + 0.1));
+
+	diffuse += color * (vec3(1.0) - F);
 }
 
 void DoDirectionalLightPS(
@@ -236,11 +256,18 @@ void DoDirectionalLightPS(
 	inout vec3 subsurface)
 {
 	vec3 L = normalize(-direction);
-	float NdotL = max(dot(N, L), 0.0);
-	//subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
-	color *= (1.0 - shadow) * NdotL;
-	diffuse += color;
-	specular += color * SpecularGGX(m, N, V, L);
+
+	DoCommonLightPS(
+		color,
+		shadow,
+		1.0,
+		N,
+		V,
+		L,
+		m,
+		diffuse,
+		specular,
+		subsurface);
 }
 
 void DoPointLightPS(
@@ -261,11 +288,19 @@ void DoPointLightPS(
 	L = normalize(L);
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
 	att *= att;
-	float NdotL = max(dot(N, L), 0.0);
-	//subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
-	color *= (1.0 - shadow) * NdotL * att;
-	diffuse += color;
-	specular += color * SpecularGGX(m, N, V, L);
+
+	
+	DoCommonLightPS(
+		color,
+		shadow,
+		att,
+		N,
+		V,
+		L,
+		m,
+		diffuse,
+		specular,
+		subsurface);
 }
 
 void DoSpotLightPS(
@@ -291,10 +326,19 @@ void DoSpotLightPS(
 	float theta = dot(L, normalize(-direction));
 	float epsilon = dcosInner - dcosOuter;
 	float intensity = clamp((theta - dcosOuter) / epsilon, 0.0, 1.0);
-	//subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
-	color *= (1.0 - shadow) * intensity * att;
-	diffuse += color;
-	specular += color * SpecularGGX(m, N, V, L);
+
+	
+	DoCommonLightPS(
+		color,
+		shadow,
+		att * intensity,
+		N,
+		V,
+		L,
+		m,
+		diffuse,
+		specular,
+		subsurface);
 }
 void Exposure()
 {

@@ -4,7 +4,7 @@
   "name":"BBMOD_ShGammaToLinear",
   "parent":{
     "name":"Shaders",
-    "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
+    "path":"folders/BBMOD/Core/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

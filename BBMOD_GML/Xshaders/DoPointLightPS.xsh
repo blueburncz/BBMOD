@@ -1,12 +1,5 @@
 #pragma include("Material.xsh")
-#if defined(X_PBR) && !defined(X_TERRAIN) && !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
-#    pragma include("CheapSubsurface.xsh")
-#endif
-#if defined(X_PBR) && !defined(X_PARTICLES)
-#    pragma include("SpecularGGX.xsh")
-#else
-#    pragma include("SpecularBlinnPhong.xsh")
-#endif
+#pragma include("DoCommonLightPS.xsh")
 
 void DoPointLightPS(
 	vec3 position,
@@ -26,15 +19,17 @@ void DoPointLightPS(
 	L = normalize(L);
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
 	att *= att;
-	float NdotL = max(dot(N, L), 0.0);
-#if defined(X_PBR) && !defined(X_TERRAIN) && !defined(X_LIGHTMAP) && !defined(X_PARTICLES)
-	subsurface += xCheapSubsurface(m.Subsurface, V, N, L, color);
-#endif
-	color *= (1.0 - shadow) * NdotL * att;
-	diffuse += color;
-#if defined(X_PBR) && !defined(X_PARTICLES)
-	specular += color * SpecularGGX(m, N, V, L);
-#else
-	specular += color * SpecularBlinnPhong(m, N, V, L);
-#endif
+
+	
+	DoCommonLightPS(
+		color,
+		shadow,
+		att,
+		N,
+		V,
+		L,
+		m,
+		diffuse,
+		specular,
+		subsurface);
 }

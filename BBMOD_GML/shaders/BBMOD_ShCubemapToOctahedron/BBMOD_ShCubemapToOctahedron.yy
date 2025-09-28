@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShCubemapToOctahedron",
   "name":"BBMOD_ShCubemapToOctahedron",
   "parent":{
-    "name":"Rendering",
-    "path":"folders/BBMOD/Core/Rendering.yy",
+    "name":"Shaders",
+    "path":"folders/BBMOD/Core/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
