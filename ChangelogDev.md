@@ -72,4 +72,5 @@ only with animations with optimization level 0!
 * Function `bbmod_lightmap_get` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Function `bbmod_lightmap_set` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 
-* Moved enum `BBMOD_EPropertyType` and struct `BBMOD_Property` from the Core module into the Save module.
+* **Moved** enum `BBMOD_EPropertyType` and struct `BBMOD_Property` from the Core module into the Save module.
+* **Moved** structs `BBMOD_Importer`, `BBMOD_MeshBuilder` and `BBMOD_Vertex` from the Core module into the OBJImporter module.

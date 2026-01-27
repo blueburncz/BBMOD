@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_Property",
   "parent":{
-    "name":"Properties",
-    "path":"folders/BBMOD/Core/Properties.yy",
+    "name":"Save",
+    "path":"folders/BBMOD/Save.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

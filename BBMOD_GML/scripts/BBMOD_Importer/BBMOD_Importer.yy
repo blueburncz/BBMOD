@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_Importer",
   "parent":{
-    "name":"Core",
-    "path":"folders/BBMOD/Core.yy",
+    "name":"OBJImporter",
+    "path":"folders/BBMOD/OBJImporter.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

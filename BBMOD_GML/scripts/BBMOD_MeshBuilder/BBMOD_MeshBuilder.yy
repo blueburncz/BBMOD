@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_MeshBuilder",
   "parent":{
-    "name":"MeshBuilder",
-    "path":"folders/BBMOD/Core/MeshBuilder.yy",
+    "name":"OBJImporter",
+    "path":"folders/BBMOD/OBJImporter.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
