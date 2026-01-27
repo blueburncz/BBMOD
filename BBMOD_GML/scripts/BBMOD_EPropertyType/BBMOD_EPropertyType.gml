@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Save
 
 /// @enum Enumeration of all property types.
 /// @see BBMOD_Property

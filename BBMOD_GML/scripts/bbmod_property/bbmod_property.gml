@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Save
 
 /// @func BBMOD_Property(_name, _type)
 ///

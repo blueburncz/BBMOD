@@ -71,3 +71,5 @@ only with animations with optimization level 0!
 * Function `bbmod_reflection_probe_clear` is now **deprecated**! Please use method `BBMOD_Scene.clear_reflection_probes` instead.
 * Function `bbmod_lightmap_get` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
 * Function `bbmod_lightmap_set` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
+
+* Moved enum `BBMOD_EPropertyType` and struct `BBMOD_Property` from the Core module into the Save module.
