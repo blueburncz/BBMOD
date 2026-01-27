@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__bbmod_ssao",
   "parent":{
-    "name":"SSAO",
-    "path":"folders/BBMOD/Rendering/SSAO.yy",
+    "name":"Rendering",
+    "path":"folders/BBMOD/Core/Rendering.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

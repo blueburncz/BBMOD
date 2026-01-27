@@ -1,4 +1,4 @@
-/// @module Rendering.SSAO
+/// @module Core
 
 /// @macro {Real} Size of the SSAO noise texture. Must be the same as in shaders!
 /// @private
