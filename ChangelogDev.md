@@ -6,10 +6,10 @@
 * Fixed SSAO sampling kernel not scaling with depth. You will need to increase `SSAORadius` to get the same look as before!
 * Fixed energy conservation between diffuse and specular lighting in PBR shaders.
 
-* Added new struct `BBMOD_Environment`, which stores environment settings like lights, reflection probes and fog.
-* Added new function `bbmod_environment_get_default()`, which retrieves the default environment.
-* Added new function `bbmod_environment_get_current()`, which retrieves the current environment.
-* Added new function `bbmod_environment_set_current(_env)`, which changes the current environment.
+* Added new struct `BBMOD_Scene`, which stores scene settings like lights, reflection probes and fog.
+* Added new function `bbmod_scene_get_default()`, which retrieves the default scene.
+* Added new function `bbmod_scene_get_current()`, which retrieves the current scene.
+* Added new function `bbmod_scene_set_current(_scene)`, which changes the current scene.
 
 * Added new method `remove(_resourceOrPath)` to `BBMOD_ResourceManager`, which removes a resource from the manager, keeping its reference count.
 * Added new method `load_sync(_path[, _sha1])`, which synchronously loads a resource from a file or retrieves a reference to it, if it is already loaded.
@@ -34,40 +34,40 @@ only with animations with optimization level 0!
 
 * Updated Assimp to [v6.0.2](https://github.com/assimp/assimp/releases/tag/v6.0.2).
 
-* Function `bbmod_fog_set` is now **deprecated**! Please use properties `BBMOD_Environment.FogColor`, `BBMOD_Environment.FogIntensity`, `BBMOD_Environment.FogStart` and `BBMOD_Environment.FogEnd` instead.
-* Function `bbmod_fog_get_color` is now **deprecated**! Please use property `BBMOD_Environment.FogColor` instead.
-* Function `bbmod_fog_set_color` is now **deprecated**! Please use property `BBMOD_Environment.FogColor` instead.
-* Function `bbmod_fog_get_intensity` is now **deprecated**! Please use property `BBMOD_Environment.FogIntensity` instead.
-* Function `bbmod_fog_set_intensity` is now **deprecated**! Please use property `BBMOD_Environment.FogIntensity` instead.
-* Function `bbmod_fog_get_start` is now **deprecated**! Please use property `BBMOD_Environment.FogStart` instead.
-* Function `bbmod_fog_set_start` is now **deprecated**! Please use property `BBMOD_Environment.FogStart` instead.
-* Function `bbmod_fog_get_end` is now **deprecated**! Please use property `BBMOD_Environment.FogEnd` instead.
-* Function `bbmod_fog_set_end` is now **deprecated**! Please use property `BBMOD_Environment.FogEnd` instead.
-* Function `bbmod_light_ambient_set_dir` is now **deprecated**! Please use property `BBMOD_Environment.AmbientLightDirection` instead.
-* Function `bbmod_light_ambient_get_dir` is now **deprecated**! Please use property `BBMOD_Environment.AmbientLightDirection` instead.
-* Function `bbmod_light_ambient_set` is now **deprecated**! Please use properties `BBMOD_Environment.AmbientLightColorUp` and `BBMOD_Environment.AmbientLightColorDown` instead.
-* Function `bbmod_light_ambient_get_up` is now **deprecated**! Please use property `BBMOD_Environment.AmbientLightColorUp` instead.
-* Function `bbmod_light_ambient_set_up` is now **deprecated**! Please use property `BBMOD_Environment.AmbientLightColorUp` instead.
-* Function `bbmod_light_ambient_get_down` is now **deprecated**! Please use property `BBMOD_Environment.AmbientLightColorDown` instead.
-* Function `bbmod_light_ambient_set_down` is now **deprecated**! Please use property `BBMOD_Environment.AmbientLightColorDown` instead.
-* Function `bbmod_light_ambient_get_affect_lightmaps` is now **deprecated**! Please use property `BBMOD_Environment.AmbientLightAffectLightmaps` instead.
-* Function `bbmod_light_ambient_set_affect_lightmaps` is now **deprecated**! Please use property `BBMOD_Environment.AmbientLightAffectLightmaps` instead.
-* Function `bbmod_light_directional_get` is now **deprecated**! Please use property `BBMOD_Environment.LightDirectional` instead.
-* Function `bbmod_light_directional_set` is now **deprecated**! Please use property `BBMOD_Environment.LightDirectional` instead.
-* Function `bbmod_light_punctual_add` is now **deprecated**! Please use method `BBMOD_Environment.add_punctual_light` instead.
-* Function `bbmod_light_punctual_count` is now **deprecated**! Please use method `BBMOD_Environment.get_punctual_light_count` instead.
-* Function `bbmod_light_punctual_get` is now **deprecated**! Please use method `BBMOD_Environment.get_punctual_light` instead.
-* Function `bbmod_light_punctual_remove` is now **deprecated**! Please use method `BBMOD_Environment.remove_punctual_light` instead.
-* Function `bbmod_light_punctual_remove_index` is now **deprecated**! Please use method `BBMOD_Environment.remove_punctual_light_index` instead.
-* Function `bbmod_light_punctual_clear` is now **deprecated**! Please use method `BBMOD_Environment.clear_punctual_lights` instead.
-* Function `bbmod_ibl_get` is now **deprecated**! Please use property `BBMOD_Environment.ImageBasedLight` instead.
-* Function `bbmod_ibl_get` is now **deprecated**! Please use property `BBMOD_Environment.ImageBasedLight` instead.
-* Function `bbmod_reflection_probe_add` is now **deprecated**! Please use method `BBMOD_Environment.add_reflection_probe` instead.
-* Function `bbmod_reflection_probe_count` is now **deprecated**! Please use method `BBMOD_Environment.get_reflection_probe_count` instead.
-* Function `bbmod_reflection_probe_get` is now **deprecated**! Please use method `BBMOD_Environment.get_reflection_probe` instead.
-* Function `bbmod_reflection_probe_find` is now **deprecated**! Please use method `BBMOD_Environment.find_reflection_probe` instead.
-* Function `bbmod_reflection_probe_remove` is now **deprecated**! Please use method `BBMOD_Environment.remove_reflection_probe` instead.
-* Function `bbmod_reflection_probe_remove_index` is now **deprecated**! Please use method `BBMOD_Environment.remove_reflection_probe_index` instead.
-* Function `bbmod_reflection_probe_clear` is now **deprecated**! Please use method `BBMOD_Environment.clear_reflection_probes` instead.
-* Function `bbmod_lightmap_get` is now **deprecated**! Please use property `BBMOD_Environment.Lightmap` instead.
-* Function `bbmod_lightmap_set` is now **deprecated**! Please use property `BBMOD_Environment.Lightmap` instead.
+* Function `bbmod_fog_set` is now **deprecated**! Please use properties `BBMOD_Scene.FogColor`, `BBMOD_Scene.FogIntensity`, `BBMOD_Scene.FogStart` and `BBMOD_Scene.FogEnd` instead.
+* Function `bbmod_fog_get_color` is now **deprecated**! Please use property `BBMOD_Scene.FogColor` instead.
+* Function `bbmod_fog_set_color` is now **deprecated**! Please use property `BBMOD_Scene.FogColor` instead.
+* Function `bbmod_fog_get_intensity` is now **deprecated**! Please use property `BBMOD_Scene.FogIntensity` instead.
+* Function `bbmod_fog_set_intensity` is now **deprecated**! Please use property `BBMOD_Scene.FogIntensity` instead.
+* Function `bbmod_fog_get_start` is now **deprecated**! Please use property `BBMOD_Scene.FogStart` instead.
+* Function `bbmod_fog_set_start` is now **deprecated**! Please use property `BBMOD_Scene.FogStart` instead.
+* Function `bbmod_fog_get_end` is now **deprecated**! Please use property `BBMOD_Scene.FogEnd` instead.
+* Function `bbmod_fog_set_end` is now **deprecated**! Please use property `BBMOD_Scene.FogEnd` instead.
+* Function `bbmod_light_ambient_set_dir` is now **deprecated**! Please use property `BBMOD_Scene.AmbientLightDirection` instead.
+* Function `bbmod_light_ambient_get_dir` is now **deprecated**! Please use property `BBMOD_Scene.AmbientLightDirection` instead.
+* Function `bbmod_light_ambient_set` is now **deprecated**! Please use properties `BBMOD_Scene.AmbientLightColorUp` and `BBMOD_Scene.AmbientLightColorDown` instead.
+* Function `bbmod_light_ambient_get_up` is now **deprecated**! Please use property `BBMOD_Scene.AmbientLightColorUp` instead.
+* Function `bbmod_light_ambient_set_up` is now **deprecated**! Please use property `BBMOD_Scene.AmbientLightColorUp` instead.
+* Function `bbmod_light_ambient_get_down` is now **deprecated**! Please use property `BBMOD_Scene.AmbientLightColorDown` instead.
+* Function `bbmod_light_ambient_set_down` is now **deprecated**! Please use property `BBMOD_Scene.AmbientLightColorDown` instead.
+* Function `bbmod_light_ambient_get_affect_lightmaps` is now **deprecated**! Please use property `BBMOD_Scene.AmbientLightAffectLightmaps` instead.
+* Function `bbmod_light_ambient_set_affect_lightmaps` is now **deprecated**! Please use property `BBMOD_Scene.AmbientLightAffectLightmaps` instead.
+* Function `bbmod_light_directional_get` is now **deprecated**! Please use property `BBMOD_Scene.LightDirectional` instead.
+* Function `bbmod_light_directional_set` is now **deprecated**! Please use property `BBMOD_Scene.LightDirectional` instead.
+* Function `bbmod_light_punctual_add` is now **deprecated**! Please use method `BBMOD_Scene.add_punctual_light` instead.
+* Function `bbmod_light_punctual_count` is now **deprecated**! Please use method `BBMOD_Scene.get_punctual_light_count` instead.
+* Function `bbmod_light_punctual_get` is now **deprecated**! Please use method `BBMOD_Scene.get_punctual_light` instead.
+* Function `bbmod_light_punctual_remove` is now **deprecated**! Please use method `BBMOD_Scene.remove_punctual_light` instead.
+* Function `bbmod_light_punctual_remove_index` is now **deprecated**! Please use method `BBMOD_Scene.remove_punctual_light_index` instead.
+* Function `bbmod_light_punctual_clear` is now **deprecated**! Please use method `BBMOD_Scene.clear_punctual_lights` instead.
+* Function `bbmod_ibl_get` is now **deprecated**! Please use property `BBMOD_Scene.ImageBasedLight` instead.
+* Function `bbmod_ibl_get` is now **deprecated**! Please use property `BBMOD_Scene.ImageBasedLight` instead.
+* Function `bbmod_reflection_probe_add` is now **deprecated**! Please use method `BBMOD_Scene.add_reflection_probe` instead.
+* Function `bbmod_reflection_probe_count` is now **deprecated**! Please use method `BBMOD_Scene.get_reflection_probe_count` instead.
+* Function `bbmod_reflection_probe_get` is now **deprecated**! Please use method `BBMOD_Scene.get_reflection_probe` instead.
+* Function `bbmod_reflection_probe_find` is now **deprecated**! Please use method `BBMOD_Scene.find_reflection_probe` instead.
+* Function `bbmod_reflection_probe_remove` is now **deprecated**! Please use method `BBMOD_Scene.remove_reflection_probe` instead.
+* Function `bbmod_reflection_probe_remove_index` is now **deprecated**! Please use method `BBMOD_Scene.remove_reflection_probe_index` instead.
+* Function `bbmod_reflection_probe_clear` is now **deprecated**! Please use method `BBMOD_Scene.clear_reflection_probes` instead.
+* Function `bbmod_lightmap_get` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.
+* Function `bbmod_lightmap_set` is now **deprecated**! Please use property `BBMOD_Scene.Lightmap` instead.

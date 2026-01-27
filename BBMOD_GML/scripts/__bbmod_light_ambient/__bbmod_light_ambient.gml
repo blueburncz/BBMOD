@@ -9,13 +9,13 @@
 /// Should be normalized!
 ///
 /// @see bbmod_light_ambient_get_dir
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightDirection} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightDirection} instead.
 function bbmod_light_ambient_set_dir(_dir)
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().AmbientLightDirection = _dir;
+	bbmod_scene_get_current().AmbientLightDirection = _dir;
 }
 
 /// @func bbmod_light_ambient_get_dir()
@@ -27,13 +27,13 @@ function bbmod_light_ambient_set_dir(_dir)
 /// The default value is {@link BBMOD_VEC3_UP}.
 ///
 /// @see bbmod_light_ambient_set_dir
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightDirection} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightDirection} instead.
 function bbmod_light_ambient_get_dir()
 {
 	gml_pragma("forceinline");
-	return bbmod_environment_get_current().AmbientLightDirection;
+	return bbmod_scene_get_current().AmbientLightDirection;
 }
 
 /// @func bbmod_light_ambient_set(_color)
@@ -48,15 +48,15 @@ function bbmod_light_ambient_get_dir()
 /// @see bbmod_light_ambient_get_down
 /// @see bbmod_light_ambient_set_down
 /// @see BBMOD_Color
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightColorUp} and
-/// {@link BBMOD_Environment.AmbientLightColorDown} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorUp} and
+/// {@link BBMOD_Scene.AmbientLightColorDown} instead.
 function bbmod_light_ambient_set(_color)
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().AmbientLightColorUp = _color;
-	bbmod_environment_get_current().AmbientLightColorDown = _color;
+	bbmod_scene_get_current().AmbientLightColorUp = _color;
+	bbmod_scene_get_current().AmbientLightColorDown = _color;
 }
 
 /// @func bbmod_light_ambient_get_up()
@@ -72,13 +72,13 @@ function bbmod_light_ambient_set(_color)
 /// @see bbmod_light_ambient_get_down
 /// @see bbmod_light_ambient_set_down
 /// @see BBMOD_Color
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightColorUp} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorUp} instead.
 function bbmod_light_ambient_get_up()
 {
 	gml_pragma("forceinline");
-	return bbmod_environment_get_current().AmbientLightColorUp;
+	return bbmod_scene_get_current().AmbientLightColorUp;
 }
 
 /// @func bbmod_light_ambient_set_up(_color)
@@ -94,13 +94,13 @@ function bbmod_light_ambient_get_up()
 /// @see bbmod_light_ambient_get_down
 /// @see bbmod_light_ambient_set_down
 /// @see BBMOD_Color
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightColorUp} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorUp} instead.
 function bbmod_light_ambient_set_up(_color)
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().AmbientLightColorUp = _color;
+	bbmod_scene_get_current().AmbientLightColorUp = _color;
 }
 
 /// @func bbmod_light_ambient_get_down()
@@ -116,13 +116,13 @@ function bbmod_light_ambient_set_up(_color)
 /// @see bbmod_light_ambient_set_up
 /// @see bbmod_light_ambient_set_down
 /// @see BBMOD_Color
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightColorDown} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorDown} instead.
 function bbmod_light_ambient_get_down()
 {
 	gml_pragma("forceinline");
-	return bbmod_environment_get_current().AmbientLightColorDown;
+	return bbmod_scene_get_current().AmbientLightColorDown;
 }
 
 /// @func bbmod_light_ambient_set_down(_color)
@@ -138,13 +138,13 @@ function bbmod_light_ambient_get_down()
 /// @see bbmod_light_ambient_set_up
 /// @see bbmod_light_ambient_get_down
 /// @see BBMOD_Color
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightColorDown} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightColorDown} instead.
 function bbmod_light_ambient_set_down(_color)
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().AmbientLightColorDown = _color;
+	bbmod_scene_get_current().AmbientLightColorDown = _color;
 }
 
 /// @func bbmod_light_ambient_get_affect_lightmaps()
@@ -155,13 +155,13 @@ function bbmod_light_ambient_set_down(_color)
 /// @return {Bool} Returns `true` if ambient light affects materials that
 /// use lightmaps.
 ///
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightAffectLightmaps} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightAffectLightmaps} instead.
 function bbmod_light_ambient_get_affect_lightmaps()
 {
 	gml_pragma("forceinline");
-	return bbmod_environment_get_current().AmbientLightAffectLightmaps;
+	return bbmod_scene_get_current().AmbientLightAffectLightmaps;
 }
 
 /// @func bbmod_light_ambient_set_affect_lightmaps(_enable)
@@ -172,11 +172,11 @@ function bbmod_light_ambient_get_affect_lightmaps()
 /// @param {Bool} _enable Use `true` to enable ambient light affecting materials
 /// that use baked lightmaps.
 ///
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.AmbientLightAffectLightmaps} instead.
+/// @deprecated Please use {@link BBMOD_Scene.AmbientLightAffectLightmaps} instead.
 function bbmod_light_ambient_set_affect_lightmaps(_enable)
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().AmbientLightAffectLightmaps = _enable;
+	bbmod_scene_get_current().AmbientLightAffectLightmaps = _enable;
 }

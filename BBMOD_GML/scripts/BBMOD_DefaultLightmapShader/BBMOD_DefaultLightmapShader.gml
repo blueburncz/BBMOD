@@ -88,11 +88,11 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat): BBMOD_DefaultShade
 ///
 /// @return {Pointer.Texture} The default RGBM encoded lightmap texture.
 ///
-/// @deprecated Please use {@link BBMOD_Environment.Lightmap} instead.
+/// @deprecated Please use {@link BBMOD_Scene.Lightmap} instead.
 function bbmod_lightmap_get()
 {
 	gml_pragma("forceinline");
-	return bbmod_environment_get_current().Lightmap;
+	return bbmod_scene_get_current().Lightmap;
 }
 
 /// @func bbmod_lightmap_set(_texture)
@@ -103,9 +103,9 @@ function bbmod_lightmap_get()
 /// @param {Pointer.Texture} _texture The new default RGBM encoded lightmap
 /// texture.
 ///
-/// @deprecated Please use {@link BBMOD_Environment.Lightmap} instead.
+/// @deprecated Please use {@link BBMOD_Scene.Lightmap} instead.
 function bbmod_lightmap_set(_texture)
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().Lightmap = _texture;
+	bbmod_scene_get_current().Lightmap = _texture;
 }

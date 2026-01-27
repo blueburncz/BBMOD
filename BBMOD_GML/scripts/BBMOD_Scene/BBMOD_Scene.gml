@@ -1,15 +1,15 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_Environment} The current environment.
+/// @var {Struct.BBMOD_Scene} The current scene.
 /// @private
-global.__bbmodEnvCurrent = undefined;
+global.__bbmodSceneCurrent = undefined;
 
-/// @func BBMOD_Environment()
+/// @func BBMOD_Scene()
 ///
 /// @implements {BBMOD_IDestructible}
 ///
-/// @desc Stores environment settings like lights, reflection probes and fog.
-function BBMOD_Environment() constructor
+/// @desc Stores scene settings like lights, reflection probes and fog.
+function BBMOD_Scene() constructor
 {
 	/// @var {Struct.BBMOD_Vec3} The direction towards the upper hemisphere of
 	/// the ambient light. Defaults to {@link BBMOD_VEC3_UP}.
@@ -27,26 +27,26 @@ function BBMOD_Environment() constructor
 	/// to `true`.
 	AmbientLightAffectLightmaps = true;
 
-	/// @var {Pointer.Texture} A lightmap applied to the whole environment.
+	/// @var {Pointer.Texture} A lightmap applied to the whole scene.
 	/// @readonly
 	Lightmap = sprite_get_texture(BBMOD_SprBlack, 0);
 
 	/// @var {Struct.BBMOD_DirectionalLight, Undefined} A directional light
-	/// applied to the whole environment. Defaults to `undefined`.
+	/// applied to the whole scene. Defaults to `undefined`.
 	LightDirectional = undefined;
 
 	/// @var {Array<Struct.BBMOD_PunctualLight>} An array of punctual lights
-	/// added to the environment.
+	/// added to the scene.
 	/// @readonly
 	LightsPunctual = [];
 
 	/// @var {Struct.BBMOD_ImageBasedLight, Undefined} The image-based light
-	/// applied to the whole environment. Defaults to `undefined`.
+	/// applied to the whole scene. Defaults to `undefined`.
 	/// @readonly
 	ImageBasedLight = undefined;
 
 	/// @var {Array<Struct.BBMOD_ReflectionProbe>} An array of reflection probes
-	/// added to the environment.
+	/// added to the scene.
 	/// @readonly
 	ReflectionProbes = [];
 
@@ -59,22 +59,22 @@ function BBMOD_Environment() constructor
 	FogIntensity = 0.0;
 
 	/// @var {Real} The distance from the camera at which the fog starts.
-	/// @see BBMOD_Environment.FogEnd
+	/// @see BBMOD_Scene.FogEnd
 	FogStart = 0.0;
 
 	/// @var {Real} The distance from the camera at which the fog reaches its
 	/// maximum intensity.
-	/// @see BBMOD_Environment.FogStart
-	/// @see BBMOD_Environment.FogIntensity
+	/// @see BBMOD_Scene.FogStart
+	/// @see BBMOD_Scene.FogIntensity
 	FogEnd = 1.0;
 
 	/// @func add_punctual_light(_light)
 	///
-	/// @desc Adds a punctual light to the environment.
+	/// @desc Adds a punctual light to the scene.
 	///
 	/// @param {Struct.BBMOD_PunctualLight} _light The light to add.
 	///
-	/// @return {Struct.BBMOD_Environment} Returns `self`.
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	static add_punctual_light = function (_light)
 	{
 		gml_pragma("forceinline");
@@ -84,9 +84,9 @@ function BBMOD_Environment() constructor
 
 	/// @func get_punctual_light_count()
 	///
-	/// @desc Retrieves number of punctual lights added to the environment.
+	/// @desc Retrieves number of punctual lights added to the scene.
 	///
-	/// @return {Real} The number of punctual lights added to the environment.
+	/// @return {Real} The number of punctual lights added to the scene.
 	static get_punctual_light_count = function ()
 	{
 		gml_pragma("forceinline");
@@ -108,12 +108,12 @@ function BBMOD_Environment() constructor
 
 	/// @func remove_punctual_light(_light)
 	///
-	/// @desc Removes a punctual light from the environment.
+	/// @desc Removes a punctual light from the scene.
 	///
 	/// @param {Struct.BBMOD_PunctualLight} _light The light to remove.
 	///
 	/// @return {Bool} Returns `true` if the light was removed or `false` if the
-	/// light was not found in the environment.
+	/// light was not found in the scene.
 	static remove_punctual_light = function (_light)
 	{
 		var _punctualLights = LightsPunctual;
@@ -132,11 +132,11 @@ function BBMOD_Environment() constructor
 
 	/// @func remove_punctual_light_index(_index)
 	///
-	/// @desc Removes a punctual light at given index from the environment.
+	/// @desc Removes a punctual light at given index from the scene.
 	///
 	/// @param {Real} _index The index to remove the light at.
 	///
-	/// @return {Struct.BBMOD_Environment} Returns `self`.
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	static remove_punctual_light_index = function (_index)
 	{
 		gml_pragma("forceinline");
@@ -146,9 +146,9 @@ function BBMOD_Environment() constructor
 
 	/// @func clear_punctual_lights(_index)
 	///
-	/// @desc Removes all punctual lights added to the environment.
+	/// @desc Removes all punctual lights added to the scene.
 	///
-	/// @return {Struct.BBMOD_Environment} Returns `self`.
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	static clear_punctual_lights = function ()
 	{
 		gml_pragma("forceinline");
@@ -158,12 +158,12 @@ function BBMOD_Environment() constructor
 
 	/// @func add_reflection_probe(_reflectionProbe)
 	///
-	/// @desc Adds a reflection probe to the environment.
+	/// @desc Adds a reflection probe to the scene.
 	///
 	/// @param {Struct.BBMOD_ReflectionProbe} _reflectionProbe The reflection
 	/// probe to add.
 	///
-	/// @return {Struct.BBMOD_Environment} Returns `self`.
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	static add_reflection_probe = function (_reflectionProbe)
 	{
 		gml_pragma("forceinline");
@@ -173,9 +173,9 @@ function BBMOD_Environment() constructor
 
 	/// @func get_reflection_probe_count()
 	///
-	/// @desc Retrieves number of reflection probes added to the environment.
+	/// @desc Retrieves number of reflection probes added to the scene.
 	///
-	/// @return {Real} The number of reflection probes added to the environment.
+	/// @return {Real} The number of reflection probes added to the scene.
 	static get_reflection_probe_count = function ()
 	{
 		gml_pragma("forceinline");
@@ -198,7 +198,7 @@ function BBMOD_Environment() constructor
 
 	/// @func find_reflection_probe(_position)
 	///
-	/// @desc Finds a reflection probe in the environment that influences given
+	/// @desc Finds a reflection probe in the scene that influences given
 	/// position.
 	///
 	/// @param {Struct.BBMOD_Vec3} _position The position to find a reflection
@@ -252,13 +252,13 @@ function BBMOD_Environment() constructor
 
 	/// @func remove_reflection_probe(_reflectionProbe)
 	///
-	/// @desc Removes a reflection probe at given index from the environment.
+	/// @desc Removes a reflection probe at given index from the scene.
 	///
 	/// @param {Struct.BBMOD_ReflectionProbe} _reflectionProbe The reflection
 	/// probe to remove.
 	///
 	/// @return {Bool} Returns `true` if the probe was removed of `false` if the
-	/// probe was not found in the environment.
+	/// probe was not found in the scene.
 	static remove_reflection_probe = function (_reflectionProbe)
 	{
 		gml_pragma("forceinline");
@@ -278,11 +278,11 @@ function BBMOD_Environment() constructor
 
 	/// @func remove_reflection_probe_index(_index)
 	///
-	/// @desc Removes a reflection probe at given index from the environment.
+	/// @desc Removes a reflection probe at given index from the scene.
 	///
 	/// @param {Real} _index The index to remove the reflection probe at.
 	///
-	/// @return {Struct.BBMOD_Environment} Returns `self`.
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	static remove_reflection_probe_index = function (_index)
 	{
 		gml_pragma("forceinline");
@@ -292,9 +292,9 @@ function BBMOD_Environment() constructor
 
 	/// @func clear_reflection_probes()
 	///
-	/// @desc Removes all reflection probes added to the environment.
+	/// @desc Removes all reflection probes added to the scene.
 	///
-	/// @return {Struct.BBMOD_Environment} Returns `self`.
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	static clear_reflection_probes = function ()
 	{
 		gml_pragma("forceinline");
@@ -304,10 +304,10 @@ function BBMOD_Environment() constructor
 
 	/// @func clear()
 	///
-	/// @desc Resets the environment to the default state, destroys everything it
+	/// @desc Resets the scene to the default state, destroys everything it
 	/// contains.
 	///
-	/// @return {Struct.BBMOD_Environment} Returns `self`.
+	/// @return {Struct.BBMOD_Scene} Returns `self`.
 	static clear = function ()
 	{
 		AmbientLightDirection = BBMOD_VEC3_UP;
@@ -335,64 +335,64 @@ function BBMOD_Environment() constructor
 
 	/// @func destroy()
 	///
-	/// @desc Destroys the environment and everything it contains.
+	/// @desc Destroys the scene and everything it contains.
 	///
 	/// @return {Undefined} Returns `undefined`.
 	///
-	/// @note Trying to destroy the default environment will end with an error!
+	/// @note Trying to destroy the default scene will end with an error!
 	///
-	/// @see bbmod_environment_get_default
+	/// @see bbmod_scene_get_default
 	static destroy = function ()
 	{
-		bbmod_assert(bbmod_environment_get_default() != self, "Cannot destroy the default environment!");
+		bbmod_assert(bbmod_scene_get_default() != self, "Cannot destroy the default scene!");
 		clear();
 		return undefined;
 	};
 }
 
-/// @func bbmod_environment_get_default()
+/// @func bbmod_scene_get_default()
 ///
-/// @desc Retrieves the default environment.
+/// @desc Retrieves the default scene.
 ///
-/// @return {Struct.BBMOD_Environment} The default environment.
+/// @return {Struct.BBMOD_Scene} The default scene.
 ///
-/// @note The default environment cannot be destroyed!
+/// @note The default scene cannot be destroyed!
 ///
-/// @see bbmod_environment_get_current
-/// @see bbmod_environment_set_current
-function bbmod_environment_get_default()
+/// @see bbmod_scene_get_current
+/// @see bbmod_scene_set_current
+function bbmod_scene_get_default()
 {
 	gml_pragma("forceinline");
-	static _env = new BBMOD_Environment();
-	return _env;
+	static _scene = new BBMOD_Scene();
+	return _scene;
 }
 
-/// @func bbmod_environment_get_current()
+/// @func bbmod_scene_get_current()
 ///
-/// @desc Retrieves the current environment.
+/// @desc Retrieves the current scene.
 ///
-/// @return {Struct.BBMOD_Environment} The current environment. The default one
-/// is returned if a user environment has not been defined previously with
-/// {@link bbmod_environment_set_current}.
+/// @return {Struct.BBMOD_Scene} The current scene. The default one
+/// is returned if a user scene has not been defined previously with
+/// {@link bbmod_scene_set_current}.
 ///
-/// @see bbmod_environment_get_default
-function bbmod_environment_get_current()
+/// @see bbmod_scene_get_default
+function bbmod_scene_get_current()
 {
 	gml_pragma("forceinline");
-	return (global.__bbmodEnvCurrent ?? bbmod_environment_get_default());
+	return (global.__bbmodSceneCurrent ?? bbmod_scene_get_default());
 }
 
-/// @func bbmod_environment_set_current(_env)
+/// @func bbmod_scene_set_current(_scene)
 ///
-/// @desc Changes the current environment.
+/// @desc Changes the current scene.
 ///
-/// @param {Struct.BBMOD_Environment} _env The new environment or `undefiend`
+/// @param {Struct.BBMOD_Scene} _scene The new scene or `undefiend`
 /// to use the default one.
 ///
-/// @see bbmod_environment_get_default
-/// @see bbmod_environment_get_current
-function bbmod_environment_set_current(_env)
+/// @see bbmod_scene_get_default
+/// @see bbmod_scene_get_current
+function bbmod_scene_set_current(_scene)
 {
 	gml_pragma("forceinline");
-	global.__bbmodEnvCurrent = _env;
+	global.__bbmodSceneCurrent = _scene;
 }

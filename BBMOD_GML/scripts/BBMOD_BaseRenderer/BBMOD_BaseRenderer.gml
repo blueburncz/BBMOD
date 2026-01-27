@@ -621,7 +621,7 @@ function BBMOD_BaseRenderer() constructor
 			else
 			{
 				// Punctual lights
-				var _punctualLights = bbmod_environment_get_current().LightsPunctual;
+				var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 				var i = 0;
 				repeat(array_length(_punctualLights))
 				{
@@ -685,7 +685,7 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_camera_set_exposure(1.0);
 
 		var _cubemap = __cubemap;
-		var _reflectionProbes = bbmod_environment_get_current().ReflectionProbes;
+		var _reflectionProbes = bbmod_scene_get_current().ReflectionProbes;
 
 		var i = 0;
 		repeat(array_length(_reflectionProbes))

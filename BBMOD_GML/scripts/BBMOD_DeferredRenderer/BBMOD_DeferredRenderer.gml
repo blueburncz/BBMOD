@@ -109,7 +109,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 			}
 
 			// Punctual lights
-			var _punctualLights = bbmod_environment_get_current().LightsPunctual;
+			var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 			var i = 0;
 			repeat(array_length(_punctualLights))
 			{
@@ -394,7 +394,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		gpu_set_ztestenable(false);
 		gpu_set_cullmode(cull_clockwise);
 
-		var _punctualLights = bbmod_environment_get_current().LightsPunctual;
+		var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 		for (var i = array_length(_punctualLights) - 1; i >= 0; --i)
 		{
 			with(_punctualLights[i])

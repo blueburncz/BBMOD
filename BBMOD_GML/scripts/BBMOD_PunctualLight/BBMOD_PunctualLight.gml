@@ -53,13 +53,13 @@ function BBMOD_PunctualLight(_color = BBMOD_C_WHITE, _position = undefined, _ran
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.add_punctual_light} instead.
+/// @deprecated Please use {@link BBMOD_Scene.add_punctual_light} instead.
 function bbmod_light_punctual_add(_light)
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().add_punctual_light(_light);
+	bbmod_scene_get_current().add_punctual_light(_light);
 }
 
 /// @func bbmod_light_punctual_count()
@@ -73,13 +73,13 @@ function bbmod_light_punctual_add(_light)
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.get_punctual_light_count} instead.
+/// @deprecated Please use {@link BBMOD_Scene.get_punctual_light_count} instead.
 function bbmod_light_punctual_count()
 {
 	gml_pragma("forceinline");
-	return bbmod_environment_get_current().get_punctual_light_count();
+	return bbmod_scene_get_current().get_punctual_light_count();
 }
 
 /// @func bbmod_light_punctual_get(_index)
@@ -95,13 +95,13 @@ function bbmod_light_punctual_count()
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.get_punctual_light} instead.
+/// @deprecated Please use {@link BBMOD_Scene.get_punctual_light} instead.
 function bbmod_light_punctual_get(_index)
 {
 	gml_pragma("forceinline");
-	return bbmod_environment_get_current().get_punctual_light(_index);
+	return bbmod_scene_get_current().get_punctual_light(_index);
 }
 
 /// @func bbmod_light_punctual_remove(_light)
@@ -118,13 +118,13 @@ function bbmod_light_punctual_get(_index)
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove_index
 /// @see bbmod_light_punctual_clear
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.remove_punctual_light} instead.
+/// @deprecated Please use {@link BBMOD_Scene.remove_punctual_light} instead.
 function bbmod_light_punctual_remove(_light)
 {
 	gml_pragma("forceinline");
-	return bbmod_environment_get_current().remove_punctual_light(_light);
+	return bbmod_scene_get_current().remove_punctual_light(_light);
 }
 
 /// @func bbmod_light_punctual_remove_index(_index)
@@ -140,14 +140,14 @@ function bbmod_light_punctual_remove(_light)
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_clear
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.remove_punctual_light_index}
+/// @deprecated Please use {@link BBMOD_Scene.remove_punctual_light_index}
 /// instead.
 function bbmod_light_punctual_remove_index(_index)
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().remove_punctual_light_index(_index);
+	bbmod_scene_get_current().remove_punctual_light_index(_index);
 	return true;
 }
 
@@ -160,11 +160,11 @@ function bbmod_light_punctual_remove_index(_index)
 /// @see bbmod_light_punctual_get
 /// @see bbmod_light_punctual_remove
 /// @see bbmod_light_punctual_remove_index
-/// @see bbmod_environment_get_current
+/// @see bbmod_scene_get_current
 ///
-/// @deprecated Please use {@link BBMOD_Environment.clear_punctual_lights} instead.
+/// @deprecated Please use {@link BBMOD_Scene.clear_punctual_lights} instead.
 function bbmod_light_punctual_clear()
 {
 	gml_pragma("forceinline");
-	bbmod_environment_get_current().clear_punctual_lights();
+	bbmod_scene_get_current().clear_punctual_lights();
 }

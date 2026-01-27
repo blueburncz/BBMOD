@@ -106,10 +106,10 @@ BBMOD_RESOURCE_MANAGER.add("MatSphereEmissive", matSphereEmissive);
 // Lighting
 //
 
-var _env = bbmod_environment_get_current();
+var _scene = bbmod_scene_get_current();
 
-_env.AmbientLightColorUp = BBMOD_C_BLACK;
-_env.AmbientLightColorDown = BBMOD_C_BLACK;
+_scene.AmbientLightColorUp = BBMOD_C_BLACK;
+_scene.AmbientLightColorDown = BBMOD_C_BLACK;
 
 var _sprIBL = BBMOD_RESOURCE_MANAGER.load_sync("Data/BBMOD/Skies/IBL+40.png");
 var _sprSky = BBMOD_RESOURCE_MANAGER.load_sync("Data/BBMOD/Skies/Sky+40.png");
@@ -118,18 +118,18 @@ matSky = BBMOD_MATERIAL_SKY.clone();
 matSky.BaseOpacity = sprite_get_texture(_sprSky.Raw, 0);
 BBMOD_RESOURCE_MANAGER.add("MatSky", matSky);
 
-_env.ImageBasedLight = new BBMOD_ImageBasedLight(sprite_get_texture(_sprIBL.Raw, 0));
+_scene.ImageBasedLight = new BBMOD_ImageBasedLight(sprite_get_texture(_sprIBL.Raw, 0));
 
 sun = new BBMOD_DirectionalLight();
 sun.Direction.Set(0.44, 0.63, -0.64);
 sun.CastShadows = true;
 sun.ShadowmapArea = 100;
 sun.ShadowmapResolution = 2048;
-_env.LightDirectional = sun;
+_scene.LightDirectional = sun;
 
 probe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(0, 0, 1));
 probe.Infinite = true;
-_env.add_reflection_probe(probe);
+_scene.add_reflection_probe(probe);
 
 sunshafts.LightDirection = sun.Direction;
 
@@ -160,7 +160,7 @@ var _light = new BBMOD_PointLight();
 _light.Color = BBMOD_C_AQUA;
 _light.Position = new BBMOD_Vec3(22, 22, 2.5);
 _light.Range = 10;
-_env.add_punctual_light(_light);
+_scene.add_punctual_light(_light);
 
 var _lensFlare = new BBMOD_LensFlare();
 _lensFlare.Range = 20;

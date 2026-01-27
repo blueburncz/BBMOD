@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BBMOD_Environment",
+  "%Name":"BBMOD_Scene",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BBMOD_Environment",
+  "name":"BBMOD_Scene",
   "parent":{
     "name":"Rendering",
     "path":"folders/BBMOD/Core/Rendering.yy",

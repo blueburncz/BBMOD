@@ -4,8 +4,8 @@ postProcessor = postProcessor.destroy();
 
 batchSphere = batchSphere.destroy();
 
-// Resets all environment settings (lights, fog, reflection probes, ...)
-bbmod_environment_get_current().clear();
+// Resets all scene settings (lights, fog, reflection probes, ...)
+bbmod_scene_get_current().clear();
 
 // Destroys all resources that aren't persistent
 BBMOD_RESOURCE_MANAGER.clear();
