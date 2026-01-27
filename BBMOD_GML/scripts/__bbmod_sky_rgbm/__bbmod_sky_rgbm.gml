@@ -1,17 +1,16 @@
-/// @module Rendering.Sky
+/// @module RGBMSky
 
 /// @macro {Struct.BBMOD_BaseMaterial} A material for rendering RGBM encoded
 /// skies.
-/// @see BBMOD_BaseMaterial
-#macro BBMOD_MATERIAL_SKY __bbmod_material_sky()
+#macro BBMOD_MATERIAL_SKY_RGBM __bbmod_material_sky_rgbm()
 
-function __bbmod_material_sky()
+function __bbmod_material_sky_rgbm()
 {
 	static _skyRenderQueue = new BBMOD_RenderQueue("Sky", -$FFFFFFFF);
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		var _skSky = new BBMOD_BaseShader(BBMOD_ShSky, BBMOD_VFORMAT_DEFAULT);
+		var _skSky = new BBMOD_BaseShader(BBMOD_ShSkyRGBM, BBMOD_VFORMAT_DEFAULT);
 		_material = new BBMOD_BaseMaterial();
 		_material.Persistent = true;
 		_material.set_shader(BBMOD_ERenderPass.Background, _skSky);
@@ -25,5 +24,15 @@ function __bbmod_material_sky()
 	}
 	return _material;
 }
+
+bbmod_material_register("BBMOD_MATERIAL_SKY_RGBM", BBMOD_MATERIAL_SKY_RGBM);
+
+////////////////////////////////////////////////////////////////////////////////
+// DEPRECATED!!!
+
+/// @macro {Struct.BBMOD_BaseMaterial} A material for rendering RGBM encoded
+/// skies.
+/// @deprecated Please use {@link BBMOD_MATERIAL_SKY_RGBM} instead.
+#macro BBMOD_MATERIAL_SKY BBMOD_MATERIAL_SKY_RGBM
 
 bbmod_material_register("BBMOD_MATERIAL_SKY", BBMOD_MATERIAL_SKY);

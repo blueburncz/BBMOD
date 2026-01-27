@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"__bbmod_sky",
+  "%Name":"__bbmod_sky_rgbm",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__bbmod_sky",
+  "name":"__bbmod_sky_rgbm",
   "parent":{
-    "name":"Sky",
-    "path":"folders/BBMOD/Rendering/Sky.yy",
+    "name":"RGBMSky",
+    "path":"folders/BBMOD/RGBMSky.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
