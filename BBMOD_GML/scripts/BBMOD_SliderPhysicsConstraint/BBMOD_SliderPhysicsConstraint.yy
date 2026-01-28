@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_SliderPhysicsConstraint",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_SliderPhysicsConstraint",
+  "parent":{
+    "name":"Constraints",
+    "path":"folders/BBMOD/Physics/Constraints.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

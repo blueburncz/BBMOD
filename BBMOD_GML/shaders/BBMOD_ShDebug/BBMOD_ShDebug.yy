@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShDebug",
+  "name":"BBMOD_ShDebug",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/BBMOD/Core/Debug.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

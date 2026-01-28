@@ -130,6 +130,7 @@ function CGUI() constructor
 	{
 		var _color = _props[$ "Color"] ?? c_white;
 		DrawTextShadow(_text, _color);
+		DrawX += string_width(_text);
 		return self;
 	};
 
@@ -412,12 +413,7 @@ function CGUI() constructor
 		if (_label != undefined)
 		{
 			DrawX += 8;
-
-			draw_text(
-				DrawX,
-				DrawY + floor((_height - string_height(_label)) / 2),
-				_label);
-
+			DrawTextShadow(_label);
 			DrawX += string_width(_label);
 		}
 

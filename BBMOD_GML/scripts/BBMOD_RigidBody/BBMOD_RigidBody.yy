@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_RigidBody",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_RigidBody",
+  "parent":{
+    "name":"Physics",
+    "path":"folders/BBMOD/Physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

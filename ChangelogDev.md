@@ -80,3 +80,7 @@ only with animations with optimization level 0!
 * **Replaced** macro `BBMOD_MATERIAL_SKY` with a new one called `BBMOD_MATERIAL_SKY_RGBM`. The old one is kept for backwards compatibility, but is now **deprecated**!
 
 * **Removed** module *Rendering*, as it become empty.
+
+* Added new function `bbmod_get_scratch_buffer(_sizeMin)`.
+* Added new module *Physics*.
+* **TODO:** physics changelog

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_CylinderPhysicsShape",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_CylinderPhysicsShape",
+  "parent":{
+    "name":"Shapes",
+    "path":"folders/BBMOD/Physics/Shapes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

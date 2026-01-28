@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_SixDOFPhysicsConstraint",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_SixDOFPhysicsConstraint",
+  "parent":{
+    "name":"Constraints",
+    "path":"folders/BBMOD/Physics/Constraints.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

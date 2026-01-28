@@ -47,8 +47,8 @@ Requires [CMake](https://cmake.org) version 3.23 or newer!
 
 ```sh
 git clone --recurse-submodules https://github.com/blueburncz/BBMOD.git
-cd BBMOD/BBMOD_CLI
-cmake -S . -B build
+cd BBMOD/BBMOD_CPP
+cmake -S . -B build -DCMAKE_POLICY_VERSION_MINIMUM="3.10"
 cmake --build build --config=Release
 ```
 
@@ -65,7 +65,7 @@ otool -l libBBMOD.dylib | grep -B 1 -A 2 LC_RPATH
 * Remove bad rpaths:
 
 ```sh
-install_name_tool -delete_rpath "/Volumes/KINGSTON/Git/BBMOD/BBMOD_CLI/lib" libBBMOD.dylib # Replace with the path you got from the previous command
+install_name_tool -delete_rpath "/Volumes/KINGSTON/Git/BBMOD/BBMOD_CPP/lib" libBBMOD.dylib # Replace with the path you got from the previous command
 ```
 
 * Add rpaths:

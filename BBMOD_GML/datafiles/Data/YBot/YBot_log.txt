@@ -1,0 +1,68 @@
+Nodes:
+======
+52: RootNode
+    53: Alpha_Surface:
+        * Mesh 0 [V,N,UV,T,B,]
+
+    54: Alpha_Joints:
+        * Mesh 0 [V,N,UV,T,B,]
+
+    55: RootNode
+        0: mixamorig:Hips [bone]
+            1: mixamorig:Spine [bone]
+                2: mixamorig:Spine1 [bone]
+                    3: mixamorig:Spine2 [bone]
+                        4: mixamorig:Neck [bone]
+                            5: mixamorig:Head [bone]
+                        6: mixamorig:LeftShoulder [bone]
+                            7: mixamorig:LeftArm [bone]
+                                8: mixamorig:LeftForeArm [bone]
+                                    9: mixamorig:LeftHand [bone]
+                                        10: mixamorig:LeftHandThumb1 [bone]
+                                            11: mixamorig:LeftHandThumb2 [bone]
+                                                12: mixamorig:LeftHandThumb3 [bone]
+                                        13: mixamorig:LeftHandIndex1 [bone]
+                                            14: mixamorig:LeftHandIndex2 [bone]
+                                                15: mixamorig:LeftHandIndex3 [bone]
+                                        16: mixamorig:LeftHandMiddle1 [bone]
+                                            17: mixamorig:LeftHandMiddle2 [bone]
+                                                18: mixamorig:LeftHandMiddle3 [bone]
+                                        19: mixamorig:LeftHandRing1 [bone]
+                                            20: mixamorig:LeftHandRing2 [bone]
+                                                21: mixamorig:LeftHandRing3 [bone]
+                                        22: mixamorig:LeftHandPinky1 [bone]
+                                            23: mixamorig:LeftHandPinky2 [bone]
+                                                24: mixamorig:LeftHandPinky3 [bone]
+                        25: mixamorig:RightShoulder [bone]
+                            26: mixamorig:RightArm [bone]
+                                27: mixamorig:RightForeArm [bone]
+                                    28: mixamorig:RightHand [bone]
+                                        29: mixamorig:RightHandThumb1 [bone]
+                                            30: mixamorig:RightHandThumb2 [bone]
+                                                31: mixamorig:RightHandThumb3 [bone]
+                                        32: mixamorig:RightHandIndex1 [bone]
+                                            33: mixamorig:RightHandIndex2 [bone]
+                                                34: mixamorig:RightHandIndex3 [bone]
+                                        35: mixamorig:RightHandMiddle1 [bone]
+                                            36: mixamorig:RightHandMiddle2 [bone]
+                                                37: mixamorig:RightHandMiddle3 [bone]
+                                        38: mixamorig:RightHandRing1 [bone]
+                                            39: mixamorig:RightHandRing2 [bone]
+                                                40: mixamorig:RightHandRing3 [bone]
+                                        41: mixamorig:RightHandPinky1 [bone]
+                                            42: mixamorig:RightHandPinky2 [bone]
+                                                43: mixamorig:RightHandPinky3 [bone]
+            44: mixamorig:LeftUpLeg [bone]
+                45: mixamorig:LeftLeg [bone]
+                    46: mixamorig:LeftFoot [bone]
+                        47: mixamorig:LeftToeBase [bone]
+            48: mixamorig:RightUpLeg [bone]
+                49: mixamorig:RightLeg [bone]
+                    50: mixamorig:RightFoot [bone]
+                        51: mixamorig:RightToeBase [bone]
+
+Materials:
+==========
+0: Alpha_Body_MAT
+1: Alpha_Joints_MAT
+

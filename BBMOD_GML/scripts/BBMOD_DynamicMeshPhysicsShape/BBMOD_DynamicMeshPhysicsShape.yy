@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_DynamicMeshPhysicsShape",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_DynamicMeshPhysicsShape",
+  "parent":{
+    "name":"Shapes",
+    "path":"folders/BBMOD/Physics/Shapes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

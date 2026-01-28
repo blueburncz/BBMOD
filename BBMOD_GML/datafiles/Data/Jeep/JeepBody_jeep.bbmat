@@ -1,0 +1,25 @@
+{
+    "__MaterialName": "BBMOD_MATERIAL_DEFERRED",
+    "RenderQueue": "Default",
+    "BaseOpacityMultiplier": {
+        "Red": 255,
+        "Green": 227.46,
+        "Blue": 186.15,
+        "Alpha": 1
+    },
+    "Shaders": {
+        "Forward": "undefined",
+        "DepthOnly": "undefined",
+        "Shadows": "BBMOD_SHADER_DEFAULT_DEPTH",
+        "Id": "BBMOD_SHADER_INSTANCE_ID"
+    },
+    "Repeat": true,
+    "Mipmapping": true,
+    "Filtering": true,
+    "__Textures": {
+        "BaseOpacity": "./Textures/JeepColor.png",
+        "NormalRoughness": "./Textures/JeepNormalRoughness.png",
+        "MetallicAO": "./Textures/JeepMetallicAO.png",
+        "Emissive": "./Textures/JeepEmissive.png"
+    }
+}

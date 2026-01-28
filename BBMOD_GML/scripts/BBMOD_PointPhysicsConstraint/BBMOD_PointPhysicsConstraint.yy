@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_PointPhysicsConstraint",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_PointPhysicsConstraint",
+  "parent":{
+    "name":"Constraints",
+    "path":"folders/BBMOD/Physics/Constraints.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

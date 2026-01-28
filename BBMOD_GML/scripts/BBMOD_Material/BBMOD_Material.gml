@@ -809,7 +809,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 ///
 /// // Submit characters
 /// var _world = matrix_get(matrix_world);
-/// with (OCharacter)
+/// with(OCharacter)
 /// {
 ///     matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, direction, 1, 1, 1));
 ///     animationPlayer.submit();

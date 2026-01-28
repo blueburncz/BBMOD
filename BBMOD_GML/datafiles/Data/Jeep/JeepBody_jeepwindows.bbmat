@@ -1,0 +1,29 @@
+{
+    "__MaterialName": "BBMOD_MATERIAL_DEFAULT",
+    "RenderQueue": "Default",
+    "BaseOpacityMultiplier": {
+        "Red": 255,
+        "Green": 255,
+        "Blue": 255,
+        "Alpha": 0.6
+    },
+    "Shaders": {
+        "Forward": "undefined",
+        "DepthOnly": "undefined",
+        "Alpha": "BBMOD_SHADER_DEFAULT",
+        "Shadows": "BBMOD_SHADER_DEFAULT_DEPTH",
+        "Id": "BBMOD_SHADER_INSTANCE_ID"
+    },
+    "Repeat": true,
+    "Mipmapping": true,
+    "Filtering": true,
+    "__Textures": {
+        "BaseOpacity": "./Textures/glassColor.png",
+        "NormalRoughness": "./Textures/GlassNormalRoughness.png",
+        "MetallicAO": "./Textures/GlassMetallicAO.png"
+    },
+    "Culling": "cull_noculling",
+    "ZWrite": false,
+    "AlphaTest": 0,
+    "AlphaBlend": true
+}

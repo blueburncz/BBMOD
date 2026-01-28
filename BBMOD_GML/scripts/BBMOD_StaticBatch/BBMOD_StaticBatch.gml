@@ -21,7 +21,7 @@
 /// var _vformat = modTree.get_vertex_format();
 /// batch = new BBMOD_StaticBatch(_vformat);
 /// batch.start();
-/// with (OTree)
+/// with(OTree)
 /// {
 ///     var _transform = matrix_build(x, y, z, 0, 0, direction, 1, 1, 1);
 ///     other.batch.add(other.modTree, _transform);
@@ -77,7 +77,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 	/// var _vformat = modTree.get_vertex_format();
 	/// batch = new BBMOD_StaticBatch(_vformat);
 	/// batch.start();
-	/// with (OTree)
+	/// with(OTree)
 	/// {
 	///     var _transform = matrix_build(x, y, z, 0, 0, direction, 1, 1, 1);
 	///     other.batch.add(other.modTree, _transform);
