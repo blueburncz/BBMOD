@@ -2,5 +2,5 @@
 	path = BBMOD_GML/Xpanda
 	url = https://github.com/GameMakerDiscord/Xpanda.git
 [submodule "BBMOD_CLI/external/assimp"]
-	path = BBMOD_CLI/external/assimp
+	path = BBMOD_CPP/external/assimp
 	url = https://github.com/assimp/assimp.git
