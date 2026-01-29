@@ -14,7 +14,7 @@
   "copyToTargets":66,
   "description":"",
   "exportToGame":true,
-  "extensionVersion":"3.22.5",
+  "extensionVersion":"3.99.0",
   "files":[
     {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":66,"filename":"BBMOD_Physics.ext","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"BBMOD_PhysicsEngine_CreatePhysicsWorld","argCount":0,"args":[1,],"documentation":"","externalName":"BBMOD_PhysicsEngine_CreatePhysicsWorld","help":"","hidden":false,"kind":1,"name":"BBMOD_PhysicsEngine_CreatePhysicsWorld","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
