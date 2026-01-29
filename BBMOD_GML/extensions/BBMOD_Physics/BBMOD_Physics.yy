@@ -16,7 +16,7 @@
   "exportToGame":true,
   "extensionVersion":"3.22.5",
   "files":[
-    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":64,"filename":"BBMOD_Physics.ext","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":66,"filename":"BBMOD_Physics.ext","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"BBMOD_PhysicsEngine_CreatePhysicsWorld","argCount":0,"args":[1,],"documentation":"","externalName":"BBMOD_PhysicsEngine_CreatePhysicsWorld","help":"","hidden":false,"kind":1,"name":"BBMOD_PhysicsEngine_CreatePhysicsWorld","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"BBMOD_PhysicsEngine_CreateBoxShape","argCount":0,"args":[1,],"documentation":"","externalName":"BBMOD_PhysicsEngine_CreateBoxShape","help":"","hidden":false,"kind":1,"name":"BBMOD_PhysicsEngine_CreateBoxShape","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"BBMOD_PhysicsEngine_CreateCapsuleXShape","argCount":0,"args":[1,],"documentation":"","externalName":"BBMOD_PhysicsEngine_CreateCapsuleXShape","help":"","hidden":false,"kind":1,"name":"BBMOD_PhysicsEngine_CreateCapsuleXShape","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -58,6 +58,7 @@
         {"$GMExtensionFunction":"","%Name":"BBMOD_PhysicsVehicle_UpdateWheelTransform","argCount":0,"args":[2,2,],"documentation":"","externalName":"BBMOD_PhysicsVehicle_UpdateWheelTransform","help":"","hidden":false,"kind":4,"name":"BBMOD_PhysicsVehicle_UpdateWheelTransform","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":4,"name":"","origname":"","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"BBMOD_Physics_x64.dll","name":"BBMOD_Physics_x64.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
+        {"$GMProxyFile":"","%Name":"libBBMOD_Physics.dylib","name":"libBBMOD_Physics.dylib","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":1,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
     {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"LICENSE-Bullet3","final":"","functions":[],"init":"","kind":4,"name":"","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],

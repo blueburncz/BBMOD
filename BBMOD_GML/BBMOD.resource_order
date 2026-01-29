@@ -87,9 +87,9 @@
     {"name":"Rooms","order":2,"path":"folders/TestBasic/Rooms.yy",},
     {"name":"Sprites","order":3,"path":"folders/TestBasic/Sprites.yy",},
     {"name":"TestPhysics","order":5,"path":"folders/TestPhysics.yy",},
-    {"name":"Scripts","order":3,"path":"folders/TestPhysics/Scripts.yy",},
     {"name":"Objects","order":1,"path":"folders/TestPhysics/Objects.yy",},
     {"name":"Rooms","order":2,"path":"folders/TestPhysics/Rooms.yy",},
+    {"name":"Scripts","order":3,"path":"folders/TestPhysics/Scripts.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"OLightmap","order":1,"path":"objects/OLightmap/OLightmap.yy",},

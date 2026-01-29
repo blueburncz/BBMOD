@@ -100,9 +100,9 @@
     {"$GMFolder":"","%Name":"Rooms","folderPath":"folders/TestBasic/Rooms.yy","name":"Rooms","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sprites","folderPath":"folders/TestBasic/Sprites.yy","name":"Sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"TestPhysics","folderPath":"folders/TestPhysics.yy","name":"TestPhysics","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/TestPhysics/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/TestPhysics/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Rooms","folderPath":"folders/TestPhysics/Rooms.yy","name":"Rooms","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/TestPhysics/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
@@ -111,6 +111,7 @@
     {"$GMIncludedFile":"","%Name":"BBMOD.dll","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","name":"BBMOD.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"BBMOD.exe","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","name":"BBMOD.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"libassimp.5.dylib","CopyToMask":2,"filePath":"datafiles/Data/BBMOD","name":"libassimp.5.dylib","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"libassimp.6.0.2.dylib","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","name":"libassimp.6.0.2.dylib","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"libBBMOD.dylib","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","name":"libBBMOD.dylib","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE-Assimp","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","name":"LICENSE-Assimp","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ConeNegX.bbmod","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","name":"ConeNegX.bbmod","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -225,7 +226,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.1400.0.911",
+    "IDEVersion":"2024.1400.3.974",
   },
   "name":"BBMOD",
   "resources":[

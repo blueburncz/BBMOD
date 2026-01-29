@@ -19,17 +19,16 @@ add_custom_command(TARGET BBMOD_CLI POST_BUILD
 # Assimp runtime copy
 #===============================================================================
 if(WIN32)
-    set(ASSIMP_DLL "${CMAKE_BINARY_DIR}/external/assimp/bin/Release/assimp-vc143-mt.dll")
     add_custom_command(TARGET BBMOD_CLI POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            ${ASSIMP_DLL}
+            "${CMAKE_BINARY_DIR}/external/assimp/bin/Release/assimp-vc143-mt.dll"
             ${DIR_DATAFILES}
     )
 elseif(APPLE OR UNIX)
     add_custom_command(TARGET BBMOD_CLI POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
             $<TARGET_FILE:assimp>
-            ${DIR_DATAFILES}
+            "${DIR_DATAFILES}/libassimp.6.dylib"
     )
 endif()
 
