@@ -12,9 +12,9 @@
 #include <vector>
 
 #ifdef _WIN32
-#	define EXPORT extern "C" __declspec(dllexport)
+#	define GM_EXPORT extern "C" __declspec(dllexport)
 #else
-#	define EXPORT extern "C"
+#	define GM_EXPORT extern "C"
 #endif
 
 using btVehicleTuning = btRaycastVehicle::btVehicleTuning;
@@ -331,7 +331,7 @@ struct BBMOD_PhysicsVehicle
 // BBMOD_PhysicsEngine
 //
 
-EXPORT double BBMOD_PhysicsEngine_CreatePhysicsWorld(char* _buffer)
+GM_EXPORT double BBMOD_PhysicsEngine_CreatePhysicsWorld(char* _buffer)
 {
     auto gravityX = BBMOD_ReadBuffer<double>(_buffer);
     auto gravityY = BBMOD_ReadBuffer<double>(_buffer);
@@ -347,7 +347,7 @@ EXPORT double BBMOD_PhysicsEngine_CreatePhysicsWorld(char* _buffer)
     return Registry::Add(world);
 }
 
-EXPORT double BBMOD_PhysicsEngine_CreateBoxShape(char* _buffer)
+GM_EXPORT double BBMOD_PhysicsEngine_CreateBoxShape(char* _buffer)
 {
     auto margin = BBMOD_ReadBuffer<double>(_buffer);
     btScalar m[16];
@@ -368,7 +368,7 @@ EXPORT double BBMOD_PhysicsEngine_CreateBoxShape(char* _buffer)
     return Registry::Add(compoundShape);
 }
 
-EXPORT double BBMOD_PhysicsEngine_CreateCapsuleXShape(char* _buffer)
+GM_EXPORT double BBMOD_PhysicsEngine_CreateCapsuleXShape(char* _buffer)
 {
     auto margin = BBMOD_ReadBuffer<double>(_buffer);
     btScalar m[16];
@@ -388,7 +388,7 @@ EXPORT double BBMOD_PhysicsEngine_CreateCapsuleXShape(char* _buffer)
     return Registry::Add(compoundShape);
 }
 
-EXPORT double BBMOD_PhysicsEngine_CreateCapsuleYShape(char* _buffer)
+GM_EXPORT double BBMOD_PhysicsEngine_CreateCapsuleYShape(char* _buffer)
 {
     auto margin = BBMOD_ReadBuffer<double>(_buffer);
     btScalar m[16];
@@ -408,7 +408,7 @@ EXPORT double BBMOD_PhysicsEngine_CreateCapsuleYShape(char* _buffer)
     return Registry::Add(compoundShape);
 }
 
-EXPORT double BBMOD_PhysicsEngine_CreateCapsuleZShape(char* _buffer)
+GM_EXPORT double BBMOD_PhysicsEngine_CreateCapsuleZShape(char* _buffer)
 {
     auto margin = BBMOD_ReadBuffer<double>(_buffer);
     btScalar m[16];
@@ -428,22 +428,22 @@ EXPORT double BBMOD_PhysicsEngine_CreateCapsuleZShape(char* _buffer)
     return Registry::Add(compoundShape);
 }
 
-EXPORT double BBMOD_PhysicsEngine_CreateConeXShape(double _radius, double _height)
+GM_EXPORT double BBMOD_PhysicsEngine_CreateConeXShape(double _radius, double _height)
 {
     return Registry::Add(new btConeShapeX(_radius, _height));
 }
 
-EXPORT double BBMOD_PhysicsEngine_CreateConeYShape(double _radius, double _height)
+GM_EXPORT double BBMOD_PhysicsEngine_CreateConeYShape(double _radius, double _height)
 {
     return Registry::Add(new btConeShape(_radius, _height));
 }
 
-EXPORT double BBMOD_PhysicsEngine_CreateConeZShape(double _radius, double _height)
+GM_EXPORT double BBMOD_PhysicsEngine_CreateConeZShape(double _radius, double _height)
 {
     return Registry::Add(new btConeShapeZ(_radius, _height));
 }
 
-EXPORT double BBMOD_PhysicsEngine_CreateSphereShape(char* _buffer)
+GM_EXPORT double BBMOD_PhysicsEngine_CreateSphereShape(char* _buffer)
 {
     auto margin = BBMOD_ReadBuffer<double>(_buffer);
     btScalar m[16];
@@ -462,7 +462,7 @@ EXPORT double BBMOD_PhysicsEngine_CreateSphereShape(char* _buffer)
     return Registry::Add(compoundShape);
 }
 
-EXPORT double BBMOD_PhysicsEngine_DestroyShape(double _shapeId)
+GM_EXPORT double BBMOD_PhysicsEngine_DestroyShape(double _shapeId)
 {
     auto shape = Registry::Get<btCollisionShape>(_shapeId);
 
@@ -489,14 +489,14 @@ EXPORT double BBMOD_PhysicsEngine_DestroyShape(double _shapeId)
 // BBMOD_PhysicsWorld
 //
 
-EXPORT double BBMOD_PhysicsWorld_SetGravity(double _id, double _x, double _y, double _z)
+GM_EXPORT double BBMOD_PhysicsWorld_SetGravity(double _id, double _x, double _y, double _z)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     physicsWorld->m_dynamicsWorld->setGravity(btVector3(_x, _y, _z));
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreateRigidBody(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateRigidBody(double _id, char* _buffer)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     auto shapeId = BBMOD_ReadBuffer<double>(_buffer);
@@ -534,7 +534,7 @@ EXPORT double BBMOD_PhysicsWorld_CreateRigidBody(double _id, char* _buffer)
     return Registry::Add(body);
 }
 
-EXPORT double BBMOD_PhysicsWorld_DestroyRigidBody(double _worldId, double _bodyId)
+GM_EXPORT double BBMOD_PhysicsWorld_DestroyRigidBody(double _worldId, double _bodyId)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
     auto rigidBody = Registry::Get<btRigidBody>(_bodyId);
@@ -551,7 +551,7 @@ EXPORT double BBMOD_PhysicsWorld_DestroyRigidBody(double _worldId, double _bodyI
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreatePointConstraint(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreatePointConstraint(double _id, char* _buffer)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
@@ -588,7 +588,7 @@ EXPORT double BBMOD_PhysicsWorld_CreatePointConstraint(double _id, char* _buffer
     return Registry::Add(constraint);
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreateHingeConstraint(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateHingeConstraint(double _id, char* _buffer)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
@@ -635,7 +635,7 @@ EXPORT double BBMOD_PhysicsWorld_CreateHingeConstraint(double _id, char* _buffer
     return Registry::Add(constraint);
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreateSliderConstraint(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateSliderConstraint(double _id, char* _buffer)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
@@ -678,7 +678,7 @@ EXPORT double BBMOD_PhysicsWorld_CreateSliderConstraint(double _id, char* _buffe
     return Registry::Add(constraint);
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreateConeTwistConstraint(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateConeTwistConstraint(double _id, char* _buffer)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
@@ -720,7 +720,7 @@ EXPORT double BBMOD_PhysicsWorld_CreateConeTwistConstraint(double _id, char* _bu
     return Registry::Add(constraint);
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreateSixDOFConstraint(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateSixDOFConstraint(double _id, char* _buffer)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
@@ -807,7 +807,7 @@ EXPORT double BBMOD_PhysicsWorld_CreateSixDOFConstraint(double _id, char* _buffe
     return Registry::Add(constraint);
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreateCharacterJoint(double _worldId, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateCharacterJoint(double _worldId, char* _buffer)
 {
     auto A = Registry::Get<btRigidBody>(BBMOD_ReadBuffer<double>(_buffer));
     auto B = Registry::Get<btRigidBody>(BBMOD_ReadBuffer<double>(_buffer));
@@ -845,7 +845,7 @@ EXPORT double BBMOD_PhysicsWorld_CreateCharacterJoint(double _worldId, char* _bu
     return Registry::Add(joint);
 }
 
-EXPORT double BBMOD_PhysicsWorld_DestroyConstraint(double _worldId, double _constraintId)
+GM_EXPORT double BBMOD_PhysicsWorld_DestroyConstraint(double _worldId, double _constraintId)
 {
     auto world = Registry::Get<BBMOD_PhysicsWorld>(_worldId)->m_dynamicsWorld;
     auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
@@ -858,7 +858,7 @@ EXPORT double BBMOD_PhysicsWorld_DestroyConstraint(double _worldId, double _cons
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreateTerrain(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateTerrain(double _id, char* _buffer)
 {
     auto width = BBMOD_ReadBuffer<uint32_t>(_buffer);
     auto height = BBMOD_ReadBuffer<uint32_t>(_buffer);
@@ -904,7 +904,7 @@ EXPORT double BBMOD_PhysicsWorld_CreateTerrain(double _id, char* _buffer)
     return Registry::Add(body);
 }
 
-EXPORT double BBMOD_PhysicsWorld_DestroyTerrain(double _worldId, double _terrainId)
+GM_EXPORT double BBMOD_PhysicsWorld_DestroyTerrain(double _worldId, double _terrainId)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId)->m_dynamicsWorld;
     auto body = Registry::Get<btRigidBody>(_terrainId);
@@ -923,7 +923,7 @@ EXPORT double BBMOD_PhysicsWorld_DestroyTerrain(double _worldId, double _terrain
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsWorld_CreateVehicle(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateVehicle(double _id, char* _buffer)
 {
     auto world = Registry::Get<BBMOD_PhysicsWorld>(_id)->m_dynamicsWorld;
 
@@ -950,7 +950,7 @@ EXPORT double BBMOD_PhysicsWorld_CreateVehicle(double _id, char* _buffer)
     return Registry::Add(res);
 }
 
-EXPORT double BBMOD_PhysicsWorld_DestroyVehicle(double _worldId, double _vehicleId)
+GM_EXPORT double BBMOD_PhysicsWorld_DestroyVehicle(double _worldId, double _vehicleId)
 {
     auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_vehicleId);
     Registry::Remove(vehicle);
@@ -958,34 +958,34 @@ EXPORT double BBMOD_PhysicsWorld_DestroyVehicle(double _worldId, double _vehicle
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsWorld_Simulate(double _id, double _timeStep, double _maxSubSteps)
+GM_EXPORT double BBMOD_PhysicsWorld_Simulate(double _id, double _timeStep, double _maxSubSteps)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     physicsWorld->m_dynamicsWorld->stepSimulation(_timeStep, _maxSubSteps);
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsWorld_DrawDebug(double _id)
+GM_EXPORT double BBMOD_PhysicsWorld_DrawDebug(double _id)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     physicsWorld->m_dynamicsWorld->debugDrawWorld();
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsWorld_GetDebugDrawSize(double _id)
+GM_EXPORT double BBMOD_PhysicsWorld_GetDebugDrawSize(double _id)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     return physicsWorld->m_debugDraw->getSize();
 }
 
-EXPORT double BBMOD_PhysicsWorld_GetDebugDrawToBuffer(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_GetDebugDrawToBuffer(double _id, char* _buffer)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     physicsWorld->m_debugDraw->toBuffer((uint8_t*)_buffer);
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsWorld_Destroy(double _id)
+GM_EXPORT double BBMOD_PhysicsWorld_Destroy(double _id)
 {
     auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
     auto dynamicsWorld = physicsWorld->m_dynamicsWorld;
@@ -1014,7 +1014,7 @@ EXPORT double BBMOD_PhysicsWorld_Destroy(double _id)
 // BBMOD_RigidBody
 //
 
-EXPORT double BBMOD_RigidBody_GetMatrixToBuffer(double _id, char* _buffer)
+GM_EXPORT double BBMOD_RigidBody_GetMatrixToBuffer(double _id, char* _buffer)
 {
     auto rigidBody = Registry::Get<btRigidBody>(_id);
 
@@ -1032,7 +1032,7 @@ EXPORT double BBMOD_RigidBody_GetMatrixToBuffer(double _id, char* _buffer)
     return 1.0;
 }
 
-EXPORT double BBMOD_RigidBody_GetDualQuatToBuffer(double _id, char* _buffer)
+GM_EXPORT double BBMOD_RigidBody_GetDualQuatToBuffer(double _id, char* _buffer)
 {
     auto rigidBody = Registry::Get<btRigidBody>(_id);
 
@@ -1059,7 +1059,7 @@ EXPORT double BBMOD_RigidBody_GetDualQuatToBuffer(double _id, char* _buffer)
 // BBMOD_PhysicsVehicle
 //
 
-EXPORT double BBMOD_PhysicsVehicle_AddWheel(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsVehicle_AddWheel(double _id, char* _buffer)
 {
     auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id);
 
@@ -1099,34 +1099,34 @@ EXPORT double BBMOD_PhysicsVehicle_AddWheel(double _id, char* _buffer)
     return static_cast<double>(vehicle->m_vehicle->getNumWheels() - 1);
 }
 
-EXPORT double BBMOD_PhysicsVehicle_SetBrake(double _id, double _wheelIndex, double _brake)
+GM_EXPORT double BBMOD_PhysicsVehicle_SetBrake(double _id, double _wheelIndex, double _brake)
 {
     auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id)->m_vehicle;
     vehicle->setBrake(_brake, static_cast<int>(_wheelIndex));
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsVehicle_SetSteering(double _id, double _wheelIndex, double _steering)
+GM_EXPORT double BBMOD_PhysicsVehicle_SetSteering(double _id, double _wheelIndex, double _steering)
 {
     auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id)->m_vehicle;
     vehicle->setSteeringValue(_steering, static_cast<int>(_wheelIndex));
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsVehicle_ApplyEngineForce(double _id, double _wheelIndex, double _force)
+GM_EXPORT double BBMOD_PhysicsVehicle_ApplyEngineForce(double _id, double _wheelIndex, double _force)
 {
     auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id)->m_vehicle;
     vehicle->applyEngineForce(_force, static_cast<int>(_wheelIndex));
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsVehicle_UpdateWheelTransform(double _id, double _wheelIndex)
+GM_EXPORT double BBMOD_PhysicsVehicle_UpdateWheelTransform(double _id, double _wheelIndex)
 {
     Registry::Get<BBMOD_PhysicsVehicle>(_id)->m_vehicle->updateWheelTransform(static_cast<int>(_wheelIndex), true);
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsVehicle_GetWheelTransform(double _id, double _wheelIndex, char* _outBuffer)
+GM_EXPORT double BBMOD_PhysicsVehicle_GetWheelTransform(double _id, double _wheelIndex, char* _outBuffer)
 {
     auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id)->m_vehicle;
     auto transform = vehicle->getWheelTransformWS(static_cast<int>(_wheelIndex));
@@ -1139,13 +1139,13 @@ EXPORT double BBMOD_PhysicsVehicle_GetWheelTransform(double _id, double _wheelIn
     return 1.0;
 }
 
-EXPORT double BBMOD_PhysicsVehicle_GetDeltaRotation(double _id, double _wheelIndex)
+GM_EXPORT double BBMOD_PhysicsVehicle_GetDeltaRotation(double _id, double _wheelIndex)
 {
     auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id)->m_vehicle;
     return ToDegrees(vehicle->getWheelInfo(static_cast<int>(_wheelIndex)).m_deltaRotation);
 }
 
-EXPORT double BBMOD_PhysicsVehicle_IsWheelInContact(double _id, double _wheelIndex)
+GM_EXPORT double BBMOD_PhysicsVehicle_IsWheelInContact(double _id, double _wheelIndex)
 {
     auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id)->m_vehicle;
     return vehicle->getWheelInfo(static_cast<int>(_wheelIndex)).m_raycastInfo.m_isInContact ? 1.0 : 0.0;

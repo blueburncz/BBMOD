@@ -17,6 +17,4 @@ function BBMOD_SliderPhysicsConstraintInfo(): BBMOD_PhysicsConstraintInfo() cons
 	};
 }
 
-function BBMOD_SliderPhysicsConstraint(): BBMOD_PhysicsConstraint() constructor
-{
-}
+function BBMOD_SliderPhysicsConstraint(): BBMOD_PhysicsConstraint() constructor {}

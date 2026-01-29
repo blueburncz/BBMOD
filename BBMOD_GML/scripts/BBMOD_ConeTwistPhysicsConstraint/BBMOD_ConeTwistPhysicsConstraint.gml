@@ -17,6 +17,4 @@ function BBMOD_ConeTwistPhysicsConstraintInfo(): BBMOD_PhysicsConstraintInfo() c
 	};
 }
 
-function BBMOD_ConeTwistPhysicsConstraint(): BBMOD_PhysicsConstraint() constructor
-{
-}
+function BBMOD_ConeTwistPhysicsConstraint(): BBMOD_PhysicsConstraint() constructor {}

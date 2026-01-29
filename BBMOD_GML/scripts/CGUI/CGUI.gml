@@ -447,8 +447,7 @@ function CGUI() constructor
 						_valueNew = keyboard_string;
 					}
 				}
-				catch (_ignore)
-				{}
+				catch (_ignore) {}
 				_onChange(_valueNew);
 			}
 			WidgetActive = undefined;

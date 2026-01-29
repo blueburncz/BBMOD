@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"bbmod_vtf_is_supported",
+  "%Name":"__bbmod_vtf",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"bbmod_vtf_is_supported",
+  "name":"__bbmod_vtf",
   "parent":{
     "name":"Utils",
     "path":"folders/BBMOD/Core/Utils.yy",

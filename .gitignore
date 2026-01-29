@@ -1,13 +1,14 @@
 # Local
-.env
-.vscode
+.env/
+.vscode/
 /docs_build/
 /docs_src/ScriptingAPI/
+env/
 
 # macOS
 .DS_Store
 ._*
 
-# Old font files
+# Old files
 *.old.png
 *.old.yy

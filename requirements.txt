@@ -1,9 +1,4 @@
-cachetools==5.0.0
-EditorConfig==0.12.4
-future==0.18.2
-Jinja2==3.1.1
-jsbeautifier==1.15.1
-MarkupSafe==2.1.1
-mistune==2.0.2
-pefile==2021.9.3
-six==1.16.0
+EditorConfig==0.17.1
+jsbeautifier==1.15.4
+json5==0.13.0
+six==1.17.0

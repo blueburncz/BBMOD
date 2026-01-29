@@ -1,9 +1,9 @@
 enum EAxis
 {
 	X = 0,
-	Y,
-	Z,
-	SIZE,
+		Y,
+		Z,
+		SIZE,
 };
 
 global.AxisNames = ["X", "Y", "Z"];
@@ -30,11 +30,11 @@ function GetAxisValue(_axis)
 enum EPhysicsShape
 {
 	Box = 0,
-	Capsule,
-	//Cone,
-	//Cylinder,
-	Sphere,
-	SIZE,
+		Capsule,
+		//Cone,
+		//Cylinder,
+		Sphere,
+		SIZE,
 };
 
 global.PhysicsShapeNames = ["Box", "Capsule", "Sphere"];

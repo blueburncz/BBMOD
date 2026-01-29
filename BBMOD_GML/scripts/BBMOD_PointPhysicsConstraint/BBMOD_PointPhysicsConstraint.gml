@@ -17,6 +17,4 @@ function BBMOD_PointPhysicsConstraintInfo(): BBMOD_PhysicsConstraintInfo() const
 	};
 }
 
-function BBMOD_PointPhysicsConstraint(): BBMOD_PhysicsConstraint() constructor
-{
-}
+function BBMOD_PointPhysicsConstraint(): BBMOD_PhysicsConstraint() constructor {}

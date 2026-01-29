@@ -5,40 +5,40 @@ enum btDebugDrawModes
 {
 	/// @member No debug drawing.
 	DBG_NoDebug = 0,
-	/// @member Debug drawing of wireframe.
-	DBG_DrawWireframe = 1,
-	/// @member Debug drawing of axis-aligned bounding boxes (AABBs).
-	DBG_DrawAabb = 2,
-	/// @member Debug drawing of features as text.
-	DBG_DrawFeaturesText = 4,
-	/// @member Debug drawing of contact points.
-	DBG_DrawContactPoints = 8,
-	/// @member Debug drawing with no deactivation.
-	DBG_NoDeactivation = 16,
-	/// @member Debug drawing with no help text.
-	DBG_NoHelpText = 32,
-	/// @member Debug drawing of text.
-	DBG_DrawText = 64,
-	/// @member Debug drawing of profile timings.
-	DBG_ProfileTimings = 128,
-	/// @member Debug enabling of Separating Axis Theorem (SAT) comparison.
-	DBG_EnableSatComparison = 256,
-	/// @member Debug disabling of Bullet's Linear Complementarity Problem (LCP).
-	DBG_DisableBulletLCP = 512,
-	/// @member Debug enabling of Continuous Collision Detection (CCD).
-	DBG_EnableCCD = 1024,
-	/// @member Debug drawing of constraints.
-	DBG_DrawConstraints = 0b100000000000,
-	/// @member Debug drawing of constraint limits.
-	DBG_DrawConstraintLimits = 0b1000000000000,
-	/// @member Debug drawing of wireframe in a fast manner.
-	DBG_FastWireframe = 0b10000000000000,
-	/// @member Debug drawing of normals.
-	DBG_DrawNormals = 0b100000000000000,
-	/// @member Debug drawing of frames.
-	DBG_DrawFrames = 0b1000000000000000,
-	/// @member Maximum debug draw mode.
-	DBG_MAX_DEBUG_DRAW_MODE
+		/// @member Debug drawing of wireframe.
+		DBG_DrawWireframe = 1,
+		/// @member Debug drawing of axis-aligned bounding boxes (AABBs).
+		DBG_DrawAabb = 2,
+		/// @member Debug drawing of features as text.
+		DBG_DrawFeaturesText = 4,
+		/// @member Debug drawing of contact points.
+		DBG_DrawContactPoints = 8,
+		/// @member Debug drawing with no deactivation.
+		DBG_NoDeactivation = 16,
+		/// @member Debug drawing with no help text.
+		DBG_NoHelpText = 32,
+		/// @member Debug drawing of text.
+		DBG_DrawText = 64,
+		/// @member Debug drawing of profile timings.
+		DBG_ProfileTimings = 128,
+		/// @member Debug enabling of Separating Axis Theorem (SAT) comparison.
+		DBG_EnableSatComparison = 256,
+		/// @member Debug disabling of Bullet's Linear Complementarity Problem (LCP).
+		DBG_DisableBulletLCP = 512,
+		/// @member Debug enabling of Continuous Collision Detection (CCD).
+		DBG_EnableCCD = 1024,
+		/// @member Debug drawing of constraints.
+		DBG_DrawConstraints = 0b100000000000,
+		/// @member Debug drawing of constraint limits.
+		DBG_DrawConstraintLimits = 0b1000000000000,
+		/// @member Debug drawing of wireframe in a fast manner.
+		DBG_FastWireframe = 0b10000000000000,
+		/// @member Debug drawing of normals.
+		DBG_DrawNormals = 0b100000000000000,
+		/// @member Debug drawing of frames.
+		DBG_DrawFrames = 0b1000000000000000,
+		/// @member Maximum debug draw mode.
+		DBG_MAX_DEBUG_DRAW_MODE
 };
 
 function BBMOD_PhysicsWorldInfo() constructor
@@ -206,16 +206,16 @@ function BBMOD_PhysicsWorld() constructor
 		buffer_write(_buffer, buffer_f64, _terrain.Scale.Z);
 
 		var _j = 0;
-		repeat (_terrainHeight)
+		repeat(_terrainHeight)
 		{
 			var _i = 0;
-			repeat (_terrainWidth)
-			{
-				var _val = _terrain.get_height_index(_i, _j);
-				buffer_write(_buffer, buffer_u8, _val);
-				++_i;
-			}
-			++_j;
+			repeat(_terrainWidth)
+				{
+					var _val = _terrain.get_height_index(_i, _j);
+					buffer_write(_buffer, buffer_u8, _val);
+					++_i;
+				}
+				++_j;
 		}
 
 		var _physicsTerrain = new BBMOD_PhysicsTerrain();

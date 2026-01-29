@@ -23,36 +23,22 @@ function BBMOD_CapsulePhysicsShapeInfo(): BBMOD_PhysicsShapeInfo() constructor
 	};
 }
 
-function BBMOD_CapsulePhysicsShape(): BBMOD_PhysicsShape() constructor
-{
-}
+function BBMOD_CapsulePhysicsShape(): BBMOD_PhysicsShape() constructor {}
 
 // X
 
-function BBMOD_CapsuleXPhysicsShapeInfo(): BBMOD_CapsulePhysicsShapeInfo() constructor
-{
-}
+function BBMOD_CapsuleXPhysicsShapeInfo(): BBMOD_CapsulePhysicsShapeInfo() constructor {}
 
-function BBMOD_CapsuleXPhysicsShape(): BBMOD_CapsulePhysicsShape() constructor
-{
-}
+function BBMOD_CapsuleXPhysicsShape(): BBMOD_CapsulePhysicsShape() constructor {}
 
 // Y
 
-function BBMOD_CapsuleYPhysicsShapeInfo(): BBMOD_CapsulePhysicsShapeInfo() constructor
-{
-}
+function BBMOD_CapsuleYPhysicsShapeInfo(): BBMOD_CapsulePhysicsShapeInfo() constructor {}
 
-function BBMOD_CapsuleYPhysicsShape(): BBMOD_CapsulePhysicsShape() constructor
-{
-}
+function BBMOD_CapsuleYPhysicsShape(): BBMOD_CapsulePhysicsShape() constructor {}
 
 // Z
 
-function BBMOD_CapsuleZPhysicsShapeInfo(): BBMOD_CapsulePhysicsShapeInfo() constructor
-{
-}
+function BBMOD_CapsuleZPhysicsShapeInfo(): BBMOD_CapsulePhysicsShapeInfo() constructor {}
 
-function BBMOD_CapsuleZPhysicsShape(): BBMOD_CapsulePhysicsShape() constructor
-{
-}
+function BBMOD_CapsuleZPhysicsShape(): BBMOD_CapsulePhysicsShape() constructor {}

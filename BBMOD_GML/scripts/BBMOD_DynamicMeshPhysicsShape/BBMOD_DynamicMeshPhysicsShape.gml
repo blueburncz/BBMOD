@@ -1,5 +1,3 @@
 /// @module Physics
 
-function BBMOD_DynamicMeshPhysicsShape(): BBMOD_PhysicsShape() constructor
-{
-}
+function BBMOD_DynamicMeshPhysicsShape(): BBMOD_PhysicsShape() constructor {}

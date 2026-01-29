@@ -37,6 +37,4 @@ function BBMOD_SixDOFPhysicsConstraintInfo(): BBMOD_PhysicsConstraintInfo() cons
 	};
 }
 
-function BBMOD_SixDOFPhysicsConstraint(): BBMOD_PhysicsConstraint() constructor
-{
-}
+function BBMOD_SixDOFPhysicsConstraint(): BBMOD_PhysicsConstraint() constructor {}

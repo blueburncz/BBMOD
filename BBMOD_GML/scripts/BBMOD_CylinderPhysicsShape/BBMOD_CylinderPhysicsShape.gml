@@ -23,36 +23,22 @@ function BBMOD_CylinderPhysicsShapeInfo(): BBMOD_PhysicsShapeInfo() constructor
 	};
 }
 
-function BBMOD_CylinderPhysicsShape(): BBMOD_PhysicsShape() constructor
-{
-}
+function BBMOD_CylinderPhysicsShape(): BBMOD_PhysicsShape() constructor {}
 
 // X
 
-function BBMOD_CylinderXPhysicsShapeInfo(): BBMOD_CylinderPhysicsShapeInfo() constructor
-{
-}
+function BBMOD_CylinderXPhysicsShapeInfo(): BBMOD_CylinderPhysicsShapeInfo() constructor {}
 
-function BBMOD_CylinderXPhysicsShape(): BBMOD_CylinderPhysicsShape() constructor
-{
-}
+function BBMOD_CylinderXPhysicsShape(): BBMOD_CylinderPhysicsShape() constructor {}
 
 // Y
 
-function BBMOD_CylinderYPhysicsShapeInfo(): BBMOD_CylinderPhysicsShapeInfo() constructor
-{
-}
+function BBMOD_CylinderYPhysicsShapeInfo(): BBMOD_CylinderPhysicsShapeInfo() constructor {}
 
-function BBMOD_CylinderYPhysicsShape(): BBMOD_CylinderPhysicsShape() constructor
-{
-}
+function BBMOD_CylinderYPhysicsShape(): BBMOD_CylinderPhysicsShape() constructor {}
 
 // Z
 
-function BBMOD_CylinderZPhysicsShapeInfo(): BBMOD_CylinderPhysicsShapeInfo() constructor
-{
-}
+function BBMOD_CylinderZPhysicsShapeInfo(): BBMOD_CylinderPhysicsShapeInfo() constructor {}
 
-function BBMOD_CylinderZPhysicsShape(): BBMOD_CylinderPhysicsShape() constructor
-{
-}
+function BBMOD_CylinderZPhysicsShape(): BBMOD_CylinderPhysicsShape() constructor {}

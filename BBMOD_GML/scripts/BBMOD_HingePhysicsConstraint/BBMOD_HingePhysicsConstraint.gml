@@ -21,6 +21,4 @@ function BBMOD_HingePhysicsConstraintInfo(): BBMOD_PhysicsConstraintInfo() const
 	};
 }
 
-function BBMOD_HingePhysicsConstraint(): BBMOD_PhysicsConstraint() constructor
-{
-}
+function BBMOD_HingePhysicsConstraint(): BBMOD_PhysicsConstraint() constructor {}

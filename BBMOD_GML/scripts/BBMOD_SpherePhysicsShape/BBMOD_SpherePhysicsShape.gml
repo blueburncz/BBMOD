@@ -21,6 +21,4 @@ function BBMOD_SpherePhysicsShapeInfo(): BBMOD_PhysicsShapeInfo() constructor
 	};
 }
 
-function BBMOD_SpherePhysicsShape(): BBMOD_PhysicsShape() constructor
-{
-}
+function BBMOD_SpherePhysicsShape(): BBMOD_PhysicsShape() constructor {}

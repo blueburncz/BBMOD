@@ -1,5 +1,41 @@
 /// @module Core
 
+/// @func bbmod_texture_set_stage_vs(_slot, _texture)
+///
+/// @desc Passes a texture to a vertex shader. On Windows this uses
+/// BBMOD_D3D11 (if available), otherwise GameMaker's built-in
+/// `texture_set_stage` is used, which should work on OpenGL-based platforms.
+///
+/// @param {Real} _slot The vertex texture slot index. Must be in range 0..7.
+/// @param {Pointer.Texture} _texture The texture to pass.
+///
+/// @note You can test if this function is supported with
+/// {@link bbmod_vtf_is_supported}.
+///
+/// @see bbmod_vtf_is_supported
+function bbmod_texture_set_stage_vs(_slot, _texture)
+{
+	gml_pragma("forceinline");
+
+	if (os_type == os_windows && os_browser == browser_not_a_browser)
+	{
+		try
+		{
+			if (bbmod_d3d11_init())
+			{
+				texture_set_stage(0, _texture);
+				bbmod_d3d11_copy_srv_ps_vs(0, _slot);
+			}
+		}
+		catch (_ignore) {}
+
+		// Note: On Windows this wouldn't work anyways, so we can simply return...
+		return;
+	}
+
+	texture_set_stage(_slot, _texture);
+}
+
 /// @func bbmod_vtf_is_supported()
 ///
 /// @desc Checks whether vertex texture fetching is supported on the current

@@ -134,7 +134,7 @@ CreateRagdoll = function ()
 
 		var _shapeInfo = undefined;
 		var _shape = undefined;
-	
+
 		switch (_ragdollPart.Type)
 		{
 			case EPhysicsShape.Box:
@@ -148,11 +148,11 @@ CreateRagdoll = function ()
 				_shapeInfo.Height = max(_ragdollPart.Size.Y - (_shapeInfo.Radius * 2), 0);
 				break;
 
-			//case EPhysicsShape.Cone:
-			//	break;
+				//case EPhysicsShape.Cone:
+				//	break;
 
-			//case EPhysicsShape.Cylinder:
-			//	break;
+				//case EPhysicsShape.Cylinder:
+				//	break;
 
 			case EPhysicsShape.Sphere:
 				_shapeInfo = new BBMOD_SpherePhysicsShapeInfo();
@@ -177,11 +177,11 @@ CreateRagdoll = function ()
 					_shape = OMain.physicsEngine.create_capsule_y_shape(_shapeInfo);
 					break;
 
-				//case EPhysicsShape.Cone:
-				//	break;
+					//case EPhysicsShape.Cone:
+					//	break;
 
-				//case EPhysicsShape.Cylinder:
-				//	break;
+					//case EPhysicsShape.Cylinder:
+					//	break;
 
 				case EPhysicsShape.Sphere:
 					_shape = OMain.physicsEngine.create_sphere_shape(_shapeInfo);
@@ -246,7 +246,8 @@ CreateRagdoll = function ()
 		_ragdollPart.LowerLimit.ToBuffer(_scratchBuffer, buffer_f32);
 		_ragdollPart.UpperLimit.ToBuffer(_scratchBuffer, buffer_f32);
 
-		_ragdollPart.Constraint = BBMOD_PhysicsWorld_CreateCharacterJoint(OMain.physicsWorld.__id, buffer_get_address(_scratchBuffer));
+		_ragdollPart.Constraint = BBMOD_PhysicsWorld_CreateCharacterJoint(OMain.physicsWorld.__id,
+			buffer_get_address(_scratchBuffer));
 	}
 };
 
@@ -258,27 +259,27 @@ Pelvis.Name = "Pelvis";
 Pelvis.Bone = TryGetBone("mixamorig:Hips");
 Pelvis.Expand = true;
 Pelvis.Type = EPhysicsShape.Box;
-Pelvis.Offset.Set(-8.40425491*power(10,-6),0.0745585412,-0.0308578461).MulSelf(new BBMOD_Vec3(1, 1, -1));
-Pelvis.Size.Set(0.375215948,0.282260925,0.25216195);
+Pelvis.Offset.Set(-8.40425491 * power(10, -6), 0.0745585412, -0.0308578461).MulSelf(new BBMOD_Vec3(1, 1, -1));
+Pelvis.Size.Set(0.375215948, 0.282260925, 0.25216195);
 Pelvis.Mass = 12.5;
 array_push(Ragdoll, Pelvis);
 
 LeftHips = new CRagdollPartInfo();
 LeftHips.Name = "Left Hips";
 LeftHips.Bone = TryGetBone("mixamorig:LeftUpLeg");
-LeftHips.Offset.Set(0,0.21,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+LeftHips.Offset.Set(0, 0.21, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 LeftHips.Size.X = 0.08;
 LeftHips.Size.Y = 0.39;
 LeftHips.Mass = 7.5;
 LeftHips.ConnectedToBone = TryGetBone("mixamorig:Hips");
 LeftHips.LowerLimit.Set(-30.0, -70.0, -60.0);
-LeftHips.UpperLimit.Set( 30.0,  70.0,  60.0);
+LeftHips.UpperLimit.Set(30.0, 70.0, 60.0);
 array_push(Ragdoll, LeftHips);
 
 LeftKnee = new CRagdollPartInfo();
 LeftKnee.Name = "Left Knee";
 LeftKnee.Bone = TryGetBone("mixamorig:LeftLeg");
-LeftKnee.Offset.Set(0,0.2430662,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+LeftKnee.Offset.Set(0, 0.2430662, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 LeftKnee.Size.X = 0.1215331;
 LeftKnee.Size.Y = 0.4861324;
 LeftKnee.Mass = 7.5;
@@ -295,19 +296,19 @@ array_push(Ragdoll, LeftKnee);
 RightHips = new CRagdollPartInfo();
 RightHips.Name = "Right Hips";
 RightHips.Bone = TryGetBone("mixamorig:RightUpLeg");
-RightHips.Offset.Set(0,0.21,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+RightHips.Offset.Set(0, 0.21, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 RightHips.Size.X = 0.08;
 RightHips.Size.Y = 0.39;
 RightHips.Mass = 7.5;
 RightHips.ConnectedToBone = TryGetBone("mixamorig:Hips");
 RightHips.LowerLimit.Set(-30.0, -70.0, -60.0);
-RightHips.UpperLimit.Set( 30.0,  70.0,  60.0);
+RightHips.UpperLimit.Set(30.0, 70.0, 60.0);
 array_push(Ragdoll, RightHips);
 
 RightKnee = new CRagdollPartInfo();
 RightKnee.Name = "Right Knee";
 RightKnee.Bone = TryGetBone("mixamorig:RightLeg");
-RightKnee.Offset.Set(0,0.2430652,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+RightKnee.Offset.Set(0, 0.2430652, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 RightKnee.Size.X = 0.1215326;
 RightKnee.Size.Y = 0.4861304;
 RightKnee.Mass = 7.5;
@@ -324,73 +325,73 @@ array_push(Ragdoll, RightKnee);
 LeftArm = new CRagdollPartInfo();
 LeftArm.Name = "Left Arm";
 LeftArm.Bone = TryGetBone("mixamorig:LeftArm");
-LeftArm.Offset.Set(0,0.1370234,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+LeftArm.Offset.Set(0, 0.1370234, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 LeftArm.Size.X = 0.06851171;
 LeftArm.Size.Y = 0.2740468;
 LeftArm.Mass = 5;
 LeftArm.ConnectedToBone = TryGetBone("mixamorig:Spine1");
 LeftArm.LowerLimit.Set(-15.0, -85.0, -70.0);
-LeftArm.UpperLimit.Set( 15.0,  85.0,  70.0);
+LeftArm.UpperLimit.Set(15.0, 85.0, 70.0);
 array_push(Ragdoll, LeftArm);
 
 LeftElbow = new CRagdollPartInfo();
 LeftElbow.Name = "Left Elbow";
 LeftElbow.Bone = TryGetBone("mixamorig:LeftForeArm");
-LeftElbow.Offset.Set(0,0.2557196,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+LeftElbow.Offset.Set(0, 0.2557196, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 LeftElbow.Size.X = 0.1022878;
 LeftElbow.Size.Y = 0.5114392;
 LeftElbow.Mass = 5;
 LeftElbow.ConnectedToBone = TryGetBone("mixamorig:LeftArm");
 LeftElbow.LowerLimit.Set(-15.0, 0.0, 0.0); // -6.0, 0.0, 0.0
-LeftElbow.UpperLimit.Set( 15.0, 0.0, -85.0); // 6.0, 0.0, -100.0
+LeftElbow.UpperLimit.Set(15.0, 0.0, -85.0); // 6.0, 0.0, -100.0
 array_push(Ragdoll, LeftElbow);
 
 RightArm = new CRagdollPartInfo();
 RightArm.Name = "Right Arm";
 RightArm.Bone = TryGetBone("mixamorig:RightArm");
-RightArm.Offset.Set(0,0.1370234,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+RightArm.Offset.Set(0, 0.1370234, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 RightArm.Size.X = 0.06851171;
 RightArm.Size.Y = 0.2740468;
 RightArm.Mass = 5;
 RightArm.ConnectedToBone = TryGetBone("mixamorig:Spine1");
 RightArm.LowerLimit.Set(-15.0, -85.0, -70.0);
-RightArm.UpperLimit.Set( 15.0,  85.0,  70.0);
+RightArm.UpperLimit.Set(15.0, 85.0, 70.0);
 array_push(Ragdoll, RightArm);
 
 RightElbow = new CRagdollPartInfo();
 RightElbow.Name = "Right Elbow";
 RightElbow.Bone = TryGetBone("mixamorig:RightForeArm");
-RightElbow.Offset.Set(0,0.2557195,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+RightElbow.Offset.Set(0, 0.2557195, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 RightElbow.Size.X = 0.1022878;
 RightElbow.Size.Y = 0.511439;
 RightElbow.Mass = 5;
 RightElbow.ConnectedToBone = TryGetBone("mixamorig:RightArm");
 RightElbow.LowerLimit.Set(-15.0, 0.0, 0.0); // -6.0, 0.0, 0.0
-RightElbow.UpperLimit.Set( 15.0, 0.0, 85.0); // 6.0, 0.0, 100.0
+RightElbow.UpperLimit.Set(15.0, 0.0, 85.0); // 6.0, 0.0, 100.0
 array_push(Ragdoll, RightElbow);
 
 MiddleSpine = new CRagdollPartInfo();
 MiddleSpine.Name = "Middle Spine";
 MiddleSpine.Bone = TryGetBone("mixamorig:Spine1");
 MiddleSpine.Type = EPhysicsShape.Box;
-MiddleSpine.Offset.Set(3.7252903*power(10,-7),0.112345047,-0.00417891145).MulSelf(new BBMOD_Vec3(1, 1, -1));
-MiddleSpine.Size.Set(0.375215948,0.224690124,0.254008442);
+MiddleSpine.Offset.Set(3.7252903 * power(10, -7), 0.112345047, -0.00417891145).MulSelf(new BBMOD_Vec3(1, 1, -1));
+MiddleSpine.Size.Set(0.375215948, 0.224690124, 0.254008442);
 MiddleSpine.Mass = 12.5;
 MiddleSpine.ConnectedToBone = TryGetBone("mixamorig:Hips");
 MiddleSpine.LowerLimit.Set(-20.0, -30.0, -30.0);
-MiddleSpine.UpperLimit.Set( 20.0,  30.0,  30.0);
+MiddleSpine.UpperLimit.Set(20.0, 30.0, 30.0);
 array_push(Ragdoll, MiddleSpine);
 
 Head = new CRagdollPartInfo();
 Head.Name = "Head";
 Head.Bone = TryGetBone("mixamorig:Head");
 Head.Type = EPhysicsShape.Sphere;
-Head.Offset.Set(0,0.0938039869,0).MulSelf(new BBMOD_Vec3(1, 1, -1));
+Head.Offset.Set(0, 0.0938039869, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 Head.Size.X = 0.09380399;
 Head.Mass = 5;
 Head.ConnectedToBone = TryGetBone("mixamorig:Spine1");
 Head.LowerLimit.Set(-25.0, -35.0, -35.0);
-Head.UpperLimit.Set( 25.0,  35.0,  35.0);
+Head.UpperLimit.Set(25.0, 35.0, 35.0);
 array_push(Ragdoll, Head);
 
 alarm[0] = 1;
