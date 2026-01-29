@@ -1,8 +1,8 @@
 # Local
 .env/
 .vscode/
-/docs_build/
-/docs_src/ScriptingAPI/
+docs_build/
+docs_src/ScriptingAPI/
 env/
 
 # macOS
