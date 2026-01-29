@@ -7,7 +7,6 @@ if(WIN32)
 endif()
 
 target_include_directories(BBMOD_Physics PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../include
     ${CMAKE_SOURCE_DIR}/external/bullet3/src
 )
 

@@ -1,7 +1,7 @@
 #include <BBMOD/Importer.hpp>
 #include <BBMOD/Model.hpp>
 #include <BBMOD/Animation.hpp>
-#include <terminal.hpp>
+#include <BBMOD/terminal.hpp>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

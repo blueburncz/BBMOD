@@ -1,15 +1,15 @@
 #include <BBMOD/Animation.hpp>
 #include <BBMOD/Config.hpp>
-#include <BBMOD/Model.hpp>
 #include <BBMOD/Math.hpp>
 #include <BBMOD/Matrix.hpp>
-#include <terminal.hpp>
+#include <BBMOD/Model.hpp>
+#include <BBMOD/terminal.hpp>
+#include <BBMOD/utils.hpp>
 
 #include <assimp/anim.h>
 #include <assimp/vector3.h>
 #include <assimp/quaternion.h>
 
-#include <utils.hpp>
 #include <iostream>
 #include <stack>
 

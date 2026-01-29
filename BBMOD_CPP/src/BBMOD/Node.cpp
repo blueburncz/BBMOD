@@ -1,5 +1,5 @@
 #include <BBMOD/Node.hpp>
-#include <utils.hpp>
+#include <BBMOD/utils.hpp>
 #include <iostream>
 
 bool SNode::Save(std::ofstream& file)

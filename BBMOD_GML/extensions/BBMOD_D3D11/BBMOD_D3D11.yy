@@ -20,7 +20,7 @@
         {"$GMExtensionFunction":"","%Name":"bbmod_d3d11_copy_srv_ps_vs","argCount":0,"args":[2,2,],"documentation":"","externalName":"bbmod_d3d11_copy_srv_ps_vs","help":"bbmod_d3d11_copy_srv_ps_vs(_indexSrc, _indexDest)","hidden":false,"kind":4,"name":"bbmod_d3d11_copy_srv_ps_vs","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"bbmod_d3d11_init_impl","argCount":0,"args":[1,1,],"documentation":"","externalName":"bbmod_d3d11_init_impl","help":"bbmod_d3d11_init_impl(_device, _context)","hidden":false,"kind":4,"name":"bbmod_d3d11_init_impl","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":4,"name":"","origname":"","ProxyFiles":[
-        {"$GMProxyFile":"","%Name":"BBMOD_D3D11.dll","name":"BBMOD_D3D11.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
+        {"$GMProxyFile":"","%Name":"BBMOD_D3D11_x64.dll","name":"BBMOD_D3D11_x64.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,

@@ -1,7 +1,7 @@
 #include <BBMOD/Mesh.hpp>
 #include <BBMOD/Model.hpp>
-#include <terminal.hpp>
-#include <utils.hpp>
+#include <BBMOD/terminal.hpp>
+#include <BBMOD/utils.hpp>
 
 #include <assimp/scene.h>
 

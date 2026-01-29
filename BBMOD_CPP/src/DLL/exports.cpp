@@ -1,21 +1,13 @@
+#include <BBMOD/exports.hpp>
 #include <BBMOD/Importer.hpp>
 
 #include <cmath>
 
-#ifdef _WIN32
-#	define GM_EXPORT extern "C" __declspec(dllexport)
-#else
-#	define GM_EXPORT extern "C"
-#endif
-
 #define GM_TRUE 1.0
-
 #define GM_FALSE 0.0
 
 typedef double gmreal_t;
-
 typedef const char* gmstring_t;
-
 typedef void* gmptr_t;
 
 SConfig gConfig;

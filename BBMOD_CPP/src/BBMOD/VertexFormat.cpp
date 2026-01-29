@@ -1,5 +1,5 @@
 #include <BBMOD/VertexFormat.hpp>
-#include <utils.hpp>
+#include <BBMOD/utils.hpp>
 
 bool SVertexFormat::Save(std::ofstream& file)
 {

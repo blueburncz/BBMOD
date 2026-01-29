@@ -1,5 +1,5 @@
 #include <BBMOD/Bone.hpp>
-#include <utils.hpp>
+#include <BBMOD/utils.hpp>
 
 bool SBone::Save(std::ofstream& file)
 {

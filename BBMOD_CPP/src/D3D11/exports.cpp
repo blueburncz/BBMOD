@@ -1,8 +1,8 @@
+#include <BBMOD/exports.hpp>
+
 #include <d3d11.h>
 
 #pragma comment(lib, "d3d11.lib")
-
-#define GM_EXPORT extern "C" __declspec(dllexport)
 
 static bool gInitialized = false;
 static ID3D11Device* gDevice = nullptr;

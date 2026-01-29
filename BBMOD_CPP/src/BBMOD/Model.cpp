@@ -1,6 +1,5 @@
 #include <BBMOD/Model.hpp>
-
-#include <utils.hpp>
+#include <BBMOD/utils.hpp>
 
 #include <assimp/scene.h>
 

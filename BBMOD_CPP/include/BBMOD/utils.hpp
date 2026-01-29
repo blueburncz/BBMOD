@@ -1,7 +1,7 @@
 #pragma once
 
 #include <BBMOD/Matrix.hpp>
-#include <terminal.hpp>
+#include <BBMOD/terminal.hpp>
 
 #define FILE_WRITE_DATA(f, d) \
 	(f).write(reinterpret_cast<const char*>(&(d)), sizeof(d))

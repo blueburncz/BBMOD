@@ -14,12 +14,7 @@ if(APPLE)
 endif()
 
 # ==============================================================================
-# Shared code
-# ==============================================================================
-add_subdirectory(src/BBMOD)
-
-# ==============================================================================
-# Assimp config
+# Assimp
 # ==============================================================================
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
@@ -45,6 +40,9 @@ add_subdirectory(external/bullet3)
 # ==============================================================================
 # Projects
 # ==============================================================================
+include_directories(include)
+add_subdirectory(src/BBMOD) # Shared across projects
+
 add_subdirectory(src/CLI)
 add_subdirectory(src/DLL)
 add_subdirectory(src/Physics)

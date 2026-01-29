@@ -1,5 +1,6 @@
 #include <BBMOD/Importer.hpp>
-#include <terminal.hpp>
+#include <BBMOD/terminal.hpp>
+
 #include <iostream>
 #include <filesystem>
 #include <string>

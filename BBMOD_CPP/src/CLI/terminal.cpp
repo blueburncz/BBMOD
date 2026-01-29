@@ -1,7 +1,7 @@
-#include <terminal.hpp>
+#include <BBMOD/terminal.hpp>
 
 #ifdef _WIN32
-#include <Windows.h>
+#	include <Windows.h>
 #endif
 
 bool InitTerminal()
