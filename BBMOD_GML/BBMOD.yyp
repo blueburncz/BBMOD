@@ -25,7 +25,6 @@
     {"$GMFolder":"","%Name":"Deprecated","folderPath":"folders/BBMOD/Core/DefaultRenderer/Deprecated.yy","name":"Deprecated","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Shaders","folderPath":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy","name":"Shaders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sprites","folderPath":"folders/BBMOD/Core/DefaultRenderer/Sprites.yy","name":"Sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"VTF","folderPath":"folders/BBMOD/VTF.yy","name":"VTF","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Interfaces","folderPath":"folders/BBMOD/Core/Interfaces.yy","name":"Interfaces","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Lights","folderPath":"folders/BBMOD/Core/Lights.yy","name":"Lights","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Rendering","folderPath":"folders/BBMOD/Core/Rendering.yy","name":"Rendering","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -93,6 +92,7 @@
     {"$GMFolder":"","%Name":"StateMachine","folderPath":"folders/BBMOD/StateMachine.yy","name":"StateMachine","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Terrain","folderPath":"folders/BBMOD/Terrain.yy","name":"Terrain","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Shaders","folderPath":"folders/BBMOD/Terrain/Shaders.yy","name":"Shaders","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"VTF","folderPath":"folders/BBMOD/VTF.yy","name":"VTF","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Test","folderPath":"folders/Test.yy","name":"Test","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/Test/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Test/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -233,6 +233,7 @@
   "resources":[
     {"id":{"name":"BBMOD_D3D11","path":"extensions/BBMOD_D3D11/BBMOD_D3D11.yy",},},
     {"id":{"name":"BBMOD_Physics","path":"extensions/BBMOD_Physics/BBMOD_Physics.yy",},},
+    {"id":{"name":"BBMOD","path":"extensions/BBMOD/BBMOD.yy",},},
     {"id":{"name":"OCharacter","path":"objects/OCharacter/OCharacter.yy",},},
     {"id":{"name":"OLightmap","path":"objects/OLightmap/OLightmap.yy",},},
     {"id":{"name":"OMain","path":"objects/OMain/OMain.yy",},},

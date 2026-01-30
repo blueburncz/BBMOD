@@ -13,7 +13,6 @@
     {"name":"Deprecated","order":13,"path":"folders/BBMOD/Core/DefaultRenderer/Deprecated.yy",},
     {"name":"Shaders","order":3,"path":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy",},
     {"name":"Sprites","order":4,"path":"folders/BBMOD/Core/DefaultRenderer/Sprites.yy",},
-    {"name":"VTF","order":15,"path":"folders/BBMOD/VTF.yy",},
     {"name":"Interfaces","order":1,"path":"folders/BBMOD/Core/Interfaces.yy",},
     {"name":"Lights","order":5,"path":"folders/BBMOD/Core/Lights.yy",},
     {"name":"Rendering","order":2,"path":"folders/BBMOD/Core/Rendering.yy",},
@@ -79,6 +78,7 @@
     {"name":"StateMachine","order":2,"path":"folders/BBMOD/StateMachine.yy",},
     {"name":"Terrain","order":3,"path":"folders/BBMOD/Terrain.yy",},
     {"name":"Shaders","order":8,"path":"folders/BBMOD/Terrain/Shaders.yy",},
+    {"name":"VTF","order":15,"path":"folders/BBMOD/VTF.yy",},
     {"name":"Test","order":4,"path":"folders/Test.yy",},
     {"name":"Scripts","order":1,"path":"folders/Test/Scripts.yy",},
     {"name":"Sprites","order":2,"path":"folders/Test/Sprites.yy",},
@@ -92,6 +92,7 @@
     {"name":"Scripts","order":3,"path":"folders/TestPhysics/Scripts.yy",},
   ],
   "ResourceOrderSettings":[
+    {"name":"BBMOD","order":10,"path":"extensions/BBMOD/BBMOD.yy",},
     {"name":"OLightmap","order":1,"path":"objects/OLightmap/OLightmap.yy",},
     {"name":"OMainBasic","order":2,"path":"objects/OMainBasic/OMainBasic.yy",},
     {"name":"ORagdoll","order":2,"path":"objects/ORagdoll/ORagdoll.yy",},
