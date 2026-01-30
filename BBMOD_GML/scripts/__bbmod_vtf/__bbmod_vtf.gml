@@ -1,4 +1,4 @@
-/// @module Core
+/// @module VTF
 
 /// @func bbmod_texture_set_stage_vs(_slot, _texture)
 ///

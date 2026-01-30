@@ -83,3 +83,5 @@ only with animations with optimization level 0!
 * Added new module *Physics*.
 
 * Added new module *D3D11* and extension `BBMOD_D3D11`. Use function `bbmod_d3d11_init()` to initialize the extension. This is for **Windows only!**
+
+* Added new module *VTF* for vertex texture fetching techniques. Moved functions `bbmod_vtf_is_supported` and `bbmod_texture_set_stage_vs` from *Core* into it.
