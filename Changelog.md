@@ -86,4 +86,4 @@ only with animations with optimization level 0!
 
 * Added new module *VTF* for vertex texture fetching techniques. Moved functions `bbmod_vtf_is_supported` and `bbmod_texture_set_stage_vs` from *Core* into it.
 
-* Added new extension `BBMOD` to the *Core* module, which handles automatic shader includes. See the documentation for more info.
+* Fixed shader compatibility with GMRT.

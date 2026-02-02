@@ -131,11 +131,11 @@ vec3 xPrefilterIBL_GGX(sampler2D octahedron, vec3 R, float roughness)
 		vec3 H = xImportanceSample_GGX(Xi, N, roughness);
 		vec3 L = 2.0 * dot(V, H) * H - V;
 		float NdotL = clamp(dot(N, L), 0.0, 1.0);
-		if (NdotL > 0.0)
-		{
+		//if (NdotL > 0.0)
+		//{
 			prefilteredColor += texture2D(octahedron, xVec3ToOctahedronUv(L)).rgb * NdotL;
 			totalWeight += NdotL;
-		}
+		//}
 	}
 	return prefilteredColor / totalWeight;
 }

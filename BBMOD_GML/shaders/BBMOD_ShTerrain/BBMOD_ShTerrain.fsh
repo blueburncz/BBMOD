@@ -664,7 +664,7 @@ Material UnpackMaterial(
 vec3 xProject(vec2 tanAspect, vec2 texCoord, float depth)
 {
 #if !(defined(_YY_HLSL11_) || defined(_YY_PSSL_))
-	tanAspect.y *= -1.0;
+//	tanAspect.y *= -1.0;
 #endif
 	return vec3(tanAspect * (texCoord * 2.0 - 1.0) * depth, depth);
 }
@@ -725,10 +725,6 @@ vec2 VogelDiskSample(int sampleIndex, int samplesCount, float phi)
 
 float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 {
-	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
-	{
-		return 0.0;
-	}
 	float shadow = 0.0;
 	float noise = 6.28 * InterleavedGradientNoise(gl_FragCoord.xy);
 	float bias = bbmod_ShadowmapBias / bbmod_ShadowmapArea;
@@ -744,6 +740,10 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 		{
 			shadow += step(depth, compareZ);
 		}
+	}
+	if (clamp(uv.xy, vec2(0.0), vec2(1.0)) != uv.xy)
+	{
+		return 0.0;
 	}
 	return (shadow / float(SHADOWMAP_SAMPLE_COUNT));
 }
