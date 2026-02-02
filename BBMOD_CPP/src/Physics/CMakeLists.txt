@@ -1,5 +1,8 @@
 add_library(BBMOD_Physics SHARED
-    exports.cpp
+    exports_PhysicsEngine.cpp
+    exports_PhysicsVehicle.cpp
+    exports_PhysicsWorld.cpp
+    exports_RigidBody.cpp
 )
 
 if(WIN32)
