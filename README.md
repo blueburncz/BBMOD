@@ -7,6 +7,9 @@
 [![License](https://img.shields.io/github/license/blueburncz/BBMOD)](LICENSE)
 [![Discord](https://img.shields.io/discord/298884075585011713?label=Discord)](https://discord.gg/ep2BGPm)
 
+> [!WARNING]
+> You are viewing the development branch of BBMOD 3. Feel free to experiment with the [yet-unreleased changes](Changelog.md), but expect bugs and unfinished features. The release branch can be found [here](https://github.com/blueburncz/BBMOD/tree/bbmod3).
+
 ## Table of Contents
 
 * [About](#about)
@@ -20,9 +23,7 @@
 
 ## About
 
-BBMOD is a library that makes creating 3D games in GameMaker easier! Whether you just need to draw 3D models in 2D games
-or you are building fully immersive 3D worlds, BBMOD helps you bring your vision to life! For more info, please see its
-homepage <https://blueburn.cz/bbmod/>.
+BBMOD is a library that makes creating 3D games in GameMaker easier! Whether you just need to draw 3D models in 2D games or you are building fully immersive 3D worlds, BBMOD helps you bring your vision to life! For more info, please see its homepage <https://blueburn.cz/bbmod/>.
 
 ## Screenshots
 
