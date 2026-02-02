@@ -86,10 +86,7 @@ void PrintHelp()
 
 int main(int argc, const char* argv[])
 {
-	if (!InitTerminal())
-	{
-		return EXIT_FAILURE;
-	}
+	TermColor::Init();
 
 	const char* fin = NULL;
 	const char* fout = NULL;

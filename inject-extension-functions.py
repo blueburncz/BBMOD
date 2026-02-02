@@ -56,9 +56,7 @@ for source_dir, yy_file_path, extension_filename in EXTENSIONS:
 
                         if args_string:
                             args_split = args_string.split(", ")
-                            args_list = [
-                                tuple(arg.split(" ", 1)) for arg in args_split
-                            ]
+                            args_list = [tuple(arg.split(" ", 1)) for arg in args_split]
 
                             for arg_type, arg_name in args_list:
                                 arg_types.append(TYPE_MAP[arg_type])

@@ -1,6 +1,13 @@
 #pragma once
 
 #include <cstdio>
+#include <cstdlib>
+
+#ifdef _WIN32
+#	include <windows.h>
+#else
+#	include <unistd.h>
+#endif
 
 #define TC_RESET 0
 
@@ -31,15 +38,78 @@
 	"\x1B[" TC_STRINGIFY(v1) ";" TC_STRINGIFY(v2) "m"
 
 #define PRINT_SUCCESS(fmt, ...) \
-	printf(TC2(TC_B_GREEN, TC_F_BLACK) " Success: " TC1(TC_RESET) " " fmt "\n", ##__VA_ARGS__)
+	printf("%s Success: %s " fmt "\n", \
+		TermColor::Code(TC2(TC_B_GREEN, TC_F_BLACK)), \
+		TermColor::Code(TC1(TC_RESET)), \
+		##__VA_ARGS__)
 
 #define PRINT_INFO(fmt, ...) \
-	printf(TC2(TC_B_CYAN, TC_F_BLACK) " Info: " TC1(TC_RESET) " " fmt "\n", ##__VA_ARGS__)
+	printf("%s Info: %s " fmt "\n", \
+		TermColor::Code(TC2(TC_B_CYAN, TC_F_BLACK)), \
+		TermColor::Code(TC1(TC_RESET)), \
+		##__VA_ARGS__)
 
 #define PRINT_WARNING(fmt, ...) \
-	printf(TC2(TC_B_YELLOW, TC_F_BLACK) " Warning: " TC1(TC_RESET) " " fmt "\n", ##__VA_ARGS__)
+	printf("%s Warning: %s " fmt "\n", \
+		TermColor::Code(TC2(TC_B_YELLOW, TC_F_BLACK)), \
+		TermColor::Code(TC1(TC_RESET)), \
+		##__VA_ARGS__)
 
 #define PRINT_ERROR(fmt, ...) \
-	printf(TC2(TC_B_RED, TC_F_BLACK) " Error: " TC1(TC_RESET) " " fmt "\n", ##__VA_ARGS__)
+	printf("%s Error: %s " fmt "\n", \
+		TermColor::Code(TC2(TC_B_RED, TC_F_BLACK)), \
+		TermColor::Code(TC1(TC_RESET)), \
+		##__VA_ARGS__)
 
-bool InitTerminal();
+class TermColor final
+{
+public:
+	static bool Init()
+	{
+#ifdef _WIN32
+		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (hOut == INVALID_HANDLE_VALUE)
+		{
+			return false;
+		}
+
+		DWORD mode = 0;
+		if (!GetConsoleMode(hOut, &mode))
+		{
+			return false;
+		}
+
+		mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		if (!SetConsoleMode(hOut, mode))
+		{
+			return false;
+		}
+
+		s_enabled = true;
+		return true;
+#else
+		// If stdout isn't a terminal, don't bother
+		if (!isatty(fileno(stdout)))
+		{
+			return false;
+		}
+
+		// Respect NO_COLOR if user explicitly hates fun
+		if (std::getenv("NO_COLOR"))
+		{
+			return false;
+		}
+		
+		s_enabled = true;
+		return true;
+#endif
+	}
+
+	static const char* Code(const char* ansi)
+	{
+		return s_enabled ? ansi : "";
+	}
+
+private:
+	static inline bool s_enabled = false;
+};

@@ -8,6 +8,6 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-python expand-shaders.py
+python pre-build.py
 
 endlocal
