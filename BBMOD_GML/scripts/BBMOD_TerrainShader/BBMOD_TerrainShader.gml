@@ -4,7 +4,7 @@
 ///
 /// @extends BBMOD_BaseShader
 ///
-/// @desc Base class for BBMOD terrain shaders.
+/// @desc Base struct for BBMOD terrain shaders.
 ///
 /// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required

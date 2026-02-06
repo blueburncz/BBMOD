@@ -4,162 +4,96 @@
 ///
 /// @implements {BBMOD_IDestructible}
 ///
-/// @desc
+/// @desc A struct that serves as the main entry point for the physics engine. It
+/// provides methods for creating physics worlds and shapes, as well as other
+/// related functionality.
+///
+/// @see BBMOD_PhysicsShape
+/// @see BBMOD_PhysicsWorld
 function BBMOD_PhysicsEngine() constructor
 {
 	/// @func create_physics_world([_info])
 	///
-	/// @desc
+	/// @desc Creates a new physics world with the specified information. If no
+	/// information is provided, a default physics world will be created.
 	///
-	/// @param {Struct.BBMOD_PhysicsWorldInfo} [_info]
+	/// @param {Struct.BBMOD_PhysicsWorldInfo} [_info] Optional information for
+	/// creating the physics world.
 	///
-	/// @return {Struct.BBMOD_PhysicsWorld}
+	/// @return {Struct.BBMOD_PhysicsWorld} The created physics world.
 	static create_physics_world = function (_info = new BBMOD_PhysicsWorldInfo())
 	{
 		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
 		var _physicsWorld = new BBMOD_PhysicsWorld();
-		_physicsWorld.__id = BBMOD_PhysicsEngine_CreatePhysicsWorld(buffer_get_address(_scratchBuffer));
+		_physicsWorld.__id = BBMOD_PhysicsEngine_CreatePhysicsWorld(_info.to_abi());
 		return _physicsWorld;
 	};
 
-	/// @func create_box_shape(_info)
+	/// @func create_physics_shape(_info)
 	///
-	/// @desc
+	/// @desc Creates a new physics shape with the specified information.
 	///
-	/// @param {Struct.BBMOD_BoxPhysicsShapeInfo} _info
+	/// @param {Struct.BBMOD_PhysicsShapeInfo} _info Information for creating
+	/// the physics shape.
 	///
-	/// @return {Struct.BBMOD_BoxPhysicsShape}
-	static create_box_shape = function (_info)
+	/// @return {Struct.BBMOD_PhysicsShape} The created physics shape.
+	static create_physics_shape = function (_info)
 	{
 		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _shape = new BBMOD_BoxPhysicsShape();
-		_shape.__id = BBMOD_PhysicsEngine_CreateBoxShape(buffer_get_address(_scratchBuffer));
-		return _shape;
-	};
 
-	/// @func create_capsule_x_shape(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_CapsuleXPhysicsShapeInfo} _info
-	///
-	/// @return {Struct.BBMOD_CapsuleXPhysicsShape}
-	static create_capsule_x_shape = function (_info)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _shape = new BBMOD_CapsuleXPhysicsShape();
-		_shape.__id = BBMOD_PhysicsEngine_CreateCapsuleXShape(buffer_get_address(_scratchBuffer));
-		return _shape;
-	};
+		var _shape = undefined;
+		switch (_info.__type)
+		{
+			case BBMOD_EPhysicsShapeType.Box:
+				_shape = new BBMOD_BoxPhysicsShape();
+				break;
 
-	/// @func create_capsule_y_shape(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_CapsuleYPhysicsShapeInfo} _info
-	///
-	/// @return {Struct.BBMOD_CapsuleYPhysicsShape}
-	static create_capsule_y_shape = function (_info)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _shape = new BBMOD_CapsuleYPhysicsShape();
-		_shape.__id = BBMOD_PhysicsEngine_CreateCapsuleYShape(buffer_get_address(_scratchBuffer));
-		return _shape;
-	};
+			case BBMOD_EPhysicsShapeType.Capsule:
+				_shape = new BBMOD_CapsulePhysicsShape();
+				break;
 
-	/// @func create_capsule_z_shape(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_CapsuleZPhysicsShapeInfo} _info
-	///
-	/// @return {Struct.BBMOD_CapsuleZPhysicsShape}
-	static create_capsule_z_shape = function (_info)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _shape = new BBMOD_CapsuleZPhysicsShape();
-		_shape.__id = BBMOD_PhysicsEngine_CreateCapsuleZShape(buffer_get_address(_scratchBuffer));
-		return _shape;
-	};
+			case BBMOD_EPhysicsShapeType.Compound:
+				_shape = new BBMOD_CompoundPhysicsShape();
+				break;
 
-	/// @func create_cone_x_shape(_radius, _height)
-	///
-	/// @desc
-	///
-	/// @param {Real} _radius
-	/// @param {Real} _height
-	///
-	/// @return {Struct.BBMOD_ConeXPhysicsShape}
-	static create_cone_x_shape = function (_radius, _height)
-	{
-		gml_pragma("forceinline");
-		var _shape = new BBMOD_ConePhysicsShape();
-		_shape.__id = BBMOD_PhysicsEngine_CreateConeXShape(_radius, _height);
-		return _shape;
-	};
+			case BBMOD_EPhysicsShapeType.Cone:
+				_shape = new BBMOD_ConePhysicsShape();
+				break;
 
-	/// @func create_cone_y_shape(_radius, _height)
-	///
-	/// @desc
-	///
-	/// @param {Real} _radius
-	/// @param {Real} _height
-	///
-	/// @return {Struct.BBMOD_ConeYPhysicsShape}
-	static create_cone_y_shape = function (_radius, _height)
-	{
-		gml_pragma("forceinline");
-		var _shape = new BBMOD_ConeYPhysicsShape();
-		_shape.__id = BBMOD_PhysicsEngine_CreateConeYShape(_radius, _height);
-		return _shape;
-	};
+			case BBMOD_EPhysicsShapeType.ConvexHull:
+				_shape = new BBMOD_ConvexHullPhysicsShape();
+				break;
 
-	/// @func create_cone_z_shape(_radius, _height)
-	///
-	/// @desc
-	///
-	/// @param {Real} _radius
-	/// @param {Real} _height
-	///
-	/// @return {Struct.BBMOD_ConeZPhysicsShape}
-	static create_cone_z_shape = function (_radius, _height)
-	{
-		gml_pragma("forceinline");
-		var _shape = new BBMOD_ConeZPhysicsShape();
-		_shape.__id = BBMOD_PhysicsEngine_CreateConeZShape(_radius, _height);
-		return _shape;
-	};
+			case BBMOD_EPhysicsShapeType.Cylinder:
+				_shape = new BBMOD_CylinderPhysicsShape();
+				break;
 
-	/// @func create_sphere_shape(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_SpherePhysicsShapeInfo} _info
-	///
-	/// @return {Struct.BBMOD_SpherePhysicsShape}
-	static create_sphere_shape = function (_info)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _shape = new BBMOD_SpherePhysicsShape();
-		_shape.__id = BBMOD_PhysicsEngine_CreateSphereShape(buffer_get_address(_scratchBuffer));
+			case BBMOD_EPhysicsShapeType.Plane:
+				_shape = new BBMOD_PlanePhysicsShape();
+				break;
+
+			case BBMOD_EPhysicsShapeType.Sphere:
+				_shape = new BBMOD_SpherePhysicsShape();
+				break;
+
+			case BBMOD_EPhysicsShapeType.StaticMesh:
+				_shape = new BBMOD_StaticMeshPhysicsShape();
+				break;
+
+			default:
+				bbmod_assert(false, $"Invalid physics shape type {_info.__type}!");
+				break;
+		}
+
+		_shape.__id = BBMOD_PhysicsEngine_CreatePhysicsShape(_info.to_abi());
+
 		return _shape;
 	};
 
 	static destroy = function ()
 	{
 		gml_pragma("forceinline");
+		// TODO: Implement physics engine destruction
 		return undefined;
 	};
 }

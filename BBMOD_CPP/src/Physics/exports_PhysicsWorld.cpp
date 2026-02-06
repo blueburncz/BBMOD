@@ -1,6 +1,7 @@
 #include "DualQuat.hpp"
-#include "PhysicsWorld.hpp"
+#include "PhysicsConstraint.hpp"
 #include "PhysicsVehicle.hpp"
+#include "PhysicsWorld.hpp"
 #include "Registry.hpp"
 
 #include <BBMOD/buffer.hpp>
@@ -71,10 +72,19 @@ static btGeneric6DofConstraint* CreateCharacterJoint(
 	return joint;
 }
 
-GM_EXPORT double BBMOD_PhysicsWorld_SetGravity(double _id, double _x, double _y, double _z)
+GM_EXPORT double BBMOD_PhysicsWorld_GetGravity(double _id, char* _buffer)
 {
 	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
-	physicsWorld->m_dynamicsWorld->setGravity(btVector3(_x, _y, _z));
+	btVector3 gravity = physicsWorld->m_dynamicsWorld->getGravity();
+	*reinterpret_cast<btVector3*>(_buffer) = gravity;
+	return 1.0;
+}
+
+GM_EXPORT double BBMOD_PhysicsWorld_SetGravity(double _id, char* _buffer)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
+	btVector3 gravity = *reinterpret_cast<btVector3*>(_buffer);
+	physicsWorld->m_dynamicsWorld->setGravity(gravity);
 	return 1.0;
 }
 
@@ -133,257 +143,157 @@ GM_EXPORT double BBMOD_PhysicsWorld_DestroyRigidBody(double _worldId, double _bo
 	return 1.0;
 }
 
-GM_EXPORT double BBMOD_PhysicsWorld_CreatePointConstraint(double _id, char* _buffer)
+GM_EXPORT double BBMOD_PhysicsWorld_CreateConstraint(double _id, char* _buffer)
 {
 	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
-	auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto bodyId2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto x1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto y1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto z1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto x2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto y2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto z2 = BBMOD_ReadBuffer<double>(_buffer);
 
-	auto body1 = Registry::Get<btRigidBody>(bodyId1);
-	auto body2 = Registry::Get<btRigidBody>(bodyId2);
+	auto type = static_cast<BBMOD_EPhysicsConstraintType>(BBMOD_PeekBuffer<int8_t>(_buffer));
 
-	btPoint2PointConstraint* constraint = nullptr;
-	if (body2)
+	btTypedConstraint* constraint = nullptr;
+	switch (type)
 	{
-		constraint = new btPoint2PointConstraint(
-			*body1,
-			*body2,
-			btVector3(x1, y1, z1),
-			btVector3(x2, y2, z2)
-		);
+		case BBMOD_EPhysicsConstraintType::ConeTwist:
+		{
+			BBMOD_ConeTwistPhysicsConstraintInfo info(_buffer);
+			if (info.m_rigidBody2)
+			{
+				constraint = new btConeTwistConstraint(
+					*info.m_rigidBody1,
+					*info.m_rigidBody2,
+					info.m_frame1,
+					info.m_frame2
+				);
+			}
+			else
+			{
+				constraint = new btConeTwistConstraint(
+					*info.m_rigidBody1,
+					info.m_frame1
+				);
+			}
+		}
+		break;
+
+		case BBMOD_EPhysicsConstraintType::Hinge:
+		{
+			BBMOD_HingePhysicsConstraintInfo info(_buffer);
+			if (info.m_rigidBody2)
+			{
+				constraint = new btHingeConstraint(
+					*info.m_rigidBody1,
+					*info.m_rigidBody2,
+					info.m_pivot1,
+					info.m_pivot2,
+					info.m_axis1,
+					info.m_axis2,
+					false
+				);
+			}
+			else
+			{
+				constraint = new btHingeConstraint(
+					*info.m_rigidBody1,
+					info.m_pivot1,
+					info.m_axis1,
+					false
+				);
+			}
+		}
+		break;
+
+		case BBMOD_EPhysicsConstraintType::Point:
+		{
+			BBMOD_PointPhysicsConstraintInfo info(_buffer);
+			if (info.m_rigidBody2)
+			{
+				constraint = new btPoint2PointConstraint(
+					*info.m_rigidBody1,
+					*info.m_rigidBody2,
+					info.m_pivot1,
+					info.m_pivot2
+				);
+			}
+			else
+			{
+				constraint = new btPoint2PointConstraint(
+					*info.m_rigidBody1,
+					info.m_pivot1
+				);
+			}
+		}
+		break;
+
+		case BBMOD_EPhysicsConstraintType::SixDOF:
+		{
+			BBMOD_SixDOFPhysicsConstraintInfo info(_buffer);
+
+			auto sixDof = new btGeneric6DofSpring2Constraint(
+				*info.m_rigidBody1,
+				*info.m_rigidBody2,
+				info.m_frame1,
+				info.m_frame2,
+				RO_YXZ // Follow GM's matrix_build
+			);
+
+			sixDof->setLinearLowerLimit(info.m_linearLowerLimit);
+			sixDof->setLinearUpperLimit(info.m_linearUpperLimit);
+
+			sixDof->setAngularLowerLimit(info.m_angularLowerLimit);
+			sixDof->setAngularUpperLimit(info.m_angularUpperLimit);
+
+			sixDof->enableSpring(0, info.m_enableLinearSpring[0]);
+			sixDof->enableSpring(1, info.m_enableLinearSpring[1]);
+			sixDof->enableSpring(2, info.m_enableLinearSpring[2]);
+			sixDof->enableSpring(3, info.m_enableAngularSpring[0]);
+			sixDof->enableSpring(4, info.m_enableAngularSpring[1]);
+			sixDof->enableSpring(5, info.m_enableAngularSpring[2]);
+
+			sixDof->setStiffness(0, info.m_linearStiffness.getX());
+			sixDof->setStiffness(1, info.m_linearStiffness.getY());
+			sixDof->setStiffness(2, info.m_linearStiffness.getZ());
+			sixDof->setStiffness(3, info.m_angularStiffness.getX());
+			sixDof->setStiffness(4, info.m_angularStiffness.getY());
+			sixDof->setStiffness(5, info.m_angularStiffness.getZ());
+
+			sixDof->setDamping(0, info.m_linearDamping.getX());
+			sixDof->setDamping(1, info.m_linearDamping.getY());
+			sixDof->setDamping(2, info.m_linearDamping.getZ());
+			sixDof->setDamping(3, info.m_angularDamping.getX());
+			sixDof->setDamping(4, info.m_angularDamping.getY());
+			sixDof->setDamping(5, info.m_angularDamping.getZ());
+
+			constraint = sixDof;
+		}
+		break;
+
+		case BBMOD_EPhysicsConstraintType::Slider:
+		{
+			BBMOD_SliderPhysicsConstraintInfo info(_buffer);
+			if (info.m_rigidBody2)
+			{
+				constraint = new btSliderConstraint(
+					*info.m_rigidBody1,
+					*info.m_rigidBody2,
+					info.m_frame1,
+					info.m_frame2,
+					false
+				);
+			}
+			else
+			{
+				constraint = new btSliderConstraint(
+					*info.m_rigidBody1,
+					info.m_frame1,
+					false
+				);
+			}
+		}
+		break;
+
+		default:
+			// Unsupported constraint type
+			return -1.0;
 	}
-	else
-	{
-		constraint = new btPoint2PointConstraint(
-			*body1,
-			btVector3(x1, y1, z1)
-		);
-	}
-
-	physicsWorld->m_dynamicsWorld->addConstraint(constraint);
-	return Registry::Add(constraint);
-}
-
-GM_EXPORT double BBMOD_PhysicsWorld_CreateHingeConstraint(double _id, char* _buffer)
-{
-	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
-	auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto bodyId2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto pivotX1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto pivotY1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto pivotZ1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto pivotX2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto pivotY2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto pivotZ2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto axisX1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto axisY1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto axisZ1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto axisX2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto axisY2 = BBMOD_ReadBuffer<double>(_buffer);
-	auto axisZ2 = BBMOD_ReadBuffer<double>(_buffer);
-
-	auto body1 = Registry::Get<btRigidBody>(bodyId1);
-	auto body2 = Registry::Get<btRigidBody>(bodyId2);
-
-	btHingeConstraint* constraint = nullptr;
-	if (body2)
-	{
-		constraint = new btHingeConstraint(
-			*body1,
-			*body2,
-			btVector3(pivotX1, pivotY1, pivotZ1),
-			btVector3(pivotX2, pivotY2, pivotZ2),
-			btVector3(axisX1, axisY1, axisZ1),
-			btVector3(axisX2, axisY2, axisZ2)
-		);
-	}
-	else
-	{
-		constraint = new btHingeConstraint(
-			*body1,
-			btVector3(pivotX1, pivotY1, pivotZ1),
-			btVector3(axisX1, axisY1, axisZ1)
-		);
-	}
-
-
-	physicsWorld->m_dynamicsWorld->addConstraint(constraint);
-	return Registry::Add(constraint);
-}
-
-GM_EXPORT double BBMOD_PhysicsWorld_CreateSliderConstraint(double _id, char* _buffer)
-{
-	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
-	auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto bodyId2 = BBMOD_ReadBuffer<double>(_buffer);
-	btScalar m1[16];
-	btScalar m2[16];
-	for (int i = 0; i < 16; ++i) { m1[i] = (btScalar)BBMOD_ReadBuffer<double>(_buffer); }
-	for (int i = 0; i < 16; ++i) { m2[i] = (btScalar)BBMOD_ReadBuffer<double>(_buffer); }
-
-	btTransform t1;
-	btTransform t2;
-	t1.setFromOpenGLMatrix(m1);
-	t2.setFromOpenGLMatrix(m2);
-
-	auto body1 = Registry::Get<btRigidBody>(bodyId1);
-	auto body2 = Registry::Get<btRigidBody>(bodyId2);
-
-	btSliderConstraint* constraint = nullptr;
-	if (body2)
-	{
-		constraint = new btSliderConstraint(
-			*body1,
-			*body2,
-			t1,
-			t2,
-			false
-		);
-
-	}
-	else
-	{
-		constraint = new btSliderConstraint(
-			*body1,
-			t1,
-			false
-		);
-	}
-
-	physicsWorld->m_dynamicsWorld->addConstraint(constraint);
-	return Registry::Add(constraint);
-}
-
-GM_EXPORT double BBMOD_PhysicsWorld_CreateConeTwistConstraint(double _id, char* _buffer)
-{
-	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
-	auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto bodyId2 = BBMOD_ReadBuffer<double>(_buffer);
-	btScalar m1[16];
-	btScalar m2[16];
-	for (int i = 0; i < 16; ++i) { m1[i] = (btScalar)BBMOD_ReadBuffer<double>(_buffer); }
-	for (int i = 0; i < 16; ++i) { m2[i] = (btScalar)BBMOD_ReadBuffer<double>(_buffer); }
-
-	btTransform t1;
-	btTransform t2;
-	t1.setFromOpenGLMatrix(m1);
-	t2.setFromOpenGLMatrix(m2);
-
-	auto body1 = Registry::Get<btRigidBody>(bodyId1);
-	auto body2 = Registry::Get<btRigidBody>(bodyId2);
-
-	btConeTwistConstraint* constraint = nullptr;
-	if (body2)
-	{
-		constraint = new btConeTwistConstraint(
-			*body1,
-			*body2,
-			t1,
-			t2
-		);
-	}
-	else
-	{
-		constraint = new btConeTwistConstraint(
-			*body1,
-			t1
-		);
-	}
-
-	constraint->setLimit(btRadians(1), btRadians(1), 0);
-
-	physicsWorld->m_dynamicsWorld->addConstraint(constraint);
-	return Registry::Add(constraint);
-}
-
-GM_EXPORT double BBMOD_PhysicsWorld_CreateSixDOFConstraint(double _id, char* _buffer)
-{
-	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_id);
-	auto bodyId1 = BBMOD_ReadBuffer<double>(_buffer);
-	auto bodyId2 = BBMOD_ReadBuffer<double>(_buffer);
-	btScalar m1[16];
-	btScalar m2[16];
-	for (int i = 0; i < 16; ++i) { m1[i] = (btScalar)BBMOD_ReadBuffer<double>(_buffer); }
-	for (int i = 0; i < 16; ++i) { m2[i] = (btScalar)BBMOD_ReadBuffer<double>(_buffer); }
-	auto linearLowerLimitX = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearLowerLimitY = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearLowerLimitZ = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearUpperLimitX = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearUpperLimitY = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearUpperLimitZ = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularLowerLimitX = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularLowerLimitY = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularLowerLimitZ = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularUpperLimitX = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularUpperLimitY = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularUpperLimitZ = BBMOD_ReadBuffer<double>(_buffer);
-	auto enableLinearSpringX = BBMOD_ReadBuffer<bool>(_buffer);
-	auto enableLinearSpringY = BBMOD_ReadBuffer<bool>(_buffer);
-	auto enableLinearSpringZ = BBMOD_ReadBuffer<bool>(_buffer);
-	auto enableAngularSpringX = BBMOD_ReadBuffer<bool>(_buffer);
-	auto enableAngularSpringY = BBMOD_ReadBuffer<bool>(_buffer);
-	auto enableAngularSpringZ = BBMOD_ReadBuffer<bool>(_buffer);
-	auto linearStiffnessX = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearStiffnessY = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearStiffnessZ = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularStiffnessX = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularStiffnessY = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularStiffnessZ = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearDampingX = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearDampingY = BBMOD_ReadBuffer<double>(_buffer);
-	auto linearDampingZ = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularDampingX = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularDampingY = BBMOD_ReadBuffer<double>(_buffer);
-	auto angularDampingZ = BBMOD_ReadBuffer<double>(_buffer);
-
-	btTransform t1;
-	btTransform t2;
-	t1.setFromOpenGLMatrix(m1);
-	t2.setFromOpenGLMatrix(m2);
-
-	auto body1 = Registry::Get<btRigidBody>(bodyId1);
-	auto body2 = Registry::Get<btRigidBody>(bodyId2);
-
-	btGeneric6DofSpring2Constraint* constraint = new btGeneric6DofSpring2Constraint(
-		*body1,
-		*body2,
-		t1,
-		t2,
-		RO_YXZ // Follow GM's matrix_build
-	);
-
-	constraint->setLinearLowerLimit(btVector3(linearLowerLimitX, linearLowerLimitY, linearLowerLimitZ));
-	constraint->setLinearUpperLimit(btVector3(linearUpperLimitX, linearUpperLimitY, linearUpperLimitZ));
-
-	constraint->setAngularLowerLimit(btVector3(angularLowerLimitX, angularLowerLimitY, angularLowerLimitZ));
-	constraint->setAngularUpperLimit(btVector3(angularUpperLimitX, angularUpperLimitY, angularUpperLimitZ));
-
-	constraint->enableSpring(0, enableLinearSpringX);
-	constraint->enableSpring(1, enableLinearSpringY);
-	constraint->enableSpring(2, enableLinearSpringZ);
-	constraint->enableSpring(3, enableAngularSpringX);
-	constraint->enableSpring(4, enableAngularSpringY);
-	constraint->enableSpring(5, enableAngularSpringZ);
-
-	constraint->setStiffness(0, linearStiffnessX);
-	constraint->setStiffness(1, linearStiffnessY);
-	constraint->setStiffness(2, linearStiffnessZ);
-	constraint->setStiffness(3, angularStiffnessX);
-	constraint->setStiffness(4, angularStiffnessY);
-	constraint->setStiffness(5, angularStiffnessZ);
-
-	constraint->setDamping(0, linearDampingX);
-	constraint->setDamping(1, linearDampingY);
-	constraint->setDamping(2, linearDampingZ);
-	constraint->setDamping(3, angularDampingX);
-	constraint->setDamping(4, angularDampingY);
-	constraint->setDamping(5, angularDampingZ);
 
 	physicsWorld->m_dynamicsWorld->addConstraint(constraint);
 	return Registry::Add(constraint);

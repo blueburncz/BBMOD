@@ -1,5 +1,7 @@
 /// @module Core
 
+/* beautify ignore:start */
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // BBMOD release version
@@ -29,3 +31,5 @@
 /// @macro {Real} The current minor version of BBMOD and BBANIM files.
 /// @see BBMOD_VERSION_MAJOR
 #macro BBMOD_VERSION_MINOR 4
+
+/* beautify ignore:end */

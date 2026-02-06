@@ -380,7 +380,7 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	static Inverse = function ()
 	{
 		gml_pragma("forceinline");
-		return Conjugate().Scale(1.0 / Length());
+		return Conjugate().Scale(1.0 / LengthSqr());
 	};
 
 	/// @func InverseSelf()
@@ -392,7 +392,7 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	static InverseSelf = function ()
 	{
 		gml_pragma("forceinline");
-		return ConjugateSelf().ScaleSelf(1.0 / Length());
+		return ConjugateSelf().ScaleSelf(1.0 / LengthSqr());
 	};
 
 	/// @func Length()

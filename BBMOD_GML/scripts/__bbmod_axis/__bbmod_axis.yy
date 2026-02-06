@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bbmod_axis",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bbmod_axis",
+  "parent":{
+    "name":"Utils",
+    "path":"folders/BBMOD/Core/Utils.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

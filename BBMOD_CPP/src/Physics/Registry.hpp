@@ -20,6 +20,17 @@ public:
 		return id;
 	}
 
+	static double GetId(void* ptr)
+	{
+		assert(ptr != nullptr);
+		auto it = m_ptrToId.find(ptr);
+		if (it != m_ptrToId.end())
+		{
+			return it->second;
+		}
+		return -1.0;
+	}
+
 	template<typename T>
 	static T* Get(double id)
 	{

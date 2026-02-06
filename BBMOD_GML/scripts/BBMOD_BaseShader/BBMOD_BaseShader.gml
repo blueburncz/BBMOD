@@ -7,7 +7,7 @@
 ///
 /// @extends BBMOD_Shader
 ///
-/// @desc Base class for BBMOD shaders.
+/// @desc Base struct for BBMOD shaders.
 ///
 /// @param {Asset.GMShader} _shader The shader resource.
 /// @param {Struct.BBMOD_VertexFormat} _vertexFormat The vertex format required

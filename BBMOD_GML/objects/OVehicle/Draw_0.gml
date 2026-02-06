@@ -22,7 +22,7 @@ for (var i = 0; i < 4; ++i)
 		0, 0, 90 * ((i == 0 || i == 2) ? -1 : 1),
 		jeepScale, jeepScale, jeepScale
 	);
-	_wheelMatrix = vehicle.get_wheel_transform(i);
+	_wheelMatrix = vehicle.get_wheel(i).get_matrix().Raw;
 	_wheelMatrix = matrix_multiply(_tireMatrix, _wheelMatrix);
 	matrix_set(matrix_world, _wheelMatrix);
 	jeepTire.render();

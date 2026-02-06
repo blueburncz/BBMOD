@@ -183,6 +183,10 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 			X * X
 			+ Y * Y
 		);
+		if (_length <= math_get_epsilon())
+		{
+			return new BBMOD_Vec2();
+		}
 		var _newLength = clamp(_length, _min, _max);
 		return new BBMOD_Vec2(
 			(X / _length) * _newLength,
@@ -213,6 +217,10 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 			X * X
 			+ Y * Y
 		);
+		if (_length <= math_get_epsilon())
+		{
+			return new BBMOD_Vec2();
+		}
 		var _newLength = clamp(_length, _min, _max);
 		X = (X / _length) * _newLength;
 		Y = (Y / _length) * _newLength;
@@ -495,7 +503,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 		gml_pragma("forceinline");
 		return max(
 			X,
-			Y,
+			Y
 		);
 	};
 
@@ -719,7 +727,8 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// @desc Reflects the vector from vector `_v` and returns the result
 	/// as a new vector.
 	///
-	/// @param {Struct.BBMOD_Vec2} _v The vector to reflect from.
+	/// @param {Struct.BBMOD_Vec2} _v The vector to reflect from. Must be
+	/// normalized!
 	///
 	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Reflect = function (_v)

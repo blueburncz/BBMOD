@@ -44,6 +44,12 @@ GM_EXPORT double BBMOD_PhysicsVehicle_AddWheel(double _id, char* _buffer)
 	return static_cast<double>(vehicle->m_vehicle->getNumWheels() - 1);
 }
 
+GM_EXPORT double BBMOD_PhysicsVehicle_GetNumWheels(double _id)
+{
+	auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id);
+	return static_cast<double>(vehicle->m_vehicle->getNumWheels());
+}
+
 GM_EXPORT double BBMOD_PhysicsVehicle_SetBrake(double _id, double _wheelIndex, double _brake)
 {
 	auto vehicle = Registry::Get<BBMOD_PhysicsVehicle>(_id)->m_vehicle;

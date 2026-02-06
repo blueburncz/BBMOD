@@ -1,13 +1,165 @@
 /// @module Physics
 
+/// @func BBMOD_PhysicsWheelInfo()
+///
+/// @desc A struct containing the information needed to add a wheel to a physics
+/// vehicle.
+///
+//// @see BBMOD_PhysicsVehicle.add_wheel
+function BBMOD_PhysicsWheelInfo() constructor
+{
+	/// @var {Struct.BBMOD_Vec3} The connection point of the wheel relative to
+	/// the vehicle's center of mass.
+	ConnectionPoint = new BBMOD_Vec3();
+
+	/// @var {Struct.BBMOD_Vec3} The direction of the wheel suspension. Default
+	/// is `(0, 0, -1)`.
+	Direction = new BBMOD_Vec3(0, 0, -1);
+
+	/// @var {Struct.BBMOD_Vec3} The axle of the wheel. Default is `(0, -1, 0)`.
+	Axle = new BBMOD_Vec3(0, -1, 0);
+
+	/// @var {Real} The rest length of the wheel suspension. Default is `0`.
+	SuspensionRestLength = 0;
+
+	/// @var {Real} The radius of the wheel. Default is `0`.
+	Radius = 0;
+
+	/// @var {Bool} Whether the wheel is a front wheel. Default is `false`.
+	IsFrontWheel = false;
+
+	/// @func to_buffer(_buffer)
+	///
+	/// @desc Writes the wheel info into given buffer.
+	///
+	/// @param {Id.Buffer} The buffer to write the info to.
+	///
+	/// @return {Struct.BBMOD_PhysicsWheelInfo} Returns `self`.
+	static to_buffer = function (_buffer)
+	{
+		ConnectionPoint.ToBuffer(_buffer, buffer_f64);
+		Direction.ToBuffer(_buffer, buffer_f64);
+		Axle.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, SuspensionRestLength);
+		buffer_write(_buffer, buffer_f64, Radius);
+		buffer_write(_buffer, buffer_bool, IsFrontWheel);
+		return self;
+	};
+
+	/// @func to_abi()
+	///
+	/// @desc Converts the physics wheel info to a format suitable for passing
+	/// to the native physics engine. This is used internally when creating a
+	/// wheel, and is not intended to be called directly by user code.
+	///
+	/// @return {Pointer} The address of the buffer containing the physics wheel
+	/// info.
+	static to_abi = function ()
+	{
+		gml_pragma("forceinline");
+		var _scratchBuffer = bbmod_get_scratch_buffer();
+		to_buffer(_scratchBuffer);
+		return buffer_get_address(_scratchBuffer);
+	};
+}
+
+/// @func BBMOD_PhysicsWheel()
+///
+/// @desc A physics wheel that can be added to a physics vehicle.
+///
+/// @see BBMOD_PhysicsVehicle.add_wheel
+function BBMOD_PhysicsWheel() constructor
+{
+	__wheelIndex = -1;
+	__vehicle = undefined;
+	__matrix = new BBMOD_Matrix();
+
+	/// @func set_brake(_brake)
+	///
+	/// @desc Sets the brake force for a specific wheel.
+	///
+	/// @param {Real} _brake The brake force to apply.
+	///
+	/// @return {Struct.BBMOD_PhysicsWheel} Returns `self`.
+	static set_brake = function (_brake)
+	{
+		gml_pragma("forceinline");
+		BBMOD_PhysicsVehicle_SetBrake(__vehicle.__id, __wheelIndex, _brake);
+		return self;
+	};
+
+	/// @func set_steering(_steering)
+	///
+	/// @desc Sets the steering angle for a specific wheel.
+	///
+	/// @param {Real} _steering The steering angle to apply.
+	///
+	/// @return {Struct.BBMOD_PhysicsWheel} Returns `self`.
+	static set_steering = function (_steering)
+	{
+		gml_pragma("forceinline");
+		BBMOD_PhysicsVehicle_SetSteering(__vehicle.__id, __wheelIndex, _steering);
+		return self;
+	};
+
+	/// @func apply_engine_force(_force)
+	///
+	/// @desc Applies engine force to a specific wheel.
+	///
+	/// @param {Real} _force The force to apply.
+	///
+	/// @return {Struct.BBMOD_PhysicsWheel} Returns `self`.
+	static apply_engine_force = function (_force)
+	{
+		gml_pragma("forceinline");
+		BBMOD_PhysicsVehicle_ApplyEngineForce(__vehicle.__id, __wheelIndex, _force);
+		return self
+	};
+
+	/// @func get_matrix()
+	///
+	/// @desc Gets the transformation matrix of a specific wheel.
+	///
+	/// @return {Struct.BBMOD_Matrix} The transformation matrix of the wheel.
+	static get_matrix = function ()
+	{
+		gml_pragma("forceinline");
+		var _scratchBuffer = bbmod_get_scratch_buffer(buffer_sizeof(buffer_f64) * 16);
+		BBMOD_PhysicsVehicle_GetWheelTransform(__vehicle.__id, __wheelIndex, buffer_get_address(_scratchBuffer));
+		return __matrix.FromBuffer(_scratchBuffer, buffer_f64);
+	};
+}
+
+/// @func BBMOD_PhysicsVehicleInfo()
+///
+/// @desc A struct containing the information needed to create a physics vehicle.
+///
+/// @see BBMOD_PhysicsVehicle
+/// @see BBMOD_PhysicsWorld.create_vehicle
 function BBMOD_PhysicsVehicleInfo() constructor
 {
+	/// @var {Real} The suspension stiffness of the vehicle. Default is `5.88`.
 	SuspensionStiffness = 5.88;
+
+	/// @var {Real} The suspension compression of the vehicle. Default is `0.83`.
 	SuspensionCompression = 0.83;
+
+	/// @var {Real} The suspension damping of the vehicle. Default is `0.88`.
 	SuspensionDamping = 0.88;
+
+	/// @var {Real} The maximum suspension travel of the vehicle in centimeters.
+	/// Default is `500.0`.
 	MaxSuspensionTravelCm = 500.0;
+
+	/// @var {Real} The friction slip of the vehicle. Default is `10.5`.
 	FrictionSlip = 10.5;
+
+	/// @var {Real} The maximum suspension force of the vehicle. Default is
+	/// `6000.0`.
 	MaxSuspensionForce = 6000.0;
+
+	/// @var {Struct.BBMOD_RigidBody} The rigid body associated with the
+	/// vehicle.
 	RigidBody = undefined;
 
 	/// @func to_buffer(_buffer)
@@ -28,108 +180,75 @@ function BBMOD_PhysicsVehicleInfo() constructor
 		buffer_write(_buffer, buffer_f64, RigidBody.__id);
 		return self;
 	};
-}
 
-function BBMOD_PhysicsWheelInfo() constructor
-{
-	ConnectionPoint = new BBMOD_Vec3();
-	Direction = new BBMOD_Vec3(0, 0, -1);
-	Axle = new BBMOD_Vec3(0, -1, 0);
-	SuspensionRestLength = 0;
-	Radius = 0;
-	IsFrontWheel = false;
-
-	/// @func to_buffer(_buffer)
+	/// @func to_abi()
 	///
-	/// @desc Writes the wheel info into given buffer.
+	/// @desc Converts the physics vehicle info to a format suitable for passing
+	/// to the native physics engine. This is used internally when creating a
+	/// vehicle, and is not intended to be called directly by user code.
 	///
-	/// @param {Id.Buffer} The buffer to write the info to.
-	///
-	/// @return {Struct.BBMOD_PhysicsWheelInfo} Returns `self`.
-	static to_buffer = function (_buffer)
-	{
-		ConnectionPoint.ToBuffer(_buffer, buffer_f64);
-		Direction.ToBuffer(_buffer, buffer_f64);
-		Axle.ToBuffer(_buffer, buffer_f64);
-		buffer_write(_buffer, buffer_f64, SuspensionRestLength);
-		buffer_write(_buffer, buffer_f64, Radius);
-		buffer_write(_buffer, buffer_bool, IsFrontWheel);
-		return self;
-	};
-}
-
-function BBMOD_PhysicsVehicle() constructor
-{
-	__id = -1;
-
-	/// @func add_wheel(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_PhysicsWheelInfo} _info
-	///
-	/// @return {Real}
-	static add_wheel = function (_info)
+	/// @return {Pointer} The address of the buffer containing the physics
+	/// vehicle info.
+	static to_abi = function ()
 	{
 		gml_pragma("forceinline");
 		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		return BBMOD_PhysicsVehicle_AddWheel(__id, buffer_get_address(_scratchBuffer));
+		to_buffer(_scratchBuffer);
+		return buffer_get_address(_scratchBuffer);
 	};
+}
 
-	/// @func set_brake(_wheelIndex, _brake)
+/// @func BBMOD_PhysicsVehicle()
+///
+/// @desc A physics vehicle that can be added to a physics world.
+///
+/// @see BBMOD_PhysicsWorld.create_vehicle
+function BBMOD_PhysicsVehicle() constructor
+{
+	__id = -1;
+	__physicsWorld = undefined;
+
+	/// @func add_wheel(_info)
 	///
-	/// @desc
+	/// @desc Adds a wheel to the physics vehicle.
 	///
-	/// @param {Real} _wheelIndex
-	/// @param {Real} _brake
-	static set_brake = function (_wheelIndex, _brake)
+	/// @param {Struct.BBMOD_PhysicsWheelInfo} _info The information of the
+	/// wheel to add.
+	///
+	/// @return {Struct.BBMOD_PhysicsWheel} The added wheel.
+	static add_wheel = function (_info)
 	{
 		gml_pragma("forceinline");
-		BBMOD_PhysicsVehicle_SetBrake(__id, _wheelIndex, _brake);
+		var _wheel = new BBMOD_PhysicsWheel();
+		_wheel.__wheelIndex = BBMOD_PhysicsVehicle_AddWheel(__id, _info.to_abi());
+		_wheel.__vehicle = self;
+		return _wheel;
 	};
 
-	/// @func set_steering(_wheelIndex, _steering)
+	/// @func get_num_wheels()
 	///
-	/// @desc
+	/// @desc Gets the number of wheels currently added to the vehicle.
 	///
-	/// @param {Real} _wheelIndex
-	/// @param {Real} _steering
-	static set_steering = function (_wheelIndex, _steering)
+	/// @return {Real} The number of wheels currently added to the vehicle.
+	static get_num_wheels = function ()
 	{
 		gml_pragma("forceinline");
-		BBMOD_PhysicsVehicle_SetSteering(__id, _wheelIndex, _steering);
+		return BBMOD_PhysicsVehicle_GetNumWheels(__id);
 	};
 
-	/// @func apply_engine_force(_wheelIndex, _force)
+	/// @func get_wheel(_index)
 	///
-	/// @desc
+	/// @desc Gets a specific wheel of the vehicle.
 	///
-	/// @param {Real} _wheelIndex
-	/// @param {Real} _force
-	static apply_engine_force = function (_wheelIndex, _force)
+	/// @param {Real} _index The index of the wheel to get.
+	///
+	/// @return {Struct.BBMOD_PhysicsWheel} The wheel at the specified index.
+	static get_wheel = function (_index)
 	{
 		gml_pragma("forceinline");
-		BBMOD_PhysicsVehicle_ApplyEngineForce(__id, _wheelIndex, _force);
-	};
-
-	/// @func get_wheel_transform(_wheelIndex)
-	///
-	/// @desc
-	///
-	/// @param {Real} _wheelIndex
-	///
-	/// @return {Array<Real>}
-	static get_wheel_transform = function (_wheelIndex)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer(buffer_sizeof(buffer_f64) * 16);
-		BBMOD_PhysicsVehicle_GetWheelTransform(__id, _wheelIndex, buffer_get_address(_scratchBuffer));
-		var _transform = array_create(16);
-		for (var i = 0; i < 16; ++i)
-		{
-			_transform[@ i] = buffer_read(_scratchBuffer, buffer_f64);
-		}
-		return _transform;
+		var _wheel = new BBMOD_PhysicsWheel();
+		_wheel.__wheelIndex = _index;
+		_wheel.__vehicle = self;
+		return _wheel;
 	};
 }

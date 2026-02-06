@@ -1,0 +1,42 @@
+enum CM_CYLINDER
+{
+	TYPE, 
+	GROUP,
+	X1, 
+	Y1, 
+	Z1, 
+	X2,
+	Y2,
+	Z2,
+	R,
+	NUM
+}
+
+#macro CM_CYLINDER_BEGIN var cylinder = array_create(CM_CYLINDER.NUM, CM_OBJECTS.CYLINDER)
+#macro CM_CYLINDER_TYPE  cylinder[@ CM_CYLINDER.TYPE]
+#macro CM_CYLINDER_GROUP cylinder[@ CM_CYLINDER.GROUP]
+#macro CM_CYLINDER_R	 cylinder[@ CM_CYLINDER.R]
+#macro CM_CYLINDER_X1	 cylinder[@ CM_CYLINDER.X1]
+#macro CM_CYLINDER_Y1	 cylinder[@ CM_CYLINDER.Y1]
+#macro CM_CYLINDER_Z1	 cylinder[@ CM_CYLINDER.Z1]
+#macro CM_CYLINDER_X2	 cylinder[@ CM_CYLINDER.X2]
+#macro CM_CYLINDER_Y2	 cylinder[@ CM_CYLINDER.Y2]
+#macro CM_CYLINDER_Z2	 cylinder[@ CM_CYLINDER.Z2]
+#macro CM_CYLINDER_DX	 (CM_CYLINDER_X2 - CM_CYLINDER_X1)
+#macro CM_CYLINDER_DY	 (CM_CYLINDER_Y2 - CM_CYLINDER_Y1)
+#macro CM_CYLINDER_DZ	 (CM_CYLINDER_Z2 - CM_CYLINDER_Z1)
+#macro CM_CYLINDER_END	 return cylinder
+
+function cm_cylinder(x1, y1, z1, x2, y2, z2, radius, group = CM_GROUP_SOLID)
+{
+	CM_CYLINDER_BEGIN;
+	CM_CYLINDER_GROUP = group;
+	CM_CYLINDER_X1 = x1;
+	CM_CYLINDER_Y1 = y1;
+	CM_CYLINDER_Z1 = z1;
+	CM_CYLINDER_X2 = x2;
+	CM_CYLINDER_Y2 = y2;
+	CM_CYLINDER_Z2 = z2;
+	CM_CYLINDER_R = radius;
+	CM_CYLINDER_END;
+}

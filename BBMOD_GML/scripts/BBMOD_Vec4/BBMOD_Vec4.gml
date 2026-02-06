@@ -216,6 +216,10 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 			+ Z * Z
 			+ W * W
 		);
+		if (_length <= math_get_epsilon())
+		{
+			return new BBMOD_Vec4();
+		}
 		var _newLength = clamp(_length, _min, _max);
 		return new BBMOD_Vec4(
 			(X / _length) * _newLength,
@@ -253,6 +257,10 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 			+ Z * Z
 			+ W * W
 		);
+		if (_length <= math_get_epsilon())
+		{
+			return new BBMOD_Vec4();
+		}
 		var _newLength = clamp(_length, _min, _max);
 		X = (X / _length) * _newLength;
 		Y = (Y / _length) * _newLength;
@@ -574,7 +582,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 			X,
 			Y,
 			Z,
-			W,
+			W
 		);
 	};
 
@@ -826,7 +834,8 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	/// @desc Reflects the vector from vector `_v` and returns the result
 	/// as a new vector.
 	///
-	/// @param {Struct.BBMOD_Vec4} _v The vector to reflect from.
+	/// @param {Struct.BBMOD_Vec4} _v The vector to reflect from. Must be
+	/// normalized!
 	///
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	static Reflect = function (_v)

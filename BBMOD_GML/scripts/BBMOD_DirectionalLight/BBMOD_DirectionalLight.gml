@@ -65,14 +65,28 @@ function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBM
 			.TransformSelf(matrix_inverse(__shadowmapMatrixPrev));
 		var _center = _correctedCenter.Scale(1.0 / _correctedCenter.W);
 
+		var _forward = Direction.Clone();
+		var _up = BBMOD_VEC3_UP;
+		var _right = _forward.Cross(_up);
+
+		if (!_forward.Orthonormalize3(_right, _up))
+		{
+			// Try different up vector...
+			_up = BBMOD_VEC3_RIGHT;
+			_right = _forward.Cross(_up);
+			_forward.Orthonormalize3(_right, _up);
+		}
+
 		return matrix_build_lookat(
 			_center.X,
 			_center.Y,
 			_center.Z,
-			_center.X + Direction.X,
-			_center.Y + Direction.Y,
-			_center.Z + Direction.Z,
-			0.0, 0.0, 1.0); // TODO: Find the up vector
+			_center.X + _forward.X,
+			_center.Y + _forward.Y,
+			_center.Z + _forward.Z,
+			_up.X,
+			_up.Y,
+			_up.Z);
 	};
 
 	static __get_shadowmap_projection = function ()

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_CompoundPhysicsShape",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_CompoundPhysicsShape",
+  "parent":{
+    "name":"Shapes",
+    "path":"folders/BBMOD/Physics/Shapes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

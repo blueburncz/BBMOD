@@ -107,7 +107,7 @@ global.__bbmodShaderCurrent = undefined;
 
 /// @func BBMOD_Shader([_shader[, _vertexFormat]])
 ///
-/// @desc Base class for wrappers of raw GameMaker shader assets.
+/// @desc Base struct for wrappers of raw GameMaker shader assets.
 ///
 /// @param {Asset.GMShader} [_shader] The raw GameMaker shader asset.
 /// @param {Struct.BBMOD_VertexFormat} [_vertexFormat] The vertex format required

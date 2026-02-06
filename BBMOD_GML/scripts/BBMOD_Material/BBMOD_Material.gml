@@ -68,7 +68,7 @@ global.__bbmodMaterialCurrent = undefined;
 ///
 /// @implements {BBMOD_IMaterial}
 ///
-/// @desc Base class for materials.
+/// @desc Base struct for materials.
 ///
 /// @param {Struct.BBMOD_Shader} [_shader] A shader that the material uses in
 /// the {@link BBMOD_ERenderPass.Forward} pass. Leave `undefined` if you would

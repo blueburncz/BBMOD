@@ -1,6 +1,9 @@
 /// @module Physics
 
-/// @enum Enum representing debug draw modes for rendering debug information.
+// TODO: Replace Bullet-specific debug modes with mapping to BBMOD debug modes.
+
+/// @enum Enumeration representing debug draw modes for rendering debug
+/// information.
 enum btDebugDrawModes
 {
 	/// @member No debug drawing.
@@ -41,16 +44,28 @@ enum btDebugDrawModes
 		DBG_MAX_DEBUG_DRAW_MODE
 };
 
+/// @func BBMOD_PhysicsWorldInfo()
+///
+/// @desc A struct that contains information for creating a physics world.
+///
+/// @see BBMOD_PhysicsEngine.create_physics_world
+/// @see BBMOD_PhysicsWorld
 function BBMOD_PhysicsWorldInfo() constructor
 {
+	/// @var {Struct.BBMOD_Vec3} The gravity vector for the physics world.
+	/// Defaults to `(0, 0, -9.81)`.
 	Gravity = new BBMOD_Vec3(0.0, 0.0, -9.81);
+
+	/// @var {Real} The debug mode for the physics world. Defaults to `0` (no
+	/// debug drawing).
+	/// @see btDebugDrawModes
 	DebugMode = 0;
 
 	/// @func to_buffer(_buffer)
 	///
 	/// @desc Writes the physics world info into given buffer.
 	///
-	/// @param {Id.Buffer} The buffer to write the info to.
+	/// @param {Id.Buffer} _buffer The buffer to write the info to.
 	///
 	/// @return {Struct.BBMOD_PhysicsWorldInfo} Returns `self`.
 	static to_buffer = function (_buffer)
@@ -59,135 +74,138 @@ function BBMOD_PhysicsWorldInfo() constructor
 		buffer_write(_buffer, buffer_u64, DebugMode);
 		return self;
 	};
+
+	/// @func to_abi()
+	///
+	/// @desc Converts the physics world info to a format suitable for passing
+	/// to the native physics engine. This is used internally when creating a
+	/// physics world, and is not intended to be called directly by user code.
+	///
+	/// @return {Pointer} The address of the buffer containing the physics
+	/// world info.
+	static to_abi = function ()
+	{
+		gml_pragma("forceinline");
+		var _scratchBuffer = bbmod_get_scratch_buffer();
+		to_buffer(_scratchBuffer);
+		return buffer_get_address(_scratchBuffer);
+	};
 }
 
+/// @func BBMOD_PhysicsWorld()
+///
+/// @desc A struct that represents a physics world. It provides methods for
+/// creating rigid bodies, constraints, and other physics-related objects, as well as simulating
+/// the physics world and drawing debug information.
+///
+/// @see BBMOD_PhysicsEngine.create_physics_world
 function BBMOD_PhysicsWorld() constructor
 {
 	__id = -1;
 
+	/// @func get_gravity()
+	///
+	/// @desc Gets the gravity vector for the physics world.
+	///
+	/// @return {Struct.BBMOD_Vec3} The gravity vector for the physics world.
+	static get_gravity = function ()
+	{
+		gml_pragma("forceinline");
+		var _scratchBuffer = bbmod_get_scratch_buffer(buffer_sizeof(buffer_f64) * 3);
+		BBMOD_PhysicsWorld_GetGravity(__id, buffer_get_address(_scratchBuffer));
+		return new BBMOD_Vec3().FromBuffer(_scratchBuffer, buffer_f64);
+	};
+
 	/// @func set_gravity(_gravity)
 	///
-	/// @desc
+	/// @desc Sets the gravity vector for the physics world.
 	///
-	/// @param {Struct.BBMOD_Vec3} _gravity
+	/// @param {Struct.BBMOD_Vec3} _gravity The new gravity vector.
 	///
 	/// @return {Struct.BBMOD_PhysicsWorld} Returns `self`.
 	static set_gravity = function (_gravity)
 	{
 		gml_pragma("forceinline");
-		BBMOD_PhysicsWorld_SetGravity(__id, _gravity.X, _gravity.Y, _gravity.Z);
+		var _scratchBuffer = bbmod_get_scratch_buffer(buffer_sizeof(buffer_f64) * 3);
+		_gravity.ToBuffer(_scratchBuffer, buffer_f64);
+		BBMOD_PhysicsWorld_SetGravity(__id, buffer_get_address(_scratchBuffer));
 		return self;
 	};
 
 	/// @func create_rigid_body(_info)
 	///
-	/// @desc
+	/// @desc Creates a new rigid body in the physics world with the specified
+	/// information.
 	///
-	/// @param {Struct.BBMOD_RigidBodyInfo} _info
+	/// @param {Struct.BBMOD_RigidBodyInfo} _info Information for creating the
+	/// rigid body.
 	///
-	/// @return {Struct.BBMOD_RigidBody}
+	/// @return {Struct.BBMOD_RigidBody} The created rigid body.
 	static create_rigid_body = function (_info)
 	{
 		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
 		var _rigidBody = new BBMOD_RigidBody();
-		_rigidBody.__id = BBMOD_PhysicsWorld_CreateRigidBody(__id, buffer_get_address(_scratchBuffer));
+		_rigidBody.__id = BBMOD_PhysicsWorld_CreateRigidBody(__id, _info.to_abi());
+		_rigidBody.__physicsWorld = self;
 		return _rigidBody;
 	};
 
-	/// @func create_point_constraint(_info)
+	/// @func create_constraint(_info)
 	///
-	/// @desc
+	/// @desc Creates a new constraint in the physics world with the
+	/// specified information.
 	///
-	/// @param {Struct.BBMOD_PointPhysicsConstraintInfo} _info
+	/// @param {Struct.BBMOD_PhysicsConstraintInfo} _info Information for
+	/// creating the constraint.
 	///
-	/// @return {Struct.BBMOD_PointPhysicsConstraint}
-	static create_point_constraint = function (_info)
+	/// @return {Struct.BBMOD_PhysicsConstraint} The created constraint.
+	static create_constraint = function (_info)
 	{
 		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _constraint = new BBMOD_PointPhysicsConstraint();
-		_constraint.__id = BBMOD_PhysicsWorld_CreatePointConstraint(__id, buffer_get_address(_scratchBuffer));
-		return _constraint;
-	};
 
-	/// @func create_hinge_constraint(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_HingePhysicsConstraintInfo} _info
-	///
-	/// @return {Struct.BBMOD_HingePhysicsConstraint}
-	static create_hinge_constraint = function (_info)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _constraint = new BBMOD_HingePhysicsConstraint();
-		_constraint.__id = BBMOD_PhysicsWorld_CreateHingeConstraint(__id, buffer_get_address(_scratchBuffer));
-		return _constraint;
-	};
+		var _constraint = undefined;
+		switch (_info.Type)
+		{
+			case BBMOD_EPhysicsConstraintType.ConeTwist:
+				_constraint = new BBMOD_ConeTwistPhysicsConstraint();
+				break;
 
-	/// @func create_slider_constraint(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_SliderPhysicsConstraintInfo} _info
-	///
-	/// @return {Struct.BBMOD_SliderPhysicsConstraint}
-	static create_slider_constraint = function (_info)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _constraint = new BBMOD_SliderPhysicsConstraint();
-		_constraint.__id = BBMOD_PhysicsWorld_CreateSliderConstraint(__id, buffer_get_address(_scratchBuffer));
-		return _constraint;
-	};
+			case BBMOD_EPhysicsConstraintType.Hinge:
+				_constraint = new BBMOD_HingePhysicsConstraint();
+				break;
 
-	/// @func create_cone_twist_constraint(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_ConeTwistPhysicsConstraintInfo} _info
-	///
-	/// @return {Struct.BBMOD_ConeTwistPhysicsConstraint}
-	static create_cone_twist_constraint = function (_info)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _constraint = new BBMOD_ConeTwistPhysicsConstraint();
-		_constraint.__id = BBMOD_PhysicsWorld_CreateConeTwistConstraint(__id, buffer_get_address(_scratchBuffer));
-		return _constraint;
-	};
+			case BBMOD_EPhysicsConstraintType.Point:
+				_constraint = new BBMOD_PointPhysicsConstraint();
+				break;
 
-	/// @func create_six_dof_constraint(_info)
-	///
-	/// @desc
-	///
-	/// @param {Struct.BBMOD_SixDOFPhysicsConstraintInfo} _info
-	///
-	/// @return {Struct.BBMOD_SixDOFPhysicsConstraint}
-	static create_six_dof_constraint = function (_info)
-	{
-		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
-		var _constraint = new BBMOD_SixDOFPhysicsConstraint();
-		_constraint.__id = BBMOD_PhysicsWorld_CreateSixDOFConstraint(__id, buffer_get_address(_scratchBuffer));
+			case BBMOD_EPhysicsConstraintType.SixDOF:
+				_constraint = new BBMOD_SixDOFPhysicsConstraint();
+				break;
+
+			case BBMOD_EPhysicsConstraintType.Slider:
+				_constraint = new BBMOD_SliderPhysicsConstraint();
+				break;
+
+			default:
+				bbmod_assert(false, $"Invalid constraint type: {_info.__type}!");
+				break;
+		}
+
+		_constraint.__id = BBMOD_PhysicsWorld_CreateConstraint(__id, _info.to_abi());
+		_constraint.__physicsWorld = self;
+
 		return _constraint;
 	};
 
 	/// @function create_terrain(_terrain)
 	///
-	/// @desc
+	/// @desc Creates a physical representation of the given terrain in the
+	/// physics world.
 	///
-	/// @param {Struct.BBMOD_Terrain} _terrain
+	/// @param {Struct.BBMOD_Terrain} _terrain The terrain to create the physics
+	/// terrain from.
 	///
-	/// @return {Struct.BBMOD_PhysicsTerrain}
+	/// @return {Struct.BBMOD_PhysicsTerrain} The created physics terrain.
 	static create_terrain = function (_terrain)
 	{
 		gml_pragma("forceinline");
@@ -220,33 +238,36 @@ function BBMOD_PhysicsWorld() constructor
 
 		var _physicsTerrain = new BBMOD_PhysicsTerrain();
 		_physicsTerrain.__id = BBMOD_PhysicsWorld_CreateTerrain(__id, buffer_get_address(_buffer));
+		_physicsTerrain.__physicsWorld = self;
 		_physicsTerrain.__buffer = _buffer;
 		return _physicsTerrain;
 	};
 
 	/// @function create_vehicle(_info)
 	///
-	/// @desc
+	/// @desc Creates a new vehicle in the physics world with the specified
+	/// information.
 	///
-	/// @param {Struct.BBMOD_PhysicsVehicleInfo} _info
+	/// @param {Struct.BBMOD_PhysicsVehicleInfo} _info Information for creating
+	/// the vehicle.
 	///
-	/// @return {Struct.BBMOD_PhysicsVehicle}
+	/// @return {Struct.BBMOD_PhysicsVehicle} The created physics vehicle.
 	static create_vehicle = function (_info)
 	{
 		gml_pragma("forceinline");
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-		_info.to_buffer(_scratchBuffer);
 		var _vehicle = new BBMOD_PhysicsVehicle();
-		_vehicle.__id = BBMOD_PhysicsWorld_CreateVehicle(__id, buffer_get_address(_scratchBuffer));
+		_vehicle.__id = BBMOD_PhysicsWorld_CreateVehicle(__id, _info.to_abi());
+		_vehicle.__physicsWorld = self;
 		return _vehicle;
 	};
 
 	/// @func simulate(_timeStep[, _maxSubSteps])
 	///
-	/// @desc
+	/// @desc Simulates the physics world for the given time step.
 	///
-	/// @param {Real} _timeStep
-	/// @param {Real} [_maxSubSteps]
+	/// @param {Real} _timeStep The time step to simulate the physics world for.
+	/// @param {Real} [_maxSubSteps] The maximum number of sub-steps to perform.
+	/// Defaults to `1`.
 	///
 	/// @return {Struct.BBMOD_PhysicsWorld} Returns `self`.
 	static simulate = function (_timeStep, _maxSubSteps = 1)
@@ -260,7 +281,7 @@ function BBMOD_PhysicsWorld() constructor
 
 	/// @func draw_debug()
 	///
-	/// @desc
+	/// @desc Draws the debug information for the physics world.
 	///
 	/// @return {Struct.BBMOD_PhysicsWorld} Returns `self`.
 	static draw_debug = function ()
@@ -287,15 +308,11 @@ function BBMOD_PhysicsWorld() constructor
 		return self;
 	};
 
-	/// @func destroy()
-	///
-	/// @desc
-	///
-	/// @return {Undefined}
 	static destroy = function ()
 	{
 		gml_pragma("forceinline");
 		BBMOD_PhysicsWorld_Destroy(__id);
+		__id = -1;
 		return undefined;
 	};
 }

@@ -89,3 +89,7 @@ only with animations with optimization level 0!
 * Added new extension `BBMOD` to the *Core* module, which handles automatic shader includes and model conversion. See the documentation for more info. **Requires Python3!**
 
 * Fixed shader compatibility with GMRT.
+
+* Fixed function `bbmod_model_to_colmesh` ignoring node transforms when adding individual meshes to a ColMesh.
+* Added functions `bbmod_mesh_to_colmesh2(_mesh, _colmesh[, _transform])` and `bbmod_model_to_colmesh(_model, _colmesh[, _transform])`, which can be used to add a `BBMOD_Mesh` or a `BBMOD_Model` into a ColMesh v2.
+* ColMesh2 (commit `ba0c4facb193b04dc1ee0bc3ccff131c9eee120a`) is now included in the BBMOD package.

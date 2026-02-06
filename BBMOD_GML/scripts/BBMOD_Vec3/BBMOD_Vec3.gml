@@ -214,6 +214,10 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 			+ Y * Y
 			+ Z * Z
 		);
+		if (_length <= math_get_epsilon())
+		{
+			return new BBMOD_Vec3();
+		}
 		var _newLength = clamp(_length, _min, _max);
 		return new BBMOD_Vec3(
 			(X / _length) * _newLength,
@@ -249,6 +253,13 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 			+ Y * Y
 			+ Z * Z
 		);
+		if (_length <= math_get_epsilon())
+		{
+			X = 0.0;
+			Y = 0.0;
+			Z = 0.0;
+			return self;
+		}
 		var _newLength = clamp(_length, _min, _max);
 		X = (X / _length) * _newLength;
 		Y = (Y / _length) * _newLength;
@@ -585,7 +596,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		return max(
 			X,
 			Y,
-			Z,
+			Z
 		);
 	};
 
@@ -820,7 +831,8 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 
 	/// @func Orthonormalize(_v)
 	///
-	/// @desc Orthonormalizes the vectors in-place using the Gram-Schmidt process.
+	/// @desc Orthonormalizes two vectors `self` and `_v` in-place using the
+	/// Gram-Schmidt process.
 	///
 	/// @param {Struct.BBMOD_Vec3} _v The other vector.
 	///
@@ -830,6 +842,12 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		gml_pragma("forceinline");
 
 		var _v1 = Normalize();
+
+		if (_v1.Length() <= 0.0)
+		{
+			return false;
+		}
+
 		var _proj = _v1.Scale(_v.Dot(_v1));
 		var _v2 = _v.Sub(_proj);
 
@@ -844,12 +862,55 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		return true;
 	};
 
+	/// @func Orthonormalize3(_v2, _v3)
+	///
+	/// @desc Orthonormalizes vectors `self`, `_v2` and `_v3` in-place using
+	/// the Gram–Schmidt process.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v2 The second vector.
+	/// @param {Struct.BBMOD_Vec3} _v3 The third vector.
+	///
+	/// @return {Bool} Returns `true` if the vectors were orthonormalized.
+	static Orthonormalize3 = function (_v2, _v3)
+	{
+		gml_pragma("forceinline");
+
+		var _eps = math_get_epsilon();
+
+		// First vector
+		if (Length() <= _eps)
+		{
+			return false;
+		}
+		NormalizeSelf();
+
+		// Second vector
+		_v2.SubSelf(Scale(_v2.Dot(self)));
+		if (_v2.Length() <= _eps)
+		{
+			return false;
+		}
+		_v2.NormalizeSelf();
+
+		// Third vector
+		_v3.SubSelf(Scale(_v3.Dot(self)))
+			.SubSelf(_v2.Scale(_v3.Dot(_v2)));
+		if (_v3.Length() <= _eps)
+		{
+			return false;
+		}
+		_v3.NormalizeSelf();
+
+		return true;
+	};
+
 	/// @func Reflect(_v)
 	///
 	/// @desc Reflects the vector from vector `_v` and returns the result
 	/// as a new vector.
 	///
-	/// @param {Struct.BBMOD_Vec3} _v The vector to reflect from.
+	/// @param {Struct.BBMOD_Vec3} _v The vector to reflect from. Must be
+	/// normalized!
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Reflect = function (_v)

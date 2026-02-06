@@ -2,7 +2,7 @@
 
 /// @func BBMOD_Light()
 ///
-/// @desc Base class for lights.
+/// @desc Base struct for lights.
 function BBMOD_Light() constructor
 {
 	/// @var {Bool} Use `false` to disable the light. Defaults to `true` (the

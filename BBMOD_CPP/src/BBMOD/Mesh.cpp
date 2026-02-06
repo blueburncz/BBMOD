@@ -5,10 +5,10 @@
 
 #include <assimp/scene.h>
 
-#include <map>
-#include <vector>
-#include <string>
 #include <iostream>
+#include <map>
+#include <string>
+#include <vector>
 
 /// Encodes color into a single integer as ARGB.
 static inline uint32_t EncodeColor(const aiColor4D& color)

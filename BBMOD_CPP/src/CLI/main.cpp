@@ -1,11 +1,11 @@
 #include <BBMOD/Importer.hpp>
 #include <BBMOD/terminal.hpp>
 
-#include <iostream>
-#include <filesystem>
-#include <string>
-#include <regex>
 #include <cstdlib>
+#include <filesystem>
+#include <iostream>
+#include <regex>
+#include <string>
 
 // TODO: Implement class for argument parsing
 

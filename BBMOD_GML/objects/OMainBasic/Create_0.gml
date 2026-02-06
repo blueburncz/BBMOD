@@ -1,5 +1,11 @@
 event_inherited();
 
+x = 19.55;
+y = -4.31;
+z = 4.5;
+camera.Direction = -134;
+camera.DirectionUp = -23.5;
+
 var _baseMaterial = undefined;
 if (useDeferredRenderer)
 {

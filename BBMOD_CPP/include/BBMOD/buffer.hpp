@@ -3,17 +3,17 @@
 #include <string>
 
 template<typename T>
-void BBMOD_WriteBuffer(char*& buffer, const T& value)
+T BBMOD_PeekBuffer(char* buffer)
 {
 	if constexpr (std::is_same_v<T, std::string>)
 	{
-		memcpy(buffer, value.c_str(), value.size() + 1);
-		buffer += value.size() + 1;
+		return std::string(buffer);
 	}
 	else
 	{
-		memcpy(buffer, &value, sizeof(T));
-		buffer += sizeof(T);
+		T value;
+		memcpy(&value, buffer, sizeof(T));
+		return value;
 	}
 }
 
@@ -32,5 +32,33 @@ T BBMOD_ReadBuffer(char*& buffer)
 		memcpy(&value, buffer, sizeof(T));
 		buffer += sizeof(T);
 		return value;
+	}
+}
+
+template<typename T>
+void BBMOD_PokeBuffer(char* buffer, const T& value)
+{
+	if constexpr (std::is_same_v<T, std::string>)
+	{
+		memcpy(buffer, value.c_str(), value.size() + 1);
+	}
+	else
+	{
+		memcpy(buffer, &value, sizeof(T));
+	}
+}
+
+template<typename T>
+void BBMOD_WriteBuffer(char*& buffer, const T& value)
+{
+	if constexpr (std::is_same_v<T, std::string>)
+	{
+		memcpy(buffer, value.c_str(), value.size() + 1);
+		buffer += value.size() + 1;
+	}
+	else
+	{
+		memcpy(buffer, &value, sizeof(T));
+		buffer += sizeof(T);
 	}
 }

@@ -7,8 +7,8 @@
 #include <BBMOD/utils.hpp>
 
 #include <assimp/anim.h>
-#include <assimp/vector3.h>
 #include <assimp/quaternion.h>
+#include <assimp/vector3.h>
 
 #include <iostream>
 #include <stack>

@@ -1,5 +1,6 @@
 add_library(BBMOD_Physics SHARED
     exports_PhysicsEngine.cpp
+    exports_PhysicsShape.cpp
     exports_PhysicsVehicle.cpp
     exports_PhysicsWorld.cpp
     exports_RigidBody.cpp

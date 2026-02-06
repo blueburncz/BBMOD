@@ -1,18 +1,18 @@
+#include <BBMOD/Animation.hpp>
 #include <BBMOD/Importer.hpp>
 #include <BBMOD/Model.hpp>
-#include <BBMOD/Animation.hpp>
 #include <BBMOD/terminal.hpp>
 
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 #include <map>
-#include <string>
 #include <regex>
+#include <string>
 #include <vector>
 
 namespace fs = std::filesystem;

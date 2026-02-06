@@ -39,11 +39,11 @@ def beautify_file(filepath):
     res = jsbeautifier.beautify_file(filepath, OPTIONS)
     res = re.sub(r"\$[\s\n]+\"", '$"', res)
     res = re.sub(r"\@[\s\n]+\"", '@"', res)
-    res = re.sub(r"\[[\s\n]+\@", '[@ ', res)
-    res = re.sub(r"\[[\s\n]+\|", '[| ', res)
-    res = re.sub(r"\[[\s\n]+\#", '[# ', res)
-    res = re.sub(r"\[[\s\n]+\?", '[? ', res)
-    res = re.sub(r"\[[\s\n]*\$", '[$ ', res)
+    res = re.sub(r"\[[\s\n]+\@", "[@ ", res)
+    res = re.sub(r"\[[\s\n]+\|", "[| ", res)
+    res = re.sub(r"\[[\s\n]+\#", "[# ", res)
+    res = re.sub(r"\[[\s\n]+\?", "[? ", res)
+    res = re.sub(r"\[[\s\n]*\$", "[$ ", res)
     return res
 
 
@@ -80,6 +80,12 @@ def get_staged_file_contents(file_path):
         exit(1)
 
 
+# TODO: Add option to ignore files
+def should_format(file_path):
+    file_path = file_path.lower()
+    return file_path.endswith(".gml") and not file_path.startswith(("__cmi_", "cm_"))
+
+
 if __name__ == "__main__":
     target = "--staged"
     filepath = None
@@ -100,7 +106,7 @@ if __name__ == "__main__":
         print(VERSION_STRING)
     elif target == "--validate":
         for filepath in get_staged_files():
-            if filepath.endswith(".gml"):
+            if should_format(filepath):
                 orig = get_staged_file_contents(filepath)
                 res = beautify_file(filepath)
                 if orig != res:
@@ -110,14 +116,14 @@ if __name__ == "__main__":
                     exit(1)
     elif target == "--staged":
         for filepath in get_staged_files():
-            if filepath.endswith(".gml"):
+            if should_format(filepath):
                 res = beautify_file(filepath)
                 with open(filepath, "w") as f:
                     f.write(res)
     elif target == "--all":
         for dirpath, _, filenames in os.walk("."):
             for filename in filenames:
-                if filename.endswith(".gml"):
+                if should_format(filename):
                     filepath = os.path.join(dirpath, filename)
                     res = beautify_file(filepath)
                     with open(filepath, "w") as f:

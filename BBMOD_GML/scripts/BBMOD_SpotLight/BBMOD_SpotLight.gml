@@ -43,14 +43,29 @@ function BBMOD_SpotLight(
 	static __get_shadowmap_view = function ()
 	{
 		gml_pragma("forceinline");
+
+		var _forward = Direction.Clone();
+		var _up = BBMOD_VEC3_UP;
+		var _right = _forward.Cross(_up);
+
+		if (!_forward.Orthonormalize3(_right, _up))
+		{
+			// Try different up vector...
+			_up = BBMOD_VEC3_RIGHT;
+			_right = _forward.Cross(_up);
+			_forward.Orthonormalize3(_right, _up);
+		}
+
 		return matrix_build_lookat(
 			Position.X,
 			Position.Y,
 			Position.Z,
-			Position.X + Direction.X,
-			Position.Y + Direction.Y,
-			Position.Z + Direction.Z,
-			0.0, 0.0, 1.0); // TODO: Find the up vector
+			Position.X + _forward.X,
+			Position.Y + _forward.Y,
+			Position.Z + _forward.Z,
+			_up.X,
+			_up.Y,
+			_up.Z);
 	};
 
 	static __get_shadowmap_projection = function ()

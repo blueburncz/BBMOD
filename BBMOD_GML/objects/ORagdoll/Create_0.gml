@@ -117,7 +117,7 @@ CreateRagdoll = function ()
 
 		if (_ragdollPart.PhysicsShape != undefined)
 		{
-			BBMOD_PhysicsEngine_DestroyShape(_ragdollPart.PhysicsShape.__id);
+			BBMOD_PhysicsEngine_DestroyPhysicsShape(_ragdollPart.PhysicsShape.__id);
 			_ragdollPart.PhysicsShape = undefined;
 		}
 	}
@@ -143,7 +143,8 @@ CreateRagdoll = function ()
 				break;
 
 			case EPhysicsShape.Capsule:
-				_shapeInfo = new BBMOD_CapsuleYPhysicsShapeInfo();
+				_shapeInfo = new BBMOD_CapsulePhysicsShapeInfo();
+				_shapeInfo.UpAxis = BBMOD_EAxis.Y;
 				_shapeInfo.Radius = _ragdollPart.Size.X;
 				_shapeInfo.Height = max(_ragdollPart.Size.Y - (_shapeInfo.Radius * 2), 0);
 				break;
@@ -165,36 +166,16 @@ CreateRagdoll = function ()
 
 		if (_shapeInfo != undefined)
 		{
-			_shapeInfo.Transform.TranslateSelf(_ragdollPart.Offset);
-
-			switch (_ragdollPart.Type)
-			{
-				case EPhysicsShape.Box:
-					_shape = OMain.physicsEngine.create_box_shape(_shapeInfo);
-					break;
-
-				case EPhysicsShape.Capsule:
-					_shape = OMain.physicsEngine.create_capsule_y_shape(_shapeInfo);
-					break;
-
-					//case EPhysicsShape.Cone:
-					//	break;
-
-					//case EPhysicsShape.Cylinder:
-					//	break;
-
-				case EPhysicsShape.Sphere:
-					_shape = OMain.physicsEngine.create_sphere_shape(_shapeInfo);
-					break;
-
-				default:
-					break;
-			}
+			_shape = OMain.physicsEngine.create_physics_shape(_shapeInfo);
 		}
 
 		if (_shape != undefined)
 		{
-			_ragdollPart.PhysicsShape = _shape;
+			var _compoundShape = OMain.physicsEngine.create_physics_shape(new BBMOD_CompoundPhysicsShapeInfo());
+			_compoundShape.add_child_shape(_shape, new BBMOD_Matrix().TranslateSelf(_ragdollPart.Offset));
+			_shape = _compoundShape;
+
+			_ragdollPart.PhysicsShape = _compoundShape;
 
 			var _bodyInfo = new BBMOD_RigidBodyInfo();
 			_bodyInfo.PhysicsShape = _shape;

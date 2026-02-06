@@ -1,4 +1,6 @@
 {
   "commonArgs": "",
-  "models": {}
+  "models": {
+    "assets/test.fbx": {}
+  }
 }

@@ -7,12 +7,6 @@ camera.Exposure = 2;
 camera.MouseSensitivity = 0.5;
 camera.FollowObject = self;
 
-x = 19.55;
-y = -4.31;
-z = 4.5;
-camera.Direction = -134;
-camera.DirectionUp = -23.5;
-
 if (useDeferredRenderer)
 {
 	renderer = new BBMOD_DeferredRenderer();
@@ -24,7 +18,7 @@ else
 }
 renderer.UseAppSurface = true;
 renderer.EnableShadows = true;
-renderer.ShadowmapNormalOffset = 0.01;
+renderer.ShadowmapNormalOffset = 0.03;
 renderer.EnableSSAO = true;
 renderer.SSAODepthRange = 1.5;
 renderer.SSAORadius = 128;

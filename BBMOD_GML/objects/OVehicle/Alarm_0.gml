@@ -8,10 +8,13 @@ with(OMain)
 
 var _boxShapeInfo = new BBMOD_BoxPhysicsShapeInfo();
 _boxShapeInfo.Size.Set(4, 1.8, 0.7);
-_boxShapeInfo.Transform.TranslateSelf(0, 0, -0.1);
 _boxShapeInfo.Margin = 0.1;
 
-collisionShape = _physicsEngine.create_box_shape(_boxShapeInfo);
+var _boxShape = _physicsEngine.create_physics_shape(_boxShapeInfo);
+
+collisionShape = _physicsEngine.create_physics_shape(new BBMOD_CompoundPhysicsShapeInfo());
+
+collisionShape.add_child_shape(_boxShape, new BBMOD_Matrix().TranslateSelf(0, 0, -0.1));
 
 var _rigidBodyInfo = new BBMOD_RigidBodyInfo();
 _rigidBodyInfo.PhysicsShape = collisionShape;
