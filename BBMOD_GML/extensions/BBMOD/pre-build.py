@@ -32,6 +32,40 @@ ENDINCLUDE_PATTERN = re.compile(r"// +@endinclude\n")
 
 
 # ==============================================================================
+# Args helpers
+# ==============================================================================
+def parse_args(arg_string):
+    result = {}
+    for arg in arg_string.split():
+        arg = arg.strip()
+        if not arg:
+            continue
+
+        if "=" in arg:
+            key, value = arg.split("=", 1)
+            result[key] = value
+        else:
+            # handle flags without values like "-pt"
+            result[arg] = None
+
+    return result
+
+
+def build_args(arg_dict, as_list=False):
+    items = []
+    for key in sorted(arg_dict.keys()):
+        value = arg_dict[key]
+        if value is None:
+            items.append(key)
+        else:
+            items.append(f"{key}={value}")
+
+    if as_list:
+        return items
+    return " ".join(items)
+
+
+# ==============================================================================
 # Cache helpers
 # ==============================================================================
 def check_and_update_cache(file_path, cache_key, args_str, cache):
@@ -207,11 +241,10 @@ def main_program():
         # ======================================================================
         # Convert models
         # ======================================================================
-        common_args = conf.get("commonArgs", "").split(" ")
-        common_args = [arg.strip() for arg in common_args]
-        common_args = [arg for arg in common_args if arg != ""]
-        common_args = sorted(list(set(common_args)))
-        conf["commonArgs"] = " ".join(common_args)
+
+        # Parse common args
+        common_dict = parse_args(conf.get("commonArgs", ""))
+        conf["commonArgs"] = build_args(common_dict)
 
         exe = os.path.abspath(
             "BBMOD.exe" if sys.platform.startswith("win") else "BBMOD"
@@ -239,16 +272,18 @@ def main_program():
 
                 conf["models"].setdefault(file_path_cache, {})
 
-                # Normalize args
-                args = conf["models"][file_path_cache].get("args", "").split(" ")
-                args = [arg.strip() for arg in args]
-                args = [arg for arg in args if arg != ""]
+                # Parse model args
+                model_dict = parse_args(conf["models"][file_path_cache].get("args", ""))
 
-                args_str = " ".join(sorted(list(set(args))))
-                conf["models"][file_path_cache]["args"] = args_str
+                # Model args override common args
+                combined = common_dict.copy()
+                combined.update(model_dict)
 
-                # Combine with common args and normalize again
-                args = sorted(list(set(args + common_args)))
+                # Save normalized model args
+                conf["models"][file_path_cache]["args"] = build_args(model_dict)
+
+                # Final combined args string
+                args = build_args(combined, as_list=True)
                 args_str = " ".join(args)
 
                 if check_and_update_cache(
