@@ -1,6 +1,8 @@
 {
-  "commonArgs": "",
+  "commonArgs": "-lf=false -zup=true",
   "models": {
-    "assets/test.fbx": {}
+    "assets/seeker_new.glb": {
+      "args": ""
+    }
   }
 }

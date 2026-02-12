@@ -60,6 +60,8 @@ void PrintHelp()
 		<< "                                       Default is " << config.GenNormals << "." << std::endl
 		<< "  -iw|--invert-winding=true|false      Invert winding order of vertices." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.InvertWinding) << "." << std::endl
+		<< "  -lf|--log-file=true|false            Enable/disable logging to a file." << std::endl
+		<< "                                       Default is " << PRINT_BOOL(config.LogFile) << "." << std::endl
 		<< "  -lh|--left-handed=true|false         Convert to left-handed coordinate system." << std::endl
 		<< "                                       Default is " << PRINT_BOOL(config.LeftHanded) << "." << std::endl
 		<< "  -oa|--optimize-animations=0|1|2      Optimize animations." << std::endl
@@ -176,6 +178,14 @@ int main(int argc, const char* argv[])
 				else if (o == "-iw" || o == "--invert-winding")
 				{
 					config.InvertWinding = bValue;
+				}
+				else if (o == "-lh" || o == "--left-handed")
+				{
+					config.LeftHanded = bValue;
+				}
+				else if (o == "-lf" || o == "--log-file")
+				{
+					config.LogFile = bValue;
 				}
 				else if (o == "-lh" || o == "--left-handed")
 				{

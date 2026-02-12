@@ -88,7 +88,7 @@
   "packageId":"",
   "parent":{
     "name":"Physics",
-    "path":"folders/BBMOD/Physics.yy",
+    "path":"folders/BBMOD_WIP/Physics.yy",
   },
   "productId":"",
   "resourceType":"GMExtension",

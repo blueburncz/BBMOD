@@ -19,7 +19,7 @@ import zipfile
 # ==============================================================================
 MODEL_EXTENSIONS = [
     ".fbx",
-    ".glbin",
+    ".glb",
     ".gltf",
     ".obj",
 ]
@@ -34,7 +34,7 @@ ENDINCLUDE_PATTERN = re.compile(r"// +@endinclude\n")
 # ==============================================================================
 # Cache helpers
 # ==============================================================================
-def check_and_update_cache(file_path, cache_key, cache):
+def check_and_update_cache(file_path, cache_key, args_str, cache):
     p = Path(file_path)
     stat = p.stat()
 
@@ -45,6 +45,7 @@ def check_and_update_cache(file_path, cache_key, cache):
     current = {
         "mtime": mtime,
         "size": size,
+        "args": args_str,
     }
 
     last = cache.get(cache_key)
@@ -163,7 +164,7 @@ def main_program():
                 conf = json.load(f)
         except:
             conf = {}
-        conf.setdefault("commonArgs", "-zup=true")
+        conf.setdefault("commonArgs", "-lf=false -zup=true")
         conf.setdefault("models", {})
 
         set_progress_text("Loading 'bbmod.cache.json'...")
@@ -206,6 +207,12 @@ def main_program():
         # ======================================================================
         # Convert models
         # ======================================================================
+        common_args = conf.get("commonArgs", "").split(" ")
+        common_args = [arg.strip() for arg in common_args]
+        common_args = [arg for arg in common_args if arg != ""]
+        common_args = sorted(list(set(common_args)))
+        conf["commonArgs"] = " ".join(common_args)
+
         exe = os.path.abspath(
             "BBMOD.exe" if sys.platform.startswith("win") else "BBMOD"
         )
@@ -232,8 +239,20 @@ def main_program():
 
                 conf["models"].setdefault(file_path_cache, {})
 
+                # Normalize args
+                args = conf["models"][file_path_cache].get("args", "").split(" ")
+                args = [arg.strip() for arg in args]
+                args = [arg for arg in args if arg != ""]
+
+                args_str = " ".join(sorted(list(set(args))))
+                conf["models"][file_path_cache]["args"] = args_str
+
+                # Combine with common args and normalize again
+                args = sorted(list(set(args + common_args)))
+                args_str = " ".join(args)
+
                 if check_and_update_cache(
-                    file_path_in, file_path_cache, cache
+                    file_path_in, file_path_cache, args_str, cache
                 ) and os.path.exists(file_path_out):
                     set_progress_text(f"Skipping '{file_path_cache}' (cached)...")
                     continue
@@ -241,7 +260,7 @@ def main_program():
                 set_progress_text(f"Converting '{file_path_cache}'...")
 
                 os.makedirs(os.path.dirname(file_path_out), exist_ok=True)
-                cmd = [exe, file_path_in, file_path_out, "-em=false"]
+                cmd = [exe, file_path_in, file_path_out] + args
 
                 result = subprocess.run(cmd, cwd=exe_cwd)
 

@@ -101,4 +101,7 @@ struct SConfig
 
 	/// Save unused material properties.
 	bool SaveUnused = false;
+
+	/// Enable/disable logging to a file.
+	bool LogFile = true;
 };

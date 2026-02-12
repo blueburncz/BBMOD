@@ -128,7 +128,16 @@ int ConvertToBBMOD(const char* fin, const char* fout, const SConfig& config)
 		std::string pathOutCurrentStr = pathOutCurrent.string();
 		const char* foutCurrent = pathOutCurrentStr.c_str();
 
-		std::ofstream log(GetFilename(foutCurrent, "log", ".txt", config.Prefix), std::ios::out);
+		std::ofstream log(
+			config.LogFile
+				? GetFilename(foutCurrent, "log", ".txt", config.Prefix)
+				:
+#ifdef _WIN32
+				"NUL"
+#else
+				"/dev/null"
+#endif
+			, std::ios::out);
 
 		Assimp::Importer* importer = new Assimp::Importer();
 		importer->SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);

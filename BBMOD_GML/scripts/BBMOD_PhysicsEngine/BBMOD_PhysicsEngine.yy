@@ -6,7 +6,7 @@
   "name":"BBMOD_PhysicsEngine",
   "parent":{
     "name":"Physics",
-    "path":"folders/BBMOD/Physics.yy",
+    "path":"folders/BBMOD_WIP/Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
