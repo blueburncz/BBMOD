@@ -4,7 +4,9 @@
 <h3 id="ColMeshFunctions">Functions</h3>
 
  * [bbmod_mesh_to_colmesh](./bbmod_mesh_to_colmesh.html)
+ * [bbmod_mesh_to_colmesh2](./bbmod_mesh_to_colmesh2.html)
  * [bbmod_model_to_colmesh](./bbmod_model_to_colmesh.html)
+ * [bbmod_model_to_colmesh2](./bbmod_model_to_colmesh2.html)
 <hr/><h2 id="Core">Core</h2>
 
 <h3 id="CoreConstructors">Constructors</h3>
@@ -29,10 +31,8 @@
  * [BBMOD_DLL](./BBMOD_DLL.html)
  * [BBMOD_DualQuaternion](./BBMOD_DualQuaternion.html)
  * [BBMOD_DynamicBatch](./BBMOD_DynamicBatch.html)
- * [BBMOD_Environment](./BBMOD_Environment.html)
  * [BBMOD_Exception](./BBMOD_Exception.html)
  * [BBMOD_ImageBasedLight](./BBMOD_ImageBasedLight.html)
- * [BBMOD_Importer](./BBMOD_Importer.html)
  * [BBMOD_Light](./BBMOD_Light.html)
  * [BBMOD_LightmapMaterial](./BBMOD_LightmapMaterial.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_LightmapShader](./BBMOD_LightmapShader.html) <span class="badge badge-warning">DEPRECATED</span>
@@ -40,14 +40,12 @@
  * [BBMOD_MaterialPropertyBlock](./BBMOD_MaterialPropertyBlock.html)
  * [BBMOD_Matrix](./BBMOD_Matrix.html)
  * [BBMOD_Mesh](./BBMOD_Mesh.html)
- * [BBMOD_MeshBuilder](./BBMOD_MeshBuilder.html)
  * [BBMOD_MeshRenderQueue](./BBMOD_MeshRenderQueue.html)
  * [BBMOD_Model](./BBMOD_Model.html)
  * [BBMOD_Node](./BBMOD_Node.html)
  * [BBMOD_NotImplementedException](./BBMOD_NotImplementedException.html)
  * [BBMOD_OutOfRangeException](./BBMOD_OutOfRangeException.html)
  * [BBMOD_PointLight](./BBMOD_PointLight.html)
- * [BBMOD_Property](./BBMOD_Property.html)
  * [BBMOD_PunctualLight](./BBMOD_PunctualLight.html)
  * [BBMOD_Quaternion](./BBMOD_Quaternion.html)
  * [BBMOD_Rect](./BBMOD_Rect.html)
@@ -56,6 +54,7 @@
  * [BBMOD_RenderQueue](./BBMOD_RenderQueue.html)
  * [BBMOD_Resource](./BBMOD_Resource.html)
  * [BBMOD_ResourceManager](./BBMOD_ResourceManager.html)
+ * [BBMOD_Scene](./BBMOD_Scene.html)
  * [BBMOD_Shader](./BBMOD_Shader.html)
  * [BBMOD_SpotLight](./BBMOD_SpotLight.html)
  * [BBMOD_Sprite](./BBMOD_Sprite.html)
@@ -63,7 +62,6 @@
  * [BBMOD_Vec2](./BBMOD_Vec2.html)
  * [BBMOD_Vec3](./BBMOD_Vec3.html)
  * [BBMOD_Vec4](./BBMOD_Vec4.html)
- * [BBMOD_Vertex](./BBMOD_Vertex.html)
  * [BBMOD_VertexFormat](./BBMOD_VertexFormat.html)
 <h3 id="CoreInterfaces">Interfaces</h3>
 
@@ -98,9 +96,6 @@
  * [bbmod_cullmode_from_string](./bbmod_cullmode_from_string.html)
  * [bbmod_cullmode_to_string](./bbmod_cullmode_to_string.html)
  * [bbmod_empty_callback](./bbmod_empty_callback.html)
- * [bbmod_environment_get_current](./bbmod_environment_get_current.html)
- * [bbmod_environment_get_default](./bbmod_environment_get_default.html)
- * [bbmod_environment_set_current](./bbmod_environment_set_current.html)
  * [bbmod_fog_get_color](./bbmod_fog_get_color.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_fog_get_end](./bbmod_fog_get_end.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_fog_get_intensity](./bbmod_fog_get_intensity.html) <span class="badge badge-warning">DEPRECATED</span>
@@ -111,6 +106,7 @@
  * [bbmod_fog_set_intensity](./bbmod_fog_set_intensity.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_fog_set_start](./bbmod_fog_set_start.html) <span class="badge badge-warning">DEPRECATED</span>
  * [bbmod_get_calling_function_name](./bbmod_get_calling_function_name.html)
+ * [bbmod_get_scratch_buffer](./bbmod_get_scratch_buffer.html)
  * [bbmod_gpu_get_default_state](./bbmod_gpu_get_default_state.html)
  * [bbmod_hdr_is_supported](./bbmod_hdr_is_supported.html)
  * [bbmod_ibl_get](./bbmod_ibl_get.html) <span class="badge badge-warning">DEPRECATED</span>
@@ -181,6 +177,9 @@
  * [bbmod_render_queues_clear](./bbmod_render_queues_clear.html)
  * [bbmod_render_queues_get](./bbmod_render_queues_get.html)
  * [bbmod_render_queues_submit](./bbmod_render_queues_submit.html)
+ * [bbmod_scene_get_current](./bbmod_scene_get_current.html)
+ * [bbmod_scene_get_default](./bbmod_scene_get_default.html)
+ * [bbmod_scene_set_current](./bbmod_scene_set_current.html)
  * [bbmod_set_instance_id](./bbmod_set_instance_id.html)
  * [bbmod_shader_clear_globals](./bbmod_shader_clear_globals.html)
  * [bbmod_shader_exists](./bbmod_shader_exists.html)
@@ -211,6 +210,7 @@
  * [bbmod_shader_set_globals](./bbmod_shader_set_globals.html)
  * [bbmod_shader_unset_global](./bbmod_shader_unset_global.html)
  * [bbmod_sprite_add_async](./bbmod_sprite_add_async.html)
+ * [bbmod_ssao_draw](./bbmod_ssao_draw.html)
  * [bbmod_string_explode](./bbmod_string_explode.html)
  * [bbmod_string_join_array](./bbmod_string_join_array.html)
  * [bbmod_string_split_on_first](./bbmod_string_split_on_first.html)
@@ -218,16 +218,14 @@
  * [bbmod_surface_check](./bbmod_surface_check.html)
  * [bbmod_texfilter_from_string](./bbmod_texfilter_from_string.html)
  * [bbmod_texfilter_to_string](./bbmod_texfilter_to_string.html)
- * [bbmod_texture_set_stage_vs](./bbmod_texture_set_stage_vs.html)
  * [bbmod_vertex_buffer_load](./bbmod_vertex_buffer_load.html)
- * [bbmod_vtf_is_supported](./bbmod_vtf_is_supported.html)
  * [bbmod_window_get_height](./bbmod_window_get_height.html)
  * [bbmod_window_get_width](./bbmod_window_get_width.html)
  * [bbmod_wrap_value](./bbmod_wrap_value.html)
 <h3 id="CoreEnums">Enums</h3>
 
+ * [BBMOD_EAxis](./BBMOD_EAxis.html)
  * [BBMOD_ECubeSide](./BBMOD_ECubeSide.html)
- * [BBMOD_EPropertyType](./BBMOD_EPropertyType.html)
  * [BBMOD_ERenderCommand](./BBMOD_ERenderCommand.html)
  * [BBMOD_ERenderPass](./BBMOD_ERenderPass.html)
  * [BBMOD_EShaderUniformType](./BBMOD_EShaderUniformType.html)
@@ -308,6 +306,11 @@
  * [BBMOD_VFORMAT_DEFAULT_SPRITE](./BBMOD_VFORMAT_DEFAULT_SPRITE.html)
  * [BBMOD_VFORMAT_LIGHTMAP](./BBMOD_VFORMAT_LIGHTMAP.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_VFORMAT_SPRITE](./BBMOD_VFORMAT_SPRITE.html) <span class="badge badge-warning">DEPRECATED</span>
+<hr/><h2 id="D3D11">D3D11</h2>
+
+<h3 id="D3D11Functions">Functions</h3>
+
+ * [bbmod_d3d11_init](./bbmod_d3d11_init.html)
 <hr/><h2 id="DeferredRenderer">DeferredRenderer</h2>
 
 <h3 id="DeferredRendererConstructors">Constructors</h3>
@@ -349,7 +352,10 @@
 
 <h3 id="OBJImporterConstructors">Constructors</h3>
 
+ * [BBMOD_Importer](./BBMOD_Importer.html)
+ * [BBMOD_MeshBuilder](./BBMOD_MeshBuilder.html)
  * [BBMOD_OBJImporter](./BBMOD_OBJImporter.html)
+ * [BBMOD_Vertex](./BBMOD_Vertex.html)
 <hr/><h2 id="Particles">Particles</h2>
 
 <h3 id="ParticlesConstructors">Constructors</h3>
@@ -461,6 +467,12 @@
 <h3 id="PostProcessingEnums">Enums</h3>
 
  * [BBMOD_EAntialiasing](./BBMOD_EAntialiasing.html) <span class="badge badge-danger">OBSOLETE</span>
+<hr/><h2 id="RGBMSky">RGBMSky</h2>
+
+<h3 id="RGBMSkyMacros">Macros</h3>
+
+ * [BBMOD_MATERIAL_SKY](./BBMOD_MATERIAL_SKY.html) <span class="badge badge-warning">DEPRECATED</span>
+ * [BBMOD_MATERIAL_SKY_RGBM](./BBMOD_MATERIAL_SKY_RGBM.html)
 <hr/><h2 id="Raycasting">Raycasting</h2>
 
 <h3 id="RaycastingConstructors">Constructors</h3>
@@ -478,18 +490,11 @@
 <h3 id="RaycastingEnums">Enums</h3>
 
  * [BBMOD_EFrustumPlane](./BBMOD_EFrustumPlane.html)
-<hr/><h2 id="Rendering.SSAO">Rendering.SSAO</h2>
-
-<h3 id="Rendering.SSAOFunctions">Functions</h3>
-
- * [bbmod_ssao_draw](./bbmod_ssao_draw.html)
-<hr/><h2 id="Rendering.Sky">Rendering.Sky</h2>
-
-<h3 id="Rendering.SkyMacros">Macros</h3>
-
- * [BBMOD_MATERIAL_SKY](./BBMOD_MATERIAL_SKY.html)
 <hr/><h2 id="Save">Save</h2>
 
+<h3 id="SaveConstructors">Constructors</h3>
+
+ * [BBMOD_Property](./BBMOD_Property.html)
 <h3 id="SaveFunctions">Functions</h3>
 
  * [bbmod_instance_from_buffer](./bbmod_instance_from_buffer.html)
@@ -520,6 +525,9 @@
  * [bbmod_object_get_property_array](./bbmod_object_get_property_array.html)
  * [bbmod_object_get_property_map](./bbmod_object_get_property_map.html)
  * [bbmod_save_instances_to_buffer](./bbmod_save_instances_to_buffer.html)
+<h3 id="SaveEnums">Enums</h3>
+
+ * [BBMOD_EPropertyType](./BBMOD_EPropertyType.html)
 <hr/><h2 id="StateMachine">StateMachine</h2>
 
 <h3 id="StateMachineConstructors">Constructors</h3>
@@ -542,3 +550,9 @@
  * [BBMOD_MATERIAL_TERRAIN_UNLIT](./BBMOD_MATERIAL_TERRAIN_UNLIT.html)
  * [BBMOD_SHADER_TERRAIN](./BBMOD_SHADER_TERRAIN.html)
  * [BBMOD_SHADER_TERRAIN_UNLIT](./BBMOD_SHADER_TERRAIN_UNLIT.html)
+<hr/><h2 id="VTF">VTF</h2>
+
+<h3 id="VTFFunctions">Functions</h3>
+
+ * [bbmod_texture_set_stage_vs](./bbmod_texture_set_stage_vs.html)
+ * [bbmod_vtf_is_supported](./bbmod_vtf_is_supported.html)

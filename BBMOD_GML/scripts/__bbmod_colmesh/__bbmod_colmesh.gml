@@ -167,7 +167,7 @@ function bbmod_model_to_colmesh(_model, _colmesh, _transform = undefined)
 	__bbmod_model_to_colmesh_impl(_model, _colmesh, _transform, 1);
 }
 
-/// @func bbmod_model_to_colmesh(_model, _colmesh[, _transform])
+/// @func bbmod_model_to_colmesh2(_model, _colmesh[, _transform])
 ///
 /// @desc Adds a {@link BBMOD_Model} into ColMesh v2.
 ///
@@ -177,7 +177,7 @@ function bbmod_model_to_colmesh(_model, _colmesh, _transform = undefined)
 /// before it is added to the ColMesh. Leave `undefined` if you do not wish to
 /// transform the model.
 ///
-/// @see https://marketplace.yoyogames.com/assets/8130/colmesh
+/// @see https://github.com/TheSnidr/ColMesh
 function bbmod_model_to_colmesh2(_model, _colmesh, _transform = undefined)
 {
 	__bbmod_model_to_colmesh_impl(_model, _colmesh, _transform, 2);

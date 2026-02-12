@@ -5,7 +5,8 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
-  "version": "3.99.0",
+  "ignore": ["physics", "rigidbody"],
+  "version": "3.99.0-alpha1",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"

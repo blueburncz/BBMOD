@@ -1,8 +1,4 @@
 {
   "commonArgs": "-lf=false -zup=true",
-  "models": {
-    "assets/seeker_new.glb": {
-      "args": ""
-    }
-  }
+  "models": {}
 }
