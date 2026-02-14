@@ -39,11 +39,11 @@ function __bbmod_mesh_to_colmesh_impl(_mesh, _colmesh, _transform, _version)
 
 		if (_transform != undefined)
 		{
-			array_copy(_vertex, 0, colmesh_matrix_transform_vertex(_transform, _vertex[0], _vertex[1], _vertex[2]),
+			array_copy(_vertex, 0, matrix_transform_vertex(_transform, _vertex[0], _vertex[1], _vertex[2]),
 				0, 3);
-			array_copy(_vertex, 3, colmesh_matrix_transform_vertex(_transform, _vertex[3], _vertex[4], _vertex[5]),
+			array_copy(_vertex, 3, matrix_transform_vertex(_transform, _vertex[3], _vertex[4], _vertex[5]),
 				0, 3);
-			array_copy(_vertex, 6, colmesh_matrix_transform_vertex(_transform, _vertex[6], _vertex[7], _vertex[8]),
+			array_copy(_vertex, 6, matrix_transform_vertex(_transform, _vertex[6], _vertex[7], _vertex[8]),
 				0, 3);
 		}
 
@@ -124,8 +124,8 @@ function __bbmod_model_to_colmesh_impl(_model, _colmesh, _transform, _version)
 
 	while (!ds_stack_empty(_stack))
 	{
-		var _matrix = ds_stack_pop(_renderStack);
-		var _node = ds_stack_pop(_renderStack);
+		var _matrix = ds_stack_pop(_stack);
+		var _node = ds_stack_pop(_stack);
 
 		if (!_node.IsRenderable || !_node.Visible)
 		{
