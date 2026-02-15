@@ -10,6 +10,10 @@
   },
   "defaultScriptType":1,
   "Folders":[
+    {"$GMFolder":"","%Name":"BBMOD_WIP","folderPath":"folders/BBMOD_WIP.yy","name":"BBMOD_WIP","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Physics","folderPath":"folders/BBMOD_WIP/Physics.yy","name":"Physics","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Constraints","folderPath":"folders/BBMOD_WIP/Physics/Constraints.yy","name":"Constraints","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Shapes","folderPath":"folders/BBMOD_WIP/Physics/Shapes.yy","name":"Shapes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"BBMOD","folderPath":"folders/BBMOD.yy","name":"BBMOD","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"ColMesh","folderPath":"folders/BBMOD/ColMesh.yy","name":"ColMesh","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Core","folderPath":"folders/BBMOD/Core.yy","name":"Core","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -60,9 +64,6 @@
     {"$GMFolder":"","%Name":"Velocity","folderPath":"folders/BBMOD/Particles/Modules/Velocity.yy","name":"Velocity","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Shaders","folderPath":"folders/BBMOD/Particles/Shaders.yy","name":"Shaders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sprites","folderPath":"folders/BBMOD/Particles/Sprites.yy","name":"Sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Physics","folderPath":"folders/BBMOD_WIP/Physics.yy","name":"Physics","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Constraints","folderPath":"folders/BBMOD_WIP/Physics/Constraints.yy","name":"Constraints","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Shapes","folderPath":"folders/BBMOD_WIP/Physics/Shapes.yy","name":"Shapes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"PostProcessing","folderPath":"folders/BBMOD/PostProcessing.yy","name":"PostProcessing","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"ChromaticAberration","folderPath":"folders/BBMOD/PostProcessing/ChromaticAberration.yy","name":"ChromaticAberration","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"ColorGrading","folderPath":"folders/BBMOD/PostProcessing/ColorGrading.yy","name":"ColorGrading","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -142,7 +143,6 @@
     {"$GMFolder":"","%Name":"4 Octree","folderPath":"folders/ColMesh2/4 Containers/4 Octree.yy","name":"4 Octree","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Debug","folderPath":"folders/ColMesh2/4 Containers/4 Octree/Debug.yy","name":"Debug","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Internal","folderPath":"folders/ColMesh2/4 Containers/4 Octree/Internal.yy","name":"Internal","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"BBMOD_WIP","folderPath":"folders/BBMOD_WIP.yy","name":"BBMOD_WIP","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Test","folderPath":"folders/Test.yy","name":"Test","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/Test/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Scripts","folderPath":"folders/Test/Scripts.yy","name":"Scripts","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -277,7 +277,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.1400.3.974",
+    "IDEVersion":"2024.1400.4.991",
   },
   "name":"BBMOD",
   "resources":[
