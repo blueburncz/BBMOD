@@ -219,7 +219,9 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 		);
 		if (_length <= math_get_epsilon())
 		{
-			return new BBMOD_Vec2();
+			X = 0.0;
+			Y = 0.0;
+			return self;
 		}
 		var _newLength = clamp(_length, _min, _max);
 		X = (X / _length) * _newLength;
@@ -564,7 +566,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 		gml_pragma("forceinline");
 		return min(
 			X,
-			Y,
+			Y
 		);
 	};
 

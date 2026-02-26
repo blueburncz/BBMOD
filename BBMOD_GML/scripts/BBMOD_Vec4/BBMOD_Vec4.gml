@@ -259,7 +259,11 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 		);
 		if (_length <= math_get_epsilon())
 		{
-			return new BBMOD_Vec4();
+			X = 0.0;
+			Y = 0.0;
+			Z = 0.0;
+			W = 0.0;
+			return self;
 		}
 		var _newLength = clamp(_length, _min, _max);
 		X = (X / _length) * _newLength;
@@ -649,7 +653,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 			X,
 			Y,
 			Z,
-			W,
+			W
 		);
 	};
 

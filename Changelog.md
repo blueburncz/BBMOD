@@ -2,6 +2,22 @@
 
 > This file is used to accumulate changes until 3.99.0 is released.
 
+## Changelog 3.99.0-alpha2
+
+### Core
+
+* Fixed method `BBMOD_Quaternion.Exp` and `BBMOD_Quaternion.ExpSelf` missing exponential factor on vector components in quaternion exponential map formula.
+* Fixed method `BBMOD_Quaternion.Slerp` and `BBMOD_Quaternion.SlerpSelf` incorrectly multiplying by length instead of dividing during normalization of the second quaternion.
+* Fixed method `BBMOD_DualQuaternion.Clone` creating shallow copy instead of deep copy, causing both instances to share the same quaternion references.
+* Fixed method `BBMOD_DualQuaternion.Copy` creating shallow copy instead of properly copying quaternion components.
+* Fixed method `BBMOD_DualQuaternion.Normalize` and `BBMOD_DualQuaternion.NormalizeSelf` dividing by magnitude squared instead of magnitude.
+* Fixed method `BBMOD_Vec2.ClampLengthSelf` and `BBMOD_Vec4.ClampLengthSelf` returning new vector instead of modifying self when vector length is near zero.
+* Fixed method `BBMOD_Matrix.FromColumns` and `BBMOD_Matrix.FromRows` having swapped implementations due to GameMaker's column-major matrix format.
+
+### ColMesh
+
+* Fixed crash inside functions `bbmod_mesh_to_colmesh` and `bbmod_mesh_to_colmesh2` caused by using wrong variable and function names.
+
 ## Changelog 3.99.0-alpha1
 
 ### Asset pipeline

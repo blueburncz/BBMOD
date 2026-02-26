@@ -277,7 +277,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.1400.4.991",
+    "IDEVersion":"2024.1400.4.1003",
   },
   "name":"BBMOD",
   "resources":[
@@ -870,8 +870,8 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
-    {"roomId":{"name":"RmTestModelViewer","path":"rooms/RmTestModelViewer/RmTestModelViewer.yy",},},
     {"roomId":{"name":"RmTestBasic","path":"rooms/RmTestBasic/RmTestBasic.yy",},},
+    {"roomId":{"name":"RmTestModelViewer","path":"rooms/RmTestModelViewer/RmTestModelViewer.yy",},},
     {"roomId":{"name":"RmTestPhysics","path":"rooms/RmTestPhysics/RmTestPhysics.yy",},},
   ],
   "templateType":null,

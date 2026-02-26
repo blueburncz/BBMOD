@@ -162,12 +162,13 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		var _length = Length();
 		if (_length > math_get_epsilon())
 		{
+			var _expW = exp(W);
 			var _sinc = Sinc(_length);
 			return new BBMOD_Quaternion(
-				X * _sinc,
-				Y * _sinc,
-				Z * _sinc,
-				exp(W) * cos(_length)
+				X * _sinc * _expW,
+				Y * _sinc * _expW,
+				Z * _sinc * _expW,
+				_expW * cos(_length)
 			);
 		}
 		return new BBMOD_Quaternion(0.0, 0.0, 0.0, exp(W));
@@ -185,11 +186,12 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		var _length = Length();
 		if (_length > math_get_epsilon())
 		{
+			var _expW = exp(W);
 			var _sinc = Sinc(_length);
-			X *= _sinc;
-			Y *= _sinc;
-			Z *= _sinc;
-			W = exp(W) * cos(_length);
+			X *= _sinc * _expW;
+			Y *= _sinc * _expW;
+			Z *= _sinc * _expW;
+			W = _expW * cos(_length);
 			return self;
 		}
 		X = 0.0;
@@ -600,13 +602,41 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	/// @param {Struct.BBMOD_Vec3} _v The vector to rotate.
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
+	///
+	/// @note For best performance, the quaternion should be normalized.
+	/// Normalizes the quaternion internally if needed.
 	static Rotate = function (_v)
 	{
 		gml_pragma("forceinline");
-		var _q = Normalize();
-		var _V = new BBMOD_Quaternion(_v.X, _v.Y, _v.Z, 0.0);
-		var _rot = _q.Mul(_V).Mul(_q.Conjugate());
-		return new BBMOD_Vec3(_rot.X, _rot.Y, _rot.Z);
+
+		// Normalize first
+		var _lenSqr = X * X + Y * Y + Z * Z + W * W;
+		var _qx = X, _qy = Y, _qz = Z, _qw = W;
+
+		if (abs(_lenSqr - 1.0) > math_get_epsilon())
+		{
+			var _invLen = 1.0 / sqrt(_lenSqr);
+			_qx *= _invLen;
+			_qy *= _invLen;
+			_qz *= _invLen;
+			_qw *= _invLen;
+		}
+
+		// Optimized rotation: v' = v + q.w * t + cross(q.xyz, t)
+		// where t = 2 * cross(q.xyz, v)
+		var _vx = _v.X, _vy = _v.Y, _vz = _v.Z;
+
+		// t = 2 * cross(q.xyz, v)
+		var _tx = 2.0 * (_qy * _vz - _qz * _vy);
+		var _ty = 2.0 * (_qz * _vx - _qx * _vz);
+		var _tz = 2.0 * (_qx * _vy - _qy * _vx);
+
+		// v' = v + q.w * t + cross(q.xyz, t)
+		return new BBMOD_Vec3(
+			_vx + _qw * _tx + (_qy * _tz - _qz * _ty),
+			_vy + _qw * _ty + (_qz * _tx - _qx * _tz),
+			_vz + _qw * _tz + (_qx * _ty - _qy * _tx)
+		);
 	};
 
 	/// @func RotateOther(_v)
@@ -617,15 +647,40 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	/// @param {Struct.BBMOD_Vec3} _v The vector to rotate.
 	///
 	/// @return {Struct.BBMOD_Vec3} Returns vector `_v`.
+	///
+	/// @note For best performance, the quaternion should be normalized.
+	/// Normalizes the quaternion internally if needed.
 	static RotateOther = function (_v)
 	{
 		gml_pragma("forceinline");
-		var _q = Normalize();
-		var _V = new BBMOD_Quaternion(_v.X, _v.Y, _v.Z, 0.0);
-		var _rot = _q.Mul(_V).Mul(_q.Conjugate());
-		_v.X = _rot.X;
-		_v.Y = _rot.Y;
-		_v.Z = _rot.Z;
+
+		// Normalize first
+		var _lenSqr = X * X + Y * Y + Z * Z + W * W;
+		var _qx = X, _qy = Y, _qz = Z, _qw = W;
+
+		if (abs(_lenSqr - 1.0) > math_get_epsilon())
+		{
+			var _invLen = 1.0 / sqrt(_lenSqr);
+			_qx *= _invLen;
+			_qy *= _invLen;
+			_qz *= _invLen;
+			_qw *= _invLen;
+		}
+
+		// Optimized rotation: v' = v + q.w * t + cross(q.xyz, t)
+		// where t = 2 * cross(q.xyz, v)
+		var _vx = _v.X, _vy = _v.Y, _vz = _v.Z;
+
+		// t = 2 * cross(q.xyz, v)
+		var _tx = 2.0 * (_qy * _vz - _qz * _vy);
+		var _ty = 2.0 * (_qz * _vx - _qx * _vz);
+		var _tz = 2.0 * (_qx * _vy - _qy * _vx);
+
+		// v' = v + q.w * t + cross(q.xyz, t)
+		_v.X = _vx + _qw * _tx + (_qy * _tz - _qz * _ty);
+		_v.Y = _vy + _qw * _ty + (_qz * _tx - _qx * _tz);
+		_v.Z = _vz + _qw * _tz + (_qx * _ty - _qy * _tx);
+
 		return _v;
 	};
 
@@ -707,7 +762,7 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		_q12 *= _norm;
 		_q13 *= _norm;
 
-		_norm = sqrt(_q20 * _q20
+		_norm = 1.0 / sqrt(_q20 * _q20
 			+ _q21 * _q21
 			+ _q22 * _q22
 			+ _q23 * _q23);
@@ -791,7 +846,7 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		_q12 *= _norm;
 		_q13 *= _norm;
 
-		_norm = sqrt(_q20 * _q20
+		_norm = 1.0 / sqrt(_q20 * _q20
 			+ _q21 * _q21
 			+ _q22 * _q22
 			+ _q23 * _q23);
@@ -927,7 +982,7 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		_dest[@ _index + 1] = 2.0 * (_temp0 + _temp1);
 		_dest[@ _index + 4] = 2.0 * (_temp0 - _temp1);
 
-		_temp0 = _q0 * _q2
+		_temp0 = _q0 * _q2;
 		_temp1 = _q3 * _q1;
 		_dest[@ _index + 2] = 2.0 * (_temp0 - _temp1);
 		_dest[@ _index + 8] = 2.0 * (_temp0 + _temp1);

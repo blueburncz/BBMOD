@@ -74,8 +74,8 @@ function BBMOD_DualQuaternion(
 	{
 		gml_pragma("forceinline");
 		var _dq = new BBMOD_DualQuaternion();
-		_dq.Real = Real;
-		_dq.Dual = Dual;
+		_dq.Real = Real.Clone();
+		_dq.Dual = Dual.Clone();
 		return _dq;
 	};
 
@@ -106,8 +106,8 @@ function BBMOD_DualQuaternion(
 	static Copy = function (_dest)
 	{
 		gml_pragma("forceinline");
-		_dest.Real = Real;
-		_dest.Dual = Dual;
+		Real.Copy(_dest.Real);
+		Dual.Copy(_dest.Dual);
 		return self;
 	};
 
@@ -441,7 +441,7 @@ function BBMOD_DualQuaternion(
 	{
 		gml_pragma("forceinline");
 		var _dq = Clone();
-		var _mag = Real.Dot(Real);
+		var _mag = sqrt(Real.Dot(Real));
 		if (_mag > math_get_epsilon())
 		{
 			_dq.Real = _dq.Real.Scale(1.0 / _mag);
@@ -458,7 +458,7 @@ function BBMOD_DualQuaternion(
 	static NormalizeSelf = function ()
 	{
 		gml_pragma("forceinline");
-		var _mag = Real.Dot(Real);
+		var _mag = sqrt(Real.Dot(Real));
 		if (_mag > math_get_epsilon())
 		{
 			Real.ScaleSelf(1.0 / _mag);

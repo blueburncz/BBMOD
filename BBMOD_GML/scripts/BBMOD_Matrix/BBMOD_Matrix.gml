@@ -165,10 +165,10 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	{
 		gml_pragma("forceinline");
 		Raw = [
-			_c1.X, _c2.X, _c3.X, _c4.X,
-			_c1.Y, _c2.Y, _c3.Y, _c4.Y,
-			_c1.Z, _c2.Z, _c3.Z, _c4.Z,
-			_c1.W, _c2.W, _c3.W, _c4.W,
+			_c1.X, _c1.Y, _c1.Z, _c1.W,
+			_c2.X, _c2.Y, _c2.Z, _c2.W,
+			_c3.X, _c3.Y, _c3.Z, _c3.W,
+			_c4.X, _c4.Y, _c4.Z, _c4.W,
 		];
 		return self;
 	};
@@ -187,10 +187,10 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	{
 		gml_pragma("forceinline");
 		Raw = [
-			_r1.X, _r1.Y, _r1.Z, _r1.W,
-			_r2.X, _r2.Y, _r2.Z, _r2.W,
-			_r3.X, _r3.Y, _r3.Z, _r3.W,
-			_r4.X, _r4.Y, _r4.Z, _r4.W,
+			_r1.X, _r2.X, _r3.X, _r4.X,
+			_r1.Y, _r2.Y, _r3.Y, _r4.Y,
+			_r1.Z, _r2.Z, _r3.Z, _r4.Z,
+			_r1.W, _r2.W, _r3.W, _r4.W,
 		];
 		return self;
 	};
