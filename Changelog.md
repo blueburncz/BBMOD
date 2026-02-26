@@ -13,6 +13,11 @@
 * Fixed method `BBMOD_DualQuaternion.Normalize` and `BBMOD_DualQuaternion.NormalizeSelf` dividing by magnitude squared instead of magnitude.
 * Fixed method `BBMOD_Vec2.ClampLengthSelf` and `BBMOD_Vec4.ClampLengthSelf` returning new vector instead of modifying self when vector length is near zero.
 * Fixed method `BBMOD_Matrix.FromColumns` and `BBMOD_Matrix.FromRows` having swapped implementations due to GameMaker's column-major matrix format.
+* Fixed missing semicolon in method `BBMOD_Quaternion.ToMatrix`.
+* Fixed trailing commas in methods `BBMOD_Vec2.MinComponent`, `BBMOD_Vec3.MinComponent`, and `BBMOD_Vec4.MinComponent` for code consistency.
+* Optimized method `BBMOD_Camera.update_matrices` to reduce vector rotation operations from 9 to 5, eliminating redundant calculations.
+* Added new function `bbmod_matrix_transpose(_matrix[, _dest])` to compute the transpose of a matrix (swaps rows and columns).
+* Optimized method `BBMOD_Gizmo.update` by using `ToMatrix()` instead of manually building rotation matrices, using `bbmod_matrix_transpose()` for orthonormal matrix inverse, simplifying scale ratio calculations, and eliminating unnecessary Vec3<->Vec4 conversions.
 
 ### ColMesh
 

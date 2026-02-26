@@ -611,7 +611,10 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 
 		// Normalize first
 		var _lenSqr = X * X + Y * Y + Z * Z + W * W;
-		var _qx = X, _qy = Y, _qz = Z, _qw = W;
+		var _qx = X;
+		var _qy = Y;
+		var _qz = Z;
+		var _qw = W;
 
 		if (abs(_lenSqr - 1.0) > math_get_epsilon())
 		{
@@ -624,7 +627,9 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 
 		// Optimized rotation: v' = v + q.w * t + cross(q.xyz, t)
 		// where t = 2 * cross(q.xyz, v)
-		var _vx = _v.X, _vy = _v.Y, _vz = _v.Z;
+		var _vx = _v.X;
+		var _vy = _v.Y;
+		var _vz = _v.Z;
 
 		// t = 2 * cross(q.xyz, v)
 		var _tx = 2.0 * (_qy * _vz - _qz * _vy);
@@ -656,7 +661,10 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 
 		// Normalize first
 		var _lenSqr = X * X + Y * Y + Z * Z + W * W;
-		var _qx = X, _qy = Y, _qz = Z, _qw = W;
+		var _qx = X;
+		var _qy = Y;
+		var _qz = Z;
+		var _qw = W;
 
 		if (abs(_lenSqr - 1.0) > math_get_epsilon())
 		{
@@ -669,7 +677,9 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 
 		// Optimized rotation: v' = v + q.w * t + cross(q.xyz, t)
 		// where t = 2 * cross(q.xyz, v)
-		var _vx = _v.X, _vy = _v.Y, _vz = _v.Z;
+		var _vx = _v.X;
+		var _vy = _v.Y;
+		var _vz = _v.Z;
 
 		// t = 2 * cross(q.xyz, v)
 		var _tx = 2.0 * (_qy * _vz - _qz * _vy);

@@ -1273,3 +1273,38 @@ function bbmod_matrix_set_scale(_matrix, _x, _y, _z)
 	_matrix[@ 5] = _y;
 	_matrix[@ 10] = _z;
 }
+
+/// @func bbmod_matrix_transpose(_matrix[, _dest])
+///
+/// @desc Computes the transpose of a matrix (swaps rows and columns).
+///
+/// @param {Array<Real>} _matrix The matrix to transpose.
+/// @param {Array<Real>} [_dest] The destination array. If not specified, a
+/// new array is created.
+///
+/// @return {Array<Real>} The destination array containing the transpose.
+///
+/// @note For orthonormal matrices (like rotation matrices), the transpose
+/// is equal to the inverse.
+function bbmod_matrix_transpose(_matrix, _dest = undefined)
+{
+	gml_pragma("forceinline");
+	_dest ??= array_create(16, 0.0);
+	_dest[@ 0] = _matrix[0];
+	_dest[@ 1] = _matrix[4];
+	_dest[@ 2] = _matrix[8];
+	_dest[@ 3] = _matrix[12];
+	_dest[@ 4] = _matrix[1];
+	_dest[@ 5] = _matrix[5];
+	_dest[@ 6] = _matrix[9];
+	_dest[@ 7] = _matrix[13];
+	_dest[@ 8] = _matrix[2];
+	_dest[@ 9] = _matrix[6];
+	_dest[@ 10] = _matrix[10];
+	_dest[@ 11] = _matrix[14];
+	_dest[@ 12] = _matrix[3];
+	_dest[@ 13] = _matrix[7];
+	_dest[@ 14] = _matrix[11];
+	_dest[@ 15] = _matrix[15];
+	return _dest;
+}
