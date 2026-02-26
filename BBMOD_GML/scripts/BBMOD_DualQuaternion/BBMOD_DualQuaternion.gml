@@ -316,7 +316,13 @@ function BBMOD_DualQuaternion(
 	static Log = function ()
 	{
 		gml_pragma("forceinline");
-		var _scale = 1.0 / Real.Length();
+		var _length = Real.Length();
+		if (_length < math_get_epsilon())
+		{
+			// Zero dual quaternion, return identity
+			return new BBMOD_DualQuaternion();
+		}
+		var _scale = 1.0 / _length;
 		return new BBMOD_DualQuaternion()
 			.FromRealDual(
 				Real.Log(),
@@ -332,7 +338,21 @@ function BBMOD_DualQuaternion(
 	static LogSelf = function ()
 	{
 		gml_pragma("forceinline");
-		var _scale = 1.0 / Real.Length();
+		var _length = Real.Length();
+		if (_length < math_get_epsilon())
+		{
+			// Zero dual quaternion, reset to identity
+			Real.X = 0.0;
+			Real.Y = 0.0;
+			Real.Z = 0.0;
+			Real.W = 1.0;
+			Dual.X = 0.0;
+			Dual.Y = 0.0;
+			Dual.Z = 0.0;
+			Dual.W = 0.0;
+			return self;
+		}
+		var _scale = 1.0 / _length;
 		return FromRealDual(
 			Real.Log(),
 			Real.Clone().ConjugateSelf().MulSelf(Dual).ScaleSelf(_scale * _scale));

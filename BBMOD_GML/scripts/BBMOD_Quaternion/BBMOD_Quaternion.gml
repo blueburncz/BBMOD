@@ -336,7 +336,18 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		}
 
 		var _right = _up.Cross(_forward);
-		var _w = sqrt(1.0 + _right.X + _up.Y + _forward.Z) * 0.5;
+		var _trace = 1.0 + _right.X + _up.Y + _forward.Z;
+		if (_trace < math_get_epsilon())
+		{
+			// Trace is too small, use alternative computation
+			_trace = max(_trace, 0.0001);
+		}
+		var _w = sqrt(_trace) * 0.5;
+		if (abs(_w) < math_get_epsilon())
+		{
+			// W is too small, use fallback
+			_w = math_get_epsilon();
+		}
 		var _w4Recip = 1.0 / (4.0 * _w);
 
 		X = (_up.Z - _forward.Y) * _w4Recip;
@@ -354,7 +365,7 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	static GetAngle = function ()
 	{
 		gml_pragma("forceinline");
-		return radtodeg(arccos(W) * 2.0);
+		return radtodeg(arccos(clamp(W, -1.0, 1.0)) * 2.0);
 	};
 
 	/// @func GetAxis()
@@ -365,7 +376,13 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	static GetAxis = function ()
 	{
 		gml_pragma("forceinline");
-		var _sinThetaInv = 1.0 / sin(arccos(W));
+		var _sinTheta = sin(arccos(clamp(W, -1.0, 1.0)));
+		if (abs(_sinTheta) < math_get_epsilon())
+		{
+			// Rotation angle is 0 or 180 degrees, axis is undefined
+			return new BBMOD_Vec3(0.0, 0.0, 1.0);
+		}
+		var _sinThetaInv = 1.0 / _sinTheta;
 		return new BBMOD_Vec3(
 			X * _sinThetaInv,
 			Y * _sinThetaInv,
@@ -478,8 +495,13 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	{
 		gml_pragma("forceinline");
 		var _length = Length();
+		if (_length < math_get_epsilon())
+		{
+			// Zero quaternion, return zero
+			return new BBMOD_Quaternion(0.0, 0.0, 0.0, -infinity);
+		}
 		var _w = logn(2.71828, _length);
-		var _a = arccos(W / _length);
+		var _a = arccos(clamp(W / _length, -1.0, 1.0));
 		if (_a > math_get_epsilon())
 		{
 			var _mag = 1.0 / _length / Sinc(_a);
@@ -503,8 +525,17 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 	{
 		gml_pragma("forceinline");
 		var _length = Length();
+		if (_length < math_get_epsilon())
+		{
+			// Zero quaternion, return zero
+			X = 0.0;
+			Y = 0.0;
+			Z = 0.0;
+			W = -infinity;
+			return self;
+		}
 		var _w = logn(2.71828, _length);
-		var _a = arccos(W / _length);
+		var _a = arccos(clamp(W / _length, -1.0, 1.0));
 		if (_a > math_get_epsilon())
 		{
 			var _mag = 1.0 / _length / Sinc(_a);
@@ -810,6 +841,16 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		var _theta = _theta0 * _s;
 		var _sinTheta = sin(_theta);
 		var _sinTheta0 = sin(_theta0);
+		if (abs(_sinTheta0) < math_get_epsilon())
+		{
+			// Fallback to linear interpolation
+			return new BBMOD_Quaternion(
+				lerp(_q10, _q20, _s),
+				lerp(_q11, _q21, _s),
+				lerp(_q12, _q22, _s),
+				lerp(_q13, _q23, _s)
+			);
+		}
 		var _s2 = _sinTheta / _sinTheta0;
 		var _s1 = cos(_theta) - (_dot * _s2);
 
@@ -893,6 +934,15 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 		var _theta = _theta0 * _s;
 		var _sinTheta = sin(_theta);
 		var _sinTheta0 = sin(_theta0);
+		if (abs(_sinTheta0) < math_get_epsilon())
+		{
+			// Fallback to linear interpolation
+			X = lerp(_q10, _q20, _s);
+			Y = lerp(_q11, _q21, _s);
+			Z = lerp(_q12, _q22, _s);
+			W = lerp(_q13, _q23, _s);
+			return self;
+		}
 		var _s2 = _sinTheta / _sinTheta0;
 		var _s1 = cos(_theta) - (_dot * _s2);
 

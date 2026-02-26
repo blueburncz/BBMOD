@@ -64,7 +64,7 @@ function BBMOD_AttractorModule(
 				var _vecZ = _positionRealZ
 					- _particles[# BBMOD_EParticle.PositionZ, _particleIndex];
 				var _distance = sqrt((_vecX * _vecX) + (_vecY * _vecY) + (_vecZ * _vecZ));
-				if (_distance <= _radius)
+				if (_distance <= _radius && _distance > math_get_epsilon())
 				{
 					var _scale = (_force * (1.0 - (_distance / _radius))) / _mass;
 					_particles[# BBMOD_EParticle.AccelerationX, _particleIndex] +=

@@ -379,7 +379,7 @@ function BBMOD_AnimationLayer(_name) constructor
 					}
 					else
 					{
-						var _theta0 = arccos(_dot);
+						var _theta0 = arccos(clamp(_dot, -1.0, 1.0));
 						var _theta = _theta0 * _weight;
 						var _sinTheta = sin(_theta);
 						var _sinTheta0 = sin(_theta0);
@@ -488,7 +488,7 @@ function BBMOD_AnimationLayer(_name) constructor
 					}
 					else
 					{
-						var _theta0 = arccos(_dot);
+						var _theta0 = arccos(clamp(_dot, -1.0, 1.0));
 						var _theta = _theta0 * _weight;
 						var _sinTheta = sin(_theta);
 						var _sinTheta0 = sin(_theta0);

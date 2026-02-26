@@ -1146,6 +1146,29 @@ function bbmod_matrix_build_normalmatrix(_m, _dest = [], _index = 0)
 		+ _m4 * ((_m9 * _m2) - (_m1 * _m10))
 		+ _m8 * ((_m1 * _m6) - (_m5 * _m2)));
 
+	if (abs(_determinant) < math_get_epsilon())
+	{
+		// Singular matrix, cannot compute normal matrix
+		// Return identity matrix
+		_dest[@ _index + 0] = 1.0;
+		_dest[@ _index + 1] = 0.0;
+		_dest[@ _index + 2] = 0.0;
+		_dest[@ _index + 3] = 0.0;
+		_dest[@ _index + 4] = 0.0;
+		_dest[@ _index + 5] = 1.0;
+		_dest[@ _index + 6] = 0.0;
+		_dest[@ _index + 7] = 0.0;
+		_dest[@ _index + 8] = 0.0;
+		_dest[@ _index + 9] = 0.0;
+		_dest[@ _index + 10] = 1.0;
+		_dest[@ _index + 11] = 0.0;
+		_dest[@ _index + 12] = 0.0;
+		_dest[@ _index + 13] = 0.0;
+		_dest[@ _index + 14] = 0.0;
+		_dest[@ _index + 15] = 1.0;
+		return _dest;
+	}
+
 	var _s = 1.0 / _determinant;
 
 	_dest[@ _index + 0] = _s * ((_m5 * _m10) - (_m6 * _m9));

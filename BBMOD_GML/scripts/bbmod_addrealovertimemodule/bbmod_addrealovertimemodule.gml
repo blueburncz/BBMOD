@@ -45,7 +45,7 @@ function BBMOD_AddRealOverTimeModule(
 					_emitter.Particles,
 					_property, 0,
 					_property, _y2,
-					Change * ((_deltaTime * 0.000001) / Period));
+					Change * ((_deltaTime * 0.000001) / max(Period, 0.000001)));
 			}
 		}
 	};

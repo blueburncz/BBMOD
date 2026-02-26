@@ -486,17 +486,28 @@ function BBMOD_Animation(_file = undefined, _sha1 = undefined): BBMOD_Resource()
 				}
 				else
 				{
-					var _theta0 = arccos(_dot);
+					var _theta0 = arccos(clamp(_dot, -1.0, 1.0));
 					var _theta = _theta0 * _factor;
 					var _sinTheta = sin(_theta);
 					var _sinTheta0 = sin(_theta0);
-					var _s2 = _sinTheta / _sinTheta0;
-					var _s1 = cos(_theta) - (_dot * _s2);
+					if (abs(_sinTheta0) < math_get_epsilon())
+					{
+						// Fallback to linear interpolation
+						_dq10 = lerp(_dq10, _dq20, _factor);
+						_dq11 = lerp(_dq11, _dq21, _factor);
+						_dq12 = lerp(_dq12, _dq22, _factor);
+						_dq13 = lerp(_dq13, _dq23, _factor);
+					}
+					else
+					{
+						var _s2 = _sinTheta / _sinTheta0;
+						var _s1 = cos(_theta) - (_dot * _s2);
 
-					_dq10 = (_dq10 * _s1) + (_dq20 * _s2);
-					_dq11 = (_dq11 * _s1) + (_dq21 * _s2);
-					_dq12 = (_dq12 * _s1) + (_dq22 * _s2);
-					_dq13 = (_dq13 * _s1) + (_dq23 * _s2);
+						_dq10 = (_dq10 * _s1) + (_dq20 * _s2);
+						_dq11 = (_dq11 * _s1) + (_dq21 * _s2);
+						_dq12 = (_dq12 * _s1) + (_dq22 * _s2);
+						_dq13 = (_dq13 * _s1) + (_dq23 * _s2);
+					}
 				}
 
 				// Create new dual quaternion from translation and rotation and

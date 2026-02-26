@@ -15,9 +15,26 @@
 * Fixed method `BBMOD_Matrix.FromColumns` and `BBMOD_Matrix.FromRows` having swapped implementations due to GameMaker's column-major matrix format.
 * Fixed missing semicolon in method `BBMOD_Quaternion.ToMatrix`.
 * Fixed trailing commas in methods `BBMOD_Vec2.MinComponent`, `BBMOD_Vec3.MinComponent`, and `BBMOD_Vec4.MinComponent` for code consistency.
+* Fixed missing semicolons after `gml_pragma("forceinline")` statements in `BBMOD_Vec2`, `BBMOD_Vec3`, and `BBMOD_Vec4` (18 locations total).
+* Fixed duplicate "Struct." prefix in JSDoc type annotations for `_max` parameter in `BBMOD_Vec2.Clamp`, `BBMOD_Vec2.ClampSelf`, `BBMOD_Vec3.ClampSelf`, and `BBMOD_Vec4.ClampSelf`.
+* Fixed potential `arccos` domain errors in methods `BBMOD_Quaternion.GetAngle`, `BBMOD_Quaternion.GetAxis`, `BBMOD_Quaternion.Log`, `BBMOD_Quaternion.LogSelf`, and quaternion slerp calculations in `BBMOD_Animation` and `BBMOD_AnimationLayer` by clamping input values to valid range [-1, 1].
+* Fixed potential division by zero in `BBMOD_Quaternion.GetAxis` when rotation angle is 0 or 180 degrees (returns default axis instead).
+* Fixed potential division by zero in `BBMOD_Quaternion.Log` and `BBMOD_Quaternion.LogSelf` when quaternion has zero length.
+* Fixed potential division by zero in `BBMOD_Quaternion.FromLookRotation` when computing quaternion from look direction by protecting trace and W component calculations.
+* Fixed potential division by zero in `BBMOD_Quaternion.Slerp` and `BBMOD_Quaternion.SlerpSelf` when sin(theta) is near zero - falls back to linear interpolation.
+* Fixed potential division by zero in `BBMOD_DualQuaternion.Log` and `BBMOD_DualQuaternion.LogSelf` when real quaternion has zero length.
+* Fixed potential division by zero in `BBMOD_Animation.create_transition` during quaternion slerp when sin(theta) is near zero.
+* Fixed potential division by zero in `bbmod_matrix_build_normalmatrix` when matrix is singular (determinant equals zero) - returns identity matrix instead.
 * Optimized method `BBMOD_Camera.update_matrices` to reduce vector rotation operations from 9 to 5, eliminating redundant calculations.
 * Added new function `bbmod_matrix_transpose(_matrix[, _dest])` to compute the transpose of a matrix (swaps rows and columns).
 * Optimized method `BBMOD_Gizmo.update` by using `ToMatrix()` instead of manually building rotation matrices, using `bbmod_matrix_transpose()` for orthonormal matrix inverse, simplifying scale ratio calculations, and eliminating unnecessary Vec3<->Vec4 conversions.
+
+### Particles
+
+* Fixed potential division by zero in `BBMOD_AddRealOverTimeModule`, `BBMOD_AddVec2OverTimeModule`, `BBMOD_AddVec3OverTimeModule`, and `BBMOD_AddVec4OverTimeModule` when `Period` is set to zero by protecting division with `max(Period, 0.000001)`.
+* Fixed critical velocity calculation bug in `BBMOD_MixColorFromSpeedModule`, `BBMOD_MixQuaternionFromSpeedModule`, `BBMOD_MixRealFromSpeedModule`, `BBMOD_MixVec2FromSpeedModule`, `BBMOD_MixVec3FromSpeedModule`, and `BBMOD_MixVec4FromSpeedModule` where Y velocity component was being added instead of multiplied when computing speed magnitude.
+* Fixed potential division by zero in the same six mix modules when `Min` equals `Max` by protecting division with `max(_max - _min, 0.000001)`.
+* Fixed potential division by zero in `BBMOD_AttractorModule` when particle is exactly at attractor position.
 
 ### ColMesh
 

@@ -131,7 +131,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// components of `_min` and `_max` and returns the result as a new vector.
 	///
 	/// @param {Struct.BBMOD_Vec2} _min A vector with minimum components.
-	/// @param {Struct.Struct.BBMOD_Vec2} _max A vector with maximum components.
+	/// @param {Struct.BBMOD_Vec2} _max A vector with maximum components.
 	///
 	/// @return {Struct.BBMOD_Vec2} The resulting vector.
 	static Clamp = function (_min, _max)
@@ -149,7 +149,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// components of `_min` and `_max` and stores the result into `self`.
 	///
 	/// @param {Struct.BBMOD_Vec2} _min A vector with minimum components.
-	/// @param {Struct.Struct.BBMOD_Vec2} _max A vector with maximum components.
+	/// @param {Struct.BBMOD_Vec2} _max A vector with maximum components.
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
 	static ClampSelf = function (_min, _max)
@@ -820,7 +820,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// ```
 	static Scale = function (_s)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			X * _s,
 			Y * _s
@@ -842,7 +842,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// ```
 	static ScaleSelf = function (_s)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		X *= _s;
 		Y *= _s;
 		return self;
@@ -935,7 +935,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// ```
 	static Sub = function (_v)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			X - _v.X,
 			Y - _v.Y
@@ -959,7 +959,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// ```
 	static SubSelf = function (_v)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		X = X - _v.X;
 		Y = Y - _v.Y;
 		return self;
