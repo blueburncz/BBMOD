@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_MixEmissionModule([_from[, _to]])
 ///

@@ -1,10 +1,10 @@
 // FIXME: Temporary fix!
 precision highp float;
 
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform vec2 u_vTexel;
-uniform float u_fOffset;
+uniform vec2 uTexel;
+uniform float uOffset;
 
 // Source: https://blog.en.uwa4d.com/2022/09/01/screen-post-processing-effects-chapter-4-kawase-blur-and-its-implementation/
 vec4 KawaseBlur(sampler2D texture, vec2 uv, vec2 texel, float offset)
@@ -19,5 +19,5 @@ vec4 KawaseBlur(sampler2D texture, vec2 uv, vec2 texel, float offset)
 
 void main()
 {
-	gl_FragColor = KawaseBlur(gm_BaseTexture, v_vTexCoord, u_vTexel, u_fOffset);
+	gl_FragColor = KawaseBlur(gm_BaseTexture, vTexCoord, uTexel, uOffset);
 }

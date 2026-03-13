@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_ExposureEffect([_exposure])
 ///
@@ -17,7 +17,7 @@ function BBMOD_ExposureEffect(_exposure = undefined): BBMOD_PostProcessEffect() 
 	/// @see BBMOD_BaseCamera.Exposure
 	Exposure = _exposure;
 
-	static __uExposure = shader_get_uniform(BBMOD_ShExposure, "u_fExposure");
+	static __uExposure = shader_get_uniform(BBMOD_ShExposure, "uExposure");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

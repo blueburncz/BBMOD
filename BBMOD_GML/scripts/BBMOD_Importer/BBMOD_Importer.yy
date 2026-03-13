@@ -6,7 +6,7 @@
   "name":"BBMOD_Importer",
   "parent":{
     "name":"OBJImporter",
-    "path":"folders/BBMOD/OBJImporter.yy",
+    "path":"folders/BBMOD/5_Extras/OBJImporter.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

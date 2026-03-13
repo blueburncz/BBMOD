@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShCloudShadowBlit",
+  "name":"BBMOD_ShCloudShadowBlit",
+  "parent":{
+    "name":"Sky",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Sky.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

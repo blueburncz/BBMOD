@@ -1,17 +1,92 @@
 /// @module Core
 
+/// @enum Enumeration of render queue categories.
+/// Defines the order in which render queues are submitted during rendering.
+/// Values are spaced to allow custom queues between standard ones (e.g., Opaque + 1).
+enum BBMOD_ERenderQueue
+{
+	/// @member Render queue for terrain rendering.
+	Terrain = 0,
+		/// @member Render queue for opaque objects.
+		Opaque = 1000,
+		/// @member Render queue for transparent objects.
+		Transparent = 2000,
+		/// @member Render queue for sky rendering.
+		Sky = 3000
+};
+
+/// @var {Struct} Map of render queue values to render queue instances.
+/// @private
+global.__bbmodRenderQueues = {};
+
+/// @func bbmod_render_queue_get(_index)
+///
+/// @desc Retrieves the render queue instance for the given queue value.
+/// Creates a new queue if one doesn't exist for this value.
+///
+/// @param {Real} _index The render queue value (e.g., BBMOD_ERenderQueue.Opaque or BBMOD_ERenderQueue.Opaque + 1).
+///
+/// @return {Struct.BBMOD_RenderQueue} The render queue instance.
+///
+/// @see BBMOD_ERenderQueue
+/// @see BBMOD_RenderQueue
+function bbmod_render_queue_get(_index)
+{
+	gml_pragma("forceinline");
+	var _key = string(_index);
+	if (!variable_struct_exists(global.__bbmodRenderQueues, _key))
+	{
+		global.__bbmodRenderQueues[$  _key] = new BBMOD_RenderQueue("RenderQueue" + _key, _index);
+	}
+	return global.__bbmodRenderQueues[$  _key];
+}
+
+/// @func bbmod_render_queue_set(_index, _renderQueue)
+///
+/// @desc Sets the render queue instance for the given queue value.
+///
+/// @param {Real} _index The render queue value (e.g., BBMOD_ERenderQueue.Opaque).
+/// @param {Struct.BBMOD_RenderQueue} _renderQueue The render queue instance to set.
+///
+/// @return {Struct.BBMOD_RenderQueue} Returns the render queue instance.
+///
+/// @see BBMOD_ERenderQueue
+/// @see BBMOD_RenderQueue
+function bbmod_render_queue_set(_index, _renderQueue)
+{
+	gml_pragma("forceinline");
+	global.__bbmodRenderQueues[$  string(_index)] = _renderQueue;
+	return _renderQueue;
+}
+
 /// @func bbmod_render_queues_get()
 ///
-/// @desc Retrieves a read-only array of existing render queues, sorted by
-/// their priority in an asceding order.
+/// @desc Retrieves an array of existing render queues sorted by priority (ascending).
 ///
 /// @return {Array<Struct.BBMOD_RenderQueue>} The array of render queues.
 ///
 /// @see BBMOD_RenderQueue
+/// @see BBMOD_ERenderQueue
 function bbmod_render_queues_get()
 {
-	gml_pragma("forceinline");
 	static _renderQueues = [];
+	static _sortFn = function (_a, _b)
+	{
+		return _a.Priority - _b.Priority;
+	};
+
+	// Rebuild array from struct
+	array_resize(_renderQueues, 0);
+	var _keys = variable_struct_get_names(global.__bbmodRenderQueues);
+	var i = 0;
+	repeat(array_length(_keys))
+	{
+		array_push(_renderQueues, global.__bbmodRenderQueues[$  _keys[i++]]);
+	}
+
+	// Sort by priority
+	array_sort(_renderQueues, _sortFn);
+
 	return _renderQueues;
 }
 
@@ -72,53 +147,68 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// debugging purposes.
 	Name = _name ?? ("RenderQueue" + string(IdNext++));
 
-	/// @var {Real} The priority of the render queue. Render queues with lower
-	/// priority come first in the array returned by
-	/// {@link bbmod_render_queues_get}.
+	/// @var {Real} The priority of the render queue.
+	/// @deprecated This property is obsolete. Render queue order is now determined
+	/// by BBMOD_ERenderQueue enum values.
 	/// @readonly
 	Priority = _priority;
 
-	/// @var {Array<Array>}
+	/// @var {Array<Id.DsGrid>} Array of grids storing render commands, one per render pass.
+	/// Each row is a command. Column 0 = command type, Column 1 = material hash, Column 2 = data array.
 	/// @see BBMOD_ERenderCommand
+	/// @see BBMOD_ERenderPass
 	/// @private
-	__renderCommands = [];
+	__renderCommands = array_create(BBMOD_ERenderPass.SIZE, undefined);
 
-	/// @var {Real}
+	/// @var {Array<Real>} Current row index in each render pass's grid.
 	/// @private
-	__index = 0;
+	__index = array_create(BBMOD_ERenderPass.SIZE, 0);
 
-	/// @var {Real} Render passes that the queue has commands for.
+	/// @var {Array<Bool>} Whether each render pass's grid is currently sorted.
+	/// @private
+	__isSorted = array_create(BBMOD_ERenderPass.SIZE, true);
+
+	// Initialize grids for each render pass
+	var i = 0;
+	repeat(BBMOD_ERenderPass.SIZE)
+	{
+		var _grid = ds_grid_create(3, 128);
+		// Fill column 1 with max value so unused rows sort to the end
+		ds_grid_set_region(_grid, 1, 0, 1, 127, infinity);
+		__renderCommands[@ i] = _grid;
+		++i;
+	}
+
+	/// @var {Real} Render passes that the queue has commands for (bitfield).
 	/// @private
 	__renderPasses = 0;
 
-	/// @func __get_next(_size)
+	/// @func __get_next(_pass)
 	///
-	/// @desc Retrieves next render command available to reuse.
+	/// @desc Retrieves the next available row index in the specified render pass's grid.
+	/// Resizes the grid if necessary.
 	///
-	/// @param {Real} _size The size of the render command.
+	/// @param {Real} _pass The render pass index.
 	///
-	/// @return {Array} The render command.
+	/// @return {Real} The row index for the next command.
 	///
 	/// @private
-	static __get_next = function (_size)
+	static __get_next = function (_pass)
 	{
-		gml_pragma("forceinline");
-		var _command;
-		if (array_length(__renderCommands) > __index)
+		var _index = __index[_pass];
+		var _grid = __renderCommands[_pass];
+		var _height = ds_grid_height(_grid);
+
+		if (_index >= _height)
 		{
-			_command = __renderCommands[__index++];
-			if (array_length(_command) < _size)
-			{
-				array_resize(_command, _size);
-			}
+			var _newHeight = _height * 2;
+			ds_grid_resize(_grid, 3, _newHeight);
+			// Fill new rows with infinity in hash column
+			ds_grid_set_region(_grid, 1, _height, 1, _newHeight - 1, infinity);
 		}
-		else
-		{
-			_command = array_create(_size);
-			array_push(__renderCommands, _command);
-			++__index;
-		}
-		return _command;
+
+		__index[@ _pass] = _index + 1;
+		return _index;
 	};
 
 	static set_priority = function (_p)
@@ -142,16 +232,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// of them.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static ApplyMaterial = function (_material, _vertexFormat, _enabledPasses = ~0)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= _material.RenderPass;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.ApplyMaterial;
-		_command[@ 1] = global.__bbmodMaterialProps;
-		_command[@ 2] = _vertexFormat;
-		_command[@ 3] = _material;
-		_command[@ 4] = _enabledPasses;
+		__bbmod_warning("BBMOD_RenderQueue.ApplyMaterial is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -164,13 +249,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// material property block to apply.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static ApplyMaterialProps = function (_materialPropertyBlock)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.ApplyMaterialProps;
-		_command[@ 1] = _materialPropertyBlock;
+		__bbmod_warning("BBMOD_RenderQueue.ApplyMaterialProps is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -180,12 +263,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// into the queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static BeginConditionalBlock = function ()
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.BeginConditionalBlock;
+		__bbmod_warning("BBMOD_RenderQueue.BeginConditionalBlock is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -199,14 +281,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// Defaults to an empty array.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static CallFunction = function (_function, _arguments = [])
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.CallFunction;
-		_command[@ 1] = _function;
-		_command[@ 2] = _arguments;
+		__bbmod_warning("BBMOD_RenderQueue.CallFunction is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -218,89 +297,236 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} [_passes] Mask of allowed rendering passes.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static CheckRenderPass = function (_passes)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.CheckRenderPass;
-		_command[@ 1] = _passes;
+		__bbmod_warning("BBMOD_RenderQueue.CheckRenderPass is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
 	static DrawMesh = function (_mesh, _material, _matrix)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= _material.RenderPass;
-		var _command = __get_next(6);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawMesh;
-		_command[@ 1] = global.__bbmodInstanceID;
-		_command[@ 2] = global.__bbmodMaterialProps;
-		_command[@ 3] = _mesh;
-		_command[@ 4] = _material;
-		_command[@ 5] = _matrix;
+		var _materialPasses = _material.RenderPass;
+		__renderPasses |= _materialPasses;
+		var _materialHash = _material.get_hash();
+		var _instanceID = global.__bbmodInstanceID;
+
+		// Add command to all render pass grids that this material supports
+		var _pass = 0;
+		repeat(BBMOD_ERenderPass.SIZE)
+		{
+			if (_materialPasses & (1 << _pass))
+			{
+				// Inline __get_next for performance
+				var _row = __index[_pass];
+				var _grid = __renderCommands[_pass];
+				var _height = ds_grid_height(_grid);
+				if (_row >= _height)
+				{
+					var _newHeight = _height * 2;
+					ds_grid_resize(_grid, 3, _newHeight);
+					ds_grid_set_region(_grid, 1, _height, 1, _newHeight - 1, infinity);
+				}
+				__index[@ _pass] = _row + 1;
+
+				_grid[# 0, _row] = BBMOD_ERenderCommand.DrawMesh;
+				_grid[# 1, _row] = _materialHash;
+				var _data = _grid[# 2, _row];
+				if (!is_array(_data) || array_length(_data) < 4)
+				{
+					_data = array_create(4);
+					_grid[# 2, _row] = _data;
+				}
+				_data[@ 0] = _instanceID;
+				_data[@ 1] = _mesh;
+				_data[@ 2] = _material;
+				_data[@ 3] = _matrix;
+				__isSorted[@ _pass] = false;
+			}
+			++_pass;
+		}
 		return self;
 	};
 
 	static DrawMeshAnimated = function (_mesh, _material, _matrix, _boneTransform)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= _material.RenderPass;
-		var _command = __get_next(7);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawMeshAnimated;
-		_command[@ 1] = global.__bbmodInstanceID;
-		_command[@ 2] = global.__bbmodMaterialProps;
-		_command[@ 3] = _mesh;
-		_command[@ 4] = _material;
-		_command[@ 5] = _matrix;
-		_command[@ 6] = _boneTransform;
+		var _materialPasses = _material.RenderPass;
+		__renderPasses |= _materialPasses;
+		var _materialHash = _material.get_hash();
+		var _instanceID = global.__bbmodInstanceID;
+
+		// Add command to all render pass grids that this material supports
+		var _pass = 0;
+		repeat(BBMOD_ERenderPass.SIZE)
+		{
+			if (_materialPasses & (1 << _pass))
+			{
+				// Inline __get_next for performance
+				var _row = __index[_pass];
+				var _grid = __renderCommands[_pass];
+				var _height = ds_grid_height(_grid);
+				if (_row >= _height)
+				{
+					var _newHeight = _height * 2;
+					ds_grid_resize(_grid, 3, _newHeight);
+					ds_grid_set_region(_grid, 1, _height, 1, _newHeight - 1, infinity);
+				}
+				__index[@ _pass] = _row + 1;
+
+				_grid[# 0, _row] = BBMOD_ERenderCommand.DrawMeshAnimated;
+				_grid[# 1, _row] = _materialHash;
+				var _data = _grid[# 2, _row];
+				if (!is_array(_data) || array_length(_data) < 5)
+				{
+					_data = array_create(5);
+					_grid[# 2, _row] = _data;
+				}
+				_data[@ 0] = _instanceID;
+				_data[@ 1] = _mesh;
+				_data[@ 2] = _material;
+				_data[@ 3] = _matrix;
+				_data[@ 4] = _boneTransform;
+				__isSorted[@ _pass] = false;
+			}
+			++_pass;
+		}
 		return self;
 	};
 
 	static DrawMeshBatched = function (_mesh, _material, _matrix, _batchData)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= _material.RenderPass;
-		var _command = __get_next(7);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawMeshBatched;
-		_command[@ 1] = global.__bbmodInstanceIDBatch ?? global.__bbmodInstanceID;
-		_command[@ 2] = global.__bbmodMaterialProps;
-		_command[@ 3] = _mesh;
-		_command[@ 4] = _material;
-		_command[@ 5] = _matrix;
-		_command[@ 6] = _batchData;
+		var _materialPasses = _material.RenderPass;
+		__renderPasses |= _materialPasses;
+		var _materialHash = _material.get_hash();
+		var _instanceID = global.__bbmodInstanceIDBatch ?? global.__bbmodInstanceID;
+
+		// Add command to all render pass grids that this material supports
+		var _pass = 0;
+		repeat(BBMOD_ERenderPass.SIZE)
+		{
+			if (_materialPasses & (1 << _pass))
+			{
+				// Inline __get_next for performance
+				var _row = __index[_pass];
+				var _grid = __renderCommands[_pass];
+				var _height = ds_grid_height(_grid);
+				if (_row >= _height)
+				{
+					var _newHeight = _height * 2;
+					ds_grid_resize(_grid, 3, _newHeight);
+					ds_grid_set_region(_grid, 1, _height, 1, _newHeight - 1, infinity);
+				}
+				__index[@ _pass] = _row + 1;
+
+				_grid[# 0, _row] = BBMOD_ERenderCommand.DrawMeshBatched;
+				_grid[# 1, _row] = _materialHash;
+				var _data = _grid[# 2, _row];
+				if (!is_array(_data) || array_length(_data) < 5)
+				{
+					_data = array_create(5);
+					_grid[# 2, _row] = _data;
+				}
+				_data[@ 0] = _instanceID;
+				_data[@ 1] = _mesh;
+				_data[@ 2] = _material;
+				_data[@ 3] = _matrix;
+				_data[@ 4] = _batchData;
+				__isSorted[@ _pass] = false;
+			}
+			++_pass;
+		}
 		return self;
 	};
 
-	/// @func DrawSprite(_sprite, _subimg, _x, _y)
+	static DrawTerrain = function (_terrain)
+	{
+		gml_pragma("forceinline");
+		var _material = _terrain.Material;
+		var _materialPasses = _material.RenderPass;
+		__renderPasses |= _materialPasses;
+		var _materialHash = _material.get_hash();
+		var _instanceID = global.__bbmodInstanceID;
+
+		// Add command to all render pass grids that this material supports
+		var _pass = 0;
+		repeat(BBMOD_ERenderPass.SIZE)
+		{
+			if (_materialPasses & (1 << _pass))
+			{
+				// Inline __get_next for performance
+				var _row = __index[_pass];
+				var _grid = __renderCommands[_pass];
+				var _height = ds_grid_height(_grid);
+				if (_row >= _height)
+				{
+					var _newHeight = _height * 2;
+					ds_grid_resize(_grid, 3, _newHeight);
+					ds_grid_set_region(_grid, 1, _height, 1, _newHeight - 1, infinity);
+				}
+				__index[@ _pass] = _row + 1;
+
+				_grid[# 0, _row] = BBMOD_ERenderCommand.DrawTerrain;
+				_grid[# 1, _row] = _materialHash;
+				var _data = _grid[# 2, _row];
+				if (!is_array(_data) || array_length(_data) < 2)
+				{
+					_data = array_create(2);
+					_grid[# 2, _row] = _data;
+				}
+				_data[@ 0] = _instanceID;
+				_data[@ 1] = _terrain;
+				__isSorted[@ _pass] = false;
+			}
+			++_pass;
+		}
+		return self;
+	};
+
+	/// @func DrawSprite(_material, _sprite, _subimg, _x, _y)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSprite} command into the
 	/// queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _x The x coordinate of where to draw the sprite.
 	/// @param {Real} _y The y coordinate of where to draw the sprite.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static DrawSprite = function (_sprite, _subimg, _x, _y)
+	static DrawSprite = function (_material, _sprite, _subimg, _x, _y)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSprite;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _x;
-		_command[@ 4] = _y;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSprite;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 5)
+		{
+			_data = array_create(5);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _x;
+		_data[@ 4] = _y;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpriteExt(_sprite, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha)
+	/// @func DrawSpriteExt(_material, _sprite, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpriteExt} command into the
 	/// queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _x The x coordinate of where to draw the sprite.
@@ -313,29 +539,40 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawSpriteExt = function (
-		_sprite, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha)
+		_material, _sprite, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(10);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpriteExt;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _x;
-		_command[@ 4] = _y;
-		_command[@ 5] = _xscale;
-		_command[@ 6] = _yscale;
-		_command[@ 7] = _rot;
-		_command[@ 8] = _col;
-		_command[@ 9] = _alpha;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpriteExt;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 10)
+		{
+			_data = array_create(10);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _x;
+		_data[@ 4] = _y;
+		_data[@ 5] = _xscale;
+		_data[@ 6] = _yscale;
+		_data[@ 7] = _rot;
+		_data[@ 8] = _col;
+		_data[@ 9] = _alpha;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpriteGeneral(_sprite, _subimg, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _rot, _c1, _c2, _c3, _c4, _alpha)
+	/// @func DrawSpriteGeneral(_material, _sprite, _subimg, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _rot, _c1, _c2, _c3, _c4, _alpha)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpriteGeneral} command into
 	/// the queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _left The x position on the sprite of the top left corner
@@ -361,37 +598,48 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawSpriteGeneral = function (
-		_sprite, _subimg, _left, _top, _width, _height, _x, _y, _xscale, _yscale,
+		_material, _sprite, _subimg, _left, _top, _width, _height, _x, _y, _xscale, _yscale,
 		_rot, _c1, _c2, _c3, _c4, _alpha)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(17);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpriteGeneral;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _left;
-		_command[@ 4] = _top;
-		_command[@ 5] = _width;
-		_command[@ 6] = _height;
-		_command[@ 7] = _x;
-		_command[@ 8] = _y;
-		_command[@ 9] = _xscale;
-		_command[@ 10] = _yscale;
-		_command[@ 11] = _rot;
-		_command[@ 12] = _c1;
-		_command[@ 13] = _c2;
-		_command[@ 14] = _c3;
-		_command[@ 15] = _c4;
-		_command[@ 16] = _alpha;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpriteGeneral;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 17)
+		{
+			_data = array_create(17);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _left;
+		_data[@ 4] = _top;
+		_data[@ 5] = _width;
+		_data[@ 6] = _height;
+		_data[@ 7] = _x;
+		_data[@ 8] = _y;
+		_data[@ 9] = _xscale;
+		_data[@ 10] = _yscale;
+		_data[@ 11] = _rot;
+		_data[@ 12] = _c1;
+		_data[@ 13] = _c2;
+		_data[@ 14] = _c3;
+		_data[@ 15] = _c4;
+		_data[@ 16] = _alpha;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpritePart(_sprite, _subimg, _left, _top, _width, _height, _x, _y)
+	/// @func DrawSpritePart(_material, _sprite, _subimg, _left, _top, _width, _height, _x, _y)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpritePart} command into
 	/// the queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _left The x position on the sprite of the top left corner
@@ -405,28 +653,39 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawSpritePart = function (
-		_sprite, _subimg, _left, _top, _width, _height, _x, _y)
+		_material, _sprite, _subimg, _left, _top, _width, _height, _x, _y)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(9);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpritePart;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _left;
-		_command[@ 4] = _top;
-		_command[@ 5] = _width;
-		_command[@ 6] = _height;
-		_command[@ 7] = _x;
-		_command[@ 8] = _y;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpritePart;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 9)
+		{
+			_data = array_create(9);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _left;
+		_data[@ 4] = _top;
+		_data[@ 5] = _width;
+		_data[@ 6] = _height;
+		_data[@ 7] = _x;
+		_data[@ 8] = _y;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpritePartExt(_sprite, _subimg, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _col, _alpha)
+	/// @func DrawSpritePartExt(_material, _sprite, _subimg, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _col, _alpha)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpritePartExt} command into
 	/// the queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _left The x position on the sprite of the top left corner
@@ -444,33 +703,44 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawSpritePartExt = function (
-		_sprite, _subimg, _left, _top, _width, _height, _x, _y, _xscale, _yscale,
+		_material, _sprite, _subimg, _left, _top, _width, _height, _x, _y, _xscale, _yscale,
 		_col, _alpha)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(13);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpritePartExt;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _left;
-		_command[@ 4] = _top;
-		_command[@ 5] = _width;
-		_command[@ 6] = _height;
-		_command[@ 7] = _x;
-		_command[@ 8] = _y;
-		_command[@ 9] = _xscale;
-		_command[@ 10] = _yscale;
-		_command[@ 11] = _col;
-		_command[@ 12] = _alpha;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpritePartExt;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 13)
+		{
+			_data = array_create(13);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _left;
+		_data[@ 4] = _top;
+		_data[@ 5] = _width;
+		_data[@ 6] = _height;
+		_data[@ 7] = _x;
+		_data[@ 8] = _y;
+		_data[@ 9] = _xscale;
+		_data[@ 10] = _yscale;
+		_data[@ 11] = _col;
+		_data[@ 12] = _alpha;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpritePos(_sprite, _subimg, _x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4, _alpha)
+	/// @func DrawSpritePos(_material, _sprite, _subimg, _x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4, _alpha)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpritePos} command into the
 	/// queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _x1 The first x coordinate.
@@ -485,31 +755,42 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawSpritePos = function (
-		_sprite, _subimg, _x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4, _alpha)
+		_material, _sprite, _subimg, _x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4, _alpha)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(12);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpritePos;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _x1;
-		_command[@ 4] = _y1;
-		_command[@ 5] = _x2;
-		_command[@ 6] = _y2;
-		_command[@ 7] = _x3;
-		_command[@ 8] = _y3;
-		_command[@ 9] = _x4;
-		_command[@ 10] = _y4;
-		_command[@ 11] = _alpha;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpritePos;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 12)
+		{
+			_data = array_create(12);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _x1;
+		_data[@ 4] = _y1;
+		_data[@ 5] = _x2;
+		_data[@ 6] = _y2;
+		_data[@ 7] = _x3;
+		_data[@ 8] = _y3;
+		_data[@ 9] = _x4;
+		_data[@ 10] = _y4;
+		_data[@ 11] = _alpha;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpriteStretched(_sprite, _subimg, _x, _y, _w, _h)
+	/// @func DrawSpriteStretched(_material, _sprite, _subimg, _x, _y, _w, _h)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpriteStretched} command
 	/// into the queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _x The x coordinate of where to draw the sprite.
@@ -518,26 +799,37 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _h The height of the area the stretched sprite will occupy.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static DrawSpriteStretched = function (_sprite, _subimg, _x, _y, _w, _h)
+	static DrawSpriteStretched = function (_material, _sprite, _subimg, _x, _y, _w, _h)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(7);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpriteStretched;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _x;
-		_command[@ 4] = _y;
-		_command[@ 5] = _w;
-		_command[@ 6] = _h;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpriteStretched;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 7)
+		{
+			_data = array_create(7);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _x;
+		_data[@ 4] = _y;
+		_data[@ 5] = _w;
+		_data[@ 6] = _h;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpriteStretchedExt(_sprite, _subimg, _x, _y, _w, _h, _col, _alpha)
+	/// @func DrawSpriteStretchedExt(_material, _sprite, _subimg, _x, _y, _w, _h, _col, _alpha)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpriteStretchedExt} command
 	/// into the queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _x The x coordinate of where to draw the sprite.
@@ -549,52 +841,74 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawSpriteStretchedExt = function (
-		_sprite, _subimg, _x, _y, _w, _h, _col, _alpha)
+		_material, _sprite, _subimg, _x, _y, _w, _h, _col, _alpha)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(9);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpriteStretchedExt;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _x;
-		_command[@ 4] = _y;
-		_command[@ 5] = _w;
-		_command[@ 6] = _h;
-		_command[@ 7] = _col;
-		_command[@ 8] = _alpha;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpriteStretchedExt;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 9)
+		{
+			_data = array_create(9);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _x;
+		_data[@ 4] = _y;
+		_data[@ 5] = _w;
+		_data[@ 6] = _h;
+		_data[@ 7] = _col;
+		_data[@ 8] = _alpha;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpriteTiled(_sprite, _subimg, _x, _y)
+	/// @func DrawSpriteTiled(_material, _sprite, _subimg, _x, _y)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpriteTiled} command into
 	/// the queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _x The x coordinate of where to draw the sprite.
 	/// @param {Real} _y The y coordinate of where to draw the sprite.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
-	static DrawSpriteTiled = function (_sprite, _subimg, _x, _y)
+	static DrawSpriteTiled = function (_material, _sprite, _subimg, _x, _y)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpriteTiled;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _x;
-		_command[@ 4] = _y;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpriteTiled;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 5)
+		{
+			_data = array_create(5);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _x;
+		_data[@ 4] = _y;
+		__isSorted = false;
 		return self;
 	};
 
-	/// @func DrawSpriteTiledExt(_sprite, _subimg, _x, _y, _xscale, _yscale, _col, _alpha)
+	/// @func DrawSpriteTiledExt(_material, _sprite, _subimg, _x, _y, _xscale, _yscale, _col, _alpha)
 	///
 	/// @desc Adds a {@link BBMOD_ERenderCommand.DrawSpriteTiledExt} command
 	/// into the queue.
 	///
+	/// @param {Struct.BBMOD_Material} _material The material to use when drawing the sprite.
 	/// @param {Asset.GMSprite} _sprite The sprite to draw.
 	/// @param {Real} _subimg The sub-image of the sprite to draw.
 	/// @param {Real} _x The x coordinate of where to draw the sprite.
@@ -606,20 +920,30 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
 	static DrawSpriteTiledExt = function (
-		_sprite, _subimg, _x, _y, _xscale, _yscale, _col, _alpha)
+		_material, _sprite, _subimg, _x, _y, _xscale, _yscale, _col, _alpha)
 	{
 		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(9);
-		_command[@ 0] = BBMOD_ERenderCommand.DrawSpriteTiledExt;
-		_command[@ 1] = _sprite;
-		_command[@ 2] = _subimg;
-		_command[@ 3] = _x;
-		_command[@ 4] = _y;
-		_command[@ 5] = _xscale;
-		_command[@ 6] = _yscale;
-		_command[@ 7] = _col;
-		_command[@ 8] = _alpha;
+		__renderPasses |= _material.RenderPass;
+		var _row = __get_next();
+		var _grid = __renderCommands;
+		_grid[# 0, _row] = BBMOD_ERenderCommand.DrawSpriteTiledExt;
+		_grid[# 1, _row] = _material.get_hash();
+		var _data = _grid[# 2, _row];
+		if (!is_array(_data) || array_length(_data) < 9)
+		{
+			_data = array_create(9);
+			_grid[# 2, _row] = _data;
+		}
+		_data[@ 0] = _material;
+		_data[@ 1] = _sprite;
+		_data[@ 2] = _subimg;
+		_data[@ 3] = _x;
+		_data[@ 4] = _y;
+		_data[@ 5] = _xscale;
+		_data[@ 6] = _yscale;
+		_data[@ 7] = _col;
+		_data[@ 8] = _alpha;
+		__isSorted = false;
 		return self;
 	};
 
@@ -629,12 +953,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// into the queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static EndConditionalBlock = function ()
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.EndConditionalBlock;
+		__bbmod_warning("BBMOD_RenderQueue.EndConditionalBlock is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -644,12 +967,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static PopGpuState = function ()
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.PopGpuState;
+		__bbmod_warning("BBMOD_RenderQueue.PopGpuState is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -659,12 +981,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static PushGpuState = function ()
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.PushGpuState;
+		__bbmod_warning("BBMOD_RenderQueue.PushGpuState is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -674,12 +995,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static ResetMaterial = function ()
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.ResetMaterial;
+		__bbmod_warning("BBMOD_RenderQueue.ResetMaterial is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -689,12 +1009,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// into the queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static ResetMaterialProps = function ()
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.ResetMaterialProps;
+		__bbmod_warning("BBMOD_RenderQueue.ResetMaterialProps is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -704,12 +1023,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// queue.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static ResetShader = function ()
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(1);
-		_command[@ 0] = BBMOD_ERenderCommand.ResetShader;
+		__bbmod_warning("BBMOD_RenderQueue.ResetShader is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -721,13 +1039,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _enable Use `true` to enable alpha testing.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuAlphaTestEnable = function (_enable)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuAlphaTestEnable;
-		_command[@ 1] = _enable;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuAlphaTestEnable is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -739,13 +1055,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The new alpha test threshold value.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuAlphaTestRef = function (_value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuAlphaTestRef;
-		_command[@ 1] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuAlphaTestRef is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -757,13 +1071,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _enable Use `true` to enable alpha blending.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuBlendEnable = function (_enable)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendEnable;
-		_command[@ 1] = _enable;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuBlendEnable is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -775,13 +1087,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Constant.BlendMode} _blendmode The new blend mode.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuBlendMode = function (_blendmode)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendMode;
-		_command[@ 1] = _blendmode;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuBlendMode is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -794,14 +1104,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Constant.BlendMode} _dest Destination blend mode.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuBlendModeExt = function (_src, _dest)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendModeExt;
-		_command[@ 1] = _src;
-		_command[@ 2] = _dest;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuBlendModeExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -817,16 +1124,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// channel.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuBlendModeExtSepAlpha = function (_src, _dest, _srcalpha, _destalpha)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha;
-		_command[@ 1] = _src;
-		_command[@ 2] = _dest;
-		_command[@ 3] = _srcalpha;
-		_command[@ 4] = _destalpha;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuBlendModeExtSepAlpha is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -844,16 +1146,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _alpha Use `true` to enable writing to the alpha channel.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuColorWriteEnable = function (_red, _green, _blue, _alpha)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuColorWriteEnable;
-		_command[@ 1] = _red;
-		_command[@ 2] = _green;
-		_command[@ 3] = _blue;
-		_command[@ 4] = _alpha;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuColorWriteEnable is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -865,13 +1162,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Constant.CullMode} _cullmode The new coll mode.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuCullMode = function (_cullmode)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuCullMode;
-		_command[@ 1] = _cullmode;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuCullMode is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -883,13 +1178,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _depth The new z coordinate to draw sprites and text at.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuDepth = function (_depth)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuDepth;
-		_command[@ 1] = _depth;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuDepth is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -906,16 +1199,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// maximum intensity.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuFog = function (_enable, _color, _start, _end)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuFog;
-		_command[@ 1] = _enable;
-		_command[@ 2] = _color;
-		_command[@ 3] = _start;
-		_command[@ 4] = _end;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuFog is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -927,13 +1215,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Id.DsMap} _state The new GPU state.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuState = function (_state)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuState;
-		_command[@ 1] = _state;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuState is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -945,13 +1231,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _linear Use `true` to enable linear texture filtering.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexFilter = function (_linear)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexFilter;
-		_command[@ 1] = _linear;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexFilter is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -965,14 +1249,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// the sampler.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexFilterExt = function (_name, _linear)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexFilterExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _linear;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexFilterExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -984,13 +1265,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The maximum level of anisotropy.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMaxAniso = function (_value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxAniso;
-		_command[@ 1] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMaxAniso is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1003,14 +1282,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The maximum level of anisotropy.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMaxAnisoExt = function (_name, _value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMaxAnisoExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1022,13 +1298,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The maximum mipmap level.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMaxMip = function (_value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxMip;
-		_command[@ 1] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMaxMip is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1041,14 +1315,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The maximum mipmap level.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMaxMipExt = function (_name, _value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMaxMipExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMaxMipExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1060,13 +1331,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The minimum mipmap level.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMinMip = function (_value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMinMip;
-		_command[@ 1] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMinMip is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1079,14 +1348,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The minimum mipmap level.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMinMipExt = function (_name, _value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMinMipExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMinMipExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1098,13 +1364,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The mipmap bias.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMipBias = function (_value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipBias;
-		_command[@ 1] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMipBias is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1117,14 +1381,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The mipmap bias.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMipBiasExt = function (_name, _value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipBiasExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMipBiasExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1136,13 +1397,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _enable Use `true` to enable mipmapping.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMipEnable = function (_enable)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipEnable;
-		_command[@ 1] = _enable;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMipEnable is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1155,14 +1414,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _enable Use `true` to enable mipmapping.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMipEnableExt = function (_name, _enable)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipEnableExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _enable;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMipEnableExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1174,13 +1430,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Constant.MipFilter} _filter The mipmap filter.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMipFilter = function (_filter)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipFilter;
-		_command[@ 1] = _filter;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMipFilter is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1193,14 +1447,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Constant.MipFilter} _filter The mipmap filter.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexMipFilterExt = function (_name, _filter)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexMipFilterExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _filter;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexMipFilterExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1212,13 +1463,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _enable Use `true` to enable texture repeat.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexRepeat = function (_enable)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexRepeat;
-		_command[@ 1] = _enable;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexRepeat is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1231,14 +1480,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _enable Use `true` to enable texture repeat.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuTexRepeatExt = function (_name, _enable)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuTexRepeatExt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _enable;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuTexRepeatExt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1250,13 +1496,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Constant.CmpFunc} _func The depth test function.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuZFunc = function (_func)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZFunc;
-		_command[@ 1] = _func;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuZFunc is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1269,13 +1513,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// buffer.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuZTestEnable = function (_enable)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZTestEnable;
-		_command[@ 1] = _enable;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuZTestEnable is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1287,13 +1529,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Bool} _enable Use `true` to enable writing to the depth buffer.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetGpuZWriteEnable = function (_enable)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetGpuZWriteEnable;
-		_command[@ 1] = _enable;
+		__bbmod_warning("BBMOD_RenderQueue.SetGpuZWriteEnable is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1306,13 +1546,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// material property block to set as the current one.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetMaterialProps = function (_materialPropertyBlock)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetMaterialProps;
-		_command[@ 1] = _materialPropertyBlock;
+		__bbmod_warning("BBMOD_RenderQueue.SetMaterialProps is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1324,13 +1562,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Array<Real>} _matrix The new projection matrix.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetProjectionMatrix = function (_matrix)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetProjectionMatrix;
-		_command[@ 1] = _matrix;
+		__bbmod_warning("BBMOD_RenderQueue.SetProjectionMatrix is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1343,14 +1579,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Pointer.Texture} _texture The new texture.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetSampler = function (_nameOrIndex, _texture)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetSampler;
-		_command[@ 1] = _nameOrIndex;
-		_command[@ 2] = _texture;
+		__bbmod_warning("BBMOD_RenderQueue.SetSampler is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1362,13 +1595,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Asset.GMShader} _shader The shader to set.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetShader = function (_shader)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetShader;
-		_command[@ 1] = _shader;
+		__bbmod_warning("BBMOD_RenderQueue.SetShader is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1381,14 +1612,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The new uniform value.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformFloat = function (_name, _value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformFloat is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1402,15 +1630,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _v2 The value of the second component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformFloat2 = function (_name, _v1, _v2)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(4);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat2;
-		_command[@ 1] = _name;
-		_command[@ 2] = _v1;
-		_command[@ 3] = _v2;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformFloat2 is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1425,16 +1649,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _v3 The value of the third component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformFloat3 = function (_name, _v1, _v2, _v3)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat3;
-		_command[@ 1] = _name;
-		_command[@ 2] = _v1;
-		_command[@ 3] = _v2;
-		_command[@ 4] = _v3;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformFloat3 is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1450,17 +1669,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _v4 The value of the fourth component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformFloat4 = function (_name, _v1, _v2, _v3, _v4)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(6);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloat4;
-		_command[@ 1] = _name;
-		_command[@ 2] = _v1;
-		_command[@ 3] = _v2;
-		_command[@ 4] = _v3;
-		_command[@ 5] = _v4;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformFloat4 is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1473,14 +1686,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Array<Real>} _array The array of values.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformFloatArray = function (_name, _array)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformFloatArray;
-		_command[@ 1] = _name;
-		_command[@ 2] = _array;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformFloatArray is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1493,14 +1703,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _value The new uniform value.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformInt = function (_name, _value)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt;
-		_command[@ 1] = _name;
-		_command[@ 2] = _value;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformInt is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1514,15 +1721,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _v2 The value of the second component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformInt2 = function (_name, _v1, _v2)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(4);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt2;
-		_command[@ 1] = _name;
-		_command[@ 2] = _v1;
-		_command[@ 3] = _v2;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformInt2 is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1537,16 +1740,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _v3 The value of the third component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformInt3 = function (_name, _v1, _v2, _v3)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(5);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt3;
-		_command[@ 1] = _name;
-		_command[@ 2] = _v1;
-		_command[@ 3] = _v2;
-		_command[@ 4] = _v3;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformInt3 is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1562,17 +1760,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Real} _v4 The value of the fourth component.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformInt4 = function (_name, _v1, _v2, _v3, _v4)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(6);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformInt4;
-		_command[@ 1] = _name;
-		_command[@ 2] = _v1;
-		_command[@ 3] = _v2;
-		_command[@ 4] = _v3;
-		_command[@ 5] = _v4;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformInt4 is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1585,14 +1777,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Array<Real>} _array The array of values.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformIntArray = function (_name, _array)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformIntArray;
-		_command[@ 1] = _name;
-		_command[@ 2] = _array;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformIntArray is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1604,13 +1793,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {String} _name The name of the uniform.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformMatrix = function (_name)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformMatrix;
-		_command[@ 1] = _name;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformMatrix is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1623,14 +1810,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Array<Real>} _array The array of values.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetUniformMatrixArray = function (_name, _array)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(3);
-		_command[@ 0] = BBMOD_ERenderCommand.SetUniformMatrixArray;
-		_command[@ 1] = _name;
-		_command[@ 2] = _array;
+		__bbmod_warning("BBMOD_RenderQueue.SetUniformMatrixArray is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1642,13 +1826,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Array<Real>} _matrix The new view matrix.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetViewMatrix = function (_matrix)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetViewMatrix;
-		_command[@ 1] = _matrix;
+		__bbmod_warning("BBMOD_RenderQueue.SetViewMatrix is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1660,13 +1842,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Array<Real>} _matrix The new world matrix.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SetWorldMatrix = function (_matrix)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SetWorldMatrix;
-		_command[@ 1] = _matrix;
+		__bbmod_warning("BBMOD_RenderQueue.SetWorldMatrix is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1678,13 +1858,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Struct.BBMOD_RenderQueue} _renderQueue The vertex buffer to submit.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SubmitRenderQueue = function (_renderQueue)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(2);
-		_command[@ 0] = BBMOD_ERenderCommand.SubmitRenderQueue;
-		_command[@ 1] = _renderQueue;
+		__bbmod_warning("BBMOD_RenderQueue.SubmitRenderQueue is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
@@ -1699,22 +1877,18 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	/// @param {Pointer.Texture} _texture The texture to use.
 	///
 	/// @return {Struct.BBMOD_RenderQueue} Returns `self`.
+	///
+	/// @obsolete This method is obsolete. Use `Draw*` methods instead.
 	static SubmitVertexBuffer = function (_vertexBuffer, _prim, _texture)
 	{
-		gml_pragma("forceinline");
-		__renderPasses |= 0xFFFFFFFF;
-		var _command = __get_next(4);
-		_command[@ 0] = BBMOD_ERenderCommand.SubmitVertexBuffer;
-		_command[@ 1] = _vertexBuffer;
-		_command[@ 2] = _prim;
-		_command[@ 3] = _texture;
+		__bbmod_warning("BBMOD_RenderQueue.SubmitVertexBuffer is obsolete. Use Draw* methods instead.");
 		return self;
 	};
 
 	static is_empty = function ()
 	{
 		gml_pragma("forceinline");
-		return (__index == 0);
+		return (__renderPasses == 0);
 	};
 
 	static has_commands = function (_renderPass)
@@ -1725,189 +1899,259 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 
 	static submit = function (_instances = undefined)
 	{
-		if (!has_commands(global.__bbmodRenderPass))
+		// Get current render pass
+		var _currentPass = bbmod_render_pass_get();
+
+		// Check if this render pass has any commands
+		if (!(__renderPasses & (1 << _currentPass)))
 		{
 			return self;
 		}
 
-		var _commandIndex = 0;
-		var _renderCommands = __renderCommands;
-		var _condition = false;
-		var _skipCounter = 0;
-		var _matchCounter = 0;
+		// Use the grid for the current render pass only
+		var _grid = __renderCommands[_currentPass];
+		var _gridIndex = __index[_currentPass];
+		var _lastMaterial = undefined;
+		var _lastVertexFormat = undefined;
 
-		repeat(__index)
+		// Cached shader and uniform locations (updated when material changes)
+		var _shaderCurrent = undefined;
+		var _uInstanceID = undefined;
+		var _uMaterialIndex = undefined;
+		var _uBones = undefined;
+		var _uBatchData = undefined;
+		var _uBaseOpacityUV = undefined;
+
+		// Sort grid by material hash (column 1) for better batching
+		// Unused rows have infinity in column 1, so they sort to the end
+		if (!__isSorted[_currentPass])
 		{
-			var _command = _renderCommands[_commandIndex++];
-			var i = 0;
-			var _commandType = _command[i++];
+			ds_grid_sort(_grid, 1, true);
+			__isSorted[@ _currentPass] = true;
+		}
 
-			if (_skipCounter > 0)
-			{
-				switch (_commandType)
-				{
-					case BBMOD_ERenderCommand.BeginConditionalBlock:
-						++_skipCounter;
-						break;
-
-					case BBMOD_ERenderCommand.EndConditionalBlock:
-						--_skipCounter;
-						break;
-				}
-
-				continue;
-			}
+		for (var _row = 0; _row < _gridIndex; ++_row)
+		{
+			var _commandType = _grid[# 0, _row];
 
 			switch (_commandType)
 			{
-				case BBMOD_ERenderCommand.ApplyMaterial:
-				{
-					var _materialPropsOld = global.__bbmodMaterialProps;
-					global.__bbmodMaterialProps = _command[i++];
-					var _vertexFormat = _command[i++];
-					var _material = _command[i++];
-					var _enabledPasses = _command[i++];
-					if (((1 << bbmod_render_pass_get()) & _enabledPasses) == 0
-						|| !_material.apply(_vertexFormat))
-					{
-						global.__bbmodMaterialProps = _materialPropsOld;
-						_condition = false;
-						continue;
-					}
-					global.__bbmodMaterialProps = _materialPropsOld;
-				}
-				break;
-
-				case BBMOD_ERenderCommand.ApplyMaterialProps:
-					_command[i++].apply();
-					break;
-
-				case BBMOD_ERenderCommand.BeginConditionalBlock:
-					if (!_condition)
-					{
-						++_skipCounter;
-					}
-					else
-					{
-						++_matchCounter;
-					}
-					break;
-
-				case BBMOD_ERenderCommand.CallFunction:
-					_condition = script_execute_ext(_command[1], _command[2]) ? true : false;
-					break;
-
-				case BBMOD_ERenderCommand.CheckRenderPass:
-					if (((1 << bbmod_render_pass_get()) & _command[i++]) == 0)
-					{
-						_condition = false;
-						continue;
-					}
-					break;
-
 				case BBMOD_ERenderCommand.DrawMesh:
 				{
-					var _id = _command[1];
-					var _materialProps = _command[2];
-					var _mesh = _command[3];
-					var _material = _command[4];
-					var _matrix = _command[5];
+					var _data = _grid[# 2, _row];
+					var _id = _data[0];
+					var _mesh = _data[1];
+					var _material = _data[2];
+					var _matrix = _data[3];
 
-					var _materialPropsOld = global.__bbmodMaterialProps;
-					global.__bbmodMaterialProps = _materialProps;
-
-					if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-						|| !_material.apply(_mesh.VertexFormat))
+					if (_instances != undefined && ds_list_find_index(_instances, _id) == -1)
 					{
-						global.__bbmodMaterialProps = _materialPropsOld;
-						_condition = false;
 						continue;
 					}
 
-					with(BBMOD_SHADER_CURRENT)
+					// Frustum culling
+					if (global.__bbmodFrustumCulling && _mesh.BoundingSphereCenter != undefined)
 					{
-						set_instance_id(_id);
-						matrix_set(matrix_world, _matrix);
-						set_material_index(_mesh.MaterialIndex);
-					}
+						var _center = _mesh.BoundingSphereCenter;
+						var _centerX = _center.X;
+						var _centerY = _center.Y;
+						var _centerZ = _center.Z;
 
-					var _baseOpacity = _material.BaseOpacity;
-					if (global.__bbmodMaterialProps != undefined)
-					{
-						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
-						if (_baseOpacityProp != undefined)
+						// Transform center to world space
+						var _worldX = _matrix[12] + _centerX * _matrix[0] + _centerY * _matrix[4] + _centerZ
+							* _matrix[8];
+						var _worldY = _matrix[13] + _centerX * _matrix[1] + _centerY * _matrix[5] + _centerZ
+							* _matrix[9];
+						var _worldZ = _matrix[14] + _centerX * _matrix[2] + _centerY * _matrix[6] + _centerZ
+							* _matrix[10];
+
+						// Get maximum scale from matrix
+						var _scaleX = sqrt(_matrix[0] * _matrix[0] + _matrix[1] * _matrix[1] + _matrix[2] * _matrix[
+							2]);
+						var _scaleY = sqrt(_matrix[4] * _matrix[4] + _matrix[5] * _matrix[5] + _matrix[6] * _matrix[
+							6]);
+						var _scaleZ = sqrt(_matrix[8] * _matrix[8] + _matrix[9] * _matrix[9] + _matrix[10]
+							* _matrix[10]);
+						var _maxScale = max(_scaleX, _scaleY, _scaleZ);
+						var _worldRadius = _mesh.BoundingSphereRadius * _maxScale;
+
+						// Test visibility
+						if (!sphere_is_visible(_worldX, _worldY, _worldZ, _worldRadius))
 						{
-							_baseOpacity = _baseOpacityProp;
+							continue;
 						}
 					}
 
-					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _baseOpacity);
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || _mesh.VertexFormat != _lastVertexFormat)
+					{
+						if (!_material.apply(_mesh.VertexFormat))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = _mesh.VertexFormat;
 
-					global.__bbmodMaterialProps = _materialPropsOld;
+						// Cache shader and uniform locations
+						_shaderCurrent = shader_current();
+						_uInstanceID = shader_get_uniform(_shaderCurrent, BBMOD_U_INSTANCE_ID);
+						_uMaterialIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_MATERIAL_INDEX);
+					}
+
+					shader_set_uniform_f(
+						_uInstanceID,
+						((_id & $000000FF) >> 0) / 255,
+						((_id & $0000FF00) >> 8) / 255,
+						((_id & $00FF0000) >> 16) / 255,
+						((_id & $FF000000) >> 24) / 255);
+					matrix_set(matrix_world, _matrix);
+					shader_set_uniform_f(
+						_uMaterialIndex,
+						_mesh.MaterialIndex);
+
+					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawMeshAnimated:
 				{
-					var _id = _command[1];
-					var _materialProps = _command[2];
-					var _mesh = _command[3];
-					var _material = _command[4];
-					var _matrix = _command[5];
-					var _boneData = _command[6];
+					var _data = _grid[# 2, _row];
+					var _id = _data[0];
+					var _mesh = _data[1];
+					var _material = _data[2];
+					var _matrix = _data[3];
+					var _boneData = _data[4];
 
-					var _materialPropsOld = global.__bbmodMaterialProps;
-					global.__bbmodMaterialProps = _materialProps;
-
-					if ((_instances != undefined && ds_list_find_index(_instances, _id) == -1)
-						|| !_material.apply(_mesh.VertexFormat))
+					if (_instances != undefined && ds_list_find_index(_instances, _id) == -1)
 					{
-						global.__bbmodMaterialProps = _materialPropsOld;
-						_condition = false;
 						continue;
 					}
 
-					with(BBMOD_SHADER_CURRENT)
+					// Frustum culling
+					if (global.__bbmodFrustumCulling && _mesh.BoundingSphereCenter != undefined)
 					{
-						set_instance_id(_id);
-						matrix_set(matrix_world, _matrix);
-						set_material_index(_mesh.MaterialIndex);
-						set_bones(_boneData);
-					}
+						var _center = _mesh.BoundingSphereCenter;
+						var _centerX = _center.X;
+						var _centerY = _center.Y;
+						var _centerZ = _center.Z;
 
-					var _baseOpacity = _material.BaseOpacity;
-					if (global.__bbmodMaterialProps != undefined)
-					{
-						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
-						if (_baseOpacityProp != undefined)
+						// Transform center to world space
+						var _worldX = _matrix[12] + _centerX * _matrix[0] + _centerY * _matrix[4] + _centerZ
+							* _matrix[8];
+						var _worldY = _matrix[13] + _centerX * _matrix[1] + _centerY * _matrix[5] + _centerZ
+							* _matrix[9];
+						var _worldZ = _matrix[14] + _centerX * _matrix[2] + _centerY * _matrix[6] + _centerZ
+							* _matrix[10];
+
+						// Get maximum scale from matrix
+						var _scaleX = sqrt(_matrix[0] * _matrix[0] + _matrix[1] * _matrix[1] + _matrix[2] * _matrix[
+							2]);
+						var _scaleY = sqrt(_matrix[4] * _matrix[4] + _matrix[5] * _matrix[5] + _matrix[6] * _matrix[
+							6]);
+						var _scaleZ = sqrt(_matrix[8] * _matrix[8] + _matrix[9] * _matrix[9] + _matrix[10]
+							* _matrix[10]);
+						var _maxScale = max(_scaleX, _scaleY, _scaleZ);
+						var _worldRadius = _mesh.BoundingSphereRadius * _maxScale;
+
+						// Test visibility
+						if (!sphere_is_visible(_worldX, _worldY, _worldZ, _worldRadius))
 						{
-							_baseOpacity = _baseOpacityProp;
+							continue;
 						}
 					}
 
-					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _baseOpacity);
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || _mesh.VertexFormat != _lastVertexFormat)
+					{
+						if (!_material.apply(_mesh.VertexFormat))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = _mesh.VertexFormat;
 
-					global.__bbmodMaterialProps = _materialPropsOld;
+						// Cache shader and uniform locations
+						_shaderCurrent = shader_current();
+						_uInstanceID = shader_get_uniform(_shaderCurrent, BBMOD_U_INSTANCE_ID);
+						_uMaterialIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_MATERIAL_INDEX);
+						_uBones = shader_get_uniform(_shaderCurrent, BBMOD_U_BONES);
+					}
+
+					shader_set_uniform_f(
+						_uInstanceID,
+						((_id & $000000FF) >> 0) / 255,
+						((_id & $0000FF00) >> 8) / 255,
+						((_id & $00FF0000) >> 16) / 255,
+						((_id & $FF000000) >> 24) / 255);
+					matrix_set(matrix_world, _matrix);
+					shader_set_uniform_f(
+						_uMaterialIndex,
+						_mesh.MaterialIndex);
+					shader_set_uniform_f_array(
+						_uBones,
+						_boneData);
+
+					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawMeshBatched:
 				{
-					var _id = _command[1];
-					var _materialProps = _command[2];
-					var _mesh = _command[3];
-					var _material = _command[4];
-					var _matrix = _command[5];
-					var _batchData = _command[6];
+					var _data = _grid[# 2, _row];
+					var _id = _data[0];
+					var _mesh = _data[1];
+					var _material = _data[2];
+					var _matrix = _data[3];
+					var _batchData = _data[4];
 
-					var _materialPropsOld = global.__bbmodMaterialProps;
-					global.__bbmodMaterialProps = _materialProps;
-
-					if (!_material.apply(_mesh.VertexFormat))
+					// Frustum culling (batched meshes use the base matrix)
+					if (_mesh.BoundingSphereCenter != undefined)
 					{
-						global.__bbmodMaterialProps = _materialPropsOld;
-						_condition = false;
-						continue;
+						var _center = _mesh.BoundingSphereCenter;
+						var _centerX = _center.X;
+						var _centerY = _center.Y;
+						var _centerZ = _center.Z;
+
+						// Transform center to world space
+						var _worldX = _matrix[12] + _centerX * _matrix[0] + _centerY * _matrix[4] + _centerZ
+							* _matrix[8];
+						var _worldY = _matrix[13] + _centerX * _matrix[1] + _centerY * _matrix[5] + _centerZ
+							* _matrix[9];
+						var _worldZ = _matrix[14] + _centerX * _matrix[2] + _centerY * _matrix[6] + _centerZ
+							* _matrix[10];
+
+						// Get maximum scale from matrix
+						var _scaleX = sqrt(_matrix[0] * _matrix[0] + _matrix[1] * _matrix[1] + _matrix[2] * _matrix[
+							2]);
+						var _scaleY = sqrt(_matrix[4] * _matrix[4] + _matrix[5] * _matrix[5] + _matrix[6] * _matrix[
+							6]);
+						var _scaleZ = sqrt(_matrix[8] * _matrix[8] + _matrix[9] * _matrix[9] + _matrix[10]
+							* _matrix[10]);
+						var _maxScale = max(_scaleX, _scaleY, _scaleZ);
+						var _worldRadius = _mesh.BoundingSphereRadius * _maxScale;
+
+						// Test visibility
+						if (!sphere_is_visible(_worldX, _worldY, _worldZ, _worldRadius))
+						{
+							continue;
+						}
+					}
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || _mesh.VertexFormat != _lastVertexFormat)
+					{
+						if (!_material.apply(_mesh.VertexFormat))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = _mesh.VertexFormat;
+
+						// Cache shader and uniform locations
+						_shaderCurrent = shader_current();
+						_uInstanceID = shader_get_uniform(_shaderCurrent, BBMOD_U_INSTANCE_ID);
+						_uMaterialIndex = shader_get_uniform(_shaderCurrent, BBMOD_U_MATERIAL_INDEX);
+						_uBatchData = shader_get_uniform(_shaderCurrent, BBMOD_U_BATCH_DATA);
 					}
 
 					////////////////////////////////////////////////////////////
@@ -2002,8 +2246,6 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 
 							if (!_hasInstances)
 							{
-								global.__bbmodMaterialProps = _materialPropsOld;
-								_condition = false;
 								continue;
 							}
 						}
@@ -2013,8 +2255,6 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 							// _id is a single ID
 							if (ds_list_find_index(_instances, _id) == -1)
 							{
-								global.__bbmodMaterialProps = _materialPropsOld;
-								_condition = false;
 								continue;
 							}
 						}
@@ -2022,599 +2262,490 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 
 					////////////////////////////////////////////////////////////
 
-					with(BBMOD_SHADER_CURRENT)
+					if (is_real(_id))
 					{
-						if (is_real(_id))
-						{
-							set_instance_id(_id);
-						}
-						set_material_index(_mesh.MaterialIndex);
+						shader_set_uniform_f(
+							_uInstanceID,
+							((_id & $000000FF) >> 0) / 255,
+							((_id & $0000FF00) >> 8) / 255,
+							((_id & $00FF0000) >> 16) / 255,
+							((_id & $FF000000) >> 24) / 255);
 					}
+					shader_set_uniform_f(
+						_uMaterialIndex,
+						_mesh.MaterialIndex);
 
 					matrix_set(matrix_world, _matrix);
 
 					var _primitiveType = _mesh.PrimitiveType;
 					var _vertexBuffer = _mesh.VertexBuffer;
 
-					var _baseOpacity = _material.BaseOpacity;
-					if (global.__bbmodMaterialProps != undefined)
-					{
-						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
-						if (_baseOpacityProp != undefined)
-						{
-							_baseOpacity = _baseOpacityProp;
-						}
-					}
-
 					if (is_array(_batchData[0]))
 					{
 						var _dataIndex = 0;
 						repeat(array_length(_batchData))
 						{
-							BBMOD_SHADER_CURRENT.set_batch_data(_batchData[_dataIndex++]);
-							vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+							shader_set_uniform_f_array(
+								_uBatchData,
+								_batchData[_dataIndex++]);
+							vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
 						}
 					}
 					else
 					{
-						BBMOD_SHADER_CURRENT.set_batch_data(_batchData);
-						vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+						shader_set_uniform_f_array(
+							_uBatchData,
+							_batchData);
+						vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
+					}
+				}
+				break;
+
+				case BBMOD_ERenderCommand.DrawTerrain:
+				{
+					var _data = _grid[# 2, _row];
+					var _id = _data[0];
+					var _terrain = _data[1];
+
+					if (_instances != undefined && ds_list_find_index(_instances, _id) == -1)
+					{
+						continue;
 					}
 
-					global.__bbmodMaterialProps = _materialPropsOld;
+					_terrain.submit();
+					bbmod_material_reset();
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSprite:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _x = _data[3];
+					var _y = _data[4];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite(_sprite, _subimg, _x, _y);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpriteExt:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					var _xscale = _command[i++];
-					var _yscale = _command[i++];
-					var _rot = _command[i++];
-					var _col = _command[i++];
-					var _alpha = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _x = _data[3];
+					var _y = _data[4];
+					var _xscale = _data[5];
+					var _yscale = _data[6];
+					var _rot = _data[7];
+					var _col = _data[8];
+					var _alpha = _data[9];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite_ext(_sprite, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpriteGeneral:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _left = _command[i++];
-					var _top = _command[i++];
-					var _width = _command[i++];
-					var _height = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					var _xscale = _command[i++];
-					var _yscale = _command[i++];
-					var _rot = _command[i++];
-					var _c1 = _command[i++];
-					var _c2 = _command[i++];
-					var _c3 = _command[i++];
-					var _c4 = _command[i++];
-					var _alpha = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _left = _data[3];
+					var _top = _data[4];
+					var _width = _data[5];
+					var _height = _data[6];
+					var _x = _data[7];
+					var _y = _data[8];
+					var _xscale = _data[9];
+					var _yscale = _data[10];
+					var _rot = _data[11];
+					var _c1 = _data[12];
+					var _c2 = _data[13];
+					var _c3 = _data[14];
+					var _c4 = _data[15];
+					var _alpha = _data[16];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite_general(_sprite, _subimg, _left, _top, _width, _height, _x, _y,
 						_xscale, _yscale, _rot, _c1, _c2, _c3, _c4, _alpha);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpritePart:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _left = _command[i++];
-					var _top = _command[i++];
-					var _width = _command[i++];
-					var _height = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _left = _data[3];
+					var _top = _data[4];
+					var _width = _data[5];
+					var _height = _data[6];
+					var _x = _data[7];
+					var _y = _data[8];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite_part(_sprite, _subimg, _left, _top, _width, _height, _x, _y);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpritePartExt:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _left = _command[i++];
-					var _top = _command[i++];
-					var _width = _command[i++];
-					var _height = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					var _xscale = _command[i++];
-					var _yscale = _command[i++];
-					var _col = _command[i++];
-					var _alpha = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _left = _data[3];
+					var _top = _data[4];
+					var _width = _data[5];
+					var _height = _data[6];
+					var _x = _data[7];
+					var _y = _data[8];
+					var _xscale = _data[9];
+					var _yscale = _data[10];
+					var _col = _data[11];
+					var _alpha = _data[12];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite_part_ext(_sprite, _subimg, _left, _top, _width, _height, _x, _y,
 						_xscale, _yscale, _col, _alpha);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpritePos:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _x1 = _command[i++];
-					var _y1 = _command[i++];
-					var _x2 = _command[i++];
-					var _y2 = _command[i++];
-					var _x3 = _command[i++];
-					var _y3 = _command[i++];
-					var _x4 = _command[i++];
-					var _y4 = _command[i++];
-					var _alpha = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _x1 = _data[3];
+					var _y1 = _data[4];
+					var _x2 = _data[5];
+					var _y2 = _data[6];
+					var _x3 = _data[7];
+					var _y3 = _data[8];
+					var _x4 = _data[9];
+					var _y4 = _data[10];
+					var _alpha = _data[11];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite_pos(_sprite, _subimg, _x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4, _alpha);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpriteStretched:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					var _w = _command[i++];
-					var _h = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _x = _data[3];
+					var _y = _data[4];
+					var _w = _data[5];
+					var _h = _data[6];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite_stretched(_sprite, _subimg, _x, _y, _w, _h);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpriteStretchedExt:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					var _w = _command[i++];
-					var _h = _command[i++];
-					var _col = _command[i++];
-					var _alpha = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _x = _data[3];
+					var _y = _data[4];
+					var _w = _data[5];
+					var _h = _data[6];
+					var _col = _data[7];
+					var _alpha = _data[8];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite_stretched_ext(_sprite, _subimg, _x, _y, _w, _h, _col, _alpha);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpriteTiled:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _x = _data[3];
+					var _y = _data[4];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
+						{
+							continue;
+						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
+
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
 					draw_sprite_tiled(_sprite, _subimg, _x, _y);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 
 				case BBMOD_ERenderCommand.DrawSpriteTiledExt:
 				{
-					var _sprite = _command[i++];
-					var _subimg = _command[i++];
-					var _x = _command[i++];
-					var _y = _command[i++];
-					var _xscale = _command[i++];
-					var _yscale = _command[i++];
-					var _col = _command[i++];
-					var _alpha = _command[i++];
-					if (global.__bbmodMaterialProps == undefined
-						|| !global.__bbmodMaterialProps.has(BBMOD_U_BASE_OPACITY_UV))
+					var _data = _grid[# 2, _row];
+					var _material = _data[0];
+					var _sprite = _data[1];
+					var _subimg = _data[2];
+					var _x = _data[3];
+					var _y = _data[4];
+					var _xscale = _data[5];
+					var _yscale = _data[6];
+					var _col = _data[7];
+					var _alpha = _data[8];
+
+					// Only apply material if it changed or vertex format changed
+					if (_material != _lastMaterial || BBMOD_VFORMAT_DEFAULT != _lastVertexFormat)
 					{
-						bbmod_shader_set_base_opacity_uv(shader_current(), sprite_get_uvs(_sprite, _subimg));
-					}
-					draw_sprite_tiled_ext(_sprite, _subimg, _x, _y, _xscale, _yscale, _col, _alpha);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.EndConditionalBlock:
-					if (--_matchCounter < 0)
-					{
-						show_error("Found unmatching end of conditional block in render queue " + Name + "!",
-							true);
-					}
-					break;
-
-				case BBMOD_ERenderCommand.PopGpuState:
-					gpu_pop_state();
-					break;
-
-				case BBMOD_ERenderCommand.PushGpuState:
-					gpu_push_state();
-					break;
-
-				case BBMOD_ERenderCommand.ResetMaterial:
-					bbmod_material_reset();
-					break;
-
-				case BBMOD_ERenderCommand.ResetMaterialProps:
-					bbmod_material_props_reset();
-					break;
-
-				case BBMOD_ERenderCommand.ResetShader:
-					shader_reset();
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuAlphaTestEnable:
-					gpu_set_alphatestenable(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuAlphaTestRef:
-					gpu_set_alphatestref(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuBlendEnable:
-					gpu_set_blendenable(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuBlendMode:
-					gpu_set_blendmode(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuBlendModeExt:
-				{
-					var _src = _command[i++];
-					var _dest = _command[i++];
-					gpu_set_blendmode_ext(_src, _dest);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuBlendModeExtSepAlpha:
-				{
-					var _src = _command[i++];
-					var _dest = _command[i++];
-					var _srcalpha = _command[i++];
-					var _destalpha = _command[i++];
-					gpu_set_blendmode_ext_sepalpha(_src, _dest, _srcalpha, _destalpha);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuColorWriteEnable:
-				{
-					var _red = _command[i++];
-					var _green = _command[i++];
-					var _blue = _command[i++];
-					var _alpha = _command[i++];
-					gpu_set_colorwriteenable(_red, _green, _blue, _alpha);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuCullMode:
-					gpu_set_cullmode(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuDepth:
-					gpu_set_depth(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuFog:
-					if (_command[i++])
-					{
-						var _color = _command[i++];
-						var _start = _command[i++];
-						var _end = _command[i++];
-						gpu_set_fog(true, _color, _start, _end);
-					}
-					else
-					{
-						gpu_set_fog(false, c_black, 0, 1);
-					}
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuState:
-					gpu_set_state(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexFilter:
-					gpu_set_tex_filter(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexFilterExt:
-				{
-					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
-					gpu_set_tex_filter_ext(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMaxAniso:
-					gpu_set_tex_max_aniso(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMaxAnisoExt:
-				{
-					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
-					gpu_set_tex_max_aniso_ext(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMaxMip:
-					gpu_set_tex_max_mip(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMaxMipExt:
-				{
-					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
-					gpu_set_tex_max_mip_ext(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMinMip:
-					gpu_set_tex_min_mip(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMinMipExt:
-				{
-					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
-					gpu_set_tex_min_mip_ext(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMipBias:
-					gpu_set_tex_mip_bias(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMipBiasExt:
-				{
-					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
-					gpu_set_tex_mip_bias_ext(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMipEnable:
-					gpu_set_tex_mip_enable(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMipEnableExt:
-				{
-					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
-					gpu_set_tex_mip_enable_ext(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMipFilter:
-					gpu_set_tex_mip_filter(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexMipFilterExt:
-				{
-					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
-					gpu_set_tex_mip_filter_ext(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuTexRepeat:
-					gpu_set_tex_repeat(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuTexRepeatExt:
-				{
-					var _index = shader_get_sampler_index(shader_current(), _command[i++]);
-					gpu_set_tex_repeat_ext(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetGpuZFunc:
-					gpu_set_zfunc(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuZTestEnable:
-					gpu_set_ztestenable(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetGpuZWriteEnable:
-					gpu_set_zwriteenable(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetMaterialProps:
-					bbmod_material_props_set(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetProjectionMatrix:
-					matrix_set(matrix_projection, _command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetSampler:
-				{
-					var _nameOrIndex = _command[i++];
-					var _index = is_string(_nameOrIndex)
-						? shader_get_sampler_index(shader_current(), _nameOrIndex)
-						: _nameOrIndex;
-					texture_set_stage(_index, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetShader:
-					shader_set(_command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetUniformFloat:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					shader_set_uniform_f(_uniform, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformFloat2:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					var _v1 = _command[i++];
-					var _v2 = _command[i++];
-					shader_set_uniform_f(_uniform, _v1, _v2);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformFloat3:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					var _v1 = _command[i++];
-					var _v2 = _command[i++];
-					var _v3 = _command[i++];
-					shader_set_uniform_f(_uniform, _v1, _v2, _v3);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformFloat4:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					var _v1 = _command[i++];
-					var _v2 = _command[i++];
-					var _v3 = _command[i++];
-					var _v4 = _command[i++];
-					shader_set_uniform_f(_uniform, _v1, _v2, _v3, _v4);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformFloatArray:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					shader_set_uniform_f_array(_uniform, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformInt:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					shader_set_uniform_i(_uniform, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformInt2:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					var _v1 = _command[i++];
-					var _v2 = _command[i++];
-					shader_set_uniform_i(_uniform, _v1, _v2);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformInt3:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					var _v1 = _command[i++];
-					var _v2 = _command[i++];
-					var _v3 = _command[i++];
-					shader_set_uniform_i(_uniform, _v1, _v2, _v3);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformInt4:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					var _v1 = _command[i++];
-					var _v2 = _command[i++];
-					var _v3 = _command[i++];
-					var _v4 = _command[i++];
-					shader_set_uniform_i(_uniform, _v1, _v2, _v3, _v4);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformIntArray:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					shader_set_uniform_i_array(_uniform, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetUniformMatrix:
-					shader_set_uniform_matrix(shader_get_uniform(shader_current(), _command[i++]));
-					break;
-
-				case BBMOD_ERenderCommand.SetUniformMatrixArray:
-				{
-					var _uniform = shader_get_uniform(shader_current(), _command[i++]);
-					shader_set_uniform_matrix_array(_uniform, _command[i++]);
-				}
-				break;
-
-				case BBMOD_ERenderCommand.SetViewMatrix:
-					matrix_set(matrix_view, _command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SetWorldMatrix:
-					matrix_set(matrix_world, _command[i++]);
-					break;
-
-				case BBMOD_ERenderCommand.SubmitRenderQueue:
-					_command[i++].submit(_instances);
-					break;
-
-				case BBMOD_ERenderCommand.SubmitVertexBuffer:
-				{
-					var _vertexBuffer = _command[i++];
-					var _prim = _command[i++];
-
-					var _texture = _command[i++];
-					if (global.__bbmodMaterialProps != undefined)
-					{
-						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
-						if (_baseOpacityProp != undefined)
+						if (!_material.apply(BBMOD_VFORMAT_DEFAULT))
 						{
-							_texture = _baseOpacityProp;
+							continue;
 						}
+						_lastMaterial = _material;
+						_lastVertexFormat = BBMOD_VFORMAT_DEFAULT;
+
+						// Cache shader and uniform location
+						_shaderCurrent = shader_current();
+						_uBaseOpacityUV = shader_get_uniform(_shaderCurrent, BBMOD_U_BASE_OPACITY_UV);
 					}
 
-					vertex_submit(_vertexBuffer, _prim, _texture);
+					var _uv = sprite_get_uvs(_sprite, _subimg);
+					shader_set_uniform_f(
+						_uBaseOpacityUV,
+						_uv[0],
+						_uv[1],
+						_uv[2],
+						_uv[3]);
+					draw_sprite_tiled_ext(_sprite, _subimg, _x, _y, _xscale, _yscale, _col, _alpha);
+					shader_reset();
+					_lastMaterial = undefined;
+					_lastVertexFormat = undefined;
 				}
 				break;
 			}
 
-			_condition = true;
 		}
 
 		return self;
@@ -2624,67 +2755,96 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 	{
 		gml_pragma("forceinline");
 		__renderPasses = 0;
-		__index = 0;
+		// Clear all render pass grids
+		var i = 0;
+		repeat(BBMOD_ERenderPass.SIZE)
+		{
+			__index[@ i] = 0;
+			__isSorted[@ i] = true;
+			++i;
+		}
 		return self;
 	};
 
 	static destroy = function ()
 	{
+		// Destroy all render pass grids
+		var i = 0;
+		repeat(BBMOD_ERenderPass.SIZE)
+		{
+			ds_grid_destroy(__renderCommands[i]);
+			++i;
+		}
 		__renderCommands = undefined;
 		__bbmod_remove_render_queue(self);
 		return undefined;
 	};
 
-	__bbmod_add_render_queue(self);
+	// Note: Render queues are now managed through BBMOD_ERenderQueue enum.
+	// This constructor no longer automatically registers the queue.
 }
 
+/// @func __bbmod_add_render_queue(_renderQueue)
+/// @deprecated This function is obsolete and no longer has any effect.
+/// Render queues are now managed through the BBMOD_ERenderQueue enum.
+/// @private
 function __bbmod_add_render_queue(_renderQueue)
 {
 	gml_pragma("forceinline");
-	static _renderQueues = bbmod_render_queues_get();
-	array_push(_renderQueues, _renderQueue);
-	__bbmod_reindex_render_queues();
+	// Obsolete - render queues are now fixed based on BBMOD_ERenderQueue
 }
 
+/// @func __bbmod_remove_render_queue(_renderQueue)
+/// @deprecated This function is obsolete and no longer has any effect.
+/// Render queues are now managed through the BBMOD_ERenderQueue enum.
+/// @private
 function __bbmod_remove_render_queue(_renderQueue)
 {
 	gml_pragma("forceinline");
-	static _renderQueues = bbmod_render_queues_get();
-	var _renderQueueCount = array_length(_renderQueues);
-	for (var i = 0; i < _renderQueueCount; ++i)
-	{
-		if (_renderQueues[i] == _renderQueue)
-		{
-			array_delete(_renderQueues, i, 1);
-			break;
-		}
-	}
-	__bbmod_reindex_render_queues();
+	// Obsolete - render queues are now fixed based on BBMOD_ERenderQueue
 }
 
+/// @func __bbmod_reindex_render_queues()
+/// @deprecated This function is obsolete and no longer has any effect.
+/// Render queues are now managed through the BBMOD_ERenderQueue enum.
+/// @private
 function __bbmod_reindex_render_queues()
 {
 	gml_pragma("forceinline");
-	static _renderQueues = bbmod_render_queues_get();
-	static _sortFn = function (_a, _b)
-	{
-		if (_b.Priority > _a.Priority) return -1;
-		if (_b.Priority < _a.Priority) return +1;
-		return 0;
-	};
-	array_sort(_renderQueues, _sortFn);
+	// Obsolete - render queue order is now fixed based on BBMOD_ERenderQueue
 }
 
 /// @func bbmod_render_queue_get_default()
 ///
-/// @desc Retrieves the default render queue.
+/// @desc Retrieves the default render queue (Opaque).
 ///
 /// @return {Struct.BBMOD_RenderQueue} The default render queue.
 ///
 /// @see BBMOD_RenderQueue
+/// @see BBMOD_ERenderQueue
 function bbmod_render_queue_get_default()
 {
 	gml_pragma("forceinline");
-	static _renderQueue = new BBMOD_RenderQueue("Default");
-	return _renderQueue;
+	return bbmod_render_queue_get(BBMOD_ERenderQueue.Opaque);
 }
+
+/// @func __bbmod_render_queues_init()
+///
+/// @desc Initializes the global render queues with default instances.
+/// Called automatically during BBMOD initialization.
+///
+/// @private
+function __bbmod_render_queues_init()
+{
+	gml_pragma("forceinline");
+	global.__bbmodRenderQueues[$  string(BBMOD_ERenderQueue.Terrain)] = new BBMOD_RenderQueue("Terrain",
+		BBMOD_ERenderQueue.Terrain);
+	global.__bbmodRenderQueues[$  string(BBMOD_ERenderQueue.Opaque)] = new BBMOD_RenderQueue("Opaque", BBMOD_ERenderQueue
+		.Opaque);
+	global.__bbmodRenderQueues[$  string(BBMOD_ERenderQueue.Transparent)] = new BBMOD_RenderQueue("Transparent",
+		BBMOD_ERenderQueue.Transparent);
+	global.__bbmodRenderQueues[$  string(BBMOD_ERenderQueue.Sky)] = new BBMOD_RenderQueue("Sky", BBMOD_ERenderQueue.Sky);
+}
+
+// Initialize render queues immediately
+__bbmod_render_queues_init();

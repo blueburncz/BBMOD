@@ -1,4 +1,4 @@
-/// @module LayeredAnimationPlayer
+/// @module Extras.LayeredAnimationPlayer
 
 /// @func BBMOD_LayeredAnimationPlayer(_model[, _paused])
 ///
@@ -211,7 +211,10 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 	/// @return {Struct.BBMOD_LayeredAnimationPlayer} Returns `self`.
 	static update = function (_deltaTime)
 	{
-		if (!Model.IsLoaded)
+		var _model = Model;
+		var _layers = Layers;
+
+		if (!_model.IsLoaded)
 		{
 			return self;
 		}
@@ -221,7 +224,7 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 			return self;
 		}
 
-		var _layerCount = array_length(Layers);
+		var _layerCount = array_length(_layers);
 
 		// Update animation layers
 		var _layerPrev = undefined;
@@ -229,7 +232,7 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 		var _layerIndex = 0;
 		repeat(_layerCount)
 		{
-			var _layer = Layers[_layerIndex];
+			var _layer = _layers[_layerIndex];
 			if (_layer.Enabled && _layer.Weight > 0.0)
 			{
 				_layer.update(_deltaTime, __frameskipCurrent, _layerPrev);
@@ -241,9 +244,10 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 		if (__frameskipCurrent == 0)
 		{
 			// Transform nodes with parent node
-			var _nodes = Model.get_node_array();
+			var _nodes = _model.get_node_array();
+			var _nodeCount = _model.NodeCount;
 			var _index = 0;
-			repeat(array_length(_nodes))
+			repeat(_nodeCount)
 			{
 				var _node = _nodes[_index++];
 				var _nodeIndex = _node.Index;
@@ -317,10 +321,10 @@ function BBMOD_LayeredAnimationPlayer(_model, _paused = false) constructor
 
 			// Get the transform array for shaders
 			var _boneIndex = 0;
-			repeat(Model.BoneCount)
+			repeat(_model.BoneCount)
 			{
 				__bbmod_dquat_mul_array(
-					Model.__offsetArray, _boneIndex,
+					_model.__offsetArray, _boneIndex,
 					__nodeTransform, _boneIndex,
 					__transformArray, _boneIndex);
 				_boneIndex += 8;

@@ -6,7 +6,7 @@
   "name":"BBMOD_PhysicsShape",
   "parent":{
     "name":"Shapes",
-    "path":"folders/BBMOD_WIP/Physics/Shapes.yy",
+    "path":"folders/BBMOD/3_Physics/Shapes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

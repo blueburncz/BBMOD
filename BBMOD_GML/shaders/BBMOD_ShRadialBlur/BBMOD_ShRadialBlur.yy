@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShRadialBlur",
   "name":"BBMOD_ShRadialBlur",
   "parent":{
-    "name":"RadialBlur",
-    "path":"folders/BBMOD/PostProcessing/RadialBlur.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

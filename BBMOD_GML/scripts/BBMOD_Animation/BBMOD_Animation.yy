@@ -6,7 +6,7 @@
   "name":"BBMOD_Animation",
   "parent":{
     "name":"Animation",
-    "path":"folders/BBMOD/Core/Base/Animation.yy",
+    "path":"folders/BBMOD/0_Base/Animation.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

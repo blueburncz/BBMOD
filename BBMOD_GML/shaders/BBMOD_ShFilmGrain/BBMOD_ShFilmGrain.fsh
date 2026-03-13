@@ -1,10 +1,10 @@
 // FIXME: Temporary fix!
 precision highp float;
 
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform float u_fStrength;
-uniform float u_fTime;
+uniform float uStrength;
+uniform float uTime;
 
 float Random(vec2 co)
 {
@@ -19,9 +19,9 @@ float Luminance(vec3 color)
 
 void main()
 {
-	vec3 color = texture2D(gm_BaseTexture, v_vTexCoord).rgb;
-	float noise = Random(vec2(Random(v_vTexCoord), u_fTime)) * 2.0 - 1.0;
-	float strength = (1.0 - Luminance(color)) * u_fStrength;
+	vec3 color = texture2D(gm_BaseTexture, vTexCoord).rgb;
+	float noise = Random(vec2(Random(vTexCoord), uTime)) * 2.0 - 1.0;
+	float strength = (1.0 - Luminance(color)) * uStrength;
 	gl_FragColor.rgb = color + color * noise * strength;
 	gl_FragColor.a = 1.0;
 }

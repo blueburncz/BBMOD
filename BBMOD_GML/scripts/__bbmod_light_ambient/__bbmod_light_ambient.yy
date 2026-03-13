@@ -6,7 +6,7 @@
   "name":"__bbmod_light_ambient",
   "parent":{
     "name":"Lights",
-    "path":"folders/BBMOD/Core/Lights.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Lights.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

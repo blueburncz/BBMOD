@@ -6,7 +6,7 @@
   "name":"BBMOD_AddVec2OnCollisionModule",
   "parent":{
     "name":"AddPropertyOnCollision",
-    "path":"folders/BBMOD/Particles/Modules/Universal/AddPropertyOnCollision.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Universal/AddPropertyOnCollision.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

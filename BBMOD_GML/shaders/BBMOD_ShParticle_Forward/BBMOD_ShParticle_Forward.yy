@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShParticle_Forward",
+  "name":"BBMOD_ShParticle_Forward",
+  "parent":{
+    "name":"Particle",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Particle.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -134,6 +134,27 @@ function BBMOD_PhysicsWheel() constructor
 ///
 /// @desc A struct containing the information needed to create a physics vehicle.
 ///
+/// @example
+/// ```gml
+/// // Create a vehicle chassis
+/// var _chassisShape = physicsEngine.create_physics_shape(new BBMOD_BoxPhysicsShapeInfo());
+/// var _rigidBodyInfo = new BBMOD_RigidBodyInfo();
+/// _rigidBodyInfo.Shape = _chassisShape;
+/// _rigidBodyInfo.Mass = 800.0; // 800kg car
+/// _rigidBodyInfo.Position = new BBMOD_Vec3(0, 0, 2);
+/// var _chassis = physicsWorld.create_rigid_body(_rigidBodyInfo);
+///
+/// // Create the vehicle
+/// var _vehicleInfo = new BBMOD_PhysicsVehicleInfo();
+/// _vehicleInfo.RigidBody = _chassis;
+/// _vehicleInfo.SuspensionStiffness = 20.0;
+/// _vehicleInfo.SuspensionDamping = 2.3;
+/// _vehicleInfo.SuspensionCompression = 4.4;
+/// var _car = physicsWorld.create_vehicle(_vehicleInfo);
+///
+/// // See add_wheel() for example of adding wheels
+/// ```
+///
 /// @see BBMOD_PhysicsVehicle
 /// @see BBMOD_PhysicsWorld.create_vehicle
 function BBMOD_PhysicsVehicleInfo() constructor
@@ -216,6 +237,42 @@ function BBMOD_PhysicsVehicle() constructor
 	/// wheel to add.
 	///
 	/// @return {Struct.BBMOD_PhysicsWheel} The added wheel.
+	///
+	/// @example
+	/// ```gml
+	/// // Add four wheels to a vehicle
+	/// var _wheelInfo = new BBMOD_PhysicsWheelInfo();
+	/// _wheelInfo.Radius = 0.4;
+	/// _wheelInfo.SuspensionRestLength = 0.6;
+	/// _wheelInfo.Direction = new BBMOD_Vec3(0, 0, -1);
+	/// _wheelInfo.Axle = new BBMOD_Vec3(0, -1, 0);
+	///
+	/// // Front-left wheel
+	/// _wheelInfo.ConnectionPoint = new BBMOD_Vec3(-0.9, 1.2, 0.5);
+	/// _wheelInfo.IsFrontWheel = true;
+	/// var _wheelFL = _car.add_wheel(_wheelInfo);
+	///
+	/// // Front-right wheel
+	/// _wheelInfo.ConnectionPoint = new BBMOD_Vec3(0.9, 1.2, 0.5);
+	/// _wheelInfo.IsFrontWheel = true;
+	/// var _wheelFR = _car.add_wheel(_wheelInfo);
+	///
+	/// // Rear-left wheel
+	/// _wheelInfo.ConnectionPoint = new BBMOD_Vec3(-0.9, -1.2, 0.5);
+	/// _wheelInfo.IsFrontWheel = false;
+	/// var _wheelRL = _car.add_wheel(_wheelInfo);
+	///
+	/// // Rear-right wheel
+	/// _wheelInfo.ConnectionPoint = new BBMOD_Vec3(0.9, -1.2, 0.5);
+	/// _wheelInfo.IsFrontWheel = false;
+	/// var _wheelRR = _car.add_wheel(_wheelInfo);
+	///
+	/// // Apply controls to the wheels
+	/// _wheelFL.set_steering(0.3);
+	/// _wheelFR.set_steering(0.3);
+	/// _wheelRL.apply_engine_force(1000.0);
+	/// _wheelRR.apply_engine_force(1000.0);
+	/// ```
 	static add_wheel = function (_info)
 	{
 		gml_pragma("forceinline");

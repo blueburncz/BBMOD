@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_DepthOfFieldEffect([_focusStart[, _focusEnd[, _autoFocus[, _autoFocusRange[, _autoFocusPoint[, _autoFocusFactor[, _blurRangeNear[, _blurRangeFar[, _blurScaleNear[, _blurScaleFar[, _bokehShape[, _sampleCount]]]]]]]]]]]])
 ///
@@ -156,22 +156,22 @@ function BBMOD_DepthOfFieldEffect(
 	/// @private
 	__surAutoFocus = -1;
 
-	static __uGetCoCFocusStart = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusStart");
-	static __uGetCoCFocusEnd = shader_get_uniform(BBMOD_ShGetCoC, "u_fFocusEnd");
-	static __uGetCoCBlurRangeNear = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeNear");
-	static __uGetCoCBlurRangeFar = shader_get_uniform(BBMOD_ShGetCoC, "u_fBlurRangeFar");
+	static __uGetCoCFocusStart = shader_get_uniform(BBMOD_ShGetCoC, "uFocusStart");
+	static __uGetCoCFocusEnd = shader_get_uniform(BBMOD_ShGetCoC, "uFocusEnd");
+	static __uGetCoCBlurRangeNear = shader_get_uniform(BBMOD_ShGetCoC, "uBlurRangeNear");
+	static __uGetCoCBlurRangeFar = shader_get_uniform(BBMOD_ShGetCoC, "uBlurRangeFar");
 
-	static __uDownsampleTexel = shader_get_uniform(BBMOD_ShDownsampleCoC, "u_vTexel");
+	static __uDownsampleTexel = shader_get_uniform(BBMOD_ShDownsampleCoC, "uTexel");
 
-	static __uBlurTexel = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
+	static __uBlurTexel = shader_get_uniform(BBMOD_ShGaussianBlur, "uTexel");
 
-	static __uDoFCoCNear = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCNear");
-	static __uDoFCoCFar = shader_get_sampler_index(BBMOD_ShDoF, "u_texCoCFar");
-	static __uDoFCoCScaleNear = shader_get_uniform(BBMOD_ShDoF, "u_fCoCScaleNear");
-	static __uDoFCoCScaleFar = shader_get_uniform(BBMOD_ShDoF, "u_fCoCScaleFar");
-	static __uDoFTexel = shader_get_uniform(BBMOD_ShDoF, "u_vTexel");
-	static __uDoFBokehShape = shader_get_uniform(BBMOD_ShDoF, "u_fBokehShape");
-	static __uDoFStep = shader_get_uniform(BBMOD_ShDoF, "u_fStep");
+	static __uDoFCoCNear = shader_get_sampler_index(BBMOD_ShDoF, "uCoCNear");
+	static __uDoFCoCFar = shader_get_sampler_index(BBMOD_ShDoF, "uCoCFar");
+	static __uDoFCoCScaleNear = shader_get_uniform(BBMOD_ShDoF, "uCoCScaleNear");
+	static __uDoFCoCScaleFar = shader_get_uniform(BBMOD_ShDoF, "uCoCScaleFar");
+	static __uDoFTexel = shader_get_uniform(BBMOD_ShDoF, "uTexel");
+	static __uDoFBokehShape = shader_get_uniform(BBMOD_ShDoF, "uBokehShape");
+	static __uDoFStep = shader_get_uniform(BBMOD_ShDoF, "uStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -238,17 +238,17 @@ function BBMOD_DepthOfFieldEffect(
 		// Downsample near CoC
 		shader_set(BBMOD_ShDownsampleCoC);
 		surface_set_target(__surCoCDownsample1);
-		shader_set_uniform_f(__uDownsampleTexel, 2.0 / _width, 2.0 / _height);
+		shader_set_uniform_f(__uDownsampleTexel, 1.0 / _width, 1.0 / _height);
 		draw_surface_stretched(__surCoC, 0, 0, _width / 2, _height / 2);
 		surface_reset_target()
 
 		surface_set_target(__surCoCDownsample2);
-		shader_set_uniform_f(__uDownsampleTexel, 4.0 / _width, 4.0 / _height);
+		shader_set_uniform_f(__uDownsampleTexel, 2.0 / _width, 2.0 / _height);
 		draw_surface_stretched(__surCoCDownsample1, 0, 0, _width / 4, _height / 4);
 		surface_reset_target()
 
 		surface_set_target(__surCoCNear);
-		shader_set_uniform_f(__uDownsampleTexel, 8.0 / _width, 8.0 / _height);
+		shader_set_uniform_f(__uDownsampleTexel, 4.0 / _width, 4.0 / _height);
 		draw_surface_stretched(__surCoCDownsample2, 0, 0, _width / 8, _height / 8);
 		surface_reset_target()
 		shader_reset();

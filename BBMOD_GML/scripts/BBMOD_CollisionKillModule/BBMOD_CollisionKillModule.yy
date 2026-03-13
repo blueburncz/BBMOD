@@ -6,7 +6,7 @@
   "name":"BBMOD_CollisionKillModule",
   "parent":{
     "name":"Kill",
-    "path":"folders/BBMOD/Particles/Modules/Kill.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Kill.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

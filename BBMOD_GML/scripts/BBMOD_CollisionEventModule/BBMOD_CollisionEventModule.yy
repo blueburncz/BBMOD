@@ -6,7 +6,7 @@
   "name":"BBMOD_CollisionEventModule",
   "parent":{
     "name":"Event",
-    "path":"folders/BBMOD/Particles/Modules/Event.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Event.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

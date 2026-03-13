@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @enum Enumeration of anti-aliasing techniques.
 /// @obsolete Please use {@link BBMOD_FXAAEffect} instead.

@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @enum Enumeration of particle properties.
 /// @see BBMOD_ParticleEmitter.Particles

@@ -17,6 +17,8 @@ else
 	_baseMaterial.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
 }
 _baseMaterial.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+_baseMaterial.DitherFadeStart = 50;
+_baseMaterial.DitherFadeEnd = 60;
 
 matSphere = _baseMaterial.clone();
 matSphere.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);

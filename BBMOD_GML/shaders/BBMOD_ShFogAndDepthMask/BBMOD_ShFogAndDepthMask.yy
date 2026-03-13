@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShFogAndDepthMask",
   "name":"BBMOD_ShFogAndDepthMask",
   "parent":{
-    "name":"Shaders",
-    "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
+    "name":"DeferredRendering",
+    "path":"folders/BBMOD/2_Rendering/Shaders/DeferredRendering.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

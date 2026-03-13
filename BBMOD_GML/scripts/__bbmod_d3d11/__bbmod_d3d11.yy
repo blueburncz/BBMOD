@@ -6,7 +6,7 @@
   "name":"__bbmod_d3d11",
   "parent":{
     "name":"D3D11",
-    "path":"folders/BBMOD/D3D11.yy",
+    "path":"folders/BBMOD/5_Extras/D3D11.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,4 +1,4 @@
-/// @module Raycasting
+/// @module Extras.Raycasting
 
 /// @func bbmod_cmp(_a, _b)
 ///

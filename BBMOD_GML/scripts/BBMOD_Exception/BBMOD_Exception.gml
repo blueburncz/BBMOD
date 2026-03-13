@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /// @func BBMOD_Exception([_msg])
 ///

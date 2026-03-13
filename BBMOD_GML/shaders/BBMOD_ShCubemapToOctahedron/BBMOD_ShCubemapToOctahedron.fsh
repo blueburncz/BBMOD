@@ -1,6 +1,6 @@
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform vec2 u_vTexel;
+uniform vec2 uTexel;
 
 #define X_CUBEMAP_POS_X 0
 #define X_CUBEMAP_NEG_X 1
@@ -94,6 +94,6 @@ vec3 xOctahedronUvToVec3Normalized(vec2 uv)
 
 void main()
 {
-	vec3 dir = xOctahedronUvToVec3Normalized(v_vTexCoord);
-	gl_FragColor = texture2D(gm_BaseTexture, xVec3ToCubeUv(dir, u_vTexel));
+	vec3 dir = xOctahedronUvToVec3Normalized(vTexCoord);
+	gl_FragColor = texture2D(gm_BaseTexture, xVec3ToCubeUv(dir, uTexel));
 }

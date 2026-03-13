@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_LensFlare",
   "parent":{
-    "name":"LensFlares",
-    "path":"folders/BBMOD/PostProcessing/LensFlares.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

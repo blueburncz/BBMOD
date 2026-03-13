@@ -97,6 +97,9 @@ GM_EXPORT double BBMOD_PhysicsWorld_CreateRigidBody(double _id, char* _buffer)
 	auto mass = BBMOD_ReadBuffer<double>(_buffer);
 	auto restitution = BBMOD_ReadBuffer<double>(_buffer);
 	auto friction = BBMOD_ReadBuffer<double>(_buffer);
+	auto collisionGroup = BBMOD_ReadBuffer<int16_t>(_buffer);
+	auto collisionMask = BBMOD_ReadBuffer<int16_t>(_buffer);
+	auto isTrigger = BBMOD_ReadBuffer<bool>(_buffer);
 
 	auto colShape = Registry::Get<btCollisionShape>(shapeId);
 
@@ -121,7 +124,15 @@ GM_EXPORT double BBMOD_PhysicsWorld_CreateRigidBody(double _id, char* _buffer)
 	body->setSleepingThresholds(0.1f, 0.1f);
 	body->setDeactivationTime(1.0f);
 
-	physicsWorld->m_dynamicsWorld->addRigidBody(body);
+	// Set as trigger (no physical response) if requested
+	if (isTrigger)
+	{
+		body->setCollisionFlags(
+			body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE
+		);
+	}
+
+	physicsWorld->m_dynamicsWorld->addRigidBody(body, collisionGroup, collisionMask);
 
 	return Registry::Add(body);
 }
@@ -350,6 +361,205 @@ GM_EXPORT double BBMOD_PhysicsWorld_DestroyConstraint(double _worldId, double _c
 	return 1.0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Constraint Control
+//
+
+GM_EXPORT double BBMOD_PhysicsConstraint_SetBreakingThreshold(double _constraintId, double _threshold)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	constraint->setBreakingImpulseThreshold(static_cast<btScalar>(_threshold));
+	return 1.0;
+}
+
+GM_EXPORT double BBMOD_PhysicsConstraint_GetBreakingThreshold(double _constraintId)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	return static_cast<double>(constraint->getBreakingImpulseThreshold());
+}
+
+GM_EXPORT double BBMOD_PhysicsConstraint_IsEnabled(double _constraintId)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	return constraint->isEnabled() ? 1.0 : 0.0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Hinge Constraint Motors
+//
+
+GM_EXPORT double BBMOD_HingeConstraint_EnableMotor(double _constraintId, double _enable)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto hingeConstraint = dynamic_cast<btHingeConstraint*>(constraint);
+
+	if (hingeConstraint)
+	{
+		hingeConstraint->enableMotor(_enable > 0.5);
+		return 1.0;
+	}
+
+	return 0.0; // Not a hinge constraint
+}
+
+GM_EXPORT double BBMOD_HingeConstraint_SetMotorTarget(double _constraintId, double _targetAngle, double _dt)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto hingeConstraint = dynamic_cast<btHingeConstraint*>(constraint);
+
+	if (hingeConstraint)
+	{
+		hingeConstraint->setMotorTarget(static_cast<btScalar>(_targetAngle), static_cast<btScalar>(_dt));
+		return 1.0;
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_HingeConstraint_SetMaxMotorImpulse(double _constraintId, double _maxImpulse)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto hingeConstraint = dynamic_cast<btHingeConstraint*>(constraint);
+
+	if (hingeConstraint)
+	{
+		hingeConstraint->setMaxMotorImpulse(static_cast<btScalar>(_maxImpulse));
+		return 1.0;
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_HingeConstraint_GetHingeAngle(double _constraintId)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto hingeConstraint = dynamic_cast<btHingeConstraint*>(constraint);
+
+	if (hingeConstraint)
+	{
+		return static_cast<double>(hingeConstraint->getHingeAngle());
+	}
+
+	return 0.0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Slider Constraint Motors
+//
+
+GM_EXPORT double BBMOD_SliderConstraint_SetPoweredLinMotor(double _constraintId, double _enable)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto sliderConstraint = dynamic_cast<btSliderConstraint*>(constraint);
+
+	if (sliderConstraint)
+	{
+		sliderConstraint->setPoweredLinMotor(_enable > 0.5);
+		return 1.0;
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_SliderConstraint_SetTargetLinMotorVelocity(double _constraintId, double _velocity)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto sliderConstraint = dynamic_cast<btSliderConstraint*>(constraint);
+
+	if (sliderConstraint)
+	{
+		sliderConstraint->setTargetLinMotorVelocity(static_cast<btScalar>(_velocity));
+		return 1.0;
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_SliderConstraint_SetMaxLinMotorForce(double _constraintId, double _force)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto sliderConstraint = dynamic_cast<btSliderConstraint*>(constraint);
+
+	if (sliderConstraint)
+	{
+		sliderConstraint->setMaxLinMotorForce(static_cast<btScalar>(_force));
+		return 1.0;
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_SliderConstraint_SetPoweredAngMotor(double _constraintId, double _enable)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto sliderConstraint = dynamic_cast<btSliderConstraint*>(constraint);
+
+	if (sliderConstraint)
+	{
+		sliderConstraint->setPoweredAngMotor(_enable > 0.5);
+		return 1.0;
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_SliderConstraint_SetTargetAngMotorVelocity(double _constraintId, double _velocity)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto sliderConstraint = dynamic_cast<btSliderConstraint*>(constraint);
+
+	if (sliderConstraint)
+	{
+		sliderConstraint->setTargetAngMotorVelocity(static_cast<btScalar>(_velocity));
+		return 1.0;
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_SliderConstraint_SetMaxAngMotorForce(double _constraintId, double _force)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto sliderConstraint = dynamic_cast<btSliderConstraint*>(constraint);
+
+	if (sliderConstraint)
+	{
+		sliderConstraint->setMaxAngMotorForce(static_cast<btScalar>(_force));
+		return 1.0;
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_SliderConstraint_GetLinearPos(double _constraintId)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto sliderConstraint = dynamic_cast<btSliderConstraint*>(constraint);
+
+	if (sliderConstraint)
+	{
+		return static_cast<double>(sliderConstraint->getLinearPos());
+	}
+
+	return 0.0;
+}
+
+GM_EXPORT double BBMOD_SliderConstraint_GetAngularPos(double _constraintId)
+{
+	auto constraint = Registry::Get<btTypedConstraint>(_constraintId);
+	auto sliderConstraint = dynamic_cast<btSliderConstraint*>(constraint);
+
+	if (sliderConstraint)
+	{
+		return static_cast<double>(sliderConstraint->getAngularPos());
+	}
+
+	return 0.0;
+}
+
 GM_EXPORT double BBMOD_PhysicsWorld_CreateTerrain(double _id, char* _buffer)
 {
 	auto width = BBMOD_ReadBuffer<uint32_t>(_buffer);
@@ -497,6 +707,533 @@ GM_EXPORT double BBMOD_PhysicsWorld_Destroy(double _id)
 		dynamicsWorld->removeCollisionObject(obj);
 		delete obj;
 	}
+
+	return 1.0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Raycasting
+//
+
+GM_EXPORT double BBMOD_PhysicsWorld_Raycast(double _worldId, char* _buffer)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
+
+	// Read ray start and end positions
+	btScalar fromX = BBMOD_ReadBuffer<double>(_buffer);
+	btScalar fromY = BBMOD_ReadBuffer<double>(_buffer);
+	btScalar fromZ = BBMOD_ReadBuffer<double>(_buffer);
+	btVector3 rayFrom(fromX, fromY, fromZ);
+
+	btScalar toX = BBMOD_ReadBuffer<double>(_buffer);
+	btScalar toY = BBMOD_ReadBuffer<double>(_buffer);
+	btScalar toZ = BBMOD_ReadBuffer<double>(_buffer);
+	btVector3 rayTo(toX, toY, toZ);
+
+	// Perform raycast
+	btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
+	physicsWorld->m_dynamicsWorld->rayTest(rayFrom, rayTo, rayCallback);
+
+	// Write results back to buffer
+	if (rayCallback.hasHit())
+	{
+		// Hit = true
+		BBMOD_WriteBuffer(_buffer, 1.0);
+
+		// Hit position
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(rayCallback.m_hitPointWorld.getX()));
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(rayCallback.m_hitPointWorld.getY()));
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(rayCallback.m_hitPointWorld.getZ()));
+
+		// Hit normal
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(rayCallback.m_hitNormalWorld.getX()));
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(rayCallback.m_hitNormalWorld.getY()));
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(rayCallback.m_hitNormalWorld.getZ()));
+
+		// Hit fraction (0-1 along ray)
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(rayCallback.m_closestHitFraction));
+
+		// Hit body ID (find in registry)
+		const btCollisionObject* hitObject = rayCallback.m_collisionObject;
+		const btRigidBody* hitBody = btRigidBody::upcast(hitObject);
+		if (hitBody)
+		{
+			double bodyId = Registry::GetId(const_cast<btRigidBody*>(hitBody));
+			BBMOD_WriteBuffer(_buffer, bodyId);
+		}
+		else
+		{
+			BBMOD_WriteBuffer(_buffer, -1.0); // No rigid body
+		}
+	}
+	else
+	{
+		// Hit = false
+		BBMOD_WriteBuffer(_buffer, 0.0);
+
+		// Write dummy data (7 more doubles to keep buffer size consistent)
+		for (int i = 0; i < 7; ++i)
+		{
+			BBMOD_WriteBuffer(_buffer, 0.0);
+		}
+	}
+
+	return 1.0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Shape Casting (Sweep Tests)
+//
+
+GM_EXPORT double BBMOD_PhysicsWorld_ShapeSweep(double _worldId, char* _buffer)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
+
+	// Read shape ID
+	auto shapeId = BBMOD_ReadBuffer<double>(_buffer);
+	auto colShape = Registry::Get<btCollisionShape>(shapeId);
+
+	// Shape must be convex for sweep tests
+	btConvexShape* convexShape = dynamic_cast<btConvexShape*>(colShape);
+	if (!convexShape)
+	{
+		// Not a convex shape - write no hit and return
+		BBMOD_WriteBuffer(_buffer, 0.0);
+		for (int i = 0; i < 7; ++i)
+		{
+			BBMOD_WriteBuffer(_buffer, 0.0);
+		}
+		return 0.0; // Error: shape is not convex
+	}
+
+	// Read from transform (16 doubles for 4x4 matrix)
+	btScalar fromMatrix[16];
+	for (int i = 0; i < 16; ++i)
+	{
+		fromMatrix[i] = BBMOD_ReadBuffer<double>(_buffer);
+	}
+	btTransform fromTransform;
+	fromTransform.setFromOpenGLMatrix(fromMatrix);
+
+	// Read to transform (16 doubles for 4x4 matrix)
+	btScalar toMatrix[16];
+	for (int i = 0; i < 16; ++i)
+	{
+		toMatrix[i] = BBMOD_ReadBuffer<double>(_buffer);
+	}
+	btTransform toTransform;
+	toTransform.setFromOpenGLMatrix(toMatrix);
+
+	// Perform convex sweep test
+	btCollisionWorld::ClosestConvexResultCallback sweepCallback(
+		fromTransform.getOrigin(),
+		toTransform.getOrigin()
+	);
+
+	physicsWorld->m_dynamicsWorld->convexSweepTest(
+		convexShape,
+		fromTransform,
+		toTransform,
+		sweepCallback
+	);
+
+	// Write results back to buffer
+	if (sweepCallback.hasHit())
+	{
+		// Hit = true
+		BBMOD_WriteBuffer(_buffer, 1.0);
+
+		// Hit position
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(sweepCallback.m_hitPointWorld.getX()));
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(sweepCallback.m_hitPointWorld.getY()));
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(sweepCallback.m_hitPointWorld.getZ()));
+
+		// Hit normal
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(sweepCallback.m_hitNormalWorld.getX()));
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(sweepCallback.m_hitNormalWorld.getY()));
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(sweepCallback.m_hitNormalWorld.getZ()));
+
+		// Hit fraction (0-1 along sweep)
+		BBMOD_WriteBuffer(_buffer, static_cast<double>(sweepCallback.m_closestHitFraction));
+
+		// Hit body ID (find in registry)
+		const btCollisionObject* hitObject = sweepCallback.m_hitCollisionObject;
+		const btRigidBody* hitBody = btRigidBody::upcast(hitObject);
+		if (hitBody)
+		{
+			double bodyId = Registry::GetId(const_cast<btRigidBody*>(hitBody));
+			BBMOD_WriteBuffer(_buffer, bodyId);
+		}
+		else
+		{
+			BBMOD_WriteBuffer(_buffer, -1.0); // No rigid body
+		}
+	}
+	else
+	{
+		// Hit = false
+		BBMOD_WriteBuffer(_buffer, 0.0);
+
+		// Write dummy data (7 more doubles to keep buffer size consistent)
+		for (int i = 0; i < 7; ++i)
+		{
+			BBMOD_WriteBuffer(_buffer, 0.0);
+		}
+	}
+
+	return 1.0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Overlap Tests
+//
+
+GM_EXPORT double BBMOD_PhysicsWorld_TestBodyContact(double _worldId, char* _buffer)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
+
+	// Read body IDs
+	auto body1Id = BBMOD_ReadBuffer<double>(_buffer);
+	auto body2Id = BBMOD_ReadBuffer<double>(_buffer);
+
+	auto body1 = Registry::Get<btRigidBody>(body1Id);
+	auto body2 = Registry::Get<btRigidBody>(body2Id);
+
+	// Check if bodies are in contact by examining collision manifolds
+	auto dispatcher = physicsWorld->m_dynamicsWorld->getDispatcher();
+	int numManifolds = dispatcher->getNumManifolds();
+
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = dispatcher->getManifoldByIndexInternal(i);
+		const btCollisionObject* objA = contactManifold->getBody0();
+		const btCollisionObject* objB = contactManifold->getBody1();
+
+		// Check if this manifold involves both our bodies
+		bool involves1 = (objA == body1 || objB == body1);
+		bool involves2 = (objA == body2 || objB == body2);
+
+		if (involves1 && involves2)
+		{
+			// Check if there are actual contact points
+			int numContacts = contactManifold->getNumContacts();
+			for (int j = 0; j < numContacts; j++)
+			{
+				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+				if (pt.getDistance() < 0.0)
+				{
+					// Contact detected (negative distance means penetration)
+					return 1.0;
+				}
+			}
+		}
+	}
+
+	// No contact found
+	return 0.0;
+}
+
+// Custom callback for collecting overlapping bodies
+struct OverlapResultCallback : public btCollisionWorld::ContactResultCallback
+{
+	btAlignedObjectArray<const btRigidBody*> m_bodies;
+	const btCollisionObject* m_testObject;
+	int m_maxResults;
+
+	OverlapResultCallback(const btCollisionObject* testObj, int maxResults)
+		: m_testObject(testObj), m_maxResults(maxResults) {}
+
+	virtual btScalar addSingleResult(
+		btManifoldPoint& cp,
+		const btCollisionObjectWrapper* colObj0Wrap,
+		int partId0,
+		int index0,
+		const btCollisionObjectWrapper* colObj1Wrap,
+		int partId1,
+		int index1
+	)
+	{
+		if (m_bodies.size() >= m_maxResults)
+			return 0.0;
+
+		// Determine which object is the "other" object (not our test object)
+		const btCollisionObject* otherObj = nullptr;
+		if (colObj0Wrap->getCollisionObject() == m_testObject)
+		{
+			otherObj = colObj1Wrap->getCollisionObject();
+		}
+		else
+		{
+			otherObj = colObj0Wrap->getCollisionObject();
+		}
+
+		const btRigidBody* body = btRigidBody::upcast(otherObj);
+
+		if (body && m_bodies.findLinearSearch(body) == m_bodies.size())
+		{
+			// Not already in list - add it
+			m_bodies.push_back(body);
+		}
+
+		return 0.0;
+	}
+};
+
+GM_EXPORT double BBMOD_PhysicsWorld_OverlapShape(double _worldId, char* _buffer)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
+
+	// Read shape ID
+	auto shapeId = BBMOD_ReadBuffer<double>(_buffer);
+	auto colShape = Registry::Get<btCollisionShape>(shapeId);
+
+	// Read transform (16 doubles for 4x4 matrix)
+	btScalar transformMatrix[16];
+	for (int i = 0; i < 16; ++i)
+	{
+		transformMatrix[i] = BBMOD_ReadBuffer<double>(_buffer);
+	}
+	btTransform transform;
+	transform.setFromOpenGLMatrix(transformMatrix);
+
+	// Read max results
+	auto maxResults = static_cast<int>(BBMOD_ReadBuffer<double>(_buffer));
+
+	// Create temporary collision object for testing
+	btCollisionObject testObject;
+	testObject.setCollisionShape(colShape);
+	testObject.setWorldTransform(transform);
+
+	// Perform contact test
+	OverlapResultCallback callback(&testObject, maxResults);
+	physicsWorld->m_dynamicsWorld->contactTest(&testObject, callback);
+
+	// Write results to buffer
+	int numBodies = callback.m_bodies.size();
+	BBMOD_WriteBuffer(_buffer, static_cast<double>(numBodies));
+
+	for (int i = 0; i < numBodies; ++i)
+	{
+		double bodyId = Registry::GetId(const_cast<btRigidBody*>(callback.m_bodies[i]));
+		BBMOD_WriteBuffer(_buffer, bodyId);
+	}
+
+	return static_cast<double>(numBodies);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Advanced Queries
+//
+
+// Callback for AABB overlap queries
+struct AABBQueryCallback : public btBroadphaseAabbCallback
+{
+	btVector3 m_queryMin;
+	btVector3 m_queryMax;
+	std::vector<const btRigidBody*> m_bodies;
+	int m_maxResults;
+
+	AABBQueryCallback(const btVector3& min, const btVector3& max, int maxResults)
+		: m_queryMin(min)
+		, m_queryMax(max)
+		, m_maxResults(maxResults)
+	{
+	}
+
+	virtual bool process(const btBroadphaseProxy* proxy)
+	{
+		// Check if we've reached max results
+		if (m_maxResults > 0 && static_cast<int>(m_bodies.size()) >= m_maxResults)
+		{
+			return false; // Stop searching
+		}
+
+		btCollisionObject* colObj = static_cast<btCollisionObject*>(proxy->m_clientObject);
+		btRigidBody* rigidBody = btRigidBody::upcast(colObj);
+
+		if (rigidBody)
+		{
+			// Get object's AABB
+			btVector3 aabbMin, aabbMax;
+			colObj->getCollisionShape()->getAabb(colObj->getWorldTransform(), aabbMin, aabbMax);
+
+			// Check if AABBs overlap
+			if (m_queryMin.x() <= aabbMax.x() && m_queryMax.x() >= aabbMin.x() &&
+				m_queryMin.y() <= aabbMax.y() && m_queryMax.y() >= aabbMin.y() &&
+				m_queryMin.z() <= aabbMax.z() && m_queryMax.z() >= aabbMin.z())
+			{
+				m_bodies.push_back(rigidBody);
+			}
+		}
+
+		return true; // Continue searching
+	}
+};
+
+GM_EXPORT double BBMOD_PhysicsWorld_QueryRadius(double _worldId, char* _buffer)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
+
+	// Read center position (vec3)
+	btVector3 center;
+	center.setX(BBMOD_ReadBuffer<double>(_buffer));
+	center.setY(BBMOD_ReadBuffer<double>(_buffer));
+	center.setZ(BBMOD_ReadBuffer<double>(_buffer));
+
+	// Read radius
+	auto radius = static_cast<btScalar>(BBMOD_ReadBuffer<double>(_buffer));
+
+	// Read max results
+	auto maxResults = static_cast<int>(BBMOD_ReadBuffer<double>(_buffer));
+
+	// Create AABB around the sphere
+	btVector3 radiusVec(radius, radius, radius);
+	btVector3 aabbMin = center - radiusVec;
+	btVector3 aabbMax = center + radiusVec;
+
+	// Query broadphase
+	AABBQueryCallback callback(aabbMin, aabbMax, maxResults);
+	physicsWorld->m_dynamicsWorld->getBroadphase()->aabbTest(aabbMin, aabbMax, callback);
+
+	// Filter results by actual sphere distance
+	std::vector<const btRigidBody*> sphereResults;
+	btScalar radiusSquared = radius * radius;
+
+	for (const auto* body : callback.m_bodies)
+	{
+		// Get body position
+		btVector3 bodyPos = body->getWorldTransform().getOrigin();
+		btVector3 diff = bodyPos - center;
+		btScalar distSquared = diff.length2();
+
+		if (distSquared <= radiusSquared)
+		{
+			sphereResults.push_back(body);
+			if (maxResults > 0 && static_cast<int>(sphereResults.size()) >= maxResults)
+			{
+				break;
+			}
+		}
+	}
+
+	// Write results to buffer
+	int numBodies = sphereResults.size();
+	BBMOD_WriteBuffer(_buffer, static_cast<double>(numBodies));
+
+	for (int i = 0; i < numBodies; ++i)
+	{
+		double bodyId = Registry::GetId(const_cast<btRigidBody*>(sphereResults[i]));
+		BBMOD_WriteBuffer(_buffer, bodyId);
+	}
+
+	return static_cast<double>(numBodies);
+}
+
+GM_EXPORT double BBMOD_PhysicsWorld_QueryAABB(double _worldId, char* _buffer)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
+
+	// Read min position (vec3)
+	btVector3 aabbMin;
+	aabbMin.setX(BBMOD_ReadBuffer<double>(_buffer));
+	aabbMin.setY(BBMOD_ReadBuffer<double>(_buffer));
+	aabbMin.setZ(BBMOD_ReadBuffer<double>(_buffer));
+
+	// Read max position (vec3)
+	btVector3 aabbMax;
+	aabbMax.setX(BBMOD_ReadBuffer<double>(_buffer));
+	aabbMax.setY(BBMOD_ReadBuffer<double>(_buffer));
+	aabbMax.setZ(BBMOD_ReadBuffer<double>(_buffer));
+
+	// Read max results
+	auto maxResults = static_cast<int>(BBMOD_ReadBuffer<double>(_buffer));
+
+	// Query broadphase
+	AABBQueryCallback callback(aabbMin, aabbMax, maxResults);
+	physicsWorld->m_dynamicsWorld->getBroadphase()->aabbTest(aabbMin, aabbMax, callback);
+
+	// Write results to buffer
+	int numBodies = callback.m_bodies.size();
+	BBMOD_WriteBuffer(_buffer, static_cast<double>(numBodies));
+
+	for (int i = 0; i < numBodies; ++i)
+	{
+		double bodyId = Registry::GetId(const_cast<btRigidBody*>(callback.m_bodies[i]));
+		BBMOD_WriteBuffer(_buffer, bodyId);
+	}
+
+	return static_cast<double>(numBodies);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Collision Callbacks (Polling)
+//
+
+GM_EXPORT double BBMOD_PhysicsWorld_GetCollisionCount(double _worldId)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
+	auto dispatcher = physicsWorld->m_dynamicsWorld->getDispatcher();
+	return static_cast<double>(dispatcher->getNumManifolds());
+}
+
+GM_EXPORT double BBMOD_PhysicsWorld_GetCollisionInfo(double _worldId, double _index, char* _buffer)
+{
+	auto physicsWorld = Registry::Get<BBMOD_PhysicsWorld>(_worldId);
+	auto dispatcher = physicsWorld->m_dynamicsWorld->getDispatcher();
+	int index = static_cast<int>(_index);
+
+	if (index < 0 || index >= dispatcher->getNumManifolds())
+	{
+		// Invalid index - write default data
+		BBMOD_WriteBuffer(_buffer, -1.0); // body1Id
+		BBMOD_WriteBuffer(_buffer, -1.0); // body2Id
+		BBMOD_WriteBuffer(_buffer, 0.0);  // contactCount
+		BBMOD_WriteBuffer(_buffer, 0.0);  // totalImpulse
+		return 0.0;
+	}
+
+	btPersistentManifold* manifold = dispatcher->getManifoldByIndexInternal(index);
+
+	// Get the two bodies involved
+	const btCollisionObject* objA = manifold->getBody0();
+	const btCollisionObject* objB = manifold->getBody1();
+
+	const btRigidBody* bodyA = btRigidBody::upcast(objA);
+	const btRigidBody* bodyB = btRigidBody::upcast(objB);
+
+	double body1Id = -1.0;
+	double body2Id = -1.0;
+
+	if (bodyA)
+	{
+		body1Id = Registry::GetId(const_cast<btRigidBody*>(bodyA));
+	}
+
+	if (bodyB)
+	{
+		body2Id = Registry::GetId(const_cast<btRigidBody*>(bodyB));
+	}
+
+	// Count contact points and accumulate impulse
+	int numContacts = manifold->getNumContacts();
+	btScalar totalImpulse = 0.0;
+
+	for (int i = 0; i < numContacts; i++)
+	{
+		btManifoldPoint& pt = manifold->getContactPoint(i);
+		totalImpulse += pt.getAppliedImpulse();
+	}
+
+	// Write to buffer
+	BBMOD_WriteBuffer(_buffer, body1Id);
+	BBMOD_WriteBuffer(_buffer, body2Id);
+	BBMOD_WriteBuffer(_buffer, static_cast<double>(numContacts));
+	BBMOD_WriteBuffer(_buffer, static_cast<double>(totalImpulse));
 
 	return 1.0;
 }

@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_NormalDistortionEffect([_texture[, _strength]])
 ///
@@ -21,10 +21,10 @@ function BBMOD_NormalDistortionEffect(_texture = pointer_null, _strength = 1.0):
 	/// can be used. Use 0 to disable the effect. Default value is 1.
 	Strength = _strength;
 
-	static __uNormal = shader_get_sampler_index(BBMOD_ShNormalDistortion, "u_texNormal");
-	static __uNormalUVs = shader_get_uniform(BBMOD_ShNormalDistortion, "u_vNormalUVs");
-	static __uStrength = shader_get_uniform(BBMOD_ShNormalDistortion, "u_fStrength");
-	static __uTexel = shader_get_uniform(BBMOD_ShNormalDistortion, "u_vTexel");
+	static __uNormal = shader_get_sampler_index(BBMOD_ShNormalDistortion, "uNormal");
+	static __uNormalUVs = shader_get_uniform(BBMOD_ShNormalDistortion, "uNormalUVs");
+	static __uStrength = shader_get_uniform(BBMOD_ShNormalDistortion, "uStrength");
+	static __uTexel = shader_get_uniform(BBMOD_ShNormalDistortion, "uTexel");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

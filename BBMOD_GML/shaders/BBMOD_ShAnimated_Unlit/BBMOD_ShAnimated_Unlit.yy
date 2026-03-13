@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShAnimated_Unlit",
+  "name":"BBMOD_ShAnimated_Unlit",
+  "parent":{
+    "name":"Animated",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Animated.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

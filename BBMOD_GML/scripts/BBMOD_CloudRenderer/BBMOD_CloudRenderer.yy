@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_CloudRenderer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_CloudRenderer",
+  "parent":{
+    "name":"Sky",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Sky.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_RadialBlurEffect([_origin[, _radius[, _strength[, _step]]]])
 ///
@@ -33,11 +33,11 @@ BBMOD_PostProcessEffect() constructor
 	/// 1/8.
 	Step = _step;
 
-	static __uTexel = shader_get_uniform(BBMOD_ShRadialBlur, "u_vTexel");
-	static __uOrigin = shader_get_uniform(BBMOD_ShRadialBlur, "u_vOrigin");
-	static __uRadius = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
-	static __uStrength = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStrength");
-	static __uStep = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
+	static __uTexel = shader_get_uniform(BBMOD_ShRadialBlur, "uTexel");
+	static __uOrigin = shader_get_uniform(BBMOD_ShRadialBlur, "uOrigin");
+	static __uRadius = shader_get_uniform(BBMOD_ShRadialBlur, "uRadius");
+	static __uStrength = shader_get_uniform(BBMOD_ShRadialBlur, "uStrength");
+	static __uStep = shader_get_uniform(BBMOD_ShRadialBlur, "uStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

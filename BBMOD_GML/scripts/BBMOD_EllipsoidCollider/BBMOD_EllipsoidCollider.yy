@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_EllipsoidCollider",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_EllipsoidCollider",
+  "parent":{
+    "name":"Raycasting",
+    "path":"folders/BBMOD/5_Extras/Raycasting.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

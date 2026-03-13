@@ -1,4 +1,4 @@
-/// @module D3D11
+/// @module Extras.D3D11
 
 /// @func bbmod_d3d11_init()
 ///

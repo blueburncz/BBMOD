@@ -2,9 +2,9 @@
 attribute vec4 in_Position;
 attribute vec2 in_TextureCoord;
 
-varying vec4 v_vFragPos;
+varying vec4 vFragPos;
 
-uniform vec2 u_vTexelVS;
+uniform vec2 uTexelVS;
 
 /// @param texCoord Texture coordinates.
 /// @param texel    vec2(1.0 / textureWidth, 1.0 / textureHeight)
@@ -19,5 +19,5 @@ vec4 FXAAFragPos(vec2 texCoord, vec2 texel)
 void main()
 {
 	gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * in_Position;
-	v_vFragPos = FXAAFragPos(in_TextureCoord, u_vTexelVS);
+	vFragPos = FXAAFragPos(in_TextureCoord, uTexelVS);
 }

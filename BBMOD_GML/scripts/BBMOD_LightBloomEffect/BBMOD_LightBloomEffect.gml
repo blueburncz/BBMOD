@@ -1,36 +1,46 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_LightBloomEffect([_bias[, _scale[, _strength]]])
 ///
 /// @extends BBMOD_PostProcessEffect
 ///
-/// @desc Light bloom (post-processing effect).
+/// @desc AAA-grade light bloom effect with soft threshold and progressive upsampling.
+/// Uses techniques from Call of Duty: Advanced Warfare including Karis average for
+/// firefly reduction and dual filter upsampling for high quality bloom.
 ///
 /// @param {Struct.BBMOD_Vec3} [_bias] A value added to RGB channels before the
 /// light bloom effect is applied. Defaults to `(-1, -1, -1)` if `undefined`.
+/// Internally converted to threshold (threshold = -bias.X).
 /// @param {Struct.BBMOD_Vec3} [_scale] A value that the RGB channels are
 /// multiplied by before the light bloom effect is applied. Defaults to
-/// `(1, 1, 1)` if `undefined`.
+/// `(1, 1, 1)` if `undefined`. Internally converted to knee (knee = scale.X * 0.5).
 /// @param {Real} [_strength] The strength of the effect. Use values in range
 /// 0..1. Defaults to 1.
 /* beautify ignore:start */
 function BBMOD_LightBloomEffect(_bias = undefined, _scale = undefined, _strength = 1.0): BBMOD_PostProcessEffect() constructor
 /* beautify ignore:end */
 {
-	/// @var {Struct.BBMOD_Vec3} A value added to RGB channels before the light
-	/// bloom effect is applied. Default value is `(-1, -1, -1)`.
-	Bias = _bias ?? new BBMOD_Vec3(-1.0);
+	/// @var {Real} Brightness threshold for bloom. Pixels brighter than this will bloom.
+	/// Default value is 1.0. Set via the Bias parameter (threshold = -bias.X).
+	Threshold = (_bias != undefined) ? -_bias.X : 1.0;
 
-	/// @var {Struct.BBMOD_Vec3} A value that the RGB channels are multiplied by
-	/// before the light bloom effect is applied. Default value is `(1, 1, 1)`.
-	Scale = _scale ?? new BBMOD_Vec3(1.0);
+	/// @var {Real} Soft knee width for smooth threshold transition.
+	/// Higher values create smoother bloom falloff. Default value is 0.5.
+	/// Set via the Scale parameter (knee = scale.X * 0.5).
+	Knee = (_scale != undefined) ? _scale.X * 0.5 : 0.5;
 
 	/// @var {Real} The strength of the effect. Use values in range 0..1.
 	/// Default value is 1.
 	Strength = _strength;
 
 	/// @var {Real}
+	/// @private
 	__levels = 8;
+
+	/// @var {Array<Real>} Per-mip level intensity multipliers for fine-tuning bloom spread.
+	/// Each value controls the contribution of that mip level. Index 0 is the largest (sharpest),
+	/// higher indices are smaller (wider spread). Default values provide smooth falloff.
+	MipIntensity = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
 
 	/// @var {Array<Id.Surface>}
 	/// @private
@@ -40,17 +50,20 @@ function BBMOD_LightBloomEffect(_bias = undefined, _scale = undefined, _strength
 	/// @private
 	__surfaces2 = array_create(__levels, -1);
 
-	static __uBias = shader_get_uniform(BBMOD_ShThreshold, "u_vBias");
-	static __uScale = shader_get_uniform(BBMOD_ShThreshold, "u_vScale");
+	static __uThreshold = shader_get_uniform(BBMOD_ShThreshold, "uThreshold");
+	static __uKnee = shader_get_uniform(BBMOD_ShThreshold, "uKnee");
+	static __uTexelSize = shader_get_uniform(BBMOD_ShThreshold, "uTexelSize");
 
-	static __uTexelKawase = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
-	static __uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
+	static __uTexelDownsampleKaris = shader_get_uniform(BBMOD_ShDownsampleKaris, "uTexel");
 
-	static __uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
+	static __uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "uTexel");
 
-	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
-	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
-	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
+	static __uTexelUpsample = shader_get_uniform(BBMOD_ShBloomUpsample, "uTexelSize");
+	static __uRadiusUpsample = shader_get_uniform(BBMOD_ShBloomUpsample, "uRadius");
+
+	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "uLensDirt");
+	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "uLensDirtUVs");
+	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "uLensDirtStrength");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
@@ -63,21 +76,21 @@ function BBMOD_LightBloomEffect(_bias = undefined, _scale = undefined, _strength
 		var _height = surface_get_height(_surfaceSrc);
 		var _format = bbmod_hdr_is_supported() ? surface_rgba16float : surface_rgba8unorm;
 
-		// Threshold
+		// Threshold with Karis average (downsample and extract bright areas)
 		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _width / 2, _height / 2, _format, false);
 		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _width / 2, _height / 2, _format, false);
 		surface_set_target(__surfaces1[0]);
 		shader_set(BBMOD_ShThreshold);
-		shader_set_uniform_f(__uBias, Bias.X, Bias.Y, Bias.Z);
-		shader_set_uniform_f(__uScale, Scale.X, Scale.Y, Scale.Z);
+		shader_set_uniform_f(__uThreshold, Threshold);
+		shader_set_uniform_f(__uKnee, Knee);
+		shader_set_uniform_f(__uTexelSize, 1.0 / _width, 1.0 / _height);
 		draw_surface_stretched(_surfaceSrc, 0, 0, _width / 2, _height / 2);
 		shader_reset();
 		surface_reset_target();
 
-		// Downsample + Kawase
+		// Downsample with Karis averaging (firefly reduction)
 		{
-			shader_set(BBMOD_ShKawaseBlur);
-			shader_set_uniform_f(__uOffset, 0.0);
+			shader_set(BBMOD_ShDownsampleKaris);
 
 			var i = 1;
 			var _w = _width / 4;
@@ -86,7 +99,7 @@ function BBMOD_LightBloomEffect(_bias = undefined, _scale = undefined, _strength
 			{
 				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, _format, false);
 				surface_set_target(__surfaces1[i]);
-				shader_set_uniform_f(__uTexelKawase, 1.0 / _w, 1.0 / _h);
+				shader_set_uniform_f(__uTexelDownsampleKaris, 1.0 / _w, 1.0 / _h);
 				draw_surface_stretched(__surfaces1[i - 1], 0, 0, _w, _h);
 				surface_reset_target();
 				_w = _w >> 1;
@@ -132,18 +145,40 @@ function BBMOD_LightBloomEffect(_bias = undefined, _scale = undefined, _strength
 
 		gpu_push_state();
 		gpu_set_blendenable(true);
-
-		// Combine into one
 		gpu_set_blendmode(bm_add);
-		surface_set_target(__surfaces1[0]);
-		for (var i = 1; i < __levels; ++i)
+
+		// Progressive upsampling (dual filter approach)
+		// Start from smallest mip and progressively upsample + blend with larger mips
+		shader_set(BBMOD_ShBloomUpsample);
+		shader_set_uniform_f(__uRadiusUpsample, 1.0);
+
+		// Find the smallest valid mip level
+		var _smallestMip = __levels - 1;
+		while (_smallestMip > 0 && !surface_exists(__surfaces1[_smallestMip]))
 		{
-			if (surface_exists(__surfaces1[i]))
-			{
-				draw_surface_stretched(__surfaces1[i], 0, 0, _width / 2, _height / 2);
-			}
+			--_smallestMip;
 		}
-		surface_reset_target();
+
+		// Progressively upsample from smallest to largest
+		for (var i = _smallestMip - 1; i >= 0; --i)
+		{
+			var _w = surface_get_width(__surfaces1[i]);
+			var _h = surface_get_height(__surfaces1[i]);
+			var _mipIntensity = MipIntensity[i];
+
+			// Upsample smaller mip to current level size
+			shader_set_uniform_f(__uTexelUpsample, 1.0 / surface_get_width(__surfaces1[i + 1]), 1.0 / surface_get_height(__surfaces1[i + 1]));
+			surface_set_target(__surfaces2[i]);
+			draw_surface_stretched(__surfaces1[i + 1], 0, 0, _w, _h);
+			surface_reset_target();
+
+			// Blend upsampled result with current mip level (apply per-mip intensity)
+			surface_set_target(__surfaces1[i]);
+			draw_surface_ext(__surfaces2[i], 0, 0, 1, 1, 0, c_white, _mipIntensity);
+			surface_reset_target();
+		}
+
+		shader_reset();
 
 		// Overlay
 		surface_set_target(_surfaceDest);

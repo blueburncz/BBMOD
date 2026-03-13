@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_MixQuaternionFromHealthModule([_property[, _from[, _to]]])
 ///

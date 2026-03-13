@@ -6,7 +6,7 @@
   "name":"BBMOD_OutOfRangeException",
   "parent":{
     "name":"Exceptions",
-    "path":"folders/BBMOD/Core/Base/Exceptions.yy",
+    "path":"folders/BBMOD/0_Base/Exceptions.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

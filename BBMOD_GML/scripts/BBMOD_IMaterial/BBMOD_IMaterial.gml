@@ -1,3 +1,5 @@
+/// @module Base
+
 /// @func BBMOD_IMaterial()
 ///
 /// @interface

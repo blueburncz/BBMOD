@@ -6,7 +6,7 @@
   "name":"__bbmod_colmesh",
   "parent":{
     "name":"ColMesh",
-    "path":"folders/BBMOD/ColMesh.yy",
+    "path":"folders/BBMOD/5_Extras/ColMesh.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

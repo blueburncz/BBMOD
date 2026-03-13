@@ -1,9 +1,9 @@
 // FIXME: Temporary fix!
 precision highp float;
 
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform sampler2D u_texLUT;
+uniform sampler2D uLUT;
 
 /// @param color The original RGB color.
 /// @param lut Texture of color-grading lookup table (256x16).
@@ -40,7 +40,7 @@ vec3 ColorGrade(vec3 color, sampler2D lut)
 
 void main()
 {
-	vec3 color = clamp(texture2D(gm_BaseTexture, v_vTexCoord).rgb, vec3(0.0), vec3(1.0));
-	gl_FragColor.rgb = ColorGrade(color, u_texLUT);
+	vec3 color = clamp(texture2D(gm_BaseTexture, vTexCoord).rgb, vec3(0.0), vec3(1.0));
+	gl_FragColor.rgb = ColorGrade(color, uLUT);
 	gl_FragColor.a = 1.0;
 }

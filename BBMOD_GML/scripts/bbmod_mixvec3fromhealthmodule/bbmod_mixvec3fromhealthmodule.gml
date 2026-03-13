@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_MixVec3FromHealthModule([_property[, _from[, _to]]])
 ///

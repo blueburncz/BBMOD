@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_DynamicBatch",
   "parent":{
-    "name":"Batching",
-    "path":"folders/BBMOD/Core/Batching.yy",
+    "name":"1_Core",
+    "path":"folders/BBMOD/1_Core.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

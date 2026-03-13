@@ -1,3 +1,4 @@
+clouds.destroy();
 renderer = renderer.destroy();
 gizmo = gizmo.destroy();
 postProcessor = postProcessor.destroy();

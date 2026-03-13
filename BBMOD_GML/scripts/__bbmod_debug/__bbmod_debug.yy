@@ -6,7 +6,7 @@
   "name":"__bbmod_debug",
   "parent":{
     "name":"Debug",
-    "path":"folders/BBMOD/Core/Debug.yy",
+    "path":"folders/BBMOD/1_Core/Debug.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

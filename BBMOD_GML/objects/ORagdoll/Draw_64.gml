@@ -187,3 +187,12 @@ UI.Button("Create",
 		},
 	})
 	.Newline();
+
+// Show instructions and current mode
+UI.Newline();
+if (ragdoll != undefined)
+{
+	var _mode = ragdoll.is_active() ? "RAGDOLL (Physics)" : "ANIMATION (Keyframes)";
+	UI.Text("Current Mode: " + _mode).Newline();
+	UI.Text("Press SPACE to toggle mode").Newline();
+}

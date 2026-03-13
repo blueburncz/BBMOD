@@ -6,7 +6,7 @@
   "name":"BBMOD_Vec2",
   "parent":{
     "name":"Math",
-    "path":"folders/BBMOD/Core/Base/Math.yy",
+    "path":"folders/BBMOD/0_Base/Math.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

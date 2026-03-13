@@ -6,7 +6,7 @@
   "name":"BBMOD_PostProcessEffect",
   "parent":{
     "name":"PostProcessing",
-    "path":"folders/BBMOD/PostProcessing.yy",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

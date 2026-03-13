@@ -5,6 +5,21 @@
 /// @desc A struct containing the information needed to create a physics
 /// box shape.
 ///
+/// @example
+/// ```gml
+/// // Create a box shape for a crate (1m x 1m x 1m)
+/// var _boxInfo = new BBMOD_BoxPhysicsShapeInfo();
+/// _boxInfo.Size = new BBMOD_Vec3(1.0, 1.0, 1.0);
+/// var _boxShape = physicsEngine.create_physics_shape(_boxInfo);
+///
+/// // Create a dynamic rigid body using the box shape
+/// var _rigidBodyInfo = new BBMOD_RigidBodyInfo();
+/// _rigidBodyInfo.Shape = _boxShape;
+/// _rigidBodyInfo.Mass = 10.0; // 10kg crate
+/// _rigidBodyInfo.Position = new BBMOD_Vec3(0, 0, 5);
+/// var _crate = physicsWorld.create_rigid_body(_rigidBodyInfo);
+/// ```
+///
 /// @see BBMOD_PhysicsShape
 /// @see BBMOD_PhysicsWorld.create_physics_shape
 function BBMOD_BoxPhysicsShapeInfo(): BBMOD_PhysicsShapeInfo() constructor

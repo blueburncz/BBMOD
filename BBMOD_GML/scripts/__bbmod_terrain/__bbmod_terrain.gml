@@ -1,17 +1,17 @@
-/// @module Terrain
+/// @module Core
 
-/// @macro {Struct.BBMOD_TerrainShader} Shader for terrain materials. Supports
+/// @macro {Struct.BBMOD_Shader} Shader for terrain materials. Supports
 /// up to 5 terrain layers, each one being rendered in its own draw call.
 #macro BBMOD_SHADER_TERRAIN __bbmod_shader_terrain()
 
-/// @macro {Struct.BBMOD_TerrainMaterial} Base terrain material.
+/// @macro {Struct.BBMOD_Material} Base terrain material.
 #macro BBMOD_MATERIAL_TERRAIN __bbmod_material_terrain()
 
-/// @macro {Struct.BBMOD_TerrainShader} Shader for unlit terrain materials.
+/// @macro {Struct.BBMOD_Shader} Shader for unlit terrain materials.
 /// Supports up to 5 material layers, rendering up to 3 in a single draw call.
 #macro BBMOD_SHADER_TERRAIN_UNLIT __bbmod_shader_terrain_unlit()
 
-/// @macro {Struct.BBMOD_BaseMaterial} Unlit terrain material.
+/// @macro {Struct.BBMOD_Material} Unlit terrain material.
 #macro BBMOD_MATERIAL_TERRAIN_UNLIT __bbmod_material_terrain_unlit()
 
 function __bbmod_shader_terrain()
@@ -19,7 +19,7 @@ function __bbmod_shader_terrain()
 	static _shader = undefined;
 	if (_shader == undefined)
 	{
-		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
+		_shader = new BBMOD_Shader(BBMOD_ShTerrain_Forward, BBMOD_VFORMAT_DEFAULT);
 		_shader.LayersPerDrawCall = 1;
 		_shader.MaxLayers = 5;
 	}
@@ -31,7 +31,7 @@ function __bbmod_shader_terrain_unlit()
 	static _shader = undefined;
 	if (_shader == undefined)
 	{
-		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrainUnlit, BBMOD_VFORMAT_DEFAULT);
+		_shader = new BBMOD_Shader(BBMOD_ShTerrain_Unlit, BBMOD_VFORMAT_DEFAULT);
 		_shader.LayersPerDrawCall = 3;
 		_shader.MaxLayers = 5;
 	}
@@ -43,7 +43,7 @@ function __bbmod_material_terrain()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		_material = new BBMOD_TerrainMaterial(BBMOD_SHADER_TERRAIN);
+		_material = new BBMOD_Material(BBMOD_SHADER_TERRAIN);
 		_material.Persistent = true;
 		_material.set_shader(BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_TERRAIN);
 		_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);

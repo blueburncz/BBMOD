@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShExposure",
   "name":"BBMOD_ShExposure",
   "parent":{
-    "name":"Exposure",
-    "path":"folders/BBMOD/PostProcessing/Exposure.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

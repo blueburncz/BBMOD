@@ -105,6 +105,11 @@ function BBMOD_BaseRenderer() constructor
 	/// @see BBMOD_Light.ShadowmapResolution
 	EnableShadows = false;
 
+	/// @var {Struct.BBMOD_CloudRenderer, Undefined}
+	/// Assign your cloud renderer here to enable cloud shadows packed into
+	/// the alpha channel of the geometry shadow map.
+	CloudRenderer = undefined;
+
 	/// @var {Id.DsList}
 	/// @private
 	__shadowmapLights = ds_list_create();
@@ -539,7 +544,7 @@ function BBMOD_BaseRenderer() constructor
 
 				_light.Position.Copy(_cubemap.Position);
 				bbmod_shader_set_global_f(BBMOD_U_ZFAR, _shadowmapZFar);
-				bbmod_shader_set_global_f("u_fOutputDistance", 1.0);
+				bbmod_shader_set_global_f("uOutputDistance", 1.0);
 
 				while (_cubemap.set_target())
 				{
@@ -549,7 +554,7 @@ function BBMOD_BaseRenderer() constructor
 				}
 				bbmod_material_reset();
 
-				bbmod_shader_set_global_f("u_fOutputDistance", 0.0);
+				bbmod_shader_set_global_f("uOutputDistance", 0.0);
 
 				_cubemap.to_single_surface();
 				_cubemap.to_octahedron();
@@ -647,6 +652,42 @@ function BBMOD_BaseRenderer() constructor
 		}
 
 		__render_shadowmap_impl(_shadowCaster);
+
+		// Pack cloud shadow transmittance into the alpha channel of the geometry
+		// shadow map.  RGB stores depth as normal; A is in world-XY cloud-shadow space.
+		// Scene shaders read .a at (worldPos.xy - cloudShadowPos) / cloudShadowSize + 0.5.
+		var _cr = CloudRenderer;
+		if (_cr != undefined
+			&& surface_exists(__shadowmapSurfaces[?  _shadowCaster])
+			&& surface_exists(_cr.__shadowSurf))
+		{
+			var _shadowSurf = __shadowmapSurfaces[?  _shadowCaster];
+			var _sw = surface_get_width(_shadowSurf);
+			var _sh = surface_get_height(_shadowSurf);
+
+			var _mw = matrix_get(matrix_world);
+			var _mv = matrix_get(matrix_view);
+			var _mp = matrix_get(matrix_projection);
+			matrix_set(matrix_world,      matrix_build_identity());
+			matrix_set(matrix_view,       matrix_build_identity());
+			matrix_set(matrix_projection, matrix_build_projection_ortho(_sw, _sh, -1, 1));
+
+			surface_set_target(_shadowSurf);
+			gpu_push_state();
+			gpu_set_ztestenable(false);
+			gpu_set_zwriteenable(false);
+			shader_set(BBMOD_ShCloudShadowBlit);
+			// Preserve existing RGB (depth encoding), write only alpha (cloud shadow).
+			gpu_set_blendmode_ext_sepalpha(bm_zero, bm_one, bm_one, bm_zero);
+			draw_surface_stretched(_cr.__shadowSurf, 0, 0, _sw, _sh);
+			gpu_pop_state();
+			shader_reset();
+			surface_reset_target();
+
+			matrix_set(matrix_world,      _mw);
+			matrix_set(matrix_view,       _mv);
+			matrix_set(matrix_projection, _mp);
+		}
 
 		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[?  _shadowCaster]);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
@@ -770,8 +811,8 @@ function BBMOD_BaseRenderer() constructor
 			camera_apply(_camera);
 
 			shader_set(BBMOD_ShMixRGBM);
-			texture_set_stage(shader_get_sampler_index(BBMOD_ShMixRGBM, "u_texTo"), _to);
-			shader_set_uniform_f(shader_get_uniform(BBMOD_ShMixRGBM, "u_fFactor"), 1.0);
+			texture_set_stage(shader_get_sampler_index(BBMOD_ShMixRGBM, "uTo"), _to);
+			shader_set_uniform_f(shader_get_uniform(BBMOD_ShMixRGBM, "uFactor"), 1.0);
 			draw_surface(__surProbe2, 0, 0);
 			shader_reset();
 
@@ -799,8 +840,8 @@ function BBMOD_BaseRenderer() constructor
 			camera_apply(_camera);
 
 			shader_set(BBMOD_ShMixRGBM);
-			texture_set_stage(shader_get_sampler_index(BBMOD_ShMixRGBM, "u_texTo"), _to);
-			shader_set_uniform_f(shader_get_uniform(BBMOD_ShMixRGBM, "u_fFactor"), 0.1);
+			texture_set_stage(shader_get_sampler_index(BBMOD_ShMixRGBM, "uTo"), _to);
+			shader_set_uniform_f(shader_get_uniform(BBMOD_ShMixRGBM, "uFactor"), 0.1);
 			draw_surface(__surProbe2, 0, 0);
 			shader_reset();
 
@@ -1004,9 +1045,9 @@ function BBMOD_BaseRenderer() constructor
 			var _shader = BBMOD_ShInstanceHighlight;
 			shader_set(_shader);
 			bbmod_shader_set_globals(_shader);
-			shader_set_uniform_f(shader_get_uniform(_shader, "u_vTexel"),
+			shader_set_uniform_f(shader_get_uniform(_shader, "uTexel"),
 				_texelWidth, _texelHeight);
-			shader_set_uniform_f(shader_get_uniform(_shader, "u_vColor"),
+			shader_set_uniform_f(shader_get_uniform(_shader, "uColor"),
 				InstanceHighlightColor.Red / 255.0,
 				InstanceHighlightColor.Green / 255.0,
 				InstanceHighlightColor.Blue / 255.0,

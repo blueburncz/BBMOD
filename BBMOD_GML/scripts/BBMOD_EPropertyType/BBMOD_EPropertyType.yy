@@ -6,7 +6,7 @@
   "name":"BBMOD_EPropertyType",
   "parent":{
     "name":"Save",
-    "path":"folders/BBMOD/Save.yy",
+    "path":"folders/BBMOD/5_Extras/Save.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

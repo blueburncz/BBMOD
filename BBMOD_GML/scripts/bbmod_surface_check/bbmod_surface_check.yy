@@ -6,7 +6,7 @@
   "name":"bbmod_surface_check",
   "parent":{
     "name":"Utils",
-    "path":"folders/BBMOD/Core/Utils.yy",
+    "path":"folders/BBMOD/1_Core/Utils.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

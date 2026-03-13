@@ -6,7 +6,7 @@
   "name":"__bbmod_deferred_material",
   "parent":{
     "name":"DeferredRenderer",
-    "path":"folders/BBMOD/DeferredRenderer.yy",
+    "path":"folders/BBMOD/2_Rendering/DeferredRenderer.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

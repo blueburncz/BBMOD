@@ -6,7 +6,7 @@
   "name":"BBMOD_LayeredAnimationPlayer",
   "parent":{
     "name":"LayeredAnimationPlayer",
-    "path":"folders/BBMOD/LayeredAnimationPlayer.yy",
+    "path":"folders/BBMOD/5_Extras/LayeredAnimationPlayer.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

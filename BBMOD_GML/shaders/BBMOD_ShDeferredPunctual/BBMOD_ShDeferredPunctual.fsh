@@ -1,17 +1,17 @@
-varying vec4 v_vVertex;
+varying vec4 vVertex;
 
 // Maximum number of punctual lights
 #define BBMOD_MAX_PUNCTUAL_LIGHTS 8
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 
-#define u_texGB0 gm_BaseTexture
-uniform sampler2D u_texGB1;
-uniform sampler2D u_texGB2;
-uniform mat4 u_mView;
-uniform mat4 u_mViewInverse;
-uniform mat4 u_mProjection;
-uniform vec2 u_vTanAspect;
+#define uGB0 gm_BaseTexture
+uniform sampler2D uGB1;
+uniform sampler2D uGB2;
+uniform mat4 uView;
+uniform mat4 uViewInverse;
+uniform mat4 uProjection;
+uniform vec2 uTanAspect;
 
 // Camera's position in world space
 uniform vec3 bbmod_CamPos;
@@ -195,7 +195,7 @@ vec3 xBRDF(vec3 f0, float roughness, float NdotL, float NdotV, float NdotH, floa
 {
 	vec3 specular = xSpecularD_GGX(roughness, NdotH)
 		* xSpecularF_Schlick(f0, VdotH)
-		* xSpecularG_Schlick(xK_Analytic(roughness), NdotL, NdotH);
+		* xSpecularG_Schlick(xK_Analytic(roughness), NdotL, NdotV);
 	return specular / ((4.0 * NdotL * NdotV) + 0.1);
 }
 
@@ -275,7 +275,6 @@ void DoPointLightPS(
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
 	att *= att;
 
-	
 	DoCommonLightPS(
 		color,
 		shadow,
@@ -313,7 +312,6 @@ void DoSpotLightPS(
 	float epsilon = dcosInner - dcosOuter;
 	float intensity = clamp((theta - dcosOuter) / epsilon, 0.0, 1.0);
 
-	
 	DoCommonLightPS(
 		color,
 		shadow,
@@ -555,10 +553,10 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 
 void main()
 {
-	vec2 screenUV = xUnproject(v_vVertex);
-	vec4 GB0 = texture2D(u_texGB0, screenUV);
-	vec4 GB1 = texture2D(u_texGB1, screenUV);
-	vec4 GB2 = texture2D(u_texGB2, screenUV);
+	vec2 screenUV = xUnproject(vVertex);
+	vec4 GB0 = texture2D(uGB0, screenUV);
+	vec4 GB1 = texture2D(uGB1, screenUV);
+	vec4 GB2 = texture2D(uGB2, screenUV);
 
 	Material material = CreateMaterial();
 	material.Base = xGammaToLinear(GB0.rgb);
@@ -570,19 +568,19 @@ void main()
 	material.Base *= 1.0 - material.Metallic;
 
 	float depth = xDecodeDepth(GB2.rgb) * bbmod_ZFar;
-	vec3 vertexView = xProject(u_vTanAspect, screenUV, depth);
-	vec3 vertexWorld = (u_mViewInverse * vec4(vertexView, 1.0)).xyz;
+	vec3 vertexView = xProject(uTanAspect, screenUV, depth);
+	vec3 vertexWorld = (uViewInverse * vec4(vertexView, 1.0)).xyz;
 
-	vec4 v_vEye;
-	v_vEye.xyz = normalize(-vec3(
-		u_mView[0][2],
-		u_mView[1][2],
-		u_mView[2][2]
+	vec4 vEye;
+	vEye.xyz = normalize(-vec3(
+		uView[0][2],
+		uView[1][2],
+		uView[2][2]
 	));
-	v_vEye.w = (u_mProjection[2][3] == 0.0) ? 1.0 : 0.0;
+	vEye.w = (uProjection[2][3] == 0.0) ? 1.0 : 0.0;
 
 	vec3 N = material.Normal;
-	vec3 V = (v_vEye.w == 1.0) ? v_vEye.xyz : normalize(bbmod_CamPos - vertexWorld);
+	vec3 V = (vEye.w == 1.0) ? vEye.xyz : normalize(bbmod_CamPos - vertexWorld);
 	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
 	vec3 lightSubsurface = vec3(0.0);
@@ -637,7 +635,7 @@ void main()
 	gl_FragColor = vec4(((material.Base * lightDiffuse) + lightSpecular) * material.AO, 1.0);
 	gl_FragColor.rgb = max(gl_FragColor.rgb, vec3(0.0));
 
-	if (bbmod_HDR == 0.0)
+	if (bbmod_HDR < 0.5)
 	{
 		Exposure();
 		TonemapReinhard();

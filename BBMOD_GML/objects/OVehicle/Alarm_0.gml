@@ -6,21 +6,24 @@ with(OMain)
 	_terrain = terrain;
 }
 
-var _boxShapeInfo = new BBMOD_BoxPhysicsShapeInfo();
-_boxShapeInfo.Size.Set(4, 1.8, 0.7);
-_boxShapeInfo.Margin = 0.1;
+// Create convex hull from jeep model
+var _hullBuilder = new BBMOD_ConvexHullBuilder(_physicsEngine);
+var _hullShape = _hullBuilder.from_model(jeep);
 
-var _boxShape = _physicsEngine.create_physics_shape(_boxShapeInfo);
-
+// Use compound shape to apply the transform from the Draw event
+// Hull already has node transforms baked in, just need to match matrix_build(jeepX, jeepY, jeepZ, 0, 0, 90, jeepScale, jeepScale, jeepScale)
 collisionShape = _physicsEngine.create_physics_shape(new BBMOD_CompoundPhysicsShapeInfo());
-
-collisionShape.add_child_shape(_boxShape, new BBMOD_Matrix().TranslateSelf(0, 0, -0.1));
+var _hullTransform = new BBMOD_Matrix()
+	.ScaleSelf(jeepScale, jeepScale, jeepScale)
+	.RotateZSelf(90)
+	.TranslateSelf(jeepX, jeepY, jeepZ);
+collisionShape.add_child_shape(_hullShape, _hullTransform);
 
 var _rigidBodyInfo = new BBMOD_RigidBodyInfo();
 _rigidBodyInfo.PhysicsShape = collisionShape;
 _rigidBodyInfo.Mass = 1200;
 _rigidBodyInfo.Transform.TranslateSelf(
-	0, 0, (_terrain.get_height(x, y) ?? 0) + (_boxShapeInfo.Size.Z * 2)
+	0, 0, (_terrain.get_height(x, y) ?? 0) + 2.0
 );
 
 rigidBody = _physicsWorld.create_rigid_body(_rigidBodyInfo);
@@ -57,3 +60,6 @@ _wheelInfo.ConnectionPoint.Set(-1.1, 0.9, -0.5);
 vehicle.add_wheel(_wheelInfo);
 
 steering = 0;
+
+// Freeze the jeep model after we have created convex hull collider for it
+jeep.freeze();

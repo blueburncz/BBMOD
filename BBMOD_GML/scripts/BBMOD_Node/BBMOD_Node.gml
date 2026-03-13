@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /// @var {Id.DsStack} A stack used when rendering nodes to avoid recursion.
 /// @private
@@ -323,7 +323,7 @@ function BBMOD_Node(_model) constructor
 	///
 	/// @desc Enqueues the node for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_BaseMaterial>} _materials An array of materials,
+	/// @param {Array<Struct.BBMOD_Material>} _materials An array of materials,
 	/// one for each material slot of the model.
 	/// @param {Array<Real>} _transform An array of dual quaternions for
 	/// transforming animated models or `undefined`.

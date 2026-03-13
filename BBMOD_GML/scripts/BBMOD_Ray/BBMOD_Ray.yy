@@ -6,7 +6,7 @@
   "name":"BBMOD_Ray",
   "parent":{
     "name":"Raycasting",
-    "path":"folders/BBMOD/Raycasting.yy",
+    "path":"folders/BBMOD/5_Extras/Raycasting.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

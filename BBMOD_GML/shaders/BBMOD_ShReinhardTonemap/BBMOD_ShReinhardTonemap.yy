@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShReinhardTonemap",
   "name":"BBMOD_ShReinhardTonemap",
   "parent":{
-    "name":"ReinhardTonemap",
-    "path":"folders/BBMOD/PostProcessing/ReinhardTonemap.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

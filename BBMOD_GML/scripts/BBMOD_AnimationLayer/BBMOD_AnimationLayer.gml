@@ -1,4 +1,4 @@
-/// @module LayeredAnimationPlayer
+/// @module Extras.LayeredAnimationPlayer
 
 /// @func BBMOD_AnimationLayer(_name)
 ///
@@ -91,6 +91,8 @@ function BBMOD_AnimationLayer(_name) constructor
 		var _positionOverrides = __nodePositionOverride;
 		var _rotationOverrides = __nodeRotationOverride;
 		var _nodes = _model.get_node_array();
+		var _weightBase = Weight;
+		var _maskArray = (Mask != undefined) ? Mask.MaskArray : undefined;
 
 		var _index = 0;
 		repeat(_model.NodeCount)
@@ -98,7 +100,7 @@ function BBMOD_AnimationLayer(_name) constructor
 			var _node = _nodes[_index++];
 			var _nodeIndex = _node.Index;
 
-			var _weight = Weight * ((Mask != undefined) ? Mask.MaskArray[_nodeIndex] : 1.0);
+			var _weight = _weightBase * ((_maskArray != undefined) ? _maskArray[_nodeIndex] : 1.0);
 			if (_weight <= 0.0)
 			{
 				continue;
@@ -346,7 +348,7 @@ function BBMOD_AnimationLayer(_name) constructor
 					_q12 *= _norm;
 					_q13 *= _norm;
 
-					_norm = sqrt(_q20 * _q20
+					_norm = 1.0 / sqrt(_q20 * _q20
 						+ _q21 * _q21
 						+ _q22 * _q22
 						+ _q23 * _q23);
@@ -455,7 +457,7 @@ function BBMOD_AnimationLayer(_name) constructor
 					_q12 *= _norm;
 					_q13 *= _norm;
 
-					_norm = sqrt(_q20 * _q20
+					_norm = 1.0 / sqrt(_q20 * _q20
 						+ _q21 * _q21
 						+ _q22 * _q22
 						+ _q23 * _q23);

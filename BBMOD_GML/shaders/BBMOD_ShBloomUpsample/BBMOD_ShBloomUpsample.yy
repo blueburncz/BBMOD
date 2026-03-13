@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShBloomUpsample",
+  "name":"BBMOD_ShBloomUpsample",
+  "parent":{
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

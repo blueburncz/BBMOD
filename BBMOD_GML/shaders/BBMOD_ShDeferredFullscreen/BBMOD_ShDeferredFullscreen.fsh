@@ -1,17 +1,17 @@
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
 // Maximum number of punctual lights
 #define BBMOD_MAX_PUNCTUAL_LIGHTS 8
 // Number of samples used when computing shadows
 #define SHADOWMAP_SAMPLE_COUNT 12
 
-#define u_texGB0 gm_BaseTexture
-uniform sampler2D u_texGB1;
-uniform sampler2D u_texGB2;
-uniform mat4 u_mView;
-uniform mat4 u_mViewInverse;
-uniform mat4 u_mProjection;
-uniform vec2 u_vTanAspect;
+#define uGB0 gm_BaseTexture
+uniform sampler2D uGB1;
+uniform sampler2D uGB2;
+uniform mat4 uView;
+uniform mat4 uViewInverse;
+uniform mat4 uProjection;
+uniform vec2 uTanAspect;
 
 // Camera's position in world space
 uniform vec3 bbmod_CamPos;
@@ -31,6 +31,12 @@ uniform vec4 bbmod_LightAmbientDown;
 uniform vec3 bbmod_LightDirectionalDir;
 // Color of the directional light
 uniform vec4 bbmod_LightDirectionalColor;
+// Sun disk angular size in radians (0 = point light)
+uniform float bbmod_LightDirectionalDiskSize;
+
+// Cloud shadow packed into bbmod_Shadowmap.a (world-XY UV, independent of depth UV).
+uniform vec2  bbmod_CloudShadowPos;
+uniform float bbmod_CloudShadowSize;
 
 // 1.0 to enable shadows
 uniform float bbmod_ShadowmapEnablePS;
@@ -209,7 +215,7 @@ vec3 xBRDF(vec3 f0, float roughness, float NdotL, float NdotV, float NdotH, floa
 {
 	vec3 specular = xSpecularD_GGX(roughness, NdotH)
 		* xSpecularF_Schlick(f0, VdotH)
-		* xSpecularG_Schlick(xK_Analytic(roughness), NdotL, NdotH);
+		* xSpecularG_Schlick(xK_Analytic(roughness), NdotL, NdotV);
 	return specular / ((4.0 * NdotL * NdotV) + 0.1);
 }
 
@@ -243,10 +249,41 @@ void DoCommonLightPS(
 	diffuse += color * (vec3(1.0) - F);
 }
 
+/// @desc Compute specular for spherical/disk area light using representative point method
+/// @param L Light direction
+/// @param diskSize Angular size of the disk in radians (diameter, not radius)
+/// @param roughness Material roughness
+/// @param N Surface normal
+/// @param V View direction
+/// @return Modified light direction and adjusted roughness
+void GetAreaLightRepresentativePoint(vec3 L, float diskSize, float roughness, vec3 N, vec3 V, out vec3 Lnew, out float roughnessNew)
+{
+	// Compute reflection vector
+	vec3 R = reflect(-V, N);
+
+	// Representative point method: find closest point on sphere to reflection ray
+	// Source: "Real Shading in Unreal Engine 4" by Brian Karis
+	float sinAlpha = sin(diskSize * 0.5);
+	float cosAlpha = cos(diskSize * 0.5);
+
+	// Closest point on sphere to ray
+	vec3 centerToRay = dot(L, R) * R - L;
+	vec3 closestPoint = L + centerToRay * clamp(sinAlpha / (length(centerToRay) + 0.0001), 0.0, 1.0);
+	Lnew = normalize(closestPoint);
+
+	// Roughness adjustment (Karis 2013).
+	// We need roughnessNew such that roughnessNew^4 = roughness^4 + sinAlpha^2,
+	// because xSpecularD_GGX raises roughness to the 4th power internally.
+	float sphereAngle = clamp(sinAlpha, 0.0, 1.0);
+	float a2 = roughness * roughness * roughness * roughness; // roughness^4
+	roughnessNew = sqrt(sqrt(a2 + sphereAngle * sphereAngle));
+}
+
 void DoDirectionalLightPS(
 	vec3 direction,
 	vec3 color,
 	float shadow,
+	float diskSize,
 	vec3 vertex,
 	vec3 N,
 	vec3 V,
@@ -255,19 +292,60 @@ void DoDirectionalLightPS(
 	inout vec3 specular,
 	inout vec3 subsurface)
 {
+	// Cloud shadow: alpha of shadowmap sampled at world-XY cloud-shadow UV.
+	if (bbmod_ShadowmapEnablePS == 1.0)
+	{
+		vec2  cloudUV    = (vertex.xy - bbmod_CloudShadowPos) / bbmod_CloudShadowSize + 0.5;
+		float edgeFade   = clamp(min(min(cloudUV.x, 1.0 - cloudUV.x),
+		                             min(cloudUV.y, 1.0 - cloudUV.y)) * 8.0, 0.0, 1.0);
+		float cloudShadow = mix(1.0, texture2D(bbmod_Shadowmap, cloudUV).a, edgeFade);
+		color *= cloudShadow;
+	}
+
 	vec3 L = normalize(-direction);
 
-	DoCommonLightPS(
-		color,
-		shadow,
-		1.0,
-		N,
-		V,
-		L,
-		m,
-		diffuse,
-		specular,
-		subsurface);
+	// Fast path: point light (no area light)
+	if (diskSize <= 0.0)
+	{
+		DoCommonLightPS(
+			color,
+			shadow,
+			1.0,
+			N,
+			V,
+			L,
+			m,
+			diffuse,
+			specular,
+			subsurface);
+		return;
+	}
+
+	// Area light path: use representative point for specular
+	float NdotL = max(dot(N, L), 0.0);
+
+	// Get modified light direction and roughness for specular.
+	// Done before scaling color so the representative NdotL drives specular,
+	// not the geometric NdotL which goes to zero at the horizon.
+	vec3 Lspec;
+	float roughnessArea;
+	GetAreaLightRepresentativePoint(L, diskSize, m.Roughness, N, V, Lspec, roughnessArea);
+
+	float NdotLspec = max(dot(N, Lspec), 0.0);
+	vec3 H = normalize(Lspec + V);
+	float NdotV = max(dot(N, V), 0.0);
+	float NdotH = max(dot(N, H), 0.0);
+	float VdotH = max(dot(V, H), 0.0);
+
+	float D = xSpecularD_GGX(roughnessArea, NdotH);
+	vec3 F = xSpecularF_Schlick(m.Specular, VdotH);
+	float G = xSpecularG_Schlick(xK_Analytic(roughnessArea), NdotLspec, NdotH);
+
+	vec3 shadowedColor = color * (1.0 - shadow);
+	specular += shadowedColor * NdotLspec * ((D * F * G) / ((4.0 * NdotLspec * NdotV) + 0.1));
+
+	// Diffuse uses the original geometric NdotL
+	diffuse += shadowedColor * NdotL * (vec3(1.0) - F);
 }
 
 void DoPointLightPS(
@@ -289,7 +367,6 @@ void DoPointLightPS(
 	float att = clamp(1.0 - (dist / range), 0.0, 1.0);
 	att *= att;
 
-	
 	DoCommonLightPS(
 		color,
 		shadow,
@@ -327,7 +404,6 @@ void DoSpotLightPS(
 	float epsilon = dcosInner - dcosOuter;
 	float intensity = clamp((theta - dcosOuter) / epsilon, 0.0, 1.0);
 
-	
 	DoCommonLightPS(
 		color,
 		shadow,
@@ -569,9 +645,9 @@ float ShadowMap(sampler2D shadowMap, vec2 texel, vec2 uv, float compareZ)
 
 void main()
 {
-	vec4 GB0 = texture2D(u_texGB0, v_vTexCoord);
-	vec4 GB1 = texture2D(u_texGB1, v_vTexCoord);
-	vec4 GB2 = texture2D(u_texGB2, v_vTexCoord);
+	vec4 GB0 = texture2D(uGB0, vTexCoord);
+	vec4 GB1 = texture2D(uGB1, vTexCoord);
+	vec4 GB2 = texture2D(uGB2, vTexCoord);
 
 	Material material = CreateMaterial();
 	material.Base = xGammaToLinear(GB0.rgb);
@@ -583,19 +659,19 @@ void main()
 	material.Base *= 1.0 - material.Metallic;
 
 	float depth = xDecodeDepth(GB2.rgb) * bbmod_ZFar;
-	vec3 vertexView = xProject(u_vTanAspect, v_vTexCoord, depth);
-	vec3 vertexWorld = (u_mViewInverse * vec4(vertexView, 1.0)).xyz;
+	vec3 vertexView = xProject(uTanAspect, vTexCoord, depth);
+	vec3 vertexWorld = (uViewInverse * vec4(vertexView, 1.0)).xyz;
 
-	vec4 v_vEye;
-	v_vEye.xyz = normalize(-vec3(
-		u_mView[0][2],
-		u_mView[1][2],
-		u_mView[2][2]
+	vec4 vEye;
+	vEye.xyz = normalize(-vec3(
+		uView[0][2],
+		uView[1][2],
+		uView[2][2]
 	));
-	v_vEye.w = (u_mProjection[2][3] == 0.0) ? 1.0 : 0.0;
+	vEye.w = (uProjection[2][3] == 0.0) ? 1.0 : 0.0;
 
 	vec3 N = material.Normal;
-	vec3 V = (v_vEye.w == 1.0) ? v_vEye.xyz : normalize(bbmod_CamPos - vertexWorld);
+	vec3 V = (vEye.w == 1.0) ? vEye.xyz : normalize(bbmod_CamPos - vertexWorld);
 	vec3 lightDiffuse = vec3(0.0);
 	vec3 lightSpecular = vec3(0.0);
 	vec3 lightSubsurface = vec3(0.0);
@@ -634,17 +710,18 @@ void main()
 		bbmod_LightDirectionalDir,
 		directionalLightColor,
 		shadow,
+		bbmod_LightDirectionalDiskSize,
 		vertexWorld, N, V, material, lightDiffuse, lightSpecular, lightSubsurface);
 
 	// SSAO
-	float ssao = texture2D(bbmod_SSAO, v_vTexCoord).r;
+	float ssao = texture2D(bbmod_SSAO, vTexCoord).r;
 	lightDiffuse *= ssao;
 	lightSpecular *= ssao;
 
 	gl_FragColor = vec4(((material.Base * lightDiffuse) + lightSpecular) * material.AO, 1.0);
 	gl_FragColor.rgb = max(gl_FragColor.rgb, vec3(0.0));
 
-	if (bbmod_HDR == 0.0)
+	if (bbmod_HDR < 0.5)
 	{
 		Exposure();
 		TonemapReinhard();

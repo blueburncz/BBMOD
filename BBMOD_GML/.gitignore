@@ -1,3 +1,6 @@
-/shader_includes/
 Build/
+Xpanda/
+Xshaders/
+
 bbmod.cache.json
+ExpandShaders.py

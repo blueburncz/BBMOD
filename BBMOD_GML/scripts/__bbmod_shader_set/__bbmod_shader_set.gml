@@ -1,3 +1,5 @@
+/// @module Core
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Vertex shader uniforms
@@ -744,7 +746,7 @@ function bbmod_shader_set_ambient_light(_shader, _up = undefined, _down = undefi
 /// @see bbmod_light_directional_get
 #macro BBMOD_U_LIGHT_DIRECTIONAL_COLOR "bbmod_LightDirectionalColor"
 
-/// @func bbmod_shader_set_directional_light(_shader[, _light[, _isLightmapped])
+/// @func bbmod_shader_set_directional_light(_shader[, _light])
 ///
 /// @desc Sets uniforms {@link BBMOD_U_LIGHT_DIRECTIONAL_DIR} and
 /// {@link BBMOD_U_LIGHT_DIRECTIONAL_COLOR}.
@@ -753,17 +755,13 @@ function bbmod_shader_set_ambient_light(_shader, _up = undefined, _down = undefi
 /// @param {Struct.BBMOD_DirectionalLight} [_light] The directional light.
 /// If `undefined`, then the value set by {@link bbmod_light_directional_set}
 /// is used. If the light is not enabled then it is not passed.
-/// @param {Bool} [_isLightmapped] Use `true` in case the shader renders
-/// lightmapped models. Defaults to `false.`
 ///
 /// @see BBMOD_DirectionalLight
-function bbmod_shader_set_directional_light(_shader, _light = undefined, _isLightmapped = false)
+function bbmod_shader_set_directional_light(_shader, _light = undefined)
 {
 	gml_pragma("forceinline");
 	_light ??= bbmod_light_directional_get();
-	if (_light != undefined
-		&& _light.Enabled
-		&& (!_isLightmapped || _light.AffectLightmaps))
+	if (_light != undefined && _light.Enabled)
 	{
 		var _direction = _light.Direction;
 		shader_set_uniform_f(
@@ -843,9 +841,7 @@ function bbmod_shader_set_ibl(_shader, _ibl = undefined, _isLightmapped = false)
 
 	_ibl ??= bbmod_ibl_get();
 
-	if (_ibl != undefined
-		&& _ibl.Enabled
-		&& (!_isLightmapped || _ibl.AffectLightmaps))
+	if (_ibl != undefined && _ibl.Enabled)
 	{
 		_texture = _ibl.Texture;
 		_texel = _ibl.Texel;
@@ -929,8 +925,7 @@ function bbmod_shader_set_punctual_lights(_shader, _lights = undefined, _isLight
 		var _light = _lights[i++];
 
 		if (_light.Enabled
-			&& (_light.RenderPass & _renderPassMask) != 0
-			&& (!_isLightmapped || _light.AffectLightmaps))
+			&& (_light.RenderPass & _renderPassMask) != 0)
 		{
 			_light.Position.ToArray(_dataA, _indexA);
 			_dataA[@ _indexA + 3] = _light.Range;

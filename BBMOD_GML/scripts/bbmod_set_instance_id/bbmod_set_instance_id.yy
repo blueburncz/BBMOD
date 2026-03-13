@@ -6,7 +6,7 @@
   "name":"bbmod_set_instance_id",
   "parent":{
     "name":"Rendering",
-    "path":"folders/BBMOD/Core/Rendering.yy",
+    "path":"folders/BBMOD/1_Core/Rendering.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

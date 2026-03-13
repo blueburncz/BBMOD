@@ -1,4 +1,4 @@
-/// @module OBJImporter
+/// @module Extras.OBJImporter
 
 /// @func BBMOD_OBJImporter()
 ///

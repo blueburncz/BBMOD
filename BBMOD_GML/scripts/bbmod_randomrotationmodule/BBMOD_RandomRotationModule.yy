@@ -6,7 +6,7 @@
   "name":"BBMOD_RandomRotationModule",
   "parent":{
     "name":"Rotation",
-    "path":"folders/BBMOD/Particles/Modules/Rotation.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Rotation.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

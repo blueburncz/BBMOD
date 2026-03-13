@@ -1,7 +1,7 @@
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform sampler2D u_texTo;
-uniform float u_fFactor;
+uniform sampler2D uTo;
+uniform float uFactor;
 
 #define X_GAMMA 2.2
 
@@ -37,7 +37,7 @@ vec3 xDecodeRGBM(vec4 rgbm)
 
 void main()
 {
-	vec3 from = xGammaToLinear(xDecodeRGBM(texture2D(gm_BaseTexture, v_vTexCoord)));
-	vec3 to = xGammaToLinear(xDecodeRGBM(texture2D(u_texTo, v_vTexCoord)));
-	gl_FragColor = xEncodeRGBM(xLinearToGamma(mix(from, to, u_fFactor)));
+	vec3 from = xGammaToLinear(xDecodeRGBM(texture2D(gm_BaseTexture, vTexCoord)));
+	vec3 to = xGammaToLinear(xDecodeRGBM(texture2D(uTo, vTexCoord)));
+	gl_FragColor = xEncodeRGBM(xLinearToGamma(mix(from, to, uFactor)));
 }

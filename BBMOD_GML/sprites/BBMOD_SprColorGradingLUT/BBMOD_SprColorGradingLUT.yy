@@ -38,8 +38,8 @@
   },
   "origin":0,
   "parent":{
-    "name":"ColorGrading",
-    "path":"folders/BBMOD/PostProcessing/ColorGrading.yy",
+    "name":"Sprites",
+    "path":"folders/BBMOD/2_Rendering/Sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

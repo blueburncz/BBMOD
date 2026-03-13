@@ -1,8 +1,8 @@
-/// @module Terrain
+/// @module Core
 
 /// @func BBMOD_TerrainMaterial([_shader])
 ///
-/// @extends BBMOD_BaseMaterial
+/// @extends BBMOD_Material
 ///
 /// @desc A material that can be used when rendering terrain.
 ///
@@ -11,13 +11,10 @@
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
 ///
+/// @see BBMOD_Material
 /// @see BBMOD_Shader
-function BBMOD_TerrainMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader) constructor
-{
-	static clone = function ()
-	{
-		var _clone = new BBMOD_TerrainMaterial();
-		copy(_clone);
-		return _clone;
-	};
-}
+///
+/// @deprecated This struct is obsolete. Please use {@link BBMOD_Material}
+/// instead. All properties and methods previously in BBMOD_TerrainMaterial
+/// are now available directly in BBMOD_Material.
+function BBMOD_TerrainMaterial(_shader = undefined): BBMOD_Material(_shader) constructor {}

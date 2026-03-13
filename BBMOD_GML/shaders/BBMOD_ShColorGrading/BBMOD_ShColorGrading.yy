@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShColorGrading",
   "name":"BBMOD_ShColorGrading",
   "parent":{
-    "name":"ColorGrading",
-    "path":"folders/BBMOD/PostProcessing/ColorGrading.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

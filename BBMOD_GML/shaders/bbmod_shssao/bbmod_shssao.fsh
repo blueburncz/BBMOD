@@ -4,37 +4,37 @@
 // The size of the SSAO kernel.
 #define BBMOD_SSAO_KERNEL_SIZE 8
 
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
 // Texture of random rotations.
-uniform sampler2D u_texNoise;
+uniform sampler2D uNoise;
 
 // (1 / screenWidth, 1 / screenHeight)
-uniform vec2 u_vTexel;
+uniform vec2 uTexel;
 
 // (dtan(fov / 2) * (screenWidth / screenHeight), -dtan(fov / 2))
-uniform vec2 u_vTanAspect;
+uniform vec2 uTanAspect;
 
 // Distance to the far clipping plane.
-uniform float u_fClipFar;
+uniform float uClipFar;
 
 // Kernel of random vectors.
-uniform vec2 u_vSampleKernel[BBMOD_SSAO_KERNEL_SIZE];
+uniform vec2 uSampleKernel[BBMOD_SSAO_KERNEL_SIZE];
 
 // (screenWidth, screenHeight) / noiseTextureSize
-uniform vec2 u_vNoiseScale;
+uniform vec2 uNoiseScale;
 
 // Strength of the occlusion effect.
-uniform float u_fPower;
+uniform float uPower;
 
 // Screen-space radius of the occlusion effect.
-uniform float u_fRadius;
+uniform float uRadius;
 
 // Angle bias of the occlusion effect (in radians).
-uniform float u_fAngleBias;
+uniform float uAngleBias;
 
 // Maximum depth difference of samples taken into account.
-uniform float u_fDepthRange;
+uniform float uDepthRange;
 
 //#pragma include("DepthEncoding.xsh", "glsl")
 /// @param d Linearized depth to encode.
@@ -124,10 +124,10 @@ float AcosApprox(float x)
 void main()
 {
 	// Origin
-	float depth = xDecodeDepth(texture2D(gm_BaseTexture, v_vTexCoord).rgb) * u_fClipFar;
+	float depth = xDecodeDepth(texture2D(gm_BaseTexture, vTexCoord).rgb) * uClipFar;
 
-	vec3 origin = xProject(u_vTanAspect, v_vTexCoord, depth);
-	vec2 noise = texture2D(u_texNoise, v_vTexCoord * u_vNoiseScale).xy * 2.0 - 1.0;
+	vec3 origin = xProject(uTanAspect, vTexCoord, depth);
+	vec2 noise = texture2D(uNoise, vTexCoord * uNoiseScale).xy * 2.0 - 1.0;
 	mat2 rot = mat2(
 		noise.x, -noise.y,
 		noise.y, noise.x
@@ -138,31 +138,31 @@ void main()
 
 	for (int i = 0; i < BBMOD_SSAO_KERNEL_SIZE; ++i)
 	{
-		vec2 dir = (rot * u_vSampleKernel[i].xy) * (u_fRadius / depth);
-		vec2 uv1 = v_vTexCoord + dir * u_vTexel;
-		vec2 uv2 = v_vTexCoord - dir * u_vTexel;
+		vec2 dir = (rot * uSampleKernel[i].xy) * (uRadius / depth);
+		vec2 uv1 = vTexCoord + dir * uTexel;
+		vec2 uv2 = vTexCoord - dir * uTexel;
 		float angle = 1.0;
-		float depth1 = xDecodeDepth(texture2D(gm_BaseTexture, uv1).rgb) * u_fClipFar;
-		float depth2 = xDecodeDepth(texture2D(gm_BaseTexture, uv2).rgb) * u_fClipFar;
+		float depth1 = xDecodeDepth(texture2D(gm_BaseTexture, uv1).rgb) * uClipFar;
+		float depth2 = xDecodeDepth(texture2D(gm_BaseTexture, uv2).rgb) * uClipFar;
 
 		if (uv1.x > 0.0 && uv1.x < 1.0
 			&& uv1.y > 0.0 && uv1.y < 1.0
 			&& uv2.x > 0.0 && uv2.x < 1.0
 			&& uv2.y > 0.0 && uv2.y < 1.0)
 		{
-			vec3 pos1 = xProject(u_vTanAspect, uv1, depth1);
-			vec3 pos2 = xProject(u_vTanAspect, uv2, depth2);
+			vec3 pos1 = xProject(uTanAspect, uv1, depth1);
+			vec3 pos2 = xProject(uTanAspect, uv2, depth2);
 			vec3 diff1 = pos1 - origin;
 			vec3 diff2 = pos2 - origin;
 			float cosAngle = dot(diff1, diff2) / (length(diff1) * length(diff2));
 
-			angle = max(AcosApprox(cosAngle - u_fAngleBias), 0.0) / X_PI;
+			angle = max(AcosApprox(cosAngle - uAngleBias), 0.0) / X_PI;
 			if (-diff1.z - diff2.z < 0.01)
 			{
 				angle = 1.0;
 			}
 
-			float att = (abs(diff1.z) + abs(diff2.z)) / (u_fDepthRange * 2.0);
+			float att = (abs(diff1.z) + abs(diff2.z)) / (uDepthRange * 2.0);
 			att = clamp(att * att, 0.0, 1.0);
 			angle = mix(angle, 1.0, att);
 		}
@@ -171,13 +171,13 @@ void main()
 	}
 
 	occlusion /= float(BBMOD_SSAO_KERNEL_SIZE);
-	occlusion = pow(occlusion, u_fPower);
+	occlusion = pow(occlusion, uPower);
 
 	// Output
 	gl_FragColor.rgb = vec3(occlusion);
 	gl_FragColor.a   = 1.0;
 
-	if (depth == 0.0 || depth == u_fClipFar)
+	if (depth == 0.0 || depth == uClipFar)
 	{
 		gl_FragColor = vec4(1.0);
 	}

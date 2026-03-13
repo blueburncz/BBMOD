@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShLightmapped_Depth",
+  "name":"BBMOD_ShLightmapped_Depth",
+  "parent":{
+    "name":"Lightmapped",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Lightmapped.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

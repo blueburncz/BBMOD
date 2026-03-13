@@ -27,7 +27,7 @@
   "origin":0,
   "parent":{
     "name":"Sprites",
-    "path":"folders/BBMOD/Gizmo/Sprites.yy",
+    "path":"folders/BBMOD/1_Core/Sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

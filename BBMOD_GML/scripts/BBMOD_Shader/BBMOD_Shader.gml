@@ -105,6 +105,9 @@ global.__bbmodShaderCurrent = undefined;
 /// @readonly
 #macro BBMOD_SHADER_CURRENT global.__bbmodShaderCurrent
 
+/// @macro {Real} Maximum number of punctual lights in shaders. Equals to 8.
+#macro BBMOD_MAX_PUNCTUAL_LIGHTS 8
+
 /// @func BBMOD_Shader([_shader[, _vertexFormat]])
 ///
 /// @desc Base struct for wrappers of raw GameMaker shader assets.
@@ -131,6 +134,22 @@ function BBMOD_Shader(_shader = undefined, _vertexFormat = undefined) constructo
 	{
 		add_variant(_shader, _vertexFormat);
 	}
+
+	/// @var {Real} Maximum number of punctual lights in the shader.
+	/// @deprecated Please use {@link BBMOD_MAX_PUNCTUAL_LIGHTS} instead.
+	/// @readonly
+	MaxPunctualLights = BBMOD_MAX_PUNCTUAL_LIGHTS;
+
+	/// @var {Real} Number of terrain layers that this shader can render in
+	/// a single draw call. Default value is 1. Hard maximum is 3 because of
+	/// limited number of texture samplers.
+	/// @readonly
+	LayersPerDrawCall = 1;
+
+	/// @var {Real} Maximum number of terrain layers that this shader supports.
+	/// Default value is 5.
+	/// @readonly
+	MaxLayers = 5;
 
 	/// @func add_variant(_shader, _vertexFormat)
 	///
@@ -199,7 +218,21 @@ function BBMOD_Shader(_shader = undefined, _vertexFormat = undefined) constructo
 	/// @func on_set()
 	///
 	/// @desc A function executed when the shader is set.
-	static on_set = function () {};
+	static on_set = function ()
+	{
+		gml_pragma("forceinline");
+		var _shaderCurrent = shader_current();
+		bbmod_shader_set_cam_pos(_shaderCurrent);
+		bbmod_shader_set_exposure(_shaderCurrent);
+		bbmod_shader_set_ibl(_shaderCurrent);
+		bbmod_shader_set_ambient_light(_shaderCurrent);
+		bbmod_shader_set_directional_light(_shaderCurrent);
+		bbmod_shader_set_punctual_lights(_shaderCurrent);
+		bbmod_shader_set_fog(_shaderCurrent);
+		bbmod_shader_set_ssao(_shaderCurrent, sprite_get_texture(BBMOD_SprWhite, 0));
+		bbmod_shader_set_hdr(_shaderCurrent, 0.0);
+		bbmod_shader_set_lightmap(_shaderCurrent);
+	};
 
 	/// @func set(_vertexFormat)
 	///
@@ -248,14 +281,86 @@ function BBMOD_Shader(_shader = undefined, _vertexFormat = undefined) constructo
 	///
 	/// @desc Sets shader uniforms using values from the material.
 	///
-	/// @param {Struct.BBMOD_BaseMaterial} _material The material to take the
+	/// @param {Struct.BBMOD_Material} _material The material to take the
 	/// values from.
 	///
 	/// @return {Struct.BBMOD_Shader} Returns `self`.
 	///
-	/// @see BBMOD_BaseMaterial
+	/// @see BBMOD_Material
 	static set_material = function (_material)
 	{
+		gml_pragma("forceinline");
+		var _shaderCurrent = shader_current();
+
+		// BaseMaterial properties
+		bbmod_shader_set_base_opacity_multiplier(_shaderCurrent, _material.BaseOpacityMultiplier);
+		bbmod_shader_set_alpha_test(_shaderCurrent, _material.AlphaTest);
+		bbmod_shader_set_texture_offset(_shaderCurrent, _material.TextureOffset);
+		bbmod_shader_set_texture_scale(_shaderCurrent, _material.TextureScale);
+		bbmod_shader_set_shadowmap_bias(_shaderCurrent, _material.ShadowmapBias);
+		bbmod_shader_set_two_sided(_shaderCurrent, _material.TwoSided);
+
+		// DefaultMaterial properties
+		// Base opacity UVs
+		var _baseOpacity = _material.BaseOpacity;
+		if (_baseOpacity != pointer_null)
+		{
+			bbmod_shader_set_base_opacity_uv(_shaderCurrent, texture_get_uvs(_baseOpacity));
+		}
+
+		// Normal smoothness/roughness
+		var _normalSmoothness = _material.NormalSmoothness;
+		if (_normalSmoothness != undefined)
+		{
+			bbmod_shader_set_normal_smoothness(_shaderCurrent, _normalSmoothness);
+			bbmod_shader_set_normal_w_uv(_shaderCurrent, texture_get_uvs(_normalSmoothness));
+		}
+
+		var _normalRoughness = _material.NormalRoughness;
+		if (_normalRoughness != undefined)
+		{
+			bbmod_shader_set_normal_roughness(_shaderCurrent, _normalRoughness);
+			bbmod_shader_set_normal_w_uv(_shaderCurrent, texture_get_uvs(_normalRoughness));
+		}
+
+		// Specular color/Metallic and AO
+		var _specularColor = _material.SpecularColor;
+		if (_specularColor != undefined)
+		{
+			bbmod_shader_set_specular_color(_shaderCurrent, _specularColor);
+			bbmod_shader_set_material_uv(_shaderCurrent, texture_get_uvs(_specularColor));
+		}
+
+		var _metallicAO = _material.MetallicAO;
+		if (_metallicAO != undefined)
+		{
+			bbmod_shader_set_metallic_ao(_shaderCurrent, _metallicAO);
+			bbmod_shader_set_material_uv(_shaderCurrent, texture_get_uvs(_metallicAO));
+		}
+
+		// Subsurface
+		var _subsurface = _material.Subsurface;
+		bbmod_shader_set_subsurface(_shaderCurrent, _subsurface);
+		bbmod_shader_set_subsurface_uv(_shaderCurrent, texture_get_uvs(_subsurface));
+
+		// Emissive
+		var _emissive = _material.Emissive;
+		bbmod_shader_set_emissive(_shaderCurrent, _emissive);
+		bbmod_shader_set_emissive_uv(_shaderCurrent, texture_get_uvs(_emissive));
+
+		// DefaultLightmapMaterial properties
+		if (_material.Lightmap != undefined)
+		{
+			bbmod_shader_set_lightmap(_shaderCurrent, _material.Lightmap);
+		}
+
+		// ParticleMaterial properties
+		bbmod_shader_set_soft_distance(_shaderCurrent, _material.SoftDistance);
+
+		// Dithering
+		shader_set_uniform_f(shader_get_uniform(_shaderCurrent, "bbmod_DitherFadeStart"), _material.DitherFadeStart);
+		shader_set_uniform_f(shader_get_uniform(_shaderCurrent, "bbmod_DitherFadeEnd"), _material.DitherFadeEnd);
+
 		return self;
 	};
 

@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /// @macro {Struct.BBMOD_Matrix} A read-only globally allocated identity matrix.
 #macro BBMOD_MATRIX_IDENTITY __bbmod_matrix_get_identity()
@@ -398,7 +398,7 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	static Inverse = function ()
 	{
 		gml_pragma("forceinline");
-		return Clone().InverseSelf();
+		return new BBMOD_Matrix(matrix_inverse(Raw));
 	};
 
 	/// @func InverseSelf()
@@ -491,7 +491,16 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	static MulComponentwise = function (_matrix)
 	{
 		gml_pragma("forceinline");
-		return Clone().MulComponentwiseSelf(_matrix);
+		var _selfRaw = Raw;
+		var _otherRaw = _matrix.Raw;
+		var _resRaw = array_create(16, 0.0);
+		var _index = 0;
+		repeat(16)
+		{
+			_resRaw[@ _index] = _selfRaw[_index] * _otherRaw[_index];
+			++_index;
+		}
+		return new BBMOD_Matrix(_resRaw);
 	};
 
 	/// @func MulComponentwiseSelf(_matrix)
@@ -528,7 +537,16 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	static AddComponentwise = function (_matrix)
 	{
 		gml_pragma("forceinline");
-		return Clone().AddComponentwiseSelf(_matrix);
+		var _selfRaw = Raw;
+		var _otherRaw = _matrix.Raw;
+		var _resRaw = array_create(16, 0.0);
+		var _index = 0;
+		repeat(16)
+		{
+			_resRaw[@ _index] = _selfRaw[_index] + _otherRaw[_index];
+			++_index;
+		}
+		return new BBMOD_Matrix(_resRaw);
 	};
 
 	/// @func AddComponentwiseSelf(_matrix)
@@ -565,7 +583,16 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	static SubComponentwise = function (_matrix)
 	{
 		gml_pragma("forceinline");
-		return Clone().SubComponentwiseSelf(_matrix);
+		var _selfRaw = Raw;
+		var _otherRaw = _matrix.Raw;
+		var _resRaw = array_create(16, 0.0);
+		var _index = 0;
+		repeat(16)
+		{
+			_resRaw[@ _index] = _selfRaw[_index] - _otherRaw[_index];
+			++_index;
+		}
+		return new BBMOD_Matrix(_resRaw);
 	};
 
 	/// @func SubComponentwiseSelf(_matrix)
@@ -627,7 +654,7 @@ function BBMOD_Matrix(_raw = undefined) constructor
 	static Transpose = function ()
 	{
 		gml_pragma("forceinline");
-		return Clone().TransposeSelf();
+		return new BBMOD_Matrix(bbmod_matrix_transpose(Raw));
 	};
 
 	/// @func TransposeSelf()

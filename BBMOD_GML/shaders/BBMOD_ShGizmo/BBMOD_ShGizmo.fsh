@@ -1,8 +1,8 @@
 // FIXME: Temporary fix!
 precision highp float;
 
-varying vec3 v_vNormal;
-varying vec2 v_vTexCoord;
+varying vec3 vNormal;
+varying vec2 vTexCoord;
 
 uniform float bbmod_HDR;
 uniform float bbmod_Exposure;
@@ -43,14 +43,14 @@ void GammaCorrect()
 
 void main()
 {
-	vec3 base = xGammaToLinear(texture2D(gm_BaseTexture, v_vTexCoord).rgb);
-	vec3 N = normalize(v_vNormal);
+	vec3 base = xGammaToLinear(texture2D(gm_BaseTexture, vTexCoord).rgb);
+	vec3 N = normalize(vNormal);
 	vec3 L = vec3(0.0, 0.0, -1.0);
 	float light = mix(0.25, 1.0, max(dot(N, L), 0.0));
 	gl_FragColor.rgb = base * light;
 	gl_FragColor.a = 1.0;
 
-	if (bbmod_HDR == 0.0)
+	if (bbmod_HDR < 0.5)
 	{
 		Exposure();
 		TonemapReinhard();

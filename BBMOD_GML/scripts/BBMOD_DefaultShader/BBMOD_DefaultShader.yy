@@ -6,7 +6,7 @@
   "name":"BBMOD_DefaultShader",
   "parent":{
     "name":"DefaultRenderer",
-    "path":"folders/BBMOD/Core/DefaultRenderer.yy",
+    "path":"folders/BBMOD/2_Rendering/DefaultRenderer.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

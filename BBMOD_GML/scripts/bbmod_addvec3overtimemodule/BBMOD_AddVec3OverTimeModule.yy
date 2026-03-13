@@ -6,7 +6,7 @@
   "name":"BBMOD_AddVec3OverTimeModule",
   "parent":{
     "name":"AddPropertyOverTime",
-    "path":"folders/BBMOD/Particles/Modules/Universal/AddPropertyOverTime.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Universal/AddPropertyOverTime.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

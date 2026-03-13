@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_MixSpeedModule([_from[, _to]])
 ///
@@ -28,7 +28,7 @@ function BBMOD_MixSpeedModule(_from = 1.0, _to = _from): BBMOD_ParticleModule() 
 		var _velocityX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 		var _velocityY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];
 		var _velocityZ = _particles[# BBMOD_EParticle.VelocityZ, _particleIndex];
-		var _norm = sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
+		var _norm = point_distance_3d(0, 0, 0, _velocityX, _velocityY, _velocityZ);
 		var _factor = lerp(From, To, random(1.0)) / max(_norm, 0.001);
 		_particles[# BBMOD_EParticle.VelocityX, _particleIndex] = _velocityX * _factor;
 		_particles[# BBMOD_EParticle.VelocityY, _particleIndex] = _velocityY * _factor;

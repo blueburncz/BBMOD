@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @macro {Struct.BBMOD_VertexFormat} Vertex format of a single billboard
 /// particle.
@@ -8,23 +8,23 @@
 /// billboard particles.
 #macro BBMOD_VFORMAT_PARTICLE_BATCHED __bbmod_vformat_particle_batched()
 
-/// @macro {Struct.BBMOD_BaseShader} Shader for rendering dynamic batches
+/// @macro {Struct.BBMOD_Shader} Shader for rendering dynamic batches
 /// of unlit billboard particles.
 #macro BBMOD_SHADER_PARTICLE_UNLIT __bbmod_shader_particle_unlit()
 
-/// @macro {Struct.BBMOD_DefaultShader} Shader for rendering dynamic batches
+/// @macro {Struct.BBMOD_Shader} Shader for rendering dynamic batches
 /// of lit billboard particles.
 #macro BBMOD_SHADER_PARTICLE_LIT __bbmod_shader_particle_lit()
 
-/// @macro {Struct.BBMOD_DefaultShader} Shader for rendering dynamic batches
+/// @macro {Struct.BBMOD_Shader} Shader for rendering dynamic batches
 /// of billboard particles into depth buffers.
 #macro BBMOD_SHADER_PARTICLE_DEPTH __bbmod_shader_particle_depth()
 
-/// @macro {Struct.BBMOD_DefaultMaterial} Default material for rendering dynamic
+/// @macro {Struct.BBMOD_Material} Default material for rendering dynamic
 /// batches of unlit billboard particles.
 #macro BBMOD_MATERIAL_PARTICLE_UNLIT __bbmod_material_particle_unlit()
 
-/// @macro {Struct.BBMOD_DefaultMaterial} Default material for rendering dynamic
+/// @macro {Struct.BBMOD_Material} Default material for rendering dynamic
 /// batches of lit billboard particles.
 #macro BBMOD_MATERIAL_PARTICLE_LIT __bbmod_material_particle_lit()
 
@@ -47,22 +47,22 @@ function __bbmod_vformat_particle_batched()
 
 function __bbmod_shader_particle_unlit()
 {
-	static _shader = new BBMOD_ParticleShader(
-		BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_Shader(
+		BBMOD_ShParticle_Unlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
 function __bbmod_shader_particle_lit()
 {
-	static _shader = new BBMOD_ParticleShader(
-		BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_Shader(
+		BBMOD_ShParticle_Forward, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
 function __bbmod_shader_particle_depth()
 {
-	static _shader = new BBMOD_BaseShader(
-		BBMOD_ShParticleDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
+	static _shader = new BBMOD_Shader(
+		BBMOD_ShParticle_Depth, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
@@ -71,7 +71,7 @@ function __bbmod_material_particle_unlit()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		_material = new BBMOD_ParticleMaterial();
+		_material = new BBMOD_Material();
 		_material.Persistent = true;
 		_material.set_shader(BBMOD_ERenderPass.Alpha, BBMOD_SHADER_PARTICLE_UNLIT);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprParticle, 0);

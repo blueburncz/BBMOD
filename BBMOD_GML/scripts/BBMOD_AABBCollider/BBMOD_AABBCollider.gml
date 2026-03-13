@@ -1,4 +1,4 @@
-/// @module Raycasting
+/// @module Extras.Raycasting
 
 /// @func BBMOD_AABBCollider([_position[, _size]])
 ///
@@ -39,8 +39,14 @@ function BBMOD_AABBCollider(
 	static FromMinMax = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		Position = _min.Add(_max).Scale(0.5);
-		Size = _max.Sub(_min).Scale(0.5);
+		// Position = _min.Add(_max).Scale(0.5);
+		Position.X = (_min.X + _max.X) * 0.5;
+		Position.Y = (_min.Y + _max.Y) * 0.5;
+		Position.Z = (_min.Z + _max.Z) * 0.5;
+		// Size = _max.Sub(_min).Scale(0.5);
+		Size.X = (_max.X - _min.X) * 0.5;
+		Size.Y = (_max.Y - _min.Y) * 0.5;
+		Size.Z = (_max.Z - _min.Z) * 0.5;
 		return self;
 	};
 
@@ -53,9 +59,14 @@ function BBMOD_AABBCollider(
 	static GetMin = function ()
 	{
 		gml_pragma("forceinline");
-		var _p1 = Position.Add(Size);
-		var _p2 = Position.Sub(Size);
-		return _p1.Minimize(_p2);
+		// var _p1 = Position.Add(Size);
+		// var _p2 = Position.Sub(Size);
+		// return _p1.Minimize(_p2);
+		return new BBMOD_Vec3(
+			min(Position.X + Size.X, Position.X - Size.X),
+			min(Position.Y + Size.Y, Position.Y - Size.Y),
+			min(Position.Z + Size.Z, Position.Z - Size.Z)
+		);
 	};
 
 	/// @func GetMax()
@@ -67,16 +78,28 @@ function BBMOD_AABBCollider(
 	static GetMax = function ()
 	{
 		gml_pragma("forceinline");
-		var _p1 = Position.Add(Size);
-		var _p2 = Position.Sub(Size);
-		return _p1.Maximize(_p2);
+		// var _p1 = Position.Add(Size);
+		// var _p2 = Position.Sub(Size);
+		// return _p1.Maximize(_p2);
+		return new BBMOD_Vec3(
+			max(Position.X + Size.X, Position.X - Size.X),
+			max(Position.Y + Size.Y, Position.Y - Size.Y),
+			max(Position.Z + Size.Z, Position.Z - Size.Z)
+		);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L149
 	static GetClosestPoint = function (_point)
 	{
 		gml_pragma("forceinline");
-		return _point.Clamp(GetMin(), GetMax());
+		// return _point.Clamp(GetMin(), GetMax());
+		var _min = GetMin();
+		var _max = GetMax();
+		return new BBMOD_Vec3(
+			clamp(_point.X, _min.X, _max.X),
+			clamp(_point.Y, _min.Y, _max.Y),
+			clamp(_point.Z, _min.Z, _max.Z)
+		);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L340
@@ -99,7 +122,10 @@ function BBMOD_AABBCollider(
 		var _pLen = (Size.X * abs(_plane.Normal.X)
 			+ Size.Y * abs(_plane.Normal.Y)
 			+ Size.Z * abs(_plane.Normal.Z));
-		var _dist = _plane.Normal.Dot(Position) - _plane.Distance;
+		// var _dist = _plane.Normal.Dot(Position) - _plane.Distance;
+		var _dist = (_plane.Normal.X * Position.X
+			+ _plane.Normal.Y * Position.Y
+			+ _plane.Normal.Z * Position.Z) - _plane.Distance;
 		return (abs(_dist) <= _pLen);
 	};
 
@@ -124,6 +150,48 @@ function BBMOD_AABBCollider(
 	{
 		gml_pragma("forceinline");
 		return _sphere.TestAABB(self);
+	};
+
+	static TestCapsule = function (_capsule)
+	{
+		gml_pragma("forceinline");
+		return _capsule.TestAABB(self);
+	};
+
+	static TestTriangle = function (_triangle)
+	{
+		gml_pragma("forceinline");
+		return _triangle.TestAABB(self);
+	};
+
+	static TestOBB = function (_obb)
+	{
+		gml_pragma("forceinline");
+		return _obb.TestAABB(self);
+	};
+
+	static TestLineSegment = function (_segment)
+	{
+		gml_pragma("forceinline");
+		return _segment.TestAABB(self);
+	};
+
+	static TestCylinder = function (_cylinder)
+	{
+		gml_pragma("forceinline");
+		return _cylinder.TestAABB(self);
+	};
+
+	static TestEllipsoid = function (_ellipsoid)
+	{
+		gml_pragma("forceinline");
+		return _ellipsoid.TestAABB(self);
+	};
+
+	static TestCone = function (_cone)
+	{
+		gml_pragma("forceinline");
+		return _cone.TestAABB(self);
 	};
 
 	// Source: https://github.com/gszauer/GamePhysicsCookbook/blob/a0b8ee0c39fed6d4b90bb6d2195004dfcf5a1115/Code/Geometry3D.cpp#L707
@@ -168,7 +236,12 @@ function BBMOD_AABBCollider(
 			var _tResult = (_tmin < 0.0) ? _tmax : _tmin;
 
 			_result.Distance = _tResult;
-			_result.Point = _ray.Origin.Add(_ray.Direction.Scale(_tResult));
+			// _result.Point = _ray.Origin.Add(_ray.Direction.Scale(_tResult));
+			_result.Point = new BBMOD_Vec3(
+				_ray.Origin.X + _ray.Direction.X * _tResult,
+				_ray.Origin.Y + _ray.Direction.Y * _tResult,
+				_ray.Origin.Z + _ray.Direction.Z * _tResult
+			);
 
 			for (var i = 0; i < 6; ++i)
 			{

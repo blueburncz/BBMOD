@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShAnimated_VertexColors_Depth",
+  "name":"BBMOD_ShAnimated_VertexColors_Depth",
+  "parent":{
+    "name":"Animated",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Animated.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

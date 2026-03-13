@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /// @func BBMOD_DualQuaternion([_x, _y, _z, _w, _dx, _dy, _dz, _dw])
 ///
@@ -44,10 +44,17 @@ function BBMOD_DualQuaternion(
 	static Add = function (_dq)
 	{
 		gml_pragma("forceinline");
-		return new BBMOD_DualQuaternion()
-			.FromRealDual(
-				Real.Add(_dq.Real),
-				Dual.Add(_dq.Dual));
+		var _res = new BBMOD_DualQuaternion();
+		_res.Real.X = Real.X + _dq.Real.X;
+		_res.Real.Y = Real.Y + _dq.Real.Y;
+		_res.Real.Z = Real.Z + _dq.Real.Z;
+		_res.Real.W = Real.W + _dq.Real.W;
+		_res.Real.NormalizeSelf();
+		_res.Dual.X = Dual.X + _dq.Dual.X;
+		_res.Dual.Y = Dual.Y + _dq.Dual.Y;
+		_res.Dual.Z = Dual.Z + _dq.Dual.Z;
+		_res.Dual.W = Dual.W + _dq.Dual.W;
+		return _res;
 	};
 
 	/// @func AddSelf(_dq)
@@ -73,10 +80,16 @@ function BBMOD_DualQuaternion(
 	static Clone = function ()
 	{
 		gml_pragma("forceinline");
-		var _dq = new BBMOD_DualQuaternion();
-		_dq.Real = Real.Clone();
-		_dq.Dual = Dual.Clone();
-		return _dq;
+		return new BBMOD_DualQuaternion(
+			Real.X,
+			Real.Y,
+			Real.Z,
+			Real.W,
+			Dual.X,
+			Dual.Y,
+			Dual.Z,
+			Dual.W
+		);
 	};
 
 	/// @func Conjugate()
@@ -88,10 +101,18 @@ function BBMOD_DualQuaternion(
 	static Conjugate = function ()
 	{
 		gml_pragma("forceinline");
-		return new BBMOD_DualQuaternion()
-			.FromRealDual(
-				Real.Conjugate(),
-				Dual.Conjugate());
+		var _res = new BBMOD_DualQuaternion(
+			-Real.X,
+			-Real.Y,
+			-Real.Z,
+			Real.W,
+			-Dual.X,
+			-Dual.Y,
+			-Dual.Z,
+			Dual.W
+		);
+		_res.Real.NormalizeSelf();
+		return _res;
 	};
 
 	/// @func Copy(_dq)
@@ -148,10 +169,21 @@ function BBMOD_DualQuaternion(
 	{
 		gml_pragma("forceinline");
 		var _real = Real.Exp();
-		return new BBMOD_DualQuaternion()
-			.FromRealDual(
-				_real,
-				_real.Mul(Dual));
+		var _dualX = _real.W * Dual.X + _real.X * Dual.W + _real.Y * Dual.Z - _real.Z * Dual.Y;
+		var _dualY = _real.W * Dual.Y + _real.Y * Dual.W + _real.Z * Dual.X - _real.X * Dual.Z;
+		var _dualZ = _real.W * Dual.Z + _real.Z * Dual.W + _real.X * Dual.Y - _real.Y * Dual.X;
+		var _dualW = _real.W * Dual.W - _real.X * Dual.X - _real.Y * Dual.Y - _real.Z * Dual.Z;
+		var _res = new BBMOD_DualQuaternion();
+		_res.Real.X = _real.X;
+		_res.Real.Y = _real.Y;
+		_res.Real.Z = _real.Z;
+		_res.Real.W = _real.W;
+		_res.Real.NormalizeSelf();
+		_res.Dual.X = _dualX;
+		_res.Dual.Y = _dualY;
+		_res.Dual.Z = _dualZ;
+		_res.Dual.W = _dualW;
+		return _res;
 	};
 
 	/// @func ExpSelf()
@@ -164,9 +196,20 @@ function BBMOD_DualQuaternion(
 	{
 		gml_pragma("forceinline");
 		var _real = Real.Exp();
-		return FromRealDual(
-			_real,
-			_real.Mul(Dual));
+		var _dualX = _real.W * Dual.X + _real.X * Dual.W + _real.Y * Dual.Z - _real.Z * Dual.Y;
+		var _dualY = _real.W * Dual.Y + _real.Y * Dual.W + _real.Z * Dual.X - _real.X * Dual.Z;
+		var _dualZ = _real.W * Dual.Z + _real.Z * Dual.W + _real.X * Dual.Y - _real.Y * Dual.X;
+		var _dualW = _real.W * Dual.W - _real.X * Dual.X - _real.Y * Dual.Y - _real.Z * Dual.Z;
+		Real.X = _real.X;
+		Real.Y = _real.Y;
+		Real.Z = _real.Z;
+		Real.W = _real.W;
+		Real.NormalizeSelf();
+		Dual.X = _dualX;
+		Dual.Y = _dualY;
+		Dual.Z = _dualZ;
+		Dual.W = _dualW;
+		return self;
 	};
 
 	/// @func FromArray(_array[, _index])
@@ -220,8 +263,15 @@ function BBMOD_DualQuaternion(
 	static FromRealDual = function (_real, _dual)
 	{
 		gml_pragma("forceinline");
-		Real = _real.Normalize();
-		Dual = _dual;
+		Real.X = _real.X;
+		Real.Y = _real.Y;
+		Real.Z = _real.Z;
+		Real.W = _real.W;
+		Real.NormalizeSelf();
+		Dual.X = _dual.X;
+		Dual.Y = _dual.Y;
+		Dual.Z = _dual.Z;
+		Dual.W = _dual.W;
 		return self;
 	};
 
@@ -323,10 +373,31 @@ function BBMOD_DualQuaternion(
 			return new BBMOD_DualQuaternion();
 		}
 		var _scale = 1.0 / _length;
-		return new BBMOD_DualQuaternion()
-			.FromRealDual(
-				Real.Log(),
-				Real.Conjugate().Mul(Dual).Scale(_scale * _scale));
+		var _realX = Real.X;
+		var _realY = Real.Y;
+		var _realZ = Real.Z;
+		var _realW = Real.W;
+		var _conjX = -_realX;
+		var _conjY = -_realY;
+		var _conjZ = -_realZ;
+		var _conjW = _realW;
+		var _scaleSqr = _scale * _scale;
+		var _dualX = (_conjW * Dual.X + _conjX * Dual.W + _conjY * Dual.Z - _conjZ * Dual.Y) * _scaleSqr;
+		var _dualY = (_conjW * Dual.Y + _conjY * Dual.W + _conjZ * Dual.X - _conjX * Dual.Z) * _scaleSqr;
+		var _dualZ = (_conjW * Dual.Z + _conjZ * Dual.W + _conjX * Dual.Y - _conjY * Dual.X) * _scaleSqr;
+		var _dualW = (_conjW * Dual.W - _conjX * Dual.X - _conjY * Dual.Y - _conjZ * Dual.Z) * _scaleSqr;
+		var _realLog = Real.Log();
+		var _res = new BBMOD_DualQuaternion();
+		_res.Real.X = _realLog.X;
+		_res.Real.Y = _realLog.Y;
+		_res.Real.Z = _realLog.Z;
+		_res.Real.W = _realLog.W;
+		_res.Real.NormalizeSelf();
+		_res.Dual.X = _dualX;
+		_res.Dual.Y = _dualY;
+		_res.Dual.Z = _dualZ;
+		_res.Dual.W = _dualW;
+		return _res;
 	};
 
 	/// @func LogSelf()
@@ -353,9 +424,26 @@ function BBMOD_DualQuaternion(
 			return self;
 		}
 		var _scale = 1.0 / _length;
-		return FromRealDual(
-			Real.Log(),
-			Real.Clone().ConjugateSelf().MulSelf(Dual).ScaleSelf(_scale * _scale));
+		var _realX = Real.X;
+		var _realY = Real.Y;
+		var _realZ = Real.Z;
+		var _realW = Real.W;
+		var _conjX = -_realX;
+		var _conjY = -_realY;
+		var _conjZ = -_realZ;
+		var _conjW = _realW;
+		var _scaleSqr = _scale * _scale;
+		var _dualX = (_conjW * Dual.X + _conjX * Dual.W + _conjY * Dual.Z - _conjZ * Dual.Y) * _scaleSqr;
+		var _dualY = (_conjW * Dual.Y + _conjY * Dual.W + _conjZ * Dual.X - _conjX * Dual.Z) * _scaleSqr;
+		var _dualZ = (_conjW * Dual.Z + _conjZ * Dual.W + _conjX * Dual.Y - _conjY * Dual.X) * _scaleSqr;
+		var _dualW = (_conjW * Dual.W - _conjX * Dual.X - _conjY * Dual.Y - _conjZ * Dual.Z) * _scaleSqr;
+		Real.LogSelf();
+		Real.NormalizeSelf();
+		Dual.X = _dualX;
+		Dual.Y = _dualY;
+		Dual.Z = _dualZ;
+		Dual.W = _dualW;
+		return self;
 	};
 
 	/// @func Mul(_dq)
@@ -460,14 +548,22 @@ function BBMOD_DualQuaternion(
 	static Normalize = function ()
 	{
 		gml_pragma("forceinline");
-		var _dq = Clone();
 		var _mag = sqrt(Real.Dot(Real));
 		if (_mag > math_get_epsilon())
 		{
-			_dq.Real = _dq.Real.Scale(1.0 / _mag);
-			_dq.Dual = _dq.Dual.Scale(1.0 / _mag);
+			var _invMag = 1.0 / _mag;
+			return new BBMOD_DualQuaternion(
+				Real.X * _invMag,
+				Real.Y * _invMag,
+				Real.Z * _invMag,
+				Real.W * _invMag,
+				Dual.X * _invMag,
+				Dual.Y * _invMag,
+				Dual.Z * _invMag,
+				Dual.W * _invMag
+			);
 		}
-		return _dq;
+		return Clone();
 	};
 
 	/// @func NormalizeSelf()
@@ -554,10 +650,16 @@ function BBMOD_DualQuaternion(
 	static Scale = function (_s)
 	{
 		gml_pragma("forceinline");
-		var _dq = new BBMOD_DualQuaternion();
-		_dq.Real = Real.Scale(_s);
-		_dq.Dual = Dual.Scale(_s);
-		return _dq;
+		return new BBMOD_DualQuaternion(
+			Real.X * _s,
+			Real.Y * _s,
+			Real.Z * _s,
+			Real.W * _s,
+			Dual.X * _s,
+			Dual.Y * _s,
+			Dual.Z * _s,
+			Dual.W * _s
+		);
 	};
 
 	/// @func ScaleSelf(_s)
@@ -664,17 +766,47 @@ function BBMOD_DualQuaternion(
 
 		_dest ??= array_create(16, 0.0);
 
-		// Rotation
-		Real.ToMatrix(_dest, _index);
+		var _rx = Real.X;
+		var _ry = Real.Y;
+		var _rz = Real.Z;
+		var _rw = Real.W;
+
+		var _x2 = _rx * _rx;
+		var _y2 = _ry * _ry;
+		var _z2 = _rz * _rz;
+		var _xy = _rx * _ry;
+		var _xz = _rx * _rz;
+		var _yz = _ry * _rz;
+		var _wx = _rw * _rx;
+		var _wy = _rw * _ry;
+		var _wz = _rw * _rz;
+
+		_dest[@ _index + 0] = 1.0 - 2.0 * (_y2 + _z2);
+		_dest[@ _index + 1] = 2.0 * (_xy + _wz);
+		_dest[@ _index + 2] = 2.0 * (_xz - _wy);
 		_dest[@ _index + 3] = 0.0;
+
+		_dest[@ _index + 4] = 2.0 * (_xy - _wz);
+		_dest[@ _index + 5] = 1.0 - 2.0 * (_x2 + _z2);
+		_dest[@ _index + 6] = 2.0 * (_yz + _wx);
 		_dest[@ _index + 7] = 0.0;
+
+		_dest[@ _index + 8] = 2.0 * (_xz + _wy);
+		_dest[@ _index + 9] = 2.0 * (_yz - _wx);
+		_dest[@ _index + 10] = 1.0 - 2.0 * (_x2 + _y2);
 		_dest[@ _index + 11] = 0.0;
 
-		// Translation
-		var _translation = GetTranslation();
-		_dest[@ _index + 12] = _translation.X;
-		_dest[@ _index + 13] = _translation.Y;
-		_dest[@ _index + 14] = _translation.Z;
+		var _q10 = Dual.X * 2.0;
+		var _q11 = Dual.Y * 2.0;
+		var _q12 = Dual.Z * 2.0;
+		var _q13 = Dual.W * 2.0;
+		var _q20 = -_rx;
+		var _q21 = -_ry;
+		var _q22 = -_rz;
+		var _q23 = _rw;
+		_dest[@ _index + 12] = _q13 * _q20 + _q10 * _q23 + _q11 * _q22 - _q12 * _q21;
+		_dest[@ _index + 13] = _q13 * _q21 + _q11 * _q23 + _q12 * _q20 - _q10 * _q22;
+		_dest[@ _index + 14] = _q13 * _q22 + _q12 * _q23 + _q10 * _q21 - _q11 * _q20;
 		_dest[@ _index + 15] = 1.0;
 
 		return _dest;
@@ -691,7 +823,45 @@ function BBMOD_DualQuaternion(
 	static Transform = function (_v)
 	{
 		gml_pragma("forceinline");
-		return GetTranslation().AddSelf(Real.Rotate(_v));
+
+		var _q10 = Dual.X * 2.0;
+		var _q11 = Dual.Y * 2.0;
+		var _q12 = Dual.Z * 2.0;
+		var _q13 = Dual.W * 2.0;
+		var _q20 = -Real.X;
+		var _q21 = -Real.Y;
+		var _q22 = -Real.Z;
+		var _q23 = Real.W;
+		var _tx = _q13 * _q20 + _q10 * _q23 + _q11 * _q22 - _q12 * _q21;
+		var _ty = _q13 * _q21 + _q11 * _q23 + _q12 * _q20 - _q10 * _q22;
+		var _tz = _q13 * _q22 + _q12 * _q23 + _q10 * _q21 - _q11 * _q20;
+
+		var _qx = Real.X;
+		var _qy = Real.Y;
+		var _qz = Real.Z;
+		var _qw = Real.W;
+		var _lenSqr = _qx * _qx + _qy * _qy + _qz * _qz + _qw * _qw;
+		if (abs(_lenSqr - 1.0) > math_get_epsilon())
+		{
+			var _invLen = 1.0 / sqrt(_lenSqr);
+			_qx *= _invLen;
+			_qy *= _invLen;
+			_qz *= _invLen;
+			_qw *= _invLen;
+		}
+
+		var _vx = _v.X;
+		var _vy = _v.Y;
+		var _vz = _v.Z;
+		var _tx2 = 2.0 * (_qy * _vz - _qz * _vy);
+		var _ty2 = 2.0 * (_qz * _vx - _qx * _vz);
+		var _tz2 = 2.0 * (_qx * _vy - _qy * _vx);
+
+		return new BBMOD_Vec3(
+			(_vx + _qw * _tx2 + (_qy * _tz2 - _qz * _ty2)) + _tx,
+			(_vy + _qw * _ty2 + (_qz * _tx2 - _qx * _tz2)) + _ty,
+			(_vz + _qw * _tz2 + (_qx * _ty2 - _qy * _tx2)) + _tz
+		);
 	};
 
 	/// @func TransformOther(_v)
@@ -705,7 +875,43 @@ function BBMOD_DualQuaternion(
 	static TransformOther = function (_v)
 	{
 		gml_pragma("forceinline");
-		GetTranslation().AddSelf(Real.Rotate(_v)).Copy(_v);
+
+		var _q10 = Dual.X * 2.0;
+		var _q11 = Dual.Y * 2.0;
+		var _q12 = Dual.Z * 2.0;
+		var _q13 = Dual.W * 2.0;
+		var _q20 = -Real.X;
+		var _q21 = -Real.Y;
+		var _q22 = -Real.Z;
+		var _q23 = Real.W;
+		var _tx = _q13 * _q20 + _q10 * _q23 + _q11 * _q22 - _q12 * _q21;
+		var _ty = _q13 * _q21 + _q11 * _q23 + _q12 * _q20 - _q10 * _q22;
+		var _tz = _q13 * _q22 + _q12 * _q23 + _q10 * _q21 - _q11 * _q20;
+
+		var _qx = Real.X;
+		var _qy = Real.Y;
+		var _qz = Real.Z;
+		var _qw = Real.W;
+		var _lenSqr = _qx * _qx + _qy * _qy + _qz * _qz + _qw * _qw;
+		if (abs(_lenSqr - 1.0) > math_get_epsilon())
+		{
+			var _invLen = 1.0 / sqrt(_lenSqr);
+			_qx *= _invLen;
+			_qy *= _invLen;
+			_qz *= _invLen;
+			_qw *= _invLen;
+		}
+
+		var _vx = _v.X;
+		var _vy = _v.Y;
+		var _vz = _v.Z;
+		var _tx2 = 2.0 * (_qy * _vz - _qz * _vy);
+		var _ty2 = 2.0 * (_qz * _vx - _qx * _vz);
+		var _tz2 = 2.0 * (_qx * _vy - _qy * _vx);
+
+		_v.X = (_vx + _qw * _tx2 + (_qy * _tz2 - _qz * _ty2)) + _tx;
+		_v.Y = (_vy + _qw * _ty2 + (_qz * _tx2 - _qx * _tz2)) + _ty;
+		_v.Z = (_vz + _qw * _tz2 + (_qx * _ty2 - _qy * _tx2)) + _tz;
 		return _v;
 	};
 }

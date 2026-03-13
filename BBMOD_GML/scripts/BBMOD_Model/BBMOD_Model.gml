@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /// @func BBMOD_Model([_file[, _sha1]])
 ///
@@ -881,7 +881,7 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 	///
 	/// @desc Enqueues the model for rendering.
 	///
-	/// @param {Array<Struct.BBMOD_BaseMaterial>} [_materials] An array of
+	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of
 	/// materials, one for each material slot of the model. If not specified,
 	/// then {@link BBMOD_Model.Materials} is used. Defaults to `undefined`.
 	/// @param {Array<Real>} [_transform] An array of dual quaternions for

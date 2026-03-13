@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_LumaSharpenEffect",
   "parent":{
-    "name":"LumaSharpen",
-    "path":"folders/BBMOD/PostProcessing/LumaSharpen.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

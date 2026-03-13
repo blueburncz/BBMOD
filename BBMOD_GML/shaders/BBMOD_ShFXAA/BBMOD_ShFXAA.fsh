@@ -3,9 +3,9 @@
 #define FXAA_REDUCE_MUL (1.0 / 8.0)
 #define FXAA_SPAN_MAX 8.0
 
-varying vec4 v_vFragPos;
+varying vec4 vFragPos;
 
-uniform vec2 u_vTexelPS;
+uniform vec2 vTexelPS;
 
 /// @param tex     Input texture.
 /// @param fragPos Output of FXAAFragPos.
@@ -56,5 +56,5 @@ vec4 FXAA(sampler2D tex, vec4 fragPos, vec2 texel)
 
 void main()
 {
-	gl_FragColor = FXAA(gm_BaseTexture, v_vFragPos, u_vTexelPS);
+	gl_FragColor = FXAA(gm_BaseTexture, vFragPos, vTexelPS);
 }

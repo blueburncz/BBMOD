@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_IMaterial",
   "parent":{
-    "name":"Base",
-    "path":"folders/BBMOD/Core/Base.yy",
+    "name":"Interfaces",
+    "path":"folders/BBMOD/0_Base/Interfaces.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

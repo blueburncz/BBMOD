@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_DepthOfFieldEffect",
   "parent":{
-    "name":"DepthOfField",
-    "path":"folders/BBMOD/PostProcessing/DepthOfField.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,9 +1,9 @@
 # Local
-.env/
-.vscode/
-docs_build/
-docs_src/ScriptingAPI/
-env/
+.vscode
+/BBMOD_GML/Build/
+/docs_build/
+/docs_src/ScriptingAPI/
+/env/
 
 # macOS
 .DS_Store

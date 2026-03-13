@@ -167,7 +167,7 @@ function bbmod_render_pass_get()
 /// By default this is set to {@link BBMOD_ERenderPass.Forward}.
 ///
 /// @see bbmod_render_pass_get
-/// @see BBMOD_BaseMaterial.set_shader
+/// @see BBMOD_Material.set_shader
 /// @see BBMOD_ERenderPass
 function bbmod_render_pass_set(_pass)
 {

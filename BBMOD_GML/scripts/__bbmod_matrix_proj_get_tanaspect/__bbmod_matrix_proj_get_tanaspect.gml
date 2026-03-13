@@ -1,3 +1,5 @@
+/// @module Core
+
 /// @func __bbmod_matrix_proj_get_tanaspect(_matProj)
 ///
 /// @desc

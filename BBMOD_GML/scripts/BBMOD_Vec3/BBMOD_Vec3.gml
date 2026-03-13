@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /// @macro {Struct.BBMOD_Vec3} A shorthand for `new BBMOD_Vec3(1, 0, 0)`.
 /// @see BBMOD_VEC3_RIGHT
@@ -209,20 +209,19 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	static ClampLength = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		var _length = sqrt(
-			X * X
-			+ Y * Y
-			+ Z * Z
-		);
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
+		var _length = sqrt(_x * _x + _y * _y + _z * _z);
 		if (_length <= math_get_epsilon())
 		{
 			return new BBMOD_Vec3();
 		}
-		var _newLength = clamp(_length, _min, _max);
+		var _scale = clamp(_length, _min, _max) / _length;
 		return new BBMOD_Vec3(
-			(X / _length) * _newLength,
-			(Y / _length) * _newLength,
-			(Z / _length) * _newLength
+			_x * _scale,
+			_y * _scale,
+			_z * _scale
 		);
 	};
 
@@ -248,11 +247,10 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	static ClampLengthSelf = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		var _length = sqrt(
-			X * X
-			+ Y * Y
-			+ Z * Z
-		);
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
+		var _length = sqrt(_x * _x + _y * _y + _z * _z);
 		if (_length <= math_get_epsilon())
 		{
 			X = 0.0;
@@ -260,10 +258,10 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 			Z = 0.0;
 			return self;
 		}
-		var _newLength = clamp(_length, _min, _max);
-		X = (X / _length) * _newLength;
-		Y = (Y / _length) * _newLength;
-		Z = (Z / _length) * _newLength;
+		var _scale = clamp(_length, _min, _max) / _length;
+		X = _x * _scale;
+		Y = _y * _scale;
+		Z = _z * _scale;
 		return self;
 	};
 
@@ -841,23 +839,42 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	{
 		gml_pragma("forceinline");
 
-		var _v1 = Normalize();
-
-		if (_v1.Length() <= 0.0)
+		var _eps = math_get_epsilon();
+		var _x1 = X;
+		var _y1 = Y;
+		var _z1 = Z;
+		var _len1Sqr = _x1 * _x1 + _y1 * _y1 + _z1 * _z1;
+		if (_len1Sqr <= _eps)
 		{
 			return false;
 		}
+		var _invLen1 = 1.0 / sqrt(_len1Sqr);
+		_x1 *= _invLen1;
+		_y1 *= _invLen1;
+		_z1 *= _invLen1;
 
-		var _proj = _v1.Scale(_v.Dot(_v1));
-		var _v2 = _v.Sub(_proj);
+		var _x2 = _v.X;
+		var _y2 = _v.Y;
+		var _z2 = _v.Z;
+		var _dot = _x2 * _x1 + _y2 * _y1 + _z2 * _z1;
+		_x2 -= _x1 * _dot;
+		_y2 -= _y1 * _dot;
+		_z2 -= _z1 * _dot;
 
-		if (_v2.Length() <= 0.0)
+		var _len2Sqr = _x2 * _x2 + _y2 * _y2 + _z2 * _z2;
+		if (_len2Sqr <= _eps)
 		{
 			return false;
 		}
+		var _invLen2 = 1.0 / sqrt(_len2Sqr);
 
-		_v1.Copy(self);
-		_v2.Normalize().Copy(_v);
+		X = _x1;
+		Y = _y1;
+		Z = _z1;
+
+		_v.X = _x2 * _invLen2;
+		_v.Y = _y2 * _invLen2;
+		_v.Z = _z2 * _invLen2;
 
 		return true;
 	};
@@ -878,28 +895,64 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		var _eps = math_get_epsilon();
 
 		// First vector
-		if (Length() <= _eps)
+		var _x1 = X;
+		var _y1 = Y;
+		var _z1 = Z;
+		var _len1Sqr = _x1 * _x1 + _y1 * _y1 + _z1 * _z1;
+		if (_len1Sqr <= _eps)
 		{
 			return false;
 		}
-		NormalizeSelf();
+		var _invLen1 = 1.0 / sqrt(_len1Sqr);
+		_x1 *= _invLen1;
+		_y1 *= _invLen1;
+		_z1 *= _invLen1;
+		X = _x1;
+		Y = _y1;
+		Z = _z1;
 
 		// Second vector
-		_v2.SubSelf(Scale(_v2.Dot(self)));
-		if (_v2.Length() <= _eps)
+		var _x2 = _v2.X;
+		var _y2 = _v2.Y;
+		var _z2 = _v2.Z;
+		var _dot21 = _x2 * _x1 + _y2 * _y1 + _z2 * _z1;
+		_x2 -= _x1 * _dot21;
+		_y2 -= _y1 * _dot21;
+		_z2 -= _z1 * _dot21;
+		var _len2Sqr = _x2 * _x2 + _y2 * _y2 + _z2 * _z2;
+		if (_len2Sqr <= _eps)
 		{
 			return false;
 		}
-		_v2.NormalizeSelf();
+		var _invLen2 = 1.0 / sqrt(_len2Sqr);
+		_x2 *= _invLen2;
+		_y2 *= _invLen2;
+		_z2 *= _invLen2;
+		_v2.X = _x2;
+		_v2.Y = _y2;
+		_v2.Z = _z2;
 
 		// Third vector
-		_v3.SubSelf(Scale(_v3.Dot(self)))
-			.SubSelf(_v2.Scale(_v3.Dot(_v2)));
-		if (_v3.Length() <= _eps)
+		var _x3 = _v3.X;
+		var _y3 = _v3.Y;
+		var _z3 = _v3.Z;
+		var _dot31 = _x3 * _x1 + _y3 * _y1 + _z3 * _z1;
+		_x3 -= _x1 * _dot31;
+		_y3 -= _y1 * _dot31;
+		_z3 -= _z1 * _dot31;
+		var _dot32 = _x3 * _x2 + _y3 * _y2 + _z3 * _z2;
+		_x3 -= _x2 * _dot32;
+		_y3 -= _y2 * _dot32;
+		_z3 -= _z2 * _dot32;
+		var _len3Sqr = _x3 * _x3 + _y3 * _y3 + _z3 * _z3;
+		if (_len3Sqr <= _eps)
 		{
 			return false;
 		}
-		_v3.NormalizeSelf();
+		var _invLen3 = 1.0 / sqrt(_len3Sqr);
+		_v3.X = _x3 * _invLen3;
+		_v3.Y = _y3 * _invLen3;
+		_v3.Z = _z3 * _invLen3;
 
 		return true;
 	};
@@ -1218,11 +1271,13 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		{
 			_matrix = _matrix.Raw;
 		}
-		var _res = matrix_transform_vertex(_matrix, X, Y, Z);
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
 		return new BBMOD_Vec3(
-			_res[0],
-			_res[1],
-			_res[2]
+			_matrix[0] * _x + _matrix[4] * _y + _matrix[8] * _z + _matrix[12],
+			_matrix[1] * _x + _matrix[5] * _y + _matrix[9] * _z + _matrix[13],
+			_matrix[2] * _x + _matrix[6] * _y + _matrix[10] * _z + _matrix[14]
 		);
 	};
 
@@ -1242,10 +1297,12 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		{
 			_matrix = _matrix.Raw;
 		}
-		var _res = matrix_transform_vertex(_matrix, X, Y, Z);
-		X = _res[0];
-		Y = _res[1];
-		Z = _res[2];
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
+		X = _matrix[0] * _x + _matrix[4] * _y + _matrix[8] * _z + _matrix[12];
+		Y = _matrix[1] * _x + _matrix[5] * _y + _matrix[9] * _z + _matrix[13];
+		Z = _matrix[2] * _x + _matrix[6] * _y + _matrix[10] * _z + _matrix[14];
 		return self;
 	};
 }

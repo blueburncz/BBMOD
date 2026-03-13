@@ -6,6 +6,8 @@ var _material = OMain.useDeferredRenderer ? BBMOD_MATERIAL_DEFERRED.clone() : BB
 _material.BaseOpacity = sprite_get_texture(SprCyborgFemaleA, 0);
 _material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 _material.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID);
+_material.DitherFadeStart = 100;
+_material.DitherFadeEnd = 110;
 model.Materials[@ 0] = _material;
 
 animIdle = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character_Idle.bbanim");

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_PhysicsContactResult",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_PhysicsContactResult",
+  "parent":{
+    "name":"TestResults",
+    "path":"folders/BBMOD/3_Physics/TestResults.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

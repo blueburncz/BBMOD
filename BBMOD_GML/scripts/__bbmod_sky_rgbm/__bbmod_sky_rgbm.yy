@@ -6,7 +6,7 @@
   "name":"__bbmod_sky_rgbm",
   "parent":{
     "name":"RGBMSky",
-    "path":"folders/BBMOD/RGBMSky.yy",
+    "path":"folders/BBMOD/2_Rendering/RGBMSky.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

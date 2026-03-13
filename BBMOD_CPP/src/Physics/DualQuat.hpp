@@ -8,6 +8,13 @@ struct DualQuat
 	btQuaternion m_real;
 	btQuaternion m_dual;
 
+	// Default constructor - identity transform
+	DualQuat()
+		: m_real(0, 0, 0, 1)  // No rotation
+		, m_dual(0, 0, 0, 0)  // No translation
+	{
+	}
+
 	void FromTransform(const btTransform& t)
 	{
 		btQuaternion qr = t.getRotation();

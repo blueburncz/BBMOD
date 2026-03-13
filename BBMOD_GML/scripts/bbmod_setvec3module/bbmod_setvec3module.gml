@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_SetVec3Module([_property[, _value]])
 ///

@@ -6,7 +6,7 @@
   "name":"BBMOD_MixColorModule",
   "parent":{
     "name":"MixProperty",
-    "path":"folders/BBMOD/Particles/Modules/Universal/MixProperty.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Universal/MixProperty.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

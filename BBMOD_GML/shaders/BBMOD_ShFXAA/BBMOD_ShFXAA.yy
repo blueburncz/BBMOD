@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShFXAA",
   "name":"BBMOD_ShFXAA",
   "parent":{
-    "name":"FXAA",
-    "path":"folders/BBMOD/PostProcessing/FXAA.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

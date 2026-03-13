@@ -5,6 +5,21 @@
 /// @desc A struct containing the information needed to create a physics
 /// plane shape.
 ///
+/// @example
+/// ```gml
+/// // Create an infinite ground plane at Z = 0
+/// var _planeInfo = new BBMOD_PlanePhysicsShapeInfo();
+/// _planeInfo.Normal = new BBMOD_Vec3(0, 0, 1); // Plane faces upward
+/// _planeInfo.Distance = 0.0; // Plane is at origin
+/// var _planeShape = physicsEngine.create_physics_shape(_planeInfo);
+///
+/// // Create a static ground rigid body
+/// var _rigidBodyInfo = new BBMOD_RigidBodyInfo();
+/// _rigidBodyInfo.Shape = _planeShape;
+/// _rigidBodyInfo.Mass = 0; // Static body (infinite mass)
+/// var _ground = physicsWorld.create_rigid_body(_rigidBodyInfo);
+/// ```
+///
 /// @see BBMOD_PhysicsShape
 /// @see BBMOD_PhysicsWorld.create_physics_shape
 function BBMOD_PlanePhysicsShapeInfo(): BBMOD_PhysicsShapeInfo() constructor

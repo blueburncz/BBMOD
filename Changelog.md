@@ -4,41 +4,72 @@
 
 ## Changelog 3.99.0-alpha2
 
-### Core
+### Breaking Changes
 
-* Fixed method `BBMOD_Quaternion.Exp` and `BBMOD_Quaternion.ExpSelf` missing exponential factor on vector components in quaternion exponential map formula.
-* Fixed method `BBMOD_Quaternion.Slerp` and `BBMOD_Quaternion.SlerpSelf` incorrectly multiplying by length instead of dividing during normalization of the second quaternion.
-* Fixed method `BBMOD_DualQuaternion.Clone` creating shallow copy instead of deep copy, causing both instances to share the same quaternion references.
-* Fixed method `BBMOD_DualQuaternion.Copy` creating shallow copy instead of properly copying quaternion components.
-* Fixed method `BBMOD_DualQuaternion.Normalize` and `BBMOD_DualQuaternion.NormalizeSelf` dividing by magnitude squared instead of magnitude.
-* Fixed method `BBMOD_Vec2.ClampLengthSelf` and `BBMOD_Vec4.ClampLengthSelf` returning new vector instead of modifying self when vector length is near zero.
-* Fixed method `BBMOD_Matrix.FromColumns` and `BBMOD_Matrix.FromRows` having swapped implementations due to GameMaker's column-major matrix format.
-* Fixed missing semicolon in method `BBMOD_Quaternion.ToMatrix`.
-* Fixed trailing commas in methods `BBMOD_Vec2.MinComponent`, `BBMOD_Vec3.MinComponent`, and `BBMOD_Vec4.MinComponent` for code consistency.
-* Fixed missing semicolons after `gml_pragma("forceinline")` statements in `BBMOD_Vec2`, `BBMOD_Vec3`, and `BBMOD_Vec4` (18 locations total).
-* Fixed duplicate "Struct." prefix in JSDoc type annotations for `_max` parameter in `BBMOD_Vec2.Clamp`, `BBMOD_Vec2.ClampSelf`, `BBMOD_Vec3.ClampSelf`, and `BBMOD_Vec4.ClampSelf`.
-* Fixed potential `arccos` domain errors in methods `BBMOD_Quaternion.GetAngle`, `BBMOD_Quaternion.GetAxis`, `BBMOD_Quaternion.Log`, `BBMOD_Quaternion.LogSelf`, and quaternion slerp calculations in `BBMOD_Animation` and `BBMOD_AnimationLayer` by clamping input values to valid range [-1, 1].
-* Fixed potential division by zero in `BBMOD_Quaternion.GetAxis` when rotation angle is 0 or 180 degrees (returns default axis instead).
-* Fixed potential division by zero in `BBMOD_Quaternion.Log` and `BBMOD_Quaternion.LogSelf` when quaternion has zero length.
-* Fixed potential division by zero in `BBMOD_Quaternion.FromLookRotation` when computing quaternion from look direction by protecting trace and W component calculations.
-* Fixed potential division by zero in `BBMOD_Quaternion.Slerp` and `BBMOD_Quaternion.SlerpSelf` when sin(theta) is near zero - falls back to linear interpolation.
-* Fixed potential division by zero in `BBMOD_DualQuaternion.Log` and `BBMOD_DualQuaternion.LogSelf` when real quaternion has zero length.
-* Fixed potential division by zero in `BBMOD_Animation.create_transition` during quaternion slerp when sin(theta) is near zero.
-* Fixed potential division by zero in `bbmod_matrix_build_normalmatrix` when matrix is singular (determinant equals zero) - returns identity matrix instead.
-* Optimized method `BBMOD_Camera.update_matrices` to reduce vector rotation operations from 9 to 5, eliminating redundant calculations.
+* **Removed** deprecated structs `BBMOD_DefaultSpriteShader`, `BBMOD_LightmapMaterial`, `BBMOD_LightmapShader`, `BBMOD_Renderer` and `BBMOD_StaticBatch`! Please make sure you are not using these in your project before upgrading to this version.
+* **DrawSprite Material Parameter:** `DrawSprite*` methods now require a material parameter. Update existing calls: `DrawSprite(_material, _sprite, _subimg, _x, _y)`.
+
+### Rendering
+
+* **Material System Simplification:** All material subclasses merged into `BBMOD_Material`. Old types remain for compatibility but are now obsolete.
+* **Shader System Simplification:** All shader subclasses merged into `BBMOD_Shader`. Old types remain for compatibility but are now obsolete.
+* **Render Queue Enum System:** Render queues now use `BBMOD_ERenderQueue` enum (Terrain/Opaque/Transparent/Sky). Access with `bbmod_render_queue_get(BBMOD_ERenderQueue.Opaque)`. Priority system removed.
+* **Render Queue Simplification:** Low-level queue commands deprecated in favor of high-level `DrawMesh*`, `DrawTerrain`, and `DrawSprite*` methods.
+* **Frustum Culling:** Automatic visibility culling for off-screen meshes and terrain. Toggle with `bbmod_set_frustum_culling()` (enabled by default).
+* Improved terrain performance with render queue integration and optimized layer handling.
+* Significant performance improvements to rendering pipeline.
+* **AAA-Grade Light Bloom:** Upgraded bloom effect with Karis average for firefly reduction, soft threshold with smooth knee falloff, and progressive upsampling using dual filtering. Based on techniques from Call of Duty: Advanced Warfare and ARM's bandwidth-efficient rendering. Added `MipIntensity` array property for per-mip level control.
+* **Toksvig Specular AA:** Added automatic specular anti-aliasing for normal-mapped surfaces to reduce specular aliasing artifacts. Adjusts roughness based on normal map variance.
+* **Cloud System Overhaul:** Replaced the volumetric ray-marched cloud system with a fast 2D layered approach. Supports 1-3 independently moving cloud layers, per-layer coverage/density/scale/wind, optional artist-painted coverage mask, and optional noise texture input. Works without any texture asset via built-in procedural FBM. `BBMOD_ECloudQuality` enum removed (no longer applicable). `BBMOD_CloudRenderer` API significantly simplified -- see updated docs.
+
+### Raycasting
+
+* Added `BBMOD_CapsuleCollider` for character controllers.
+* Added `BBMOD_ConeCollider` for vision cones and spotlight volumes.
+* Added `BBMOD_CylinderCollider` for cylindrical collision volumes.
+* Added `BBMOD_EllipsoidCollider` for stretched sphere collision.
+* Added `BBMOD_LineSegmentCollider` for weapon/melee detection.
+* Added `BBMOD_OBBCollider` for oriented bounding box tests.
+* Added `BBMOD_TriangleCollider` for triangle collision.
+* Raycasting module now includes 11 collider types with full cross-compatibility.
+
+### Optimizations
+
+* Optimized animation and particle systems to eliminate per-frame allocations.
+
+### Math Library
+
 * Added new function `bbmod_matrix_transpose(_matrix[, _dest])` to compute the transpose of a matrix (swaps rows and columns).
-* Optimized method `BBMOD_Gizmo.update` by using `ToMatrix()` instead of manually building rotation matrices, using `bbmod_matrix_transpose()` for orthonormal matrix inverse, simplifying scale ratio calculations, and eliminating unnecessary Vec3<->Vec4 conversions.
+* Fixed `BBMOD_Quaternion.Exp` and `ExpSelf` missing exponential factor on vector components.
+* Fixed `BBMOD_Quaternion.Slerp` and `SlerpSelf` incorrectly multiplying by length instead of dividing during normalization.
+* Fixed `BBMOD_DualQuaternion.Clone` creating shallow copy instead of deep copy.
+* Fixed `BBMOD_DualQuaternion.Copy` creating shallow copy instead of properly copying quaternion components.
+* Fixed `BBMOD_DualQuaternion.Normalize` and `NormalizeSelf` dividing by magnitude squared instead of magnitude.
+* Fixed `BBMOD_Vec2.ClampLengthSelf` and `BBMOD_Vec4.ClampLengthSelf` returning new vector instead of modifying self when vector length is near zero.
+* Fixed `BBMOD_Matrix.FromColumns` and `FromRows` having swapped implementations due to GameMaker's column-major matrix format.
+* Fixed missing semicolons in `BBMOD_Quaternion.ToMatrix` and after `gml_pragma("forceinline")` statements.
+* Fixed trailing commas in `BBMOD_Vec2.MinComponent`, `BBMOD_Vec3.MinComponent`, and `BBMOD_Vec4.MinComponent`.
+* Fixed duplicate "Struct." prefix in JSDoc type annotations.
+* Fixed potential `arccos` domain errors in quaternion methods.
+* Fixed potential division by zero in multiple quaternion, dual quaternion, and matrix methods.
+* Optimized `BBMOD_Camera.update_matrices` to reduce vector rotation operations from 9 to 5.
+* Optimized `BBMOD_Gizmo.update` by using `ToMatrix()` and `bbmod_matrix_transpose()`.
+* Optimized quaternion, vector, matrix, and dual quaternion methods by inlining scalar math and reducing temporary allocations.
 
 ### Particles
 
-* Fixed potential division by zero in `BBMOD_AddRealOverTimeModule`, `BBMOD_AddVec2OverTimeModule`, `BBMOD_AddVec3OverTimeModule`, and `BBMOD_AddVec4OverTimeModule` when `Period` is set to zero by protecting division with `max(Period, 0.000001)`.
-* Fixed critical velocity calculation bug in `BBMOD_MixColorFromSpeedModule`, `BBMOD_MixQuaternionFromSpeedModule`, `BBMOD_MixRealFromSpeedModule`, `BBMOD_MixVec2FromSpeedModule`, `BBMOD_MixVec3FromSpeedModule`, and `BBMOD_MixVec4FromSpeedModule` where Y velocity component was being added instead of multiplied when computing speed magnitude.
-* Fixed potential division by zero in the same six mix modules when `Min` equals `Max` by protecting division with `max(_max - _min, 0.000001)`.
+* Fixed particle MixFromSpeed modules calculating velocity magnitude incorrectly (Y velocity was being added instead of multiplied).
+* Fixed potential division by zero in `BBMOD_AddRealOverTimeModule`, `BBMOD_AddVec2OverTimeModule`, `BBMOD_AddVec3OverTimeModule`, and `BBMOD_AddVec4OverTimeModule` when `Period` is zero.
+* Fixed potential division by zero in MixFromSpeed modules when `Min` equals `Max`.
 * Fixed potential division by zero in `BBMOD_AttractorModule` when particle is exactly at attractor position.
 
 ### ColMesh
 
-* Fixed crash inside functions `bbmod_mesh_to_colmesh` and `bbmod_mesh_to_colmesh2` caused by using wrong variable and function names.
+* Fixed crash in `bbmod_mesh_to_colmesh` and `bbmod_mesh_to_colmesh2` caused by wrong variable and function names.
+
+### Deprecated
+
+* `BeginConditionalBlock()`/`EndConditionalBlock()`, `BBMOD_MaterialPropertyBlock`, `Material.OnApply`, `Light.AffectLightmaps`, `BBMOD_IMeshRenderQueue`, and `BBMOD_MeshRenderQueue` marked obsolete/deprecated. Use `BBMOD_RenderQueue` for all render queue operations.
 
 ## Changelog 3.99.0-alpha1
 
@@ -150,4 +181,22 @@ only with animations with optimization level 0!
 
 > This section is for things that aren't finished and won't be released yet.
 
-* Added new module *Physics*.
+### Physics
+
+* Added new module *Physics* - a complete 3D physics engine powered by Bullet Physics.
+* Added extension `BBMOD_Physics` (Windows x64 only).
+* Added struct `BBMOD_PhysicsWorld` for creating and managing physics simulations with configurable gravity, time step, and debug rendering.
+* Added struct `BBMOD_RigidBody` for dynamic physics objects with properties for mass, friction, restitution, collision groups/masks, and trigger support.
+* Added struct `BBMOD_CharacterController` for kinematic character movement with ground detection, jumping, slope handling, and step climbing.
+* Added struct `BBMOD_Ragdoll` for physics-driven skeletal animation with seamless switching between animation playback and physics simulation.
+* Added struct `BBMOD_PhysicsVehicle` for arcade-style vehicle physics with raycast-based wheels.
+* Added struct `BBMOD_PhysicsTerrain` for terrain collision from heightmaps.
+* Added struct `BBMOD_ConvexHullBuilder` for generating convex hull collision shapes from BBMOD meshes with serialization support.
+* Added physics shapes: `BBMOD_BoxPhysicsShape`, `BBMOD_SpherePhysicsShape`, `BBMOD_CapsulePhysicsShape`, `BBMOD_CylinderPhysicsShape`, `BBMOD_ConePhysicsShape`, `BBMOD_PlanePhysicsShape`, `BBMOD_ConvexHullPhysicsShape`, `BBMOD_StaticMeshPhysicsShape`, and `BBMOD_CompoundPhysicsShape`.
+* Added physics constraints: `BBMOD_HingePhysicsConstraint`, `BBMOD_PointPhysicsConstraint`, `BBMOD_ConeTwistPhysicsConstraint`, `BBMOD_SliderPhysicsConstraint`, and `BBMOD_SixDOFPhysicsConstraint`.
+* Added physics query results: `BBMOD_PhysicsRaycastResult`, `BBMOD_PhysicsContactResult`, and `BBMOD_PhysicsSweepResult`.
+
+### Navigation
+
+* Added new module *Navigation* - AI navigation mesh generation and pathfinding powered by Recast & Detour.
+* Added extension `BBMOD_Navigation` (Windows x64 only).

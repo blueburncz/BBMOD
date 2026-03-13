@@ -6,7 +6,7 @@
   "name":"__bbmod_gizmo",
   "parent":{
     "name":"Gizmo",
-    "path":"folders/BBMOD/Gizmo.yy",
+    "path":"folders/BBMOD/1_Core/Gizmo.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

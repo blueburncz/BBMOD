@@ -5,6 +5,23 @@
 /// @desc A struct containing the information needed to create a physics
 /// cylinder shape.
 ///
+/// @example
+/// ```gml
+/// // Create a cylinder shape for a barrel (radius 0.3m, height 1.0m)
+/// var _cylinderInfo = new BBMOD_CylinderPhysicsShapeInfo();
+/// _cylinderInfo.UpAxis = BBMOD_EAxis.Z; // Cylinder stands upright
+/// _cylinderInfo.Radius = 0.3;
+/// _cylinderInfo.Height = 1.0;
+/// var _cylinderShape = physicsEngine.create_physics_shape(_cylinderInfo);
+///
+/// // Create a dynamic barrel
+/// var _rigidBodyInfo = new BBMOD_RigidBodyInfo();
+/// _rigidBodyInfo.Shape = _cylinderShape;
+/// _rigidBodyInfo.Mass = 20.0;
+/// _rigidBodyInfo.Position = new BBMOD_Vec3(0, 0, 2);
+/// var _barrel = physicsWorld.create_rigid_body(_rigidBodyInfo);
+/// ```
+///
 /// @see BBMOD_PhysicsShape
 /// @see BBMOD_PhysicsWorld.create_physics_shape
 function BBMOD_CylinderPhysicsShapeInfo(): BBMOD_PhysicsShapeInfo() constructor

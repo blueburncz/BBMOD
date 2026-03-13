@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_SetQuaternionModule([_property[, _value]])
 ///

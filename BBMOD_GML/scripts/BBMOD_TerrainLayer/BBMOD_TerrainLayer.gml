@@ -1,4 +1,4 @@
-/// @module Terrain
+/// @module Core
 
 /// @func BBMOD_TerrainLayer()
 ///

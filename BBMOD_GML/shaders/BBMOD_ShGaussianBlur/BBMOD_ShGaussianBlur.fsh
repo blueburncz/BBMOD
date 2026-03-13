@@ -1,9 +1,9 @@
 // FIXME: Temporary fix!
 precision highp float;
 
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform vec2 u_vTexel;
+uniform vec2 uTexel;
 
 /// @param image The image to blur.
 /// @param uv The current texture coordinates.
@@ -24,5 +24,5 @@ vec4 xGaussianBlur(sampler2D image, vec2 uv, vec2 texel)
 
 void main()
 {
-	gl_FragColor = xGaussianBlur(gm_BaseTexture, v_vTexCoord, u_vTexel);
+	gl_FragColor = xGaussianBlur(gm_BaseTexture, vTexCoord, uTexel);
 }

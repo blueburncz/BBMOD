@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /// @macro {Struct.BBMOD_VertexFormat} The default vertex format for static
 /// models. Consists of vertex 3D positions, normals, texture coordinates,

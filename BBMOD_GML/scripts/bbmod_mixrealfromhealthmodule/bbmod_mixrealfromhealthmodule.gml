@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_MixRealFromHealthModule([_property[, _from[, _to]]])
 ///

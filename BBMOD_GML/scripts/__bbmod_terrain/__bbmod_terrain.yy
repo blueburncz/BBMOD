@@ -6,7 +6,7 @@
   "name":"__bbmod_terrain",
   "parent":{
     "name":"Terrain",
-    "path":"folders/BBMOD/Terrain.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Terrain.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

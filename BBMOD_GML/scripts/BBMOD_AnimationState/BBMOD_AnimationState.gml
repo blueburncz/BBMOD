@@ -1,4 +1,4 @@
-/// @module StateMachine
+/// @module Extras.StateMachine
 
 /// @func BBMOD_AnimationState(_name, _animation[, _loop])
 ///

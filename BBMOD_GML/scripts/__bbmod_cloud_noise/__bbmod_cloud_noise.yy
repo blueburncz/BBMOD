@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bbmod_cloud_noise",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bbmod_cloud_noise",
+  "parent":{
+    "name":"RGBMSky",
+    "path":"folders/BBMOD/2_Rendering/RGBMSky.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

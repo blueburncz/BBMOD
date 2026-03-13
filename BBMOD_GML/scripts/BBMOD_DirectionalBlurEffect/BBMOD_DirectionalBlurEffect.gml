@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_DirectionalBlurEffect([_vector[, _step]])
 ///
@@ -20,8 +20,8 @@ function BBMOD_DirectionalBlurEffect(_vector = undefined, _step = 0.125): BBMOD_
 	/// 1/8.
 	Step = _step;
 
-	static __uVector = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_vVector");
-	static __uStep = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_fStep");
+	static __uVector = shader_get_uniform(BBMOD_ShDirectionalBlur, "uVector");
+	static __uStep = shader_get_uniform(BBMOD_ShDirectionalBlur, "uStep");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

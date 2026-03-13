@@ -1,4 +1,4 @@
-/// @module DeferredRenderer
+/// @module Rendering
 
 /// @func BBMOD_DeferredRenderer()
 ///
@@ -136,6 +136,43 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 			return;
 		}
 
+		// Pack cloud shadow transmittance into the alpha channel of the geometry
+		// shadow map. RGB stores depth as normal; A is in world-XY cloud-shadow
+		// space. Scene shaders read .a at:
+		//   (worldPos.xy - cloudShadowPos) / cloudShadowSize + 0.5
+		var _cr = CloudRenderer;
+		if (_cr != undefined
+			&& surface_exists(__shadowmapSurfaces[? _shadowCaster])
+			&& surface_exists(_cr.__shadowSurf))
+		{
+			var _shadowSurf = __shadowmapSurfaces[? _shadowCaster];
+			var _sw = surface_get_width(_shadowSurf);
+			var _sh = surface_get_height(_shadowSurf);
+
+			var _mw = matrix_get(matrix_world);
+			var _mv = matrix_get(matrix_view);
+			var _mp = matrix_get(matrix_projection);
+			matrix_set(matrix_world, matrix_build_identity());
+			matrix_set(matrix_view, matrix_build_identity());
+			matrix_set(matrix_projection, matrix_build_projection_ortho(_sw, _sh, -1, 1));
+
+			surface_set_target(_shadowSurf);
+			gpu_push_state();
+			gpu_set_ztestenable(false);
+			gpu_set_zwriteenable(false);
+			shader_set(BBMOD_ShCloudShadowBlit);
+			// Preserve existing RGB (depth encoding), write only alpha (cloud shadow).
+			gpu_set_blendmode_ext_sepalpha(bm_zero, bm_one, bm_one, bm_zero);
+			draw_surface_stretched(_cr.__shadowSurf, 0, 0, _sw, _sh);
+			gpu_pop_state();
+			shader_reset();
+			surface_reset_target();
+
+			matrix_set(matrix_world, _mw);
+			matrix_set(matrix_view, _mv);
+			matrix_set(matrix_projection, _mp);
+		}
+
 		var _shadowmapTexture = surface_get_texture(__shadowmapSurfaces[?  _shadowCaster]);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_VS, 1.0);
 		bbmod_shader_set_global_f(BBMOD_U_SHADOWMAP_ENABLE_PS, 1.0);
@@ -204,11 +241,11 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		//
 		// G-buffer pass
 		//
-		bbmod_shader_set_global_sampler("u_texBestFitNormalLUT", sprite_get_texture(BBMOD_SprBestFitNormalLUT,
+		bbmod_shader_set_global_sampler("uBestFitNormalLUT", sprite_get_texture(BBMOD_SprBestFitNormalLUT,
 			0));
-		bbmod_shader_set_global_sampler_filter("u_texBestFitNormalLUT", false);
-		bbmod_shader_set_global_sampler_mip_enable("u_texBestFitNormalLUT", false);
-		bbmod_shader_set_global_sampler_repeat("u_texBestFitNormalLUT", false);
+		bbmod_shader_set_global_sampler_filter("uBestFitNormalLUT", false);
+		bbmod_shader_set_global_sampler_mip_enable("uBestFitNormalLUT", false);
+		bbmod_shader_set_global_sampler_repeat("uBestFitNormalLUT", false);
 
 		__surGBuffer[@ 0] = bbmod_surface_check(__surGBuffer[0], _renderWidth, _renderHeight,
 			surface_rgba8unorm, false);
@@ -254,7 +291,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		gpu_pop_state();
 		surface_reset_target();
 
-		bbmod_shader_unset_global("u_texBestFitNormalLUT");
+		bbmod_shader_unset_global("uBestFitNormalLUT");
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -277,15 +314,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		//
 		surface_set_target(__surFinal);
 
-		gpu_push_state();
-		gpu_set_state(bbmod_gpu_get_default_state());
-		gpu_set_blendenable(false);
-		gpu_set_zwriteenable(false);
-		gpu_set_ztestenable(false);
-		matrix_set(matrix_world, matrix_build_identity());
-		camera_apply(__camera2D);
-		draw_sprite_stretched_ext(BBMOD_SprBlack, 0, 0, 0, _renderWidth, _renderHeight, c_black, 0.0);
-		gpu_pop_state();
+		draw_clear_ext(c_black, 0.0);
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.DepthOnly);
 		matrix_set(matrix_world, _world);
@@ -334,12 +363,13 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		var _shader = BBMOD_ShDeferredFullscreen;
 		shader_set(_shader);
 		bbmod_shader_set_globals(_shader);
-		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
-		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
-		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mView"), _view);
-		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"), _viewInverse);
-		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mProjection"), _projection);
-		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
+		texture_set_stage(shader_get_sampler_index(_shader, "uGB1"), surface_get_texture(__surGBuffer[1]));
+		texture_set_stage(shader_get_sampler_index(_shader, "uGB2"), surface_get_texture(__surGBuffer[2]));
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "uView"), _view);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "uViewInverse"), _viewInverse);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "uProjection"), _projection);
+		shader_set_uniform_f_array(shader_get_uniform(_shader, "uTanAspect"), _tanAspect);
+		// bbmod_LightDirectionalDiskSize is set via bbmod_shader_set_global_f each frame.
 		bbmod_shader_set_cam_pos(_shader);
 		bbmod_shader_set_exposure(_shader);
 		bbmod_shader_set_ibl(_shader);
@@ -357,12 +387,12 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		_shader = BBMOD_ShDeferredPunctual;
 		shader_set(_shader);
 		bbmod_shader_set_globals(_shader);
-		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB1"), surface_get_texture(__surGBuffer[1]));
-		texture_set_stage(shader_get_sampler_index(_shader, "u_texGB2"), surface_get_texture(__surGBuffer[2]));
-		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mView"), _view);
-		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"), _viewInverse);
-		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mProjection"), _projection);
-		shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vTanAspect"), _tanAspect);
+		texture_set_stage(shader_get_sampler_index(_shader, "uGB1"), surface_get_texture(__surGBuffer[1]));
+		texture_set_stage(shader_get_sampler_index(_shader, "uGB2"), surface_get_texture(__surGBuffer[2]));
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "uView"), _view);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "uViewInverse"), _viewInverse);
+		shader_set_uniform_matrix_array(shader_get_uniform(_shader, "uProjection"), _projection);
+		shader_set_uniform_f_array(shader_get_uniform(_shader, "uTanAspect"), _tanAspect);
 
 		bbmod_shader_set_cam_pos(_shader);
 		bbmod_shader_set_exposure(_shader);
@@ -535,7 +565,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		bbmod_shader_set_fog(BBMOD_ShFogAndDepthMask);
 		bbmod_shader_set_ambient_light(BBMOD_ShFogAndDepthMask);
 		bbmod_shader_set_directional_light(BBMOD_ShFogAndDepthMask);
-		texture_set_stage(shader_get_sampler_index(BBMOD_ShFogAndDepthMask, "u_texDepth"), surface_get_texture(
+		texture_set_stage(shader_get_sampler_index(BBMOD_ShFogAndDepthMask, "uDepth"), surface_get_texture(
 			__surGBuffer[2]));
 		draw_surface(__surLBuffer, 0, 0);
 		shader_reset();

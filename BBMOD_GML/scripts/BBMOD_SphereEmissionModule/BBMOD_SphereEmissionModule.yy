@@ -6,7 +6,7 @@
   "name":"BBMOD_SphereEmissionModule",
   "parent":{
     "name":"Shape",
-    "path":"folders/BBMOD/Particles/Modules/Emission/Shape.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Emission/Shape.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

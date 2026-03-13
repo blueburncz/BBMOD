@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShDebug",
   "name":"BBMOD_ShDebug",
   "parent":{
-    "name":"Debug",
-    "path":"folders/BBMOD/Core/Debug.yy",
+    "name":"Shaders",
+    "path":"folders/BBMOD/1_Core/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

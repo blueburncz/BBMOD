@@ -6,7 +6,7 @@
   "name":"BBMOD_TerrainCollisionModule",
   "parent":{
     "name":"Collision",
-    "path":"folders/BBMOD/Particles/Modules/Collision.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Collision.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

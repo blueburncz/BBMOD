@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_GammaCorrectEffect([_gamma])
 ///
@@ -12,7 +12,7 @@ function BBMOD_GammaCorrectEffect(_gamma = 2.2): BBMOD_PostProcessEffect() const
 	/// @var {Real} Gamma value. Default value is 2.2.
 	Gamma = _gamma;
 
-	static __uGamma = shader_get_uniform(BBMOD_ShGammaCorrect, "u_fGamma");
+	static __uGamma = shader_get_uniform(BBMOD_ShGammaCorrect, "uGamma");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

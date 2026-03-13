@@ -86,6 +86,14 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// @private
 	__name = undefined;
 
+	/// @var {Real} Cached hash value for material configuration.
+	/// @private
+	__hash = 0;
+
+	/// @var {Bool} If `true`, the material hash needs to be recomputed.
+	/// Set to `true` whenever material properties change. Default value is `true`.
+	HashDirty = true;
+
 	/// @var {Real} Render passes in which is the material rendered. Defaults
 	/// to 0 (no passes).
 	/// @readonly
@@ -98,12 +106,9 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// @see BBMOD_Material.get_shader
 	__shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
 
-	/// @var {Struct.BBMOD_RenderQueue} The render queue used by this material.
-	/// Defaults to the default BBMOD render queue.
-	/// @readonly
-	/// @see BBMOD_RenderQueue
-	/// @see bbmod_render_queue_get_default
-	RenderQueue = bbmod_render_queue_get_default();
+	/// @var {Real} The render queue category used by this material. Defaults to
+	/// {@link BBMOD_ERenderQueue.Opaque}.
+	RenderQueue = BBMOD_ERenderQueue.Opaque;
 
 	/// @var {Function} A function that is executed when the shader is applied.
 	/// Must take the material as the first argument. Use `undefined` if you do
@@ -114,6 +119,10 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	///
 	/// @see BBMOD_MaterialPropertyBlock
 	/// @see bbmod_material_props_set
+	///
+	/// @obsolete This feature is obsolete! You should extend this struct and
+	/// and implement a custom `apply` in case you need to emulate the old
+	/// behavior.
 	OnApply = undefined;
 
 	/// @var {Constant.BlendMode} A blend mode. Default value is `bm_normal`.
@@ -186,6 +195,265 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 
 	__baseOpacitySprite = undefined;
 
+	/// @var {Struct.BBMOD_Color} Multiplier for base color and opacity.
+	/// Default value is white (no tint).
+	BaseOpacityMultiplier = BBMOD_C_WHITE;
+
+	/// @var {Struct.BBMOD_Vec2} An offset of texture UV coordinates.
+	/// Defaults to (0, 0). Controls texture position within texture page.
+	TextureOffset = new BBMOD_Vec2(0.0);
+
+	/// @var {Struct.BBMOD_Vec2} A scale of texture UV coordinates.
+	/// Defaults to (1, 1). Controls texture size within texture page.
+	TextureScale = new BBMOD_Vec2(1.0);
+
+	/// @var {Real} Controls range over which the mesh smoothly transitions
+	/// into shadow. Useful for billboarded particles where harsh transition
+	/// doesn't look good. Default value is 0 (no smooth transition).
+	ShadowmapBias = 0.0;
+
+	/// @var {Bool} Whether the material is two-sided. If true, normal
+	/// vectors of backfaces are flipped before shading. Default is `true`.
+	TwoSided = true;
+
+	/// @var {Pointer.Texture} A texture with tangent-space normals in RGB
+	/// channels and smoothness in alpha channel or `undefined`.
+	NormalSmoothness = sprite_get_texture(BBMOD_SprDefaultNormalW, 0);
+
+	__normalSmoothnessSprite = undefined;
+
+	/// @var {Pointer.Texture} A texture with specular color in RGB channels
+	/// or `undefined`.
+	SpecularColor = sprite_get_texture(BBMOD_SprDefaultSpecularColor, 0);
+
+	__specularColorSprite = undefined;
+
+	/// @var {Pointer.Texture} A texture with tangent-space normals in RGB
+	/// channels and roughness in alpha channel or `undefined`.
+	NormalRoughness = undefined;
+
+	__normalRoughnessSprite = undefined;
+
+	/// @var {Pointer.Texture} A texture with metallic in red channel and
+	/// ambient occlusion in green channel or `undefined`.
+	MetallicAO = undefined;
+
+	__metallicAOSprite = undefined;
+
+	/// @var {Pointer.Texture} A texture with subsurface color in RGB
+	/// channels and subsurface effect intensity in alpha channel.
+	Subsurface = sprite_get_texture(BBMOD_SprBlack, 0);
+
+	__subsurfaceSprite = undefined;
+
+	/// @var {Pointer.Texture} RGBM encoded emissive texture.
+	Emissive = sprite_get_texture(BBMOD_SprBlack, 0);
+
+	__emissiveSprite = undefined;
+
+	/// @var {Pointer.Texture} RGBM encoded lightmap texture. Overrides
+	/// the default lightmap texture defined with bbmod_lightmap_set.
+	Lightmap = undefined;
+
+	/// @var {Real} Distance over which particles smoothly disappear when
+	/// getting closer to geometry in the depth buffer. Use values <= 0 to
+	/// disable. Default value is 0.
+	SoftDistance = 0.0;
+
+	/// @var {Real}
+	DitherFadeStart = -1.0;
+
+	/// @var {Real}
+	DitherFadeEnd = -1.0;
+
+	/// @func set_normal_smoothness(_normal, _smoothness)
+	///
+	/// @desc Changes the normal vector and smoothness to a uniform value for
+	/// the entire material.
+	///
+	/// @param {Struct.BBMOD_Vec3} _normal The new normal vector. If you are not
+	/// sure what this value should be, use {@link BBMOD_VEC3_UP}.
+	/// @param {Real} _smoothness The new smoothness. Use values in range 0..1.
+	///
+	/// @return {Struct.BBMOD_Material} Returns `self`.
+	static set_normal_smoothness = function (_normal, _smoothness)
+	{
+		NormalRoughness = undefined;
+		if (__normalRoughnessSprite != undefined)
+		{
+			sprite_delete(__normalRoughnessSprite);
+			__normalRoughnessSprite = undefined;
+		}
+
+		if (__normalSmoothnessSprite != undefined)
+		{
+			sprite_delete(__normalSmoothnessSprite);
+		}
+		_normal = _normal.Normalize();
+		__normalSmoothnessSprite = _make_sprite(
+			(_normal.X * 0.5 + 0.5) * 255.0,
+			(_normal.Y * 0.5 + 0.5) * 255.0,
+			(_normal.Z * 0.5 + 0.5) * 255.0,
+			_smoothness
+		);
+		NormalSmoothness = sprite_get_texture(__normalSmoothnessSprite, 0);
+		return self;
+	};
+
+	/// @func set_specular_color(_color)
+	///
+	/// @desc Changes the specular color to a uniform value for the entire
+	/// material.
+	///
+	/// @param {Struct.BBMOD_Color} _color The new specular color.
+	///
+	/// @return {Struct.BBMOD_Material} Returns `self`.
+	static set_specular_color = function (_color)
+	{
+		MetallicAO = undefined;
+		if (__metallicAOSprite != undefined)
+		{
+			sprite_delete(__metallicAOSprite);
+			__metallicAOSprite = undefined;
+		}
+
+		if (__specularColorSprite != undefined)
+		{
+			sprite_delete(__specularColorSprite);
+		}
+		__specularColorSprite = _make_sprite(
+			_color.Red,
+			_color.Green,
+			_color.Blue,
+			1.0
+		);
+		SpecularColor = sprite_get_texture(__specularColorSprite, 0);
+		return self;
+	};
+
+	/// @func set_normal_roughness(_normal, _roughness)
+	///
+	/// @desc Changes the normal vector and roughness to a uniform value for the
+	/// entire material.
+	///
+	/// @param {Struct.BBMOD_Vec3} _normal The new normal vector. If you are not
+	/// sure what this value should be, use {@link BBMOD_VEC3_UP}.
+	/// @param {Real} _roughness The new roughness. Use values in range 0..1.
+	///
+	/// @return {Struct.BBMOD_Material} Returns `self`.
+	static set_normal_roughness = function (_normal, _roughness)
+	{
+		NormalSmoothness = undefined;
+		if (__normalSmoothnessSprite != undefined)
+		{
+			sprite_delete(__normalSmoothnessSprite);
+			__normalSmoothnessSprite = undefined;
+		}
+
+		if (__normalRoughnessSprite != undefined)
+		{
+			sprite_delete(__normalRoughnessSprite);
+		}
+		_normal = _normal.Normalize();
+		__normalRoughnessSprite = _make_sprite(
+			(_normal.X * 0.5 + 0.5) * 255.0,
+			(_normal.Y * 0.5 + 0.5) * 255.0,
+			(_normal.Z * 0.5 + 0.5) * 255.0,
+			_roughness
+		);
+		NormalRoughness = sprite_get_texture(__normalRoughnessSprite, 0);
+		return self;
+	};
+
+	/// @func set_metallic_ao(_metallic, _ao)
+	///
+	/// @desc Changes the metalness and ambient occlusion to a uniform value for
+	/// the entire material.
+	///
+	/// @param {Real} _metallic The new metalness. You can use any value in range
+	/// 0..1, but in general this is usually either 0 for dielectric materials
+	/// and 1 for metals.
+	/// @param {Real} _ao The new ambient occlusion value. Use values in range
+	/// 0..1, where 0 means full occlusion and 1 means no occlusion.
+	///
+	/// @return {Struct.BBMOD_Material} Returns `self`.
+	static set_metallic_ao = function (_metallic, _ao)
+	{
+		SpecularColor = undefined;
+		if (__specularColorSprite != undefined)
+		{
+			sprite_delete(__specularColorSprite);
+			__specularColorSprite = undefined;
+		}
+
+		if (__metallicAOSprite != undefined)
+		{
+			sprite_delete(__metallicAOSprite);
+		}
+		__metallicAOSprite = _make_sprite(
+			_metallic * 255.0,
+			_ao * 255.0,
+			0.0,
+			0.0
+		);
+		MetallicAO = sprite_get_texture(__metallicAOSprite, 0);
+		return self;
+	};
+
+	/// @func set_subsurface(_color, _intensity)
+	///
+	/// @desc Changes the subsurface color to a uniform value for the entire
+	/// material.
+	///
+	/// @param {Real} _color The new subsurface color.
+	/// @param {Real} _intensity The subsurface color intensity. Use values in
+	/// range 0..1. The higher the value, the more visible the effect is.
+	///
+	/// @return {Struct.BBMOD_Material} Returns `self`.
+	static set_subsurface = function (_color, _intensity)
+	{
+		if (__subsurfaceSprite != undefined)
+		{
+			sprite_delete(__subsurfaceSprite);
+		}
+		__subsurfaceSprite = _make_sprite(
+			color_get_red(_color),
+			color_get_green(_color),
+			color_get_blue(_color),
+			_intensity
+		);
+		Subsurface = sprite_get_texture(__subsurfaceSprite, 0);
+		return self;
+	};
+
+	/// @func set_emissive(_color)
+	///
+	/// @desc Changes the emissive color to a uniform value for the entire
+	/// material.
+	///
+	/// @param {Struct.BBMOD_Color} _color The new emissive color.
+	///
+	/// @return {Struct.BBMOD_Material} Returns `self`.
+	static set_emissive = function ()
+	{
+		var _color = (argument_count == 3)
+			? new BBMOD_Color(argument[0], argument[1], argument[2])
+			: argument[0];
+		var _rgbm = _color.ToRGBM();
+		if (__emissiveSprite != undefined)
+		{
+			sprite_delete(__emissiveSprite);
+		}
+		__emissiveSprite = _make_sprite(
+			_rgbm[0] * 255.0,
+			_rgbm[1] * 255.0,
+			_rgbm[2] * 255.0,
+			_rgbm[3]
+		);
+		Emissive = sprite_get_texture(__emissiveSprite, 0);
+		return self;
+	};
+
 	/// @func copy(_dest)
 	///
 	/// @desc Copies properties of this material into another material.
@@ -232,6 +500,122 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		{
 			_dest.BaseOpacity = BaseOpacity;
 		}
+
+		// BaseMaterial properties
+		BaseOpacityMultiplier.Copy(_dest.BaseOpacityMultiplier);
+		_dest.TextureOffset = TextureOffset.Clone();
+		_dest.TextureScale = TextureScale.Clone();
+		_dest.ShadowmapBias = ShadowmapBias;
+		_dest.TwoSided = TwoSided;
+
+		// DefaultMaterial NormalSmoothness
+		if (_dest.__normalSmoothnessSprite != undefined)
+		{
+			sprite_delete(_dest.__normalSmoothnessSprite);
+			_dest.__normalSmoothnessSprite = undefined;
+		}
+		if (__normalSmoothnessSprite != undefined)
+		{
+			_dest.__normalSmoothnessSprite = sprite_duplicate(__normalSmoothnessSprite);
+			_dest.NormalSmoothness = sprite_get_texture(_dest.__normalSmoothnessSprite, 0);
+		}
+		else
+		{
+			_dest.NormalSmoothness = NormalSmoothness;
+		}
+
+		// DefaultMaterial SpecularColor
+		if (_dest.__specularColorSprite != undefined)
+		{
+			sprite_delete(_dest.__specularColorSprite);
+			_dest.__specularColorSprite = undefined;
+		}
+		if (__specularColorSprite != undefined)
+		{
+			_dest.__specularColorSprite = sprite_duplicate(__specularColorSprite);
+			_dest.SpecularColor = sprite_get_texture(_dest.__specularColorSprite, 0);
+		}
+		else
+		{
+			_dest.SpecularColor = SpecularColor;
+		}
+
+		// DefaultMaterial NormalRoughness
+		if (_dest.__normalRoughnessSprite != undefined)
+		{
+			sprite_delete(_dest.__normalRoughnessSprite);
+			_dest.__normalRoughnessSprite = undefined;
+		}
+		if (__normalRoughnessSprite != undefined)
+		{
+			_dest.__normalRoughnessSprite = sprite_duplicate(__normalRoughnessSprite);
+			_dest.NormalRoughness = sprite_get_texture(_dest.__normalRoughnessSprite, 0);
+		}
+		else
+		{
+			_dest.NormalRoughness = NormalRoughness;
+		}
+
+		// DefaultMaterial MetallicAO
+		if (_dest.__metallicAOSprite != undefined)
+		{
+			sprite_delete(_dest.__metallicAOSprite);
+			_dest.__metallicAOSprite = undefined;
+		}
+		if (__metallicAOSprite != undefined)
+		{
+			_dest.__metallicAOSprite = sprite_duplicate(__metallicAOSprite);
+			_dest.MetallicAO = sprite_get_texture(_dest.__metallicAOSprite, 0);
+		}
+		else
+		{
+			_dest.MetallicAO = MetallicAO;
+		}
+
+		// DefaultMaterial Subsurface
+		if (_dest.__subsurfaceSprite != undefined)
+		{
+			sprite_delete(_dest.__subsurfaceSprite);
+			_dest.__subsurfaceSprite = undefined;
+		}
+		if (__subsurfaceSprite != undefined)
+		{
+			_dest.__subsurfaceSprite = sprite_duplicate(__subsurfaceSprite);
+			_dest.Subsurface = sprite_get_texture(_dest.__subsurfaceSprite, 0);
+		}
+		else
+		{
+			_dest.Subsurface = Subsurface;
+		}
+
+		// DefaultMaterial Emissive
+		if (_dest.__emissiveSprite != undefined)
+		{
+			sprite_delete(_dest.__emissiveSprite);
+			_dest.__emissiveSprite = undefined;
+		}
+		if (__emissiveSprite != undefined)
+		{
+			_dest.__emissiveSprite = sprite_duplicate(__emissiveSprite);
+			_dest.Emissive = sprite_get_texture(_dest.__emissiveSprite, 0);
+		}
+		else
+		{
+			_dest.Emissive = Emissive;
+		}
+
+		// DefaultLightmapMaterial properties
+		_dest.Lightmap = Lightmap;
+
+		// ParticleMaterial properties
+		_dest.SoftDistance = SoftDistance;
+
+		// Dithering
+		_dest.DitherFadeStart = DitherFadeStart;
+		_dest.DitherFadeEnd = DitherFadeEnd;
+
+		// Mark hash as dirty so it will be recomputed
+		_dest.HashDirty = true;
 
 		return self;
 	};
@@ -282,10 +666,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		}
 		_json.__shaders = _shaders;
 
-		if (RenderQueue.Name != undefined)
-		{
-			_json.RenderQueue = RenderQueue.Name;
-		}
+		_json.RenderQueue = RenderQueue;
 
 		// TODO: Save OnApply
 
@@ -306,6 +687,40 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		_json.Repeat = Repeat;
 
 		// TODO: Save BaseOpacity/__baseOpacitySprite
+
+		// BaseMaterial properties
+		_json.BaseOpacityMultiplier = {
+			Red: BaseOpacityMultiplier.Red,
+			Green: BaseOpacityMultiplier.Green,
+			Blue: BaseOpacityMultiplier.Blue,
+			Alpha: BaseOpacityMultiplier.Alpha,
+		};
+
+		_json.TextureOffset = {
+			X: TextureOffset.X,
+			Y: TextureOffset.Y,
+		};
+
+		_json.TextureScale = {
+			X: TextureScale.X,
+			Y: TextureScale.Y,
+		};
+
+		_json.ShadowmapBias = ShadowmapBias;
+		_json.TwoSided = TwoSided;
+
+		// DefaultMaterial properties
+		// TODO: Save texture sprites (NormalSmoothness, SpecularColor, etc.)
+
+		// DefaultLightmapMaterial properties
+		// TODO: Save Lightmap
+
+		// ParticleMaterial properties
+		_json.SoftDistance = SoftDistance;
+
+		// Dithering
+		_json.DitherFadeStart = DitherFadeStart;
+		_json.DitherFadeEnd = DitherFadeEnd;
 
 		return self;
 	};
@@ -359,22 +774,26 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			var _renderQueue = _json.RenderQueue;
 			if (is_string(_renderQueue))
 			{
-				var _renderQueues = bbmod_render_queues_get();
-				var _index = 0;
-				repeat(array_length(_renderQueues))
+				// Backwards compatibility: convert old string names to enum values
+				switch (_renderQueue)
 				{
-					with(_renderQueues[_index++])
-					{
-						if (Name == _renderQueue)
-						{
-							_renderQueue = self;
-							break;
-						}
-					}
-				}
-				if (is_string(_renderQueue))
-				{
-					throw new BBMOD_Exception("Invalid render queue \"" + _renderQueue + "\"!");
+					case "Sky":
+						_renderQueue = BBMOD_ERenderQueue.Sky;
+						break;
+					case "Terrain":
+						_renderQueue = BBMOD_ERenderQueue.Terrain;
+						break;
+					case "Opaque":
+					case "Default":
+						_renderQueue = BBMOD_ERenderQueue.Opaque;
+						break;
+					case "Transparent":
+						_renderQueue = BBMOD_ERenderQueue.Transparent;
+						break;
+					default:
+						// Unknown queue name, default to Opaque
+						_renderQueue = BBMOD_ERenderQueue.Opaque;
+						break;
 				}
 			}
 			RenderQueue = _renderQueue;
@@ -486,6 +905,125 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			BaseOpacity = _json.BaseOpacity;
 		}
 
+		if (variable_struct_exists(_json, "BaseOpacityMultiplier"))
+		{
+			var _multiplier = _json.BaseOpacityMultiplier;
+			BaseOpacityMultiplier = new BBMOD_Color(
+				_multiplier.Red,
+				_multiplier.Green,
+				_multiplier.Blue,
+				_multiplier.Alpha
+			);
+		}
+
+		if (variable_struct_exists(_json, "TextureOffset"))
+		{
+			var _offset = _json.TextureOffset;
+			TextureOffset = new BBMOD_Vec2(_offset.X, _offset.Y);
+		}
+
+		if (variable_struct_exists(_json, "TextureScale"))
+		{
+			var _scale = _json.TextureScale;
+			TextureScale = new BBMOD_Vec2(_scale.X, _scale.Y);
+		}
+
+		if (variable_struct_exists(_json, "ShadowmapBias"))
+		{
+			ShadowmapBias = _json.ShadowmapBias;
+		}
+
+		if (variable_struct_exists(_json, "TwoSided"))
+		{
+			TwoSided = _json.TwoSided;
+		}
+
+		if (variable_struct_exists(_json, "NormalSmoothness"))
+		{
+			if (__normalSmoothnessSprite != undefined)
+			{
+				sprite_delete(__normalSmoothnessSprite);
+				__normalSmoothnessSprite = undefined;
+			}
+
+			NormalSmoothness = _json.NormalSmoothness;
+		}
+
+		if (variable_struct_exists(_json, "SpecularColor"))
+		{
+			if (__specularColorSprite != undefined)
+			{
+				sprite_delete(__specularColorSprite);
+				__specularColorSprite = undefined;
+			}
+
+			SpecularColor = _json.SpecularColor;
+		}
+
+		if (variable_struct_exists(_json, "NormalRoughness"))
+		{
+			if (__normalRoughnessSprite != undefined)
+			{
+				sprite_delete(__normalRoughnessSprite);
+				__normalRoughnessSprite = undefined;
+			}
+
+			NormalRoughness = _json.NormalRoughness;
+		}
+
+		if (variable_struct_exists(_json, "MetallicAO"))
+		{
+			if (__metallicAOSprite != undefined)
+			{
+				sprite_delete(__metallicAOSprite);
+				__metallicAOSprite = undefined;
+			}
+
+			MetallicAO = _json.MetallicAO;
+		}
+
+		if (variable_struct_exists(_json, "Subsurface"))
+		{
+			if (__subsurfaceSprite != undefined)
+			{
+				sprite_delete(__subsurfaceSprite);
+				__subsurfaceSprite = undefined;
+			}
+
+			Subsurface = _json.Subsurface;
+		}
+
+		if (variable_struct_exists(_json, "Emissive"))
+		{
+			if (__emissiveSprite != undefined)
+			{
+				sprite_delete(__emissiveSprite);
+				__emissiveSprite = undefined;
+			}
+
+			Emissive = _json.Emissive;
+		}
+
+		if (variable_struct_exists(_json, "Lightmap"))
+		{
+			Lightmap = _json.Lightmap;
+		}
+
+		if (variable_struct_exists(_json, "SoftDistance"))
+		{
+			SoftDistance = _json.SoftDistance;
+		}
+
+		if (variable_struct_exists(_json, "DitherFadeStart"))
+		{
+			DitherFadeStart = _json.DitherFadeStart;
+		}
+
+		if (variable_struct_exists(_json, "DitherFadeEnd"))
+		{
+			DitherFadeEnd = _json.DitherFadeEnd;
+		}
+
 		return self;
 	};
 
@@ -569,7 +1107,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	///
 	/// @param {Struct.BBMOD_Color} _color The new base color and opacity.
 	///
-	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
+	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static set_base_opacity = function (_color)
 	{
 		if (__baseOpacitySprite != undefined)
@@ -658,8 +1196,8 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			gpu_set_blendmode(_disableBlending ? bm_normal : BlendMode);
 			gpu_set_blendenable(_disableBlending ? false : AlphaBlend);
 			gpu_set_cullmode(Culling);
-			gpu_set_zwriteenable( /*_disableBlending ? true : */ ZWrite);
-			gpu_set_ztestenable( /*_disableBlending ? true : */ ZTest);
+			gpu_set_zwriteenable(ZWrite);
+			gpu_set_ztestenable(ZTest);
 			gpu_set_zfunc(ZFunc);
 			gpu_set_tex_mip_enable(Mipmapping);
 			if (Mipmapping)
@@ -687,17 +1225,6 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			_shader.set_material(self);
 		}
 
-		var _materialProps = global.__bbmodMaterialProps;
-		if (_materialProps != undefined)
-		{
-			_materialProps.apply();
-		}
-
-		if (OnApply != undefined)
-		{
-			OnApply(self);
-		}
-
 		return true;
 	};
 
@@ -717,6 +1244,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		gml_pragma("forceinline");
 		RenderPass |= (1 << _pass);
 		__shaders[@ _pass] = _shader;
+		HashDirty = true;
 		return self;
 	};
 
@@ -780,6 +1308,84 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		return self;
 	};
 
+	/// @func get_hash()
+	///
+	/// @desc Computes a hash value that uniquely identifies this material's
+	/// configuration based on all its properties and shaders.
+	///
+	/// @return {Real} A hash value representing the material's state.
+	///
+	/// @see bbmod_hash_combine
+	/// @see bbmod_hash_array
+	static get_hash = function ()
+	{
+		if (!HashDirty)
+		{
+			return __hash;
+		}
+
+		var _hash = 0;
+
+		// Hash shaders for all render passes
+		var i = 0;
+		repeat(BBMOD_ERenderPass.SIZE)
+		{
+			var _shader = __shaders[i++];
+			_hash = bbmod_hash_combine(_hash, _shader != undefined ? ptr(_shader) : 0);
+		}
+
+		// Hash GPU state properties
+		_hash = bbmod_hash_combine(_hash, BlendMode);
+		_hash = bbmod_hash_combine(_hash, Culling);
+		_hash = bbmod_hash_combine(_hash, ZWrite);
+		_hash = bbmod_hash_combine(_hash, ZTest);
+		_hash = bbmod_hash_combine(_hash, ZFunc);
+		_hash = bbmod_hash_combine(_hash, AlphaTest);
+		_hash = bbmod_hash_combine(_hash, AlphaBlend);
+
+		// Hash texture sampling properties
+		_hash = bbmod_hash_combine(_hash, Mipmapping);
+		_hash = bbmod_hash_combine(_hash, MipBias);
+		_hash = bbmod_hash_combine(_hash, MipFilter);
+		_hash = bbmod_hash_combine(_hash, MipMin);
+		_hash = bbmod_hash_combine(_hash, MipMax);
+		_hash = bbmod_hash_combine(_hash, Anisotropy);
+		_hash = bbmod_hash_combine(_hash, Filtering);
+		_hash = bbmod_hash_combine(_hash, Repeat);
+
+		// Hash material textures
+		_hash = bbmod_hash_combine(_hash, BaseOpacity ?? 0);
+		_hash = bbmod_hash_combine(_hash, NormalSmoothness ?? 0);
+		_hash = bbmod_hash_combine(_hash, SpecularColor ?? 0);
+		_hash = bbmod_hash_combine(_hash, NormalRoughness ?? 0);
+		_hash = bbmod_hash_combine(_hash, MetallicAO ?? 0);
+		_hash = bbmod_hash_combine(_hash, Subsurface ?? 0);
+		_hash = bbmod_hash_combine(_hash, Emissive ?? 0);
+		_hash = bbmod_hash_combine(_hash, Lightmap ?? 0);
+
+		// Hash color multipliers and offsets
+		_hash = bbmod_hash_combine(_hash, BaseOpacityMultiplier.Red);
+		_hash = bbmod_hash_combine(_hash, BaseOpacityMultiplier.Green);
+		_hash = bbmod_hash_combine(_hash, BaseOpacityMultiplier.Blue);
+		_hash = bbmod_hash_combine(_hash, BaseOpacityMultiplier.Alpha);
+
+		// Hash texture transform
+		_hash = bbmod_hash_combine(_hash, TextureOffset.X);
+		_hash = bbmod_hash_combine(_hash, TextureOffset.Y);
+		_hash = bbmod_hash_combine(_hash, TextureScale.X);
+		_hash = bbmod_hash_combine(_hash, TextureScale.Y);
+
+		// Hash other material properties
+		_hash = bbmod_hash_combine(_hash, ShadowmapBias);
+		_hash = bbmod_hash_combine(_hash, TwoSided);
+		_hash = bbmod_hash_combine(_hash, SoftDistance);
+
+		__hash = _hash;
+		HashDirty = false;
+
+		return _hash;
+	};
+
 	static destroy = function ()
 	{
 		Resource_destroy();
@@ -787,6 +1393,36 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		{
 			sprite_delete(__baseOpacitySprite);
 			__baseOpacitySprite = undefined;
+		}
+		if (__normalSmoothnessSprite != undefined)
+		{
+			sprite_delete(__normalSmoothnessSprite);
+			__normalSmoothnessSprite = undefined;
+		}
+		if (__specularColorSprite != undefined)
+		{
+			sprite_delete(__specularColorSprite);
+			__specularColorSprite = undefined;
+		}
+		if (__normalRoughnessSprite != undefined)
+		{
+			sprite_delete(__normalRoughnessSprite);
+			__normalRoughnessSprite = undefined;
+		}
+		if (__metallicAOSprite != undefined)
+		{
+			sprite_delete(__metallicAOSprite);
+			__metallicAOSprite = undefined;
+		}
+		if (__subsurfaceSprite != undefined)
+		{
+			sprite_delete(__subsurfaceSprite);
+			__subsurfaceSprite = undefined;
+		}
+		if (__emissiveSprite != undefined)
+		{
+			sprite_delete(__emissiveSprite);
+			__emissiveSprite = undefined;
 		}
 		return undefined;
 	};

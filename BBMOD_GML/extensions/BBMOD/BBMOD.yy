@@ -50,8 +50,8 @@
   "optionsFile":"options.json",
   "packageId":"",
   "parent":{
-    "name":"Base",
-    "path":"folders/BBMOD/Core/Base.yy",
+    "name":"0_Base",
+    "path":"folders/BBMOD/0_Base.yy",
   },
   "productId":"",
   "resourceType":"GMExtension",

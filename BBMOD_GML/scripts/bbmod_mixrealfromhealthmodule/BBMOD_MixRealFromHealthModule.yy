@@ -6,7 +6,7 @@
   "name":"BBMOD_MixRealFromHealthModule",
   "parent":{
     "name":"MixPropertyFromHealth",
-    "path":"folders/BBMOD/Particles/Modules/Universal/MixPropertyFromHealth.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Universal/MixPropertyFromHealth.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

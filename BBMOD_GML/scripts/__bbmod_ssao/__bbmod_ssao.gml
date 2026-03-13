@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Rendering
 
 /// @macro {Real} Size of the SSAO noise texture. Must be the same as in shaders!
 /// @private
@@ -117,21 +117,21 @@ function bbmod_ssao_draw(
 	_selfOcclusionBias = 0.01,
 	_blurDepthRange = 2.0)
 {
-	static _uTexNoise = shader_get_sampler_index(BBMOD_ShSSAO, "u_texNoise");
-	static _uTexel = shader_get_uniform(BBMOD_ShSSAO, "u_vTexel");
-	static _uClipFar = shader_get_uniform(BBMOD_ShSSAO, "u_fClipFar");
-	static _uTanAspect = shader_get_uniform(BBMOD_ShSSAO, "u_vTanAspect");
-	static _uSampleKernel = shader_get_uniform(BBMOD_ShSSAO, "u_vSampleKernel");
-	static _uRadius = shader_get_uniform(BBMOD_ShSSAO, "u_fRadius");
-	static _uPower = shader_get_uniform(BBMOD_ShSSAO, "u_fPower");
-	static _uNoiseScale = shader_get_uniform(BBMOD_ShSSAO, "u_vNoiseScale");
-	static _uAngleBias = shader_get_uniform(BBMOD_ShSSAO, "u_fAngleBias");
-	static _uDepthRange = shader_get_uniform(BBMOD_ShSSAO, "u_fDepthRange");
+	static _uTexNoise = shader_get_sampler_index(BBMOD_ShSSAO, "uNoise");
+	static _uTexel = shader_get_uniform(BBMOD_ShSSAO, "uTexel");
+	static _uClipFar = shader_get_uniform(BBMOD_ShSSAO, "uClipFar");
+	static _uTanAspect = shader_get_uniform(BBMOD_ShSSAO, "uTanAspect");
+	static _uSampleKernel = shader_get_uniform(BBMOD_ShSSAO, "uSampleKernel");
+	static _uRadius = shader_get_uniform(BBMOD_ShSSAO, "uRadius");
+	static _uPower = shader_get_uniform(BBMOD_ShSSAO, "uPower");
+	static _uNoiseScale = shader_get_uniform(BBMOD_ShSSAO, "uNoiseScale");
+	static _uAngleBias = shader_get_uniform(BBMOD_ShSSAO, "uAngleBias");
+	static _uDepthRange = shader_get_uniform(BBMOD_ShSSAO, "uDepthRange");
 	static _uSelfOcclusionBias = shader_get_uniform(BBMOD_ShSSAO, "u_fSelfOcclusionBias");
-	static _uBlurTexel = shader_get_uniform(BBMOD_ShSSAOBlur, "u_vTexel");
-	static _uBlurTexDepth = shader_get_sampler_index(BBMOD_ShSSAOBlur, "u_texDepth");
-	static _uBlurClipFar = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fClipFar");
-	static _uBlurDepthRange = shader_get_uniform(BBMOD_ShSSAOBlur, "u_fDepthRange");
+	static _uBlurTexel = shader_get_uniform(BBMOD_ShSSAOBlur, "uTexel");
+	static _uBlurTexDepth = shader_get_sampler_index(BBMOD_ShSSAOBlur, "uDepth");
+	static _uBlurClipFar = shader_get_uniform(BBMOD_ShSSAOBlur, "uClipFar");
+	static _uBlurDepthRange = shader_get_uniform(BBMOD_ShSSAOBlur, "uDepthRange");
 
 	var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_matProj);
 	var _width = surface_get_width(_surSsao);

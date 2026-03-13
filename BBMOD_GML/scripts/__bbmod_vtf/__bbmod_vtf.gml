@@ -1,4 +1,4 @@
-/// @module VTF
+/// @module Core
 
 /// @func bbmod_texture_set_stage_vs(_slot, _texture)
 ///
@@ -58,7 +58,7 @@ function bbmod_vtf_is_supported()
 			draw_clear(c_black);
 			shader_set(_shader);
 			bbmod_texture_set_stage_vs(
-				shader_get_sampler_index(_shader, "u_texTest"),
+				shader_get_sampler_index(_shader, "uTest"),
 				sprite_get_texture(BBMOD_SprWhite, 0));
 			draw_sprite(BBMOD_SprWhite, 0, 0, 0);
 			shader_reset();

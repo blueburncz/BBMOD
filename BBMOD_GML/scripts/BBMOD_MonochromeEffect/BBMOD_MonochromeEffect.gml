@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_MonochromeEffect([_strength[, _color]])
 ///
@@ -20,8 +20,8 @@ function BBMOD_MonochromeEffect(_strength = 1.0, _color = c_white): BBMOD_PostPr
 	/// `c_white`.
 	Color = _color;
 
-	static __uStrength = shader_get_uniform(BBMOD_ShMonochrome, "u_fStrength");
-	static __uColor = shader_get_uniform(BBMOD_ShMonochrome, "u_vColor");
+	static __uStrength = shader_get_uniform(BBMOD_ShMonochrome, "uStrength");
+	static __uColor = shader_get_uniform(BBMOD_ShMonochrome, "uColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

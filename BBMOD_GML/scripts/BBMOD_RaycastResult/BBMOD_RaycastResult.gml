@@ -1,4 +1,4 @@
-/// @module Raycasting
+/// @module Extras.Raycasting
 
 /// @func BBMOD_RaycastResult()
 ///

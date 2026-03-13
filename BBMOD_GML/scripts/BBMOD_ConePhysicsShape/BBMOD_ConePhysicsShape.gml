@@ -5,6 +5,23 @@
 /// @desc A struct containing the information needed to create a physics
 /// cone shape.
 ///
+/// @example
+/// ```gml
+/// // Create a cone shape for a traffic cone (radius 0.2m, height 0.6m)
+/// var _coneInfo = new BBMOD_ConePhysicsShapeInfo();
+/// _coneInfo.UpAxis = BBMOD_EAxis.Z; // Cone points upward
+/// _coneInfo.Radius = 0.2;
+/// _coneInfo.Height = 0.6;
+/// var _coneShape = physicsEngine.create_physics_shape(_coneInfo);
+///
+/// // Create a dynamic traffic cone
+/// var _rigidBodyInfo = new BBMOD_RigidBodyInfo();
+/// _rigidBodyInfo.Shape = _coneShape;
+/// _rigidBodyInfo.Mass = 1.0;
+/// _rigidBodyInfo.Position = new BBMOD_Vec3(0, 0, 1);
+/// var _trafficCone = physicsWorld.create_rigid_body(_rigidBodyInfo);
+/// ```
+///
 /// @see BBMOD_PhysicsShape
 /// @see BBMOD_PhysicsWorld.create_physics_shape
 function BBMOD_ConePhysicsShapeInfo(): BBMOD_PhysicsShapeInfo() constructor

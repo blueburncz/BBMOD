@@ -1,12 +1,12 @@
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform sampler2D u_texCoCNear;
-uniform sampler2D u_texCoCFar;
-uniform float u_fCoCScaleNear;
-uniform float u_fCoCScaleFar;
-uniform vec2 u_vTexel;
-uniform float u_fBokehShape;
-uniform float u_fStep;
+uniform sampler2D uCoCNear;
+uniform sampler2D uCoCFar;
+uniform float uCoCScaleNear;
+uniform float uCoCScaleFar;
+uniform vec2 uTexel;
+uniform float uBokehShape;
+uniform float uStep;
 
 // Source: https://www.adriancourreges.com/blog/2018/12/02/ue4-optimized-post-effects/
 #define PI 3.14159265359
@@ -73,14 +73,14 @@ vec2 SquareToPolygonMapping(vec2 uv, float edgeCount, float shapeRotation)
 float SampleCoC(sampler2D texCoCNear, sampler2D texCoCFar, vec2 uv, float scaleNear, float scaleFar)
 {
 	float cocNear = texture2D(texCoCNear, uv).g * scaleNear;
-	float cocFar = texture2D(texCoCFar, uv).r * scaleFar;
+	float cocFar = texture2D(texCoCNear, uv).r * scaleFar;
 	// Source: https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-28-practical-post-process-depth-field
 	return (2.0 * max(cocFar, cocNear)) - cocFar;
 }
 
 void main()
 {
-	float coc = SampleCoC(u_texCoCNear, u_texCoCFar, v_vTexCoord, u_fCoCScaleNear, u_fCoCScaleFar);
+	float coc = SampleCoC(uCoCNear, uCoCFar, vTexCoord, uCoCScaleNear, uCoCScaleFar);
 	if (coc <= 0.0)
 	{
 		discard;
@@ -94,19 +94,19 @@ void main()
 		for (float j = -1.0; j <= 1.0; j += 0.01)
 		{
 			vec2 sampleOffset = coc
-				* ((u_fBokehShape >= 3.0)
-					? SquareToPolygonMapping(vec2(stepSumI, stepSumJ), u_fBokehShape, 0.0)
+				* ((uBokehShape >= 3.0)
+					? SquareToPolygonMapping(vec2(stepSumI, stepSumJ), uBokehShape, 0.0)
 					: SquareToDiskMapping(vec2(stepSumI, stepSumJ)))
-				* u_vTexel;
-			color += texture2D(gm_BaseTexture, v_vTexCoord + sampleOffset);
+				* uTexel;
+			color += texture2D(gm_BaseTexture, vTexCoord + sampleOffset);
 			weight += 1.0;
-			stepSumJ += u_fStep;
+			stepSumJ += uStep;
 			if (stepSumJ > 1.0)
 			{
 				break;
 			}
 		}
-		stepSumI += u_fStep;
+		stepSumI += uStep;
 		if (stepSumI > 1.0)
 		{
 			break;

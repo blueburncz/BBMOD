@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_AddRealOverTimeModule([_property[, _change[, _period]]])
 ///

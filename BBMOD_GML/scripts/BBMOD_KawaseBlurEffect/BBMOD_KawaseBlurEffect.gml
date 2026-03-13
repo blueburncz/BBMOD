@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_KawaseBlurEffect([_offsets])
 ///
@@ -14,8 +14,8 @@ function BBMOD_KawaseBlurEffect(_offsets = []): BBMOD_PostProcessEffect() constr
 	///`[0, 1, 2, 3]`. Default value is an empty array.
 	Offsets = _offsets;
 
-	static __uTexel = shader_get_uniform(BBMOD_ShKawaseBlur, "u_vTexel");
-	static __uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "u_fOffset");
+	static __uTexel = shader_get_uniform(BBMOD_ShKawaseBlur, "uTexel");
+	static __uOffset = shader_get_uniform(BBMOD_ShKawaseBlur, "uOffset");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

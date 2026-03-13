@@ -93,7 +93,7 @@ function BBMOD_PhysicsShape() constructor
 	static get_type = function ()
 	{
 		gml_pragma("forceinline");
-		return BBMOD_PhysicsEngine_GetPhysicsShapeType(__id);
+		return BBMOD_PhysicsShape_GetShapeType(__id);
 	};
 
 	/// @func get_margin()
@@ -104,7 +104,7 @@ function BBMOD_PhysicsShape() constructor
 	static get_margin = function ()
 	{
 		gml_pragma("forceinline");
-		return BBMOD_PhysicsEngine_GetPhysicsShapeMargin(__id);
+		return BBMOD_PhysicsShape_GetMargin(__id);
 	};
 
 	/// @func set_margin(_margin)
@@ -114,10 +114,17 @@ function BBMOD_PhysicsShape() constructor
 	/// @param {Real} _margin The new margin of this physics shape.
 	///
 	/// @return {Struct.BBMOD_PhysicsShape} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// // Adjust collision margin for better stability
+	/// var _boxShape = physicsEngine.create_physics_shape(new BBMOD_BoxPhysicsShapeInfo());
+	/// _boxShape.set_margin(0.02); // Smaller margin for tighter collisions
+	/// ```
 	static set_margin = function (_margin)
 	{
 		gml_pragma("forceinline");
-		BBMOD_PhysicsEngine_SetPhysicsShapeMargin(__id, _margin);
+		BBMOD_PhysicsShape_SetMargin(__id, _margin);
 		return self;
 	};
 
@@ -130,7 +137,7 @@ function BBMOD_PhysicsShape() constructor
 	{
 		gml_pragma("forceinline");
 		var _scratchBuffer = bbmod_get_scratch_buffer(buffer_sizeof(buffer_f64) * 3);
-		BBMOD_PhysicsEngine_GetPhysicsShapeLocalScaling(__id, buffer_get_address(_scratchBuffer));
+		BBMOD_PhysicsShape_GetLocalScaling(__id, buffer_get_address(_scratchBuffer));
 		return new BBMOD_Vec3().FromBuffer(_scratchBuffer, buffer_f64);
 	};
 
@@ -141,12 +148,19 @@ function BBMOD_PhysicsShape() constructor
 	/// @param {Struct.BBMOD_Vec3} _scaling The new local scaling of this physics shape.
 	///
 	/// @return {Struct.BBMOD_PhysicsShape} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// // Scale a box shape non-uniformly
+	/// var _boxShape = physicsEngine.create_physics_shape(new BBMOD_BoxPhysicsShapeInfo());
+	/// _boxShape.set_local_scaling(new BBMOD_Vec3(2.0, 1.0, 0.5)); // Stretch on X, compress on Z
+	/// ```
 	static set_local_scaling = function (_scaling)
 	{
 		gml_pragma("forceinline");
 		var _scratchBuffer = bbmod_get_scratch_buffer(buffer_sizeof(buffer_f64) * 3);
 		_scaling.ToBuffer(_scratchBuffer, buffer_f64);
-		BBMOD_PhysicsEngine_SetPhysicsShapeLocalScaling(__id, buffer_get_address(_scratchBuffer));
+		BBMOD_PhysicsShape_SetLocalScaling(__id, buffer_get_address(_scratchBuffer));
 		return self;
 	};
 

@@ -4,7 +4,7 @@
   "name":"BBMOD_ShCheckMRT",
   "parent":{
     "name":"Shaders",
-    "path":"folders/BBMOD/Core/Shaders.yy",
+    "path":"folders/BBMOD/1_Core/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

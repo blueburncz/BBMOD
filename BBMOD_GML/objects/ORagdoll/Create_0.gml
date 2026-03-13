@@ -1,6 +1,6 @@
 z = (OMain.terrain.get_height(x, y) ?? 0) + 0.125;
 
-model = BBMOD_RESOURCE_MANAGER.load_sync("Data/YBot/YBot.bbmod").freeze();
+model = BBMOD_RESOURCE_MANAGER.load_sync("Data/YBot/YBot.bbmod");
 
 var _nodes = model.get_node_array();
 var _boneCount = model.BoneCount;
@@ -16,6 +16,12 @@ for (var i = 0; i < array_length(_nodes); ++i)
 }
 
 transformArray = array_create(_boneCount * 8, 0);
+ragdoll = undefined;
+
+// Animation player for smooth transitions
+animationPlayer = new BBMOD_AnimationPlayer(model);
+idleAnimation = BBMOD_RESOURCE_MANAGER.load_sync("Data/YBot/Idle.bbanim");
+animationPlayer.play(idleAnimation, true);
 
 /// @func GetNodeWorldTransform(_node)
 GetNodeWorldTransform = function (_node)
@@ -28,55 +34,6 @@ GetNodeWorldTransform = function (_node)
 		_current = _current.Parent;
 	}
 	return _dualQuat;
-};
-
-/// @func GetTransformArray(_dest)
-GetTransformArray = function (_dest)
-{
-	var _numParts = array_length(Ragdoll);
-	var _numBones = array_length(bones);
-	var _worldDqs = array_create(_numBones, undefined);
-
-	// Get world DQs from ragdoll
-	for (var i = 0; i < _numParts; ++i)
-	{
-		var _part = Ragdoll[i];
-		if (_part.RigidBody != undefined)
-		{
-			_worldDqs[@ _part.Bone.Index] = _part.RigidBody.get_dual_quaternion();
-		}
-	}
-
-	// Fill in missing DQs
-	for (var i = 0; i < _numBones; ++i)
-	{
-		if (_worldDqs[i] == undefined)
-		{
-			var _bone = bones[i];
-			var _dualQuat = _bone.Transform;
-			var _current = _bone.Parent;
-			while (_current != undefined)
-			{
-				if (_current.IsBone && _worldDqs[_current.Index] != undefined)
-				{
-					_dualQuat = _dualQuat.Mul(_worldDqs[_current.Index]);
-					break;
-				}
-				_dualQuat = _dualQuat.Mul(_current.Transform);
-				_current = _current.Parent;
-			}
-			_worldDqs[@ i] = _dualQuat;
-		}
-	}
-
-	// Mul with bone offsets
-	for (var i = 0; i < _numBones; ++i)
-	{
-		var _dq = _worldDqs[i];
-		var _offset = new BBMOD_DualQuaternion().FromArray(model.__offsetArray, i * 8);
-		_dq = _offset.Mul(_dq);
-		_dq.ToArray(_dest, i * 8);
-	}
 };
 
 /// @func TryGetBone(_name)
@@ -96,156 +53,55 @@ TryGetBone = function (_name)
 /// @func CreateRagdoll()
 CreateRagdoll = function ()
 {
+	// Destroy old ragdoll
+	if (ragdoll != undefined)
+	{
+		ragdoll.destroy();
+		ragdoll = undefined;
+	}
+
+	// Update animation player to ensure transforms are ready
+	animationPlayer.update(0);
+
+	// Create ragdoll info
+	var _ragdollInfo = new BBMOD_RagdollInfo(model);
+
+	// Add all parts to the ragdoll info
 	var _num = array_length(Ragdoll);
-
-	// Destroy old
 	for (var i = 0; i < _num; ++i)
 	{
-		var _ragdollPart = Ragdoll[i];
-
-		if (_ragdollPart.Constraint != undefined)
-		{
-			BBMOD_PhysicsWorld_DestroyConstraint(OMain.physicsWorld.__id, _ragdollPart.Constraint);
-			_ragdollPart.Constraint = undefined;
-		}
-
-		if (_ragdollPart.RigidBody != undefined)
-		{
-			BBMOD_PhysicsWorld_DestroyRigidBody(OMain.physicsWorld.__id, _ragdollPart.RigidBody.__id);
-			_ragdollPart.RigidBody = undefined;
-		}
-
-		if (_ragdollPart.PhysicsShape != undefined)
-		{
-			BBMOD_PhysicsEngine_DestroyPhysicsShape(_ragdollPart.PhysicsShape.__id);
-			_ragdollPart.PhysicsShape = undefined;
-		}
+		_ragdollInfo.add_part(Ragdoll[i]);
 	}
 
-	// Create new shapes and rigid bodies
-	for (var i = 0; i < _num; ++i)
+	// Create ragdoll at current object position
+	var _worldTransform = new BBMOD_Matrix().TranslateSelf(x, y, z);
+	ragdoll = OMain.physicsWorld.create_ragdoll(_ragdollInfo, _worldTransform);
+
+	if (ragdoll != undefined)
 	{
-		var _ragdollPart = Ragdoll[i];
+		// Start in animation mode
+		ragdoll.set_active(false);
 
-		if (_ragdollPart.Bone == undefined)
-		{
-			continue;
-		}
-
-		var _shapeInfo = undefined;
-		var _shape = undefined;
-
-		switch (_ragdollPart.Type)
-		{
-			case EPhysicsShape.Box:
-				_shapeInfo = new BBMOD_BoxPhysicsShapeInfo();
-				_ragdollPart.Size.Copy(_shapeInfo.Size);
-				break;
-
-			case EPhysicsShape.Capsule:
-				_shapeInfo = new BBMOD_CapsulePhysicsShapeInfo();
-				_shapeInfo.UpAxis = BBMOD_EAxis.Y;
-				_shapeInfo.Radius = _ragdollPart.Size.X;
-				_shapeInfo.Height = max(_ragdollPart.Size.Y - (_shapeInfo.Radius * 2), 0);
-				break;
-
-				//case EPhysicsShape.Cone:
-				//	break;
-
-				//case EPhysicsShape.Cylinder:
-				//	break;
-
-			case EPhysicsShape.Sphere:
-				_shapeInfo = new BBMOD_SpherePhysicsShapeInfo();
-				_shapeInfo.Radius = _ragdollPart.Size.X;
-				break;
-
-			default:
-				break;
-		}
-
-		if (_shapeInfo != undefined)
-		{
-			_shape = OMain.physicsEngine.create_physics_shape(_shapeInfo);
-		}
-
-		if (_shape != undefined)
-		{
-			var _compoundShape = OMain.physicsEngine.create_physics_shape(new BBMOD_CompoundPhysicsShapeInfo());
-			_compoundShape.add_child_shape(_shape, new BBMOD_Matrix().TranslateSelf(_ragdollPart.Offset));
-			_shape = _compoundShape;
-
-			_ragdollPart.PhysicsShape = _compoundShape;
-
-			var _bodyInfo = new BBMOD_RigidBodyInfo();
-			_bodyInfo.PhysicsShape = _shape;
-			_bodyInfo.Mass = _ragdollPart.Mass;
-			_bodyInfo.Transform.Raw = matrix_multiply(
-				GetNodeWorldTransform(_ragdollPart.Bone).ToMatrix(),
-				matrix_build(x, y, z, 0, 0, 0, 1, 1, 1)
-			);
-
-			_ragdollPart.RigidBody = OMain.physicsWorld.create_rigid_body(_bodyInfo);
-		}
-	}
-
-	// Create constraints
-	for (var i = 0; i < _num; ++i)
-	{
-		var _ragdollPart = Ragdoll[i];
-
-		if (_ragdollPart.RigidBody == undefined)
-		{
-			continue;
-		}
-
-		if (_ragdollPart.ConnectedToBone == undefined)
-		{
-			continue;
-		}
-
-		var _ragdollPartConnectedTo = undefined;
-		for (var j = 0; j < _num; ++j)
-		{
-			if (Ragdoll[j].Bone != undefined
-				&& Ragdoll[j].Bone == _ragdollPart.ConnectedToBone)
-			{
-				_ragdollPartConnectedTo = Ragdoll[j];
-				break;
-			}
-		}
-
-		if (_ragdollPartConnectedTo == undefined)
-		{
-			continue;
-		}
-
-		var _scratchBuffer = bbmod_get_scratch_buffer();
-
-		buffer_write(_scratchBuffer, buffer_f64, _ragdollPart.RigidBody.__id);
-		buffer_write(_scratchBuffer, buffer_f64, _ragdollPartConnectedTo.RigidBody.__id);
-		_ragdollPart.LowerLimit.ToBuffer(_scratchBuffer, buffer_f32);
-		_ragdollPart.UpperLimit.ToBuffer(_scratchBuffer, buffer_f32);
-
-		_ragdollPart.Constraint = BBMOD_PhysicsWorld_CreateCharacterJoint(OMain.physicsWorld.__id,
-			buffer_get_address(_scratchBuffer));
+		// Sync to current animation pose
+		var _worldMat = new BBMOD_Matrix().TranslateSelf(x, y, z);
+		ragdoll.sync_to_animation(animationPlayer, _worldMat);
 	}
 };
 
 UI = new CGUI();
 Ragdoll = [];
 
-Pelvis = new CRagdollPartInfo();
+Pelvis = new BBMOD_RagdollPartInfo();
 Pelvis.Name = "Pelvis";
 Pelvis.Bone = TryGetBone("mixamorig:Hips");
 Pelvis.Expand = true;
-Pelvis.Type = EPhysicsShape.Box;
+Pelvis.Type = BBMOD_EPhysicsShapeType.Box;
 Pelvis.Offset.Set(-8.40425491 * power(10, -6), 0.0745585412, -0.0308578461).MulSelf(new BBMOD_Vec3(1, 1, -1));
 Pelvis.Size.Set(0.375215948, 0.282260925, 0.25216195);
 Pelvis.Mass = 12.5;
 array_push(Ragdoll, Pelvis);
 
-LeftHips = new CRagdollPartInfo();
+LeftHips = new BBMOD_RagdollPartInfo();
 LeftHips.Name = "Left Hips";
 LeftHips.Bone = TryGetBone("mixamorig:LeftUpLeg");
 LeftHips.Offset.Set(0, 0.21, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
@@ -257,7 +113,7 @@ LeftHips.LowerLimit.Set(-30.0, -70.0, -60.0);
 LeftHips.UpperLimit.Set(30.0, 70.0, 60.0);
 array_push(Ragdoll, LeftHips);
 
-LeftKnee = new CRagdollPartInfo();
+LeftKnee = new BBMOD_RagdollPartInfo();
 LeftKnee.Name = "Left Knee";
 LeftKnee.Bone = TryGetBone("mixamorig:LeftLeg");
 LeftKnee.Offset.Set(0, 0.2430662, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
@@ -269,12 +125,12 @@ LeftKnee.LowerLimit.Set(0.0, 0.0, 0.0);
 LeftKnee.UpperLimit.Set(0.0, 85.0, 0.0); // 0.0, 105.0, 0.0
 array_push(Ragdoll, LeftKnee);
 
-//LeftFoot = new CRagdollPartInfo();
+//LeftFoot = new BBMOD_RagdollPartInfo();
 //LeftFoot.Name = "Left Foot";
 //LeftFoot.Bone = TryGetBone("mixamorig:LeftFoot");
 //array_push(Ragdoll, LeftFoot);
 
-RightHips = new CRagdollPartInfo();
+RightHips = new BBMOD_RagdollPartInfo();
 RightHips.Name = "Right Hips";
 RightHips.Bone = TryGetBone("mixamorig:RightUpLeg");
 RightHips.Offset.Set(0, 0.21, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
@@ -286,7 +142,7 @@ RightHips.LowerLimit.Set(-30.0, -70.0, -60.0);
 RightHips.UpperLimit.Set(30.0, 70.0, 60.0);
 array_push(Ragdoll, RightHips);
 
-RightKnee = new CRagdollPartInfo();
+RightKnee = new BBMOD_RagdollPartInfo();
 RightKnee.Name = "Right Knee";
 RightKnee.Bone = TryGetBone("mixamorig:RightLeg");
 RightKnee.Offset.Set(0, 0.2430652, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
@@ -298,12 +154,12 @@ RightKnee.LowerLimit.Set(0.0, 0.0, 0.0);
 RightKnee.UpperLimit.Set(0.0, 85.0, 0.0); // 0.0, 105.0, 0.0
 array_push(Ragdoll, RightKnee);
 
-//RightFoot = new CRagdollPartInfo();
+//RightFoot = new BBMOD_RagdollPartInfo();
 //RightFoot.Name = "Right Foot";
 //RightFoot.Bone = TryGetBone("mixamorig:RightFoot");
 //array_push(Ragdoll, RightFoot);
 
-LeftArm = new CRagdollPartInfo();
+LeftArm = new BBMOD_RagdollPartInfo();
 LeftArm.Name = "Left Arm";
 LeftArm.Bone = TryGetBone("mixamorig:LeftArm");
 LeftArm.Offset.Set(0, 0.1370234, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
@@ -315,7 +171,7 @@ LeftArm.LowerLimit.Set(-15.0, -85.0, -70.0);
 LeftArm.UpperLimit.Set(15.0, 85.0, 70.0);
 array_push(Ragdoll, LeftArm);
 
-LeftElbow = new CRagdollPartInfo();
+LeftElbow = new BBMOD_RagdollPartInfo();
 LeftElbow.Name = "Left Elbow";
 LeftElbow.Bone = TryGetBone("mixamorig:LeftForeArm");
 LeftElbow.Offset.Set(0, 0.2557196, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
@@ -327,7 +183,7 @@ LeftElbow.LowerLimit.Set(-15.0, 0.0, 0.0); // -6.0, 0.0, 0.0
 LeftElbow.UpperLimit.Set(15.0, 0.0, -85.0); // 6.0, 0.0, -100.0
 array_push(Ragdoll, LeftElbow);
 
-RightArm = new CRagdollPartInfo();
+RightArm = new BBMOD_RagdollPartInfo();
 RightArm.Name = "Right Arm";
 RightArm.Bone = TryGetBone("mixamorig:RightArm");
 RightArm.Offset.Set(0, 0.1370234, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
@@ -339,7 +195,7 @@ RightArm.LowerLimit.Set(-15.0, -85.0, -70.0);
 RightArm.UpperLimit.Set(15.0, 85.0, 70.0);
 array_push(Ragdoll, RightArm);
 
-RightElbow = new CRagdollPartInfo();
+RightElbow = new BBMOD_RagdollPartInfo();
 RightElbow.Name = "Right Elbow";
 RightElbow.Bone = TryGetBone("mixamorig:RightForeArm");
 RightElbow.Offset.Set(0, 0.2557195, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
@@ -351,10 +207,10 @@ RightElbow.LowerLimit.Set(-15.0, 0.0, 0.0); // -6.0, 0.0, 0.0
 RightElbow.UpperLimit.Set(15.0, 0.0, 85.0); // 6.0, 0.0, 100.0
 array_push(Ragdoll, RightElbow);
 
-MiddleSpine = new CRagdollPartInfo();
+MiddleSpine = new BBMOD_RagdollPartInfo();
 MiddleSpine.Name = "Middle Spine";
 MiddleSpine.Bone = TryGetBone("mixamorig:Spine1");
-MiddleSpine.Type = EPhysicsShape.Box;
+MiddleSpine.Type = BBMOD_EPhysicsShapeType.Box;
 MiddleSpine.Offset.Set(3.7252903 * power(10, -7), 0.112345047, -0.00417891145).MulSelf(new BBMOD_Vec3(1, 1, -1));
 MiddleSpine.Size.Set(0.375215948, 0.224690124, 0.254008442);
 MiddleSpine.Mass = 12.5;
@@ -363,10 +219,10 @@ MiddleSpine.LowerLimit.Set(-20.0, -30.0, -30.0);
 MiddleSpine.UpperLimit.Set(20.0, 30.0, 30.0);
 array_push(Ragdoll, MiddleSpine);
 
-Head = new CRagdollPartInfo();
+Head = new BBMOD_RagdollPartInfo();
 Head.Name = "Head";
 Head.Bone = TryGetBone("mixamorig:Head");
-Head.Type = EPhysicsShape.Sphere;
+Head.Type = BBMOD_EPhysicsShapeType.Sphere;
 Head.Offset.Set(0, 0.0938039869, 0).MulSelf(new BBMOD_Vec3(1, 1, -1));
 Head.Size.X = 0.09380399;
 Head.Mass = 5;

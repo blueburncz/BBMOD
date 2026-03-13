@@ -1,11 +1,11 @@
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
 uniform sampler2D bbmod_Splatmap;
 uniform int bbmod_SplatmapIndex;
 
 void main()
 {
-	vec4 splatmap = texture2D(bbmod_Splatmap, v_vTexCoord);
+	vec4 splatmap = texture2D(bbmod_Splatmap, vTexCoord);
 	// splatmap[index] does not work in HTML5
 	gl_FragColor.rgb = vec3((bbmod_SplatmapIndex == 0) ? splatmap.r
 		: ((bbmod_SplatmapIndex == 1) ? splatmap.g

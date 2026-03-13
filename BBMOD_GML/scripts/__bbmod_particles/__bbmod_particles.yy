@@ -6,7 +6,7 @@
   "name":"__bbmod_particles",
   "parent":{
     "name":"Particles",
-    "path":"folders/BBMOD/Particles.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

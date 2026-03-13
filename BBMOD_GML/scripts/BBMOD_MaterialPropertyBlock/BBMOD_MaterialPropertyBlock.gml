@@ -43,6 +43,8 @@ global.__bbmodMaterialProps = undefined;
 /// @see bbmod_material_props_set
 /// @see bbmod_material_props_get
 /// @see bbmod_material_props_reset
+///
+/// @obsolete This feature is obsolete and no longer supported. Material property blocks are no longer applied during rendering.
 function BBMOD_MaterialPropertyBlock() constructor
 {
 	/// @var {Array<String>}
@@ -171,7 +173,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 	/// @example
 	/// ```gml
 	/// var _materialProps = new BBMOD_MaterialPropertyBlock();
-	/// _materialProps.set_color("u_vColor", BBMOD_C_AQUA);
+	/// _materialProps.set_color("uColor", BBMOD_C_AQUA);
 	/// ```
 	///
 	/// @note This is a shorthand for
@@ -761,6 +763,8 @@ function BBMOD_MaterialPropertyBlock() constructor
 /// @see bbmod_material_props_get
 /// @see bbmod_material_props_reset
 /// @see BBMOD_MaterialPropertyBlock
+///
+/// @obsolete This feature is obsolete and no longer supported. Material property blocks are no longer applied during rendering.
 function bbmod_material_props_set(_materialPropertyBlock)
 {
 	gml_pragma("forceinline");
@@ -786,6 +790,8 @@ function bbmod_material_props_set(_materialPropertyBlock)
 /// @see bbmod_material_props_set
 /// @see bbmod_material_props_reset
 /// @see BBMOD_MaterialPropertyBlock
+///
+/// @obsolete This feature is obsolete and no longer supported. Material property blocks are no longer applied during rendering.
 function bbmod_material_props_get()
 {
 	gml_pragma("forceinline");
@@ -808,6 +814,8 @@ function bbmod_material_props_get()
 /// @see bbmod_material_props_set
 /// @see bbmod_material_props_get
 /// @see BBMOD_MaterialPropertyBlock
+///
+/// @obsolete This feature is obsolete and no longer supported. Material property blocks are no longer applied during rendering.
 function bbmod_material_props_reset()
 {
 	gml_pragma("forceinline");

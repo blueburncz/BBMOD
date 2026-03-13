@@ -1,6 +1,6 @@
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform float u_fRoughness;
+uniform float uRoughness;
 
 // 1.0 = input is HDR (linear space), 0.0 = input is LDR (gamma space)
 uniform float bbmod_HDR;
@@ -168,7 +168,7 @@ vec3 xLinearToGamma(vec3 rgb)
 
 void main()
 {
-	vec3 dir = xOctahedronUvToVec3Normalized(v_vTexCoord);
-	vec3 result = xPrefilterIBL_GGX(gm_BaseTexture, dir, u_fRoughness);
+	vec3 dir = xOctahedronUvToVec3Normalized(vTexCoord);
+	vec3 result = xPrefilterIBL_GGX(gm_BaseTexture, dir, uRoughness);
 	gl_FragColor = xEncodeRGBM((bbmod_HDR == 1.0) ? xLinearToGamma(result) : result);
 }

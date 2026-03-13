@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /* beautify ignore:start */
 #macro __BBMOD_BONE_SPACE_PARENT (1 << 0)

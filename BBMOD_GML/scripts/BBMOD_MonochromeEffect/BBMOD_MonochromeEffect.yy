@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_MonochromeEffect",
   "parent":{
-    "name":"Monochrome",
-    "path":"folders/BBMOD/PostProcessing/Monochrome.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__bbmod_array",
   "parent":{
-    "name":"Base",
-    "path":"folders/BBMOD/Core/Base.yy",
+    "name":"0_Base",
+    "path":"folders/BBMOD/0_Base.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

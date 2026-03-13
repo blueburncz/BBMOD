@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShStatic_VertexColors_Forward",
+  "name":"BBMOD_ShStatic_VertexColors_Forward",
+  "parent":{
+    "name":"Static",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Static.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

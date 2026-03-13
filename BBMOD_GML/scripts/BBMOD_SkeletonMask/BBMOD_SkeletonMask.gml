@@ -1,4 +1,4 @@
-/// @module LayeredAnimationPlayer
+/// @module Extras.LayeredAnimationPlayer
 
 /// @func BBMOD_SkeletonMask(_model)
 ///

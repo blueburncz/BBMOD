@@ -71,11 +71,11 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 	/// {@link BBMOD_Camera.DirectionUpMax}. Defaults to `0`.
 	DirectionUp = 0.0;
 
-	/// @var {Real} Minimum angle that {@link BBMOD_Camrea.DirectionUp}
+	/// @var {Real} Minimum angle that {@link BBMOD_Camera.DirectionUp}
 	/// can be. Use `undefined` to remove the limit. Default value is `-89`.
 	DirectionUpMin = -89.0;
 
-	/// @var {Real} Maximum angle that {@link BBMOD_Camrea.DirectionUp}
+	/// @var {Real} Maximum angle that {@link BBMOD_Camera.DirectionUp}
 	/// can be. Use `undefined` to remove the limit. Default value is `89`.
 	DirectionUpMax = 89.0;
 

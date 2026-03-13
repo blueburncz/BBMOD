@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_SunShaftsEffect",
   "parent":{
-    "name":"SunShafts",
-    "path":"folders/BBMOD/PostProcessing/SunShafts.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

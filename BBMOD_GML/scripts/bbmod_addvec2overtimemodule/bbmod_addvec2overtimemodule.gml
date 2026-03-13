@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_AddVec2OverTimeModule([_property[, _change[, _period]]])
 ///

@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Rendering
 
 /// @func BBMOD_DefaultRenderer()
 ///

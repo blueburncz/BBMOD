@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShDirectionalBlur",
   "name":"BBMOD_ShDirectionalBlur",
   "parent":{
-    "name":"DirectionalBlur",
-    "path":"folders/BBMOD/PostProcessing/DirectionalBlur.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

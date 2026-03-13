@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_PhysicsRaycastResult",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_PhysicsRaycastResult",
+  "parent":{
+    "name":"TestResults",
+    "path":"folders/BBMOD/3_Physics/TestResults.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

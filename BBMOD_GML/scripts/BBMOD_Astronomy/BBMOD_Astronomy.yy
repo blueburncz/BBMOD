@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_Astronomy",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_Astronomy",
+  "parent":{
+    "name":"Sky",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Sky.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

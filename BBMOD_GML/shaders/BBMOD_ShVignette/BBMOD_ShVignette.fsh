@@ -1,18 +1,18 @@
 // FIXME: Temporary fix!
 precision highp float;
 
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform float u_fStrength;
-uniform vec3 u_vColor;
+uniform float uStrength;
+uniform vec3 uColor;
 
 void main()
 {
-	vec2 vec = 0.5 - v_vTexCoord;
+	vec2 vec = 0.5 - vTexCoord;
 	float vecLen = length(vec);
 	gl_FragColor.rgb = mix(
-		texture2D(gm_BaseTexture, v_vTexCoord).rgb,
-		u_vColor,
-		vecLen * vecLen * u_fStrength);
+		texture2D(gm_BaseTexture, vTexCoord).rgb,
+		uColor,
+		vecLen * vecLen * uStrength);
 	gl_FragColor.a = 1.0;
 }

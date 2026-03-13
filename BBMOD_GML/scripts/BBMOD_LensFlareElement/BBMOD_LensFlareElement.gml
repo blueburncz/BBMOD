@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset[, _scale[, _scaleByDistanceMin[, _scaleByDistanceMax[, _color[, _applyTint[, _angle[, _angleRelative[, _fadeOut[, _applyStarburst]]]]]]]]]]]])
 ///

@@ -6,7 +6,7 @@
   "name":"BBMOD_AnimationState",
   "parent":{
     "name":"StateMachine",
-    "path":"folders/BBMOD/StateMachine.yy",
+    "path":"folders/BBMOD/5_Extras/StateMachine.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_ExposureEffect",
   "parent":{
-    "name":"Exposure",
-    "path":"folders/BBMOD/PostProcessing/Exposure.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

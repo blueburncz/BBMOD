@@ -6,7 +6,7 @@
   "name":"BBMOD_VertexFormat",
   "parent":{
     "name":"Model",
-    "path":"folders/BBMOD/Core/Base/Model.yy",
+    "path":"folders/BBMOD/0_Base/Model.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -10,12 +10,12 @@ http://creativecommons.org/licenses/by-sa/4.0/.
 // FIXME: Temporary fix!
 precision highp float;
 
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform vec2 u_vTexel;
-uniform float u_fStrength;
-uniform float u_fClamp;
-uniform float u_fOffset;
+uniform vec2 uTexel;
+uniform float uStrength;
+uniform float uClamp;
+uniform float uOffset;
 
 // Overlay blending mode
 float Overlay(float LayerA, float LayerB)
@@ -39,16 +39,16 @@ float Luma(vec3 Source, vec3 Coefficients)
 
 void main()
 {
-	vec2 Pixel = u_vTexel;
+	vec2 Pixel = uTexel;
 
-	Pixel *= u_fOffset;
+	Pixel *= uOffset;
 	// Sample display image
-	vec3 Source = texture2D(gm_BaseTexture, v_vTexCoord).rgb;
+	vec3 Source = texture2D(gm_BaseTexture, vTexCoord).rgb;
 
-	vec2 North = vec2(v_vTexCoord.x, v_vTexCoord.y + Pixel.y);
-	vec2 South = vec2(v_vTexCoord.x, v_vTexCoord.y - Pixel.y);
-	vec2 West = vec2(v_vTexCoord.x + Pixel.x, v_vTexCoord.y);
-	vec2 East = vec2(v_vTexCoord.x - Pixel.x, v_vTexCoord.y);
+	vec2 North = vec2(vTexCoord.x, vTexCoord.y + Pixel.y);
+	vec2 South = vec2(vTexCoord.x, vTexCoord.y - Pixel.y);
+	vec2 West = vec2(vTexCoord.x + Pixel.x, vTexCoord.y);
+	vec2 East = vec2(vTexCoord.x - Pixel.x, vTexCoord.y);
 
 	// Choose luma coefficient
 	vec3 LumaCoefficient = vec3(0.2126, 0.7152, 0.0722); // BT.709 Luma
@@ -64,11 +64,11 @@ void main()
 	HighPass = (HighPass + Luma(Source, LumaCoefficient)) * 0.5;
 
 	// Sharpen strength
-	HighPass = mix(0.5, HighPass, u_fStrength);
+	HighPass = mix(0.5, HighPass, uStrength);
 
 	// Clamping sharpen
-	HighPass = min(HighPass, u_fClamp);
-	HighPass = max(HighPass, 1.0 - u_fClamp);
+	HighPass = min(HighPass, uClamp);
+	HighPass = max(HighPass, 1.0 - uClamp);
 
 	vec3 Sharpen = vec3(
 		Overlay(Source.r, HighPass),

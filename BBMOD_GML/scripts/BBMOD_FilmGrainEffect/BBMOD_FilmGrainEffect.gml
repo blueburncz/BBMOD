@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_FilmGrainEffect([_strength])
 ///
@@ -12,8 +12,8 @@ function BBMOD_FilmGrainEffect(_strength = 0.1): BBMOD_PostProcessEffect() const
 	/// @var {Real} The strength of the effect. Default value is 0.1.
 	Strength = _strength;
 
-	static __uStrength = shader_get_uniform(BBMOD_ShFilmGrain, "u_fStrength");
-	static __uTime = shader_get_uniform(BBMOD_ShFilmGrain, "u_fTime");
+	static __uStrength = shader_get_uniform(BBMOD_ShFilmGrain, "uStrength");
+	static __uTime = shader_get_uniform(BBMOD_ShFilmGrain, "uTime");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

@@ -6,7 +6,7 @@
   "name":"BBMOD_PhysicsConstraint",
   "parent":{
     "name":"Constraints",
-    "path":"folders/BBMOD_WIP/Physics/Constraints.yy",
+    "path":"folders/BBMOD/3_Physics/Constraints.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

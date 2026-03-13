@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShSSAOBlur",
   "name":"BBMOD_ShSSAOBlur",
   "parent":{
-    "name":"Shaders",
-    "path":"folders/BBMOD/Core/Shaders.yy",
+    "name":"SSAO",
+    "path":"folders/BBMOD/2_Rendering/Shaders/SSAO.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

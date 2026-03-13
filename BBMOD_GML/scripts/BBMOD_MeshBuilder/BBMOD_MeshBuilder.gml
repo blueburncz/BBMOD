@@ -1,4 +1,4 @@
-/// @module OBJImporter
+/// @module Extras.OBJImporter
 
 /// @func BBMOD_MeshBuilder([_primitiveType])
 ///
@@ -252,7 +252,7 @@ function BBMOD_MeshBuilder(_primitiveType = pr_trianglelist) constructor
 			_tY -= (_nY * _nDotT);
 			_tZ -= (_nZ * _nDotT);
 
-			var _tSubNorm = 1.0 / sqrt((_tX * _tX) + (_tY * _tY) + (_tZ * _tZ));
+			var _tSubNorm = 1.0 / point_distance_3d(0, 0, 0, _tX, _tY, _tZ);
 
 			_t.X = _tX * _tSubNorm;
 			_t.Y = _tY * _tSubNorm;

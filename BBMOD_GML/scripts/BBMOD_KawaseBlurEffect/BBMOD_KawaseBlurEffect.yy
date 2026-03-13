@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_KawaseBlurEffect",
   "parent":{
-    "name":"KawaseBlur",
-    "path":"folders/BBMOD/PostProcessing/KawaseBlur.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

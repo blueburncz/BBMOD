@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_ParticleSystem(_model, _material, _particleCount[, _batchSize])
 ///

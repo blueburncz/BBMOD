@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /* beautify ignore:start */
 
@@ -11,13 +11,13 @@
 #macro BBMOD_RELEASE_MAJOR 3
 
 /// @macro {Real} The minor version number of this BBMOD release.
-#macro BBMOD_RELEASE_MINOR 22
+#macro BBMOD_RELEASE_MINOR 99
 
 /// @macro {Real} The patch version number of this BBMOD release.
-#macro BBMOD_RELEASE_PATCH 5
+#macro BBMOD_RELEASE_PATCH 0
 
 /// @macro {String} The version of this BBMOD release as a string ("major.minor.patch" format).
-#macro BBMOD_RELEASE_STRING $"{BBMOD_RELEASE_MAJOR}.{BBMOD_RELEASE_MINOR}.{BBMOD_RELEASE_PATCH}"
+#macro BBMOD_RELEASE_STRING BBMOD_RELEASE_MAJOR"."BBMOD_RELEASE_MINOR"."BBMOD_RELEASE_PATCH""
 
 ////////////////////////////////////////////////////////////////////////////////
 //

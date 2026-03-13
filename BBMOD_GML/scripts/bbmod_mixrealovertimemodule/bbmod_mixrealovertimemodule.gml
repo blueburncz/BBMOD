@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_MixRealOverTimeModule([_property[, _from[, _to[, _duration]]]])
 ///

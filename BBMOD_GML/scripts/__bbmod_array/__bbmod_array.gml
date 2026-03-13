@@ -1,4 +1,4 @@
-/// @module Core
+/// @module Base
 
 /// @func bbmod_array_clone(_array)
 ///

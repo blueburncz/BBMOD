@@ -6,7 +6,7 @@
   "name":"BBMOD_BaseCamera",
   "parent":{
     "name":"Camera",
-    "path":"folders/BBMOD/Core/Camera.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Camera.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

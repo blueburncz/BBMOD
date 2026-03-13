@@ -1,4 +1,4 @@
-/// @module Raycasting
+/// @module Extras.Raycasting
 
 /// @enum Enumeration of frustum planes.
 enum BBMOD_EFrustumPlane
@@ -59,12 +59,22 @@ function BBMOD_FrustumCollider(): BBMOD_Collider() constructor
 		var _col4 = new BBMOD_Vec3(_vp[3], _vp[7], _vp[11]);
 
 		// Find plane magnitudes
-		Planes[BBMOD_EFrustumPlane.Left].Normal = _col4.Add(_col1);
-		Planes[BBMOD_EFrustumPlane.Right].Normal = _col4.Sub(_col1);
-		Planes[BBMOD_EFrustumPlane.Bottom].Normal = _col4.Add(_col2);
-		Planes[BBMOD_EFrustumPlane.Top].Normal = _col4.Sub(_col2);
+		// Planes[BBMOD_EFrustumPlane.Left].Normal = _col4.Add(_col1);
+		Planes[BBMOD_EFrustumPlane.Left].Normal = new BBMOD_Vec3(_col4.X + _col1.X, _col4.Y + _col1.Y, _col4.Z
+			+ _col1.Z);
+		// Planes[BBMOD_EFrustumPlane.Right].Normal = _col4.Sub(_col1);
+		Planes[BBMOD_EFrustumPlane.Right].Normal = new BBMOD_Vec3(_col4.X - _col1.X, _col4.Y - _col1.Y, _col4.Z
+			- _col1.Z);
+		// Planes[BBMOD_EFrustumPlane.Bottom].Normal = _col4.Add(_col2);
+		Planes[BBMOD_EFrustumPlane.Bottom].Normal = new BBMOD_Vec3(_col4.X + _col2.X, _col4.Y + _col2.Y, _col4.Z
+			+ _col2.Z);
+		// Planes[BBMOD_EFrustumPlane.Top].Normal = _col4.Sub(_col2);
+		Planes[BBMOD_EFrustumPlane.Top].Normal = new BBMOD_Vec3(_col4.X - _col2.X, _col4.Y - _col2.Y, _col4.Z
+			- _col2.Z);
 		Planes[BBMOD_EFrustumPlane.Near].Normal = /*_col4.Add(*/ _col3 /*)*/ ;
-		Planes[BBMOD_EFrustumPlane.Far].Normal = _col4.Sub(_col3);
+		// Planes[BBMOD_EFrustumPlane.Far].Normal = _col4.Sub(_col3);
+		Planes[BBMOD_EFrustumPlane.Far].Normal = new BBMOD_Vec3(_col4.X - _col3.X, _col4.Y - _col3.Y, _col4.Z
+			- _col3.Z);
 
 		// Find plane distances
 		var _vp12 = _vp[12];
@@ -84,8 +94,13 @@ function BBMOD_FrustumCollider(): BBMOD_Collider() constructor
 		{
 			with(Planes[i])
 			{
-				var _n = 1.0 / Normal.Length();
-				Normal = Normal.Scale(_n);
+				// var _n = 1.0 / Normal.Length();
+				// Normal = Normal.Scale(_n);
+				var _nX = Normal.X;
+				var _nY = Normal.Y;
+				var _nZ = Normal.Z;
+				var _n = 1.0 / point_distance_3d(0, 0, 0, _nX, _nY, _nZ);
+				Normal = new BBMOD_Vec3(_nX * _n, _nY * _n, _nZ * _n);
 				Distance *= _n;
 			}
 		}
@@ -123,11 +138,25 @@ function BBMOD_FrustumCollider(): BBMOD_Collider() constructor
 	// Source: https://donw.io/post/frustum-point-extraction/
 	static __intersectPlanes = function (_p0, _p1, _p2)
 	{
-		var bxc = _p1.Normal.Cross(_p2.Normal);
-		var cxa = _p2.Normal.Cross(_p0.Normal);
-		var axb = _p0.Normal.Cross(_p1.Normal);
-		var r = bxc.Scale(-_p0.Distance).Sub(cxa.Scale(_p1.Distance)).Sub(axb.Scale(_p2.Distance));
-		return r.Scale(1.0 / _p0.Normal.Dot(bxc));
+		// var bxc = _p1.Normal.Cross(_p2.Normal);
+		var bxcX = _p1.Normal.Y * _p2.Normal.Z - _p1.Normal.Z * _p2.Normal.Y;
+		var bxcY = _p1.Normal.Z * _p2.Normal.X - _p1.Normal.X * _p2.Normal.Z;
+		var bxcZ = _p1.Normal.X * _p2.Normal.Y - _p1.Normal.Y * _p2.Normal.X;
+		// var cxa = _p2.Normal.Cross(_p0.Normal);
+		var cxaX = _p2.Normal.Y * _p0.Normal.Z - _p2.Normal.Z * _p0.Normal.Y;
+		var cxaY = _p2.Normal.Z * _p0.Normal.X - _p2.Normal.X * _p0.Normal.Z;
+		var cxaZ = _p2.Normal.X * _p0.Normal.Y - _p2.Normal.Y * _p0.Normal.X;
+		// var axb = _p0.Normal.Cross(_p1.Normal);
+		var axbX = _p0.Normal.Y * _p1.Normal.Z - _p0.Normal.Z * _p1.Normal.Y;
+		var axbY = _p0.Normal.Z * _p1.Normal.X - _p0.Normal.X * _p1.Normal.Z;
+		var axbZ = _p0.Normal.X * _p1.Normal.Y - _p0.Normal.Y * _p1.Normal.X;
+		// var r = bxc.Scale(-_p0.Distance).Sub(cxa.Scale(_p1.Distance)).Sub(axb.Scale(_p2.Distance));
+		var rX = bxcX * -_p0.Distance - cxaX * _p1.Distance - axbX * _p2.Distance;
+		var rY = bxcY * -_p0.Distance - cxaY * _p1.Distance - axbY * _p2.Distance;
+		var rZ = bxcZ * -_p0.Distance - cxaZ * _p1.Distance - axbZ * _p2.Distance;
+		// return r.Scale(1.0 / _p0.Normal.Dot(bxc));
+		var _scale = 1.0 / (_p0.Normal.X * bxcX + _p0.Normal.Y * bxcY + _p0.Normal.Z * bxcZ);
+		return new BBMOD_Vec3(rX * _scale, rY * _scale, rZ * _scale);
 	};
 
 	/// @func GetCorners()
@@ -165,7 +194,9 @@ function BBMOD_FrustumCollider(): BBMOD_Collider() constructor
 		for (var i = 0; i < BBMOD_EFrustumPlane.SIZE; ++i)
 		{
 			var _plane = Planes[i];
-			if ((_point.Dot(_plane.Normal) + _plane.Distance) < 0.0)
+			// if ((_point.Dot(_plane.Normal) + _plane.Distance) < 0.0)
+			if ((_point.X * _plane.Normal.X + _point.Y * _plane.Normal.Y + _point.Z * _plane.Normal.Z + _plane
+					.Distance) < 0.0)
 			{
 				return false;
 			}
@@ -179,12 +210,71 @@ function BBMOD_FrustumCollider(): BBMOD_Collider() constructor
 		for (var i = 0; i < BBMOD_EFrustumPlane.SIZE; ++i)
 		{
 			var _plane = Planes[i];
-			if ((_sphere.Position.Dot(_plane.Normal) + _plane.Distance) < -_sphere.Radius)
+			// if ((_sphere.Position.Dot(_plane.Normal) + _plane.Distance) < -_sphere.Radius)
+			if ((_sphere.Position.X * _plane.Normal.X + _sphere.Position.Y * _plane.Normal.Y + _sphere.Position
+					.Z * _plane.Normal.Z + _plane.Distance) < -_sphere.Radius)
 			{
 				return false;
 			}
 		}
 		return true;
+	};
+
+	static TestCapsule = function (_capsule)
+	{
+		// Test capsule by testing both endpoints as spheres
+		// If either sphere is inside frustum, capsule intersects
+		for (var i = 0; i < BBMOD_EFrustumPlane.SIZE; ++i)
+		{
+			var _plane = Planes[i];
+			var _distA = _capsule.PointA.X * _plane.Normal.X + _capsule.PointA.Y * _plane.Normal.Y
+				+ _capsule.PointA.Z * _plane.Normal.Z + _plane.Distance;
+			var _distB = _capsule.PointB.X * _plane.Normal.X + _capsule.PointB.Y * _plane.Normal.Y
+				+ _capsule.PointB.Z * _plane.Normal.Z + _plane.Distance;
+
+			// If both endpoints (including radius) are outside this plane, capsule is outside frustum
+			if (_distA < -_capsule.Radius && _distB < -_capsule.Radius)
+			{
+				return false;
+			}
+		}
+		return true;
+	};
+
+	static TestTriangle = function (_triangle)
+	{
+		gml_pragma("forceinline");
+		return _triangle.TestFrustum(self);
+	};
+
+	static TestOBB = function (_obb)
+	{
+		gml_pragma("forceinline");
+		return _obb.TestFrustum(self);
+	};
+
+	static TestLineSegment = function (_segment)
+	{
+		gml_pragma("forceinline");
+		return _segment.TestFrustum(self);
+	};
+
+	static TestCylinder = function (_cylinder)
+	{
+		gml_pragma("forceinline");
+		return _cylinder.TestFrustum(self);
+	};
+
+	static TestEllipsoid = function (_ellipsoid)
+	{
+		gml_pragma("forceinline");
+		return _ellipsoid.TestFrustum(self);
+	};
+
+	static TestCone = function (_cone)
+	{
+		gml_pragma("forceinline");
+		return _cone.TestFrustum(self);
 	};
 
 	static DrawDebug = function (_color = c_white, _alpha = 1.0)

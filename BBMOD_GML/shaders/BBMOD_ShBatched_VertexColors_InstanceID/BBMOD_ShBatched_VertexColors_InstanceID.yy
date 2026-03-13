@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShBatched_VertexColors_InstanceID",
+  "name":"BBMOD_ShBatched_VertexColors_InstanceID",
+  "parent":{
+    "name":"Batched",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Batched.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -1,8 +1,8 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_ParticleMaterial([_shader])
 ///
-/// @extends BBMOD_DefaultMaterial
+/// @extends BBMOD_Material
 ///
 /// @desc A material that can be used for rendering particles.
 ///
@@ -11,27 +11,10 @@
 /// like to use {@link BBMOD_Material.set_shader} to specify shaders used in
 /// specific render passes.
 ///
-/// @see BBMOD_ParticleShader
-function BBMOD_ParticleMaterial(_shader = undefined): BBMOD_DefaultMaterial(_shader) constructor
-{
-	static DefaultMaterial_copy = copy;
-
-	/// @var {Real} Distance over which the particle smoothly disappears when
-	/// getting closer to geometry rendered in the depth buffer. Use values less
-	/// or equal to 0 to disable the effect. Default value is 0.
-	SoftDistance = 0.0;
-
-	static copy = function (_dest)
-	{
-		DefaultMaterial_copy(_dest);
-		_dest.SoftDistance = SoftDistance;
-		return self;
-	};
-
-	static clone = function ()
-	{
-		var _clone = new BBMOD_ParticleMaterial();
-		copy(_clone);
-		return _clone;
-	};
-}
+/// @see BBMOD_Material
+/// @see BBMOD_Shader
+///
+/// @deprecated This struct is obsolete. Please use {@link BBMOD_Material}
+/// instead. All properties and methods previously in BBMOD_ParticleMaterial
+/// are now available directly in BBMOD_Material.
+function BBMOD_ParticleMaterial(_shader = undefined): BBMOD_Material(_shader) constructor {}

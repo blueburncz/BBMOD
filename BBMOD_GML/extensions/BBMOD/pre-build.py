@@ -30,6 +30,13 @@ MODEL_EXTENSIONS = [
 INCLUDE_PATTERN = re.compile(r"// +@include +(\w+)\n")
 ENDINCLUDE_PATTERN = re.compile(r"// +@endinclude\n")
 
+# Custom preprocessor directives
+DEFINE_PATTERN = re.compile(r"// +@define +(\w+)")
+IFDEF_PATTERN = re.compile(r"// +@ifdef +(\w+)")
+IFNDEF_PATTERN = re.compile(r"// +@ifndef +(\w+)")
+ELSE_PATTERN = re.compile(r"// +@else")
+ENDIF_PATTERN = re.compile(r"// +@endif")
+
 
 # ==============================================================================
 # Args helpers
@@ -115,7 +122,128 @@ def safe_close(delay_ms=0):
 # ==============================================================================
 # Shader expansion logic
 # ==============================================================================
-def expand_shader(source_code, included_files, depth=0):
+def get_line_indent(source_code, pos):
+    """Get indentation of the line containing pos."""
+    # Find start of line
+    line_start = source_code.rfind('\n', 0, pos) + 1
+    # Count leading whitespace
+    indent = ""
+    for i in range(line_start, pos):
+        if source_code[i] in ' \t':
+            indent += source_code[i]
+        else:
+            break
+    return indent
+
+
+def indent_code(code, indent):
+    """Apply indentation to each non-empty line of code, preserving relative indentation."""
+    if not indent:
+        return code
+
+    lines = code.split('\n')
+
+    # Find minimum indentation level (ignoring empty lines)
+    min_indent = None
+    for line in lines:
+        if line.strip():  # Non-empty line
+            # Count leading whitespace
+            leading = len(line) - len(line.lstrip())
+            if min_indent is None or leading < min_indent:
+                min_indent = leading
+
+    # If all lines are empty, just return as-is
+    if min_indent is None:
+        return code
+
+    # Remove base indentation and apply new indentation
+    result = []
+    for line in lines:
+        if line.strip():  # Non-empty line
+            # Remove base indentation, keep relative indentation
+            dedented = line[min_indent:] if len(line) > min_indent else line.lstrip()
+            result.append(indent + dedented.rstrip())  # rstrip to remove trailing whitespace
+        else:  # Empty line - no indentation
+            result.append('')
+
+    return '\n'.join(result)
+
+
+def preprocess_shader(source_code, defines=None):
+    """Process custom preprocessor directives (// @ifdef, etc.)"""
+    if defines is None:
+        defines = set()
+
+    # First pass: collect defines from // @define directives
+    for match in DEFINE_PATTERN.finditer(source_code):
+        defines.add(match.group(1))
+
+    lines = source_code.split('\n')
+    result = []
+    condition_stack = []  # Stack of (condition_met, else_encountered)
+
+    for line in lines:
+        # Check for @define directive (already collected, keep in output)
+        if DEFINE_PATTERN.match(line):
+            result.append(line)
+            continue
+
+        # Check for @ifdef
+        ifdef_match = IFDEF_PATTERN.match(line)
+        if ifdef_match:
+            define_name = ifdef_match.group(1)
+            is_defined = define_name in defines
+            condition_stack.append((is_defined, False))
+            continue
+
+        # Check for @ifndef
+        ifndef_match = IFNDEF_PATTERN.match(line)
+        if ifndef_match:
+            define_name = ifndef_match.group(1)
+            is_not_defined = define_name not in defines
+            condition_stack.append((is_not_defined, False))
+            continue
+
+        # Check for @else
+        if ELSE_PATTERN.match(line):
+            if condition_stack:
+                condition_met, _ = condition_stack.pop()
+                # Flip the condition for else block
+                condition_stack.append((not condition_met, True))
+            continue
+
+        # Check for @endif
+        if ENDIF_PATTERN.match(line):
+            if condition_stack:
+                condition_stack.pop()
+            continue
+
+        # Determine if we should include this line
+        include_line = True
+        for condition_met, _ in condition_stack:
+            if not condition_met:
+                include_line = False
+                break
+
+        if include_line:
+            result.append(line)
+
+    # Collapse consecutive blank lines
+    filtered_result = []
+    prev_blank = False
+    for line in result:
+        is_blank = line.strip() == ''
+        if not (is_blank and prev_blank):
+            filtered_result.append(line)
+        prev_blank = is_blank
+
+    return '\n'.join(filtered_result)
+
+
+def expand_shader(source_code, included_files, depth=0, defines=None):
+    if defines is None:
+        defines = set()
+
     search_pos = 0
 
     while True:
@@ -123,10 +251,15 @@ def expand_shader(source_code, included_files, depth=0):
         if not include_match:
             break
 
+        # Get indentation of the @include line
+        indent = get_line_indent(source_code, include_match.start())
+
         if depth == 0:
             prefix = source_code[: include_match.span()[1]]
         else:
-            prefix = source_code[: include_match.start()]
+            # For nested includes, don't include the indent in prefix
+            # (it will be added by indent_code)
+            prefix = source_code[: include_match.start() - len(indent)]
 
         endinclude_match = ENDINCLUDE_PATTERN.search(
             source_code, pos=include_match.span()[1]
@@ -150,21 +283,29 @@ def expand_shader(source_code, included_files, depth=0):
             if os.path.exists(include_path):
                 print("  " * (depth + 1) + f"Including '{include_name}.glsl'...")
                 with open(include_path, "r", encoding="utf-8") as include_file:
-                    included_code = include_file.read()
+                    raw_code = include_file.read()
 
-                included_code = (
-                    expand_shader(included_code, included_files, depth + 1).strip()
-                    + "\n"
-                )
+                # Preprocess custom directives first (pass defines from parent)
+                preprocessed_code = preprocess_shader(raw_code, defines.copy())
+
+                # Recursively expand nested includes (pass defines down)
+                expanded_code = expand_shader(preprocessed_code, included_files, depth + 1, defines).strip()
+
+                # Apply indentation to the included code
+                # Add blank line before included content at depth 0 for readability
+                if depth == 0:
+                    included_code = "\n" + indent_code(expanded_code, indent) + "\n"
+                else:
+                    included_code = indent_code(expanded_code, indent) + "\n"
             else:
                 print(
                     "  " * (depth + 1)
                     + f"ERROR: File '{include_name}.glsl' does not exist!"
                 )
-                included_code = f"#error Failed to include '{include_name}.glsl'!\n"
+                included_code = indent + f"#error Failed to include '{include_name}.glsl'!\n"
 
             if depth == 0:
-                included_code += "// @endinclude\n"
+                included_code += indent + "// @endinclude\n"
         else:
             print(
                 "  " * depth + f"Skipping '{include_name}.glsl' (already included)..."
@@ -231,8 +372,13 @@ def main_program():
                 with open(file_path, "r", encoding="utf-8") as shader_file:
                     original_code = shader_file.read()
 
+                # First, preprocess custom directives (/// @ifdef, etc.)
+                defines = set()
+                preprocessed_code = preprocess_shader(original_code, defines)
+
+                # Then expand includes
                 included_files = set()
-                expanded_code = expand_shader(original_code, included_files)
+                expanded_code = expand_shader(preprocessed_code, included_files, depth=0, defines=defines)
 
                 if original_code != expanded_code:
                     with open(file_path, "w", encoding="utf-8") as shader_file:

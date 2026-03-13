@@ -1,4 +1,4 @@
-/// @module Gizmo
+/// @module Core
 
 /// @enum Enumeration of edit spaces.
 enum BBMOD_EEditSpace
@@ -66,14 +66,14 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 
 	if (Models == undefined)
 	{
-		var _shaderSelect = new BBMOD_BaseShader(
+		var _shaderSelect = new BBMOD_Shader(
 			BBMOD_ShGizmoSelect, BBMOD_VFORMAT_DEFAULT);
-		var _materialSelect = new BBMOD_BaseMaterial(_shaderSelect);
+		var _materialSelect = new BBMOD_Material(_shaderSelect);
 		_materialSelect.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 1);
 		MaterialsSelect = [_materialSelect];
 
-		var _shader = new BBMOD_DefaultShader(BBMOD_ShGizmo, BBMOD_VFORMAT_DEFAULT);
-		var _material = new BBMOD_DefaultMaterial(_shader);
+		var _shader = new BBMOD_Shader(BBMOD_ShGizmo, BBMOD_VFORMAT_DEFAULT);
+		var _material = new BBMOD_Material(_shader);
 		_material.BaseOpacity = sprite_get_texture(BBMOD_SprGizmo, 0);
 
 		var _modelMove = new BBMOD_Model("Data/BBMOD/Models/GizmoMove.bbmod")

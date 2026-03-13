@@ -4,7 +4,7 @@
   "name":"BBMOD_ShExtractSplatmapLayer",
   "parent":{
     "name":"Shaders",
-    "path":"folders/BBMOD/Terrain/Shaders.yy",
+    "path":"folders/BBMOD/1_Core/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -5,6 +5,39 @@
 /// @desc A struct containing the information needed to create a six degrees of
 /// freedom (6DOF) physics constraint.
 ///
+/// @example
+/// ```gml
+/// // Create a customizable joint with limits and springs
+/// var _bodyAInfo = new BBMOD_RigidBodyInfo();
+/// _bodyAInfo.Shape = boxShape;
+/// _bodyAInfo.Mass = 10.0;
+/// _bodyAInfo.Position = new BBMOD_Vec3(0, 0, 5);
+/// var _bodyA = physicsWorld.create_rigid_body(_bodyAInfo);
+///
+/// var _bodyBInfo = new BBMOD_RigidBodyInfo();
+/// _bodyBInfo.Shape = boxShape;
+/// _bodyBInfo.Mass = 10.0;
+/// _bodyBInfo.Position = new BBMOD_Vec3(0, 0, 3);
+/// var _bodyB = physicsWorld.create_rigid_body(_bodyBInfo);
+///
+/// // Create a 6DOF constraint with custom limits
+/// var _sixDOFInfo = new BBMOD_SixDOFPhysicsConstraintInfo();
+/// _sixDOFInfo.RigidBody1 = _bodyA;
+/// _sixDOFInfo.RigidBody2 = _bodyB;
+/// _sixDOFInfo.Frame1 = new BBMOD_Matrix();
+/// _sixDOFInfo.Frame2 = new BBMOD_Matrix();
+///
+/// // Set linear limits (movement constraints)
+/// _sixDOFInfo.LinearLowerLimit = new BBMOD_Vec3(-1, -1, 0);
+/// _sixDOFInfo.LinearUpperLimit = new BBMOD_Vec3(1, 1, 2);
+///
+/// // Set angular limits (rotation constraints)
+/// _sixDOFInfo.AngularLowerLimit = new BBMOD_Vec3(-pi/4, -pi/4, -pi/4);
+/// _sixDOFInfo.AngularUpperLimit = new BBMOD_Vec3(pi/4, pi/4, pi/4);
+///
+/// var _joint = physicsWorld.create_constraint(_sixDOFInfo);
+/// ```
+///
 /// @see BBMOD_PhysicsConstraint
 /// @see BBMOD_PhysicsWorld.create_constraint
 function BBMOD_SixDOFPhysicsConstraintInfo(): BBMOD_PhysicsConstraintInfo() constructor

@@ -5,6 +5,24 @@
 /// @desc A struct containing the information needed to create a physics
 /// capsule shape.
 ///
+/// @example
+/// ```gml
+/// // Create a capsule shape for a character (radius 0.4m, height 1.8m)
+/// var _capsuleInfo = new BBMOD_CapsulePhysicsShapeInfo();
+/// _capsuleInfo.UpAxis = BBMOD_EAxis.Z; // Capsule stands upright
+/// _capsuleInfo.Radius = 0.4;
+/// _capsuleInfo.Height = 1.8;
+/// var _capsuleShape = physicsEngine.create_physics_shape(_capsuleInfo);
+///
+/// // Create a character controller rigid body
+/// var _rigidBodyInfo = new BBMOD_RigidBodyInfo();
+/// _rigidBodyInfo.Shape = _capsuleShape;
+/// _rigidBodyInfo.Mass = 75.0; // 75kg character
+/// _rigidBodyInfo.Position = new BBMOD_Vec3(0, 0, 1);
+/// var _character = physicsWorld.create_rigid_body(_rigidBodyInfo);
+/// _character.set_angular_factor(new BBMOD_Vec3(0, 0, 0)); // Prevent rotation
+/// ```
+///
 /// @see BBMOD_PhysicsShape
 /// @see BBMOD_PhysicsWorld.create_physics_shape
 function BBMOD_CapsulePhysicsShapeInfo(): BBMOD_PhysicsShapeInfo() constructor

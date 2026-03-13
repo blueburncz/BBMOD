@@ -1,31 +1,31 @@
-/// @module DeferredRenderer
+/// @module Rendering
 
-/// @macro {Struct.BBMOD_DefaultShader} A shader for rendering models into the
+/// @macro {Struct.BBMOD_Shader} A shader for rendering models into the
 /// G-buffer.
 #macro BBMOD_SHADER_GBUFFER __bbmod_shader_gbuffer()
 
-/// @macro {Struct.BBMOD_DefaultMaterial} An opaque material that can be used
+/// @macro {Struct.BBMOD_Material} An opaque material that can be used
 /// with {@link BBMOD_DeferredRenderer}.
 #macro BBMOD_MATERIAL_DEFERRED __bbmod_material_deferred()
 
-/// @macro {Struct.BBMOD_TerrainShader} A shader for rendering terrain into
+/// @macro {Struct.BBMOD_Shader} A shader for rendering terrain into
 /// the G-buffer. Supports 3 terrain layers at most!
 #macro BBMOD_SHADER_TERRAIN_GBUFFER __bbmod_shader_terrain_gbuffer()
 
-/// @macro {Struct.BBMOD_TerrainMaterial} A terrain material that can be used
+/// @macro {Struct.BBMOD_Material} A terrain material that can be used
 /// with {@link BBMOD_DeferredRenderer}.
 #macro BBMOD_MATERIAL_TERRAIN_DEFERRED __bbmod_material_terrain_deferred()
 
 function __bbmod_shader_gbuffer()
 {
 	gml_pragma("forceinline");
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShGBuffer, BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShGBufferAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShGBufferBatched, BBMOD_VFORMAT_DEFAULT_BATCHED)
-		.add_variant(BBMOD_ShGBufferColor, BBMOD_VFORMAT_DEFAULT_COLOR)
-		.add_variant(BBMOD_ShGBufferColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
-		.add_variant(BBMOD_ShGBufferColorBatched, BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
-		.add_variant(BBMOD_ShGBufferSprite, BBMOD_VFORMAT_DEFAULT_SPRITE);
+	static _shader = new BBMOD_Shader(BBMOD_ShStatic_Deferred, BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShAnimated_Deferred, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShBatched_Deferred, BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShStatic_VertexColors_Deferred, BBMOD_VFORMAT_DEFAULT_COLOR)
+		.add_variant(BBMOD_ShAnimated_VertexColors_Deferred, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
+		.add_variant(BBMOD_ShBatched_VertexColors_Deferred, BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShSprite_Deferred, BBMOD_VFORMAT_DEFAULT_SPRITE);
 	return _shader;
 }
 
@@ -35,7 +35,7 @@ function __bbmod_material_deferred()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		_material = new BBMOD_DefaultMaterial();
+		_material = new BBMOD_Material();
 		_material.Persistent = true;
 		_material.set_shader(BBMOD_ERenderPass.GBuffer, BBMOD_SHADER_GBUFFER);
 	}
@@ -47,7 +47,7 @@ function __bbmod_shader_terrain_gbuffer()
 	static _shader = undefined;
 	if (_shader == undefined)
 	{
-		_shader = new BBMOD_TerrainShader(BBMOD_ShGBufferTerrain, BBMOD_VFORMAT_DEFAULT);
+		_shader = new BBMOD_Shader(BBMOD_ShTerrain_Deferred, BBMOD_VFORMAT_DEFAULT);
 		_shader.LayersPerDrawCall = 3;
 		_shader.MaxLayers = 3;
 	}
@@ -59,7 +59,7 @@ function __bbmod_material_terrain_deferred()
 	static _material = undefined;
 	if (_material == undefined)
 	{
-		_material = new BBMOD_TerrainMaterial();
+		_material = new BBMOD_Material();
 		_material.Persistent = true;
 		_material.set_shader(BBMOD_ERenderPass.GBuffer, BBMOD_SHADER_TERRAIN_GBUFFER);
 		_material.set_shader(BBMOD_ERenderPass.ReflectionCapture, BBMOD_SHADER_TERRAIN);

@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShLumaSharpen",
   "name":"BBMOD_ShLumaSharpen",
   "parent":{
-    "name":"LumaSharpen",
-    "path":"folders/BBMOD/PostProcessing/LumaSharpen.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

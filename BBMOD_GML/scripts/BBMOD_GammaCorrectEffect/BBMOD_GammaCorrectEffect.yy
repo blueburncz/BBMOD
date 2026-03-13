@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_GammaCorrectEffect",
   "parent":{
-    "name":"GammaCorrect",
-    "path":"folders/BBMOD/PostProcessing/GammaCorrect.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/PostProcessing.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

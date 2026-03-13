@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShTerrain_Forward",
+  "name":"BBMOD_ShTerrain_Forward",
+  "parent":{
+    "name":"Terrain",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Terrain.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

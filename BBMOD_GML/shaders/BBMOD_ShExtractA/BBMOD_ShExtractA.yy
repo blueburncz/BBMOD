@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShExtractA",
+  "name":"BBMOD_ShExtractA",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/1_Core/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

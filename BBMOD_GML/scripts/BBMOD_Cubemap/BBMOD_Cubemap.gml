@@ -199,7 +199,7 @@ function BBMOD_Cubemap(_resolution) constructor
 		camera_apply(__camera2D);
 		shader_set(BBMOD_ShCubemapToOctahedron);
 		shader_set_uniform_f(
-			shader_get_uniform(BBMOD_ShCubemapToOctahedron, "u_vTexel"),
+			shader_get_uniform(BBMOD_ShCubemapToOctahedron, "uTexel"),
 			1 / Resolution,
 			1 / Resolution);
 		draw_surface_stretched(Surface, 0, 0, Resolution, Resolution);
@@ -243,7 +243,7 @@ function BBMOD_Cubemap(_resolution) constructor
 		shader_set_uniform_f(
 			shader_get_uniform(BBMOD_ShPrefilterSpecular, "bbmod_HDR"),
 			_hdr ? 1.0 : 0.0);
-		var _uRoughness = shader_get_uniform(BBMOD_ShPrefilterSpecular, "u_fRoughness");
+		var _uRoughness = shader_get_uniform(BBMOD_ShPrefilterSpecular, "uRoughness");
 		for (var i = 0; i <= 6; ++i)
 		{
 			shader_set_uniform_f(_uRoughness, i / 6);

@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_VignetteEffect([_strength[, _color]])
 ///
@@ -18,8 +18,8 @@ function BBMOD_VignetteEffect(_strength = 1.0, _color = c_black): BBMOD_PostProc
 	/// `c_black`.
 	Color = _color;
 
-	static __uStrength = shader_get_uniform(BBMOD_ShVignette, "u_fStrength");
-	static __uColor = shader_get_uniform(BBMOD_ShVignette, "u_vColor");
+	static __uStrength = shader_get_uniform(BBMOD_ShVignette, "uStrength");
+	static __uColor = shader_get_uniform(BBMOD_ShVignette, "uColor");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"LensDirt",
-    "path":"folders/BBMOD/PostProcessing/LensDirt.yy",
+    "name":"Sprites",
+    "path":"folders/BBMOD/2_Rendering/Sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

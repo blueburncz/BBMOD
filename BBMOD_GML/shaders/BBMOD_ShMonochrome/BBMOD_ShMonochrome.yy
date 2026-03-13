@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShMonochrome",
   "name":"BBMOD_ShMonochrome",
   "parent":{
-    "name":"Monochrome",
-    "path":"folders/BBMOD/PostProcessing/Monochrome.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

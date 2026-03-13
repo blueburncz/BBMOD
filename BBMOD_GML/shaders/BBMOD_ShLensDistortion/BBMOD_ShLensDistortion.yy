@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShLensDistortion",
   "name":"BBMOD_ShLensDistortion",
   "parent":{
-    "name":"LensDistortion",
-    "path":"folders/BBMOD/PostProcessing/LensDistortion.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

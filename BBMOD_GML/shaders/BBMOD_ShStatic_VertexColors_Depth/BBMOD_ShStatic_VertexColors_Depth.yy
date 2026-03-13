@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShStatic_VertexColors_Depth",
+  "name":"BBMOD_ShStatic_VertexColors_Depth",
+  "parent":{
+    "name":"Static",
+    "path":"folders/BBMOD/2_Rendering/Shaders/Static.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

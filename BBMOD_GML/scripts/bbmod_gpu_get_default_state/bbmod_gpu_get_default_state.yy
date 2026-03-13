@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"bbmod_gpu_get_default_state",
   "parent":{
-    "name":"Rendering",
-    "path":"folders/BBMOD/Core/Rendering.yy",
+    "name":"Utils",
+    "path":"folders/BBMOD/1_Core/Utils.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

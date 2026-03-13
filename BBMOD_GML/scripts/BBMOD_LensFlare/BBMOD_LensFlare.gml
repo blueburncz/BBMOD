@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @var {Array<Struct.BBMOD_LensFlare>}
 /// @private
@@ -88,20 +88,20 @@ function BBMOD_LensFlare(
 	/// @private
 	__elements = [];
 
-	static __uDepthTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texDepth");
-	static __uStarburstTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texStarburst");
-	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensFlare, "u_texLensDirt");
-	static __uLightPos = shader_get_uniform(BBMOD_ShLensFlare, "u_vLightPos");
-	static __uInvRes = shader_get_uniform(BBMOD_ShLensFlare, "u_vInvRes");
-	static __uColor = shader_get_uniform(BBMOD_ShLensFlare, "u_vColor");
-	static __uFadeOut = shader_get_uniform(BBMOD_ShLensFlare, "u_fFadeOut");
-	static __uClipFar = shader_get_uniform(BBMOD_ShLensFlare, "u_fClipFar");
-	static __uDepthThreshold = shader_get_uniform(BBMOD_ShLensFlare, "u_fDepthThreshold");
-	static __uStarburstUVs = shader_get_uniform(BBMOD_ShLensFlare, "u_vStarburstUVs");
-	static __uStarburstStrength = shader_get_uniform(BBMOD_ShLensFlare, "u_fStarburstStrength");
-	static __uStarburstRot = shader_get_uniform(BBMOD_ShLensFlare, "u_fStarburstRot");
-	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensFlare, "u_vLensDirtUVs");
-	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensFlare, "u_fLensDirtStrength");
+	static __uDepthTex = shader_get_sampler_index(BBMOD_ShLensFlare, "uDepth");
+	static __uStarburstTex = shader_get_sampler_index(BBMOD_ShLensFlare, "uStarburst");
+	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensFlare, "uLensDirt");
+	static __uLightPos = shader_get_uniform(BBMOD_ShLensFlare, "uLightPos");
+	static __uInvRes = shader_get_uniform(BBMOD_ShLensFlare, "uInvRes");
+	static __uColor = shader_get_uniform(BBMOD_ShLensFlare, "uColor");
+	static __uFadeOut = shader_get_uniform(BBMOD_ShLensFlare, "uFadeOut");
+	static __uClipFar = shader_get_uniform(BBMOD_ShLensFlare, "uClipFar");
+	static __uDepthThreshold = shader_get_uniform(BBMOD_ShLensFlare, "uDepthThreshold");
+	static __uStarburstUVs = shader_get_uniform(BBMOD_ShLensFlare, "uStarburstUVs");
+	static __uStarburstStrength = shader_get_uniform(BBMOD_ShLensFlare, "uStarburstStrength");
+	static __uStarburstRot = shader_get_uniform(BBMOD_ShLensFlare, "uStarburstRot");
+	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensFlare, "uLensDirtUVs");
+	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensFlare, "uLensDirtStrength");
 
 	/// @func add_element(_element)
 	///

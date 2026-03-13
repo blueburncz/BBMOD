@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShLensDirt",
   "name":"BBMOD_ShLensDirt",
   "parent":{
-    "name":"LensDirt",
-    "path":"folders/BBMOD/PostProcessing/LensDirt.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

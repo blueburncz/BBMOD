@@ -1,14 +1,14 @@
-varying vec4 v_vColor;
-varying vec2 v_vTexCoord;
+varying vec4 vColor;
+varying vec2 vTexCoord;
 
-uniform sampler2D u_texLensDirt;
-uniform vec4 u_vLensDirtUVs;
-uniform float u_fLensDirtStrength;
+uniform sampler2D uLensDirt;
+uniform vec4 uLensDirtUVs;
+uniform float uLensDirtStrength;
 
 void main()
 {
-	gl_FragColor = v_vColor * texture2D(gm_BaseTexture, v_vTexCoord);
-	vec2 lensDirtUV = mix(u_vLensDirtUVs.xy, u_vLensDirtUVs.zw, v_vTexCoord);
-	gl_FragColor.rgb += texture2D(u_texLensDirt, lensDirtUV).rgb * gl_FragColor.rgb * u_fLensDirtStrength;
+	gl_FragColor = vColor * texture2D(gm_BaseTexture, vTexCoord);
+	vec2 lensDirtUV = mix(uLensDirtUVs.xy, uLensDirtUVs.zw, vTexCoord);
+	gl_FragColor.rgb += texture2D(uLensDirt, lensDirtUV).rgb * gl_FragColor.rgb * uLensDirtStrength;
 	gl_FragColor.rgb = clamp(gl_FragColor.rgb, vec3(0.0), vec3(1.0));
 }

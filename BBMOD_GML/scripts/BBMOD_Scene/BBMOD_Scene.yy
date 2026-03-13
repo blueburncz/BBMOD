@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_Scene",
   "parent":{
-    "name":"Rendering",
-    "path":"folders/BBMOD/Core/Rendering.yy",
+    "name":"Scene",
+    "path":"folders/BBMOD/1_Core/Scene.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

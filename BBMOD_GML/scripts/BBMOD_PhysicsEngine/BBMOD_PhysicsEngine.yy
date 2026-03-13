@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_PhysicsEngine",
   "parent":{
-    "name":"Physics",
-    "path":"folders/BBMOD_WIP/Physics.yy",
+    "name":"3_Physics",
+    "path":"folders/BBMOD/3_Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

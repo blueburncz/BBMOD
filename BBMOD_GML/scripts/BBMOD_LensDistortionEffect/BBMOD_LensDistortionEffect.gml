@@ -1,4 +1,4 @@
-/// @module PostProcessing
+/// @module Rendering
 
 /// @func BBMOD_LensDistortionEffect([_strength[, _zoom]])
 ///
@@ -22,8 +22,8 @@ function BBMOD_LensDistortionEffect(_strength = 0.0, _zoom = 1.0): BBMOD_PostPro
 	/// value is 1 (no zoom).
 	Zoom = _zoom;
 
-	static __uStrength = shader_get_uniform(BBMOD_ShLensDistortion, "u_fStrength");
-	static __uScale = shader_get_uniform(BBMOD_ShLensDistortion, "u_fScale");
+	static __uStrength = shader_get_uniform(BBMOD_ShLensDistortion, "uStrength");
+	static __uScale = shader_get_uniform(BBMOD_ShLensDistortion, "uScale");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

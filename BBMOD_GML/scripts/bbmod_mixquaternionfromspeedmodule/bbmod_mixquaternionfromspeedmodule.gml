@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_MixQuaternionFromSpeedModule([_property[, _from[, _to[, _min[, _max]]]]])
 ///
@@ -68,7 +68,7 @@ function BBMOD_MixQuaternionFromSpeedModule(
 				var _velX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 				var _velY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];
 				var _velZ = _particles[# BBMOD_EParticle.VelocityZ, _particleIndex];
-				var _speed = sqrt((_velX * _velX) + (_velY * _velY) + (_velZ * _velZ));
+				var _speed = point_distance_3d(0, 0, 0, _velX, _velY, _velZ);
 				var _factor = clamp((_speed - _min) / _div, 0.0, 1.0);
 				var _quat = _to.Slerp(_from, _factor);
 				_particles[# _property, _particleIndex] = _quat.X;

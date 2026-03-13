@@ -1,4 +1,4 @@
-/// @module Particles
+/// @module Core
 
 /// @func BBMOD_AddRealOnCollisionModule([_property[, _change]])
 ///

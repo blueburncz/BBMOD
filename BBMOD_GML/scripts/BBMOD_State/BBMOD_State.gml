@@ -1,4 +1,4 @@
-/// @module StateMachine
+/// @module Extras.StateMachine
 
 /// @func BBMOD_State(_name)
 ///

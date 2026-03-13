@@ -1,7 +1,7 @@
 // FIXME: Temporary fix!
 precision highp float;
 
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
 void TonemapReinhard()
 {
@@ -10,7 +10,7 @@ void TonemapReinhard()
 
 void main()
 {
-	gl_FragColor.rgb = texture2D(gm_BaseTexture, v_vTexCoord).rgb;
+	gl_FragColor.rgb = texture2D(gm_BaseTexture, vTexCoord).rgb;
 	TonemapReinhard();
 	gl_FragColor.a = 1.0;
 }

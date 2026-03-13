@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BBMOD_ResourceManager",
   "parent":{
-    "name":"Core",
-    "path":"folders/BBMOD/Core.yy",
+    "name":"1_Core",
+    "path":"folders/BBMOD/1_Core.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

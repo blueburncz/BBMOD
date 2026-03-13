@@ -1,6 +1,9 @@
 model = BBMOD_RESOURCE_MANAGER.load_sync("Data/Lightmap/Lightmap.bbmod").freeze();
 
-model.Materials[0].set_base_opacity(BBMOD_C_SILVER);
+var _material = model.Materials[0];
+_material.set_base_opacity(BBMOD_C_SILVER);
+_material.DitherFadeStart = 200;
+_material.DitherFadeEnd = 210;
 
 matrix = new BBMOD_Matrix()
 	.ScaleSelf(10, 10, 10)

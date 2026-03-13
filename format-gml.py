@@ -36,7 +36,10 @@ else:
 
 
 def beautify_file(filepath):
-    res = jsbeautifier.beautify_file(filepath, OPTIONS)
+    # Read file with explicit UTF-8 encoding to handle non-ASCII characters
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    res = jsbeautifier.beautify(content, OPTIONS)
     res = re.sub(r"\$[\s\n]+\"", '$"', res)
     res = re.sub(r"\@[\s\n]+\"", '@"', res)
     res = re.sub(r"\[[\s\n]+\@", "[@ ", res)
@@ -54,6 +57,7 @@ def get_staged_files():
         stdout=subprocess.PIPE,  # Capture output
         stderr=subprocess.PIPE,  # Capture errors
         text=True,
+        encoding='utf-8'
     )  # Return output as string
 
     # Check if there was an error
@@ -72,7 +76,7 @@ def get_staged_file_contents(file_path):
     try:
         # Run the git show command to get the staged contents
         result = subprocess.run(
-            ["git", "show", f":{file_path}"], capture_output=True, text=True, check=True
+            ["git", "show", f":{file_path}"], capture_output=True, text=True, check=True, encoding='utf-8'
         )
         return result.stdout  # Return the staged file contents
     except subprocess.CalledProcessError as e:
@@ -118,7 +122,7 @@ if __name__ == "__main__":
         for filepath in get_staged_files():
             if should_format(filepath):
                 res = beautify_file(filepath)
-                with open(filepath, "w") as f:
+                with open(filepath, "w", encoding='utf-8') as f:
                     f.write(res)
     elif target == "--all":
         for dirpath, _, filenames in os.walk("."):
@@ -126,7 +130,7 @@ if __name__ == "__main__":
                 if should_format(filename):
                     filepath = os.path.join(dirpath, filename)
                     res = beautify_file(filepath)
-                    with open(filepath, "w") as f:
+                    with open(filepath, "w", encoding='utf-8') as f:
                         f.write(res)
     elif target == "--file":
         res = beautify_file(filepath)

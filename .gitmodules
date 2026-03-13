@@ -4,3 +4,6 @@
 [submodule "BBMOD_CPP/external/bullet3"]
 	path = BBMOD_CPP/external/bullet3
 	url = https://github.com/bulletphysics/bullet3.git
+[submodule "BBMOD_CPP/external/recastnavigation"]
+	path = BBMOD_CPP/external/recastnavigation
+	url = https://github.com/recastnavigation/recastnavigation.git

@@ -6,7 +6,7 @@
   "name":"BBMOD_MixVec3FromSpeedModule",
   "parent":{
     "name":"MixPropertyFromSpeed",
-    "path":"folders/BBMOD/Particles/Modules/Universal/MixPropertyFromSpeed.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Universal/MixPropertyFromSpeed.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

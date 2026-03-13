@@ -88,4 +88,54 @@ function BBMOD_PhysicsConstraint() constructor
 	__type = BBMOD_EPhysicsConstraintType.Invalid;
 	__id = -1;
 	__physicsWorld = undefined;
+
+	/// @func set_breaking_threshold(_threshold)
+	///
+	/// @desc Sets the impulse threshold at which this constraint will break.
+	/// When the accumulated impulse on the constraint exceeds this value, the
+	/// constraint becomes disabled and no longer affects the connected bodies.
+	/// This is useful for destructible connections like breakable joints.
+	///
+	/// @param {Real} _threshold The breaking impulse threshold. Set to a very
+	/// high value (e.g., `infinity`) to make the constraint unbreakable (default).
+	/// Lower values make the constraint easier to break.
+	///
+	/// @return {Struct.BBMOD_PhysicsConstraint} Returns `self`.
+	///
+	/// @example
+	/// ```gml
+	/// // Create a weak hinge that breaks under 100 units of force
+	/// var _hinge = physicsWorld.create_constraint(hingeInfo);
+	/// _hinge.set_breaking_threshold(100.0);
+	/// ```
+	static set_breaking_threshold = function (_threshold)
+	{
+		gml_pragma("forceinline");
+		BBMOD_PhysicsConstraint_SetBreakingThreshold(__id, _threshold);
+		return self;
+	};
+
+	/// @func get_breaking_threshold()
+	///
+	/// @desc Gets the current breaking impulse threshold for this constraint.
+	///
+	/// @return {Real} The breaking threshold value.
+	static get_breaking_threshold = function ()
+	{
+		gml_pragma("forceinline");
+		return BBMOD_PhysicsConstraint_GetBreakingThreshold(__id);
+	};
+
+	/// @func is_enabled()
+	///
+	/// @desc Checks if this constraint is currently enabled. Constraints
+	/// become disabled when they break (exceed their breaking threshold).
+	///
+	/// @return {Bool} Returns `true` if the constraint is active, `false`
+	/// if it has been broken or disabled.
+	static is_enabled = function ()
+	{
+		gml_pragma("forceinline");
+		return BBMOD_PhysicsConstraint_IsEnabled(__id) > 0.5;
+	};
 }

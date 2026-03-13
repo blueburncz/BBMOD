@@ -1,9 +1,9 @@
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform vec2 u_vLightPos;
-uniform vec2 u_vAspect;
-uniform float u_fRadius;
-uniform vec4 u_vColor;
+uniform vec2 uLightPos;
+uniform vec2 uAspect;
+uniform float uRadius;
+uniform vec4 uColor;
 
 /// @param c Encoded depth.
 /// @return Docoded linear depth.
@@ -16,7 +16,7 @@ float xDecodeDepth(vec3 c)
 
 void main()
 {
-	gl_FragColor = vec4(vec3(xDecodeDepth(texture2D(gm_BaseTexture, v_vTexCoord).rgb)), 1.0);
-	gl_FragColor.rgb *= 1.0 - clamp(length((v_vTexCoord - u_vLightPos) * u_vAspect) / u_fRadius, 0.0, 1.0);
-	gl_FragColor.rgb *= u_vColor.rgb * u_vColor.a;
+	gl_FragColor = vec4(vec3(xDecodeDepth(texture2D(gm_BaseTexture, vTexCoord).rgb)), 1.0);
+	gl_FragColor.rgb *= 1.0 - clamp(length((vTexCoord - uLightPos) * uAspect) / uRadius, 0.0, 1.0);
+	gl_FragColor.rgb *= uColor.rgb * uColor.a;
 }

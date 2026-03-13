@@ -6,7 +6,7 @@
   "name":"BBMOD_IMeshRenderQueue",
   "parent":{
     "name":"Interfaces",
-    "path":"folders/BBMOD/Core/Interfaces.yy",
+    "path":"folders/BBMOD/1_Core/Interfaces.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

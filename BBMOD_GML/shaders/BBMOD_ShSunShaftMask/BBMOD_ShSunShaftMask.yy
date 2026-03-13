@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShSunShaftMask",
   "name":"BBMOD_ShSunShaftMask",
   "parent":{
-    "name":"SunShafts",
-    "path":"folders/BBMOD/PostProcessing/SunShafts.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

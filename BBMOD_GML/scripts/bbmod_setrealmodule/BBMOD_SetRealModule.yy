@@ -6,7 +6,7 @@
   "name":"BBMOD_SetRealModule",
   "parent":{
     "name":"SetProperty",
-    "path":"folders/BBMOD/Particles/Modules/Universal/SetProperty.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Universal/SetProperty.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

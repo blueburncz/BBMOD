@@ -39,7 +39,7 @@
   "origin":4,
   "parent":{
     "name":"Sprites",
-    "path":"folders/BBMOD/PostProcessing/LensFlares/Sprites.yy",
+    "path":"folders/BBMOD/2_Rendering/Sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

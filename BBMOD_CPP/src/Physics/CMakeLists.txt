@@ -1,8 +1,12 @@
 add_library(BBMOD_Physics SHARED
+    exports_CharacterController.cpp
+    exports_ConvexHullBuilder.cpp
+    exports_ConvexHullSerialization.cpp
     exports_PhysicsEngine.cpp
     exports_PhysicsShape.cpp
     exports_PhysicsVehicle.cpp
     exports_PhysicsWorld.cpp
+    exports_Ragdoll.cpp
     exports_RigidBody.cpp
 )
 

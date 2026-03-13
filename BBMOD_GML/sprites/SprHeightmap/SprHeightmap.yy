@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"SprHeightmap",
   "bboxMode":0,
-  "bbox_bottom":63,
+  "bbox_bottom":127,
   "bbox_left":0,
-  "bbox_right":63,
+  "bbox_right":127,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":64,
+  "height":128,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"fdf0de35-8750-4598-858e-a3cd01ac41e6","blendMode":0,"displayName":"default","isLocked":false,"name":"fdf0de35-8750-4598-858e-a3cd01ac41e6","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -88,5 +88,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":64,
+  "width":128,
 }

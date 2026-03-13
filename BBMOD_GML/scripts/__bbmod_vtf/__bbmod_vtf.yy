@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__bbmod_vtf",
   "parent":{
-    "name":"VTF",
-    "path":"folders/BBMOD/VTF.yy",
+    "name":"Rendering",
+    "path":"folders/BBMOD/1_Core/Rendering.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

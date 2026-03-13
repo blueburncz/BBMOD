@@ -6,7 +6,7 @@
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
   "ignore": ["physics", "rigidbody"],
-  "version": "3.99.0-alpha1",
+  "version": "3.99.0-alpha2",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"

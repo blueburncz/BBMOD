@@ -1,4 +1,4 @@
-/// @module Save
+/// @module Extras.Save
 
 /// @enum Enumeration of all property types.
 /// @see BBMOD_Property

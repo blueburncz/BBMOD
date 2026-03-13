@@ -3,8 +3,8 @@
   "%Name":"BBMOD_ShGammaCorrect",
   "name":"BBMOD_ShGammaCorrect",
   "parent":{
-    "name":"GammaCorrect",
-    "path":"folders/BBMOD/PostProcessing/GammaCorrect.yy",
+    "name":"PostProcessing",
+    "path":"folders/BBMOD/2_Rendering/Shaders/PostProcessing.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

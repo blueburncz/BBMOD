@@ -1,7 +1,7 @@
-varying vec2 v_vTexCoord;
+varying vec2 vTexCoord;
 
-uniform vec2 u_vTexel;
-uniform vec4 u_vColor;
+uniform vec2 uTexel;
+uniform vec4 uColor;
 
 uniform float bbmod_HDR;
 
@@ -31,14 +31,14 @@ void GammaCorrect()
 
 void main()
 {
-	float x = IsInstance(v_vTexCoord + vec2(-1.0, 0.0) * u_vTexel)
-		- IsInstance(v_vTexCoord + vec2(+1.0, 0.0) * u_vTexel);
-	float y = IsInstance(v_vTexCoord + vec2(0.0, -1.0) * u_vTexel)
-		- IsInstance(v_vTexCoord + vec2(0.0, +1.0) * u_vTexel);
-	gl_FragColor.rgb = xGammaToLinear(u_vColor.rgb);
-	gl_FragColor.a = clamp(u_vColor.a * sqrt((x * x) + (y * y)), 0.0, 1.0);
+	float x = IsInstance(vTexCoord + vec2(-1.0, 0.0) * uTexel)
+		- IsInstance(vTexCoord + vec2(+1.0, 0.0) * uTexel);
+	float y = IsInstance(vTexCoord + vec2(0.0, -1.0) * uTexel)
+		- IsInstance(vTexCoord + vec2(0.0, +1.0) * uTexel);
+	gl_FragColor.rgb = xGammaToLinear(uColor.rgb);
+	gl_FragColor.a = clamp(uColor.a * sqrt((x * x) + (y * y)), 0.0, 1.0);
 
-	if (bbmod_HDR == 0.0)
+	if (bbmod_HDR < 0.5)
 	{
 		GammaCorrect();
 	}

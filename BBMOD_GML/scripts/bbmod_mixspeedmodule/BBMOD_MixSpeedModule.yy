@@ -6,7 +6,7 @@
   "name":"BBMOD_MixSpeedModule",
   "parent":{
     "name":"Velocity",
-    "path":"folders/BBMOD/Particles/Modules/Velocity.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Velocity.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

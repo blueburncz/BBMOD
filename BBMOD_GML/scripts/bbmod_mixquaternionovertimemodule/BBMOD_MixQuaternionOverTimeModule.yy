@@ -6,7 +6,7 @@
   "name":"BBMOD_MixQuaternionOverTimeModule",
   "parent":{
     "name":"MixPropertyOverTime",
-    "path":"folders/BBMOD/Particles/Modules/Universal/MixPropertyOverTime.yy",
+    "path":"folders/BBMOD/1_Core/Scene/Particles/Modules/Universal/MixPropertyOverTime.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

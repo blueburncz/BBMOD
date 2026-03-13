@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_RagdollInfo",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_RagdollInfo",
+  "parent":{
+    "name":"3_Physics",
+    "path":"folders/BBMOD/3_Physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
