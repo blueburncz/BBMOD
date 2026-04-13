@@ -36,10 +36,10 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 	/// layers. The first layer is always visible (if the material is not
 	/// `undefined`), the red channel of the splatmap controls visibility of the
 	/// second layer, the green channel controls the third layer etc.
-	Splatmap = pointer_null;
+	Splatmap = (-1/*pointer_null*/);
 
 	/// @var {Pointer.Texture} A texture to multiply the terrain colors with.
-	Colormap = pointer_null;
+	Colormap = (-1/*pointer_null*/);
 
 	/// @var {Id.DsGrid}
 	/// @private

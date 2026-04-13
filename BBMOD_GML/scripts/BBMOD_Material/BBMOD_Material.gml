@@ -182,7 +182,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 
 	/// @var {Pointer.Texture} A texture with a base color in the RGB channels
 	/// and opacity in the alpha channel.
-	BaseOpacity = pointer_null;
+	BaseOpacity = (-1/*pointer_null*/);
 
 	__baseOpacitySprite = undefined;
 

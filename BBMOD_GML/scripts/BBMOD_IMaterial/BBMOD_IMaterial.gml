@@ -8,7 +8,7 @@ function BBMOD_IMaterial()
 {
 	/// @var {Pointer.Texture} A texture with a base color in the RGB channels
 	/// and opacity in the alpha channel.
-	BaseOpacity = pointer_null;
+	BaseOpacity = (-1/*pointer_null*/);
 
 	/// @func apply(_vertexFormat)
 	///

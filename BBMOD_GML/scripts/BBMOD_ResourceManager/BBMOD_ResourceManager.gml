@@ -247,20 +247,54 @@ function BBMOD_ResourceManager() constructor
 						_textureSha1 = _propertyValue[$ "SHA1"];
 					}
 
-					_texturePath = bbmod_path_get_absolute(_texturePath, filename_dir(_pathAbsolute));
+					var _isSprite = string_starts_with(_texturePath, "sprite://");
+					if (!_isSprite)
+					{
+						_texturePath = bbmod_path_get_absolute(_texturePath, filename_dir(_pathAbsolute));
+					}
 
 					var _sprite;
+					var _subimage = 0;
+
 					if (has(_texturePath))
 					{
 						_sprite = get(_texturePath);
 					}
 					else
 					{
-						_sprite = new BBMOD_Sprite(_texturePath, _textureSha1);
+						_sprite = new BBMOD_Sprite();
+
+						if (_isSprite)
+						{
+							var _prefixLength = 9; //string_length("sprite://");
+							var _spriteNameAndSubimage = string_split(string_delete(_texturePath, 1, _prefixLength), ":");
+							var _spriteName = _spriteNameAndSubimage[0];
+
+							if (array_length(_spriteNameAndSubimage) > 1)
+							{
+								_subimage = real(_spriteNameAndSubimage[1]);
+							}
+
+							var _asset = asset_get_index(_spriteName);
+							if (_asset == -1)
+							{
+								throw BBMOD_Exception($"Invalid texture {_spriteName}!");
+							}
+
+							_sprite.Raw = _asset;
+							_sprite.Width = sprite_get_width(_asset);
+							_sprite.Height = sprite_get_height(_asset);
+							_sprite.Owned = false;
+						}
+						else
+						{
+							_sprite.from_file(_texturePath, _textureSha1);
+						}
+
 						add(_texturePath, _sprite);
 					}
 
-					_json[$  _property] = _sprite.get_texture();
+					_json[$  _property] = _sprite.get_texture(_subimage);
 				}
 			}
 

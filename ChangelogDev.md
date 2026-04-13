@@ -13,6 +13,17 @@
 * Added new method `load_sync(_path[, _sha1])`, which synchronously loads a resource from a file or retrieves a reference to it, if it is already loaded.
 * Added new method `load_async(_path[, _sha1[, _onLoad]])`, which asynchronously loads a resource from a file or retrieves a reference to it, if it is already loaded.
 * Method `load` of `BBMOD_ResourceManager` is now **deprecated**! Please use method `BBMOD_ResourceManager.load_async` instead.
+* Function `bbmod_sprite_add_async` now uses `add_sprite_ext`, which actually loads sprites asynchronously even on non-browser platforms.
+* Added new property `Owned` to struct `BBMOD_Sprite`, which tells whether the sprite stored in the struct is owned by the struct. If yes (default), then the sprite is deleted when the struct is destroyed.
+* `.bbmat` materials now support referencing project sprites in `__Textures` object, for example:
+
+```json
+{
+    "__Textures": {
+        "BaseOpacity": "sprite://SprBaseOpacity:0"
+    }
+}
+```
 
 ## Rendering
 

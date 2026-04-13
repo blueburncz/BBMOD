@@ -6,7 +6,7 @@ global.__bbmodReflectionProbes = [];
 
 /// @var {Pointer.Texture}
 /// @private
-global.__bbmodReflectionProbeTexture = pointer_null;
+global.__bbmodReflectionProbeTexture = (-1/*pointer_null*/);
 
 /// @func BBMOD_ReflectionProbe([_position[, _sprite]])
 ///

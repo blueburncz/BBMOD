@@ -130,18 +130,11 @@ function bbmod_async_save_load_update(_asyncLoad)
 /// event for this function to work!
 function bbmod_sprite_add_async(_file, _callback)
 {
-	var _id = sprite_add(_file, 0, false, false, 0, 0);
+	var _id = sprite_add_ext(_file, 0, 0, 0, false);
 
-	if (os_browser == browser_not_a_browser)
-	{
-		_callback(undefined, _id);
-	}
-	else
-	{
-		global.__bbmodSpriteCallback[?  _id] = {
-			Callback: _callback,
-		};
-	}
+	global.__bbmodSpriteCallback[?  _id] = {
+		Callback: _callback,
+	};
 }
 
 /// @func bbmod_async_image_loaded_update(_asyncLoad)
@@ -172,7 +165,7 @@ function bbmod_async_image_loaded_update(_asyncLoad)
 	var _id = _asyncLoad[?  "id"];
 	var _data = _map[?  _id];
 
-	if (_asyncLoad[?  "status"] == false)
+	if (_asyncLoad[?  "status"] < 0)
 	{
 		_data.Callback(new BBMOD_Exception("Async load failed!"));
 	}

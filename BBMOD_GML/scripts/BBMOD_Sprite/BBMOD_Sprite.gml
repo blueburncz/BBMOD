@@ -21,6 +21,11 @@ function BBMOD_Sprite(_file = undefined, _sha1 = undefined): BBMOD_Resource() co
 	/// @readonly
 	Raw = undefined;
 
+	/// @var {Bool} Whether `Raw` stores a sprite owned by this struct. If
+	/// `true`, then the sprite is deleted when the struct is destroyed. Default
+	/// value is `true`.
+	Owned = true;
+
 	/// @var {Real} The width of the sprite.
 	/// @readonly
 	Width = 0;
@@ -83,29 +88,32 @@ function BBMOD_Sprite(_file = undefined, _sha1 = undefined): BBMOD_Resource() co
 		return self;
 	};
 
-	/// @func get_texture()
+	/// @func get_texture([_subimage])
 	///
 	/// @desc Retrieves a pointer to the texture.
 	///
+	/// @param {Real} [_subimage] The sprite subimage to retrieve the texture of.
+	/// Defaults to 0.
+	///
 	/// @return {Pointer.Texture} The pointer to the texture.
-	static get_texture = function ()
+	static get_texture = function (_subimage = 0)
 	{
 		gml_pragma("forceinline");
 		if (Raw == undefined)
 		{
-			return -1;
+			return (-1/*pointer_null*/);
 		}
-		return sprite_get_texture(Raw, 0);
+		return sprite_get_texture(Raw, _subimage);
 	};
 
 	static destroy = function ()
 	{
 		Resource_destroy();
-		if (Raw != undefined)
+		if (Owned && Raw != undefined)
 		{
 			sprite_delete(Raw);
-			Raw = undefined;
 		}
+		Raw = undefined;
 		return undefined;
 	};
 

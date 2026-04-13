@@ -13,6 +13,7 @@
         "Alpha": 1.0
     },
     "__Textures": {
+        "BaseOpacity": "sprite://SprColormap:1",
         "Lightmap": ".\\Material_Lightmap.png"
     },
     "TextureOffset": {

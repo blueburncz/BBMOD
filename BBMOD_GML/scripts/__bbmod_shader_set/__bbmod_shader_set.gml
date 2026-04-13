@@ -838,7 +838,7 @@ function bbmod_shader_set_ibl(_shader, _ibl = undefined, _isLightmapped = false)
 {
 	gml_pragma("forceinline");
 
-	var _texture = pointer_null;
+	var _texture = (-1/*pointer_null*/);
 	var _texel;
 
 	_ibl ??= global.__bbmodImageBasedLight;
@@ -851,13 +851,13 @@ function bbmod_shader_set_ibl(_shader, _ibl = undefined, _isLightmapped = false)
 		_texel = _ibl.Texel;
 	}
 
-	if (global.__bbmodReflectionProbeTexture != pointer_null)
+	if (global.__bbmodReflectionProbeTexture != (-1/*pointer_null*/))
 	{
 		_texture = global.__bbmodReflectionProbeTexture;
 		_texel = texture_get_texel_height(_texture);
 	}
 
-	if (_texture != pointer_null)
+	if (_texture != (-1/*pointer_null*/))
 	{
 		var _uIBL = shader_get_sampler_index(_shader, BBMOD_U_IBL);
 

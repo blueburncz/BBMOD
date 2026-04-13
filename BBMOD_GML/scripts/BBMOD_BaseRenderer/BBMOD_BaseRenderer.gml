@@ -680,7 +680,7 @@ function BBMOD_BaseRenderer() constructor
 		var _projection = matrix_get(matrix_projection);
 		var _exposure = bbmod_camera_get_exposure();
 
-		global.__bbmodReflectionProbeTexture = pointer_null;
+		global.__bbmodReflectionProbeTexture = (-1/*pointer_null*/);
 		bbmod_camera_set_exposure(1.0);
 
 		var _cubemap = __cubemap;

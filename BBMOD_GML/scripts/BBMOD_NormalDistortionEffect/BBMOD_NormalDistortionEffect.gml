@@ -7,14 +7,14 @@
 /// @desc Distort screen using a normal map texture (post-processing effect).
 ///
 /// @param {Pointer.Texture} [_texture] A normal map texture. Defaults to
-/// `pointer_null`.
+/// `(-1/*pointer_null*/)`.
 /// @param {Real} [_strength] The strength of the effect. Both positive and
 /// negative values can be used. Use 0 to disable the effect. Default value is
 /// 1.
-function BBMOD_NormalDistortionEffect(_texture = pointer_null, _strength = 1.0): BBMOD_PostProcessEffect() constructor
+function BBMOD_NormalDistortionEffect(_texture = (-1/*pointer_null*/), _strength = 1.0): BBMOD_PostProcessEffect() constructor
 {
 	/// @var {Pointer.Texture} A normal map texture. Default value is
-	/// `pointer_null` (and the effect is not applied).
+	/// `(-1/*pointer_null*/)` (and the effect is not applied).
 	Texture = _texture;
 
 	/// @var {Real} The strength of the effect. Both positive and negative values
@@ -28,7 +28,7 @@ function BBMOD_NormalDistortionEffect(_texture = pointer_null, _strength = 1.0):
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
-		if (Texture == pointer_null
+		if (Texture == (-1/*pointer_null*/)
 			|| Strength == 0.0)
 		{
 			return _surfaceSrc;
