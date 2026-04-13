@@ -1,4 +1,9 @@
 # Scripting API
+<hr/><h2 id="Base">Base</h2>
+
+<h3 id="BaseConstructors">Constructors</h3>
+
+ * [BBMOD_Quaternion](./BBMOD_Quaternion.html)
 <hr/><h2 id="ColMesh">ColMesh</h2>
 
 <h3 id="ColMeshFunctions">Functions</h3>
@@ -41,6 +46,7 @@
  * [BBMOD_Mesh](./BBMOD_Mesh.html)
  * [BBMOD_MeshBuilder](./BBMOD_MeshBuilder.html)
  * [BBMOD_MeshRenderQueue](./BBMOD_MeshRenderQueue.html)
+ * [BBMOD_MixSpeedModule](./BBMOD_MixSpeedModule.html)
  * [BBMOD_Model](./BBMOD_Model.html)
  * [BBMOD_Node](./BBMOD_Node.html)
  * [BBMOD_NotImplementedException](./BBMOD_NotImplementedException.html)
@@ -48,7 +54,6 @@
  * [BBMOD_PointLight](./BBMOD_PointLight.html)
  * [BBMOD_Property](./BBMOD_Property.html)
  * [BBMOD_PunctualLight](./BBMOD_PunctualLight.html)
- * [BBMOD_Quaternion](./BBMOD_Quaternion.html)
  * [BBMOD_Rect](./BBMOD_Rect.html)
  * [BBMOD_ReflectionProbe](./BBMOD_ReflectionProbe.html)
  * [BBMOD_Renderer](./BBMOD_Renderer.html) <span class="badge badge-warning">DEPRECATED</span>
@@ -154,6 +159,7 @@
  * [bbmod_matrix_set_rotation_z](./bbmod_matrix_set_rotation_z.html)
  * [bbmod_matrix_set_scale](./bbmod_matrix_set_scale.html)
  * [bbmod_matrix_set_translation](./bbmod_matrix_set_translation.html)
+ * [bbmod_matrix_transpose](./bbmod_matrix_transpose.html)
  * [bbmod_mipenable_from_string](./bbmod_mipenable_from_string.html)
  * [bbmod_mipenable_to_string](./bbmod_mipenable_to_string.html)
  * [bbmod_mrt_is_supported](./bbmod_mrt_is_supported.html)
@@ -214,9 +220,7 @@
  * [bbmod_surface_check](./bbmod_surface_check.html)
  * [bbmod_texfilter_from_string](./bbmod_texfilter_from_string.html)
  * [bbmod_texfilter_to_string](./bbmod_texfilter_to_string.html)
- * [bbmod_texture_set_stage_vs](./bbmod_texture_set_stage_vs.html)
  * [bbmod_vertex_buffer_load](./bbmod_vertex_buffer_load.html)
- * [bbmod_vtf_is_supported](./bbmod_vtf_is_supported.html)
  * [bbmod_window_get_height](./bbmod_window_get_height.html)
  * [bbmod_window_get_width](./bbmod_window_get_width.html)
 <h3 id="CoreEnums">Enums</h3>
@@ -303,6 +307,11 @@
  * [BBMOD_VFORMAT_DEFAULT_SPRITE](./BBMOD_VFORMAT_DEFAULT_SPRITE.html)
  * [BBMOD_VFORMAT_LIGHTMAP](./BBMOD_VFORMAT_LIGHTMAP.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_VFORMAT_SPRITE](./BBMOD_VFORMAT_SPRITE.html) <span class="badge badge-warning">DEPRECATED</span>
+<hr/><h2 id="D3D11">D3D11</h2>
+
+<h3 id="D3D11Functions">Functions</h3>
+
+ * [bbmod_d3d11_init](./bbmod_d3d11_init.html)
 <hr/><h2 id="DeferredRenderer">DeferredRenderer</h2>
 
 <h3 id="DeferredRendererConstructors">Constructors</h3>
@@ -371,7 +380,6 @@
  * [BBMOD_MixRealFromSpeedModule](./BBMOD_MixRealFromSpeedModule.html)
  * [BBMOD_MixRealModule](./BBMOD_MixRealModule.html)
  * [BBMOD_MixRealOverTimeModule](./BBMOD_MixRealOverTimeModule.html)
- * [BBMOD_MixSpeedModule](./BBMOD_MixSpeedModule.html)
  * [BBMOD_MixVec2FromHealthModule](./BBMOD_MixVec2FromHealthModule.html)
  * [BBMOD_MixVec2FromSpeedModule](./BBMOD_MixVec2FromSpeedModule.html)
  * [BBMOD_MixVec2Module](./BBMOD_MixVec2Module.html)
@@ -530,3 +538,9 @@
  * [BBMOD_MATERIAL_TERRAIN_UNLIT](./BBMOD_MATERIAL_TERRAIN_UNLIT.html)
  * [BBMOD_SHADER_TERRAIN](./BBMOD_SHADER_TERRAIN.html)
  * [BBMOD_SHADER_TERRAIN_UNLIT](./BBMOD_SHADER_TERRAIN_UNLIT.html)
+<hr/><h2 id="VTF">VTF</h2>
+
+<h3 id="VTFFunctions">Functions</h3>
+
+ * [bbmod_texture_set_stage_vs](./bbmod_texture_set_stage_vs.html)
+ * [bbmod_vtf_is_supported](./bbmod_vtf_is_supported.html)
