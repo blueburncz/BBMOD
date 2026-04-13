@@ -66,12 +66,13 @@ Up-to-date license text of Assimp (from its `LICENSE` file) should be kept in `/
 ### 2. Build BBMOD CLI and DLL
 
 ```sh
-cd BBMOD_CLI
-cmake -S . -B build
+git clone --recurse-submodules https://github.com/blueburncz/BBMOD.git
+cd BBMOD/BBMOD_CPP
+cmake -S . -B build -DCMAKE_POLICY_VERSION_MINIMUM="3.10"
 cmake --build build --config=Release
 ```
 
-This builds both BBMOD CLI and DLL into `/BBMOD_CLI/build/`. **Do not forget to copy the files to `/BBMOD_GML/datafiles/Data/BBMOD/` on release!** On Windows, these are `BBMOD.exe`, `assimp-vc143-mt.dll` and `LICENSE-Assimp`. On macOS it's `BBMOD`, `libassimp.5.dylib`, `libBBMOD.dylib` and `LICENSE-Assimp`.
+his builds both BBMOD CLI and DLL copies all files into their designated folders.
 
 ### 3. Fix rpaths and codesign (for macOS)
 

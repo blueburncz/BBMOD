@@ -250,7 +250,9 @@ Material UnpackMaterial(
 		uv
 		);
 
-	m.Normal = normalize(TBN * (normalW.rgb * 2.0 - 1.0));
+	vec3 normalTS = normalW.rgb * 2.0 - 1.0;
+	float normalLength = length(normalTS);
+	m.Normal = normalize(TBN * normalTS);
 
 	if (isRoughness == 1.0)
 	{
@@ -262,6 +264,11 @@ Material UnpackMaterial(
 		m.Smoothness = mix(0.1, 0.9, normalW.a);
 		m.Roughness = 1.0 - m.Smoothness;
 	}
+
+	// Toksvig specular anti-aliasing
+	float variance = 1.0 - normalLength;
+	m.Roughness = sqrt(m.Roughness * m.Roughness + variance * variance);
+	m.Smoothness = 1.0 - m.Roughness;
 
 	// Material properties
 	m.Metallic = 0.0;

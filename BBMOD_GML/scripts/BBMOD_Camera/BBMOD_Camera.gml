@@ -71,11 +71,11 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 	/// {@link BBMOD_Camera.DirectionUpMax}. Defaults to `0`.
 	DirectionUp = 0.0;
 
-	/// @var {Real} Minimum angle that {@link BBMOD_Camrea.DirectionUp}
+	/// @var {Real} Minimum angle that {@link BBMOD_Camera.DirectionUp}
 	/// can be. Use `undefined` to remove the limit. Default value is `-89`.
 	DirectionUpMin = -89.0;
 
-	/// @var {Real} Maximum angle that {@link BBMOD_Camrea.DirectionUp}
+	/// @var {Real} Maximum angle that {@link BBMOD_Camera.DirectionUp}
 	/// can be. Use `undefined` to remove the limit. Default value is `89`.
 	DirectionUpMax = 89.0;
 
@@ -91,24 +91,23 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 	{
 		gml_pragma("forceinline");
 
-		var _forward = BBMOD_VEC3_FORWARD;
-		var _right = BBMOD_VEC3_RIGHT;
-		var _up = BBMOD_VEC3_UP;
+		// Apply yaw rotation (around up axis)
+		var _quatZ = new BBMOD_Quaternion().FromAxisAngle(BBMOD_VEC3_UP, Direction);
+		var _forward = _quatZ.Rotate(BBMOD_VEC3_FORWARD);
+		var _right = _quatZ.Rotate(BBMOD_VEC3_RIGHT);
+		var _up = _quatZ.Rotate(BBMOD_VEC3_UP);
 
-		var _quatZ = new BBMOD_Quaternion().FromAxisAngle(_up, Direction);
-		_forward = _quatZ.Rotate(_forward);
-		_right = _quatZ.Rotate(_right);
-		_up = _quatZ.Rotate(_up);
-
+		// Apply pitch rotation (around rotated right axis)
 		var _quatY = new BBMOD_Quaternion().FromAxisAngle(_right, DirectionUp);
 		_forward = _quatY.Rotate(_forward);
-		_right = _quatY.Rotate(_right);
 		_up = _quatY.Rotate(_up);
 
-		var _quatX = new BBMOD_Quaternion().FromAxisAngle(_forward, Roll);
-		_forward = _quatX.Rotate(_forward);
-		_right = _quatX.Rotate(_right);
-		_up = _quatX.Rotate(_up);
+		// Apply roll rotation (around rotated forward axis)
+		if (Roll != 0)
+		{
+			var _quatX = new BBMOD_Quaternion().FromAxisAngle(_forward, Roll);
+			_up = _quatX.Rotate(_up);
+		}
 
 		var _target = Position.Add(_forward);
 

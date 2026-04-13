@@ -131,7 +131,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// components of `_min` and `_max` and returns the result as a new vector.
 	///
 	/// @param {Struct.BBMOD_Vec2} _min A vector with minimum components.
-	/// @param {Struct.Struct.BBMOD_Vec2} _max A vector with maximum components.
+	/// @param {Struct.BBMOD_Vec2} _max A vector with maximum components.
 	///
 	/// @return {Struct.BBMOD_Vec2} The resulting vector.
 	static Clamp = function (_min, _max)
@@ -149,7 +149,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// components of `_min` and `_max` and stores the result into `self`.
 	///
 	/// @param {Struct.BBMOD_Vec2} _min A vector with minimum components.
-	/// @param {Struct.Struct.BBMOD_Vec2} _max A vector with maximum components.
+	/// @param {Struct.BBMOD_Vec2} _max A vector with maximum components.
 	///
 	/// @return {Struct.BBMOD_Vec2} Returns `self`.
 	static ClampSelf = function (_min, _max)
@@ -179,14 +179,17 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	static ClampLength = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		var _length = sqrt(
-			X * X
-			+ Y * Y
-		);
-		var _newLength = clamp(_length, _min, _max);
+		var _x = X;
+		var _y = Y;
+		var _length = sqrt(_x * _x + _y * _y);
+		if (_length <= math_get_epsilon())
+		{
+			return new BBMOD_Vec2();
+		}
+		var _scale = clamp(_length, _min, _max) / _length;
 		return new BBMOD_Vec2(
-			(X / _length) * _newLength,
-			(Y / _length) * _newLength
+			_x * _scale,
+			_y * _scale
 		);
 	};
 
@@ -209,13 +212,18 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	static ClampLengthSelf = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		var _length = sqrt(
-			X * X
-			+ Y * Y
-		);
-		var _newLength = clamp(_length, _min, _max);
-		X = (X / _length) * _newLength;
-		Y = (Y / _length) * _newLength;
+		var _x = X;
+		var _y = Y;
+		var _length = sqrt(_x * _x + _y * _y);
+		if (_length <= math_get_epsilon())
+		{
+			X = 0.0;
+			Y = 0.0;
+			return self;
+		}
+		var _scale = clamp(_length, _min, _max) / _length;
+		X = _x * _scale;
+		Y = _y * _scale;
 		return self;
 	};
 
@@ -495,7 +503,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 		gml_pragma("forceinline");
 		return max(
 			X,
-			Y,
+			Y
 		);
 	};
 
@@ -556,7 +564,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 		gml_pragma("forceinline");
 		return min(
 			X,
-			Y,
+			Y
 		);
 	};
 
@@ -719,7 +727,8 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// @desc Reflects the vector from vector `_v` and returns the result
 	/// as a new vector.
 	///
-	/// @param {Struct.BBMOD_Vec2} _v The vector to reflect from.
+	/// @param {Struct.BBMOD_Vec2} _v The vector to reflect from. Must be
+	/// normalized!
 	///
 	/// @return {Struct.BBMOD_Vec2} The created vector.
 	static Reflect = function (_v)
@@ -809,7 +818,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// ```
 	static Scale = function (_s)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			X * _s,
 			Y * _s
@@ -831,7 +840,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// ```
 	static ScaleSelf = function (_s)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		X *= _s;
 		Y *= _s;
 		return self;
@@ -924,7 +933,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// ```
 	static Sub = function (_v)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		return new BBMOD_Vec2(
 			X - _v.X,
 			Y - _v.Y
@@ -948,7 +957,7 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 	/// ```
 	static SubSelf = function (_v)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		X = X - _v.X;
 		Y = Y - _v.Y;
 		return self;
@@ -1007,8 +1016,8 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 		}
 		var _res = matrix_transform_vertex(_matrix, X, Y, 0.0);
 		return new BBMOD_Vec2(
-			_res[0],
-			_res[1]
+			_matrix[0] * _x + _matrix[4] * _y + _matrix[12],
+			_matrix[1] * _x + _matrix[5] * _y + _matrix[13]
 		);
 	};
 
@@ -1028,9 +1037,10 @@ function BBMOD_Vec2(_x = 0.0, _y = _x) constructor
 		{
 			_matrix = _matrix.Raw;
 		}
-		var _res = matrix_transform_vertex(_matrix, X, Y, 0.0);
-		X = _res[0];
-		Y = _res[1];
+		var _x = X;
+		var _y = Y;
+		X = _matrix[0] * _x + _matrix[4] * _y + _matrix[12];
+		Y = _matrix[1] * _x + _matrix[5] * _y + _matrix[13];
 		return self;
 	};
 }

@@ -67,7 +67,7 @@ function BBMOD_MixColorFromSpeedModule(
 			var _toA = _to.Alpha;
 			var _min = Min;
 			var _max = Max;
-			var _div = _max - _min;
+			var _div = max(_max - _min, 0.000001);
 
 			var _particleIndex = 0;
 			repeat(_emitter.ParticlesAlive)
@@ -75,7 +75,7 @@ function BBMOD_MixColorFromSpeedModule(
 				var _velX = _particles[# BBMOD_EParticle.VelocityX, _particleIndex];
 				var _velY = _particles[# BBMOD_EParticle.VelocityY, _particleIndex];
 				var _velZ = _particles[# BBMOD_EParticle.VelocityZ, _particleIndex];
-				var _speed = sqrt((_velX * _velX) + (_velY + _velY) + (_velZ * _velZ));
+				var _speed = point_distance_3d(0, 0, 0, _velX, _velY, _velZ);
 				var _factor = clamp((_speed - _min) / _div, 0.0, 1.0);
 				_particles[# _property, _particleIndex] = lerp(_toR, _fromR, _factor);
 				_particles[# _property + 1, _particleIndex] = lerp(_toG, _fromG, _factor);

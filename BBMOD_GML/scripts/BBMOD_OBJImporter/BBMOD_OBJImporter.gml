@@ -36,17 +36,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 	/// _objImporter.ImportMaterials = true;
 	/// var _model = _objImporter.import("model.obj");
 	/// _objImporter = _objImporter.destroy();
-	///
-	/// /// @desc Async - Image Loaded event
-	/// BBMOD_RESOURCE_MANAGER.async_image_loaded_update(async_load);
 	/// ```
-	///
-	/// @note Please note that if this is enabled, {@link BBMOD_RESOURCE_MANAGER}
-	/// will be used for loading textures and you will need to call its method
-	/// {@link BBMOD_ResourceManager.async_image_loaded_update} to make this work
-	/// properly!
-	///
-	/// @see BBMOD_RESOURCE_MANAGER
 	ImportMaterials = false;
 
 	__vertices = ds_list_create();
@@ -119,15 +109,8 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 						Material: _material,
 						SpritePath: _spritePath
 					};
-					BBMOD_RESOURCE_MANAGER.load(_spritePath, undefined, method(_scope, function (_err, _res)
-					{
-						if (_err != undefined)
-						{
-							__bbmod_warning("Could not open file \"{0}\"!", [SpritePath]);
-							return;
-						}
-						Material.BaseOpacity = sprite_get_texture(_res.Raw, 0);
-					}));
+					_res = BBMOD_RESOURCE_MANAGER.load_sync(_spritePath);
+					Material.BaseOpacity = sprite_get_texture(_res.Raw, 0);
 				}
 				break;
 			}

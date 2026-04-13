@@ -690,7 +690,8 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// not been called yet!
 	static update = function (_deltaTime)
 	{
-		if (!global.__bbmodCameraCurrent)
+		var _camera = global.__bbmodCameraCurrent;
+		if (_camera == undefined)
 		{
 			return self;
 		}
@@ -809,19 +810,10 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		var _rightGizmo = _quaternionGizmo.Rotate(BBMOD_VEC3_RIGHT);
 		var _upGizmo = _quaternionGizmo.Rotate(BBMOD_VEC3_UP);
 
-		var _matRot = [
-			_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0,
-			_rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z, 0.0,
-			_upGizmo.X, _upGizmo.Y, _upGizmo.Z, 0.0,
-			0.0, 0.0, 0.0, 1.0,
-		];
-
-		var _matRotInverse = [
-			_forwardGizmo.X, _rightGizmo.X, _upGizmo.X, 0.0,
-			_forwardGizmo.Y, _rightGizmo.Y, _upGizmo.Y, 0.0,
-			_forwardGizmo.Z, _rightGizmo.Z, _upGizmo.Z, 0.0,
-			0.0, 0.0, 0.0, 1.0,
-		];
+		// Build rotation matrix from quaternion
+		var _matRot = _quaternionGizmo.ToMatrix();
+		// For orthonormal matrices, inverse = transpose
+		var _matRotInverse = bbmod_matrix_transpose(_matRot);
 
 		////////////////////////////////////////////////////////////////////////
 		// Handle editing
@@ -839,36 +831,36 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				{
 					case BBMOD_EEditAxis.X:
 					{
-						var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _rightGizmo.Dot(_camera.get_forward());
+						var _dot2 = _upGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
 					}
 					break;
 
 					case BBMOD_EEditAxis.Y:
 					{
-						var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _forwardGizmo.Dot(_camera.get_forward());
+						var _dot2 = _upGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
 					}
 					break;
 
 					case BBMOD_EEditAxis.Z:
 					{
-						var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _forwardGizmo.Dot(_camera.get_forward());
+						var _dot2 = _rightGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
 					}
 					break;
 
 					case BBMOD_EEditAxis.All:
-						_planeNormal = global.__bbmodCameraCurrent.get_forward();
+						_planeNormal = _camera.get_forward();
 						break;
 				}
 
 				var _mouseWorld = intersect_ray_plane(
-					global.__bbmodCameraCurrent.Position,
-					global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global
+					_camera.Position,
+					_camera.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global
 						.__bbmodRendererCurrent),
 					__positionBackup,
 					_planeNormal);
@@ -976,8 +968,8 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 						: _upGizmo));
 
 				_mouseWorld = intersect_ray_plane(
-					global.__bbmodCameraCurrent.Position,
-					global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global
+					_camera.Position,
+					_camera.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global
 						.__bbmodRendererCurrent),
 					Position,
 					_planeNormal);
@@ -1017,36 +1009,36 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				{
 					case BBMOD_EEditAxis.X:
 					{
-						var _dot1 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _rightGizmo.Dot(_camera.get_forward());
+						var _dot2 = _upGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _rightGizmo : _upGizmo;
 					}
 					break;
 
 					case BBMOD_EEditAxis.Y:
 					{
-						var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _upGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _forwardGizmo.Dot(_camera.get_forward());
+						var _dot2 = _upGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _upGizmo;
 					}
 					break;
 
 					case BBMOD_EEditAxis.Z:
 					{
-						var _dot1 = _forwardGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
-						var _dot2 = _rightGizmo.Dot(global.__bbmodCameraCurrent.get_forward());
+						var _dot1 = _forwardGizmo.Dot(_camera.get_forward());
+						var _dot2 = _rightGizmo.Dot(_camera.get_forward());
 						_planeNormal = (abs(_dot1) > abs(_dot2)) ? _forwardGizmo : _rightGizmo;
 					}
 					break;
 
 					case BBMOD_EEditAxis.All:
-						_planeNormal = global.__bbmodCameraCurrent.get_forward();
+						_planeNormal = _camera.get_forward();
 						break;
 				}
 
 				_mouseWorld = intersect_ray_plane(
-					global.__bbmodCameraCurrent.Position,
-					global.__bbmodCameraCurrent.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global
+					_camera.Position,
+					_camera.screen_point_to_vec3(new BBMOD_Vec2(_mouseX, _mouseY), global
 						.__bbmodRendererCurrent),
 					Position,
 					_planeNormal);
@@ -1136,8 +1128,8 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 			var _upInstance = _quaternionInstance.Rotate(BBMOD_VEC3_UP);
 
 			// Apply rotation
-			var _matGlobal = GetInstanceGlobalMatrix(_instance);
-			var _matGlobalInv = _matGlobal.Inverse();
+			var _matGlobal = GetInstanceGlobalMatrix(_instance).Raw;
+			var _matGlobalInv = matrix_inverse(_matGlobal);
 			var _rotateByX = __rotateBy.X;
 			var _rotateByY = __rotateBy.Y;
 			var _rotateByZ = __rotateBy.Z;
@@ -1151,13 +1143,13 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				_rotateByZ = floor(__rotateBy.Z / AngleSnap) * AngleSnap;
 			}
 
-			var _temp = new BBMOD_Vec4(_forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z, 0.0).Transform(
-				_matGlobalInv.Raw);
-			var _forwardGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
-			_temp = new BBMOD_Vec4(_rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
-			var _rightGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
-			_temp = new BBMOD_Vec4(_upGizmo.X, _upGizmo.Y, _upGizmo.Z, 0.0).Transform(_matGlobalInv.Raw);
-			var _upGlobal = new BBMOD_Vec3(_temp.X, _temp.Y, _temp.Z);
+			// Transform gizmo basis vectors to instance's local space
+			var _vTemp = matrix_transform_vertex(_matGlobalInv, _forwardGizmo.X, _forwardGizmo.Y, _forwardGizmo.Z);
+			var _forwardGlobal = new BBMOD_Vec3(_vTemp[0], _vTemp[1], _vTemp[2]);
+			_vTemp = matrix_transform_vertex(_matGlobalInv, _rightGizmo.X, _rightGizmo.Y, _rightGizmo.Z);
+			var _rightGlobal = new BBMOD_Vec3(_vTemp[0], _vTemp[1], _vTemp[2]);
+			_vTemp = matrix_transform_vertex(_matGlobalInv, _upGizmo.X, _upGizmo.Y, _upGizmo.Z);
+			var _upGlobal = new BBMOD_Vec3(_vTemp[0], _vTemp[1], _vTemp[2]);
 
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
 			if (_rotateByX != 0.0)
@@ -1203,14 +1195,14 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 			_scaleNew.Z += __scaleBy.Z * abs(_upGlobal.Dot(_upInstance));
 
 			// Scale offset
-			var _vI = matrix_transform_vertex(_matRotInverse, _positionOffset.X, _positionOffset.Y, _positionOffset
-				.Z);
+			var _vI = matrix_transform_vertex(
+				_matRotInverse, _positionOffset.X, _positionOffset.Y, _positionOffset.Z);
+			// Compute scale ratios (new scale / old scale)
+			var _scaleRatioX = (_scaleOld.X + __scaleBy.X) / max(_scaleOld.X, 0.0001);
+			var _scaleRatioY = (_scaleOld.Y + __scaleBy.Y) / max(_scaleOld.Y, 0.0001);
+			var _scaleRatioZ = (_scaleOld.Z + __scaleBy.Z) / max(_scaleOld.Z, 0.0001);
 			var _vIRot = matrix_transform_vertex(
-				matrix_build(
-					0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-					(1.0 / max(_scaleOld.X, 0.0001)) * (_scaleOld.X + __scaleBy.X),
-					(1.0 / max(_scaleOld.Y, 0.0001)) * (_scaleOld.Y + __scaleBy.Y),
-					(1.0 / max(_scaleOld.Z, 0.0001)) * (_scaleOld.Z + __scaleBy.Z)),
+				matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _scaleRatioX, _scaleRatioY, _scaleRatioZ),
 				_vI[0], _vI[1], _vI[2]);
 			var _v = matrix_transform_vertex(_matRot, _vIRot[0], _vIRot[1], _vIRot[2]);
 

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bbmod_vtf",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bbmod_vtf",
+  "parent":{
+    "name":"VTF",
+    "path":"folders/BBMOD/VTF.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

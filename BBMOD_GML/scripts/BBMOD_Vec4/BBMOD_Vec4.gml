@@ -175,7 +175,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	/// components of `_min` and `_max` and stores the result into `self`.
 	///
 	/// @param {Struct.BBMOD_Vec4} _min A vector with minimum components.
-	/// @param {Struct.Struct.BBMOD_Vec4} _max A vector with maximum components.
+	/// @param {Struct.BBMOD_Vec4} _max A vector with maximum components.
 	///
 	/// @return {Struct.BBMOD_Vec4} Returns `self`.
 	static ClampSelf = function (_min, _max)
@@ -210,18 +210,21 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	static ClampLength = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		var _length = sqrt(
-			X * X
-			+ Y * Y
-			+ Z * Z
-			+ W * W
-		);
-		var _newLength = clamp(_length, _min, _max);
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
+		var _w = W;
+		var _length = sqrt(_x * _x + _y * _y + _z * _z + _w * _w);
+		if (_length <= math_get_epsilon())
+		{
+			return new BBMOD_Vec4();
+		}
+		var _scale = clamp(_length, _min, _max) / _length;
 		return new BBMOD_Vec4(
-			(X / _length) * _newLength,
-			(Y / _length) * _newLength,
-			(Z / _length) * _newLength,
-			(W / _length) * _newLength
+			_x * _scale,
+			_y * _scale,
+			_z * _scale,
+			_w * _scale
 		);
 	};
 
@@ -247,17 +250,24 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	static ClampLengthSelf = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		var _length = sqrt(
-			X * X
-			+ Y * Y
-			+ Z * Z
-			+ W * W
-		);
-		var _newLength = clamp(_length, _min, _max);
-		X = (X / _length) * _newLength;
-		Y = (Y / _length) * _newLength;
-		Z = (Z / _length) * _newLength;
-		W = (W / _length) * _newLength;
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
+		var _w = W;
+		var _length = sqrt(_x * _x + _y * _y + _z * _z + _w * _w);
+		if (_length <= math_get_epsilon())
+		{
+			X = 0.0;
+			Y = 0.0;
+			Z = 0.0;
+			W = 0.0;
+			return self;
+		}
+		var _scale = clamp(_length, _min, _max) / _length;
+		X = _x * _scale;
+		Y = _y * _scale;
+		Z = _z * _scale;
+		W = _w * _scale;
 		return self;
 	};
 
@@ -574,7 +584,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 			X,
 			Y,
 			Z,
-			W,
+			W
 		);
 	};
 
@@ -641,7 +651,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 			X,
 			Y,
 			Z,
-			W,
+			W
 		);
 	};
 
@@ -826,7 +836,8 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	/// @desc Reflects the vector from vector `_v` and returns the result
 	/// as a new vector.
 	///
-	/// @param {Struct.BBMOD_Vec4} _v The vector to reflect from.
+	/// @param {Struct.BBMOD_Vec4} _v The vector to reflect from. Must be
+	/// normalized!
 	///
 	/// @return {Struct.BBMOD_Vec4} The created vector.
 	static Reflect = function (_v)
@@ -931,7 +942,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	/// ```
 	static Scale = function (_s)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		return new BBMOD_Vec4(
 			X * _s,
 			Y * _s,
@@ -956,7 +967,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	/// ```
 	static ScaleSelf = function (_s)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		X *= _s;
 		Y *= _s;
 		Z *= _s;
@@ -1069,7 +1080,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	/// ```
 	static Sub = function (_v)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		return new BBMOD_Vec4(
 			X - _v.X,
 			Y - _v.Y,
@@ -1095,7 +1106,7 @@ function BBMOD_Vec4(_x = 0.0, _y = _x, _z = _x, _w = _x) constructor
 	/// ```
 	static SubSelf = function (_v)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		X -= _v.X;
 		Y -= _v.Y;
 		Z -= _v.Z;

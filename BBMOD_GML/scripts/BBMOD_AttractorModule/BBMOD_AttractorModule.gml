@@ -42,12 +42,22 @@ function BBMOD_AttractorModule(
 
 	static on_update = function (_emitter, _deltaTime)
 	{
-		__positionReal = Relative ? _emitter.Position.Add(Position) : Position;
+		// __positionReal = Relative ? _emitter.Position.Add(Position) : Position;
+		var _positionRealX, _positionRealY, _positionRealZ;
+		if (Relative)
+		{
+			_positionRealX = _emitter.Position.X + Position.X;
+			_positionRealY = _emitter.Position.Y + Position.Y;
+			_positionRealZ = _emitter.Position.Z + Position.Z;
+		}
+		else
+		{
+			_positionRealX = Position.X;
+			_positionRealY = Position.Y;
+			_positionRealZ = Position.Z;
+		}
 
 		var _particles = _emitter.Particles;
-		var _positionRealX = __positionReal.X;
-		var _positionRealY = __positionReal.Y;
-		var _positionRealZ = __positionReal.Z;
 		var _radius = Radius;
 		var _force = Force;
 
@@ -63,7 +73,7 @@ function BBMOD_AttractorModule(
 					- _particles[# BBMOD_EParticle.PositionY, _particleIndex];
 				var _vecZ = _positionRealZ
 					- _particles[# BBMOD_EParticle.PositionZ, _particleIndex];
-				var _distance = sqrt((_vecX * _vecX) + (_vecY * _vecY) + (_vecZ * _vecZ));
+				var _distance = point_distance_3d(0, 0, 0, _vecX, _vecY, _vecZ);
 				if (_distance <= _radius)
 				{
 					var _scale = (_force * (1.0 - (_distance / _radius))) / _mass;

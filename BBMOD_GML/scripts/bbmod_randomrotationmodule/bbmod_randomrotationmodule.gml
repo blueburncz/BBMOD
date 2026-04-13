@@ -29,10 +29,17 @@ function BBMOD_RandomRotationModule(_axis = BBMOD_VEC3_UP, _from = 0.0, _to = 36
 
 	static on_particle_start = function (_emitter, _particleIndex)
 	{
-		var _rotation = new BBMOD_Quaternion().FromAxisAngle(Axis, random_range(From, To));
-		_emitter.Particles[# BBMOD_EParticle.RotationX, _particleIndex] = _rotation.X;
-		_emitter.Particles[# BBMOD_EParticle.RotationY, _particleIndex] = _rotation.Y;
-		_emitter.Particles[# BBMOD_EParticle.RotationZ, _particleIndex] = _rotation.Z;
-		_emitter.Particles[# BBMOD_EParticle.RotationW, _particleIndex] = _rotation.W;
+		// var _rotation = new BBMOD_Quaternion().FromAxisAngle(Axis, random_range(From, To));
+		// Inlined to eliminate allocation
+		var _angle = -random_range(From, To);
+		var _sinHalfAngle = dsin(_angle * 0.5);
+		var _rotX = Axis.X * _sinHalfAngle;
+		var _rotY = Axis.Y * _sinHalfAngle;
+		var _rotZ = Axis.Z * _sinHalfAngle;
+		var _rotW = dcos(_angle * 0.5);
+		_emitter.Particles[# BBMOD_EParticle.RotationX, _particleIndex] = _rotX;
+		_emitter.Particles[# BBMOD_EParticle.RotationY, _particleIndex] = _rotY;
+		_emitter.Particles[# BBMOD_EParticle.RotationZ, _particleIndex] = _rotZ;
+		_emitter.Particles[# BBMOD_EParticle.RotationW, _particleIndex] = _rotW;
 	};
 }

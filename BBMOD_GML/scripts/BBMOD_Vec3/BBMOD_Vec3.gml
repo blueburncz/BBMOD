@@ -175,7 +175,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	/// components of `_min` and `_max` and stores the result into `self`.
 	///
 	/// @param {Struct.BBMOD_Vec3} _min A vector with minimum components.
-	/// @param {Struct.Struct.BBMOD_Vec3} _max A vector with maximum components.
+	/// @param {Struct.BBMOD_Vec3} _max A vector with maximum components.
 	///
 	/// @return {Struct.BBMOD_Vec3} Returns `self`.
 	static ClampSelf = function (_min, _max)
@@ -209,16 +209,19 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	static ClampLength = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		var _length = sqrt(
-			X * X
-			+ Y * Y
-			+ Z * Z
-		);
-		var _newLength = clamp(_length, _min, _max);
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
+		var _length = sqrt(_x * _x + _y * _y + _z * _z);
+		if (_length <= math_get_epsilon())
+		{
+			return new BBMOD_Vec3();
+		}
+		var _scale = clamp(_length, _min, _max) / _length;
 		return new BBMOD_Vec3(
-			(X / _length) * _newLength,
-			(Y / _length) * _newLength,
-			(Z / _length) * _newLength
+			_x * _scale,
+			_y * _scale,
+			_z * _scale
 		);
 	};
 
@@ -244,15 +247,21 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	static ClampLengthSelf = function (_min, _max)
 	{
 		gml_pragma("forceinline");
-		var _length = sqrt(
-			X * X
-			+ Y * Y
-			+ Z * Z
-		);
-		var _newLength = clamp(_length, _min, _max);
-		X = (X / _length) * _newLength;
-		Y = (Y / _length) * _newLength;
-		Z = (Z / _length) * _newLength;
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
+		var _length = sqrt(_x * _x + _y * _y + _z * _z);
+		if (_length <= math_get_epsilon())
+		{
+			X = 0.0;
+			Y = 0.0;
+			Z = 0.0;
+			return self;
+		}
+		var _scale = clamp(_length, _min, _max) / _length;
+		X = _x * _scale;
+		Y = _y * _scale;
+		Z = _z * _scale;
 		return self;
 	};
 
@@ -585,7 +594,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		return max(
 			X,
 			Y,
-			Z,
+			Z
 		);
 	};
 
@@ -649,7 +658,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		return min(
 			X,
 			Y,
-			Z,
+			Z
 		);
 	};
 
@@ -820,7 +829,8 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 
 	/// @func Orthonormalize(_v)
 	///
-	/// @desc Orthonormalizes the vectors in-place using the Gram–Schmidt process.
+	/// @desc Orthonormalizes two vectors `self` and `_v` in-place using the
+	/// Gram-Schmidt process.
 	///
 	/// @param {Struct.BBMOD_Vec3} _v The other vector.
 	///
@@ -829,17 +839,120 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	{
 		gml_pragma("forceinline");
 
-		var _v1 = Normalize();
-		var _proj = _v1.Scale(_v.Dot(_v1));
-		var _v2 = _v.Sub(_proj);
-
-		if (_v2.Length() <= 0.0)
+		var _eps = math_get_epsilon();
+		var _x1 = X;
+		var _y1 = Y;
+		var _z1 = Z;
+		var _len1Sqr = _x1 * _x1 + _y1 * _y1 + _z1 * _z1;
+		if (_len1Sqr <= _eps)
 		{
 			return false;
 		}
+		var _invLen1 = 1.0 / sqrt(_len1Sqr);
+		_x1 *= _invLen1;
+		_y1 *= _invLen1;
+		_z1 *= _invLen1;
 
-		_v1.Copy(self);
-		_v2.Normalize().Copy(_v);
+		var _x2 = _v.X;
+		var _y2 = _v.Y;
+		var _z2 = _v.Z;
+		var _dot = _x2 * _x1 + _y2 * _y1 + _z2 * _z1;
+		_x2 -= _x1 * _dot;
+		_y2 -= _y1 * _dot;
+		_z2 -= _z1 * _dot;
+
+		var _len2Sqr = _x2 * _x2 + _y2 * _y2 + _z2 * _z2;
+		if (_len2Sqr <= _eps)
+		{
+			return false;
+		}
+		var _invLen2 = 1.0 / sqrt(_len2Sqr);
+
+		X = _x1;
+		Y = _y1;
+		Z = _z1;
+
+		_v.X = _x2 * _invLen2;
+		_v.Y = _y2 * _invLen2;
+		_v.Z = _z2 * _invLen2;
+
+		return true;
+	};
+
+	/// @func Orthonormalize3(_v2, _v3)
+	///
+	/// @desc Orthonormalizes vectors `self`, `_v2` and `_v3` in-place using
+	/// the Gram-Schmidt process.
+	///
+	/// @param {Struct.BBMOD_Vec3} _v2 The second vector.
+	/// @param {Struct.BBMOD_Vec3} _v3 The third vector.
+	///
+	/// @return {Bool} Returns `true` if the vectors were orthonormalized.
+	static Orthonormalize3 = function (_v2, _v3)
+	{
+		gml_pragma("forceinline");
+
+		var _eps = math_get_epsilon();
+
+		// First vector
+		var _x1 = X;
+		var _y1 = Y;
+		var _z1 = Z;
+		var _len1Sqr = _x1 * _x1 + _y1 * _y1 + _z1 * _z1;
+		if (_len1Sqr <= _eps)
+		{
+			return false;
+		}
+		var _invLen1 = 1.0 / sqrt(_len1Sqr);
+		_x1 *= _invLen1;
+		_y1 *= _invLen1;
+		_z1 *= _invLen1;
+		X = _x1;
+		Y = _y1;
+		Z = _z1;
+
+		// Second vector
+		var _x2 = _v2.X;
+		var _y2 = _v2.Y;
+		var _z2 = _v2.Z;
+		var _dot21 = _x2 * _x1 + _y2 * _y1 + _z2 * _z1;
+		_x2 -= _x1 * _dot21;
+		_y2 -= _y1 * _dot21;
+		_z2 -= _z1 * _dot21;
+		var _len2Sqr = _x2 * _x2 + _y2 * _y2 + _z2 * _z2;
+		if (_len2Sqr <= _eps)
+		{
+			return false;
+		}
+		var _invLen2 = 1.0 / sqrt(_len2Sqr);
+		_x2 *= _invLen2;
+		_y2 *= _invLen2;
+		_z2 *= _invLen2;
+		_v2.X = _x2;
+		_v2.Y = _y2;
+		_v2.Z = _z2;
+
+		// Third vector
+		var _x3 = _v3.X;
+		var _y3 = _v3.Y;
+		var _z3 = _v3.Z;
+		var _dot31 = _x3 * _x1 + _y3 * _y1 + _z3 * _z1;
+		_x3 -= _x1 * _dot31;
+		_y3 -= _y1 * _dot31;
+		_z3 -= _z1 * _dot31;
+		var _dot32 = _x3 * _x2 + _y3 * _y2 + _z3 * _z2;
+		_x3 -= _x2 * _dot32;
+		_y3 -= _y2 * _dot32;
+		_z3 -= _z2 * _dot32;
+		var _len3Sqr = _x3 * _x3 + _y3 * _y3 + _z3 * _z3;
+		if (_len3Sqr <= _eps)
+		{
+			return false;
+		}
+		var _invLen3 = 1.0 / sqrt(_len3Sqr);
+		_v3.X = _x3 * _invLen3;
+		_v3.Y = _y3 * _invLen3;
+		_v3.Z = _z3 * _invLen3;
 
 		return true;
 	};
@@ -849,7 +962,8 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	/// @desc Reflects the vector from vector `_v` and returns the result
 	/// as a new vector.
 	///
-	/// @param {Struct.BBMOD_Vec3} _v The vector to reflect from.
+	/// @param {Struct.BBMOD_Vec3} _v The vector to reflect from. Must be
+	/// normalized!
 	///
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Reflect = function (_v)
@@ -945,7 +1059,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	/// ```
 	static Scale = function (_s)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
 			X * _s,
 			Y * _s,
@@ -968,7 +1082,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	/// ```
 	static ScaleSelf = function (_s)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		X *= _s;
 		Y *= _s;
 		Z *= _s;
@@ -1071,7 +1185,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	/// ```
 	static Sub = function (_v)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		return new BBMOD_Vec3(
 			X - _v.X,
 			Y - _v.Y,
@@ -1096,7 +1210,7 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 	/// ```
 	static SubSelf = function (_v)
 	{
-		gml_pragma("forceinline")
+		gml_pragma("forceinline");
 		X -= _v.X;
 		Y -= _v.Y;
 		Z -= _v.Z;
@@ -1157,11 +1271,13 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		{
 			_matrix = _matrix.Raw;
 		}
-		var _res = matrix_transform_vertex(_matrix, X, Y, Z);
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
 		return new BBMOD_Vec3(
-			_res[0],
-			_res[1],
-			_res[2]
+			_matrix[0] * _x + _matrix[4] * _y + _matrix[8] * _z + _matrix[12],
+			_matrix[1] * _x + _matrix[5] * _y + _matrix[9] * _z + _matrix[13],
+			_matrix[2] * _x + _matrix[6] * _y + _matrix[10] * _z + _matrix[14]
 		);
 	};
 
@@ -1181,10 +1297,12 @@ function BBMOD_Vec3(_x = 0.0, _y = _x, _z = _x) constructor
 		{
 			_matrix = _matrix.Raw;
 		}
-		var _res = matrix_transform_vertex(_matrix, X, Y, Z);
-		X = _res[0];
-		Y = _res[1];
-		Z = _res[2];
+		var _x = X;
+		var _y = Y;
+		var _z = Z;
+		X = _matrix[0] * _x + _matrix[4] * _y + _matrix[8] * _z + _matrix[12];
+		Y = _matrix[1] * _x + _matrix[5] * _y + _matrix[9] * _z + _matrix[13];
+		Z = _matrix[2] * _x + _matrix[6] * _y + _matrix[10] * _z + _matrix[14];
 		return self;
 	};
 }

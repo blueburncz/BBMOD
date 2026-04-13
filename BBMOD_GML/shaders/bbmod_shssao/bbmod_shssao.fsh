@@ -144,7 +144,7 @@ void main()
 
 	for (int i = 0; i < BBMOD_SSAO_KERNEL_SIZE; ++i)
 	{
-		vec2 dir = (rot * u_vSampleKernel[i].xy) * u_fRadius;
+		vec2 dir = (rot * u_vSampleKernel[i].xy) * (u_fRadius / depth);
 		vec2 uv1 = v_vTexCoord + dir * u_vTexel;
 		vec2 uv2 = v_vTexCoord - dir * u_vTexel;
 

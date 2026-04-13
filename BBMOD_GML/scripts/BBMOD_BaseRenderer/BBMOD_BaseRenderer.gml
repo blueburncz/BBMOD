@@ -980,6 +980,8 @@ function BBMOD_BaseRenderer() constructor
 
 		gpu_push_state();
 		gpu_set_blendenable(true);
+		gpu_set_zwriteenable(false);
+		gpu_set_ztestenable(false);
 
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
@@ -989,6 +991,7 @@ function BBMOD_BaseRenderer() constructor
 		var _texelWidth = 1.0 / _width;
 		var _texelHeight = 1.0 / _height;
 
+		matrix_set(matrix_world, bbmod_matrix_get_identity());
 		camera_set_view_size(__camera2D, _width, _height);
 		camera_apply(__camera2D);
 

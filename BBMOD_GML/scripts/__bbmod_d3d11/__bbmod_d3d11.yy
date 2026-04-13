@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__bbmod_d3d11",
   "parent":{
-    "name":"Utils",
-    "path":"folders/BBMOD/Core/Utils.yy",
+    "name":"D3D11",
+    "path":"folders/BBMOD/D3D11.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

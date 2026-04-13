@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShDownsampleKaris",
+  "name":"BBMOD_ShDownsampleKaris",
+  "parent":{
+    "name":"LightBloom",
+    "path":"folders/BBMOD/PostProcessing/LightBloom.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

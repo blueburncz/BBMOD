@@ -18,10 +18,10 @@ else
 }
 renderer.UseAppSurface = true;
 renderer.EnableShadows = true;
-renderer.ShadowmapNormalOffset = 0.01;
+renderer.ShadowmapNormalOffset = 0.1;
 renderer.EnableSSAO = true;
 renderer.SSAODepthRange = 1.5;
-renderer.SSAORadius = 64;
+renderer.SSAORadius = 128;
 renderer.SSAOPower = 2;
 
 gizmo = new BBMOD_Gizmo();
@@ -34,7 +34,7 @@ postProcessor.LensDirtStrength = 0.1;
 //_dof.AutoFocus = true;
 //postProcessor.add_effect(_dof);
 
-postProcessor.add_effect(new BBMOD_LightBloomEffect(undefined, new BBMOD_Vec3(0.2)));
+postProcessor.add_effect(new BBMOD_LightBloomEffect(1.2));
 
 directionalBlur = new BBMOD_DirectionalBlurEffect();
 postProcessor.add_effect(directionalBlur);
@@ -56,14 +56,9 @@ postProcessor.add_effect(new BBMOD_LensFlaresEffect());
 postProcessor.add_effect(new BBMOD_VignetteEffect(0.5));
 renderer.PostProcessor = postProcessor;
 
-batchSphere = undefined;
-
-modSphere = BBMOD_RESOURCE_MANAGER.load("Data/BBMOD/Models/Sphere.bbmod", function (_err, _model)
-{
-	bbmod_assert(_err == undefined, "Failed to load Sphere model!");
-	batchSphere = new BBMOD_DynamicBatch(modSphere);
-	modSphere.freeze();
-});
+modSphere = BBMOD_RESOURCE_MANAGER.load_sync("Data/BBMOD/Models/Sphere.bbmod");
+batchSphere = new BBMOD_DynamicBatch(modSphere);
+modSphere.freeze();
 
 var _baseMaterial = undefined;
 if (_useDeferredRenderer)

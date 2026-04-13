@@ -42,7 +42,7 @@ function BBMOD_AddVec3OverTimeModule(
 			var _y2 = _emitter.ParticlesAlive - 1;
 			if (_y2 >= 0)
 			{
-				var _factor = ((_deltaTime * 0.000001) / Period);
+				var _factor = ((_deltaTime * 0.000001) / max(Period, 0.000001));
 				var _change = Change;
 				var _changeX = _change.X * _factor;
 				var _changeY = _change.Y * _factor;

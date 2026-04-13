@@ -276,15 +276,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		//
 		surface_set_target(__surFinal);
 
-		gpu_push_state();
-		gpu_set_state(bbmod_gpu_get_default_state());
-		gpu_set_blendenable(false);
-		gpu_set_zwriteenable(false);
-		gpu_set_ztestenable(false);
-		matrix_set(matrix_world, matrix_build_identity());
-		camera_apply(__camera2D);
-		draw_sprite_stretched_ext(BBMOD_SprBlack, 0, 0, 0, _renderWidth, _renderHeight, c_black, 0.0);
-		gpu_pop_state();
+		draw_clear_ext(c_black, 0.0);
 
 		bbmod_render_pass_set(BBMOD_ERenderPass.DepthOnly);
 		matrix_set(matrix_world, _world);
@@ -321,7 +313,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		//
 		surface_set_target(__surLBuffer);
 
-		var _viewInverse = (new BBMOD_Matrix(_view)).Inverse().Raw;
+		var _viewInverse = matrix_inverse(_view);
 		var _tanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
 
 		////////////////////////////////////////////////////////////////////////
