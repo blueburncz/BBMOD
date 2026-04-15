@@ -223,6 +223,7 @@
  * [bbmod_vertex_buffer_load](./bbmod_vertex_buffer_load.html)
  * [bbmod_window_get_height](./bbmod_window_get_height.html)
  * [bbmod_window_get_width](./bbmod_window_get_width.html)
+ * [bbmod_wrap_value](./bbmod_wrap_value.html)
 <h3 id="CoreEnums">Enums</h3>
 
  * [BBMOD_ECubeSide](./BBMOD_ECubeSide.html)
