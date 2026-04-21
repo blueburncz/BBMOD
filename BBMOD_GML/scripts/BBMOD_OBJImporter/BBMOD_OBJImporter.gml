@@ -105,12 +105,8 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 				case "map_Kd":
 				{
 					var _spritePath = filename_path(_path) + _line;
-					var _scope = {
-						Material: _material,
-						SpritePath: _spritePath
-					};
-					_res = BBMOD_RESOURCE_MANAGER.load_sync(_spritePath);
-					Material.BaseOpacity = sprite_get_texture(_res.Raw, 0);
+					var _res = BBMOD_RESOURCE_MANAGER.load_sync(_spritePath);
+					_material.BaseOpacity = sprite_get_texture(_res.Raw, 0);
 				}
 				break;
 			}
