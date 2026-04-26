@@ -4,3 +4,9 @@
 [submodule "BBMOD_CPP/external/assimp"]
 	path = BBMOD_CPP/external/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "BBMOD_CPP/external/stb"]
+	path = BBMOD_CPP/external/stb
+	url = https://github.com/nothings/stb.git
+[submodule "BBMOD_CPP/external/tinyddsloader"]
+	path = BBMOD_CPP/external/tinyddsloader
+	url = https://github.com/benikabocha/tinyddsloader.git

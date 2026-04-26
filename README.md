@@ -43,27 +43,7 @@ An online documentation for the latest release of BBMOD is always available at h
 
 Requires [CMake](https://cmake.org) version 3.23 or newer!
 
-### 1. Build Assimp
-
-Normally this can be omitted, since Assimp binaries are included in this repo, but in case of need, here's how to build them from scratch:
-
-```sh
-git clone https://github.com/assimp/assimp.git
-cd assimp
-git checkout v5.4.3
-cmake -S . -B build # Use -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" on macOS!
-cmake --build build --config=Release
-```
-
-When finished, copy
-
-* `assimp-vc143-mt.dll` into `/BBMOD_CLI/bin/` on Windows,
-* `assimp-vc143-mt.lib` into `/BBMOD_CLI/lib/`
-* and `libassimp.5.4.3.dylib` into `/BBMOD_CLI/lib/libassimp.5.dylib` on macOS.
-
-Up-to-date license text of Assimp (from its `LICENSE` file) should be kept in `/BBMOD_CLI/bin/LICENSE-Assimp`‼️
-
-### 2. Build BBMOD CLI and DLL
+### 1. Build BBMOD CLI and DLL
 
 ```sh
 git clone --recurse-submodules https://github.com/blueburncz/BBMOD.git
@@ -72,9 +52,9 @@ cmake -S . -B build -DCMAKE_POLICY_VERSION_MINIMUM="3.10"
 cmake --build build --config=Release
 ```
 
-his builds both BBMOD CLI and DLL copies all files into their designated folders.
+his builds both BBMOD CLI and DLL and copies all files into their designated folders.
 
-### 3. Fix rpaths and codesign (for macOS)
+### 2. Fix rpaths and codesign (for macOS)
 
 * Check rpaths:
 
@@ -95,9 +75,9 @@ install_name_tool -add_rpath "@executable_path/data/bbmod" libBBMOD.dylib
 install_name_tool -add_rpath "@loader_path/" libBBMOD.dylib
 install_name_tool -add_rpath "@executable_path/../Resources/Data/BBMOD" libBBMOD.dylib
 
-install_name_tool -add_rpath "@executable_path/data/bbmod" libassimp.5.dylib
-install_name_tool -add_rpath "@loader_path/" libassimp.5.dylib
-install_name_tool -add_rpath "@executable_path/../Resources/Data/BBMOD" libassimp.5.dylib
+install_name_tool -add_rpath "@executable_path/data/bbmod" libassimp.6.dylib
+install_name_tool -add_rpath "@loader_path/" libassimp.6.dylib
+install_name_tool -add_rpath "@executable_path/../Resources/Data/BBMOD" libassimp.6.dylib
 ```
 
 * Codesign:
@@ -105,7 +85,7 @@ install_name_tool -add_rpath "@executable_path/../Resources/Data/BBMOD" libassim
 ```sh
 codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" BBMOD
 codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libBBMOD.dylib
-codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libassimp.5.dylib
+codesign --force --timestamp --sign "Developer ID Application: Your Name (Y0URT3AM1D)" libassimp.6.dylib
 ```
 
 ## License
