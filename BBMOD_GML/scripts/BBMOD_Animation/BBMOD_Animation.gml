@@ -96,6 +96,10 @@ function BBMOD_Animation(_file = undefined, _sha1 = undefined): BBMOD_Resource()
 	/// @private
 	__isTransition = false;
 
+	/// @var {Real} Used to play the animation at a faster/slower rate. Defaults
+	/// to 1.
+	PlaybackSpeed = 1.0;
+
 	/// @var {Real} Duration of transition into this animation (in seconds).
 	/// Must be a value greater or equal to 0!
 	TransitionIn = 0.1;
