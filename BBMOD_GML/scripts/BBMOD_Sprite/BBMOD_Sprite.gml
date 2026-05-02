@@ -101,7 +101,7 @@ function BBMOD_Sprite(_file = undefined, _sha1 = undefined): BBMOD_Resource() co
 		gml_pragma("forceinline");
 		if (Raw == undefined)
 		{
-			return (-1/*pointer_null*/);
+			return (-1 /*pointer_null*/ );
 		}
 		return sprite_get_texture(Raw, _subimage);
 	};

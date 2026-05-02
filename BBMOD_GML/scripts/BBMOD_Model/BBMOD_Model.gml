@@ -1016,11 +1016,18 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 	{
 		Resource_destroy();
 		var i = 0;
-		repeat(array_length(Meshes))
+		repeat(is_array(Meshes) ? array_length(Meshes) : 0)
 		{
-			Meshes[i++].destroy();
+			if (Meshes[i] != undefined)
+			{
+				Meshes[i].destroy();
+			}
+			++i;
 		}
 		Meshes = undefined;
+		RootNode = undefined;
+		__nodeArray = undefined;
+		__cacheData = undefined;
 		return undefined;
 	};
 

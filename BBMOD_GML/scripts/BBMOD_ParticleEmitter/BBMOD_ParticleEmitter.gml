@@ -192,7 +192,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 					0, _lastAlive,
 					BBMOD_EParticle.SIZE - 1, _lastAlive,
 					0, _particleIndex);
-				Particles[# BBMOD_ERenderPass.Id, _lastAlive] = _particleId;
+				Particles[# BBMOD_EParticle.Id, _lastAlive] = _particleId;
 				Particles[# BBMOD_EParticle.IsAlive, _lastAlive] = false;
 
 				--ParticlesAlive;

@@ -304,7 +304,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 					var _N = 0;
 					var _faceVerts = [];
 					var _rem = _line;
-					
+
 					while (_rem != "")
 					{
 						bbmod_string_split_on_first(_rem, " ", _split);
@@ -347,7 +347,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 								_vertex.TextureCoord.Y = __textureCoords[|  _t + 1];
 							}
 
-							_vertexInd[_i] = _meshBuilder.add_vertex(_vertex);
+							_polyInd[_i] = _meshBuilder.add_vertex(_vertex);
 						}
 
 						// Fan triangulate
@@ -355,11 +355,11 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 						{
 							if (InvertWinding)
 							{
-								_meshBuilder.add_face(_vertexInd[_i + 1], _vertexInd[_i], _vertexInd[0]);
+								_meshBuilder.add_face(_polyInd[_i + 1], _polyInd[_i], _polyInd[0]);
 							}
 							else
 							{
-								_meshBuilder.add_face(_vertexInd[0], _vertexInd[_i], _vertexInd[_i + 1]);
+								_meshBuilder.add_face(_polyInd[0], _polyInd[_i], _polyInd[_i + 1]);
 							}
 						}
 					}

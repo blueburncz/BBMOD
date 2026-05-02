@@ -127,7 +127,7 @@ function BBMOD_DefaultShader(_shader, _vertexFormat): BBMOD_BaseShader(_shader, 
 
 		// Base opacity UVs
 		var _baseOpacity = _material.BaseOpacity;
-		if (_baseOpacity != (-1/*pointer_null*/))
+		if (_baseOpacity != (-1 /*pointer_null*/ ))
 		{
 			bbmod_shader_set_base_opacity_uv(_shaderCurrent, texture_get_uvs(_baseOpacity));
 		}

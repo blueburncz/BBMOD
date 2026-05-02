@@ -80,6 +80,7 @@ function BBMOD_ResourceManager() constructor
 		}
 		__resources[?  _uniqueName] = _resource;
 		_resource.__manager = self;
+		_resource.__resourceId = _uniqueName;
 		return self;
 	};
 
@@ -117,7 +118,9 @@ function BBMOD_ResourceManager() constructor
 		{
 			throw new BBMOD_Exception("Resource not found!");
 		}
-		return __resources[?  _pathOrUniqueName].ref();
+
+		var _resource = __resources[?  _pathOrUniqueName];
+		return _resource.ref();
 	};
 
 	/// @func get_or_add(_uniqueName, _onAdd)
@@ -267,7 +270,8 @@ function BBMOD_ResourceManager() constructor
 						if (_isSprite)
 						{
 							var _prefixLength = 9; //string_length("sprite://");
-							var _spriteNameAndSubimage = string_split(string_delete(_texturePath, 1, _prefixLength), ":");
+							var _spriteNameAndSubimage = string_split(string_delete(_texturePath, 1,
+								_prefixLength), ":");
 							var _spriteName = _spriteNameAndSubimage[0];
 
 							if (array_length(_spriteNameAndSubimage) > 1)
@@ -342,6 +346,7 @@ function BBMOD_ResourceManager() constructor
 		}
 
 		_res.__manager = self;
+		_res.__resourceId = _path;
 		var _manager = self;
 		var _context = {
 			Path: _path,
@@ -356,6 +361,11 @@ function BBMOD_ResourceManager() constructor
 		var _callback = method(_context, function (_err, _res)
 		{
 			--Manager.Loading;
+
+			if (_res.__manager != Manager)
+			{
+				return;
+			}
 
 			if (_err == undefined && LoadMaterials)
 			{
@@ -385,7 +395,9 @@ function BBMOD_ResourceManager() constructor
 							{
 								Model.Materials[@ Index] = _res;
 							}
-							if (Counter.Value-- == 0
+
+							--Counter.Value;
+							if (Counter.Value == 0
 								&& Callback != undefined)
 							{
 								Callback(undefined, Model);
@@ -568,7 +580,7 @@ function BBMOD_ResourceManager() constructor
 	{
 		gml_pragma("forceinline");
 		var _resource = is_struct(_resourceOrPath)
-			? _resourceOrPath : _resources[?  _resourceOrPath];
+			? _resourceOrPath : __resources[?  _resourceOrPath];
 		if (_resource == undefined || _resource.__manager != self)
 		{
 			throw new BBMOD_Exception("Resource not added to this resource manager!");
@@ -602,6 +614,7 @@ function BBMOD_ResourceManager() constructor
 			}
 		}
 		_resource.__manager = undefined;
+		_resource.__resourceId = undefined;
 		return self;
 	};
 
@@ -623,9 +636,14 @@ function BBMOD_ResourceManager() constructor
 		{
 			_resourceOrPath.free();
 		}
+		else if (ds_map_exists(_resources, _resourceOrPath))
+		{
+			var _resource = _resources[?  _resourceOrPath];
+			_resource.free();
+		}
 		else
 		{
-			_resources[?  _resourceOrPath].free();
+			throw new BBMOD_Exception("Resource not found!");
 		}
 		return self;
 	};

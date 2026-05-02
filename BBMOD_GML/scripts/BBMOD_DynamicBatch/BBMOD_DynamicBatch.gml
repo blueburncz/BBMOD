@@ -174,21 +174,21 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 		if (_indexDataDeleted != undefined)
 		{
 			var _indexIdDeleted = _indexDataDeleted / SlotsPerInstance;
+			var _indexLast = InstanceCount - 1;
+			var _indexDataLast = _indexLast * SlotsPerInstance;
+			var _instanceLast = __indexToInstance[?  _indexDataLast];
 
 			--InstanceCount;
-			if (InstanceCount > 0)
+			if (InstanceCount > 0
+				&& _indexDataDeleted != _indexDataLast)
 			{
 				////////////////////////////////////////////////////////////////
 				// Data
 
-				// Get last used index
-				var _indexLast = InstanceCount * SlotsPerInstance;
-				// Get instance that is stored on that index
-				var _instanceLast = __indexToInstance[?  _indexLast];
 				// Find the exact array that stores the data
-				var _dataLast = __data[_indexLast div BatchLength];
+				var _dataLast = __data[_indexDataLast div BatchLength];
 				// Get starting index within that array
-				var i = _indexLast mod BatchLength;
+				var i = _indexDataLast mod BatchLength;
 
 				// Copy data of the last instance over the data of the removed instance
 				array_copy(
@@ -204,8 +204,6 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 				////////////////////////////////////////////////////////////////
 				// Ids
 
-				// Get last used index
-				_indexLast = InstanceCount;
 				// Find the exact array that stores the ID
 				var _idsLast = __ids[_indexLast div Size];
 				// Get starting index within that array
@@ -222,8 +220,23 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 				// Last instance is now stored instead of the deleted one
 				__instanceToIndex[?  _instanceLast] = _indexDataDeleted;
 				__indexToInstance[?  _indexDataDeleted] = _instanceLast;
-				ds_map_delete(__indexToInstance, _indexLast);
 			}
+			else
+			{
+				var _dataLast = __data[_indexDataLast div BatchLength];
+				var i = _indexDataLast mod BatchLength;
+
+				repeat(SlotsPerInstance)
+				{
+					_dataLast[i++] = 0.0;
+				}
+
+				var _idsLast = __ids[_indexLast div Size];
+				_idsLast[@ _indexLast mod Size] = 0.0;
+			}
+
+			ds_map_delete(__instanceToIndex, _instance);
+			ds_map_delete(__indexToInstance, _indexDataLast);
 			__resize_data();
 		}
 		return self;
@@ -378,7 +391,7 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 			}
 		}
 
-		_method(_material, _batchData, _batchIds);
+		_method(_materials, _batchData, _batchIds);
 	};
 
 	/// @func submit_object(_object[, _materials[, _fn]])

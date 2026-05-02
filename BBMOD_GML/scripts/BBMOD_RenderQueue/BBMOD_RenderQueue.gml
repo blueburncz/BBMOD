@@ -1739,6 +1739,7 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 		repeat(__index)
 		{
 			var _command = _renderCommands[_commandIndex++];
+
 			var i = 0;
 			var _commandType = _command[i++];
 

@@ -120,6 +120,9 @@ function BBMOD_Animation(_file = undefined, _sha1 = undefined): BBMOD_Resource()
 	/// @param {String} _name The name of the event.
 	///
 	/// @return {Struct.BBMOD_Animation} Returns `self`.
+	/// @note Events are fired in the exact order they are stored in this
+	/// animation. If multiple events use the same frame, their insertion order
+	/// is preserved.
 	///
 	/// @example
 	/// ```gml
@@ -339,6 +342,205 @@ function BBMOD_Animation(_file = undefined, _sha1 = undefined): BBMOD_Resource()
 		from_file(_file, _sha1);
 	}
 
+	/// @func sample_transition_frame(_timeFrom, _animTo, _timeTo, _factor
+	/// [, _destination])
+	///
+	/// @desc Samples a transition frame between this animation and target
+	/// animation and writes it into destination array.
+	///
+	/// @param {Real} _timeFrom Animation time of this animation in tics.
+	/// @param {Struct.BBMOD_Animation} _animTo Target animation.
+	/// @param {Real} _timeTo Animation time of target animation in tics.
+	/// @param {Real} _factor Blend factor in range 0..1.
+	/// @param {Array<Real>} [_destination] Optional destination array receiving
+	/// the blended frame. If omitted, a new array is allocated.
+	///
+	/// @return {Array<Real>} Transition frame array or `undefined` if sampling
+	/// is not supported.
+	static sample_transition_frame = function (_timeFrom, _animTo, _timeTo,
+		_factor, _destination = undefined)
+	{
+		bbmod_assert(_animTo != undefined,
+			"Transition target animation cannot be undefined!");
+
+		if ((__spaces & (__BBMOD_BONE_SPACE_PARENT | __BBMOD_BONE_SPACE_WORLD)) == 0
+			|| __spaces != _animTo.__spaces)
+		{
+			return undefined;
+		}
+
+		_factor = clamp(_factor, 0.0, 1.0);
+		_timeFrom = bbmod_wrap_value(_timeFrom, Duration);
+		_timeTo = bbmod_wrap_value(_timeTo, _animTo.Duration);
+
+		var _frameFrom;
+		var _frameTo;
+		if (__spaces & __BBMOD_BONE_SPACE_PARENT)
+		{
+			_frameFrom = __framesParent[_timeFrom];
+			_frameTo = _animTo.__framesParent[_timeTo];
+		}
+		else
+		{
+			_frameFrom = __framesWorld[_timeFrom];
+			_frameTo = _animTo.__framesWorld[_timeTo];
+		}
+
+		var _frameSize = array_length(_frameFrom);
+		if (_destination == undefined)
+		{
+			_destination = array_create(_frameSize, 0.0);
+		}
+		else
+		{
+			bbmod_assert(is_array(_destination),
+				"Transition destination must be an array!");
+			bbmod_assert(array_length(_destination) >= _frameSize,
+				"Transition destination array is too small!");
+		}
+
+		var i = 0;
+		repeat(_frameSize / 8)
+		{
+			// First dual quaternion
+			var _dq10 = _frameFrom[i];
+			var _dq11 = _frameFrom[i + 1];
+			var _dq12 = _frameFrom[i + 2];
+			var _dq13 = _frameFrom[i + 3];
+			// (* 2 since we use this only in the translation reconstruction)
+			var _dq14 = _frameFrom[i + 4] * 2;
+			var _dq15 = _frameFrom[i + 5] * 2;
+			var _dq16 = _frameFrom[i + 6] * 2;
+			var _dq17 = _frameFrom[i + 7] * 2;
+
+			// Second dual quaternion
+			var _dq20 = _frameTo[i];
+			var _dq21 = _frameTo[i + 1];
+			var _dq22 = _frameTo[i + 2];
+			var _dq23 = _frameTo[i + 3];
+			// (* 2 since we use this only in the translation reconstruction)
+			var _dq24 = _frameTo[i + 4] * 2;
+			var _dq25 = _frameTo[i + 5] * 2;
+			var _dq26 = _frameTo[i + 6] * 2;
+			var _dq27 = _frameTo[i + 7] * 2;
+
+			// Lerp between reconstructed translations
+			var _pos0 = lerp(
+				_dq17 * (-_dq10) + _dq14 * _dq13 + _dq15 * (-_dq12) - _dq16 * (-_dq11),
+				_dq27 * (-_dq20) + _dq24 * _dq23 + _dq25 * (-_dq22) - _dq26 * (-_dq21),
+				_factor
+			);
+
+			var _pos1 = lerp(
+				_dq17 * (-_dq11) + _dq15 * _dq13 + _dq16 * (-_dq10) - _dq14 * (-_dq12),
+				_dq27 * (-_dq21) + _dq25 * _dq23 + _dq26 * (-_dq20) - _dq24 * (-_dq22),
+				_factor
+			);
+
+			var _pos2 = lerp(
+				_dq17 * (-_dq12) + _dq16 * _dq13 + _dq14 * (-_dq11) - _dq15 * (-_dq10),
+				_dq27 * (-_dq22) + _dq26 * _dq23 + _dq24 * (-_dq21) - _dq25 * (-_dq20),
+				_factor
+			);
+
+			// Slerp rotations and store result into _dq1
+			var _norm;
+
+			var _lenSqr = _dq10 * _dq10
+				+ _dq11 * _dq11
+				+ _dq12 * _dq12
+				+ _dq13 * _dq13;
+
+			if (_lenSqr > math_get_epsilon())
+			{
+				_norm = 1.0 / sqrt(_lenSqr);
+				_dq10 *= _norm;
+				_dq11 *= _norm;
+				_dq12 *= _norm;
+				_dq13 *= _norm;
+			}
+			else
+			{
+				_dq10 = 0.0;
+				_dq11 = 0.0;
+				_dq12 = 0.0;
+				_dq13 = 1.0;
+			}
+
+			_lenSqr = _dq20 * _dq20
+				+ _dq21 * _dq21
+				+ _dq22 * _dq22
+				+ _dq23 * _dq23;
+
+			if (_lenSqr > math_get_epsilon())
+			{
+				_norm = 1.0 / sqrt(_lenSqr);
+				_dq20 *= _norm;
+				_dq21 *= _norm;
+				_dq22 *= _norm;
+				_dq23 *= _norm;
+			}
+			else
+			{
+				_dq20 = 0.0;
+				_dq21 = 0.0;
+				_dq22 = 0.0;
+				_dq23 = 1.0;
+			}
+
+			var _dot = _dq10 * _dq20
+				+ _dq11 * _dq21
+				+ _dq12 * _dq22
+				+ _dq13 * _dq23;
+
+			if (_dot < 0)
+			{
+				_dot = -_dot;
+				_dq20 *= -1;
+				_dq21 *= -1;
+				_dq22 *= -1;
+				_dq23 *= -1;
+			}
+
+			if (_dot > 0.9995)
+			{
+				_dq10 = lerp(_dq10, _dq20, _factor);
+				_dq11 = lerp(_dq11, _dq21, _factor);
+				_dq12 = lerp(_dq12, _dq22, _factor);
+				_dq13 = lerp(_dq13, _dq23, _factor);
+			}
+			else
+			{
+				var _theta0 = arccos(clamp(_dot, -1.0, 1.0));
+				var _theta = _theta0 * _factor;
+				var _sinTheta = sin(_theta);
+				var _sinTheta0 = sin(_theta0);
+				var _s2 = _sinTheta / _sinTheta0;
+				var _s1 = cos(_theta) - (_dot * _s2);
+
+				_dq10 = (_dq10 * _s1) + (_dq20 * _s2);
+				_dq11 = (_dq11 * _s1) + (_dq21 * _s2);
+				_dq12 = (_dq12 * _s1) + (_dq22 * _s2);
+				_dq13 = (_dq13 * _s1) + (_dq23 * _s2);
+			}
+
+			// Create new dual quaternion from translation and rotation and
+			// write it into the frame
+			_destination[@ i] = _dq10;
+			_destination[@ i + 1] = _dq11;
+			_destination[@ i + 2] = _dq12;
+			_destination[@ i + 3] = _dq13;
+			_destination[@ i + 4] = (+_pos0 * _dq13 + _pos1 * _dq12 - _pos2 * _dq11) * 0.5;
+			_destination[@ i + 5] = (+_pos1 * _dq13 + _pos2 * _dq10 - _pos0 * _dq12) * 0.5;
+			_destination[@ i + 6] = (+_pos2 * _dq13 + _pos0 * _dq11 - _pos1 * _dq10) * 0.5;
+			_destination[@ i + 7] = (-_pos0 * _dq10 - _pos1 * _dq11 - _pos2 * _dq12) * 0.5;
+
+			i += 8;
+		}
+
+		return _destination;
+	};
+
 	/// @func create_transition(_timeFrom, _animTo, _timeTo)
 	///
 	/// @desc Creates a new animation transition.
@@ -353,11 +555,21 @@ function BBMOD_Animation(_file = undefined, _sha1 = undefined): BBMOD_Resource()
 	/// support transitions.
 	static create_transition = function (_timeFrom, _animTo, _timeTo)
 	{
+		bbmod_assert(_animTo != undefined,
+			"Transition target animation cannot be undefined!");
+		bbmod_assert(Duration > 0,
+			"Source animation cannot create transition with zero duration!");
+		bbmod_assert(_animTo.Duration > 0,
+			"Target animation cannot create transition with zero duration!");
+
 		if ((__spaces & (__BBMOD_BONE_SPACE_PARENT | __BBMOD_BONE_SPACE_WORLD)) == 0
 			|| __spaces != _animTo.__spaces)
 		{
 			return undefined;
 		}
+
+		_timeFrom = bbmod_wrap_value(_timeFrom, Duration);
+		_timeTo = bbmod_wrap_value(_timeTo, _animTo.Duration);
 
 		var _transition = new BBMOD_Animation();
 		_transition.IsLoaded = true;
@@ -366,152 +578,30 @@ function BBMOD_Animation(_file = undefined, _sha1 = undefined): BBMOD_Resource()
 		_transition.__spaces = (__spaces & __BBMOD_BONE_SPACE_PARENT)
 			? __BBMOD_BONE_SPACE_PARENT
 			: __BBMOD_BONE_SPACE_WORLD;
-		_transition.Duration = round((TransitionOut + _animTo.TransitionIn)
-			* TicsPerSecond);
+		_transition.Duration = max(1, round((TransitionOut + _animTo.TransitionIn)
+			* TicsPerSecond));
 		_transition.TicsPerSecond = TicsPerSecond;
 		_transition.__isTransition = true;
 
-		var _frameFrom, _frameTo, _framesDest;
+		var _framesDest;
 
 		if (__spaces & __BBMOD_BONE_SPACE_PARENT)
 		{
-			_frameFrom = __framesParent[_timeFrom];
-			_frameTo = _animTo.__framesParent[_timeTo];
 			_framesDest = _transition.__framesParent;
 		}
 		else
 		{
-			_frameFrom = __framesWorld[_timeFrom];
-			_frameTo = _animTo.__framesWorld[_timeTo];
 			_framesDest = _transition.__framesWorld;
 		}
 
 		var _time = 0;
 		repeat(_transition.Duration)
 		{
-			var _frameSize = array_length(_frameFrom);
-			var _frame = array_create(_frameSize);
-
-			var i = 0;
-			repeat(_frameSize / 8)
-			{
-				var _factor = _time / _transition.Duration;
-
-				// First dual quaternion
-				var _dq10 = _frameFrom[i];
-				var _dq11 = _frameFrom[i + 1];
-				var _dq12 = _frameFrom[i + 2];
-				var _dq13 = _frameFrom[i + 3];
-				// (* 2 since we use this only in the translation reconstruction)
-				var _dq14 = _frameFrom[i + 4] * 2;
-				var _dq15 = _frameFrom[i + 5] * 2;
-				var _dq16 = _frameFrom[i + 6] * 2;
-				var _dq17 = _frameFrom[i + 7] * 2;
-
-				// Second dual quaternion
-				var _dq20 = _frameTo[i];
-				var _dq21 = _frameTo[i + 1];
-				var _dq22 = _frameTo[i + 2];
-				var _dq23 = _frameTo[i + 3];
-				// (* 2 since we use this only in the translation reconstruction)
-				var _dq24 = _frameTo[i + 4] * 2;
-				var _dq25 = _frameTo[i + 5] * 2;
-				var _dq26 = _frameTo[i + 6] * 2;
-				var _dq27 = _frameTo[i + 7] * 2;
-
-				// Lerp between reconstructed translations
-				var _pos0 = lerp(
-					_dq17 * (-_dq10) + _dq14 * _dq13 + _dq15 * (-_dq12) - _dq16 * (-_dq11),
-					_dq27 * (-_dq20) + _dq24 * _dq23 + _dq25 * (-_dq22) - _dq26 * (-_dq21),
-					_factor
-				);
-
-				var _pos1 = lerp(
-					_dq17 * (-_dq11) + _dq15 * _dq13 + _dq16 * (-_dq10) - _dq14 * (-_dq12),
-					_dq27 * (-_dq21) + _dq25 * _dq23 + _dq26 * (-_dq20) - _dq24 * (-_dq22),
-					_factor
-				);
-
-				var _pos2 = lerp(
-					_dq17 * (-_dq12) + _dq16 * _dq13 + _dq14 * (-_dq11) - _dq15 * (-_dq10),
-					_dq27 * (-_dq22) + _dq26 * _dq23 + _dq24 * (-_dq21) - _dq25 * (-_dq20),
-					_factor
-				);
-
-				// Slerp rotations and store result into _dq1
-				var _norm;
-
-				_norm = 1 / sqrt(_dq10 * _dq10
-					+ _dq11 * _dq11
-					+ _dq12 * _dq12
-					+ _dq13 * _dq13);
-
-				_dq10 *= _norm;
-				_dq11 *= _norm;
-				_dq12 *= _norm;
-				_dq13 *= _norm;
-
-				_norm = sqrt(_dq20 * _dq20
-					+ _dq21 * _dq21
-					+ _dq22 * _dq22
-					+ _dq23 * _dq23);
-
-				_dq20 *= _norm;
-				_dq21 *= _norm;
-				_dq22 *= _norm;
-				_dq23 *= _norm;
-
-				var _dot = _dq10 * _dq20
-					+ _dq11 * _dq21
-					+ _dq12 * _dq22
-					+ _dq13 * _dq23;
-
-				if (_dot < 0)
-				{
-					_dot = -_dot;
-					_dq20 *= -1;
-					_dq21 *= -1;
-					_dq22 *= -1;
-					_dq23 *= -1;
-				}
-
-				if (_dot > 0.9995)
-				{
-					_dq10 = lerp(_dq10, _dq20, _factor);
-					_dq11 = lerp(_dq11, _dq21, _factor);
-					_dq12 = lerp(_dq12, _dq22, _factor);
-					_dq13 = lerp(_dq13, _dq23, _factor);
-				}
-				else
-				{
-					var _theta0 = arccos(_dot);
-					var _theta = _theta0 * _factor;
-					var _sinTheta = sin(_theta);
-					var _sinTheta0 = sin(_theta0);
-					var _s2 = _sinTheta / _sinTheta0;
-					var _s1 = cos(_theta) - (_dot * _s2);
-
-					_dq10 = (_dq10 * _s1) + (_dq20 * _s2);
-					_dq11 = (_dq11 * _s1) + (_dq21 * _s2);
-					_dq12 = (_dq12 * _s1) + (_dq22 * _s2);
-					_dq13 = (_dq13 * _s1) + (_dq23 * _s2);
-				}
-
-				// Create new dual quaternion from translation and rotation and
-				// write it into the frame
-				_frame[@ i] = _dq10;
-				_frame[@ i + 1] = _dq11;
-				_frame[@ i + 2] = _dq12;
-				_frame[@ i + 3] = _dq13;
-				_frame[@ i + 4] = (+_pos0 * _dq13 + _pos1 * _dq12 - _pos2 * _dq11) * 0.5;
-				_frame[@ i + 5] = (+_pos1 * _dq13 + _pos2 * _dq10 - _pos0 * _dq12) * 0.5;
-				_frame[@ i + 6] = (+_pos2 * _dq13 + _pos0 * _dq11 - _pos1 * _dq10) * 0.5;
-				_frame[@ i + 7] = (-_pos0 * _dq10 - _pos1 * _dq11 - _pos2 * _dq12) * 0.5;
-
-				i += 8;
-			}
-
-			array_push(_framesDest, _frame);
+			var _factor = (_transition.Duration > 1)
+				? (_time / (_transition.Duration - 1))
+				: 1.0;
+			array_push(_framesDest,
+				sample_transition_frame(_timeFrom, _animTo, _timeTo, _factor));
 			++_time;
 		}
 

@@ -22,6 +22,11 @@ modSphere.render([matSphereEmissive]);
 
 terrain.render();
 
+_matrix.SetIdentity()
+	.TranslateSelf(0, -8, 0)
+	.ApplyWorld();
+characterPlayer.render();
+
 BBMOD_MATRIX_IDENTITY.ApplyWorld();
 
 camera.apply();

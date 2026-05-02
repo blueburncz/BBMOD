@@ -144,7 +144,7 @@ function BBMOD_PostProcessor() constructor
 			"Effect is not added to this post-processor!");
 		for (var i = array_length(Effects) - 1; i >= 0; --i)
 		{
-			if (Effects == _effect)
+			if (Effects[i] == _effect)
 			{
 				_effect.PostProcessor = undefined;
 				array_delete(Effects, i, 1);

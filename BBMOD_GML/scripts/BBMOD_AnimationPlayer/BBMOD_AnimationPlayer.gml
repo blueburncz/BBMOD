@@ -113,6 +113,30 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	/// @private
 	__frame = undefined;
 
+	/// @var {Struct.BBMOD_Animation} Animation that we are transitioning from.
+	/// @private
+	__transitionSourceAnimation = undefined;
+
+	/// @var {Real} Source animation time for transition sampling.
+	/// @private
+	__transitionSourceTime = 0;
+
+	/// @var {Real} Target animation time for transition sampling.
+	/// @private
+	__transitionTargetTime = 0;
+
+	/// @var {Real} Transition duration in animation ticks.
+	/// @private
+	__transitionDuration = 0;
+
+	/// @var {Real} Transition sampling rate in ticks per second.
+	/// @private
+	__transitionTicsPerSecond = 0;
+
+	/// @var {Array<Real>} Reusable frame used for transition sampling.
+	/// @private
+	__transitionFrame = array_create(BBMOD_MAX_BONES * 8, 0.0);
+
 	/// @var {Real} Number of frames (calls to {@link BBMOD_AnimationPlayer.update})
 	/// to skip. Defaults to 0 (frame skipping is disabled). Increasing the
 	/// value increases performance. Use `infinity` to disable computing
@@ -145,12 +169,15 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	/// @see BBMOD_Animation.create_transition
 	EnableTransitions = true;
 
-	static __animate = function (_animationInstance, _animationTime)
+	static __animate = function (_animationInstance, _animationTime, _frame = undefined)
 	{
 		var _model = Model;
 		var _nodeCount = _model.NodeCount;
 		var _animation = _animationInstance.Animation;
-		var _frame = _animation.__framesParent[_animationTime];
+		if (_frame == undefined)
+		{
+			_frame = _animation.__framesParent[_animationTime];
+		}
 		__frame = _frame;
 		var _transformArray = __transformArray;
 		var _offsetArray = _model.__offsetArray;
@@ -346,20 +373,109 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			array_resize(__transformArray, _boneSize);
 		}
 
-		var _animation = __animations[0].Animation;
-		Time += _deltaTime * 0.000001 * PlaybackSpeed * _animation.PlaybackSpeed;
+		if (array_length(__transitionFrame) != _nodeSize)
+		{
+			array_resize(__transitionFrame, _nodeSize);
+		}
 
-		repeat(_animationCount)
+		var _animation = __animations[0].Animation;
+		if (__transitionSourceAnimation != undefined)
+		{
+			Time += _deltaTime * 0.000001 * PlaybackSpeed;
+		}
+		else
+		{
+			Time += _deltaTime * 0.000001 * PlaybackSpeed * _animation.PlaybackSpeed;
+		}
+
+		repeat(_animationCount + ((__transitionSourceAnimation != undefined) ? 1 : 0))
 		{
 			var _animInst = __animations[0];
 			_animation = _animInst.Animation;
+			var _isTransition = (__transitionSourceAnimation != undefined);
+
+			if (_isTransition)
+			{
+				var _animFrom = __transitionSourceAnimation;
+				if (!_animFrom.IsLoaded)
+				{
+					__transitionSourceAnimation = undefined;
+					Time = 0.0;
+					continue;
+				}
+
+				var _transitionTime = round(abs(Time) * __transitionTicsPerSecond);
+				var _transitionDuration = __transitionDuration;
+
+				if (_transitionTime < 0 || _transitionTime >= _transitionDuration)
+				{
+					Time = 0.0;
+					__transitionSourceAnimation = undefined;
+					continue;
+				}
+
+				if (__frameskipCurrent == 0)
+				{
+					var _factor = (_transitionDuration > 1)
+						? (_transitionTime / (_transitionDuration - 1))
+						: 1.0;
+
+					var _frame = _animFrom.sample_transition_frame(
+						__transitionSourceTime,
+						_animation,
+						__transitionTargetTime,
+						_factor,
+						__transitionFrame);
+
+					if (_frame != undefined)
+					{
+						if (_animFrom.__spaces & __BBMOD_BONE_SPACE_PARENT)
+						{
+							__animate(_animInst, 0, _frame);
+						}
+						else if (_animFrom.__spaces & __BBMOD_BONE_SPACE_WORLD)
+						{
+							var _transformArray = __transformArray;
+							var _offsetArray = _model.__offsetArray;
+
+							array_copy(__nodeTransform, 0, _frame, 0, _nodeSize);
+							array_copy(_transformArray, 0, _frame, 0, _boneSize);
+
+							var _index = 0;
+							repeat(_boneCount)
+							{
+								__bbmod_dquat_mul_array(
+									_offsetArray, _index,
+									_frame, _index,
+									_transformArray, _index);
+								_index += 8;
+							}
+						}
+
+						array_copy(__transformArray, _boneSize, __nodeTransform, _boneSize,
+							_nodeSize - _boneSize);
+					}
+				}
+
+				if (Frameskip == infinity)
+				{
+					__frameskipCurrent = -1;
+				}
+				else if (++__frameskipCurrent > Frameskip)
+				{
+					__frameskipCurrent = 0;
+				}
+
+				__animationInstanceLast = _animInst;
+				break;
+			}
 
 			if (!_animation.IsLoaded)
 			{
 				break;
 			}
 
-			var _time = _animation.__isTransition ? abs(Time) : Time;
+			var _time = Time;
 			var _animationTime = _animation.get_animation_time(_time);
 			var _animationDuration = _animation.Duration;
 			var _animationTimeWrapped = bbmod_wrap_value(_animationTime, _animationDuration);
@@ -377,11 +493,8 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 				{
 					Time = 0.0;
 					array_delete(__animations, 0, 1);
-					if (!_animation.__isTransition)
-					{
-						Animation = undefined;
-						trigger_event(BBMOD_EV_ANIMATION_END, _animation);
-					}
+					Animation = undefined;
+					trigger_event(BBMOD_EV_ANIMATION_END, _animation);
 					continue;
 				}
 			}
@@ -466,6 +579,9 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			//show_debug_message("Average: " + string(_sum / _iters) + "us");
 
 			__animationInstanceLast = _animInst;
+
+			// Keep processing only if current queue head was removed above.
+			break;
 		}
 
 		return self;
@@ -492,6 +608,11 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 		}
 
 		Time = 0;
+		__transitionSourceAnimation = undefined;
+		__transitionSourceTime = 0;
+		__transitionTargetTime = 0;
+		__transitionDuration = 0;
+		__transitionTicsPerSecond = 0;
 
 		__animations = [];
 		var _animationLast = __animationInstanceLast;
@@ -500,14 +621,20 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			&& _animationLast != undefined
 			&& _animationLast.Animation.TransitionOut + _animation.TransitionIn > 0)
 		{
-			var _transition = _animationLast.Animation.create_transition(
-				_animationLast.__animationTime,
-				_animation,
-				0);
-
-			if (_transition != undefined)
+			var _animFrom = _animationLast.Animation;
+			if ((_animFrom.__spaces & (__BBMOD_BONE_SPACE_PARENT | __BBMOD_BONE_SPACE_WORLD)) != 0
+				&& _animFrom.__spaces == _animation.__spaces
+				&& _animFrom.Duration > 0
+				&& _animation.Duration > 0)
 			{
-				array_push(__animations, new BBMOD_AnimationInstance(_transition));
+				__transitionSourceAnimation = _animFrom;
+				__transitionSourceTime = bbmod_wrap_value(_animationLast.__animationTime,
+					_animFrom.Duration);
+				__transitionTargetTime = 0;
+				__transitionDuration = max(1, round((_animFrom.TransitionOut
+						+ _animation.TransitionIn)
+					* _animFrom.TicsPerSecond));
+				__transitionTicsPerSecond = _animFrom.TicsPerSecond;
 			}
 		}
 

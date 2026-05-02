@@ -20,4 +20,7 @@ bbmod_reflection_probe_clear();
 terrain = terrain.destroy();
 terrainMaterial = terrainMaterial.destroy();
 
+characterPlayer = undefined;
+characterDesiredAnimation = undefined;
+
 BBMOD_RESOURCE_MANAGER.clear();

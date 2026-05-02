@@ -182,7 +182,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 
 	/// @var {Pointer.Texture} A texture with a base color in the RGB channels
 	/// and opacity in the alpha channel.
-	BaseOpacity = (-1/*pointer_null*/);
+	BaseOpacity = (-1 /*pointer_null*/ );
 
 	__baseOpacitySprite = undefined;
 
@@ -599,12 +599,13 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// @see BBMOD_Material.reset
 	static apply = function (_vertexFormat)
 	{
-		if ((RenderPass & (1 << bbmod_render_pass_get())) == 0)
+		var _renderPass = bbmod_render_pass_get();
+		if ((RenderPass & (1 << _renderPass)) == 0)
 		{
 			return false;
 		}
 
-		var _shader = __shaders[bbmod_render_pass_get()];
+		var _shader = __shaders[_renderPass];
 		var _shaderRaw = _shader.get_variant(_vertexFormat);
 
 		if (_shaderRaw == undefined)
@@ -632,7 +633,6 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		if (global.__bbmodMaterialCurrent != self)
 		{
 			// TODO: GPU settings override per render pass!
-			var _renderPass = bbmod_render_pass_get();
 			var _disableBlending = (_renderPass == BBMOD_ERenderPass.Shadows
 				|| _renderPass == BBMOD_ERenderPass.DepthOnly
 				|| _renderPass == BBMOD_ERenderPass.GBuffer

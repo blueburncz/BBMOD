@@ -164,3 +164,44 @@ terrainLayer = new BBMOD_TerrainLayer();
 terrainLayer.BaseOpacity = sprite_get_texture(BBMOD_SprCheckerboard, 0);
 
 terrain.Layer[@ 0] = terrainLayer;
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Animation player test
+//
+
+modCharacter = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character.bbmod");
+
+{
+	var _material = undefined;
+	if (_useDeferredRenderer)
+	{
+		_material = BBMOD_MATERIAL_DEFERRED.clone();
+	}
+	else
+	{
+		_material = BBMOD_MATERIAL_DEFAULT.clone();
+		_material.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
+	}
+	_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
+	_material.BaseOpacity = sprite_get_texture(SprCyborgFemaleA, 0);
+	modCharacter.Materials[@ 0] = _material;
+}
+
+animCharacterIdle = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character_Idle.bbanim");
+animCharacterWalk = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character_Walk.bbanim");
+animCharacterRun = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character_Run.bbanim");
+animCharacterShoot = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character_Shoot.bbanim");
+
+characterPlayer = new BBMOD_AnimationPlayer(modCharacter);
+characterPlayer.EnableTransitions = true;
+characterPlayer.play(animCharacterIdle, true);
+
+characterBurstRunHoldDuration = 600000;
+characterBurstRunHoldRemaining = 0;
+characterLocomotionSpeedCurrent = 0.0;
+characterLocomotionAccelRate = 14.0;
+characterLocomotionDecelRate = 8.0;
+characterIsShooting = false;
+characterDesiredAnimation = animCharacterIdle;
+characterDesiredLoops = true;

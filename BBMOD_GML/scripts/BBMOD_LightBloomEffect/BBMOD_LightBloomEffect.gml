@@ -157,7 +157,8 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 			var _h = surface_get_height(__surfaces1[i]);
 			var _mipIntensity = __mipIntensity[i];
 
-			shader_set_uniform_f(__uTexelUpsample, 1.0 / surface_get_width(__surfaces1[i + 1]), 1.0 / surface_get_height(__surfaces1[i + 1]));
+			shader_set_uniform_f(__uTexelUpsample, 1.0 / surface_get_width(__surfaces1[i + 1]), 1.0
+				/ surface_get_height(__surfaces1[i + 1]));
 			surface_set_target(__surfaces2[i]);
 			draw_surface_stretched(__surfaces1[i + 1], 0, 0, _w, _h);
 			surface_reset_target();

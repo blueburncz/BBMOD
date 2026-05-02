@@ -1,5 +1,6 @@
 # Local
-.vscode
+.venv/
+.vscode/
 /docs_build/
 /docs_src/ScriptingAPI/
 

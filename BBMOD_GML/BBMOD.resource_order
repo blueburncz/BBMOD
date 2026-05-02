@@ -324,6 +324,7 @@
     {"name":"BBMOD_SprLensFlareStreak","order":3,"path":"sprites/BBMOD_SprLensFlareStreak/BBMOD_SprLensFlareStreak.yy",},
     {"name":"BBMOD_SprWhite","order":2,"path":"sprites/BBMOD_SprWhite/BBMOD_SprWhite.yy",},
     {"name":"SprColormap","order":3,"path":"sprites/SprColormap/SprColormap.yy",},
+    {"name":"SprCyborgFemaleA","order":5,"path":"sprites/SprCyborgFemaleA/SprCyborgFemaleA.yy",},
     {"name":"SprHeightmap","order":2,"path":"sprites/SprHeightmap/SprHeightmap.yy",},
   ],
 }
