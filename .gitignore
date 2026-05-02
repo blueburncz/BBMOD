@@ -1,4 +1,5 @@
 # Local
+__pycache__/
 .venv/
 .vscode/
 /docs_build/
