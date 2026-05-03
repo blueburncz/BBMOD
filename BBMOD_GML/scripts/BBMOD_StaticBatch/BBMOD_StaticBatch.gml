@@ -147,17 +147,7 @@ function BBMOD_StaticBatch(_vformat) constructor
 			return self;
 		}
 
-		var _baseOpacity = _material.BaseOpacity;
-		if (global.__bbmodMaterialProps != undefined)
-		{
-			var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
-			if (_baseOpacityProp != undefined)
-			{
-				_baseOpacity = _baseOpacityProp;
-			}
-		}
-
-		vertex_submit(__vertexBuffer, __primitiveType, _baseOpacity);
+		vertex_submit(__vertexBuffer, __primitiveType, _material.BaseOpacity);
 
 		return self;
 	};
@@ -177,14 +167,12 @@ function BBMOD_StaticBatch(_vformat) constructor
 		gml_pragma("forceinline");
 
 		_material.RenderQueue
-			.SetMaterialProps(global.__bbmodMaterialProps)
 			.ApplyMaterial(_material, _vertexFormat)
 			.BeginConditionalBlock()
 			.SetWorldMatrix(matrix_get(matrix_world))
 			.SubmitVertexBuffer(__vertexBuffer, __vertexFormat.Raw, _material.BaseOpacity)
 			.ResetMaterial()
-			.EndConditionalBlock()
-			.ResetMaterialProps();
+			.EndConditionalBlock();
 
 		return self;
 	};

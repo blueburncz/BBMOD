@@ -7,7 +7,6 @@
 
 function __bbmod_material_sky()
 {
-	static _skyRenderQueue = new BBMOD_RenderQueue("Sky", -$FFFFFFFF);
 	static _material = undefined;
 	if (_material == undefined)
 	{
@@ -18,9 +17,9 @@ function __bbmod_material_sky()
 		_material.Culling = cull_noculling;
 		_material.Mipmapping = mip_off;
 		_material.ZWrite = false;
-		_material.ZTest = false;
+		_material.ZTest = true;
 		_material.Filtering = true;
-		_material.RenderQueue = _skyRenderQueue;
+		_material.RenderQueue = BBMOD_ERenderQueue.Sky;
 	}
 	return _material;
 }

@@ -31,6 +31,11 @@ uniform vec2 bbmod_TextureScale;
 
 uniform vec4 bbmod_BatchData[BBMOD_MAX_BATCH_VEC4S];
 
+// Per-instance temporal fade for non-particle batched rendering.
+
+uniform float bbmod_DitherSeed;
+uniform float bbmod_DitherFade;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings
@@ -42,6 +47,8 @@ varying vec4 v_vColor;
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
+varying float v_fDitherSeed;
+varying float v_fDitherFadeMultiplier;
 
 varying vec4 v_vPosShadowmap;
 
@@ -82,10 +89,13 @@ void main()
 {
 	vec3 batchPosition = bbmod_BatchData[int(in_Id) * 4 + 0].xyz;
 	vec4 batchRot = bbmod_BatchData[int(in_Id) * 4 + 1];
-	vec3 batchScale = bbmod_BatchData[int(in_Id) * 4 + 2].xyz;
+	vec4 batchScaleFade = bbmod_BatchData[int(in_Id) * 4 + 2];
+	vec3 batchScale = batchScaleFade.xyz;
 	vec4 batchColorAlpha = bbmod_BatchData[int(in_Id) * 4 + 3];
 	v_vColor.rgb = xGammaToLinear(batchColorAlpha.rgb);
 	v_vColor.a = batchColorAlpha.a;
+	v_fDitherSeed = dot(batchPosition, vec3(12.9898, 78.233, 37.719)) + in_Id * 17.0;
+	v_fDitherFadeMultiplier = (batchScaleFade.w > 0.0) ? batchScaleFade.w : 1.0;
 
 	vec4 position = in_Position;
 	position.xyz *= batchScale;

@@ -110,6 +110,7 @@ function BBMOD_Camera(): BBMOD_BaseCamera() constructor
 		}
 
 		var _target = Position.Add(_forward);
+		__update_view_forward(_target.X, _target.Y, _target.Z);
 
 		var _view = matrix_build_lookat(
 			Position.X, Position.Y, Position.Z,

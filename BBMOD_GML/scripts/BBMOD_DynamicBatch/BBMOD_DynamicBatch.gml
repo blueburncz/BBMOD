@@ -19,7 +19,7 @@
 /// @param {Real} [_size] Number of model instances in the batch. Default value
 /// is 32.
 /// @param {Real} [_slotsPerInstance] Number of slots that each instance takes
-/// in the data array. Default value is 12.
+/// in the data array. Default value is 16.
 ///
 /// @example
 /// Following code renders all instances of a car object in batches of 64.
@@ -35,7 +35,7 @@
 /// ```
 ///
 /// @see BBMOD_StaticBatch
-function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 12) constructor
+function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 16) constructor
 {
 	/// @var {Struct.BBMOD_Model} A model that is being batched.
 	/// @readonly
@@ -67,6 +67,19 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 	/// Defaults to {@link BBMOD_DynamicBatch.default_fn}.
 	DataWriter = default_fn;
 
+	/// @var {Function} A function that filters dynamic batch payload right
+	/// before queued draw submission.
+	///
+	/// It must accept arguments
+	/// `(_mesh, _matrix, _batchData, _ids, _instances,
+	/// _visibleInstancesHint, _ditherEnableSnapshot, _ditherValueSnapshot)`
+	/// and return a struct
+	/// with fields:
+	/// `BatchData`, `VisibleInstances`, `FrustumCulledInstances`,
+	/// `DistanceCulledInstances`, `FadeData`, `SkipDraw`.
+	/// Defaults to {@link BBMOD_DynamicBatch.default_filter_fn}.
+	DataFilter = default_filter_fn;
+
 	/// @var {Array<Array<Real>>}
 	/// @private
 	__data = [];
@@ -74,6 +87,45 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 	/// @var {Array<Array<Id.Instance>}}
 	/// @private
 	__ids = [];
+
+	/// @var {Struct}
+	/// @private
+	__batchFilterResult = {
+		BatchData: undefined,
+		VisibleInstances: 0,
+		FrustumCulledInstances: 0,
+		DistanceCulledInstances: 0,
+		FadeData: undefined,
+		SkipDraw: false,
+	};
+
+	/// @var {Array<Real>}
+	/// @private
+	__filterScratchFlat = [];
+
+	/// @var {Array<Array<Real>>}
+	/// @private
+	__filterScratchNested = [];
+
+	/// @var {Array<Array<Real>>}
+	/// @private
+	__filterScratchOutput = [];
+
+	/// @var {Array<Real>}
+	/// @private
+	__filterScratchFadeFlat = [];
+
+	/// @var {Array<Array<Real>>}
+	/// @private
+	__filterScratchFadeNested = [];
+
+	/// @var {Array<Array<Real>>}
+	/// @private
+	__filterScratchFadeOutput = [];
+
+	/// @var {Array}
+	/// @private
+	__filterScratchEmpty = [];
 
 	/// @var {Id.DsMap} Mapping from instances to indices at which they are
 	/// stored in the data array.
@@ -139,7 +191,10 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 		__indexToInstance[?  _indexData] = _instance;
 		++InstanceCount;
 		__resize_data();
+		var _batchContextPrev = global.__bbmodDynamicBatchContext;
+		global.__bbmodDynamicBatchContext = self;
 		method(_instance, DataWriter)(__data[_indexData div BatchLength], _indexData mod BatchLength);
+		global.__bbmodDynamicBatchContext = _batchContextPrev;
 		__ids[_indexIds div Size][@ _indexIds mod Size] = real(_instance[$ "id"] ?? 0.0);
 		return self;
 	};
@@ -157,7 +212,10 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 	{
 		gml_pragma("forceinline");
 		var _index = __instanceToIndex[?  _instance];
+		var _batchContextPrev = global.__bbmodDynamicBatchContext;
+		global.__bbmodDynamicBatchContext = self;
 		method(_instance, DataWriter)(__data[_index div BatchLength], _index mod BatchLength);
+		global.__bbmodDynamicBatchContext = _batchContextPrev;
 		return self;
 	};
 
@@ -242,13 +300,20 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 		return self;
 	};
 
-	/// @func submit([_materials[, _batchData]])
+	/// @func submit([_materials[, _batchData[, _ids[, _visibleInstances]]]])
 	///
 	/// @desc Immediately submits the dynamic batch for rendering.
 	///
 	/// @param {Array<Struct.BBMOD_Material>} [_materials] An array of materials.
 	/// @param {Array<Real>, Array<Array<Real>>} [_batchData] Data for dynamic
 	/// batching.
+	/// @param {Array<Id.Instance>, Array<Array<Id.Instance>>} [_ids] IDs of
+	/// instances in the `_batchData` array(s). Defaults to IDs of instances
+	/// added with {@link BBMOD_DynamicBatch.add_instance}. When `_batchData` is
+	/// provided, `_ids` must be provided and must match `_batchData` layout.
+	/// @param {Real} [_visibleInstances] Optional number of visible instances in
+	/// `_batchData`. When provided, render-queue filtering can reuse this value
+	/// for no-ID payloads instead of scanning `_batchData`.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
@@ -257,10 +322,26 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
 	/// @see BBMOD_ERenderPass
-	static submit = function (_materials = undefined, _batchData = undefined)
+	static submit = function (_materials = undefined, _batchData = undefined, _ids = undefined, _visibleInstances =
+		undefined)
 	{
 		gml_pragma("forceinline");
 		_batchData ??= __data;
+
+		if (_batchData == __data)
+		{
+			_ids = __ids;
+		}
+
+		var _batchIdsPrev = global.__bbmodInstanceIDBatch;
+		var _batchVisiblePrev = variable_global_exists("__bbmodBatchVisibleInstances")
+			? global.__bbmodBatchVisibleInstances
+			: undefined;
+		var _batchContextPrev = global.__bbmodDynamicBatchContext;
+		global.__bbmodInstanceIDBatch = _ids;
+		global.__bbmodBatchVisibleInstances = _visibleInstances;
+		global.__bbmodDynamicBatchContext = self;
+
 		if (array_length(_batchData) > 0)
 		{
 			if (_materials != undefined
@@ -271,10 +352,14 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 			matrix_set(matrix_world, matrix_build_identity());
 			Batch.submit(_materials, undefined, _batchData);
 		}
+
+		global.__bbmodBatchVisibleInstances = _batchVisiblePrev;
+		global.__bbmodDynamicBatchContext = _batchContextPrev;
+		global.__bbmodInstanceIDBatch = _batchIdsPrev;
 		return self;
 	};
 
-	/// @func render([_materials[, _batchData[, _ids]]])
+	/// @func render([_materials[, _batchData[, _ids[, _visibleInstances]]]])
 	///
 	/// @desc Enqueues the dynamic batch for rendering.
 	///
@@ -286,6 +371,9 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 	/// instances in the `_batchData` array(s). Defaults to IDs of instances
 	/// added with {@link BBMOD_DynamicBatch.add_instance}. Applicable only when
 	/// `_batchData` is `undefined`!
+	/// @param {Real} [_visibleInstances] Optional number of visible instances in
+	/// `_batchData`. When provided, render-queue filtering can reuse this value
+	/// for no-ID payloads instead of scanning `_batchData`.
 	///
 	/// @return {Struct.BBMOD_DynamicBatch} Returns `self`.
 	///
@@ -293,9 +381,15 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 	/// @see BBMOD_DynamicBatch.submit_object
 	/// @see BBMOD_DynamicBatch.render_object
 	/// @see BBMOD_Material
-	static render = function (_materials = undefined, _batchData = undefined, _ids = undefined)
+	static render = function (_materials = undefined, _batchData = undefined, _ids = undefined, _visibleInstances =
+		undefined)
 	{
 		gml_pragma("forceinline");
+		var _batchIdsPrev = global.__bbmodInstanceIDBatch;
+		var _batchVisiblePrev = variable_global_exists("__bbmodBatchVisibleInstances")
+			? global.__bbmodBatchVisibleInstances
+			: undefined;
+		var _batchContextPrev = global.__bbmodDynamicBatchContext;
 
 		if (_batchData == undefined)
 		{
@@ -306,6 +400,9 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 		{
 			global.__bbmodInstanceIDBatch = _ids;
 		}
+		global.__bbmodBatchVisibleInstances = _visibleInstances;
+
+		global.__bbmodDynamicBatchContext = self;
 
 		if (array_length(_batchData) > 0)
 		{
@@ -317,6 +414,10 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 			matrix_set(matrix_world, matrix_build_identity());
 			Batch.render(_materials, undefined, _batchData);
 		}
+
+		global.__bbmodDynamicBatchContext = _batchContextPrev;
+		global.__bbmodBatchVisibleInstances = _batchVisiblePrev;
+		global.__bbmodInstanceIDBatch = _batchIdsPrev;
 
 		return self;
 	};
@@ -336,6 +437,15 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 	/// @see BBMOD_DynamicBatch.render_object
 	static default_fn = function (_data, _index)
 	{
+		var _batchContext = variable_global_exists("__bbmodDynamicBatchContext")
+			? global.__bbmodDynamicBatchContext
+			: undefined;
+
+		if (_batchContext != undefined)
+		{
+			bbmod_assert(_batchContext.SlotsPerInstance >= 16);
+		}
+
 		// Position
 		_data[@ _index] = x;
 		_data[@ _index + 1] = y;
@@ -351,6 +461,551 @@ function BBMOD_DynamicBatch(_model = undefined, _size = 32, _slotsPerInstance = 
 		_data[@ _index + 9] = ((id & $0000FF00) >> 8) / 255;
 		_data[@ _index + 10] = ((id & $00FF0000) >> 16) / 255;
 		_data[@ _index + 11] = ((id & $FF000000) >> 24) / 255;
+
+		// Reserved/padding slot.
+		_data[@ _index + 12] = 0.0;
+		// Reserved/padding slot.
+		_data[@ _index + 13] = 0.0;
+
+		// Local per-instance dither multiplier used by queue-time snapshots.
+		var _localMul = 1.0;
+		if (is_struct(self))
+		{
+			if (variable_struct_exists(self, BBMOD_DITHER_VALUE))
+			{
+				_localMul = variable_struct_get(self, BBMOD_DITHER_VALUE);
+			}
+		}
+		else if (variable_instance_exists(id, BBMOD_DITHER_VALUE))
+		{
+			_localMul = variable_instance_get(id, BBMOD_DITHER_VALUE);
+		}
+
+		_localMul = clamp(_localMul, 0.0, 1.0);
+		_data[@ _index + 14] = _localMul;
+
+		var _globalFade = bbmod_dither_get_enabled() ? bbmod_dither_get_value() : 1.0;
+		_data[@ _index + 15] = clamp(_globalFade * _localMul, 0.0, 1.0);
+	};
+
+	/// @func default_filter_fn(_mesh, _matrix, _batchData, _ids, _instances[, _visibleInstancesHint[, _ditherEnableSnapshot[, _ditherValueSnapshot]]])
+	///
+	/// @desc Filters dynamic batch payload for queued rendering by optional
+	/// instance-ID list and optional frustum visibility, then writes snapshot
+	/// dither values into slot 15.
+	///
+	/// The default implementation assumes the same per-instance payload layout
+	/// as {@link BBMOD_DynamicBatch.default_fn}.
+	///
+	/// @param {Struct.BBMOD_Mesh} _mesh The mesh being rendered.
+	/// @param {Array<Real>} _matrix The world matrix for the mesh.
+	/// @param {Array<Real>, Array<Array<Real>>} _batchData Batch payload.
+	/// @param {Array<Id.Instance>, Array<Array<Id.Instance>>} _ids IDs matching
+	/// instances in `_batchData`.
+	/// @param {Id.DsList<Id.Instance>} _instances Optional instance filter.
+	/// @param {Real} [_visibleInstancesHint] Visible instance hint for no-ID
+	/// payloads.
+	/// @param {Bool} [_ditherEnableSnapshot] Per-command dither enabled
+	/// snapshot.
+	/// @param {Real} [_ditherValueSnapshot] Per-command dither value snapshot.
+	///
+	/// @return {Struct} Filtering result with fields `BatchData`,
+	/// `VisibleInstances`, `FrustumCulledInstances`,
+	/// `DistanceCulledInstances`, `FadeData`, `SkipDraw`.
+	static default_filter_fn = function (
+		_mesh,
+		_matrix,
+		_batchData,
+		_ids,
+		_instances,
+		_visibleInstancesHint = undefined,
+		_ditherEnableSnapshot = bbmod_dither_get_enabled(),
+		_ditherValueSnapshot = bbmod_dither_get_value())
+	{
+		gml_pragma("forceinline");
+
+		var _result = __batchFilterResult;
+		_result.BatchData = _batchData;
+		_result.VisibleInstances = 0;
+		_result.FrustumCulledInstances = 0;
+		_result.DistanceCulledInstances = 0;
+		_result.FadeData = undefined;
+		_result.SkipDraw = false;
+
+		var _ditherEnabled = _ditherEnableSnapshot;
+		var _ditherValue = clamp(_ditherValueSnapshot, 0.0, 1.0);
+		var _ditherCullAll = (_ditherEnabled && _ditherValue <= 0.0);
+
+		if (!is_array(_ids))
+		{
+			// Some producers (for example particle emitters) submit
+			// dynamic-batch payload without per-instance IDs; skip ID/frustum
+			// filtering in that case.
+			var _visibleFallback = 0;
+			if (is_real(_visibleInstancesHint))
+			{
+				_visibleFallback = max(real(_visibleInstancesHint), 0.0);
+			}
+			else if (is_array(_batchData))
+			{
+				var _slotsPerInstanceFallback = max(SlotsPerInstance, 1);
+				if (array_length(_batchData) > 0)
+				{
+					if (is_array(_batchData[0]))
+					{
+						var _batchIndexFallback = 0;
+						repeat(array_length(_batchData))
+						{
+							_visibleFallback += ceil(array_length(_batchData[_batchIndexFallback++])
+								/ _slotsPerInstanceFallback);
+						}
+					}
+					else
+					{
+						_visibleFallback = ceil(array_length(_batchData) / _slotsPerInstanceFallback);
+					}
+				}
+			}
+
+			if (_ditherCullAll)
+			{
+				_result.VisibleInstances = 0;
+				_result.DistanceCulledInstances = _visibleFallback;
+				_result.SkipDraw = true;
+				return _result;
+			}
+
+			_result.VisibleInstances = _visibleFallback;
+			_result.SkipDraw = (_visibleFallback <= 0);
+			return _result;
+		}
+
+		var _filterByInstances = (_instances != undefined);
+		var _filterByFrustum = (global.__bbmodFrustumCulling && _mesh.BoundingSphereCenter != undefined);
+		var _idsIsNested = is_array(_ids[0]);
+
+		if (!_filterByInstances && !_filterByFrustum && !_ditherEnabled)
+		{
+			var _visibleNoFilter = 0;
+			if (_idsIsNested)
+			{
+				var _idArrayIndex = 0;
+				repeat(array_length(_ids))
+				{
+					var _idsCurrent = _ids[_idArrayIndex++];
+					var _idIndex = 0;
+					repeat(array_length(_idsCurrent))
+					{
+						if (_idsCurrent[_idIndex++] != 0)
+						{
+							++_visibleNoFilter;
+						}
+					}
+				}
+			}
+			else
+			{
+				var _idIndex = 0;
+				repeat(array_length(_ids))
+				{
+					if (_ids[_idIndex++] != 0)
+					{
+						++_visibleNoFilter;
+					}
+				}
+			}
+
+			_result.VisibleInstances = _visibleNoFilter;
+			_result.SkipDraw = (_visibleNoFilter <= 0);
+			return _result;
+		}
+
+		var _slotsPerInstance = SlotsPerInstance;
+		if (_slotsPerInstance <= 0)
+		{
+			_result.SkipDraw = true;
+			return _result;
+		}
+
+		bbmod_assert(_slotsPerInstance >= 16);
+
+		var _centerX = 0.0;
+		var _centerY = 0.0;
+		var _centerZ = 0.0;
+		var _radius = 0.0;
+		var _m00 = 0.0;
+		var _m01 = 0.0;
+		var _m02 = 0.0;
+		var _m10 = 0.0;
+		var _m11 = 0.0;
+		var _m12 = 0.0;
+		var _m20 = 0.0;
+		var _m21 = 0.0;
+		var _m22 = 0.0;
+		var _m30 = 0.0;
+		var _m31 = 0.0;
+		var _m32 = 0.0;
+		var _matrixScale = 1.0;
+		var _centerMatrixX = 0.0;
+		var _centerMatrixY = 0.0;
+		var _centerMatrixZ = 0.0;
+		if (_filterByFrustum)
+		{
+			var _center = _mesh.BoundingSphereCenter;
+			_centerX = _center.X;
+			_centerY = _center.Y;
+			_centerZ = _center.Z;
+			_radius = _mesh.BoundingSphereRadius;
+
+			_m00 = _matrix[0];
+			_m01 = _matrix[1];
+			_m02 = _matrix[2];
+			_m10 = _matrix[4];
+			_m11 = _matrix[5];
+			_m12 = _matrix[6];
+			_m20 = _matrix[8];
+			_m21 = _matrix[9];
+			_m22 = _matrix[10];
+			_m30 = _matrix[12];
+			_m31 = _matrix[13];
+			_m32 = _matrix[14];
+
+			var _scaleX = sqrt(_m00 * _m00 + _m01 * _m01 + _m02 * _m02);
+			var _scaleY = sqrt(_m10 * _m10 + _m11 * _m11 + _m12 * _m12);
+			var _scaleZ = sqrt(_m20 * _m20 + _m21 * _m21 + _m22 * _m22);
+			_matrixScale = max(_scaleX, _scaleY, _scaleZ);
+
+			// Keep culling math in sync with Transform.xsh batched path:
+			// vertex = M * vertex; vertex = pos + (Q(vertex) * scale)
+			_centerMatrixX = _m30 + _centerX * _m00 + _centerY * _m10 + _centerZ * _m20;
+			_centerMatrixY = _m31 + _centerX * _m01 + _centerY * _m11 + _centerZ * _m21;
+			_centerMatrixZ = _m32 + _centerX * _m02 + _centerY * _m12 + _centerZ * _m22;
+		}
+
+		var _visibleInstances = 0;
+		var _frustumCulled = 0;
+		var _distanceCulled = 0;
+		var _filteredBatchData = __filterScratchEmpty;
+		var _filteredFadeData = undefined;
+
+		if (_idsIsNested)
+		{
+			var _scratchNested = __filterScratchNested;
+			var _scratchOutput = __filterScratchOutput;
+			var _batchCount = min(array_length(_ids), array_length(_batchData));
+			var _filteredBatchCount = 0;
+
+			var _batchIndex = 0;
+			repeat(_batchCount)
+			{
+				var _idsCurrent = _ids[_batchIndex];
+				var _idsCount = array_length(_idsCurrent);
+
+				var _sourceDataCurrent = _batchData[_batchIndex];
+				var _dataLength = array_length(_sourceDataCurrent);
+				var _dataCurrent = undefined;
+				if (_batchIndex < array_length(_scratchNested))
+				{
+					_dataCurrent = _scratchNested[_batchIndex];
+				}
+
+				if (_dataCurrent == undefined || array_length(_dataCurrent) != _dataLength)
+				{
+					_dataCurrent = array_create(_dataLength, 0.0);
+					_scratchNested[@ _batchIndex] = _dataCurrent;
+				}
+
+				array_copy(_dataCurrent, 0, _sourceDataCurrent, 0, _dataLength);
+
+				var _hasData = false;
+
+				var _instanceIndex = 0;
+				repeat(_idsCount)
+				{
+					var _keep = false;
+					var _culledByFrustum = false;
+					var _culledByDistance = false;
+					var _idCurrent = _idsCurrent[_instanceIndex];
+					var _index = _instanceIndex * _slotsPerInstance;
+
+					if (_idCurrent != 0)
+					{
+						_keep = true;
+					}
+
+					if (_keep && _filterByInstances && ds_list_find_index(_instances, _idCurrent) == -1)
+					{
+						_keep = false;
+					}
+
+					if (_keep && _filterByFrustum)
+					{
+						var _worldX = 0.0;
+						var _worldY = 0.0;
+						var _worldZ = 0.0;
+						var _worldRadius = 0.0;
+
+						var _scale = _dataCurrent[@(_index + 3)];
+						var _scaleAbs = abs(_scale);
+						var _centerRotX = _centerMatrixX;
+						var _centerRotY = _centerMatrixY;
+						var _centerRotZ = _centerMatrixZ;
+
+						if (_slotsPerInstance >= 8)
+						{
+							var _qx = _dataCurrent[@(_index + 4)];
+							var _qy = _dataCurrent[@(_index + 5)];
+							var _qz = _dataCurrent[@(_index + 6)];
+							var _qw = _dataCurrent[@(_index + 7)];
+							var _lenSqr = _qx * _qx + _qy * _qy + _qz * _qz + _qw * _qw;
+
+							if (_lenSqr > 0.0)
+							{
+								if (abs(_lenSqr - 1.0) > math_get_epsilon())
+								{
+									var _invLen = 1.0 / sqrt(_lenSqr);
+									_qx *= _invLen;
+									_qy *= _invLen;
+									_qz *= _invLen;
+									_qw *= _invLen;
+								}
+
+								var _tx = 2.0 * (_qy * _centerRotZ - _qz * _centerRotY);
+								var _ty = 2.0 * (_qz * _centerRotX - _qx * _centerRotZ);
+								var _tz = 2.0 * (_qx * _centerRotY - _qy * _centerRotX);
+
+								_centerRotX = _centerRotX + _qw * _tx + (_qy * _tz - _qz * _ty);
+								_centerRotY = _centerRotY + _qw * _ty + (_qz * _tx - _qx * _tz);
+								_centerRotZ = _centerRotZ + _qw * _tz + (_qx * _ty - _qy * _tx);
+							}
+						}
+
+						_worldX = _dataCurrent[@ _index] + _centerRotX * _scale;
+						_worldY = _dataCurrent[@(_index + 1)] + _centerRotY * _scale;
+						_worldZ = _dataCurrent[@(_index + 2)] + _centerRotZ * _scale;
+						_worldRadius = _radius * _scaleAbs * _matrixScale;
+
+						if (!sphere_is_visible(_worldX, _worldY, _worldZ, _worldRadius))
+						{
+							_keep = false;
+							_culledByFrustum = true;
+						}
+					}
+
+					if (_keep && _ditherCullAll)
+					{
+						_keep = false;
+						_culledByDistance = true;
+					}
+
+					if (!_keep)
+					{
+						var _slotIndex = _instanceIndex * _slotsPerInstance;
+						repeat(_slotsPerInstance)
+						{
+							_dataCurrent[@ _slotIndex++] = 0.0;
+						}
+					}
+					else
+					{
+						if (_ditherEnabled)
+						{
+							_dataCurrent[@(_index + 15)] = clamp(_ditherValue * _dataCurrent[@(_index
+								+ 14)], 0.0, 1.0);
+						}
+						else
+						{
+							_dataCurrent[@(_index + 15)] = 1.0;
+						}
+
+						_hasData = true;
+						++_visibleInstances;
+					}
+
+					if (_culledByFrustum)
+					{
+						++_frustumCulled;
+					}
+
+					if (_culledByDistance)
+					{
+						++_distanceCulled;
+					}
+
+					++_instanceIndex;
+				}
+
+				if (_hasData)
+				{
+					_scratchOutput[@ _filteredBatchCount] = _dataCurrent;
+					++_filteredBatchCount;
+				}
+
+				++_batchIndex;
+			}
+
+			__filterScratchNested = _scratchNested;
+
+			if (_filteredBatchCount > 0)
+			{
+				var _scratchOutputLength = array_length(_scratchOutput);
+				if (_scratchOutputLength != _filteredBatchCount)
+				{
+					array_resize(_scratchOutput, _filteredBatchCount);
+				}
+				_filteredBatchData = _scratchOutput;
+			}
+
+			__filterScratchOutput = _scratchOutput;
+		}
+		else
+		{
+			var _idsCurrent = _ids;
+			var _idsCount = array_length(_idsCurrent);
+			var _sourceDataCurrent = _batchData;
+			var _dataLength = array_length(_sourceDataCurrent);
+			var _dataCurrent = __filterScratchFlat;
+
+			if (array_length(_dataCurrent) != _dataLength)
+			{
+				_dataCurrent = array_create(_dataLength, 0.0);
+				__filterScratchFlat = _dataCurrent;
+			}
+
+			array_copy(_dataCurrent, 0, _sourceDataCurrent, 0, _dataLength);
+
+			var _hasData = false;
+
+			var _instanceIndex = 0;
+			repeat(_idsCount)
+			{
+				var _keep = false;
+				var _culledByFrustum = false;
+				var _culledByDistance = false;
+				var _idCurrent = _idsCurrent[_instanceIndex];
+				var _index = _instanceIndex * _slotsPerInstance;
+
+				if (_idCurrent != 0)
+				{
+					_keep = true;
+				}
+
+				if (_keep && _filterByInstances && ds_list_find_index(_instances, _idCurrent) == -1)
+				{
+					_keep = false;
+				}
+
+				if (_keep && _filterByFrustum)
+				{
+					var _worldX = 0.0;
+					var _worldY = 0.0;
+					var _worldZ = 0.0;
+					var _worldRadius = 0.0;
+
+					var _scale = _dataCurrent[@(_index + 3)];
+					var _scaleAbs = abs(_scale);
+					var _centerRotX = _centerMatrixX;
+					var _centerRotY = _centerMatrixY;
+					var _centerRotZ = _centerMatrixZ;
+
+					if (_slotsPerInstance >= 8)
+					{
+						var _qx = _dataCurrent[@(_index + 4)];
+						var _qy = _dataCurrent[@(_index + 5)];
+						var _qz = _dataCurrent[@(_index + 6)];
+						var _qw = _dataCurrent[@(_index + 7)];
+						var _lenSqr = _qx * _qx + _qy * _qy + _qz * _qz + _qw * _qw;
+
+						if (_lenSqr > 0.0)
+						{
+							if (abs(_lenSqr - 1.0) > math_get_epsilon())
+							{
+								var _invLen = 1.0 / sqrt(_lenSqr);
+								_qx *= _invLen;
+								_qy *= _invLen;
+								_qz *= _invLen;
+								_qw *= _invLen;
+							}
+
+							var _tx = 2.0 * (_qy * _centerRotZ - _qz * _centerRotY);
+							var _ty = 2.0 * (_qz * _centerRotX - _qx * _centerRotZ);
+							var _tz = 2.0 * (_qx * _centerRotY - _qy * _centerRotX);
+
+							_centerRotX = _centerRotX + _qw * _tx + (_qy * _tz - _qz * _ty);
+							_centerRotY = _centerRotY + _qw * _ty + (_qz * _tx - _qx * _tz);
+							_centerRotZ = _centerRotZ + _qw * _tz + (_qx * _ty - _qy * _tx);
+						}
+					}
+
+					_worldX = _dataCurrent[@ _index] + _centerRotX * _scale;
+					_worldY = _dataCurrent[@(_index + 1)] + _centerRotY * _scale;
+					_worldZ = _dataCurrent[@(_index + 2)] + _centerRotZ * _scale;
+					_worldRadius = _radius * _scaleAbs * _matrixScale;
+
+					if (!sphere_is_visible(_worldX, _worldY, _worldZ, _worldRadius))
+					{
+						_keep = false;
+						_culledByFrustum = true;
+					}
+				}
+
+				if (_keep && _ditherCullAll)
+				{
+					_keep = false;
+					_culledByDistance = true;
+				}
+
+				if (!_keep)
+				{
+					var _slotIndex = _instanceIndex * _slotsPerInstance;
+					repeat(_slotsPerInstance)
+					{
+						_dataCurrent[@ _slotIndex++] = 0.0;
+					}
+				}
+				else
+				{
+					if (_ditherEnabled)
+					{
+						_dataCurrent[@(_index + 15)] = clamp(_ditherValue * _dataCurrent[@(_index + 14)], 0.0,
+							1.0);
+					}
+					else
+					{
+						_dataCurrent[@(_index + 15)] = 1.0;
+					}
+
+					_hasData = true;
+					++_visibleInstances;
+				}
+
+				if (_culledByFrustum)
+				{
+					++_frustumCulled;
+				}
+
+				if (_culledByDistance)
+				{
+					++_distanceCulled;
+				}
+
+				++_instanceIndex;
+			}
+
+			if (_hasData)
+			{
+				_filteredBatchData = _dataCurrent;
+			}
+		}
+
+		_result.BatchData = _filteredBatchData;
+		_result.FadeData = _filteredFadeData;
+		_result.VisibleInstances = _visibleInstances;
+		_result.FrustumCulledInstances = _frustumCulled;
+		_result.DistanceCulledInstances = _distanceCulled;
+		_result.SkipDraw = (_visibleInstances <= 0);
+
+		return _result;
 	};
 
 	static __draw_object = function (_method, _object, _materials, _fn = undefined)

@@ -22,7 +22,8 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 {
 	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
 	/// @readonly
-	static RenderQueue = new BBMOD_RenderQueue("Terrain", -$FFFFFFFE);
+	/// @deprecated Use bbmod_render_queue_get(BBMOD_ERenderQueue.Terrain) instead.
+	static RenderQueue = bbmod_render_queue_get(BBMOD_ERenderQueue.Terrain);
 
 	/// @var {Struct.BBMOD_TerrainMaterial} The material used when rendering
 	/// the terrain. Default is {@link BBMOD_MATERIAL_TERRAIN}.
@@ -36,10 +37,10 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 	/// layers. The first layer is always visible (if the material is not
 	/// `undefined`), the red channel of the splatmap controls visibility of the
 	/// second layer, the green channel controls the third layer etc.
-	Splatmap = (-1 /*pointer_null*/ );
+	Splatmap = pointer_null;
 
 	/// @var {Pointer.Texture} A texture to multiply the terrain colors with.
-	Colormap = (-1 /*pointer_null*/ );
+	Colormap = pointer_null;
 
 	/// @var {Id.DsGrid}
 	/// @private
@@ -114,6 +115,13 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 	Chunks = ds_grid_create(1, 1);
 
 	ds_grid_clear(Chunks, undefined);
+
+	/// @var {Id.DsGrid<Array<Real>>} Grid storing bounding sphere data for each chunk.
+	/// Each entry is an array [centerX, centerY, centerZ, radius] in local space.
+	/// @private
+	__chunkBoundingSpheres = ds_grid_create(1, 1);
+
+	ds_grid_clear(__chunkBoundingSpheres, undefined);
 
 	/// @var {Real} The radius (in chunk size) within which terrain chunks are visible
 	/// around the camera. Zero means only the chunk that the camera is on is visible.
@@ -236,6 +244,9 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 
 		ds_grid_resize(Chunks, _chunksX, _chunksY);
 		ds_grid_clear(Chunks, undefined);
+
+		ds_grid_resize(__chunkBoundingSpheres, _chunksX, _chunksY);
+		ds_grid_clear(__chunkBoundingSpheres, undefined);
 
 		return self;
 	};
@@ -420,7 +431,7 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 					var _nx = get_height_index(_i - 1, _j) - get_height_index(_i + 1, _j);
 					var _ny = get_height_index(_i, _j - 1) - get_height_index(_i, _j + 1);
 					var _nz = 2.0;
-					var _r = sqrt((_nx * _nx) + (_ny * _ny) + (_nz * _nz));
+					var _r = point_distance_3d(0, 0, 0, _nx, _ny, _nz);
 					_nx /= _r;
 					_ny /= _r;
 					_nz /= _r;
@@ -452,7 +463,7 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 				var _nx = ds_grid_get_mean(__normalX, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
 				var _ny = ds_grid_get_mean(__normalY, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
 				var _nz = ds_grid_get_mean(__normalZ, x1 - 1, y1 - 1, x1 + 1, y1 + 1);
-				var _r = sqrt((_nx * _nx) + (_ny * _ny) + (_nz * _nz));
+				var _r = point_distance_3d(0, 0, 0, _nx, _ny, _nz);
 				_nx /= _r;
 				_ny /= _r;
 				_nz /= _r;
@@ -682,6 +693,39 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 		vertex_freeze(_vbuffer);
 		Chunks[# _chunkI, _chunkJ] = _vbuffer;
 
+		// Compute and store bounding sphere for this chunk
+		var _chunkMinX = _chunkI * ChunkSize;
+		var _chunkMaxX = min((_chunkI + 1) * ChunkSize, _terrainWidth - 1);
+		var _chunkMinY = _chunkJ * ChunkSize;
+		var _chunkMaxY = min((_chunkJ + 1) * ChunkSize, _terrainHeight - 1);
+
+		// Get min/max height for this chunk
+		var _heightMin = infinity;
+		var _heightMax = -infinity;
+		for (var _hx = _chunkMinX; _hx <= _chunkMaxX; ++_hx)
+		{
+			for (var _hy = _chunkMinY; _hy <= _chunkMaxY; ++_hy)
+			{
+				var _h = _height[# _hx, _hy];
+				_heightMin = min(_heightMin, _h);
+				_heightMax = max(_heightMax, _h);
+			}
+		}
+
+		// Compute bounding sphere center in local space
+		var _centerX = (_chunkMinX + _chunkMaxX) * 0.5;
+		var _centerY = (_chunkMinY + _chunkMaxY) * 0.5;
+		var _centerZ = (_heightMin + _heightMax) * 0.5;
+
+		// Compute bounding sphere radius in local space
+		var _halfSizeX = (_chunkMaxX - _chunkMinX) * 0.5;
+		var _halfSizeY = (_chunkMaxY - _chunkMinY) * 0.5;
+		var _halfSizeZ = (_heightMax - _heightMin) * 0.5;
+		var _radius = sqrt(_halfSizeX * _halfSizeX + _halfSizeY * _halfSizeY + _halfSizeZ * _halfSizeZ);
+
+		// Store bounding sphere data
+		__chunkBoundingSpheres[# _chunkI, _chunkJ] = [_centerX, _centerY, _centerZ, _radius];
+
 		return self;
 	};
 
@@ -805,6 +849,12 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 		var _normalWDefault = sprite_get_texture(BBMOD_SprDefaultNormalW, 0);
 		var _renderPass = bbmod_render_pass_get();
 
+		// For non-visual passes (Depth, Shadows, InstanceId, etc.), only render
+		// once since all layers produce identical data
+		var _isVisualPass = (_renderPass == BBMOD_ERenderPass.Forward
+			|| _renderPass == BBMOD_ERenderPass.ReflectionCapture
+			|| _renderPass == BBMOD_ERenderPass.GBuffer);
+
 		for (var _call = 0; _call < _layerCount; _call += _layersPerDrawCall)
 		{
 			if (_call == 0)
@@ -817,66 +867,104 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 				//gpu_set_blendenable(true);
 				//gpu_set_colorwriteenable(true, true, true, false);
 
-				if (_renderPass != BBMOD_ERenderPass.Forward
-					&& _renderPass != BBMOD_ERenderPass.ReflectionCapture
-					&& _renderPass != BBMOD_ERenderPass.GBuffer)
+				if (!_isVisualPass)
 				{
 					break;
 				}
 			}
 
-			for (var i = 0; i < _layersPerDrawCall; ++i)
+			// For non-visual passes, we only need the first layer's base
+			// opacity. No need to set up all layer textures/uniforms since they
+			// don't affect depth/shadows/etc.
+			if (_isVisualPass)
 			{
-				var _layerCallIndex = _call + i;
-				if (_layerCallIndex < _layerCount)
+				for (var i = 0; i < _layersPerDrawCall; ++i)
 				{
-					var _layer = _layers[_layerCallIndex];
-					var _layerNormalRoughness = _layer[$ "NormalRoughness"];
-					var _baseOpacity = _layer.BaseOpacity;
-
-					if (global.__bbmodMaterialProps != undefined)
+					var _layerCallIndex = _call + i;
+					if (_layerCallIndex < _layerCount)
 					{
-						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_BASE_OPACITY);
-						if (_baseOpacityProp != undefined)
+						var _layer = _layers[_layerCallIndex];
+						var _layerNormalRoughness = _layer[$ "NormalRoughness"];
+						var _baseOpacity = _layer.BaseOpacity;
+
+						if (i == 0)
 						{
-							_baseOpacity = _baseOpacityProp;
+							_baseOpacityFirst = _baseOpacity;
 						}
-					}
+						else
+						{
+							texture_set_stage(_uTerrainBaseOpacity[i], _baseOpacity);
+						}
 
-					if (i == 0)
-					{
-						_baseOpacityFirst = _baseOpacity;
+						shader_set_uniform_i(_uSplatmapIndex[i], _layerIndices[_call + i] - 1);
+						texture_set_stage(_uTerrainNormalW[i], _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"]
+							?? _normalWDefault));
+						shader_set_uniform_f(_uTerrainIsRoughness[i], (_layerNormalRoughness != undefined) ? 1.0
+							: 0.0);
 					}
 					else
 					{
-						texture_set_stage(_uTerrainBaseOpacity[i], _baseOpacity);
+						shader_set_uniform_i(_uSplatmapIndex[i], -1);
 					}
-
-					shader_set_uniform_i(_uSplatmapIndex[i], _layerIndices[_call + i] - 1);
-					texture_set_stage(_uTerrainNormalW[i], _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"]
-						?? _normalWDefault));
-					shader_set_uniform_f(_uTerrainIsRoughness[i], (_layerNormalRoughness != undefined) ? 1.0 : 0.0);
 				}
-				else
+			}
+			else
+			{
+				// For non-visual passes, just get the base opacity from the
+				// first layer
+				if (_layerCount > 0)
 				{
-					shader_set_uniform_i(_uSplatmapIndex[i], -1);
+					_baseOpacityFirst = _layers[0].BaseOpacity;
 				}
+			}
 
-				var _i = _chunkFromX;
-				repeat(_chunkToX - _chunkFromX)
-				{
-					var _j = _chunkFromY;
-					repeat(_chunkToY - _chunkFromY)
+			// Submit all chunks once per draw call (not per layer)
+			var _i = _chunkFromX;
+			repeat(_chunkToX - _chunkFromX)
+			{
+				var _j = _chunkFromY;
+				repeat(_chunkToY - _chunkFromY)
+					{
+						var _chunk = Chunks[# _i, _j];
+						if (_chunk != undefined)
 						{
-							var _chunk = Chunks[# _i, _j];
-							if (_chunk != undefined)
+							var _isVisible = true;
+
+							// Frustum culling using precomputed bounding sphere
+							if (global.__bbmodFrustumCulling)
 							{
+								var _boundingSphere = __chunkBoundingSpheres[# _i, _j];
+								if (_boundingSphere != undefined)
+								{
+									// Transform precomputed bounding sphere to world space
+									var _worldX = Position.X + _boundingSphere[0] * Scale.X;
+									var _worldY = Position.Y + _boundingSphere[1] * Scale.Y;
+									var _worldZ = Position.Z + _boundingSphere[2] * Scale.Z;
+
+									// Get maximum scale
+									var _maxScale = max(Scale.X, Scale.Y, Scale.Z);
+									var _worldRadius = _boundingSphere[3] * _maxScale;
+
+									// Test visibility
+									_isVisible = sphere_is_visible(_worldX, _worldY, _worldZ, _worldRadius);
+								}
+							}
+
+							if (_isVisible)
+							{
+								__bbmod_render_statistics_count(
+									__BBMOD_ERenderStatisticsCounter.TerrainDrawCallsDrawn);
 								vertex_submit(_chunk, pr_trianglelist, _baseOpacityFirst);
 							}
-							++_j;
+							else
+							{
+								__bbmod_render_statistics_count(
+									__BBMOD_ERenderStatisticsCounter.TerrainDrawCallsFrustumCulled);
+							}
 						}
-						++_i;
-				}
+						++_j;
+					}
+					++_i;
 			}
 		}
 
@@ -892,163 +980,7 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static render = function ()
 	{
-		var _shader = Material.get_shader(BBMOD_ERenderPass.GBuffer)
-			?? Material.get_shader(BBMOD_ERenderPass.Forward);
-		if (_shader == undefined)
-		{
-			return self;
-		}
-
-		var _layersPerDrawCall = _shader.LayersPerDrawCall;
-		var _layers = [];
-		var _layerIndices = [];
-		for (var i = 0; i < min(_shader.MaxLayers, 5); ++i)
-		{
-			var _layer = Layer[i];
-			if (_layer != undefined)
-			{
-				array_push(_layers, _layer);
-				array_push(_layerIndices, i);
-			}
-		}
-
-		var _layerCount = array_length(_layers);
-		if (_layerCount == 0)
-		{
-			return self;
-		}
-
-		var _matrix = matrix_build(Position.X, Position.Y, Position.Z, 0, 0, 0, Scale.X, Scale.Y, Scale.Z);
-		var _normalMatrix = bbmod_matrix_build_normalmatrix(_matrix);
-		var _chunksX = ds_grid_width(Chunks);
-		var _chunksY = ds_grid_height(Chunks);
-
-		var _chunkFromX, _chunkFromY, _chunkToX, _chunkToY;
-
-		if (ChunkRadius == infinity)
-		{
-			_chunkFromX = 0;
-			_chunkFromY = 0;
-			_chunkToX = _chunksX;
-			_chunkToY = _chunksY;
-		}
-		else
-		{
-			var _camPos = bbmod_camera_get_position();
-			var _camI = clamp(((_camPos.X - Position.X) / Scale.X) / ChunkSize, 0, _chunksX);
-			var _camJ = clamp(((_camPos.Y - Position.Y) / Scale.Y) / ChunkSize, 0, _chunksY);
-			_chunkFromX = clamp(floor(_camI - ChunkRadius), 0, _chunksX);
-			_chunkFromY = clamp(floor(_camJ - ChunkRadius), 0, _chunksY);
-			_chunkToX = clamp(ceil(_camI + ChunkRadius), 0, _chunksX);
-			_chunkToY = clamp(ceil(_camJ + ChunkRadius), 0, _chunksY);
-		}
-
-		RenderQueue
-			.SetMaterialProps(global.__bbmodMaterialProps)
-			.ApplyMaterial(Material, VertexFormat)
-			.BeginConditionalBlock()
-			.SetSampler(BBMOD_U_SPLATMAP, Splatmap)
-			.SetSampler(BBMOD_U_COLORMAP, Colormap)
-			.SetUniformFloat2(BBMOD_U_TEXTURE_SCALE, TextureRepeat.X, TextureRepeat.Y)
-			.SetUniformMatrixArray(BBMOD_U_NORMAL_MATRIX, _normalMatrix)
-			.SetWorldMatrix(_matrix);
-
-		var _baseOpacityFirst = -1;
-		var _normalWDefault = sprite_get_texture(BBMOD_SprDefaultNormalW, 0);
-
-		for (var _call = 0; _call < _layerCount; _call += _layersPerDrawCall)
-		{
-			if (_call == 0)
-			{
-				//RenderQueue
-				//	.SetGpuBlendEnable(false)
-				//	.SetGpuColorWriteEnable(true, true, true, true);
-			}
-			else
-			{
-				RenderQueue
-					.CheckRenderPass((1 << BBMOD_ERenderPass.Forward)
-						| (1 << BBMOD_ERenderPass.ReflectionCapture)
-						| (1 << BBMOD_ERenderPass.GBuffer))
-					.BeginConditionalBlock()
-				//.SetGpuBlendEnable(true)
-				//.SetGpuColorWriteEnable(true, true, true, false)
-				;
-			}
-
-			RenderQueue
-				.SetGpuZWriteEnable(_call == 0)
-				.SetGpuZFunc((_call == 0) ? cmpfunc_lessequal : cmpfunc_equal);
-
-			for (var i = 0; i < _layersPerDrawCall; ++i)
-			{
-				var _iStr = string(i);
-				var _layerCallIndex = _call + i;
-				if (_layerCallIndex < _layerCount)
-				{
-					var _layer = _layers[_layerCallIndex];
-					var _layerNormalRoughness = _layer[$ "NormalRoughness"];
-					var _baseOpacity = _layer.BaseOpacity;
-
-					if (global.__bbmodMaterialProps != undefined)
-					{
-						var _baseOpacityProp = global.__bbmodMaterialProps.get(BBMOD_U_TERRAIN_BASE_OPACITY
-							+ _iStr);
-						if (_baseOpacityProp != undefined)
-						{
-							_baseOpacity = _baseOpacityProp;
-						}
-					}
-
-					if (i == 0)
-					{
-						_baseOpacityFirst = _baseOpacity;
-					}
-					else
-					{
-						RenderQueue.SetSampler(BBMOD_U_TERRAIN_BASE_OPACITY + _iStr, _baseOpacity);
-					}
-
-					RenderQueue
-						.SetUniformInt(BBMOD_U_SPLATMAP_INDEX + _iStr, _layerIndices[_call + i] - 1)
-						.SetSampler(BBMOD_U_TERRAIN_NORMAL_W + _iStr, _layerNormalRoughness ?? (_layer[$ "NormalSmoothness"] ?? _normalWDefault))
-						.SetUniformFloat(BBMOD_U_TERRAIN_IS_ROUGHNESS + _iStr, (_layerNormalRoughness != undefined)
-							? 1.0 : 0.0);
-				}
-				else
-				{
-					RenderQueue
-						.SetUniformInt(BBMOD_U_SPLATMAP_INDEX + _iStr, -1);
-				}
-			}
-
-			var _i = _chunkFromX;
-			repeat(_chunkToX - _chunkFromX)
-			{
-				var _j = _chunkFromY;
-				repeat(_chunkToY - _chunkFromY)
-					{
-						var _chunk = Chunks[# _i, _j];
-						if (_chunk != undefined)
-						{
-							RenderQueue.SubmitVertexBuffer(_chunk, pr_trianglelist, _baseOpacityFirst);
-						}
-						++_j;
-					}
-					++_i;
-			}
-
-			if (_call != 0)
-			{
-				RenderQueue.EndConditionalBlock();
-			}
-		}
-
-		RenderQueue
-			.ResetMaterial()
-			.EndConditionalBlock()
-			.ResetMaterialProps();
-
+		RenderQueue.DrawTerrain(self);
 		return self;
 	};
 
@@ -1076,6 +1008,7 @@ function BBMOD_Terrain(_heightmap = undefined, _subimage = 0, _chunkSize = 128) 
 		}
 
 		ds_grid_destroy(Chunks);
+		ds_grid_destroy(__chunkBoundingSpheres);
 
 		return undefined;
 	};

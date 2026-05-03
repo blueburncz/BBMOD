@@ -34,6 +34,20 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 	/// @see BBMOD_Mesh.update_bbox
 	BboxMax = undefined;
 
+	/// @var {Struct.BBMOD_Vec3} The center of the mesh's bounding sphere in
+	/// local space. Computed from BboxMin and BboxMax. Can be `undefined` (default).
+	/// @readonly
+	/// @see BBMOD_Mesh.update_bbox
+	/// @see BBMOD_Mesh.BoundingSphereRadius
+	BoundingSphereCenter = undefined;
+
+	/// @var {Real} The radius of the mesh's bounding sphere in local space.
+	/// Computed from BboxMin and BboxMax. Can be `undefined` (default).
+	/// @readonly
+	/// @see BBMOD_Mesh.update_bbox
+	/// @see BBMOD_Mesh.BoundingSphereCenter
+	BoundingSphereRadius = undefined;
+
 	/// @var {Id.VertexBuffer} A vertex buffer containing the raw mesh data or
 	/// `undefined` (default).
 	/// @readonly
@@ -54,6 +68,37 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 	/// @see BBMOD_Mesh.freeze
 	Frozen = false;
 
+	/// @func __compute_bounding_sphere()
+	///
+	/// @desc Computes the bounding sphere center and radius from BboxMin and BboxMax.
+	/// Called internally when the bounding box is updated.
+	///
+	/// @private
+	static __compute_bounding_sphere = function ()
+	{
+		if (BboxMin != undefined && BboxMax != undefined)
+		{
+			// Compute center
+			BoundingSphereCenter = new BBMOD_Vec3(
+				(BboxMin.X + BboxMax.X) * 0.5,
+				(BboxMin.Y + BboxMax.Y) * 0.5,
+				(BboxMin.Z + BboxMax.Z) * 0.5
+			);
+
+			// Compute radius (distance from center to corner)
+			var _halfSizeX = (BboxMax.X - BboxMin.X) * 0.5;
+			var _halfSizeY = (BboxMax.Y - BboxMin.Y) * 0.5;
+			var _halfSizeZ = (BboxMax.Z - BboxMin.Z) * 0.5;
+			BoundingSphereRadius = sqrt(_halfSizeX * _halfSizeX + _halfSizeY * _halfSizeY + _halfSizeZ
+				* _halfSizeZ);
+		}
+		else
+		{
+			BoundingSphereCenter = undefined;
+			BoundingSphereRadius = undefined;
+		}
+	};
+
 	/// @func copy(_dest)
 	///
 	/// @desc Copies mesh data into another mesh.
@@ -67,6 +112,8 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 		_dest.MaterialIndex = MaterialIndex;
 		_dest.BboxMin = (BboxMin != undefined) ? BboxMin.Clone() : undefined;
 		_dest.BboxMax = (BboxMax != undefined) ? BboxMax.Clone() : undefined;
+		_dest.BoundingSphereCenter = (BoundingSphereCenter != undefined) ? BoundingSphereCenter.Clone() : undefined;
+		_dest.BoundingSphereRadius = BoundingSphereRadius;
 
 		if (_dest.VertexBuffer != undefined)
 		{
@@ -127,6 +174,7 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 		{
 			BboxMin = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f32);
 			BboxMax = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f32);
+			__compute_bounding_sphere();
 		}
 
 		if (Model.VersionMinor >= 2)
@@ -246,6 +294,8 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 		}
 		buffer_delete(_buffer);
 
+		__compute_bounding_sphere();
+
 		return self;
 	};
 
@@ -282,9 +332,164 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 	static submit = function (_material, _transform, _batchData)
 	{
 		var _materialIsStruct = is_struct(_material);
+		var _isBatched = (_batchData != undefined);
+		var _isAnimated = (_transform != undefined);
+		var _ditherEnableSnapshot = bbmod_dither_get_enabled();
+		var _ditherValueSnapshot = bbmod_dither_get_value();
+		var _batchedInstancesExecuted = 1;
+
+		if (_isBatched && !_isAnimated)
+		{
+			var _batchContext = global.__bbmodDynamicBatchContext;
+			if (_batchContext != undefined)
+			{
+				var _batchVisibleHint = variable_global_exists("__bbmodBatchVisibleInstances")
+					? global.__bbmodBatchVisibleInstances
+					: undefined;
+				var _filterResult = _batchContext.DataFilter(
+					self,
+					matrix_get(matrix_world),
+					_batchData,
+					global.__bbmodInstanceIDBatch,
+					undefined,
+					_batchVisibleHint,
+					_ditherEnableSnapshot,
+					_ditherValueSnapshot);
+
+				_batchData = _filterResult.BatchData;
+				_batchedInstancesExecuted = _filterResult.VisibleInstances;
+
+				if (_filterResult.FrustumCulledInstances > 0)
+				{
+					__bbmod_render_statistics_count(
+						__BBMOD_ERenderStatisticsCounter.BatchedMeshDrawCallsFrustumCulled,
+						_filterResult.FrustumCulledInstances);
+				}
+
+				if (_filterResult.DistanceCulledInstances > 0)
+				{
+					__bbmod_render_statistics_count(
+						__BBMOD_ERenderStatisticsCounter.BatchedMeshDrawCallsDistanceCulled,
+						_filterResult.DistanceCulledInstances);
+				}
+
+				if (_filterResult.SkipDraw || _batchedInstancesExecuted <= 0)
+				{
+					return self;
+				}
+			}
+			else
+			{
+				var _batchInstanceIds = global.__bbmodInstanceIDBatch;
+				if (is_array(_batchInstanceIds))
+				{
+					if (is_array(_batchInstanceIds[0]))
+					{
+						_batchedInstancesExecuted = 0;
+						var _idArrayIndex = 0;
+						repeat(array_length(_batchInstanceIds))
+						{
+							var _idsCurrent = _batchInstanceIds[_idArrayIndex++];
+							var _idIndex = 0;
+							repeat(array_length(_idsCurrent))
+							{
+								if (_idsCurrent[_idIndex++] != 0)
+								{
+									++_batchedInstancesExecuted;
+								}
+							}
+						}
+					}
+					else
+					{
+						_batchedInstancesExecuted = 0;
+						var _idIndex = 0;
+						repeat(array_length(_batchInstanceIds))
+						{
+							if (_batchInstanceIds[_idIndex++] != 0)
+							{
+								++_batchedInstancesExecuted;
+							}
+						}
+					}
+				}
+				else if (is_array(_batchData[0]))
+				{
+					// No IDs available, so use chunk count as a conservative fallback.
+					_batchedInstancesExecuted = array_length(_batchData);
+				}
+			}
+		}
 
 		if (_materialIsStruct && !_material.apply(VertexFormat))
 		{
+			return self;
+		}
+
+		var _ditherEnable = _ditherEnableSnapshot ? 1.0 : 0.0;
+		var _instanceId = variable_global_exists("__bbmodInstanceID")
+			? variable_global_get("__bbmodInstanceID")
+			: 0.0;
+		var _ditherFade = _ditherValueSnapshot;
+
+		// Frustum culling (skip for dynamic batches as it would be expensive)
+		if (global.__bbmodFrustumCulling && BoundingSphereCenter != undefined && !(_batchData != undefined
+				&& is_array(_batchData[0])))
+		{
+			var _matrix = matrix_get(matrix_world);
+			var _center = BoundingSphereCenter;
+			var _centerX = _center.X;
+			var _centerY = _center.Y;
+			var _centerZ = _center.Z;
+
+			// Transform center to world space
+			var _worldX = _matrix[12] + _centerX * _matrix[0] + _centerY * _matrix[4] + _centerZ * _matrix[8];
+			var _worldY = _matrix[13] + _centerX * _matrix[1] + _centerY * _matrix[5] + _centerZ * _matrix[9];
+			var _worldZ = _matrix[14] + _centerX * _matrix[2] + _centerY * _matrix[6] + _centerZ * _matrix[10];
+
+			// Get maximum scale from matrix
+			var _scaleX = sqrt(_matrix[0] * _matrix[0] + _matrix[1] * _matrix[1] + _matrix[2] * _matrix[2]);
+			var _scaleY = sqrt(_matrix[4] * _matrix[4] + _matrix[5] * _matrix[5] + _matrix[6] * _matrix[6]);
+			var _scaleZ = sqrt(_matrix[8] * _matrix[8] + _matrix[9] * _matrix[9] + _matrix[10] * _matrix[10]);
+			var _maxScale = max(_scaleX, _scaleY, _scaleZ);
+			var _worldRadius = BoundingSphereRadius * _maxScale;
+
+			// Test visibility
+			if (!sphere_is_visible(_worldX, _worldY, _worldZ, _worldRadius))
+			{
+				if (_isAnimated)
+				{
+					__bbmod_render_statistics_count(
+						__BBMOD_ERenderStatisticsCounter.AnimatedMeshDrawCallsFrustumCulled);
+				}
+				else if (_isBatched)
+				{
+					__bbmod_render_statistics_count(
+						__BBMOD_ERenderStatisticsCounter.BatchedMeshDrawCallsFrustumCulled);
+				}
+				else
+				{
+					__bbmod_render_statistics_count(
+						__BBMOD_ERenderStatisticsCounter.MeshDrawCallsFrustumCulled);
+				}
+
+				return self;
+			}
+		}
+
+		if (_ditherEnable > 0.0 && _ditherFade <= 0.0 && !_isBatched)
+		{
+			if (_isAnimated)
+			{
+				__bbmod_render_statistics_count(
+					__BBMOD_ERenderStatisticsCounter.AnimatedMeshDrawCallsDistanceCulled);
+			}
+			else
+			{
+				__bbmod_render_statistics_count(
+					__BBMOD_ERenderStatisticsCounter.MeshDrawCallsDistanceCulled);
+			}
+
 			return self;
 		}
 
@@ -292,12 +497,13 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 		var _primitiveType = PrimitiveType;
 		var _baseOpacity = _materialIsStruct ? _material.BaseOpacity : _material;
 		var _shader = shader_current();
+		var _ditherSeed = 0.0;
 
 		if (_shader != -1)
 		{
-			if (variable_global_exists("__bbmodInstanceID"))
+			if (_instanceId != 0)
 			{
-				var _instanceId = variable_global_get("__bbmodInstanceID");
+				_ditherSeed = _instanceId;
 				shader_set_uniform_f(
 					shader_get_uniform(_shader, "bbmod_InstanceID"),
 					((_instanceId & $000000FF) >> 0) / 255,
@@ -307,6 +513,9 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 			}
 
 			shader_set_uniform_f(shader_get_uniform(_shader, "bbmod_MaterialIndex"), MaterialIndex);
+			shader_set_uniform_f(shader_get_uniform(_shader, BBMOD_U_DITHER_ENABLE), _ditherEnable);
+			shader_set_uniform_f(shader_get_uniform(_shader, BBMOD_U_DITHER_SEED), _ditherSeed);
+			shader_set_uniform_f(shader_get_uniform(_shader, BBMOD_U_DITHER_FADE), _ditherFade);
 
 			if (_transform != undefined)
 			{
@@ -327,6 +536,11 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 						_uBatchData ??= shader_get_uniform(_shader, "bbmod_BatchData");
 						shader_set_uniform_f_array(_uBatchData, _batchData[_dataIndex++]);
 					}
+					if (_isAnimated)
+					{
+						__bbmod_render_statistics_count(
+							__BBMOD_ERenderStatisticsCounter.AnimatedMeshDrawCallsDrawn);
+					}
 					vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 				}
 			}
@@ -337,11 +551,33 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 					shader_set_uniform_f_array(
 						shader_get_uniform(_shader, "bbmod_BatchData"), _batchData);
 				}
+				if (_isAnimated)
+				{
+					__bbmod_render_statistics_count(
+						__BBMOD_ERenderStatisticsCounter.AnimatedMeshDrawCallsDrawn);
+				}
 				vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
+			}
+
+			if (!_isAnimated)
+			{
+				__bbmod_render_statistics_count(
+					__BBMOD_ERenderStatisticsCounter.BatchedMeshDrawCallsDrawn,
+					_batchedInstancesExecuted);
 			}
 		}
 		else
 		{
+			if (_isAnimated)
+			{
+				__bbmod_render_statistics_count(
+					__BBMOD_ERenderStatisticsCounter.AnimatedMeshDrawCallsDrawn);
+			}
+			else
+			{
+				__bbmod_render_statistics_count(
+					__BBMOD_ERenderStatisticsCounter.MeshDrawCallsDrawn);
+			}
 			vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 		}
 
@@ -352,7 +588,7 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 	///
 	/// @desc Enqueues the mesh for rendering.
 	///
-	/// @param {Struct.BBMOD_BaseMaterial} _material The material to use.
+	/// @param {Struct.BBMOD_Material} _material The material to use.
 	/// @param {Array<Real>} _transform An array of bone transforms or `undefined`.
 	/// @param {Array<Real>, Array<Array<Real>>} _batchData Data for dynamic
 	/// batching or `undefined`.
@@ -362,17 +598,18 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 	static render = function (_material, _transform, _batchData, _matrix)
 	{
 		gml_pragma("forceinline");
+		var _renderQueue = bbmod_render_queue_get(_material.RenderQueue);
 		if (_batchData != undefined)
 		{
-			_material.RenderQueue.DrawMeshBatched(self, _material, _matrix, _batchData);
+			_renderQueue.DrawMeshBatched(self, _material, _matrix, _batchData);
 		}
 		else if (_transform != undefined)
 		{
-			_material.RenderQueue.DrawMeshAnimated(self, _material, _matrix, _transform);
+			_renderQueue.DrawMeshAnimated(self, _material, _matrix, _transform);
 		}
 		else
 		{
-			_material.RenderQueue.DrawMesh(self, _material, _matrix);
+			_renderQueue.DrawMesh(self, _material, _matrix);
 		}
 		return self;
 	};

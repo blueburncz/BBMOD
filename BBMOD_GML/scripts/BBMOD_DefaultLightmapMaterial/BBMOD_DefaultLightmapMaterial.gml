@@ -16,6 +16,7 @@
 function BBMOD_DefaultLightmapMaterial(_shader = undefined): BBMOD_DefaultMaterial(_shader) constructor
 {
 	static DefaultMaterial_copy = copy;
+	static DefaultMaterial_get_hash = get_hash;
 	static DefaultMaterial_from_json = from_json;
 
 	/// @var {Pointer.Texture} A texture with RGBM encoded lightmap. Overrides
@@ -26,6 +27,7 @@ function BBMOD_DefaultLightmapMaterial(_shader = undefined): BBMOD_DefaultMateri
 	{
 		DefaultMaterial_copy(_dest);
 		_dest.Lightmap = Lightmap;
+		_dest.HashDirty = true;
 		return self;
 	};
 
@@ -36,6 +38,22 @@ function BBMOD_DefaultLightmapMaterial(_shader = undefined): BBMOD_DefaultMateri
 		return _clone;
 	};
 
+	static get_hash = function ()
+	{
+		if (!HashDirty)
+		{
+			return __hash;
+		}
+
+		var _hash = DefaultMaterial_get_hash();
+		_hash = bbmod_hash_combine(_hash, Lightmap ?? 0);
+
+		__hash = _hash;
+		HashDirty = false;
+
+		return __hash;
+	};
+
 	static from_json = function (_json)
 	{
 		DefaultMaterial_from_json(_json);
@@ -44,6 +62,8 @@ function BBMOD_DefaultLightmapMaterial(_shader = undefined): BBMOD_DefaultMateri
 		{
 			Lightmap = _json.Lightmap;
 		}
+
+		HashDirty = true;
 
 		return self;
 	};

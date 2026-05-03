@@ -15,6 +15,7 @@
 function BBMOD_ParticleMaterial(_shader = undefined): BBMOD_DefaultMaterial(_shader) constructor
 {
 	static DefaultMaterial_copy = copy;
+	static DefaultMaterial_get_hash = get_hash;
 
 	/// @var {Real} Distance over which the particle smoothly disappears when
 	/// getting closer to geometry rendered in the depth buffer. Use values less
@@ -25,6 +26,7 @@ function BBMOD_ParticleMaterial(_shader = undefined): BBMOD_DefaultMaterial(_sha
 	{
 		DefaultMaterial_copy(_dest);
 		_dest.SoftDistance = SoftDistance;
+		_dest.HashDirty = true;
 		return self;
 	};
 
@@ -33,5 +35,21 @@ function BBMOD_ParticleMaterial(_shader = undefined): BBMOD_DefaultMaterial(_sha
 		var _clone = new BBMOD_ParticleMaterial();
 		copy(_clone);
 		return _clone;
+	};
+
+	static get_hash = function ()
+	{
+		if (!HashDirty)
+		{
+			return __hash;
+		}
+
+		var _hash = DefaultMaterial_get_hash();
+		_hash = bbmod_hash_combine(_hash, SoftDistance);
+
+		__hash = _hash;
+		HashDirty = false;
+
+		return __hash;
 	};
 }

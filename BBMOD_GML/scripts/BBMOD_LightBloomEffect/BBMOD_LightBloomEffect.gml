@@ -69,16 +69,20 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 		var _width = surface_get_width(_surfaceSrc);
 		var _height = surface_get_height(_surfaceSrc);
 		var _format = bbmod_hdr_is_supported() ? surface_rgba16float : surface_rgba8unorm;
+		var _widthHalf = max(_width div 2, 1);
+		var _heightHalf = max(_height div 2, 1);
+		var _activeLevels = 1;
 
 		// Threshold
-		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _width / 2, _height / 2, _format, false);
-		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _width / 2, _height / 2, _format, false);
+		__surfaces1[@ 0] = bbmod_surface_check(__surfaces1[0], _widthHalf, _heightHalf, _format, false);
+		__surfaces2[@ 0] = bbmod_surface_check(__surfaces2[0], _widthHalf, _heightHalf, _format, false);
 		surface_set_target(__surfaces1[0]);
+		draw_clear_alpha(c_black, 0.0);
 		shader_set(BBMOD_ShThreshold);
 		shader_set_uniform_f(__uThreshold, Threshold);
 		shader_set_uniform_f(__uKnee, Knee);
 		shader_set_uniform_f(__uTexelSize, 1.0 / _width, 1.0 / _height);
-		draw_surface_stretched(_surfaceSrc, 0, 0, _width / 2, _height / 2);
+		draw_surface_stretched(_surfaceSrc, 0, 0, _widthHalf, _heightHalf);
 		shader_reset();
 		surface_reset_target();
 
@@ -87,18 +91,25 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 			shader_set(BBMOD_ShDownsampleKaris);
 
 			var i = 1;
-			var _w = _width / 4;
-			var _h = _height / 4;
+			var _w = max(_widthHalf div 2, 1);
+			var _h = max(_heightHalf div 2, 1);
 			repeat(__levels - 1)
 			{
 				__surfaces1[@ i] = bbmod_surface_check(__surfaces1[i], _w, _h, _format, false);
 				surface_set_target(__surfaces1[i]);
+				draw_clear_alpha(c_black, 0.0);
 				shader_set_uniform_f(__uTexelDownsampleKaris, 1.0 / _w, 1.0 / _h);
 				draw_surface_stretched(__surfaces1[i - 1], 0, 0, _w, _h);
 				surface_reset_target();
-				_w = _w >> 1;
-				_h = _h >> 1;
-				if (_w == 0 || _h == 0) break;
+				_activeLevels = i + 1;
+
+				if (_w == 1 && _h == 1)
+				{
+					break;
+				}
+
+				_w = max(_w div 2, 1);
+				_h = max(_h div 2, 1);
 				++i;
 			}
 
@@ -110,27 +121,25 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 			shader_set(BBMOD_ShGaussianBlur);
 
 			var i = 0;
-			var _w = _width / 2;
-			var _h = _height / 2;
-			repeat(__levels)
+			repeat(_activeLevels)
 			{
+				var _w = surface_get_width(__surfaces1[i]);
+				var _h = surface_get_height(__surfaces1[i]);
 				__surfaces2[@ i] = bbmod_surface_check(__surfaces2[i], _w, _h, _format, false);
 
 				// Horizontal
 				shader_set_uniform_f(__uTexelGaussian, 1.0 / _w, 0.0);
 				surface_set_target(__surfaces2[i]);
+				draw_clear_alpha(c_black, 0.0);
 				draw_surface_stretched(__surfaces1[i], 0, 0, _w, _h);
 				surface_reset_target();
 
 				// Vertical
 				shader_set_uniform_f(__uTexelGaussian, 0.0, 1.0 / _h);
 				surface_set_target(__surfaces1[i]);
+				draw_clear_alpha(c_black, 0.0);
 				draw_surface_stretched(__surfaces2[i], 0, 0, _w, _h);
 				surface_reset_target();
-
-				_w = _w >> 1;
-				_h = _h >> 1;
-				if (_w == 0 || _h == 0) break;
 				++i;
 			}
 
@@ -145,11 +154,7 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 		shader_set(BBMOD_ShBloomUpsample);
 		shader_set_uniform_f(__uRadiusUpsample, 1.0);
 
-		var _smallestMip = __levels - 1;
-		while (_smallestMip > 0 && !surface_exists(__surfaces1[_smallestMip]))
-		{
-			--_smallestMip;
-		}
+		var _smallestMip = _activeLevels - 1;
 
 		for (var i = _smallestMip - 1; i >= 0; --i)
 		{
@@ -160,6 +165,7 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 			shader_set_uniform_f(__uTexelUpsample, 1.0 / surface_get_width(__surfaces1[i + 1]), 1.0
 				/ surface_get_height(__surfaces1[i + 1]));
 			surface_set_target(__surfaces2[i]);
+			draw_clear_alpha(c_black, 0.0);
 			draw_surface_stretched(__surfaces1[i + 1], 0, 0, _w, _h);
 			surface_reset_target();
 

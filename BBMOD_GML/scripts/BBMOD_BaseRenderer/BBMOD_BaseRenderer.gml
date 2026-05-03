@@ -197,6 +197,191 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	__camera2D = camera_create();
 
+	/// @var {Array<Struct.BBMOD_PunctualLight>} Renderer-local punctual lights
+	/// filtered to enabled and currently visible entries.
+	/// @private
+	__punctualLightsVisible = [];
+
+	/// @func __sort_visible_punctual_lights_by_distance_fn(_a, _b)
+	///
+	/// @desc Comparator used by {@link array_sort} to order punctual lights
+	/// from closest to farthest camera distance.
+	///
+	/// @note This method is expected to be called using
+	/// `method(_context, __sort_visible_punctual_lights_by_distance_fn)` where
+	/// `_context` provides `Camera`, `FallbackX`, `FallbackY`, and `FallbackZ`.
+	///
+	/// @param {Struct.BBMOD_PunctualLight} _a First light.
+	/// @param {Struct.BBMOD_PunctualLight} _b Second light.
+	///
+	/// @return {Real} `-1`, `0`, or `1` according to sort order.
+	///
+	/// @private
+	static __sort_visible_punctual_lights_by_distance_fn = function (_a, _b)
+	{
+		var _distanceA;
+		var _distanceB;
+
+		if (Camera != undefined)
+		{
+			_distanceA = Camera.get_distance(_a.Position);
+			_distanceB = Camera.get_distance(_b.Position);
+		}
+		else
+		{
+			var _dxA = _a.Position.X - FallbackX;
+			var _dyA = _a.Position.Y - FallbackY;
+			var _dzA = _a.Position.Z - FallbackZ;
+			_distanceA = _dxA * _dxA + _dyA * _dyA + _dzA * _dzA;
+
+			var _dxB = _b.Position.X - FallbackX;
+			var _dyB = _b.Position.Y - FallbackY;
+			var _dzB = _b.Position.Z - FallbackZ;
+			_distanceB = _dxB * _dxB + _dyB * _dyB + _dzB * _dzB;
+		}
+
+		if (_distanceA < _distanceB)
+		{
+			return -1;
+		}
+
+		if (_distanceA > _distanceB)
+		{
+			return 1;
+		}
+
+		return 0;
+	};
+
+	/// @func __sort_visible_punctual_lights_by_distance()
+	///
+	/// @desc Sorts {@link BBMOD_BaseRenderer.__punctualLightsVisible} from
+	/// closest to farthest using {@link array_sort}.
+	///
+	/// @private
+	static __sort_visible_punctual_lights_by_distance = function ()
+	{
+		var _count = array_length(__punctualLightsVisible);
+		if (_count < 2)
+		{
+			return;
+		}
+
+		var _fallbackCameraPos = bbmod_camera_get_position();
+		var _sortContext = {
+			Camera: global.__bbmodCameraCurrent,
+			FallbackX: _fallbackCameraPos.X,
+			FallbackY: _fallbackCameraPos.Y,
+			FallbackZ: _fallbackCameraPos.Z,
+		};
+
+		array_sort(__punctualLightsVisible,
+			method(_sortContext, __sort_visible_punctual_lights_by_distance_fn));
+	};
+
+	/// @func __get_punctual_light_distance_fade(_light, _distanceSq)
+	///
+	/// @desc Computes a punctual light's distance fade factor using camera
+	/// distance-squared input.
+	///
+	/// @param {Struct.BBMOD_PunctualLight} _light A punctual light.
+	/// @param {Real} _distanceSq Camera-to-light distance squared.
+	///
+	/// @return {Real} A fade factor in range 0..1.
+	///
+	/// @private
+	static __get_punctual_light_distance_fade = function (_light, _distanceSq)
+	{
+		var _fadeStart = max(_light.DistanceFadeStart, 0.0);
+		var _fadeEnd = max(_light.DistanceFadeEnd, 0.0);
+
+		if (_fadeEnd > _fadeStart)
+		{
+			var _fadeEndSq = _fadeEnd * _fadeEnd;
+			if (_distanceSq >= _fadeEndSq)
+			{
+				return 0.0;
+			}
+
+			var _fadeStartSq = _fadeStart * _fadeStart;
+			if (_distanceSq <= _fadeStartSq)
+			{
+				return 1.0;
+			}
+
+			var _distance = sqrt(_distanceSq);
+			return 1.0 - ((_distance - _fadeStart) / (_fadeEnd - _fadeStart));
+		}
+
+		if (_fadeEnd < infinity)
+		{
+			return (_distanceSq < (_fadeEnd * _fadeEnd)) ? 1.0 : 0.0;
+		}
+
+		return 1.0;
+	};
+
+	/// @func __build_visible_punctual_lights()
+	///
+	/// @desc Builds renderer-local array of enabled punctual lights that are
+	/// visible in the current camera frustum and sorts them by camera distance
+	/// from closest to farthest.
+	///
+	/// @return {Array<Struct.BBMOD_PunctualLight>} Visible punctual lights.
+	///
+	/// @private
+	static __build_visible_punctual_lights = function ()
+	{
+		array_resize(__punctualLightsVisible, 0);
+
+		var _lights = global.__bbmodPunctualLights;
+		var _cameraPos = bbmod_camera_get_position();
+		var _cameraPosX = _cameraPos.X;
+		var _cameraPosY = _cameraPos.Y;
+		var _cameraPosZ = _cameraPos.Z;
+
+		var i = 0;
+		repeat(array_length(_lights))
+		{
+			var _light = _lights[i++];
+
+			if (!_light.Enabled)
+			{
+				__bbmod_render_statistics_count(
+					__BBMOD_ERenderStatisticsCounter.PunctualLightsSkippedDisabled);
+				continue;
+			}
+
+			if (!sphere_is_visible(_light.Position.X, _light.Position.Y, _light.Position.Z, _light.Range))
+			{
+				__bbmod_render_statistics_count(
+					__BBMOD_ERenderStatisticsCounter.PunctualLightsSkippedFrustum);
+				continue;
+			}
+
+			var _dx = _light.Position.X - _cameraPosX;
+			var _dy = _light.Position.Y - _cameraPosY;
+			var _dz = _light.Position.Z - _cameraPosZ;
+			var _distanceSq = _dx * _dx + _dy * _dy + _dz * _dz;
+			var _fade = __get_punctual_light_distance_fade(_light, _distanceSq);
+			if (_fade <= 0.0)
+			{
+				__bbmod_render_statistics_count(
+					__BBMOD_ERenderStatisticsCounter.PunctualLightsSkippedDistance);
+				continue;
+			}
+
+			_light.__distanceFadeFactor = _fade;
+			__bbmod_render_statistics_count(__BBMOD_ERenderStatisticsCounter.PunctualLightsUsed);
+
+			array_push(__punctualLightsVisible, _light);
+		}
+
+		__sort_visible_punctual_lights_by_distance();
+
+		return __punctualLightsVisible;
+	};
+
 	/// @func get_width()
 	///
 	/// @desc Retrieves the width of the renderer on the screen.
@@ -517,6 +702,11 @@ function BBMOD_BaseRenderer() constructor
 		if ((!_light.Static || _light.NeedsUpdate)
 			&& _light.__frameskipCurrent == 0)
 		{
+			__bbmod_render_statistics_count(
+				__BBMOD_ERenderStatisticsCounter.ShadowmapUpdatesDrawn,
+				1,
+				BBMOD_ERenderPass.Shadows);
+
 			var _shadowCaster = _light;
 			var _shadowmapMatrix;
 			var _shadowmapZFar = _light.__getZFar();
@@ -584,6 +774,13 @@ function BBMOD_BaseRenderer() constructor
 
 			_light.NeedsUpdate = false;
 		}
+		else
+		{
+			__bbmod_render_statistics_count(
+				__BBMOD_ERenderStatisticsCounter.ShadowmapUpdatesSkippedSchedule,
+				1,
+				BBMOD_ERenderPass.Shadows);
+		}
 
 		if (_light.Frameskip == infinity)
 		{
@@ -621,15 +818,37 @@ function BBMOD_BaseRenderer() constructor
 			else
 			{
 				// Punctual lights
+				var _cameraPos = bbmod_camera_get_position();
+				var _cameraPosX = _cameraPos.X;
+				var _cameraPosY = _cameraPos.Y;
+				var _cameraPosZ = _cameraPos.Z;
 				var i = 0;
 				repeat(array_length(global.__bbmodPunctualLights))
 				{
 					_light = global.__bbmodPunctualLights[i];
 					if (_light.CastShadows)
 					{
-						_shadowCaster = _light;
-						_shadowCasterIndex = i;
-						break;
+						if (sphere_is_visible(_light.Position.X, _light.Position.Y, _light.Position.Z, _light
+								.Range))
+						{
+							var _dx = _light.Position.X - _cameraPosX;
+							var _dy = _light.Position.Y - _cameraPosY;
+							var _dz = _light.Position.Z - _cameraPosZ;
+							var _distanceSq = _dx * _dx + _dy * _dy + _dz * _dz;
+							if (__get_punctual_light_distance_fade(_light, _distanceSq) > 0.0)
+							{
+								_shadowCaster = _light;
+								_shadowCasterIndex = i;
+								break;
+							}
+						}
+						else
+						{
+							__bbmod_render_statistics_count(
+								__BBMOD_ERenderStatisticsCounter.ShadowmapUpdatesSkippedFrustum,
+								1,
+								BBMOD_ERenderPass.Shadows);
+						}
 					}
 					++i;
 				}
@@ -680,7 +899,7 @@ function BBMOD_BaseRenderer() constructor
 		var _projection = matrix_get(matrix_projection);
 		var _exposure = bbmod_camera_get_exposure();
 
-		global.__bbmodReflectionProbeTexture = (-1/*pointer_null*/);
+		global.__bbmodReflectionProbeTexture = (-1 /*pointer_null*/ );
 		bbmod_camera_set_exposure(1.0);
 
 		var _cubemap = __cubemap;
@@ -1069,6 +1288,7 @@ function BBMOD_BaseRenderer() constructor
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
 		var _projection = matrix_get(matrix_projection);
+		var _punctualLightsVisible = __build_visible_punctual_lights();
 
 		var i = 0;
 		repeat(array_length(Renderables))
@@ -1101,6 +1321,8 @@ function BBMOD_BaseRenderer() constructor
 		//
 		// Background
 		//
+		global.__bbmodPunctualLightsRenderer = _punctualLightsVisible;
+
 		bbmod_shader_set_global_f(BBMOD_U_ZFAR, bbmod_camera_get_zfar());
 
 		matrix_set(matrix_view, _view);
@@ -1148,6 +1370,7 @@ function BBMOD_BaseRenderer() constructor
 
 		// Unset in case it gets destroyed when the room changes etc.
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
+		global.__bbmodPunctualLightsRenderer = undefined;
 
 		return self;
 	};

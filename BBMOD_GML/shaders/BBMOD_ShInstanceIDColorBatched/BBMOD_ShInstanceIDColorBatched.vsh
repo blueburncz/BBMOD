@@ -37,6 +37,10 @@ uniform vec2 bbmod_TextureScale;
 
 uniform vec4 bbmod_BatchData[BBMOD_MAX_BATCH_VEC4S];
 
+
+uniform float bbmod_DitherSeed;
+uniform float bbmod_DitherFade;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings
@@ -48,6 +52,8 @@ varying vec4 v_vColor;
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
+varying float v_fDitherSeed;
+varying float v_fDitherFadeMultiplier;
 
 varying vec4 v_vPosShadowmap;
 
@@ -79,7 +85,7 @@ void Transform(
 	tangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(tangent, 0.0)).xyz);
 	bitangent = normalize((gm_Matrices[MATRIX_WORLD] * vec4(bitangent, 0.0)).xyz);
 
-	int idx = int(in_Id) * 3;
+	int idx = int(in_Id) * 4;
 	vec4 posScale = bbmod_BatchData[idx];
 	vec4 rot = bbmod_BatchData[idx + 1];
 
@@ -125,6 +131,8 @@ void main()
 
 	vec4 positionWVP = gm_Matrices[MATRIX_PROJECTION] * (gm_Matrices[MATRIX_VIEW] * position);
 	v_vVertex = position.xyz;
+	v_fDitherFadeMultiplier = bbmod_BatchData[(int(in_Id) * 4) + 3].w;
+	v_fDitherSeed = dot(bbmod_BatchData[(int(in_Id) * 4) + 2], vec4(1.0, 17.0, 37.0, 73.0));
 
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;
@@ -133,6 +141,6 @@ void main()
 
 	v_mTBN = mat3(tangent, bitangent, normal);
 
-	v_vInstanceID = bbmod_BatchData[(int(in_Id) * 3) + 2];
+	v_vInstanceID = bbmod_BatchData[(int(in_Id) * 4) + 2];
 
 }

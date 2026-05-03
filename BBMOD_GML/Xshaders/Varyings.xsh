@@ -10,6 +10,8 @@ varying vec2 v_vTexCoord2;
 #endif
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
+varying float v_fDitherSeed;
+varying float v_fDitherFadeMultiplier;
 
 #if !defined(X_UNLIT) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
 varying vec4 v_vPosShadowmap;

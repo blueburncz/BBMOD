@@ -31,6 +31,11 @@ attribute vec4 in_TangentW;
 uniform vec2 bbmod_TextureOffset;
 uniform vec2 bbmod_TextureScale;
 
+// Per-instance temporal fade for non-particle batched rendering.
+
+uniform float bbmod_DitherSeed;
+uniform float bbmod_DitherFade;
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Varyings
@@ -40,6 +45,8 @@ varying vec3 v_vVertex;
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
+varying float v_fDitherSeed;
+varying float v_fDitherFadeMultiplier;
 
 varying vec4 v_vPosShadowmap;
 
@@ -82,6 +89,8 @@ void main()
 
 	vec4 positionWVP = gm_Matrices[MATRIX_PROJECTION] * (gm_Matrices[MATRIX_VIEW] * position);
 	v_vVertex = position.xyz;
+	v_fDitherFadeMultiplier = bbmod_DitherFade;
+	v_fDitherSeed = bbmod_DitherSeed;
 
 	gl_Position = positionWVP;
 	v_vPosition = positionWVP;

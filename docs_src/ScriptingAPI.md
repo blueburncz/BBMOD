@@ -41,11 +41,11 @@
  * [BBMOD_LightmapMaterial](./BBMOD_LightmapMaterial.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_LightmapShader](./BBMOD_LightmapShader.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_Material](./BBMOD_Material.html)
- * [BBMOD_MaterialPropertyBlock](./BBMOD_MaterialPropertyBlock.html)
+ * [BBMOD_MaterialPropertyBlock](./BBMOD_MaterialPropertyBlock.html) <span class="badge badge-danger">OBSOLETE</span>
  * [BBMOD_Matrix](./BBMOD_Matrix.html)
  * [BBMOD_Mesh](./BBMOD_Mesh.html)
  * [BBMOD_MeshBuilder](./BBMOD_MeshBuilder.html)
- * [BBMOD_MeshRenderQueue](./BBMOD_MeshRenderQueue.html)
+ * [BBMOD_MeshRenderQueue](./BBMOD_MeshRenderQueue.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_MixSpeedModule](./BBMOD_MixSpeedModule.html)
  * [BBMOD_Model](./BBMOD_Model.html)
  * [BBMOD_Node](./BBMOD_Node.html)
@@ -58,6 +58,7 @@
  * [BBMOD_ReflectionProbe](./BBMOD_ReflectionProbe.html)
  * [BBMOD_Renderer](./BBMOD_Renderer.html) <span class="badge badge-warning">DEPRECATED</span>
  * [BBMOD_RenderQueue](./BBMOD_RenderQueue.html)
+ * [BBMOD_RenderStatistics](./BBMOD_RenderStatistics.html)
  * [BBMOD_Resource](./BBMOD_Resource.html)
  * [BBMOD_ResourceManager](./BBMOD_ResourceManager.html)
  * [BBMOD_Shader](./BBMOD_Shader.html)
@@ -73,7 +74,7 @@
 
  * [BBMOD_IDestructible](./BBMOD_IDestructible.html)
  * [BBMOD_IEventListener](./BBMOD_IEventListener.html)
- * [BBMOD_IMeshRenderQueue](./BBMOD_IMeshRenderQueue.html)
+ * [BBMOD_IMeshRenderQueue](./BBMOD_IMeshRenderQueue.html) <span class="badge badge-danger">OBSOLETE</span>
  * [BBMOD_IRenderable](./BBMOD_IRenderable.html)
  * [BBMOD_IRenderTarget](./BBMOD_IRenderTarget.html)
 <h3 id="CoreFunctions">Functions</h3>
@@ -101,6 +102,10 @@
  * [bbmod_cmpfunc_to_string](./bbmod_cmpfunc_to_string.html)
  * [bbmod_cullmode_from_string](./bbmod_cullmode_from_string.html)
  * [bbmod_cullmode_to_string](./bbmod_cullmode_to_string.html)
+ * [bbmod_dither_get_enabled](./bbmod_dither_get_enabled.html)
+ * [bbmod_dither_get_value](./bbmod_dither_get_value.html)
+ * [bbmod_dither_set_enabled](./bbmod_dither_set_enabled.html)
+ * [bbmod_dither_set_value](./bbmod_dither_set_value.html)
  * [bbmod_empty_callback](./bbmod_empty_callback.html)
  * [bbmod_fog_get_color](./bbmod_fog_get_color.html)
  * [bbmod_fog_get_end](./bbmod_fog_get_end.html)
@@ -112,7 +117,10 @@
  * [bbmod_fog_set_intensity](./bbmod_fog_set_intensity.html)
  * [bbmod_fog_set_start](./bbmod_fog_set_start.html)
  * [bbmod_get_calling_function_name](./bbmod_get_calling_function_name.html)
+ * [bbmod_get_frustum_culling](./bbmod_get_frustum_culling.html)
  * [bbmod_gpu_get_default_state](./bbmod_gpu_get_default_state.html)
+ * [bbmod_hash_array](./bbmod_hash_array.html)
+ * [bbmod_hash_combine](./bbmod_hash_combine.html)
  * [bbmod_hdr_is_supported](./bbmod_hdr_is_supported.html)
  * [bbmod_ibl_get](./bbmod_ibl_get.html)
  * [bbmod_ibl_set](./bbmod_ibl_set.html)
@@ -146,9 +154,9 @@
  * [bbmod_lightmap_set](./bbmod_lightmap_set.html)
  * [bbmod_material_exists](./bbmod_material_exists.html)
  * [bbmod_material_get](./bbmod_material_get.html)
- * [bbmod_material_props_get](./bbmod_material_props_get.html)
- * [bbmod_material_props_reset](./bbmod_material_props_reset.html)
- * [bbmod_material_props_set](./bbmod_material_props_set.html)
+ * [bbmod_material_props_get](./bbmod_material_props_get.html) <span class="badge badge-danger">OBSOLETE</span>
+ * [bbmod_material_props_reset](./bbmod_material_props_reset.html) <span class="badge badge-danger">OBSOLETE</span>
+ * [bbmod_material_props_set](./bbmod_material_props_set.html) <span class="badge badge-danger">OBSOLETE</span>
  * [bbmod_material_register](./bbmod_material_register.html)
  * [bbmod_material_reset](./bbmod_material_reset.html)
  * [bbmod_matrix_build_normalmatrix](./bbmod_matrix_build_normalmatrix.html)
@@ -179,10 +187,15 @@
  * [bbmod_render_pass_get](./bbmod_render_pass_get.html)
  * [bbmod_render_pass_set](./bbmod_render_pass_set.html)
  * [bbmod_render_pass_to_string](./bbmod_render_pass_to_string.html)
+ * [bbmod_render_queue_get](./bbmod_render_queue_get.html)
  * [bbmod_render_queue_get_default](./bbmod_render_queue_get_default.html)
  * [bbmod_render_queues_clear](./bbmod_render_queues_clear.html)
  * [bbmod_render_queues_get](./bbmod_render_queues_get.html)
  * [bbmod_render_queues_submit](./bbmod_render_queues_submit.html)
+ * [bbmod_render_statistics_end](./bbmod_render_statistics_end.html)
+ * [bbmod_render_statistics_get](./bbmod_render_statistics_get.html)
+ * [bbmod_render_statistics_start](./bbmod_render_statistics_start.html)
+ * [bbmod_set_frustum_culling](./bbmod_set_frustum_culling.html)
  * [bbmod_set_instance_id](./bbmod_set_instance_id.html)
  * [bbmod_shader_clear_globals](./bbmod_shader_clear_globals.html)
  * [bbmod_shader_exists](./bbmod_shader_exists.html)
@@ -230,6 +243,7 @@
  * [BBMOD_EPropertyType](./BBMOD_EPropertyType.html)
  * [BBMOD_ERenderCommand](./BBMOD_ERenderCommand.html)
  * [BBMOD_ERenderPass](./BBMOD_ERenderPass.html)
+ * [BBMOD_ERenderQueue](./BBMOD_ERenderQueue.html)
  * [BBMOD_EShaderUniformType](./BBMOD_EShaderUniformType.html)
 <h3 id="CoreMacros">Macros</h3>
 
@@ -252,6 +266,7 @@
  * [BBMOD_C_TEAL](./BBMOD_C_TEAL.html)
  * [BBMOD_C_WHITE](./BBMOD_C_WHITE.html)
  * [BBMOD_C_YELLOW](./BBMOD_C_YELLOW.html)
+ * [BBMOD_DITHER_VALUE](./BBMOD_DITHER_VALUE.html)
  * [BBMOD_DLL_IS_SUPPORTED](./BBMOD_DLL_IS_SUPPORTED.html)
  * [BBMOD_DLL_PATH](./BBMOD_DLL_PATH.html)
  * [BBMOD_EV_ANIMATION_CHANGE](./BBMOD_EV_ANIMATION_CHANGE.html)

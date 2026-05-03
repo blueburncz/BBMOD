@@ -15,6 +15,7 @@
 function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader) constructor
 {
 	static BaseMaterial_copy = copy;
+	static BaseMaterial_get_hash = get_hash;
 	static BaseMaterial_from_json = from_json;
 	static BaseMaterial_destroy = destroy;
 
@@ -125,6 +126,8 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 			Emissive = _json.Emissive;
 		}
 
+		HashDirty = true;
+
 		return self;
 	};
 
@@ -159,6 +162,7 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 			_smoothness
 		);
 		NormalSmoothness = sprite_get_texture(__normalSmoothnessSprite, 0);
+		HashDirty = true;
 		return self;
 	};
 
@@ -190,6 +194,7 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 			1.0
 		);
 		SpecularColor = sprite_get_texture(__specularColorSprite, 0);
+		HashDirty = true;
 		return self;
 	};
 
@@ -224,6 +229,7 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 			_roughness
 		);
 		NormalRoughness = sprite_get_texture(__normalRoughnessSprite, 0);
+		HashDirty = true;
 		return self;
 	};
 
@@ -259,6 +265,7 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 			0.0
 		);
 		MetallicAO = sprite_get_texture(__metallicAOSprite, 0);
+		HashDirty = true;
 		return self;
 	};
 
@@ -285,6 +292,7 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 			_intensity
 		);
 		Subsurface = sprite_get_texture(__subsurfaceSprite, 0);
+		HashDirty = true;
 		return self;
 	};
 
@@ -313,6 +321,7 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 			_rgbm[3]
 		);
 		Emissive = sprite_get_texture(__emissiveSprite, 0);
+		HashDirty = true;
 		return self;
 	};
 
@@ -422,6 +431,8 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 			_dest.Emissive = Emissive;
 		}
 
+		_dest.HashDirty = true;
+
 		return self;
 	};
 
@@ -430,6 +441,28 @@ function BBMOD_DefaultMaterial(_shader = undefined): BBMOD_BaseMaterial(_shader)
 		var _clone = new BBMOD_DefaultMaterial();
 		copy(_clone);
 		return _clone;
+	};
+
+	static get_hash = function ()
+	{
+		if (!HashDirty)
+		{
+			return __hash;
+		}
+
+		var _hash = BaseMaterial_get_hash();
+
+		_hash = bbmod_hash_combine(_hash, NormalSmoothness ?? 0);
+		_hash = bbmod_hash_combine(_hash, SpecularColor ?? 0);
+		_hash = bbmod_hash_combine(_hash, NormalRoughness ?? 0);
+		_hash = bbmod_hash_combine(_hash, MetallicAO ?? 0);
+		_hash = bbmod_hash_combine(_hash, Subsurface ?? 0);
+		_hash = bbmod_hash_combine(_hash, Emissive ?? 0);
+
+		__hash = _hash;
+		HashDirty = false;
+
+		return __hash;
 	};
 
 	static destroy = function ()

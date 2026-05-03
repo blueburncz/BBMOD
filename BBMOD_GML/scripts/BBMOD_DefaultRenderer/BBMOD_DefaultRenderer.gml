@@ -67,6 +67,7 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 		var _projection = matrix_get(matrix_projection);
 		var _renderWidth = get_render_width();
 		var _renderHeight = get_render_height();
+		var _punctualLightsVisible = __build_visible_punctual_lights();
 
 		var i = 0;
 		repeat(array_length(Renderables))
@@ -94,6 +95,8 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 		// Shadow map
 		//
 		__render_shadowmaps();
+
+		global.__bbmodPunctualLightsRenderer = _punctualLightsVisible;
 
 		bbmod_shader_set_global_f(BBMOD_U_ZFAR, bbmod_camera_get_zfar());
 
@@ -182,6 +185,7 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 		bbmod_shader_unset_global(BBMOD_U_SHADOWMAP);
 		bbmod_shader_unset_global(BBMOD_U_SSAO);
 		bbmod_shader_unset_global(BBMOD_U_GBUFFER);
+		global.__bbmodPunctualLightsRenderer = undefined;
 
 		return self;
 	};

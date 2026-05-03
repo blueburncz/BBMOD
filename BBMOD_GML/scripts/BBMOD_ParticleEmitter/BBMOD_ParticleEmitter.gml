@@ -46,6 +46,22 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	/// @private
 	__time = 0.0;
 
+	/// @var {Id.DsGrid}
+	/// @private
+	__sortGrid = ds_grid_create(2, System.ParticleCount);
+
+	/// @var {Array<Array<Real>>}
+	/// @private
+	__batchDataScratch = [];
+
+	/// @var {Array<Array<Real>>}
+	/// @private
+	__batchDataOutput = [];
+
+	/// @var {Real}
+	/// @private
+	__batchChunkLength = System.__dynamicBatch.Size * 16;
+
 	// Initialize particle index
 	ds_grid_clear(Particles, 0.0);
 
@@ -53,6 +69,8 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		++_particleIndex)
 	{
 		Particles[# BBMOD_EParticle.Id, _particleIndex] = _particleIndex;
+		__sortGrid[# 0, _particleIndex] = _particleIndex;
+		__sortGrid[# 1, _particleIndex] = 0.0;
 	}
 
 	/// @func spawn_particle([_position])
@@ -123,12 +141,14 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		Particles[# BBMOD_EParticle.ColorB, _particleIndex] = 255.0;
 		Particles[# BBMOD_EParticle.ColorA, _particleIndex] = 1.0;
 
-		var _modules = System.Modules;
+		var _system = System;
+		_system.__ensure_module_callbacks();
+		var _modulesOnParticleStart = _system.__modulesOnParticleStart;
 		var m = 0;
-		repeat(array_length(_modules))
+		repeat(array_length(_modulesOnParticleStart))
 		{
-			var _module = _modules[m++];
-			if (_module.Enabled && _module.on_particle_start)
+			var _module = _modulesOnParticleStart[m++];
+			if (_module.Enabled)
 			{
 				_module.on_particle_start(self, _particleIndex);
 			}
@@ -153,7 +173,14 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		}
 
 		var _deltaTimeS = _deltaTime * 0.000001;
-		var _modules = System.Modules;
+		var _system = System;
+		_system.__ensure_module_callbacks();
+		var _modules = _system.Modules;
+		var _moduleHasStart = _system.__moduleHasStart;
+		var _moduleHasUpdate = _system.__moduleHasUpdate;
+		var _moduleHasFinish = _system.__moduleHasFinish;
+		var _modulesOnParticleFinish = _system.__modulesOnParticleFinish;
+		var _modulesOnParticleFinishCount = array_length(_modulesOnParticleFinish);
 
 		var _timeStart = (__time == 0.0 && _deltaTime != 0.0);
 		__time += _deltaTimeS;
@@ -174,10 +201,10 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 			if (Particles[# BBMOD_EParticle.HealthLeft, _particleIndex] <= 0.0)
 			{
 				var m = 0;
-				repeat(array_length(_modules))
+				repeat(_modulesOnParticleFinishCount)
 				{
-					var _module = _modules[m++];
-					if (_module.Enabled && _module.on_particle_finish)
+					var _module = _modulesOnParticleFinish[m++];
+					if (_module.Enabled)
 					{
 						_module.on_particle_finish(self, _particleIndex);
 					}
@@ -275,30 +302,33 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 		////////////////////////////////////////////////////////////////////////
 		// Execute modules
+		var _moduleCount = array_length(_modules);
 		var m = 0;
-		repeat(array_length(_modules))
+		repeat(_moduleCount)
 		{
-			var _module = _modules[m++];
+			var _module = _modules[m];
 			if (_module.Enabled)
 			{
 				// Emitter start
-				if (_timeStart && _module.on_start)
+				if (_timeStart && _moduleHasStart[m])
 				{
 					_module.on_start(self);
 				}
 
 				// Emitter update
-				if (_module.on_update)
+				if (_moduleHasUpdate[m])
 				{
 					_module.on_update(self, _deltaTime);
 				}
 
 				// Emitter finish
-				if (_timeOut && _module.on_finish)
+				if (_timeOut && _moduleHasFinish[m])
 				{
 					_module.on_finish(self);
 				}
 			}
+
+			++m;
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -372,66 +402,85 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 		return false;
 	};
 
-	static _draw = function (_method, _material = undefined)
+	static __draw = function (_method, _material = undefined)
 	{
 		gml_pragma("forceinline");
 
-		var _dynamicBatch = System.__dynamicBatch;
+		var _system = System;
+		var _dynamicBatch = _system.__dynamicBatch;
 		var _batchSize = _dynamicBatch.Size;
-		_material ??= System.Material;
+		_material ??= _system.Material;
 
 		var _particleCount = ParticlesAlive;
-		var _particlesSorted;
-
-		if (System.Sort)
+		if (_particleCount <= 0)
 		{
-			_particlesSorted = array_create(_particleCount);
-			var i = 0;
-			repeat(_particleCount)
-			{
-				_particlesSorted[@ i] = i;
-				++i;
-			}
-
-			array_sort(_particlesSorted, method(self, function (_p1, _p2)
-			{
-				var _camPos = global.__bbmodCameraPosition;
-				var _particles = Particles;
-				var _d1 = point_distance_3d(
-					_particles[# BBMOD_EParticle.PositionX, _p1],
-					_particles[# BBMOD_EParticle.PositionY, _p1],
-					_particles[# BBMOD_EParticle.PositionZ, _p1],
-					_camPos.X,
-					_camPos.Y,
-					_camPos.Z);
-				var _d2 = point_distance_3d(
-					_particles[# BBMOD_EParticle.PositionX, _p2],
-					_particles[# BBMOD_EParticle.PositionY, _p2],
-					_particles[# BBMOD_EParticle.PositionZ, _p2],
-					_camPos.X,
-					_camPos.Y,
-					_camPos.Z);
-				if (_d2 > _d1) return +1;
-				if (_d2 < _d1) return -1;
-				return 0;
-			}));
+			return;
 		}
 
 		var _particles = Particles;
-		//var _color = new BBMOD_Color();
-		var _particleIndex = 0;
-		var _batchCount = ceil(_particleCount / _batchSize);
-		var _batchData = array_create(_batchCount);
-		var _batchIndex = 0;
+		var _sortEnabled = (_system.Sort && _particleCount > 1);
+		var _sortGrid = __sortGrid;
+		if (_sortEnabled)
+		{
+			var _cameraPos = global.__bbmodCameraPosition;
+			var _cameraX = _cameraPos.X;
+			var _cameraY = _cameraPos.Y;
+			var _cameraZ = _cameraPos.Z;
+			var _particleCapacity = _system.ParticleCount;
 
+			var i = 0;
+			repeat(_particleCount)
+			{
+				var _dx = _particles[# BBMOD_EParticle.PositionX, i] - _cameraX;
+				var _dy = _particles[# BBMOD_EParticle.PositionY, i] - _cameraY;
+				var _dz = _particles[# BBMOD_EParticle.PositionZ, i] - _cameraZ;
+
+				_sortGrid[# 0, i] = i;
+				_sortGrid[# 1, i] = _dx * _dx + _dy * _dy + _dz * _dz;
+				++i;
+			}
+
+			repeat(_particleCapacity - _particleCount)
+			{
+				_sortGrid[# 0, i] = i;
+				_sortGrid[# 1, i] = -infinity;
+				++i;
+			}
+
+			ds_grid_sort(_sortGrid, 1, false);
+		}
+
+		var _batchCount = ceil(_particleCount / _batchSize);
+		var _batchDataScratch = __batchDataScratch;
+		var _batchDataOutput = __batchDataOutput;
+		var _batchChunkLength = __batchChunkLength;
+
+		var _batchScratchCount = array_length(_batchDataScratch);
+		if (_batchScratchCount < _batchCount)
+		{
+			repeat(_batchCount - _batchScratchCount)
+			{
+				array_push(_batchDataScratch, array_create(_batchChunkLength, 0.0));
+			}
+		}
+
+		if (array_length(_batchDataOutput) != _batchCount)
+		{
+			array_resize(_batchDataOutput, _batchCount);
+		}
+
+		var _particleIndex = 0;
+		var _particleCountRemaining = _particleCount;
+		var _batchIndex = 0;
 		repeat(_batchCount)
 		{
-			var _data = array_create(_batchSize * 16, 0);
+			var _data = _batchDataScratch[_batchIndex];
+			var _particlesInBatch = min(_particleCountRemaining, _batchSize);
 			var d = 0;
-			repeat(min(_particleCount, _batchSize))
+			repeat(_particlesInBatch)
 			{
-				var i = System.Sort
-					? _particlesSorted[_particleIndex++]
+				var i = _sortEnabled
+					? _sortGrid[# 0, _particleIndex++]
 					: _particleIndex++;
 
 				_data[d + 0] = _particles[# BBMOD_EParticle.PositionX, i];
@@ -454,14 +503,20 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 				d += 16;
 			}
-			_particleCount -= _batchSize;
-			_batchData[@ _batchIndex++] = _data;
+
+			if (_particlesInBatch < _batchSize)
+			{
+				repeat(_batchChunkLength - d)
+				{
+					_data[@ d++] = 0.0;
+				}
+			}
+
+			_particleCountRemaining -= _batchSize;
+			_batchDataOutput[@ _batchIndex++] = _data;
 		}
 
-		if (_batchCount > 0)
-		{
-			_method(_material, _batchData);
-		}
+		_method(_material, _batchDataOutput, undefined, _particleCount);
 	};
 
 	/// @func submit([_material])
@@ -475,7 +530,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	static submit = function (_material = undefined)
 	{
 		var _dynamicBatch = System.__dynamicBatch;
-		_draw(method(_dynamicBatch, _dynamicBatch.submit), _material);
+		__draw(method(_dynamicBatch, _dynamicBatch.submit), _material);
 		return self;
 	};
 
@@ -490,7 +545,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	static render = function (_material = undefined)
 	{
 		var _dynamicBatch = System.__dynamicBatch;
-		_draw(method(_dynamicBatch, _dynamicBatch.render), _material);
+		__draw(method(_dynamicBatch, _dynamicBatch.render), _material);
 		return self;
 	};
 
@@ -498,6 +553,7 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 	{
 		ds_grid_destroy(Particles);
 		ds_grid_destroy(GridCompute);
+		ds_grid_destroy(__sortGrid);
 		return undefined;
 	};
 }

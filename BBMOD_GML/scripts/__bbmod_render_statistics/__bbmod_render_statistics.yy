@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bbmod_render_statistics",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bbmod_render_statistics",
+  "parent":{
+    "name":"Rendering",
+    "path":"folders/BBMOD/Core/Rendering.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

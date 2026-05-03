@@ -115,11 +115,22 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 				_light = global.__bbmodPunctualLights[i];
 				if (_light.CastShadows)
 				{
-					__render_shadowmap_impl(_light);
-					if (_shadowCaster == undefined)
+					if (sphere_is_visible(_light.Position.X, _light.Position.Y, _light.Position.Z, _light
+							.Range))
 					{
-						_shadowCaster = _light;
-						_shadowCasterIndex = i;
+						__render_shadowmap_impl(_light);
+						if (_shadowCaster == undefined)
+						{
+							_shadowCaster = _light;
+							_shadowCasterIndex = i;
+						}
+					}
+					else
+					{
+						__bbmod_render_statistics_count(
+							__BBMOD_ERenderStatisticsCounter.ShadowmapUpdatesSkippedFrustum,
+							1,
+							BBMOD_ERenderPass.Shadows);
 					}
 				}
 				++i;
@@ -162,6 +173,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		var _projection = matrix_get(matrix_projection);
 		var _renderWidth = get_render_width();
 		var _renderHeight = get_render_height();
+		var _punctualLightsVisible = __build_visible_punctual_lights();
 
 		camera_set_view_size(__camera2D, _renderWidth, _renderHeight);
 
@@ -193,6 +205,8 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		// Shadow map
 		//
 		__render_shadowmaps();
+
+		global.__bbmodPunctualLightsRenderer = _punctualLightsVisible;
 
 		__gBufferZFar = bbmod_camera_get_zfar();
 
@@ -385,14 +399,11 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		gpu_set_ztestenable(false);
 		gpu_set_cullmode(cull_clockwise);
 
-		for (var i = array_length(global.__bbmodPunctualLights) - 1; i >= 0; --i)
+		var _punctualLightCount = array_length(_punctualLightsVisible);
+		for (var i = 0; i < _punctualLightCount; ++i)
 		{
-			with(global.__bbmodPunctualLights[i])
+			with(_punctualLightsVisible[i])
 			{
-				if (!Enabled)
-				{
-					continue;
-				}
 				matrix_set(matrix_world, matrix_build(
 					Position.X, Position.Y, Position.Z,
 					0, 0, 0,
@@ -404,7 +415,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 					Color.Red / 255.0,
 					Color.Green / 255.0,
 					Color.Blue / 255.0,
-					Color.Alpha
+					Color.Alpha * __distanceFadeFactor
 				);
 				if (is_instanceof(self, BBMOD_SpotLight))
 				{
@@ -575,6 +586,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		bbmod_shader_unset_global(BBMOD_U_SSAO);
 		bbmod_shader_unset_global(BBMOD_U_GBUFFER);
 		bbmod_shader_set_global_f(BBMOD_U_HDR, 0.0);
+		global.__bbmodPunctualLightsRenderer = undefined;
 
 		return self;
 	};

@@ -4,6 +4,10 @@
 /// @private
 global.__bbmodPunctualLights = [];
 
+/// @var {Array<Struct.BBMOD_PunctualLight>}
+/// @private
+global.__bbmodPunctualLightsRenderer = undefined;
+
 /// @func BBMOD_PunctualLight([_color[, _position[, _range]]])
 ///
 /// @extends BBMOD_Light
@@ -35,6 +39,19 @@ function BBMOD_PunctualLight(_color = BBMOD_C_WHITE, _position = undefined, _ran
 
 	/// @var {Real} The range of the light.
 	Range = _range;
+
+	/// @var {Real} Distance from camera where this light starts fading out.
+	/// Use `infinity` to disable distance fade. Defaults to `infinity`.
+	DistanceFadeStart = infinity;
+
+	/// @var {Real} Distance from camera where this light is fully faded out
+	/// and skipped by renderer light upload.
+	/// Use `infinity` to disable distance fade. Defaults to `infinity`.
+	DistanceFadeEnd = infinity;
+
+	/// @var {Real} Per-frame fade factor assigned by renderers.
+	/// @private
+	__distanceFadeFactor = 1.0;
 
 	__getZFar = __get_shadowmap_zfar;
 

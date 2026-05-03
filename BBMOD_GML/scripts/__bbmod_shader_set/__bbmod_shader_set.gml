@@ -101,6 +101,61 @@ function bbmod_shader_set_batch_data(_shader, _data)
 }
 
 /// @macro {String} Name of a vertex shader uniform of type `float` that holds
+/// per-draw seed used for distance dithering.
+#macro BBMOD_U_DITHER_SEED "bbmod_DitherSeed"
+
+/// @func bbmod_shader_set_dither_seed(_shader, _seed)
+///
+/// @desc Sets the {@link BBMOD_U_DITHER_SEED} uniform.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniform for.
+/// @param {Real} _seed The dithering seed value.
+function bbmod_shader_set_dither_seed(_shader, _seed)
+{
+	gml_pragma("forceinline");
+	shader_set_uniform_f(
+		shader_get_uniform(_shader, BBMOD_U_DITHER_SEED),
+		_seed);
+}
+
+/// @macro {String} Name of a vertex shader uniform of type `float` that holds
+/// dither fade multiplier for non-batched draws.
+#macro BBMOD_U_DITHER_FADE "bbmod_DitherFade"
+
+/// @func bbmod_shader_set_dither_fade(_shader, _fade)
+///
+/// @desc Sets the {@link BBMOD_U_DITHER_FADE} uniform.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniform for.
+/// @param {Real} _fade Dither fade multiplier in range 0..1.
+function bbmod_shader_set_dither_fade(_shader, _fade)
+{
+	gml_pragma("forceinline");
+	shader_set_uniform_f(
+		shader_get_uniform(_shader, BBMOD_U_DITHER_FADE),
+		_fade);
+}
+
+/// @macro {String} Name of a vertex shader uniform of type `float[]` that
+/// holds per-instance dither fade multipliers for batched draws.
+/// @obsolete Legacy helper retained for compatibility with custom shaders.
+#macro BBMOD_U_BATCH_FADE "bbmod_BatchFade"
+
+/// @func bbmod_shader_set_batch_fade(_shader, _fadeArray)
+///
+/// @desc Sets the {@link BBMOD_U_BATCH_FADE} uniform array.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniform for.
+/// @param {Array<Real>} _fadeArray Per-instance dither fades.
+function bbmod_shader_set_batch_fade(_shader, _fadeArray)
+{
+	gml_pragma("forceinline");
+	shader_set_uniform_f_array(
+		shader_get_uniform(_shader, BBMOD_U_BATCH_FADE),
+		_fadeArray);
+}
+
+/// @macro {String} Name of a vertex shader uniform of type `float` that holds
 /// whether shadowmapping is enabled (1.0) or disabled (0.0).
 #macro BBMOD_U_SHADOWMAP_ENABLE_VS "bbmod_ShadowmapEnableVS"
 
@@ -597,6 +652,60 @@ function bbmod_shader_set_soft_distance(_shader, _value)
 		_value);
 }
 
+/// @macro {String} Name of a fragment shader uniform of type `float` that
+/// enables distance dithering (1.0) or disables it (0.0).
+#macro BBMOD_U_DITHER_ENABLE "bbmod_DitherEnable"
+
+/// @func bbmod_shader_set_dither_enable(_shader, _enable)
+///
+/// @desc Sets the {@link BBMOD_U_DITHER_ENABLE} uniform.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniform for.
+/// @param {Bool} _enable Whether distance dithering is enabled.
+function bbmod_shader_set_dither_enable(_shader, _enable)
+{
+	gml_pragma("forceinline");
+	shader_set_uniform_f(
+		shader_get_uniform(_shader, BBMOD_U_DITHER_ENABLE),
+		_enable ? 1.0 : 0.0);
+}
+
+/// @macro {String} Name of a fragment shader uniform of type `vec4` that
+/// holds distance-dithering range as
+/// `(fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd)`.
+#macro BBMOD_U_DITHER_DISTANCE "bbmod_DitherDistance"
+
+/// @macro {String} Name of a global shader configuration value of type
+/// `float2` that holds dither fade durations in seconds as
+/// `(fadeInSeconds, fadeOutSeconds)`.
+/// @obsolete Legacy temporal helper retained for compatibility.
+#macro BBMOD_U_DITHER_TIME "bbmod_DitherTime"
+
+/// @func bbmod_shader_set_dither_distance(_shader, _fadeInStart, _fadeInEnd, _fadeOutStart, _fadeOutEnd)
+///
+/// @desc Sets the {@link BBMOD_U_DITHER_DISTANCE} uniform.
+///
+/// @param {Asset.GMShader} _shader The shader to set the uniform for.
+/// @param {Real} _fadeInStart The fade-in start distance.
+/// @param {Real} _fadeInEnd The fade-in end distance.
+/// @param {Real} _fadeOutStart The fade-out start distance.
+/// @param {Real} _fadeOutEnd The fade-out end distance.
+function bbmod_shader_set_dither_distance(
+	_shader,
+	_fadeInStart,
+	_fadeInEnd,
+	_fadeOutStart,
+	_fadeOutEnd)
+{
+	gml_pragma("forceinline");
+	shader_set_uniform_f(
+		shader_get_uniform(_shader, BBMOD_U_DITHER_DISTANCE),
+		_fadeInStart,
+		_fadeInEnd,
+		_fadeOutStart,
+		_fadeOutEnd);
+}
+
 /// @macro {String} Name of a fragment shader uniform of type `vec4` that holds
 /// the fog color.
 /// @see bbmod_fog_set_color
@@ -910,7 +1019,7 @@ function bbmod_shader_set_punctual_lights(_shader, _lights = undefined, _isLight
 {
 	gml_pragma("forceinline");
 
-	_lights ??= global.__bbmodPunctualLights;
+	_lights ??= (global.__bbmodPunctualLightsRenderer ?? global.__bbmodPunctualLights);
 
 	var _renderPassMask = (1 << bbmod_render_pass_get());
 
@@ -938,7 +1047,7 @@ function bbmod_shader_set_punctual_lights(_shader, _lights = undefined, _isLight
 			_dataA[@ _indexA + 4] = _color.Red / 255.0;
 			_dataA[@ _indexA + 5] = _color.Green / 255.0;
 			_dataA[@ _indexA + 6] = _color.Blue / 255.0;
-			_dataA[@ _indexA + 7] = _color.Alpha;
+			_dataA[@ _indexA + 7] = _color.Alpha * _light.__distanceFadeFactor;
 			_indexA += 8;
 
 			if (is_instanceof(_light, BBMOD_SpotLight))

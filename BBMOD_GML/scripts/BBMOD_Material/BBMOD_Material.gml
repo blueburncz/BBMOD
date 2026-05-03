@@ -98,12 +98,9 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// @see BBMOD_Material.get_shader
 	__shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
 
-	/// @var {Struct.BBMOD_RenderQueue} The render queue used by this material.
-	/// Defaults to the default BBMOD render queue.
-	/// @readonly
-	/// @see BBMOD_RenderQueue
-	/// @see bbmod_render_queue_get_default
-	RenderQueue = bbmod_render_queue_get_default();
+	/// @var {Real} The render queue category used by this material. Defaults to
+	/// {@link BBMOD_ERenderQueue.Opaque}.
+	RenderQueue = BBMOD_ERenderQueue.Opaque;
 
 	/// @var {Function} A function that is executed when the shader is applied.
 	/// Must take the material as the first argument. Use `undefined` if you do
@@ -114,6 +111,10 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	///
 	/// @see BBMOD_MaterialPropertyBlock
 	/// @see bbmod_material_props_set
+	///
+	/// @obsolete This feature is obsolete! You should extend this struct and
+	/// and implement a custom `apply` in case you need to emulate the old
+	/// behavior.
 	OnApply = undefined;
 
 	/// @var {Constant.BlendMode} A blend mode. Default value is `bm_normal`.
@@ -186,6 +187,14 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 
 	__baseOpacitySprite = undefined;
 
+	/// @var {Real} Cached hash for this material.
+	/// @private
+	__hash = 0;
+
+	/// @var {Bool} If `true`, hash is recomputed on next
+	/// {@link BBMOD_Material.get_hash}.
+	HashDirty = true;
+
 	/// @func copy(_dest)
 	///
 	/// @desc Copies properties of this material into another material.
@@ -232,6 +241,8 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		{
 			_dest.BaseOpacity = BaseOpacity;
 		}
+
+		_dest.HashDirty = true;
 
 		return self;
 	};
@@ -282,10 +293,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		}
 		_json.__shaders = _shaders;
 
-		if (RenderQueue.Name != undefined)
-		{
-			_json.RenderQueue = RenderQueue.Name;
-		}
+		_json.RenderQueue = RenderQueue;
 
 		// TODO: Save OnApply
 
@@ -359,23 +367,40 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			var _renderQueue = _json.RenderQueue;
 			if (is_string(_renderQueue))
 			{
-				var _renderQueues = bbmod_render_queues_get();
-				var _index = 0;
-				repeat(array_length(_renderQueues))
+				switch (_renderQueue)
 				{
-					with(_renderQueues[_index++])
-					{
-						if (Name == _renderQueue)
-						{
-							_renderQueue = self;
-							break;
-						}
-					}
+					case "Sky":
+						_renderQueue = BBMOD_ERenderQueue.Sky;
+						break;
+
+					case "Terrain":
+						_renderQueue = BBMOD_ERenderQueue.Terrain;
+						break;
+
+					case "Opaque":
+					case "Default":
+						_renderQueue = BBMOD_ERenderQueue.Opaque;
+						break;
+
+					case "Transparent":
+						_renderQueue = BBMOD_ERenderQueue.Transparent;
+						break;
+
+					default:
+						__bbmod_warning(
+							"BBMOD_Material.from_json: Unknown RenderQueue \"{0}\". Falling back to BBMOD_ERenderQueue.Opaque.",
+							[_renderQueue]
+						);
+						_renderQueue = BBMOD_ERenderQueue.Opaque;
+						break;
 				}
-				if (is_string(_renderQueue))
-				{
-					throw new BBMOD_Exception("Invalid render queue \"" + _renderQueue + "\"!");
-				}
+			}
+			else if (!is_real(_renderQueue))
+			{
+				__bbmod_warning(
+					"BBMOD_Material.from_json: Invalid RenderQueue value in JSON. Expected string or real queue index. Falling back to BBMOD_ERenderQueue.Opaque."
+				);
+				_renderQueue = BBMOD_ERenderQueue.Opaque;
 			}
 			RenderQueue = _renderQueue;
 		}
@@ -486,6 +511,8 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			BaseOpacity = _json.BaseOpacity;
 		}
 
+		HashDirty = true;
+
 		return self;
 	};
 
@@ -584,6 +611,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			_isReal ? argument[1] : _color.Alpha
 		);
 		BaseOpacity = sprite_get_texture(__baseOpacitySprite, 0);
+		HashDirty = true;
 		return self;
 	};
 
@@ -687,17 +715,6 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			_shader.set_material(self);
 		}
 
-		var _materialProps = global.__bbmodMaterialProps;
-		if (_materialProps != undefined)
-		{
-			_materialProps.apply();
-		}
-
-		if (OnApply != undefined)
-		{
-			OnApply(self);
-		}
-
 		return true;
 	};
 
@@ -717,6 +734,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		gml_pragma("forceinline");
 		RenderPass |= (1 << _pass);
 		__shaders[@ _pass] = _shader;
+		HashDirty = true;
 		return self;
 	};
 
@@ -762,7 +780,62 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		gml_pragma("forceinline");
 		RenderPass &= ~(1 << _pass);
 		__shaders[@ _pass] = undefined;
+		HashDirty = true;
 		return self;
+	};
+
+	/// @func get_hash()
+	///
+	/// @desc Computes a hash value for this material's core state.
+	///
+	/// @return {Real} A hash value representing the material state.
+	static get_hash = function ()
+	{
+		if (!HashDirty)
+		{
+			return __hash;
+		}
+
+		var _hash = 0;
+		var _renderQueue = RenderQueue;
+		if (is_struct(_renderQueue))
+		{
+			_renderQueue = ptr(_renderQueue);
+		}
+
+		_hash = bbmod_hash_combine(_hash, RenderPass);
+		_hash = bbmod_hash_combine(_hash, _renderQueue ?? 0);
+
+		var i = 0;
+		repeat(BBMOD_ERenderPass.SIZE)
+		{
+			var _shader = __shaders[i++];
+			_hash = bbmod_hash_combine(_hash, _shader != undefined ? ptr(_shader) : 0);
+		}
+
+		_hash = bbmod_hash_combine(_hash, BlendMode);
+		_hash = bbmod_hash_combine(_hash, Culling);
+		_hash = bbmod_hash_combine(_hash, ZWrite);
+		_hash = bbmod_hash_combine(_hash, ZTest);
+		_hash = bbmod_hash_combine(_hash, ZFunc);
+		_hash = bbmod_hash_combine(_hash, AlphaTest);
+		_hash = bbmod_hash_combine(_hash, AlphaBlend);
+
+		_hash = bbmod_hash_combine(_hash, Mipmapping);
+		_hash = bbmod_hash_combine(_hash, MipBias);
+		_hash = bbmod_hash_combine(_hash, MipFilter);
+		_hash = bbmod_hash_combine(_hash, MipMin);
+		_hash = bbmod_hash_combine(_hash, MipMax);
+		_hash = bbmod_hash_combine(_hash, Anisotropy);
+		_hash = bbmod_hash_combine(_hash, Filtering);
+		_hash = bbmod_hash_combine(_hash, Repeat);
+
+		_hash = bbmod_hash_combine(_hash, BaseOpacity ?? 0);
+
+		__hash = _hash;
+		HashDirty = false;
+
+		return __hash;
 	};
 
 	/// @func reset()

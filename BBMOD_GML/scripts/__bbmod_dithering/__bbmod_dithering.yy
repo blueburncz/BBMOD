@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bbmod_dithering",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bbmod_dithering",
+  "parent":{
+    "name":"Rendering",
+    "path":"folders/BBMOD/Core/Rendering.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

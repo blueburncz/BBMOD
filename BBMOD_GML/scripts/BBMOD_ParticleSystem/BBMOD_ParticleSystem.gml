@@ -51,6 +51,102 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize = 32
 	/// @readonly
 	Modules = [];
 
+	/// @var {Array<Struct.BBMOD_ParticleModule>}
+	/// @private
+	__modulesOnParticleStart = [];
+
+	/// @var {Array<Struct.BBMOD_ParticleModule>}
+	/// @private
+	__modulesOnParticleFinish = [];
+
+	/// @var {Array<Bool>}
+	/// @private
+	__moduleHasStart = [];
+
+	/// @var {Array<Bool>}
+	/// @private
+	__moduleHasUpdate = [];
+
+	/// @var {Array<Bool>}
+	/// @private
+	__moduleHasFinish = [];
+
+	/// @var {Array<Struct.BBMOD_ParticleModule>}
+	/// @private
+	__moduleCallbacksSource = undefined;
+
+	/// @var {Real}
+	/// @private
+	__moduleCallbacksLength = -1;
+
+	/// @func __rebuild_module_callbacks()
+	///
+	/// @desc Rebuilds internal module callback caches.
+	///
+	/// @return {Struct.BBMOD_ParticleSystem} Returns `self`.
+	///
+	/// @private
+	static __rebuild_module_callbacks = function ()
+	{
+		var _modules = Modules;
+		var _moduleCount = array_length(_modules);
+
+		var _modulesOnParticleStart = [];
+		var _modulesOnParticleFinish = [];
+		var _moduleHasStart = array_create(_moduleCount, false);
+		var _moduleHasUpdate = array_create(_moduleCount, false);
+		var _moduleHasFinish = array_create(_moduleCount, false);
+
+		var i = 0;
+		repeat(_moduleCount)
+		{
+			var _module = _modules[i];
+			_moduleHasStart[@ i] = (_module.on_start != undefined);
+			_moduleHasUpdate[@ i] = (_module.on_update != undefined);
+			_moduleHasFinish[@ i] = (_module.on_finish != undefined);
+
+			if (_module.on_particle_start != undefined)
+			{
+				array_push(_modulesOnParticleStart, _module);
+			}
+
+			if (_module.on_particle_finish != undefined)
+			{
+				array_push(_modulesOnParticleFinish, _module);
+			}
+
+			++i;
+		}
+
+		__modulesOnParticleStart = _modulesOnParticleStart;
+		__modulesOnParticleFinish = _modulesOnParticleFinish;
+		__moduleHasStart = _moduleHasStart;
+		__moduleHasUpdate = _moduleHasUpdate;
+		__moduleHasFinish = _moduleHasFinish;
+		__moduleCallbacksSource = _modules;
+		__moduleCallbacksLength = _moduleCount;
+
+		return self;
+	};
+
+	/// @func __ensure_module_callbacks()
+	///
+	/// @desc Lazily refreshes callback caches when module list changes.
+	///
+	/// @return {Struct.BBMOD_ParticleSystem} Returns `self`.
+	///
+	/// @private
+	static __ensure_module_callbacks = function ()
+	{
+		var _modules = Modules;
+		if (_modules != __moduleCallbacksSource
+			|| array_length(_modules) != __moduleCallbacksLength)
+		{
+			__rebuild_module_callbacks();
+		}
+		return self;
+	};
+
 	/// @func add_modules(_module...)
 	///
 	/// @desc Adds modules to the particle system.
@@ -68,8 +164,11 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize = 32
 		{
 			array_push(Modules, argument[i++]);
 		}
+		__rebuild_module_callbacks();
 		return self;
 	};
+
+	__rebuild_module_callbacks();
 
 	static destroy = function ()
 	{

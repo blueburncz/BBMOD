@@ -1,9 +1,5 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_MaterialPropertyBlock}
-/// @private
-global.__bbmodMaterialProps = undefined;
-
 /// @func BBMOD_MaterialPropertyBlock()
 ///
 /// @desc A collection of material properties. Useful in case you want to use
@@ -43,6 +39,9 @@ global.__bbmodMaterialProps = undefined;
 /// @see bbmod_material_props_set
 /// @see bbmod_material_props_get
 /// @see bbmod_material_props_reset
+///
+/// @obsolete This feature is obsolete and no longer supported. Material
+/// property blocks are no longer applied during rendering.
 function BBMOD_MaterialPropertyBlock() constructor
 {
 	/// @var {Array<String>}
@@ -736,9 +735,7 @@ function BBMOD_MaterialPropertyBlock() constructor
 
 /// @func bbmod_material_props_set(_materialPropertyBlock)
 ///
-/// @desc Sets a material property block as the current one. Its properties are
-/// then applied to all rendered materials until it is reset again using
-/// {@link bbmod_material_props_reset}.
+/// @desc Obsolete no-op retained for compatibility.
 ///
 /// @param {Struct.BBMOD_MaterialPropertyBlock} _materialPropertyBlock The
 /// material property block to set as the current one.
@@ -749,27 +746,27 @@ function BBMOD_MaterialPropertyBlock() constructor
 /// materialProps.set_color("u_vSilhouetteColor", BBMOD_C_RED);
 /// materialProps.set_float("u_fSilhouetteStrength", 1.0);
 /// bbmod_material_props_set(_materialProps);
-/// model.render();
+/// model.render(); // No effect: feature is obsolete and hard-disabled.
 /// bbmod_material_props_reset();
 /// ```
-///
-/// @note The current material property block is applied automatically every
-/// time {@link BBMOD_Material.apply} is called. If the applied material has an
-/// [OnApply](./BBMOD_Material.OnApply.html) property, it is executed *after* the
-/// material property block is applied.
 ///
 /// @see bbmod_material_props_get
 /// @see bbmod_material_props_reset
 /// @see BBMOD_MaterialPropertyBlock
+///
+/// @obsolete This feature is obsolete and no longer supported. Material
+/// property blocks are no longer applied during rendering.
 function bbmod_material_props_set(_materialPropertyBlock)
 {
 	gml_pragma("forceinline");
-	global.__bbmodMaterialProps = _materialPropertyBlock;
+	// Obsolete no-op.
 }
 
 /// @func bbmod_material_props_get()
 ///
 /// @desc Retrieves the current material property block.
+///
+/// @note Always returns `undefined` because this feature is hard-disabled.
 ///
 /// @return {Struct.BBMOD_MaterialPropertyBlock} The current material property
 /// block or `undefined`.
@@ -778,7 +775,7 @@ function bbmod_material_props_set(_materialPropertyBlock)
 /// ```gml
 /// var _materialProps = new BBMOD_MaterialPropertyBlock();
 /// bbmod_material_props_set(_materialProps);
-/// bbmod_material_props_get(); // => _materialProps
+/// bbmod_material_props_get(); // => undefined
 /// bbmod_material_props_reset();
 /// bbmod_material_props_get(); // => undefined
 /// ```
@@ -786,21 +783,24 @@ function bbmod_material_props_set(_materialPropertyBlock)
 /// @see bbmod_material_props_set
 /// @see bbmod_material_props_reset
 /// @see BBMOD_MaterialPropertyBlock
+///
+/// @obsolete This feature is obsolete and no longer supported. Material
+/// property blocks are no longer applied during rendering.
 function bbmod_material_props_get()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodMaterialProps;
+	return undefined;
 }
 
 /// @func bbmod_material_props_reset()
 ///
-/// @desc Unsets the current material property block.
+/// @desc Obsolete no-op retained for compatibility.
 ///
 /// @example
 /// ```gml
 /// var _materialProps = new BBMOD_MaterialPropertyBlock();
 /// bbmod_material_props_set(_materialProps);
-/// bbmod_material_props_get(); // => _materialProps
+/// bbmod_material_props_get(); // => undefined
 /// bbmod_material_props_reset();
 /// bbmod_material_props_get(); // => undefined
 /// ```
@@ -808,8 +808,11 @@ function bbmod_material_props_get()
 /// @see bbmod_material_props_set
 /// @see bbmod_material_props_get
 /// @see BBMOD_MaterialPropertyBlock
+///
+/// @obsolete This feature is obsolete and no longer supported. Material
+/// property blocks are no longer applied during rendering.
 function bbmod_material_props_reset()
 {
 	gml_pragma("forceinline");
-	global.__bbmodMaterialProps = undefined;
+	// Obsolete no-op.
 }

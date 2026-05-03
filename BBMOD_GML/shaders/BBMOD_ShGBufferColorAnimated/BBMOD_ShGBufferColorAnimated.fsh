@@ -23,6 +23,8 @@ varying vec4 v_vColor;
 varying vec2 v_vTexCoord;
 varying mat3 v_mTBN;
 varying vec4 v_vPosition;
+varying float v_fDitherSeed;
+varying float v_fDitherFadeMultiplier;
 
 varying vec4 v_vPosShadowmap;
 
@@ -84,6 +86,14 @@ uniform sampler2D u_texBestFitNormalLUT;
 
 // 0.0 = apply exposure, tonemap and gamma correct, 1.0 = output raw values
 uniform float bbmod_HDR;
+
+////////////////////////////////////////////////////////////////////////////////
+// Distance dithering
+
+// 0.0 = disabled, > 0.0 = enabled
+uniform float bbmod_DitherEnable;
+// (fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd)
+uniform vec4 bbmod_DitherDistance;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -284,6 +294,33 @@ Material UnpackMaterial(
 	return m;
 }
 
+float xDistanceDitherNoise(vec2 positionScreen, float seed)
+{
+	vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+	return fract(magic.z * fract(dot(positionScreen + vec2(seed * 13.13, seed * 7.31), magic.xy)));
+}
+
+void xApplyDistanceDither(float seed, float fadeMultiplier)
+{
+	if (bbmod_DitherEnable <= 0.0)
+	{
+		return;
+	}
+
+	float fade = clamp(fadeMultiplier, 0.0, 1.0);
+
+	if (fade <= 0.0)
+	{
+		discard;
+	}
+
+	float threshold = xDistanceDitherNoise(gl_FragCoord.xy, seed);
+	if (threshold > fade)
+	{
+		discard;
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
@@ -310,6 +347,8 @@ void main()
 	{
 		discard;
 	}
+
+	xApplyDistanceDither(v_fDitherSeed, v_fDitherFadeMultiplier);
 
 	gl_FragData[0] = vec4(xLinearToGamma(mix(material.Base, material.Specular, material.Metallic)), material.AO);
 	gl_FragData[1] = vec4(xBestFitNormal(material.Normal, u_texBestFitNormalLUT) * 0.5 + 0.5, material.Roughness);

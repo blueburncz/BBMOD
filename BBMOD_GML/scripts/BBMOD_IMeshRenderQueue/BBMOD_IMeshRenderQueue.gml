@@ -7,6 +7,8 @@
 /// @implements {BBMOD_IDestructible}
 ///
 /// @desc An interface for render queues that can draw meshes.
+///
+/// @obsolete This interface is obsolete. Use {@link BBMOD_RenderQueue} instead.
 function BBMOD_IMeshRenderQueue()
 {
 	/// @func set_priority(_p)

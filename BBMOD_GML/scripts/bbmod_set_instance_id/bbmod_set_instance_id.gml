@@ -8,6 +8,10 @@ global.__bbmodInstanceID = 0;
 /// @private
 global.__bbmodInstanceIDBatch = undefined;
 
+/// @var {Struct.BBMOD_DynamicBatch,Undefined}
+/// @private
+global.__bbmodDynamicBatchContext = undefined;
+
 /// @func bbmod_set_instance_id(_id)
 ///
 /// @desc Sets an instance ID for all subsequently rendered models.

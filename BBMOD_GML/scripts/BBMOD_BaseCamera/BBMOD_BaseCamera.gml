@@ -101,6 +101,48 @@ function BBMOD_BaseCamera() constructor
 	/// @private
 	__projFlipped = false;
 
+	/// @var {Real} Normalized view-forward X component.
+	/// @private
+	__viewForwardX = 0.0;
+
+	/// @var {Real} Normalized view-forward Y component.
+	/// @private
+	__viewForwardY = 0.0;
+
+	/// @var {Real} Normalized view-forward Z component.
+	/// @private
+	__viewForwardZ = 0.0;
+
+	/// @func __update_view_forward(_targetX, _targetY, _targetZ)
+	///
+	/// @desc Caches a normalized camera forward direction used by hot-path
+	/// camera distance checks.
+	///
+	/// @param {Real} _targetX Target X position.
+	/// @param {Real} _targetY Target Y position.
+	/// @param {Real} _targetZ Target Z position.
+	///
+	/// @private
+	static __update_view_forward = function (_targetX, _targetY, _targetZ)
+	{
+		var _fx = _targetX - Position.X;
+		var _fy = _targetY - Position.Y;
+		var _fz = _targetZ - Position.Z;
+		var _lengthSq = _fx * _fx + _fy * _fy + _fz * _fz;
+		if (_lengthSq <= 0.0)
+		{
+			__viewForwardX = 0.0;
+			__viewForwardY = 0.0;
+			__viewForwardZ = 0.0;
+			return;
+		}
+
+		var _invLength = 1.0 / sqrt(_lengthSq);
+		__viewForwardX = _fx * _invLength;
+		__viewForwardY = _fy * _invLength;
+		__viewForwardZ = _fz * _invLength;
+	};
+
 	/// @func __build_proj_mat()
 	///
 	/// @desc Builds a projection matrix based on the camera's properties.
@@ -150,6 +192,7 @@ function BBMOD_BaseCamera() constructor
 	static update_matrices = function ()
 	{
 		gml_pragma("forceinline");
+		__update_view_forward(Target.X, Target.Y, Target.Z);
 
 		var _view = matrix_build_lookat(
 			Position.X, Position.Y, Position.Z,
@@ -255,6 +298,27 @@ function BBMOD_BaseCamera() constructor
 			_view[4],
 			_view[8]
 		);
+	};
+
+	/// @func get_distance(_point)
+	///
+	/// @desc Computes signed view-space distance (depth) from the camera to a
+	/// world-space point.
+	///
+	/// @param {Struct.BBMOD_Vec3} _point Point in world-space.
+	///
+	/// @return {Real} Signed view-space distance. Positive values are in front
+	/// of the camera and negative values are behind it.
+	///
+	/// @note This relies on cached forward direction updated by
+	/// {@link BBMOD_BaseCamera.update_matrices}.
+	static get_distance = function (_point)
+	{
+		gml_pragma("forceinline");
+		var _dx = _point.X - Position.X;
+		var _dy = _point.Y - Position.Y;
+		var _dz = _point.Z - Position.Z;
+		return (_dx * __viewForwardX + _dy * __viewForwardY + _dz * __viewForwardZ);
 	};
 
 	/// @func get_up()

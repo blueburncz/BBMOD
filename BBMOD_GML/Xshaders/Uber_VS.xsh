@@ -66,6 +66,10 @@ uniform vec4 bbmod_Bones[2 * BBMOD_MAX_BONES];
 uniform vec4 bbmod_BatchData[BBMOD_MAX_BATCH_VEC4S];
 #endif
 
+
+uniform float bbmod_DitherSeed;
+uniform float bbmod_DitherFade;
+
 #if defined(X_PBR) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)
 // 1.0 to enable shadows
 uniform float bbmod_ShadowmapEnableVS;
@@ -104,10 +108,13 @@ void main()
 #if defined(X_PARTICLES)
 	vec3 batchPosition = bbmod_BatchData[int(in_Id) * 4 + 0].xyz;
 	vec4 batchRot = bbmod_BatchData[int(in_Id) * 4 + 1];
-	vec3 batchScale = bbmod_BatchData[int(in_Id) * 4 + 2].xyz;
+	vec4 batchScaleFade = bbmod_BatchData[int(in_Id) * 4 + 2];
+	vec3 batchScale = batchScaleFade.xyz;
 	vec4 batchColorAlpha = bbmod_BatchData[int(in_Id) * 4 + 3];
 	v_vColor.rgb = xGammaToLinear(batchColorAlpha.rgb);
 	v_vColor.a = batchColorAlpha.a;
+	v_fDitherSeed = dot(batchPosition, vec3(12.9898, 78.233, 37.719)) + in_Id * 17.0;
+	v_fDitherFadeMultiplier = (batchScaleFade.w > 0.0) ? batchScaleFade.w : 1.0;
 
 	vec4 position = in_Position;
 	position.xyz *= batchScale;
@@ -146,6 +153,13 @@ void main()
 
 	vec4 positionWVP = gm_Matrices[MATRIX_PROJECTION] * (gm_Matrices[MATRIX_VIEW] * position);
 	v_vVertex = position.xyz;
+#if defined(X_BATCHED)
+	v_fDitherFadeMultiplier = bbmod_BatchData[(int(in_Id) * 4) + 3].w;
+	v_fDitherSeed = dot(bbmod_BatchData[(int(in_Id) * 4) + 2], vec4(1.0, 17.0, 37.0, 73.0));
+#else
+	v_fDitherFadeMultiplier = bbmod_DitherFade;
+	v_fDitherSeed = bbmod_DitherSeed;
+#endif
 #endif // !X_PARTICLES
 
 	gl_Position = positionWVP;
@@ -180,7 +194,7 @@ void main()
 #endif
 
 #if defined(X_ID) && defined(X_BATCHED)
-	v_vInstanceID = bbmod_BatchData[(int(in_Id) * 3) + 2];
+	v_vInstanceID = bbmod_BatchData[(int(in_Id) * 4) + 2];
 #endif
 
 #if defined(X_PBR) && !defined(X_OUTPUT_DEPTH) && !defined(X_2D)

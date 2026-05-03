@@ -15,6 +15,7 @@
 function BBMOD_BaseMaterial(_shader = undefined): BBMOD_Material(_shader) constructor
 {
 	static Material_copy = copy;
+	static Material_get_hash = get_hash;
 	static Material_to_json = to_json;
 	static Material_from_json = from_json;
 
@@ -50,6 +51,7 @@ function BBMOD_BaseMaterial(_shader = undefined): BBMOD_Material(_shader) constr
 		_dest.TextureOffset = TextureOffset.Clone();
 		_dest.TextureScale = TextureScale.Clone();
 		_dest.ShadowmapBias = ShadowmapBias;
+		_dest.HashDirty = true;
 		return self;
 	};
 
@@ -58,6 +60,34 @@ function BBMOD_BaseMaterial(_shader = undefined): BBMOD_Material(_shader) constr
 		var _clone = new BBMOD_BaseMaterial();
 		copy(_clone);
 		return _clone;
+	};
+
+	static get_hash = function ()
+	{
+		if (!HashDirty)
+		{
+			return __hash;
+		}
+
+		var _hash = Material_get_hash();
+
+		_hash = bbmod_hash_combine(_hash, BaseOpacityMultiplier.Red);
+		_hash = bbmod_hash_combine(_hash, BaseOpacityMultiplier.Green);
+		_hash = bbmod_hash_combine(_hash, BaseOpacityMultiplier.Blue);
+		_hash = bbmod_hash_combine(_hash, BaseOpacityMultiplier.Alpha);
+
+		_hash = bbmod_hash_combine(_hash, TextureOffset.X);
+		_hash = bbmod_hash_combine(_hash, TextureOffset.Y);
+		_hash = bbmod_hash_combine(_hash, TextureScale.X);
+		_hash = bbmod_hash_combine(_hash, TextureScale.Y);
+
+		_hash = bbmod_hash_combine(_hash, ShadowmapBias);
+		_hash = bbmod_hash_combine(_hash, TwoSided);
+
+		__hash = _hash;
+		HashDirty = false;
+
+		return __hash;
 	};
 
 	static to_json = function (_json)
@@ -123,6 +153,8 @@ function BBMOD_BaseMaterial(_shader = undefined): BBMOD_Material(_shader) constr
 		{
 			ShadowmapBias = _json.ShadowmapBias;
 		}
+
+		HashDirty = true;
 
 		return self;
 	};

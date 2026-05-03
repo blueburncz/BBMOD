@@ -309,6 +309,14 @@ uniform sampler2D u_texBestFitNormalLUT;
 uniform float bbmod_HDR;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Distance dithering
+
+// 0.0 = disabled, > 0.0 = enabled
+uniform float bbmod_DitherEnable;
+// (fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd)
+uniform vec4 bbmod_DitherDistance;
+
+////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
@@ -327,6 +335,8 @@ uniform float bbmod_HDR;
 #    pragma include("UnlitShader.xsh")
 #endif
 
+#pragma include("DistanceDither.xsh")
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Main
@@ -340,6 +350,8 @@ void main()
 	{
 		discard;
 	}
+
+	xApplyDistanceDither(v_fDitherSeed, v_fDitherFadeMultiplier);
 
 #if defined(X_ID)
 	#if defined(X_BATCHED)
@@ -527,6 +539,8 @@ void main()
 	{
 		discard;
 	}
+
+	xApplyDistanceDither(v_fDitherSeed, v_fDitherFadeMultiplier);
 
 #if defined(X_OUTPUT_GBUFFER)
 	gl_FragData[0] = vec4(xLinearToGamma(mix(material.Base, material.Specular, material.Metallic)), material.AO);
