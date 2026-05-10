@@ -3,9 +3,9 @@ precision highp float;
 
 varying vec2 vTexCoord;
 
-uniform float uThreshold;
-uniform float uKnee;
-uniform vec2 uTexelSize;
+uniform float u_fThreshold;
+uniform float u_fKnee;
+uniform vec2 u_vTexelSize;
 
 // @include BBMOD_KarisAverage
 
@@ -67,7 +67,7 @@ vec3 BBMOD_SoftThreshold(vec3 color, float threshold, float knee)
 
 void main()
 {
-	vec3 color = BBMOD_KarisAverage(gm_BaseTexture, vTexCoord, uTexelSize);
-	gl_FragColor.rgb = BBMOD_SoftThreshold(color, uThreshold, uKnee);
+	vec3 color = BBMOD_KarisAverage(gm_BaseTexture, vTexCoord, u_vTexelSize);
+	gl_FragColor.rgb = BBMOD_SoftThreshold(color, u_fThreshold, u_fKnee);
 	gl_FragColor.a = 1.0;
 }

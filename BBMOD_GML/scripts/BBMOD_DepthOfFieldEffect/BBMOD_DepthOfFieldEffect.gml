@@ -238,17 +238,17 @@ function BBMOD_DepthOfFieldEffect(
 		// Downsample near CoC
 		shader_set(BBMOD_ShDownsampleCoC);
 		surface_set_target(__surCoCDownsample1);
-		shader_set_uniform_f(__uDownsampleTexel, 2.0 / _width, 2.0 / _height);
+		shader_set_uniform_f(__uDownsampleTexel, 1.0 / _width, 1.0 / _height);
 		draw_surface_stretched(__surCoC, 0, 0, _width / 2, _height / 2);
 		surface_reset_target()
 
 		surface_set_target(__surCoCDownsample2);
-		shader_set_uniform_f(__uDownsampleTexel, 4.0 / _width, 4.0 / _height);
+		shader_set_uniform_f(__uDownsampleTexel, 2.0 / _width, 2.0 / _height);
 		draw_surface_stretched(__surCoCDownsample1, 0, 0, _width / 4, _height / 4);
 		surface_reset_target()
 
 		surface_set_target(__surCoCNear);
-		shader_set_uniform_f(__uDownsampleTexel, 8.0 / _width, 8.0 / _height);
+		shader_set_uniform_f(__uDownsampleTexel, 4.0 / _width, 4.0 / _height);
 		draw_surface_stretched(__surCoCDownsample2, 0, 0, _width / 8, _height / 8);
 		surface_reset_target()
 		shader_reset();

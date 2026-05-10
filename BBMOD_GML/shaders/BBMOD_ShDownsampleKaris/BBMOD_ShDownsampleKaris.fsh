@@ -3,7 +3,7 @@ precision highp float;
 
 varying vec2 vTexCoord;
 
-uniform vec2 uTexel;
+uniform vec2 u_vTexel;
 
 // @include BBMOD_KarisAverage
 
@@ -39,6 +39,6 @@ vec3 BBMOD_KarisAverage(sampler2D tex, vec2 texCoord, vec2 texelSize)
 
 void main()
 {
-	vec3 color = BBMOD_KarisAverage(gm_BaseTexture, vTexCoord, uTexel);
+	vec3 color = BBMOD_KarisAverage(gm_BaseTexture, vTexCoord, u_vTexel);
 	gl_FragColor = vec4(color, 1.0);
 }

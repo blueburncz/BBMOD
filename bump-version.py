@@ -17,7 +17,7 @@ def parse_version(version: str) -> tuple[int, int, int]:
     match = VERSION_RE.match(version)
     if not match:
         raise ValueError(
-            f"Invalid version '{version}'. Expected 'major.minor.patch' (for example 3.23.0)."
+            f"Invalid version '{version}'. Expected 'major.minor.patch' (for example 3.23.1)."
         )
     return tuple(int(part) for part in match.groups())
 
@@ -150,7 +150,7 @@ def main() -> int:
     )
     parser.add_argument(
         "new_version",
-        help="New version in major.minor.patch format (for example 3.23.0).",
+        help="New version in major.minor.patch format (for example 3.23.1).",
     )
     parser.add_argument(
         "old_version",

@@ -44,20 +44,20 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 	/// @private
 	__surfaces2 = array_create(__levels, -1);
 
-	static __uThreshold = shader_get_uniform(BBMOD_ShThreshold, "uThreshold");
-	static __uKnee = shader_get_uniform(BBMOD_ShThreshold, "uKnee");
-	static __uTexelSize = shader_get_uniform(BBMOD_ShThreshold, "uTexelSize");
+	static __uThreshold = shader_get_uniform(BBMOD_ShThreshold, "u_fThreshold");
+	static __uKnee = shader_get_uniform(BBMOD_ShThreshold, "u_fKnee");
+	static __uTexelSize = shader_get_uniform(BBMOD_ShThreshold, "u_vTexelSize");
 
-	static __uTexelDownsampleKaris = shader_get_uniform(BBMOD_ShDownsampleKaris, "uTexel");
+	static __uTexelDownsampleKaris = shader_get_uniform(BBMOD_ShDownsampleKaris, "u_vTexel");
 
-	static __uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "uTexel");
+	static __uTexelGaussian = shader_get_uniform(BBMOD_ShGaussianBlur, "u_vTexel");
 
-	static __uTexelUpsample = shader_get_uniform(BBMOD_ShBloomUpsample, "uTexelSize");
-	static __uRadiusUpsample = shader_get_uniform(BBMOD_ShBloomUpsample, "uRadius");
+	static __uTexelUpsample = shader_get_uniform(BBMOD_ShBloomUpsample, "u_vTexelSize");
+	static __uRadiusUpsample = shader_get_uniform(BBMOD_ShBloomUpsample, "u_fRadius");
 
-	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "uLensDirt");
-	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "uLensDirtUVs");
-	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "uLensDirtStrength");
+	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
+	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
+	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

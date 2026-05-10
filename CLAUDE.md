@@ -230,9 +230,9 @@ Additional constraints:
 
 These rules apply to production code changes in this repository.
 
-#### Runtime GML Reference (macOS)
+#### Runtime GML Reference
 
-- The full GML reference is available at `/Users/Shared/GameMakerStudio2-Beta/Cache/runtimes/runtime-2024.1400.5.1027/GmlSpec.xml`.
+- The full GML reference is available at `/Users/Shared/GameMakerStudio2-Beta/Cache/runtimes/runtime-2024.1400.5.1027/GmlSpec.xml` (macOS) or `C:\ProgramData/GameMakerStudio2-Beta/Cache/runtimes\runtime-2024.1400.5.1027` (Windows)
 
 #### Core Quality Bar
 
