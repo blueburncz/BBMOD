@@ -9,7 +9,11 @@
 <h3 id="ColMeshFunctions">Functions</h3>
 
  * [bbmod_mesh_to_colmesh](./bbmod_mesh_to_colmesh.html)
+ * [bbmod_mesh_to_colmesh2](./bbmod_mesh_to_colmesh2.html)
  * [bbmod_model_to_colmesh](./bbmod_model_to_colmesh.html)
+ * [bbmod_model_to_colmesh2](./bbmod_model_to_colmesh2.html)
+ * [bbmod_terrain_to_colmesh](./bbmod_terrain_to_colmesh.html)
+ * [bbmod_terrain_to_colmesh2](./bbmod_terrain_to_colmesh2.html)
 <hr/><h2 id="Core">Core</h2>
 
 <h3 id="CoreConstructors">Constructors</h3>
