@@ -4,6 +4,7 @@ __pycache__/
 .vscode/
 /docs_build/
 /docs_src/ScriptingAPI/
+Documentation.zip
 
 # macOS
 .DS_Store
