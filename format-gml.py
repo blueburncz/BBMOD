@@ -50,6 +50,11 @@ def beautify_file(filepath):
     return res
 
 
+def should_skip_formatting(filepath):
+    basename = os.path.basename(filepath).lower()
+    return basename.startswith("cm_") or basename.startswith("__cmi_")
+
+
 def get_staged_files():
     # Run the git command
     result = subprocess.run(
@@ -111,7 +116,7 @@ if __name__ == "__main__":
         print(VERSION_STRING)
     elif target == "--validate":
         for filepath in get_staged_files():
-            if should_format(filepath):
+            if filepath.endswith(".gml") and not should_skip_formatting(filepath):
                 orig = get_staged_file_contents(filepath)
                 res = beautify_file(filepath)
                 if orig != res:
@@ -121,22 +126,23 @@ if __name__ == "__main__":
                     exit(1)
     elif target == "--staged":
         for filepath in get_staged_files():
-            if should_format(filepath):
+            if filepath.endswith(".gml") and not should_skip_formatting(filepath):
                 res = beautify_file(filepath)
                 with open(filepath, "w", encoding='utf-8') as f:
                     f.write(res)
     elif target == "--all":
         for dirpath, _, filenames in os.walk("."):
             for filename in filenames:
-                if should_format(filename):
+                if filename.endswith(".gml") and not should_skip_formatting(filename):
                     filepath = os.path.join(dirpath, filename)
                     res = beautify_file(filepath)
                     with open(filepath, "w", encoding='utf-8') as f:
                         f.write(res)
     elif target == "--file":
-        res = beautify_file(filepath)
-        with open(filepath, "w") as f:
-            f.write(res)
+        if not should_skip_formatting(filepath):
+            res = beautify_file(filepath)
+            with open(filepath, "w") as f:
+                f.write(res)
     else:
         print(f"Invalid target {target}! Run format-gml -h to display usage.")
         exit(1)

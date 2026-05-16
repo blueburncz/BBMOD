@@ -77,4 +77,3 @@ if (particleModuleShowcaseEnabled)
 		draw_set_valign(_valignPrev);
 	}
 }
-

@@ -1,5 +1,10 @@
 /// @module ColMesh
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// Mesh
+//
+
 function __bbmod_mesh_to_colmesh_impl(_mesh, _colmesh, _transform, _version)
 {
 	gml_pragma("forceinline");
@@ -82,7 +87,23 @@ function __bbmod_mesh_to_colmesh_impl(_mesh, _colmesh, _transform, _version)
 /// @see https://marketplace.yoyogames.com/assets/8130/colmesh
 function bbmod_mesh_to_colmesh(_mesh, _colmesh, _transform = undefined)
 {
-	__bbmod_add_mesh_to_colmesh_impl(_mesh, _colmesh, _transform, 1);
+	__bbmod_mesh_to_colmesh_impl(_mesh, _colmesh, _transform, 1);
+}
+
+/// @func bbmod_mesh_to_colmesh2(_mesh, _colmesh[, _transform])
+///
+/// @desc Adds a {@link BBMOD_Mesh} into ColMesh v2.
+///
+/// @param {Struct.BBMOD_Mesh} _mesh The mesh to add.
+/// @param {Array<Any>} _colmesh The ColMesh to add the mesh to.
+/// @param {Array<Real>} [_transform] A matrix to transform the mesh  with before
+/// it is added to the ColMesh. Leave `undefined` if you do not wish to transform
+/// the mesh.
+///
+/// @see https://github.com/TheSnidr/ColMesh
+function bbmod_mesh_to_colmesh2(_mesh, _colmesh, _transform = undefined)
+{
+	__bbmod_mesh_to_colmesh_impl(_mesh, _colmesh, _transform, 2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,4 +165,164 @@ function __bbmod_model_to_colmesh_impl(_model, _colmesh, _transform, _version)
 function bbmod_model_to_colmesh(_model, _colmesh, _transform = undefined)
 {
 	__bbmod_model_to_colmesh_impl(_model, _colmesh, _transform, 1);
+}
+
+/// @func bbmod_model_to_colmesh2(_model, _colmesh[, _transform])
+///
+/// @desc Adds a {@link BBMOD_Model} into ColMesh v2.
+///
+/// @param {Struct.BBMOD_Model} _model The model to add.
+/// @param {Struct.colmesh} _colmesh The ColMesh to add the model to.
+/// @param {Array<Real>} [_transform] A matrix to transform the model with
+/// before it is added to the ColMesh. Leave `undefined` if you do not wish to
+/// transform the model.
+///
+/// @see https://github.com/TheSnidr/ColMesh
+function bbmod_model_to_colmesh2(_model, _colmesh, _transform = undefined)
+{
+	__bbmod_model_to_colmesh_impl(_model, _colmesh, _transform, 2);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Terrain
+//
+
+function __bbmod_terrain_to_colmesh_impl(_terrain, _colmesh, _version)
+{
+	var _heightGrid = _terrain.__height;
+	var _cols = ds_grid_width(_heightGrid);
+	var _rows = ds_grid_height(_heightGrid);
+	var _posX = _terrain.Position.X;
+	var _posY = _terrain.Position.Y;
+	var _posZ = _terrain.Position.Z;
+	var _scaleX = _terrain.Scale.X;
+	var _scaleY = _terrain.Scale.Y;
+	var _scaleZ = _terrain.Scale.Z;
+	var _vertex = array_create(9, 0.0);
+
+	var i = 0;
+	repeat(_cols - 1)
+	{
+		var j = 0;
+		repeat(_rows - 1)
+			{
+				var _ax = _posX + i * _scaleX;
+				var _ay = _posY + j * _scaleY;
+				var _az = _posZ + _heightGrid[# i, j] * _scaleZ;
+
+				var _bx = _posX + (i + 1) * _scaleX;
+				var _by = _posY + j * _scaleY;
+				var _bz = _posZ + _heightGrid[# i + 1, j] * _scaleZ;
+
+				var _cx = _posX + (i + 1) * _scaleX;
+				var _cy = _posY + (j + 1) * _scaleY;
+				var _cz = _posZ + _heightGrid[# i + 1, j + 1] * _scaleZ;
+
+				var _dx = _posX + i * _scaleX;
+				var _dy = _posY + (j + 1) * _scaleY;
+				var _dz = _posZ + _heightGrid[# i, j + 1] * _scaleZ;
+
+				// Triangle 1: A, C, D  (lower-left, matching BBMOD_Terrain.build_chunk winding)
+				_vertex[@ 0] = _ax;
+				_vertex[@ 1] = _ay;
+				_vertex[@ 2] = _az;
+				_vertex[@ 3] = _cx;
+				_vertex[@ 4] = _cy;
+				_vertex[@ 5] = _cz;
+				_vertex[@ 6] = _dx;
+				_vertex[@ 7] = _dy;
+				_vertex[@ 8] = _dz;
+
+				switch (_version)
+				{
+					case 1:
+						_colmesh.addTriangle(_vertex);
+						break;
+
+					case 2:
+					{
+						var _triangle = cm_triangle(
+							true,
+							_vertex[0], _vertex[1], _vertex[2],
+							_vertex[3], _vertex[4], _vertex[5],
+							_vertex[6], _vertex[7], _vertex[8]);
+						cm_add(_colmesh, _triangle);
+					}
+					break;
+
+					default:
+						bbmod_assert(false, $"Unsupported ColMesh version {_version}!");
+						break;
+				}
+
+				// Triangle 2: A, B, C  (upper-right, matching BBMOD_Terrain.build_chunk winding)
+				_vertex[@ 0] = _ax;
+				_vertex[@ 1] = _ay;
+				_vertex[@ 2] = _az;
+				_vertex[@ 3] = _bx;
+				_vertex[@ 4] = _by;
+				_vertex[@ 5] = _bz;
+				_vertex[@ 6] = _cx;
+				_vertex[@ 7] = _cy;
+				_vertex[@ 8] = _cz;
+
+				switch (_version)
+				{
+					case 1:
+						_colmesh.addTriangle(_vertex);
+						break;
+
+					case 2:
+					{
+						var _triangle = cm_triangle(
+							true,
+							_vertex[0], _vertex[1], _vertex[2],
+							_vertex[3], _vertex[4], _vertex[5],
+							_vertex[6], _vertex[7], _vertex[8]);
+						cm_add(_colmesh, _triangle);
+					}
+					break;
+
+					default:
+						bbmod_assert(false, $"Unsupported ColMesh version {_version}!");
+						break;
+				}
+
+				++j;
+			}
+			++i;
+	}
+}
+
+/// @func bbmod_terrain_to_colmesh(_terrain, _colmesh)
+///
+/// @desc Adds a {@link BBMOD_Terrain} into ColMesh v1. Terrain position,
+/// scale, and heightmap data are baked directly into the triangle geometry
+/// submitted to the collision mesh. The triangulation matches
+/// {@link BBMOD_Terrain.build_chunk}.
+///
+/// @param {Struct.BBMOD_Terrain} _terrain The terrain to add.
+/// @param {Struct.colmesh} _colmesh The ColMesh to add the terrain to.
+///
+/// @see https://marketplace.yoyogames.com/assets/8130/colmesh
+function bbmod_terrain_to_colmesh(_terrain, _colmesh)
+{
+	__bbmod_terrain_to_colmesh_impl(_terrain, _colmesh, 1);
+}
+
+/// @func bbmod_terrain_to_colmesh2(_terrain, _colmesh)
+///
+/// @desc Adds a {@link BBMOD_Terrain} into ColMesh v2. Terrain position,
+/// scale, and heightmap data are baked directly into the triangle geometry
+/// submitted to the collision mesh. The triangulation matches
+/// {@link BBMOD_Terrain.build_chunk}.
+///
+/// @param {Struct.BBMOD_Terrain} _terrain The terrain to add.
+/// @param {Array<Any>} _colmesh The ColMesh to add the terrain to.
+///
+/// @see https://github.com/TheSnidr/ColMesh
+function bbmod_terrain_to_colmesh2(_terrain, _colmesh)
+{
+	__bbmod_terrain_to_colmesh_impl(_terrain, _colmesh, 2);
 }
