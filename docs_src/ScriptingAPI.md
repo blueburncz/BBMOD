@@ -549,6 +549,7 @@
 <h3 id="TerrainConstructors">Constructors</h3>
 
  * [BBMOD_Terrain](./BBMOD_Terrain.html)
+ * [BBMOD_TerrainInfo](./BBMOD_TerrainInfo.html)
  * [BBMOD_TerrainLayer](./BBMOD_TerrainLayer.html)
  * [BBMOD_TerrainMaterial](./BBMOD_TerrainMaterial.html)
  * [BBMOD_TerrainShader](./BBMOD_TerrainShader.html)

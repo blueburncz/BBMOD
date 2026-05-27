@@ -11,7 +11,7 @@
 #macro BBMOD_RELEASE_MAJOR 3
 
 /// @macro {Real} The minor version number of this BBMOD release.
-#macro BBMOD_RELEASE_MINOR 24
+#macro BBMOD_RELEASE_MINOR 25
 
 /// @macro {Real} The patch version number of this BBMOD release.
 #macro BBMOD_RELEASE_PATCH 0

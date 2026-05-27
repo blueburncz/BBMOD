@@ -1,5 +1,5 @@
-window_set_size(1024, 576);
-window_set_position(0, 64);
+//window_set_size(1024, 576);
+//window_set_position(0, 64);
 
 var _useDeferredRenderer = bbmod_deferred_renderer_is_supported();
 
@@ -248,27 +248,54 @@ bbmod_light_punctual_add(spotLightTest);
 //
 // Terrain
 //
-terrain = new BBMOD_Terrain(SprHeightmap, 0, 16);
-terrain.Scale.Set(16);
-terrain.Position.Set(
-	-terrain.Size.X * terrain.Scale.X * 0.5,
-	-terrain.Size.Y * terrain.Scale.Y * 0.5,
-	0);
-terrain.TextureRepeat.Set(32);
 
-terrainMaterial = _useDeferredRenderer ? BBMOD_MATERIAL_TERRAIN_DEFERRED.clone() : BBMOD_MATERIAL_TERRAIN.clone();
+terrainMaterial = _useDeferredRenderer
+	? BBMOD_MATERIAL_TERRAIN_DEFERRED.clone()
+	: BBMOD_MATERIAL_TERRAIN.clone();
+
 if (!_useDeferredRenderer)
 {
 	terrainMaterial.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
 }
-terrain.Material = terrainMaterial;
-
-terrain.Colormap = sprite_get_texture(SprColormap, 0);
 
 terrainLayer = new BBMOD_TerrainLayer();
 terrainLayer.BaseOpacity = sprite_get_texture(BBMOD_SprCheckerboard, 0);
 
-terrain.Layer[@ 0] = terrainLayer;
+var _terrainInfo = new BBMOD_TerrainInfo();
+_terrainInfo.Heightmap = SprHeightmap;
+_terrainInfo.SmoothHeight = 3;
+_terrainInfo.ChunkSize = 64;
+_terrainInfo.ChunkRadius = 5;
+_terrainInfo.EnableLazyBuild = true;
+_terrainInfo.LazyBuildBudget = 1;
+//_terrainInfo.LazyBuildInterval = 4;
+_terrainInfo.EnableBuildProfiler = true;
+_terrainInfo.Scale.Set(16);
+_terrainInfo.TextureRepeat.Set(32);
+_terrainInfo.Material = terrainMaterial;
+_terrainInfo.Colormap = sprite_get_texture(SprColormap, 0);
+_terrainInfo.Layer[@ 0] = terrainLayer;
+
+terrain = new BBMOD_Terrain(_terrainInfo);
+
+// Center terrain around world origin
+terrain.Position.Set(
+	-terrain.Size.X * terrain.Scale.X * 0.5,
+	-terrain.Size.Y * terrain.Scale.Y * 0.5,
+	0);
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Fog
+//
+
+var _terrainMaxScale = max(terrain.Scale.X, terrain.Scale.Y);
+var _terrainChunkWorldSize = max(terrain.ChunkSize * _terrainMaxScale, 1.0);
+var _terrainChunkMaxRange = terrain.ChunkRadius * _terrainChunkWorldSize;
+var _fogStart = _terrainChunkMaxRange * 0.7;
+var _fogEnd = _terrainChunkMaxRange * 0.9;
+
+bbmod_fog_set(BBMOD_C_SILVER, 0.9, _fogStart, _fogEnd);
 
 ////////////////////////////////////////////////////////////////////////////////
 //

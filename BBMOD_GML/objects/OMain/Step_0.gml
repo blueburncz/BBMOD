@@ -15,6 +15,17 @@ if (keyboard_check_pressed(vk_f3))
 	show_debug_overlay(showRenderStatistics, false);
 }
 
+if (terrain != undefined && keyboard_check_pressed(vk_f4))
+{
+	terrain.EnableBuildProfiler = !terrain.EnableBuildProfiler;
+	terrain.reset_build_profiler();
+}
+
+if (terrain != undefined && keyboard_check_pressed(vk_f5))
+{
+	terrain.reset_build_profiler();
+}
+
 if (keyboard_check_pressed(vk_home))
 {
 	bbmod_dither_set_enabled(!bbmod_dither_get_enabled());

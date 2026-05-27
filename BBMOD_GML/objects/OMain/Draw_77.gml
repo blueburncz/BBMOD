@@ -77,3 +77,48 @@ if (particleModuleShowcaseEnabled)
 		draw_set_valign(_valignPrev);
 	}
 }
+
+if (terrain != undefined)
+{
+	var _prof = terrain.get_build_profiler();
+	var _avg = _prof.StageAvgUs;
+
+	var _lastMs = _prof.LastChunkUs * 0.001;
+	var _avgMs = _prof.AvgChunkUs * 0.001;
+	var _maxMs = _prof.MaxChunkUs * 0.001;
+
+	var _text = "Terrain Build Profiler [" + (_prof.Enabled ? "ON" : "OFF") + "]";
+	_text += "  (F4 toggle, F5 reset)\n";
+	_text += "Chunks: " + string(_prof.ChunkCount) + " | Last verts: " + string(_prof.LastVertexCount) + "\n";
+	_text += "Chunk ms: last " + string_format(_lastMs, 1, 3)
+		+ " | avg " + string_format(_avgMs, 1, 3)
+		+ " | max " + string_format(_maxMs, 1, 3) + "\n";
+	_text += "Top stage: " + string(_prof.TopStageName)
+		+ " (avg " + string_format(_prof.TopStageAvgUs, 1, 1) + " us)\n";
+	_text += "Avg us: SN " + string_format(_avg.SmoothNormals, 1, 1)
+		+ " | Write " + string_format(_avg.WriteVertexData, 1, 1)
+		+ " | Freeze " + string_format(_avg.Freeze, 1, 1)
+		+ " | Bounds " + string_format(_avg.Bounds, 1, 1);
+
+	var _colorPrev = draw_get_color();
+	var _alphaPrev = draw_get_alpha();
+	var _halignPrev = draw_get_halign();
+	var _valignPrev = draw_get_valign();
+
+	var _x = 18;
+	var _y = 18;
+
+	draw_set_halign(fa_left);
+	draw_set_valign(fa_top);
+	draw_set_alpha(0.75);
+	draw_set_color(c_black);
+	draw_text(_x + 1, _y + 1, _text);
+	draw_set_alpha(1.0);
+	draw_set_color(c_white);
+	draw_text(_x, _y, _text);
+
+	draw_set_color(_colorPrev);
+	draw_set_alpha(_alphaPrev);
+	draw_set_halign(_halignPrev);
+	draw_set_valign(_valignPrev);
+}
