@@ -19,13 +19,13 @@
 function __bbmod_shader_gbuffer()
 {
 	gml_pragma("forceinline");
-	static _shader = new BBMOD_DefaultShader(BBMOD_ShGBuffer, BBMOD_VFORMAT_DEFAULT)
-		.add_variant(BBMOD_ShGBufferAnimated, BBMOD_VFORMAT_DEFAULT_ANIMATED)
-		.add_variant(BBMOD_ShGBufferBatched, BBMOD_VFORMAT_DEFAULT_BATCHED)
-		.add_variant(BBMOD_ShGBufferColor, BBMOD_VFORMAT_DEFAULT_COLOR)
-		.add_variant(BBMOD_ShGBufferColorAnimated, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
-		.add_variant(BBMOD_ShGBufferColorBatched, BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
-		.add_variant(BBMOD_ShGBufferSprite, BBMOD_VFORMAT_DEFAULT_SPRITE);
+	static _shader = new BBMOD_DefaultShader(BBMOD_ShStatic_GBuffer, BBMOD_VFORMAT_DEFAULT)
+		.add_variant(BBMOD_ShAnimated_GBuffer, BBMOD_VFORMAT_DEFAULT_ANIMATED)
+		.add_variant(BBMOD_ShBatched_GBuffer, BBMOD_VFORMAT_DEFAULT_BATCHED)
+		.add_variant(BBMOD_ShStatic_GBuffer_VertexColors, BBMOD_VFORMAT_DEFAULT_COLOR)
+		.add_variant(BBMOD_ShAnimated_GBuffer_VertexColors, BBMOD_VFORMAT_DEFAULT_COLOR_ANIMATED)
+		.add_variant(BBMOD_ShBatched_GBuffer_VertexColors, BBMOD_VFORMAT_DEFAULT_COLOR_BATCHED)
+		.add_variant(BBMOD_ShSprite_GBuffer, BBMOD_VFORMAT_DEFAULT_SPRITE);
 	return _shader;
 }
 
@@ -42,7 +42,7 @@ function __bbmod_shader_terrain_gbuffer()
 	static _shader = undefined;
 	if (_shader == undefined)
 	{
-		_shader = new BBMOD_TerrainShader(BBMOD_ShGBufferTerrain, BBMOD_VFORMAT_DEFAULT);
+		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrain_GBuffer, BBMOD_VFORMAT_DEFAULT);
 		_shader.LayersPerDrawCall = 3;
 		_shader.MaxLayers = 3;
 	}

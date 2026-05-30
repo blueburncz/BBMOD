@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShSprite_GBuffer",
+  "name":"BBMOD_ShSprite_GBuffer",
+  "parent":{
+    "name":"Sprite",
+    "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

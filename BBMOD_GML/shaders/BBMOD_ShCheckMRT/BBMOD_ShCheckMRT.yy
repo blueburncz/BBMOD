@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShCheckMRT",
   "name":"BBMOD_ShCheckMRT",
   "parent":{
-    "name":"Utils",
+    "name":"Shaders",
     "path":"folders/BBMOD/Core/Utils.yy",
   },
   "resourceType":"GMShader",

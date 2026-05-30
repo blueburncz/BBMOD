@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShTerrain_GBuffer",
+  "name":"BBMOD_ShTerrain_GBuffer",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

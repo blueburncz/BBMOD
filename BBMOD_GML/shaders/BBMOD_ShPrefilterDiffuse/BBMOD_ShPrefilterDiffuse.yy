@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShPrefilterDiffuse",
   "name":"BBMOD_ShPrefilterDiffuse",
   "parent":{
-    "name":"Rendering",
+    "name":"Shaders",
     "path":"folders/BBMOD/Core/Rendering.yy",
   },
   "resourceType":"GMShader",

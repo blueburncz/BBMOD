@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShStatic_InstanceID",
+  "name":"BBMOD_ShStatic_InstanceID",
+  "parent":{
+    "name":"Static",
+    "path":"folders/BBMOD/Gizmo/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

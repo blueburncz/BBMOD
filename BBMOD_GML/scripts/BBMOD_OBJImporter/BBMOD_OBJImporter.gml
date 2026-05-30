@@ -39,6 +39,12 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 	/// ```
 	ImportMaterials = false;
 
+	/// @var {Struct.BBMOD_Material} A material to apply to loaded models.
+	/// If {@link BBMOD_OBJImporter.ImportMaterials} is enabled, then the
+	/// material is cloned first before doing changes to it. Defaults to
+	/// {@link BBMOD_MATERIAL_DEFAULT}.
+	Material = BBMOD_MATERIAL_DEFAULT;
+
 	__vertices = ds_list_create();
 
 	__normals = ds_list_create();
@@ -78,7 +84,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 				// New material
 				case "newmtl":
 				{
-					_material = BBMOD_MATERIAL_DEFAULT.clone();
+					_material = Material.clone();
 					_material.Repeat = true;
 					array_push(__materials, _material);
 					array_push(__materialNames, _line);
@@ -175,7 +181,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 				{
 					_material = 0;
 					_model.MaterialCount = 1;
-					array_push(_model.Materials, BBMOD_MATERIAL_DEFAULT);
+					array_push(_model.Materials, Material);
 					array_push(_model.MaterialNames, "Material");
 				}
 				_mesh.MaterialIndex = _material;
@@ -221,7 +227,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 					{
 						_ind = array_length(_model.MaterialNames);
 						array_push(_model.MaterialNames, _line);
-						array_push(_model.Materials, BBMOD_MATERIAL_DEFAULT);
+						array_push(_model.Materials, Material);
 						++_model.MaterialCount;
 					}
 					_material = _ind;
@@ -394,7 +400,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 			{
 				_material = 0;
 				_model.MaterialCount = 1;
-				array_push(_model.Materials, BBMOD_MATERIAL_DEFAULT);
+				array_push(_model.Materials, Material);
 				array_push(_model.MaterialNames, "Material");
 			}
 			_mesh.MaterialIndex = _material;

@@ -5,7 +5,7 @@
   "isDnD":false,
   "name":"__bbmod_sky",
   "parent":{
-    "name":"Sky",
+    "name":"SkyRGBM",
     "path":"folders/BBMOD/Rendering/Sky.yy",
   },
   "resourceType":"GMScript",

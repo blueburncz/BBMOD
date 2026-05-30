@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShPrefilterSpecular",
   "name":"BBMOD_ShPrefilterSpecular",
   "parent":{
-    "name":"Rendering",
+    "name":"Shaders",
     "path":"folders/BBMOD/Core/Rendering.yy",
   },
   "resourceType":"GMShader",

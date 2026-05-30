@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShAnimated_GBuffer",
+  "name":"BBMOD_ShAnimated_GBuffer",
+  "parent":{
+    "name":"Animated",
+    "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

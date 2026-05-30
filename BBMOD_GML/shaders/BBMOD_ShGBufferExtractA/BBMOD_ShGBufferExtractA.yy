@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShGBufferExtractA",
   "name":"BBMOD_ShGBufferExtractA",
   "parent":{
-    "name":"Shaders",
+    "name":"Engine",
     "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
   },
   "resourceType":"GMShader",

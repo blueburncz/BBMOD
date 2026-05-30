@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShKawaseBlur",
   "name":"BBMOD_ShKawaseBlur",
   "parent":{
-    "name":"Rendering",
+    "name":"Shaders",
     "path":"folders/BBMOD/Core/Rendering.yy",
   },
   "resourceType":"GMShader",

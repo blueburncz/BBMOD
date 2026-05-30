@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShStatic_Lit",
+  "name":"BBMOD_ShStatic_Lit",
+  "parent":{
+    "name":"Static",
+    "path":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

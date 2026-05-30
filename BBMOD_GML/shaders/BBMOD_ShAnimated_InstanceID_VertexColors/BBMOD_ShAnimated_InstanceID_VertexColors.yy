@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShAnimated_InstanceID_VertexColors",
+  "name":"BBMOD_ShAnimated_InstanceID_VertexColors",
+  "parent":{
+    "name":"Animated",
+    "path":"folders/BBMOD/Gizmo/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

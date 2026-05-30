@@ -127,6 +127,10 @@ function BBMOD_Shader(_shader = undefined, _vertexFormat = undefined) constructo
 	/// @private
 	__raw = {};
 
+	/// @var {Bool} Whether all shader variants are compiled.
+	/// @private
+	__isCompiled = undefined;
+
 	if (_shader != undefined && _vertexFormat != undefined)
 	{
 		add_variant(_shader, _vertexFormat);
@@ -173,7 +177,7 @@ function BBMOD_Shader(_shader = undefined, _vertexFormat = undefined) constructo
 	static has_variant = function (_vertexFormat)
 	{
 		gml_pragma("forceinline");
-		return (get_raw(_vertexFormat) != undefined);
+		return (get_variant(_vertexFormat) != undefined);
 	};
 
 	/// @func is_compiled()
@@ -184,16 +188,21 @@ function BBMOD_Shader(_shader = undefined, _vertexFormat = undefined) constructo
 	static is_compiled = function ()
 	{
 		gml_pragma("forceinline");
-		var _keys = variable_struct_get_names(__raw);
-		var i = 0;
-		repeat(array_length(_keys))
+		if (__isCompiled == undefined)
 		{
-			if (!shader_is_compiled(__raw[$  _keys[i++]]))
+			__isCompiled = true;
+			var _keys = variable_struct_get_names(__raw);
+			var i = 0;
+			repeat(array_length(_keys))
 			{
-				return false;
+				if (!shader_is_compiled(__raw[$  _keys[i++]]))
+				{
+					__isCompiled = false;
+					break;
+				}
 			}
 		}
-		return true;
+		return __isCompiled;
 	};
 
 	/// @func on_set()

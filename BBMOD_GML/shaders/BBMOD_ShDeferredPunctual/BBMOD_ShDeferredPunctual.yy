@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShDeferredPunctual",
   "name":"BBMOD_ShDeferredPunctual",
   "parent":{
-    "name":"Shaders",
+    "name":"Engine",
     "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
   },
   "resourceType":"GMShader",

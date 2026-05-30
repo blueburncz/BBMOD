@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShMixRGBM",
   "name":"BBMOD_ShMixRGBM",
   "parent":{
-    "name":"Rendering",
+    "name":"Shaders",
     "path":"folders/BBMOD/Core/Rendering.yy",
   },
   "resourceType":"GMShader",

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShParticle_Unlit",
+  "name":"BBMOD_ShParticle_Unlit",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/Particles/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

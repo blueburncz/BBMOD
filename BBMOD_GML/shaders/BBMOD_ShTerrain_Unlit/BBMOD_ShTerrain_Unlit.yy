@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShTerrain_Unlit",
+  "name":"BBMOD_ShTerrain_Unlit",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/BBMOD/Terrain/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

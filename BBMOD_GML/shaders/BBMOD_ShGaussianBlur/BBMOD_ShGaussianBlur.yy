@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShGaussianBlur",
   "name":"BBMOD_ShGaussianBlur",
   "parent":{
-    "name":"Rendering",
+    "name":"Shaders",
     "path":"folders/BBMOD/Core/Rendering.yy",
   },
   "resourceType":"GMShader",

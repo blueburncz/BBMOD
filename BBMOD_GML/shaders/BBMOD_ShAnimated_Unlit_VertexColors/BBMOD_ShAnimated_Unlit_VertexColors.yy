@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShAnimated_Unlit_VertexColors",
+  "name":"BBMOD_ShAnimated_Unlit_VertexColors",
+  "parent":{
+    "name":"Animated",
+    "path":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

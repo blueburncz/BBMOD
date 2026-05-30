@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShSprite_Lit_Subsurface",
+  "name":"BBMOD_ShSprite_Lit_Subsurface",
+  "parent":{
+    "name":"Sprite",
+    "path":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

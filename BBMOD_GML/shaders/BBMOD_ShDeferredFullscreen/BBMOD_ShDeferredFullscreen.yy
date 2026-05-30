@@ -3,7 +3,7 @@
   "%Name":"BBMOD_ShDeferredFullscreen",
   "name":"BBMOD_ShDeferredFullscreen",
   "parent":{
-    "name":"Shaders",
+    "name":"Engine",
     "path":"folders/BBMOD/DeferredRenderer/Shaders.yy",
   },
   "resourceType":"GMShader",

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShBatched_Depth",
+  "name":"BBMOD_ShBatched_Depth",
+  "parent":{
+    "name":"Batched",
+    "path":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

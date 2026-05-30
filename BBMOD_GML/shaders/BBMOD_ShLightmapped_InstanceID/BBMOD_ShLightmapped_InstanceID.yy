@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShLightmapped_InstanceID",
+  "name":"BBMOD_ShLightmapped_InstanceID",
+  "parent":{
+    "name":"Lightmapped",
+    "path":"folders/BBMOD/Gizmo/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

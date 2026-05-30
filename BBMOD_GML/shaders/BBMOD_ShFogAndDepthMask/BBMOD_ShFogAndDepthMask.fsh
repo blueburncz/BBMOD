@@ -40,7 +40,6 @@ vec3 xLinearToGamma(vec3 rgb)
 	return pow(rgb, vec3(1.0 / X_GAMMA));
 }
 
-
 /// @param c Encoded depth.
 /// @return Docoded linear depth.
 /// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/

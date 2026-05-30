@@ -19,7 +19,7 @@ function __bbmod_shader_terrain()
 	static _shader = undefined;
 	if (_shader == undefined)
 	{
-		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrain, BBMOD_VFORMAT_DEFAULT);
+		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrain_Lit, BBMOD_VFORMAT_DEFAULT);
 		_shader.LayersPerDrawCall = 1;
 		_shader.MaxLayers = 5;
 	}
@@ -31,7 +31,7 @@ function __bbmod_shader_terrain_unlit()
 	static _shader = undefined;
 	if (_shader == undefined)
 	{
-		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrainUnlit, BBMOD_VFORMAT_DEFAULT);
+		_shader = new BBMOD_TerrainShader(BBMOD_ShTerrain_Unlit, BBMOD_VFORMAT_DEFAULT);
 		_shader.LayersPerDrawCall = 3;
 		_shader.MaxLayers = 5;
 	}

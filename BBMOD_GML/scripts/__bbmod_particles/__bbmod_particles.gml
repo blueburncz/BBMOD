@@ -48,21 +48,21 @@ function __bbmod_vformat_particle_batched()
 function __bbmod_shader_particle_unlit()
 {
 	static _shader = new BBMOD_ParticleShader(
-		BBMOD_ShParticleUnlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+		BBMOD_ShParticle_Unlit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
 function __bbmod_shader_particle_lit()
 {
 	static _shader = new BBMOD_ParticleShader(
-		BBMOD_ShParticleLit, BBMOD_VFORMAT_PARTICLE_BATCHED);
+		BBMOD_ShParticle_Lit, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 
 function __bbmod_shader_particle_depth()
 {
 	static _shader = new BBMOD_BaseShader(
-		BBMOD_ShParticleDepth, BBMOD_VFORMAT_PARTICLE_BATCHED);
+		BBMOD_ShParticle_Depth, BBMOD_VFORMAT_PARTICLE_BATCHED);
 	return _shader;
 }
 

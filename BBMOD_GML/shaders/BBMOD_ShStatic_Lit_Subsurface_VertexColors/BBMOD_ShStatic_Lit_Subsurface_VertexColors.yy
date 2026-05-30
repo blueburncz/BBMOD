@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"BBMOD_ShStatic_Lit_Subsurface_VertexColors",
+  "name":"BBMOD_ShStatic_Lit_Subsurface_VertexColors",
+  "parent":{
+    "name":"Static",
+    "path":"folders/BBMOD/Core/DefaultRenderer/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
