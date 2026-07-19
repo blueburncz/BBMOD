@@ -1,39 +1,9 @@
-var _camera = global.__bbmodCameraCurrent;
-if (_camera != undefined)
+if (sceneModel == undefined && model.IsLoaded)
 {
-	DitherFrustum.FromCamera(_camera);
-
-	DitherDistanceScratch.Set(x, y, z);
-	var _distanceToCamera = abs(_camera.get_distance(DitherDistanceScratch));
-
-	if (DitherInside)
-	{
-		if (_distanceToCamera > DitherTriggerExitDistance)
-		{
-			DitherInside = false;
-		}
-	}
-	else if (_distanceToCamera < DitherTriggerEnterDistance)
-	{
-		DitherInside = true;
-	}
-
-	var _targetFade = DitherInside ? 1.0 : 0.0;
-	var _deltaSeconds = delta_time * 0.000001;
-	var _wasVisible = DitherWasVisible;
-	var _isVisible = DitherFrustum.TestPoint(DitherDistanceScratch);
-	DitherWasVisible = _isVisible;
-
-	if (_isVisible && !_wasVisible)
-	{
-		DitherFade = _targetFade;
-	}
-	else if (_targetFade > DitherFade)
-	{
-		DitherFade = min(1.0, DitherFade + DitherFadeInRate * _deltaSeconds);
-	}
-	else if (_targetFade < DitherFade)
-	{
-		DitherFade = max(0.0, DitherFade - DitherFadeOutRate * _deltaSeconds);
-	}
+	model.Meshes[0].update_bbox(); // For frustum culling
+	sceneModel = model.make_instance();
+	sceneModel.set_position(new BBMOD_Vec3(x, y, z));
+	sceneModel.set_rotation(new BBMOD_Vec3(0.0, 0.0, 90.0));
+	sceneModel.set_scale(new BBMOD_Vec3(10.0));
+	scene.add_node(sceneModel);
 }

@@ -12,29 +12,19 @@ matSphere = matSphere.destroy();
 matSphereMetallic = matSphereMetallic.destroy();
 matSphereEmissive = matSphereEmissive.destroy();
 
+scene = scene.destroy();
+
 sprite_delete(sprIBL);
 sprite_delete(sprSky);
 
 matSky = matSky.destroy();
 
-bbmod_ibl_set(undefined);
-bbmod_light_directional_set(undefined);
-bbmod_light_punctual_clear();
-bbmod_reflection_probe_clear();
-
-terrain = terrain.destroy();
+terrain = undefined;
 terrainMaterial = terrainMaterial.destroy();
 
 if (particleModuleShowcaseSystems != undefined)
 {
 	var i = 0;
-	repeat(array_length(particleModuleShowcaseEmitters))
-	{
-		particleModuleShowcaseEmitters[i] = particleModuleShowcaseEmitters[i].destroy();
-		++i;
-	}
-
-	i = 0;
 	repeat(array_length(particleModuleShowcaseSystems))
 	{
 		particleModuleShowcaseSystems[i] = particleModuleShowcaseSystems[i].destroy();
@@ -44,10 +34,13 @@ if (particleModuleShowcaseSystems != undefined)
 
 characterPlayer = undefined;
 characterDesiredAnimation = undefined;
+character = undefined;
 
 batchSphereInstances = undefined;
 punctualLightsTest = undefined;
 spotLightTest = undefined;
+staticPointLightTest = undefined;
+staticSpotLightTest = undefined;
 particleModuleShowcaseEmitters = undefined;
 particleModuleShowcaseSystems = undefined;
 particleModuleShowcaseNames = undefined;

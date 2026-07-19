@@ -109,10 +109,11 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 			}
 
 			// Punctual lights
+			var _punctualLights = bbmod_scene_get_current().LightsPunctual;
 			var i = 0;
-			repeat(array_length(global.__bbmodPunctualLights))
+			repeat(array_length(_punctualLights))
 			{
-				_light = global.__bbmodPunctualLights[i];
+				_light = _punctualLights[i];
 				if (_light.CastShadows)
 				{
 					if (sphere_is_visible(_light.Position.X, _light.Position.Y, _light.Position.Z, _light
@@ -185,6 +186,8 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 				render();
 			}
 		}
+
+		__render_scene_nodes();
 
 		////////////////////////////////////////////////////////////////////////
 		//
@@ -558,8 +561,9 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 
 		////////////////////////////////////////////////////////////////////////
 		//
-		// Draw gizmo and highlight selected instances
+		// Draw editor debug geometry, gizmo and highlight selected instances
 		//
+		__draw_editor_debug_geometry();
 		__overlay_gizmo_and_instance_highlight();
 
 		gpu_pop_state();

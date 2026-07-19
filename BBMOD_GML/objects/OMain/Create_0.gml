@@ -5,10 +5,14 @@ var _useDeferredRenderer = bbmod_deferred_renderer_is_supported();
 
 z = 1;
 
+scene = new BBMOD_Scene();
+bbmod_scene_set_current(scene);
+
 camera = new BBMOD_Camera();
 camera.Exposure = 2;
 camera.MouseSensitivity = 0.5;
 camera.FollowObject = self;
+scene.add_node(camera);
 
 if (_useDeferredRenderer)
 {
@@ -72,12 +76,6 @@ ditherFadeInRate = 1.0 / max(ditherFadeInSeconds, 0.001);
 ditherFadeOutRate = 1.0 / max(ditherFadeOutSeconds, 0.001);
 ditherDistanceScratch = new BBMOD_Vec3(0.0);
 ditherFrustum = new BBMOD_FrustumCollider();
-ditherRegularStates = [
-	{ X: 0.0, Y: 0.0, Z: 1.0, IsInside: true, Fade: 1.0, WasVisible: true },
-	{ X: 4.0, Y: 0.0, Z: 1.0, IsInside: true, Fade: 1.0, WasVisible: true },
-	{ X: 8.0, Y: 0.0, Z: 1.0, IsInside: true, Fade: 1.0, WasVisible: true },
-	{ X: 0.0, Y: -8.0, Z: 0.0, IsInside: true, Fade: 1.0, WasVisible: true },
-];
 
 showRenderStatistics = false;
 show_debug_overlay(showRenderStatistics, true);
@@ -124,6 +122,7 @@ else
 	_baseMaterial = BBMOD_MATERIAL_DEFAULT.clone();
 	_baseMaterial.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
 }
+_baseMaterial.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID);
 _baseMaterial.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 
 matSphere = _baseMaterial.clone();
@@ -140,12 +139,28 @@ matSphereEmissive.BaseOpacity = sprite_get_texture(BBMOD_SprBlack, 0);
 matSphereEmissive.set_normal_roughness(BBMOD_VEC3_UP, 1.0);
 matSphereEmissive.set_emissive(new BBMOD_Color(255 * 1.1, 127 * 1.1, 0));
 
+sceneSphere = modSphere.make_instance();
+sceneSphere.Materials[@ 0] = matSphere;
+sceneSphere.set_position(new BBMOD_Vec3(0.0, 0.0, 1.0));
+scene.add_node(sceneSphere);
+
+sceneSphereMetallic = modSphere.make_instance();
+sceneSphereMetallic.Materials[@ 0] = matSphereMetallic;
+sceneSphereMetallic.set_position(new BBMOD_Vec3(4.0, 0.0, 1.0));
+scene.add_node(sceneSphereMetallic);
+
+sceneSphereEmissive = modSphere.make_instance();
+sceneSphereEmissive.Materials[@ 0] = matSphereEmissive;
+sceneSphereEmissive.set_position(new BBMOD_Vec3(8.0, 0.0, 1.0));
+scene.add_node(sceneSphereEmissive);
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Lighting
 //
 
-bbmod_light_ambient_set(BBMOD_C_BLACK);
+scene.AmbientLightColorUp = BBMOD_C_BLACK;
+scene.AmbientLightColorDown = BBMOD_C_BLACK;
 
 sprIBL = sprite_add("Data/BBMOD/Skies/IBL+40.png", 1, false, false, 0, 0);
 sprSky = sprite_add("Data/BBMOD/Skies/Sky+40.png", 1, false, false, 0, 0);
@@ -153,24 +168,29 @@ sprSky = sprite_add("Data/BBMOD/Skies/Sky+40.png", 1, false, false, 0, 0);
 matSky = BBMOD_MATERIAL_SKY.clone();
 matSky.BaseOpacity = sprite_get_texture(sprSky, 0);
 
+sceneSky = modSphere.make_instance();
+sceneSky.Materials[@ 0] = matSky;
+sceneSky.set_scale(new BBMOD_Vec3(1000.0));
+scene.add_node(sceneSky);
+
 ibl = new BBMOD_ImageBasedLight(sprite_get_texture(sprIBL, 0));
-bbmod_ibl_set(ibl);
+scene.ImageBasedLight = ibl;
 
 sun = new BBMOD_DirectionalLight();
 sun.Direction.Set(0.44, 0.63, -0.64);
 sun.CastShadows = true;
 sun.ShadowmapArea = 100;
 sun.ShadowmapResolution = 2048;
-bbmod_light_directional_set(sun);
+scene.set_directional_light(sun);
 
 probe = new BBMOD_ReflectionProbe(new BBMOD_Vec3(0, 0, 1));
 probe.Infinite = true;
-bbmod_reflection_probe_add(probe);
+scene.add_node(probe);
 
 sunshafts.LightDirection = sun.Direction;
 
 lensFlare = new BBMOD_LensFlare();
-lensFlare.Direction = sun.Direction;
+lensFlare.DirectionalLight = sun;
 lensFlare.add_ghosts(BBMOD_SprLensFlareHeptagon, 0, 8, 0.1, 1.0, 0.5, 0.1, 3.0, BBMOD_C_BLUE);
 
 var _e;
@@ -190,7 +210,8 @@ _e.AngleRelative = true;
 _e.Color.Alpha = 0.5;
 lensFlare.add_element(_e);
 
-bbmod_lens_flare_add(lensFlare);
+lensFlare.set_position(new BBMOD_Vec3(2.0, 0.0, 0.0));
+sun.add_child(lensFlare);
 
 punctualLightsTest = [];
 
@@ -218,7 +239,7 @@ for (var i = 0; i < _pointLightCount; ++i)
 	_pointLight[$ "OrbitRadius"] = 40.0 + (i mod 4) * 8.0;
 	_pointLight[$ "OrbitHeight"] = 4.0 + (i mod 3) * 2.0;
 
-	bbmod_light_punctual_add(_pointLight);
+	scene.add_node(_pointLight);
 	array_push(punctualLightsTest, _pointLight);
 }
 
@@ -242,7 +263,30 @@ spotLightTest[$ "OrbitSpeed"] = 14.0;
 spotLightTest[$ "OrbitRadius"] = 30.0;
 spotLightTest[$ "OrbitHeight"] = 18.0;
 
-bbmod_light_punctual_add(spotLightTest);
+scene.add_node(spotLightTest);
+
+staticPointLightTest = new BBMOD_PointLight(
+	new BBMOD_Color(255, 190, 120),
+	new BBMOD_Vec3(14.0, -10.0, 5.0),
+	18.0
+);
+staticPointLightTest.RenderPass = (1 << BBMOD_ERenderPass.Forward)
+	| (1 << BBMOD_ERenderPass.Alpha)
+	| (1 << BBMOD_ERenderPass.ReflectionCapture);
+scene.add_node(staticPointLightTest);
+
+staticSpotLightTest = new BBMOD_SpotLight(
+	new BBMOD_Color(120, 190, 255),
+	new BBMOD_Vec3(-14.0, 10.0, 10.0),
+	28.0,
+	new BBMOD_Vec3(14.0, -10.0, -8.0).Normalize(),
+	14.0,
+	26.0
+);
+staticSpotLightTest.RenderPass = (1 << BBMOD_ERenderPass.Forward)
+	| (1 << BBMOD_ERenderPass.Alpha)
+	| (1 << BBMOD_ERenderPass.ReflectionCapture);
+scene.add_node(staticSpotLightTest);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -283,6 +327,7 @@ terrain.Position.Set(
 	-terrain.Size.X * terrain.Scale.X * 0.5,
 	-terrain.Size.Y * terrain.Scale.Y * 0.5,
 	0);
+scene.add_node(terrain);
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -295,7 +340,10 @@ var _terrainChunkMaxRange = terrain.ChunkRadius * _terrainChunkWorldSize;
 var _fogStart = _terrainChunkMaxRange * 0.7;
 var _fogEnd = _terrainChunkMaxRange * 0.9;
 
-bbmod_fog_set(BBMOD_C_SILVER, 0.9, _fogStart, _fogEnd);
+scene.FogColor = BBMOD_C_SILVER;
+scene.FogIntensity = 0.9;
+scene.FogStart = _fogStart;
+scene.FogEnd = _fogEnd;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -514,6 +562,7 @@ _particle_showcase_add = function (_name, _modules, _options = undefined)
 		particleModuleShowcaseOriginY + particleModuleShowcaseOffsetY + (_row * particleModuleShowcaseSpacingY),
 		_positionZ + ((_row mod 2) * particleModuleShowcaseRowZStep));
 	var _emitter = new BBMOD_ParticleEmitter(_position, _system);
+	scene.add_node(_emitter);
 
 	array_push(particleModuleShowcaseSystems, _system);
 	array_push(particleModuleShowcaseEmitters, _emitter);
@@ -845,6 +894,7 @@ modCharacter = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character.bbmod"
 		_material = BBMOD_MATERIAL_DEFAULT.clone();
 		_material.set_shader(BBMOD_ERenderPass.DepthOnly, BBMOD_SHADER_DEFAULT_DEPTH);
 	}
+	_material.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID);
 	_material.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 	_material.BaseOpacity = sprite_get_texture(SprCyborgFemaleA, 0);
 	modCharacter.Materials[@ 0] = _material;
@@ -855,9 +905,12 @@ animCharacterWalk = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character_W
 animCharacterRun = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character_Run.bbanim");
 animCharacterShoot = BBMOD_RESOURCE_MANAGER.load_sync("Data/Character/Character_Shoot.bbanim");
 
-characterPlayer = new BBMOD_AnimationPlayer(modCharacter);
+character = modCharacter.make_instance();
+character.set_position(new BBMOD_Vec3(0.0, -8.0, 0.0));
+characterPlayer = new BBMOD_AnimationPlayer(character);
 characterPlayer.EnableTransitions = true;
 characterPlayer.play(animCharacterIdle, true);
+scene.add_node(character);
 
 characterBurstRunHoldDuration = 600000;
 characterBurstRunHoldRemaining = 0;

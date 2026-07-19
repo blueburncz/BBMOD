@@ -24,6 +24,12 @@ function BBMOD_SpotLight(
 	_angleOuter = 20
 ): BBMOD_PunctualLight(_color, _position, _range) constructor
 {
+	SceneNodeKind = BBMOD_ESceneNodeType.SpotLight;
+	EditorFlags = BBMOD_EEditorFlag.Translate
+		| BBMOD_EEditorFlag.Rotate
+		| BBMOD_EEditorFlag.Scale
+		| BBMOD_EEditorFlag.RefreshReflectionProbes;
+
 	/// @var {Struct.BBMOD_Vec3} The direction of the light. The default value is
 	/// `(1, 0, 0)`.
 	Direction = _direction ?? BBMOD_VEC3_FORWARD;

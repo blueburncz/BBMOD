@@ -1,9 +1,5 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_ImageBasedLight}
-/// @private
-global.__bbmodImageBasedLight = undefined;
-
 /// @func BBMOD_ImageBasedLight(_texture)
 ///
 /// @extends BBMOD_Light
@@ -34,7 +30,7 @@ function BBMOD_ImageBasedLight(_texture): BBMOD_Light() constructor
 function bbmod_ibl_get()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodImageBasedLight;
+	return bbmod_scene_get_current().ImageBasedLight;
 }
 
 /// @func bbmod_ibl_set(_ibl)
@@ -48,5 +44,5 @@ function bbmod_ibl_get()
 function bbmod_ibl_set(_ibl)
 {
 	gml_pragma("forceinline");
-	global.__bbmodImageBasedLight = _ibl;
+	bbmod_scene_get_current().ImageBasedLight = _ibl;
 }

@@ -198,10 +198,19 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// @readonly
 	Selected = ds_list_create();
 
+	/// @var {Id.DsList<Struct>} A list of selected scene nodes.
+	/// @readonly
+	SelectedNodes = ds_list_create();
+
 	/// @var {Id.DsList<Struct>} A list of additional data required for editing
 	/// instances, e.g. their original offset from the gizmo, rotation and scale.
 	/// @private
 	__instanceData = ds_list_create();
+
+	/// @var {Id.DsList<Struct>} A list of additional data required for editing
+	/// selected scene nodes.
+	/// @private
+	__nodeData = ds_list_create();
 
 	/// @var {Struct.BBMOD_Vec3} The current scaling factor of selected instances.
 	/// @private
@@ -510,6 +519,329 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		return self;
 	};
 
+	/// @private
+	static __editor_array_contains = function (_array, _value)
+	{
+		gml_pragma("forceinline");
+		var i = 0;
+		repeat(array_length(_array))
+		{
+			if (_array[i++] == _value)
+			{
+				return true;
+			}
+		}
+		return false;
+	};
+
+	/// @private
+	static __editor_node_exists = function (_target)
+	{
+		var _scene = bbmod_scene_get_current();
+
+		switch (_target.SceneNodeKind)
+		{
+			case BBMOD_ESceneNodeType.PointLight:
+			case BBMOD_ESceneNodeType.SpotLight:
+				return __editor_array_contains(_scene.LightsPunctual, _target);
+
+			case BBMOD_ESceneNodeType.DirectionalLight:
+				return (_scene.LightDirectional == _target);
+
+			case BBMOD_ESceneNodeType.ReflectionProbe:
+				return __editor_array_contains(_scene.ReflectionProbes, _target);
+
+			case BBMOD_ESceneNodeType.ParticleEmitter:
+				return __editor_array_contains(_scene.ParticleEmitters, _target);
+
+			case BBMOD_ESceneNodeType.Terrain:
+				return __editor_array_contains(_scene.Terrains, _target);
+
+			case BBMOD_ESceneNodeType.LensFlare:
+				return __editor_array_contains(_scene.LensFlares, _target);
+		}
+
+		return true;
+	};
+
+	/// @private
+	static __editor_node_get_position_vec3 = function (_target)
+	{
+		gml_pragma("forceinline");
+		return _target.Position;
+	};
+
+	/// @private
+	static __editor_node_set_position_vec3 = function (_target, _position)
+	{
+		gml_pragma("forceinline");
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.DirectionalLight
+			|| _target.SceneNodeKind == BBMOD_ESceneNodeType.ReflectionProbe
+			|| _target.SceneNodeKind == BBMOD_ESceneNodeType.LensFlare)
+		{
+			_target.set_position(_position);
+		}
+		else
+		{
+			_target.Position = _position;
+			_target.mark_transform_dirty();
+		}
+	};
+
+	/// @private
+	static __editor_node_uses_direction = function (_target)
+	{
+		gml_pragma("forceinline");
+		return (_target.SceneNodeKind == BBMOD_ESceneNodeType.DirectionalLight
+			|| _target.SceneNodeKind == BBMOD_ESceneNodeType.SpotLight
+			|| (_target.SceneNodeKind == BBMOD_ESceneNodeType.LensFlare
+				&& (_target.DirectionalLight != undefined
+					|| _target.Direction != undefined)));
+	};
+
+	/// @private
+	static __editor_node_get_direction = function (_target)
+	{
+		gml_pragma("forceinline");
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.LensFlare
+			&& _target.DirectionalLight != undefined)
+		{
+			return _target.DirectionalLight.Direction;
+		}
+		return _target.Direction;
+	};
+
+	/// @private
+	static __editor_node_set_direction = function (_target, _direction)
+	{
+		gml_pragma("forceinline");
+		var _directionTarget = _target;
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.LensFlare
+			&& _target.DirectionalLight != undefined)
+		{
+			_directionTarget = _target.DirectionalLight;
+		}
+
+		_directionTarget.Direction = _direction;
+	};
+
+	/// @private
+	static __editor_node_get_rotation_vec3 = function (_target)
+	{
+		if (__editor_node_uses_direction(_target))
+		{
+			var _euler = new BBMOD_Quaternion()
+				.FromLookRotation(__editor_node_get_direction(_target), BBMOD_VEC3_UP)
+				.ToEuler();
+			return new BBMOD_Vec3(_euler[0], _euler[1], _euler[2]);
+		}
+
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.Model)
+		{
+			return _target.Rotation;
+		}
+
+		return new BBMOD_Vec3();
+	};
+
+	/// @private
+	static __editor_node_set_rotation_vec3 = function (_target, _rotation)
+	{
+		if (__editor_node_uses_direction(_target))
+		{
+			__editor_node_set_direction(
+				_target,
+				new BBMOD_Quaternion()
+				.FromEuler(_rotation.X, _rotation.Y, _rotation.Z)
+				.Rotate(BBMOD_VEC3_FORWARD)
+				.Normalize());
+		}
+		else if (_target.SceneNodeKind == BBMOD_ESceneNodeType.Model)
+		{
+			_target.Rotation = _rotation;
+			_target.mark_transform_dirty();
+		}
+	};
+
+	/// @private
+	static __editor_node_get_scale_vec3 = function (_target)
+	{
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.PointLight)
+		{
+			return new BBMOD_Vec3(_target.Range);
+		}
+
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.SpotLight)
+		{
+			return new BBMOD_Vec3(
+				_target.Range,
+				tan(degtorad(_target.AngleInner)) * _target.Range,
+				tan(degtorad(_target.AngleOuter)) * _target.Range);
+		}
+
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.ReflectionProbe)
+		{
+			return _target.Size;
+		}
+
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.Terrain)
+		{
+			return _target.Scale;
+		}
+
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.Model)
+		{
+			return _target.Scale;
+		}
+
+		return new BBMOD_Vec3(1.0);
+	};
+
+	/// @private
+	static __editor_node_get_uniform_scale_by = function ()
+	{
+		var _scaleBy = __scaleBy.X;
+		if (abs(__scaleBy.Y) > abs(_scaleBy))
+		{
+			_scaleBy = __scaleBy.Y;
+		}
+		if (abs(__scaleBy.Z) > abs(_scaleBy))
+		{
+			_scaleBy = __scaleBy.Z;
+		}
+		return _scaleBy;
+	};
+
+	/// @private
+	static __editor_node_get_spot_scale_by = function (_target, _forwardGizmo, _rightGizmo, _upGizmo)
+	{
+		var _forward = _target.Direction.Normalize();
+		var _right = _forward.Cross(BBMOD_VEC3_UP);
+		if (_right.LengthSqr() <= math_get_epsilon())
+		{
+			_right = _forward.Cross(BBMOD_VEC3_RIGHT);
+		}
+		_right = _right.Normalize();
+		var _up = _right.Cross(_forward).Normalize();
+
+		var _rangeScaleBy = __scaleBy.X * abs(_forwardGizmo.Dot(_forward))
+			+ __scaleBy.Y * abs(_rightGizmo.Dot(_forward))
+			+ __scaleBy.Z * abs(_upGizmo.Dot(_forward));
+		var _innerRadiusScaleBy = __scaleBy.X * abs(_forwardGizmo.Dot(_up))
+			+ __scaleBy.Y * abs(_rightGizmo.Dot(_up))
+			+ __scaleBy.Z * abs(_upGizmo.Dot(_up));
+		var _outerRadiusScaleBy = __scaleBy.X * abs(_forwardGizmo.Dot(_right))
+			+ __scaleBy.Y * abs(_rightGizmo.Dot(_right))
+			+ __scaleBy.Z * abs(_upGizmo.Dot(_right));
+
+		return new BBMOD_Vec3(_rangeScaleBy, _innerRadiusScaleBy, _outerRadiusScaleBy);
+	};
+
+	/// @private
+	static __editor_node_set_scale_vec3 = function (_target, _scale)
+	{
+		if (_target.SceneNodeKind == BBMOD_ESceneNodeType.PointLight)
+		{
+			_target.Range = max(_scale.X, 0.0);
+		}
+		else if (_target.SceneNodeKind == BBMOD_ESceneNodeType.SpotLight)
+		{
+			var _range = max(_scale.X, 0.0);
+			var _outerRadius = max(_scale.Z, 0.0);
+			var _innerRadius = clamp(_scale.Y, 0.0, _outerRadius);
+			var _rangeForAngle = max(_range, 0.0001);
+
+			_target.Range = _range;
+			_target.AngleOuter = clamp(
+				radtodeg(arctan2(_outerRadius, _rangeForAngle)),
+				0.0,
+				89.0);
+			_target.AngleInner = min(
+				clamp(radtodeg(arctan2(_innerRadius, _rangeForAngle)), 0.0, 89.0),
+				_target.AngleOuter);
+		}
+		else if (_target.SceneNodeKind == BBMOD_ESceneNodeType.ReflectionProbe)
+		{
+			_target.set_size(_scale);
+		}
+		else if (_target.SceneNodeKind == BBMOD_ESceneNodeType.Terrain)
+		{
+			_target.Scale = _scale;
+		}
+		else if (_target.SceneNodeKind == BBMOD_ESceneNodeType.Model)
+		{
+			_target.Scale = _scale;
+			_target.mark_transform_dirty();
+		}
+	};
+
+	/// @private
+	static __editor_vec3_changed = function (_a, _b)
+	{
+		gml_pragma("forceinline");
+		return (_a.X != _b.X || _a.Y != _b.Y || _a.Z != _b.Z);
+	};
+
+	/// @private
+	static __editor_reflection_probes_need_update = function ()
+	{
+		var _reflectionProbes = bbmod_scene_get_current().ReflectionProbes;
+		var i = 0;
+		repeat(array_length(_reflectionProbes))
+		{
+			_reflectionProbes[i++].NeedsUpdate = true;
+		}
+	};
+
+	/// @private
+	static __editor_node_finish_edit = function ()
+	{
+		var _size = ds_list_size(SelectedNodes);
+		var i = 0;
+		repeat(_size)
+		{
+			var _target = SelectedNodes[|  i];
+			var _data = __nodeData[|  i];
+			var _positionChanged = __editor_vec3_changed(
+				_data.Position, __editor_node_get_position_vec3(_target));
+			var _rotationChanged = __editor_vec3_changed(
+				_data.Rotation, __editor_node_get_rotation_vec3(_target));
+			var _scaleChanged = __editor_vec3_changed(
+				_data.Scale, __editor_node_get_scale_vec3(_target));
+			var _transformChanged = (_positionChanged || _rotationChanged || _scaleChanged);
+
+			if (_transformChanged
+				&& (_target.EditorFlags & BBMOD_EEditorFlag.RefreshReflectionProbes))
+			{
+				__editor_reflection_probes_need_update();
+			}
+
+			switch (_target.SceneNodeKind)
+			{
+				case BBMOD_ESceneNodeType.PointLight:
+				case BBMOD_ESceneNodeType.SpotLight:
+				case BBMOD_ESceneNodeType.DirectionalLight:
+					if (_transformChanged)
+					{
+						if (_target.Static && _target.CastShadows)
+						{
+							_target.NeedsUpdate = true;
+						}
+					}
+					break;
+
+				case BBMOD_ESceneNodeType.ReflectionProbe:
+					if (_positionChanged || _scaleChanged)
+					{
+						_target.NeedsUpdate = true;
+					}
+					break;
+			}
+
+			++i;
+		}
+	};
+
 	/// @func select(_instance)
 	///
 	/// @desc Adds an instance to selection.
@@ -533,6 +865,40 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		return self;
 	};
 
+	/// @func select_node(_target)
+	///
+	/// @desc Adds a scene node to selection.
+	///
+	/// @param {Struct} _target The scene node to select.
+	///
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static select_node = function (_target)
+	{
+		if (!is_node_selected(_target))
+		{
+			var _position = __editor_node_get_position_vec3(_target);
+			var _rotation = __editor_node_get_rotation_vec3(_target);
+			var _scale = __editor_node_get_scale_vec3(_target);
+			var _direction = undefined;
+
+			if (__editor_node_uses_direction(_target))
+			{
+				_direction = __editor_node_get_direction(_target).Clone();
+			}
+
+			ds_list_add(SelectedNodes, _target);
+			ds_list_add(__nodeData,
+			{
+				Offset: new BBMOD_Vec3(),
+				Position: _position.Clone(),
+				Rotation: _rotation.Clone(),
+				Scale: _scale.Clone(),
+				Direction: _direction,
+			});
+		}
+		return self;
+	};
+
 	/// @func is_selected(_instance)
 	///
 	/// @desc Checks whether an instance is selected.
@@ -544,6 +910,19 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	{
 		gml_pragma("forceinline");
 		return (ds_list_find_index(Selected, _instance) != -1);
+	};
+
+	/// @func is_node_selected(_target)
+	///
+	/// @desc Checks whether a scene node is selected.
+	///
+	/// @param {Struct} _target The scene node to check.
+	///
+	/// @return {Bool} Returns `true` if the scene node is selected.
+	static is_node_selected = function (_target)
+	{
+		gml_pragma("forceinline");
+		return (ds_list_find_index(SelectedNodes, _target) != -1);
 	};
 
 	/// @func unselect(_instance)
@@ -561,6 +940,25 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		{
 			ds_list_delete(Selected, _index);
 			ds_list_delete(__instanceData, _index);
+		}
+		return self;
+	};
+
+	/// @func unselect_node(_target)
+	///
+	/// @desc Removes a scene node from selection.
+	///
+	/// @param {Struct} _target The scene node to unselect.
+	///
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static unselect_node = function (_target)
+	{
+		gml_pragma("forceinline");
+		var _index = ds_list_find_index(SelectedNodes, _target);
+		if (_index != -1)
+		{
+			ds_list_delete(SelectedNodes, _index);
+			ds_list_delete(__nodeData, _index);
 		}
 		return self;
 	};
@@ -586,6 +984,27 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		return self;
 	};
 
+	/// @func toggle_select_node(_target)
+	///
+	/// @desc Unselects a scene node if selected, or selects it if it isn't.
+	///
+	/// @param {Struct} _target The scene node to toggle selection of.
+	///
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static toggle_select_node = function (_target)
+	{
+		gml_pragma("forceinline");
+		if (is_node_selected(_target))
+		{
+			unselect_node(_target);
+		}
+		else
+		{
+			select_node(_target);
+		}
+		return self;
+	};
+
 	/// @func clear_selection()
 	///
 	/// @desc Removes all instances from selection.
@@ -596,6 +1015,8 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		gml_pragma("forceinline");
 		ds_list_clear(Selected);
 		ds_list_clear(__instanceData);
+		ds_list_clear(SelectedNodes);
+		ds_list_clear(__nodeData);
 		return self;
 	};
 
@@ -630,6 +1051,8 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	static update_position = function ()
 	{
 		var _size = ds_list_size(Selected);
+		var _sizeNodes = ds_list_size(SelectedNodes);
+		var _sizeTotal = _size + _sizeNodes;
 		var _posX = 0.0;
 		var _posY = 0.0;
 		var _posZ = 0.0;
@@ -651,21 +1074,48 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 			_posZ += GetInstancePositionZ(_instance);
 		}
 
-		if (_size > 0)
+		for (var i = _sizeNodes - 1; i >= 0; --i)
 		{
-			_posX /= _size;
-			_posY /= _size;
-			_posZ /= _size;
+			var _target = SelectedNodes[|  i];
+
+			if (!__editor_node_exists(_target))
+			{
+				ds_list_delete(SelectedNodes, i);
+				ds_list_delete(__nodeData, i);
+				--_sizeNodes;
+				--_sizeTotal;
+				continue;
+			}
+
+			var _position = __editor_node_get_position_vec3(_target);
+			_posX += _position.X;
+			_posY += _position.Y;
+			_posZ += _position.Z;
+		}
+
+		if (_sizeTotal > 0)
+		{
+			_posX /= _sizeTotal;
+			_posY /= _sizeTotal;
+			_posZ /= _sizeTotal;
 
 			Position.Set(_posX, _posY, _posZ);
 
 			if (EditSpace == BBMOD_EEditSpace.Local)
 			{
-				var _lastSelected = Selected[|  _size - 1];
-				Rotation.Set(
-					GetInstanceRotationX(_lastSelected),
-					GetInstanceRotationY(_lastSelected),
-					GetInstanceRotationZ(_lastSelected));
+				if (_sizeNodes > 0)
+				{
+					var _lastSelectedNode = SelectedNodes[|  _sizeNodes - 1];
+					__editor_node_get_rotation_vec3(_lastSelectedNode).Copy(Rotation);
+				}
+				else
+				{
+					var _lastSelected = Selected[|  _size - 1];
+					Rotation.Set(
+						GetInstanceRotationX(_lastSelected),
+						GetInstanceRotationY(_lastSelected),
+						GetInstanceRotationZ(_lastSelected));
+				}
 			}
 			else
 			{
@@ -690,7 +1140,7 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// not been called yet!
 	static update = function (_deltaTime)
 	{
-		var _camera = global.__bbmodCameraCurrent;
+		var _camera = bbmod_scene_get_current().CameraCurrent ?? global.__bbmodCameraCurrent;
 		if (_camera == undefined)
 		{
 			return self;
@@ -702,6 +1152,11 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		//
 		if (!IsEditing || !mouse_check_button(ButtonDrag))
 		{
+			if (IsEditing)
+			{
+				__editor_node_finish_edit();
+			}
+
 			if (KeyNextEditType != undefined
 				&& keyboard_check_pressed(KeyNextEditType))
 			{
@@ -722,6 +1177,8 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 
 			// Compute gizmo's new position
 			var _size = ds_list_size(Selected);
+			var _sizeNodes = ds_list_size(SelectedNodes);
+			var _sizeTotal = _size + _sizeNodes;
 			var _posX = 0.0;
 			var _posY = 0.0;
 			var _posZ = 0.0;
@@ -743,22 +1200,49 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				_posZ += GetInstancePositionZ(_instance);
 			}
 
-			if (_size > 0)
+			for (var i = _sizeNodes - 1; i >= 0; --i)
 			{
-				_posX /= _size;
-				_posY /= _size;
-				_posZ /= _size;
+				var _target = SelectedNodes[|  i];
+
+				if (!__editor_node_exists(_target))
+				{
+					ds_list_delete(SelectedNodes, i);
+					ds_list_delete(__nodeData, i);
+					--_sizeNodes;
+					--_sizeTotal;
+					continue;
+				}
+
+				var _position = __editor_node_get_position_vec3(_target);
+				_posX += _position.X;
+				_posY += _position.Y;
+				_posZ += _position.Z;
+			}
+
+			if (_sizeTotal > 0)
+			{
+				_posX /= _sizeTotal;
+				_posY /= _sizeTotal;
+				_posZ /= _sizeTotal;
 
 				Position.Set(_posX, _posY, _posZ);
 
 				if (EditSpace == BBMOD_EEditSpace.Local)
 				{
-					var _lastSelected = Selected[|  _size - 1];
-					var _mat = GetInstanceGlobalMatrix(_lastSelected);
-					var _mat2 = new BBMOD_Matrix().RotateEuler(get_instance_rotation_vec3(_lastSelected));
-					var _mat3 = _mat2.Mul(_mat);
-					var _euler = _mat3.ToEuler();
-					Rotation.FromArray(_euler);
+					if (_sizeNodes > 0)
+					{
+						var _lastSelectedNode = SelectedNodes[|  _sizeNodes - 1];
+						__editor_node_get_rotation_vec3(_lastSelectedNode).Copy(Rotation);
+					}
+					else
+					{
+						var _lastSelected = Selected[|  _size - 1];
+						var _mat = GetInstanceGlobalMatrix(_lastSelected);
+						var _mat2 = new BBMOD_Matrix().RotateEuler(get_instance_rotation_vec3(_lastSelected));
+						var _mat3 = _mat2.Mul(_mat);
+						var _euler = _mat3.ToEuler();
+						Rotation.FromArray(_euler);
+					}
 				}
 				else
 				{
@@ -774,6 +1258,26 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				_data.Offset = get_instance_position_vec3(_instance).Sub(Position);
 				_data.Rotation = get_instance_rotation_vec3(_instance);
 				_data.Scale = get_instance_scale_vec3(_instance);
+			}
+
+			for (var i = _sizeNodes - 1; i >= 0; --i)
+			{
+				var _target = SelectedNodes[|  i];
+				var _data = __nodeData[|  i];
+				var _position = __editor_node_get_position_vec3(_target);
+				_data.Offset = _position.Sub(Position);
+				_data.Position = _position.Clone();
+				_data.Rotation = __editor_node_get_rotation_vec3(_target);
+				_data.Scale = __editor_node_get_scale_vec3(_target).Clone();
+
+				if (__editor_node_uses_direction(_target))
+				{
+					_data.Direction = __editor_node_get_direction(_target).Clone();
+				}
+				else
+				{
+					_data.Direction = undefined;
+				}
 			}
 
 			// Clear properties used when editing
@@ -1213,6 +1717,149 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 			SetInstancePositionZ(_instance, Position.Z + _v[2]);
 		}
 
+		////////////////////////////////////////////////////////////////////////
+		// Apply to selected scene nodes
+		var _sizeNodes = ds_list_size(SelectedNodes);
+		var _rotateByXStruct = __rotateBy.X;
+		var _rotateByYStruct = __rotateBy.Y;
+		var _rotateByZStruct = __rotateBy.Z;
+		var _applyStructRotation = (EditType == BBMOD_EEditType.Rotation);
+
+		if (EnableAngleSnap
+			&& AngleSnap != 0.0
+			&& !keyboard_check(KeyIgnoreSnap))
+		{
+			_rotateByXStruct = floor(__rotateBy.X / AngleSnap) * AngleSnap;
+			_rotateByYStruct = floor(__rotateBy.Y / AngleSnap) * AngleSnap;
+			_rotateByZStruct = floor(__rotateBy.Z / AngleSnap) * AngleSnap;
+		}
+
+		for (var i = _sizeNodes - 1; i >= 0; --i)
+		{
+			var _target = SelectedNodes[|  i];
+
+			if (!__editor_node_exists(_target))
+			{
+				ds_list_delete(SelectedNodes, i);
+				ds_list_delete(__nodeData, i);
+				--_sizeNodes;
+				continue;
+			}
+
+			var _data = __nodeData[|  i];
+			var _positionOffset = _data.Offset;
+			var _rotationStored = _data.Rotation;
+			var _scaleStored = _data.Scale;
+
+			if (_applyStructRotation
+				&& (_target.EditorFlags & BBMOD_EEditorFlag.Rotate)
+				&& (_rotateByXStruct != 0.0
+					|| _rotateByYStruct != 0.0
+					|| _rotateByZStruct != 0.0))
+			{
+				var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
+				var _usesDirection = __editor_node_uses_direction(_target);
+				var _direction = undefined;
+
+				if (_usesDirection)
+				{
+					_direction = (_data.Direction != undefined)
+						? _data.Direction.Clone()
+						: __editor_node_get_direction(_target).Clone();
+				}
+
+				if (_rotateByXStruct != 0.0)
+				{
+					var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forwardGizmo, _rotateByXStruct);
+					_positionOffset = _quaternionX.Rotate(_positionOffset);
+					_rotMatrix = _rotMatrix.RotateQuat(_quaternionX);
+					if (_usesDirection)
+					{
+						_direction = _quaternionX.Rotate(_direction);
+					}
+				}
+				if (_rotateByYStruct != 0.0)
+				{
+					var _quaternionY = new BBMOD_Quaternion().FromAxisAngle(_rightGizmo, _rotateByYStruct);
+					_positionOffset = _quaternionY.Rotate(_positionOffset);
+					_rotMatrix = _rotMatrix.RotateQuat(_quaternionY);
+					if (_usesDirection)
+					{
+						_direction = _quaternionY.Rotate(_direction);
+					}
+				}
+				if (_rotateByZStruct != 0.0)
+				{
+					var _quaternionZ = new BBMOD_Quaternion().FromAxisAngle(_upGizmo, _rotateByZStruct);
+					_positionOffset = _quaternionZ.Rotate(_positionOffset);
+					_rotMatrix = _rotMatrix.RotateQuat(_quaternionZ);
+					if (_usesDirection)
+					{
+						_direction = _quaternionZ.Rotate(_direction);
+					}
+				}
+
+				if (_usesDirection)
+				{
+					__editor_node_set_direction(_target, _direction.Normalize());
+				}
+				else
+				{
+					var _rotArray = _rotMatrix.ToEuler();
+					__editor_node_set_rotation_vec3(_target,
+						new BBMOD_Vec3(_rotArray[0], _rotArray[1], _rotArray[2]));
+				}
+			}
+
+			if (_target.EditorFlags & BBMOD_EEditorFlag.Scale)
+			{
+				var _scaleNew = _scaleStored.Clone();
+				if (_target.SceneNodeKind == BBMOD_ESceneNodeType.PointLight)
+				{
+					var _scaleBy = __editor_node_get_uniform_scale_by();
+					_scaleNew.X += _scaleBy;
+					_scaleNew.Y += _scaleBy;
+					_scaleNew.Z += _scaleBy;
+				}
+				else if (_target.SceneNodeKind == BBMOD_ESceneNodeType.SpotLight)
+				{
+					_scaleNew.AddSelf(__editor_node_get_spot_scale_by(
+						_target,
+						_forwardGizmo,
+						_rightGizmo,
+						_upGizmo));
+				}
+				else
+				{
+					_scaleNew.X += __scaleBy.X;
+					_scaleNew.Y += __scaleBy.Y;
+					_scaleNew.Z += __scaleBy.Z;
+				}
+
+				var _vI = matrix_transform_vertex(
+					_matRotInverse, _positionOffset.X, _positionOffset.Y, _positionOffset.Z);
+				var _scaleRatioX = _scaleNew.X / max(_scaleStored.X, 0.0001);
+				var _scaleRatioY = _scaleNew.Y / max(_scaleStored.Y, 0.0001);
+				var _scaleRatioZ = _scaleNew.Z / max(_scaleStored.Z, 0.0001);
+				var _vIRot = matrix_transform_vertex(
+					matrix_build(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _scaleRatioX, _scaleRatioY, _scaleRatioZ),
+					_vI[0], _vI[1], _vI[2]);
+				var _v = matrix_transform_vertex(_matRot, _vIRot[0], _vIRot[1], _vIRot[2]);
+				_positionOffset = new BBMOD_Vec3(_v[0], _v[1], _v[2]);
+
+				__editor_node_set_scale_vec3(_target, _scaleNew);
+			}
+
+			if (_target.EditorFlags & BBMOD_EEditorFlag.Translate)
+			{
+				__editor_node_set_position_vec3(_target,
+					new BBMOD_Vec3(
+						Position.X + _positionOffset.X,
+						Position.Y + _positionOffset.Y,
+						Position.Z + _positionOffset.Z));
+			}
+		}
+
 		return self;
 	};
 
@@ -1263,7 +1910,9 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	static destroy = function ()
 	{
 		ds_list_destroy(Selected);
+		ds_list_destroy(SelectedNodes);
 		ds_list_destroy(__instanceData);
+		ds_list_destroy(__nodeData);
 		return undefined;
 	};
 }

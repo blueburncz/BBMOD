@@ -16,6 +16,29 @@ function bbmod_array_clone(_array)
 	return _clone;
 }
 
+/// @func bbmod_array_remove(_array, _value)
+///
+/// @desc Removes the first value equal to `_value` from an array.
+///
+/// @param {Array} _array The array to modify.
+/// @param {Any} _value The value to remove.
+///
+/// @return {Bool} Returns `true` when a value was removed.
+function bbmod_array_remove(_array, _value)
+{
+	var i = 0;
+	repeat(array_length(_array))
+	{
+		if (_array[i] == _value)
+		{
+			array_delete(_array, i, 1);
+			return true;
+		}
+		++i;
+	}
+	return false;
+}
+
 /// @func bbmod_array_to_buffer(_buffer, _type)
 ///
 /// @desc Writes an array into a buffer.

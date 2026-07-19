@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_ReferenceCounted",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_ReferenceCounted",
+  "parent":{
+    "name":"Base",
+    "path":"folders/BBMOD/Core/Base.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

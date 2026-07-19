@@ -146,7 +146,11 @@ function __bbmod_model_to_colmesh_impl(_model, _colmesh, _transform, _version)
 		i = 0;
 		repeat(array_length(_children))
 		{
-			ds_stack_push(_stack, _children[i++], _nodeMatrix);
+			var _child = _children[i++];
+			if (_node.is_model_child(_child))
+			{
+				ds_stack_push(_stack, _child, _nodeMatrix);
+			}
 		}
 	}
 }

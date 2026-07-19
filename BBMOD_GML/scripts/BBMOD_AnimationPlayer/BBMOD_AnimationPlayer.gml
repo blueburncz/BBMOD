@@ -68,6 +68,23 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	/// @readonly
 	Model = _model;
 
+	/// @var {Bool} Whether parent-space animation should write local transforms
+	/// into the model's {@link BBMOD_Node} hierarchy. Defaults to `true` for
+	/// model instances created with {@link BBMOD_Model.make_instance}, otherwise
+	/// `false`.
+	/// @see BBMOD_Model.AnimationPlayer
+	/// @see BBMOD_Model.AutoUpdateAnimation
+	ApplyToModelNodes = _model.IsModelInstance;
+
+	/// @var {Bool} Whether the last update wrote transforms to model nodes.
+	/// @private
+	__appliedToModelNodes = false;
+
+	if (_model.AnimationPlayer == undefined)
+	{
+		_model.AnimationPlayer = self;
+	}
+
 	/// @var {Array<Struct.BBMOD_Animation>} List of animations to play.
 	/// @private
 	__animations = [];
@@ -169,6 +186,49 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	/// @see BBMOD_Animation.create_transition
 	EnableTransitions = true;
 
+	static __mark_attached_children_dirty = function (_node)
+	{
+		var _children = _node.Children;
+		var i = 0;
+		repeat(array_length(_children))
+		{
+			var _child = _children[i++];
+			if (!_node.is_model_child(_child))
+			{
+				_child.mark_transform_dirty();
+			}
+		}
+	};
+
+	static __apply_node_transform = function (_node, _array, _offset)
+	{
+		var _transform = _node.Transform;
+		_transform.Real.X = _array[_offset];
+		_transform.Real.Y = _array[_offset + 1];
+		_transform.Real.Z = _array[_offset + 2];
+		_transform.Real.W = _array[_offset + 3];
+		_transform.Dual.X = _array[_offset + 4];
+		_transform.Dual.Y = _array[_offset + 5];
+		_transform.Dual.Z = _array[_offset + 6];
+		_transform.Dual.W = _array[_offset + 7];
+		_node.TransformDirty = true;
+		__mark_attached_children_dirty(_node);
+		__appliedToModelNodes = true;
+	};
+
+	static __get_render_transform = function ()
+	{
+		if (ApplyToModelNodes)
+		{
+			Model.__build_draw_cache();
+			if (Model.__animationKind == 0)
+			{
+				return undefined;
+			}
+		}
+		return get_transform();
+	};
+
 	static __animate = function (_animationInstance, _animationTime, _frame = undefined)
 	{
 		var _model = Model;
@@ -181,6 +241,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 		__frame = _frame;
 		var _transformArray = __transformArray;
 		var _offsetArray = _model.__offsetArray;
+		var _applyToModelNodes = ApplyToModelNodes;
 		var _nodeTransform = __nodeTransform;
 		var _positionOverrides = __nodePositionOverride;
 		var _rotationOverrides = __nodeRotationOverride;
@@ -208,7 +269,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			var _nodePositionOverride = _positionOverrides[_nodeIndex];
 			var _nodeRotationOverride = _rotationOverrides[_nodeIndex];
 			var _nodeRotationPost = _rotationPost[_nodeIndex];
-			var _nodeParent = _node.Parent;
+			var _nodeParent = _node.get_model_parent();
 			var _parentIndex = (_nodeParent != undefined) ? _nodeParent.Index : -1;
 
 			if (_nodePositionOverride != undefined
@@ -288,6 +349,11 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 				_nodeTransform[@ _nodeOffset + 6] = (_tx * _ry - _ty * _rx + _tz * _rw) * 0.5;
 				_nodeTransform[@ _nodeOffset + 7] = (-_tx * _rx - _ty * _ry - _tz * _rz) * 0.5;
 
+				if (_applyToModelNodes)
+				{
+					__apply_node_transform(_node, _nodeTransform, _nodeOffset);
+				}
+
 				if (_parentIndex != -1)
 				{
 					__bbmod_dquat_mul_array(
@@ -301,6 +367,11 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			}
 			else
 			{
+				if (_applyToModelNodes)
+				{
+					__apply_node_transform(_node, _frame, _nodeOffset);
+				}
+
 				if (_parentIndex == -1)
 				{
 					// No parent transform -> just copy the node transform
@@ -327,7 +398,11 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			var i = 0;
 			repeat(array_length(_children))
 			{
-				_animStack[_stackNext++] = _children[i++];
+				var _child = _children[i++];
+				if (_node.is_model_child(_child))
+				{
+					_animStack[_stackNext++] = _child;
+				}
 			}
 		}
 	};
@@ -584,6 +659,12 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			break;
 		}
 
+		if (__appliedToModelNodes)
+		{
+			_model.clear_draw_cache();
+			__appliedToModelNodes = false;
+		}
+
 		return self;
 	};
 
@@ -778,7 +859,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	static submit = function (_materials = undefined)
 	{
 		gml_pragma("forceinline");
-		Model.submit(_materials, get_transform());
+		Model.submit(_materials, __get_render_transform());
 		return self;
 	};
 
@@ -794,7 +875,7 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 	static render = function (_materials = undefined)
 	{
 		gml_pragma("forceinline");
-		Model.render(_materials, get_transform());
+		Model.render(_materials, __get_render_transform());
 		return self;
 	};
 }

@@ -1,9 +1,5 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_DirectionalLight}
-/// @private
-global.__bbmodDirectionalLight = undefined;
-
 /// @func BBMOD_DirectionalLight([_color[, _direction]])
 ///
 /// @extends BBMOD_Light
@@ -16,6 +12,11 @@ global.__bbmodDirectionalLight = undefined;
 /// `(-1, 0, -1)` if `undefined`.
 function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBMOD_Light() constructor
 {
+	SceneNodeKind = BBMOD_ESceneNodeType.DirectionalLight;
+	EditorFlags = BBMOD_EEditorFlag.Translate
+		| BBMOD_EEditorFlag.Rotate
+		| BBMOD_EEditorFlag.RefreshReflectionProbes;
+
 	/// @var {Struct.BBMOD_Color} The color of the light. Defaul value is
 	/// {@link BBMOD_C_WHITE}.
 	Color = _color ?? BBMOD_C_WHITE;
@@ -23,6 +24,9 @@ function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBM
 	/// @var {Struct.BBMOD_Vec3} The direction of the light. Default value is
 	/// `(-1, 0, -1)`.
 	Direction = _direction ?? new BBMOD_Vec3(-1.0, 0.0, -1.0).Normalize();
+
+	/// @var {Real} Length of the edit-mode wireframe arrow. Defaults to 10.
+	EditorWireframeLength = 10.0;
 
 	/// @var {Real} The area captured by the shadowmap. Defaults to 1024.
 	ShadowmapArea = 1024;
@@ -108,7 +112,7 @@ function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBM
 function bbmod_light_directional_get()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodDirectionalLight;
+	return bbmod_scene_get_current().LightDirectional;
 }
 
 /// @func bbmod_light_directional_set(_light)
@@ -123,5 +127,5 @@ function bbmod_light_directional_get()
 function bbmod_light_directional_set(_light)
 {
 	gml_pragma("forceinline");
-	global.__bbmodDirectionalLight = _light;
+	bbmod_scene_get_current().set_directional_light(_light);
 }

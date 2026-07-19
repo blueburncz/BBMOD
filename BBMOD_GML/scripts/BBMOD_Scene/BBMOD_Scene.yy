@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BBMOD_Scene",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BBMOD_Scene",
+  "parent":{
+    "name":"Core",
+    "path":"folders/BBMOD/Core.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

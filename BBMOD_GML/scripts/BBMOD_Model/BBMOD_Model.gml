@@ -21,7 +21,7 @@
 /// texture to material slot 0 (meaning it won't use BBMOD's material system)
 /// and then draws the model at the x, y, z position of given instance. The
 /// model is then destroyed in the Clean Up event to avoid memory leaks.
-/// 
+///
 ///
 /// ```gml
 /// /// @desc Create event
@@ -112,6 +112,322 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 	/// @see BBMOD_Model.freeze
 	Frozen = false;
 
+	/// @var {Bool} Whether this model was created as a shared-mesh instance.
+	/// @readonly
+	/// @see BBMOD_Model.make_instance
+	IsModelInstance = false;
+
+	/// @var {Struct.BBMOD_AnimationPlayer, Undefined} Optional animation player
+	/// updated by {@link BBMOD_Model.update} when
+	/// {@link BBMOD_Model.AutoUpdateAnimation} is enabled.
+	/// @see BBMOD_AnimationPlayer.ApplyToModelNodes
+	AnimationPlayer = undefined;
+
+	/// @var {Bool} Whether {@link BBMOD_Model.update} should update
+	/// {@link BBMOD_Model.AnimationPlayer}. Defaults to `true`.
+	AutoUpdateAnimation = true;
+
+	/// @var {Struct.BBMOD_Scene, Undefined} The scene this model belongs to.
+	/// @readonly
+	Scene = undefined;
+
+	/// @var {Struct.BBMOD_SceneNode, Undefined} The parent scene node.
+	/// @readonly
+	Parent = undefined;
+
+	/// @var {Array<Struct.BBMOD_SceneNode>} Child scene nodes.
+	/// @readonly
+	Children = [];
+
+	/// @var {Real} Scene node kind. Uses {@link BBMOD_ESceneNodeType}.
+	SceneNodeKind = BBMOD_ESceneNodeType.Model;
+
+	/// @var {Struct.BBMOD_Vec3} Local position relative to the parent.
+	Position = new BBMOD_Vec3();
+
+	/// @var {Struct.BBMOD_Vec3} Local rotation relative to the parent.
+	Rotation = new BBMOD_Vec3();
+
+	/// @var {Struct.BBMOD_Vec3} Local scale relative to the parent.
+	Scale = new BBMOD_Vec3(1.0);
+
+	/// @var {Bool} Whether the cached world transform is dirty.
+	TransformDirty = true;
+
+	/// @var {Real} Editor-selectable flags. Uses {@link BBMOD_EEditorFlag}.
+	EditorFlags = BBMOD_EEditorFlag.Translate
+		| BBMOD_EEditorFlag.Rotate
+		| BBMOD_EEditorFlag.Scale;
+
+	/// @var {Asset.GMSprite} Sprite used for the editor icon.
+	EditorIconSprite = BBMOD_SprParticle;
+
+	/// @var {Real} Subimage used for the editor icon.
+	EditorIconIndex = 0;
+
+	/// @var {Real} Click priority when editor icons overlap.
+	EditorPickPriority = 0;
+
+	/// @var {Real} Distance at which the editor icon starts fading out.
+	EditorIconFadeStart = 100.0;
+
+	/// @var {Real} Distance at which the editor icon becomes hidden.
+	EditorIconFadeEnd = 120.0;
+
+	/// @var {Struct.BBMOD_Vec3} Editor icon world-space offset.
+	EditorOffset = new BBMOD_Vec3();
+
+	/// @var {Array<Real>} Cached local matrix.
+	/// @private
+	__localMatrix = matrix_build_identity();
+
+	/// @var {Array<Real>} Cached world matrix.
+	/// @private
+	__worldMatrix = matrix_build_identity();
+
+	static __attach_root_node = function ()
+	{
+		if (RootNode != undefined && RootNode.Parent != self)
+		{
+			add_child(RootNode);
+		}
+		return self;
+	};
+
+	static __destroy_model_node_tree = function (_node)
+	{
+		if (_node == undefined)
+		{
+			return self;
+		}
+
+		if (_node.Scene != undefined)
+		{
+			_node.Scene.remove_node(_node);
+		}
+
+		var i = array_length(_node.Children) - 1;
+		repeat(array_length(_node.Children))
+		{
+			var _child = _node.Children[i--];
+			if (_node.is_model_child(_child))
+			{
+				__destroy_model_node_tree(_child);
+			}
+			else
+			{
+				_node.remove_child(_child);
+			}
+		}
+
+		_node.Children = [];
+		_node.Parent = undefined;
+		_node.destroy();
+		return self;
+	};
+
+	/// @func add_child(_node)
+	///
+	/// @desc Adds a child scene node.
+	///
+	/// @param {Struct.BBMOD_SceneNode} _node The child node to add.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static add_child = function (_node)
+	{
+		if (_node.Parent == self)
+		{
+			return self;
+		}
+
+		if (_node.Parent != undefined)
+		{
+			_node.Parent.remove_child(_node);
+		}
+		else if (_node.Scene != undefined && _node.Scene != Scene)
+		{
+			_node.Scene.remove_node(_node);
+		}
+
+		array_push(Children, _node);
+		_node.Parent = self;
+		_node.mark_transform_dirty();
+
+		if (Scene != undefined)
+		{
+			Scene.add_node(_node);
+		}
+
+		return self;
+	};
+
+	/// @func remove_child(_node)
+	///
+	/// @desc Removes a child scene node.
+	///
+	/// @param {Struct.BBMOD_SceneNode} _node The child node to remove.
+	///
+	/// @return {Bool} Returns `true` if the child was removed.
+	static remove_child = function (_node)
+	{
+		if (bbmod_array_remove(Children, _node))
+		{
+			_node.Parent = undefined;
+			_node.mark_transform_dirty();
+
+			if (Scene != undefined && _node.Scene == Scene)
+			{
+				Scene.__add_root_node(_node);
+			}
+
+			return true;
+		}
+		return false;
+	};
+
+	/// @func remove_from_parent()
+	///
+	/// @desc Removes this model from its parent scene node.
+	///
+	/// @return {Bool} Returns `true` if the model had a parent.
+	static remove_from_parent = function ()
+	{
+		if (Parent == undefined)
+		{
+			return false;
+		}
+		return Parent.remove_child(self);
+	};
+
+	/// @func mark_transform_dirty()
+	///
+	/// @desc Marks this model and its descendants as needing world transform
+	/// recalculation.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static mark_transform_dirty = function ()
+	{
+		TransformDirty = true;
+
+		var i = 0;
+		repeat(array_length(Children))
+		{
+			Children[i++].mark_transform_dirty();
+		}
+
+		return self;
+	};
+
+	/// @func set_position(_position)
+	///
+	/// @desc Sets the model scene-node local position.
+	///
+	/// @param {Struct.BBMOD_Vec3} _position The new local position.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static set_position = function (_position)
+	{
+		if (!Position.Equals(_position))
+		{
+			Position = _position;
+			mark_transform_dirty();
+		}
+		return self;
+	};
+
+	/// @func set_rotation(_rotation)
+	///
+	/// @desc Sets the model scene-node local rotation.
+	///
+	/// @param {Struct.BBMOD_Vec3} _rotation The new local rotation.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static set_rotation = function (_rotation)
+	{
+		if (!Rotation.Equals(_rotation))
+		{
+			Rotation = _rotation;
+			mark_transform_dirty();
+		}
+		return self;
+	};
+
+	/// @func set_scale(_scale)
+	///
+	/// @desc Sets the model scene-node local scale.
+	///
+	/// @param {Struct.BBMOD_Vec3} _scale The new local scale.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static set_scale = function (_scale)
+	{
+		if (!Scale.Equals(_scale))
+		{
+			Scale = _scale;
+			mark_transform_dirty();
+		}
+		return self;
+	};
+
+	/// @func get_local_matrix()
+	///
+	/// @desc Retrieves the model scene-node local transform matrix.
+	///
+	/// @return {Array<Real>} The local transform matrix.
+	static get_local_matrix = function ()
+	{
+		__localMatrix = matrix_build(
+			Position.X,
+			Position.Y,
+			Position.Z,
+			Rotation.X,
+			Rotation.Y,
+			Rotation.Z,
+			Scale.X,
+			Scale.Y,
+			Scale.Z);
+		return __localMatrix;
+	};
+
+	/// @func get_world_matrix()
+	///
+	/// @desc Retrieves the model scene-node world transform matrix.
+	///
+	/// @return {Array<Real>} The world transform matrix.
+	static get_world_matrix = function ()
+	{
+		if (TransformDirty)
+		{
+			if (Parent == undefined)
+			{
+				__worldMatrix = get_local_matrix();
+			}
+			else
+			{
+				__worldMatrix = matrix_multiply(get_local_matrix(), Parent.get_world_matrix());
+			}
+			TransformDirty = false;
+		}
+		return __worldMatrix;
+	};
+
+	/// @func update(_deltaTime)
+	///
+	/// @desc Updates model-owned scene systems, including the optional
+	/// {@link AnimationPlayer} when {@link AutoUpdateAnimation} is enabled.
+	///
+	/// @param {Real} _deltaTime How much time has passed since the last frame.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static update = function (_deltaTime)
+	{
+		if (AutoUpdateAnimation && AnimationPlayer != undefined)
+		{
+			AnimationPlayer.update(_deltaTime);
+		}
+		return self;
+	};
+
 	/// @func copy(_dest)
 	///
 	/// @desc Copies model data into another model.
@@ -130,7 +446,7 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 
 		for (var i = array_length(_dest.Meshes) - 1; i >= 0; --i)
 		{
-			_dest.Meshes[i].destroy();
+			_dest.Meshes[i].free();
 		}
 
 		var _meshCount = array_length(Meshes);
@@ -147,13 +463,15 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 
 		if (_dest.RootNode)
 		{
-			_dest.RootNode.destroy();
+			_dest.__destroy_model_node_tree(_dest.RootNode);
 		}
+		_dest.Children = [];
 
 		if (RootNode)
 		{
 			_dest.RootNode = RootNode.clone();
 			_dest.__pass_self_to_nodes();
+			_dest.__attach_root_node();
 		}
 		else
 		{
@@ -166,8 +484,106 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		_dest.MaterialNames = bbmod_array_clone(MaterialNames);
 		_dest.Materials = bbmod_array_clone(Materials);
 		_dest.Frozen = Frozen;
+		_dest.IsModelInstance = IsModelInstance;
+		_dest.AnimationPlayer = undefined;
+		_dest.AutoUpdateAnimation = AutoUpdateAnimation;
+		_dest.__nodeArray = undefined;
+		_dest.__cacheData = undefined;
+		_dest.__animationKind = -1;
 
 		return self;
+	};
+
+	/// @func copy_instance(_dest)
+	///
+	/// @desc Copies model instance data into another model while sharing mesh
+	/// references. The destination receives cloned model nodes, material arrays,
+	/// draw caches, and animation state placeholders, but runtime attachments are
+	/// not cloned.
+	///
+	/// @param {Struct.BBMOD_Model} _dest The model instance to copy data to.
+	///
+	/// @return {Struct.BBMOD_Model} Returns `self`.
+	static copy_instance = function (_dest)
+	{
+		_dest.IsLoaded = IsLoaded;
+		_dest.Path = Path;
+
+		_dest.VersionMajor = VersionMajor;
+		_dest.VersionMinor = VersionMinor;
+		_dest.VertexFormat = VertexFormat;
+
+		for (var i = array_length(_dest.Meshes) - 1; i >= 0; --i)
+		{
+			_dest.Meshes[i].free();
+		}
+
+		var _meshCount = array_length(Meshes);
+		_dest.Meshes = array_create(_meshCount);
+
+		for (var i = 0; i < _meshCount; ++i)
+		{
+			_dest.Meshes[@ i] = Meshes[i].ref();
+		}
+
+		_dest.NodeCount = NodeCount;
+
+		if (_dest.RootNode)
+		{
+			_dest.__destroy_model_node_tree(_dest.RootNode);
+		}
+		_dest.Children = [];
+
+		if (RootNode)
+		{
+			_dest.RootNode = RootNode.clone();
+			_dest.__pass_self_to_nodes();
+			_dest.__attach_root_node();
+		}
+		else
+		{
+			_dest.RootNode = undefined;
+		}
+
+		_dest.BoneCount = BoneCount;
+		_dest.__offsetArray = bbmod_array_clone(__offsetArray);
+		_dest.MaterialCount = MaterialCount;
+		_dest.MaterialNames = bbmod_array_clone(MaterialNames);
+		_dest.Materials = bbmod_array_clone(Materials);
+		_dest.Frozen = Frozen;
+		_dest.IsModelInstance = true;
+		_dest.AnimationPlayer = undefined;
+		_dest.AutoUpdateAnimation = AutoUpdateAnimation;
+		_dest.__nodeArray = undefined;
+		_dest.__cacheData = undefined;
+		_dest.__animationKind = -1;
+
+		return self;
+	};
+
+	/// @func make_instance()
+	///
+	/// @desc Creates a scene-ready model instance that shares mesh vertex buffers
+	/// with this model, but owns its own model-node hierarchy, materials, draw
+	/// caches, transforms, and animation player reference.
+	///
+	/// @example
+	/// ```gml
+	/// var _character = modCharacter.make_instance();
+	/// var _weaponSocket = _character.find_node("Hand.R");
+	/// _weaponSocket.add_child(weaponNode);
+	/// bbmod_scene_get_current().add_node(_character);
+	/// ```
+	///
+	/// @return {Struct.BBMOD_Model} The created model instance.
+	///
+	/// @see BBMOD_Model.copy_instance
+	/// @see BBMOD_AnimationPlayer.ApplyToModelNodes
+	static make_instance = function ()
+	{
+		var _instance = new BBMOD_Model();
+		copy_instance(_instance);
+		return _instance;
 	};
 
 	/// @func clone()
@@ -195,7 +611,11 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		_node.Model = self;
 		for (var i = array_length(_node.Children) - 1; i >= 0; --i)
 		{
-			__pass_self_to_nodes(_node.Children[i]);
+			var _child = _node.Children[i];
+			if (_child.SceneNodeKind == BBMOD_ESceneNodeType.ModelNode)
+			{
+				__pass_self_to_nodes(_child);
+			}
 		}
 		return self;
 	};
@@ -264,7 +684,9 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 
 		// Node count and root node
 		NodeCount = buffer_read(_buffer, buffer_u32);
+		Children = [];
 		RootNode = new BBMOD_Node(self).from_buffer(_buffer);
+		__attach_root_node();
 
 		// Bone offsets
 		BoneCount = buffer_read(_buffer, buffer_u32);
@@ -427,10 +849,14 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		var i = 0;
 		repeat(array_length(_children))
 		{
-			var _found = find_node(_idOrName, _children[i++]);
-			if (_found != undefined)
+			var _child = _children[i++];
+			if (_node.is_model_child(_child))
 			{
-				return _found;
+				var _found = find_node(_idOrName, _child);
+				if (_found != undefined)
+				{
+					return _found;
+				}
 			}
 		}
 		return undefined;
@@ -580,7 +1006,11 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		var i = 0;
 		repeat(array_length(_children))
 		{
-			__get_node_array_impl(_children[i++]);
+			var _child = _children[i++];
+			if (_node.is_model_child(_child))
+			{
+				__get_node_array_impl(_child);
+			}
 		}
 	};
 
@@ -660,7 +1090,11 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 			i = 0;
 			repeat(array_length(_children))
 			{
-				ds_stack_push(_renderStack, _children[i++], _nodeMatrix);
+				var _child = _children[i++];
+				if (_node.is_model_child(_child))
+				{
+					ds_stack_push(_renderStack, _child, _nodeMatrix);
+				}
 			}
 		}
 
@@ -756,6 +1190,12 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		// _dest[@ 15] = 1.0;
 	};
 
+	static __get_render_matrix = function ()
+	{
+		gml_pragma("forceinline");
+		return (Scene != undefined) ? get_world_matrix() : matrix_get(matrix_world);
+	};
+
 	/// @func submit([_materials[, _transform[, _batchData]]])
 	///
 	/// @desc Immediately submits the model for rendering.
@@ -805,10 +1245,17 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		__build_draw_cache();
 
 		var _cacheData = __cacheData;
+		if (_transform == undefined
+			&& AnimationPlayer != undefined
+			&& AnimationPlayer.ApplyToModelNodes
+			&& __animationKind != 0)
+		{
+			_transform = AnimationPlayer.get_transform();
+		}
 
 		if (_transform == undefined)
 		{
-			var _matrix = matrix_get(matrix_world);
+			var _matrix = __get_render_matrix();
 
 			var i = 0;
 			repeat(_cacheData[i++])
@@ -830,7 +1277,7 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		}
 		else if (__animationKind == 0)
 		{
-			var _matrix = matrix_get(matrix_world);
+			var _matrix = __get_render_matrix();
 
 			var i = 0;
 			repeat(_cacheData[i++])
@@ -869,7 +1316,10 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		}
 		else
 		{
+			var _matrix = matrix_get(matrix_world);
+			matrix_set(matrix_world, __get_render_matrix());
 			RootNode.submit(_materials, _transform, _batchData);
+			matrix_set(matrix_world, _matrix);
 		}
 
 		return self;
@@ -910,11 +1360,18 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 		}
 
 		_materials ??= Materials;
-		_matrix ??= matrix_get(matrix_world);
+		_matrix ??= __get_render_matrix();
 
 		__build_draw_cache();
 
 		var _cacheData = __cacheData;
+		if (_transform == undefined
+			&& AnimationPlayer != undefined
+			&& AnimationPlayer.ApplyToModelNodes
+			&& __animationKind != 0)
+		{
+			_transform = AnimationPlayer.get_transform();
+		}
 
 		if (_transform == undefined)
 		{
@@ -1014,18 +1471,30 @@ function BBMOD_Model(_file = undefined, _sha1 = undefined): BBMOD_Resource() con
 
 	static destroy = function ()
 	{
+		if (Scene != undefined)
+		{
+			Scene.remove_node(self);
+		}
+
 		Resource_destroy();
 		var i = 0;
 		repeat(is_array(Meshes) ? array_length(Meshes) : 0)
 		{
 			if (Meshes[i] != undefined)
 			{
-				Meshes[i].destroy();
+				Meshes[i].free();
 			}
 			++i;
 		}
 		Meshes = undefined;
+		if (RootNode != undefined)
+		{
+			__destroy_model_node_tree(RootNode);
+		}
 		RootNode = undefined;
+		Children = undefined;
+		Parent = undefined;
+		AnimationPlayer = undefined;
 		__nodeArray = undefined;
 		__cacheData = undefined;
 		return undefined;

@@ -4,7 +4,7 @@
 ///
 /// @extends BBMOD_PostProcessEffect
 ///
-/// @desc Draws all lens flares added with {@link bbmod_lens_flare_add}.
+/// @desc Draws all lens flare nodes in the current scene.
 ///
 /// @see BBMOD_LensFlare
 function BBMOD_LensFlaresEffect(): BBMOD_PostProcessEffect() constructor
@@ -19,7 +19,7 @@ function BBMOD_LensFlaresEffect(): BBMOD_PostProcessEffect() constructor
 		draw_surface(_surfaceSrc, 0, 0);
 		gpu_push_state();
 		gpu_set_blendenable(true);
-		var _lensFlares = global.__bbmodLensFlares;
+		var _lensFlares = bbmod_scene_get_current().LensFlares;
 		for (var i = array_length(_lensFlares) - 1; i >= 0; --i)
 		{
 			_lensFlares[i].draw(PostProcessor, _depth);

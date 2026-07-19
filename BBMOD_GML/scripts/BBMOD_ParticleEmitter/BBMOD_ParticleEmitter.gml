@@ -1,5 +1,34 @@
 /// @module Particles
 
+/// @func __bbmod_editor_emitter_add(_emitter)
+///
+/// @desc Adds a particle emitter to the current scene.
+///
+/// @param {Struct.BBMOD_ParticleEmitter} _emitter The emitter to add.
+///
+/// @private
+function __bbmod_editor_emitter_add(_emitter)
+{
+	gml_pragma("forceinline");
+	bbmod_scene_get_current().add_node(_emitter);
+}
+
+/// @func __bbmod_editor_emitter_remove(_emitter)
+///
+/// @desc Removes a particle emitter from its scene.
+///
+/// @param {Struct.BBMOD_ParticleEmitter} _emitter The emitter to remove.
+///
+/// @private
+function __bbmod_editor_emitter_remove(_emitter)
+{
+	gml_pragma("forceinline");
+	if (_emitter.Scene != undefined)
+	{
+		_emitter.Scene.remove_node(_emitter);
+	}
+}
+
 /// @func BBMOD_ParticleEmitter(_position, _system)
 ///
 /// @implements {BBMOD_IDestructible}
@@ -12,10 +41,20 @@
 /// defines behavior of emitted particles.
 ///
 /// @see BBBMOD_ParticleSystem
-function BBMOD_ParticleEmitter(_position, _system) constructor
+function BBMOD_ParticleEmitter(
+	_position,
+	_system
+): BBMOD_SceneNode(
+	BBMOD_ESceneNodeType.ParticleEmitter,
+	BBMOD_EEditorFlag.Translate
+) constructor
 {
+	static SceneNode_destroy = destroy;
+
 	/// @var {Struct.BBMOD_Vec3} The emitter's position in world-space.
 	Position = _position;
+
+	__bbmod_editor_emitter_add(self);
 
 	/// @var {Struct.BBMOD_ParticleSystem} The system of particles that this
 	/// emitter emits.
@@ -551,6 +590,9 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 	static destroy = function ()
 	{
+		SceneNode_destroy();
+
+		__bbmod_editor_emitter_remove(self);
 		ds_grid_destroy(Particles);
 		ds_grid_destroy(GridCompute);
 		ds_grid_destroy(__sortGrid);

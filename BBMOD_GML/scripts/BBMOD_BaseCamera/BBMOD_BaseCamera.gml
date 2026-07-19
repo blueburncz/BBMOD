@@ -30,8 +30,10 @@ global.__bbmodCameraAspectFlip = -1.0;
 ///
 /// @desc A camera with support for both orthographic and perspective
 /// projection.
-function BBMOD_BaseCamera() constructor
+function BBMOD_BaseCamera(): BBMOD_SceneNode(BBMOD_ESceneNodeType.Camera) constructor
 {
+	static SceneNode_destroy = destroy;
+
 	static __isBrowser = bbmod_is_browser();
 
 	/// @var {camera} An underlying GameMaker camera.
@@ -157,12 +159,14 @@ function BBMOD_BaseCamera() constructor
 		{
 			var _width = (Width != undefined) ? Width : (Height * AspectRatio);
 			var _height = (Height != undefined) ? Height : (Width / AspectRatio);
-			_proj = matrix_build_projection_ortho(_width, _height * global.__bbmodCameraAspectFlip, ZNear, ZFar);
+			_proj = matrix_build_projection_ortho(_width, _height * global.__bbmodCameraAspectFlip, ZNear,
+				ZFar);
 		}
 		else
 		{
 			_proj = matrix_build_projection_perspective_fov(
-				Fov * global.__bbmodCameraFovFlip, AspectRatio * global.__bbmodCameraAspectFlip, ZNear, ZFar);
+				Fov * global.__bbmodCameraFovFlip, AspectRatio * global.__bbmodCameraAspectFlip, ZNear, ZFar
+			);
 		}
 		return _proj;
 	};
@@ -443,6 +447,7 @@ function BBMOD_BaseCamera() constructor
 	static apply = function ()
 	{
 		gml_pragma("forceinline");
+		bbmod_scene_get_current().CameraCurrent = self;
 		global.__bbmodCameraCurrent = self;
 		camera_apply(Raw);
 		bbmod_camera_set_position(Position.Clone());
@@ -453,10 +458,15 @@ function BBMOD_BaseCamera() constructor
 
 	static destroy = function ()
 	{
+		SceneNode_destroy();
 		camera_destroy(Raw);
 		if (global.__bbmodCameraCurrent == self)
 		{
 			global.__bbmodCameraCurrent = undefined;
+		}
+		if (Scene != undefined && Scene.CameraCurrent == self)
+		{
+			Scene.CameraCurrent = undefined;
 		}
 		return undefined;
 	};

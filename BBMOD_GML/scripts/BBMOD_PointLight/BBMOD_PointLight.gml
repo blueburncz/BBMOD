@@ -14,6 +14,11 @@
 function BBMOD_PointLight(_color = BBMOD_C_WHITE, _position = undefined, _range = 1.0): BBMOD_PunctualLight(_color,
 	_position, _range) constructor
 {
+	SceneNodeKind = BBMOD_ESceneNodeType.PointLight;
+	EditorFlags = BBMOD_EEditorFlag.Translate
+		| BBMOD_EEditorFlag.Scale
+		| BBMOD_EEditorFlag.RefreshReflectionProbes;
+
 	__getShadowmapMatrix = __get_shadowmap_matrix;
 
 	static __get_shadowmap_matrix = function ()

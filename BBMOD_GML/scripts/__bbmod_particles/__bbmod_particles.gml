@@ -134,6 +134,7 @@ function __bbmod_model_particle()
 		_model.Meshes = [_mesh];
 		_model.NodeCount = 1;
 		_model.RootNode = _node;
+		_model.add_child(_node);
 		_model.MaterialCount = 1;
 		_model.MaterialNames = ["Material"];
 		_model.Materials = [BBMOD_MATERIAL_PARTICLE_UNLIT];

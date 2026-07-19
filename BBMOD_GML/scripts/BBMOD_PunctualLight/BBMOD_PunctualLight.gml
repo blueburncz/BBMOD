@@ -2,10 +2,6 @@
 
 /// @var {Array<Struct.BBMOD_PunctualLight>}
 /// @private
-global.__bbmodPunctualLights = [];
-
-/// @var {Array<Struct.BBMOD_PunctualLight>}
-/// @private
 global.__bbmodPunctualLightsRenderer = undefined;
 
 /// @func BBMOD_PunctualLight([_color[, _position[, _range]]])
@@ -77,7 +73,7 @@ function BBMOD_PunctualLight(_color = BBMOD_C_WHITE, _position = undefined, _ran
 function bbmod_light_punctual_add(_light)
 {
 	gml_pragma("forceinline");
-	array_push(global.__bbmodPunctualLights, _light);
+	bbmod_scene_get_current().add_punctual_light(_light);
 }
 
 /// @func bbmod_light_punctual_count()
@@ -94,7 +90,7 @@ function bbmod_light_punctual_add(_light)
 function bbmod_light_punctual_count()
 {
 	gml_pragma("forceinline");
-	return array_length(global.__bbmodPunctualLights);
+	return bbmod_scene_get_current().get_punctual_light_count();
 }
 
 /// @func bbmod_light_punctual_get(_index)
@@ -113,7 +109,7 @@ function bbmod_light_punctual_count()
 function bbmod_light_punctual_get(_index)
 {
 	gml_pragma("forceinline");
-	return global.__bbmodPunctualLights[_index];
+	return bbmod_scene_get_current().get_punctual_light(_index);
 }
 
 /// @func bbmod_light_punctual_remove(_light)
@@ -133,18 +129,7 @@ function bbmod_light_punctual_get(_index)
 function bbmod_light_punctual_remove(_light)
 {
 	gml_pragma("forceinline");
-	var _punctualLights = global.__bbmodPunctualLights;
-	var i = 0;
-	repeat(array_length(_punctualLights))
-	{
-		if (_punctualLights[i] == _light)
-		{
-			array_delete(_punctualLights, i, 1);
-			return true;
-		}
-		++i;
-	}
-	return false;
+	return bbmod_scene_get_current().remove_punctual_light(_light);
 }
 
 /// @func bbmod_light_punctual_remove_index(_index)
@@ -163,7 +148,7 @@ function bbmod_light_punctual_remove(_light)
 function bbmod_light_punctual_remove_index(_index)
 {
 	gml_pragma("forceinline");
-	array_delete(global.__bbmodPunctualLights, _index, 1);
+	bbmod_scene_get_current().remove_punctual_light_index(_index);
 	return true;
 }
 
@@ -179,5 +164,5 @@ function bbmod_light_punctual_remove_index(_index)
 function bbmod_light_punctual_clear()
 {
 	gml_pragma("forceinline");
-	global.__bbmodPunctualLights = [];
+	bbmod_scene_get_current().clear_punctual_lights();
 }

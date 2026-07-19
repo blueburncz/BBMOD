@@ -4,6 +4,35 @@
 /// @private
 #macro __BBMOD_SAVE_TERRAIN_VERSION 0
 
+/// @func __bbmod_editor_terrain_add(_terrain)
+///
+/// @desc Adds a terrain to the current scene.
+///
+/// @param {Struct.BBMOD_Terrain} _terrain The terrain to add.
+///
+/// @private
+function __bbmod_editor_terrain_add(_terrain)
+{
+	gml_pragma("forceinline");
+	bbmod_scene_get_current().add_node(_terrain);
+}
+
+/// @func __bbmod_editor_terrain_remove(_terrain)
+///
+/// @desc Removes a terrain from its scene.
+///
+/// @param {Struct.BBMOD_Terrain} _terrain The terrain to remove.
+///
+/// @private
+function __bbmod_editor_terrain_remove(_terrain)
+{
+	gml_pragma("forceinline");
+	if (_terrain.Scene != undefined)
+	{
+		_terrain.Scene.remove_node(_terrain);
+	}
+}
+
 /// @func BBMOD_TerrainInfo()
 ///
 /// @desc Configuration struct for initializing a {@link BBMOD_Terrain}.
@@ -106,8 +135,15 @@ function BBMOD_TerrainInfo() constructor
 ///
 /// @param {Struct.BBMOD_TerrainInfo} [_info] Properties to initialize the
 /// terrain with.
-function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
+function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()): BBMOD_SceneNode(
+	BBMOD_ESceneNodeType.Terrain,
+	BBMOD_EEditorFlag.Translate
+	| BBMOD_EEditorFlag.Scale
+	| BBMOD_EEditorFlag.RefreshReflectionProbes
+) constructor
 {
+	static SceneNode_destroy = destroy;
+
 	////////////////////////////////////////////////////////////////////////////
 	// Legacy arguments
 
@@ -127,6 +163,9 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 	var _chunkSize = (argument_count > 2) ? argument[2] : _info.ChunkSize;
 
 	////////////////////////////////////////////////////////////////////////////
+
+	EditorIconFadeStart = infinity;
+	EditorIconFadeEnd = infinity;
 
 	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
 	/// @readonly
@@ -170,6 +209,8 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 
 	/// @var {Struct.BBMOD_Vec3} The scale of the terrain.
 	Scale = new BBMOD_Vec3(_info.Scale.X, _info.Scale.Y, _info.Scale.Z);
+
+	__bbmod_editor_terrain_add(self);
 
 	/// @var {Id.DsGrid} __height of individual vertices (on the z axis).
 	/// @private
@@ -443,8 +484,7 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 			}
 		}
 
-		return
-		{
+		return {
 			Enabled: EnableBuildProfiler,
 			ChunkCount: _count,
 			LastChunkI: __buildProfilerLastChunkI,
@@ -638,8 +678,7 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 		var _invTerrainWidth = 1.0 / _terrainWidth;
 		var _invTerrainHeight = 1.0 / _terrainHeight;
 
-		__lazyBuildChunkJob =
-		{
+		__lazyBuildChunkJob = {
 			ChunkI: _chunkI,
 			ChunkJ: _chunkJ,
 			ChunkIStart: _chunkIStart,
@@ -717,8 +756,10 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 
 					for (var _jChunk = _job.NormalsFromY; _jChunk <= _job.NormalsToY; ++_jChunk)
 					{
-						var _nx = get_height_index(_iChunk - 1, _jChunk) - get_height_index(_iChunk + 1, _jChunk);
-						var _ny = get_height_index(_iChunk, _jChunk - 1) - get_height_index(_iChunk, _jChunk + 1);
+						var _nx = get_height_index(_iChunk - 1, _jChunk) - get_height_index(_iChunk + 1,
+							_jChunk);
+						var _ny = get_height_index(_iChunk, _jChunk - 1) - get_height_index(_iChunk, _jChunk
+							+ 1);
 						var _nz = 2.0;
 						var _r = sqrt(_nx * _nx + _ny * _ny + _nz * _nz);
 						_nx /= _r;
@@ -753,9 +794,12 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 
 					for (var _yChunk = _job.ChunkMinY; _yChunk <= _job.ChunkMaxY; ++_yChunk)
 					{
-						var _nx = ds_grid_get_mean(__normalX, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk + 1);
-						var _ny = ds_grid_get_mean(__normalY, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk + 1);
-						var _nz = ds_grid_get_mean(__normalZ, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk + 1);
+						var _nx = ds_grid_get_mean(__normalX, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk
+							+ 1);
+						var _ny = ds_grid_get_mean(__normalY, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk
+							+ 1);
+						var _nz = ds_grid_get_mean(__normalZ, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk
+							+ 1);
 						var _r = sqrt(_nx * _nx + _ny * _ny + _nz * _nz);
 						_nx /= _r;
 						_ny /= _r;
@@ -1664,7 +1708,8 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 		for (var i = 0; i < 4; ++i)
 		{
 			shader_set(BBMOD_ShExtractSplatmapLayer);
-			texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP), Splatmap);
+			texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP),
+				Splatmap);
 			shader_set_uniform_i(shader_get_uniform(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP_INDEX), i);
 
 			surface_set_target(_surface);
@@ -2183,7 +2228,8 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 		{
 			var _iStr = string(i);
 			_uSplatmapIndex[@ i] = shader_get_uniform(_shaderRaw, BBMOD_U_SPLATMAP_INDEX + _iStr);
-			_uTerrainBaseOpacity[@ i] = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_BASE_OPACITY + _iStr);
+			_uTerrainBaseOpacity[@ i] = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_BASE_OPACITY
+				+ _iStr);
 			_uTerrainNormalW[@ i] = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_NORMAL_W + _iStr);
 			_uTerrainIsRoughness[@ i] = shader_get_uniform(_shaderRaw, BBMOD_U_TERRAIN_IS_ROUGHNESS + _iStr);
 		}
@@ -2315,6 +2361,10 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 
 	static destroy = function ()
 	{
+		SceneNode_destroy();
+
+		__bbmod_editor_terrain_remove(self);
+
 		__lazy_build_cancel_job();
 
 		ds_grid_destroy(__splatmapGrid);

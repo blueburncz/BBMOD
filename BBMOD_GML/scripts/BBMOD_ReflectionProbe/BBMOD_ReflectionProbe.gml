@@ -1,9 +1,5 @@
 /// @module Core
 
-/// @var {Array<Struct.BBMOD_ReflectionProbe>}
-/// @private
-global.__bbmodReflectionProbes = [];
-
 /// @var {Pointer.Texture}
 /// @private
 global.__bbmodReflectionProbeTexture = (-1 /*pointer_null*/ );
@@ -68,8 +64,17 @@ global.__bbmodReflectionProbeTexture = (-1 /*pointer_null*/ );
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) constructor
+function BBMOD_ReflectionProbe(
+	_position = undefined,
+	_sprite = undefined
+): BBMOD_SceneNode(
+	BBMOD_ESceneNodeType.ReflectionProbe,
+	BBMOD_EEditorFlag.Translate
+	| BBMOD_EEditorFlag.Scale
+) constructor
 {
+	static SceneNode_destroy = destroy;
+
 	/// @var {Bool} If `false` then the probe is disabled and unused. Default
 	/// value is `true`.
 	Enabled = true;
@@ -172,6 +177,8 @@ function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) const
 
 	static destroy = function ()
 	{
+		SceneNode_destroy();
+
 		if (Sprite != undefined)
 		{
 			sprite_delete(Sprite);
@@ -196,7 +203,7 @@ function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) const
 function bbmod_reflection_probe_add(_reflectionProbe)
 {
 	gml_pragma("forceinline");
-	array_push(global.__bbmodReflectionProbes, _reflectionProbe);
+	bbmod_scene_get_current().add_reflection_probe(_reflectionProbe);
 }
 
 /// @func bbmod_reflection_probe_count()
@@ -214,7 +221,7 @@ function bbmod_reflection_probe_add(_reflectionProbe)
 function bbmod_reflection_probe_count()
 {
 	gml_pragma("forceinline");
-	return array_length(global.__bbmodReflectionProbes);
+	return bbmod_scene_get_current().get_reflection_probe_count();
 }
 
 /// @func bbmod_reflection_probe_get(_index)
@@ -234,7 +241,7 @@ function bbmod_reflection_probe_count()
 function bbmod_reflection_probe_get(_index)
 {
 	gml_pragma("forceinline");
-	return global.__bbmodReflectionProbes[_index];
+	return bbmod_scene_get_current().get_reflection_probe(_index);
 }
 
 /// @func bbmod_reflection_probe_find(_position)
@@ -256,46 +263,8 @@ function bbmod_reflection_probe_get(_index)
 /// @see bbmod_reflection_probe_clear
 function bbmod_reflection_probe_find(_position)
 {
-	// TODO: Use spatial index for reflection probes
 	gml_pragma("forceinline");
-	var _reflectionProbes = global.__bbmodReflectionProbes;
-	var _probe = undefined;
-	var _probeVolume = infinity;
-	var i = 0;
-	repeat(array_length(_reflectionProbes))
-	{
-		with(_reflectionProbes[i++])
-		{
-			if (!Enabled)
-			{
-				continue;
-			}
-			if (Infinite)
-			{
-				return self;
-			}
-			var _min = Position.Sub(Size);
-			if (_position.X < _min.X
-				|| _position.Y < _min.Y
-				|| _position.Z < _min.Z)
-			{
-				continue;
-			}
-			var _max = Position.Add(Size);
-			if (_position.X > _max.X
-				|| _position.Y > _max.Y
-				|| _position.Z > _max.Z)
-			{
-				continue;
-			}
-			if (__volume < _probeVolume)
-			{
-				_probe = self;
-				_probeVolume = __volume;
-			}
-		}
-	}
-	return _probe;
+	return bbmod_scene_get_current().find_reflection_probe(_position);
 }
 
 /// @func bbmod_reflection_probe_remove(_reflectionProbe)
@@ -315,18 +284,7 @@ function bbmod_reflection_probe_find(_position)
 function bbmod_reflection_probe_remove(_reflectionProbe)
 {
 	gml_pragma("forceinline");
-	var _reflectionProbes = global.__bbmodReflectionProbes;
-	var i = 0;
-	repeat(array_length(_reflectionProbes))
-	{
-		if (_reflectionProbes[i] == _reflectionProbe)
-		{
-			array_delete(_reflectionProbes, i, 1);
-			return true;
-		}
-		++i;
-	}
-	return false;
+	return bbmod_scene_get_current().remove_reflection_probe(_reflectionProbe);
 }
 
 /// @func bbmod_reflection_probe_remove_index(_index)
@@ -346,7 +304,7 @@ function bbmod_reflection_probe_remove(_reflectionProbe)
 function bbmod_reflection_probe_remove_index(_index)
 {
 	gml_pragma("forceinline");
-	array_delete(global.__bbmodReflectionProbes, _index, 1);
+	bbmod_scene_get_current().remove_reflection_probe_index(_index);
 	return true;
 }
 
@@ -363,5 +321,5 @@ function bbmod_reflection_probe_remove_index(_index)
 function bbmod_reflection_probe_clear()
 {
 	gml_pragma("forceinline");
-	global.__bbmodReflectionProbes = [];
+	bbmod_scene_get_current().clear_reflection_probes();
 }

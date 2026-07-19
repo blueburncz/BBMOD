@@ -2,12 +2,12 @@
 
 /// @func BBMOD_Resource()
 ///
-/// @implements {BBMOD_IDestructible}
+/// @extends BBMOD_ReferenceCounted
 ///
 /// @desc Base struct for all BBMOD resources.
 ///
 /// @see BBMOD_ResourceManager
-function BBMOD_Resource() constructor
+function BBMOD_Resource(): BBMOD_ReferenceCounted() constructor
 {
 	/// @var {Bool} If `false` then the resource has not been loaded yet.
 	/// @readonly
@@ -32,11 +32,6 @@ function BBMOD_Resource() constructor
 	/// @var {String} Key under which is this resource stored in manager map.
 	/// @private
 	__resourceId = undefined;
-
-	/// @var {Real} Number of resource "lives". If it reaches 0, the resource is
-	/// destroyed.
-	/// @private
-	__counter = 1;
 
 	/// @func from_buffer(_buffer)
 	///

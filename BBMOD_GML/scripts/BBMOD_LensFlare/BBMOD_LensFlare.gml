@@ -1,9 +1,5 @@
 /// @module PostProcessing
 
-/// @var {Array<Struct.BBMOD_LensFlare>}
-/// @private
-global.__bbmodLensFlares = [];
-
 /// @func BBMOD_LensFlare([_tint[, _position[, _range[, _falloff[, _depthThreshold[, _direction[, _angleInner[, _angleOuter]]]]]]]])
 ///
 /// @desc A collection of {@link BBMOD_LensFlareElement}s that together define a
@@ -11,12 +7,13 @@ global.__bbmodLensFlares = [];
 ///
 /// @param {Struct.BBMOD_Color, Undefined} [_tint] The color to multiply lens
 /// flare elements' color by. Defaults to {@link BBMOD_C_WHITE} if `undefined`.
-/// @param {Struct.BBMOD_Vec3, Undefined} [_position] The position in the world
-/// or `undefined`, in which case the property {@link BBMOD_LensFlare.Direction}
-/// is used instead. Defaults to `undefined`.
+/// @param {Struct.BBMOD_Vec3, Undefined} [_position] The initial local
+/// position. When supplied, {@link BBMOD_LensFlare.UsePosition} is enabled;
+/// otherwise {@link BBMOD_LensFlare.DirectionalLight} or
+/// {@link BBMOD_LensFlare.Direction} defines a directional flare.
 /// @param {Real} [_range] The maximum distance at which is the lens flare
-/// visible. Used only in case {@link BBMOD_LensFlare.Position} is not
-/// `undefined`. Defaults to `infinity`.
+/// visible. Used only when {@link BBMOD_LensFlare.UsePosition} is enabled.
+/// Defaults to `infinity`.
 /// @param {Real} [_falloff] A multiplier for {@link BBMOD_LensFlare.Range} used
 /// to compute the distance from the camera at which the lens flare starts
 /// fading away. Use values in range 0..1. Defaults to 0.8 (the lens flare
@@ -31,7 +28,6 @@ global.__bbmodLensFlares = [];
 /// @param {Real, Undefined} [_angleOuter] The outer cone angle in degrees (for
 /// lens flares produced by spot lights) or `undefined` (default).
 ///
-/// @see bbmod_lens_flare_add
 /// @see BBMOD_LensFlareElement
 /// @see BBMOD_LensFlareEffect
 function BBMOD_LensFlare(
@@ -43,22 +39,30 @@ function BBMOD_LensFlare(
 	_direction = undefined,
 	_angleInner = undefined,
 	_angleOuter = undefined
+): BBMOD_SceneNode(
+	BBMOD_ESceneNodeType.LensFlare,
+	BBMOD_EEditorFlag.Translate | BBMOD_EEditorFlag.Rotate
 ) constructor
 {
+	static SceneNode_destroy = destroy;
+
 	/// @var {Struct.BBMOD_Color} The color to multiply lens flare elements'
 	/// color by. Default value is {@link BBMOD_C_WHITE}.
 	/// @see BBMOD_LensFlareElement.ApplyTint
 	Tint = _tint ?? BBMOD_C_WHITE;
 
-	/// @var {Struct.BBMOD_Vec3, Undefined} The position in the world or
-	/// `undefined`, in which case the property
-	/// {@link BBMOD_LensFlare.Direction} is used instead. Default value is
-	/// `undefined`.
-	Position = _position;
+	/// @var {Bool} Whether to use the scene node's world position as the flare
+	/// position. Defaults to `true` when `_position` is supplied.
+	UsePosition = (_position != undefined);
 
-	/// @var {Real} The maximum distance at which is the lens flare visible.
-	/// Used only in case {@link BBMOD_LensFlare.Position} is not `undefined`.
-	/// Default value is `infinity`.
+	if (_position != undefined)
+	{
+		Position = _position;
+	}
+
+	/// @var {Real} The maximum distance at which the lens flare is visible.
+	/// Used only when {@link BBMOD_LensFlare.UsePosition} is enabled. Default
+	/// value is `infinity`.
 	Range = _range;
 
 	/// @var {Real} A multiplier for {@link BBMOD_LensFlare.Range} used to
@@ -72,8 +76,14 @@ function BBMOD_LensFlare(
 	/// Default value is 1.
 	DepthThreshold = _depthThreshold;
 
-	/// @var {Struct.BBMOD_Vec3, Undefined} The source light's direction or
-	/// `undefined` (default).
+	/// @var {Struct.BBMOD_DirectionalLight, Undefined} The directional light to
+	/// follow or `undefined`. When defined, its `Direction` takes precedence
+	/// over {@link BBMOD_LensFlare.Direction}.
+	DirectionalLight = undefined;
+
+	/// @var {Struct.BBMOD_Vec3, Undefined} The manual source light direction or
+	/// `undefined` (default). This is used when `DirectionalLight` is
+	/// `undefined`.
 	Direction = _direction;
 
 	/// @var {Real, Undefined} The inner cone angle in degrees (for lens flares
@@ -217,12 +227,16 @@ function BBMOD_LensFlare(
 	/// @return {Struct.BBMOD_LensFlare} Returns `self`.
 	static draw = function (_postProcessor, _depth)
 	{
-		if (Position == undefined && Direction == undefined)
+		var _sourceDirection = (DirectionalLight != undefined)
+			? DirectionalLight.Direction
+			: Direction;
+
+		if (!UsePosition && _sourceDirection == undefined)
 		{
 			return self;
 		}
 
-		var _camera = global.__bbmodCameraCurrent;
+		var _camera = bbmod_scene_get_current().CameraCurrent ?? global.__bbmodCameraCurrent;
 		if (_camera == undefined)
 		{
 			return self;
@@ -232,8 +246,15 @@ function BBMOD_LensFlare(
 		var _rect = _postProcessor.Rect;
 		var _screenWidth = _rect.Width;
 		var _screenHeight = _rect.Height;
+		var _position = UsePosition
+			? new BBMOD_Vec3().TransformSelf(get_world_matrix())
+			: undefined;
 		var _screenPos = _camera.world_to_screen(
-			Position ?? new BBMOD_Vec4(-Direction.X, -Direction.Y, -Direction.Z, 0.0),
+			_position ?? new BBMOD_Vec4(
+				-_sourceDirection.X,
+				-_sourceDirection.Y,
+				-_sourceDirection.Z,
+				0.0),
 			_screenWidth, _screenHeight);
 
 		if (_screenPos == undefined
@@ -244,9 +265,9 @@ function BBMOD_LensFlare(
 		}
 
 		var _strength = 1.0;
-		if (Position != undefined)
+		if (_position != undefined)
 		{
-			var _vec = _camera.Position.Sub(Position);
+			var _vec = _camera.Position.Sub(_position);
 
 			if (Range != infinity)
 			{
@@ -254,14 +275,14 @@ function BBMOD_LensFlare(
 				_strength = 1.0 - clamp((_dist - (Range * Falloff)) / (Range * (1.0 - Falloff)), 0.0, 1.0);
 			}
 
-			if (Direction != undefined
+			if (_sourceDirection != undefined
 				&& AngleInner != undefined
 				&& AngleOuter != undefined)
 			{
 				var _dir = _vec.Normalize();
 				var _inner = dsin(AngleInner);
 				var _outer = dsin(AngleOuter);
-				var _dot = clamp(_dir.Dot(Direction.Normalize()), 0.0, 1.0);
+				var _dot = clamp(_dir.Dot(_sourceDirection.Normalize()), 0.0, 1.0);
 				_strength *= clamp((_dot - _inner) / (_outer - _inner), 0.0, 1.0);
 			}
 		}
@@ -290,7 +311,6 @@ function BBMOD_LensFlare(
 
 		gpu_push_state();
 		gpu_set_tex_repeat(true);
-
 		shader_set(BBMOD_ShLensFlare);
 		shader_set_uniform_f(__uLightPos, _x, _y, _z);
 		shader_set_uniform_f(__uInvRes, 1.0 / _screenWidth, 1.0 / _screenHeight);
@@ -301,13 +321,22 @@ function BBMOD_LensFlare(
 
 		texture_set_stage(__uStarburstTex, _postProcessor.Starburst);
 		var _starburstUVs = texture_get_uvs(_postProcessor.Starburst);
-		shader_set_uniform_f(__uStarburstUVs, _starburstUVs[0], _starburstUVs[1], _starburstUVs[2], _starburstUVs[
-			3]);
+		shader_set_uniform_f(
+			__uStarburstUVs,
+			_starburstUVs[0],
+			_starburstUVs[1],
+			_starburstUVs[2],
+			_starburstUVs[3]);
 		shader_set_uniform_f(__uStarburstRot, _camRot);
 
 		texture_set_stage(__uLensDirtTex, _postProcessor.LensDirt);
 		var _lensDirtUVs = texture_get_uvs(_postProcessor.LensDirt);
-		shader_set_uniform_f(__uLensDirtUVs, _lensDirtUVs[0], _lensDirtUVs[1], _lensDirtUVs[2], _lensDirtUVs[3]);
+		shader_set_uniform_f(
+			__uLensDirtUVs,
+			_lensDirtUVs[0],
+			_lensDirtUVs[1],
+			_lensDirtUVs[2],
+			_lensDirtUVs[3]);
 		shader_set_uniform_f(__uLensDirtStrength, _postProcessor.LensDirtStrength);
 
 		var _uColor = __uColor;
@@ -324,12 +353,16 @@ function BBMOD_LensFlare(
 				var _elementX = _x + _vecX * Offset.X * 2.0;
 				var _elementY = _y + _vecY * Offset.Y * 2.0;
 				var _elementDistance = point_distance(
-					_elementX / _screenWidth, _elementY / _screenHeight,
-					_x / _screenWidth, _y / _screenHeight);
-				var _elementScaleX = Scale.X * lerp(ScaleByDistanceMin.X, ScaleByDistanceMax.X,
-					_elementDistance) * _scale;
-				var _elementScaleY = Scale.Y * lerp(ScaleByDistanceMin.Y, ScaleByDistanceMax.Y,
-					_elementDistance) * _scale
+					_elementX / _screenWidth,
+					_elementY / _screenHeight,
+					_x / _screenWidth,
+					_y / _screenHeight);
+				var _elementScaleX = Scale.X
+					* lerp(ScaleByDistanceMin.X, ScaleByDistanceMax.X, _elementDistance)
+					* _scale;
+				var _elementScaleY = Scale.Y
+					* lerp(ScaleByDistanceMin.Y, ScaleByDistanceMax.Y, _elementDistance)
+					* _scale;
 				var _elementColorR = Color.Red / 255.0;
 				var _elementColorG = Color.Green / 255.0;
 				var _elementColorB = Color.Blue / 255.0;
@@ -344,7 +377,9 @@ function BBMOD_LensFlare(
 				}
 
 				shader_set_uniform_f(_uFadeOut, FadeOut ? 1.0 : 0.0);
-				shader_set_uniform_f(_uStarburstStrength, ApplyStarburst ? _starburstStrength : 0.0);
+				shader_set_uniform_f(
+					_uStarburstStrength,
+					ApplyStarburst ? _starburstStrength : 0.0);
 				shader_set_uniform_f(
 					_uColor,
 					_elementColorR,
@@ -352,11 +387,15 @@ function BBMOD_LensFlare(
 					_elementColorB,
 					_elementColorA);
 				draw_sprite_ext(
-					Sprite, Subimage,
-					_elementX, _elementY,
-					_elementScaleX, _elementScaleY,
+					Sprite,
+					Subimage,
+					_elementX,
+					_elementY,
+					_elementScaleX,
+					_elementScaleY,
 					Angle + _direction * (AngleRelative ? 1.0 : 0.0),
-					c_white, 1.0);
+					c_white,
+					1.0);
 			}
 		}
 
@@ -369,120 +408,100 @@ function BBMOD_LensFlare(
 
 /// @func bbmod_lens_flare_add(_lensFlare)
 ///
-/// @desc Adds a lens flare to be drawn with {@link BBMOD_LensFlaresEffect}.
+/// @desc Adds a lens flare to the current scene.
+/// @deprecated Use {@link BBMOD_Scene.add_node} instead.
 ///
-/// @param {Struct.BBMOD_LensFlare} _lensFlare The lens flare.
+/// @param {Struct.BBMOD_LensFlare} _lensFlare The lens flare to add.
 ///
-/// @see bbmod_lens_flare_add
-/// @see bbmod_lens_flare_count
-/// @see bbmod_lens_flare_get
-/// @see bbmod_lens_flare_remove
-/// @see bbmod_lens_flare_remove_index
-/// @see bbmod_lens_flare_clear
+/// @see BBMOD_Scene.add_node
 function bbmod_lens_flare_add(_lensFlare)
 {
 	gml_pragma("forceinline");
-	array_push(global.__bbmodLensFlares, _lensFlare);
+	bbmod_scene_get_current().add_node(_lensFlare);
 }
 
 /// @func bbmod_lens_flare_count()
 ///
-/// @desc Retrieves number of lens flares to be drawn.
+/// @desc Retrieves the number of lens flares in the current scene.
+/// @deprecated Use {@link BBMOD_Scene.LensFlares} instead.
 ///
-/// @return {Real} The number of lens flares to be drawn.
+/// @return {Real} The number of lens flares in the current scene.
 ///
-/// @see bbmod_lens_flare_add
-/// @see bbmod_lens_flare_get
-/// @see bbmod_lens_flare_remove
-/// @see bbmod_lens_flare_remove_index
-/// @see bbmod_lens_flare_clear
+/// @see BBMOD_Scene.LensFlares
 function bbmod_lens_flare_count()
 {
 	gml_pragma("forceinline");
-	return array_length(global.__bbmodLensFlares);
+	return array_length(bbmod_scene_get_current().LensFlares);
 }
 
 /// @func bbmod_lens_flare_get(_index)
 ///
-/// @desc Retrieves a lens flare at given index.
+/// @desc Retrieves a lens flare in the current scene at the given index.
+/// @deprecated Use {@link BBMOD_Scene.LensFlares} instead.
 ///
 /// @param {Real} _index The index of the lens flare.
 ///
 /// @return {Struct.BBMOD_LensFlare} The lens flare.
 ///
-/// @see bbmod_lens_flare_add
-/// @see bbmod_lens_flare_count
-/// @see bbmod_lens_flare_remove
-/// @see bbmod_lens_flare_remove_index
-/// @see bbmod_lens_flare_clear
+/// @see BBMOD_Scene.LensFlares
 function bbmod_lens_flare_get(_index)
 {
 	gml_pragma("forceinline");
-	return global.__bbmodLensFlares[_index];
+	return bbmod_scene_get_current().LensFlares[_index];
 }
 
 /// @func bbmod_lens_flare_remove(_lensFlare)
 ///
-/// @desc Removes a lens flare so it is not drawn anymore.
+/// @desc Removes a lens flare from the current scene without destroying it.
+/// @deprecated Use {@link BBMOD_Scene.remove_node} instead.
 ///
 /// @param {Struct.BBMOD_LensFlare} _lensFlare The lens flare to remove.
 ///
 /// @return {Bool} Returns `true` if the lens flare was removed or `false` if
-/// the lens flare was not found.
+/// the lens flare does not belong to the current scene.
 ///
-/// @see bbmod_lens_flare_add
-/// @see bbmod_lens_flare_count
-/// @see bbmod_lens_flare_get
-/// @see bbmod_lens_flare_remove_index
-/// @see bbmod_lens_flare_clear
+/// @see BBMOD_Scene.remove_node
 function bbmod_lens_flare_remove(_lensFlare)
 {
 	gml_pragma("forceinline");
-	var _lensFlares = global.__bbmodLensFlares;
-	var i = 0;
-	repeat(array_length(_lensFlares))
-	{
-		if (_lensFlares[i] == _lensFlare)
-		{
-			array_delete(_lensFlares, i, 1);
-			return true;
-		}
-		++i;
-	}
-	return false;
+	return bbmod_scene_get_current().remove_node(_lensFlare);
 }
 
 /// @func bbmod_lens_flare_remove_index(_index)
 ///
-/// @desc Removes a lens flare so it is not drawn anymore.
+/// @desc Removes a lens flare in the current scene at the given index without
+/// destroying it.
+/// @deprecated Use {@link BBMOD_Scene.remove_node} instead.
 ///
-/// @param {Real} _index The index to remove the lens flare at.
+/// @param {Real} _index The index of the lens flare to remove.
 ///
 /// @return {Bool} Always returns `true`.
 ///
-/// @see bbmod_lens_flare_add
-/// @see bbmod_lens_flare_count
-/// @see bbmod_lens_flare_get
-/// @see bbmod_lens_flare_remove
-/// @see bbmod_lens_flare_clear
+/// @see BBMOD_Scene.remove_node
 function bbmod_lens_flare_remove_index(_index)
 {
 	gml_pragma("forceinline");
-	array_delete(global.__bbmodLensFlares, _index, 1);
+	var _lensFlares = bbmod_scene_get_current().LensFlares;
+	if (_index < 0 || _index >= array_length(_lensFlares))
+	{
+		return true;
+	}
+	bbmod_scene_get_current().remove_node(_lensFlares[_index]);
 	return true;
 }
 
 /// @func bbmod_lens_flare_clear()
 ///
-/// @desc Removes all lens flares.
+/// @desc Removes all lens flares from the current scene without destroying them.
+/// @deprecated Use {@link BBMOD_Scene.remove_node} instead.
 ///
-/// @see bbmod_lens_flare_add
-/// @see bbmod_lens_flare_count
-/// @see bbmod_lens_flare_get
-/// @see bbmod_lens_flare_remove
-/// @see bbmod_lens_flare_remove_index
+/// @see BBMOD_Scene.remove_node
 function bbmod_lens_flare_clear()
 {
 	gml_pragma("forceinline");
-	global.__bbmodLensFlares = [];
+	var _scene = bbmod_scene_get_current();
+	while (array_length(_scene.LensFlares) > 0)
+	{
+		_scene.remove_node(_scene.LensFlares[array_length(_scene.LensFlares) - 1]);
+	}
 }

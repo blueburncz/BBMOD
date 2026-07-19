@@ -144,6 +144,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 		var _root = new BBMOD_Node(_model);
 		_root.Name = "Node0";
 		_model.RootNode = _root;
+		_model.add_child(_root);
 
 		var _meshBuilder = undefined;
 		var _split = array_create(2);
@@ -199,7 +200,7 @@ function BBMOD_OBJImporter(): BBMOD_Importer() constructor
 				case "o":
 				{
 					_node = new BBMOD_Node(_model);
-					_root.add_child(_node);
+					_root.add_model_child(_node);
 					_node.Index = array_length(_root.Children);
 					_node.Name = "Node" + string(_node.Index);
 					++_model.NodeCount;

@@ -1,21 +1,5 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_Vec3}
-/// @private
-global.__bbmodAmbientLightDirUp = BBMOD_VEC3_UP;
-
-/// @var {Struct.BBMOD_Color}
-/// @private
-global.__bbmodAmbientLightUp = BBMOD_C_WHITE;
-
-/// @var {Struct.BBMOD_Color}
-/// @private
-global.__bbmodAmbientLightDown = BBMOD_C_GRAY;
-
-/// @var {Bool}
-/// @private
-global.__bbmodAmbientAffectLightmap = true;
-
 /// @func bbmod_light_ambient_set_dir(_dir)
 ///
 /// @desc Defines the direction towards the ambient light's upper hemisphere.
@@ -27,7 +11,7 @@ global.__bbmodAmbientAffectLightmap = true;
 function bbmod_light_ambient_set_dir(_dir)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientLightDirUp = _dir;
+	bbmod_scene_get_current().AmbientLightDirection = _dir;
 }
 
 /// @func bbmod_light_ambient_get_dir()
@@ -41,7 +25,7 @@ function bbmod_light_ambient_set_dir(_dir)
 function bbmod_light_ambient_get_dir(_dir)
 {
 	gml_pragma("forceinline");
-	return global.__bbmodAmbientLightDirUp;
+	return bbmod_scene_get_current().AmbientLightDirection;
 }
 
 /// @func bbmod_light_ambient_set(_color)
@@ -59,8 +43,8 @@ function bbmod_light_ambient_get_dir(_dir)
 function bbmod_light_ambient_set(_color)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientLightUp = _color;
-	global.__bbmodAmbientLightDown = _color;
+	bbmod_light_ambient_set_up(_color);
+	bbmod_light_ambient_set_down(_color);
 }
 
 /// @func bbmod_light_ambient_get_up()
@@ -79,7 +63,7 @@ function bbmod_light_ambient_set(_color)
 function bbmod_light_ambient_get_up()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodAmbientLightUp;
+	return bbmod_scene_get_current().AmbientLightColorUp;
 }
 
 /// @func bbmod_light_ambient_set_up(_color)
@@ -98,7 +82,7 @@ function bbmod_light_ambient_get_up()
 function bbmod_light_ambient_set_up(_color)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientLightUp = _color;
+	bbmod_scene_get_current().AmbientLightColorUp = _color;
 }
 
 /// @func bbmod_light_ambient_get_down()
@@ -117,7 +101,7 @@ function bbmod_light_ambient_set_up(_color)
 function bbmod_light_ambient_get_down()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodAmbientLightDown;
+	return bbmod_scene_get_current().AmbientLightColorDown;
 }
 
 /// @func bbmod_light_ambient_set_down(_color)
@@ -136,7 +120,7 @@ function bbmod_light_ambient_get_down()
 function bbmod_light_ambient_set_down(_color)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientLightDown = _color;
+	bbmod_scene_get_current().AmbientLightColorDown = _color;
 }
 
 /// @func bbmod_light_ambient_get_affect_lightmaps()
@@ -149,7 +133,7 @@ function bbmod_light_ambient_set_down(_color)
 function bbmod_light_ambient_get_affect_lightmaps()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodAmbientAffectLightmap;
+	return bbmod_scene_get_current().AmbientLightAffectLightmaps;
 }
 
 /// @func bbmod_light_ambient_set_affect_lightmaps(_enable)
@@ -162,5 +146,5 @@ function bbmod_light_ambient_get_affect_lightmaps()
 function bbmod_light_ambient_set_affect_lightmaps(_enable)
 {
 	gml_pragma("forceinline");
-	global.__bbmodAmbientAffectLightmap = _enable;
+	bbmod_scene_get_current().AmbientLightAffectLightmaps = _enable;
 }

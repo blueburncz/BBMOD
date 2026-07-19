@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bbmod_editor_debug_geometry",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bbmod_editor_debug_geometry",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/BBMOD/Core/Debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

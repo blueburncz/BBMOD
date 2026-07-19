@@ -1,21 +1,5 @@
 /// @module Core
 
-/// @var {Struct.BBMOD_Color}
-/// @private
-global.__bbmodFogColor = BBMOD_C_WHITE;
-
-/// @var {Real}
-/// @private
-global.__bbmodFogIntensity = 0.0;
-
-/// @var {Real}
-/// @private
-global.__bbmodFogStart = 0.0;
-
-/// @var {Real}
-/// @private
-global.__bbmodFogEnd = 1.0;
-
 /// @func bbmod_fog_set(_color, _intensity, _start, _end)
 ///
 /// @desc Defines fog properties sent to shaders.
@@ -41,10 +25,13 @@ global.__bbmodFogEnd = 1.0;
 function bbmod_fog_set(_color, _intensity, _start, _end)
 {
 	gml_pragma("forceinline");
-	global.__bbmodFogColor = _color;
-	global.__bbmodFogIntensity = _intensity;
-	global.__bbmodFogStart = _start;
-	global.__bbmodFogEnd = _end;
+	with(bbmod_scene_get_current())
+	{
+		FogColor = _color;
+		FogIntensity = _intensity;
+		FogStart = _start;
+		FogEnd = _end;
+	}
 }
 
 /// @func bbmod_fog_get_color()
@@ -65,7 +52,7 @@ function bbmod_fog_set(_color, _intensity, _start, _end)
 function bbmod_fog_get_color()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodFogColor;
+	return bbmod_scene_get_current().FogColor;
 }
 
 /// @func bbmod_fog_set_color(_color)
@@ -87,7 +74,7 @@ function bbmod_fog_get_color()
 function bbmod_fog_set_color(_color)
 {
 	gml_pragma("forceinline");
-	global.__bbmodFogColor = _color;
+	bbmod_scene_get_current().FogColor = _color;
 }
 
 /// @func bbmod_fog_get_intensity()
@@ -107,7 +94,7 @@ function bbmod_fog_set_color(_color)
 function bbmod_fog_get_intensity()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodFogIntensity;
+	return bbmod_scene_get_current().FogIntensity;
 }
 
 /// @func bbmod_fog_set_intensity(_intensity)
@@ -128,7 +115,7 @@ function bbmod_fog_get_intensity()
 function bbmod_fog_set_intensity(_intensity)
 {
 	gml_pragma("forceinline");
-	global.__bbmodFogIntensity = _intensity;
+	bbmod_scene_get_current().FogIntensity = _intensity;
 }
 
 /// @func bbmod_fog_get_start()
@@ -149,7 +136,7 @@ function bbmod_fog_set_intensity(_intensity)
 function bbmod_fog_get_start()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodFogStart;
+	return bbmod_scene_get_current().FogStart;
 }
 
 /// @func bbmod_fog_set_start(_start)
@@ -170,7 +157,7 @@ function bbmod_fog_get_start()
 function bbmod_fog_set_start(_start)
 {
 	gml_pragma("forceinline");
-	global.__bbmodFogStart = _start;
+	bbmod_scene_get_current().FogStart = _start;
 }
 
 /// @func bbmod_fog_get_end()
@@ -191,7 +178,7 @@ function bbmod_fog_set_start(_start)
 function bbmod_fog_get_end()
 {
 	gml_pragma("forceinline");
-	return global.__bbmodFogEnd;
+	return bbmod_scene_get_current().FogEnd;
 }
 
 /// @func bbmod_fog_set_end(_end)
@@ -212,5 +199,5 @@ function bbmod_fog_get_end()
 function bbmod_fog_set_end(_end)
 {
 	gml_pragma("forceinline");
-	global.__bbmodFogEnd = _end;
+	bbmod_scene_get_current().FogEnd = _end;
 }

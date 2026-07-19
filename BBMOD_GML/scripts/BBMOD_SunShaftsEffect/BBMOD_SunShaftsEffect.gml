@@ -88,7 +88,7 @@ function BBMOD_SunShaftsEffect(
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{
-		var _camera = global.__bbmodCameraCurrent;
+		var _camera = bbmod_scene_get_current().CameraCurrent ?? global.__bbmodCameraCurrent;
 
 		if (Color.Alpha <= 0.0
 			|| LightDirection == undefined

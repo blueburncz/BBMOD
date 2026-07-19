@@ -2,7 +2,7 @@
 
 /// @func BBMOD_Mesh(_vertexFormat[, _model])
 ///
-/// @implements {BBMOD_IDestructible}
+/// @extends BBMOD_ReferenceCounted
 ///
 /// @desc A mesh defined by vertex data, its format and the primitive type to
 /// use when it's drawn.
@@ -11,7 +11,7 @@
 /// mesh or `undefined`.
 /// @param {Struct.BBMOD_Model} [_model] The model to which the mesh belongs or
 /// `undefined`.
-function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
+function BBMOD_Mesh(_vertexFormat, _model = undefined): BBMOD_ReferenceCounted() constructor
 {
 	/// @var {Struct.BBMOD_Model} The model to which the mesh belongs or
 	/// `undefined` (default).
@@ -108,11 +108,17 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 	/// @return {Struct.BBMOD_Mesh} Returns `self`.
 	static copy = function (_dest)
 	{
+		if (VertexFormat == undefined)
+		{
+			throw new BBMOD_Exception("Cannot copy a mesh whose vertex format is undefined!");
+		}
+
 		_dest.Model = Model;
 		_dest.MaterialIndex = MaterialIndex;
 		_dest.BboxMin = (BboxMin != undefined) ? BboxMin.Clone() : undefined;
 		_dest.BboxMax = (BboxMax != undefined) ? BboxMax.Clone() : undefined;
-		_dest.BoundingSphereCenter = (BoundingSphereCenter != undefined) ? BoundingSphereCenter.Clone() : undefined;
+		_dest.BoundingSphereCenter = (BoundingSphereCenter != undefined) ? BoundingSphereCenter.Clone()
+			: undefined;
 		_dest.BoundingSphereRadius = BoundingSphereRadius;
 
 		if (_dest.VertexBuffer != undefined)
@@ -124,7 +130,7 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 		{
 			var _buffer = buffer_create_from_vertex_buffer(VertexBuffer, buffer_fixed, 1);
 			_dest.VertexBuffer = vertex_create_buffer_from_buffer_ext(_buffer,
-				(VertexFormat != undefined) ? VertexFormat.Raw : Model.VertexFormat.Raw,
+				VertexFormat.Raw,
 				0, vertex_get_number(VertexBuffer));
 			buffer_delete(_buffer);
 		}
@@ -166,6 +172,10 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 		if (Model == undefined)
 		{
 			throw new BBMOD_Exception("Cannot load a mesh from a buffer if Model is undefined!");
+		}
+		if (VertexFormat == undefined && Model.VersionMinor < 2)
+		{
+			throw new BBMOD_Exception("Cannot load a legacy mesh if VertexFormat is undefined!");
 		}
 
 		MaterialIndex = buffer_read(_buffer, buffer_u32);
@@ -753,7 +763,7 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 		}
 		_staticBatch.PrimitiveType = PrimitiveType;
 		var _vertexBuffer = _staticBatch.VertexBuffer;
-		var _vertexFormat = _model.VertexFormat;
+		var _vertexFormat = VertexFormat;
 		var _hasVertices = _vertexFormat.Vertices;
 		var _hasNormals = _vertexFormat.Normals;
 		var _hasUvs = _vertexFormat.TextureCoords;

@@ -78,6 +78,8 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 			}
 		}
 
+		__render_scene_nodes();
+
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Reflection probes
@@ -170,8 +172,9 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 
 		////////////////////////////////////////////////////////////////////////
 		//
-		// Draw gizmo and highlight selected instances
+		// Draw editor debug geometry, gizmo and highlight selected instances
 		//
+		__draw_editor_debug_geometry();
 		__overlay_gizmo_and_instance_highlight();
 
 		////////////////////////////////////////////////////////////////////////

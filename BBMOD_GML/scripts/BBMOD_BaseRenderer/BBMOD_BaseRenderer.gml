@@ -65,9 +65,24 @@ function BBMOD_BaseRenderer() constructor
 	KeyMultiSelect = vk_shift;
 
 	/// @var {Struct.BBMOD_Gizmo} A gizmo for transforming instances when
-	/// {@link BBMOD_BaseRenderer.EditMode} is enabled. This is by default `undefined`.
+	/// {@link BBMOD_BaseRenderer.EditMode} is enabled. This is by default
+	/// `undefined`.
 	/// @see BBMOD_Gizmo
 	Gizmo = undefined;
+
+	/// @var {Bool} If `true` (default) then edit-mode icons for selectable
+	/// structs are shown.
+	ShowEditorIcons = true;
+
+	/// @var {Real} Size of edit-mode icons in pixels. Default value is 24.
+	EditorIconSize = 24.0;
+
+	/// @var {Bool} If `true` (default) then wireframe debug geometry for
+	/// selected editable lights and reflection probes is shown in edit mode.
+	ShowEditorWireframe = true;
+
+	/// @var {Struct.BBMOD_Color} Color of edit-mode wireframe debug geometry.
+	EditorWireframeColor = BBMOD_C_ORANGE;
 
 	/// @var {Id.Surface} A surface containing the gizmo. Used to enable
 	/// z-testing against itself, but ingoring the scene geometry.
@@ -77,6 +92,74 @@ function BBMOD_BaseRenderer() constructor
 	/// @var {Id.Surface} Surface for mouse-picking the gizmo.
 	/// @private
 	__surSelect = -1;
+
+	/// @var {Struct} Editor icon target under the mouse or `undefined`.
+	/// @private
+	__editorHoveredTarget = undefined;
+
+	/// @var {Array<Struct>} Projected editor icon targets.
+	/// @private
+	__editorIconTarget = [];
+
+	/// @var {Array<Real>} Projected editor icon screen X coordinates.
+	/// @private
+	__editorIconX = [];
+
+	/// @var {Array<Real>} Projected editor icon screen Y coordinates.
+	/// @private
+	__editorIconY = [];
+
+	/// @var {Array<Real>} Projected editor icon left bounds.
+	/// @private
+	__editorIconLeft = [];
+
+	/// @var {Array<Real>} Projected editor icon top bounds.
+	/// @private
+	__editorIconTop = [];
+
+	/// @var {Array<Real>} Projected editor icon right bounds.
+	/// @private
+	__editorIconRight = [];
+
+	/// @var {Array<Real>} Projected editor icon bottom bounds.
+	/// @private
+	__editorIconBottom = [];
+
+	/// @var {Array<Real>} Projected editor icon draw scales.
+	/// @private
+	__editorIconScale = [];
+
+	/// @var {Array<Real>} Projected editor icon alpha values.
+	/// @private
+	__editorIconAlpha = [];
+
+	/// @var {Array<Real>} Projected editor icon depths.
+	/// @private
+	__editorIconDepth = [];
+
+	/// @var {Array<Real>} Projected editor icon priorities.
+	/// @private
+	__editorIconPriority = [];
+
+	/// @var {Array<Real>} Projected editor icon sprites.
+	/// @private
+	__editorIconSprite = [];
+
+	/// @var {Array<Real>} Projected editor icon frames.
+	/// @private
+	__editorIconFrame = [];
+
+	/// @var {Array<Real>} Projected editor icon flags.
+	/// @private
+	__editorIconFlags = [];
+
+	/// @var {Real} Allocated size of editor icon projection arrays.
+	/// @private
+	__editorIconCapacity = 0;
+
+	/// @var {Real} Number of projected editor icons in current frame.
+	/// @private
+	__editorIconCount = 0;
 
 	/// @var {Array<Struct.BBMOD_IRenderable>} An array of renderable objects
 	/// and structs. These are automatically rendered in
@@ -145,7 +228,6 @@ function BBMOD_BaseRenderer() constructor
 	{
 		__cubemap.Format = surface_rgba16float;
 	}
-
 	/// @var {Id.Surface} For reflection probe capture.
 	/// @private
 	__surProbe1 = -1;
@@ -269,7 +351,7 @@ function BBMOD_BaseRenderer() constructor
 
 		var _fallbackCameraPos = bbmod_camera_get_position();
 		var _sortContext = {
-			Camera: global.__bbmodCameraCurrent,
+			Camera: bbmod_scene_get_current().CameraCurrent ?? global.__bbmodCameraCurrent,
 			FallbackX: _fallbackCameraPos.X,
 			FallbackY: _fallbackCameraPos.Y,
 			FallbackZ: _fallbackCameraPos.Z,
@@ -295,7 +377,7 @@ function BBMOD_BaseRenderer() constructor
 		var _fadeStart = max(_light.DistanceFadeStart, 0.0);
 		var _fadeEnd = max(_light.DistanceFadeEnd, 0.0);
 
-		if (_fadeEnd > _fadeStart)
+		if (_fadeEnd != infinity && _fadeEnd > _fadeStart)
 		{
 			var _fadeEndSq = _fadeEnd * _fadeEnd;
 			if (_distanceSq >= _fadeEndSq)
@@ -334,7 +416,7 @@ function BBMOD_BaseRenderer() constructor
 	{
 		array_resize(__punctualLightsVisible, 0);
 
-		var _lights = global.__bbmodPunctualLights;
+		var _lights = bbmod_scene_get_current().LightsPunctual;
 		var _cameraPos = bbmod_camera_get_position();
 		var _cameraPosX = _cameraPos.X;
 		var _cameraPosY = _cameraPos.Y;
@@ -534,6 +616,239 @@ function BBMOD_BaseRenderer() constructor
 		return true;
 	};
 
+	/// @private
+	static __editor_icon_ensure_capacity = function (_capacity)
+	{
+		if (__editorIconCapacity >= _capacity)
+		{
+			return;
+		}
+
+		__editorIconCapacity = max(_capacity, max(__editorIconCapacity * 2, 16));
+		array_resize(__editorIconTarget, __editorIconCapacity);
+		array_resize(__editorIconX, __editorIconCapacity);
+		array_resize(__editorIconY, __editorIconCapacity);
+		array_resize(__editorIconLeft, __editorIconCapacity);
+		array_resize(__editorIconTop, __editorIconCapacity);
+		array_resize(__editorIconRight, __editorIconCapacity);
+		array_resize(__editorIconBottom, __editorIconCapacity);
+		array_resize(__editorIconScale, __editorIconCapacity);
+		array_resize(__editorIconAlpha, __editorIconCapacity);
+		array_resize(__editorIconDepth, __editorIconCapacity);
+		array_resize(__editorIconPriority, __editorIconCapacity);
+		array_resize(__editorIconSprite, __editorIconCapacity);
+		array_resize(__editorIconFrame, __editorIconCapacity);
+		array_resize(__editorIconFlags, __editorIconCapacity);
+	};
+
+	/// @private
+	static __editor_icon_project_target = function (
+		_target,
+		_viewProjection,
+		_width,
+		_height,
+		_projFlipped,
+		_cameraPosition
+	)
+	{
+		var _flags = _target.EditorFlags;
+		var _position = new BBMOD_Vec3().TransformSelf(_target.get_world_matrix());
+		var _offset = _target.EditorOffset;
+		var _x = _position.X + _offset.X;
+		var _y = _position.Y + _offset.Y;
+		var _z = _position.Z + _offset.Z;
+		var _fadeStart = _target.EditorIconFadeStart;
+		var _fadeEnd = _target.EditorIconFadeEnd;
+		var _alpha = 1.0;
+
+		if (_fadeEnd > _fadeStart)
+		{
+			var _dx = _x - _cameraPosition.X;
+			var _dy = _y - _cameraPosition.Y;
+			var _dz = _z - _cameraPosition.Z;
+			var _distance = sqrt(_dx * _dx + _dy * _dy + _dz * _dz);
+
+			if (_distance >= _fadeEnd)
+			{
+				return;
+			}
+
+			if (_distance > _fadeStart)
+			{
+				_alpha = 1.0 - ((_distance - _fadeStart) / (_fadeEnd - _fadeStart));
+			}
+		}
+
+		var _clipX = _viewProjection[0] * _x + _viewProjection[4] * _y + _viewProjection[8] * _z + _viewProjection[
+			12];
+		var _clipY = _viewProjection[1] * _x + _viewProjection[5] * _y + _viewProjection[9] * _z + _viewProjection[
+			13];
+		var _clipZ = _viewProjection[2] * _x + _viewProjection[6] * _y + _viewProjection[10] * _z + _viewProjection[
+			14];
+		var _clipW = _viewProjection[3] * _x + _viewProjection[7] * _y + _viewProjection[11] * _z + _viewProjection[
+			15];
+
+		if (_clipZ < 0.0 || _clipW == 0.0)
+		{
+			return;
+		}
+
+		var _screenX = (((_clipX / _clipW) * 0.5) + 0.5) * _width;
+		var _screenY = (((_clipY / _clipW) * 0.5) + 0.5) * _height;
+		if (_projFlipped)
+		{
+			_screenY = _height - _screenY;
+		}
+
+		var _sprite = _target.EditorIconSprite;
+		var _spriteWidth = max(sprite_get_width(_sprite), 1.0);
+		var _spriteHeight = max(sprite_get_height(_sprite), 1.0);
+		var _scale = EditorIconSize / max(_spriteWidth, _spriteHeight);
+		var _left = _screenX - sprite_get_xoffset(_sprite) * _scale;
+		var _top = _screenY - sprite_get_yoffset(_sprite) * _scale;
+		var _right = _left + _spriteWidth * _scale;
+		var _bottom = _top + _spriteHeight * _scale;
+
+		if (_right < 0.0
+			|| _left > _width
+			|| _bottom < 0.0
+			|| _top > _height)
+		{
+			return;
+		}
+
+		var _index = __editorIconCount++;
+		__editor_icon_ensure_capacity(__editorIconCount);
+		__editorIconTarget[@ _index] = _target;
+		__editorIconX[@ _index] = _screenX;
+		__editorIconY[@ _index] = _screenY;
+		__editorIconLeft[@ _index] = _left;
+		__editorIconTop[@ _index] = _top;
+		__editorIconRight[@ _index] = _right;
+		__editorIconBottom[@ _index] = _bottom;
+		__editorIconScale[@ _index] = _scale;
+		__editorIconAlpha[@ _index] = _alpha;
+		__editorIconDepth[@ _index] = _clipZ / _clipW;
+		__editorIconPriority[@ _index] = _target.EditorPickPriority;
+		__editorIconSprite[@ _index] = _sprite;
+		__editorIconFrame[@ _index] = _target.EditorIconIndex;
+		__editorIconFlags[@ _index] = _flags;
+	};
+
+	/// @private
+	static __editor_project_icons = function (_width, _height)
+	{
+		__editorIconCount = 0;
+		__editorHoveredTarget = undefined;
+
+		var _camera = bbmod_scene_get_current().CameraCurrent ?? global.__bbmodCameraCurrent;
+
+		if (!ShowEditorIcons || _camera == undefined)
+		{
+			return;
+		}
+
+		var _viewProjection = _camera.ViewProjectionMatrix;
+		var _projFlipped = _camera.__projFlipped;
+		var _cameraPosition = _camera.Position;
+
+		var _scene = bbmod_scene_get_current();
+		var _punctualLights = _scene.LightsPunctual;
+		var i = 0;
+		repeat(array_length(_punctualLights))
+		{
+			var _light = _punctualLights[i++];
+			if (_light.Enabled)
+			{
+				__editor_icon_project_target(
+					_light, _viewProjection, _width, _height, _projFlipped, _cameraPosition);
+			}
+		}
+
+		var _directionalLight = _scene.LightDirectional;
+		if (_directionalLight != undefined && _directionalLight.Enabled)
+		{
+			__editor_icon_project_target(
+				_directionalLight, _viewProjection, _width, _height, _projFlipped, _cameraPosition);
+		}
+
+		var _reflectionProbes = _scene.ReflectionProbes;
+		i = 0;
+		repeat(array_length(_reflectionProbes))
+		{
+			var _probe = _reflectionProbes[i++];
+			if (_probe.Enabled)
+			{
+				__editor_icon_project_target(
+					_probe, _viewProjection, _width, _height, _projFlipped, _cameraPosition);
+			}
+		}
+
+		var _emitters = _scene.ParticleEmitters;
+		i = 0;
+		repeat(array_length(_emitters))
+		{
+			__editor_icon_project_target(
+				_emitters[i++], _viewProjection, _width, _height, _projFlipped, _cameraPosition);
+		}
+
+		var _terrains = _scene.Terrains;
+		i = 0;
+		repeat(array_length(_terrains))
+		{
+			__editor_icon_project_target(
+				_terrains[i++], _viewProjection, _width, _height, _projFlipped, _cameraPosition);
+		}
+
+		var _lensFlares = _scene.LensFlares;
+		i = 0;
+		repeat(array_length(_lensFlares))
+		{
+			__editor_icon_project_target(
+				_lensFlares[i++], _viewProjection, _width, _height, _projFlipped, _cameraPosition);
+		}
+	};
+
+	/// @private
+	static __editor_pick_icon = function (_screenX, _screenY)
+	{
+		var _renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
+		var _x = clamp(_screenX - X, 0, get_width()) * _renderScale;
+		var _y = clamp(_screenY - Y, 0, get_height()) * _renderScale;
+		var _bestIndex = -1;
+		var _bestDepth = infinity;
+		var _bestPriority = -infinity;
+
+		var i = 0;
+		repeat(__editorIconCount)
+		{
+			if (_x >= __editorIconLeft[i]
+				&& _x <= __editorIconRight[i]
+				&& _y >= __editorIconTop[i]
+				&& _y <= __editorIconBottom[i])
+			{
+				var _priority = __editorIconPriority[i];
+				var _depth = __editorIconDepth[i];
+				if (_priority > _bestPriority
+					|| (_priority == _bestPriority && _depth < _bestDepth)
+					|| (_priority == _bestPriority && _depth == _bestDepth && i > _bestIndex))
+				{
+					_bestIndex = i;
+					_bestDepth = _depth;
+					_bestPriority = _priority;
+				}
+			}
+			++i;
+		}
+
+		if (_bestIndex == -1)
+		{
+			return undefined;
+		}
+
+		return __editorIconTarget[_bestIndex];
+	};
+
 	/// @func get_instance_id(_screenX, _screenY)
 	///
 	/// @desc Retrieves an ID of an instance at given position on the screen.
@@ -597,6 +912,104 @@ function BBMOD_BaseRenderer() constructor
 				array_delete(Renderables, i, 1);
 			}
 		}
+		return self;
+	};
+
+	/// @func __has_renderable(_renderable)
+	///
+	/// @desc Checks whether a renderable is registered directly with this renderer.
+	///
+	/// @param {Struct.BBMOD_IRenderable} _renderable The renderable to check.
+	///
+	/// @return {Bool} Returns `true` if the renderable is registered.
+	///
+	/// @private
+	static __has_renderable = function (_renderable)
+	{
+		var i = 0;
+		repeat(array_length(Renderables))
+		{
+			if (Renderables[i++] == _renderable)
+			{
+				return true;
+			}
+		}
+		return false;
+	};
+
+	/// @func __render_scene_nodes()
+	///
+	/// @desc Enqueues renderable scene nodes from the current scene.
+	///
+	/// @return {Struct.BBMOD_BaseRenderer} Returns `self`.
+	///
+	/// @private
+	static __render_scene_nodes = function ()
+	{
+		var _scene = bbmod_scene_get_current();
+		var _editMode = EditMode;
+
+		var _models = _scene.Models;
+		var i = 0;
+		repeat(array_length(_models))
+		{
+			var _model = _models[i++];
+			if (!__has_renderable(_model))
+			{
+				if (_editMode)
+				{
+					var _pickId = global.__bbmodSceneNodePickIdNext++;
+					ds_map_add(global.__bbmodSceneNodePickMap, _pickId, _model);
+					_model.__bbmodPickId = _pickId;
+					global.__bbmodInstanceID = _pickId;
+				}
+
+				_model.render(undefined, undefined, undefined, _model.get_world_matrix());
+
+				if (_editMode)
+				{
+					global.__bbmodInstanceID = 0;
+				}
+			}
+		}
+
+		var _emitters = _scene.ParticleEmitters;
+		i = 0;
+		repeat(array_length(_emitters))
+		{
+			_emitters[i++].render();
+		}
+
+		var _terrains = _scene.Terrains;
+		i = 0;
+		repeat(array_length(_terrains))
+		{
+			var _terrain = _terrains[i++];
+			if (_editMode)
+			{
+				var _pickId = global.__bbmodSceneNodePickIdNext++;
+				ds_map_add(global.__bbmodSceneNodePickMap, _pickId, _terrain);
+				_terrain.__bbmodPickId = _pickId;
+				global.__bbmodInstanceID = _pickId;
+
+				if (is_instanceof(_terrain, BBMOD_Terrain))
+				{
+					var _mat = _terrain.Material;
+					if (_mat != undefined && !_mat.has_shader(BBMOD_ERenderPass.Id))
+					{
+						_mat.set_shader(BBMOD_ERenderPass.Id, BBMOD_SHADER_INSTANCE_ID);
+					}
+				}
+			}
+
+			_terrain.render();
+
+			if (_editMode)
+			{
+				global.__bbmodInstanceID = 0;
+			}
+		}
+
 		return self;
 	};
 
@@ -823,9 +1236,10 @@ function BBMOD_BaseRenderer() constructor
 				var _cameraPosY = _cameraPos.Y;
 				var _cameraPosZ = _cameraPos.Z;
 				var i = 0;
-				repeat(array_length(global.__bbmodPunctualLights))
+				var _punctualLights = bbmod_scene_get_current().LightsPunctual;
+				repeat(array_length(_punctualLights))
 				{
-					_light = global.__bbmodPunctualLights[i];
+					_light = _punctualLights[i];
 					if (_light.CastShadows)
 					{
 						if (sphere_is_visible(_light.Position.X, _light.Position.Y, _light.Position.Z, _light
@@ -903,7 +1317,7 @@ function BBMOD_BaseRenderer() constructor
 		bbmod_camera_set_exposure(1.0);
 
 		var _cubemap = __cubemap;
-		var _reflectionProbes = global.__bbmodReflectionProbes;
+		var _reflectionProbes = bbmod_scene_get_current().ReflectionProbes;
 
 		var i = 0;
 		repeat(array_length(_reflectionProbes))
@@ -953,8 +1367,9 @@ function BBMOD_BaseRenderer() constructor
 			}
 		}
 
-		var _to = (global.__bbmodImageBasedLight != undefined)
-			? global.__bbmodImageBasedLight.Texture
+		var _imageBasedLight = bbmod_scene_get_current().ImageBasedLight;
+		var _to = (_imageBasedLight != undefined)
+			? _imageBasedLight.Texture
 			: sprite_get_texture(BBMOD_SprBlack, 0);
 
 		var _reflectionProbe = bbmod_reflection_probe_find(bbmod_camera_get_position());
@@ -1096,6 +1511,31 @@ function BBMOD_BaseRenderer() constructor
 
 		////////////////////////////////////////////////////////////////////////
 		// Instance IDs
+		if (_editMode)
+		{
+			__editor_project_icons(_renderWidth, _renderHeight);
+		}
+
+		if (_editMode
+			&& ShowEditorIcons
+			&& _continueMousePick
+			&& _mouseOver
+			&& mouse_check_button_pressed(ButtonSelect))
+		{
+			var _target = __editor_pick_icon(_mouseX, _mouseY);
+			if (_target != undefined)
+			{
+				if (!keyboard_check(KeyMultiSelect))
+				{
+					Gizmo.clear_selection();
+				}
+				Gizmo.toggle_select_node(_target).update_position();
+				Gizmo.Size = _gizmoSize
+					* Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+				_continueMousePick = false;
+			}
+		}
+
 		var _mousePickInstance = (_editMode && _continueMousePick
 			&& _mouseOver && mouse_check_button_pressed(ButtonSelect));
 
@@ -1126,32 +1566,78 @@ function BBMOD_BaseRenderer() constructor
 				var _id = get_instance_id(_mouseX, _mouseY);
 				if (_id != 0)
 				{
-					Gizmo.toggle_select(_id).update_position();
+					if (ds_map_exists(global.__bbmodSceneNodePickMap, _id))
+					{
+						var _target = global.__bbmodSceneNodePickMap[?  _id];
+						Gizmo.toggle_select_node(_target).update_position();
+					}
+					else
+					{
+						Gizmo.toggle_select(_id).update_position();
+					}
+
 					Gizmo.Size = _gizmoSize
 						* Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
 				}
 			}
 		}
 
-		if (_editMode && !ds_list_empty(Gizmo.Selected))
+		ds_map_clear(global.__bbmodSceneNodePickMap);
+
+		if (_editMode && (!ds_list_empty(Gizmo.Selected)
+				|| !ds_list_empty(Gizmo.SelectedNodes)))
 		{
 			////////////////////////////////////////////////////////////////////
 			// Instance highlight
-			__surInstanceHighlight = bbmod_surface_check(
-				__surInstanceHighlight, _renderWidth, _renderHeight, surface_rgba8unorm, true);
+			if (!ds_list_empty(Gizmo.Selected) || !ds_list_empty(Gizmo.SelectedNodes))
+			{
+				__surInstanceHighlight = bbmod_surface_check(
+					__surInstanceHighlight, _renderWidth, _renderHeight, surface_rgba8unorm, true);
 
-			surface_set_target(__surInstanceHighlight);
-			draw_clear_alpha(0, 0.0);
+				surface_set_target(__surInstanceHighlight);
+				draw_clear_alpha(0, 0.0);
 
-			matrix_set(matrix_view, _view);
-			matrix_set(matrix_projection, _projection);
+				matrix_set(matrix_view, _view);
+				matrix_set(matrix_projection, _projection);
 
-			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
+				bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
-			bbmod_render_queues_submit(Gizmo.Selected);
-			bbmod_material_reset();
+				// Build combined filter: legacy instance IDs + scene node pick IDs
+				var _selectedAll = Gizmo.Selected;
+				var _sizeNodes = ds_list_size(Gizmo.SelectedNodes);
+				if (_sizeNodes > 0)
+				{
+					_selectedAll = ds_list_create();
+					var _sizeInstances = ds_list_size(Gizmo.Selected);
+					var k = 0;
+					repeat(_sizeInstances)
+					{
+						ds_list_add(_selectedAll, Gizmo.Selected[|  k]);
+						++k;
+					}
+					k = 0;
+					repeat(_sizeNodes)
+					{
+						var _node = Gizmo.SelectedNodes[|  k];
+						if (variable_struct_exists(_node, "__bbmodPickId"))
+						{
+							ds_list_add(_selectedAll, _node.__bbmodPickId);
+						}
+						++k;
+					}
+				}
 
-			surface_reset_target();
+				bbmod_render_queues_submit(_selectedAll);
+
+				if (_selectedAll != Gizmo.Selected)
+				{
+					ds_list_destroy(_selectedAll);
+				}
+
+				bbmod_material_reset();
+
+				surface_reset_target();
+			}
 
 			////////////////////////////////////////////////////////////////////
 			// Gizmo
@@ -1190,9 +1676,110 @@ function BBMOD_BaseRenderer() constructor
 	};
 
 	/// @private
+	static __draw_editor_debug_geometry = function ()
+	{
+		if (!EditMode || !Gizmo || !ShowEditorWireframe
+			|| ds_list_empty(Gizmo.SelectedNodes))
+		{
+			return;
+		}
+
+		var _color = EditorWireframeColor.ToConstant();
+		var _alpha = EditorWireframeColor.Alpha;
+
+		gpu_push_state();
+		gpu_set_state(bbmod_gpu_get_default_state());
+		gpu_set_blendenable(true);
+		gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_inv_src_alpha);
+		gpu_set_colorwriteenable(true, true, true, true);
+		gpu_set_zwriteenable(false);
+		gpu_set_ztestenable(false);
+
+		var _world = matrix_get(matrix_world);
+		matrix_set(matrix_world, bbmod_matrix_get_identity());
+
+		var _size = ds_list_size(Gizmo.SelectedNodes);
+		var i = 0;
+		repeat(_size)
+		{
+			var _target = Gizmo.SelectedNodes[|  i++];
+
+			switch (_target.SceneNodeKind)
+			{
+				case BBMOD_ESceneNodeType.PointLight:
+					__bbmod_editor_debug_draw_sphere(
+						_target.Position,
+						_target.Range,
+						_color,
+						_alpha);
+					break;
+
+				case BBMOD_ESceneNodeType.SpotLight:
+					__bbmod_editor_debug_draw_cone(
+						_target.Position,
+						_target.Direction,
+						_target.Range,
+						_target.AngleInner,
+						_color,
+						_alpha);
+					__bbmod_editor_debug_draw_cone(
+						_target.Position,
+						_target.Direction,
+						_target.Range,
+						_target.AngleOuter,
+						_color,
+						_alpha);
+					break;
+
+				case BBMOD_ESceneNodeType.DirectionalLight:
+					var _position = _target.Position;
+					var _direction = _target.Direction.Normalize();
+					var _wireframeLength = _target.EditorWireframeLength;
+					var _directionOffset = _direction.Scale(_wireframeLength * 0.5);
+					var _directionStart = _position.Sub(_directionOffset);
+					var _directionEnd = _position.Add(_directionOffset);
+					__bbmod_editor_debug_draw_line(
+						_directionStart.X,
+						_directionStart.Y,
+						_directionStart.Z,
+						_directionEnd.X,
+						_directionEnd.Y,
+						_directionEnd.Z,
+						_color,
+						_alpha);
+					__bbmod_editor_debug_draw_cone(
+						_directionEnd,
+						_direction.Scale(-1.0),
+						_wireframeLength * 0.2,
+						20.0,
+						_color,
+						_alpha);
+					break;
+
+				case BBMOD_ESceneNodeType.ReflectionProbe:
+					if (!_target.Infinite)
+					{
+						__bbmod_editor_debug_draw_aabb(
+							_target.Position,
+							_target.Size,
+							_color,
+							_alpha);
+					}
+					break;
+			}
+		}
+
+		matrix_set(matrix_world, _world);
+		gpu_pop_state();
+	};
+
+	/// @private
 	static __overlay_gizmo_and_instance_highlight = function ()
 	{
-		if (!EditMode || !Gizmo || ds_list_empty(Gizmo.Selected))
+		if (!EditMode || !Gizmo
+			|| (ds_list_empty(Gizmo.Selected)
+				&& ds_list_empty(Gizmo.SelectedNodes)
+				&& __editorIconCount <= 0))
 		{
 			return;
 		}
@@ -1216,7 +1803,8 @@ function BBMOD_BaseRenderer() constructor
 
 		////////////////////////////////////////////////////////////////
 		// Highlighted instances
-		if (!ds_list_empty(Gizmo.Selected)
+		if ((!ds_list_empty(Gizmo.Selected)
+				|| !ds_list_empty(Gizmo.SelectedNodes))
 			&& surface_exists(__surInstanceHighlight))
 		{
 			var _shader = BBMOD_ShInstanceHighlight;
@@ -1235,9 +1823,41 @@ function BBMOD_BaseRenderer() constructor
 
 		////////////////////////////////////////////////////////////////
 		// Gizmo
-		if (surface_exists(__surGizmo))
+		if ((!ds_list_empty(Gizmo.Selected) || !ds_list_empty(Gizmo.SelectedNodes))
+			&& surface_exists(__surGizmo))
 		{
 			draw_surface_stretched(__surGizmo, 0, 0, _width, _height);
+		}
+
+		////////////////////////////////////////////////////////////////
+		// Editor icons
+		if (ShowEditorIcons && __editorIconCount > 0)
+		{
+			var i = 0;
+			repeat(__editorIconCount)
+			{
+				var _target = __editorIconTarget[i];
+				var _sprite = __editorIconSprite[i];
+				var _frame = __editorIconFrame[i];
+				var _scale = __editorIconScale[i];
+				var _alpha = __editorIconAlpha[i] * 0.75;
+				if (Gizmo.is_node_selected(_target))
+				{
+					_scale *= 1.25;
+					_alpha = __editorIconAlpha[i];
+				}
+				draw_sprite_ext(
+					_sprite,
+					_frame,
+					__editorIconX[i],
+					__editorIconY[i],
+					_scale,
+					_scale,
+					0.0,
+					c_white,
+					_alpha);
+				++i;
+			}
 		}
 
 		matrix_set(matrix_world, _world);
@@ -1299,6 +1919,8 @@ function BBMOD_BaseRenderer() constructor
 			}
 		}
 
+		__render_scene_nodes();
+
 		////////////////////////////////////////////////////////////////////////
 		//
 		// Reflection probes
@@ -1357,8 +1979,9 @@ function BBMOD_BaseRenderer() constructor
 
 		////////////////////////////////////////////////////////////////////////
 		//
-		// Draw gizmo and highlight selected instances
+		// Draw editor debug geometry, gizmo and highlight selected instances
 		//
+		__draw_editor_debug_geometry();
 		__overlay_gizmo_and_instance_highlight();
 
 		////////////////////////////////////////////////////////////////////////

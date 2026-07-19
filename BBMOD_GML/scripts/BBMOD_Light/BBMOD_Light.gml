@@ -3,7 +3,11 @@
 /// @func BBMOD_Light()
 ///
 /// @desc Base class for lights.
-function BBMOD_Light() constructor
+function BBMOD_Light(): BBMOD_SceneNode(
+	BBMOD_ESceneNodeType.None,
+	BBMOD_EEditorFlag.Translate
+	| BBMOD_EEditorFlag.RefreshReflectionProbes
+) constructor
 {
 	/// @var {Bool} Use `false` to disable the light. Defaults to `true` (the
 	/// light is enabled).

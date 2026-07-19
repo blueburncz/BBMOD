@@ -6,6 +6,8 @@ global.__bbmodRenderStack = ds_stack_create();
 
 /// @func BBMOD_Node(_model)
 ///
+/// @extends BBMOD_SceneNode
+///
 /// @implements {BBMOD_IRenderable}
 ///
 /// @desc A node, defined by its transformation, an array of indices of
@@ -15,7 +17,7 @@ global.__bbmodRenderStack = ds_stack_create();
 /// @param {Struct.BBMOD_Model} _model The model which contains this node.
 ///
 /// @see BBMOD_Model.RootNode
-function BBMOD_Node(_model) constructor
+function BBMOD_Node(_model): BBMOD_SceneNode(BBMOD_ESceneNodeType.ModelNode) constructor
 {
 	/// @var {Struct.BBMOD_Model} The model which contains this node.
 	/// @readonly
@@ -32,8 +34,8 @@ function BBMOD_Node(_model) constructor
 	/// @see BBMOD_Node.IsBone
 	Index = 0;
 
-	/// @var {Struct.BBMOD_Node} The parent of this node or `undefined` (default)
-	/// if it's the root node of a model.
+	/// @var {Struct.BBMOD_SceneNode} The scene parent of this node or `undefined`
+	/// if it has no parent.
 	/// @readonly
 	Parent = undefined;
 
@@ -60,9 +62,62 @@ function BBMOD_Node(_model) constructor
 	/// @readonly
 	IsRenderable = false;
 
-	/// @var {Array<Struct.BBMOD_Node>} An array of child nodes.
+	/// @var {Array<Struct.BBMOD_SceneNode>} An array of child scene nodes.
 	/// @readonly
 	Children = [];
+
+	/// @func is_model_child(_node)
+	///
+	/// @desc Checks whether the given child belongs to the same model hierarchy.
+	///
+	/// @param {Struct.BBMOD_SceneNode} _node The child node to check.
+	///
+	/// @return {Bool} Returns `true` if the child is a same-model model node.
+	static is_model_child = function (_node)
+	{
+		return (_node.SceneNodeKind == BBMOD_ESceneNodeType.ModelNode
+			&& _node.Model == Model);
+	};
+
+	/// @func get_model_parent()
+	///
+	/// @desc Retrieves this node's same-model parent.
+	///
+	/// @return {Struct.BBMOD_Node, Undefined} The model parent or `undefined`.
+	static get_model_parent = function ()
+	{
+		if (Parent != undefined
+			&& Parent.SceneNodeKind == BBMOD_ESceneNodeType.ModelNode
+			&& Parent.Model == Model)
+		{
+			return Parent;
+		}
+		return undefined;
+	};
+
+	/// @func add_model_child(_node)
+	///
+	/// @desc Adds a child node that belongs to the same model hierarchy.
+	///
+	/// @param {Struct.BBMOD_Node} _node The child model node to add.
+	///
+	/// @return {Struct.BBMOD_Node} Returns `self`.
+	static add_model_child = function (_node)
+	{
+		_node.Model = Model;
+		add_child(_node);
+		return self;
+	};
+
+	/// @func get_local_matrix()
+	///
+	/// @desc Retrieves the model-node local transform matrix.
+	///
+	/// @return {Array<Real>} The local transform matrix.
+	static get_local_matrix = function ()
+	{
+		return Transform.ToMatrix();
+	};
 
 	/// @func copy(_dest)
 	///
@@ -76,7 +131,7 @@ function BBMOD_Node(_model) constructor
 		_dest.Model = Model;
 		_dest.Name = Name;
 		_dest.Index = Index;
-		_dest.Parent = Parent;
+		_dest.Parent = undefined;
 		_dest.IsBone = IsBone;
 		_dest.Visible = Visible;
 		_dest.Transform = Transform.Clone();
@@ -93,7 +148,11 @@ function BBMOD_Node(_model) constructor
 		var i = 0;
 		repeat(array_length(Children))
 		{
-			_dest.add_child(Children[i++].clone());
+			var _child = Children[i++];
+			if (is_model_child(_child))
+			{
+				_dest.add_model_child(_child.clone());
+			}
 		}
 
 		return self;
@@ -109,21 +168,6 @@ function BBMOD_Node(_model) constructor
 		var _clone = new BBMOD_Node(Model);
 		copy(_clone);
 		return _clone;
-	};
-
-	/// @func add_child(_node)
-	///
-	/// @desc Adds a child node.
-	///
-	/// @param {Struct.BBMOD_Node} _node The child node to add.
-	///
-	/// @return {Struct.BBMOD_Node} Returns `self`.
-	static add_child = function (_node)
-	{
-		gml_pragma("forceinline");
-		array_push(Children, _node);
-		_node.Parent = self;
-		return self;
 	};
 
 	/// @func set_renderable()
@@ -142,7 +186,7 @@ function BBMOD_Node(_model) constructor
 			//	break;
 			//}
 			_current.IsRenderable = true;
-			_current = _current.Parent;
+			_current = _current.get_model_parent();
 		}
 		return self;
 	};
@@ -188,7 +232,7 @@ function BBMOD_Node(_model) constructor
 		repeat(_childCount)
 		{
 			var _child = new BBMOD_Node(Model);
-			add_child(_child);
+			add_model_child(_child);
 			_child.from_buffer(_buffer);
 		}
 
@@ -226,13 +270,25 @@ function BBMOD_Node(_model) constructor
 		}
 
 		// Child nodes
-		var _childCount = array_length(Children);
+		var _childCount = 0;
+		i = 0;
+		repeat(array_length(Children))
+		{
+			if (is_model_child(Children[i++]))
+			{
+				++_childCount;
+			}
+		}
 		buffer_write(_buffer, buffer_u32, _childCount);
 
 		i = 0;
-		repeat(_childCount)
+		repeat(array_length(Children))
 		{
-			Children[i++].to_buffer(_buffer);
+			var _child = Children[i++];
+			if (is_model_child(_child))
+			{
+				_child.to_buffer(_buffer);
+			}
 		}
 
 		return self;
@@ -310,7 +366,11 @@ function BBMOD_Node(_model) constructor
 			i = 0;
 			repeat(array_length(_children))
 			{
-				ds_stack_push(_renderStack, _children[i++]);
+				var _child = _children[i++];
+				if (_node.is_model_child(_child))
+				{
+					ds_stack_push(_renderStack, _child);
+				}
 			}
 		}
 
@@ -392,7 +452,11 @@ function BBMOD_Node(_model) constructor
 			i = 0;
 			repeat(array_length(_children))
 			{
-				ds_stack_push(_renderStack, _children[i++]);
+				var _child = _children[i++];
+				if (_node.is_model_child(_child))
+				{
+					ds_stack_push(_renderStack, _child);
+				}
 			}
 		}
 

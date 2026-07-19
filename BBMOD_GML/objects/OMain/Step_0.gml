@@ -44,10 +44,16 @@ z += _up;
 var _directionPrev = camera.Direction;
 var _directionUpPrev = camera.DirectionUp;
 
-renderer.update(delta_time);
-
 camera.AspectRatio = surface_get_width(application_surface) / surface_get_height(application_surface);
-camera.update(delta_time);
+scene.update(delta_time);
+
+sceneSky.Position.Set(
+	camera.Position.X,
+	camera.Position.Y,
+	camera.Position.Z);
+sceneSky.mark_transform_dirty();
+
+renderer.update(delta_time);
 ditherFrustum.FromCamera(camera);
 
 var _locomotionForward = keyboard_check(vk_up) - keyboard_check(vk_down);
@@ -115,8 +121,6 @@ if (!characterIsShooting)
 	characterPlayer.change(characterDesiredAnimation, true);
 }
 
-characterPlayer.update(delta_time);
-
 if (characterIsShooting && characterPlayer.Animation == undefined)
 {
 	characterIsShooting = false;
@@ -133,48 +137,9 @@ directionalBlur.Step = 2.0 / min(_length, 32.0);
 
 var _deltaSeconds = delta_time * 0.000001;
 
-// Trigger-zone temporal dither for regular non-batched sample objects.
-var i = 0;
-repeat(array_length(ditherRegularStates))
-{
-	var _state = ditherRegularStates[i++];
-	ditherDistanceScratch.Set(_state.X, _state.Y, _state.Z);
-	var _distanceToCamera = abs(camera.get_distance(ditherDistanceScratch));
-
-	if (_state.IsInside)
-	{
-		if (_distanceToCamera > ditherTriggerExitDistance)
-		{
-			_state.IsInside = false;
-		}
-	}
-	else if (_distanceToCamera < ditherTriggerEnterDistance)
-	{
-		_state.IsInside = true;
-	}
-
-	var _targetFade = _state.IsInside ? 1.0 : 0.0;
-	var _wasVisible = _state.WasVisible;
-	var _isVisible = ditherFrustum.TestPoint(ditherDistanceScratch);
-	_state.WasVisible = _isVisible;
-
-	if (_isVisible && !_wasVisible)
-	{
-		_state.Fade = _targetFade;
-	}
-	else if (_targetFade > _state.Fade)
-	{
-		_state.Fade = min(1.0, _state.Fade + ditherFadeInRate * _deltaSeconds);
-	}
-	else if (_targetFade < _state.Fade)
-	{
-		_state.Fade = max(0.0, _state.Fade - ditherFadeOutRate * _deltaSeconds);
-	}
-}
-
 batchSphereOrbitTime += _deltaSeconds;
 
-i = 0;
+var i = 0;
 repeat(array_length(batchSphereInstances))
 {
 	var _instance = batchSphereInstances[i++];
@@ -237,6 +202,7 @@ repeat(array_length(punctualLightsTest))
 		lengthdir_y(_radius, _angle),
 		_height + dsin(_angle * 1.5) * 1.5
 	);
+	_light.mark_transform_dirty();
 }
 
 if (spotLightTest != undefined)
@@ -250,6 +216,7 @@ if (spotLightTest != undefined)
 		lengthdir_y(_spotRadius, _spotAngle),
 		_spotHeight
 	);
+	spotLightTest.mark_transform_dirty();
 
 	var _toCenter = new BBMOD_Vec3(
 		-spotLightTest.Position.X,
@@ -258,17 +225,4 @@ if (spotLightTest != undefined)
 	).Normalize();
 
 	spotLightTest.Direction.Set(_toCenter.X, _toCenter.Y, _toCenter.Z);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Particle module showcase
-//
-if (particleModuleShowcaseEnabled)
-{
-	i = 0;
-	repeat(array_length(particleModuleShowcaseEmitters))
-	{
-		particleModuleShowcaseEmitters[i++].update(delta_time);
-	}
 }
