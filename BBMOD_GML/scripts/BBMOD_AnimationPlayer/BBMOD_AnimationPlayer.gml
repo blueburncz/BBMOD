@@ -584,6 +584,21 @@ function BBMOD_AnimationPlayer(_model, _paused = false) constructor
 			break;
 		}
 
+		// Store world transforms for all non-bone nodes as well. This lets
+		// meshes attached to non-bone nodes (e.g. weapons) use get_transform()
+		// correctly.
+		var _nodes = _model.get_node_array();
+		var i = 0;
+		repeat(array_length(_nodes))
+		{
+			var _n = _nodes[i++];
+			if (!_n.IsBone)
+			{
+				var _off = _n.Index * 8;
+				array_copy(__transformArray, _off, __nodeTransform, _off, 8);
+			}
+		}
+
 		return self;
 	};
 

@@ -5,14 +5,13 @@
   "title": "BBMOD Docs",
   "author": "BlueBurn",
   "prefix": ["bbmod", "__bbmod"],
-  "version": "3.25.0",
+  "version": "3.26.0",
   "analytics": "",
   "api": {
     "rating": "/bbmod/page_rating.php"
   },
   "toc": {
     "BBMOD Docs": "index.md",
-    "Supported file formats": "SupportedFileFormats.md",
     "Scripting API": {}
   }
 }

@@ -207,7 +207,6 @@
     {"name":"BBMOD_DeferredRenderer","order":5,"path":"scripts/BBMOD_DeferredRenderer/BBMOD_DeferredRenderer.yy",},
     {"name":"BBMOD_DepthOfFieldEffect","order":2,"path":"scripts/BBMOD_DepthOfFieldEffect/BBMOD_DepthOfFieldEffect.yy",},
     {"name":"BBMOD_DirectionalLight","order":1,"path":"scripts/BBMOD_DirectionalLight/BBMOD_DirectionalLight.yy",},
-    {"name":"BBMOD_DLL","order":26,"path":"scripts/BBMOD_DLL/BBMOD_DLL.yy",},
     {"name":"BBMOD_DragModule","order":1,"path":"scripts/BBMOD_DragModule/BBMOD_DragModule.yy",},
     {"name":"BBMOD_EAntialiasing","order":23,"path":"scripts/BBMOD_EAntialiasing/BBMOD_EAntialiasing.yy",},
     {"name":"BBMOD_EmissionModule","order":4,"path":"scripts/BBMOD_EmissionModule/BBMOD_EmissionModule.yy",},

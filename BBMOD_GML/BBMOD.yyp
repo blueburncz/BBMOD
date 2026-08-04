@@ -145,13 +145,6 @@
   ],
   "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"assimp-vc143-mt.dll","CopyToMask":64,"filePath":"datafiles/Data/BBMOD","name":"assimp-vc143-mt.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"BBMOD","CopyToMask":0,"filePath":"datafiles/Data/BBMOD","name":"BBMOD","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"BBMOD.dll","CopyToMask":64,"filePath":"datafiles/Data/BBMOD","name":"BBMOD.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"BBMOD.exe","CopyToMask":0,"filePath":"datafiles/Data/BBMOD","name":"BBMOD.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"libassimp.6.dylib","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","name":"libassimp.6.dylib","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"libBBMOD.dylib","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","name":"libBBMOD.dylib","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"LICENSE-Assimp","CopyToMask":66,"filePath":"datafiles/Data/BBMOD","name":"LICENSE-Assimp","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE-ColMesh","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD","name":"LICENSE-ColMesh","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ConeNegX.bbmod","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","name":"ConeNegX.bbmod","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ConeNegY.bbmod","CopyToMask":-1,"filePath":"datafiles/Data/BBMOD/Models","name":"ConeNegY.bbmod","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -229,7 +222,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2026.0.0.15",
+    "IDEVersion":"2026.0.0.16",
   },
   "name":"BBMOD",
   "resources":[
@@ -344,7 +337,6 @@
     {"id":{"name":"BBMOD_DepthOfFieldEffect","path":"scripts/BBMOD_DepthOfFieldEffect/BBMOD_DepthOfFieldEffect.yy",},},
     {"id":{"name":"BBMOD_DirectionalBlurEffect","path":"scripts/BBMOD_DirectionalBlurEffect/BBMOD_DirectionalBlurEffect.yy",},},
     {"id":{"name":"BBMOD_DirectionalLight","path":"scripts/BBMOD_DirectionalLight/BBMOD_DirectionalLight.yy",},},
-    {"id":{"name":"BBMOD_DLL","path":"scripts/BBMOD_DLL/BBMOD_DLL.yy",},},
     {"id":{"name":"BBMOD_DragModule","path":"scripts/BBMOD_DragModule/BBMOD_DragModule.yy",},},
     {"id":{"name":"BBMOD_DualQuaternion","path":"scripts/BBMOD_DualQuaternion/BBMOD_DualQuaternion.yy",},},
     {"id":{"name":"BBMOD_DynamicBatch","path":"scripts/BBMOD_DynamicBatch/BBMOD_DynamicBatch.yy",},},
