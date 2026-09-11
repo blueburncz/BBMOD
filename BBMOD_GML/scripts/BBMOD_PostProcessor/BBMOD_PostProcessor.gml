@@ -1,6 +1,6 @@
-// Feather ignore GM1021
-
 /// @module PostProcessing
+
+// Feather ignore GM1021
 
 /// @func BBMOD_PostProcessor()
 ///
@@ -14,7 +14,7 @@
 /// @see BBMOD_PostProcessEffect
 function BBMOD_PostProcessor(): BBMOD_Resource() constructor
 {
-	static BBMOD_Resource_destroy = destroy;
+	static Resource_destroy = destroy;
 
 	/// @var {Bool} If `true` then the post-processor is enabled. Default value
 	/// is `true`.
@@ -213,13 +213,13 @@ function BBMOD_PostProcessor(): BBMOD_Resource() constructor
 	{
 		buffer_write(_buffer, buffer_string, "BBPOST");
 		buffer_write(_buffer, buffer_u32, 1);
-		buffer_write(_buffer, buffer_u8, Enabled ? 1 : 0);
-		buffer_write(_buffer, buffer_u8, DesignWidth != undefined ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, Enabled);
+		buffer_write(_buffer, buffer_bool, DesignWidth != undefined);
 		if (DesignWidth != undefined)
 		{
 			buffer_write(_buffer, buffer_f64, DesignWidth);
 		}
-		buffer_write(_buffer, buffer_u8, DesignHeight != undefined ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, DesignHeight != undefined);
 		if (DesignHeight != undefined)
 		{
 			buffer_write(_buffer, buffer_f64, DesignHeight);
@@ -269,10 +269,10 @@ function BBMOD_PostProcessor(): BBMOD_Resource() constructor
 		bbmod_texture_ref_destroy(self, "ColorGradingLUT");
 		bbmod_texture_ref_destroy(self, "LensDirt");
 		bbmod_texture_ref_destroy(self, "Starburst");
-		Enabled = buffer_read(_buffer, buffer_u8) != 0;
-		DesignWidth = buffer_read(_buffer, buffer_u8) != 0
+		Enabled = buffer_read(_buffer, buffer_bool);
+		DesignWidth = buffer_read(_buffer, buffer_bool)
 			? buffer_read(_buffer, buffer_f64) : undefined;
-		DesignHeight = buffer_read(_buffer, buffer_u8) != 0
+		DesignHeight = buffer_read(_buffer, buffer_bool)
 			? buffer_read(_buffer, buffer_f64) : undefined;
 		ChromaticAberration = buffer_read(_buffer, buffer_f64);
 		ChromaticAberrationOffset = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
@@ -401,7 +401,7 @@ function BBMOD_PostProcessor(): BBMOD_Resource() constructor
 
 	static destroy = function ()
 	{
-		BBMOD_Resource_destroy();
+		Resource_destroy();
 		bbmod_texture_ref_destroy(self, "ColorGradingLUT");
 		bbmod_texture_ref_destroy(self, "LensDirt");
 		bbmod_texture_ref_destroy(self, "Starburst");

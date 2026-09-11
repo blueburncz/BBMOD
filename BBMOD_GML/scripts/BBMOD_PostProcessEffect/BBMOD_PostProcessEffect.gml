@@ -27,7 +27,7 @@ function BBMOD_PostProcessEffect() constructor
 	/// @return {Struct.BBMOD_PostProcessEffect} Returns `self`.
 	static to_buffer = function (_buffer)
 	{
-		buffer_write(_buffer, buffer_u8, Enabled ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, Enabled);
 		return self;
 	};
 
@@ -40,7 +40,7 @@ function BBMOD_PostProcessEffect() constructor
 	/// @return {Struct.BBMOD_PostProcessEffect} Returns `self`.
 	static from_buffer = function (_buffer)
 	{
-		Enabled = buffer_read(_buffer, buffer_u8) != 0;
+		Enabled = buffer_read(_buffer, buffer_bool);
 		return self;
 	};
 

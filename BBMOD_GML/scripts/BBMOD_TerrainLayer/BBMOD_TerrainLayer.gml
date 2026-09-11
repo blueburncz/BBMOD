@@ -74,6 +74,22 @@ function BBMOD_TerrainLayer() constructor
 	/// {@link BBMOD_TerrainLayer.NormalRoughnessSprite}.
 	NormalRoughnessOwned = false;
 
+	static to_buffer = function (_buffer)
+	{
+		bbmod_texture_ref_to_buffer(_buffer, self, "BaseOpacity");
+		bbmod_texture_ref_to_buffer(_buffer, self, "NormalSmoothness");
+		bbmod_texture_ref_to_buffer(_buffer, self, "NormalRoughness");
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		bbmod_texture_ref_from_buffer(_buffer, self, "BaseOpacity");
+		bbmod_texture_ref_from_buffer(_buffer, self, "NormalSmoothness");
+		bbmod_texture_ref_from_buffer(_buffer, self, "NormalRoughness");
+		return self;
+	};
+
 	/// @func destroy()
 	///
 	/// @desc Releases owned texture sprites and destroys this layer.

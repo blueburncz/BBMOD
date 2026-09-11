@@ -233,11 +233,11 @@ function BBMOD_LensFlareElement(
 		ScaleByDistanceMin.ToBuffer(_buffer, buffer_f64);
 		ScaleByDistanceMax.ToBuffer(_buffer, buffer_f64);
 		Color.ToBuffer(_buffer);
-		buffer_write(_buffer, buffer_u8, ApplyTint ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, ApplyTint);
 		buffer_write(_buffer, buffer_f64, Angle);
-		buffer_write(_buffer, buffer_u8, AngleRelative ? 1 : 0);
-		buffer_write(_buffer, buffer_u8, FadeOut ? 1 : 0);
-		buffer_write(_buffer, buffer_u8, ApplyStarburst ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, AngleRelative);
+		buffer_write(_buffer, buffer_bool, FadeOut);
+		buffer_write(_buffer, buffer_bool, ApplyStarburst);
 		return self;
 	};
 
@@ -263,11 +263,11 @@ function BBMOD_LensFlareElement(
 		ScaleByDistanceMin = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
 		ScaleByDistanceMax = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
 		Color = new BBMOD_Color().FromBuffer(_buffer);
-		ApplyTint = buffer_read(_buffer, buffer_u8) != 0;
+		ApplyTint = buffer_read(_buffer, buffer_bool);
 		Angle = buffer_read(_buffer, buffer_f64);
-		AngleRelative = buffer_read(_buffer, buffer_u8) != 0;
-		FadeOut = buffer_read(_buffer, buffer_u8) != 0;
-		ApplyStarburst = buffer_read(_buffer, buffer_u8) != 0;
+		AngleRelative = buffer_read(_buffer, buffer_bool);
+		FadeOut = buffer_read(_buffer, buffer_bool);
+		ApplyStarburst = buffer_read(_buffer, buffer_bool);
 		return self;
 	};
 

@@ -180,7 +180,7 @@ function BBMOD_DepthOfFieldEffect(
 		PostProcessEffect_to_buffer(_buffer);
 		buffer_write(_buffer, buffer_f64, FocusStart);
 		buffer_write(_buffer, buffer_f64, FocusEnd);
-		buffer_write(_buffer, buffer_u8, AutoFocus ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, AutoFocus);
 		buffer_write(_buffer, buffer_f64, AutoFocusRange);
 		AutoFocusPoint.ToBuffer(_buffer, buffer_f64);
 		buffer_write(_buffer, buffer_f64, AutoFocusFactor);
@@ -198,7 +198,7 @@ function BBMOD_DepthOfFieldEffect(
 		PostProcessEffect_from_buffer(_buffer);
 		FocusStart = buffer_read(_buffer, buffer_f64);
 		FocusEnd = buffer_read(_buffer, buffer_f64);
-		AutoFocus = buffer_read(_buffer, buffer_u8) != 0;
+		AutoFocus = buffer_read(_buffer, buffer_bool);
 		AutoFocusRange = buffer_read(_buffer, buffer_f64);
 		AutoFocusPoint = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
 		AutoFocusFactor = buffer_read(_buffer, buffer_f64);

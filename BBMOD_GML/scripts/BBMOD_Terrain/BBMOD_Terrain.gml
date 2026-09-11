@@ -1,5 +1,7 @@
 /// @module Terrain
 
+// Feather ignore GM1021
+
 /// @macro {Real}
 /// @private
 #macro __BBMOD_SAVE_TERRAIN_VERSION 0
@@ -134,6 +136,8 @@ function BBMOD_TerrainInfo() constructor
 
 /// @func BBMOD_Terrain([_info])
 ///
+/// @extends {BBMOD_Resource}
+///
 /// @implements {BBMOD_IDestructible}
 ///
 /// @desc A heightmap-based terrain with five material layers controlled through
@@ -141,8 +145,10 @@ function BBMOD_TerrainInfo() constructor
 ///
 /// @param {Struct.BBMOD_TerrainInfo} [_info] Properties to initialize the
 /// terrain with.
-function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
+function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()): BBMOD_Resource() constructor
 {
+	static Resource_destroy = destroy;
+
 	////////////////////////////////////////////////////////////////////////////
 	// Legacy arguments
 
@@ -166,7 +172,8 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 	/// @var {Struct.BBMOD_RenderQueue} Render queue for terrain layers.
 	/// @readonly
 	/// @deprecated Use bbmod_render_queue_get(BBMOD_ERenderQueue.Terrain) instead.
-	static RenderQueue = bbmod_render_queue_get(BBMOD_ERenderQueue.Terrain);
+	static RenderQueue = variable_global_exists("__bbmodRenderQueues")
+		? bbmod_render_queue_get(BBMOD_ERenderQueue.Terrain) : undefined;
 
 	/// @var {Struct.BBMOD_TerrainMaterial} The material used when rendering
 	/// the terrain. Default is {@link BBMOD_MATERIAL_TERRAIN}.
@@ -785,8 +792,10 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 
 					for (var _jChunk = _job.NormalsFromY; _jChunk <= _job.NormalsToY; ++_jChunk)
 					{
-						var _nx = get_height_index(_iChunk - 1, _jChunk) - get_height_index(_iChunk + 1, _jChunk);
-						var _ny = get_height_index(_iChunk, _jChunk - 1) - get_height_index(_iChunk, _jChunk + 1);
+						var _nx = get_height_index(_iChunk - 1, _jChunk) - get_height_index(_iChunk + 1,
+							_jChunk);
+						var _ny = get_height_index(_iChunk, _jChunk - 1) - get_height_index(_iChunk, _jChunk
+							+ 1);
 						var _nz = 2.0;
 						var _r = sqrt(_nx * _nx + _ny * _ny + _nz * _nz);
 						_nx /= _r;
@@ -821,9 +830,12 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 
 					for (var _yChunk = _job.ChunkMinY; _yChunk <= _job.ChunkMaxY; ++_yChunk)
 					{
-						var _nx = ds_grid_get_mean(__normalX, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk + 1);
-						var _ny = ds_grid_get_mean(__normalY, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk + 1);
-						var _nz = ds_grid_get_mean(__normalZ, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk + 1);
+						var _nx = ds_grid_get_mean(__normalX, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk
+							+ 1);
+						var _ny = ds_grid_get_mean(__normalY, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk
+							+ 1);
+						var _nz = ds_grid_get_mean(__normalZ, _xChunk - 1, _yChunk - 1, _xChunk + 1, _yChunk
+							+ 1);
 						var _r = sqrt(_nx * _nx + _ny * _ny + _nz * _nz);
 						_nx /= _r;
 						_ny /= _r;
@@ -1732,7 +1744,8 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 		for (var i = 0; i < 4; ++i)
 		{
 			shader_set(BBMOD_ShExtractSplatmapLayer);
-			texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP), Splatmap);
+			texture_set_stage(shader_get_sampler_index(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP),
+				Splatmap);
 			shader_set_uniform_i(shader_get_uniform(BBMOD_ShExtractSplatmapLayer, BBMOD_U_SPLATMAP_INDEX), i);
 
 			surface_set_target(_surface);
@@ -2251,7 +2264,8 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 		{
 			var _iStr = string(i);
 			_uSplatmapIndex[@ i] = shader_get_uniform(_shaderRaw, BBMOD_U_SPLATMAP_INDEX + _iStr);
-			_uTerrainBaseOpacity[@ i] = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_BASE_OPACITY + _iStr);
+			_uTerrainBaseOpacity[@ i] = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_BASE_OPACITY
+				+ _iStr);
 			_uTerrainNormalW[@ i] = shader_get_sampler_index(_shaderRaw, BBMOD_U_TERRAIN_NORMAL_W + _iStr);
 			_uTerrainIsRoughness[@ i] = shader_get_uniform(_shaderRaw, BBMOD_U_TERRAIN_IS_ROUGHNESS + _iStr);
 		}
@@ -2383,12 +2397,153 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 	/// @return {Struct.BBMOD_Terrain} Returns `self`.
 	static render = function ()
 	{
-		RenderQueue.DrawTerrain(self);
+		bbmod_render_queue_get(BBMOD_ERenderQueue.Terrain).DrawTerrain(self);
+		return self;
+	};
+
+	static to_buffer = function (_buffer)
+	{
+		buffer_write(_buffer, buffer_string, "BBTERR");
+		buffer_write(_buffer, buffer_u32, 1);
+		TextureRepeat.ToBuffer(_buffer, buffer_f64);
+		Position.ToBuffer(_buffer, buffer_f64);
+		Scale.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, ChunkSize);
+		buffer_write(_buffer, buffer_f64, ChunkRadius);
+		buffer_write(_buffer, buffer_bool, EnableLazyBuild);
+		buffer_write(_buffer, buffer_f64, LazyBuildBudget);
+		buffer_write(_buffer, buffer_f64, LazyBuildInterval);
+		buffer_write(_buffer, buffer_bool, LazyBuildForceReflectionCapture);
+		buffer_write(_buffer, buffer_bool, EnableBuildProfiler);
+		bbmod_texture_ref_to_buffer(_buffer, self, "Splatmap");
+		bbmod_texture_ref_to_buffer(_buffer, self, "Colormap");
+
+		var _width = ds_grid_width(__height);
+		var _height = ds_grid_height(__height);
+		buffer_write(_buffer, buffer_u32, _width);
+		buffer_write(_buffer, buffer_u32, _height);
+		for (var _x = 0; _x < _width; ++_x)
+		{
+			for (var _y = 0; _y < _height; ++_y)
+			{
+				buffer_write(_buffer, buffer_f64, __height[# _x, _y]);
+			}
+		}
+
+		buffer_write(_buffer, buffer_u32, array_length(Layer));
+		for (var i = 0; i < array_length(Layer); ++i)
+		{
+			var _layer = Layer[i];
+			buffer_write(_buffer, buffer_bool, _layer != undefined);
+			if (_layer != undefined)
+			{
+				var _constructorName = instanceof(_layer);
+				if (_constructorName == undefined || _constructorName == "struct")
+				{
+					throw new BBMOD_Exception("Terrain layer has no constructor.");
+				}
+				buffer_write(_buffer, buffer_string, _constructorName);
+				_layer.to_buffer(_buffer);
+			}
+		}
+		IsLoaded = true;
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		if (buffer_read(_buffer, buffer_string) != "BBTERR")
+		{
+			throw new BBMOD_Exception("Invalid BBTERR resource header.");
+		}
+		if (buffer_read(_buffer, buffer_u32) != 1)
+		{
+			throw new BBMOD_Exception("Unsupported BBTERR resource version.");
+		}
+		TextureRepeat = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		Position = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Scale = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		ChunkSize = buffer_read(_buffer, buffer_f64);
+		ChunkRadius = buffer_read(_buffer, buffer_f64);
+		EnableLazyBuild = buffer_read(_buffer, buffer_bool);
+		LazyBuildBudget = buffer_read(_buffer, buffer_f64);
+		LazyBuildInterval = buffer_read(_buffer, buffer_f64);
+		LazyBuildForceReflectionCapture = buffer_read(_buffer, buffer_bool);
+		EnableBuildProfiler = buffer_read(_buffer, buffer_bool);
+		bbmod_texture_ref_from_buffer(_buffer, self, "Splatmap");
+		bbmod_texture_ref_from_buffer(_buffer, self, "Colormap");
+
+		var _width = buffer_read(_buffer, buffer_u32);
+		var _height = buffer_read(_buffer, buffer_u32);
+		if (_width == 0 || _height == 0 || _width * _height > 100000000)
+		{
+			throw new BBMOD_Exception("Invalid BBTERR height grid dimensions.");
+		}
+		ds_grid_resize(__height, _width, _height);
+		Size.X = _width;
+		Size.Y = _height;
+		for (var _x = 0; _x < _width; ++_x)
+		{
+			for (var _y = 0; _y < _height; ++_y)
+			{
+				__height[# _x, _y] = buffer_read(_buffer, buffer_f64);
+			}
+		}
+		var _chunksX = max(ceil(_width / ChunkSize), 1);
+		var _chunksY = max(ceil(_height / ChunkSize), 1);
+		var _normalGrids = [
+			__normalX, __normalY, __normalZ,
+			__normalSmoothX, __normalSmoothY, __normalSmoothZ,
+			__tangentSmoothX, __tangentSmoothY, __tangentSmoothZ, __tangentSmoothW,
+		];
+		for (var i = 0; i < array_length(_normalGrids); ++i)
+		{
+			ds_grid_resize(_normalGrids[i], _width, _height);
+			ds_grid_clear(_normalGrids[i], 0);
+		}
+		ds_grid_resize(Chunks, _chunksX, _chunksY);
+		ds_grid_clear(Chunks, undefined);
+		ds_grid_resize(__chunkBoundingSpheres, _chunksX, _chunksY);
+		ds_grid_clear(__chunkBoundingSpheres, undefined);
+		ds_grid_resize(__chunkNormalsBuilt, _chunksX, _chunksY);
+		ds_grid_clear(__chunkNormalsBuilt, false);
+		ds_grid_resize(__chunkSmoothNormalsBuilt, _chunksX, _chunksY);
+		ds_grid_clear(__chunkSmoothNormalsBuilt, false);
+
+		var _layerCount = buffer_read(_buffer, buffer_u32);
+		if (_layerCount != 5)
+		{
+			throw new BBMOD_Exception("Invalid BBTERR layer count.");
+		}
+		Layer = array_create(_layerCount, undefined);
+		for (var i = 0; i < _layerCount; ++i)
+		{
+			if (buffer_read(_buffer, buffer_bool))
+			{
+				var _constructorName = buffer_read(_buffer, buffer_string);
+				var _constructor = asset_get_index(_constructorName);
+				if (_constructor == -1)
+				{
+					throw new BBMOD_Exception(
+						"Unknown terrain layer: " + _constructorName);
+				}
+				Layer[i] = new _constructor().from_buffer(_buffer);
+			}
+		}
+
+		build_normals();
+		build_smooth_normals();
+		if (!EnableLazyBuild)
+		{
+			build_mesh();
+		}
+		IsLoaded = true;
 		return self;
 	};
 
 	static destroy = function ()
 	{
+		Resource_destroy();
 		__lazy_build_cancel_job();
 		for (var i = array_length(Layer) - 1; i >= 0; --i)
 		{

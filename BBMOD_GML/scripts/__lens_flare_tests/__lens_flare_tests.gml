@@ -162,13 +162,13 @@ if (true)
 	buffer_write(_unknownConstructorBuffer, buffer_string, "BBFLARE");
 	buffer_write(_unknownConstructorBuffer, buffer_u32, 2);
 	new BBMOD_Color().ToBuffer(_unknownConstructorBuffer);
-	buffer_write(_unknownConstructorBuffer, buffer_u8, 0);
+	buffer_write(_unknownConstructorBuffer, buffer_bool, false);
 	buffer_write(_unknownConstructorBuffer, buffer_f64, 1.0);
 	buffer_write(_unknownConstructorBuffer, buffer_f64, 0.8);
 	buffer_write(_unknownConstructorBuffer, buffer_f64, 1.0);
-	buffer_write(_unknownConstructorBuffer, buffer_u8, 0);
-	buffer_write(_unknownConstructorBuffer, buffer_u8, 0);
-	buffer_write(_unknownConstructorBuffer, buffer_u8, 0);
+	buffer_write(_unknownConstructorBuffer, buffer_bool, false);
+	buffer_write(_unknownConstructorBuffer, buffer_bool, false);
+	buffer_write(_unknownConstructorBuffer, buffer_bool, false);
 	buffer_write(_unknownConstructorBuffer, buffer_u32, 1);
 	buffer_write(
 		_unknownConstructorBuffer,

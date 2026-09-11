@@ -51,7 +51,7 @@ function BBMOD_LensFlare(
 	_angleOuter = undefined
 ): BBMOD_Resource() constructor
 {
-	static BBMOD_Resource_destroy = destroy;
+	static Resource_destroy = destroy;
 
 	/// @var {Struct.BBMOD_Color} The color to multiply lens flare elements'
 	/// color by. Default value is {@link BBMOD_C_WHITE}.
@@ -420,16 +420,16 @@ function BBMOD_LensFlare(
 		}
 
 		var _tint = new BBMOD_Color().FromBuffer(_buffer);
-		var _position = (buffer_read(_buffer, buffer_u8) != 0)
+		var _position = buffer_read(_buffer, buffer_bool)
 			? new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64) : undefined;
 		var _range = buffer_read(_buffer, buffer_f64);
 		var _falloff = buffer_read(_buffer, buffer_f64);
 		var _depthThreshold = buffer_read(_buffer, buffer_f64);
-		var _direction = (buffer_read(_buffer, buffer_u8) != 0)
+		var _direction = buffer_read(_buffer, buffer_bool)
 			? new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64) : undefined;
-		var _angleInner = (buffer_read(_buffer, buffer_u8) != 0)
+		var _angleInner = buffer_read(_buffer, buffer_bool)
 			? buffer_read(_buffer, buffer_f64) : undefined;
-		var _angleOuter = (buffer_read(_buffer, buffer_u8) != 0)
+		var _angleOuter = buffer_read(_buffer, buffer_bool)
 			? buffer_read(_buffer, buffer_f64) : undefined;
 		var _flare = new BBMOD_LensFlare(
 			_tint,
@@ -472,7 +472,7 @@ function BBMOD_LensFlare(
 		buffer_write(_buffer, buffer_string, "BBFLARE");
 		buffer_write(_buffer, buffer_u32, 2);
 		Tint.ToBuffer(_buffer);
-		buffer_write(_buffer, buffer_u8, Position != undefined ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, Position != undefined);
 		if (Position != undefined)
 		{
 			Position.ToBuffer(_buffer, buffer_f64);
@@ -480,17 +480,17 @@ function BBMOD_LensFlare(
 		buffer_write(_buffer, buffer_f64, Range);
 		buffer_write(_buffer, buffer_f64, Falloff);
 		buffer_write(_buffer, buffer_f64, DepthThreshold);
-		buffer_write(_buffer, buffer_u8, Direction != undefined ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, Direction != undefined);
 		if (Direction != undefined)
 		{
 			Direction.ToBuffer(_buffer, buffer_f64);
 		}
-		buffer_write(_buffer, buffer_u8, AngleInner != undefined ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, AngleInner != undefined);
 		if (AngleInner != undefined)
 		{
 			buffer_write(_buffer, buffer_f64, AngleInner);
 		}
-		buffer_write(_buffer, buffer_u8, AngleOuter != undefined ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, AngleOuter != undefined);
 		if (AngleOuter != undefined)
 		{
 			buffer_write(_buffer, buffer_f64, AngleOuter);
@@ -512,7 +512,7 @@ function BBMOD_LensFlare(
 	/// @return {Undefined} Always returns `undefined`.
 	static destroy = function ()
 	{
-		BBMOD_Resource_destroy();
+		Resource_destroy();
 		for (var i = array_length(__elements) - 1; i >= 0; --i)
 		{
 			__elements[i].destroy();

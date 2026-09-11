@@ -331,6 +331,10 @@ function BBMOD_ResourceManager() constructor
 				_res = new BBMOD_PostProcessor();
 				break;
 
+			case ".bbterr":
+				_res = new BBMOD_Terrain();
+				break;
+
 			case ".bbflare":
 				_res = new BBMOD_LensFlare();
 				break;

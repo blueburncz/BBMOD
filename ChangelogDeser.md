@@ -34,3 +34,10 @@
 * Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to post-process effects for serializing authored fields and shared `Enabled` state; runtime surfaces, shader handles, and effect caches are rebuilt or excluded.
 * Added binary `.bbpost` resources for saving and loading post-processing configuration, legacy properties, texture references, and ordered effects.
 * `BBMOD_ResourceManager` now supports `.bbpost` resources for loading post-processing effects.
+
+## Terrain serialization
+
+* Struct `BBMOD_Terrain` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods.
+* Added binary `.bbterr` resources for saving and loading terrain configuration, final height data, texture references, and ordered terrain layers.
+* Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to `BBMOD_TerrainLayer` for serializing and deserializing layer texture references.
+* `BBMOD_ResourceManager` now supports `.bbterr` resources for loading terrains.

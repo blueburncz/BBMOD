@@ -25,7 +25,7 @@ function BBMOD_ExposureEffect(_exposure = undefined): BBMOD_PostProcessEffect() 
 	static to_buffer = function (_buffer)
 	{
 		PostProcessEffect_to_buffer(_buffer);
-		buffer_write(_buffer, buffer_u8, Exposure != undefined ? 1 : 0);
+		buffer_write(_buffer, buffer_bool, Exposure != undefined);
 		if (Exposure != undefined)
 		{
 			buffer_write(_buffer, buffer_f64, Exposure);
@@ -36,7 +36,7 @@ function BBMOD_ExposureEffect(_exposure = undefined): BBMOD_PostProcessEffect() 
 	static from_buffer = function (_buffer)
 	{
 		PostProcessEffect_from_buffer(_buffer);
-		Exposure = buffer_read(_buffer, buffer_u8) != 0
+		Exposure = buffer_read(_buffer, buffer_bool)
 			? buffer_read(_buffer, buffer_f64) : undefined;
 		return self;
 	};

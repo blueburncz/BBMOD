@@ -217,6 +217,10 @@ distortion, radial blur, Reinhard tonemap, sun shafts, and vignette.
 
 File extension: `.bbterr`
 
+`BBMOD_Terrain` is the resource itself and inherits directly from
+`BBMOD_Resource`. Each `BBMOD_TerrainLayer` owns its binary texture payload;
+the terrain container preserves layer order and rebuilds generated state.
+
 The resource serializes:
 
 - heightmap source or embedded final height data
@@ -241,6 +245,9 @@ saved terrain. A future format may store source data plus an edit layer.
 Each layer is serialized as a fresh constructor-backed struct. A
 `BBMOD_TerrainLayer` can belong to only one terrain because
 `BBMOD_Terrain.destroy()` destroys its defined layers.
+
+`BBMOD_Terrain` does not own a collision module in the current branch, so
+collision runtime state is not serialized by `.bbterr`.
 
 Load sequence:
 
