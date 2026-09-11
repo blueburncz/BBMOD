@@ -14,12 +14,27 @@
 function BBMOD_PointLight(_color = BBMOD_C_WHITE, _position = undefined, _range = 1.0): BBMOD_PunctualLight(_color,
 	_position, _range) constructor
 {
+	static PunctualLight_to_buffer = to_buffer;
+	static PunctualLight_from_buffer = from_buffer;
+
 	__getShadowmapMatrix = __get_shadowmap_matrix;
 
 	static __get_shadowmap_matrix = function ()
 	{
 		gml_pragma("forceinline");
 		return matrix_build_identity();
+	};
+
+	static to_buffer = function (_buffer)
+	{
+		PunctualLight_to_buffer(_buffer);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PunctualLight_from_buffer(_buffer);
+		return self;
 	};
 }
 

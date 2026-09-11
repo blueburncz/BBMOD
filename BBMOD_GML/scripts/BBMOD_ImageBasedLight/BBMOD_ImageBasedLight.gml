@@ -13,9 +13,11 @@ global.__bbmodImageBasedLight = undefined;
 /// @param {Pointer.Texture} _texture A texture containing 8 prefiltered
 /// RGBM-encoded octahedrons, where the first 7 are for specular reflections
 /// with increasing roughness and the last one is for diffuse lighting.
-function BBMOD_ImageBasedLight(_texture): BBMOD_Light() constructor
+function BBMOD_ImageBasedLight(_texture = undefined): BBMOD_Light() constructor
 {
 	static Light_destroy = destroy;
+	static Light_to_buffer = to_buffer;
+	static Light_from_buffer = from_buffer;
 
 	/// @var {Pointer.Texture} The texture of the IBL.
 	/// @readonly
@@ -40,8 +42,28 @@ function BBMOD_ImageBasedLight(_texture): BBMOD_Light() constructor
 
 	/// @var {Real} The texel height of the texture.
 	/// @readonly
-	Texel = texture_get_texel_height(bbmod_texture_ref_resolve(
-		Texture, TextureSprite, TextureSubimage));
+	Texel = (_texture != undefined)
+		? texture_get_texel_height(bbmod_texture_ref_resolve(
+			Texture, TextureSprite, TextureSubimage))
+		: 0.0;
+
+	static to_buffer = function (_buffer)
+	{
+		Light_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_f64, TextureFormat);
+		bbmod_texture_ref_to_buffer(_buffer, self, "Texture");
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		Light_from_buffer(_buffer);
+		TextureFormat = buffer_read(_buffer, buffer_f64);
+		bbmod_texture_ref_from_buffer(_buffer, self, "Texture");
+		Texel = texture_get_texel_height(bbmod_texture_ref_resolve(
+			Texture, TextureSprite, TextureSubimage));
+		return self;
+	};
 
 	static destroy = function ()
 	{

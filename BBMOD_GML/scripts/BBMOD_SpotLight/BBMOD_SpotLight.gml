@@ -24,6 +24,9 @@ function BBMOD_SpotLight(
 	_angleOuter = 20
 ): BBMOD_PunctualLight(_color, _position, _range) constructor
 {
+	static PunctualLight_to_buffer = to_buffer;
+	static PunctualLight_from_buffer = from_buffer;
+
 	/// @var {Struct.BBMOD_Vec3} The direction of the light. The default value is
 	/// `(1, 0, 0)`.
 	Direction = _direction ?? BBMOD_VEC3_FORWARD;
@@ -66,5 +69,23 @@ function BBMOD_SpotLight(
 		return matrix_multiply(
 			__getViewMatrix(),
 			__getProjMatrix());
+	};
+
+	static to_buffer = function (_buffer)
+	{
+		PunctualLight_to_buffer(_buffer);
+		Direction.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, AngleInner);
+		buffer_write(_buffer, buffer_f64, AngleOuter);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PunctualLight_from_buffer(_buffer);
+		Direction = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		AngleInner = buffer_read(_buffer, buffer_f64);
+		AngleOuter = buffer_read(_buffer, buffer_f64);
+		return self;
 	};
 }

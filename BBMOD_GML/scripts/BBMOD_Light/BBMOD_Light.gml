@@ -79,6 +79,35 @@ function BBMOD_Light() constructor
 	/// @private
 	__getShadowmapMatrix = undefined;
 
+	static to_buffer = function (_buffer)
+	{
+		buffer_write(_buffer, buffer_bool, Enabled);
+		buffer_write(_buffer, buffer_u32, RenderPass);
+		Position.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_bool, AffectLightmaps);
+		buffer_write(_buffer, buffer_bool, CastShadows);
+		buffer_write(_buffer, buffer_u32, ShadowmapResolution);
+		buffer_write(_buffer, buffer_u32, Frameskip);
+		buffer_write(_buffer, buffer_bool, Static);
+		buffer_write(_buffer, buffer_bool, NeedsUpdate);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		Enabled = buffer_read(_buffer, buffer_bool);
+		RenderPass = buffer_read(_buffer, buffer_u32);
+		Position = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		AffectLightmaps = buffer_read(_buffer, buffer_bool);
+		CastShadows = buffer_read(_buffer, buffer_bool);
+		ShadowmapResolution = buffer_read(_buffer, buffer_u32);
+		Frameskip = buffer_read(_buffer, buffer_u32);
+		Static = buffer_read(_buffer, buffer_bool);
+		NeedsUpdate = buffer_read(_buffer, buffer_bool);
+		__frameskipCurrent = 0;
+		return self;
+	};
+
 	/// @func destroy()
 	///
 	/// @desc Destroys the light.

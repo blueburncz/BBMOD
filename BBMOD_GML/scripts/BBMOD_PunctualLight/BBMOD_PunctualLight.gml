@@ -28,6 +28,9 @@ global.__bbmodPunctualLightsRenderer = undefined;
 /// @see bbmod_light_punctual_clear
 function BBMOD_PunctualLight(_color = BBMOD_C_WHITE, _position = undefined, _range = 1.0): BBMOD_Light() constructor
 {
+	static Light_to_buffer = to_buffer;
+	static Light_from_buffer = from_buffer;
+
 	/// @var {Struct.BBMOD_Color} The color of the light. Default value is
 	/// {@link BBMOD_C_WHITE}.
 	Color = _color;
@@ -59,6 +62,27 @@ function BBMOD_PunctualLight(_color = BBMOD_C_WHITE, _position = undefined, _ran
 	{
 		gml_pragma("forceinline");
 		return Range;
+	};
+
+	static to_buffer = function (_buffer)
+	{
+		Light_to_buffer(_buffer);
+		Color.ToBuffer(_buffer);
+		buffer_write(_buffer, buffer_f64, Range);
+		buffer_write(_buffer, buffer_f64, DistanceFadeStart);
+		buffer_write(_buffer, buffer_f64, DistanceFadeEnd);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		Light_from_buffer(_buffer);
+		Color = new BBMOD_Color().FromBuffer(_buffer);
+		Range = buffer_read(_buffer, buffer_f64);
+		DistanceFadeStart = buffer_read(_buffer, buffer_f64);
+		DistanceFadeEnd = buffer_read(_buffer, buffer_f64);
+		__distanceFadeFactor = 1.0;
+		return self;
 	};
 }
 

@@ -47,3 +47,7 @@
 * `BBMOD_ParticleSystem` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods for `.bbpart` resources.
 * Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to particle modules, except `BBMOD_TerrainCollisionModule` and `BBMOD_CollisionEventModule`.
 * `BBMOD_ResourceManager` now supports `.bbpart` resources for loading particle systems.
+
+## Scene struct serialization
+
+* Added `bbmod_struct_to_buffer(_buffer, _value)` and `bbmod_struct_from_buffer(_buffer)` helpers, plus `to_buffer(_buffer)` and `from_buffer(_buffer)` methods on `BBMOD_Light`, `BBMOD_DirectionalLight`, `BBMOD_PunctualLight`, `BBMOD_PointLight`, `BBMOD_SpotLight`, `BBMOD_ImageBasedLight`, and `BBMOD_ReflectionProbe` without promoting them to resources.

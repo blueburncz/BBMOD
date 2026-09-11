@@ -135,6 +135,63 @@ function BBMOD_ReflectionProbe(
 	/// captured.
 	NeedsUpdate = (_sprite == undefined);
 
+	/// @func to_buffer(_buffer)
+	///
+	/// @desc Serializes the reflection probe to a buffer.
+	static to_buffer = function (_buffer)
+	{
+		var _textureRef = {
+			Texture: (Sprite != undefined) ? sprite_get_texture(Sprite, 0) : undefined,
+			TextureSprite: Sprite,
+			TextureSubimage: 0,
+			TextureOwned: SpriteOwned,
+		};
+		if (variable_struct_exists(self, "SpritePath") && SpritePath != undefined)
+		{
+			_textureRef.__texturePaths = { Texture: SpritePath };
+		}
+		buffer_write(_buffer, buffer_bool, Enabled);
+		buffer_write(_buffer, buffer_bool, EnableShadows);
+		Position.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_bool, Infinite);
+		Size.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_u32, Resolution);
+		buffer_write(_buffer, buffer_bool, NeedsUpdate);
+		bbmod_texture_ref_to_buffer(_buffer, _textureRef, "Texture");
+		return self;
+	};
+
+	/// @func from_buffer(_buffer)
+	///
+	/// @desc Deserializes the reflection probe from a buffer.
+	static from_buffer = function (_buffer)
+	{
+		Enabled = buffer_read(_buffer, buffer_bool);
+		EnableShadows = buffer_read(_buffer, buffer_bool);
+		Position = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Infinite = buffer_read(_buffer, buffer_bool);
+		Size = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Resolution = buffer_read(_buffer, buffer_u32);
+		NeedsUpdate = buffer_read(_buffer, buffer_bool);
+		var _textureRef = {
+			Texture: undefined,
+			TextureSprite: undefined,
+			TextureSubimage: 0,
+			TextureOwned: false,
+		};
+		bbmod_texture_ref_from_buffer(_buffer, _textureRef, "Texture");
+		Sprite = _textureRef.TextureSprite;
+		SpriteOwned = _textureRef.TextureOwned;
+		if (variable_struct_exists(_textureRef, "__texturePaths")
+			&& variable_struct_exists(_textureRef.__texturePaths, "Texture"))
+		{
+			SpritePath = _textureRef.__texturePaths.Texture;
+		}
+		__volume = Size.X * Size.Y * Size.Z;
+		__positionSizeChanged = true;
+		return self;
+	};
+
 	/// @func set_position(_position)
 	///
 	/// @desc Changes the position of the reflection probe.

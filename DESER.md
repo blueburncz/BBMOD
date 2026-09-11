@@ -384,6 +384,39 @@ invalid dependencies must produce an error rather than a partially initialized
 resource. This applies to model, mesh, sprite, terrain, and texture
 dependencies.
 
+## Scene Struct Serialization
+
+Scene-participating structs such as lights and reflection probes support
+binary round trips without becoming `BBMOD_Resource` instances. They expose
+`to_buffer(_buffer)` and `from_buffer(_buffer)` methods for authored state only.
+They do not gain resource paths, `IsLoaded`, file helpers, manager ownership, or
+resource-manager registration.
+
+The implemented struct families are:
+
+- `BBMOD_Light`
+- `BBMOD_DirectionalLight`
+- `BBMOD_PunctualLight`
+- `BBMOD_PointLight`
+- `BBMOD_SpotLight`
+- `BBMOD_ImageBasedLight`
+- `BBMOD_ReflectionProbe`
+
+Derived structs must serialize inherited state first, followed by fields owned
+by the derived struct. Polymorphic scene values store their native constructor
+names and are reconstructed with `asset_get_index()` and `new _constructor()`.
+No application-owned constructor registry is introduced.
+
+Serialize authored configuration such as light colors, positions, directions,
+ranges, cone settings, probe settings, and texture-source metadata. Exclude
+global registration arrays, render handles, surfaces, GPU state, capture
+caches, and other runtime-only state.
+
+Image-based lights and reflection probes reuse the shared texture-reference
+format. Asset-backed sprites remain borrowed; embedded or externally loaded
+sprites are reconstructed as owned sprites. Ownership comes from explicit
+serialized source metadata and must not be inferred from generated asset names.
+
 ## Testing
 
 Add binary round-trip tests for each resource:

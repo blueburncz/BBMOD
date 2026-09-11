@@ -16,6 +16,9 @@ global.__bbmodDirectionalLight = undefined;
 /// `(-1, 0, -1)` if `undefined`.
 function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBMOD_Light() constructor
 {
+	static Light_to_buffer = to_buffer;
+	static Light_from_buffer = from_buffer;
+
 	/// @var {Struct.BBMOD_Color} The color of the light. Defaul value is
 	/// {@link BBMOD_C_WHITE}.
 	Color = _color ?? BBMOD_C_WHITE;
@@ -94,6 +97,26 @@ function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBM
 			__getProjMatrix());
 		__shadowmapMatrixPrev = new BBMOD_Matrix(_matrix);
 		return _matrix;
+	};
+
+	static to_buffer = function (_buffer)
+	{
+		Light_to_buffer(_buffer);
+		Color.ToBuffer(_buffer);
+		Direction.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, ShadowmapArea);
+		buffer_write(_buffer, buffer_bool, ShadowmapFollowsCamera);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		Light_from_buffer(_buffer);
+		Color = new BBMOD_Color().FromBuffer(_buffer);
+		Direction = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		ShadowmapArea = buffer_read(_buffer, buffer_f64);
+		ShadowmapFollowsCamera = buffer_read(_buffer, buffer_bool);
+		return self;
 	};
 }
 

@@ -184,6 +184,7 @@
     {"name":"__lens_flare_tests","order":13,"path":"scripts/__lens_flare_tests/__lens_flare_tests.yy",},
     {"name":"__particle_tests","order":16,"path":"scripts/__particle_tests/__particle_tests.yy",},
     {"name":"__post_process_tests","order":14,"path":"scripts/__post_process_tests/__post_process_tests.yy",},
+    {"name":"__scene_tests","order":17,"path":"scripts/__scene_tests/__scene_tests.yy",},
     {"name":"__terrain_tests","order":15,"path":"scripts/__terrain_tests/__terrain_tests.yy",},
     {"name":"__texture_tests","order":12,"path":"scripts/__texture_tests/__texture_tests.yy",},
     {"name":"BBMOD_AddVec2OnCollisionModule","order":1,"path":"scripts/BBMOD_AddVec2OnCollisionModule/BBMOD_AddVec2OnCollisionModule.yy",},
