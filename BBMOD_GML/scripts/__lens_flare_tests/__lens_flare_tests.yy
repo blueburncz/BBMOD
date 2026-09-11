@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__lens_flare_tests",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__lens_flare_tests",
+  "parent":{
+    "name":"Test",
+    "path":"folders/Test.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

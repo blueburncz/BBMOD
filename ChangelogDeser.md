@@ -1,5 +1,10 @@
 # ChangelogDeser
 
+## General serialization
+
+* Added method `ToBuffer(_buffer)` to `BBMOD_Color`, which writes the color channels into a buffer.
+* Added method `FromBuffer(_buffer)` to `BBMOD_Color`, which loads color channels from a buffer.
+
 ## Texture references and serialization
 
 * Added new properties `*Sprite`, `*Subimage`, `*Owned`, and `*Format` to texture references throughout materials, lighting, post-processing, terrain, and rendering APIs. Sprite sources take precedence over raw texture pointers, and `*Subimage` selects the sprite frame used for rendering.
@@ -14,3 +19,11 @@
 * Property `__Textures` of material serialization now preserves sprite subimages, including cached `sprite://` references, when texture references are expanded during deserialization.
 * Added new texture reference properties to `BBMOD_Material`, `BBMOD_DefaultMaterial`, and `BBMOD_DefaultLightmapMaterial`, which are included in material serialization and deserialization.
 * Added new sprite, subimage, ownership, and capture-format properties to `BBMOD_TerrainInfo`, `BBMOD_Terrain`, and `BBMOD_TerrainLayer` for terrain splatmap, colormap, and layer textures.
+
+## Lens flares serialization
+
+* Struct `BBMOD_LensFlare` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods.
+* Added properties `SpritePath` and `SpriteSha1` to `BBMOD_LensFlareElement` for external sprite-file references.
+* Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to `BBMOD_LensFlareElement` for serializing and deserializing element properties and sprite sources.
+* Added binary `.bbflare` resources for saving and loading lens flare compositions, including scalar properties, ordered elements, native element constructors, and asset, external-file, and embedded RGBA8 sprite references.
+* `.bbflare` resources are now supported by `BBMOD_ResourceManager` and restore owned sprites for external and embedded sources while asset-backed sprites remain borrowed.

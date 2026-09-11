@@ -1,10 +1,14 @@
 /// @module PostProcessing
 
+// Feather ignore GM1021
+
 /// @var {Array<Struct.BBMOD_LensFlare>}
 /// @private
 global.__bbmodLensFlares = [];
 
 /// @func BBMOD_LensFlare([_tint[, _position[, _range[, _falloff[, _depthThreshold[, _direction[, _angleInner[, _angleOuter]]]]]]]])
+///
+/// @extends {BBMOD_Resource}
 ///
 /// @implements {BBMOD_IDestructible}
 ///
@@ -45,8 +49,10 @@ function BBMOD_LensFlare(
 	_direction = undefined,
 	_angleInner = undefined,
 	_angleOuter = undefined
-) constructor
+): BBMOD_Resource() constructor
 {
+	static BBMOD_Resource_destroy = destroy;
+
 	/// @var {Struct.BBMOD_Color} The color to multiply lens flare elements'
 	/// color by. Default value is {@link BBMOD_C_WHITE}.
 	/// @see BBMOD_LensFlareElement.ApplyTint
@@ -307,8 +313,9 @@ function BBMOD_LensFlare(
 			_postProcessor.StarburstSubimage);
 		texture_set_stage(__uStarburstTex, _starburst);
 		var _starburstUVs = texture_get_uvs(_starburst);
-		shader_set_uniform_f(__uStarburstUVs, _starburstUVs[0], _starburstUVs[1], _starburstUVs[2], _starburstUVs[
-			3]);
+		shader_set_uniform_f(__uStarburstUVs, _starburstUVs[0], _starburstUVs[1], _starburstUVs[2],
+			_starburstUVs[
+				3]);
 		shader_set_uniform_f(__uStarburstRot, _camRot);
 
 		var _lensDirt = bbmod_texture_ref_resolve(
@@ -317,7 +324,8 @@ function BBMOD_LensFlare(
 			_postProcessor.LensDirtSubimage);
 		texture_set_stage(__uLensDirtTex, _lensDirt);
 		var _lensDirtUVs = texture_get_uvs(_lensDirt);
-		shader_set_uniform_f(__uLensDirtUVs, _lensDirtUVs[0], _lensDirtUVs[1], _lensDirtUVs[2], _lensDirtUVs[3]);
+		shader_set_uniform_f(__uLensDirtUVs, _lensDirtUVs[0], _lensDirtUVs[1], _lensDirtUVs[2], _lensDirtUVs[
+			3]);
 		shader_set_uniform_f(__uLensDirtStrength, _postProcessor.LensDirtStrength);
 
 		var _uColor = __uColor;
@@ -376,6 +384,127 @@ function BBMOD_LensFlare(
 		return self;
 	};
 
+	static __write_element = function (_buffer, _element)
+	{
+		var _constructorName = instanceof(_element);
+		if (_constructorName == undefined || _constructorName == "struct")
+		{
+			throw new BBMOD_Exception("Lens flare element has no constructor.");
+		}
+		buffer_write(_buffer, buffer_string, _constructorName);
+		_element.to_buffer(_buffer);
+	};
+
+	static __read_element = function (_buffer)
+	{
+		var _constructorName = buffer_read(_buffer, buffer_string);
+		var _constructor = asset_get_index(_constructorName);
+		if (_constructor == -1)
+		{
+			throw new BBMOD_Exception(
+				"Unknown lens flare element constructor: " + _constructorName);
+		}
+
+		return new _constructor().from_buffer(_buffer);
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		if (buffer_read(_buffer, buffer_string) != "BBFLARE")
+		{
+			throw new BBMOD_Exception("Invalid BBFLARE resource header.");
+		}
+		if (buffer_read(_buffer, buffer_u32) != 2)
+		{
+			throw new BBMOD_Exception("Unsupported BBFLARE resource version.");
+		}
+
+		var _tint = new BBMOD_Color().FromBuffer(_buffer);
+		var _position = (buffer_read(_buffer, buffer_u8) != 0)
+			? new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64) : undefined;
+		var _range = buffer_read(_buffer, buffer_f64);
+		var _falloff = buffer_read(_buffer, buffer_f64);
+		var _depthThreshold = buffer_read(_buffer, buffer_f64);
+		var _direction = (buffer_read(_buffer, buffer_u8) != 0)
+			? new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64) : undefined;
+		var _angleInner = (buffer_read(_buffer, buffer_u8) != 0)
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		var _angleOuter = (buffer_read(_buffer, buffer_u8) != 0)
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		var _flare = new BBMOD_LensFlare(
+			_tint,
+			_position,
+			_range,
+			_falloff,
+			_depthThreshold,
+			_direction,
+			_angleInner,
+			_angleOuter);
+		var _elementCount = buffer_read(_buffer, buffer_u32);
+		if (_elementCount > 100000)
+		{
+			throw new BBMOD_Exception("Invalid BBFLARE element count.");
+		}
+		for (var i = 0; i < _elementCount; ++i)
+		{
+			_flare.add_element(__read_element(_buffer));
+		}
+		for (var j = array_length(__elements) - 1; j >= 0; --j)
+		{
+			__elements[j].destroy();
+		}
+		__elements = _flare.get_elements();
+		Tint = _flare.Tint;
+		Position = _flare.Position;
+		Range = _flare.Range;
+		Falloff = _flare.Falloff;
+		DepthThreshold = _flare.DepthThreshold;
+		Direction = _flare.Direction;
+		AngleInner = _flare.AngleInner;
+		AngleOuter = _flare.AngleOuter;
+		_flare.__elements = undefined;
+		IsLoaded = true;
+		return self;
+	};
+
+	static to_buffer = function (_buffer)
+	{
+		buffer_write(_buffer, buffer_string, "BBFLARE");
+		buffer_write(_buffer, buffer_u32, 2);
+		Tint.ToBuffer(_buffer);
+		buffer_write(_buffer, buffer_u8, Position != undefined ? 1 : 0);
+		if (Position != undefined)
+		{
+			Position.ToBuffer(_buffer, buffer_f64);
+		}
+		buffer_write(_buffer, buffer_f64, Range);
+		buffer_write(_buffer, buffer_f64, Falloff);
+		buffer_write(_buffer, buffer_f64, DepthThreshold);
+		buffer_write(_buffer, buffer_u8, Direction != undefined ? 1 : 0);
+		if (Direction != undefined)
+		{
+			Direction.ToBuffer(_buffer, buffer_f64);
+		}
+		buffer_write(_buffer, buffer_u8, AngleInner != undefined ? 1 : 0);
+		if (AngleInner != undefined)
+		{
+			buffer_write(_buffer, buffer_f64, AngleInner);
+		}
+		buffer_write(_buffer, buffer_u8, AngleOuter != undefined ? 1 : 0);
+		if (AngleOuter != undefined)
+		{
+			buffer_write(_buffer, buffer_f64, AngleOuter);
+		}
+
+		buffer_write(_buffer, buffer_u32, array_length(__elements));
+		for (var i = 0; i < array_length(__elements); ++i)
+		{
+			__write_element(_buffer, __elements[i]);
+		}
+		IsLoaded = true;
+		return self;
+	};
+
 	/// @func destroy()
 	///
 	/// @desc Destroys the lens flare's elements and any sprites they own.
@@ -383,6 +512,7 @@ function BBMOD_LensFlare(
 	/// @return {Undefined} Always returns `undefined`.
 	static destroy = function ()
 	{
+		BBMOD_Resource_destroy();
 		for (var i = array_length(__elements) - 1; i >= 0; --i)
 		{
 			__elements[i].destroy();

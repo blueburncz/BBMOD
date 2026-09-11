@@ -63,6 +63,14 @@ function BBMOD_LensFlareElement(
 	/// deleted when the element is destroyed. Defaults to `false`.
 	SpriteOwned = _spriteOwned;
 
+	/// @var {String} External sprite file used during serialization, or
+	/// `undefined` (default).
+	SpritePath = undefined;
+
+	/// @var {String} Optional SHA1 for {@link SpritePath}, or `undefined`
+	/// (default).
+	SpriteSha1 = undefined;
+
 	/// @var {Real} The sprite subimage. Default value is 0.
 	Subimage = _subimage;
 
@@ -109,6 +117,160 @@ function BBMOD_LensFlareElement(
 	/// @var {Bool} Whether to apply starburst. Default value is `false`.
 	ApplyStarburst = _applyStarburst;
 
+	static __write_sprite = function (_buffer)
+	{
+		if (Sprite == undefined)
+		{
+			buffer_write(_buffer, buffer_u8, 0);
+			return;
+		}
+
+		if (SpritePath != undefined)
+		{
+			buffer_write(_buffer, buffer_u8, 2);
+			buffer_write(_buffer, buffer_string, SpritePath);
+			buffer_write(_buffer, buffer_string, SpriteSha1 ?? "");
+			return;
+		}
+
+		var _name = sprite_get_name(Sprite);
+		var _asset = (_name != "") ? asset_get_index(_name) : -1;
+		if (!SpriteOwned && _asset != -1 && asset_get_type(_asset) == asset_sprite)
+		{
+			buffer_write(_buffer, buffer_u8, 1);
+			buffer_write(_buffer, buffer_string, _name);
+			return;
+		}
+
+		var _raw = __bbmod_texture_ref_to_raw(
+			sprite_get_texture(Sprite, Subimage), surface_rgba8unorm);
+		buffer_write(_buffer, buffer_u8, 3);
+		buffer_write(_buffer, buffer_u32, _raw.Width);
+		buffer_write(_buffer, buffer_u32, _raw.Height);
+		buffer_write(_buffer, buffer_u32, array_length(_raw.Data));
+		for (var i = 0; i < array_length(_raw.Data); ++i)
+		{
+			buffer_write(_buffer, buffer_u8, _raw.Data[i]);
+		}
+	};
+
+	static __read_sprite = function (_buffer)
+	{
+		var _kind = buffer_read(_buffer, buffer_u8);
+		if (_kind == 0)
+		{
+			return { Sprite: undefined, Owned: false };
+		}
+
+		if (_kind == 1)
+		{
+			var _name = buffer_read(_buffer, buffer_string);
+			var _asset = asset_get_index(_name);
+			if (_asset == -1)
+			{
+				throw new BBMOD_Exception("Missing lens flare sprite: " + _name);
+			}
+			return { Sprite: _asset, Owned: false };
+		}
+
+		if (_kind == 2)
+		{
+			var _path = buffer_read(_buffer, buffer_string);
+			var _sha1 = buffer_read(_buffer, buffer_string);
+			var _resource = new BBMOD_Sprite(
+				_path, _sha1 == "" ? undefined : _sha1);
+			return {
+				Sprite: _resource.Raw,
+				Owned: true,
+				Path: _path,
+				SHA1: _sha1,
+			};
+		}
+
+		if (_kind == 3)
+		{
+			var _width = buffer_read(_buffer, buffer_u32);
+			var _height = buffer_read(_buffer, buffer_u32);
+			var _length = buffer_read(_buffer, buffer_u32);
+			if (_width <= 0 || _height <= 0 || _length != _width * _height * 4)
+			{
+				throw new BBMOD_Exception("Invalid embedded lens flare sprite.");
+			}
+			var _data = array_create(_length, 0);
+			for (var i = 0; i < _length; ++i)
+			{
+				_data[i] = buffer_read(_buffer, buffer_u8);
+			}
+			return {
+				Sprite: __bbmod_texture_ref_from_raw(
+				{
+					Version: 1,
+					Format: "RGBA8",
+					Width: _width,
+					Height: _height,
+					Data: _data,
+				}),
+				Owned: true,
+			};
+		}
+
+		throw new BBMOD_Exception("Unknown lens flare sprite source.");
+	};
+
+	/// @func to_buffer(_buffer)
+	///
+	/// @desc Writes this element's source and configuration to a binary buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to write to.
+	///
+	/// @return {Struct.BBMOD_LensFlareElement} Returns `self`.
+	static to_buffer = function (_buffer)
+	{
+		__write_sprite(_buffer);
+		buffer_write(_buffer, buffer_f64, Subimage);
+		Offset.ToBuffer(_buffer, buffer_f64);
+		Scale.ToBuffer(_buffer, buffer_f64);
+		ScaleByDistanceMin.ToBuffer(_buffer, buffer_f64);
+		ScaleByDistanceMax.ToBuffer(_buffer, buffer_f64);
+		Color.ToBuffer(_buffer);
+		buffer_write(_buffer, buffer_u8, ApplyTint ? 1 : 0);
+		buffer_write(_buffer, buffer_f64, Angle);
+		buffer_write(_buffer, buffer_u8, AngleRelative ? 1 : 0);
+		buffer_write(_buffer, buffer_u8, FadeOut ? 1 : 0);
+		buffer_write(_buffer, buffer_u8, ApplyStarburst ? 1 : 0);
+		return self;
+	};
+
+	/// @func from_buffer(_buffer)
+	///
+	/// @desc Reads this element's source and configuration from a binary buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to read from.
+	///
+	/// @return {Struct.BBMOD_LensFlareElement} Returns `self`.
+	static from_buffer = function (_buffer)
+	{
+		var _sprite = __read_sprite(_buffer);
+		Sprite = _sprite.Sprite;
+		SpriteOwned = _sprite.Owned;
+		SpritePath = variable_struct_exists(_sprite, "Path")
+			? _sprite.Path : undefined;
+		SpriteSha1 = variable_struct_exists(_sprite, "SHA1")
+			? _sprite.SHA1 : undefined;
+		Subimage = buffer_read(_buffer, buffer_f64);
+		Offset = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		Scale = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		ScaleByDistanceMin = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		ScaleByDistanceMax = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		Color = new BBMOD_Color().FromBuffer(_buffer);
+		ApplyTint = buffer_read(_buffer, buffer_u8) != 0;
+		Angle = buffer_read(_buffer, buffer_f64);
+		AngleRelative = buffer_read(_buffer, buffer_u8) != 0;
+		FadeOut = buffer_read(_buffer, buffer_u8) != 0;
+		ApplyStarburst = buffer_read(_buffer, buffer_u8) != 0;
+		return self;
+	};
+
 	/// @func destroy()
 	///
 	/// @desc Deletes the element sprite when this element owns it.
@@ -120,8 +282,6 @@ function BBMOD_LensFlareElement(
 		{
 			sprite_delete(Sprite);
 		}
-		Sprite = undefined;
-		SpriteOwned = false;
 		return undefined;
 	};
 }

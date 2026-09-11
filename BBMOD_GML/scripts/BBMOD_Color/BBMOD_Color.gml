@@ -166,6 +166,40 @@ function BBMOD_Color(
 		return self;
 	};
 
+	/// @func FromBuffer(_buffer)
+	///
+	/// @desc Loads color channels from a buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to read the channels from.
+	///
+	/// @return {Struct.BBMOD_Color} Returns `self`.
+	static FromBuffer = function (_buffer)
+	{
+		gml_pragma("forceinline");
+		Red = buffer_read(_buffer, buffer_f64);
+		Green = buffer_read(_buffer, buffer_f64);
+		Blue = buffer_read(_buffer, buffer_f64);
+		Alpha = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
+
+	/// @func ToBuffer(_buffer)
+	///
+	/// @desc Writes the color channels into a buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to write the channels to.
+	///
+	/// @return {Struct.BBMOD_Color} Returns `self`.
+	static ToBuffer = function (_buffer)
+	{
+		gml_pragma("forceinline");
+		buffer_write(_buffer, buffer_f64, Red);
+		buffer_write(_buffer, buffer_f64, Green);
+		buffer_write(_buffer, buffer_f64, Blue);
+		buffer_write(_buffer, buffer_f64, Alpha);
+		return self;
+	};
+
 	/// @func FromRGBA(_red, _green, _blue[, _alpha])
 	///
 	/// @desc Initializes the color using RGBA.
