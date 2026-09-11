@@ -147,7 +147,11 @@ function BBMOD_StaticBatch(_vformat) constructor
 			return self;
 		}
 
-		vertex_submit(__vertexBuffer, __primitiveType, _material.BaseOpacity);
+		var _baseOpacity = bbmod_texture_ref_resolve(
+			_material.BaseOpacity,
+			_material.BaseOpacitySprite,
+			_material.BaseOpacitySubimage);
+		vertex_submit(__vertexBuffer, __primitiveType, _baseOpacity);
 
 		return self;
 	};
@@ -170,7 +174,11 @@ function BBMOD_StaticBatch(_vformat) constructor
 			.ApplyMaterial(_material, _vertexFormat)
 			.BeginConditionalBlock()
 			.SetWorldMatrix(matrix_get(matrix_world))
-			.SubmitVertexBuffer(__vertexBuffer, __vertexFormat.Raw, _material.BaseOpacity)
+			.SubmitVertexBuffer(__vertexBuffer, __vertexFormat.Raw,
+				bbmod_texture_ref_resolve(
+					_material.BaseOpacity,
+					_material.BaseOpacitySprite,
+					_material.BaseOpacitySubimage))
 			.ResetMaterial()
 			.EndConditionalBlock();
 

@@ -126,21 +126,30 @@ function BBMOD_DefaultShader(_shader, _vertexFormat): BBMOD_BaseShader(_shader, 
 		var _shaderCurrent = shader_current();
 
 		// Base opacity UVs
-		var _baseOpacity = _material.BaseOpacity;
+		var _baseOpacity = bbmod_texture_ref_resolve(
+			_material.BaseOpacity,
+			_material.BaseOpacitySprite,
+			_material.BaseOpacitySubimage);
 		if (_baseOpacity != (-1 /*pointer_null*/ ))
 		{
 			bbmod_shader_set_base_opacity_uv(_shaderCurrent, texture_get_uvs(_baseOpacity));
 		}
 
 		// Normal smoothness/roughness
-		var _normalSmoothness = _material.NormalSmoothness;
+		var _normalSmoothness = bbmod_texture_ref_resolve(
+			_material.NormalSmoothness,
+			_material.NormalSmoothnessSprite,
+			_material.NormalSmoothnessSubimage);
 		if (_normalSmoothness != undefined)
 		{
 			bbmod_shader_set_normal_smoothness(_shaderCurrent, _normalSmoothness);
 			bbmod_shader_set_normal_w_uv(_shaderCurrent, texture_get_uvs(_normalSmoothness));
 		}
 
-		var _normalRoughness = _material.NormalRoughness;
+		var _normalRoughness = bbmod_texture_ref_resolve(
+			_material.NormalRoughness,
+			_material.NormalRoughnessSprite,
+			_material.NormalRoughnessSubimage);
 		if (_normalRoughness != undefined)
 		{
 			bbmod_shader_set_normal_roughness(_shaderCurrent, _normalRoughness);
@@ -148,14 +157,20 @@ function BBMOD_DefaultShader(_shader, _vertexFormat): BBMOD_BaseShader(_shader, 
 		}
 
 		// Specular color/Metallic and AO
-		var _specularColor = _material.SpecularColor;
+		var _specularColor = bbmod_texture_ref_resolve(
+			_material.SpecularColor,
+			_material.SpecularColorSprite,
+			_material.SpecularColorSubimage);
 		if (_specularColor != undefined)
 		{
 			bbmod_shader_set_specular_color(_shaderCurrent, _specularColor);
 			bbmod_shader_set_material_uv(_shaderCurrent, texture_get_uvs(_specularColor));
 		}
 
-		var _metallicAO = _material.MetallicAO;
+		var _metallicAO = bbmod_texture_ref_resolve(
+			_material.MetallicAO,
+			_material.MetallicAOSprite,
+			_material.MetallicAOSubimage);
 		if (_metallicAO != undefined)
 		{
 			bbmod_shader_set_metallic_ao(_shaderCurrent, _metallicAO);
@@ -163,12 +178,18 @@ function BBMOD_DefaultShader(_shader, _vertexFormat): BBMOD_BaseShader(_shader, 
 		}
 
 		// Subsurface
-		var _subsurface = _material.Subsurface;
+		var _subsurface = bbmod_texture_ref_resolve(
+			_material.Subsurface,
+			_material.SubsurfaceSprite,
+			_material.SubsurfaceSubimage);
 		bbmod_shader_set_subsurface(_shaderCurrent, _subsurface);
 		bbmod_shader_set_subsurface_uv(_shaderCurrent, texture_get_uvs(_subsurface));
 
 		// Emissive
-		var _emissive = _material.Emissive;
+		var _emissive = bbmod_texture_ref_resolve(
+			_material.Emissive,
+			_material.EmissiveSprite,
+			_material.EmissiveSubimage);
 		bbmod_shader_set_emissive(_shaderCurrent, _emissive);
 		bbmod_shader_set_emissive_uv(_shaderCurrent, texture_get_uvs(_emissive));
 

@@ -1,6 +1,8 @@
 /// @module PostProcessing
 
-/// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset[, _scale[, _scaleByDistanceMin[, _scaleByDistanceMax[, _color[, _applyTint[, _angle[, _angleRelative[, _fadeOut[, _applyStarburst]]]]]]]]]]]])
+/// @func BBMOD_LensFlareElement([_sprite[, _subimage[, _offset[, _scale[, _scaleByDistanceMin[, _scaleByDistanceMax[, _color[, _applyTint[, _angle[, _angleRelative[, _fadeOut[, _applyStarburst[, _spriteOwned]]]]]]]]]]]]])
+///
+/// @implements {BBMOD_IDestructible}
 ///
 /// @desc A single lens flare element (sprite).
 ///
@@ -31,6 +33,8 @@
 /// Defaults to `false`.
 /// @param {Bool} [_applyStarburst] Whether to apply starburst. Defaults to
 /// `false`.
+/// @param {Bool} [_spriteOwned] Whether this element owns `_sprite` and deletes
+/// it when destroyed. Defaults to `false`.
 ///
 /// @see BBMOD_LensFlare
 /// @see BBMOD_PostProcessor.Starburst
@@ -46,12 +50,18 @@ function BBMOD_LensFlareElement(
 	_angle = 0.0,
 	_angleRelative = false,
 	_fadeOut = false,
-	_applyStarburst = false
+	_applyStarburst = false,
+	_spriteOwned = false
 ) constructor
 {
 	/// @var {Asset.GMSprite} The sprite of the lens flare element. Default
 	/// value is `BBMOD_SprLensFlareHeptagon`.
 	Sprite = _sprite;
+
+	/// @var {Bool} Whether this element owns
+	/// {@link BBMOD_LensFlareElement.Sprite}. Owned sprites are
+	/// deleted when the element is destroyed. Defaults to `false`.
+	SpriteOwned = _spriteOwned;
 
 	/// @var {Real} The sprite subimage. Default value is 0.
 	Subimage = _subimage;
@@ -98,4 +108,20 @@ function BBMOD_LensFlareElement(
 
 	/// @var {Bool} Whether to apply starburst. Default value is `false`.
 	ApplyStarburst = _applyStarburst;
+
+	/// @func destroy()
+	///
+	/// @desc Deletes the element sprite when this element owns it.
+	///
+	/// @return {Undefined} Always returns `undefined`.
+	static destroy = function ()
+	{
+		if (SpriteOwned && Sprite != undefined)
+		{
+			sprite_delete(Sprite);
+		}
+		Sprite = undefined;
+		SpriteOwned = false;
+		return undefined;
+	};
 }

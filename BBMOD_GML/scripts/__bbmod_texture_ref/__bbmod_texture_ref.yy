@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bbmod_texture_ref",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bbmod_texture_ref",
+  "parent":{
+    "name":"Utils",
+    "path":"folders/BBMOD/Core/Utils.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

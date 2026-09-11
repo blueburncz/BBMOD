@@ -185,7 +185,24 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// and opacity in the alpha channel.
 	BaseOpacity = (-1 /*pointer_null*/ );
 
-	__baseOpacitySprite = undefined;
+	/// @var {SurfaceFormatType} Format used for texture capture during
+	/// serialization. Only `surface_rgba8unorm` is currently supported.
+	/// Defaults to `surface_rgba8unorm`.
+	BaseOpacityFormat = surface_rgba8unorm;
+
+	/// @var {Asset.GMSprite} A sprite source for
+	/// {@link BBMOD_Material.BaseOpacity}, or `undefined`.
+	/// Takes precedence over {@link BBMOD_Material.BaseOpacity} when defined.
+	BaseOpacitySprite = undefined;
+
+	/// @var {Real} The subimage of
+	/// {@link BBMOD_Material.BaseOpacitySprite} to use.
+	BaseOpacitySubimage = 0;
+
+	/// @var {Bool} Whether this material owns
+	/// {@link BBMOD_Material.BaseOpacitySprite} and deletes it when destroyed.
+	/// Defaults to `false`.
+	BaseOpacityOwned = false;
 
 	/// @var {Real} Cached hash for this material.
 	/// @private
@@ -204,6 +221,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// @return {Struct.BBMOD_Material} Returns `self`.
 	static copy = function (_dest)
 	{
+		bbmod_texture_ref_destroy(_dest, "BaseOpacity");
 		_dest.__name = __name;
 		_dest.RenderPass = RenderPass;
 		_dest.__shaders = array_create(BBMOD_ERenderPass.SIZE, undefined);
@@ -226,21 +244,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		_dest.Filtering = Filtering;
 		_dest.Repeat = Repeat;
 
-		if (_dest.__baseOpacitySprite != undefined)
-		{
-			sprite_delete(_dest.__baseOpacitySprite);
-			_dest.__baseOpacitySprite = undefined;
-		}
-
-		if (__baseOpacitySprite != undefined)
-		{
-			_dest.__baseOpacitySprite = sprite_duplicate(__baseOpacitySprite);
-			_dest.BaseOpacity = sprite_get_texture(_dest.__baseOpacitySprite, 0);
-		}
-		else
-		{
-			_dest.BaseOpacity = BaseOpacity;
-		}
+		bbmod_texture_ref_copy(self, _dest, "BaseOpacity");
 
 		_dest.HashDirty = true;
 
@@ -295,8 +299,6 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 
 		_json.RenderQueue = RenderQueue;
 
-		// TODO: Save OnApply
-
 		_json.BlendMode = BlendMode;
 		_json.Culling = Culling;
 		_json.ZWrite = ZWrite;
@@ -313,7 +315,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 		_json.Filtering = Filtering;
 		_json.Repeat = Repeat;
 
-		// TODO: Save BaseOpacity/__baseOpacitySprite
+		bbmod_texture_ref_to_json(_json, self, "BaseOpacity");
 
 		return self;
 	};
@@ -329,6 +331,8 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// @throws {BBMOD_Exception} If an error occurs.
 	static from_json = function (_json)
 	{
+		bbmod_texture_ref_from_json(_json, self, "BaseOpacity");
+
 		if (variable_struct_exists(_json, "Shaders"))
 		{
 			var _shaders = _json.Shaders;
@@ -500,17 +504,6 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 			Repeat = _json.Repeat;
 		}
 
-		if (variable_struct_exists(_json, "BaseOpacity"))
-		{
-			if (__baseOpacitySprite != undefined)
-			{
-				sprite_delete(__baseOpacitySprite);
-				__baseOpacitySprite = undefined;
-			}
-
-			BaseOpacity = _json.BaseOpacity;
-		}
-
 		HashDirty = true;
 
 		return self;
@@ -599,18 +592,17 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	/// @return {Struct.BBMOD_BaseMaterial} Returns `self`.
 	static set_base_opacity = function (_color)
 	{
-		if (__baseOpacitySprite != undefined)
-		{
-			sprite_delete(__baseOpacitySprite);
-		}
+		bbmod_texture_ref_destroy(self, "BaseOpacity");
 		var _isReal = is_real(_color);
-		__baseOpacitySprite = _make_sprite(
+		BaseOpacitySprite = _make_sprite(
 			_isReal ? color_get_red(_color) : _color.Red,
 			_isReal ? color_get_green(_color) : _color.Green,
 			_isReal ? color_get_blue(_color) : _color.Blue,
 			_isReal ? argument[1] : _color.Alpha
 		);
-		BaseOpacity = sprite_get_texture(__baseOpacitySprite, 0);
+		BaseOpacitySubimage = 0;
+		BaseOpacityOwned = true;
+		BaseOpacity = sprite_get_texture(BaseOpacitySprite, BaseOpacitySubimage);
 		HashDirty = true;
 		return self;
 	};
@@ -856,11 +848,7 @@ function BBMOD_Material(_shader = undefined): BBMOD_Resource() constructor
 	static destroy = function ()
 	{
 		Resource_destroy();
-		if (__baseOpacitySprite != undefined)
-		{
-			sprite_delete(__baseOpacitySprite);
-			__baseOpacitySprite = undefined;
-		}
+		bbmod_texture_ref_destroy(self, "BaseOpacity");
 		return undefined;
 	};
 

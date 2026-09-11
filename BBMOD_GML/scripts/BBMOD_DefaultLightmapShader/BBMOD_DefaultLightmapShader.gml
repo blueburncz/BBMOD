@@ -73,9 +73,13 @@ function BBMOD_DefaultLightmapShader(_shader, _vertexFormat): BBMOD_DefaultShade
 	{
 		gml_pragma("forceinline");
 		DefaultShader_set_material(_material);
-		if (_material.Lightmap != undefined)
+		var _lightmap = bbmod_texture_ref_resolve(
+			_material.Lightmap,
+			_material.LightmapSprite,
+			_material.LightmapSubimage);
+		if (_lightmap != undefined)
 		{
-			bbmod_shader_set_lightmap(shader_current(), _material.Lightmap);
+			bbmod_shader_set_lightmap(shader_current(), _lightmap);
 		}
 		return self;
 	};

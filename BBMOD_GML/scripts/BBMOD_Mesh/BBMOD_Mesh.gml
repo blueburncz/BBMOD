@@ -495,7 +495,11 @@ function BBMOD_Mesh(_vertexFormat, _model = undefined) constructor
 
 		var _vertexBuffer = VertexBuffer;
 		var _primitiveType = PrimitiveType;
-		var _baseOpacity = _materialIsStruct ? _material.BaseOpacity : _material;
+		var _baseOpacity = _materialIsStruct
+			? bbmod_texture_ref_resolve(
+				_material.BaseOpacity,
+				_material.BaseOpacitySprite,
+				_material.BaseOpacitySubimage) : _material;
 		var _shader = shader_current();
 		var _ditherSeed = 0.0;
 

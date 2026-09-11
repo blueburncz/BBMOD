@@ -23,6 +23,23 @@ function BBMOD_PostProcessor() constructor
 	/// @obsolete Please use {@link BBMOD_ColorGradingEffect} instead.
 	ColorGradingLUT = sprite_get_texture(BBMOD_SprColorGradingLUT, 0);
 
+	/// @var {SurfaceFormatType} Serialization capture format. Only
+	/// `surface_rgba8unorm` (default) is currently supported.
+	ColorGradingLUTFormat = surface_rgba8unorm;
+
+	/// @var {Asset.GMSprite} Sprite source for
+	/// {@link BBMOD_PostProcessor.ColorGradingLUT}, or
+	/// `undefined`. Takes precedence over the texture when defined.
+	ColorGradingLUTSprite = undefined;
+
+	/// @var {Real} Subimage of
+	/// {@link BBMOD_PostProcessor.ColorGradingLUTSprite} to use.
+	ColorGradingLUTSubimage = 0;
+
+	/// @var {Bool} Whether this processor owns
+	/// {@link BBMOD_PostProcessor.ColorGradingLUTSprite}.
+	ColorGradingLUTOwned = false;
+
 	/// @var {Real} The strength of the chromatic aberration effect. Use 0 to
 	/// disable the effect. Defaults to 0.
 	/// @obsolete Please use {@link BBMOD_ChromaticAberrationEffect} instead.
@@ -97,6 +114,22 @@ function BBMOD_PostProcessor() constructor
 	/// bloom and lens flares. Default is `BBMOD_SprLensDirt`.
 	LensDirt = sprite_get_texture(BBMOD_SprLensDirt, 0);
 
+	/// @var {SurfaceFormatType} Serialization capture format. Only
+	/// `surface_rgba8unorm` (default) is currently supported.
+	LensDirtFormat = surface_rgba8unorm;
+
+	/// @var {Asset.GMSprite} Sprite source for
+	/// {@link BBMOD_PostProcessor.LensDirt}, or `undefined`.
+	/// Takes precedence over the texture when defined.
+	LensDirtSprite = undefined;
+
+	/// @var {Real} Subimage of
+	/// {@link BBMOD_PostProcessor.LensDirtSprite} to use.
+	LensDirtSubimage = 0;
+
+	/// @var {Bool} Whether this processor owns
+	/// {@link BBMOD_PostProcessor.LensDirtSprite}.
+	LensDirtOwned = false;
 	/// @var {Real} The intensity of the lens dirt effect. Use values in range
 	/// 0..1, where 0 is disabled and 1 is the maximum intensity. Default value
 	/// is 1.
@@ -107,6 +140,22 @@ function BBMOD_PostProcessor() constructor
 	/// @see BBMOD_LensFlareElement.ApplyStarburst
 	Starburst = sprite_get_texture(BBMOD_SprLensFlareStarburst, 0);
 
+	/// @var {SurfaceFormatType} Serialization capture format. Only
+	/// `surface_rgba8unorm` (default) is currently supported.
+	StarburstFormat = surface_rgba8unorm;
+
+	/// @var {Asset.GMSprite} Sprite source for
+	/// {@link BBMOD_PostProcessor.Starburst}, or `undefined`.
+	/// Takes precedence over the texture when defined.
+	StarburstSprite = undefined;
+
+	/// @var {Real} Subimage of
+	/// {@link BBMOD_PostProcessor.StarburstSprite} to use.
+	StarburstSubimage = 0;
+
+	/// @var {Bool} Whether this processor owns
+	/// {@link BBMOD_PostProcessor.StarburstSprite}.
+	StarburstOwned = false;
 	/// @var {Real} The intensity of the starburst effect. Use values in range
 	/// 0..1, where 0 is disabled and 1 is the maximum intensity. Default value
 	/// is 1.
@@ -250,6 +299,9 @@ function BBMOD_PostProcessor() constructor
 
 	static destroy = function ()
 	{
+		bbmod_texture_ref_destroy(self, "ColorGradingLUT");
+		bbmod_texture_ref_destroy(self, "LensDirt");
+		bbmod_texture_ref_destroy(self, "Starburst");
 		for (var i = array_length(Effects) - 1; i >= 0; --i)
 		{
 			Effects[i].destroy();

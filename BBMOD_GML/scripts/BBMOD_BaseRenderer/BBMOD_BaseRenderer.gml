@@ -954,7 +954,10 @@ function BBMOD_BaseRenderer() constructor
 		}
 
 		var _to = (global.__bbmodImageBasedLight != undefined)
-			? global.__bbmodImageBasedLight.Texture
+			? bbmod_texture_ref_resolve(
+				global.__bbmodImageBasedLight.Texture,
+				global.__bbmodImageBasedLight.TextureSprite,
+				global.__bbmodImageBasedLight.TextureSubimage)
 			: sprite_get_texture(BBMOD_SprBlack, 0);
 
 		var _reflectionProbe = bbmod_reflection_probe_find(bbmod_camera_get_position());

@@ -246,6 +246,7 @@ function BBMOD_ResourceManager() constructor
 					}
 					else
 					{
+						throw new BBMOD_Exception($"Invalid texture {_spriteName}!");
 						_texturePath = _propertyValue.Path;
 						_textureSha1 = _propertyValue[$ "SHA1"];
 					}
@@ -258,6 +259,18 @@ function BBMOD_ResourceManager() constructor
 
 					var _sprite;
 					var _subimage = 0;
+					var _spriteName = undefined;
+
+					if (_isSprite)
+					{
+						var _spriteNameAndSubimage = string_split(string_delete(_texturePath, 1,
+							9), ":");
+						_spriteName = _spriteNameAndSubimage[0];
+						if (array_length(_spriteNameAndSubimage) > 1)
+						{
+							_subimage = real(_spriteNameAndSubimage[1]);
+						}
+					}
 
 					if (has(_texturePath))
 					{
@@ -269,20 +282,10 @@ function BBMOD_ResourceManager() constructor
 
 						if (_isSprite)
 						{
-							var _prefixLength = 9; //string_length("sprite://");
-							var _spriteNameAndSubimage = string_split(string_delete(_texturePath, 1,
-								_prefixLength), ":");
-							var _spriteName = _spriteNameAndSubimage[0];
-
-							if (array_length(_spriteNameAndSubimage) > 1)
-							{
-								_subimage = real(_spriteNameAndSubimage[1]);
-							}
-
 							var _asset = asset_get_index(_spriteName);
 							if (_asset == -1)
 							{
-								throw BBMOD_Exception($"Invalid texture {_spriteName}!");
+								throw new BBMOD_Exception($"Invalid texture {_spriteName}!");
 							}
 
 							_sprite.Raw = _asset;
@@ -299,6 +302,9 @@ function BBMOD_ResourceManager() constructor
 					}
 
 					_json[$  _property] = _sprite.get_texture(_subimage);
+					_json[$ (_property + "Sprite")] = _sprite.Raw;
+					_json[$ (_property + "Subimage")] = _subimage;
+					_json[$ (_property + "Owned")] = false;
 				}
 			}
 

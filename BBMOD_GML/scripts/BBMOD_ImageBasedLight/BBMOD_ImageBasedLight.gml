@@ -15,13 +15,40 @@ global.__bbmodImageBasedLight = undefined;
 /// with increasing roughness and the last one is for diffuse lighting.
 function BBMOD_ImageBasedLight(_texture): BBMOD_Light() constructor
 {
+	static Light_destroy = destroy;
+
 	/// @var {Pointer.Texture} The texture of the IBL.
 	/// @readonly
 	Texture = _texture;
 
+	/// @var {SurfaceFormatType} Serialization capture format. Only
+	/// `surface_rgba8unorm` (default) is currently supported.
+	TextureFormat = surface_rgba8unorm;
+
+	/// @var {Asset.GMSprite} Sprite source for
+	/// {@link BBMOD_ImageBasedLight.Texture}, or `undefined`.
+	/// Takes precedence over the texture when defined.
+	TextureSprite = undefined;
+
+	/// @var {Real} Subimage of
+	/// {@link BBMOD_ImageBasedLight.TextureSprite} to use.
+	TextureSubimage = 0;
+
+	/// @var {Bool} Whether this light owns
+	/// {@link BBMOD_ImageBasedLight.TextureSprite}.
+	TextureOwned = false;
+
 	/// @var {Real} The texel height of the texture.
 	/// @readonly
-	Texel = texture_get_texel_height(Texture);
+	Texel = texture_get_texel_height(bbmod_texture_ref_resolve(
+		Texture, TextureSprite, TextureSubimage));
+
+	static destroy = function ()
+	{
+		Light_destroy();
+		bbmod_texture_ref_destroy(self, "Texture");
+		return undefined;
+	};
 }
 
 /// @func bbmod_ibl_get()

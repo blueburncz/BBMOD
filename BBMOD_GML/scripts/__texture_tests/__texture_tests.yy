@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__texture_tests",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__texture_tests",
+  "parent":{
+    "name":"Test",
+    "path":"folders/Test.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

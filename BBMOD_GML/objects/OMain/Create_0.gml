@@ -127,16 +127,16 @@ else
 _baseMaterial.set_shader(BBMOD_ERenderPass.Shadows, BBMOD_SHADER_DEFAULT_DEPTH);
 
 matSphere = _baseMaterial.clone();
-matSphere.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
+matSphere.BaseOpacitySprite = BBMOD_SprWhite;
 matSphere.BaseOpacityMultiplier = BBMOD_C_SILVER;
 matSphere.set_normal_roughness(BBMOD_VEC3_UP, 0.2);
 
 matSphereMetallic = _baseMaterial.clone();
-matSphereMetallic.BaseOpacity = sprite_get_texture(BBMOD_SprWhite, 0);
+matSphereMetallic.BaseOpacitySprite = BBMOD_SprWhite;
 matSphereMetallic.set_metallic_ao(1, 1);
 
 matSphereEmissive = _baseMaterial.clone();
-matSphereEmissive.BaseOpacity = sprite_get_texture(BBMOD_SprBlack, 0);
+matSphereEmissive.BaseOpacitySprite = BBMOD_SprBlack;
 matSphereEmissive.set_normal_roughness(BBMOD_VEC3_UP, 1.0);
 matSphereEmissive.set_emissive(new BBMOD_Color(255 * 1.1, 127 * 1.1, 0));
 
@@ -151,7 +151,8 @@ sprIBL = sprite_add("Data/BBMOD/Skies/IBL+40.png", 1, false, false, 0, 0);
 sprSky = sprite_add("Data/BBMOD/Skies/Sky+40.png", 1, false, false, 0, 0);
 
 matSky = BBMOD_MATERIAL_SKY.clone();
-matSky.BaseOpacity = sprite_get_texture(sprSky, 0);
+matSky.BaseOpacitySprite = sprSky;
+matSky.BaseOpacityOwned = false;
 
 ibl = new BBMOD_ImageBasedLight(sprite_get_texture(sprIBL, 0));
 bbmod_ibl_set(ibl);
@@ -259,7 +260,7 @@ if (!_useDeferredRenderer)
 }
 
 terrainLayer = new BBMOD_TerrainLayer();
-terrainLayer.BaseOpacity = sprite_get_texture(BBMOD_SprCheckerboard, 0);
+terrainLayer.BaseOpacitySprite = BBMOD_SprCheckerboard;
 
 var _terrainInfo = new BBMOD_TerrainInfo();
 _terrainInfo.Heightmap = SprHeightmap;

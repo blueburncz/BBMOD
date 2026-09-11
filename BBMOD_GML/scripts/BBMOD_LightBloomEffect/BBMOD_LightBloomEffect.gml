@@ -16,6 +16,8 @@
 function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0): BBMOD_PostProcessEffect() constructor
 /* beautify ignore:end */
 {
+	static PostProcessEffect_destroy = destroy;
+
 	/// @var {Real} Brightness threshold for bloom. Pixels brighter than this
 	/// will bloom. Default value is 1.0.
 	Threshold = (_threshold != undefined) ? (is_struct(_threshold) ? -_threshold.X : _threshold) : 1.0;
@@ -181,8 +183,12 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 		gpu_set_blendmode(bm_normal);
 		draw_surface(_surfaceSrc, 0, 0);
 		shader_set(BBMOD_ShLensDirt);
-		texture_set_stage(__uLensDirtTex, PostProcessor.LensDirt);
-		var _uvs = texture_get_uvs(PostProcessor.LensDirt);
+		var _lensDirt = bbmod_texture_ref_resolve(
+			PostProcessor.LensDirt,
+			PostProcessor.LensDirtSprite,
+			PostProcessor.LensDirtSubimage);
+		texture_set_stage(__uLensDirtTex, _lensDirt);
+		var _uvs = texture_get_uvs(_lensDirt);
 		shader_set_uniform_f(__uLensDirtUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
 		shader_set_uniform_f(__uLensDirtStrength, PostProcessor.LensDirtStrength);
 		gpu_set_blendmode(bm_add);
@@ -197,6 +203,7 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 
 	static destroy = function ()
 	{
+		PostProcessEffect_destroy();
 		for (var i = 0; i < __levels; ++i)
 		{
 			if (surface_exists(__surfaces1[i]))

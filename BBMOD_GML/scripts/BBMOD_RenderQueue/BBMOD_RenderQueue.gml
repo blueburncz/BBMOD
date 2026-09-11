@@ -1914,8 +1914,13 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 
 					__bbmod_render_statistics_count(
 						__BBMOD_ERenderStatisticsCounter.MeshDrawCallsDrawn);
+					var _baseOpacity = bbmod_texture_ref_resolve(
+						_material.BaseOpacity,
+						_material.BaseOpacitySprite,
+						_material.BaseOpacitySubimage);
 
-					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
+					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType,
+						_baseOpacity);
 				}
 				break;
 
@@ -2018,7 +2023,11 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 					__bbmod_render_statistics_count(
 						__BBMOD_ERenderStatisticsCounter.AnimatedMeshDrawCallsDrawn);
 
-					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _material.BaseOpacity);
+					var _baseOpacity = bbmod_texture_ref_resolve(
+						_material.BaseOpacity,
+						_material.BaseOpacitySprite,
+						_material.BaseOpacitySubimage);
+					vertex_submit(_mesh.VertexBuffer, _mesh.PrimitiveType, _baseOpacity);
 				}
 				break;
 
@@ -2123,6 +2132,10 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 					__bbmod_render_statistics_count(
 						__BBMOD_ERenderStatisticsCounter.BatchedMeshDrawCallsDrawn,
 						_batchedInstancesExecuted);
+					var _baseOpacity = bbmod_texture_ref_resolve(
+						_material.BaseOpacity,
+						_material.BaseOpacitySprite,
+						_material.BaseOpacitySubimage);
 
 					if (is_array(_batchData[0]))
 					{
@@ -2134,7 +2147,7 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 								_uBatchData,
 								_batchChunk);
 							++_dataIndex;
-							vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
+							vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 						}
 					}
 					else
@@ -2142,7 +2155,7 @@ function BBMOD_RenderQueue(_name = undefined, _priority = 0) constructor
 						shader_set_uniform_f_array(
 							_uBatchData,
 							_batchData);
-						vertex_submit(_vertexBuffer, _primitiveType, _material.BaseOpacity);
+						vertex_submit(_vertexBuffer, _primitiveType, _baseOpacity);
 					}
 				}
 				break;

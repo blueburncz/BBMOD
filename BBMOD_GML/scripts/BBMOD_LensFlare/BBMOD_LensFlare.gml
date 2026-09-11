@@ -6,6 +6,8 @@ global.__bbmodLensFlares = [];
 
 /// @func BBMOD_LensFlare([_tint[, _position[, _range[, _falloff[, _depthThreshold[, _direction[, _angleInner[, _angleOuter]]]]]]]])
 ///
+/// @implements {BBMOD_IDestructible}
+///
 /// @desc A collection of {@link BBMOD_LensFlareElement}s that together define a
 /// single lens flare instance.
 ///
@@ -299,14 +301,22 @@ function BBMOD_LensFlare(
 		shader_set_uniform_f(__uClipFar, _camera.ZFar);
 		shader_set_uniform_f(__uDepthThreshold, DepthThreshold);
 
-		texture_set_stage(__uStarburstTex, _postProcessor.Starburst);
-		var _starburstUVs = texture_get_uvs(_postProcessor.Starburst);
+		var _starburst = bbmod_texture_ref_resolve(
+			_postProcessor.Starburst,
+			_postProcessor.StarburstSprite,
+			_postProcessor.StarburstSubimage);
+		texture_set_stage(__uStarburstTex, _starburst);
+		var _starburstUVs = texture_get_uvs(_starburst);
 		shader_set_uniform_f(__uStarburstUVs, _starburstUVs[0], _starburstUVs[1], _starburstUVs[2], _starburstUVs[
 			3]);
 		shader_set_uniform_f(__uStarburstRot, _camRot);
 
-		texture_set_stage(__uLensDirtTex, _postProcessor.LensDirt);
-		var _lensDirtUVs = texture_get_uvs(_postProcessor.LensDirt);
+		var _lensDirt = bbmod_texture_ref_resolve(
+			_postProcessor.LensDirt,
+			_postProcessor.LensDirtSprite,
+			_postProcessor.LensDirtSubimage);
+		texture_set_stage(__uLensDirtTex, _lensDirt);
+		var _lensDirtUVs = texture_get_uvs(_lensDirt);
 		shader_set_uniform_f(__uLensDirtUVs, _lensDirtUVs[0], _lensDirtUVs[1], _lensDirtUVs[2], _lensDirtUVs[3]);
 		shader_set_uniform_f(__uLensDirtStrength, _postProcessor.LensDirtStrength);
 
@@ -364,6 +374,21 @@ function BBMOD_LensFlare(
 		gpu_pop_state();
 
 		return self;
+	};
+
+	/// @func destroy()
+	///
+	/// @desc Destroys the lens flare's elements and any sprites they own.
+	///
+	/// @return {Undefined} Always returns `undefined`.
+	static destroy = function ()
+	{
+		for (var i = array_length(__elements) - 1; i >= 0; --i)
+		{
+			__elements[i].destroy();
+		}
+		__elements = undefined;
+		return undefined;
 	};
 }
 

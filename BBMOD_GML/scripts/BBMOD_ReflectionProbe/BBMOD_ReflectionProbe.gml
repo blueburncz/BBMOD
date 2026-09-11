@@ -8,7 +8,7 @@ global.__bbmodReflectionProbes = [];
 /// @private
 global.__bbmodReflectionProbeTexture = (-1 /*pointer_null*/ );
 
-/// @func BBMOD_ReflectionProbe([_position[, _sprite]])
+/// @func BBMOD_ReflectionProbe([_position[, _sprite[, _spriteOwned]]])
 ///
 /// @implements {BBMOD_IDestructible}
 ///
@@ -19,8 +19,9 @@ global.__bbmodReflectionProbeTexture = (-1 /*pointer_null*/ );
 /// Defaults to vector `(0, 0, 0)` if `undefined`.
 /// @param {Asset.GMSprite} [_sprite] Pre-captured reflection probe sprite. Useful
 /// for example if you want to skip your game with pre-baked probes instead of
-/// capturing them on runtime. **The sprite is deleted when the probe is re-captured
-/// or destroyed!**
+/// capturing them on runtime. The probe owns this sprite by default.
+/// @param {Bool} [_spriteOwned] Whether the probe owns `_sprite`. Defaults to
+/// `true` when a sprite is provided.
 ///
 /// @example
 /// A reflection probe object:
@@ -68,7 +69,11 @@ global.__bbmodReflectionProbeTexture = (-1 /*pointer_null*/ );
 /// @see bbmod_reflection_probe_remove
 /// @see bbmod_reflection_probe_remove_index
 /// @see bbmod_reflection_probe_clear
-function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) constructor
+function BBMOD_ReflectionProbe(
+	_position = undefined,
+	_sprite = undefined,
+	_spriteOwned = (_sprite != undefined)
+) constructor
 {
 	/// @var {Bool} If `false` then the probe is disabled and unused. Default
 	/// value is `true`.
@@ -110,6 +115,12 @@ function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) const
 	/// @readonly
 	/// @see BBMOD_ReflectionProbe.set_sprite
 	Sprite = _sprite;
+
+	/// @var {Bool} Whether this probe owns
+	/// {@link BBMOD_ReflectionProbe.Sprite}. Owned sprites are
+	/// deleted when the probe replaces or destroys them. Defaults to `true` when
+	/// a sprite is provided.
+	SpriteOwned = _spriteOwned;
 
 	/// @var {Real} The resolution of a cubemap used when capturing the probe.
 	/// Default is 128 or the height of the sprite from which was the reflection
@@ -153,29 +164,39 @@ function BBMOD_ReflectionProbe(_position = undefined, _sprite = undefined) const
 		return self;
 	};
 
-	/// @func set_sprite(_sprite)
+	/// @func set_sprite(_sprite[, _owned])
 	///
 	/// @desc Destroys the reflection probe's sprite and replaces it with a new one.
 	///
 	/// @param {Asset.GMSprite} _sprite The new sprite.
+	/// @param {Bool} [_owned] Whether the probe owns `_sprite`. Defaults to
+	/// `true`.
 	///
 	/// @return {Struct.BBMOD_ReflectionProbe} Returns `self`.
-	static set_sprite = function (_sprite)
+	static set_sprite = function (_sprite, _owned = true)
 	{
-		if (Sprite != undefined)
+		if (SpriteOwned && Sprite != undefined)
 		{
 			sprite_delete(Sprite);
 		}
 		Sprite = _sprite;
+		SpriteOwned = _owned;
 		return self;
 	};
 
+	/// @func destroy()
+	///
+	/// @desc Deletes the captured sprite when this probe owns it.
+	///
+	/// @return {Undefined} Always returns `undefined`.
 	static destroy = function ()
 	{
-		if (Sprite != undefined)
+		if (SpriteOwned && Sprite != undefined)
 		{
 			sprite_delete(Sprite);
 		}
+		Sprite = undefined;
+		SpriteOwned = false;
 		return undefined;
 	};
 }

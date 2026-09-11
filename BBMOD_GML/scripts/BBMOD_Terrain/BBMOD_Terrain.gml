@@ -26,9 +26,43 @@ function BBMOD_TerrainInfo() constructor
 	/// through its RGBA channels. Defaults to `pointer_null`.
 	Splatmap = pointer_null;
 
+	/// @var {SurfaceFormatType} Serialization capture format. Only
+	/// `surface_rgba8unorm` (default) is currently supported.
+	SplatmapFormat = surface_rgba8unorm;
+
+	/// @var {Asset.GMSprite} Sprite source for
+	/// {@link BBMOD_TerrainInfo.Splatmap}, or `undefined`.
+	/// Takes precedence over the texture when defined.
+	SplatmapSprite = undefined;
+
+	/// @var {Real} Subimage of
+	/// {@link BBMOD_TerrainInfo.SplatmapSprite} to use.
+	SplatmapSubimage = 0;
+
+	/// @var {Bool} Whether this configuration owns
+	/// {@link BBMOD_TerrainInfo.SplatmapSprite}.
+	SplatmapOwned = false;
+
 	/// @var {Pointer.Texture} A texture to multiply terrain colors with.
 	/// Defaults to `pointer_null`.
 	Colormap = pointer_null;
+
+	/// @var {SurfaceFormatType} Serialization capture format. Only
+	/// `surface_rgba8unorm` (default) is currently supported.
+	ColormapFormat = surface_rgba8unorm;
+
+	/// @var {Asset.GMSprite} Sprite source for
+	/// {@link BBMOD_TerrainInfo.Colormap}, or `undefined`.
+	/// Takes precedence over the texture when defined.
+	ColormapSprite = undefined;
+
+	/// @var {Real} Subimage of
+	/// {@link BBMOD_TerrainInfo.ColormapSprite} to use.
+	ColormapSubimage = 0;
+
+	/// @var {Bool} Whether this configuration owns
+	/// {@link BBMOD_TerrainInfo.ColormapSprite}.
+	ColormapOwned = false;
 
 	/// @var {Struct.BBMOD_TerrainMaterial} The material used when rendering
 	/// the terrain. Defaults to {@link BBMOD_MATERIAL_TERRAIN}.
@@ -36,7 +70,8 @@ function BBMOD_TerrainInfo() constructor
 
 	/// @var {Array<Struct.BBMOD_TerrainLayer>} Array of five terrain layers.
 	/// Use `undefined` entries to disable individual layers. Defaults to an
-	/// array of five `undefined` entries.
+	/// array of five `undefined` entries. Each layer can be assigned to only one
+	/// terrain.
 	Layer = array_create(5, undefined);
 
 	/// @var {Struct.BBMOD_Vec2} Controls material texture repeat over the
@@ -138,7 +173,8 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 	Material = _info.Material;
 
 	/// @var {Array<Struct.BBMOD_TerrainLayer>} Array of five terrain layers.
-	/// Use `undefined` to disable certain layer.
+	/// Use `undefined` to disable certain layers. Each layer can be assigned to
+	/// only one terrain because the terrain destroys its layers on destruction.
 	Layer = array_create(5, undefined);
 	array_copy(Layer, 0, _info.Layer, 0, 5);
 
@@ -148,8 +184,42 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 	/// second layer, the green channel controls the third layer etc.
 	Splatmap = _info.Splatmap;
 
+	/// @var {Asset.GMSprite} Sprite source for
+	/// {@link BBMOD_Terrain.Splatmap}, or `undefined`.
+	/// Takes precedence over the texture when defined.
+	SplatmapSprite = _info.SplatmapSprite;
+
+	/// @var {Real} Subimage of
+	/// {@link BBMOD_Terrain.SplatmapSprite} to use.
+	SplatmapSubimage = _info.SplatmapSubimage;
+
+	/// @var {Bool} Whether this terrain owns
+	/// {@link BBMOD_Terrain.SplatmapSprite}.
+	SplatmapOwned = _info.SplatmapOwned;
+
+	/// @var {SurfaceFormatType} Serialization capture format. Only
+	/// `surface_rgba8unorm` (default) is currently supported.
+	SplatmapFormat = _info.SplatmapFormat;
+
 	/// @var {Pointer.Texture} A texture to multiply the terrain colors with.
 	Colormap = _info.Colormap;
+
+	/// @var {Asset.GMSprite} Sprite source for
+	/// {@link BBMOD_Terrain.Colormap}, or `undefined`.
+	/// Takes precedence over the texture when defined.
+	ColormapSprite = _info.ColormapSprite;
+
+	/// @var {Real} Subimage of
+	/// {@link BBMOD_Terrain.ColormapSprite} to use.
+	ColormapSubimage = _info.ColormapSubimage;
+
+	/// @var {Bool} Whether this terrain owns
+	/// {@link BBMOD_Terrain.ColormapSprite}.
+	ColormapOwned = _info.ColormapOwned;
+
+	/// @var {SurfaceFormatType} Serialization capture format. Only
+	/// `surface_rgba8unorm` (default) is currently supported.
+	ColormapFormat = _info.ColormapFormat;
 
 	/// @var {Id.DsGrid}
 	/// @private
@@ -443,8 +513,7 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 			}
 		}
 
-		return
-		{
+		return {
 			Enabled: EnableBuildProfiler,
 			ChunkCount: _count,
 			LastChunkI: __buildProfilerLastChunkI,
@@ -638,8 +707,7 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 		var _invTerrainWidth = 1.0 / _terrainWidth;
 		var _invTerrainHeight = 1.0 / _terrainHeight;
 
-		__lazyBuildChunkJob =
-		{
+		__lazyBuildChunkJob = {
 			ChunkI: _chunkI,
 			ChunkJ: _chunkJ,
 			ChunkIStart: _chunkIStart,
@@ -2234,7 +2302,10 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 					{
 						var _layer = _layers[_layerCallIndex];
 						var _layerNormalRoughness = _layer[$ "NormalRoughness"];
-						var _baseOpacity = _layer.BaseOpacity;
+						var _baseOpacity = bbmod_texture_ref_resolve(
+							_layer.BaseOpacity,
+							_layer.BaseOpacitySprite,
+							_layer.BaseOpacitySubimage);
 
 						if (i == 0)
 						{
@@ -2263,7 +2334,10 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 				// first layer
 				if (_layerCount > 0)
 				{
-					_baseOpacityFirst = _layers[0].BaseOpacity;
+					_baseOpacityFirst = bbmod_texture_ref_resolve(
+						_layers[0].BaseOpacity,
+						_layers[0].BaseOpacitySprite,
+						_layers[0].BaseOpacitySubimage);
 				}
 			}
 
@@ -2316,6 +2390,17 @@ function BBMOD_Terrain(_info = new BBMOD_TerrainInfo()) constructor
 	static destroy = function ()
 	{
 		__lazy_build_cancel_job();
+		for (var i = array_length(Layer) - 1; i >= 0; --i)
+		{
+			var _layer = Layer[i];
+			if (_layer != undefined)
+			{
+				_layer.destroy();
+				Layer[i] = undefined;
+			}
+		}
+		bbmod_texture_ref_destroy(self, "Splatmap");
+		bbmod_texture_ref_destroy(self, "Colormap");
 
 		ds_grid_destroy(__splatmapGrid);
 		ds_grid_destroy(__height);

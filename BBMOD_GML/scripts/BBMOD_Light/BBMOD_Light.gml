@@ -2,6 +2,8 @@
 
 /// @func BBMOD_Light()
 ///
+/// @implements {BBMOD_IDestructible}
+///
 /// @desc Base class for lights.
 function BBMOD_Light() constructor
 {
@@ -76,4 +78,14 @@ function BBMOD_Light() constructor
 	/// @var {Function}
 	/// @private
 	__getShadowmapMatrix = undefined;
+
+	/// @func destroy()
+	///
+	/// @desc Destroys the light.
+	///
+	/// @return {Undefined} Always returns `undefined`.
+	static destroy = function ()
+	{
+		return undefined;
+	};
 }

@@ -33,6 +33,8 @@ function BBMOD_SunShaftsEffect(
 	_lensDirtStrength = 1.0
 ): BBMOD_PostProcessEffect() constructor
 {
+	static PostProcessEffect_destroy = destroy;
+
 	/// @var {Struct.BBMOD_Vec3} The direction in which the light is coming.
 	/// Default value is `(-1, 0, -1)`.
 	LightDirection = _lightDir ?? new BBMOD_Vec3(-1.0, 0.0, -1.0).Normalize();
@@ -148,8 +150,12 @@ function BBMOD_SunShaftsEffect(
 		gpu_set_blendenable(true);
 		gpu_set_blendmode(BlendMode);
 		shader_set(BBMOD_ShLensDirt);
-		texture_set_stage(__uLensDirtTex, PostProcessor.LensDirt);
-		var _uvs = texture_get_uvs(PostProcessor.LensDirt);
+		var _lensDirt = bbmod_texture_ref_resolve(
+			PostProcessor.LensDirt,
+			PostProcessor.LensDirtSprite,
+			PostProcessor.LensDirtSubimage);
+		texture_set_stage(__uLensDirtTex, _lensDirt);
+		var _uvs = texture_get_uvs(_lensDirt);
 		shader_set_uniform_f(__uLensDirtUVs, _uvs[0], _uvs[1], _uvs[2], _uvs[3]);
 		shader_set_uniform_f(__uLensDirtStrength, PostProcessor.LensDirtStrength * LensDirtStrength);
 		draw_surface_ext(__surWork2, 0, 0, 2, 2, 0, c_white, 1.0);
@@ -162,6 +168,7 @@ function BBMOD_SunShaftsEffect(
 
 	static destroy = function ()
 	{
+		PostProcessEffect_destroy();
 		if (surface_exists(__surWork1))
 		{
 			surface_free(__surWork1);
