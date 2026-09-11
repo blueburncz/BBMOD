@@ -12,6 +12,9 @@
 /// 1/8.
 function BBMOD_DirectionalBlurEffect(_vector = undefined, _step = 0.125): BBMOD_PostProcessEffect() constructor
 {
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
+
 	/// @var {Struct.BBMOD_Vec2} The vector to blur along. Default value is
 	/// `(0, 0)`.
 	Vector = _vector ?? new BBMOD_Vec2();
@@ -22,6 +25,22 @@ function BBMOD_DirectionalBlurEffect(_vector = undefined, _step = 0.125): BBMOD_
 
 	static __uVector = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_vVector");
 	static __uStep = shader_get_uniform(BBMOD_ShDirectionalBlur, "u_fStep");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		Vector.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, Step);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		Vector = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		Step = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

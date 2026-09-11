@@ -58,6 +58,8 @@ function BBMOD_DepthOfFieldEffect(
 	_sampleCount = 32
 ): BBMOD_PostProcessEffect() constructor
 {
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
 	static PostProcessEffect_destroy = destroy;
 
 	/// @var {Real} Distance from the camera from which are objects completely
@@ -172,6 +174,42 @@ function BBMOD_DepthOfFieldEffect(
 	static __uDoFTexel = shader_get_uniform(BBMOD_ShDoF, "u_vTexel");
 	static __uDoFBokehShape = shader_get_uniform(BBMOD_ShDoF, "u_fBokehShape");
 	static __uDoFStep = shader_get_uniform(BBMOD_ShDoF, "u_fStep");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_f64, FocusStart);
+		buffer_write(_buffer, buffer_f64, FocusEnd);
+		buffer_write(_buffer, buffer_u8, AutoFocus ? 1 : 0);
+		buffer_write(_buffer, buffer_f64, AutoFocusRange);
+		AutoFocusPoint.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, AutoFocusFactor);
+		buffer_write(_buffer, buffer_f64, BlurRangeNear);
+		buffer_write(_buffer, buffer_f64, BlurRangeFar);
+		buffer_write(_buffer, buffer_f64, BlurScaleNear);
+		buffer_write(_buffer, buffer_f64, BlurScaleFar);
+		buffer_write(_buffer, buffer_f64, BokehShape);
+		buffer_write(_buffer, buffer_f64, SampleCount);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		FocusStart = buffer_read(_buffer, buffer_f64);
+		FocusEnd = buffer_read(_buffer, buffer_f64);
+		AutoFocus = buffer_read(_buffer, buffer_u8) != 0;
+		AutoFocusRange = buffer_read(_buffer, buffer_f64);
+		AutoFocusPoint = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		AutoFocusFactor = buffer_read(_buffer, buffer_f64);
+		BlurRangeNear = buffer_read(_buffer, buffer_f64);
+		BlurRangeFar = buffer_read(_buffer, buffer_f64);
+		BlurScaleNear = buffer_read(_buffer, buffer_f64);
+		BlurScaleFar = buffer_read(_buffer, buffer_f64);
+		BokehShape = buffer_read(_buffer, buffer_f64);
+		SampleCount = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

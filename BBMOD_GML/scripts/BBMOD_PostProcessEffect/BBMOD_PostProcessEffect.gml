@@ -18,6 +18,32 @@ function BBMOD_PostProcessEffect() constructor
 	/// `true`.
 	Enabled = true;
 
+	/// @func to_buffer(_buffer)
+	///
+	/// @desc Writes shared post-process effect state to a binary buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to write to.
+	///
+	/// @return {Struct.BBMOD_PostProcessEffect} Returns `self`.
+	static to_buffer = function (_buffer)
+	{
+		buffer_write(_buffer, buffer_u8, Enabled ? 1 : 0);
+		return self;
+	};
+
+	/// @func from_buffer(_buffer)
+	///
+	/// @desc Reads shared post-process effect state from a binary buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to read from.
+	///
+	/// @return {Struct.BBMOD_PostProcessEffect} Returns `self`.
+	static from_buffer = function (_buffer)
+	{
+		Enabled = buffer_read(_buffer, buffer_u8) != 0;
+		return self;
+	};
+
 	/// @func draw(_surfaceDest, _surfaceSrc, _depth, _normals)
 	///
 	/// @desc Applies the effect to given surface.

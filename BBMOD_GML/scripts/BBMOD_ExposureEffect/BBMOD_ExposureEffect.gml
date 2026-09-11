@@ -12,12 +12,34 @@
 /// @see BBMOD_BaseCamera.Exposure
 function BBMOD_ExposureEffect(_exposure = undefined): BBMOD_PostProcessEffect() constructor
 {
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
+
 	/// @var {Real, Undefined} The exposure value or `undefined` to apply the
 	/// current camera's exposure value. Default value is `undefined`.
 	/// @see BBMOD_BaseCamera.Exposure
 	Exposure = _exposure;
 
 	static __uExposure = shader_get_uniform(BBMOD_ShExposure, "u_fExposure");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_u8, Exposure != undefined ? 1 : 0);
+		if (Exposure != undefined)
+		{
+			buffer_write(_buffer, buffer_f64, Exposure);
+		}
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		Exposure = buffer_read(_buffer, buffer_u8) != 0
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

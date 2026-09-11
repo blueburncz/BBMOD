@@ -11,6 +11,9 @@
 /// @param {Real} [_offset] High-pass offset (in pixels). Defaults to 1.
 function BBMOD_LumaSharpenEffect(_strength = 1.0, _clamp = 1.0, _offset = 1.0): BBMOD_PostProcessEffect() constructor
 {
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
+
 	/// @var {Real} The strength of the effect. Default value is 1.
 	Strength = _strength;
 
@@ -24,6 +27,24 @@ function BBMOD_LumaSharpenEffect(_strength = 1.0, _clamp = 1.0, _offset = 1.0): 
 	static __uStrength = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fStrength");
 	static __uClamp = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fClamp");
 	static __uOffset = shader_get_uniform(BBMOD_ShLumaSharpen, "u_fOffset");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_f64, Strength);
+		buffer_write(_buffer, buffer_f64, Clamp);
+		buffer_write(_buffer, buffer_f64, Offset);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		Strength = buffer_read(_buffer, buffer_f64);
+		Clamp = buffer_read(_buffer, buffer_f64);
+		Offset = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

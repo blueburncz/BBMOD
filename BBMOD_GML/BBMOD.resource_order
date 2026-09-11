@@ -182,6 +182,7 @@
     {"name":"__cmi_triangle_get_priority","order":2,"path":"scripts/__cmi_triangle_get_priority/__cmi_triangle_get_priority.yy",},
     {"name":"__cmi_triangle_intersects_cube","order":4,"path":"scripts/__cmi_triangle_intersects_cube/__cmi_triangle_intersects_cube.yy",},
     {"name":"__lens_flare_tests","order":13,"path":"scripts/__lens_flare_tests/__lens_flare_tests.yy",},
+    {"name":"__post_process_tests","order":14,"path":"scripts/__post_process_tests/__post_process_tests.yy",},
     {"name":"__texture_tests","order":12,"path":"scripts/__texture_tests/__texture_tests.yy",},
     {"name":"BBMOD_AddVec2OnCollisionModule","order":1,"path":"scripts/BBMOD_AddVec2OnCollisionModule/BBMOD_AddVec2OnCollisionModule.yy",},
     {"name":"BBMOD_AddVec2OverTimeModule","order":1,"path":"scripts/BBMOD_AddVec2OverTimeModule/BBMOD_AddVec2OverTimeModule.yy",},

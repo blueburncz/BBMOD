@@ -34,6 +34,8 @@ function BBMOD_SunShaftsEffect(
 ): BBMOD_PostProcessEffect() constructor
 {
 	static PostProcessEffect_destroy = destroy;
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
 
 	/// @var {Struct.BBMOD_Vec3} The direction in which the light is coming.
 	/// Default value is `(-1, 0, -1)`.
@@ -87,6 +89,32 @@ function BBMOD_SunShaftsEffect(
 	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
 	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
 	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		LightDirection.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, Radius);
+		Color.ToBuffer(_buffer);
+		buffer_write(_buffer, buffer_f64, BlurSize);
+		buffer_write(_buffer, buffer_f64, BlurStep);
+		buffer_write(_buffer, buffer_u32, BlendMode);
+		buffer_write(_buffer, buffer_f64, LensDirtStrength);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		LightDirection = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Radius = buffer_read(_buffer, buffer_f64);
+		Color = new BBMOD_Color().FromBuffer(_buffer);
+		BlurSize = buffer_read(_buffer, buffer_f64);
+		BlurStep = buffer_read(_buffer, buffer_f64);
+		BlendMode = buffer_read(_buffer, buffer_u32);
+		LensDirtStrength = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

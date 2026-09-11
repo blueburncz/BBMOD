@@ -17,6 +17,8 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 /* beautify ignore:end */
 {
 	static PostProcessEffect_destroy = destroy;
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
 
 	/// @var {Real} Brightness threshold for bloom. Pixels brighter than this
 	/// will bloom. Default value is 1.0.
@@ -60,6 +62,24 @@ function BBMOD_LightBloomEffect(_threshold = 1.0, _knee = 0.5, _strength = 1.0):
 	static __uLensDirtTex = shader_get_sampler_index(BBMOD_ShLensDirt, "u_texLensDirt");
 	static __uLensDirtUVs = shader_get_uniform(BBMOD_ShLensDirt, "u_vLensDirtUVs");
 	static __uLensDirtStrength = shader_get_uniform(BBMOD_ShLensDirt, "u_fLensDirtStrength");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_f64, Threshold);
+		buffer_write(_buffer, buffer_f64, Knee);
+		buffer_write(_buffer, buffer_f64, Strength);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		Threshold = buffer_read(_buffer, buffer_f64);
+		Knee = buffer_read(_buffer, buffer_f64);
+		Strength = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

@@ -16,6 +16,8 @@ function BBMOD_NormalDistortionEffect(_texture = (-1 /*pointer_null*/ ), _streng
 /* beautify ignore:end */
 {
 	static PostProcessEffect_destroy = destroy;
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
 
 	/// @var {Pointer.Texture} A normal map texture. Default value is
 	/// `(-1/*pointer_null*/)` (and the effect is not applied).
@@ -46,6 +48,22 @@ function BBMOD_NormalDistortionEffect(_texture = (-1 /*pointer_null*/ ), _streng
 	static __uNormalUVs = shader_get_uniform(BBMOD_ShNormalDistortion, "u_vNormalUVs");
 	static __uStrength = shader_get_uniform(BBMOD_ShNormalDistortion, "u_fStrength");
 	static __uTexel = shader_get_uniform(BBMOD_ShNormalDistortion, "u_vTexel");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		bbmod_texture_ref_to_buffer(_buffer, self, "Texture");
+		buffer_write(_buffer, buffer_f64, Strength);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		bbmod_texture_ref_from_buffer(_buffer, self, "Texture");
+		Strength = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

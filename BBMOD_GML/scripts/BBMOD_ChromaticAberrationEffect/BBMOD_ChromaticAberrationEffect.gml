@@ -11,6 +11,9 @@
 /// `(-1, 0, 1)` if `undefined`.
 function BBMOD_ChromaticAberrationEffect(_strength = 1.0, _offset = undefined): BBMOD_PostProcessEffect() constructor
 {
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
+
 	/// @var {Real} The strength of the effect. Default value is 1.
 	Strength = _strength;
 
@@ -21,6 +24,22 @@ function BBMOD_ChromaticAberrationEffect(_strength = 1.0, _offset = undefined): 
 	static __uTexel = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vTexel");
 	static __uOffset = shader_get_uniform(BBMOD_ShChromaticAberration, "u_vOffset");
 	static __uDistortion = shader_get_uniform(BBMOD_ShChromaticAberration, "u_fDistortion");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_f64, Strength);
+		Offset.ToBuffer(_buffer, buffer_f64);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		Strength = buffer_read(_buffer, buffer_f64);
+		Offset = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

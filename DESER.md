@@ -22,6 +22,17 @@ cover editor UI, editor-only metadata, preview state, or live-reload tooling.
 - Give composite structs ownership of their own `to_buffer()` and
   `from_buffer()` payload methods. Containers should only serialize ordering,
   constructor identity, and container-level fields.
+- Follow BBMOD struct ordering: declare properties first, then shader/uniform
+  statics, then the concrete `to_buffer()`/`from_buffer()` implementations,
+  and then `draw()` or other operational methods.
+- Keep aliases for inherited methods at the beginning of the struct with the
+  other inherited-method aliases. For example,
+  `PostProcessEffect_to_buffer = to_buffer` and
+  `PostProcessEffect_from_buffer = from_buffer` must not be placed beside the
+  concrete serialization implementations.
+- Post-process effects must delegate shared state to the inherited payload
+  methods before serializing their own fields. Their payloads must exclude
+  shader handles, surfaces, and other runtime caches.
 - Read binary fields into locals in stream order before passing them to a
   constructor. Do not embed multiple `buffer_read()` calls in constructor
   arguments because GML does not guarantee argument evaluation order.
@@ -157,6 +168,10 @@ formats must be rejected explicitly until implemented.
 ## Post-Processor Resource
 
 File extension: `.bbpost`
+
+`BBMOD_PostProcessor` is the resource itself and inherits directly from
+`BBMOD_Resource`. Each effect owns its authored binary payload methods; the
+post-processor container does not duplicate effect field serialization.
 
 The resource serializes:
 

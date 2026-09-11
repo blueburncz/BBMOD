@@ -17,6 +17,9 @@
 function BBMOD_RadialBlurEffect(_origin = undefined, _radius = 0.5, _strength = 1.0, _step = 0.125):
 BBMOD_PostProcessEffect() constructor
 {
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
+
 	/// @var {Struct.BBMOD_Vec2} The origin of the blur. Default value is
 	/// `(0.5, 0.5)` (the middle of the screen).
 	Origin = _origin ?? new BBMOD_Vec2(0.5);
@@ -38,6 +41,26 @@ BBMOD_PostProcessEffect() constructor
 	static __uRadius = shader_get_uniform(BBMOD_ShRadialBlur, "u_fRadius");
 	static __uStrength = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStrength");
 	static __uStep = shader_get_uniform(BBMOD_ShRadialBlur, "u_fStep");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		Origin.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, Radius);
+		buffer_write(_buffer, buffer_f64, Strength);
+		buffer_write(_buffer, buffer_f64, Step);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		Origin = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		Radius = buffer_read(_buffer, buffer_f64);
+		Strength = buffer_read(_buffer, buffer_f64);
+		Step = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

@@ -327,6 +327,10 @@ function BBMOD_ResourceManager() constructor
 
 		switch (_ext)
 		{
+			case ".bbpost":
+				_res = new BBMOD_PostProcessor();
+				break;
+
 			case ".bbflare":
 				_res = new BBMOD_LensFlare();
 				break;

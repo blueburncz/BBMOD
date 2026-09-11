@@ -1,6 +1,10 @@
+// Feather ignore GM1021
+
 /// @module PostProcessing
 
 /// @func BBMOD_PostProcessor()
+///
+/// @extends {BBMOD_Resource}
 ///
 /// @implements {BBMOD_IDestructible}
 ///
@@ -8,8 +12,10 @@
 /// aberration, grayscale effect, vignette and anti-aliasing.
 ///
 /// @see BBMOD_PostProcessEffect
-function BBMOD_PostProcessor() constructor
+function BBMOD_PostProcessor(): BBMOD_Resource() constructor
 {
+	static BBMOD_Resource_destroy = destroy;
+
 	/// @var {Bool} If `true` then the post-processor is enabled. Default value
 	/// is `true`.
 	Enabled = true;
@@ -203,6 +209,102 @@ function BBMOD_PostProcessor() constructor
 		return self;
 	};
 
+	static to_buffer = function (_buffer)
+	{
+		buffer_write(_buffer, buffer_string, "BBPOST");
+		buffer_write(_buffer, buffer_u32, 1);
+		buffer_write(_buffer, buffer_u8, Enabled ? 1 : 0);
+		buffer_write(_buffer, buffer_u8, DesignWidth != undefined ? 1 : 0);
+		if (DesignWidth != undefined)
+		{
+			buffer_write(_buffer, buffer_f64, DesignWidth);
+		}
+		buffer_write(_buffer, buffer_u8, DesignHeight != undefined ? 1 : 0);
+		if (DesignHeight != undefined)
+		{
+			buffer_write(_buffer, buffer_f64, DesignHeight);
+		}
+		buffer_write(_buffer, buffer_f64, ChromaticAberration);
+		ChromaticAberrationOffset.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, Grayscale);
+		buffer_write(_buffer, buffer_f64, Vignette);
+		buffer_write(_buffer, buffer_u32, VignetteColor);
+		buffer_write(_buffer, buffer_u32, Antialiasing);
+		bbmod_texture_ref_to_buffer(_buffer, self, "ColorGradingLUT");
+		bbmod_texture_ref_to_buffer(_buffer, self, "LensDirt");
+		buffer_write(_buffer, buffer_f64, LensDirtStrength);
+		bbmod_texture_ref_to_buffer(_buffer, self, "Starburst");
+		buffer_write(_buffer, buffer_f64, StarburstStrength);
+		buffer_write(_buffer, buffer_u32, array_length(Effects));
+		for (var i = 0; i < array_length(Effects); ++i)
+		{
+			var _effect = Effects[i];
+			var _constructorName = instanceof(_effect);
+			if (_constructorName == undefined || _constructorName == "struct")
+			{
+				throw new BBMOD_Exception("Post-process effect has no constructor.");
+			}
+			buffer_write(_buffer, buffer_string, _constructorName);
+			_effect.to_buffer(_buffer);
+		}
+		IsLoaded = true;
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		if (buffer_read(_buffer, buffer_string) != "BBPOST")
+		{
+			throw new BBMOD_Exception("Invalid BBPOST resource header.");
+		}
+		if (buffer_read(_buffer, buffer_u32) != 1)
+		{
+			throw new BBMOD_Exception("Unsupported BBPOST resource version.");
+		}
+		for (var j = array_length(Effects) - 1; j >= 0; --j)
+		{
+			Effects[j].destroy();
+		}
+		Effects = [];
+		bbmod_texture_ref_destroy(self, "ColorGradingLUT");
+		bbmod_texture_ref_destroy(self, "LensDirt");
+		bbmod_texture_ref_destroy(self, "Starburst");
+		Enabled = buffer_read(_buffer, buffer_u8) != 0;
+		DesignWidth = buffer_read(_buffer, buffer_u8) != 0
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		DesignHeight = buffer_read(_buffer, buffer_u8) != 0
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		ChromaticAberration = buffer_read(_buffer, buffer_f64);
+		ChromaticAberrationOffset = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Grayscale = buffer_read(_buffer, buffer_f64);
+		Vignette = buffer_read(_buffer, buffer_f64);
+		VignetteColor = buffer_read(_buffer, buffer_u32);
+		Antialiasing = buffer_read(_buffer, buffer_u32);
+		bbmod_texture_ref_from_buffer(_buffer, self, "ColorGradingLUT");
+		bbmod_texture_ref_from_buffer(_buffer, self, "LensDirt");
+		LensDirtStrength = buffer_read(_buffer, buffer_f64);
+		bbmod_texture_ref_from_buffer(_buffer, self, "Starburst");
+		StarburstStrength = buffer_read(_buffer, buffer_f64);
+		var _effectCount = buffer_read(_buffer, buffer_u32);
+		if (_effectCount > 100000)
+		{
+			throw new BBMOD_Exception("Invalid post-process effect count.");
+		}
+		for (var i = 0; i < _effectCount; ++i)
+		{
+			var _constructorName = buffer_read(_buffer, buffer_string);
+			var _constructor = asset_get_index(_constructorName);
+			if (_constructor == -1)
+			{
+				throw new BBMOD_Exception(
+					"Unknown post-process effect: " + _constructorName);
+			}
+			add_effect(new _constructor().from_buffer(_buffer));
+		}
+		IsLoaded = true;
+		return self;
+	};
+
 	/// @func get_effect_scale()
 	///
 	/// @desc Retrieves the current effect scale based on the current screen
@@ -299,6 +401,7 @@ function BBMOD_PostProcessor() constructor
 
 	static destroy = function ()
 	{
+		BBMOD_Resource_destroy();
 		bbmod_texture_ref_destroy(self, "ColorGradingLUT");
 		bbmod_texture_ref_destroy(self, "LensDirt");
 		bbmod_texture_ref_destroy(self, "Starburst");

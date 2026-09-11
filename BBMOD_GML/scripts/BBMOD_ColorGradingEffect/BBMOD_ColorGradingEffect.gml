@@ -11,6 +11,8 @@
 function BBMOD_ColorGradingEffect(_lut = undefined): BBMOD_PostProcessEffect() constructor
 {
 	static PostProcessEffect_destroy = destroy;
+	static PostProcessEffect_to_buffer = to_buffer;
+	static PostProcessEffect_from_buffer = from_buffer;
 
 	/// @var {Pointer.Texture} The lookup table texture used for color grading.
 	/// Default value is `BBMOD_SprColorGradingLUT`.
@@ -34,6 +36,20 @@ function BBMOD_ColorGradingEffect(_lut = undefined): BBMOD_PostProcessEffect() c
 	LUTOwned = false;
 
 	static __uLUT = shader_get_sampler_index(BBMOD_ShColorGrading, "u_texLUT");
+
+	static to_buffer = function (_buffer)
+	{
+		PostProcessEffect_to_buffer(_buffer);
+		bbmod_texture_ref_to_buffer(_buffer, self, "LUT");
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		PostProcessEffect_from_buffer(_buffer);
+		bbmod_texture_ref_from_buffer(_buffer, self, "LUT");
+		return self;
+	};
 
 	static draw = function (_surfaceDest, _surfaceSrc, _depth, _normals)
 	{

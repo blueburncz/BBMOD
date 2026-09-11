@@ -27,3 +27,10 @@
 * Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to `BBMOD_LensFlareElement` for serializing and deserializing element properties and sprite sources.
 * Added binary `.bbflare` resources for saving and loading lens flare compositions, including scalar properties, ordered elements, native element constructors, and asset, external-file, and embedded RGBA8 sprite references.
 * `.bbflare` resources are now supported by `BBMOD_ResourceManager` and restore owned sprites for external and embedded sources while asset-backed sprites remain borrowed.
+
+## Post-processing serialization
+
+* Struct `BBMOD_PostProcessor` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods.
+* Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to post-process effects for serializing authored fields and shared `Enabled` state; runtime surfaces, shader handles, and effect caches are rebuilt or excluded.
+* Added binary `.bbpost` resources for saving and loading post-processing configuration, legacy properties, texture references, and ordered effects.
+* `BBMOD_ResourceManager` now supports `.bbpost` resources for loading post-processing effects.

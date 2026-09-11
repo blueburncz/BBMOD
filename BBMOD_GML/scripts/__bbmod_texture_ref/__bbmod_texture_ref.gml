@@ -146,6 +146,138 @@ function bbmod_texture_ref_copy(_source, _destination, _name)
 	return _destination;
 }
 
+/// @func bbmod_texture_ref_to_buffer(_buffer, _owner, _name)
+///
+/// @desc Writes a texture reference source and subimage to a binary buffer.
+///
+/// @param {Id.Buffer} _buffer The buffer to write to.
+/// @param {Struct} _owner The struct containing the texture reference.
+/// @param {String} _name The base name of the texture field.
+function bbmod_texture_ref_to_buffer(_buffer, _owner, _name)
+{
+	var _sprite = _owner[$ (_name + "Sprite")];
+	var _subimage = _owner[$ (_name + "Subimage")];
+	if (_sprite == undefined)
+	{
+		buffer_write(_buffer, buffer_u8, 0);
+		return _owner;
+	}
+
+	if (variable_struct_exists(_owner, "__texturePaths")
+		&& variable_struct_exists(_owner.__texturePaths, _name))
+	{
+		buffer_write(_buffer, buffer_u8, 2);
+		buffer_write(_buffer, buffer_string, _owner.__texturePaths[$  _name]);
+		buffer_write(_buffer, buffer_string, "");
+		buffer_write(_buffer, buffer_f64, _subimage);
+		return _owner;
+	}
+
+	var _assetName = sprite_get_name(_sprite);
+	var _asset = (_assetName != "") ? asset_get_index(_assetName) : -1;
+	if (!_owner[$ (_name + "Owned")]
+		&& _asset != -1 && asset_get_type(_asset) == asset_sprite)
+	{
+		buffer_write(_buffer, buffer_u8, 1);
+		buffer_write(_buffer, buffer_string, _assetName);
+		buffer_write(_buffer, buffer_f64, _subimage);
+		return _owner;
+	}
+
+	var _raw = __bbmod_texture_ref_to_raw(
+		sprite_get_texture(_sprite, _subimage), surface_rgba8unorm);
+	buffer_write(_buffer, buffer_u8, 3);
+	buffer_write(_buffer, buffer_u32, _raw.Width);
+	buffer_write(_buffer, buffer_u32, _raw.Height);
+	buffer_write(_buffer, buffer_u32, array_length(_raw.Data));
+	for (var i = 0; i < array_length(_raw.Data); ++i)
+	{
+		buffer_write(_buffer, buffer_u8, _raw.Data[i]);
+	}
+	buffer_write(_buffer, buffer_f64, _subimage);
+	return _owner;
+}
+
+/// @func bbmod_texture_ref_from_buffer(_buffer, _owner, _name)
+///
+/// @desc Reads a texture reference source and subimage from a binary buffer.
+///
+/// @param {Id.Buffer} _buffer The buffer to read from.
+/// @param {Struct} _owner The struct receiving the texture reference.
+/// @param {String} _name The base name of the texture field.
+function bbmod_texture_ref_from_buffer(_buffer, _owner, _name)
+{
+	var _kind = buffer_read(_buffer, buffer_u8);
+	if (_kind == 0)
+	{
+		return _owner;
+	}
+
+	var _sprite = undefined;
+	var _owned = false;
+	var _path = undefined;
+	if (_kind == 1)
+	{
+		var _assetName = buffer_read(_buffer, buffer_string);
+		_sprite = asset_get_index(_assetName);
+		if (_sprite == -1)
+		{
+			throw new BBMOD_Exception("Missing texture asset: " + _assetName);
+		}
+	}
+	else if (_kind == 2)
+	{
+		_path = buffer_read(_buffer, buffer_string);
+		var _sha1 = buffer_read(_buffer, buffer_string);
+		var _resource = new BBMOD_Sprite(_path, _sha1 == "" ? undefined : _sha1);
+		_sprite = _resource.Raw;
+		_owned = true;
+	}
+	else if (_kind == 3)
+	{
+		var _width = buffer_read(_buffer, buffer_u32);
+		var _height = buffer_read(_buffer, buffer_u32);
+		var _length = buffer_read(_buffer, buffer_u32);
+		if (_width <= 0 || _height <= 0 || _length != _width * _height * 4)
+		{
+			throw new BBMOD_Exception("Invalid embedded texture reference.");
+		}
+		var _data = array_create(_length, 0);
+		for (var i = 0; i < _length; ++i)
+		{
+			_data[i] = buffer_read(_buffer, buffer_u8);
+		}
+		_sprite = __bbmod_texture_ref_from_raw(
+		{
+			Version: 1,
+			Format: "RGBA8",
+			Width: _width,
+			Height: _height,
+			Data: _data,
+		});
+		_owned = true;
+	}
+	else
+	{
+		throw new BBMOD_Exception("Unknown texture reference source.");
+	}
+
+	bbmod_texture_ref_destroy(_owner, _name);
+	_owner[$ (_name + "Sprite")] = _sprite;
+	_owner[$ (_name + "Owned")] = _owned;
+	_owner[$ (_name + "Subimage")] = buffer_read(_buffer, buffer_f64);
+	_owner[$  _name] = sprite_get_texture(_sprite, _owner[$ (_name + "Subimage")]);
+	if (_path != undefined)
+	{
+		if (!variable_struct_exists(_owner, "__texturePaths"))
+		{
+			_owner.__texturePaths = {};
+		}
+		_owner.__texturePaths[$  _name] = _path;
+	}
+	return _owner;
+}
+
 /// @func bbmod_texture_ref_to_json(_json, _owner, _name)
 ///
 /// @desc Serializes a texture reference using the existing `__Textures`

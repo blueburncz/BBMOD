@@ -299,6 +299,7 @@
     {"id":{"name":"__cmi_triangle_get_priority","path":"scripts/__cmi_triangle_get_priority/__cmi_triangle_get_priority.yy",},},
     {"id":{"name":"__cmi_triangle_intersects_cube","path":"scripts/__cmi_triangle_intersects_cube/__cmi_triangle_intersects_cube.yy",},},
     {"id":{"name":"__lens_flare_tests","path":"scripts/__lens_flare_tests/__lens_flare_tests.yy",},},
+    {"id":{"name":"__post_process_tests","path":"scripts/__post_process_tests/__post_process_tests.yy",},},
     {"id":{"name":"__texture_tests","path":"scripts/__texture_tests/__texture_tests.yy",},},
     {"id":{"name":"BBMOD_AABBCollider","path":"scripts/BBMOD_AABBCollider/BBMOD_AABBCollider.yy",},},
     {"id":{"name":"BBMOD_AABBEmissionModule","path":"scripts/BBMOD_AABBEmissionModule/BBMOD_AABBEmissionModule.yy",},},

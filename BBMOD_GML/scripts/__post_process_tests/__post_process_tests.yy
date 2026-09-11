@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__post_process_tests",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__post_process_tests",
+  "parent":{
+    "name":"Test",
+    "path":"folders/Test.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
