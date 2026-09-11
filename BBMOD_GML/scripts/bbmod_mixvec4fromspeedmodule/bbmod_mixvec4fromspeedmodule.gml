@@ -28,6 +28,9 @@ function BBMOD_MixVec4FromSpeedModule(
 	_max = 1.0
 ): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Real} The first of the four consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
@@ -47,6 +50,30 @@ function BBMOD_MixVec4FromSpeedModule(
 	/// @var {Real} If the particles' speed is greater than this, then the property
 	/// is equal to {@link BBMOD_MixVec4FromSpeedModule.To}. Default value is 1.0.
 	Max = _max;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_bool, Property != undefined);
+		if (Property != undefined) buffer_write(_buffer, buffer_f64, Property);
+		From.ToBuffer(_buffer, buffer_f64);
+		To.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, Min);
+		buffer_write(_buffer, buffer_f64, Max);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Property = buffer_read(_buffer, buffer_bool)
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		From = new BBMOD_Vec4().FromBuffer(_buffer, buffer_f64);
+		To = new BBMOD_Vec4().FromBuffer(_buffer, buffer_f64);
+		Min = buffer_read(_buffer, buffer_f64);
+		Max = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static on_update = function (_emitter, _deltaTime)
 	{

@@ -17,6 +17,9 @@
 /// @see BBMOD_EParticle.RotationW
 function BBMOD_RandomRotationModule(_axis = BBMOD_VEC3_UP, _from = 0.0, _to = 360.0): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Struct.BBMOD_Vec3} The axis of rotation. Default value is
 	/// {@link BBMOD_VEC3_UP}.
 	Axis = _axis;
@@ -26,6 +29,24 @@ function BBMOD_RandomRotationModule(_axis = BBMOD_VEC3_UP, _from = 0.0, _to = 36
 
 	/// @var {Real} The maximum angle of rotation. Default value is 360.
 	To = _to;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		Axis.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, From);
+		buffer_write(_buffer, buffer_f64, To);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Axis = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		From = buffer_read(_buffer, buffer_f64);
+		To = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static on_particle_start = function (_emitter, _particleIndex)
 	{

@@ -25,6 +25,9 @@ function BBMOD_MixVec2Module(
 	_separate = true
 ): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Real} The first of the two consecutive properties. Use values from
 	/// {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
@@ -40,6 +43,28 @@ function BBMOD_MixVec2Module(
 	/// @var {Bool} If `true`, then each component is mixed independently on other
 	/// components. Default value is `true`.
 	Separate = _separate;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_bool, Property != undefined);
+		if (Property != undefined) buffer_write(_buffer, buffer_f64, Property);
+		From.ToBuffer(_buffer, buffer_f64);
+		To.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_bool, Separate);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Property = buffer_read(_buffer, buffer_bool)
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		From = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		To = new BBMOD_Vec2().FromBuffer(_buffer, buffer_f64);
+		Separate = buffer_read(_buffer, buffer_bool);
+		return self;
+	};
 
 	static on_particle_start = function (_emitter, _particleIndex)
 	{

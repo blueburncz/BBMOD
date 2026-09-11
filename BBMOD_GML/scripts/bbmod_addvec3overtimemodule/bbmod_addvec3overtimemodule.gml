@@ -21,6 +21,9 @@ function BBMOD_AddVec3OverTimeModule(
 	_period = 1.0
 ): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Real} The first of the three consecutive properties. Use values
 	/// from {@link BBMOD_EParticle}. Default value is `undefined`.
 	Property = _property;
@@ -33,6 +36,26 @@ function BBMOD_AddVec3OverTimeModule(
 	/// @var {Real} How long in seconds it takes to add the value to the
 	/// properties. Defaults to 1.0.
 	Period = _period;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_bool, Property != undefined);
+		if (Property != undefined) buffer_write(_buffer, buffer_f64, Property);
+		Change.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_f64, Period);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Property = buffer_read(_buffer, buffer_bool)
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		Change = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Period = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static on_update = function (_emitter, _deltaTime)
 	{

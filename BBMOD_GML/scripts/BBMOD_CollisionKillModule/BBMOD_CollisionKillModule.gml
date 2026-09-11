@@ -12,6 +12,21 @@
 /// @see BBMOD_EParticle.HasCollided
 function BBMOD_CollisionKillModule(): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		return self;
+	};
+
 	static on_update = function (_emitter, _deltaTime)
 	{
 		var _y2 = _emitter.ParticlesAlive - 1;

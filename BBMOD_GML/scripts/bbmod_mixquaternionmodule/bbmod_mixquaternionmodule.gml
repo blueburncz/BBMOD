@@ -21,6 +21,9 @@ function BBMOD_MixQuaternionModule(
 	_to = _from.Clone()
 ): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Real} The first of the four consecutive properties that together
 	/// form a quaternion. Use values from {@link BBMOD_EParticle}. Default value
 	/// is `undefined`.
@@ -33,6 +36,26 @@ function BBMOD_MixQuaternionModule(
 	/// @var {Struct.BBMOD_Quaternion} The quaternion to mix to. Default value is the
 	/// same as {@link BBMOD_MixQuaternionModule.From}.
 	To = _to;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_bool, Property != undefined);
+		if (Property != undefined) buffer_write(_buffer, buffer_f64, Property);
+		From.ToBuffer(_buffer, buffer_f64);
+		To.ToBuffer(_buffer, buffer_f64);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Property = buffer_read(_buffer, buffer_bool)
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		From = new BBMOD_Quaternion().FromBuffer(_buffer, buffer_f64);
+		To = new BBMOD_Quaternion().FromBuffer(_buffer, buffer_f64);
+		return self;
+	};
 
 	static on_particle_start = function (_emitter, _particleIndex)
 	{

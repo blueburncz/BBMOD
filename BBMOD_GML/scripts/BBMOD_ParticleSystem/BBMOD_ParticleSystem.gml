@@ -1,6 +1,10 @@
 /// @module Particles
 
+// Feather ignore GM1021
+
 /// @func BBMOD_ParticleSystem(_model, _material, _particleCount[, _batchSize])
+///
+/// @extends {BBMOD_Resource}
 ///
 /// @implements {BBMOD_IDestructible}
 ///
@@ -20,8 +24,21 @@
 /// @see BBMOD_MODEL_PARTICLE
 /// @see BBMOD_MATERIAL_PARTICLE_LIT
 /// @see BBMOD_MATERIAL_PARTICLE_UNLIT
-function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize = 32) constructor
+function BBMOD_ParticleSystem(
+	_model = undefined,
+	_material = undefined,
+	_particleCount = 0,
+	_batchSize = 32
+): BBMOD_Resource() constructor
 {
+	static Resource_destroy = destroy;
+
+	/// @var {Struct.BBMOD_Model} The model used by the particle batch.
+	Model = _model;
+
+	/// @var {Real} Number of particles rendered in one batch.
+	BatchSize = _batchSize;
+
 	/// @var {Struct.BBMOD_Material} _material The material used by the particle
 	/// system.
 	Material = _material;
@@ -44,7 +61,8 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize = 32
 
 	/// @var {Struct.BBMOD_DynamicBatch}
 	/// @private
-	__dynamicBatch = new BBMOD_DynamicBatch(_model, _batchSize).freeze();
+	__dynamicBatch = (_model != undefined)
+		? new BBMOD_DynamicBatch(_model, _batchSize).freeze() : undefined;
 
 	/// @var {Array<Struct.BBMOD_ParticleModule>} An array of modules
 	/// affecting individual particles in this system.
@@ -78,6 +96,109 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize = 32
 	/// @var {Real}
 	/// @private
 	__moduleCallbacksLength = -1;
+
+	static to_buffer = function (_buffer)
+	{
+		buffer_write(_buffer, buffer_string, "BBPART");
+		buffer_write(_buffer, buffer_u32, 1);
+		buffer_write(_buffer, buffer_u32, ParticleCount);
+		buffer_write(_buffer, buffer_u32, BatchSize);
+		buffer_write(_buffer, buffer_bool, Sort);
+		buffer_write(_buffer, buffer_f64, Duration);
+		buffer_write(_buffer, buffer_bool, Loop);
+		buffer_write(_buffer, buffer_string,
+			(Model != undefined && Model.Path != undefined) ? Model.Path : "");
+		buffer_write(_buffer, buffer_string,
+			(Material != undefined && Material.Path != undefined) ? Material.Path : "");
+		buffer_write(_buffer, buffer_u32, array_length(Modules));
+		for (var i = 0; i < array_length(Modules); ++i)
+		{
+			var _module = Modules[i];
+			var _constructorName = instanceof(_module);
+			if (_constructorName == undefined || _constructorName == "struct")
+			{
+				throw new BBMOD_Exception("Particle module has no constructor.");
+			}
+			if (_constructorName == "BBMOD_TerrainCollisionModule"
+				|| _constructorName == "BBMOD_CollisionEventModule")
+			{
+				throw new BBMOD_Exception(
+					"Particle module does not support binary serialization: "
+					+ _constructorName);
+			}
+			if (!variable_struct_exists(_module, "to_buffer")
+				|| !variable_struct_exists(_module, "from_buffer")
+				|| !is_method(_module.to_buffer)
+				|| !is_method(_module.from_buffer))
+			{
+				throw new BBMOD_Exception(
+					"Particle module does not support binary serialization: "
+					+ _constructorName);
+			}
+			buffer_write(_buffer, buffer_string, _constructorName);
+			_module.to_buffer(_buffer);
+		}
+		IsLoaded = true;
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		if (buffer_read(_buffer, buffer_string) != "BBPART")
+		{
+			throw new BBMOD_Exception("Invalid BBPART resource header.");
+		}
+		if (buffer_read(_buffer, buffer_u32) != 1)
+		{
+			throw new BBMOD_Exception("Unsupported BBPART resource version.");
+		}
+		ParticleCount = buffer_read(_buffer, buffer_u32);
+		BatchSize = buffer_read(_buffer, buffer_u32);
+		Sort = buffer_read(_buffer, buffer_bool);
+		Duration = buffer_read(_buffer, buffer_f64);
+		Loop = buffer_read(_buffer, buffer_bool);
+		var _modelPath = buffer_read(_buffer, buffer_string);
+		if (_modelPath != "")
+		{
+			Model = (__manager != undefined)
+				? __manager.load_sync(_modelPath)
+				: new BBMOD_Model(_modelPath);
+			__dynamicBatch = new BBMOD_DynamicBatch(Model, BatchSize).freeze();
+		}
+		var _materialPath = buffer_read(_buffer, buffer_string);
+		if (_materialPath != "")
+		{
+			Material = (__manager != undefined)
+				? __manager.load_sync(_materialPath)
+				: new BBMOD_Material().from_file(_materialPath);
+		}
+		var _moduleCount = buffer_read(_buffer, buffer_u32);
+		if (_moduleCount > 100000)
+		{
+			throw new BBMOD_Exception("Invalid particle module count.");
+		}
+		Modules = [];
+		for (var i = 0; i < _moduleCount; ++i)
+		{
+			var _constructorName = buffer_read(_buffer, buffer_string);
+			if (_constructorName == "BBMOD_TerrainCollisionModule"
+				|| _constructorName == "BBMOD_CollisionEventModule")
+			{
+				throw new BBMOD_Exception(
+					"Particle module does not support binary serialization: "
+					+ _constructorName);
+			}
+			var _constructor = asset_get_index(_constructorName);
+			if (_constructor == -1)
+			{
+				throw new BBMOD_Exception("Unknown particle module: " + _constructorName);
+			}
+			add_modules(new _constructor().from_buffer(_buffer));
+		}
+		__rebuild_module_callbacks();
+		IsLoaded = true;
+		return self;
+	};
 
 	/// @func __rebuild_module_callbacks()
 	///
@@ -172,7 +293,11 @@ function BBMOD_ParticleSystem(_model, _material, _particleCount, _batchSize = 32
 
 	static destroy = function ()
 	{
-		__dynamicBatch = __dynamicBatch.destroy();
+		Resource_destroy();
+		if (__dynamicBatch != undefined)
+		{
+			__dynamicBatch.destroy();
+		}
 		return undefined;
 	};
 }

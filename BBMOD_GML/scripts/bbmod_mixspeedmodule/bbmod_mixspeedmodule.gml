@@ -15,12 +15,31 @@
 /// @see BBMOD_EParticle.VelocityZ
 function BBMOD_MixSpeedModule(_from = 1.0, _to = _from): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Real} The minimum velocity vector magnitude. Default value is 1.0.
 	From = _from;
 
 	/// @var {Real} The maximum velocity vector magnitude. Default value is the
 	/// same as {@link BBMOD_MixSpeedModule.From}.
 	To = _to;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_f64, From);
+		buffer_write(_buffer, buffer_f64, To);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		From = buffer_read(_buffer, buffer_f64);
+		To = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static on_particle_start = function (_emitter, _particleIndex)
 	{

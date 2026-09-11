@@ -12,6 +12,32 @@ function BBMOD_ParticleModule() constructor
 	/// is `true`.
 	Enabled = true;
 
+	/// @func to_buffer(_buffer)
+	///
+	/// @desc Writes shared particle-module state to a binary buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to write to.
+	///
+	/// @return {Struct.BBMOD_ParticleModule} Returns `self`.
+	static to_buffer = function (_buffer)
+	{
+		buffer_write(_buffer, buffer_bool, Enabled);
+		return self;
+	};
+
+	/// @func from_buffer(_buffer)
+	///
+	/// @desc Reads shared particle-module state from a binary buffer.
+	///
+	/// @param {Id.Buffer} _buffer The buffer to read from.
+	///
+	/// @return {Struct.BBMOD_ParticleModule} Returns `self`.
+	static from_buffer = function (_buffer)
+	{
+		Enabled = buffer_read(_buffer, buffer_bool);
+		return self;
+	};
+
 	/// @func on_start(_emitter)
 	/// @desc Executed at the beginning of the emitter's emission cycle and
 	/// every time it loops.

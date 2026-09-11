@@ -41,3 +41,9 @@
 * Added binary `.bbterr` resources for saving and loading terrain configuration, final height data, texture references, and ordered terrain layers.
 * Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to `BBMOD_TerrainLayer` for serializing and deserializing layer texture references.
 * `BBMOD_ResourceManager` now supports `.bbterr` resources for loading terrains.
+
+## Particle system serialization
+
+* `BBMOD_ParticleSystem` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods for `.bbpart` resources.
+* Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to particle modules, except `BBMOD_TerrainCollisionModule` and `BBMOD_CollisionEventModule`.
+* `BBMOD_ResourceManager` now supports `.bbpart` resources for loading particle systems.

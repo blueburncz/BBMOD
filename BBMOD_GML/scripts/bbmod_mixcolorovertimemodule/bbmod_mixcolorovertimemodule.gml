@@ -25,6 +25,9 @@ function BBMOD_MixColorOverTimeModule(
 	_duration = 1.0
 ): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Real} The first of the four consecutive properties that together
 	/// form a color. Use values from {@link BBMOD_EParticle}. Default value is
 	/// `undefined`.
@@ -41,6 +44,28 @@ function BBMOD_MixColorOverTimeModule(
 	/// @var {Real} How long in seconds it takes to mix between the two values.
 	/// Default value is 1.0.
 	Duration = _duration;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_bool, Property != undefined);
+		if (Property != undefined) buffer_write(_buffer, buffer_f64, Property);
+		From.ToBuffer(_buffer);
+		To.ToBuffer(_buffer);
+		buffer_write(_buffer, buffer_f64, Duration);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Property = buffer_read(_buffer, buffer_bool)
+			? buffer_read(_buffer, buffer_f64) : undefined;
+		From = new BBMOD_Color().FromBuffer(_buffer);
+		To = new BBMOD_Color().FromBuffer(_buffer);
+		Duration = buffer_read(_buffer, buffer_f64);
+		return self;
+	};
 
 	static on_update = function (_emitter, _deltaTime)
 	{

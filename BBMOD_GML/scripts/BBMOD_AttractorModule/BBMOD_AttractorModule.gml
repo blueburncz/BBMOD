@@ -21,6 +21,9 @@ function BBMOD_AttractorModule(
 	_force = 1.0
 ): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Struct.BBMOD_Vec3} The position to attract/repel particles to/from.
 	/// Default value is `(0, 0, 0)`.
 	Position = _position;
@@ -39,6 +42,27 @@ function BBMOD_AttractorModule(
 	/// @var {Real} The strength of the force. Use negative to repel the
 	/// particles. Defaults value is 1.0.
 	Force = _force;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		Position.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_bool, Relative);
+		buffer_write(_buffer, buffer_f64, Radius);
+		buffer_write(_buffer, buffer_f64, Force);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Position = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Relative = buffer_read(_buffer, buffer_bool);
+		Radius = buffer_read(_buffer, buffer_f64);
+		Force = buffer_read(_buffer, buffer_f64);
+		__positionReal = Position;
+		return self;
+	};
 
 	static on_update = function (_emitter, _deltaTime)
 	{

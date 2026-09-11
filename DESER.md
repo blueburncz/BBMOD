@@ -301,6 +301,12 @@ asset-backed sprites remain borrowed.
 
 File extension: `.bbpart`
 
+`BBMOD_ParticleSystem` is the resource itself and inherits directly from
+`BBMOD_Resource`. BBPART version 1 stores model and material dependency paths; the
+owning `BBMOD_ResourceManager` resolves them through its cache before the
+particle system is marked loaded. Standalone loads use direct resource loading
+when no manager context is available.
+
 The resource serializes the particle-system definition, not a running
 simulation:
 
@@ -329,26 +335,33 @@ Do not serialize live particles, dynamic-batch vertex buffers, callback arrays,
 particle-system back-references, GPU handles, collision scratch state, or
 profiling state.
 
-Particle module groups requiring binary field contracts include:
+Supported particle modules provide `to_buffer(_buffer)` and
+`from_buffer(_buffer)` methods for their authored state. The current supported
+groups include:
 
 - Emission: `BBMOD_AABBEmissionModule`, `BBMOD_SphereEmissionModule`,
   `bbmod_emissionmodule`, and `BBMOD_EmissionOverTimeModule`.
 - Value setters: the real, vector, quaternion, and color setter modules.
 - Over-time modules: real, vector, quaternion, and color add/mix modules.
-- Collision modules: collision event, collision kill, terrain collision, and
-  on-collision add modules.
+- Collision modules: collision kill and on-collision add modules.
 - Speed and health modules: all speed- and health-based real, vector,
   quaternion, and color mix modules.
 - Other behavior: attractor, gravity, drag, random rotation, and direct mix
   modules.
+
+`BBMOD_TerrainCollisionModule` and `BBMOD_CollisionEventModule` are not
+serializable in `.bbpart` resources. Adding either module causes a load/save
+error until project-resource and callback-reference formats are defined.
 
 Curves, ranges, easing modes, and randomization settings must use explicit
 binary representations. Function references cannot be persisted as arbitrary
 runtime values.
 
 Particle systems should reference terrain, mesh, model, and material resources
-by canonical project path instead of embedding duplicate resources. Sprite and
-texture references use the shared texture-reference format above.
+by canonical project path instead of embedding duplicate resources. Model and
+material paths are resolved by `BBMOD_ResourceManager`; missing dependencies are
+load errors. Sprite and texture references use the shared texture-reference
+format above.
 
 A later snapshot format may serialize a running simulation, including active
 particles, ages, emitter counters, random state, and module runtime state. That

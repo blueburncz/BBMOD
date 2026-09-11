@@ -10,9 +10,26 @@
 /// `(0, 0, -9.8)`.
 function BBMOD_GravityModule(_gravity = BBMOD_VEC3_UP.Scale(-9.8)): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Struct.BBMOD_Vec3} The gravity vector. Default value is
 	/// `(0, 0, -9.8)`.
 	Gravity = _gravity;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		Gravity.ToBuffer(_buffer, buffer_f64);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Gravity = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		return self;
+	};
 
 	static on_update = function (_emitter, _deltaTime)
 	{

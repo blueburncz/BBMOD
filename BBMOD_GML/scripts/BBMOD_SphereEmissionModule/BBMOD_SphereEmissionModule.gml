@@ -17,12 +17,31 @@
 /// @see BBMOD_EParticle.PositionZ
 function BBMOD_SphereEmissionModule(_radius = 0.5, _inside = true): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Real} The radius of the sphere. Default value is 0.5.
 	Radius = _radius;
 
 	/// @var {Bool} If `true`, then the particles can be spawned inside the sphere.
 	/// Default value is `true`.
 	Inside = _inside;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		buffer_write(_buffer, buffer_f64, Radius);
+		buffer_write(_buffer, buffer_bool, Inside);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Radius = buffer_read(_buffer, buffer_f64);
+		Inside = buffer_read(_buffer, buffer_bool);
+		return self;
+	};
 
 	static on_particle_start = function (_emitter, _particleIndex)
 	{

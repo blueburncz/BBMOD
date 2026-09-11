@@ -22,6 +22,9 @@ function BBMOD_AABBEmissionModule(
 	_inside = true
 ): BBMOD_ParticleModule() constructor
 {
+	static ParticleModule_to_buffer = to_buffer;
+	static ParticleModule_from_buffer = from_buffer;
+
 	/// @var {Real} The minimum coordinate of the AABB. Default value is
 	/// to `(-0.5, -0.5, -0.5)`.
 	Min = _min;
@@ -33,6 +36,24 @@ function BBMOD_AABBEmissionModule(
 	/// @var {Bool} If `true` then the particles can be spawned inside of
 	/// the AABB. Default value is `true`.
 	Inside = _inside;
+
+	static to_buffer = function (_buffer)
+	{
+		ParticleModule_to_buffer(_buffer);
+		Min.ToBuffer(_buffer, buffer_f64);
+		Max.ToBuffer(_buffer, buffer_f64);
+		buffer_write(_buffer, buffer_bool, Inside);
+		return self;
+	};
+
+	static from_buffer = function (_buffer)
+	{
+		ParticleModule_from_buffer(_buffer);
+		Min = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Max = new BBMOD_Vec3().FromBuffer(_buffer, buffer_f64);
+		Inside = buffer_read(_buffer, buffer_bool);
+		return self;
+	};
 
 	static on_particle_start = function (_emitter, _particleIndex)
 	{

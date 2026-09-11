@@ -310,6 +310,8 @@ function BBMOD_ResourceManager() constructor
 
 			// Create the material and apply props.
 			_res = bbmod_material_get(_materialName).clone().from_json(_json);
+			_res.Path = _path;
+			_res.IsLoaded = true;
 			_res.__manager = self;
 			_resources[?  _path] = _res;
 
@@ -333,6 +335,10 @@ function BBMOD_ResourceManager() constructor
 
 			case ".bbterr":
 				_res = new BBMOD_Terrain();
+				break;
+
+			case ".bbpart":
+				_res = new BBMOD_ParticleSystem();
 				break;
 
 			case ".bbflare":
