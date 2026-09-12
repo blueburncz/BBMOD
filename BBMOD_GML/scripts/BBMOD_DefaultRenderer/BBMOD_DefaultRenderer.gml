@@ -58,6 +58,22 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 	/// @private
 	__surDepthBuffer = -1;
 
+	static __get_depth = function (_u, _v)
+	{
+		if (!EnableGBuffer || !surface_exists(__surDepthBuffer)) return undefined;
+		var _width = surface_get_width(__surDepthBuffer);
+		var _height = surface_get_height(__surDepthBuffer);
+		var _pixel = surface_getpixel_ext(
+			__surDepthBuffer,
+			clamp(_u * _width, 0, _width - 1),
+			clamp(_v * _height, 0, _height - 1));
+		var _red = _pixel & 255;
+		var _green = (_pixel >> 8) & 255;
+		var _blue = (_pixel >> 16) & 255;
+		return (_red / 255.0 + _green / 65025.0 + _blue / 16581375.0)
+			* bbmod_camera_get_zfar();
+	};
+
 	static render = function (_clearQueues = true)
 	{
 		global.__bbmodRendererCurrent = self;
@@ -108,6 +124,7 @@ function BBMOD_DefaultRenderer(): BBMOD_BaseRenderer() constructor
 		{
 			var _width = _renderWidth * GBufferScale;
 			var _height = _renderHeight * GBufferScale;
+			__capture_depth_camera(_view, _projection);
 
 			__surDepthBuffer = bbmod_surface_check(__surDepthBuffer, _width, _height, surface_rgba8unorm, true);
 

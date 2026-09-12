@@ -40,34 +40,81 @@ function BBMOD_BaseRenderer() constructor
 	__surInstanceHighlight = -1;
 
 	/// @var {Struct.BBMOD_Color} Outline color of instances selected by gizmo.
-	/// Default value is {@link BBMOD_C_ORANGE}.
-	/// @see BBMOD_BaseRenderer.Gizmo
+	/// @obsolete Please use {@link BBMOD_Editor.InstanceHighlightColor} instead.
 	InstanceHighlightColor = BBMOD_C_ORANGE;
 
 	/// @var {Bool} If `true` then edit mode is enabled. Default value is `false`.
+	/// @obsolete Please use {@link BBMOD_Editor.Enabled} instead.
 	EditMode = false;
 
 	/// @var {Bool} If `true` then mousepicking of gizmo and instances is enabled.
 	/// Default value is `true`.
+	/// @obsolete Please use {@link BBMOD_Editor.EnableMousepick} instead.
 	/// @note This can be useful for example to disable mousepicking when the
 	/// mouse cursor is over UI.
 	EnableMousepick = true;
 
 	/// @var {Constant.MouseButton} The mouse button used to select instances when
 	/// edit mode is enabled. Default value is `mb_left`.
-	/// @see BBMOD_BaseRenderer.EditMode
+	/// @obsolete Please use {@link BBMOD_Editor.ButtonSelect} instead.
 	ButtonSelect = mb_left;
 
 	/// @var {Constant.VirtualKey} The keyboard key used to add/remove instances
 	/// from multiple selection when edit mode is enabled. Default value is
 	/// `vk_shift`.
-	/// @see BBMOD_BaseRenderer.EditMode
+	/// @obsolete Please use {@link BBMOD_Editor.KeyMultiSelect} instead.
 	KeyMultiSelect = vk_shift;
 
 	/// @var {Struct.BBMOD_Gizmo} A gizmo for transforming instances when
-	/// {@link BBMOD_BaseRenderer.EditMode} is enabled. This is by default `undefined`.
+	/// {@link BBMOD_BaseRenderer.EditMode} is enabled. This is by default
+	//`undefined`.
 	/// @see BBMOD_Gizmo
+	/// @obsolete Please use {@link BBMOD_Editor.Gizmo} instead.
 	Gizmo = undefined;
+
+	/// @var {Struct.BBMOD_Editor} Editor that owns the gizmo and editor state.
+	/// Default value is `undefined`.
+	Editor = undefined;
+
+	/// @var {Bool}
+	/// @private
+	__worldPositionWarningShown = false;
+
+	/// @var {Array<Real>}
+	/// @private
+	__depthViewInverse = undefined;
+
+	/// @var {Array<Real>}
+	/// @private
+	__depthTanAspect = undefined;
+
+	/// @func __capture_depth_camera(_view, _projection)
+	///
+	/// @desc Captures the camera state used to render the depth buffer.
+	///
+	/// @param {Array<Real>} _view The view matrix.
+	/// @param {Array<Real>} _projection The projection matrix.
+	/// @private
+	static __capture_depth_camera = function (_view, _projection)
+	{
+		__depthViewInverse = matrix_inverse(_view);
+		__depthTanAspect = __bbmod_matrix_proj_get_tanaspect(_projection);
+	};
+
+	/// @func __get_depth(_u, _v)
+	///
+	/// @desc Samples normalized scene depth at normalized viewport coordinates.
+	///
+	/// @param {Real} _u Normalized viewport X coordinate.
+	/// @param {Real} _v Normalized viewport Y coordinate.
+	///
+	/// @return {Real} Linear view-space depth, or `undefined` when unavailable.
+	///
+	/// @private
+	static __get_depth = function (_u, _v)
+	{
+		return undefined;
+	};
 
 	/// @var {Id.Surface} A surface containing the gizmo. Used to enable
 	/// z-testing against itself, but ingoring the scene geometry.
@@ -558,6 +605,41 @@ function BBMOD_BaseRenderer() constructor
 		return surface_getpixel_ext(__surSelect, _screenX, _screenY);
 	};
 
+	/// @func get_world_position(_screenX, _screenY)
+	///
+	/// @desc Retrieves the world-space position beneath a screen-space point
+	/// using the renderer's scene depth buffer.
+	///
+	/// @param {Real} _screenX The screen-space X coordinate.
+	/// @param {Real} _screenY The screen-space Y coordinate.
+	///
+	/// @return {Struct.BBMOD_Vec3} The world-space position, or `undefined` if
+	/// no depth buffer is available.
+	static get_world_position = function (_screenX, _screenY)
+	{
+		var _u = clamp((_screenX - X) / get_width(), 0.0, 1.0);
+		var _v = clamp((_screenY - Y) / get_height(), 0.0, 1.0);
+		var _depth = __get_depth(_u, _v);
+		if (_depth == undefined)
+		{
+			if (!__worldPositionWarningShown)
+			{
+				__bbmod_warning(
+					"BBMOD_BaseRenderer.get_world_position requires a depth buffer.");
+				__worldPositionWarningShown = true;
+			}
+			return undefined;
+		}
+
+		if (__depthViewInverse == undefined || __depthTanAspect == undefined) return undefined;
+		var _viewPosition = matrix_transform_vertex(
+			__depthViewInverse,
+			__depthTanAspect[0] * (_u * 2.0 - 1.0) * _depth,
+			__depthTanAspect[1] * (_v * 2.0 - 1.0) * _depth,
+			_depth);
+		return new BBMOD_Vec3(_viewPosition[0], _viewPosition[1], _viewPosition[2]);
+	};
+
 	/// @func add(_renderable)
 	///
 	/// @desc Adds a renderable object or struct to the renderer.
@@ -600,6 +682,22 @@ function BBMOD_BaseRenderer() constructor
 		return self;
 	};
 
+	/// @private
+	static __sync_editor = function ()
+	{
+		if (Editor == undefined)
+		{
+			return self;
+		}
+		Gizmo = Editor.Gizmo;
+		EditMode = Editor.Enabled;
+		InstanceHighlightColor = Editor.InstanceHighlightColor;
+		EnableMousepick = Editor.EnableMousepick;
+		ButtonSelect = Editor.ButtonSelect;
+		KeyMultiSelect = Editor.KeyMultiSelect;
+		return self;
+	};
+
 	/// @func update(_deltaTime)
 	///
 	/// @desc Updates the renderer. This should be called in the Step event.
@@ -611,6 +709,7 @@ function BBMOD_BaseRenderer() constructor
 	static update = function (_deltaTime)
 	{
 		global.__bbmodRendererCurrent = self;
+		__sync_editor();
 
 		if (UseAppSurface)
 		{
@@ -625,7 +724,11 @@ function BBMOD_BaseRenderer() constructor
 			}
 		}
 
-		if (Gizmo && EditMode)
+		if (Editor != undefined)
+		{
+			Editor.update(_deltaTime);
+		}
+		else if (Gizmo && EditMode)
 		{
 			Gizmo.update(_deltaTime);
 		}
@@ -1053,17 +1156,49 @@ function BBMOD_BaseRenderer() constructor
 		var _renderWidth = get_render_width();
 		var _renderHeight = get_render_height();
 
-		var _editMode = (EditMode && Gizmo);
+		var _editMode = (Editor != undefined && Editor.Enabled && Gizmo);
 		var _mouseX = window_mouse_get_x();
 		var _mouseY = window_mouse_get_y();
 		var _mouseOver = (_mouseX >= X && _mouseX < X + get_width()
 			&& _mouseY >= Y && _mouseY < Y + get_height());
 		var _continueMousePick = EnableMousepick;
+		var _editorProjected = [];
 		var _gizmoSize;
+
+		if (_editMode && Editor.ShowIcons)
+		{
+			var _camera = global.__bbmodCameraCurrent;
+			var _viewProjection = (_camera != undefined)
+				? _camera.ViewProjectionMatrix
+				: matrix_multiply(_view, _projection);
+			_editorProjected = Editor.project_editables(
+				_viewProjection,
+				bbmod_camera_get_position(),
+				_renderWidth,
+				_renderHeight,
+				Editor.IconSize,
+				(_camera != undefined) ? _camera.__projFlipped : false);
+			var _instanceProjected = Editor.project_instance_icons(
+				_viewProjection,
+				bbmod_camera_get_position(),
+				_renderWidth,
+				_renderHeight,
+				Editor.IconSize,
+				(_camera != undefined) ? _camera.__projFlipped : false,
+				Editor.IconReferenceDistance);
+			for (var _iconIndex = 0; _iconIndex < array_length(_instanceProjected); ++_iconIndex)
+			{
+				array_push(_editorProjected, _instanceProjected[_iconIndex]);
+			}
+		}
 
 		if (_editMode)
 		{
 			_gizmoSize = Gizmo.Size;
+			if (!Gizmo.IsEditing)
+			{
+				Gizmo.update_position();
+			}
 
 			if (_projection[11] != 0.0)
 			{
@@ -1092,8 +1227,37 @@ function BBMOD_BaseRenderer() constructor
 
 			if (select_gizmo(_mouseX, _mouseY))
 			{
-				Gizmo.IsEditing = true;
+				Gizmo.begin_edit();
 				_continueMousePick = false;
+			}
+		}
+
+		////////////////////////////////////////////////////////////////////////
+		// Editable struct icons
+		var _mousePickEditor = (_editMode && _continueMousePick
+			&& _mouseOver && mouse_check_button_pressed(ButtonSelect));
+		if (_mousePickEditor)
+		{
+			var _renderScale = bbmod_is_browser() ? 1.0 : RenderScale;
+			var _editorX = clamp(_mouseX - X, 0, get_width()) * _renderScale;
+			var _editorY = clamp(_mouseY - Y, 0, get_height()) * _renderScale;
+			var _editorTarget = Editor.pick(_editorProjected, _editorX, _editorY);
+			if (_editorTarget != undefined)
+			{
+				Editor.select(_editorTarget);
+				if (!keyboard_check(KeyMultiSelect))
+				{
+					Gizmo.clear_selection();
+				}
+				Gizmo.toggle_select(_editorTarget).update_position();
+				Gizmo.Size = _gizmoSize
+					* Gizmo.Position.Sub(bbmod_camera_get_position()).Length() / 100.0;
+				_continueMousePick = false;
+			}
+			else
+			{
+				Editor.clear_selection();
+				Gizmo.clear_selection();
 			}
 		}
 
@@ -1121,8 +1285,10 @@ function BBMOD_BaseRenderer() constructor
 			// Select instance
 			if (_mousePickInstance)
 			{
-				if (!keyboard_check(KeyMultiSelect))
+				var _multiSelect = keyboard_check(KeyMultiSelect);
+				if (!_multiSelect)
 				{
+					Editor.clear_selection();
 					Gizmo.clear_selection();
 				}
 
@@ -1151,7 +1317,12 @@ function BBMOD_BaseRenderer() constructor
 
 			bbmod_render_pass_set(BBMOD_ERenderPass.Id);
 
-			bbmod_render_queues_submit(Gizmo.Selected);
+			var _instanceSelection = Editor.filter_instance_selection(Gizmo.Selected);
+			if (!ds_list_empty(_instanceSelection))
+			{
+				bbmod_render_queues_submit(_instanceSelection);
+			}
+			ds_list_destroy(_instanceSelection);
 			bbmod_material_reset();
 
 			surface_reset_target();
@@ -1195,7 +1366,9 @@ function BBMOD_BaseRenderer() constructor
 	/// @private
 	static __overlay_gizmo_and_instance_highlight = function ()
 	{
-		if (!EditMode || !Gizmo || ds_list_empty(Gizmo.Selected))
+		if (!EditMode || !Gizmo
+			|| (Editor.WireframeMode != BBMOD_EWireframeMode.Always
+				&& ds_list_empty(Gizmo.Selected)))
 		{
 			return;
 		}
@@ -1212,6 +1385,12 @@ function BBMOD_BaseRenderer() constructor
 		var _height = get_render_height();
 		var _texelWidth = 1.0 / _width;
 		var _texelHeight = 1.0 / _height;
+		Editor.draw_wireframes(
+			Editor.WireframeMode,
+			Gizmo.Selected,
+			Editor.WireframeColorSelected,
+			Editor.WireframeColor,
+			1.0);
 
 		matrix_set(matrix_world, bbmod_matrix_get_identity());
 		camera_set_view_size(__camera2D, _width, _height);
@@ -1247,6 +1426,61 @@ function BBMOD_BaseRenderer() constructor
 		matrix_set(matrix_view, _view);
 		matrix_set(matrix_projection, _projection);
 
+		gpu_pop_state();
+	};
+
+	/// @private
+	static __overlay_editor_icons = function ()
+	{
+		if (Editor == undefined || !Editor.Enabled || !Editor.ShowIcons)
+		{
+			Editor.clear_instance_icons();
+			return;
+		}
+
+		var _width = get_render_width();
+		var _height = get_render_height();
+		var _world = matrix_get(matrix_world);
+		var _view = matrix_get(matrix_view);
+		var _projection = matrix_get(matrix_projection);
+		var _camera = global.__bbmodCameraCurrent;
+		var _projectionView = (_camera != undefined)
+			? _camera.ViewProjectionMatrix
+			: matrix_multiply(_view, _projection);
+		var _projected = Editor.project_editables(
+			_projectionView,
+			bbmod_camera_get_position(),
+			_width,
+			_height,
+			Editor.IconSize,
+			(_camera != undefined) ? _camera.__projFlipped : false,
+			Editor.IconReferenceDistance);
+		var _instanceProjected = Editor.project_instance_icons(
+			_projectionView,
+			bbmod_camera_get_position(),
+			_width,
+			_height,
+			Editor.IconSize,
+			(_camera != undefined) ? _camera.__projFlipped : false,
+			Editor.IconReferenceDistance);
+		for (var _iconIndex = 0; _iconIndex < array_length(_instanceProjected); ++_iconIndex)
+		{
+			array_push(_projected, _instanceProjected[_iconIndex]);
+		}
+
+		gpu_push_state();
+		gpu_set_blendenable(true);
+		gpu_set_zwriteenable(false);
+		gpu_set_ztestenable(false);
+		matrix_set(matrix_world, bbmod_matrix_get_identity());
+		camera_set_view_size(__camera2D, _width, _height);
+		camera_apply(__camera2D);
+		Editor.draw_icons(
+			_projected, X, Y, Gizmo.Selected, InstanceHighlightColor);
+		Editor.clear_instance_icons();
+		matrix_set(matrix_world, _world);
+		matrix_set(matrix_view, _view);
+		matrix_set(matrix_projection, _projection);
 		gpu_pop_state();
 	};
 
@@ -1287,6 +1521,7 @@ function BBMOD_BaseRenderer() constructor
 	static render = function (_clearQueues = true)
 	{
 		global.__bbmodRendererCurrent = self;
+		__sync_editor();
 
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
@@ -1363,6 +1598,7 @@ function BBMOD_BaseRenderer() constructor
 		// Draw gizmo and highlight selected instances
 		//
 		__overlay_gizmo_and_instance_highlight();
+		__overlay_editor_icons();
 
 		////////////////////////////////////////////////////////////////////////
 
@@ -1417,6 +1653,12 @@ function BBMOD_BaseRenderer() constructor
 
 	static destroy = function ()
 	{
+		if (Editor != undefined)
+		{
+			Editor = Editor.destroy();
+			Gizmo = undefined;
+		}
+
 		if (global.__bbmodRendererCurrent == self)
 		{
 			global.__bbmodRendererCurrent = undefined;

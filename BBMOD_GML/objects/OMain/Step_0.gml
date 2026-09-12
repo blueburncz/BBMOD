@@ -50,6 +50,14 @@ camera.AspectRatio = surface_get_width(application_surface) / surface_get_height
 camera.update(delta_time);
 ditherFrustum.FromCamera(camera);
 
+if (renderer.Editor.Enabled)
+{
+	if (keyboard_check_pressed(ord("1"))) editorSpawnKey = 1;
+	else if (keyboard_check_pressed(ord("2"))) editorSpawnKey = 2;
+	else if (keyboard_check_pressed(ord("3"))) editorSpawnKey = 3;
+	else if (keyboard_check_pressed(ord("4"))) editorSpawnKey = 4;
+}
+
 var _locomotionForward = keyboard_check(vk_up) - keyboard_check(vk_down);
 var _locomotionRight = keyboard_check(vk_right) - keyboard_check(vk_left);
 var _locomotionSpeed = max(abs(_locomotionForward), abs(_locomotionRight));
@@ -172,7 +180,11 @@ repeat(array_length(ditherRegularStates))
 	}
 }
 
-batchSphereOrbitTime += _deltaSeconds;
+var _updateEditorMotion = !renderer.Editor.Enabled || !editorMotionInitialized;
+if (_updateEditorMotion)
+{
+	batchSphereOrbitTime += _deltaSeconds;
+}
 
 i = 0;
 repeat(array_length(batchSphereInstances))
@@ -181,10 +193,13 @@ repeat(array_length(batchSphereInstances))
 	var _angle = _instance.OrbitAngle + batchSphereOrbitTime * _instance.OrbitSpeed;
 	var _radius = _instance.OrbitRadius;
 
-	_instance.x = lengthdir_x(_radius, _angle);
-	_instance.y = lengthdir_y(_radius, _angle);
-	_instance.z = _instance.OrbitHeight + dsin(_angle * 2.0) * 0.75;
-	_instance.image_angle = _angle;
+	if (_updateEditorMotion)
+	{
+		_instance.x = lengthdir_x(_radius, _angle);
+		_instance.y = lengthdir_y(_radius, _angle);
+		_instance.z = _instance.OrbitHeight + dsin(_angle * 2.0) * 0.75;
+		_instance.image_angle = _angle;
+	}
 
 	ditherDistanceScratch.Set(_instance.x, _instance.y, _instance.z);
 	var _distanceToCamera = abs(camera.get_distance(ditherDistanceScratch));
@@ -224,22 +239,25 @@ repeat(array_length(batchSphereInstances))
 	batchSphere.update_instance(_instance);
 }
 
-i = 0;
-repeat(array_length(punctualLightsTest))
+if (_updateEditorMotion)
 {
-	var _light = punctualLightsTest[i++];
-	var _angle = _light[$ "OrbitAngle"] + batchSphereOrbitTime * _light[$ "OrbitSpeed"];
-	var _radius = _light[$ "OrbitRadius"];
-	var _height = _light[$ "OrbitHeight"];
+	i = 0;
+	repeat(array_length(punctualLightsTest))
+	{
+		var _light = punctualLightsTest[i++];
+		var _angle = _light[$ "OrbitAngle"] + batchSphereOrbitTime * _light[$ "OrbitSpeed"];
+		var _radius = _light[$ "OrbitRadius"];
+		var _height = _light[$ "OrbitHeight"];
 
-	_light.Position.Set(
-		lengthdir_x(_radius, _angle),
-		lengthdir_y(_radius, _angle),
-		_height + dsin(_angle * 1.5) * 1.5
-	);
+		_light.Position.Set(
+			lengthdir_x(_radius, _angle),
+			lengthdir_y(_radius, _angle),
+			_height + dsin(_angle * 1.5) * 1.5
+		);
+	}
 }
 
-if (spotLightTest != undefined)
+if (spotLightTest != undefined && _updateEditorMotion)
 {
 	var _spotAngle = spotLightTest[$ "OrbitAngle"] + batchSphereOrbitTime * spotLightTest[$ "OrbitSpeed"];
 	var _spotRadius = spotLightTest[$ "OrbitRadius"];
@@ -259,6 +277,8 @@ if (spotLightTest != undefined)
 
 	spotLightTest.Direction.Set(_toCenter.X, _toCenter.Y, _toCenter.Z);
 }
+
+editorMotionInitialized = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 //

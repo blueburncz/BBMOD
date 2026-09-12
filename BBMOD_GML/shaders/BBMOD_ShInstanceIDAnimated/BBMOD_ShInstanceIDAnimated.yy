@@ -4,7 +4,7 @@
   "name":"BBMOD_ShInstanceIDAnimated",
   "parent":{
     "name":"Shaders",
-    "path":"folders/BBMOD/Gizmo/Shaders.yy",
+    "path":"folders/BBMOD/Editor/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

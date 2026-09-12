@@ -15,6 +15,11 @@ global.__bbmodImageBasedLight = undefined;
 /// with increasing roughness and the last one is for diffuse lighting.
 function BBMOD_ImageBasedLight(_texture = undefined): BBMOD_Light() constructor
 {
+	if (!variable_global_exists("__bbmodImageBasedLight"))
+	{
+		global.__bbmodImageBasedLight = undefined;
+	}
+
 	static Light_destroy = destroy;
 	static Light_to_buffer = to_buffer;
 	static Light_from_buffer = from_buffer;

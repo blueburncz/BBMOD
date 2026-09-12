@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"BBMOD_Gizmo",
+  "%Name":"__editor_tests",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BBMOD_Gizmo",
+  "name":"__editor_tests",
   "parent":{
-    "name":"Editor",
-    "path":"folders/BBMOD/Editor.yy",
+    "name":"Test",
+    "path":"folders/Test.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

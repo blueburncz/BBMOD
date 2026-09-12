@@ -75,6 +75,11 @@ function BBMOD_ReflectionProbe(
 	_spriteOwned = (_sprite != undefined)
 ) constructor
 {
+	if (!variable_global_exists("__bbmodReflectionProbes"))
+	{
+		global.__bbmodReflectionProbes = [];
+	}
+
 	/// @var {Bool} If `false` then the probe is disabled and unused. Default
 	/// value is `true`.
 	Enabled = true;
@@ -134,6 +139,29 @@ function BBMOD_ReflectionProbe(
 	/// @note This is automatically reset to `false` when the reflection probe is
 	/// captured.
 	NeedsUpdate = (_sprite == undefined);
+
+	/// @var {Asset.GMSprite} Sprite used for the editor icon.
+	EditorIconSprite = BBMOD_SprParticle;
+
+	/// @var {Real} Subimage used for the editor icon.
+	EditorIconIndex = 0;
+
+	/// @var {Real} Priority used when editor icons overlap.
+	EditorPickPriority = 0;
+
+	/// @var {Real} Distance at which the editor icon starts fading.
+	EditorIconFadeStart = 100.0;
+
+	/// @var {Real} Distance at which the editor icon is hidden.
+	EditorIconFadeEnd = 120.0;
+
+	/// @var {Struct.BBMOD_Vec3} World-space editor icon offset.
+	EditorOffset = new BBMOD_Vec3();
+
+	/// @var {Real} Editor transform capabilities.
+	EditorFlags = BBMOD_EEditorFlag.Translate
+		| BBMOD_EEditorFlag.Scale
+		| BBMOD_EEditorFlag.RefreshReflectionProbes;
 
 	/// @func to_buffer(_buffer)
 	///

@@ -16,6 +16,11 @@ global.__bbmodDirectionalLight = undefined;
 /// `(-1, 0, -1)` if `undefined`.
 function BBMOD_DirectionalLight(_color = undefined, _direction = undefined): BBMOD_Light() constructor
 {
+	if (!variable_global_exists("__bbmodDirectionalLight"))
+	{
+		global.__bbmodDirectionalLight = undefined;
+	}
+
 	static Light_to_buffer = to_buffer;
 	static Light_from_buffer = from_buffer;
 

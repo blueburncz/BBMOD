@@ -92,6 +92,23 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 	/// @private
 	static __sphere = new BBMOD_Model("Data/BBMOD/Models/Sphere.bbmod").freeze();
 
+	static __get_depth = function (_u, _v)
+	{
+		var _surface = __surGBuffer[2];
+		if (!surface_exists(_surface)) return undefined;
+		var _width = surface_get_width(_surface);
+		var _height = surface_get_height(_surface);
+		var _pixel = surface_getpixel_ext(
+			_surface,
+			clamp(_u * _width, 0, _width - 1),
+			clamp(_v * _height, 0, _height - 1));
+		var _red = _pixel & 255;
+		var _green = (_pixel >> 8) & 255;
+		var _blue = (_pixel >> 16) & 255;
+		return (_red / 255.0 + _green / 65025.0 + _blue / 16581375.0)
+			* __gBufferZFar;
+	};
+
 	static __render_shadowmaps = function ()
 	{
 		var _shadowCaster = undefined;
@@ -167,6 +184,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 	static render = function (_clearQueues = true)
 	{
 		global.__bbmodRendererCurrent = self;
+		__sync_editor();
 
 		var _world = matrix_get(matrix_world);
 		var _view = matrix_get(matrix_view);
@@ -229,6 +247,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 			surface_rgba8unorm, false);
 		__surGBuffer[@ 2] = bbmod_surface_check(__surGBuffer[2], _renderWidth, _renderHeight,
 			surface_rgba8unorm, false);
+		__capture_depth_camera(_view, _projection);
 		__surLBuffer = bbmod_surface_check(__surLBuffer, _renderWidth, _renderHeight, _hdr ? surface_rgba16float
 			: surface_rgba8unorm, false);
 		__surFinal = bbmod_surface_check(__surFinal, _renderWidth, _renderHeight, _hdr ? surface_rgba16float
@@ -561,6 +580,7 @@ function BBMOD_DeferredRenderer(): BBMOD_BaseRenderer() constructor
 		// Draw gizmo and highlight selected instances
 		//
 		__overlay_gizmo_and_instance_highlight();
+		__overlay_editor_icons();
 
 		gpu_pop_state();
 		surface_reset_target();

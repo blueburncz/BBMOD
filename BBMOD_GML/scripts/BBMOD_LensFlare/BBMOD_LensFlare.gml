@@ -92,6 +92,29 @@ function BBMOD_LensFlare(
 	/// produced by spot lights) or `undefined` (default).
 	AngleOuter = _angleOuter;
 
+	/// @var {Asset.GMSprite} Sprite used for the editor icon.
+	EditorIconSprite = BBMOD_SprParticle;
+
+	/// @var {Real} Subimage used for the editor icon.
+	EditorIconIndex = 0;
+
+	/// @var {Real} Priority used when editor icons overlap.
+	EditorPickPriority = 0;
+
+	/// @var {Real} Distance at which the editor icon starts fading.
+	EditorIconFadeStart = 100.0;
+
+	/// @var {Real} Distance at which the editor icon is hidden.
+	EditorIconFadeEnd = 120.0;
+
+	/// @var {Struct.BBMOD_Vec3} World-space editor icon offset.
+	EditorOffset = new BBMOD_Vec3();
+
+	/// @var {Real} Editor transform capabilities.
+	EditorFlags = BBMOD_EEditorFlag.Translate
+		| BBMOD_EEditorFlag.Rotate
+		| BBMOD_EEditorFlag.Scale;
+
 	/// @var {Array<Struct.BBMOD_LensFlareElement>}
 	/// @private
 	__elements = [];
@@ -537,6 +560,10 @@ function BBMOD_LensFlare(
 function bbmod_lens_flare_add(_lensFlare)
 {
 	gml_pragma("forceinline");
+	if (!variable_global_exists("__bbmodLensFlares"))
+	{
+		global.__bbmodLensFlares = [];
+	}
 	array_push(global.__bbmodLensFlares, _lensFlare);
 }
 

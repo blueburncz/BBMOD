@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"BBMOD_Gizmo",
+  "%Name":"BBMOD_EEditorFlag",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BBMOD_Gizmo",
+  "name":"BBMOD_EEditorFlag",
   "parent":{
-    "name":"Editor",
-    "path":"folders/BBMOD/Editor.yy",
+    "name":"Lights",
+    "path":"folders/BBMOD/Core/Lights.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

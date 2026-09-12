@@ -1,5 +1,23 @@
 renderer.present();
 
+if (renderer.Editor.Enabled)
+{
+	var _spawnHelp = "Editor spawns: 1 PointLight | 2 SpotLight | 3 ReflectionProbe | 4 Lightmap instance";
+	_spawnHelp += "\nPlace cursor over rendered geometry; depth buffer required";
+	var _spawnColor = draw_get_color();
+	var _spawnAlpha = draw_get_alpha();
+	draw_set_halign(fa_left);
+	draw_set_valign(fa_top);
+	draw_set_color(c_black);
+	draw_set_alpha(0.75);
+	draw_text(19, 19, _spawnHelp);
+	draw_set_color(c_white);
+	draw_set_alpha(1.0);
+	draw_text(18, 18, _spawnHelp);
+	draw_set_color(_spawnColor);
+	draw_set_alpha(_spawnAlpha);
+}
+
 if (particleModuleShowcaseEnabled)
 {
 	var _emitters = particleModuleShowcaseEmitters;
@@ -106,7 +124,7 @@ if (terrain != undefined)
 	var _valignPrev = draw_get_valign();
 
 	var _x = 18;
-	var _y = 18;
+	var _y = 100;
 
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);

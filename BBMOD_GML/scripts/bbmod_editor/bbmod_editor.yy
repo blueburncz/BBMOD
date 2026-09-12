@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"BBMOD_Gizmo",
+  "%Name":"BBMOD_Editor",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"BBMOD_Gizmo",
+  "name":"BBMOD_Editor",
   "parent":{
     "name":"Editor",
     "path":"folders/BBMOD/Editor.yy",

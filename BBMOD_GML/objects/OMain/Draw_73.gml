@@ -93,6 +93,47 @@ if (showRenderStatistics)
 	bbmod_render_statistics_start();
 }
 renderer.render();
+
+if (editorSpawnKey != 0)
+{
+	var _spawnPosition = renderer.get_world_position(
+		window_mouse_get_x(), window_mouse_get_y());
+	if (_spawnPosition != undefined)
+	{
+		if (editorSpawnKey == 1)
+		{
+			var _pointLight = new BBMOD_PointLight(
+				BBMOD_C_RED, _spawnPosition, 6.0);
+			bbmod_light_punctual_add(_pointLight);
+			renderer.Editor.add_created(_pointLight);
+		}
+		else if (editorSpawnKey == 2)
+		{
+			var _spotLight = new BBMOD_SpotLight(
+				BBMOD_C_BLUE, _spawnPosition, 8.0, camera.get_forward(), 15.0, 30.0);
+			bbmod_light_punctual_add(_spotLight);
+			renderer.Editor.add_created(_spotLight);
+		}
+		else if (editorSpawnKey == 3)
+		{
+			var _probe = new BBMOD_ReflectionProbe(_spawnPosition);
+			_probe.Size.Set(4.0);
+			bbmod_reflection_probe_add(_probe);
+			renderer.Editor.add_created(_probe);
+		}
+		else
+		{
+			var _instance = instance_create_layer(
+				_spawnPosition.X,
+				_spawnPosition.Y,
+				layer_get_name(layer),
+				OLightmapTest);
+			_instance.z = _spawnPosition.Z;
+			renderer.Editor.add_created(_instance);
+		}
+	}
+	editorSpawnKey = 0;
+}
 if (showRenderStatistics)
 {
 	renderStatisticsSnapshot = bbmod_render_statistics_end();

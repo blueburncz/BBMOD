@@ -1,9 +1,10 @@
 # ChangelogDeser
 
-## General serialization
+## General
 
-* Added method `ToBuffer(_buffer)` to `BBMOD_Color`, which writes the color channels into a buffer.
-* Added method `FromBuffer(_buffer)` to `BBMOD_Color`, which loads color channels from a buffer.
+* Added new method `ToBuffer(_buffer)` to `BBMOD_Color`, which writes the color channels into a buffer.
+* Added new method `FromBuffer(_buffer)` to `BBMOD_Color`, which loads color channels from a buffer.
+* Added new method `FromLookRotation(_forward, _up)` to `BBMOD_Quaternion`, which constructs a quaternion from forward and up vectors.
 
 ## Texture references and serialization
 
@@ -23,15 +24,15 @@
 ## Lens flares serialization
 
 * Struct `BBMOD_LensFlare` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods.
-* Added properties `SpritePath` and `SpriteSha1` to `BBMOD_LensFlareElement` for external sprite-file references.
-* Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to `BBMOD_LensFlareElement` for serializing and deserializing element properties and sprite sources.
+* Added new properties `SpritePath` and `SpriteSha1` to `BBMOD_LensFlareElement` for external sprite-file references.
+* Added new methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to `BBMOD_LensFlareElement` for serializing and deserializing element properties and sprite sources.
 * Added binary `.bbflare` resources for saving and loading lens flare compositions, including scalar properties, ordered elements, native element constructors, and asset, external-file, and embedded RGBA8 sprite references.
 * `.bbflare` resources are now supported by `BBMOD_ResourceManager` and restore owned sprites for external and embedded sources while asset-backed sprites remain borrowed.
 
 ## Post-processing serialization
 
 * Struct `BBMOD_PostProcessor` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods.
-* Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to post-process effects for serializing authored fields and shared `Enabled` state; runtime surfaces, shader handles, and effect caches are rebuilt or excluded.
+* Added new methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to post-process effects for serializing authored fields and shared `Enabled` state; runtime surfaces, shader handles, and effect caches are rebuilt or excluded.
 * Added binary `.bbpost` resources for saving and loading post-processing configuration, legacy properties, texture references, and ordered effects.
 * `BBMOD_ResourceManager` now supports `.bbpost` resources for loading post-processing effects.
 
@@ -39,15 +40,25 @@
 
 * Struct `BBMOD_Terrain` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods.
 * Added binary `.bbterr` resources for saving and loading terrain configuration, final height data, texture references, and ordered terrain layers.
-* Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to `BBMOD_TerrainLayer` for serializing and deserializing layer texture references.
+* Added new methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to `BBMOD_TerrainLayer` for serializing and deserializing layer texture references.
 * `BBMOD_ResourceManager` now supports `.bbterr` resources for loading terrains.
 
 ## Particle system serialization
 
 * `BBMOD_ParticleSystem` now extends `BBMOD_Resource` and supports binary `from_buffer()`, `to_buffer()`, `from_file()`, and `to_file()` methods for `.bbpart` resources.
-* Added methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to particle modules, except `BBMOD_TerrainCollisionModule` and `BBMOD_CollisionEventModule`.
+* Added new methods `to_buffer(_buffer)` and `from_buffer(_buffer)` to particle modules, except `BBMOD_TerrainCollisionModule` and `BBMOD_CollisionEventModule`.
 * `BBMOD_ResourceManager` now supports `.bbpart` resources for loading particle systems.
 
 ## Scene struct serialization
 
-* Added `bbmod_struct_to_buffer(_buffer, _value)` and `bbmod_struct_from_buffer(_buffer)` helpers, plus `to_buffer(_buffer)` and `from_buffer(_buffer)` methods on `BBMOD_Light`, `BBMOD_DirectionalLight`, `BBMOD_PunctualLight`, `BBMOD_PointLight`, `BBMOD_SpotLight`, `BBMOD_ImageBasedLight`, and `BBMOD_ReflectionProbe` without promoting them to resources.
+* Added new functions `bbmod_struct_to_buffer(_buffer, _value)` and `bbmod_struct_from_buffer(_buffer)`, plus new methods `to_buffer(_buffer)` and `from_buffer(_buffer)` on `BBMOD_Light`, `BBMOD_DirectionalLight`, `BBMOD_PunctualLight`, `BBMOD_PointLight`, `BBMOD_SpotLight`, `BBMOD_ImageBasedLight`, and `BBMOD_ReflectionProbe` without promoting them to resources.
+
+## Editor
+
+* Added new functions `bbmod_particle_emitter_add()`, `bbmod_particle_emitter_count()`, `bbmod_particle_emitter_get()`, `bbmod_particle_emitter_remove()`, `bbmod_particle_emitter_remove_index()`, and `bbmod_particle_emitter_clear()`, which manage particle emitters used by the editor and particle effects.
+* Added new struct `BBMOD_Editor`, which provides selection, transformation, icon, wireframe, undo, redo, and delete controls for supported lights, reflection probes, particle emitters, lens flares, and GameMaker instances.
+* Added new property `Editor` to `BBMOD_BaseRenderer`, which stores the renderer's `BBMOD_Editor`.
+* Added new method `get_world_position(_screenX, _screenY)` to `BBMOD_BaseRenderer`, which reconstructs the world-space position beneath a screen-space point from the renderer's depth buffer and returns `undefined` with a warning when depth is unavailable.
+* Properties `EditMode`, `ShowEditorIcons`, `EditorIconSize`, `EditorIconReferenceDistance`, `EditorWireframeMode`, `EditorWireframeColor`, `EditorWireframeColorSelected`, `InstanceHighlightColor`, `EnableMousepick`, `ButtonSelect`, `KeyMultiSelect`, and `Gizmo` of `BBMOD_BaseRenderer` are now **obsolete**! Please use the corresponding properties of `BBMOD_Editor` instead.
+* Added new function `bbmod_editor_submit_instance_icon()`, which submits a configurable editor icon for a GameMaker instance, including its image, priority, fade distances, and world-space offset.
+* Added new enum `BBMOD_EWireframeMode`, which configures whether editor wireframes are hidden, shown for selected targets, or shown for all supported targets.

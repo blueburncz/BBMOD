@@ -1,5 +1,4 @@
 renderer = renderer.destroy();
-gizmo = gizmo.destroy();
 postProcessor = postProcessor.destroy();
 show_debug_overlay(false);
 
@@ -21,6 +20,7 @@ bbmod_ibl_set(undefined);
 bbmod_light_directional_set(undefined);
 bbmod_light_punctual_clear();
 bbmod_reflection_probe_clear();
+bbmod_particle_emitter_clear();
 
 terrain = terrain.destroy();
 terrainMaterial = terrainMaterial.destroy();

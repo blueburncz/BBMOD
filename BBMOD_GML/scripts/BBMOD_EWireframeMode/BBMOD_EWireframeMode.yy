@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"__bbmod_gizmo",
+  "%Name":"BBMOD_EWireframeMode",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__bbmod_gizmo",
+  "name":"BBMOD_EWireframeMode",
   "parent":{
-    "name":"Gizmo",
-    "path":"folders/BBMOD/Gizmo.yy",
+    "name":"Lights",
+    "path":"folders/BBMOD/Core/Lights.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

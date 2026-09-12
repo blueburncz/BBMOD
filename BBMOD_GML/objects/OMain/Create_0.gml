@@ -27,9 +27,12 @@ renderer.SSAODepthRange = 1.5;
 renderer.SSAORadius = 128;
 renderer.SSAOPower = 2;
 
-gizmo = new BBMOD_Gizmo();
-renderer.Gizmo = gizmo;
-renderer.EditMode = true;
+renderer.Editor = new BBMOD_Editor();
+renderer.Editor.Enabled = true;
+//renderer.EditorWireframeMode = BBMOD_EWireframeMode.Always;
+
+editorMotionInitialized = false;
+editorSpawnKey = 0;
 
 postProcessor = new BBMOD_PostProcessor();
 postProcessor.LensDirtStrength = 0.1;
@@ -244,6 +247,8 @@ spotLightTest[$ "OrbitRadius"] = 30.0;
 spotLightTest[$ "OrbitHeight"] = 18.0;
 
 bbmod_light_punctual_add(spotLightTest);
+
+// The renderer-owned editor gizmo remains user-controlled.
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -515,6 +520,7 @@ _particle_showcase_add = function (_name, _modules, _options = undefined)
 		particleModuleShowcaseOriginY + particleModuleShowcaseOffsetY + (_row * particleModuleShowcaseSpacingY),
 		_positionZ + ((_row mod 2) * particleModuleShowcaseRowZStep));
 	var _emitter = new BBMOD_ParticleEmitter(_position, _system);
+	bbmod_particle_emitter_add(_emitter);
 
 	array_push(particleModuleShowcaseSystems, _system);
 	array_push(particleModuleShowcaseEmitters, _emitter);

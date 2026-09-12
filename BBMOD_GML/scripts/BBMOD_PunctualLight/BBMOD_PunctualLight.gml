@@ -28,6 +28,11 @@ global.__bbmodPunctualLightsRenderer = undefined;
 /// @see bbmod_light_punctual_clear
 function BBMOD_PunctualLight(_color = BBMOD_C_WHITE, _position = undefined, _range = 1.0): BBMOD_Light() constructor
 {
+	if (!variable_global_exists("__bbmodPunctualLights"))
+	{
+		global.__bbmodPunctualLights = [];
+	}
+
 	static Light_to_buffer = to_buffer;
 	static Light_from_buffer = from_buffer;
 

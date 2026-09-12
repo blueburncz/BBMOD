@@ -1,5 +1,9 @@
 /// @module Particles
 
+/// @var {Array<Struct.BBMOD_ParticleEmitter>}
+/// @private
+global.__bbmodParticleEmitters = [];
+
 /// @func BBMOD_ParticleEmitter(_position, _system)
 ///
 /// @implements {BBMOD_IDestructible}
@@ -14,8 +18,34 @@
 /// @see BBBMOD_ParticleSystem
 function BBMOD_ParticleEmitter(_position, _system) constructor
 {
+	if (!variable_global_exists("__bbmodParticleEmitters"))
+	{
+		global.__bbmodParticleEmitters = [];
+	}
+
 	/// @var {Struct.BBMOD_Vec3} The emitter's position in world-space.
 	Position = _position;
+
+	/// @var {Asset.GMSprite} Sprite used for the editor icon.
+	EditorIconSprite = BBMOD_SprParticle;
+
+	/// @var {Real} Subimage used for the editor icon.
+	EditorIconIndex = 0;
+
+	/// @var {Real} Priority used when editor icons overlap.
+	EditorPickPriority = 0;
+
+	/// @var {Real} Distance at which the editor icon starts fading.
+	EditorIconFadeStart = 100.0;
+
+	/// @var {Real} Distance at which the editor icon is hidden.
+	EditorIconFadeEnd = 120.0;
+
+	/// @var {Struct.BBMOD_Vec3} World-space editor icon offset.
+	EditorOffset = new BBMOD_Vec3();
+
+	/// @var {Real} Editor transform capabilities.
+	EditorFlags = BBMOD_EEditorFlag.Translate;
 
 	/// @var {Struct.BBMOD_ParticleSystem} The system of particles that this
 	/// emitter emits.
@@ -551,9 +581,74 @@ function BBMOD_ParticleEmitter(_position, _system) constructor
 
 	static destroy = function ()
 	{
+		bbmod_particle_emitter_remove(self);
 		ds_grid_destroy(Particles);
 		ds_grid_destroy(GridCompute);
 		ds_grid_destroy(__sortGrid);
 		return undefined;
 	};
+}
+
+/// @func bbmod_particle_emitter_add(_emitter)
+/// @desc Adds a particle emitter to the runtime emitter registry.
+function bbmod_particle_emitter_add(_emitter)
+{
+	if (!variable_global_exists("__bbmodParticleEmitters"))
+	{
+		global.__bbmodParticleEmitters = [];
+	}
+	var _emitters = global.__bbmodParticleEmitters;
+	var _count = array_length(_emitters);
+	for (var i = 0; i < _count; ++i)
+	{
+		if (_emitters[i] == _emitter)
+		{
+			return _emitter;
+		}
+	}
+	if (array_length(_emitters) == _count)
+	{
+		array_push(_emitters, _emitter);
+	}
+	return _emitter;
+}
+
+/// @func bbmod_particle_emitter_count()
+function bbmod_particle_emitter_count()
+{
+	return array_length(global.__bbmodParticleEmitters);
+}
+
+/// @func bbmod_particle_emitter_get(_index)
+function bbmod_particle_emitter_get(_index)
+{
+	return global.__bbmodParticleEmitters[_index];
+}
+
+/// @func bbmod_particle_emitter_remove(_emitter)
+function bbmod_particle_emitter_remove(_emitter)
+{
+	var _emitters = global.__bbmodParticleEmitters;
+	for (var i = 0; i < array_length(_emitters); ++i)
+	{
+		if (_emitters[i] == _emitter)
+		{
+			array_delete(_emitters, i, 1);
+			return true;
+		}
+	}
+	return false;
+}
+
+/// @func bbmod_particle_emitter_remove_index(_index)
+function bbmod_particle_emitter_remove_index(_index)
+{
+	array_delete(global.__bbmodParticleEmitters, _index, 1);
+	return true;
+}
+
+/// @func bbmod_particle_emitter_clear()
+function bbmod_particle_emitter_clear()
+{
+	global.__bbmodParticleEmitters = [];
 }

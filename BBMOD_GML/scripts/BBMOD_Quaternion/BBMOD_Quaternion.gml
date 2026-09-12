@@ -311,6 +311,67 @@ function BBMOD_Quaternion(_x = 0.0, _y = 0.0, _z = 0.0, _w = 1.0) constructor
 
 	/// @func FromLookRotation(_forward, _up)
 	///
+	/// @desc Initializes the quaternion from forward and up vectors.
+	///
+	/// @param {Struct.BBMOD_Vec3} _forward The forward direction.
+	/// @param {Struct.BBMOD_Vec3} _up The up direction.
+	///
+	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
+	static FromLookRotation = function (_forward, _up)
+	{
+		gml_pragma("forceinline");
+		var _fx = _forward.X;
+		var _fy = _forward.Y;
+		var _fz = _forward.Z;
+		var _eps = math_get_epsilon();
+		var _fLenSqr = _fx * _fx + _fy * _fy + _fz * _fz;
+		if (_fLenSqr <= _eps)
+		{
+			X = 0.0;
+			Y = 0.0;
+			Z = 0.0;
+			W = 1.0;
+			return self;
+		}
+		var _fInvLen = 1.0 / sqrt(_fLenSqr);
+		_fx *= _fInvLen;
+		_fy *= _fInvLen;
+		_fz *= _fInvLen;
+		var _ux = _up.X;
+		var _uy = _up.Y;
+		var _uz = _up.Z;
+		var _dotUF = _ux * _fx + _uy * _fy + _uz * _fz;
+		_ux -= _fx * _dotUF;
+		_uy -= _fy * _dotUF;
+		_uz -= _fz * _dotUF;
+		var _uLenSqr = _ux * _ux + _uy * _uy + _uz * _uz;
+		if (_uLenSqr <= _eps)
+		{
+			X = 0.0;
+			Y = 0.0;
+			Z = 0.0;
+			W = 1.0;
+			return self;
+		}
+		var _uInvLen = 1.0 / sqrt(_uLenSqr);
+		_ux *= _uInvLen;
+		_uy *= _uInvLen;
+		_uz *= _uInvLen;
+		var _rightX = _uy * _fz - _uz * _fy;
+		var _rightY = _uz * _fx - _ux * _fz;
+		var _rightZ = _ux * _fy - _uy * _fx;
+		var _trace = max(1.0 + _rightX + _uy + _fz, 0.0001);
+		var _w = max(sqrt(_trace) * 0.5, _eps);
+		var _w4Recip = 1.0 / (4.0 * _w);
+		X = (_uz - _fy) * _w4Recip;
+		Y = (_fx - _rightZ) * _w4Recip;
+		Z = (_rightY - _ux) * _w4Recip;
+		W = _w;
+		return self;
+	};
+
+	/// @func FromLookRotation(_forward, _up)
+	///
 	/// @desc Initializes the quaternion using a forward and an up vector. These
 	/// vectors must not be parallel! If they are, the quaternion will be set to an
 	/// identity.

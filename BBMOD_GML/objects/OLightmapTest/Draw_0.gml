@@ -1,5 +1,13 @@
 bbmod_set_instance_id(id);
 
+bbmod_editor_submit_instance_icon(
+	new BBMOD_Vec3(x, y, z),
+	BBMOD_SprParticle,
+	0,
+	0,
+	DitherTriggerEnterDistance,
+	DitherTriggerExitDistance);
+
 matrix.SetIdentity()
 	.ScaleSelf(10, 10, 10)
 	.RotateZSelf(90)

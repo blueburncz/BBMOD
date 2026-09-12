@@ -1,4 +1,4 @@
-/// @module Gizmo
+/// @module Editor
 
 /// @enum Enumeration of edit spaces.
 enum BBMOD_EEditSpace
@@ -203,6 +203,14 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// @private
 	__instanceData = ds_list_create();
 
+	/// @var {Bool}
+	/// @private
+	__bbmodEditorBound = false;
+
+	/// @var {Struct}
+	/// @private
+	__bbmodEditorOriginalCallbacks = undefined;
+
 	/// @var {Struct.BBMOD_Vec3} The current scaling factor of selected instances.
 	/// @private
 	__scaleBy = new BBMOD_Vec3(0.0);
@@ -211,6 +219,17 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 	/// instances by.
 	/// @private
 	__rotateBy = new BBMOD_Vec3(0.0);
+
+	/// @var {Function} Optional callback for applying rotation deltas to
+	/// struct-backed editor targets.
+	ApplyStructRotation = undefined;
+
+	/// @var {Function} Optional callback invoked once when a gizmo drag begins.
+	/// @private
+	OnEditBegin = undefined;
+
+	/// @var {Function} Optional callback invoked once when a gizmo drag ends.
+	OnEditEnd = undefined;
 
 	/// @var {Function} A function that the gizmo uses to check whether an instance
 	/// exists. Must take the instance as the first argument and return a bool.
@@ -599,6 +618,26 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		return self;
 	};
 
+	/// @func begin_edit()
+	///
+	/// @desc Starts a fresh gizmo drag without carrying over cursor or delta
+	/// state from a previous edit.
+	///
+	/// @return {Struct.BBMOD_Gizmo} Returns `self`.
+	static begin_edit = function ()
+	{
+		if (OnEditBegin != undefined)
+		{
+			OnEditBegin();
+		}
+		IsEditing = true;
+		__mouseOffset = undefined;
+		__positionBackup = undefined;
+		__scaleBy.Set(0.0, 0.0, 0.0);
+		__rotateBy.Set(0.0, 0.0, 0.0);
+		return self;
+	};
+
 	/// @func intersect_ray_plane(_origin, _direction, _plane, _normal)
 	///
 	/// @desc Intersects a ray with a plane.
@@ -702,6 +741,11 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 		//
 		if (!IsEditing || !mouse_check_button(ButtonDrag))
 		{
+			if (IsEditing && OnEditEnd != undefined)
+			{
+				OnEditEnd();
+			}
+
 			if (KeyNextEditType != undefined
 				&& keyboard_check_pressed(KeyNextEditType))
 			{
@@ -774,6 +818,11 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				_data.Offset = get_instance_position_vec3(_instance).Sub(Position);
 				_data.Rotation = get_instance_rotation_vec3(_instance);
 				_data.Scale = get_instance_scale_vec3(_instance);
+				if (ApplyStructRotation != undefined && !is_real(_instance))
+				{
+					_data.Direction = ApplyStructRotation(
+						_instance, undefined, undefined, undefined, undefined, undefined, undefined);
+				}
 			}
 
 			// Clear properties used when editing
@@ -980,24 +1029,26 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 					{
 						__mouseOffset = _mouseWorld;
 					}
-
-					var _v1 = __mouseOffset.Sub(Position);
-					var _v2 = _mouseWorld.Sub(Position);
-					var _angle = darctan2(_v2.Cross(_v1).Dot(_planeNormal), _v1.Dot(_v2));
-
-					switch (EditAxis)
+					else
 					{
-						case BBMOD_EEditAxis.X:
-							__rotateBy.X = _angle;
-							break;
+						var _v1 = __mouseOffset.Sub(Position);
+						var _v2 = _mouseWorld.Sub(Position);
+						var _angle = darctan2(_v2.Cross(_v1).Dot(_planeNormal), _v1.Dot(_v2));
 
-						case BBMOD_EEditAxis.Y:
-							__rotateBy.Y = _angle;
-							break;
+						switch (EditAxis)
+						{
+							case BBMOD_EEditAxis.X:
+								__rotateBy.X = _angle;
+								break;
 
-						case BBMOD_EEditAxis.Z:
-							__rotateBy.Z = _angle;
-							break;
+							case BBMOD_EEditAxis.Y:
+								__rotateBy.Y = _angle;
+								break;
+
+							case BBMOD_EEditAxis.Z:
+								__rotateBy.Z = _angle;
+								break;
+						}
 					}
 				}
 			}
@@ -1152,6 +1203,21 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 			var _upGlobal = new BBMOD_Vec3(_vTemp[0], _vTemp[1], _vTemp[2]);
 
 			var _rotMatrix = new BBMOD_Matrix().RotateEuler(_rotationStored);
+			var _hasStructRotation = (ApplyStructRotation != undefined
+				&& !is_real(_instance)
+				&& (_rotateByX != 0.0 || _rotateByY != 0.0 || _rotateByZ != 0.0));
+			if (_hasStructRotation)
+			{
+				ApplyStructRotation(
+					_instance,
+					_data.Direction,
+					_forwardGlobal,
+					_rightGlobal,
+					_upGlobal,
+					_rotateByX,
+					_rotateByY,
+					_rotateByZ);
+			}
 			if (_rotateByX != 0.0)
 			{
 				var _quaternionX = new BBMOD_Quaternion().FromAxisAngle(_forwardGlobal, _rotateByX);
@@ -1170,10 +1236,13 @@ function BBMOD_Gizmo(_size = 10.0) constructor
 				_positionOffset = _quaternionZ.Rotate(_positionOffset);
 				_rotMatrix = _rotMatrix.RotateQuat(_quaternionZ);
 			}
-			var _rotArray = _rotMatrix.ToEuler();
-			SetInstanceRotationX(_instance, _rotArray[0]);
-			SetInstanceRotationY(_instance, _rotArray[1]);
-			SetInstanceRotationZ(_instance, _rotArray[2]);
+			if (is_real(_instance) || ApplyStructRotation == undefined)
+			{
+				var _rotArray = _rotMatrix.ToEuler();
+				SetInstanceRotationX(_instance, _rotArray[0]);
+				SetInstanceRotationY(_instance, _rotArray[1]);
+				SetInstanceRotationZ(_instance, _rotArray[2]);
+			}
 
 			// Apply scale
 			var _scaleNew = _scaleStored.Clone();
